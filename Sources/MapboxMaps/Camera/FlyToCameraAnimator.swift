@@ -12,7 +12,7 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
 
     public private(set) var state: UIViewAnimatingState = .inactive
 
-    private var start: Date?
+    private var startDate: Date?
 
     private let finalCameraOptions: CameraOptions
 
@@ -22,22 +22,18 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
 
     private weak var delegate: CameraAnimatorDelegate?
 
-    internal init?(initial: CameraState,
-                   final: CameraOptions,
-                   cameraBounds: CameraBounds,
-                   owner: AnimationOwner,
-                   duration: TimeInterval? = nil,
-                   mapSize: CGSize,
-                   mapboxMap: MapboxMapProtocol,
-                   dateProvider: DateProvider,
-                   delegate: CameraAnimatorDelegate) {
-        guard let flyToInterpolator = FlyToInterpolator(from: initial, to: final, cameraBounds: cameraBounds, size: mapSize) else {
-            return nil
-        }
+    internal init(initial: CameraState,
+                  final: CameraOptions,
+                  cameraBounds: CameraBounds,
+                  owner: AnimationOwner,
+                  duration: TimeInterval? = nil,
+                  mapSize: CGSize,
+                  mapboxMap: MapboxMapProtocol,
+                  dateProvider: DateProvider,
+                  delegate: CameraAnimatorDelegate) {
+        let flyToInterpolator = FlyToInterpolator(from: initial, to: final, cameraBounds: cameraBounds, size: mapSize)
         if let duration = duration {
-            guard duration >= 0 else {
-                return nil
-            }
+            precondition(duration >= 0)
         }
         self.interpolator = flyToInterpolator
         self.mapboxMap = mapboxMap
@@ -56,7 +52,7 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
 
     internal func startAnimation() {
         state = .active
-        start = dateProvider.now
+        startDate = dateProvider.now
         delegate?.cameraAnimatorDidStartRunning(self)
     }
 
@@ -73,10 +69,10 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     }
 
     internal func update() {
-        guard state == .active, let start = start else {
+        guard state == .active, let startDate = startDate else {
             return
         }
-        let fractionComplete = min(dateProvider.now.timeIntervalSince(start) / duration, 1)
+        let fractionComplete = min(dateProvider.now.timeIntervalSince(startDate) / duration, 1)
         guard fractionComplete < 1 else {
             state = .inactive
             delegate?.cameraAnimatorDidStopRunning(self)

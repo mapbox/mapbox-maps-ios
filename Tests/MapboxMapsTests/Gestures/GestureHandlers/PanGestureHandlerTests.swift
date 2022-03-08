@@ -54,8 +54,8 @@ final class PanGestureHandlerTests: XCTestCase {
 
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(mapboxMap.dragStartStub.parameters, [touchLocation])
-        XCTAssertEqual(delegate.gestureBeganStub.parameters, [.pan])
+        XCTAssertEqual(mapboxMap.dragStartStub.invocations.map(\.parameters), [touchLocation])
+        XCTAssertEqual(delegate.gestureBeganStub.invocations.map(\.parameters), [.pan])
     }
 
     func verifyHandlePanChanged(panMode: PanMode,
@@ -80,10 +80,10 @@ final class PanGestureHandlerTests: XCTestCase {
 
             gestureRecognizer.sendActions()
 
-            XCTAssertEqual(mapboxMap.dragCameraOptionsStub.parameters, [
+            XCTAssertEqual(mapboxMap.dragCameraOptionsStub.invocations.map(\.parameters), [
                 .init(from: clampingFunction(touchLocations[idx - 1]), to: clampingFunction(touchLocations[idx]))], line: line)
-            let dragCameraOptions = try XCTUnwrap(mapboxMap.dragCameraOptionsStub.returnedValues.first, line: line)
-            XCTAssertEqual(mapboxMap.setCameraStub.parameters, [dragCameraOptions], line: line)
+            let dragCameraOptions = try XCTUnwrap(mapboxMap.dragCameraOptionsStub.invocations.first?.returnValue, line: line)
+            XCTAssertEqual(mapboxMap.setCameraStub.invocations.map(\.parameters), [dragCameraOptions], line: line)
         }
     }
 
@@ -159,10 +159,10 @@ final class PanGestureHandlerTests: XCTestCase {
         gestureRecognizer.getStateStub.defaultReturnValue = .ended
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(delegate.gestureEndedStub.parameters, [.init(gestureType: .pan, willAnimate: true)])
+        XCTAssertEqual(delegate.gestureEndedStub.invocations.map(\.parameters), [.init(gestureType: .pan, willAnimate: true)])
 
         XCTAssertEqual(cameraAnimationsManager.decelerateStub.invocations.count, 1)
-        let decelerateParams = cameraAnimationsManager.decelerateStub.parameters.first
+        let decelerateParams = cameraAnimationsManager.decelerateStub.invocations.first?.parameters
         let expectedDecelerateLocation = CGPoint(
             x: endedTouchLocation.x,
             y: max(endedTouchLocation.y, 3 / 4 * mapboxMap.size.height))
@@ -179,19 +179,19 @@ final class PanGestureHandlerTests: XCTestCase {
             let locationChangeHandler = try XCTUnwrap(decelerateParams?.locationChangeHandler)
             locationChangeHandler(previousLocations[i], interpolatedLocations[i])
             XCTAssertEqual(
-                mapboxMap.dragCameraOptionsStub.parameters,
+                mapboxMap.dragCameraOptionsStub.invocations.map(\.parameters),
                 [.init(
                     from: previousLocations[i],
                     to: interpolatedLocations[i])])
-            let dragCameraOptions = try XCTUnwrap(mapboxMap.dragCameraOptionsStub.returnedValues.first)
-            XCTAssertEqual(mapboxMap.setCameraStub.parameters, [dragCameraOptions])
+            let dragCameraOptions = try XCTUnwrap(mapboxMap.dragCameraOptionsStub.invocations.first?.returnValue)
+            XCTAssertEqual(mapboxMap.setCameraStub.invocations.map(\.parameters), [dragCameraOptions])
         }
 
         let animationEndedCompletion = try XCTUnwrap(decelerateParams?.completion)
         animationEndedCompletion()
 
         XCTAssertEqual(mapboxMap.dragEndStub.invocations.count, 1)
-        XCTAssertEqual(delegate.animationEndedStub.parameters, [.pan])
+        XCTAssertEqual(delegate.animationEndedStub.invocations.map(\.parameters), [.pan])
     }
 
     func testHandlePanEnded() throws {
@@ -230,7 +230,7 @@ final class PanGestureHandlerTests: XCTestCase {
 
         XCTAssertEqual(cameraAnimationsManager.decelerateStub.invocations.count, 0, "Cancelled pan should not trigger deceleration")
         XCTAssertEqual(mapboxMap.dragEndStub.invocations.count, 1)
-        XCTAssertEqual(delegate.gestureEndedStub.parameters, [.init(gestureType: .pan, willAnimate: false)])
+        XCTAssertEqual(delegate.gestureEndedStub.invocations.map(\.parameters), [.init(gestureType: .pan, willAnimate: false)])
     }
 
     func testSecondPanGesturePerformsCorrectlyWhenInterruptingDecelerationFromFirstPanGesture() throws {
@@ -245,7 +245,7 @@ final class PanGestureHandlerTests: XCTestCase {
         mapboxMap.setCameraStub.reset()
 
         // cancel deceleration *after* the second gesture begins
-        let decelerateAnimationCompletion = try XCTUnwrap(cameraAnimationsManager.decelerateStub.parameters.first?.completion)
+        let decelerateAnimationCompletion = try XCTUnwrap(cameraAnimationsManager.decelerateStub.invocations.first?.parameters.completion)
         decelerateAnimationCompletion()
 
         // changed 2 should still result in camera updates. a previous

@@ -18,7 +18,6 @@ targets:
         DEFINES_MODULE: "YES"
         PRODUCT_NAME: $(TARGET_NAME:c99extidentifier)
         CODE_SIGN_STYLE: Automatic
-        BUILD_DIR: .build
         SWIFT_TREAT_WARNINGS_AS_ERRORS: "YES"
         SWIFT_EMIT_PRIVATE_MODULE_INTERFACE: "YES"
       configs:

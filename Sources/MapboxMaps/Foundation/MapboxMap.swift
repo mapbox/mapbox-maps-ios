@@ -26,26 +26,33 @@ internal protocol MapboxMapProtocol: AnyObject {
     func removeViewAnnotation(withId id: String) throws
     func options(forViewAnnotationWithId id: String) throws -> ViewAnnotationOptions
     func pointIsAboveHorizon(_ point: CGPoint) -> Bool
+    func camera(for geometry: Geometry, padding: UIEdgeInsets, bearing: CGFloat?, pitch: CGFloat?) -> CameraOptions
+    func point(for coordinate: CLLocationCoordinate2D) -> CGPoint
+    func performWithoutNotifying(_ block: () -> Void)
 }
 
-// swiftlint:disable:next type_body_length
+// swiftlint:disable type_body_length
+
+/// MapboxMap provides access to the map model, including the camera, style, observable map events,
+/// and querying rendered features. Obtain the MapboxMap instance for a MapView via MapView.mapboxMap.
+///
+/// Note: MapboxMap should only be used from the main thread.
 public final class MapboxMap: MapboxMapProtocol {
     /// The underlying renderer object responsible for rendering the map
     private let __map: Map
 
     /// The `style` object supports run time styling.
-    public internal(set) var style: Style
+    public let style: Style
 
-    private let eventHandlers = WeakSet<MapEventHandler>()
+    private let observable: MapboxObservableProtocol
 
     deinit {
-        eventHandlers.allObjects.forEach {
-            $0.cancel()
-        }
         __map.destroyRenderer()
     }
 
-    internal init(mapClient: MapClient, mapInitOptions: MapInitOptions) {
+    internal init(mapClient: MapClient,
+                  mapInitOptions: MapInitOptions,
+                  mapboxObservableProvider: (ObservableProtocol) -> MapboxObservableProtocol) {
         let coreOptions = MapboxCoreMaps.ResourceOptions(mapInitOptions.resourceOptions)
 
         __map = Map(
@@ -54,7 +61,18 @@ public final class MapboxMap: MapboxMapProtocol {
             resourceOptions: coreOptions)
         __map.createRenderer()
 
+        observable = mapboxObservableProvider(__map)
+
         style = Style(with: __map)
+    }
+
+    // MARK: - Render loop
+
+    /// Triggers a repaint of the map. Calling this method is typically unnecessary but
+    /// may be needed if using a custom layer that needs to be redrawn independently
+    /// of other map changes.
+    public func triggerRepaint() {
+        __map.triggerRepaint()
     }
 
     // MARK: - Style loading
@@ -603,6 +621,8 @@ public final class MapboxMap: MapboxMapProtocol {
     }
 }
 
+// swiftlint:enable type_body_length
+
 // MARK: - MapFeatureQueryable
 
 extension MapboxMap: MapFeatureQueryable {
@@ -690,6 +710,7 @@ extension MapboxMap: MapFeatureQueryable {
     ///   - completion: The result could be a feature extension value containing
     ///         either a value (expansion-zoom) or a feature collection (children
     ///         or leaves). An error is passed if the operation was not successful.
+    /// Deprecated. Use getGeoJsonClusterLeaves/getGeoJsonClusterChildren/getGeoJsonClusterExpansionZoom to instead.
     public func queryFeatureExtension(for sourceId: String,
                                       feature: Feature,
                                       extension: String,
@@ -706,11 +727,79 @@ extension MapboxMap: MapFeatureQueryable {
                                                                      type: FeatureExtensionValue.self,
                                                                      concreteErrorType: MapError.self))
     }
+
+    /// Returns all the leaves (original points) of a cluster (given its cluster_id) from a GeoJSON source, with pagination support: limit is the number of leaves
+    /// to return (set to Infinity for all points), and offset is the amount of points to skip (for pagination).
+    ///
+    /// - Parameters:
+    ///   - sourceId: The identifier of the source to query.
+    ///   - feature: Feature to look for in the query.
+    ///   - limit: the number of points to return from the query, default to 10
+    ///   - offset: the amount of points to skip, default to 0
+    ///   - completion: The result could be a feature extension value containing
+    ///         either a value (expansion-zoom) or a feature collection (children
+    ///         or leaves). An error is passed if the operation was not successful.
+    public func getGeoJsonClusterLeaves(forSourceId sourceId: String,
+                                        feature: Feature,
+                                        limit: UInt64 = 10,
+                                        offset: UInt64 = 0,
+                                        completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void) {
+        __map.queryFeatureExtensions(forSourceIdentifier: sourceId,
+                                     feature: MapboxCommon.Feature(feature),
+                                     extension: "supercluster",
+                                     extensionField: "leaves",
+                                     args: ["limit": limit, "offset": offset],
+                                     callback: coreAPIClosureAdapter(for: completion,
+                                                                     type: FeatureExtensionValue.self,
+                                                                     concreteErrorType: MapError.self))
+    }
+
+    /// Returns the children (original points or clusters) of a cluster (on the next zoom level)
+    /// given its id (cluster_id value from feature properties) from a GeoJSON source.
+    ///
+    /// - Parameters:
+    ///   - sourceId: The identifier of the source to query.
+    ///   - feature: Feature to look for in the query.
+    ///   - completion: The result could be a feature extension value containing
+    ///         either a value (expansion-zoom) or a feature collection (children
+    ///         or leaves). An error is passed if the operation was not successful.
+    public func getGeoJsonClusterChildren(forSourceId sourceId: String,
+                                          feature: Feature,
+                                          completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void) {
+        __map.queryFeatureExtensions(forSourceIdentifier: sourceId,
+                                     feature: MapboxCommon.Feature(feature),
+                                     extension: "supercluster",
+                                     extensionField: "children",
+                                     args: nil,
+                                     callback: coreAPIClosureAdapter(for: completion,
+                                                                     type: FeatureExtensionValue.self,
+                                                                     concreteErrorType: MapError.self))
+    }
+
+    /// Returns the zoom on which the cluster expands into several children (useful for "click to zoom" feature)
+    /// given the cluster's cluster_id (cluster_id value from feature properties) from a GeoJSON source.
+    ///
+    /// - Parameters:
+    ///   - sourceId: The identifier of the source to query.
+    ///   - feature: Feature to look for in the query.
+    ///   - completion: The result could be a feature extension value containing
+    ///         either a value (expansion-zoom) or a feature collection (children
+    ///         or leaves). An error is passed if the operation was not successful.
+    public func getGeoJsonClusterExpansionZoom(forSourceId sourceId: String,
+                                               feature: Feature,
+                                               completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void) {
+        __map.queryFeatureExtensions(forSourceIdentifier: sourceId,
+                                     feature: MapboxCommon.Feature(feature),
+                                     extension: "supercluster",
+                                     extensionField: "expansion-zoom",
+                                     args: nil,
+                                     callback: coreAPIClosureAdapter(for: completion,
+                                                                     type: FeatureExtensionValue.self,
+                                                                     concreteErrorType: MapError.self))
+    }
 }
 
-// MARK: - ObservableProtocol
-
-extension MapboxMap: ObservableProtocol {
+extension MapboxMap {
     /// Subscribes an observer to a list of events.
     ///
     /// `MapboxMap` holds a strong reference to `observer` while it is subscribed. To stop receiving
@@ -724,7 +813,7 @@ extension MapboxMap: ObservableProtocol {
     ///     Prefer `onNext(eventTypes:handler:)`, `onNext(_:handler:)`, and
     ///     `onEvery(_:handler:)` to using this lower-level APIs
     public func subscribe(_ observer: Observer, events: [String]) {
-        __map.subscribe(for: observer, events: events)
+        observable.subscribe(observer, events: events)
     }
 
     /// Unsubscribes an observer from a provided list of event types.
@@ -738,11 +827,7 @@ extension MapboxMap: ObservableProtocol {
     ///   - events: Array of event types to unsubscribe from. Pass an
     ///     empty array (the default) to unsubscribe from all events.
     public func unsubscribe(_ observer: Observer, events: [String] = []) {
-        if events.isEmpty {
-            __map.unsubscribe(for: observer)
-        } else {
-            __map.unsubscribe(for: observer, events: events)
-        }
+        observable.unsubscribe(observer, events: events)
     }
 }
 
@@ -752,30 +837,46 @@ extension MapboxMap: MapEventsObservable {
 
     @discardableResult
     private func onNext(eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable {
-        let rawTypes = eventTypes.map { $0.rawValue }
-        let handler = MapEventHandler(for: rawTypes,
-                                      observable: self) { event in
-            handler(event)
-            return true
-        }
-        eventHandlers.add(handler)
-        return handler
+        return observable.onNext(eventTypes, handler: handler)
     }
 
+    /// Listen to a single occurrence of a Map event.
+    ///
+    /// This will observe the next (and only the next) event of the specified
+    /// type. After observation, the underlying subscriber will unsubscribe from
+    /// the map or snapshotter.
+    ///
+    /// If you need to unsubscribe before the event fires, call `cancel()` on
+    /// the returned `Cancelable` object.
+    ///
+    /// - Parameters:
+    ///   - eventType: The event type to listen to.
+    ///   - handler: The closure to execute when the event occurs.
+    ///
+    /// - Returns: A `Cancelable` object that you can use to stop listening for
+    ///     the event. This is especially important if you have a retain cycle in
+    ///     the handler.
     @discardableResult
     public func onNext(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
-        return onNext(eventTypes: [eventType], handler: handler)
+        return observable.onNext([eventType], handler: handler)
     }
 
+    /// Listen to multiple occurrences of a Map event.
+    ///
+    /// - Parameters:
+    ///   - eventType: The event type to listen to.
+    ///   - handler: The closure to execute when the event occurs.
+    ///
+    /// - Returns: A `Cancelable` object that you can use to stop listening for
+    ///     events. This is especially important if you have a retain cycle in
+    ///     the handler.
     @discardableResult
     public func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
-        let handler = MapEventHandler(for: [eventType.rawValue],
-                                      observable: self) { event in
-            handler(event)
-            return false
-        }
-        eventHandlers.add(handler)
-        return handler
+        return observable.onEvery([eventType], handler: handler)
+    }
+
+    internal func performWithoutNotifying(_ block: () -> Void) {
+        observable.performWithoutNotifying(block)
     }
 }
 
@@ -913,9 +1014,7 @@ extension MapboxMap {
     /// - Parameter mode: The `MapProjection` to be used by the map.
     /// - Throws: Errors during encoding or `MapProjectionError.unsupportedProjection` if the supplied projection is not compatible with the SDK.
     @_spi(Experimental) public func setMapProjection(_ mapProjection: MapProjection) throws {
-        let data = try JSONEncoder().encode(mapProjection)
-        let object = try JSONSerialization.jsonObject(with: data, options: [])
-        __map.setMapProjectionForProjection(object)
+        try __map.setMapProjectionForProjection(mapProjection.toJSON())
     }
 
     /// Get current map projection for Mapbox map.

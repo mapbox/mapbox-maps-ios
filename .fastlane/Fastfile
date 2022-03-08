@@ -1,0 +1,144 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+default_platform(:ios)
+
+ENV["FASTLANE_SKIP_UPDATE_CHECK"] = "1"
+ENV["SPACESHIP_SKIP_2FA_UPGRADE"] = "1"
+
+platform :ios do
+
+  lane :build_examples_tests do
+    setup_circle_ci
+    sync_code_signing
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "Apps/Examples/Examples.xcodeproj",
+      team_id: "GJZR2MEM28", # Developer Portal Team ID,
+      profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["com.mapbox.examples"],
+      targets: ["Examples"],
+      code_sign_identity: "Apple Development: Machiney McMachineface",
+    )
+    run_tests(
+      workspace: 'Apps/Apps.xcworkspace',
+      scheme: 'Examples',                  # XCTest scheme
+      clean: true,                        # Recommended: This would ensure the build would not include unnecessary files
+      configuration: "Release",
+      xcargs: "ENABLE_TESTABILITY=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO",
+      skip_detect_devices: true,          # Required
+      build_for_testing: true,            # Required
+      sdk: 'iphoneos',                    # Required
+      should_zip_build_products: true,     # Must be true to set the correct format for Firebase Test Lab,
+      result_bundle: true,
+      output_directory: "output/",
+      code_coverage: true
+    )
+  end
+
+  lane :run_examples_firebase_tests do
+    firebase_test_lab_ios_xctest(
+      gcp_project: 'mapbox-maps-ios-dc24c', # Your Google Cloud project name
+      devices: [                          # Device(s) to run tests on
+        {
+          ios_model_id: 'iphone11',        # Device model ID, see gcloud command above
+          ios_version_id: '13.6',         # iOS version ID, see gcloud command above
+        }
+      ],
+      timeout_sec: 20*60,
+      skip_validation: true,
+    )
+  end
+
+  desc "Test Examples scheme on Firebase Test Lab"
+  lane :firebase_examples_tests do
+    build_examples_tests
+    run_examples_firebase_tests
+  end
+
+  lane :beta do
+    app_store_connect_api_key # Generate API Token
+    increment_build_number(
+      build_number: latest_testflight_build_number + 1,
+      xcodeproj: 'Apps/Examples/Examples.xcodeproj'
+    )
+    build_and_submit
+  end
+
+  desc "Submit a new Beta Build to Apple TestFlight"
+  desc "This will also make sure that the signing certificate and provisioning profiles are up to date."
+  lane :build_and_submit do
+    setup_circle_ci
+    sync_code_signing(type: "development")
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "Apps/Examples/Examples.xcodeproj",
+      team_id: "GJZR2MEM28", # Developer Portal Team ID,
+      profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["com.mapbox.examples"],
+      targets: ["Examples"]
+    )
+    sync_code_signing(type: "appstore")
+    build_app(
+      scheme: "Examples",
+      workspace: "Apps/Apps.xcworkspace",
+      xcargs: "SWIFT_TREAT_WARNINGS_AS_ERRORS=NO" # Disable to bypass Deprecated error on OfflineManager example
+    )
+    upload_to_testflight(
+      beta_app_feedback_email: "applemachine@mapbox.com",
+      beta_app_description: "Examples app test build.",
+      demo_account_required: false,
+      skip_waiting_for_build_processing: true
+    )
+  end
+
+  lane :build_tests do
+    sh("cd .. && xcodegen")
+    app_store_connect_api_key # Generate API Token
+    setup_circle_ci
+    sync_code_signing(app_identifier: "com.mapbox.MapboxMapsTestHost")
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "MapboxMaps.xcodeproj",
+      team_id: "GJZR2MEM28", # Developer Portal Team ID,
+      profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["com.mapbox.MapboxMapsTestHost"],
+      targets: ["MapboxTestHost"],
+      code_sign_identity: "Apple Development: Machiney McMachineface",
+    )
+    run_tests(
+      project: 'MapboxMaps.xcodeproj',
+      scheme: 'MapboxTestHost',
+      clean: true,
+      configuration: "Release",
+      xcargs: "ENABLE_TESTABILITY=YES",
+      build_for_testing: true,
+      destination: 'generic/platform=iOS',
+      should_zip_build_products: true,
+      output_directory: "output/",
+      code_coverage: true
+    )
+  end
+
+  lane :firebase_tests do
+    build_tests
+    firebase_test_lab_ios_xctest(
+      gcp_project: 'mapbox-maps-ios-dc24c', # Your Google Cloud project name
+      devices: [                          # Device(s) to run tests on
+        {
+          ios_model_id: 'iphone11',        # Device model ID, see gcloud command above
+          ios_version_id: '13.6',         # iOS version ID, see gcloud command above
+        }
+      ],
+      timeout_sec: 20*60,
+      skip_validation: true,
+    )
+  end
+
+end

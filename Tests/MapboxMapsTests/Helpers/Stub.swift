@@ -21,14 +21,6 @@ final class Stub<ParametersType, ReturnType> {
         self.defaultReturnValue = defaultReturnValue
     }
 
-    var returnedValues: [ReturnType] {
-        invocations.map(\.returnValue)
-    }
-
-    var parameters: [ParametersType] {
-        invocations.map(\.parameters)
-    }
-
     func call(with parameters: ParametersType) -> ReturnType {
         let invocation = Invocation(parameters: parameters,
                                     returnValue: returnValueQueue.isEmpty ? defaultReturnValue : returnValueQueue.removeFirst())
@@ -53,5 +45,36 @@ extension Stub where ReturnType == Void {
 extension Stub where ParametersType == Void {
     func call() -> ReturnType {
         call(with: ())
+    }
+}
+
+extension Stub.Invocation: Equatable where ParametersType: Equatable, ReturnType: Equatable {
+    static func == (lhs: Stub.Invocation, rhs: Stub.Invocation) -> Bool {
+        return (lhs.parameters == rhs.parameters &&
+                lhs.returnValue == rhs.returnValue)
+    }
+}
+
+@propertyWrapper
+final class Stubbed<T> {
+    let getStub: Stub<Void, T>
+    let setStub = Stub<T, Void>()
+
+    var projectedValue: Stubbed<T> {
+        return self
+    }
+
+    init(wrappedValue: T) {
+        getStub = Stub(defaultReturnValue: wrappedValue)
+    }
+
+    var wrappedValue: T {
+        get {
+            getStub.call()
+        }
+        set {
+            setStub.call(with: newValue)
+            getStub.defaultReturnValue = newValue
+        }
     }
 }

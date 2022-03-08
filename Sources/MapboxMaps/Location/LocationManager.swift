@@ -74,9 +74,18 @@ public final class LocationManager: NSObject {
     }
 
     private func syncOptions() {
-        locationProducer.locationProvider.locationProviderOptions = options
+        // workaround to avoid calling LocationProducer.locationProvider's didSet
+        // when locationProvider is a class. In next major version, we should constrain
+        // LocationProvider to always be a class.
+        if type(of: locationProducer.locationProvider) is AnyClass {
+            var provider = locationProducer.locationProvider
+            provider.locationProviderOptions = options
+        } else {
+            locationProducer.locationProvider.locationProviderOptions = options
+        }
         puckManager.puckType = options.puckType
         puckManager.puckBearingSource = options.puckBearingSource
+        puckManager.puckBearingEnabled = options.puckBearingEnabled
     }
 }
 

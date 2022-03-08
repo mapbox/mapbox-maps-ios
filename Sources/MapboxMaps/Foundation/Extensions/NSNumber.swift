@@ -2,7 +2,8 @@ import Foundation
 import CoreGraphics
 import CoreLocation
 
-// MARK: - NSNumber
+/// :nodoc:
+/// Deprecated. These extensions will be removed from the public API in a future major version.
 extension NSNumber {
 
     /// Converts an `NSNumber` to a `CGFloat` value from its `Double` representation.

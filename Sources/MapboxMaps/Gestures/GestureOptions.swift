@@ -14,23 +14,6 @@ public enum PanMode: String, Equatable, CaseIterable {
     case horizontalAndVertical
 }
 
-/// Represents the available pinch gesture implementations. Each implementation has
-/// some shortcomings, and we hope to eliminate the need to make this trade-off in a
-/// future release.
-@_spi(Experimental) public enum PinchGestureBehavior {
-
-    /// This case represents the pinch gesture behavior that was in place in v10.1. It
-    /// resets the camera to the initial state at each frame, resulting in the issue reported
-    /// in https://github.com/mapbox/mapbox-maps-ios/issues/775
-    case tracksTouchLocationsWhenPanningAfterZoomChange
-
-    /// This case represents a new pinch gesture behavior that solves
-    /// https://github.com/mapbox/mapbox-maps-ios/issues/775 but
-    /// introduces an issue where panning while zooming doesn't work as expected:
-    /// https://github.com/mapbox/mapbox-maps-ios/issues/864
-    case doesNotResetCameraAtEachFrame
-}
-
 /// Configuration options for the built-in gestures
 public struct GestureOptions: Equatable {
 
@@ -45,9 +28,13 @@ public struct GestureOptions: Equatable {
     /// Defaults to `true`.
     public var pinchRotateEnabled: Bool = true
 
-    /// Can be used to make the desired trade-off between two available pinch gesture implementations. See ``PinchGestureBehavior`` for details.
-    /// This API is marked as experimental in anticipation of future pinch gesture improvements that remove or update the nature of this trade-off.
-    @_spi(Experimental) public var pinchBehavior: PinchGestureBehavior = .tracksTouchLocationsWhenPanningAfterZoomChange
+    /// Whether zoom is enabled for the pinch gesture.
+    /// Defaults to `true`.
+    public var pinchZoomEnabled: Bool = true
+
+    /// Whether pan is enabled for the pinch gesture.
+    /// Defaults to `true`.
+    public var pinchPanEnabled: Bool = true
 
     /// Whether the pitch gesture is enabled. Defaults to `true`.
     public var pitchEnabled: Bool = true
@@ -72,6 +59,11 @@ public struct GestureOptions: Equatable {
     /// Multiplied with the velocity vector once per millisecond during deceleration animations.
     /// Defaults to `UIScrollView.DecelerationRate.normal.rawValue`
     public var panDecelerationFactor: CGFloat = UIScrollView.DecelerationRate.normal.rawValue
+
+    /// By default, gestures rotate and zoom around the center of the gesture. Set this property to rotate and zoom around a fixed point instead.
+    ///
+    /// This property will be ignored by the pinch gesture if ``GestureOptions/pinchPanEnabled`` is set to `true`.
+    public var focalPoint: CGPoint?
 
     public init() {}
 }

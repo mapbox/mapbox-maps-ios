@@ -17,8 +17,8 @@ step "Download dependency at https://api.mapbox.com/downloads/v2/$SDK_REGISTRY_N
 curl -n "https://api.mapbox.com/downloads/v2/$SDK_REGISTRY_NAME/releases/ios/packages/$VERSION/$SDK_REGISTRY_ARTIFACT.zip" --output tmp.zip
 
 step "Unzipping $SDK_REGISTRY_ARTIFACT.zip ..."
-unzip tmp.zip
-mv *.xcframework ../
+unzip -q tmp.zip
+mv ./*.xcframework ../
 
 popd
 rm -rf .download

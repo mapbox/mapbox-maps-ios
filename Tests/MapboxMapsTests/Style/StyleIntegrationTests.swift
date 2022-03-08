@@ -241,4 +241,66 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         let result = "[\"format\",[\"coalesce\",[\"get\",\"name_zh\"],[\"get\",\"name\"]]]"
         XCTAssertEqual(result, convertedString)
     }
+
+    func testTerrain() throws {
+        let sourceId = String.randomASCII(withLength: .random(in: 1...20))
+        let exaggeration = Double.random(in: 0...1000)
+
+        let sourcePropertyName = "source"
+        let exaggerationPropertyName = "exaggeration"
+
+        var sourceTerrainProperty: Any = style.terrainProperty(sourcePropertyName)
+        var exaggerationTerrainProperty: Any = style.terrainProperty(exaggerationPropertyName)
+
+        XCTAssertTrue(sourceTerrainProperty is NSNull)
+        XCTAssertTrue(exaggerationTerrainProperty is NSNull)
+
+        var terrain = Terrain(sourceId: sourceId)
+        terrain.exaggeration = .constant(exaggeration)
+
+        try style.setTerrain(terrain)
+
+        sourceTerrainProperty = style.terrainProperty(sourcePropertyName)
+        exaggerationTerrainProperty = style.terrainProperty(exaggerationPropertyName)
+
+        XCTAssertEqual(sourceTerrainProperty as? String, sourceId)
+        let exaggerationTerrainPropertyDouble = try XCTUnwrap(exaggerationTerrainProperty as? Double)
+        // convert to float and back to double to work around precision mismatch
+        XCTAssertEqual(exaggerationTerrainPropertyDouble, Double(Float(exaggeration)))
+
+        style.removeTerrain()
+
+        sourceTerrainProperty = style.terrainProperty(sourcePropertyName)
+        exaggerationTerrainProperty = style.terrainProperty(exaggerationPropertyName)
+
+        XCTAssertTrue(sourceTerrainProperty is NSNull)
+        XCTAssertTrue(exaggerationTerrainProperty is NSNull)
+    }
+
+    func testAllSourceIdentifiersOmitsIdentifiersForCustomVectorSources() {
+        // add GeoJSON source to map style
+        let sourceId = "source"
+        var source = GeoJSONSource()
+        source.data = .empty
+        try! self.style.addSource(source, id: sourceId)
+
+        // style sources’ identifiers count increases to 1, excluding custom vector sources
+        XCTAssertEqual(self.style.allSourceIdentifiers.map(\.id), [sourceId])
+
+        // add custom source to map style
+        let customSourceId = "custom-vector-source"
+        let customSourceOptions = CustomGeometrySourceOptions(fetchTileFunction: { tileId in
+            do {
+                try self.style.setCustomGeometrySourceTileData(forSourceId: customSourceId, tileId: tileId, features: [])
+            } catch {
+                debugPrint(error)
+            }
+        }, cancelTileFunction: { _ in
+            // do nothing
+        }, tileOptions: TileOptions.init())
+        try! self.style.addCustomGeometrySource(withId: customSourceId, options: customSourceOptions)
+
+        // style sources’ identifiers count remains at 1, excluding custom vector sources
+        XCTAssertEqual(self.style.allSourceIdentifiers.map(\.id), [sourceId])
+    }
 }

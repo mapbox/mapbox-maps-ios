@@ -1,12 +1,12 @@
 import Foundation
 import MapboxMaps
 
-/**
- To add a new example, create a new `Example` struct
- and place it within the array for the category it belongs to below. Make sure
- the `fileName` is the same name of the new `UIViewController`
- you added in Examples/All Examples. See the README.md for more details.
- */
+// To add a new example, create a new `Example` struct
+// and place it within the array for the category it belongs to below. Make sure
+// the `fileName` is the same name of the new `UIViewController`
+// you added in Examples/All Examples. See the README.md for more details.
+
+// swiftlint:disable:next type_body_length
 public struct Examples {
     public static let all = [
         [
@@ -142,6 +142,9 @@ public struct Examples {
         Example(title: "Use a 3D model to show the user's location",
                 description: "A 3D model is used to represent the user's location.",
                 type: Custom3DPuckExample.self),
+        Example(title: "Add a custom location provider",
+                description: "Display the location puck at a custom location.",
+                type: CustomLocationProviderExample.self),
     ]
 
     // Examples that highlight using the Offline APIs.
@@ -231,6 +234,9 @@ public struct Examples {
         Example(title: "Add live data",
                 description: "Update feature coordinates from a geoJSON source in real time.",
                 type: LiveDataExample.self),
+        Example(title: "Join data to vector geometry",
+                description: "Join local JSON data with vector tile geometries.",
+                type: DataJoinExample.self),
         Example(title: "Use a distance expression", description: "Use a distance style expression to show features within a specific radius.", type: DistanceExpressionExample.self)
     ]
 
@@ -255,8 +261,11 @@ public struct Examples {
         Example(title: "Globe View",
                 description: "Display map on a globe.",
                 type: GlobeViewExample.self),
+        Example(title: "Viewport",
+                description: "Viewport camera showcase",
+                type: ViewportExample.self),
+        Example(title: "Advanced Viewport Gestures",
+                description: "Viewport configured to allow gestures",
+                type: AdvancedViewportGesturesExample.self),
     ]
-}
-
-struct ExamplesCategories {
 }

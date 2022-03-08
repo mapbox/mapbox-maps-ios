@@ -15,16 +15,12 @@ JOBS             ?= $(shell sysctl -n hw.ncpu)
 APP_NAME         ?= $(SCHEME)
 
 # Circle
-CIRCLE_CI_CLI       ?= /usr/local/bin/circleci
-CIRCLE_CI_BRANCH    ?= main
-CIRCLE_BUILD_NUM    ?= 0
+CIRCLE_CI_CLI       ?= /tmp/circleci
 
 # Derived variables
 BUILT_DEVICE_PRODUCTS_DIR := $(BUILD_DIR)/Build/Products/$(CONFIGURATION)-iphoneos
-XCTESTRUN_PACKAGE         := $(BUILD_DIR)/$(SCHEME)-$(CONFIGURATION)-testrun.zip
 TEST_ROOT                 := $(BUILD_DIR)/test-root
 PAYLOAD_DIR               := $(BUILD_DIR)/Payload
-DEVICE_TEST_PATH          := $(BUILD_DIR)/DeviceFarmResults
 
 # Netrc
 NETRC_FILE=~/.netrc
@@ -79,7 +75,7 @@ distclean: clean
 	-rm Apps/Apps.xcworkspace/xcshareddata/swiftpm/Package.resolved
 	-rm MapboxMaps.xcodeproj
 
-$(PAYLOAD_DIR) $(TEST_ROOT) $(DEVICE_TEST_PATH):
+$(PAYLOAD_DIR) $(TEST_ROOT):
 	-mkdir -p $@
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -113,6 +109,7 @@ test-sdk-without-building-simulator:
 		-destination 'platform=iOS Simulator,OS=latest,name=iPhone 11' \
 		-enableCodeCoverage YES \
 		test-without-building \
+		-resultBundlePath MapboxMapsTests.xcresult \
 		ONLY_ACTIVE_ARCH=YES
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -132,12 +129,6 @@ build-app-for-simulator:
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Devices - SDK
-
-USB_DEVICE_ID := $(strip $(shell system_profiler SPUSBDataType | sed -n -E -e "/(iPhone|iPad)/,/Serial/s/ *Serial Number: *(.+)/\1/p" ))
-
-ifneq ($(USB_DEVICE_ID),)
-USB_DEVICE_DESTINATION := -destination 'platform=ios,id=$(USB_DEVICE_ID)'
-endif
 
 # Xcode build command for building for device. The CODE_SIGNING_* variables are so that no code signing occurs on CI -
 # this is because AWS Device Farm re-signs the applications. This may need to change if a different provider is used.
@@ -161,48 +152,8 @@ build-sdk-for-device:
 		ONLY_ACTIVE_ARCH=NO \
 		$(CODE_SIGNING)
 
-# Testing on device uses the generated `xctestrun` file that gets created. When
-# testing on device, this along with the binaries are packaged into a Payload and
-# sent to Device Farm. The paths have to be particular (unless the xctestrun is
-# custom created). Examine the contents of the xctestrun file; __TESTROOT__ is
-# the directory where the xctestrun resides.
-
-# Example: make build-for-testing-device SCHEME=MapboxMaps
-.PHONY: build-for-testing-device
-build-for-testing-device: $(XCTESTRUN_PACKAGE)
-
 $(XCODE_PROJECT_FILE): project.yml
 	xcodegen
-
-# For the moment since this PR deals with testing unit-tests on device, this target
-# assumes that the tests require the "test host" app
-$(XCTESTRUN_PACKAGE): $(XCODE_PROJECT_FILE) | $(PAYLOAD_DIR) $(TEST_ROOT)
-ifneq ($(SCHEME),MapboxTestHost)
-ifneq ($(SCHEME),Examples)
-	$(error SCHEME should be MapboxTestHost or Examples)
-endif
-endif
-
-	# Build for testing
-	set -o pipefail && $(XCODE_BUILD_DEVICE) \
-		-scheme '$(SCHEME)' \
-		-enableCodeCoverage YES \
-		build-for-testing \
-		ENABLE_TESTABILITY=YES \
-		SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
-
-	# Gather app, frameworks and xctestrun
-	-mkdir $(TEST_ROOT)/$(CONFIGURATION)-iphoneos
-	touch $(TEST_ROOT)/$(CONFIGURATION)-iphoneos/copy-app-and-frameworks-here
-
-	# For use in Device Farm config
-	echo $(SCHEME) > $(TEST_ROOT)/scheme.txt
-	echo $(APP_NAME) > $(TEST_ROOT)/app_name.txt
-	echo $(CONFIGURATION) > $(TEST_ROOT)/configuration.txt
-	cp $(BUILT_DEVICE_PRODUCTS_DIR)/../$(SCHEME)_iphoneos*.xctestrun $(TEST_ROOT)/device.xctestrun
-
-	# Package as a zip
-	cd $(TEST_ROOT) && zip -r $@ -x.* .
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Devices - Apps
@@ -220,128 +171,15 @@ build-app-for-device:
 	set -o pipefail && $(XCODE_BUILD_DEVICE_APPS) -scheme '$(SCHEME)' build
 
 # ----------------------------------------------------------------------------------------------------------------------
-# Device Farm
-
-SHA                 := $(shell git describe --always --dirty)
-BUILD_NAME          := $(SCHEME)-$(CONFIGURATION)-$(SHA)-$(CIRCLE_BUILD_NUM)
-
-DEVICE_FARM_UPLOAD_IPA := $(BUILD_DIR)/upload.ipa
-DEVICE_FARM_RUN     := $(BUILD_DIR)/$(BUILD_NAME)-run.json
-DEVICE_FARM_RESULTS := $(BUILD_DIR)/$(BUILD_NAME)-results.json
-
-# Before a device test for a scheme, we need to clear out older schemes/test-runs
-# that may exist from testing a different scheme
-.PHONY: clean-for-device-build
-clean-for-device-build:
-	-rm $(XCTESTRUN_PACKAGE)
-	-rm $(DEVICE_FARM_UPLOAD_IPA)
-	-rm -rf $(BUILT_DEVICE_PRODUCTS_DIR)/*.framework
-	-rm -rf $(BUILT_DEVICE_PRODUCTS_DIR)/*.swiftmodule
-	-rm -rf $(BUILT_DEVICE_PRODUCTS_DIR)/../*.xctestrun
-
-# Trigger unit tests on device farm with
-# This requires the following environment variables to be set (which will be on CI). The first
-# two can be set by calling `mbx env`
-#
-#	AWS_ACCESS_KEY_ID
-#	AWS_SECRET_ACCESS_KEY
-#	AWS_DEVICE_FARM_PROJECT
-#	AWS_DEVICE_FARM_DEVICE_POOL
-#
-# 	make test-with-device-farm SCHEME=MapboxTestHost APP_NAME=MapboxTestHost
-#
-# If token expires while the tests are in progress, run `mbx env` again followed by restarting
-# the test call.
-
-.PHONY: clean-test-with-device-farm
-clean-test-with-device-farm: clean-for-device-build test-with-device-farm
-
-.PHONY: test-with-device-farm
-test-with-device-farm: $(DEVICE_FARM_RESULTS)
-	python3 ./scripts/device-farm/check_results_for_failure.py $(DEVICE_FARM_RESULTS)
-
-	# Remove the ipa
-	rm $(DEVICE_FARM_UPLOAD_IPA)
-
-# Wait for the previous scheduled run to complete and dump results/artifacts
-$(DEVICE_FARM_RESULTS): $(DEVICE_FARM_RUN)
-	-python3 ./scripts/device-farm/devicefarm.py \
-		$(DEVICE_FARM_PROJECT) \
-		--run-arn-file $(DEVICE_FARM_RUN) \
-		--artifacts-dir $(DEVICE_TEST_PATH) \
-		--output $(DEVICE_FARM_RESULTS)
-
-
-# This should match what happens on Device Farm (except for processing of results). The devicefarm.mk makefile
-# ought to match the contents of the testspec.yml file (ideally it would be shared).
-#
-# make local-test-with-device-farm-ipa SCHEME=MapboxTestHost APP_NAME=MapboxTestHost CONFIGURATION=Release ENABLE_CODE_SIGNING=1
-
-.PHONY: local-test-with-device-farm-ipa
-local-test-with-device-farm-ipa: $(DEVICE_FARM_UPLOAD_IPA)
-ifndef USB_DEVICE_DESTINATION
-	@echo "Please conntect a device via USB!"
-else
-	@echo "Connected to \"$(USB_DEVICE_ID)\""
-	make all -f scripts/device-farm/devicefarm.mk IPA_PATH=$(DEVICE_FARM_UPLOAD_IPA) DEVICE_UDID=$(USB_DEVICE_ID) ROOT=$(BUILD_DIR)/local-run-from-ipa
-endif
-
-	# Remove the ipa
-	rm $(DEVICE_FARM_UPLOAD_IPA)
-
-
-# Schedule a test run on multiple devices, but don't wait for the results, just
-# dump out the response from scheduling. We do this, as if you run locally the
-# AWS credentials can expire, so there needs to be a mechanism to pick up from
-# where we left the process.
-#
-# This was tried with using the APPIUM_NODE test type, but it appears that the
-# app & frameworks are not re-signed. Note that we're passing the same IPA twice
-# here - that's because XCTEST_UI can accept a test spec file, but needs two IPAs.
-
-$(DEVICE_FARM_RUN): $(DEVICE_FARM_UPLOAD_IPA)
-ifndef DEVICE_FARM_DEVICE_POOL
-	@echo "Please define DEVICE_FARM_DEVICE_POOL"
-	exit 1
-else
-	# Upload and start tests
-	python3 ./scripts/device-farm/devicefarm.py \
-		$(DEVICE_FARM_PROJECT) \
-		--name $(BUILD_NAME) \
-		--device-pool $(DEVICE_FARM_DEVICE_POOL) \
-		--ipa $(DEVICE_FARM_UPLOAD_IPA) \
-		--tests $(DEVICE_FARM_UPLOAD_IPA) \
-		--spec ./scripts/device-farm/testspec.yml \
-		--test-type XCTEST_UI \
-		--output $(DEVICE_FARM_RUN)
-endif
-
-.PHONY: make-device-farm-ipa
-make-device-farm-ipa: $(DEVICE_FARM_UPLOAD_IPA)
-
-$(DEVICE_FARM_UPLOAD_IPA): $(XCTESTRUN_PACKAGE) | $(DEVICE_TEST_PATH) $(PAYLOAD_DIR)
-	# Prepare the app
-	-rm -rf $(PAYLOAD_DIR)/*
-
-	# Creating IPA package for upload
-	cp -R $(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app $(PAYLOAD_DIR)
-
-	cp $(XCTESTRUN_PACKAGE) $(PAYLOAD_DIR)/$(APP_NAME).app/xctestrun.zip
-
-	-rm $(DEVICE_FARM_UPLOAD_IPA)
-	cd $(BUILD_DIR) && zip -r $(notdir $(DEVICE_FARM_UPLOAD_IPA)) Payload
-
-
-.PHONY: gather-results
-gather-results:
-	python3 ./scripts/device-farm/extract-xcresult.py --artifacts-dir $(BUILD_DIR) --output-dir $(BUILD_DIR)/testruns
+# Symbolication
 
 .PHONY: symbolicate
 symbolicate:
 	@echo Symbolicating crash reports
 
 	@export DEVELOPER_DIR=$$(xcode-select -p); \
-	CRASHES=`find $(DEVICE_TEST_PATH) -name Application_Crash_Report.ips` ; \
+	CRASHES=`find $(BUILD_DIR) -name *.ips` ; \
+	echo "crashes: $${CRASHES}"; \
 	for CRASH in $${CRASHES[@]} ; \
 	do \
 		if [ ! -f $${CRASH}.symbolicated.txt ]; then \
@@ -431,16 +269,11 @@ update-codecov-with-profdata:
 device-update-codecov-with-profdata:
 	make update-codecov-with-profdata \
 		COVERAGE_ARCH=arm64 \
-		COVERAGE_ROOT_DIR=$(BUILD_DIR)/testruns \
+		COVERAGE_ROOT_DIR=$(BUILD_DIR)/ \
 		COVERAGE_MAPBOX_MAPS='$(BUILT_DEVICE_PRODUCTS_DIR)/MapboxMaps.o'
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Dependencies
-
-.PHONY: install-devicefarm-dependencies
-install-devicefarm-dependencies:
-	brew install jq
-	pip3 install awscli requests
 
 $(NETRC_FILE):
 ifndef SDK_REGISTRY_TOKEN
@@ -459,4 +292,4 @@ validate: $(CIRCLE_CI_CLI)
 	$(CIRCLE_CI_CLI) config validate -c .circleci/config.yml
 
 $(CIRCLE_CI_CLI):
-	curl -fLSs https://circle.ci/cli | bash
+	curl -fLSs https://circle.ci/cli | DESTDIR=/tmp bash

@@ -4,54 +4,67 @@ set -euo pipefail
 
 #
 # Usage:
-#   ./scripts/release/create-github-draft-release.sh <tag name>
+#   ./scripts/release/create-github-draft-release.sh <version-without-v-prefix>
 #
 
-TAG=$1
+VERSION=$1
 
-# Variables needed for github actions
-GITHUB_TOKEN=$(./scripts/release/get_token.js)
+set -euo pipefail
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+UTILS_PATH="$SCRIPT_DIR/../utils.sh"
 
-# Set git config
-git config --global user.email "maps_sdk_ios@mapbox.com"
-git config --global user.name "Maps SDK github release bot"
+# shellcheck source=../utils.sh
+source "$UTILS_PATH"
 
-# URL for where we are posting a new release
-URL="https://api.github.com/repos/mapbox/mapbox-maps-ios/releases"
+main() {
+    GITHUB_TOKEN=$(mbx-ci github reader token)
+    export GITHUB_TOKEN
 
-# Custom message for release
-MESSAGE="### Dependency requirements:\n\
-\n\
-* Compatible version of MapboxCoreMaps:\n\
-* Compatible version of MapboxCommon:\n\
-* Compatible version of Xcode:\n\
-* Compatible version of macOS:\n\
-\n\
-### Changes\n\
-\n\
-<Compose changelog here>\n\
-\n\
-### Direct download\n\
-\n\
-Link to download binaries (append your own Mapbox access token [scoped with \`DOWNLOADS:READ\`](https://account.mapbox.com/)):\n\
-\n\
-\`\`\`\n\
-https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/$TAG/MapboxMaps.zip?access_token=<access-token>\n\
-\`\`\`"
+    VERSION_JSON_PATH="$SCRIPT_DIR/packager/versions.json"
 
-# Body that is passed to the POST request
-BODY="{\"tag_name\":\"v$TAG\",\"target_commitish\":\"main\",\"name\":\"v$TAG\",\"body\":\"$MESSAGE\",\"draft\":true,\"prerelease\":true}"
+    GL_NATIVE_RELEASE_URL=$(gh release view --repo mapbox/mapbox-gl-native-internal "maps-v$(jq -r .MapboxCoreMaps "$VERSION_JSON_PATH")" --json url -q .url)
+    COMMON_RELEASE_URL=$(gh release view --repo mapbox/mapbox-sdk-common "v$(jq -r .MapboxCommon "$VERSION_JSON_PATH")" --json url -q .url)
 
-# Performing the request using github API
-CURL_RESULT=0
-HTTP_CODE=$(curl $URL \
-    -H "Authorization: token $GITHUB_TOKEN" \
-    -H "Accept: application/vnd.github.v3+json" \
-    -d "$BODY" -w "%{response_code}") || CURL_RESULT=$?
+    MAPBOX_COMMON_VERSION=$(jq -r .MapboxCommon "$VERSION_JSON_PATH")
+    MAPBOX_COREMAPS_VERSION=$(jq -r .MapboxCoreMaps "$VERSION_JSON_PATH")
+    # The following python one-liner parses the CircleCI config and takes executor called 'xcode-sdk-min' and then checkout the macos xcode version.
+    # It's critical to have the same structure in CircleCI config in any place inside of file.
+    XCODE_MIN_VERSION=$(python3 -c "import yaml,sys;print(yaml.safe_load(sys.stdin)['executors']['xcode-sdk-min']['macos']['xcode'])" < "$SCRIPT_DIR/../../.circleci/config.yml")
 
-if [[ $CURL_RESULT != 0 ]]; then
-    echo "Failed to create draft release (curl error: $CURL_RESULT)"
-    exit $CURL_RESULT
-fi
+    CHANGELOG=$( ([[ $(command -v parse-changelog) ]] && parse-changelog CHANGELOG.md) || echo "<Compose changelog here>" )
 
-echo "Result from draft release creation: $HTTP_CODE"
+    cat << EOF > notes.txt
+### Dependency requirements:
+
+* Compatible version of MapboxCoreMaps: \`$MAPBOX_COREMAPS_VERSION\`
+* Compatible version of MapboxCommon: \`$MAPBOX_COMMON_VERSION\`
+* Compatible version of Xcode: \`$XCODE_MIN_VERSION\`
+
+### Changes
+
+$CHANGELOG
+
+### Dependencies
+- [GL Native]($GL_NATIVE_RELEASE_URL)
+- [Common]($COMMON_RELEASE_URL)
+
+### Direct download
+
+Link to download binaries (append your own Mapbox access token [scoped with \`DOWNLOADS:READ\`](https://account.mapbox.com/)):
+
+\`\`\`
+https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/$VERSION/MapboxMaps.zip?access_token=<access-token>
+\`\`\`
+EOF
+
+    PRODUCTION_DOCS_PR_URL=$(GITHUB_TOKEN=$(mbx-ci github writer public token) \
+        gh release create "v$VERSION" --repo mapbox/mapbox-maps-ios \
+            --prerelease \
+            --draft \
+            --title "v$VERSION" \
+            --notes-file notes.txt)
+
+    info "New Release: $PRODUCTION_DOCS_PR_URL"
+}
+
+main

@@ -7,7 +7,8 @@ class MapboxCompassOrnamentViewTests: XCTestCase {
 
     func testCompassVisibilityVisible() {
         // Given
-        let compass = MapboxCompassOrnamentView(visibility: .visible)
+        let compass = MapboxCompassOrnamentView()
+        compass.visibility = .visible
         // When
         compass.currentBearing = 0
         // Then
@@ -23,7 +24,8 @@ class MapboxCompassOrnamentViewTests: XCTestCase {
 
     func testCompassVisibilityHidden() {
         // Given
-        let compass = MapboxCompassOrnamentView(visibility: .hidden)
+        let compass = MapboxCompassOrnamentView()
+        compass.visibility = .hidden
         // When
         compass.currentBearing = 0
         // Then
@@ -39,7 +41,8 @@ class MapboxCompassOrnamentViewTests: XCTestCase {
 
     func testCompassVisibilityAdaptive() {
         // Given
-        let compass = MapboxCompassOrnamentView(visibility: .adaptive)
+        let compass = MapboxCompassOrnamentView()
+        compass.visibility = .adaptive
         // When
         compass.currentBearing = 0
         // Then
@@ -55,7 +58,7 @@ class MapboxCompassOrnamentViewTests: XCTestCase {
 
     func testCompassVisibilityStyleChanging() {
         // Given
-        let compass = MapboxCompassOrnamentView(visibility: .visible)
+        let compass = MapboxCompassOrnamentView()
         compass.currentBearing = 0
         // When
         compass.visibility = .visible
@@ -75,7 +78,7 @@ class MapboxCompassOrnamentViewTests: XCTestCase {
 
     func testCompassVisibilityStyleChangingWithBearing() {
         // Given
-        let compass = MapboxCompassOrnamentView(visibility: .visible)
+        let compass = MapboxCompassOrnamentView()
         compass.currentBearing = 30
         // When
         compass.visibility = .visible

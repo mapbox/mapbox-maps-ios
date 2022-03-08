@@ -29,10 +29,39 @@ public class OrnamentsManager: NSObject {
         }
     }
 
-    private let logoView: LogoView
-    private let scalebarView: MapboxScaleBarOrnamentView
-    private let compassView: MapboxCompassOrnamentView
-    private let attributionButton: InfoButtonOrnament
+    /// The view for the logo ornament. This view can be used to position other views relative to the logo
+    /// ornament, but it should not be manipulated. Use ``OrnamentOptions/logo`` to configure the
+    /// logo presentation if customization is needed.
+    public var logoView: UIView {
+        return _logoView
+    }
+
+    /// The view for the scale bar ornament. This view can be used to position other views relative to the
+    /// scale bar ornament, but it should not be manipulated. Use ``OrnamentOptions/scaleBar``
+    /// to configure the scale bar presentation if customization is needed.
+    public var scaleBarView: UIView {
+        return _scaleBarView
+    }
+
+    /// The view for the compass ornament. This view can be used to position other views relative to the
+    /// compass ornament, but it should not be manipulated. Use ``OrnamentOptions/compass`` to
+    /// configure the compass presentation if customization is needed..
+    public var compassView: UIView {
+        return _compassView
+    }
+
+    /// The view for the attribution button ornament. This view can be used to position other views relative
+    /// to the attribution button ornament, but it should not be manipulated. Use
+    /// ``OrnamentOptions/attributionButton`` to configure the attribution button presentation
+    /// if customization is needed..
+    public var attributionButton: UIView {
+        return _attributionButton
+    }
+
+    private let _logoView: LogoView
+    private let _scaleBarView: MapboxScaleBarOrnamentView
+    private let _compassView: MapboxCompassOrnamentView
+    private let _attributionButton: InfoButtonOrnament
 
     private var constraints = [NSLayoutConstraint]()
 
@@ -40,45 +69,47 @@ public class OrnamentsManager: NSObject {
                   view: UIView,
                   mapboxMap: MapboxMapProtocol,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol,
-                  infoButtonOrnamentDelegate: InfoButtonOrnamentDelegate) {
+                  infoButtonOrnamentDelegate: InfoButtonOrnamentDelegate,
+                  logoView: LogoView,
+                  scaleBarView: MapboxScaleBarOrnamentView,
+                  compassView: MapboxCompassOrnamentView,
+                  attributionButton: InfoButtonOrnament) {
         self.options = options
 
         // Logo View
-        logoView = LogoView(logoSize: .regular())
         logoView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(logoView)
+        self._logoView = logoView
 
         // Scalebar View
-        let scalebarView = MapboxScaleBarOrnamentView()
         // Check whether the scale bar is position on the right side of the map view.
         let scaleBarPosition = options.scaleBar.position
-        scalebarView.isOnRight = scaleBarPosition == .bottomRight || scaleBarPosition == .topRight
-        scalebarView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(scalebarView)
-        self.scalebarView = scalebarView
+        scaleBarView.isOnRight = scaleBarPosition == .bottomRight || scaleBarPosition == .topRight
+        scaleBarView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scaleBarView)
+        self._scaleBarView = scaleBarView
 
         // Compass View
-        let compassView = MapboxCompassOrnamentView(visibility: options.compass.visibility)
         compassView.translatesAutoresizingMaskIntoConstraints = false
         compassView.tapAction = {
             cameraAnimationsManager.cancelAnimations()
-            cameraAnimationsManager.ease(
+            cameraAnimationsManager.internalEase(
                 to: CameraOptions(bearing: 0),
                 duration: 0.3,
                 curve: .easeOut,
                 completion: nil)
         }
         view.addSubview(compassView)
-        self.compassView = compassView
+        self._compassView = compassView
 
         // Info Button
-        attributionButton = InfoButtonOrnament()
         attributionButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(attributionButton)
+        self._attributionButton = attributionButton
 
         super.init()
 
-        attributionButton.delegate = infoButtonOrnamentDelegate
+        _attributionButton.delegate = infoButtonOrnamentDelegate
 
         updateOrnaments()
 
@@ -86,16 +117,16 @@ public class OrnamentsManager: NSObject {
         // MapboxMap should not be allowed to own a strong ref to compassView
         // since compassView owns a tapAction that captures a strong ref to
         // cameraAnimationsManager which has a strong ref to mapboxMap.
-        mapboxMap.onEvery(.cameraChanged) { [weak mapboxMap, weak scalebarView, weak compassView] _ in
+        mapboxMap.onEvery(.cameraChanged) { [weak mapboxMap, weak scaleBarView, weak compassView] _ in
             guard let mapboxMap = mapboxMap,
-                  let scalebarView = scalebarView,
+                  let scaleBarView = scaleBarView,
                   let compassView = compassView else {
                 return
             }
             let cameraState = mapboxMap.cameraState
 
             // Update the scale bar
-            scalebarView.metersPerPoint = Projection.metersPerPoint(
+            scaleBarView.metersPerPoint = Projection.metersPerPoint(
                 for: cameraState.center.latitude,
                 zoom: cameraState.zoom)
 
@@ -110,24 +141,24 @@ public class OrnamentsManager: NSObject {
         constraints.removeAll()
 
         // Update the position for the ornaments
-        let logoViewConstraints = constraints(with: logoView,
+        let logoViewConstraints = constraints(with: _logoView,
                                               position: options.logo.position,
                                               margins: options.logo.margins)
         constraints.append(contentsOf: logoViewConstraints)
 
-        let compassViewConstraints = constraints(with: compassView,
+        let compassViewConstraints = constraints(with: _compassView,
                                                  position: options.compass.position,
                                                  margins: options.compass.margins)
         constraints.append(contentsOf: compassViewConstraints)
 
-        let scaleBarViewConstraints = constraints(with: scalebarView,
+        let scaleBarViewConstraints = constraints(with: _scaleBarView,
                                                   position: options.scaleBar.position,
                                                   margins: options.scaleBar.margins)
         let scaleBarPosition = options.scaleBar.position
-        scalebarView.isOnRight = scaleBarPosition == .bottomRight || scaleBarPosition == .topRight
+        _scaleBarView.isOnRight = scaleBarPosition == .bottomRight || scaleBarPosition == .topRight
         constraints.append(contentsOf: scaleBarViewConstraints)
 
-        let attributionButtonConstraints = constraints(with: attributionButton,
+        let attributionButtonConstraints = constraints(with: _attributionButton,
                                                        position: options.attributionButton.position,
                                                        margins: options.attributionButton.margins)
         constraints.append(contentsOf: attributionButtonConstraints)
@@ -135,11 +166,11 @@ public class OrnamentsManager: NSObject {
         // Activate new constraints
         NSLayoutConstraint.activate(constraints)
 
-        logoView.isHidden = options.logo.visibility == .hidden
-        scalebarView.isHidden = options.scaleBar.visibility == .hidden
-        compassView.visibility = options.compass.visibility
-        compassView.isHidden = options.compass.visibility == .hidden
-        attributionButton.isHidden = options.attributionButton.visibility == .hidden
+        _logoView.isHidden = options.logo.visibility == .hidden
+        _scaleBarView.isHidden = options.scaleBar.visibility == .hidden
+        _compassView.visibility = options.compass.visibility
+        _compassView.isHidden = options.compass.visibility == .hidden
+        _attributionButton.isHidden = options.attributionButton.visibility == .hidden
     }
 
     private func constraints(with view: UIView, position: OrnamentPosition, margins: CGPoint) -> [NSLayoutConstraint] {

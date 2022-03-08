@@ -97,7 +97,6 @@ public struct ResourceOptions {
 }
 
 extension ResourceOptions: Hashable {
-    /// :nodoc:
     public static func == (lhs: Self, rhs: Self) -> Bool {
         return (lhs.accessToken == rhs.accessToken)
             && ((lhs.baseURL == rhs.baseURL)
@@ -113,7 +112,6 @@ extension ResourceOptions: Hashable {
             && (lhs.tileStoreUsageMode == rhs.tileStoreUsageMode)
     }
 
-    /// :nodoc:
     public func hash(into hasher: inout Hasher) {
         hasher.combine(accessToken)
         hasher.combine(baseURL)
@@ -133,12 +131,10 @@ extension ResourceOptions: CustomStringConvertible, CustomDebugStringConvertible
         return result
     }
 
-    /// :nodoc:
     public var description: String {
         return "ResourceOptions: \(redactedAccessToken())"
     }
 
-    /// :nodoc:
     public var debugDescription: String {
         withUnsafePointer(to: self) {
             return "ResourceOptions @ \($0): \(redactedAccessToken())"

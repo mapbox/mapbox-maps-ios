@@ -6,7 +6,7 @@ __HELPERS_UTILS_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/nul
 step() { >&2 echo -e "\033[1m\033[36m* $*\033[0m"; }
 
 # Log a step with gray text color
-info() { >&2 echo -e "\033[1m\033[30m- $*\033[0m"; }
+info() { >&2 echo -e "\033[2m\033[37m- $*\033[0m"; }
 
 # Log an informational warning with yellow text color
 warning() { >&2 echo -e "\033[1m\033[33m! $*\033[0m"; }
@@ -17,6 +17,13 @@ error() { >&2 echo -e "\033[1m\033[31mⅹ $*\033[0m"; }
 # Log the completion with green text color
 finish() { >&2 echo -e "\033[1m\033[32m✔ $*\033[0m"; }
 
+brew_install_if_needed() {
+    local command=$1
+    if [[ ! $(command -v "$command") ]]; then
+        step "Homebrew: Install $command"
+        HOMEBREW_NO_ENV_HINTS=1 brew install -q "$command"
+    fi
+}
 
 replace_regex_in_file() {
     if [[ $# != 3 ]]; then

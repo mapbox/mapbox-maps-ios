@@ -1,5 +1,5 @@
 import XCTest
-@_spi(Experimental) @testable import MapboxMaps
+@testable import MapboxMaps
 
 final class GestureManagerTests: XCTestCase {
 
@@ -8,11 +8,11 @@ final class GestureManagerTests: XCTestCase {
     var panGestureHandler: MockPanGestureHandler!
     var pinchGestureHandler: MockPinchGestureHandler!
     var pitchGestureHandler: GestureHandler!
-    var doubleTapToZoomInGestureHandler: GestureHandler!
-    var doubleTouchToZoomOutGestureHandler: GestureHandler!
-    var quickZoomGestureHandler: GestureHandler!
+    var doubleTapToZoomInGestureHandler: MockFocusableGestureHandler!
+    var doubleTouchToZoomOutGestureHandler: MockFocusableGestureHandler!
+    var quickZoomGestureHandler: MockFocusableGestureHandler!
     var singleTapGestureHandler: GestureHandler!
-    var animationLockoutGestureHandler: GestureHandler!
+    var anyTouchGestureHandler: GestureHandler!
     var gestureManager: GestureManager!
     // swiftlint:disable:next weak_delegate
     var delegate: MockGestureManagerDelegate!
@@ -26,11 +26,13 @@ final class GestureManagerTests: XCTestCase {
         pinchGestureHandler = MockPinchGestureHandler(
             gestureRecognizer: MockGestureRecognizer())
         pitchGestureHandler = makeGestureHandler()
-        doubleTapToZoomInGestureHandler = makeGestureHandler()
-        doubleTouchToZoomOutGestureHandler = makeGestureHandler()
-        quickZoomGestureHandler = makeGestureHandler()
+        doubleTapToZoomInGestureHandler = MockFocusableGestureHandler(
+            gestureRecognizer: MockGestureRecognizer())
+        doubleTouchToZoomOutGestureHandler = MockFocusableGestureHandler(
+            gestureRecognizer: MockGestureRecognizer())
+        quickZoomGestureHandler = MockFocusableGestureHandler(gestureRecognizer: MockGestureRecognizer())
         singleTapGestureHandler = makeGestureHandler()
-        animationLockoutGestureHandler = makeGestureHandler()
+        anyTouchGestureHandler = makeGestureHandler()
         gestureManager = GestureManager(
             panGestureHandler: panGestureHandler,
             pinchGestureHandler: pinchGestureHandler,
@@ -39,7 +41,7 @@ final class GestureManagerTests: XCTestCase {
             doubleTouchToZoomOutGestureHandler: doubleTouchToZoomOutGestureHandler,
             quickZoomGestureHandler: quickZoomGestureHandler,
             singleTapGestureHandler: singleTapGestureHandler,
-            animationLockoutGestureHandler: animationLockoutGestureHandler,
+            anyTouchGestureHandler: anyTouchGestureHandler,
             mapboxMap: mapboxMap)
         delegate = MockGestureManagerDelegate()
         gestureManager.delegate = delegate
@@ -48,7 +50,7 @@ final class GestureManagerTests: XCTestCase {
     override func tearDown() {
         delegate = nil
         gestureManager = nil
-        animationLockoutGestureHandler = nil
+        anyTouchGestureHandler = nil
         singleTapGestureHandler = nil
         quickZoomGestureHandler = nil
         doubleTouchToZoomOutGestureHandler = nil
@@ -95,6 +97,10 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertTrue(gestureManager.quickZoomGestureRecognizer === quickZoomGestureHandler.gestureRecognizer)
     }
 
+    func testAnyTouchGestureRecognizer() {
+        XCTAssertTrue(gestureManager.anyTouchGestureRecognizer === anyTouchGestureHandler.gestureRecognizer)
+    }
+
     func testPanGestureHandlerDelegate() {
         XCTAssertTrue(panGestureHandler.delegate === gestureManager)
     }
@@ -127,7 +133,7 @@ final class GestureManagerTests: XCTestCase {
         let pinchGestureRecognizer = try XCTUnwrap(pinchGestureHandler.gestureRecognizer as? MockGestureRecognizer)
 
         XCTAssertEqual(pinchGestureRecognizer.requireToFailStub.invocations.count, 1)
-        XCTAssertTrue(pinchGestureRecognizer.requireToFailStub.parameters.first
+        XCTAssertTrue(pinchGestureRecognizer.requireToFailStub.invocations.first?.parameters
                         === panGestureHandler.gestureRecognizer)
     }
 
@@ -135,7 +141,7 @@ final class GestureManagerTests: XCTestCase {
         let pitchGestureRecognizer = try XCTUnwrap(pitchGestureHandler.gestureRecognizer as? MockGestureRecognizer)
 
         XCTAssertEqual(pitchGestureRecognizer.requireToFailStub.invocations.count, 1)
-        XCTAssertTrue(pitchGestureRecognizer.requireToFailStub.parameters.first
+        XCTAssertTrue(pitchGestureRecognizer.requireToFailStub.invocations.first?.parameters
                         === panGestureHandler.gestureRecognizer)
     }
 
@@ -143,7 +149,15 @@ final class GestureManagerTests: XCTestCase {
         let quickZoomGestureRecognizer = try XCTUnwrap(quickZoomGestureHandler.gestureRecognizer as? MockGestureRecognizer)
 
         XCTAssertEqual(quickZoomGestureRecognizer.requireToFailStub.invocations.count, 1)
-        XCTAssertTrue(quickZoomGestureRecognizer.requireToFailStub.parameters.first
+        XCTAssertTrue(quickZoomGestureRecognizer.requireToFailStub.invocations.first?.parameters
+                        === doubleTapToZoomInGestureHandler.gestureRecognizer)
+    }
+
+    func testSingleTapGestureRecognizerRequiresDoubleTapToZoomInGestureRecognizerToFail() throws {
+        let singleTapGestureRecognizer = try XCTUnwrap(singleTapGestureHandler.gestureRecognizer as? MockGestureRecognizer)
+
+        XCTAssertEqual(singleTapGestureRecognizer.requireToFailStub.invocations.count, 1)
+        XCTAssertTrue(singleTapGestureRecognizer.requireToFailStub.invocations.first?.parameters
                         === doubleTapToZoomInGestureHandler.gestureRecognizer)
     }
 
@@ -153,8 +167,8 @@ final class GestureManagerTests: XCTestCase {
         gestureManager.gestureBegan(for: gestureType)
 
         XCTAssertEqual(delegate.gestureDidBeginStub.invocations.count, 1, "GestureBegan should have been invoked once. It was called \(delegate.gestureDidBeginStub.invocations.count) times.")
-        XCTAssertTrue(delegate.gestureDidBeginStub.parameters.first?.gestureManager === gestureManager)
-        XCTAssertEqual(delegate.gestureDidBeginStub.parameters.first?.gestureType, gestureType)
+        XCTAssertTrue(delegate.gestureDidBeginStub.invocations.first?.parameters.gestureManager === gestureManager)
+        XCTAssertEqual(delegate.gestureDidBeginStub.invocations.first?.parameters.gestureType, gestureType)
         XCTAssertEqual(mapboxMap.beginGestureStub.invocations.count, 1)
     }
 
@@ -164,9 +178,9 @@ final class GestureManagerTests: XCTestCase {
         gestureManager.gestureEnded(for: gestureType, willAnimate: willAnimate)
 
         XCTAssertEqual(delegate.gestureDidEndStub.invocations.count, 1, "GestureEnded should have been invoked once. It was called \(delegate.gestureDidEndStub.invocations.count) times.")
-        XCTAssertTrue(delegate.gestureDidEndStub.parameters.first?.gestureManager === gestureManager)
-        XCTAssertEqual(delegate.gestureDidEndStub.parameters.first?.gestureType, gestureType)
-        let willAnimateValue = try XCTUnwrap(delegate.gestureDidEndStub.parameters.first?.willAnimate)
+        XCTAssertTrue(delegate.gestureDidEndStub.invocations.first?.parameters.gestureManager === gestureManager)
+        XCTAssertEqual(delegate.gestureDidEndStub.invocations.first?.parameters.gestureType, gestureType)
+        let willAnimateValue = try XCTUnwrap(delegate.gestureDidEndStub.invocations.first?.parameters.willAnimate)
         XCTAssertEqual(willAnimateValue, willAnimate)
         XCTAssertEqual(mapboxMap.endGestureStub.invocations.count, 1)
     }
@@ -177,8 +191,8 @@ final class GestureManagerTests: XCTestCase {
         gestureManager.animationEnded(for: gestureType)
 
         XCTAssertEqual(delegate.gestureDidEndAnimatingStub.invocations.count, 1, "animationEnded should have been invoked once. It was called \(delegate.gestureDidEndAnimatingStub.invocations.count) times.")
-        XCTAssertTrue(delegate.gestureDidEndAnimatingStub.parameters.first?.gestureManager === gestureManager)
-        XCTAssertEqual(delegate.gestureDidEndAnimatingStub.parameters.first?.gestureType, gestureType)
+        XCTAssertTrue(delegate.gestureDidEndAnimatingStub.invocations.first?.parameters.gestureManager === gestureManager)
+        XCTAssertEqual(delegate.gestureDidEndAnimatingStub.invocations.first?.parameters.gestureType, gestureType)
     }
 
     func testOptionsPanEnabled() {
@@ -331,7 +345,7 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertTrue(gestureManager.quickZoomGestureRecognizer.isEnabled)
     }
 
-    func testPanDecelerationFactor() {
+    func testOptionsPanDecelerationFactor() {
         XCTAssertEqual(gestureManager.options.panDecelerationFactor, UIScrollView.DecelerationRate.normal.rawValue)
         XCTAssertEqual(panGestureHandler.decelerationFactor, UIScrollView.DecelerationRate.normal.rawValue)
 
@@ -356,7 +370,7 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertEqual(panGestureHandler.decelerationFactor, UIScrollView.DecelerationRate.normal.rawValue)
     }
 
-    func testPanMode() {
+    func testOptionsPanMode() {
         XCTAssertEqual(gestureManager.options.panMode, .horizontalAndVertical)
         XCTAssertEqual(panGestureHandler.panMode, .horizontalAndVertical)
 
@@ -380,49 +394,102 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertEqual(gestureManager.options.panMode, panGestureHandler.panMode)
     }
 
-    func testPinchRotateEnabled() {
-        XCTAssertEqual(gestureManager.options.pinchRotateEnabled, true)
-        XCTAssertEqual(pinchGestureHandler.rotateEnabled, true)
+    func testOptionsPinchRotateEnabled() {
+        XCTAssertTrue(gestureManager.options.pinchRotateEnabled)
+        XCTAssertTrue(pinchGestureHandler.rotateEnabled)
 
         gestureManager.options.pinchRotateEnabled = false
 
-        XCTAssertEqual(gestureManager.options.pinchRotateEnabled, false)
-        XCTAssertEqual(pinchGestureHandler.rotateEnabled, false)
+        XCTAssertFalse(gestureManager.options.pinchRotateEnabled)
+        XCTAssertFalse(pinchGestureHandler.rotateEnabled)
 
         gestureManager.options.pinchRotateEnabled = true
 
-        XCTAssertEqual(gestureManager.options.pinchRotateEnabled, true)
-        XCTAssertEqual(pinchGestureHandler.rotateEnabled, true)
+        XCTAssertTrue(gestureManager.options.pinchRotateEnabled)
+        XCTAssertTrue(pinchGestureHandler.rotateEnabled)
 
         pinchGestureHandler.rotateEnabled = false
 
-        XCTAssertEqual(gestureManager.options.pinchRotateEnabled, pinchGestureHandler.rotateEnabled)
+        XCTAssertFalse(gestureManager.options.pinchRotateEnabled)
+        XCTAssertFalse(pinchGestureHandler.rotateEnabled)
 
         pinchGestureHandler.rotateEnabled = true
 
-        XCTAssertEqual(gestureManager.options.pinchRotateEnabled, pinchGestureHandler.rotateEnabled)
+        XCTAssertTrue(gestureManager.options.pinchRotateEnabled)
+        XCTAssertTrue(pinchGestureHandler.rotateEnabled)
     }
 
-    func testPinchBehavior() {
-        XCTAssertEqual(gestureManager.options.pinchBehavior, .tracksTouchLocationsWhenPanningAfterZoomChange)
-        XCTAssertEqual(pinchGestureHandler.behavior, .tracksTouchLocationsWhenPanningAfterZoomChange)
+    func testOptionsPinchZoomEnabled() {
+        XCTAssertTrue(gestureManager.options.pinchZoomEnabled)
+        XCTAssertTrue(pinchGestureHandler.zoomEnabled)
 
-        gestureManager.options.pinchBehavior = .doesNotResetCameraAtEachFrame
+        gestureManager.options.pinchZoomEnabled = false
 
-        XCTAssertEqual(gestureManager.options.pinchBehavior, .doesNotResetCameraAtEachFrame)
-        XCTAssertEqual(pinchGestureHandler.behavior, .doesNotResetCameraAtEachFrame)
+        XCTAssertFalse(gestureManager.options.pinchZoomEnabled)
+        XCTAssertFalse(pinchGestureHandler.zoomEnabled)
 
-        gestureManager.options.pinchBehavior = .tracksTouchLocationsWhenPanningAfterZoomChange
+        gestureManager.options.pinchZoomEnabled = true
 
-        XCTAssertEqual(gestureManager.options.pinchBehavior, .tracksTouchLocationsWhenPanningAfterZoomChange)
-        XCTAssertEqual(pinchGestureHandler.behavior, .tracksTouchLocationsWhenPanningAfterZoomChange)
+        XCTAssertTrue(gestureManager.options.pinchZoomEnabled)
+        XCTAssertTrue(pinchGestureHandler.zoomEnabled)
 
-        pinchGestureHandler.behavior = .doesNotResetCameraAtEachFrame
+        pinchGestureHandler.zoomEnabled = false
 
-        XCTAssertEqual(gestureManager.options.pinchBehavior, pinchGestureHandler.behavior)
+        XCTAssertFalse(gestureManager.options.pinchZoomEnabled)
+        XCTAssertFalse(pinchGestureHandler.zoomEnabled)
 
-        pinchGestureHandler.behavior = .tracksTouchLocationsWhenPanningAfterZoomChange
+        pinchGestureHandler.zoomEnabled = true
 
-        XCTAssertEqual(gestureManager.options.pinchBehavior, pinchGestureHandler.behavior)
+        XCTAssertTrue(gestureManager.options.pinchZoomEnabled)
+        XCTAssertTrue(pinchGestureHandler.zoomEnabled)
+    }
+
+    func testOptionsPinchPanEnabled() {
+        XCTAssertTrue(gestureManager.options.pinchPanEnabled)
+        XCTAssertTrue(pinchGestureHandler.panEnabled)
+
+        gestureManager.options.pinchPanEnabled = false
+
+        XCTAssertFalse(gestureManager.options.pinchPanEnabled)
+        XCTAssertFalse(pinchGestureHandler.panEnabled)
+
+        gestureManager.options.pinchPanEnabled = true
+
+        XCTAssertTrue(gestureManager.options.pinchPanEnabled)
+        XCTAssertTrue(pinchGestureHandler.panEnabled)
+
+        pinchGestureHandler.panEnabled = false
+
+        XCTAssertFalse(gestureManager.options.pinchPanEnabled)
+        XCTAssertFalse(pinchGestureHandler.panEnabled)
+
+        pinchGestureHandler.panEnabled = true
+
+        XCTAssertTrue(gestureManager.options.pinchPanEnabled)
+        XCTAssertTrue(pinchGestureHandler.panEnabled)
+    }
+
+    func testOptionsFocalPoint() {
+        XCTAssertNil(gestureManager.options.focalPoint)
+        XCTAssertNil(doubleTapToZoomInGestureHandler.focalPoint)
+        XCTAssertNil(doubleTouchToZoomOutGestureHandler.focalPoint)
+        XCTAssertNil(quickZoomGestureHandler.focalPoint)
+        XCTAssertNil(pinchGestureHandler.focalPoint)
+
+        let firstFocalPoint = CGPoint.random()
+        gestureManager.options.focalPoint = firstFocalPoint
+
+        XCTAssertEqual(gestureManager.options.focalPoint, firstFocalPoint)
+        XCTAssertEqual(doubleTapToZoomInGestureHandler.focalPoint, firstFocalPoint)
+        XCTAssertEqual(doubleTouchToZoomOutGestureHandler.focalPoint, firstFocalPoint)
+        XCTAssertEqual(quickZoomGestureHandler.focalPoint, firstFocalPoint)
+        XCTAssertEqual(pinchGestureHandler.focalPoint, firstFocalPoint)
+
+        gestureManager.options.focalPoint = nil
+
+        XCTAssertNil(doubleTapToZoomInGestureHandler.focalPoint)
+        XCTAssertNil(doubleTouchToZoomOutGestureHandler.focalPoint)
+        XCTAssertNil(quickZoomGestureHandler.focalPoint)
+        XCTAssertNil(pinchGestureHandler.focalPoint)
     }
 }

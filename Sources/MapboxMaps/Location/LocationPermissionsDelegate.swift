@@ -9,10 +9,10 @@ import CoreLocation
     ///   - error: An error object containing the reason why location tracking failed.
     @objc optional func locationManager(_ locationManager: LocationManager, didFailToLocateUserWithError error: Error)
 
-    /// Tells the delegate that an attempt to locate the user’s position failed.
+    /// Tells the delegate that the accuracy authorization has changed.
     /// - Parameters:
     ///   - locationManager: The location manager that is tracking the user’s location.
-    ///   - error: An error object containing the reason why location tracking failed.
+    ///   - accuracyAuthorization: The updated accuracy authorization value.
     @objc optional func locationManager(_ locationManager: LocationManager,
                                         didChangeAccuracyAuthorization accuracyAuthorization: CLAccuracyAuthorization)
 }

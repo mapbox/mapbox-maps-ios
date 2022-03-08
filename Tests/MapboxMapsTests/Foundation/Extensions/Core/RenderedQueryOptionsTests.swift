@@ -1,5 +1,5 @@
 import XCTest
-import MapboxMaps
+@testable import MapboxMaps
 
 final class RenderedQueryOptionsTests: XCTestCase {
 
@@ -17,8 +17,7 @@ final class RenderedQueryOptionsTests: XCTestCase {
         let filter = Exp(.abs) {
             Double.random(in: 0..<(.greatestFiniteMagnitude))
         }
-        let filterJSON = try JSONSerialization.jsonObject(with: JSONEncoder().encode(filter), options: [])
-        let filterJSONObject = try XCTUnwrap(filterJSON as? NSObject)
+        let filterJSONObject = try XCTUnwrap(filter.toJSON() as? NSObject)
 
         let options = RenderedQueryOptions(layerIds: layerIds, filter: filter)
 
@@ -37,7 +36,7 @@ final class RenderedQueryOptionsTests: XCTestCase {
         let filter = Exp(.abs) {
             Double.random(in: 0..<(.greatestFiniteMagnitude))
         }
-        let filterJSON = try JSONSerialization.jsonObject(with: JSONEncoder().encode(filter), options: [])
+        let filterJSON = try filter.toJSON()
 
         let options = RenderedQueryOptions(__layerIds: nil, filter: filterJSON)
 

@@ -65,21 +65,6 @@ final class FlyToCameraAnimatorTests: XCTestCase {
         XCTAssertEqual(flyToCameraAnimator.state, .inactive)
     }
 
-    func testInitializationWithANegativeDurationReturnsNil() {
-        XCTAssertNil(
-            FlyToCameraAnimator(
-                initial: initialCameraState,
-                final: finalCameraOptions,
-                cameraBounds: CameraBounds.default,
-                owner: AnimationOwner(rawValue: "fly-to"),
-                duration: -1,
-                mapSize: CGSize(width: 500, height: 500),
-                mapboxMap: mapboxMap,
-                dateProvider: dateProvider,
-                delegate: delegate)
-        )
-    }
-
     func testInitializationWithANilDurationSetsDurationToCalculatedValue() {
         let animator = FlyToCameraAnimator(
             initial: initialCameraState,
@@ -91,7 +76,7 @@ final class FlyToCameraAnimatorTests: XCTestCase {
             mapboxMap: mapboxMap,
             dateProvider: dateProvider,
             delegate: delegate)
-        XCTAssertNotNil(animator?.duration)
+        XCTAssertNotNil(animator.duration)
     }
 
     func testStartAnimationChangesStateToActiveAndInformsDelegate() {
@@ -99,7 +84,7 @@ final class FlyToCameraAnimatorTests: XCTestCase {
 
         XCTAssertEqual(flyToCameraAnimator.state, .active)
         XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 1)
-        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.parameters.first === flyToCameraAnimator)
+        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.invocations.first?.parameters === flyToCameraAnimator)
     }
 
     func testAnimationCompletion() {
@@ -115,7 +100,7 @@ final class FlyToCameraAnimatorTests: XCTestCase {
         XCTAssertEqual(flyToCameraAnimator.state, .inactive)
         XCTAssertEqual(animatingPositions, [.end])
         XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)
-        XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.parameters.first === flyToCameraAnimator)
+        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.invocations.first?.parameters === flyToCameraAnimator)
     }
 
     func testStopAnimation() {
@@ -130,7 +115,7 @@ final class FlyToCameraAnimatorTests: XCTestCase {
         XCTAssertEqual(animatingPositions, [.current])
         XCTAssertEqual(flyToCameraAnimator.state, .inactive)
         XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)
-        XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.parameters.first === flyToCameraAnimator)
+        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.invocations.first?.parameters === flyToCameraAnimator)
     }
 
     func testUpdateDoesNotSetCameraIfAnimationIsNotRunning() {

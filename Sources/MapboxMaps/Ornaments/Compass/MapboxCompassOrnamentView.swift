@@ -34,10 +34,9 @@ internal class MapboxCompassOrnamentView: UIButton {
         }
     }
 
-    required internal init(visibility: OrnamentVisibility) {
+    required internal init() {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
-        self.visibility = visibility
         containerView.isHidden = visibility != .visible
         let bundle = Bundle.mapboxMaps
         accessibilityLabel = NSLocalizedString("COMPASS_A11Y_LABEL",

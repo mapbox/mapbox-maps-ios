@@ -101,6 +101,10 @@ internal final class LocationProducer: LocationProducerProtocol {
             locationProvider.setDelegate(EmptyLocationProviderDelegate())
         }
         didSet {
+            // reinitialize latest values to mimic setup in init
+            latestCLLocation = nil
+            latestHeading = nil
+            latestAccuracyAuthorization = locationProvider.accuracyAuthorization
             locationProvider.setDelegate(self)
             syncIsUpdating()
         }
@@ -137,6 +141,9 @@ internal final class LocationProducer: LocationProducerProtocol {
     }
 
     private func notifyConsumers() {
+        guard isUpdating else {
+            return
+        }
         if let latestLocation = latestLocation {
             for consumer in _consumers.allObjects {
                 consumer.locationUpdate(newLocation: latestLocation)

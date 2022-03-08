@@ -3,16 +3,21 @@ import UIKit
 
 internal protocol CameraAnimationsManagerProtocol: AnyObject {
     @discardableResult
-    func ease(to camera: CameraOptions,
-              duration: TimeInterval,
-              curve: UIView.AnimationCurve,
-              completion: AnimationCompletion?) -> Cancelable?
+    func internalEase(to camera: CameraOptions,
+                      duration: TimeInterval,
+                      curve: UIView.AnimationCurve,
+                      completion: AnimationCompletion?) -> Cancelable
 
     func decelerate(location: CGPoint,
                     velocity: CGPoint,
                     decelerationFactor: CGFloat,
                     locationChangeHandler: @escaping (_ fromLocation: CGPoint, _ toLocation: CGPoint) -> Void,
                     completion: @escaping () -> Void)
+
+    func makeAnimator(duration: TimeInterval,
+                      curve: UIView.AnimationCurve,
+                      animationOwner: AnimationOwner,
+                      animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimator
 
     func cancelAnimations()
 
@@ -28,15 +33,12 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
     }
 
     /// Pointer HashTable for holding camera animators
-    private var cameraAnimatorsSet = WeakSet<CameraAnimatorInterface>()
+    private let cameraAnimatorsSet = WeakSet<CameraAnimatorInterface>()
 
     private var runningCameraAnimators = [CameraAnimator]()
 
     /// Internal camera animator used for animated transition
-    internal var internalAnimator: CameraAnimator?
-
-    /// May want to convert to an enum.
-    fileprivate let northBearing: CGFloat = 0
+    private var internalAnimator: CameraAnimator?
 
     internal var animationsEnabled: Bool = true
 
@@ -86,19 +88,16 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
                     duration: TimeInterval? = nil,
                     completion: AnimationCompletion? = nil) -> Cancelable? {
 
-        guard let flyToAnimator = FlyToCameraAnimator(
-                initial: mapboxMap.cameraState,
-                final: camera,
-                cameraBounds: mapboxMap.cameraBounds,
-                owner: AnimationOwner(rawValue: "com.mapbox.maps.cameraAnimationsManager.flyToAnimator"),
-                duration: duration,
-                mapSize: mapboxMap.size,
-                mapboxMap: mapboxMap,
-                dateProvider: DefaultDateProvider(),
-                delegate: self) else {
-            Log.warning(forMessage: "Unable to start fly-to animation", category: "CameraManager")
-            return nil
-        }
+        let flyToAnimator = FlyToCameraAnimator(
+            initial: mapboxMap.cameraState,
+            final: camera,
+            cameraBounds: mapboxMap.cameraBounds,
+            owner: AnimationOwner(rawValue: "com.mapbox.maps.cameraAnimationsManager.flyToAnimator"),
+            duration: duration,
+            mapSize: mapboxMap.size,
+            mapboxMap: mapboxMap,
+            dateProvider: DefaultDateProvider(),
+            delegate: self)
 
         // Stop the `internalAnimator` before beginning a `flyTo`
         internalAnimator?.stopAnimation()
@@ -132,6 +131,17 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
                      duration: TimeInterval,
                      curve: UIView.AnimationCurve = .easeOut,
                      completion: AnimationCompletion? = nil) -> Cancelable? {
+        return internalEase(to: camera, duration: duration, curve: curve, completion: completion)
+    }
+
+    /// Ease to implementation that returns non-optional cancelable. The public API should have
+    /// been like this, but we have to wait until the next major version to change it. This internal API
+    /// allows us to avoid force-unwrapping for internal use.
+    @discardableResult
+    internal func internalEase(to camera: CameraOptions,
+                               duration: TimeInterval,
+                               curve: UIView.AnimationCurve,
+                               completion: AnimationCompletion?) -> Cancelable {
 
         internalAnimator?.stopAnimation()
 
@@ -159,7 +169,7 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
         animator.startAnimation()
         internalAnimator = animator
 
-        return internalAnimator
+        return animator
     }
 
     // MARK: Animator Functions

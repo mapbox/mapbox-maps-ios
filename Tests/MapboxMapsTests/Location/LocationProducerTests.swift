@@ -129,11 +129,11 @@ final class LocationProducerTests: XCTestCase {
 
         for c in consumers {
             XCTAssertEqual(c.locationUpdateStub.invocations.count, 1)
-            XCTAssertTrue(c.locationUpdateStub.parameters.first?.location === locations[1])
+            XCTAssertTrue(c.locationUpdateStub.invocations.first?.parameters.location === locations[1])
             // accuracyAuthorization is populated with the value from the locationProvider
             // at the time of initialization. This value is only updated when the provider
             // notifies its delegate that the authorization has changed.
-            XCTAssertTrue(c.locationUpdateStub.parameters.first?.accuracyAuthorization == locationProvider.accuracyAuthorization)
+            XCTAssertTrue(c.locationUpdateStub.invocations.first?.parameters.accuracyAuthorization == locationProvider.accuracyAuthorization)
         }
     }
 
@@ -155,7 +155,7 @@ final class LocationProducerTests: XCTestCase {
 
         for c in consumers {
             XCTAssertEqual(c.locationUpdateStub.invocations.count, 1)
-            XCTAssertTrue(c.locationUpdateStub.parameters.first?.heading === heading)
+            XCTAssertTrue(c.locationUpdateStub.invocations.first?.parameters.heading === heading)
         }
     }
 
@@ -178,7 +178,7 @@ final class LocationProducerTests: XCTestCase {
 
         for c in consumers {
             XCTAssertEqual(c.locationUpdateStub.invocations.count, 1)
-            XCTAssertTrue(c.locationUpdateStub.parameters.first?.accuracyAuthorization == accuracyAuthorization)
+            XCTAssertTrue(c.locationUpdateStub.invocations.first?.parameters.accuracyAuthorization == accuracyAuthorization)
         }
     }
 
@@ -211,11 +211,11 @@ final class LocationProducerTests: XCTestCase {
         locationProducer.locationProvider = otherProvider
 
         XCTAssertEqual(locationProvider.setDelegateStub.invocations.count, 1)
-        let delegate = try XCTUnwrap(locationProvider.setDelegateStub.parameters.first)
+        let delegate = try XCTUnwrap(locationProvider.setDelegateStub.invocations.first?.parameters)
         XCTAssertTrue(delegate is EmptyLocationProviderDelegate)
 
         XCTAssertEqual(otherProvider.setDelegateStub.invocations.count, 1)
-        XCTAssertTrue(otherProvider.setDelegateStub.parameters.first === locationProducer)
+        XCTAssertTrue(otherProvider.setDelegateStub.invocations.first?.parameters === locationProducer)
 
         XCTAssertTrue(locationProvider.startUpdatingLocationStub.invocations.isEmpty)
         XCTAssertTrue(locationProvider.startUpdatingHeadingStub.invocations.isEmpty)
@@ -224,18 +224,50 @@ final class LocationProducerTests: XCTestCase {
     }
 
     func testSetLocationProviderWithConsumers() {
-        let otherProvider = MockLocationProvider()
-        otherProvider.authorizationStatus = .notDetermined
+        // populate location, heading, and accuracy authorization from the original location provider
+        let oldHeading = MockHeading()
+        locationProducer.locationProvider(locationProvider, didUpdateHeading: oldHeading)
+        let oldLocation = CLLocation.random()
+        locationProducer.locationProvider(locationProvider, didUpdateLocations: [oldLocation])
+        locationProvider.accuracyAuthorization = CLAccuracyAuthorization.reducedAccuracy
+        locationProducer.locationProviderDidChangeAuthorization(locationProvider)
+
+        // add a consumer
         locationProducer.add(consumer)
 
+        // set up the new provider
+        let otherProvider = MockLocationProvider()
+        otherProvider.authorizationStatus = .notDetermined
+        otherProvider.accuracyAuthorization = .random()
         locationProducer.locationProvider = otherProvider
 
+        // verify that the producer stops the old provider
         XCTAssertEqual(locationProvider.stopUpdatingLocationStub.invocations.count, 1)
         XCTAssertEqual(locationProvider.stopUpdatingHeadingStub.invocations.count, 1)
 
+        // verify that the producer starts the new provider
         XCTAssertEqual(otherProvider.requestWhenInUseAuthorizationStub.invocations.count, 1)
         XCTAssertEqual(otherProvider.startUpdatingLocationStub.invocations.count, 1)
         XCTAssertEqual(otherProvider.startUpdatingHeadingStub.invocations.count, 1)
+
+        // send a heading update from the new provider and verify that observers
+        // are not notified since the new provider has not yet produced a
+        // location
+        let newHeading = MockHeading()
+        locationProducer.locationProvider(locationProvider, didUpdateHeading: newHeading)
+
+        XCTAssertTrue(consumer.locationUpdateStub.invocations.isEmpty)
+
+        // send a location update and verify that the observers are notified
+        // with the correct value
+        let newLocation = CLLocation.random()
+        locationProducer.locationProvider(locationProvider, didUpdateLocations: [newLocation])
+
+        XCTAssertEqual(consumer.locationUpdateStub.invocations.count, 1)
+        let location = consumer.locationUpdateStub.invocations.first?.parameters
+        XCTAssertIdentical(location?.location, newLocation)
+        XCTAssertIdentical(location?.heading, newHeading)
+        XCTAssertEqual(location?.accuracyAuthorization, otherProvider.accuracyAuthorization)
     }
 
     func testSetLocationProviderWithRecentlyDeinitedConsumers() {
@@ -371,8 +403,8 @@ final class LocationProducerTests: XCTestCase {
         locationProducer.locationProvider(locationProvider, didFailWithError: error)
 
         XCTAssertEqual(delegate.didFailWithErrorStub.invocations.count, 1)
-        XCTAssertTrue(delegate.didFailWithErrorStub.parameters.first?.locationProducer === locationProducer)
-        let actualError = try XCTUnwrap(delegate.didFailWithErrorStub.parameters.first?.error)
+        XCTAssertTrue(delegate.didFailWithErrorStub.invocations.first?.parameters.locationProducer === locationProducer)
+        let actualError = try XCTUnwrap(delegate.didFailWithErrorStub.invocations.first?.parameters.error)
         XCTAssertTrue((actualError as? MockError) === error)
     }
 
@@ -392,8 +424,8 @@ final class LocationProducerTests: XCTestCase {
         locationProducer.locationProviderDidChangeAuthorization(locationProvider)
 
         XCTAssertEqual(delegate.didChangeAccuracyAuthorizationStub.invocations.count, 1)
-        XCTAssertTrue(delegate.didChangeAccuracyAuthorizationStub.parameters.first?.locationProducer === locationProducer)
-        XCTAssertEqual(delegate.didChangeAccuracyAuthorizationStub.parameters.first?.accuracyAuthorization, locationProvider.accuracyAuthorization)
+        XCTAssertTrue(delegate.didChangeAccuracyAuthorizationStub.invocations.first?.parameters.locationProducer === locationProducer)
+        XCTAssertEqual(delegate.didChangeAccuracyAuthorizationStub.invocations.first?.parameters.accuracyAuthorization, locationProvider.accuracyAuthorization)
     }
 
     func testDidChangeAuthorizationDoesNotNotifyDelegateIfAccuracyAuthorizationDidNotChange() {
@@ -419,7 +451,7 @@ final class LocationProducerTests: XCTestCase {
 
         if #available(iOS 14.0, *) {
             XCTAssertEqual(
-                locationProvider.requestTemporaryFullAccuracyAuthorizationStub.parameters,
+                locationProvider.requestTemporaryFullAccuracyAuthorizationStub.invocations.map(\.parameters),
                 ["LocationAccuracyAuthorizationDescription"])
         } else {
             XCTAssertTrue(locationProvider.requestTemporaryFullAccuracyAuthorizationStub.invocations.isEmpty)

@@ -47,18 +47,30 @@ final class DoubleTouchToZoomOutGestureHandlerTests: XCTestCase {
 
         gestureRecognizer.sendActions()
 
-        let tapLocation = try XCTUnwrap(gestureRecognizer.locationStub.returnedValues.first)
-        XCTAssertEqual(delegate.gestureBeganStub.parameters, [.doubleTouchToZoomOut])
+        let tapLocation = try XCTUnwrap(gestureRecognizer.locationStub.invocations.first?.returnValue)
+        XCTAssertEqual(delegate.gestureBeganStub.invocations.map(\.parameters), [.doubleTouchToZoomOut])
         XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 1)
-        XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.camera, CameraOptions(anchor: tapLocation, zoom: mapboxMap.cameraState.zoom - 1))
-        XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.duration, 0.3)
-        XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.curve, .easeOut)
-        XCTAssertEqual(delegate.gestureEndedStub.parameters.first?.gestureType, .doubleTouchToZoomOut)
-        let willAnimate = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.willAnimate)
+        XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.first?.parameters.camera, CameraOptions(anchor: tapLocation, zoom: mapboxMap.cameraState.zoom - 1))
+        XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.first?.parameters.duration, 0.3)
+        XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.first?.parameters.curve, .easeOut)
+        XCTAssertEqual(delegate.gestureEndedStub.invocations.first?.parameters.gestureType, .doubleTouchToZoomOut)
+        let willAnimate = try XCTUnwrap(delegate.gestureEndedStub.invocations.first?.parameters.willAnimate)
         XCTAssertTrue(willAnimate)
 
-        let easeToCompletion = try XCTUnwrap(cameraAnimationsManager.easeToStub.parameters.first?.completion)
+        let easeToCompletion = try XCTUnwrap(cameraAnimationsManager.easeToStub.invocations.first?.parameters.completion)
         easeToCompletion(.end)
-        XCTAssertEqual(delegate.animationEndedStub.parameters, [.doubleTouchToZoomOut])
+        XCTAssertEqual(delegate.animationEndedStub.invocations.map(\.parameters), [.doubleTouchToZoomOut])
+    }
+
+    func testFocalPoint() {
+        let focalPoint = CGPoint(x: 1000, y: 1000)
+        gestureHandler.focalPoint = focalPoint
+        gestureRecognizer.getStateStub.defaultReturnValue = .recognized
+        mapboxMap.cameraState = .random()
+
+        gestureRecognizer.sendActions()
+
+        XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 1)
+        XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.first?.parameters.camera.anchor, focalPoint)
     }
 }

@@ -133,12 +133,14 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         // Add labels for the toggles.
         let museumLabel = UILabel()
         museumLabel.text = "Show museums"
+        museumLabel.textColor = .darkText
         museumLabel.backgroundColor = .white
         museumLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(museumLabel)
 
         let contourLabel = UILabel()
         contourLabel.text = "Show contours"
+        contourLabel.textColor = .darkText
         contourLabel.backgroundColor = .white
         contourLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(contourLabel)
@@ -150,9 +152,9 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
             museumLabel.leadingAnchor.constraint(equalTo: museumSwitch.trailingAnchor, constant: 10),
             museumLabel.centerYAnchor.constraint(equalTo: museumSwitch.centerYAnchor),
             contourSwitch.topAnchor.constraint(equalTo: museumSwitch.bottomAnchor, constant: 20),
-            contourSwitch.leadingAnchor.constraint(equalTo: mapView.leadingAnchor, constant: 20),
-            contourLabel.centerYAnchor.constraint(equalTo: contourSwitch.centerYAnchor),
-            contourLabel.leadingAnchor.constraint(equalTo: contourSwitch.trailingAnchor, constant: 10)
+            contourSwitch.leadingAnchor.constraint(equalTo: mapView.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            contourLabel.leadingAnchor.constraint(equalTo: contourSwitch.trailingAnchor, constant: 10),
+            contourLabel.centerYAnchor.constraint(equalTo: contourSwitch.centerYAnchor)
         ])
     }
 }

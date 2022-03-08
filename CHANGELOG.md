@@ -2,6 +2,60 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## main
+
+* Update to MapboxCoreMaps 10.4.0-rc.1 and MapboxCommon 21.2.0-rc.1. ([#1158](https://github.com/mapbox/mapbox-maps-ios/pull/1158))
+* Enable explicit drawing behavior for metal view(call `draw()` explicitly instead of `setNeedsDisplay` when view's content need to be redrawn).([#1157](https://github.com/mapbox/mapbox-maps-ios/pull/1157))
+* Restore cancellation of animations on single tap. ([#1166](https://github.com/mapbox/mapbox-maps-ios/pull/1166))
+* Fix issue where invalid locations could be emitted when setting a custom location provider. ([#1172](https://github.com/mapbox/mapbox-maps-ios/pull/1172))
+* Fix crash in Puck2D when location accuracy authorization is reduced. ([#1173](https://github.com/mapbox/mapbox-maps-ios/pull/1173))
+
+## 10.4.0-beta.1 - February 23, 2022
+
+* Prevent rendering in background by pausing/resuming display link in response to application or scene lifecycle events. ([#1086](https://github.com/mapbox/mapbox-maps-ios/pull/1086))
+* Sync viewport and puck animations. ([#1090](https://github.com/mapbox/mapbox-maps-ios/pull/1090))
+* Add puckBearingEnabled property for location. ([#1107](https://github.com/mapbox/mapbox-maps-ios/pull/1107))
+* Fix camera change events being fired after map has stopped moving. ([#1118])(https://github.com/mapbox/mapbox-maps-ios/pull/1118))
+* Fix issue where single tap and double tap to zoom in gestures could recognize simultaneously. ([#1113](https://github.com/mapbox/mapbox-maps-ios/pull/1113))
+* Remove experimental GestureOptions.pinchBehavior property. ([#1125](https://github.com/mapbox/mapbox-maps-ios/pull/1125))
+* Update to MapboxCoreMaps 10.4.0-beta.1 and MapboxCommon 21.2.0-beta.1. ([#1126](https://github.com/mapbox/mapbox-maps-ios/pull/1126))
+* Exposed APIs to allow positioning of other views relative to the logoView, compassView, scaleBarView and attributionButton. ([#1130](https://github.com/mapbox/mapbox-maps-ios/pull/1130))
+* Add `GestureOptions.pinchPanEnabled` and `.pinchZoomEnabled`. ([#1092](https://github.com/mapbox/mapbox-maps-ios/pull/1092))
+* Fix an issue where pinch gesture emitted superfluous camera changed events. ([#1137](https://github.com/mapbox/mapbox-maps-ios/pull/1137))
+* Add focalPoint property to zoom and rotate gestures ([#1122](https://github.com/mapbox/mapbox-maps-ios/pull/1122))
+* Expose public initializers for `LayerInfo` and `SourceInfo`. ([#1144](https://github.com/mapbox/mapbox-maps-ios/pull/1144))
+* Add `ViewAnnotationManager.removeAll()` that removes all view annotations added before. Introduce `ViewAnnotationUpdateObserver` protocol for notifying when annotion views get their frames or visibility changed. Add `ViewAnnotationManager.addViewAnnotationUpdateObserver(_:)` and `ViewAnnotationManager.removeViewAnnotationUpdateObserver(_:)` to add and remove observers. ([#1136](https://github.com/mapbox/mapbox-maps-ios/pull/1136))
+
+## 10.3.0 - February 10, 2022
+
+* Updated to MapboxCoreMaps 10.3.2 and MapboxCommon 21.1.0. ([#1078](https://github.com/mapbox/mapbox-maps-ios/pull/1078), [#1091](https://github.com/mapbox/mapbox-maps-ios/pull/1091), [#1104](https://github.com/mapbox/mapbox-maps-ios/pull/1104))
+* Fixed compass button regression introduced in rc.1. ([#1083](https://github.com/mapbox/mapbox-maps-ios/pull/1083))
+* Removed pitch gesture change angle requirements to avoid map freezing during gesture. ([#1089](https://github.com/mapbox/mapbox-maps-ios/pull/1089))
+
+## 10.3.0-rc.1 – January 26, 2022
+
+* Exposed API to invalidate `OfflineRegion`. ([#1026](https://github.com/mapbox/mapbox-maps-ios/pull/1026))
+* Exposed API to set metadata for `OfflineRegion`. ([#1060](https://github.com/mapbox/mapbox-maps-ios/pull/1060))
+* Refined Viewport API. ([#1040](https://github.com/mapbox/mapbox-maps-ios/pull/1040), [#1050](https://github.com/mapbox/mapbox-maps-ios/pull/1050), [#1058](https://github.com/mapbox/mapbox-maps-ios/pull/1058))
+* Add extension function to show or hide bearing image. ([#980](https://github.com/mapbox/mapbox-maps-ios/pull/980))
+* Updated to MapboxCoreMaps 10.3.0-rc.1 and MapboxCommon 21.1.0-rc.1. ([#1051](https://github.com/mapbox/mapbox-maps-ios/pull/1051))
+* Add APIs to enable customizing 2D puck accuracy ring color. ([#1057](https://github.com/mapbox/mapbox-maps-ios/pull/1057))
+
+## 10.3.0-beta.1 - January 12, 2022
+
+* Exposed `triggerRepaint()` to allow manual map repainting.
+    ([#964](https://github.com/mapbox/mapbox-maps-ios/pull/964))
+* Exposed `TransitionOptions` to allow control over symbol fade duration.
+    ([#902](https://github.com/mapbox/mapbox-maps-ios/pull/902))
+* Added `Style.removeTerrain()` to allow removing terrain. ([#918](https://github.com/mapbox/mapbox-maps-ios/pull/918))
+* `Snapshotter` initialization now triggers a turnstyle event. ([#908](https://github.com/mapbox/mapbox-maps-ios/pull/908))
+* Fixed a bug where 2D puck location was never set when location accuracy authorization was reduced. ([#989](https://github.com/mapbox/mapbox-maps-ios/pull/989))
+* Fixed a bug where setting LocationManager.options would cause the LocationProvider to be reconfigured. ([#992](https://github.com/mapbox/mapbox-maps-ios/pull/992))
+
+## 10.2.0 - December 15, 2021
+* Update to MapboxCoreMaps 10.2.0 and MapboxCommon 21.0.1. ([#952](https://github.com/mapbox/mapbox-maps-ios/pull/952))
+* Fix the crash when MapView had zero width or height. ([#903](https://github.com/mapbox/mapbox-maps-ios/pull/903))
+
 ## 10.2.0-rc.1 - December 2, 2021
 
 * Removed experimental designation from persistent layer APIs. ([#849](https://github.com/mapbox/mapbox-maps-ios/pull/849))
@@ -25,6 +79,10 @@ Mapbox welcomes participation and contributions from everyone.
 * Updates pan and pinch gesture handling to work iteratively rather than based on initial state. ([#837](https://github.com/mapbox/mapbox-maps-ios/pull/837))
 * `AnnotationOrchestrator`, rather than the annotation managers, now manages the single-tap gesture recognizer for annotations. ([#840](https://github.com/mapbox/mapbox-maps-ios/pull/840))
 * Add view annotations feature, which enables the usage of custom UIView subclasses as annotations. ([#776](https://github.com/mapbox/mapbox-maps-ios/pull/776))
+
+## 10.1.2 - December 13, 2021
+
+* Fixed billing issue when upgrading Mapbox Maps SDK from v6 to v10. ([#943](https://github.com/mapbox/mapbox-maps-ios/pull/943))
 
 ## 10.1.1 - December 1, 2021
 
@@ -52,6 +110,10 @@ Mapbox welcomes participation and contributions from everyone.
 * Fixed a name collision between Swift symbols and `MapboxCoreMaps.Task`. ([#769](https://github.com/mapbox/mapbox-maps-ios/pull/769))
 * Fixed an issue that caused `queryFeatureExtension` to fail. ([#769](https://github.com/mapbox/mapbox-maps-ios/pull/769))
 * Updated `MapboxCoreMaps` to v10.1.0-beta and `MapboxCommon` to 20.1.0-rc.1. ([#769](https://github.com/mapbox/mapbox-maps-ios/pull/769))
+
+## 10.0.3 - December 13, 2021
+
+* Fixed billing issue when upgrading Mapbox Maps SDK from v6 to v10. ([#942](https://github.com/mapbox/mapbox-maps-ios/pull/942))
 
 ## 10.0.2 - November 29, 2021
 
@@ -496,11 +558,11 @@ Mapbox welcomes participation and contributions from everyone.
       * The setter for `BaseMapView.__map` is now private
       * `Snapshotter` no longer conforms to `Observer`, and the method it required is now internal.
   * The `BaseMapView.__map` property has been moved to `BaseMapView.mapboxMap.__map`. ([#280](https://github.com/mapbox/mapbox-maps-ios/pull/280))
-  * A `CameraOptions` struct has been introduced. This shadows the class of the same name from MapboxCoreMaps and. This avoids unintended sharing and better reflects the intended value semantics of the `CameraOptions` concept. ([#284](https://github.com/mapbox/mapbox-maps-ios/pull/284))  
+  * A `CameraOptions` struct has been introduced. This shadows the class of the same name from MapboxCoreMaps and. This avoids unintended sharing and better reflects the intended value semantics of the `CameraOptions` concept. ([#284](https://github.com/mapbox/mapbox-maps-ios/pull/284))
 
 - #### Dependencies
   * Updated dependencies to MapboxCoreMaps 10.0.0-beta.20 and MapboxCommon 11.0.1
-  * ResourceOptions now contains a `TileStore` instance. Tile store usage is enabled by default, the resource option `tileStoreEnabled` flag is introduced to disable it.  
+  * ResourceOptions now contains a `TileStore` instance. Tile store usage is enabled by default, the resource option `tileStoreEnabled` flag is introduced to disable it.
   * `TileStore` no longer returns cached responses for 401, 403 and unauthorized requests.
   * Fixed a bug where `TileStore` would not invoke completion closures (when client code did not keep a strong reference to the tile store instance).
 

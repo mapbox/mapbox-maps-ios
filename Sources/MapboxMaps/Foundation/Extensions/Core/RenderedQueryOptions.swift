@@ -1,7 +1,7 @@
 import Foundation
 @_implementationOnly import MapboxCommon_Private
 
-extension MapboxCoreMaps.RenderedQueryOptions {
+extension RenderedQueryOptions {
 
     /// Initialize a set of options to optimize feature querying
     /// - Parameters:
@@ -11,8 +11,7 @@ extension MapboxCoreMaps.RenderedQueryOptions {
         var filterJson: Any?
         if let filter = filter {
             do {
-                let filterData = try JSONEncoder().encode(filter)
-                filterJson = try JSONSerialization.jsonObject(with: filterData, options: [])
+                filterJson = try filter.toJSON()
             } catch {
                 Log.error(forMessage: "Filter expression could not be encoded", category: "RenderedQueryOptions")
             }

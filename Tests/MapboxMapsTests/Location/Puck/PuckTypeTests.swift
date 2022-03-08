@@ -62,4 +62,106 @@ internal class PuckTypeTests: XCTestCase {
 
         XCTAssertNotEqual(puck1, puck2)
     }
+
+    func testPuck2DConfigurationInitializerWithDefaultValues() {
+        let config = Puck2DConfiguration()
+
+        XCTAssertNil(config.topImage)
+        XCTAssertNil(config.bearingImage)
+        XCTAssertNil(config.shadowImage)
+        XCTAssertNil(config.scale)
+        XCTAssertFalse(config.showsAccuracyRing)
+        XCTAssertEqual(config.accuracyRingColor, UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3))
+        XCTAssertEqual(config.accuracyRingBorderColor, UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3))
+    }
+
+    func testPuck2DConfigurationInitializerWithNonDefaultValues() {
+        let topImage: UIImage? = .random(UIImage())
+        let bearingImage: UIImage? = .random(UIImage())
+        let shadowImage: UIImage? = .random(UIImage())
+        let scale: Value<Double>? = .random(.constant(.random(in: 0...10)))
+        let showsAccuracyRing: Bool = .random()
+
+        let config = Puck2DConfiguration(
+            topImage: topImage,
+            bearingImage: bearingImage,
+            shadowImage: shadowImage,
+            scale: scale,
+            showsAccuracyRing: showsAccuracyRing)
+
+        XCTAssertTrue(config.topImage === topImage)
+        XCTAssertTrue(config.bearingImage === bearingImage)
+        XCTAssertTrue(config.shadowImage === shadowImage)
+        XCTAssertEqual(config.scale, scale)
+        XCTAssertEqual(config.showsAccuracyRing, showsAccuracyRing)
+        XCTAssertEqual(config.accuracyRingColor, UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3))
+        XCTAssertEqual(config.accuracyRingBorderColor, UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3))
+    }
+
+    func testPuck2DConfigurationExtendedInitializerWithDefaultValues() {
+        // need to specify on of the extended params for swift to pick
+        // this overload
+        let config = Puck2DConfiguration(
+            accuracyRingColor: .black)
+
+        XCTAssertNil(config.topImage)
+        XCTAssertNil(config.bearingImage)
+        XCTAssertNil(config.shadowImage)
+        XCTAssertNil(config.scale)
+        XCTAssertFalse(config.showsAccuracyRing)
+        XCTAssertEqual(config.accuracyRingColor, .black)
+        XCTAssertEqual(config.accuracyRingBorderColor, UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3))
+
+        let config2 = Puck2DConfiguration(
+            accuracyRingBorderColor: .black)
+
+        XCTAssertNil(config2.topImage)
+        XCTAssertNil(config2.bearingImage)
+        XCTAssertNil(config2.shadowImage)
+        XCTAssertNil(config2.scale)
+        XCTAssertFalse(config2.showsAccuracyRing)
+        XCTAssertEqual(config2.accuracyRingColor, UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3))
+        XCTAssertEqual(config2.accuracyRingBorderColor, .black)
+    }
+
+    func testPuck2DConfigurationExtendedInitializerWithNonDefaultValues() {
+        let topImage: UIImage? = .random(UIImage())
+        let bearingImage: UIImage? = .random(UIImage())
+        let shadowImage: UIImage? = .random(UIImage())
+        let scale: Value<Double>? = .random(.constant(.random(in: 0...10)))
+        let showsAccuracyRing: Bool = .random()
+        let accuracyRingColor: UIColor = .random()
+        let accuracyRingBorderColor: UIColor = .random()
+
+        let config = Puck2DConfiguration(
+            topImage: topImage,
+            bearingImage: bearingImage,
+            shadowImage: shadowImage,
+            scale: scale,
+            showsAccuracyRing: showsAccuracyRing,
+            accuracyRingColor: accuracyRingColor,
+            accuracyRingBorderColor: accuracyRingBorderColor)
+
+        XCTAssertTrue(config.topImage === topImage)
+        XCTAssertTrue(config.bearingImage === bearingImage)
+        XCTAssertTrue(config.shadowImage === shadowImage)
+        XCTAssertEqual(config.scale, scale)
+        XCTAssertEqual(config.showsAccuracyRing, showsAccuracyRing)
+        XCTAssertEqual(config.accuracyRingColor, accuracyRingColor)
+        XCTAssertEqual(config.accuracyRingBorderColor, accuracyRingBorderColor)
+    }
+
+    func testPuck2DMakeDefault() {
+        let puck2D = Puck2DConfiguration.makeDefault()
+        XCTAssertEqual(puck2D.topImage, UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!)
+        XCTAssertNil(puck2D.bearingImage)
+        XCTAssertEqual(puck2D.shadowImage, UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!)
+    }
+
+    func testPuck2DMakeDefaultWithBearing() {
+        let puck2D = Puck2DConfiguration.makeDefault(showBearing: true)
+        XCTAssertEqual(puck2D.topImage, UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!)
+        XCTAssertNotNil(puck2D.bearingImage)
+        XCTAssertEqual(puck2D.shadowImage, UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!)
+    }
 }

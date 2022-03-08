@@ -17,13 +17,7 @@ public class Snapshotter {
 
     private let options: MapSnapshotOptions
 
-    private let eventHandlers = WeakSet<MapEventHandler>()
-
-    deinit {
-        eventHandlers.allObjects.forEach {
-            $0.cancel()
-        }
-    }
+    private let observable: MapboxObservableProtocol
 
     /// Initialize a `Snapshotter` instance
     /// - Parameters:
@@ -32,6 +26,18 @@ public class Snapshotter {
         self.options = options
         mapSnapshotter = MapSnapshotter(options: MapboxCoreMaps.MapSnapshotOptions(options))
         style = Style(with: mapSnapshotter)
+        observable = MapboxObservable(observable: mapSnapshotter)
+        EventsManager.shared(withAccessToken: options.resourceOptions.accessToken).sendTurnstile()
+    }
+
+    /// Enables injecting mocks when unit testing
+    internal init(options: MapSnapshotOptions,
+                  mapboxObservableProvider: (ObservableProtocol) -> MapboxObservableProtocol) {
+        self.options = options
+        mapSnapshotter = MapSnapshotter(options: MapboxCoreMaps.MapSnapshotOptions(options))
+        style = Style(with: mapSnapshotter)
+        observable = mapboxObservableProvider(mapSnapshotter)
+        EventsManager.shared(withAccessToken: options.resourceOptions.accessToken).sendTurnstile()
     }
 
     /// The size of the snapshot
@@ -253,7 +259,7 @@ public class Snapshotter {
     }
 }
 
-extension Snapshotter: ObservableProtocol {
+extension Snapshotter {
     /// Subscribes an observer to a list of events.
     ///
     /// `Snapshotter` holds a strong reference to `observer` while it is subscribed. To stop receiving
@@ -266,7 +272,7 @@ extension Snapshotter: ObservableProtocol {
     /// - Note:
     ///     Prefer `onNext(_:handler:)` and `onEvery(_:handler:)` to using this lower-level APIs
     public func subscribe(_ observer: Observer, events: [String]) {
-        mapSnapshotter.subscribe(for: observer, events: events)
+        observable.subscribe(observer, events: events)
     }
 
     /// Unsubscribes an observer from a list of events.
@@ -280,35 +286,44 @@ extension Snapshotter: ObservableProtocol {
     ///   - events: Array of event types to unsubscribe from. Pass an
     ///     empty array (the default) to unsubscribe from all events.
     public func unsubscribe(_ observer: Observer, events: [String] = []) {
-        if events.isEmpty {
-            mapSnapshotter.unsubscribe(for: observer)
-        } else {
-            mapSnapshotter.unsubscribe(for: observer, events: events)
-        }
+        observable.unsubscribe(observer, events: events)
     }
 }
 
 extension Snapshotter: MapEventsObservable {
+    /// Listen to a single occurrence of a Map event.
+    ///
+    /// This will observe the next (and only the next) event of the specified
+    /// type. After observation, the underlying subscriber will unsubscribe from
+    /// the map or snapshotter.
+    ///
+    /// If you need to unsubscribe before the event fires, call `cancel()` on
+    /// the returned `Cancelable` object.
+    ///
+    /// - Parameters:
+    ///   - eventType: The event type to listen to.
+    ///   - handler: The closure to execute when the event occurs.
+    ///
+    /// - Returns: A `Cancelable` object that you can use to stop listening for
+    ///     the event. This is especially important if you have a retain cycle in
+    ///     the handler.
     @discardableResult
     public func onNext(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
-        let handler = MapEventHandler(for: [eventType.rawValue],
-                                      observable: self) { event in
-            handler(event)
-            return true
-        }
-        eventHandlers.add(handler)
-        return handler
+        observable.onNext([eventType], handler: handler)
     }
 
+    /// Listen to multiple occurrences of a Map event.
+    ///
+    /// - Parameters:
+    ///   - eventType: The event type to listen to.
+    ///   - handler: The closure to execute when the event occurs.
+    ///
+    /// - Returns: A `Cancelable` object that you can use to stop listening for
+    ///     events. This is especially important if you have a retain cycle in
+    ///     the handler.
     @discardableResult
     public func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
-        let handler = MapEventHandler(for: [eventType.rawValue],
-                                      observable: self) { event in
-            handler(event)
-            return false
-        }
-        eventHandlers.add(handler)
-        return handler
+        observable.onEvery([eventType], handler: handler)
     }
 }
 

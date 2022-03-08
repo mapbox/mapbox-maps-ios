@@ -1,7 +1,11 @@
-@_spi(Experimental) @testable import MapboxMaps
+@testable import MapboxMaps
 
 final class MockPinchGestureHandler: GestureHandler, PinchGestureHandlerProtocol {
     var rotateEnabled: Bool = true
 
-    var behavior: PinchGestureBehavior = .tracksTouchLocationsWhenPanningAfterZoomChange
+    var zoomEnabled: Bool = true
+
+    var panEnabled: Bool = true
+
+    var focalPoint: CGPoint?
 }

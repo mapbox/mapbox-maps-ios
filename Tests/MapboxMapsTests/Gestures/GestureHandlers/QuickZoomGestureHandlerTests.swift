@@ -42,7 +42,7 @@ final class QuickZoomGestureHandlerTest: XCTestCase {
 
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(delegate.gestureBeganStub.parameters, [.quickZoom])
+        XCTAssertEqual(delegate.gestureBeganStub.invocations.map(\.parameters), [.quickZoom])
     }
 
     func testGestureChanged() throws {
@@ -59,10 +59,10 @@ final class QuickZoomGestureHandlerTest: XCTestCase {
         gestureRecognizer.locationStub.defaultReturnValue.y = 175
         gestureRecognizer.sendActions()
 
-        let initialLocation = try XCTUnwrap(gestureRecognizer.locationStub.returnedValues.first)
+        let initialLocation = try XCTUnwrap(gestureRecognizer.locationStub.invocations.first?.returnValue)
 
         XCTAssertEqual(
-            mapboxMap.setCameraStub.parameters,
+            mapboxMap.setCameraStub.invocations.map(\.parameters),
             [CameraOptions(
                 anchor: initialLocation,
                 zoom: initialZoom + 1)])
@@ -74,10 +74,24 @@ final class QuickZoomGestureHandlerTest: XCTestCase {
         gestureRecognizer.sendActions()
 
         XCTAssertEqual(delegate.gestureEndedStub.invocations.count, 1)
-        XCTAssertEqual(delegate.gestureEndedStub.parameters.first?.gestureType, .quickZoom)
+        XCTAssertEqual(delegate.gestureEndedStub.invocations.first?.parameters.gestureType, .quickZoom)
 
-        let willAnimate = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.willAnimate)
+        let willAnimate = try XCTUnwrap(delegate.gestureEndedStub.invocations.first?.parameters.willAnimate)
         XCTAssertFalse(willAnimate)
     }
 
+    func testFocalPoint() {
+        let focalPoint = CGPoint(x: 1000, y: 1000)
+        quickZoomHandler.focalPoint = focalPoint
+        mapboxMap.cameraState = .random()
+
+        gestureRecognizer.getStateStub.defaultReturnValue = .began
+        gestureRecognizer.sendActions()
+
+        gestureRecognizer.getStateStub.defaultReturnValue = .changed
+        gestureRecognizer.sendActions()
+
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 1)
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.first?.parameters.anchor, focalPoint)
+    }
 }

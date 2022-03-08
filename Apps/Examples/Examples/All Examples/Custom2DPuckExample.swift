@@ -58,6 +58,9 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         // Update puck config
         var configuration = Puck2DConfiguration(topImage: UIImage(named: "star"))
         configuration.showsAccuracyRing = showsAccuracyRing
+        configuration.accuracyRingColor = UIColor.skyBlue
+        configuration.accuracyRingBorderColor = UIColor.lightGray
+
         mapView.location.options.puckType = .puck2D(configuration)
 
         // Update button title
@@ -78,6 +81,6 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         // Constraints
         toggleAccuracyRadiusButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20.0).isActive = true
         toggleAccuracyRadiusButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20.0).isActive = true
-        toggleAccuracyRadiusButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 650.0).isActive = true
+        toggleAccuracyRadiusButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -100.0).isActive = true
     }
 }

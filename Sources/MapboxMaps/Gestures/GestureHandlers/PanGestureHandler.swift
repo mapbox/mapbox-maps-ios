@@ -112,7 +112,9 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
                 velocity: velocity.clamped(to: .zero, panMode: panMode),
                 decelerationFactor: decelerationFactor,
                 locationChangeHandler: pan(from:to:),
-                completion: endAnimation)
+                completion: { _ in
+                    self.endAnimation()
+                })
             endInteraction(willAnimate: true)
         case .cancelled:
             endInteraction(willAnimate: false)

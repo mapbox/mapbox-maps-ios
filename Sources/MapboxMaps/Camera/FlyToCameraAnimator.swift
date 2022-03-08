@@ -1,10 +1,16 @@
 import UIKit
 
-public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterface {
+/// An animator that evokes powered flight and an optional transition duration and timing function
+/// It seamlessly incorporates zooming and panning to help the user find their bearings even after
+/// traversing a great distance.
+///
+/// - SeeAlso: ``CameraAnimationsManager/fly(to:duration:completion:)``
+public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorProtocol {
 
     private let mapboxMap: MapboxMapProtocol
 
-    public private(set) var owner: AnimationOwner
+    /// The animator's owner
+    public let owner: AnimationOwner
 
     private let interpolator: FlyToInterpolator
 
@@ -20,7 +26,7 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
 
     private let dateProvider: DateProvider
 
-    private weak var delegate: CameraAnimatorDelegate?
+    internal weak var delegate: CameraAnimatorDelegate?
 
     internal init(initial: CameraState,
                   final: CameraOptions,
@@ -29,8 +35,7 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
                   duration: TimeInterval? = nil,
                   mapSize: CGSize,
                   mapboxMap: MapboxMapProtocol,
-                  dateProvider: DateProvider,
-                  delegate: CameraAnimatorDelegate) {
+                  dateProvider: DateProvider) {
         let flyToInterpolator = FlyToInterpolator(from: initial, to: final, cameraBounds: cameraBounds, size: mapSize)
         if let duration = duration {
             precondition(duration >= 0)
@@ -41,7 +46,6 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         self.finalCameraOptions = final
         self.duration = duration ?? flyToInterpolator.duration()
         self.dateProvider = dateProvider
-        self.delegate = delegate
     }
 
     public func stopAnimation() {

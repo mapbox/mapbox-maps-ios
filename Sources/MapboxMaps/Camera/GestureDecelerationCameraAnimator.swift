@@ -1,6 +1,6 @@
 import UIKit
 
-internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimatorInterface {
+internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimatorProtocol {
 
     private let location: CGPoint
     private var velocity: CGPoint
@@ -8,27 +8,40 @@ internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimator
     private let locationChangeHandler: (_ fromLocation: CGPoint, _ toLocation: CGPoint) -> Void
     private var previousDate: Date?
     private let dateProvider: DateProvider
-    private weak var delegate: CameraAnimatorDelegate?
-    internal var completion: (() -> Void)?
+    internal let owner: AnimationOwner
+    internal weak var delegate: CameraAnimatorDelegate?
+    private var completionBlocks = [AnimationCompletion]()
 
     internal init(location: CGPoint,
                   velocity: CGPoint,
                   decelerationFactor: CGFloat,
+                  owner: AnimationOwner,
                   locationChangeHandler: @escaping (_ fromLocation: CGPoint, _ toLocation: CGPoint) -> Void,
-                  dateProvider: DateProvider,
-                  delegate: CameraAnimatorDelegate) {
+                  dateProvider: DateProvider) {
         self.location = location
         self.velocity = velocity
         self.decelerationFactor = decelerationFactor
+        self.owner = owner
         self.locationChangeHandler = locationChangeHandler
         self.dateProvider = dateProvider
-        self.delegate = delegate
     }
 
     internal private(set) var state: UIViewAnimatingState = .inactive
 
     internal func cancel() {
         stopAnimation()
+    }
+
+    internal func addCompletion(_ completion: @escaping AnimationCompletion) {
+        completionBlocks.append(completion)
+    }
+
+    private func invokeCompletionBlocks(with position: UIViewAnimatingPosition) {
+        let blocks = completionBlocks
+        for block in blocks {
+            block(position)
+        }
+        completionBlocks.removeAll()
     }
 
     internal func startAnimation() {
@@ -40,8 +53,7 @@ internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimator
     internal func stopAnimation() {
         state = .inactive
         delegate?.cameraAnimatorDidStopRunning(self)
-        completion?()
-        completion = nil
+        invokeCompletionBlocks(with: .current)
     }
 
     internal func update() {
@@ -71,7 +83,9 @@ internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimator
         velocity.y *= pow(decelerationFactor, (elapsedTime * 1000))
 
         if abs(velocity.x) < 20, abs(velocity.y) < 20 {
-            stopAnimation()
+            state = .inactive
+            delegate?.cameraAnimatorDidStopRunning(self)
+            invokeCompletionBlocks(with: .end)
         }
     }
 }

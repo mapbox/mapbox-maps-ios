@@ -12,7 +12,7 @@ internal protocol CameraAnimationsManagerProtocol: AnyObject {
                     velocity: CGPoint,
                     decelerationFactor: CGFloat,
                     locationChangeHandler: @escaping (_ fromLocation: CGPoint, _ toLocation: CGPoint) -> Void,
-                    completion: @escaping () -> Void)
+                    completion: AnimationCompletion?)
 
     func makeAnimator(duration: TimeInterval,
                       curve: UIView.AnimationCurve,
@@ -33,7 +33,7 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
     }
 
     /// Pointer HashTable for holding camera animators
-    private let cameraAnimatorsSet = WeakSet<CameraAnimatorInterface>()
+    private let cameraAnimatorsSet = WeakSet<CameraAnimatorProtocol>()
 
     private var runningCameraAnimators = [CameraAnimator]()
 
@@ -92,12 +92,12 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
             initial: mapboxMap.cameraState,
             final: camera,
             cameraBounds: mapboxMap.cameraBounds,
-            owner: AnimationOwner(rawValue: "com.mapbox.maps.cameraAnimationsManager.flyToAnimator"),
+            owner: .cameraAnimationsManager,
             duration: duration,
             mapSize: mapboxMap.size,
             mapboxMap: mapboxMap,
-            dateProvider: DefaultDateProvider(),
-            delegate: self)
+            dateProvider: DefaultDateProvider())
+        flyToAnimator.delegate = self
 
         // Stop the `internalAnimator` before beginning a `flyTo`
         internalAnimator?.stopAnimation()
@@ -145,7 +145,7 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
 
         internalAnimator?.stopAnimation()
 
-        let animator = makeAnimator(duration: duration, curve: curve) { (transition) in
+        let animator = makeAnimator(duration: duration, curve: curve, animationOwner: .cameraAnimationsManager) { (transition) in
             transition.center.toValue = camera.center
             transition.padding.toValue = camera.padding
             // don't animate the anchor since that's unlikely to be the caller's intent
@@ -193,8 +193,8 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
             propertyAnimator: propertyAnimator,
             owner: animationOwner,
             mapboxMap: mapboxMap,
-            cameraView: makeCameraView(),
-            delegate: self)
+            cameraView: makeCameraView())
+        cameraAnimator.delegate = self
         cameraAnimator.addAnimations(animations)
         cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
@@ -222,8 +222,8 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
             propertyAnimator: propertyAnimator,
             owner: animationOwner,
             mapboxMap: mapboxMap,
-            cameraView: makeCameraView(),
-            delegate: self)
+            cameraView: makeCameraView())
+        cameraAnimator.delegate = self
         cameraAnimator.addAnimations(animations)
         cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
@@ -253,8 +253,8 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
             propertyAnimator: propertyAnimator,
             owner: animationOwner,
             mapboxMap: mapboxMap,
-            cameraView: makeCameraView(),
-            delegate: self)
+            cameraView: makeCameraView())
+        cameraAnimator.delegate = self
         cameraAnimator.addAnimations(animations)
         cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
@@ -283,8 +283,8 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
             propertyAnimator: propertyAnimator,
             owner: animationOwner,
             mapboxMap: mapboxMap,
-            cameraView: makeCameraView(),
-            delegate: self)
+            cameraView: makeCameraView())
+        cameraAnimator.delegate = self
         cameraAnimator.addAnimations(animations)
         cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
@@ -307,7 +307,7 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
                              velocity: CGPoint,
                              decelerationFactor: CGFloat,
                              locationChangeHandler: @escaping (_ fromLocation: CGPoint, _ toLocation: CGPoint) -> Void,
-                             completion: @escaping () -> Void) {
+                             completion: AnimationCompletion?) {
 
         // Stop the `internalAnimator` before beginning a deceleration
         internalAnimator?.stopAnimation()
@@ -316,15 +316,16 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
             location: location,
             velocity: velocity,
             decelerationFactor: decelerationFactor,
+            owner: .cameraAnimationsManager,
             locationChangeHandler: locationChangeHandler,
-            dateProvider: DefaultDateProvider(),
-            delegate: self)
+            dateProvider: DefaultDateProvider())
+        decelerateAnimator.delegate = self
 
-        decelerateAnimator.completion = { [weak self, weak decelerateAnimator] in
+        decelerateAnimator.addCompletion { [weak self, weak decelerateAnimator] (position) in
            if self?.internalAnimator === decelerateAnimator {
                self?.internalAnimator = nil
            }
-           completion()
+           completion?(position)
         }
 
         cameraAnimatorsSet.add(decelerateAnimator)
@@ -345,7 +346,7 @@ extension CameraAnimationsManager: CameraAnimatorDelegate {
     ///
     /// Moving this responsibility to `CameraAnimationsManager` means that if the `MapView` is
     /// deallocated, these strong references will be released as well.
-    func cameraAnimatorDidStartRunning(_ cameraAnimator: CameraAnimator) {
+    func cameraAnimatorDidStartRunning(_ cameraAnimator: CameraAnimatorProtocol) {
         if !runningCameraAnimators.contains(where: { $0 === cameraAnimator }) {
             runningCameraAnimators.append(cameraAnimator)
             mapboxMap.beginAnimation()
@@ -358,7 +359,7 @@ extension CameraAnimationsManager: CameraAnimatorDelegate {
     ///
     /// See `cameraAnimatorDidStartRunning(_:)` for further discussion of the rationale for this
     /// architecture.
-    func cameraAnimatorDidStopRunning(_ cameraAnimator: CameraAnimator) {
+    func cameraAnimatorDidStopRunning(_ cameraAnimator: CameraAnimatorProtocol) {
         if runningCameraAnimators.contains(where: { $0 === cameraAnimator }) {
             runningCameraAnimators.removeAll { $0 === cameraAnimator }
             mapboxMap.endAnimation()

@@ -26,33 +26,40 @@ let cameraStateTestValue = CameraState(
 final class BasicCameraAnimatorTests: XCTestCase {
 
     var propertyAnimator: MockPropertyAnimator!
+    var owner: AnimationOwner!
     var cameraView: MockCameraView!
     var mapboxMap: MockMapboxMap!
+    var animator: BasicCameraAnimator!
     // swiftlint:disable:next weak_delegate
     var delegate: MockCameraAnimatorDelegate!
-    var animator: BasicCameraAnimator!
 
     override func setUp() {
         super.setUp()
         propertyAnimator = MockPropertyAnimator()
+        owner = .random()
         cameraView = MockCameraView()
         mapboxMap = MockMapboxMap()
-        delegate = MockCameraAnimatorDelegate()
         animator = BasicCameraAnimator(
             propertyAnimator: propertyAnimator,
-            owner: .unspecified,
+            owner: owner,
             mapboxMap: mapboxMap,
-            cameraView: cameraView,
-            delegate: delegate)
+            cameraView: cameraView)
+        delegate = MockCameraAnimatorDelegate()
+        animator.delegate = delegate
     }
 
     override func tearDown() {
-        animator = nil
         delegate = nil
+        animator = nil
         mapboxMap = nil
         cameraView = nil
+        owner = nil
         propertyAnimator = nil
         super.tearDown()
+    }
+
+    func testOwner() {
+        XCTAssertEqual(animator.owner, owner)
     }
 
     func testDeinit() {

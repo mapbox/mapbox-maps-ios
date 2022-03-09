@@ -59,7 +59,9 @@ class AttributionTests: XCTestCase {
     }
 
     func testPlainTextAttributionParsing() throws {
-        let attributionString = String.randomASCII(withLength: 10)
+        var characterSet = CharacterSet(charactersIn: "©")
+        characterSet.formUnion(.whitespacesAndNewlines)
+        let attributionString = String.randomASCII(withLength: 10).trimmingCharacters(in: characterSet)
 
         let attributions = Attribution.parse([attributionString])
 

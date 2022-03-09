@@ -179,6 +179,8 @@ workflows:
       - release-precheck:
           <<: *release-anchor
           requires: [ ]
+      - trigger-metrics-v2:
+          <<: *release-anchor
       - build-dynamic:
           <<: *release-anchor
       - build-static:

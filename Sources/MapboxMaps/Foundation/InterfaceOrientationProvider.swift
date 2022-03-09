@@ -2,8 +2,18 @@ import Foundation
 import UIKit
 import CoreLocation
 
+/// A protocol that supplies current interface orientation for the specified view.
+///
+/// Use this protocol when the map view is used in non-application target(e.g. application extension target).
 @available(iOS, deprecated: 13)
 public protocol InterfaceOrientationProvider {
+
+    /// Asks the provider for the interface orientation of the provided view.
+    ///
+    /// When a device is rotated map view passes current interface orientation to its location producer in order to ensure heading is displayed correctly.
+    /// - Parameters:
+    ///   - view: The view to get interface orientation from.
+    /// - Returns: The interface orientation for the provided view.
     func interfaceOrientation(for view: UIView) -> UIInterfaceOrientation?
 }
 

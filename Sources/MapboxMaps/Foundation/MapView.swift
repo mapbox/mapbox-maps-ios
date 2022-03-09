@@ -196,6 +196,13 @@ open class MapView: UIView {
                   urlOpener: DefaultAttributionURLOpener())
     }
 
+    /// Initialize a MapView
+    /// - Parameters:
+    ///   - frame: frame for the MapView.
+    ///   - mapInitOptions: `MapInitOptions`; default uses
+    ///    `ResourceOptionsManager.default` to retrieve a shared default resource option, including the access token.
+    ///   - orientationProvider: User interface orientation provider
+    ///   - urlOpener: Attribution URL opener
     @available(iOS, deprecated: 13, message: "Use init(frame:mapInitOptions:urlOpener:) instead")
     public convenience init(frame: CGRect,
                             mapInitOptions: MapInitOptions = MapInitOptions(),
@@ -208,6 +215,12 @@ open class MapView: UIView {
                   urlOpener: urlOpener)
     }
 
+    /// Initialize a MapView
+    /// - Parameters:
+    ///   - frame: frame for the MapView.
+    ///   - mapInitOptions: `MapInitOptions`; default uses
+    ///    `ResourceOptionsManager.default` to retrieve a shared default resource option, including the access token.
+    ///   - urlOpener: Attribution URL opener
     @available(iOS 13.0, *)
     public convenience init(frame: CGRect,
                             mapInitOptions: MapInitOptions = MapInitOptions(),

@@ -89,12 +89,9 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
                     completion: AnimationCompletion? = nil) -> Cancelable? {
 
         let flyToAnimator = FlyToCameraAnimator(
-            initial: mapboxMap.cameraState,
-            final: camera,
-            cameraBounds: mapboxMap.cameraBounds,
+            toCamera: camera,
             owner: .cameraAnimationsManager,
             duration: duration,
-            mapSize: mapboxMap.size,
             mapboxMap: mapboxMap,
             dateProvider: DefaultDateProvider())
         flyToAnimator.delegate = self

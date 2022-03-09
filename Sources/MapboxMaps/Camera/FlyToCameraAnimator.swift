@@ -28,22 +28,23 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorProtoc
 
     internal weak var delegate: CameraAnimatorDelegate?
 
-    internal init(initial: CameraState,
-                  final: CameraOptions,
-                  cameraBounds: CameraBounds,
+    internal init(toCamera: CameraOptions,
                   owner: AnimationOwner,
                   duration: TimeInterval? = nil,
-                  mapSize: CGSize,
                   mapboxMap: MapboxMapProtocol,
                   dateProvider: DateProvider) {
-        let flyToInterpolator = FlyToInterpolator(from: initial, to: final, cameraBounds: cameraBounds, size: mapSize)
+        let flyToInterpolator = FlyToInterpolator(
+                    from: mapboxMap.cameraState,
+                    to: toCamera,
+                    cameraBounds: mapboxMap.cameraBounds,
+                    size: mapboxMap.size)
         if let duration = duration {
             precondition(duration >= 0)
         }
         self.interpolator = flyToInterpolator
         self.mapboxMap = mapboxMap
         self.owner = owner
-        self.finalCameraOptions = final
+        self.finalCameraOptions = toCamera
         self.duration = duration ?? flyToInterpolator.duration()
         self.dateProvider = dateProvider
     }

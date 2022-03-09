@@ -38,14 +38,14 @@ final class FlyToCameraAnimatorTests: XCTestCase {
         super.setUp()
         owner = .random()
         mapboxMap = MockMapboxMap()
+        mapboxMap.cameraState = initialCameraState
+        mapboxMap.cameraBounds = .default
+        mapboxMap.size = CGSize(width: 500, height: 500)
         dateProvider = MockDateProvider()
         flyToCameraAnimator = FlyToCameraAnimator(
-            initial: initialCameraState,
-            final: finalCameraOptions,
-            cameraBounds: CameraBounds.default,
+            toCamera: finalCameraOptions,
             owner: owner,
             duration: duration,
-            mapSize: CGSize(width: 500, height: 500),
             mapboxMap: mapboxMap,
             dateProvider: dateProvider)
         delegate = MockCameraAnimatorDelegate()
@@ -65,19 +65,6 @@ final class FlyToCameraAnimatorTests: XCTestCase {
         XCTAssertEqual(flyToCameraAnimator.owner, owner)
         XCTAssertEqual(flyToCameraAnimator.duration, duration)
         XCTAssertEqual(flyToCameraAnimator.state, .inactive)
-    }
-
-    func testInitializationWithANilDurationSetsDurationToCalculatedValue() {
-        let animator = FlyToCameraAnimator(
-            initial: initialCameraState,
-            final: finalCameraOptions,
-            cameraBounds: CameraBounds.default,
-            owner: AnimationOwner(rawValue: "fly-to"),
-            duration: nil,
-            mapSize: CGSize(width: 500, height: 500),
-            mapboxMap: mapboxMap,
-            dateProvider: dateProvider)
-        XCTAssertNotNil(animator.duration)
     }
 
     func testStartAnimationChangesStateToActiveAndInformsDelegate() {

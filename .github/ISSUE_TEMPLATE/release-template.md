@@ -34,6 +34,8 @@ assignees: ''
 
 ### Create the Release Branch
 
+Only create a release branch for RC and final releases. Beta releases may be tagged on the main branch.
+
 - [ ] If the release branch does not exist yet, create it from the latest commit on main. Name it `release/v{MAJOR}.{MINOR}` where `MAJOR` and `MINOR` are the major and minor components of the semantic version.
 - [ ] Push this branch without adding any new commits. We'll introduce changes via a PR so that our CI checks run and to give the release buddy an opporutnity to review.
 

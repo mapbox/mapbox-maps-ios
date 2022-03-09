@@ -188,7 +188,7 @@ final class PanGestureHandlerTests: XCTestCase {
         }
 
         let animationEndedCompletion = try XCTUnwrap(decelerateParams?.completion)
-        animationEndedCompletion()
+        animationEndedCompletion(.end)
 
         XCTAssertEqual(mapboxMap.dragEndStub.invocations.count, 1)
         XCTAssertEqual(delegate.animationEndedStub.invocations.map(\.parameters), [.pan])
@@ -246,7 +246,7 @@ final class PanGestureHandlerTests: XCTestCase {
 
         // cancel deceleration *after* the second gesture begins
         let decelerateAnimationCompletion = try XCTUnwrap(cameraAnimationsManager.decelerateStub.invocations.first?.parameters.completion)
-        decelerateAnimationCompletion()
+        decelerateAnimationCompletion(.current)
 
         // changed 2 should still result in camera updates. a previous
         // implementation had a bug here where the cancellation of the animation

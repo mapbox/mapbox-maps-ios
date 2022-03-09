@@ -6,9 +6,9 @@ final class BasicCameraAnimatorIntegrationTests: XCTestCase {
     var window: UIWindow!
     var cameraView: CameraView!
     var mapboxMap: MockMapboxMap!
+    var animator: BasicCameraAnimator!
     // swiftlint:disable:next weak_delegate
     var delegate: MockCameraAnimatorDelegate!
-    var animator: BasicCameraAnimator!
 
     override func setUp() {
         super.setUp()
@@ -17,13 +17,13 @@ final class BasicCameraAnimatorIntegrationTests: XCTestCase {
         window.addSubview(cameraView)
         window.makeKeyAndVisible()
         mapboxMap = MockMapboxMap()
-        delegate = MockCameraAnimatorDelegate()
         animator = BasicCameraAnimator(
             propertyAnimator: UIViewPropertyAnimator(),
             owner: .unspecified,
             mapboxMap: mapboxMap,
-            cameraView: cameraView,
-            delegate: delegate)
+            cameraView: cameraView)
+        delegate = MockCameraAnimatorDelegate()
+        animator.delegate = delegate
         animator.addAnimations { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
             transition.center.toValue = cameraOptionsTestValue.center!
@@ -35,8 +35,8 @@ final class BasicCameraAnimatorIntegrationTests: XCTestCase {
     }
 
     override func tearDown() {
-        animator = nil
         delegate = nil
+        animator = nil
         mapboxMap = nil
         cameraView = nil
         window = nil

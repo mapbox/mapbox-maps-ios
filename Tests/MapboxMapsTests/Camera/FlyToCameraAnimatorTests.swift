@@ -26,57 +26,45 @@ final class FlyToCameraAnimatorTests: XCTestCase {
         bearing: 10,
         pitch: 10)
 
-    let animationOwner = AnimationOwner(rawValue: "fly-to")
     let duration: TimeInterval = 10
+    var owner: AnimationOwner!
     var mapboxMap: MockMapboxMap!
     var dateProvider: MockDateProvider!
+    var flyToCameraAnimator: FlyToCameraAnimator!
     // swiftlint:disable:next weak_delegate
     var delegate: MockCameraAnimatorDelegate!
-    var flyToCameraAnimator: FlyToCameraAnimator!
 
     override func setUp() {
         super.setUp()
+        owner = .random()
         mapboxMap = MockMapboxMap()
+        mapboxMap.cameraState = initialCameraState
+        mapboxMap.cameraBounds = .default
+        mapboxMap.size = CGSize(width: 500, height: 500)
         dateProvider = MockDateProvider()
-        delegate = MockCameraAnimatorDelegate()
         flyToCameraAnimator = FlyToCameraAnimator(
-            initial: initialCameraState,
-            final: finalCameraOptions,
-            cameraBounds: CameraBounds.default,
-            owner: AnimationOwner(rawValue: "fly-to"),
+            toCamera: finalCameraOptions,
+            owner: owner,
             duration: duration,
-            mapSize: CGSize(width: 500, height: 500),
             mapboxMap: mapboxMap,
-            dateProvider: dateProvider,
-            delegate: delegate)
+            dateProvider: dateProvider)
+        delegate = MockCameraAnimatorDelegate()
+        flyToCameraAnimator.delegate = delegate
     }
 
     override func tearDown() {
-        flyToCameraAnimator = nil
         delegate = nil
+        flyToCameraAnimator = nil
         dateProvider = nil
         mapboxMap = nil
+        owner = nil
         super.tearDown()
     }
 
     func testInitializationWithValidOptions() {
-        XCTAssertEqual(flyToCameraAnimator.owner, animationOwner)
+        XCTAssertEqual(flyToCameraAnimator.owner, owner)
         XCTAssertEqual(flyToCameraAnimator.duration, duration)
         XCTAssertEqual(flyToCameraAnimator.state, .inactive)
-    }
-
-    func testInitializationWithANilDurationSetsDurationToCalculatedValue() {
-        let animator = FlyToCameraAnimator(
-            initial: initialCameraState,
-            final: finalCameraOptions,
-            cameraBounds: CameraBounds.default,
-            owner: AnimationOwner(rawValue: "fly-to"),
-            duration: nil,
-            mapSize: CGSize(width: 500, height: 500),
-            mapboxMap: mapboxMap,
-            dateProvider: dateProvider,
-            delegate: delegate)
-        XCTAssertNotNil(animator.duration)
     }
 
     func testStartAnimationChangesStateToActiveAndInformsDelegate() {

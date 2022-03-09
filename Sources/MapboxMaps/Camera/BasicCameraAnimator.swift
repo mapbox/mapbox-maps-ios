@@ -2,7 +2,7 @@ import UIKit
 import CoreLocation
 
 // MARK: CameraAnimator Class
-public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterface {
+public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorProtocol {
     private enum InternalState: Equatable {
         case initial
         case running(CameraTransition)
@@ -14,14 +14,14 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     private let propertyAnimator: UIViewPropertyAnimator
 
     /// The ID of the owner of this `CameraAnimator`.
-    private let owner: AnimationOwner
+    public let owner: AnimationOwner
 
     /// The `CameraView` owned by this animator
     private let cameraView: CameraView
 
     private let mapboxMap: MapboxMapProtocol
 
-    private weak var delegate: CameraAnimatorDelegate?
+    internal weak var delegate: CameraAnimatorDelegate?
 
     /// Represents the animation that this animator is attempting to execute
     private var animation: ((inout CameraTransition) -> Void)?
@@ -87,13 +87,11 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     internal init(propertyAnimator: UIViewPropertyAnimator,
                   owner: AnimationOwner,
                   mapboxMap: MapboxMapProtocol,
-                  cameraView: CameraView,
-                  delegate: CameraAnimatorDelegate) {
+                  cameraView: CameraView) {
         self.propertyAnimator = propertyAnimator
         self.owner = owner
         self.mapboxMap = mapboxMap
         self.cameraView = cameraView
-        self.delegate = delegate
     }
 
     deinit {

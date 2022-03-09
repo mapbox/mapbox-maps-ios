@@ -71,10 +71,9 @@ Only create a release branch for RC and final releases. Beta releases may be tag
     - If this is a beta or release candidate, check the prerelease box, otherwise uncheck it.
     - Save your changes, but do not publish them, and have your release buddy review the draft.
 
-## 📊 ZenHub
+## 📊 GitHub Projects
 
-- [ ] Review the [issues in the ZenHub Release](https://app.zenhub.com/workspaces/maps-sdk-5fac44a73ae0870015ac174b/reports/release), adding or removing to the list as necessary.
-- [ ] For non-prereleases, close the Zenhub Release.
+- [ ] Review the [issues in the GitHub Projects Release](https://github.com/orgs/mapbox/projects/707/views/7), adding or removing to the list as necessary.
 
 ## 📣 Announce the Release
 

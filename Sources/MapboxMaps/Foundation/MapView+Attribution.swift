@@ -1,7 +1,6 @@
 @_implementationOnly import MapboxCommon_Private
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 extension MapView: AttributionDialogManagerDelegate {
     func viewControllerForPresenting(_ attributionDialogManager: AttributionDialogManager) -> UIViewController {
         return parentViewController!
@@ -11,11 +10,11 @@ extension MapView: AttributionDialogManagerDelegate {
         switch attribution.kind {
         case .actionable(let url):
             Log.debug(forMessage: "Open url: \(url))", category: "Attribution")
-            UIApplication.shared.open(url)
+            attributionUrlOpener.openAttributionURL(url)
         case .feedback:
             let url = mapboxFeedbackURL()
             Log.debug(forMessage: "Open url: \(url))", category: "Attribution")
-            UIApplication.shared.open(url)
+            attributionUrlOpener.openAttributionURL(url)
         case .nonActionable:
             break
         }

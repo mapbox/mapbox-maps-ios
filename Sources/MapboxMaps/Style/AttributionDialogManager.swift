@@ -3,13 +3,11 @@ internal protocol AttributionDataSource: AnyObject {
     func attributions() -> [Attribution]
 }
 
-@available(iOSApplicationExtension, unavailable)
 internal protocol AttributionDialogManagerDelegate: AnyObject {
     func viewControllerForPresenting(_ attributionDialogManager: AttributionDialogManager) -> UIViewController
     func attributionDialogManager(_ attributionDialogManager: AttributionDialogManager, didTriggerActionFor attribution: Attribution)
 }
 
-@available(iOSApplicationExtension, unavailable)
 internal class AttributionDialogManager {
 
     private weak var dataSource: AttributionDataSource?
@@ -92,7 +90,7 @@ internal class AttributionDialogManager {
                                           comment: "Telemetry prompt button")
         let moreAction = UIAlertAction(title: moreTitle, style: .default) { _ in
             guard let url = URL(string: Ornaments.telemetryURL) else { return }
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            self.delegate?.attributionDialogManager(self, didTriggerActionFor: Attribution(title: "", url: url))
         }
         alert.addAction(moreAction)
 
@@ -109,7 +107,6 @@ internal class AttributionDialogManager {
 }
 
 // MARK: InfoButtonOrnamentDelegate Implementation
-@available(iOSApplicationExtension, unavailable)
 extension AttributionDialogManager: InfoButtonOrnamentDelegate {
     func didTap(_ infoButtonOrnament: InfoButtonOrnament) {
         guard let viewController = delegate?.viewControllerForPresenting(self) else {

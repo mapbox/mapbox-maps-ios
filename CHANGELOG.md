@@ -10,6 +10,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Fix issue where invalid locations could be emitted when setting a custom location provider. ([#1172](https://github.com/mapbox/mapbox-maps-ios/pull/1172))
 * Fix crash in Puck2D when location accuracy authorization is reduced. ([#1173](https://github.com/mapbox/mapbox-maps-ios/pull/1173))
 * Fix an issue where plain text source attribution was not populated in attribution dialog.([1163](https://github.com/mapbox/mapbox-maps-ios/pull/1163))
+* Add app extensions support. ([#1183](https://github.com/mapbox/mapbox-maps-ios/pull/1183))
 
 ## 10.4.0-beta.1 - February 23, 2022
 

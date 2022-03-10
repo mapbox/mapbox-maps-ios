@@ -347,7 +347,7 @@ final class MapViewTests: XCTestCase {
     }
 
     func testURLOpener() {
-        let manager = AttributionDialogManager(dataSource: self, delegate: mapView)
+        let manager = AttributionDialogManager(dataSource: MockAttributionDataSource(), delegate: MockAttributionDialogManagerDelegate())
         let url = URL(string: "http://example.com")!
         let attribution = Attribution(title: .randomASCII(withLength: 10), url: url)
 
@@ -355,11 +355,5 @@ final class MapViewTests: XCTestCase {
 
         XCTAssertEqual(attributionURLOpener.openAttributionURLStub.invocations.count, 1)
         XCTAssertEqual(attributionURLOpener.openAttributionURLStub.invocations.first?.parameters, url)
-    }
-}
-
-extension MapViewTests: AttributionDataSource {
-    func attributions() -> [Attribution] {
-        return []
     }
 }

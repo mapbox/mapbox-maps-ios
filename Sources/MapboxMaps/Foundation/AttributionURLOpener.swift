@@ -14,7 +14,7 @@ public protocol AttributionURLOpener {
 
 @available(iOSApplicationExtension, unavailable)
 internal final class DefaultAttributionURLOpener: AttributionURLOpener {
-    let application: UIApplicationProtocol
+    private let application: UIApplicationProtocol
 
     init(application: UIApplicationProtocol = UIApplication.shared) {
         self.application = application

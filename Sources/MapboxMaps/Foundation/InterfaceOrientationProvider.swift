@@ -33,8 +33,14 @@ extension InterfaceOrientationProvider {
 @available(iOS, deprecated: 13)
 @available(iOSApplicationExtension, unavailable)
 internal final class UIApplicationInterfaceOrientationProvider: InterfaceOrientationProvider {
+    private let application: UIApplicationProtocol
+
+    init(application: UIApplicationProtocol = UIApplication.shared) {
+        self.application = application
+    }
+
     func interfaceOrientation(for view: UIView) -> UIInterfaceOrientation? {
-        return UIApplication.shared.statusBarOrientation
+        return application.statusBarOrientation
     }
 }
 

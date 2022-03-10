@@ -3,6 +3,7 @@ import Foundation
 import XCTest
 
 final class UIApplicationInterfaceOrientationProviderTests: XCTestCase {
+    var application: UIApplicationProtocol!
     var provider: UIApplicationInterfaceOrientationProvider!
     var view: UIView!
 
@@ -10,12 +11,14 @@ final class UIApplicationInterfaceOrientationProviderTests: XCTestCase {
         super.setUp()
 
         view = UIView()
-        provider = UIApplicationInterfaceOrientationProvider()
+        application = MockUIApplication()
+        provider = UIApplicationInterfaceOrientationProvider(application: application)
     }
 
     override func tearDown() {
         provider = nil
         view = nil
+        application = nil
         super.tearDown()
     }
 
@@ -23,11 +26,31 @@ final class UIApplicationInterfaceOrientationProviderTests: XCTestCase {
         let orientations: [UIInterfaceOrientation] = [.portrait, .landscapeLeft, .landscapeRight, .portraitUpsideDown]
 
         for orientation in orientations {
-            UIApplication.shared.statusBarOrientation = orientation
+            application.statusBarOrientation = orientation
             let resolvedOrientation = provider.interfaceOrientation(for: view)
 
-            XCTAssertEqual(resolvedOrientation, UIApplication.shared.statusBarOrientation)
+            XCTAssertEqual(resolvedOrientation, application.statusBarOrientation)
         }
+    }
+
+    func testInterfaceToDeviceOrientationConversion() throws {
+        let interfaceOrientations: [UIInterfaceOrientation] =   [.portrait, .landscapeLeft, .landscapeRight, .portraitUpsideDown, .unknown]
+        let deviceOrientations: [CLDeviceOrientation] =         [.portrait, .landscapeRight, .landscapeLeft, .portraitUpsideDown, .portrait]
+
+        for (index, orientation) in interfaceOrientations.enumerated() {
+            let resolvedOrientation = CLDeviceOrientation(interfaceOrientation: orientation)
+
+            let expectedOrientation = deviceOrientations[index]
+            XCTAssertEqual(resolvedOrientation, expectedOrientation)
+        }
+    }
+
+    func testHeadingOrientationWrapperCallsInterfaceOrientation() {
+        let provider = MockInterfaceOrientationProvider()
+        _ = provider.headingOrientation(for: view)
+
+        XCTAssertEqual(provider.interfaceOrientationStub.invocations.count, 1)
+        XCTAssertEqual(provider.interfaceOrientationStub.invocations.first?.parameters, view)
     }
 }
 

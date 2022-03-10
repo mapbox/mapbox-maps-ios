@@ -11,7 +11,7 @@ action "Add an issue to project" {
   args    = ["issue"]
 
   env = {
-    PROJECT_URL         = "https://github.com/masutaka/github-actions-all-in-one-project/projects/1"
-    INITIAL_COLUMN_NAME = "To do"
+    PROJECT_URL         = "https://github.com/orgs/mapbox/projects/707"
+    INITIAL_COLUMN_NAME = "Backlog"
   }
 }

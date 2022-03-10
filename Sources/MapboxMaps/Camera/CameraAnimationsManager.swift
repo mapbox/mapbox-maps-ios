@@ -186,13 +186,14 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
                              animationOwner: AnimationOwner = .unspecified,
                              animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, timingParameters: parameters)
-        let cameraAnimator = BasicCameraAnimator(
+        let impl = BasicCameraAnimatorImpl(
             propertyAnimator: propertyAnimator,
             owner: animationOwner,
             mapboxMap: mapboxMap,
             cameraView: makeCameraView())
+        impl.addAnimations(animations)
+        let cameraAnimator = BasicCameraAnimator(impl: impl)
         cameraAnimator.delegate = self
-        cameraAnimator.addAnimations(animations)
         cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
     }
@@ -215,13 +216,14 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
                              animationOwner: AnimationOwner = .unspecified,
                              animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, curve: curve)
-        let cameraAnimator = BasicCameraAnimator(
+        let impl = BasicCameraAnimatorImpl(
             propertyAnimator: propertyAnimator,
             owner: animationOwner,
             mapboxMap: mapboxMap,
             cameraView: makeCameraView())
+        impl.addAnimations(animations)
+        let cameraAnimator = BasicCameraAnimator(impl: impl)
         cameraAnimator.delegate = self
-        cameraAnimator.addAnimations(animations)
         cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
     }
@@ -246,13 +248,14 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
                              animationOwner: AnimationOwner = .unspecified,
                              animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, controlPoint1: point1, controlPoint2: point2)
-        let cameraAnimator = BasicCameraAnimator(
+        let impl = BasicCameraAnimatorImpl(
             propertyAnimator: propertyAnimator,
             owner: animationOwner,
             mapboxMap: mapboxMap,
             cameraView: makeCameraView())
+        impl.addAnimations(animations)
+        let cameraAnimator = BasicCameraAnimator(impl: impl)
         cameraAnimator.delegate = self
-        cameraAnimator.addAnimations(animations)
         cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
     }
@@ -276,13 +279,14 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
                              animationOwner: AnimationOwner = .unspecified,
                              animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: ratio)
-        let cameraAnimator = BasicCameraAnimator(
+        let impl = BasicCameraAnimatorImpl(
             propertyAnimator: propertyAnimator,
             owner: animationOwner,
             mapboxMap: mapboxMap,
             cameraView: makeCameraView())
+        impl.addAnimations(animations)
+        let cameraAnimator = BasicCameraAnimator(impl: impl)
         cameraAnimator.delegate = self
-        cameraAnimator.addAnimations(animations)
         cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
     }

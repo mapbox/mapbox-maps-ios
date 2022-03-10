@@ -1,8 +1,30 @@
 import UIKit
-import CoreLocation
 
-// MARK: CameraAnimator Class
-public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorProtocol {
+internal protocol BasicCameraAnimatorDelegate: AnyObject {
+    func basicCameraAnimatorDidStartRunning(_ animator: BasicCameraAnimatorProtocol)
+    func basicCameraAnimatorDidStopRunning(_ animator: BasicCameraAnimatorProtocol)
+}
+
+internal protocol BasicCameraAnimatorProtocol: AnyObject {
+    var delegate: BasicCameraAnimatorDelegate? { get set }
+    var owner: AnimationOwner { get }
+    var transition: CameraTransition? { get }
+    var state: UIViewAnimatingState { get }
+    var isRunning: Bool { get }
+    var isReversed: Bool { get set }
+    var pausesOnCompletion: Bool { get set }
+    var fractionComplete: Double { get set }
+    func startAnimation()
+    func startAnimation(afterDelay delay: TimeInterval)
+    func pauseAnimation()
+    func stopAnimation()
+    func addCompletion(_ completion: @escaping AnimationCompletion)
+    func continueAnimation(withTimingParameters timingParameters: UITimingCurveProvider?,
+                           durationFactor: Double)
+    func update()
+}
+
+internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
     private enum InternalState: Equatable {
         case initial
         case running(CameraTransition)
@@ -13,15 +35,15 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorProtoc
     /// Instance of the property animator that will run animations.
     private let propertyAnimator: UIViewPropertyAnimator
 
-    /// The ID of the owner of this `CameraAnimator`.
-    public let owner: AnimationOwner
+    /// The animator's owner.
+    internal let owner: AnimationOwner
 
     /// The `CameraView` owned by this animator
     private let cameraView: CameraView
 
     private let mapboxMap: MapboxMapProtocol
 
-    internal weak var delegate: CameraAnimatorDelegate?
+    internal weak var delegate: BasicCameraAnimatorDelegate?
 
     /// Represents the animation that this animator is attempting to execute
     private var animation: ((inout CameraTransition) -> Void)?
@@ -29,7 +51,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorProtoc
     private var completions = [AnimationCompletion]()
 
     /// Defines the transition that will occur to the `CameraOptions` of the renderer due to this animator
-    public var transition: CameraTransition? {
+    internal var transition: CameraTransition? {
         switch internalState {
         case let .running(transition), let .paused(transition):
             return transition
@@ -39,15 +61,15 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorProtoc
     }
 
     /// The state from of the animator.
-    public var state: UIViewAnimatingState { propertyAnimator.state }
+    internal var state: UIViewAnimatingState { propertyAnimator.state }
 
     private var internalState = InternalState.initial {
         didSet {
             switch (oldValue, internalState) {
             case (.initial, .running), (.paused, .running):
-                delegate?.cameraAnimatorDidStartRunning(self)
+                delegate?.basicCameraAnimatorDidStartRunning(self)
             case (.running, .paused), (.running, .final):
-                delegate?.cameraAnimatorDidStopRunning(self)
+                delegate?.basicCameraAnimatorDidStopRunning(self)
             default:
                 // this matches cases where…
                 // * oldValue and internalState are the same
@@ -63,22 +85,22 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorProtoc
     }
 
     /// Boolean that represents if the animation is running or not.
-    public var isRunning: Bool { propertyAnimator.isRunning }
+    internal var isRunning: Bool { propertyAnimator.isRunning }
 
     /// Boolean that represents if the animation is running normally or in reverse.
-    public var isReversed: Bool {
+    internal var isReversed: Bool {
         get { propertyAnimator.isReversed }
         set { propertyAnimator.isReversed = newValue }
     }
 
     /// A Boolean value that indicates whether a completed animation remains in the active state.
-    public var pausesOnCompletion: Bool {
+    internal var pausesOnCompletion: Bool {
         get { propertyAnimator.pausesOnCompletion }
         set { propertyAnimator.pausesOnCompletion = newValue }
     }
 
     /// Value that represents what percentage of the animation has been completed.
-    public var fractionComplete: Double {
+    internal var fractionComplete: Double {
         get { Double(propertyAnimator.fractionComplete) }
         set { propertyAnimator.fractionComplete = CGFloat(newValue) }
     }
@@ -100,7 +122,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorProtoc
     }
 
     /// Starts the animation if this animator is in `inactive` state. Also used to resume a "paused" animation.
-    public func startAnimation() {
+    internal func startAnimation() {
         switch internalState {
         case .initial:
             internalState = .running(makeTransition())
@@ -119,7 +141,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorProtoc
     /// Starts the animation after a delay. This cannot be called on a paused animation.
     /// If animations are cancelled before the end of the delay, it will also be cancelled.
     /// - Parameter delay: Delay (in seconds) after which the animation should start
-    public func startAnimation(afterDelay delay: TimeInterval) {
+    internal func startAnimation(afterDelay delay: TimeInterval) {
         if internalState != .initial {
             fatalError("startAnimation(afterDelay:) cannot be called on already-delayed, paused, running, or completed animators.")
         }
@@ -129,7 +151,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorProtoc
     }
 
     /// Pauses the animation.
-    public func pauseAnimation() {
+    internal func pauseAnimation() {
         switch internalState {
         case .initial:
             internalState = .paused(makeTransition())
@@ -146,7 +168,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorProtoc
     }
 
     /// Stops the animation.
-    public func stopAnimation() {
+    internal func stopAnimation() {
         switch internalState {
         case .initial:
             fatalError("Attempt to stop an animation that has not started.")
@@ -166,14 +188,14 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorProtoc
         animation = animations
     }
 
-    /// Add a completion block to the animator. 
-    public func addCompletion(_ completion: @escaping AnimationCompletion) {
+    /// Add a completion block to the animator.
+    internal func addCompletion(_ completion: @escaping AnimationCompletion) {
         precondition(internalState != .final, "Attempt to add a completion block to an animation that has already completed.")
         completions.append(completion)
     }
 
     /// Continue the animation with a timing parameter (`UITimingCurveProvider`) and duration factor (`CGFloat`).
-    public func continueAnimation(withTimingParameters parameters: UITimingCurveProvider?, durationFactor: Double) {
+    internal func continueAnimation(withTimingParameters parameters: UITimingCurveProvider?, durationFactor: Double) {
         switch internalState {
         case .initial:
             fatalError("Attempt to continue an animation that has not started.")
@@ -187,7 +209,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorProtoc
         }
     }
 
-    func update() {
+    internal func update() {
         switch internalState {
         case .initial, .paused, .final:
             return
@@ -271,11 +293,5 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorProtoc
             cameraView.syncLayer(to: transition.fromCameraOptions) // Set up the "from" values for the interpoloation
         }
         return transition
-    }
-
-    // MARK: Cancelable
-
-    public func cancel() {
-        stopAnimation()
     }
 }

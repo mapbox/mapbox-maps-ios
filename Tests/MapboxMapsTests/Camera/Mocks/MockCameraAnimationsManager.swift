@@ -58,13 +58,8 @@ final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
         var animationOwner: AnimationOwner
         var animations: (inout CameraTransition) -> Void
     }
-    // TODO: refactor CameraAnimationsManager to use internal Impl and make internal components depend on the impl protocol
     let makeAnimatorStub = Stub<MakeAnimatorParams, BasicCameraAnimator>(
-        defaultReturnValue: BasicCameraAnimator(
-            propertyAnimator: MockPropertyAnimator(),
-            owner: .unspecified,
-            mapboxMap: MockMapboxMap(),
-            cameraView: MockCameraView()))
+        defaultReturnValue: BasicCameraAnimator(impl: MockBasicCameraAnimator()))
     func makeAnimator(duration: TimeInterval,
                       curve: UIView.AnimationCurve,
                       animationOwner: AnimationOwner,

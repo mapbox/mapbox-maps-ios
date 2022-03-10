@@ -4,7 +4,7 @@ import CoreLocation
 
 /// A protocol that supplies current interface orientation for the specified view.
 ///
-/// Use this protocol when the map view is used in non-application target(e.g. application extension target).
+/// Use this protocol when the map view is used in non-application target (e.g. application extension target).
 @available(iOS, deprecated: 13)
 public protocol InterfaceOrientationProvider {
 

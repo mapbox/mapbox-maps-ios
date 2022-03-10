@@ -4,8 +4,8 @@ jobs:
   github-actions-automate-projects:
     runs-on: ubuntu-latest
     steps:
-    - name: add-new-issues-to-repository-based-project-column
-      uses: actions/checkout@v2
+    - name: add-new-issues-to-project-board
+      uses: actions/github-actions-demo.yml
       if: github.event_name == 'issues' && github.event.action == 'opened'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

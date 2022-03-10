@@ -3,8 +3,8 @@ on: [issues]
 jobs:
   github-actions-automate-projects:
     runs-on: ubuntu-latest
+    uses: actions/checkout@v2
     steps:
-    - uses: actions/checkout@v2
     - name: add-new-issues-to-project-board
       uses: ./.github/workflows/github-actions-demo.yml
       if: github.event_name == 'issues' && github.event.action == 'opened'

@@ -59,12 +59,20 @@ jobs:
             - mapbox/add-mapbox-netrc
             - mapbox/add-mapbox-filetoken
             - build-benchmark
+            - mapbox/prepare-build-for-device-testing:
+                derivedDataPath: benchmark/DerivedData
+                outputPath: output
 
   run-benchmark:
     executor: base-docker
     steps:
       - checkout
-      - run: echo $'Running tests\nLoading'
+      - mapbox/add-mapbox-ssh-key
+      - checkout-mobile-metrics
+      - attach_workspace:
+          at: Products
+      - run: ls -l Products/
+      - run: cat mobile-metrics/ios-maps/Scripts/devicefarm.py
 
 commands:
   build-benchmark:
@@ -72,9 +80,10 @@ commands:
       - run:
           name: Build Benchmark
           command: |
-            xcodebuild -resolvePackageDependencies -scheme Benchmark
-            xcodebuild -scheme Benchmark CODE_SIGNING_ALLOWED=NO
+            xcodebuild -resolvePackageDependencies -scheme Benchmark -derivedDataPath DerivedData
+            xcodebuild build-for-testing -scheme Benchmark CODE_SIGNING_ALLOWED=NO -derivedDataPath DerivedData
           working_directory: benchmark/
+
 
   checkout-mobile-metrics:
     steps:
@@ -234,11 +243,61 @@ orbs:
               target_url: << parameters.target_url >>
               token: << parameters.token >>
 
-    jobs:
-      my_job:
-        executor: node/default # Node orb executor
+      prepare-build-for-device-testing:
+        parameters:
+          derivedDataPath:
+            type: string
+          outputPath:
+            type: string
+          testingService:
+            type: enum
+            enum:
+              - DeviceFarm
+            default: DeviceFarm
+          storeArtifacts:
+            type: boolean
+            default: true
         steps:
-          - checkout
-          - my_command
-          - store_test_results:
-              path: test-results
+          - run:
+              name: Build
+              environment:
+                DERIVED_DATA_PATH: << parameters.derivedDataPath >>
+                OUTPUT_DATA_PATH: << parameters.outputPath >>
+              command: |
+                APP_PATH=$(find "$DERIVED_DATA_PATH" -name "*.app")
+                TMP_PATH=$(mktemp -d)
+                PAYLOAD_PATH="$TMP_PATH/Payload"
+
+                mkdir -p "$PAYLOAD_PATH"
+                mkdir -p "$OUTPUT_DATA_PATH"
+                cp -R "$APP_PATH" "$PAYLOAD_PATH"
+
+                # Copy the tests out
+                XCTEST_PATH=$(find "$PAYLOAD_PATH" -name "*.xctest")
+
+                cp -r "$XCTEST_PATH" "$TMP_PATH"
+
+                # Copy the testrun in
+                TMP_PAYLOAD_APP=$(find "$PAYLOAD_PATH" -name "*.app")
+                cp "$DERIVED_DATA_PATH/Build/Products/"*.xctestrun  "$TMP_PAYLOAD_APP"
+
+                # Zip up
+                (
+                  cd "$TMP_PATH"
+                  zip -r App.ipa Payload
+                  zip -r AppTests.zip *.xctest
+                )
+
+                cp "$TMP_PATH/App.ipa" "$TMP_PATH/AppTests.zip" "$OUTPUT_DATA_PATH"
+          - when:
+              condition: << parameters.storeArtifacts >>
+              steps:
+                - store_artifacts:
+                    path: << parameters.outputPath >>/App.ipa
+                - store_artifacts:
+                    path: << parameters.outputPath >>/AppTests.zip
+                - persist_to_workspace:
+                    root: << parameters.outputPath >>
+                    paths:
+                      - App.ipa
+                      - AppTests.zip

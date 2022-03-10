@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		745D052527C8D185004E7B53 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 745D052427C8D185004E7B53 /* MapboxMaps */; };
 		7499661827C64ECD00DA186A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499661727C64ECD00DA186A /* AppDelegate.swift */; };
-		7499661A27C64ECD00DA186A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499661927C64ECD00DA186A /* SceneDelegate.swift */; };
 		7499661C27C64ECD00DA186A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499661B27C64ECD00DA186A /* ViewController.swift */; };
 		7499661F27C64ECD00DA186A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7499661D27C64ECD00DA186A /* Main.storyboard */; };
 		7499662127C64ECE00DA186A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7499662027C64ECE00DA186A /* Assets.xcassets */; };
@@ -31,7 +30,6 @@
 		745D052327C8D15F004E7B53 /* mapbox-maps-ios */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "mapbox-maps-ios"; path = "../mapbox-maps-ios"; sourceTree = "<group>"; };
 		7499661427C64ECD00DA186A /* Benchmark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Benchmark.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7499661727C64ECD00DA186A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		7499661927C64ECD00DA186A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		7499661B27C64ECD00DA186A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		7499661E27C64ECD00DA186A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7499662027C64ECE00DA186A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -91,7 +89,6 @@
 			isa = PBXGroup;
 			children = (
 				7499661727C64ECD00DA186A /* AppDelegate.swift */,
-				7499661927C64ECD00DA186A /* SceneDelegate.swift */,
 				7499661B27C64ECD00DA186A /* ViewController.swift */,
 				7499661D27C64ECD00DA186A /* Main.storyboard */,
 				7499662027C64ECE00DA186A /* Assets.xcassets */,
@@ -245,7 +242,6 @@
 			files = (
 				7499661C27C64ECD00DA186A /* ViewController.swift in Sources */,
 				7499661827C64ECD00DA186A /* AppDelegate.swift in Sources */,
-				7499661A27C64ECD00DA186A /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,7 +334,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -393,7 +389,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -410,6 +406,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -437,6 +434,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

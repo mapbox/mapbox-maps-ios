@@ -1,0 +1,17 @@
+on:
+  issue:
+    types: [opened, reopened]
+
+jobs:
+  move-to-in-progress:
+    runs-on: ubuntu-latest
+    name: Move to In Progress Column
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Move to Backlog
+        uses: kin/gh-action-move-issue-to-column@1.0
+        with:
+          access-token: "#{{ secrets.GITHUB_TOKEN }}"
+          project-name: "2022 Mobile Maps SDK Project Board"
+          target-column: "Backlog"

@@ -204,15 +204,17 @@ open class MapView: UIView {
     ///   - orientationProvider: User interface orientation provider
     ///   - urlOpener: Attribution URL opener
     @available(iOS, deprecated: 13, message: "Use init(frame:mapInitOptions:urlOpener:) instead")
-    public convenience init(frame: CGRect,
-                            mapInitOptions: MapInitOptions = MapInitOptions(),
-                            orientationProvider: InterfaceOrientationProvider,
-                            urlOpener: AttributionURLOpener) {
-        self.init(frame: frame,
-                  mapInitOptions: mapInitOptions,
-                  dependencyProvider: MapViewDependencyProvider(),
-                  orientationProvider: orientationProvider,
-                  urlOpener: urlOpener)
+    public init(frame: CGRect,
+                mapInitOptions: MapInitOptions = MapInitOptions(),
+                orientationProvider: InterfaceOrientationProvider,
+                urlOpener: AttributionURLOpener) {
+        self.dependencyProvider = MapViewDependencyProvider()
+        self.interfaceOrientationProvider = orientationProvider
+        self.attributionUrlOpener = urlOpener
+        notificationCenter = dependencyProvider.makeNotificationCenter()
+        bundle = dependencyProvider.makeBundle()
+        super.init(frame: frame)
+        commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
 
     /// Initialize a MapView
@@ -222,14 +224,16 @@ open class MapView: UIView {
     ///    `ResourceOptionsManager.default` to retrieve a shared default resource option, including the access token.
     ///   - urlOpener: Attribution URL opener
     @available(iOS 13.0, *)
-    public convenience init(frame: CGRect,
-                            mapInitOptions: MapInitOptions = MapInitOptions(),
-                            urlOpener: AttributionURLOpener) {
-        self.init(frame: frame,
-                  mapInitOptions: mapInitOptions,
-                  dependencyProvider: MapViewDependencyProvider(),
-                  orientationProvider: DefaultInterfaceOrientationProvider(),
-                  urlOpener: urlOpener)
+    public init(frame: CGRect,
+                mapInitOptions: MapInitOptions = MapInitOptions(),
+                urlOpener: AttributionURLOpener) {
+        self.dependencyProvider = MapViewDependencyProvider()
+        self.interfaceOrientationProvider = DefaultInterfaceOrientationProvider()
+        self.attributionUrlOpener = urlOpener
+        notificationCenter = dependencyProvider.makeNotificationCenter()
+        bundle = dependencyProvider.makeBundle()
+        super.init(frame: frame)
+        commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
 
     @available(iOSApplicationExtension, unavailable)

@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Mitigate `OfflineRegionManager.mergeOfflineDatabase(for:completion)` throwing `TypeConversionError.unexpectedType` on a successfull merge. Introduce `OfflineRegionManager.mergeOfflineDatabase(forPath:completion)` as the correct way to merge offline database. ([#1192](https://github.com/mapbox/mapbox-maps-ios/pull/1192))
+
 ## 10.4.0-rc.1 - March 9, 2022
 
 * Update to MapboxCoreMaps 10.4.0-rc.1 and MapboxCommon 21.2.0-rc.1. ([#1158](https://github.com/mapbox/mapbox-maps-ios/pull/1158))

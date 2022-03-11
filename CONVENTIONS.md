@@ -15,8 +15,8 @@
       developers use but don't implement should be expressed with concrete
       types.
 3. **Internal Implementation Pattern**
-    1. When a concrete type `A` has a method or property that returns another
-       concrete type `B`, the concrete types become coupled. This coupling
+    1. When a public class `A` has a method or property that returns another
+       public class `B`, the concrete types become coupled. This coupling
        reduces isolation of `A` in unit tests since `B` cannot be mocked. To
        work around this limitation, we devised the "internal implementation"
        pattern (somewhat inspired by C++'s
@@ -24,5 +24,5 @@
     2. To apply the pattern, refactor `B` to be a thin wrapper around an
        internal protocol `BProtocol` that is implemented by an internal class
        `BImpl`.
-    3. When testing `A`, instantiate instances of `B` using a mock
-       implementation `MockB` that implements `BProtocol`.
+    3. When testing `A`, instantiate `B` using a mock implementation `MockB`
+       that implements `BProtocol`.

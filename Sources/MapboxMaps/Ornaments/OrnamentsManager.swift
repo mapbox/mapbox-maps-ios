@@ -19,7 +19,6 @@ internal struct Ornaments {
     static let telemetryURL = "https://www.mapbox.com/telemetry/"
 }
 
-@available(iOSApplicationExtension, unavailable)
 public class OrnamentsManager: NSObject {
 
     /// The `OrnamentOptions` object that is used to set up and update the required ornaments on the map.

@@ -5,6 +5,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 * Update to MapboxCoreMaps 10.4.1 and MapboxCommon 21.2.0. ([#1190](https://github.com/mapbox/mapbox-maps-ios/pull/1190))
+* Add support for app extensions. ([#1183](https://github.com/mapbox/mapbox-maps-ios/pull/1183))
 
 ## 10.4.0-rc.1 - March 9, 2022
 

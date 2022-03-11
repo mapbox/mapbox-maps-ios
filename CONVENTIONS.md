@@ -3,8 +3,8 @@
 1. **Deprecations**
     1. To avoid breaking builds for customers whose projects treat warnings as
        errors, when introducing new deprecations in a minor version, make a note
-       in the documentation comment for the deprecated symbol instead of usiung
-       an asdf `@available` attribute.
+       in the documentation comment for the deprecated symbol instead of using
+       an `@available` attribute.
     2. Exclude deprecated symbols from the generated documentation.
     3. In the documentation comment, link to the APIs that should be used
        instead.

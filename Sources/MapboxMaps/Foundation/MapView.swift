@@ -182,18 +182,21 @@ open class MapView: UIView {
     ///   - mapInitOptions: `MapInitOptions`; default uses
     ///    `ResourceOptionsManager.default` to retrieve a shared default resource option, including the access token.
     @available(iOSApplicationExtension, unavailable)
-    public convenience init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions()) {
+    public init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions()) {
         let orientationProvider: InterfaceOrientationProvider
         if #available(iOS 13, *) {
             orientationProvider = DefaultInterfaceOrientationProvider()
         } else {
             orientationProvider = UIApplicationInterfaceOrientationProvider()
         }
-        self.init(frame: frame,
-                  mapInitOptions: mapInitOptions,
-                  dependencyProvider: MapViewDependencyProvider(),
-                  orientationProvider: orientationProvider,
-                  urlOpener: DefaultAttributionURLOpener())
+
+        self.dependencyProvider = MapViewDependencyProvider()
+        self.interfaceOrientationProvider = orientationProvider
+        self.attributionUrlOpener = DefaultAttributionURLOpener()
+        notificationCenter = dependencyProvider.makeNotificationCenter()
+        bundle = dependencyProvider.makeBundle()
+        super.init(frame: frame)
+        commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
 
     /// Initialize a MapView

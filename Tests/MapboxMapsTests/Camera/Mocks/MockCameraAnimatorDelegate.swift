@@ -1,13 +1,13 @@
 @testable import MapboxMaps
 
 final class MockCameraAnimatorDelegate: CameraAnimatorDelegate {
-    let cameraAnimatorDidStartRunningStub = Stub<CameraAnimator, Void>()
-    func cameraAnimatorDidStartRunning(_ cameraAnimator: CameraAnimator) {
+    let cameraAnimatorDidStartRunningStub = Stub<CameraAnimatorProtocol, Void>()
+    func cameraAnimatorDidStartRunning(_ cameraAnimator: CameraAnimatorProtocol) {
         cameraAnimatorDidStartRunningStub.call(with: cameraAnimator)
     }
 
-    let cameraAnimatorDidStopRunningStub = Stub<CameraAnimator, Void>()
-    func cameraAnimatorDidStopRunning(_ cameraAnimator: CameraAnimator) {
+    let cameraAnimatorDidStopRunningStub = Stub<CameraAnimatorProtocol, Void>()
+    func cameraAnimatorDidStopRunning(_ cameraAnimator: CameraAnimatorProtocol) {
         cameraAnimatorDidStopRunningStub.call(with: cameraAnimator)
     }
 }

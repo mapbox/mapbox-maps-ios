@@ -6,9 +6,11 @@ import MapboxMaps
 /// Example that shows how to use OfflineManager and TileStore to
 /// download regions for offline use.
 ///
-/// By default, users may download up to 250MB of data for offline
-/// use without incurring additional charges. This limit is subject
-/// to change.
+/// By default, users may download up to 750 tile packs for offline
+/// use across all regions. If the limit is hit, any loadRegion call
+/// will fail until excess regions are deleted. This limit is subject
+/// to change. Please contact Mapbox if you require a higher limit.
+/// Additional charges may apply.
 @objc(OfflineManagerExample)
 final class OfflineManagerExample: UIViewController, ExampleProtocol {
     // This example uses a Storyboard to setup the following views

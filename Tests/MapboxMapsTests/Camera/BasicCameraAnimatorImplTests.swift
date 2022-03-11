@@ -79,6 +79,15 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
         XCTAssertEqual(propertyAnimator.setIsReversedStub.invocations.map(\.parameters), [true, false])
     }
 
+    func testStopAnimationWithoutStarting() {
+        let completion = Stub<UIViewAnimatingPosition, Void>()
+        animator.addCompletion(completion.call(with:))
+
+        animator.stopAnimation()
+
+        XCTAssertEqual(completion.invocations.map(\.parameters), [.current])
+    }
+
     func testStartAndStopAnimation() {
         animator.addAnimations { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!

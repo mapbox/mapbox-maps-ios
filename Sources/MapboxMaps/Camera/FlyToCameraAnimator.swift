@@ -5,7 +5,7 @@ import UIKit
 /// traversing a great distance.
 ///
 /// - SeeAlso: ``CameraAnimationsManager/fly(to:duration:completion:)``
-public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorProtocol {
+public final class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorProtocol {
 
     private let mapboxMap: MapboxMapProtocol
 
@@ -34,10 +34,10 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorProtoc
                   mapboxMap: MapboxMapProtocol,
                   dateProvider: DateProvider) {
         let flyToInterpolator = FlyToInterpolator(
-                    from: mapboxMap.cameraState,
-                    to: toCamera,
-                    cameraBounds: mapboxMap.cameraBounds,
-                    size: mapboxMap.size)
+            from: mapboxMap.cameraState,
+            to: toCamera,
+            cameraBounds: mapboxMap.cameraBounds,
+            size: mapboxMap.size)
         if let duration = duration {
             precondition(duration >= 0)
         }

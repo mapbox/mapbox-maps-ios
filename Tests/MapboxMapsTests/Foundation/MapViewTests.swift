@@ -200,6 +200,15 @@ final class MapViewTests: XCTestCase {
         XCTAssertEqual(participant2.participateStub.invocations.count, 1)
     }
 
+    func testDisplayLinkInvokesCameraAnimatorsRunner() throws {
+        XCTAssertEqual(dependencyProvider.makeCameraAnimatorsRunnerStub.invocations.count, 1)
+        let runner = try XCTUnwrap(dependencyProvider.makeCameraAnimatorsRunnerStub.invocations.first?.returnValue as? MockCameraAnimatorsRunner)
+
+        try invokeDisplayLinkCallback()
+
+        XCTAssertEqual(runner.updateStub.invocations.count, 1)
+    }
+
     func testAppLifecycleNotificationSubscribedWhenDidMoveToNewWindow() {
         let notificationCenter = MockNotificationCenter()
         let bundle = MockBundle()

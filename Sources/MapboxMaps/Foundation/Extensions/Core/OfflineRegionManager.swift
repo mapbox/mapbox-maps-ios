@@ -3,16 +3,32 @@
 /// :nodoc:
 @available(*, deprecated)
 extension OfflineRegionManager {
+
+    /// Construct a new offline manager.
+    /// - Parameter resourceOptions: The resource options of the manager.
     public convenience init(resourceOptions: ResourceOptions) {
         self.init(resourceOptions: MapboxCoreMaps.ResourceOptions(resourceOptions))
     }
 
+    /// Retrieve all regions in the offline database.
+    ///
+    /// - Parameters:
+    ///   - completion: The block to execute with the results. This block is executed on the database thread.
+    ///   The block has no return value and takes a `Result` case parameter that indicates the result of quering the offline database.
     public func offlineRegions(completion: @escaping (Result<[OfflineRegion], Error>) -> Void) {
         getOfflineRegions(forCallback: coreAPIClosureAdapter(for: completion,
                                                              type: NSArray.self,
                                                              concreteErrorType: MapError.self))
     }
 
+    /// Create an offline region in the offline database.
+    ///
+    /// - Note: The resulting region will be in an inactive download state; to begin downloading resources, call `OfflineRegion.setOfflineRegionDownloadStateFor(_:)`, optionally registering an `OfflineRegionObserver` beforehand.
+    ///
+    /// - Parameters:
+    ///   - geometryDefinition: The offline region geometry definition.
+    ///   - completion: The block to execute with the results. This block is executed on the database thread.
+    ///   The block has no return value and takes a `Result` case parameter that indicates the result of creating the offline region.
     public func createOfflineRegion(for geometryDefinition: OfflineRegionGeometryDefinition,
                                     completion: @escaping (Result<OfflineRegion, Error>) -> Void) {
         createOfflineRegion(for: geometryDefinition, callback: coreAPIClosureAdapter(for: completion,
@@ -20,6 +36,14 @@ extension OfflineRegionManager {
                                                                                      concreteErrorType: MapError.self))
     }
 
+    /// Create an offline region in the offline database.
+    ///
+    /// - Note: The resulting region will be in an inactive download state; to begin downloading resources, call `OfflineRegion.setOfflineRegionDownloadStateFor(_:)`, optionally registering an `OfflineRegionObserver` beforehand.
+    ///
+    /// - Parameters:
+    ///   - tilePyramidDefinition: The offline region tile pymarid definition.
+    ///   - completion: The block to execute with the results. This block is executed on the database thread.
+    ///   The block has no return value and takes a `Result` case parameter that indicates the result of creating the offline region.
     public func createOfflineRegion(for tilePyramidDefinition: OfflineRegionTilePyramidDefinition,
                                     completion: @escaping (Result<OfflineRegion, Error>) -> Void) {
         createOfflineRegion(for: tilePyramidDefinition, callback: coreAPIClosureAdapter(for: completion,

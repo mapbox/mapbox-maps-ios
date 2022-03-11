@@ -67,4 +67,3 @@ private final class MapViewSubclass: MapView {
         super.init(coder: coder)
     }
 }
-

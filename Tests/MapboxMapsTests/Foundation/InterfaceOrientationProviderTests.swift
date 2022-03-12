@@ -78,7 +78,11 @@ final class DefaultInterfaceOrientationProviderTests: XCTestCase {
         super.tearDown()
     }
 
-    func testOrientationProvider() {
+    func testOrientationProvider() throws {
+        guard #available(iOS 13.0, *) else {
+            throw XCTSkip("Test requires iOS 13 or higher.")
+        }
+
         let orientation = provider.interfaceOrientation(for: view)
 
         XCTAssertNotNil(orientation)

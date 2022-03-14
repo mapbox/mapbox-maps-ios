@@ -1,6 +1,6 @@
 on:
   issues:
-    types: [opened, closed, reopened]
+    types: [opened, reopened]
 
 permissions: write-all
 

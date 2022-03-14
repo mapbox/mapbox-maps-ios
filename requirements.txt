@@ -1,0 +1,2 @@
+requests==2.27.1
+expectise==1.0.3

@@ -1,25 +1,14 @@
-name: Move Issues to Backlog Column
-description: Move given issues to a specified column
-inputs:
-  access-token:
-    description: 'Token with permissions to access issue information in repo'
-    required: true
-  project-name:
-    description: 'Case insensitive string with the name of the Github Project'
-    required: true
-  target-column:
-    description: 'Case insensitive string with name of the column in the project issues should be moved to'
-    required: true
-  target-column-id:
-    description: 'Id of the column in the project issues should be moved to'
-    required: false
-  issues:
-    description: 'Optional arrray of issue event/webhook payloads as an alternative to using the trigger event payload'
-    required: false
-    default: '[]'
-runs:
-  using: "node12"
-  main: "index.js"
+name: 'Issues to Project'
+description: 'Automating the attachment of Issues to Projects'
 branding:
-  icon: 'move'
-  color: 'green'
+  icon: 'send'
+  color: 'blue'
+inputs:
+  project_url:
+    description: 'URL of the Github project that issues should be added to'
+    required: true
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.project_url }}

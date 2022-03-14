@@ -5,7 +5,7 @@ on:
 permissions: write-all
 
 env:
-  GITHUB_API_TOKEN: ${{ secrets.ACTION_TOKEN }}
+  GITHUB_API_TOKEN: ${{ secrets.ACTION_TOKEN2 }}
 
 jobs:
   add_to_project:

@@ -58,6 +58,7 @@ jobs:
           steps:
             - mapbox/add-mapbox-netrc
             - mapbox/add-mapbox-filetoken
+            - mapbox/install-mbx-ci
             - build-benchmark
             - mapbox/prepare-build-for-device-testing:
                 derivedDataPath: benchmark/DerivedData
@@ -135,6 +136,34 @@ orbs:
               name: Add Mapbox Token to file
               command: |
                 echo "<< parameters.token >>" > <<parameters.path>>
+
+      install-mbx-ci:
+        parameters:
+          platform:
+            type: enum
+            enum:
+              - darwin
+              - linux
+            default: darwin
+          arch:
+            type: enum
+            enum:
+              - amd64
+              - arm64
+            default: amd64
+          version:
+            type: string
+            default: latest
+          install_path:
+            type: string
+            default: /usr/local/bin
+        steps:
+          - run:
+              name: Install << parameters.version >> mbx-ci
+              command: |
+                curl -Ls https://mapbox-release-engineering.s3.amazonaws.com/mbx-ci/<<parameters.version>>/mbx-ci-<<parameters.platform>>-<<parameters.arch>> > <<parameters.install_path>>/mbx-ci
+                chmod 755 <<parameters.install_path>>/mbx-ci
+                mbx-ci aws setup
 
       set-github-commit-status:
         parameters:

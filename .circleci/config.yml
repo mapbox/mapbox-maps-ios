@@ -1,0 +1,332 @@
+---
+version: 2.1
+
+parameters:
+  maps-ios-checkout-reference:
+    type: string
+    default: ""
+  run-tests:
+    type: boolean
+    default: false
+
+workflows:
+  benchmark:
+    when:
+      not: << pipeline.parameters.run-tests >>
+    jobs:
+      - build-benchmark:
+          context:
+            - SDK Registry Token
+            - MapboxCI GitHub UserToken
+  run-benchmark:
+    when: << pipeline.parameters.run-tests >>
+    jobs:
+      - build-benchmark:
+          context:
+            - SDK Registry Token
+            - MapboxCI GitHub UserToken
+      - run-benchmark:
+          requires:
+            - build-benchmark
+
+jobs:
+  build-benchmark:
+    executor: xcode-min
+    steps:
+      - checkout
+      - mapbox/add-mapbox-ssh-key
+      - run:
+          name: Checkout Maps iOS
+          command: |
+            git submodule update --init
+
+            # If parameter is not empty, checkout the commit
+            if [[ -n "<< pipeline.parameters.maps-ios-checkout-reference >>" ]];then
+              cd mapbox-maps-ios
+              git checkout << pipeline.parameters.maps-ios-checkout-reference >>
+              MAPS_COMMIT_HASH=$(git rev-parse HEAD)
+              echo "export MAPS_COMMIT_HASH=${MAPS_COMMIT_HASH}" >> $BASH_ENV
+              cat $BASH_ENV
+
+            fi
+
+            git submodule status
+      - mapbox/github-commit-progress:
+          commit: $MAPS_COMMIT_HASH
+          repository: mapbox-maps-ios
+          token: $MAPBOXCI_GITHUB_USER_TOKEN
+          steps:
+            - mapbox/add-mapbox-netrc
+            - mapbox/add-mapbox-filetoken
+            - mapbox/install-mbx-ci
+            - build-benchmark
+            - mapbox/prepare-build-for-device-testing:
+                derivedDataPath: benchmark/DerivedData
+                outputPath: output
+
+  run-benchmark:
+    executor: base-docker
+    steps:
+      - checkout
+      - mapbox/add-mapbox-ssh-key
+      - checkout-mobile-metrics
+      - attach_workspace:
+          at: Products
+      - run: ls -l Products/
+      - run: cat mobile-metrics/ios-maps/Scripts/devicefarm.py
+
+commands:
+  build-benchmark:
+    steps:
+      - run:
+          name: Build Benchmark
+          command: |
+            xcodebuild -resolvePackageDependencies -scheme Benchmark -derivedDataPath DerivedData
+            xcodebuild build-for-testing -scheme Benchmark CODE_SIGNING_ALLOWED=NO -derivedDataPath DerivedData
+          working_directory: benchmark/
+
+
+  checkout-mobile-metrics:
+    steps:
+      - run:
+          name: Checkout Mobile Metrics repository
+          command: git submodule update --init mobile-metrics
+
+executors:
+  xcode-min:
+    macos:
+      xcode: 12.5.1
+    resource_class: macos.x86.medium.gen2
+  base-docker:
+    docker:
+      - image: cimg/base:stable
+
+orbs:
+  mapbox:
+    commands:
+      add-mapbox-ssh-key:
+        steps:
+          - add_ssh_keys:
+              fingerprints:
+                - 3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e
+
+      add-mapbox-netrc:
+        parameters:
+          token:
+            type: string
+            default: $SDK_REGISTRY_TOKEN
+        steps:
+          - run:
+              name: Configure .netrc
+              command: |
+                echo "machine api.mapbox.com login mapbox password << parameters.token >>" >> ~/.netrc
+                chmod 0600 ~/.netrc
+                cat ~/.netrc
+
+      add-mapbox-filetoken:
+        parameters:
+          token:
+            type: string
+            default: $SDK_REGISTRY_TOKEN
+          path:
+            type: string
+            default: ~/.mapbox
+        steps:
+          - run:
+              name: Add Mapbox Token to file
+              command: |
+                echo "<< parameters.token >>" > <<parameters.path>>
+
+      install-mbx-ci:
+        parameters:
+          platform:
+            type: enum
+            enum:
+              - darwin
+              - linux
+            default: darwin
+          arch:
+            type: enum
+            enum:
+              - amd64
+              - arm64
+            default: amd64
+          version:
+            type: string
+            default: latest
+          install_path:
+            type: string
+            default: /usr/local/bin
+        steps:
+          - run:
+              name: Install << parameters.version >> mbx-ci
+              command: |
+                curl -Ls https://mapbox-release-engineering.s3.amazonaws.com/mbx-ci/<<parameters.version>>/mbx-ci-<<parameters.platform>>-<<parameters.arch>> > <<parameters.install_path>>/mbx-ci
+                chmod 755 <<parameters.install_path>>/mbx-ci
+                mbx-ci aws setup
+
+      set-github-commit-status:
+        parameters:
+          hash:
+            type: string
+          state:
+            type: enum
+            enum:
+              - pending
+              - success
+          repository:
+            type: string
+          company:
+            type: string
+            default: mapbox
+          token:
+            type: string
+            default: $GITHUB_TOKEN
+          target_url:
+            type: string
+            default: $CIRCLE_BUILD_URL
+          description:
+            type: string
+            default: ""
+          fail_description:
+            type: string
+            default: Job failed
+          context:
+            type: string
+            default: "internal: $CIRCLE_JOB"
+        steps:
+          - run:
+              name: Set github status
+              command: |
+                if [ -n "<< parameters.hash >>" ]; then
+                  curl -X "POST" "https://api.github.com/repos/<< parameters.company >>/<< parameters.repository >>/statuses/<< parameters.hash >>" \
+                      -H "Authorization: Token << parameters.token >>" \
+                      -H 'Content-Type: application/json; charset=utf-8' \
+                      -d "{
+                        \"target_url\": \"<< parameters.target_url >>\",
+                        \"state\": \"<< parameters.state >>\",
+                        \"description\": \"<< parameters.description >>\",
+                        \"context\": \"<< parameters.context >>\"
+                      }"
+                fi
+          - when:
+              condition:
+                equal: [<< parameters.state >>, success]
+              steps:
+                 - run:
+                    name: Set github status
+                    command: |
+                      if [ -n "<< parameters.hash >>" ]; then
+                        curl -X "POST" "https://api.github.com/repos/<< parameters.company >>/<< parameters.repository >>/statuses/<< parameters.hash >>" \
+                            -H "Authorization: Token << parameters.token >>" \
+                            -H 'Content-Type: application/json; charset=utf-8' \
+                            -d "{
+                              \"target_url\": \"<< parameters.target_url >>\",
+                              \"state\": \"failure\",
+                              \"description\": \"<< parameters.fail_description >>\",
+                              \"context\": \"<< parameters.context >>\"
+                            }"
+                      fi
+                    when: on_fail
+
+
+      github-commit-progress:
+        parameters:
+          steps:
+            type: steps
+          commit:
+            type: string
+          repository:
+            type: string
+          company:
+            type: string
+            default: mapbox
+          token:
+            type: string
+            default: $GITHUB_TOKEN
+          target_url:
+            type: string
+            default: $CIRCLE_BUILD_URL
+          context:
+            type: string
+            default: "internal: $CIRCLE_JOB"
+        steps:
+          - set-github-commit-status:
+              company: << parameters.company >>
+              context: << parameters.context >>
+              description: MapboxCI is running your tests
+              hash: << parameters.commit >>
+              repository: << parameters.repository >>
+              state: pending
+              target_url: << parameters.target_url >>
+              token: << parameters.token >>
+          - steps: << parameters.steps >>
+          - set-github-commit-status:
+              company: << parameters.company >>
+              context: << parameters.context >>
+              description: Your tests passed on MapboxCI!
+              fail_description: Your tests didn't pass on MapboxCI!
+              hash: << parameters.commit >>
+              repository: << parameters.repository >>
+              state: success
+              target_url: << parameters.target_url >>
+              token: << parameters.token >>
+
+      prepare-build-for-device-testing:
+        parameters:
+          derivedDataPath:
+            type: string
+          outputPath:
+            type: string
+          testingService:
+            type: enum
+            enum:
+              - DeviceFarm
+            default: DeviceFarm
+          storeArtifacts:
+            type: boolean
+            default: true
+        steps:
+          - run:
+              name: Build
+              environment:
+                DERIVED_DATA_PATH: << parameters.derivedDataPath >>
+                OUTPUT_DATA_PATH: << parameters.outputPath >>
+              command: |
+                APP_PATH=$(find "$DERIVED_DATA_PATH" -name "*.app")
+                TMP_PATH=$(mktemp -d)
+                PAYLOAD_PATH="$TMP_PATH/Payload"
+
+                mkdir -p "$PAYLOAD_PATH"
+                mkdir -p "$OUTPUT_DATA_PATH"
+                cp -R "$APP_PATH" "$PAYLOAD_PATH"
+
+                # Copy the tests out
+                XCTEST_PATH=$(find "$PAYLOAD_PATH" -name "*.xctest")
+
+                cp -r "$XCTEST_PATH" "$TMP_PATH"
+
+                # Copy the testrun in
+                TMP_PAYLOAD_APP=$(find "$PAYLOAD_PATH" -name "*.app")
+                cp "$DERIVED_DATA_PATH/Build/Products/"*.xctestrun  "$TMP_PAYLOAD_APP"
+
+                # Zip up
+                (
+                  cd "$TMP_PATH"
+                  zip -r App.ipa Payload
+                  zip -r AppTests.zip *.xctest
+                )
+
+                cp "$TMP_PATH/App.ipa" "$TMP_PATH/AppTests.zip" "$OUTPUT_DATA_PATH"
+          - when:
+              condition: << parameters.storeArtifacts >>
+              steps:
+                - store_artifacts:
+                    path: << parameters.outputPath >>/App.ipa
+                - store_artifacts:
+                    path: << parameters.outputPath >>/AppTests.zip
+                - persist_to_workspace:
+                    root: << parameters.outputPath >>
+                    paths:
+                      - App.ipa
+                      - AppTests.zip

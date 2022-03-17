@@ -25,6 +25,12 @@ final class CameraAnimationsManagerTests: XCTestCase {
         XCTAssertTrue(zip(cameraAnimationsManager.cameraAnimators, impl.cameraAnimators).allSatisfy(===))
     }
 
+    func testCancelAnimations() {
+        cameraAnimationsManager.cancelAnimations()
+
+        XCTAssertEqual(impl.cancelAnimationsStub.invocations.count, 1)
+    }
+
     func testFlyTo() throws {
         let cameraOptions = CameraOptions.random()
         let duration = TimeInterval?.random(.random(in: 0...10))

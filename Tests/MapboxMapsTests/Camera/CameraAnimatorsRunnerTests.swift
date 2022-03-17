@@ -32,38 +32,6 @@ final class CameraAnimatorsRunnerTests: XCTestCase {
             Set(animators.map(ObjectIdentifier.init(_:))))
     }
 
-    func testKeepsWeakRefToAnimatorsThatAreNotRunning() {
-        // held strongly
-        let animator1 = MockCameraAnimator()
-        weak var weakAnimator2: MockCameraAnimator?
-        do {
-            cameraAnimatorsRunner.add(animator1)
-
-            // held weakly, but running
-            let animator2 = MockCameraAnimator()
-            weakAnimator2 = animator2
-            cameraAnimatorsRunner.add(animator2)
-            cameraAnimatorsRunner.cameraAnimatorDidStartRunning(animator2)
-
-            // held weakly, not running
-            let animator3 = MockCameraAnimator()
-            cameraAnimatorsRunner.add(animator3)
-        }
-
-        if let animator2 = weakAnimator2 {
-            autoreleasepool {
-                XCTAssertEqual(cameraAnimatorsRunner.cameraAnimators.count, 2)
-                XCTAssertTrue(cameraAnimatorsRunner.cameraAnimators.contains { $0 === animator1 })
-                XCTAssertTrue(cameraAnimatorsRunner.cameraAnimators.contains { $0 === animator2 })
-            }
-            cameraAnimatorsRunner.cameraAnimatorDidStopRunning(animator2)
-        }
-
-        XCTAssertEqual(
-            Set(cameraAnimatorsRunner.cameraAnimators.map(ObjectIdentifier.init(_:))),
-            Set([animator1].map(ObjectIdentifier.init(_:))))
-    }
-
     func testUpdateWithAnimationsEnabled() {
         cameraAnimatorsRunner.animationsEnabled = true
         let animator = MockCameraAnimator()

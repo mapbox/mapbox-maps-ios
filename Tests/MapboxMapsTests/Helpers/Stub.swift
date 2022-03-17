@@ -77,4 +77,9 @@ final class Stubbed<T> {
             getStub.defaultReturnValue = newValue
         }
     }
+
+    func reset() {
+        getStub.reset()
+        setStub.reset()
+    }
 }

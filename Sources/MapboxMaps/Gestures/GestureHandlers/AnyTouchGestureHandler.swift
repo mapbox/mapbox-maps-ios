@@ -2,11 +2,11 @@ import UIKit
 
 internal final class AnyTouchGestureHandler: GestureHandler {
 
-    private let cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol
+    private let cameraAnimatorsRunnerEnablable: MutableEnablableProtocol
 
     internal init(gestureRecognizer: UIGestureRecognizer,
-                  cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol) {
-        self.cameraAnimatorsRunner = cameraAnimatorsRunner
+                  cameraAnimatorsRunnerEnablable: MutableEnablableProtocol) {
+        self.cameraAnimatorsRunnerEnablable = cameraAnimatorsRunnerEnablable
         super.init(gestureRecognizer: gestureRecognizer)
         gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
     }
@@ -14,9 +14,9 @@ internal final class AnyTouchGestureHandler: GestureHandler {
     @objc private func handleGesture(_ gestureRecognizer: AnyTouchGestureRecognizer) {
         switch gestureRecognizer.state {
         case .began:
-            cameraAnimatorsRunner.animationsEnabled = false
+            cameraAnimatorsRunnerEnablable.isEnabled = false
         case .ended, .cancelled:
-            cameraAnimatorsRunner.animationsEnabled = true
+            cameraAnimatorsRunnerEnablable.isEnabled = true
         default:
             break
         }

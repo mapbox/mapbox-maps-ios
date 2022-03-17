@@ -29,6 +29,7 @@ open class MapView: UIView {
     /// The `camera` object manages a camera's view lifecycle.
     public private(set) var camera: CameraAnimationsManager!
     private var cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol!
+    private let cameraAnimatorsRunnerEnablable: MutableEnablableProtocol
 
     /// The `location`object handles location events of the map.
     public private(set) var location: LocationManager!
@@ -194,8 +195,9 @@ open class MapView: UIView {
         self.dependencyProvider = MapViewDependencyProvider()
         self.interfaceOrientationProvider = orientationProvider
         self.attributionUrlOpener = DefaultAttributionURLOpener()
-        notificationCenter = dependencyProvider.makeNotificationCenter()
-        bundle = dependencyProvider.makeBundle()
+        notificationCenter = dependencyProvider.notificationCenter
+        bundle = dependencyProvider.bundle
+        cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
@@ -215,8 +217,9 @@ open class MapView: UIView {
         self.dependencyProvider = MapViewDependencyProvider()
         self.interfaceOrientationProvider = orientationProvider
         self.attributionUrlOpener = urlOpener
-        notificationCenter = dependencyProvider.makeNotificationCenter()
-        bundle = dependencyProvider.makeBundle()
+        notificationCenter = dependencyProvider.notificationCenter
+        bundle = dependencyProvider.bundle
+        cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
@@ -234,8 +237,9 @@ open class MapView: UIView {
         self.dependencyProvider = MapViewDependencyProvider()
         self.interfaceOrientationProvider = DefaultInterfaceOrientationProvider()
         self.attributionUrlOpener = urlOpener
-        notificationCenter = dependencyProvider.makeNotificationCenter()
-        bundle = dependencyProvider.makeBundle()
+        notificationCenter = dependencyProvider.notificationCenter
+        bundle = dependencyProvider.bundle
+        cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
@@ -250,8 +254,9 @@ open class MapView: UIView {
         }
 
         dependencyProvider = MapViewDependencyProvider()
-        notificationCenter = dependencyProvider.makeNotificationCenter()
-        bundle = dependencyProvider.makeBundle()
+        notificationCenter = dependencyProvider.notificationCenter
+        bundle = dependencyProvider.bundle
+        cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
         self.interfaceOrientationProvider = orientationProvider
         self.attributionUrlOpener = DefaultAttributionURLOpener()
         super.init(coder: coder)
@@ -265,8 +270,9 @@ open class MapView: UIView {
         self.dependencyProvider = dependencyProvider
         self.interfaceOrientationProvider = orientationProvider
         self.attributionUrlOpener = urlOpener
-        notificationCenter = dependencyProvider.makeNotificationCenter()
-        bundle = dependencyProvider.makeBundle()
+        notificationCenter = dependencyProvider.notificationCenter
+        bundle = dependencyProvider.bundle
+        cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
@@ -313,7 +319,7 @@ open class MapView: UIView {
         mapboxMap = MapboxMap(
             mapClient: mapClient,
             mapInitOptions: resolvedMapInitOptions,
-            mapboxObservableProvider: dependencyProvider.makeMapboxObservableProvider())
+            mapboxObservableProvider: dependencyProvider.mapboxObservableProvider)
 
         notificationCenter.addObserver(self,
                                        selector: #selector(didReceiveMemoryWarning),
@@ -355,12 +361,14 @@ open class MapView: UIView {
             eventsManager.sendMapLoadEvent()
         }
 
+        // false until added to a window and display link is created
+        cameraAnimatorsRunnerEnablable.isEnabled = false
+
         // Set up managers
         setupManagers()
     }
 
     internal func setupManagers() {
-
         // Initialize/Configure camera manager first since Gestures needs it as dependency
         cameraAnimatorsRunner = dependencyProvider.makeCameraAnimatorsRunner(
             mapboxMap: mapboxMap)
@@ -374,8 +382,7 @@ open class MapView: UIView {
         gestures = dependencyProvider.makeGestureManager(
             view: self,
             mapboxMap: mapboxMap,
-            cameraAnimationsManager: internalCamera,
-            cameraAnimatorsRunner: cameraAnimatorsRunner)
+            cameraAnimationsManager: internalCamera)
 
         // Initialize the attribution manager
         attributionDialogManager = AttributionDialogManager(
@@ -427,6 +434,11 @@ open class MapView: UIView {
             interpolatedLocationProducer: interpolatedLocationProducer,
             cameraAnimationsManager: internalCamera,
             mapboxMap: mapboxMap)
+    }
+
+    deinit {
+        cameraAnimatorsRunner.cancelAnimations()
+        cameraAnimatorsRunnerEnablable.isEnabled = false
     }
 
     private func subscribeToLifecycleNotifications() {
@@ -574,7 +586,11 @@ open class MapView: UIView {
         displayLink?.invalidate()
         displayLink = nil
 
-        guard let window = window else { return }
+        guard let window = window else {
+            cameraAnimatorsRunner.cancelAnimations()
+            cameraAnimatorsRunnerEnablable.isEnabled = false
+            return
+        }
 
         displayLink = dependencyProvider.makeDisplayLink(
             window: window,
@@ -582,8 +598,17 @@ open class MapView: UIView {
                 self?.updateFromDisplayLink(displayLink: $0)
             },
             selector: #selector(ForwardingDisplayLinkTarget.update(with:)))
+
+        guard let displayLink = displayLink else {
+            cameraAnimatorsRunner.cancelAnimations()
+            cameraAnimatorsRunnerEnablable.isEnabled = false
+            return
+        }
+
+        cameraAnimatorsRunnerEnablable.isEnabled = true
+
         updateDisplayLinkPreferredFramesPerSecond()
-        displayLink?.add(to: .current, forMode: .common)
+        displayLink.add(to: .current, forMode: .common)
 
         subscribeToLifecycleNotifications()
     }

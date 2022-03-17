@@ -60,6 +60,23 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
         XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.invocations.first?.parameters === animator)
     }
 
+    func testStartAnimationWhenAlreadyRunning() {
+        animator.startAnimation()
+        delegate.cameraAnimatorDidStartRunningStub.reset()
+
+        animator.startAnimation()
+
+        XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 0)
+    }
+
+    func testStartAnimationWhenAlreadyComplete() {
+        animator.stopAnimation()
+
+        animator.startAnimation()
+
+        XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 0)
+    }
+
     func testStopAnimation() {
         animator.startAnimation()
 
@@ -69,6 +86,25 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
         XCTAssertEqual(completion.invocations.map(\.parameters), [.current])
         XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)
         XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.invocations.first?.parameters === animator)
+    }
+
+    func testStopAnimationWithoutStarting() {
+        animator.stopAnimation()
+
+        XCTAssertEqual(animator.state, .inactive)
+        XCTAssertEqual(completion.invocations.map(\.parameters), [.current])
+        XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 0)
+    }
+
+    func testStopAnimationWhenAlreadyComplete() {
+        animator.stopAnimation()
+        completion.reset()
+
+        animator.stopAnimation()
+
+        XCTAssertEqual(animator.state, .inactive)
+        XCTAssertEqual(completion.invocations.count, 0)
+        XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 0)
     }
 
     func testUpdate() {

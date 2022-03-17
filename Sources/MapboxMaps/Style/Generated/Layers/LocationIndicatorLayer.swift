@@ -48,6 +48,9 @@ public struct LocationIndicatorLayer: Layer {
     /// The bearing of the location indicator.
     public var bearing: Value<Double>?
 
+    /// Transition options for `bearing`.
+    public var bearingTransition: StyleTransition?
+
     /// The size of the bearing image, as a scale factor applied to the size of the specified image.
     public var bearingImageSize: Value<Double>?
 
@@ -90,9 +93,6 @@ public struct LocationIndicatorLayer: Layer {
     /// Transition options for `topImageSize`.
     public var topImageSizeTransition: StyleTransition?
 
-    /// The bearing transition of the location indicator.
-    public var bearingTransition: StyleTransition?
-
     public init(id: String) {
         self.id = id
         self.type = LayerType.locationIndicator
@@ -117,6 +117,7 @@ public struct LocationIndicatorLayer: Layer {
         try paintContainer.encodeIfPresent(accuracyRadiusColor, forKey: .accuracyRadiusColor)
         try paintContainer.encodeIfPresent(accuracyRadiusColorTransition, forKey: .accuracyRadiusColorTransition)
         try paintContainer.encodeIfPresent(bearing, forKey: .bearing)
+        try paintContainer.encodeIfPresent(bearingTransition, forKey: .bearingTransition)
         try paintContainer.encodeIfPresent(bearingImageSize, forKey: .bearingImageSize)
         try paintContainer.encodeIfPresent(bearingImageSizeTransition, forKey: .bearingImageSizeTransition)
         try paintContainer.encodeIfPresent(emphasisCircleColor, forKey: .emphasisCircleColor)
@@ -131,7 +132,6 @@ public struct LocationIndicatorLayer: Layer {
         try paintContainer.encodeIfPresent(shadowImageSizeTransition, forKey: .shadowImageSizeTransition)
         try paintContainer.encodeIfPresent(topImageSize, forKey: .topImageSize)
         try paintContainer.encodeIfPresent(topImageSizeTransition, forKey: .topImageSizeTransition)
-        try paintContainer.encodeIfPresent(bearingTransition, forKey: .bearingTransition)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
         try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
@@ -158,6 +158,7 @@ public struct LocationIndicatorLayer: Layer {
             accuracyRadiusColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .accuracyRadiusColor)
             accuracyRadiusColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .accuracyRadiusColorTransition)
             bearing = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .bearing)
+            bearingTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .bearingTransition)
             bearingImageSize = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .bearingImageSize)
             bearingImageSizeTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .bearingImageSizeTransition)
             emphasisCircleColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .emphasisCircleColor)
@@ -172,7 +173,6 @@ public struct LocationIndicatorLayer: Layer {
             shadowImageSizeTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .shadowImageSizeTransition)
             topImageSize = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .topImageSize)
             topImageSizeTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .topImageSizeTransition)
-            bearingTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .bearingTransition)
         }
 
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
@@ -210,6 +210,7 @@ public struct LocationIndicatorLayer: Layer {
         case accuracyRadiusColor = "accuracy-radius-color"
         case accuracyRadiusColorTransition = "accuracy-radius-color-transition"
         case bearing = "bearing"
+        case bearingTransition = "bearing-transition"
         case bearingImageSize = "bearing-image-size"
         case bearingImageSizeTransition = "bearing-image-size-transition"
         case emphasisCircleColor = "emphasis-circle-color"
@@ -224,7 +225,6 @@ public struct LocationIndicatorLayer: Layer {
         case shadowImageSizeTransition = "shadow-image-size-transition"
         case topImageSize = "top-image-size"
         case topImageSizeTransition = "top-image-size-transition"
-        case bearingTransition = "bearing-transition"
     }
 }
 

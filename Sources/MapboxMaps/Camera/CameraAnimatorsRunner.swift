@@ -9,7 +9,7 @@ internal protocol CameraAnimatorsRunnerProtocol: AnyObject {
     func add(_ animator: CameraAnimatorProtocol)
 }
 
-final class CameraAnimatorsRunner: CameraAnimatorsRunnerProtocol {
+internal final class CameraAnimatorsRunner: CameraAnimatorsRunnerProtocol {
 
     /// When set to `false`, all animations will be canceled at each invocation of ``CameraAnimationsManagerImpl/update()``
     internal var animationsEnabled = true

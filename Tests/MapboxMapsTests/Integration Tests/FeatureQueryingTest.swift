@@ -27,7 +27,9 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                                     zoom: 15.0))
         }
 
-        didBecomeIdle = { mapView in
+        mapView.mapboxMap.onNext(.mapLoaded) { [weak self] _ in
+            guard let mapView = self?.mapView else { return }
+
             // Given
             let centerPoint = mapView.center
 

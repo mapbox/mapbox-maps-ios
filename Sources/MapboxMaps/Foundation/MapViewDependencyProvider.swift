@@ -6,9 +6,14 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
     func makeMapboxObservableProvider() -> (ObservableProtocol) -> MapboxObservableProtocol
     func makeMetalView(frame: CGRect, device: MTLDevice?) -> MTKView
     func makeDisplayLink(window: UIWindow, target: Any, selector: Selector) -> DisplayLinkProtocol?
+    func makeCameraAnimatorsRunner(mapboxMap: MapboxMapProtocol) -> CameraAnimatorsRunnerProtocol
+    func makeCameraAnimationsManagerImpl(cameraViewContainerView: UIView,
+                                         mapboxMap: MapboxMapProtocol,
+                                         cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol) -> CameraAnimationsManagerProtocol
     func makeGestureManager(view: UIView,
                             mapboxMap: MapboxMapProtocol,
-                            cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager
+                            cameraAnimationsManager: CameraAnimationsManagerProtocol,
+                            cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol) -> GestureManager
     func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool) -> LocationProducerProtocol
     func makeInterpolatedLocationProducer(locationProducer: LocationProducerProtocol,
                                           displayLinkCoordinator: DisplayLinkCoordinator) -> InterpolatedLocationProducerProtocol
@@ -41,6 +46,21 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
 
     func makeDisplayLink(window: UIWindow, target: Any, selector: Selector) -> DisplayLinkProtocol? {
         window.screen.displayLink(withTarget: target, selector: selector)
+    }
+
+    func makeCameraAnimatorsRunner(mapboxMap: MapboxMapProtocol) -> CameraAnimatorsRunnerProtocol {
+        CameraAnimatorsRunner(mapboxMap: mapboxMap)
+    }
+
+    func makeCameraAnimationsManagerImpl(cameraViewContainerView: UIView,
+                                         mapboxMap: MapboxMapProtocol,
+                                         cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol) -> CameraAnimationsManagerProtocol {
+        CameraAnimationsManagerImpl(
+            factory: CameraAnimatorsFactory(
+                cameraViewContainerView: cameraViewContainerView,
+                mapboxMap: mapboxMap,
+                dateProvider: DefaultDateProvider()),
+            runner: cameraAnimatorsRunner)
     }
 
     func makePanGestureHandler(view: UIView,
@@ -116,7 +136,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     }
 
     func makeAnyTouchGestureHandler(view: UIView,
-                                    cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
+                                    cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol) -> GestureHandler {
         // 0.15 seconds is a sufficient delay to avoid interrupting animations
         // in between a rapid succession of double tap or double touch gestures.
         // It's also not so long as to feel unnatural when touching the map to
@@ -129,12 +149,13 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
         view.addGestureRecognizer(gestureRecognizer)
         return AnyTouchGestureHandler(
             gestureRecognizer: gestureRecognizer,
-            cameraAnimationsManager: cameraAnimationsManager)
+            cameraAnimatorsRunner: cameraAnimatorsRunner)
     }
 
     func makeGestureManager(view: UIView,
                             mapboxMap: MapboxMapProtocol,
-                            cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager {
+                            cameraAnimationsManager: CameraAnimationsManagerProtocol,
+                            cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol) -> GestureManager {
         return GestureManager(
             panGestureHandler: makePanGestureHandler(
                 view: view,
@@ -162,7 +183,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                 cameraAnimationsManager: cameraAnimationsManager),
             anyTouchGestureHandler: makeAnyTouchGestureHandler(
                 view: view,
-                cameraAnimationsManager: cameraAnimationsManager),
+                cameraAnimatorsRunner: cameraAnimatorsRunner),
             mapboxMap: mapboxMap)
     }
 

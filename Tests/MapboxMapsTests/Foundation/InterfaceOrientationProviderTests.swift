@@ -54,34 +54,19 @@ final class UIApplicationInterfaceOrientationProviderTests: XCTestCase {
     }
 }
 
-@available(iOS 13.0, *)
 final class DefaultInterfaceOrientationProviderTests: XCTestCase {
-    var provider: DefaultInterfaceOrientationProvider!
-    var view: UIView!
-    var window: UIWindow!
-
-    override func setUp() {
-        super.setUp()
-
-        view = UIView()
-        window = UIWindow()
-        let viewController = UIViewController()
-        viewController.view.addSubview(view)
-        window.rootViewController = viewController
-        window.makeKeyAndVisible()
-        provider = DefaultInterfaceOrientationProvider()
-    }
-
-    override func tearDown() {
-        provider = nil
-        view = nil
-        super.tearDown()
-    }
-
     func testOrientationProvider() throws {
         guard #available(iOS 13.0, *) else {
             throw XCTSkip("Test requires iOS 13 or higher.")
         }
+
+        let view = UIView()
+        let window = UIWindow()
+        let viewController = UIViewController()
+        viewController.view.addSubview(view)
+        window.rootViewController = viewController
+        window.makeKeyAndVisible()
+        let provider = DefaultInterfaceOrientationProvider()
 
         let orientation = provider.interfaceOrientation(for: view)
 

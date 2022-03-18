@@ -100,7 +100,7 @@ final class OrnamentManagerTests: XCTestCase {
 
         XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1)
         XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 1)
-        XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.first?.parameters.camera, CameraOptions(bearing: 0))
+        XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.first?.parameters.to, CameraOptions(bearing: 0))
         XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.first?.parameters.duration, 0.3)
         XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.first?.parameters.curve, .easeOut)
         XCTAssertNil(cameraAnimationsManager.easeToStub.invocations.first?.parameters.completion)

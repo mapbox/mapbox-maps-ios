@@ -89,7 +89,7 @@ final class FollowPuckViewportStateTest: XCTestCase {
         // verify that an animation was started
         XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 1)
         let easeToInvocation = try XCTUnwrap(cameraAnimationsManager.easeToStub.invocations.first)
-        XCTAssertEqual(easeToInvocation.parameters.camera, cameraOptions0)
+        XCTAssertEqual(easeToInvocation.parameters.to, cameraOptions0)
         XCTAssertEqual(easeToInvocation.parameters.duration, state.options.animationDuration)
         XCTAssertEqual(easeToInvocation.parameters.curve, .linear)
         let easeToCompletion = try XCTUnwrap(easeToInvocation.parameters.completion)

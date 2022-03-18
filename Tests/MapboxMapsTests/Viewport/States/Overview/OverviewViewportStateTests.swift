@@ -30,7 +30,7 @@ final class OverviewViewportStateTest: XCTestCase {
     func verifyEaseTo(with expectedCamera: CameraOptions) throws -> MockCancelable {
         XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 1)
         let easeToInvocation = try XCTUnwrap(cameraAnimationsManager.easeToStub.invocations.first)
-        XCTAssertEqual(easeToInvocation.parameters.camera, expectedCamera)
+        XCTAssertEqual(easeToInvocation.parameters.to, expectedCamera)
         XCTAssertEqual(easeToInvocation.parameters.duration,
                        max(0, state.options.animationDuration))
         XCTAssertEqual(easeToInvocation.parameters.curve, .linear)

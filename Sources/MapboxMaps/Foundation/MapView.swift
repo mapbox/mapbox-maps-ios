@@ -28,6 +28,7 @@ open class MapView: UIView {
 
     /// The `camera` object manages a camera's view lifecycle.
     public private(set) var camera: CameraAnimationsManager!
+    private var cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol!
 
     /// The `location`object handles location events of the map.
     public private(set) var location: LocationManager!
@@ -361,22 +362,32 @@ open class MapView: UIView {
     internal func setupManagers() {
 
         // Initialize/Configure camera manager first since Gestures needs it as dependency
-        camera = CameraAnimationsManager(
-            cameraViewContainerView: cameraViewContainerView,
+        cameraAnimatorsRunner = dependencyProvider.makeCameraAnimatorsRunner(
             mapboxMap: mapboxMap)
+        let internalCamera = dependencyProvider.makeCameraAnimationsManagerImpl(
+            cameraViewContainerView: cameraViewContainerView,
+            mapboxMap: mapboxMap,
+            cameraAnimatorsRunner: cameraAnimatorsRunner)
+        camera = CameraAnimationsManager(impl: internalCamera)
 
         // Initialize/Configure gesture manager
-        gestures = dependencyProvider.makeGestureManager(view: self, mapboxMap: mapboxMap, cameraAnimationsManager: camera)
+        gestures = dependencyProvider.makeGestureManager(
+            view: self,
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: internalCamera,
+            cameraAnimatorsRunner: cameraAnimatorsRunner)
 
         // Initialize the attribution manager
-        attributionDialogManager = AttributionDialogManager(dataSource: mapboxMap, delegate: self)
+        attributionDialogManager = AttributionDialogManager(
+            dataSource: mapboxMap,
+            delegate: self)
 
         // Initialize/Configure ornaments manager
         ornaments = OrnamentsManager(
             options: OrnamentOptions(),
             view: self,
             mapboxMap: mapboxMap,
-            cameraAnimationsManager: camera,
+            cameraAnimationsManager: internalCamera,
             infoButtonOrnamentDelegate: attributionDialogManager,
             logoView: LogoView(logoSize: .regular()),
             scaleBarView: MapboxScaleBarOrnamentView(),
@@ -402,17 +413,19 @@ open class MapView: UIView {
             displayLinkCoordinator: self)
 
         // Initialize/Configure view annotations manager
-        viewAnnotations = ViewAnnotationManager(containerView: viewAnnotationContainerView, mapboxMap: mapboxMap)
+        viewAnnotations = ViewAnnotationManager(
+            containerView: viewAnnotationContainerView,
+            mapboxMap: mapboxMap)
 
         viewport = Viewport(
             impl: dependencyProvider.makeViewportImpl(
                 mapboxMap: mapboxMap,
-                cameraAnimationsManager: camera,
+                cameraAnimationsManager: internalCamera,
                 anyTouchGestureRecognizer: gestures.anyTouchGestureRecognizer,
                 doubleTapGestureRecognizer: gestures.doubleTapToZoomInGestureRecognizer,
                 doubleTouchGestureRecognizer: gestures.doubleTouchToZoomOutGestureRecognizer),
             interpolatedLocationProducer: interpolatedLocationProducer,
-            cameraAnimationsManager: camera,
+            cameraAnimationsManager: internalCamera,
             mapboxMap: mapboxMap)
     }
 
@@ -528,7 +541,7 @@ open class MapView: UIView {
             participant.participate()
         }
 
-        camera.update()
+        cameraAnimatorsRunner.update()
 
         if needsDisplayRefresh {
             needsDisplayRefresh = false

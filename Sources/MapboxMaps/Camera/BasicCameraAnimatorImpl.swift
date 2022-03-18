@@ -75,8 +75,8 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
                 // * oldValue and internalState are the same
                 // * initial transitions to paused
                 // * paused transitions to final
+                // * initial transitions to final
                 // * the transition is invalid…
-                //     * initial --> final
                 //     * running/paused/final --> initial
                 //     * final --> running/paused
                 break
@@ -171,7 +171,11 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
     internal func stopAnimation() {
         switch internalState {
         case .initial:
-            fatalError("Attempt to stop an animation that has not started.")
+            internalState = .final
+            for completion in completions {
+                completion(.current)
+            }
+            completions.removeAll()
         case .running, .paused:
             propertyAnimator.stopAnimation(false)
             // this invokes the completion block which updates internalState

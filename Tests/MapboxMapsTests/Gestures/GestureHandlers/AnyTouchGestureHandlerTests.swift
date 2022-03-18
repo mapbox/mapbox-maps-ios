@@ -4,49 +4,43 @@ import XCTest
 final class AnyTouchGestureHandlerTests: XCTestCase {
 
     var gestureRecognizer: MockGestureRecognizer!
-    var cameraAnimationsManager: MockCameraAnimationsManager!
+    var cameraAnimatorsRunner: MockCameraAnimatorsRunner!
     var gestureHandler: AnyTouchGestureHandler!
 
     override func setUp() {
         super.setUp()
         gestureRecognizer = MockGestureRecognizer()
-        cameraAnimationsManager = MockCameraAnimationsManager()
+        cameraAnimatorsRunner = MockCameraAnimatorsRunner()
         gestureHandler = AnyTouchGestureHandler(
             gestureRecognizer: gestureRecognizer,
-            cameraAnimationsManager: cameraAnimationsManager)
+            cameraAnimatorsRunner: cameraAnimatorsRunner)
     }
 
     override func tearDown() {
         gestureHandler = nil
-        cameraAnimationsManager = nil
+        cameraAnimatorsRunner = nil
         gestureRecognizer = nil
         super.tearDown()
     }
 
     func testGestureBegan() {
-        cameraAnimationsManager.animationsEnabled = true
-
         gestureRecognizer.getStateStub.defaultReturnValue = .began
         gestureRecognizer.sendActions()
 
-        XCTAssertFalse(cameraAnimationsManager.animationsEnabled)
+        XCTAssertEqual(cameraAnimatorsRunner.$animationsEnabled.setStub.invocations.map(\.parameters), [false])
     }
 
     func testGestureEnded() {
-        cameraAnimationsManager.animationsEnabled = false
-
         gestureRecognizer.getStateStub.defaultReturnValue = .ended
         gestureRecognizer.sendActions()
 
-        XCTAssertTrue(cameraAnimationsManager.animationsEnabled)
+        XCTAssertEqual(cameraAnimatorsRunner.$animationsEnabled.setStub.invocations.map(\.parameters), [true])
     }
 
     func testGestureCancelled() {
-        cameraAnimationsManager.animationsEnabled = false
-
         gestureRecognizer.getStateStub.defaultReturnValue = .cancelled
         gestureRecognizer.sendActions()
 
-        XCTAssertTrue(cameraAnimationsManager.animationsEnabled)
+        XCTAssertEqual(cameraAnimatorsRunner.$animationsEnabled.setStub.invocations.map(\.parameters), [true])
     }
 }

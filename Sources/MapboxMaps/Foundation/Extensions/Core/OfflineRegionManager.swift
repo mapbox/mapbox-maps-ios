@@ -1,5 +1,6 @@
 @_implementationOnly import MapboxCoreMaps_Private
 
+/// :nodoc:
 @available(*, deprecated)
 extension OfflineRegionManager {
 

@@ -377,4 +377,33 @@ final class CameraAnimationsManagerImplTests: XCTestCase {
             animatorImpl: animatorImpl,
             returnedAnimator: animator)
     }
+
+    func testMakeSimpleCameraAnimator() throws {
+        let from = CameraOptions.random()
+        let to = CameraOptions.random()
+        let duration = TimeInterval.random(in: 0...10)
+        let curve = TimingCurve.random()
+        let owner = AnimationOwner.random()
+
+        let animator = impl.makeSimpleCameraAnimator(
+            from: from,
+            to: to,
+            duration: duration,
+            curve: curve,
+            owner: owner)
+
+        // creates animator
+        XCTAssertEqual(factory.makeSimpleCameraAnimatorStub.invocations.count, 1)
+        let factoryInvocation = try XCTUnwrap(factory.makeSimpleCameraAnimatorStub.invocations.first)
+        XCTAssertEqual(factoryInvocation.parameters.from, from)
+        XCTAssertEqual(factoryInvocation.parameters.to, to)
+        XCTAssertEqual(factoryInvocation.parameters.duration, duration)
+        XCTAssertEqual(factoryInvocation.parameters.curve, curve)
+        XCTAssertEqual(factoryInvocation.parameters.owner, owner)
+        let returnedAnimator = try XCTUnwrap(factoryInvocation.returnValue as? MockSimpleCameraAnimator)
+
+        XCTAssertEqual(runner.addStub.invocations.count, 1)
+        XCTAssertIdentical(runner.addStub.invocations.first?.parameters, returnedAnimator)
+        XCTAssertIdentical(animator, returnedAnimator)
+    }
 }

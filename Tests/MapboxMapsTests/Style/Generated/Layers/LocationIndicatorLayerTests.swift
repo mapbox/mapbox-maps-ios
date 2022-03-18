@@ -93,6 +93,7 @@ final class LocationIndicatorLayerTests: XCTestCase {
        layer.accuracyRadiusColor = Value<StyleColor>.testConstantValue()
        layer.accuracyRadiusColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.bearing = Value<Double>.testConstantValue()
+       layer.bearingTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.bearingImageSize = Value<Double>.testConstantValue()
        layer.bearingImageSizeTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.emphasisCircleColor = Value<StyleColor>.testConstantValue()

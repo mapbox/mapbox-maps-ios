@@ -4,6 +4,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Mitigate `OfflineRegionManager.mergeOfflineDatabase(for:completion)` throwing `TypeConversionError.unexpectedType` on a successfull merge. Introduce `OfflineRegionManager.mergeOfflineDatabase(forPath:completion)` as the correct way to merge offline database. ([#1192](https://github.com/mapbox/mapbox-maps-ios/pull/1192))
 * Update to MapboxCoreMaps 10.4.1 and MapboxCommon 21.2.0. ([#1190](https://github.com/mapbox/mapbox-maps-ios/pull/1190))
 * Add support for app extensions. ([#1183](https://github.com/mapbox/mapbox-maps-ios/pull/1183))
 * `BasicCameraAnimator.cancel()` and `.stopAnimation()` now invoke the completion blocks with `UIViewAnimatingPosition.current` instead of crashing with a `fatalError` when invoked prior to `.startAnimation()` or `.startAnimation(afterDelay:)`. ([#1197](https://github.com/mapbox/mapbox-maps-ios/pull/1197))

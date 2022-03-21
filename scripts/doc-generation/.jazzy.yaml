@@ -231,6 +231,7 @@ custom_categories:
     children:
       - OfflineManager
       - OfflineRegion
+      - OfflineRegionManager
       - OfflineRegionGeometryDefinition
       - OfflineSwitch
       - StylePackError

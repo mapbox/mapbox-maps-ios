@@ -117,7 +117,7 @@ final class CameraAnimatorsRunnerTests: XCTestCase {
         XCTAssertEqual(animators[9].cancelStub.invocations.count, 0)
     }
 
-    func testCancelAnimationsWithSingleMultipleOwners() {
+    func testCancelAnimationsWithMultipleOwners() {
         let owner1 = AnimationOwner.random()
         let owner2 = AnimationOwner.random()
 
@@ -133,7 +133,7 @@ final class CameraAnimatorsRunnerTests: XCTestCase {
             return animator
         }
 
-        animators[10].owner = AnimationOwner(rawValue: owner1.rawValue + owner2.rawValue)
+        animators[10].owner = AnimationOwner(rawValue: owner1.rawValue + owner2.rawValue + "a")
 
         for animator in animators {
             cameraAnimatorsRunner.add(animator)

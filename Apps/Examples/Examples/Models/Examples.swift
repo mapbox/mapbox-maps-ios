@@ -84,6 +84,9 @@ public struct Examples {
 
     // Examples that focus on annotations.
     public static let annotationExamples = [
+        Example(title: "Add a polygon annotation",
+                description: "Add a polygon annotation to the map.",
+                type: PolygonAnnotationExample.self),
         Example(title: "Add a point annotation using an image",
                 description: "Add a point annotation using a custom image on a map.",
                 type: CustomPointAnnotationExample.self),
@@ -93,9 +96,6 @@ public struct Examples {
         Example(title: "Add a line annotation",
                 description: "Add a line annotation on a map.",
                 type: LineAnnotationExample.self),
-        Example(title: "Add a polygon annotation",
-                description: "Add a polygon annotation to the map.",
-                type: PolygonAnnotationExample.self),
         Example(title: "Select an annotation",
                 description: "Select an annotation with a tap gesture.",
                 type: SelectAnnotationExample.self),

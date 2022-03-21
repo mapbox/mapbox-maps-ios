@@ -1,7 +1,6 @@
 @_implementationOnly import MapboxCommon_Private
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 extension MapView {
 
     /// Errors related to rendered snapshots

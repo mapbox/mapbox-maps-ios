@@ -21,6 +21,8 @@ custom_categories:
       - ResourceOptionsManager
       - MapOptions
       - GlyphsRasterizationOptions
+      - InterfaceOrientationProvider
+      - AttributionURLOpener
 
   - name: Snapshotter
     children:

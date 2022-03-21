@@ -8,7 +8,6 @@
 import UIKit
 
 // swiftlint:disable type_body_length
-@available(iOSApplicationExtension, unavailable)
 open class MapView: UIView {
 
     // `mapboxMap` depends on `MapInitOptions`, which is not available until
@@ -29,6 +28,7 @@ open class MapView: UIView {
 
     /// The `camera` object manages a camera's view lifecycle.
     public private(set) var camera: CameraAnimationsManager!
+    private var cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol!
 
     /// The `location`object handles location events of the map.
     public private(set) var location: LocationManager!
@@ -174,30 +174,97 @@ open class MapView: UIView {
         return mapboxMap.anchor
     }
 
+    private let interfaceOrientationProvider: InterfaceOrientationProvider
+    internal let attributionUrlOpener: AttributionURLOpener
+
     /// Initialize a MapView
     /// - Parameters:
     ///   - frame: frame for the MapView.
     ///   - mapInitOptions: `MapInitOptions`; default uses
     ///    `ResourceOptionsManager.default` to retrieve a shared default resource option, including the access token.
+    @available(iOSApplicationExtension, unavailable)
     public init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions()) {
-        dependencyProvider = MapViewDependencyProvider()
+        let orientationProvider: InterfaceOrientationProvider
+        if #available(iOS 13, *) {
+            orientationProvider = DefaultInterfaceOrientationProvider()
+        } else {
+            orientationProvider = UIApplicationInterfaceOrientationProvider()
+        }
+
+        self.dependencyProvider = MapViewDependencyProvider()
+        self.interfaceOrientationProvider = orientationProvider
+        self.attributionUrlOpener = DefaultAttributionURLOpener()
         notificationCenter = dependencyProvider.makeNotificationCenter()
         bundle = dependencyProvider.makeBundle()
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
 
+    /// Initialize a MapView
+    /// - Parameters:
+    ///   - frame: frame for the MapView.
+    ///   - mapInitOptions: `MapInitOptions`; default uses
+    ///    `ResourceOptionsManager.default` to retrieve a shared default resource option, including the access token.
+    ///   - orientationProvider: User interface orientation provider
+    ///   - urlOpener: Attribution URL opener
+    @available(iOS, deprecated: 13, message: "Use init(frame:mapInitOptions:urlOpener:) instead")
+    public init(frame: CGRect,
+                mapInitOptions: MapInitOptions = MapInitOptions(),
+                orientationProvider: InterfaceOrientationProvider,
+                urlOpener: AttributionURLOpener) {
+        self.dependencyProvider = MapViewDependencyProvider()
+        self.interfaceOrientationProvider = orientationProvider
+        self.attributionUrlOpener = urlOpener
+        notificationCenter = dependencyProvider.makeNotificationCenter()
+        bundle = dependencyProvider.makeBundle()
+        super.init(frame: frame)
+        commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
+    }
+
+    /// Initialize a MapView
+    /// - Parameters:
+    ///   - frame: frame for the MapView.
+    ///   - mapInitOptions: `MapInitOptions`; default uses
+    ///    `ResourceOptionsManager.default` to retrieve a shared default resource option, including the access token.
+    ///   - urlOpener: Attribution URL opener
+    @available(iOS 13.0, *)
+    public init(frame: CGRect,
+                mapInitOptions: MapInitOptions = MapInitOptions(),
+                urlOpener: AttributionURLOpener) {
+        self.dependencyProvider = MapViewDependencyProvider()
+        self.interfaceOrientationProvider = DefaultInterfaceOrientationProvider()
+        self.attributionUrlOpener = urlOpener
+        notificationCenter = dependencyProvider.makeNotificationCenter()
+        bundle = dependencyProvider.makeBundle()
+        super.init(frame: frame)
+        commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
+    }
+
+    @available(iOSApplicationExtension, unavailable)
     required public init?(coder: NSCoder) {
+        let orientationProvider: InterfaceOrientationProvider
+        if #available(iOS 13, *) {
+            orientationProvider = DefaultInterfaceOrientationProvider()
+        } else {
+            orientationProvider = UIApplicationInterfaceOrientationProvider()
+        }
+
         dependencyProvider = MapViewDependencyProvider()
         notificationCenter = dependencyProvider.makeNotificationCenter()
         bundle = dependencyProvider.makeBundle()
+        self.interfaceOrientationProvider = orientationProvider
+        self.attributionUrlOpener = DefaultAttributionURLOpener()
         super.init(coder: coder)
     }
 
     internal init(frame: CGRect,
                   mapInitOptions: MapInitOptions,
-                  dependencyProvider: MapViewDependencyProviderProtocol) {
+                  dependencyProvider: MapViewDependencyProviderProtocol,
+                  orientationProvider: InterfaceOrientationProvider,
+                  urlOpener: AttributionURLOpener) {
         self.dependencyProvider = dependencyProvider
+        self.interfaceOrientationProvider = orientationProvider
+        self.attributionUrlOpener = urlOpener
         notificationCenter = dependencyProvider.makeNotificationCenter()
         bundle = dependencyProvider.makeBundle()
         super.init(frame: frame)
@@ -295,22 +362,32 @@ open class MapView: UIView {
     internal func setupManagers() {
 
         // Initialize/Configure camera manager first since Gestures needs it as dependency
-        camera = CameraAnimationsManager(
-            cameraViewContainerView: cameraViewContainerView,
+        cameraAnimatorsRunner = dependencyProvider.makeCameraAnimatorsRunner(
             mapboxMap: mapboxMap)
+        let internalCamera = dependencyProvider.makeCameraAnimationsManagerImpl(
+            cameraViewContainerView: cameraViewContainerView,
+            mapboxMap: mapboxMap,
+            cameraAnimatorsRunner: cameraAnimatorsRunner)
+        camera = CameraAnimationsManager(impl: internalCamera)
 
         // Initialize/Configure gesture manager
-        gestures = dependencyProvider.makeGestureManager(view: self, mapboxMap: mapboxMap, cameraAnimationsManager: camera)
+        gestures = dependencyProvider.makeGestureManager(
+            view: self,
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: internalCamera,
+            cameraAnimatorsRunner: cameraAnimatorsRunner)
 
         // Initialize the attribution manager
-        attributionDialogManager = AttributionDialogManager(dataSource: mapboxMap, delegate: self)
+        attributionDialogManager = AttributionDialogManager(
+            dataSource: mapboxMap,
+            delegate: self)
 
         // Initialize/Configure ornaments manager
         ornaments = OrnamentsManager(
             options: OrnamentOptions(),
             view: self,
             mapboxMap: mapboxMap,
-            cameraAnimationsManager: camera,
+            cameraAnimationsManager: internalCamera,
             infoButtonOrnamentDelegate: attributionDialogManager,
             logoView: LogoView(logoSize: .regular()),
             scaleBarView: MapboxScaleBarOrnamentView(),
@@ -336,17 +413,19 @@ open class MapView: UIView {
             displayLinkCoordinator: self)
 
         // Initialize/Configure view annotations manager
-        viewAnnotations = ViewAnnotationManager(containerView: viewAnnotationContainerView, mapboxMap: mapboxMap)
+        viewAnnotations = ViewAnnotationManager(
+            containerView: viewAnnotationContainerView,
+            mapboxMap: mapboxMap)
 
         viewport = Viewport(
             impl: dependencyProvider.makeViewportImpl(
                 mapboxMap: mapboxMap,
-                cameraAnimationsManager: camera,
+                cameraAnimationsManager: internalCamera,
                 anyTouchGestureRecognizer: gestures.anyTouchGestureRecognizer,
                 doubleTapGestureRecognizer: gestures.doubleTapToZoomInGestureRecognizer,
                 doubleTouchGestureRecognizer: gestures.doubleTouchToZoomOutGestureRecognizer),
             interpolatedLocationProducer: interpolatedLocationProducer,
-            cameraAnimationsManager: camera,
+            cameraAnimationsManager: internalCamera,
             mapboxMap: mapboxMap)
     }
 
@@ -462,7 +541,7 @@ open class MapView: UIView {
             participant.participate()
         }
 
-        camera.update()
+        cameraAnimatorsRunner.update()
 
         if needsDisplayRefresh {
             needsDisplayRefresh = false
@@ -512,36 +591,8 @@ open class MapView: UIView {
     // MARK: Location
 
     private func updateHeadingOrientationIfNeeded() {
-        // locationProvider.headingOrientation should be adjusted based on the
-        // current UIInterfaceOrientation of the containing window, not the
-        // device orientation
-        let optionalInterfaceOrientation: UIInterfaceOrientation?
-        if #available(iOS 13.0, *) {
-            optionalInterfaceOrientation = window?.windowScene?.interfaceOrientation
-        } else {
-            optionalInterfaceOrientation =  UIApplication.shared.statusBarOrientation
-        }
-
-        guard let interfaceOrientation = optionalInterfaceOrientation else {
+        guard let headingOrientation = interfaceOrientationProvider.headingOrientation(for: self) else {
             return
-        }
-
-        // UIInterfaceOrientation.landscape{Right,Left} correspond to
-        // CLDeviceOrientation.landscape{Left,Right}, respectively. The reason
-        // for this, according to the UIInterfaceOrientation docs is that
-        //
-        //    > …rotating the device requires rotating the content in the
-        //    > opposite direction.
-        var headingOrientation: CLDeviceOrientation
-        switch interfaceOrientation {
-        case .landscapeLeft:
-            headingOrientation = .landscapeRight
-        case .landscapeRight:
-            headingOrientation = .landscapeLeft
-        case .portraitUpsideDown:
-            headingOrientation = .portraitUpsideDown
-        default:
-            headingOrientation = .portrait
         }
 
         // We check for heading changes during the display link, but setting it
@@ -558,7 +609,6 @@ open class MapView: UIView {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
 extension MapView: DelegatingMapClientDelegate {
     internal func scheduleRepaint() {
         needsDisplayRefresh = true

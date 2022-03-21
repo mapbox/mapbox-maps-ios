@@ -63,7 +63,7 @@ extension FollowPuckViewportState: ViewportState {
                 mapboxMap.setCamera(to: cameraOptions)
             } else if !animationStarted {
                 animationStarted = true
-                compositeCancelable.add(cameraAnimationsManager.internalEase(
+                compositeCancelable.add(cameraAnimationsManager.ease(
                     to: cameraOptions,
                     duration: options.animationDuration,
                     curve: .linear) { _ in

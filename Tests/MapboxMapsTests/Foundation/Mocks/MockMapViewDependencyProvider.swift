@@ -44,10 +44,23 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
                 selector: selector))
     }
 
+    let makeCameraAnimatorsRunnerStub = Stub<MapboxMapProtocol, CameraAnimatorsRunnerProtocol>(
+        defaultReturnValue: MockCameraAnimatorsRunner())
+    func makeCameraAnimatorsRunner(mapboxMap: MapboxMapProtocol) -> CameraAnimatorsRunnerProtocol {
+        makeCameraAnimatorsRunnerStub.call(with: mapboxMap)
+    }
+
+    func makeCameraAnimationsManagerImpl(cameraViewContainerView: UIView,
+                                         mapboxMap: MapboxMapProtocol,
+                                         cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol) -> CameraAnimationsManagerProtocol {
+        MockCameraAnimationsManager()
+    }
+
     func makeGestureManager(
         view: UIView,
         mapboxMap: MapboxMapProtocol,
-        cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager {
+        cameraAnimationsManager: CameraAnimationsManagerProtocol,
+        cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol) -> GestureManager {
         return GestureManager(
             panGestureHandler: MockPanGestureHandler(
                 gestureRecognizer: UIGestureRecognizer()),
@@ -67,8 +80,9 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
         return GestureHandler(gestureRecognizer: UIGestureRecognizer())
     }
 
+    let makeLocationProducerStub = Stub<Bool, MockLocationProducer>(defaultReturnValue: MockLocationProducer())
     func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool) -> LocationProducerProtocol {
-        return MockLocationProducer()
+        return makeLocationProducerStub.call(with: mayRequestWhenInUseAuthorization)
     }
 
     func makeInterpolatedLocationProducer(locationProducer: LocationProducerProtocol,

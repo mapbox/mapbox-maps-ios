@@ -10,20 +10,29 @@ final class MapViewTests: XCTestCase {
     var mapView: MapView!
     var window: UIWindow!
     var metalView: MockMetalView!
+    var locationProducer: MockLocationProducer!
+    var orientationProvider: MockInterfaceOrientationProvider!
+    var attributionURLOpener: MockAttributionURLOpener!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
         displayLink = MockDisplayLink()
         notificationCenter = MockNotificationCenter()
         bundle = MockBundle()
+        locationProducer = MockLocationProducer()
         dependencyProvider = MockMapViewDependencyProvider()
         dependencyProvider.makeDisplayLinkStub.defaultReturnValue = displayLink
         dependencyProvider.makeNotificationCenterStub.defaultReturnValue = notificationCenter
         dependencyProvider.makeBundleStub.defaultReturnValue = bundle
+        dependencyProvider.makeLocationProducerStub.defaultReturnValue = locationProducer
+        orientationProvider = MockInterfaceOrientationProvider()
+        attributionURLOpener = MockAttributionURLOpener()
         mapView = MapView(
             frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
             mapInitOptions: MapInitOptions(),
-            dependencyProvider: dependencyProvider)
+            dependencyProvider: dependencyProvider,
+            orientationProvider: orientationProvider,
+            urlOpener: attributionURLOpener)
         window = UIWindow()
         window.addSubview(mapView)
         metalView = try XCTUnwrap(XCTUnwrap(dependencyProvider.makeMetalViewStub.invocations.first?.returnValue))
@@ -37,6 +46,9 @@ final class MapViewTests: XCTestCase {
         displayLink = nil
         bundle = nil
         notificationCenter = nil
+        orientationProvider = nil
+        attributionURLOpener = nil
+        locationProducer = nil
         super.tearDown()
     }
 
@@ -188,6 +200,15 @@ final class MapViewTests: XCTestCase {
         XCTAssertEqual(participant2.participateStub.invocations.count, 1)
     }
 
+    func testDisplayLinkInvokesCameraAnimatorsRunner() throws {
+        XCTAssertEqual(dependencyProvider.makeCameraAnimatorsRunnerStub.invocations.count, 1)
+        let runner = try XCTUnwrap(dependencyProvider.makeCameraAnimatorsRunnerStub.invocations.first?.returnValue as? MockCameraAnimatorsRunner)
+
+        try invokeDisplayLinkCallback()
+
+        XCTAssertEqual(runner.updateStub.invocations.count, 1)
+    }
+
     func testAppLifecycleNotificationSubscribedWhenDidMoveToNewWindow() {
         let notificationCenter = MockNotificationCenter()
         let bundle = MockBundle()
@@ -197,7 +218,9 @@ final class MapViewTests: XCTestCase {
         let mapView = MapView(
             frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
             mapInitOptions: MapInitOptions(),
-            dependencyProvider: dependencyProvider)
+            dependencyProvider: dependencyProvider,
+            orientationProvider: orientationProvider,
+            urlOpener: attributionURLOpener)
 
         window.addSubview(mapView)
 
@@ -226,7 +249,9 @@ final class MapViewTests: XCTestCase {
         let mapView = MapView(
             frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
             mapInitOptions: MapInitOptions(),
-            dependencyProvider: dependencyProvider)
+            dependencyProvider: dependencyProvider,
+            orientationProvider: orientationProvider,
+            urlOpener: attributionURLOpener)
 
         window.addSubview(mapView)
 
@@ -254,7 +279,9 @@ final class MapViewTests: XCTestCase {
         let mapView = MapView(
             frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
             mapInitOptions: MapInitOptions(),
-            dependencyProvider: dependencyProvider)
+            dependencyProvider: dependencyProvider,
+            orientationProvider: orientationProvider,
+            urlOpener: attributionURLOpener)
         window.addSubview(mapView)
         notificationCenter.removeObserverStub.reset()
 
@@ -309,5 +336,33 @@ final class MapViewTests: XCTestCase {
         notificationCenter.post(name: UIScene.didEnterBackgroundNotification, object: window.parentScene)
 
         XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
+    }
+
+    func testOrientationProviderIsUsed() throws {
+        try invokeDisplayLinkCallback()
+
+        XCTAssertEqual(orientationProvider.interfaceOrientationStub.invocations.count, 1)
+    }
+
+    func testOrientationChangeIsPropagated() throws {
+        let orientations: [UIInterfaceOrientation] = [.portrait, .landscapeLeft, .landscapeRight, .portraitUpsideDown]
+        for orientation in orientations {
+            orientationProvider.interfaceOrientationStub.defaultReturnValue = orientation
+
+            try invokeDisplayLinkCallback()
+
+            XCTAssertEqual(locationProducer.headingOrientation, CLDeviceOrientation(interfaceOrientation: orientation))
+        }
+    }
+
+    func testURLOpener() {
+        let manager = AttributionDialogManager(dataSource: MockAttributionDataSource(), delegate: MockAttributionDialogManagerDelegate())
+        let url = URL(string: "http://example.com")!
+        let attribution = Attribution(title: .randomASCII(withLength: 10), url: url)
+
+        mapView.attributionDialogManager(manager, didTriggerActionFor: attribution)
+
+        XCTAssertEqual(attributionURLOpener.openAttributionURLStub.invocations.count, 1)
+        XCTAssertEqual(attributionURLOpener.openAttributionURLStub.invocations.first?.parameters, url)
     }
 }

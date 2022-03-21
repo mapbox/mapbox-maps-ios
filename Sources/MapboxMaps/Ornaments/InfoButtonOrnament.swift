@@ -1,12 +1,10 @@
 import UIKit
 @_implementationOnly import MapboxCommon_Private
 
-@available(iOSApplicationExtension, unavailable)
 internal protocol InfoButtonOrnamentDelegate: AnyObject {
     func didTap(_ infoButtonOrnament: InfoButtonOrnament)
 }
 
-@available(iOSApplicationExtension, unavailable)
 internal class InfoButtonOrnament: UIView {
 
     public override var isHidden: Bool {

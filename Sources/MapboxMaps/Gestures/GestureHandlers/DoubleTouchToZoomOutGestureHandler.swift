@@ -27,7 +27,7 @@ internal final class DoubleTouchToZoomOutGestureHandler: GestureHandler, Focusab
             delegate?.gestureEnded(for: .doubleTouchToZoomOut, willAnimate: true)
 
             let anchor = focalPoint ?? gestureRecognizer.location(in: view)
-            cameraAnimationsManager.internalEase(
+            cameraAnimationsManager.ease(
                 to: CameraOptions(anchor: anchor, zoom: mapboxMap.cameraState.zoom - 1),
                 duration: 0.3,
                 curve: .easeOut) { _ in

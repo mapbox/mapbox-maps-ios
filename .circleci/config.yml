@@ -331,14 +331,14 @@ jobs:
       - run:
           name: Trigger binary size test
           command: |
-            if [ -n "${CIRCLECI_METRICS_TOKEN}" ]; then
+            if [ -n "${CIRCLECI_API_TOKEN_MOBILE_METRICS}" ]; then
               if [[ $CIRCLE_BRANCH == main ]]; then
-                curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_METRICS_TOKEN}
+                curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_API_TOKEN_MOBILE_METRICS}
               else
-                curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\",\"SOURCE_COMPARE_BASELINE\":\"YES\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_METRICS_TOKEN}
+                curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\",\"SOURCE_COMPARE_BASELINE\":\"YES\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_API_TOKEN_MOBILE_METRICS}
               fi
             else
-              echo "CIRCLECI_METRICS_TOKEN not provided"
+              echo "CIRCLECI_API_TOKEN_MOBILE_METRICS not provided"
             fi
 
   trigger-metrics-build:
@@ -347,18 +347,18 @@ jobs:
       - run:
           name: Build metrics tests
           command: |
-            if [ -n "${CIRCLECI_METRICS_TOKEN}" ]; then
+            if [ -n "${CIRCLECI_API_TOKEN_MOBILE_METRICS}" ]; then
               if [[ $CIRCLE_BRANCH == main ]]; then
-                curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_METRICS_TOKEN}
+                curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_API_TOKEN_MOBILE_METRICS}
               else
                 echo "Trying $CIRCLE_BRANCH first:"
-                if ! curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/$CIRCLE_BRANCH?circle-token=${CIRCLECI_METRICS_TOKEN}; then
+                if ! curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/$CIRCLE_BRANCH?circle-token=${CIRCLECI_API_TOKEN_MOBILE_METRICS}; then
                   echo "Falling back to `master` branch:"
-                  curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_METRICS_TOKEN}
+                  curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_API_TOKEN_MOBILE_METRICS}
                 fi
               fi
             else
-              echo "CIRCLECI_METRICS_TOKEN not provided"
+              echo "CIRCLECI_API_TOKEN_MOBILE_METRICS not provided"
             fi
 
   trigger-metrics-v2:
@@ -371,7 +371,7 @@ jobs:
             if [[ $CIRCLE_BRANCH == main ]]; then
               curl -X POST "https://circleci.com/api/v2/project/github/mapbox/mapbox-maps-ios-internal/pipeline" \
                   -H 'Content-Type: application/json' \
-                  -H "Circle-Token: $CIRCLECI_METRICS_TOKEN" \
+                  -H "Circle-Token: $CIRCLECI_API_TOKEN_MAPBOX_MAPS_IOS_INTERNAL" \
                   -d $'{
                 "branch": "main",
                 "parameters": {
@@ -382,7 +382,7 @@ jobs:
             else
               curl -X POST "https://circleci.com/api/v2/project/github/mapbox/mapbox-maps-ios-internal/pipeline" \
                 -H 'Content-Type: application/json' \
-                -H "Circle-Token: $CIRCLECI_METRICS_TOKEN" \
+                -H "Circle-Token: $CIRCLECI_API_TOKEN_MAPBOX_MAPS_IOS_INTERNAL" \
                 -d $'{
               "branch": "main",
               "parameters": {
@@ -398,10 +398,10 @@ jobs:
           # TODO: main by default (this is set as a filter), other commits on-demand
           name: Trigger metrics
           command: |
-            if [ -n "${CIRCLECI_METRICS_TOKEN}" ]; then
-              curl --fail -X POST --header "Content-Type: application/json" --data "{\"parameters\":{\"run_ios_maps_v10_benchmark\":true,\"ci_ref\":${CIRCLE_BUILD_NUM},\"mapbox_hash\":\"${CIRCLE_SHA1}\",\"target_branch\":\"${CIRCLE_BRANCH}\"},\"branch\":\"master\"}" https://circleci.com/api/v2/project/github/mapbox/mobile-metrics/pipeline?circle-token=${CIRCLECI_METRICS_TOKEN}
+            if [ -n "${CIRCLECI_API_TOKEN_MOBILE_METRICS}" ]; then
+              curl --fail -X POST --header "Content-Type: application/json" --data "{\"parameters\":{\"run_ios_maps_v10_benchmark\":true,\"ci_ref\":${CIRCLE_BUILD_NUM},\"mapbox_hash\":\"${CIRCLE_SHA1}\",\"target_branch\":\"${CIRCLE_BRANCH}\"},\"branch\":\"master\"}" https://circleci.com/api/v2/project/github/mapbox/mobile-metrics/pipeline?circle-token=${CIRCLECI_API_TOKEN_MOBILE_METRICS}
             else
-              echo "CIRCLECI_METRICS_TOKEN not provided"
+              echo "CIRCLECI_API_TOKEN_MOBILE_METRICS not provided"
             fi
       - report-failure:
           report_failure: << parameters.report_failure >>

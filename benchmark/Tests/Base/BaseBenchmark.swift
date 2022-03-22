@@ -10,7 +10,7 @@ class BaseBenchmark: XCTestCase {
     }
 
     enum Error: Swift.Error {
-        case rootViewControllerNotFount
+        case rootViewControllerNotFound
     }
 
     var styleURI: StyleURI = .streets

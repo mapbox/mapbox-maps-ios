@@ -69,11 +69,34 @@ jobs:
     steps:
       - checkout
       - mapbox/add-mapbox-ssh-key
+      - run: echo $PATH
+      - mapbox/install-mbx-ci:
+          platform: linux
       - checkout-mobile-metrics
       - attach_workspace:
           at: Products
       - run: ls -l Products/
-      - run: cat mobile-metrics/ios-maps/Scripts/devicefarm.py
+      - run: |
+          # sudo apt-get update
+          # sudo apt-get install python3-pip
+          # pip3 install awscli
+          cd /tmp
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+      - run:
+          name: Schedule DeviceFarm run
+          command: |
+            mobile-metrics/ios-maps/Scripts/devicefarm.py \
+              "arn:aws:devicefarm:us-west-2:234858372212:project:c29e8fde-6337-461b-af58-b6a7f93f043c" \
+              --name "$CIRCLE_SHA1-$CIRCLE_BUILD_NUM" \
+              --device-pool "arn:aws:devicefarm:us-west-2:234858372212:devicepool:c29e8fde-6337-461b-af58-b6a7f93f043c/bfbd31ba-dac3-4962-8ecb-52d6d6302aa8" \
+              --ipa "Products/App.ipa" \
+              --tests "Products/AppTests.zip" \
+              --test-type XCTEST \
+              --output benchmark_waiter.json
+      - store_artifacts:
+          path: benchmark_waiter.json
 
 commands:
   build-benchmark:
@@ -154,15 +177,18 @@ orbs:
           version:
             type: string
             default: latest
-          install_path:
-            type: string
-            default: /usr/local/bin
         steps:
           - run:
               name: Install << parameters.version >> mbx-ci
               command: |
-                curl -Ls https://mapbox-release-engineering.s3.amazonaws.com/mbx-ci/<<parameters.version>>/mbx-ci-<<parameters.platform>>-<<parameters.arch>> > <<parameters.install_path>>/mbx-ci
-                chmod 755 <<parameters.install_path>>/mbx-ci
+                unameOut="$(uname -s)"
+                case "${unameOut}" in
+                    Linux*)     MBX_INSTALL_PATH="$HOME/bin";;
+                    Darwin*)    MBX_INSTALL_PATH="/usr/local/bin/";;
+                    *)          MBX_INSTALL_PATH="/usr/local/bin/"
+                esac
+                curl -Ls https://mapbox-release-engineering.s3.amazonaws.com/mbx-ci/<<parameters.version>>/mbx-ci-<<parameters.platform>>-<<parameters.arch>> > $MBX_INSTALL_PATH/mbx-ci
+                chmod 755 $MBX_INSTALL_PATH/mbx-ci
                 mbx-ci aws setup
 
       set-github-commit-status:

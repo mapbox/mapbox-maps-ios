@@ -351,7 +351,7 @@ orbs:
 
                 # Copy the testrun in
                 TMP_PAYLOAD_APP=$(find "$PAYLOAD_PATH" -name "*.app")
-                cp "$DERIVED_DATA_PATH/Build/Products/"*.xctestrun  "$TMP_PAYLOAD_APP"
+                # cp "$DERIVED_DATA_PATH/Build/Products/"*.xctestrun  "$TMP_PAYLOAD_APP"
 
                 # Zip up
                 (

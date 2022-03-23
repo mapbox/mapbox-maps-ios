@@ -8,13 +8,9 @@ final class WarmCacheBenchmark: BaseBenchmark {
     }()
 
     func test_sla_WarmCacheBenchmark() throws {
-
         benchmark {
-            self.onMapLoaded { mapView in
-                mapView.removeFromSuperview()
-                self.onMapLoaded { _ in
-                    self.stopBenchmark()
-                }
+            self.onMapLoaded { _ in
+                self.stopBenchmark()
             }
         }
     }

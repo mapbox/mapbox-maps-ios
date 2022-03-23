@@ -36,54 +36,29 @@ class BaseBenchmark: XCTestCase {
         try super.tearDownWithError()
     }
 
-    override func stopMeasuring() {
-        super.stopMeasuring()
+    /// Ends recording performance metrics within a block of code.
+    ///
+    /// Call this method to end the measurement of metrics by the `benchmark(block:)` method.
+    /// Measurement will end immediately after this method is called from within the measured block.
+    func stopBenchmark() {
+        stopMeasuring()
 
         measurementExpectation?.fulfill()
     }
 
-    @available(iOS 13.0, *)
-    override func measure(metrics: [XCTMetric], block: () -> Void) {
-        super.measure(metrics: metrics, block: block)
+    /// Records the performance, for a block of code. `stopBenchmark` should be called once before the end of the block.
+    /// - Parameter block: A block whose performance is measured.
+    func benchmark(timeout: TimeInterval = 10, block: () -> Void) {
+        let options = XCTMeasureOptions()
+        options.invocationOptions = [.manuallyStop]
 
-        measurementExpectation?.fulfill()
-    }
-
-    @available(iOS 13.0, *)
-    override func measure(options: XCTMeasureOptions, block: () -> Void) {
-        super.measure(options: options, block: block)
-
-        measurementExpectation?.fulfill()
-    }
-
-    @available(iOS 13.0, *)
-    override func measure(metrics: [XCTMetric], options: XCTMeasureOptions, block: () -> Void) {
-        super.measure(metrics: metrics, options: options, block: block)
-
-        measurementExpectation?.fulfill()
-    }
-
-    /// Sets up an expectation that gets fulfilled when a performance measurement is done.
-    /// - Parameters:
-    ///   - timeout: Amount of seconds to wait until declaring the test failed
-    ///   - filePath: A string that represents a file path to the source code file.
-    ///   - lineNumber: An integer that represents a line of code in the source code file.
-    func waitForMeasurement(timeout: TimeInterval = 10, filePath: String = #file, lineNumber: Int = #line) {
-        let expectation = XCTestExpectation(description: "Measurement expectation")
-
-        measurementExpectation = expectation
-        let result = XCTWaiter().wait(for: [expectation], timeout: timeout)
-
-        guard result == .timedOut else {
-            return
+        measure(options: options) {
+            measurementExpectation = self.expectation(description: "Measure expectation")
+            block()
+            waitForExpectations(timeout: timeout)
         }
-        let location = XCTSourceCodeLocation(filePath: filePath, lineNumber: lineNumber)
-        let context = XCTSourceCodeContext(location: location)
-        let issue = XCTIssue(type: .performanceRegression,
-                             compactDescription: "Test took longer than \(timeout) seconds",
-                             sourceCodeContext: context)
-        record(issue)
     }
+
 
     /// Sets up an expectation and waits until it's fulfilled with `BaseBenchmark.notifyTestDidFinish`.
     /// - Parameters:
@@ -178,7 +153,7 @@ class BaseBenchmark: XCTestCase {
 
     private func addTestViewController(timeout: TimeInterval = 1.0) throws -> UIViewController {
         guard let rootViewController = UIApplication.shared.keyWindow?.rootViewController else {
-            throw Error.rootViewControllerNotFount
+            throw Error.rootViewControllerNotFound
         }
 
         let childController = NotifyingViewController()

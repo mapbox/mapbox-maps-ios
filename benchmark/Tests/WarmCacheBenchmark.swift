@@ -8,17 +8,14 @@ final class WarmCacheBenchmark: BaseBenchmark {
     }()
 
     func test_sla_WarmCacheBenchmark() throws {
-        guard #available(iOS 13.0, *) else {
-            throw XCTSkip()
-        }
 
-        onMapLoaded(cameraOptions: Self.cameraOptions) { mapView in
-            mapView.removeFromSuperview()
-            self.measure(options: .default) {
-                self.onMapLoaded(cameraOptions: Self.cameraOptions) { _ in } // loads the map and does nothing
+        benchmark {
+            self.onMapLoaded { mapView in
+                mapView.removeFromSuperview()
+                self.onMapLoaded { _ in
+                    self.stopBenchmark()
+                }
             }
         }
-
-        waitForMeasurement()
     }
 }

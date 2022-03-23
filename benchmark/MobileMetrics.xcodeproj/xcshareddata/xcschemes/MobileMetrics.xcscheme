@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "7499661327C64ECD00DA186A"
-               BuildableName = "Benchmark.app"
-               BlueprintName = "Benchmark"
-               ReferencedContainer = "container:Benchmark.xcodeproj">
+               BuildableName = "MobileMetrics.app"
+               BlueprintName = "MobileMetrics"
+               ReferencedContainer = "container:MobileMetrics.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "7499663127C7AD2900DA186A"
-               BuildableName = "BenchmarkTests.xctest"
-               BlueprintName = "BenchmarkTests"
-               ReferencedContainer = "container:Benchmark.xcodeproj">
+               BuildableName = "MobileMetricsTests.xctest"
+               BlueprintName = "MobileMetricsTests"
+               ReferencedContainer = "container:MobileMetrics.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "7499661327C64ECD00DA186A"
-            BuildableName = "Benchmark.app"
-            BlueprintName = "Benchmark"
-            ReferencedContainer = "container:Benchmark.xcodeproj">
+            BuildableName = "MobileMetrics.app"
+            BlueprintName = "MobileMetrics"
+            ReferencedContainer = "container:MobileMetrics.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "7499661327C64ECD00DA186A"
-            BuildableName = "Benchmark.app"
-            BlueprintName = "Benchmark"
-            ReferencedContainer = "container:Benchmark.xcodeproj">
+            BuildableName = "MobileMetrics.app"
+            BlueprintName = "MobileMetrics"
+            ReferencedContainer = "container:MobileMetrics.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

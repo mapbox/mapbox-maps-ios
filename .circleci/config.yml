@@ -66,6 +66,8 @@ jobs:
 
   run-benchmark:
     executor: base-docker
+    environment:
+      AWS_DEVICE_FARM_PROJECT_ARN: "arn:aws:devicefarm:us-west-2:234858372212:project:c29e8fde-6337-461b-af58-b6a7f93f043c"
     steps:
       - checkout
       - mapbox/add-mapbox-ssh-key
@@ -88,7 +90,7 @@ jobs:
           name: Schedule DeviceFarm run
           command: |
             mobile-metrics/ios-maps/Scripts/devicefarm.py \
-              "arn:aws:devicefarm:us-west-2:234858372212:project:c29e8fde-6337-461b-af58-b6a7f93f043c" \
+              "$AWS_DEVICE_FARM_PROJECT_ARN" \
               --name "$CIRCLE_SHA1-$CIRCLE_BUILD_NUM" \
               --device-pool "arn:aws:devicefarm:us-west-2:234858372212:devicepool:c29e8fde-6337-461b-af58-b6a7f93f043c/bfbd31ba-dac3-4962-8ecb-52d6d6302aa8" \
               --ipa "Products/App.ipa" \
@@ -97,6 +99,21 @@ jobs:
               --output benchmark_waiter.json
       - store_artifacts:
           path: benchmark_waiter.json
+      - run:
+          name: Wait for DeviceFarm results
+          command: |
+            mobile-metrics/ios-maps/Scripts/devicefarm.py \
+              "$AWS_DEVICE_FARM_PROJECT_ARN" \
+              --run-arn-file benchmark_waiter.json \
+              --artifacts-dir BenchmarkResults \
+              --output benchmark_results.json
+
+            zip -r BenchmarkResults.zip BenchmarkResults
+      - store_artifacts:
+          path: BenchmarkResults.zip
+      - store_artifacts:
+          path: benchmark_results.json
+
 
 commands:
   build-benchmark:
@@ -104,8 +121,8 @@ commands:
       - run:
           name: Build Benchmark
           command: |
-            xcodebuild -resolvePackageDependencies -scheme Benchmark -derivedDataPath DerivedData
-            xcodebuild build-for-testing -scheme Benchmark CODE_SIGNING_ALLOWED=NO -derivedDataPath DerivedData
+            xcodebuild -resolvePackageDependencies -scheme MobileMetrics -derivedDataPath DerivedData
+            xcodebuild build-for-testing -scheme MobileMetrics -configuration Release CODE_SIGNING_ALLOWED=NO ENABLE_TESTABILITY=YES -derivedDataPath DerivedData
           working_directory: benchmark/
 
 

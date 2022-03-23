@@ -94,8 +94,11 @@ extension ExampleTableViewController {
           example = examples[indexPath.row]
         }
 
-        let cell = UITableViewCell(style: .default, reuseIdentifier: "reuseIdentifier")
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "reuseIdentifier")
         cell.textLabel?.text = example.title
+        cell.textLabel?.numberOfLines = 2
+        cell.detailTextLabel?.text = example.description.trimmingCharacters(in: .whitespacesAndNewlines)
+        cell.detailTextLabel?.numberOfLines = 2
         return cell
     }
 

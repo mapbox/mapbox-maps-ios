@@ -62,19 +62,24 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         var unclusteredLayer = createUnclusteredLayer()
         unclusteredLayer.source = sourceID
 
+        // `clusterCountLayer` is a `SymbolLayer` that represents the point count within individual clusters.
+        var clusterCountLayer = createNumberLayer()
+        clusterCountLayer.source = sourceID
+
         // Add the source and two layers to the map.
         try! style.addSource(source, id: sourceID)
         try! style.addLayer(clusteredLayer)
         try! style.addLayer(unclusteredLayer, layerPosition: .below(clusteredLayer.id))
+        try! style.addLayer(clusterCountLayer)
 
         // This is used for internal testing purposes only and can be excluded
         // from your implementation.
         finish()
     }
 
-    func createClusteredLayer() -> SymbolLayer {
+    func createClusteredLayer() -> CircleLayer {
         // Create a symbol layer to represent the clustered points.
-        var clusteredLayer = SymbolLayer(id: "clustered-fire-hydrant-layer")
+        var clusteredLayer = CircleLayer(id: "clustered-circle-layer")
 
         // Filter out unclustered features by checking for `point_count`. This
         // is added to clusters when the cluster is created. If your source
@@ -82,35 +87,19 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         // for `cluster_id`.
         clusteredLayer.filter = Exp(.has) { "point_count" }
 
-        clusteredLayer.iconImage = .constant(.name("fire-station-icon"))
-
         // Set the color of the icons based on the number of points within
         // a given cluster. The first value is a default value.
-        clusteredLayer.iconColor = .expression(Exp(.step) {
+        clusteredLayer.circleColor = .expression(Exp(.step) {
             Exp(.get) { "point_count" }
-            UIColor(red: 0.12, green: 0.90, blue: 0.57, alpha: 1.00)
+            UIColor.systemGreen
             50
-            UIColor(red: 0.12, green: 0.53, blue: 0.90, alpha: 1.00)
+            UIColor.systemBlue
             100
-            UIColor(red: 0.85, green: 0.11, blue: 0.38, alpha: 1.00)
+            UIColor.systemRed
         })
 
-        // Add an outline to the icons.
-        clusteredLayer.iconHaloColor = .constant(StyleColor(.black))
-        clusteredLayer.iconHaloWidth = .constant(4)
+        clusteredLayer.circleRadius = .constant(25)
 
-        // Adjust the scale of the icons based on the number of points within an
-        // individual cluster. The first value is a default value.
-        clusteredLayer.iconSize = .expression(Exp(.step) {
-            Exp(.get) { "point_count" }
-            2.5
-            0
-            2.5
-            50
-            3
-            100
-            3.5
-        })
         return clusteredLayer
     }
 
@@ -133,9 +122,19 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
             360
         })
 
-        // Double the size of the icon image.
-        unclusteredLayer.iconSize = .constant(2)
         return unclusteredLayer
+    }
+
+    func createNumberLayer() -> SymbolLayer {
+        var numberLayer = SymbolLayer(id: "cluster-count-layer")
+
+        // check whether the point feature is clustered
+        numberLayer.filter = Exp(.has) { "point_count" }
+
+        // Display the value for 'point_count' in the text field
+        numberLayer.textField = .expression(Exp(.get) { "point_count" })
+        numberLayer.textSize = .constant(12)
+        return numberLayer
     }
 
     @objc func handleTap(gestureRecognizer: UITapGestureRecognizer) {
@@ -144,7 +143,7 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         // Look for features at the tap location within the clustered and
         // unclustered layers.
         mapView.mapboxMap.queryRenderedFeatures(at: point,
-                                                options: RenderedQueryOptions(layerIds: ["unclustered-point-layer", "clustered-fire-hydrant-layer"],
+                                                options: RenderedQueryOptions(layerIds: ["unclustered-point-layer", "clustered-circle-layer"],
                                                 filter: nil)) { [weak self] result in
             switch result {
             case .success(let queriedFeatures):

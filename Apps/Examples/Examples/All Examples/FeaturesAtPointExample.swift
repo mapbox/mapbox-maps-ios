@@ -82,15 +82,4 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
             }
         }
     }
-
-    // Present an alert with a given title.
-    public func showAlert(with title: String) {
-        let alertController = UIAlertController(title: title,
-                                                message: nil,
-                                                preferredStyle: .alert)
-
-        alertController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-
-        present(alertController, animated: true, completion: nil)
-    }
 }

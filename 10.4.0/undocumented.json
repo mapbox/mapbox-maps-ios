@@ -1,0 +1,1412 @@
+{
+  "warnings": [
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Annotations/AnnotationOrchestrator.swift",
+      "line": 4,
+      "symbol": "Annotation",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Annotations/AnnotationOrchestrator.swift",
+      "line": 16,
+      "symbol": "AnnotationManager",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Annotations/AnnotationOrchestrator.swift",
+      "line": 48,
+      "symbol": "AnnotationOrchestrator",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Annotations/Generated/CircleAnnotation.swift",
+      "line": 4,
+      "symbol": "CircleAnnotation",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Annotations/Generated/PointAnnotation.swift",
+      "line": 4,
+      "symbol": "PointAnnotation",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Annotations/Generated/PointAnnotation.swift",
+      "line": 4,
+      "symbol": "PointAnnotation",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Annotations/Generated/PointAnnotation.swift",
+      "line": 314,
+      "symbol": "PointAnnotation.image",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Annotations/Generated/PolygonAnnotation.swift",
+      "line": 4,
+      "symbol": "PolygonAnnotation",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Annotations/Generated/PolylineAnnotation.swift",
+      "line": 4,
+      "symbol": "PolylineAnnotation",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Annotations/PointAnnotation+ImageHandling.swift",
+      "line": 5,
+      "symbol": "PointAnnotation.Image",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Annotations/PointAnnotation+ImageHandling.swift",
+      "line": 6,
+      "symbol": "PointAnnotation.Image.image",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Annotations/PointAnnotation+ImageHandling.swift",
+      "line": 7,
+      "symbol": "PointAnnotation.Image.name",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Annotations/PointAnnotation+ImageHandling.swift",
+      "line": 9,
+      "symbol": "PointAnnotation.Image.init(image:name:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Annotations/ViewAnnotationManager.swift",
+      "line": 5,
+      "symbol": "ViewAnnotationManagerError",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Annotations/ViewAnnotationManager.swift",
+      "line": 6,
+      "symbol": "ViewAnnotationManagerError.viewIsAlreadyAdded",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Annotations/ViewAnnotationManager.swift",
+      "line": 7,
+      "symbol": "ViewAnnotationManagerError.associatedFeatureIdIsAlreadyInUse",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Annotations/ViewAnnotationManager.swift",
+      "line": 8,
+      "symbol": "ViewAnnotationManagerError.annotationNotFound",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Annotations/ViewAnnotationManager.swift",
+      "line": 9,
+      "symbol": "ViewAnnotationManagerError.geometryFieldMissing",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Camera/AnimationCompletion.swift",
+      "line": 3,
+      "symbol": "AnimationCompletion",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Camera/AnimationOwner.swift",
+      "line": 1,
+      "symbol": "AnimationOwner",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Camera/AnimationOwner.swift",
+      "line": 10,
+      "symbol": "AnimationOwner.gestures",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Camera/AnimationOwner.swift",
+      "line": 12,
+      "symbol": "AnimationOwner.unspecified",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Camera/BasicCameraAnimator.swift",
+      "line": 5,
+      "symbol": "BasicCameraAnimator",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Camera/BasicCameraAnimator.swift",
+      "line": 278,
+      "symbol": "BasicCameraAnimator.cancel()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Camera/CameraAnimator.swift",
+      "line": 3,
+      "symbol": "CameraAnimator",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Camera/CameraTransition.swift",
+      "line": 32,
+      "symbol": "CameraTransition.Change.fromValue",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Camera/CameraTransition.swift",
+      "line": 33,
+      "symbol": "CameraTransition.Change.toValue",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Camera/FlyToCameraAnimator.swift",
+      "line": 17,
+      "symbol": "FlyToCameraAnimator.duration",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Camera/FlyToCameraAnimator.swift",
+      "line": 97,
+      "symbol": "FlyToCameraAnimator.cancel()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/CameraBoundsOptions.swift",
+      "line": 24,
+      "symbol": "CameraBoundsOptions.init(bounds:maxZoom:minZoom:maxPitch:minPitch:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/CameraOptions.swift",
+      "line": 5,
+      "symbol": "CameraOptions",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/CameraOptions.swift",
+      "line": 6,
+      "symbol": "CameraOptions.center",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/CameraOptions.swift",
+      "line": 7,
+      "symbol": "CameraOptions.padding",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/CameraOptions.swift",
+      "line": 8,
+      "symbol": "CameraOptions.anchor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/CameraOptions.swift",
+      "line": 9,
+      "symbol": "CameraOptions.zoom",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/CameraOptions.swift",
+      "line": 10,
+      "symbol": "CameraOptions.bearing",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/CameraOptions.swift",
+      "line": 11,
+      "symbol": "CameraOptions.pitch",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/CameraOptions.swift",
+      "line": 38,
+      "symbol": "CameraOptions.init(cameraState:anchor:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/CameraState.swift",
+      "line": 5,
+      "symbol": "CameraState",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/CameraState.swift",
+      "line": 6,
+      "symbol": "CameraState.center",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/CameraState.swift",
+      "line": 7,
+      "symbol": "CameraState.padding",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/CameraState.swift",
+      "line": 8,
+      "symbol": "CameraState.zoom",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/CameraState.swift",
+      "line": 9,
+      "symbol": "CameraState.bearing",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/CameraState.swift",
+      "line": 10,
+      "symbol": "CameraState.pitch",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/CameraState.swift",
+      "line": 12,
+      "symbol": "CameraState.init(center:padding:zoom:bearing:pitch:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/Cancelable.swift",
+      "line": 6,
+      "symbol": "Cancelable.cancel()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/Events/Event.swift",
+      "line": 3,
+      "symbol": "Event",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/Extensions/Core/FeatureExtensionValue.swift",
+      "line": 3,
+      "symbol": "FeatureExtensionValue.init(value:features:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/Extensions/Core/FeatureExtensionValue.swift",
+      "line": 9,
+      "symbol": "FeatureExtensionValue.features",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/Extensions/Core/GlyphsRasterizationOptions.swift",
+      "line": 58,
+      "symbol": "GlyphsRasterizationOptions.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/Extensions/Core/GlyphsRasterizationOptions.swift",
+      "line": 72,
+      "symbol": "GlyphsRasterizationOptions.hash",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/Extensions/Core/MapOptions.swift",
+      "line": 93,
+      "symbol": "MapOptions.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/Extensions/Core/MapOptions.swift",
+      "line": 112,
+      "symbol": "MapOptions.hash",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/Extensions/Core/OfflineSwitch.swift",
+      "line": 1,
+      "symbol": "OfflineSwitch",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/Extensions/Core/QueriedFeature.swift",
+      "line": 4,
+      "symbol": "QueriedFeature.feature",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/Extensions/Core/RenderedQueryOptions.swift",
+      "line": 23,
+      "symbol": "RenderedQueryOptions.filter",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/Extensions/Core/TransitionOptions.swift",
+      "line": 3,
+      "symbol": "TransitionOptions.init(duration:delay:enablePlacementTransitions:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/Extensions/Core/TransitionOptions.swift",
+      "line": 10,
+      "symbol": "TransitionOptions.duration",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/Extensions/Core/TransitionOptions.swift",
+      "line": 14,
+      "symbol": "TransitionOptions.delay",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/Extensions/Core/TransitionOptions.swift",
+      "line": 18,
+      "symbol": "TransitionOptions.enablePlacementTransitions",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/Extensions/Turf/Feature.swift",
+      "line": 1,
+      "symbol": "Feature",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/Extensions/Turf/Geometry.swift",
+      "line": 1,
+      "symbol": "Geometry",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/MapInitOptions.swift",
+      "line": 3,
+      "symbol": "MapInitOptionsProvider",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/MapInitOptions.swift",
+      "line": 4,
+      "symbol": "MapInitOptionsProvider.mapInitOptions()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/MapInitOptions.swift",
+      "line": 54,
+      "symbol": "MapInitOptions.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/MapInitOptions.swift",
+      "line": 66,
+      "symbol": "MapInitOptions.hash",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/MapProjection.swift",
+      "line": 3,
+      "symbol": "MapProjectionError.unsupportedProjection",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/MapProjection.swift",
+      "line": 11,
+      "symbol": "MapProjection.mercator(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/MapProjection.swift",
+      "line": 14,
+      "symbol": "MapProjection.globe(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/MapProjection.swift",
+      "line": 52,
+      "symbol": "MercatorMapProjection.name",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/MapProjection.swift",
+      "line": 58,
+      "symbol": "MercatorMapProjection.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/MapProjection.swift",
+      "line": 86,
+      "symbol": "GlobeMapProjection.name",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/MapProjection.swift",
+      "line": 92,
+      "symbol": "GlobeMapProjection.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/MapView.swift",
+      "line": 5,
+      "symbol": "MapView",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/MapView.swift",
+      "line": 12,
+      "symbol": "MapView",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/MapView.swift",
+      "line": 18,
+      "symbol": "MapView.mapboxMap",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/MapView.swift",
+      "line": 190,
+      "symbol": "MapView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/MapView.swift",
+      "line": 438,
+      "symbol": "MapView.awakeFromNib()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/MapView.swift",
+      "line": 449,
+      "symbol": "MapView.layoutSubviews()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/MapView.swift",
+      "line": 490,
+      "symbol": "MapView.didMoveToWindow()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/MapboxMap.swift",
+      "line": 1010,
+      "symbol": "MapboxMap.MapProjectionError.unsupportedProjection",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/Projection.swift",
+      "line": 3,
+      "symbol": "Projection",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/Projection.swift",
+      "line": 4,
+      "symbol": "Projection.latitudeMax",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/Projection.swift",
+      "line": 5,
+      "symbol": "Projection.latitudeMin",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Foundation/ResourceOptionsManager.swift",
+      "line": 79,
+      "symbol": "ResourceOptionsManager.init(resourceOptions:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Gestures/GestureManager.swift",
+      "line": 3,
+      "symbol": "GestureManagerDelegate",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Gestures/GestureManager.swift",
+      "line": 16,
+      "symbol": "GestureManager",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Gestures/GestureOptions.swift",
+      "line": 68,
+      "symbol": "GestureOptions.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Gestures/GestureType.swift",
+      "line": 1,
+      "symbol": "GestureType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Location/AppleLocationProvider.swift",
+      "line": 4,
+      "symbol": "AppleLocationProvider",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Location/AppleLocationProvider.swift",
+      "line": 15,
+      "symbol": "AppleLocationProvider.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Location/AppleLocationProvider.swift",
+      "line": 23,
+      "symbol": "AppleLocationProvider",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Location/AppleLocationProvider.swift",
+      "line": 93,
+      "symbol": "AppleLocationProvider",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Location/AppleLocationProvider.swift",
+      "line": 94,
+      "symbol": "AppleLocationProvider.locationManager(_:didUpdateLocations:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Location/AppleLocationProvider.swift",
+      "line": 98,
+      "symbol": "AppleLocationProvider.locationManager(_:didUpdateHeading:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Location/AppleLocationProvider.swift",
+      "line": 102,
+      "symbol": "AppleLocationProvider.locationManager(_:didFailWithError:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Location/AppleLocationProvider.swift",
+      "line": 107,
+      "symbol": "AppleLocationProvider.locationManagerDidChangeAuthorization(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Location/LocationManager.swift",
+      "line": 51,
+      "symbol": "LocationManager.overrideLocationProvider(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Location/LocationOptions.swift",
+      "line": 31,
+      "symbol": "LocationOptions.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Location/Puck/PuckType.swift",
+      "line": 12,
+      "symbol": "Puck2DConfiguration",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Location/Puck/PuckType.swift",
+      "line": 91,
+      "symbol": "Puck3DConfiguration",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Offline/TileStoreObserver.swift",
+      "line": 1,
+      "symbol": "TileStoreObserver",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Ornaments/OrnamentOptions.swift",
+      "line": 30,
+      "symbol": "OrnamentOptions.logo",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Ornaments/OrnamentsManager.swift",
+      "line": 3,
+      "symbol": "OrnamentPosition",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Ornaments/OrnamentsManager.swift",
+      "line": 5,
+      "symbol": "OrnamentPosition.topLeft",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Ornaments/OrnamentsManager.swift",
+      "line": 6,
+      "symbol": "OrnamentPosition.topRight",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Ornaments/OrnamentsManager.swift",
+      "line": 7,
+      "symbol": "OrnamentPosition.bottomRight",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Ornaments/OrnamentsManager.swift",
+      "line": 8,
+      "symbol": "OrnamentPosition.bottomLeft",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Ornaments/OrnamentsManager.swift",
+      "line": 11,
+      "symbol": "OrnamentVisibility",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Ornaments/OrnamentsManager.swift",
+      "line": 12,
+      "symbol": "OrnamentVisibility.adaptive",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Ornaments/OrnamentsManager.swift",
+      "line": 13,
+      "symbol": "OrnamentVisibility.hidden",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Ornaments/OrnamentsManager.swift",
+      "line": 14,
+      "symbol": "OrnamentVisibility.visible",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Ornaments/OrnamentsManager.swift",
+      "line": 23,
+      "symbol": "OrnamentsManager",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Snapshot/SnapshotOverlay.swift",
+      "line": 9,
+      "symbol": "SnapshotOverlay.context",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Snapshot/SnapshotOverlay.swift",
+      "line": 12,
+      "symbol": "SnapshotOverlay.scale",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Snapshot/SnapshotOverlay.swift",
+      "line": 16,
+      "symbol": "SnapshotOverlay.pointForCoordinate",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Snapshot/SnapshotOverlay.swift",
+      "line": 20,
+      "symbol": "SnapshotOverlay.coordinateForPoint",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Snapshot/SnapshotOverlay.swift",
+      "line": 23,
+      "symbol": "SnapshotOverlayHandler",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Snapshot/Snapshotter.swift",
+      "line": 9,
+      "symbol": "Snapshotter",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Snapshot/Snapshotter.swift",
+      "line": 225,
+      "symbol": "Snapshotter.SnapshotError",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Snapshot/Snapshotter.swift",
+      "line": 226,
+      "symbol": "Snapshotter.SnapshotError.unknown",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Snapshot/Snapshotter.swift",
+      "line": 262,
+      "symbol": "Snapshotter",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Snapshot/Snapshotter.swift",
+      "line": 293,
+      "symbol": "Snapshotter",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Snapshot/Snapshotter.swift",
+      "line": 332,
+      "symbol": "Snapshotter",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Generated/Enums/Enums.swift",
+      "line": 4,
+      "symbol": "Visibility",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Generated/Expressions/AllExpressions.swift",
+      "line": 5,
+      "symbol": "Expression.Operator",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Generated/Layers/BackgroundLayer.swift",
+      "line": 39,
+      "symbol": "BackgroundLayer.init(id:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Generated/Layers/CircleLayer.swift",
+      "line": 81,
+      "symbol": "CircleLayer.init(id:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Generated/Layers/FillExtrusionLayer.swift",
+      "line": 63,
+      "symbol": "FillExtrusionLayer.init(id:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Generated/Layers/FillLayer.swift",
+      "line": 60,
+      "symbol": "FillLayer.init(id:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Generated/Layers/HeatmapLayer.swift",
+      "line": 45,
+      "symbol": "HeatmapLayer.init(id:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Generated/Layers/HillshadeLayer.swift",
+      "line": 51,
+      "symbol": "HillshadeLayer.init(id:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Generated/Layers/LineLayer.swift",
+      "line": 96,
+      "symbol": "LineLayer.init(id:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Generated/Layers/LocationIndicatorLayer.swift",
+      "line": 96,
+      "symbol": "LocationIndicatorLayer.init(id:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Generated/Layers/RasterLayer.swift",
+      "line": 63,
+      "symbol": "RasterLayer.init(id:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Generated/Layers/SkyLayer.swift",
+      "line": 51,
+      "symbol": "SkyLayer.init(id:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Generated/Layers/SymbolLayer.swift",
+      "line": 222,
+      "symbol": "SymbolLayer.init(id:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Generated/Light/Light.swift",
+      "line": 30,
+      "symbol": "Light.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Generated/Sources/GeoJSONSource.swift",
+      "line": 59,
+      "symbol": "GeoJSONSource.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Generated/Sources/ImageSource.swift",
+      "line": 20,
+      "symbol": "ImageSource.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Generated/Sources/RasterDemSource.swift",
+      "line": 53,
+      "symbol": "RasterDemSource.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Generated/Sources/RasterSource.swift",
+      "line": 53,
+      "symbol": "RasterSource.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Generated/Sources/VectorSource.swift",
+      "line": 53,
+      "symbol": "VectorSource.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Generated/Terrain.swift",
+      "line": 10,
+      "symbol": "Terrain.source",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Generated/Terrain.swift",
+      "line": 12,
+      "symbol": "Terrain.init(sourceId:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Layer.swift",
+      "line": 1,
+      "symbol": "Layer",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Layer.swift",
+      "line": 28,
+      "symbol": "Layer",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/ModelSource.swift",
+      "line": 15,
+      "symbol": "Model.init(uri:position:orientation:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Source.swift",
+      "line": 1,
+      "symbol": "Source",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Source.swift",
+      "line": 6,
+      "symbol": "Source",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Style.swift",
+      "line": 36,
+      "symbol": "Style.styleManager",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/StyleEncodable.swift",
+      "line": 1,
+      "symbol": "StyleEncodable",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/StyleEncodable.swift",
+      "line": 2,
+      "symbol": "StyleEncodable.jsonObject()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/StyleEncodable.swift",
+      "line": 5,
+      "symbol": "StyleDecodable",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/StyleEncodable.swift",
+      "line": 6,
+      "symbol": "StyleDecodable.init(jsonObject:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/StyleEncodable.swift",
+      "line": 9,
+      "symbol": "StyleEncodable",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/StyleErrors.swift",
+      "line": 25,
+      "symbol": "TypeConversionError",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/StyleErrors.swift",
+      "line": 26,
+      "symbol": "TypeConversionError.invalidObject",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/StyleErrors.swift",
+      "line": 27,
+      "symbol": "TypeConversionError.unexpectedType",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/StyleErrors.swift",
+      "line": 28,
+      "symbol": "TypeConversionError.unsuccessfulConversion",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 3,
+      "symbol": "Exp",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 3,
+      "symbol": "Expression",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 4,
+      "symbol": "Expression",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 5,
+      "symbol": "Expression",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 28,
+      "symbol": "Expression.init(_:content:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 77,
+      "symbol": "Expression.Element.operator(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 78,
+      "symbol": "Expression.Element.argument(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 134,
+      "symbol": "Expression.Argument.number(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 135,
+      "symbol": "Expression.Argument.string(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 136,
+      "symbol": "Expression.Argument.boolean(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 137,
+      "symbol": "Expression.Argument.numberArray(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 138,
+      "symbol": "Expression.Argument.stringArray(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 139,
+      "symbol": "Expression.Argument.option(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 140,
+      "symbol": "Expression.Argument.geoJSONObject(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 141,
+      "symbol": "Expression.Argument.null",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 142,
+      "symbol": "Expression.Argument.expression(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 5,
+      "symbol": "Expression.Option",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 6,
+      "symbol": "Expression.Option.format(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 7,
+      "symbol": "Expression.Option.numberFormat(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 8,
+      "symbol": "Expression.Option.collator(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 46,
+      "symbol": "FormatOptions",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 63,
+      "symbol": "FormatOptions.expressionArguments",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 67,
+      "symbol": "FormatOptions.init(fontScale:textFont:textColor:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 77,
+      "symbol": "NumberFormatOptions",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 91,
+      "symbol": "NumberFormatOptions.expressionArguments",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 102,
+      "symbol": "NumberFormatOptions.init(locale:currency:minFractionDigits:maxFractionDigits:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 110,
+      "symbol": "CollatorOptions",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 128,
+      "symbol": "CollatorOptions.expressionArguments",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 132,
+      "symbol": "CollatorOptions.init(caseSensitive:diacriticSensitive:locale:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/PromoteId.swift",
+      "line": 3,
+      "symbol": "PromoteId",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/PromoteId.swift",
+      "line": 4,
+      "symbol": "PromoteId.string(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/PromoteId.swift",
+      "line": 5,
+      "symbol": "PromoteId.object(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/ResolvedImage.swift",
+      "line": 6,
+      "symbol": "ResolvedImage",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/ResolvedImage.swift",
+      "line": 44,
+      "symbol": "ResolvedImageData",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/ResolvedImage.swift",
+      "line": 45,
+      "symbol": "ResolvedImageData.available",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/ResolvedImage.swift",
+      "line": 46,
+      "symbol": "ResolvedImageData.name",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/ResolvedImage.swift",
+      "line": 49,
+      "symbol": "ResolvedImage",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/Value.swift",
+      "line": 3,
+      "symbol": "Value",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/Value.swift",
+      "line": 4,
+      "symbol": "Value.constant(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/Value.swift",
+      "line": 5,
+      "symbol": "Value.expression(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/private/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code/Sources/MapboxMaps/Style/Types/Value.swift",
+      "line": 37,
+      "symbol": "Value",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/var/folders/bl/wbxjgtzx7j5_mjsmfr3ynlc00000gp/T/tmp.01YQWYnb/.docs-source-code"
+}

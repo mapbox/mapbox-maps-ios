@@ -336,6 +336,7 @@ orbs:
                 DERIVED_DATA_PATH: << parameters.derivedDataPath >>
                 OUTPUT_DATA_PATH: << parameters.outputPath >>
               command: |
+                zip -r Products.zip $DERIVED_DATA_PATH/Build/Products/
                 APP_PATH=$(find "$DERIVED_DATA_PATH" -name "*.app")
                 TMP_PATH=$(mktemp -d)
                 PAYLOAD_PATH="$TMP_PATH/Payload"
@@ -366,6 +367,8 @@ orbs:
               steps:
                 - store_artifacts:
                     path: << parameters.outputPath >>/App.ipa
+                - store_artifacts:
+                    path: Products.zip
                 - store_artifacts:
                     path: << parameters.outputPath >>/AppTests.zip
                 - persist_to_workspace:

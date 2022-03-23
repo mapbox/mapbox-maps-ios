@@ -8,14 +8,14 @@ final class AnimationEaseToBenchmark: BaseBenchmark {
     private let endPoint = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
 
     func test_sla_easeTo() {
-        onStyleLoaded { mapView, _ in
-            mapView.mapboxMap.setCamera(to: CameraOptions(center: self.startPoint))
-            self.easeTo {
-                self.notifyTestDidFinish()
+        benchmark(timeout: 141) {
+            onStyleLoaded { mapView, _ in
+                mapView.mapboxMap.setCamera(to: CameraOptions(center: self.startPoint))
+                self.easeTo {
+                    self.stopBenchmark()
+                }
             }
         }
-
-        waitForTestToFinish(timeout: 141)
     }
 
     private func easeTo(_ completion: @escaping () -> ()) {

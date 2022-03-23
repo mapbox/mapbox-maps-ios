@@ -7,13 +7,13 @@ import MapboxMaps
 final class AnimationFlyToBenchmark: BaseBenchmark {
 
     func test_sla_WarmCacheBenchmark1() {
-        onStyleLoaded { mapView, _ in
-            self.visit(.tokyo, .minsk, .helsinki, .tokyo, .helsinki, .minsk) {
-                self.notifyTestDidFinish()
+        benchmark(timeout: 61) {
+            onStyleLoaded { mapView, _ in
+                self.visit(.tokyo, .minsk, .helsinki, .tokyo, .helsinki, .minsk) {
+                    self.stopBenchmark()
+                }
             }
         }
-
-        waitForTestToFinish(timeout: 61)
     }
 
     private func visit(_ cities: CameraOptions..., completion: @escaping () -> ()) {

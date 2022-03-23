@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-common-ios.git",
         "state": {
           "branch": null,
-          "revision": "2a1c1a6bd3e1d0c66d384c4dfbd0a03d60f3f877",
-          "version": "21.2.0-rc.1"
+          "revision": "3f9002c8140503b0c3c9d1e2a210a188bc2f5252",
+          "version": "21.2.0"
         }
       },
       {
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-core-maps-ios.git",
         "state": {
           "branch": null,
-          "revision": "c6aac72620f97c28a4475b62b050c69c3a589da1",
-          "version": "10.4.0-rc.1"
+          "revision": "20763d81dd2f2dee611e81f17ce892b599aa069d",
+          "version": "10.4.1"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/mapbox/turf-swift.git",
         "state": {
           "branch": null,
-          "revision": "132aaf7f90fb3e334acd685ae7040a2b70b80d26",
-          "version": "2.1.0"
+          "revision": "a7db78a2281ffe79966443ebe5687766d6c024c7",
+          "version": "2.3.0"
         }
       }
     ]

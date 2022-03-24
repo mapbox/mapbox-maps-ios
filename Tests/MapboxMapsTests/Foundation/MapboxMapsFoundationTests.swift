@@ -55,10 +55,23 @@ class MapboxMapsFoundationTests: XCTestCase {
 
     func testCoordinateToPoint() {
         let centerCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-        let convertedPoint = mapView.mapboxMap.point(for: centerCoordinate)
+        var convertedPoint = mapView.mapboxMap.point(for: centerCoordinate)
 
         XCTAssertEqual(convertedPoint.x, mapView.bounds.midX, accuracy: 0.01)
         XCTAssertEqual(convertedPoint.y, mapView.bounds.midY, accuracy: 0.01)
+
+        let maxPoint = CGPoint(x: mapView.bounds.maxX, y: mapView.bounds.maxY)
+        let boundaryCoordinate = mapView.mapboxMap.coordinate(for: maxPoint)
+        convertedPoint = mapView.mapboxMap.point(for: boundaryCoordinate)
+
+        XCTAssertEqual(convertedPoint.x, maxPoint.x, accuracy: 0.01)
+        XCTAssertEqual(convertedPoint.y, maxPoint.y, accuracy: 0.01)
+
+        let outOfBoundsCoordinate = CLLocationCoordinate2D(latitude: boundaryCoordinate.latitude + 1,
+                                                           longitude: boundaryCoordinate.longitude + 1)
+        convertedPoint = mapView.mapboxMap.point(for: outOfBoundsCoordinate)
+        XCTAssertEqual(convertedPoint.x, -1.0)
+        XCTAssertEqual(convertedPoint.y, -1.0)
     }
 
     func testPointToCoordinateInSubviewWithEqualCenter() {

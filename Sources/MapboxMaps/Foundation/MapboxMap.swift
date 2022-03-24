@@ -436,9 +436,11 @@ public final class MapboxMap: MapboxMapProtocol {
 
     /// Converts a map coordinate to a `CGPoint`, relative to the `MapView`.
     /// - Parameter coordinate: The coordinate to convert.
-    /// - Returns: A `CGPoint` relative to the `UIView`.
+    /// - Returns: A `CGPoint` relative to the `UIView`. If the point is outside of the bounds
+    ///     of `MapView` the returned point contains `-1.0` for both coordinates.
     public func point(for coordinate: CLLocationCoordinate2D) -> CGPoint {
-        return __map.pixelForCoordinate(for: coordinate).point
+        let point = __map.pixelForCoordinate(for: coordinate).point
+        return CGRect(origin: .zero, size: size).contains(point) ? point : CGPoint(x: -1.0, y: -1.0)
     }
 
     /// Converts map coordinates to an array of `CGPoint`, relative to the `MapView`.

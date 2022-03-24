@@ -50,19 +50,23 @@ public final class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimator
         impl.delegate = self
     }
 
-    /// Starts the animation if this animator is in `inactive` state. Also used to resume a "paused" animation.
+    /// Starts the animation if this animator is in `inactive` state. Also used to resume a "paused"
+    /// animation. Calling this method on an animator that has already completed or been canceled has
+    /// no effect.
     public func startAnimation() {
         impl.startAnimation()
     }
 
     /// Starts the animation after a delay. This cannot be called on a paused animation.
-    /// If animations are cancelled before the end of the delay, it will also be cancelled.
+    /// If animations are cancelled before the end of the delay, it will also be cancelled. Calling this method
+    /// on an animator that has already completed or been canceled has no effect.
     /// - Parameter delay: Delay (in seconds) after which the animation should start
     public func startAnimation(afterDelay delay: TimeInterval) {
         impl.startAnimation(afterDelay: delay)
     }
 
-    /// Pauses the animation.
+    /// Pauses the animation. Calling this method on an animator that has already completed or been
+    /// canceled has no effect.
     public func pauseAnimation() {
         impl.pauseAnimation()
     }

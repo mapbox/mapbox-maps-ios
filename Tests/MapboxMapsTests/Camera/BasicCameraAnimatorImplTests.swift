@@ -79,15 +79,6 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
         XCTAssertEqual(propertyAnimator.setIsReversedStub.invocations.map(\.parameters), [true, false])
     }
 
-    func testStopAnimationWithoutStarting() {
-        let completion = Stub<UIViewAnimatingPosition, Void>()
-        animator.addCompletion(completion.call(with:))
-
-        animator.stopAnimation()
-
-        XCTAssertEqual(completion.invocations.map(\.parameters), [.current])
-    }
-
     func testStartAndStopAnimation() {
         animator.addAnimations { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
@@ -147,6 +138,69 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
         animator.stopAnimation()
 
         wait(for: [expectation], timeout: 15)
+    }
+
+    func testStopAnimationWithoutStarting() {
+        let completion = Stub<UIViewAnimatingPosition, Void>()
+        animator.addCompletion(completion.call(with:))
+
+        animator.stopAnimation()
+
+        XCTAssertEqual(propertyAnimator.stopAnimationStub.invocations.count, 0)
+        XCTAssertEqual(propertyAnimator.finishAnimationStub.invocations.count, 0)
+        XCTAssertEqual(delegate.basicCameraAnimatorDidStopRunningStub.invocations.count, 0)
+        XCTAssertEqual(completion.invocations.map(\.parameters), [.current])
+    }
+
+    func testStopAndStartAnimation() {
+        animator.stopAnimation()
+
+        animator.startAnimation()
+
+        XCTAssertEqual(propertyAnimator.startAnimationStub.invocations.count, 0)
+        XCTAssertEqual(propertyAnimator.addAnimationsStub.invocations.count, 0)
+        XCTAssertEqual(propertyAnimator.addCompletionStub.invocations.count, 0)
+        XCTAssertNil(animator.transition)
+        XCTAssertEqual(delegate.basicCameraAnimatorDidStartRunningStub.invocations.count, 0)
+    }
+
+    func testStopAndStartAnimationAfterDelay() {
+        animator.stopAnimation()
+
+        animator.startAnimation(afterDelay: .random(in: 0...10))
+
+        XCTAssertEqual(propertyAnimator.startAnimationAfterDelayStub.invocations.count, 0)
+        XCTAssertEqual(propertyAnimator.addAnimationsStub.invocations.count, 0)
+        XCTAssertEqual(propertyAnimator.addCompletionStub.invocations.count, 0)
+        XCTAssertNil(animator.transition)
+        XCTAssertEqual(delegate.basicCameraAnimatorDidStartRunningStub.invocations.count, 0)
+    }
+
+    func testStartAndStartAnimationAfterDelay() {
+        animator.addAnimations { (transition) in
+            transition.zoom.toValue = cameraOptionsTestValue.zoom!
+        }
+        animator.startAnimation()
+        propertyAnimator.addAnimationsStub.reset()
+        propertyAnimator.addCompletionStub.reset()
+        delegate.basicCameraAnimatorDidStartRunningStub.reset()
+
+        animator.startAnimation(afterDelay: .random(in: 0...10))
+
+        XCTAssertEqual(propertyAnimator.startAnimationAfterDelayStub.invocations.count, 0)
+        XCTAssertEqual(propertyAnimator.addAnimationsStub.invocations.count, 0)
+        XCTAssertEqual(propertyAnimator.addCompletionStub.invocations.count, 0)
+        XCTAssertEqual(delegate.basicCameraAnimatorDidStartRunningStub.invocations.count, 0)
+    }
+
+    func testStopAndPauseAnimation() {
+        animator.stopAnimation()
+
+        animator.pauseAnimation()
+
+        XCTAssertEqual(propertyAnimator.pauseAnimationStub.invocations.count, 0)
+        XCTAssertEqual(propertyAnimator.addAnimationsStub.invocations.count, 0)
+        XCTAssertEqual(propertyAnimator.addCompletionStub.invocations.count, 0)
     }
 
     func testStartandPauseAnimationAfterDelay() throws {
@@ -242,7 +296,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
         animator.pauseAnimation()
-        expectFatalError(expectedMessage: "startAnimation(afterDelay:) cannot be called on already-delayed, paused, running, or completed animators.") {
+        expectFatalError(expectedMessage: "A paused animator cannot be started with a delay.") {
             self.animator.startAnimation(afterDelay: 0)
         }
     }

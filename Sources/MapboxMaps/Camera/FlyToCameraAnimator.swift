@@ -6,27 +6,58 @@ import UIKit
 ///
 /// - SeeAlso: ``CameraAnimationsManager/fly(to:duration:completion:)``
 public final class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorProtocol {
+    private enum InternalState: Equatable {
+        case initial
+        case running(startDate: Date)
+        case final
+    }
 
     private let mapboxMap: MapboxMapProtocol
 
     /// The animator's owner
     public let owner: AnimationOwner
 
-    private let interpolator: FlyToInterpolator
-
+    /// The animator's duration
     public let duration: TimeInterval
 
-    public private(set) var state: UIViewAnimatingState = .inactive
+    /// The animator's state
+    public var state: UIViewAnimatingState {
+        switch internalState {
+        case .running:
+            return .active
+        case .initial, .final:
+            return .inactive
+        }
+    }
 
-    private var startDate: Date?
+    internal weak var delegate: CameraAnimatorDelegate?
+
+    private let interpolator: FlyToInterpolator
 
     private let finalCameraOptions: CameraOptions
 
-    private var completionBlocks = [AnimationCompletion]()
-
     private let dateProvider: DateProvider
 
-    internal weak var delegate: CameraAnimatorDelegate?
+    private var completionBlocks = [AnimationCompletion]()
+
+    private var internalState = InternalState.initial {
+        didSet {
+            switch (oldValue, internalState) {
+            case (.initial, .running):
+                delegate?.cameraAnimatorDidStartRunning(self)
+            case (.running, .final):
+                delegate?.cameraAnimatorDidStopRunning(self)
+            default:
+                // this matches cases where…
+                // * oldValue and internalState are the same
+                // * initial transitions to final
+                // * the transition is invalid…
+                //     * running/final --> initial
+                //     * final --> running
+                break
+            }
+        }
+    }
 
     internal init(toCamera: CameraOptions,
                   owner: AnimationOwner,
@@ -49,16 +80,32 @@ public final class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimator
         self.dateProvider = dateProvider
     }
 
-    public func stopAnimation() {
-        state = .inactive
-        delegate?.cameraAnimatorDidStopRunning(self)
-        invokeCompletionBlocks(with: .current) // `current` represents an interrupted animation.
+    internal func startAnimation() {
+        switch internalState {
+        case .initial:
+            internalState = .running(startDate: dateProvider.now)
+        case .running:
+            // already running; do nothing
+            break
+        case .final:
+            // animators cannot be restarted
+            break
+        }
     }
 
-    internal func startAnimation() {
-        state = .active
-        startDate = dateProvider.now
-        delegate?.cameraAnimatorDidStartRunning(self)
+    public func stopAnimation() {
+        switch internalState {
+        case .initial, .running:
+            internalState = .final
+            invokeCompletionBlocks(with: .current) // `current` represents an interrupted animation.
+        case .final:
+            // Already stopped, so do nothing
+            break
+        }
+    }
+
+    public func cancel() {
+        stopAnimation()
     }
 
     internal func addCompletion(_ completion: @escaping AnimationCompletion) {
@@ -74,13 +121,12 @@ public final class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimator
     }
 
     internal func update() {
-        guard state == .active, let startDate = startDate else {
+        guard case .running(let startDate) = internalState else {
             return
         }
         let fractionComplete = min(dateProvider.now.timeIntervalSince(startDate) / duration, 1)
         guard fractionComplete < 1 else {
-            state = .inactive
-            delegate?.cameraAnimatorDidStopRunning(self)
+            internalState = .final
             mapboxMap.setCamera(to: finalCameraOptions)
             invokeCompletionBlocks(with: .end)
             return
@@ -90,11 +136,5 @@ public final class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimator
             zoom: CGFloat(interpolator.zoom(at: fractionComplete)),
             bearing: interpolator.bearing(at: fractionComplete),
             pitch: CGFloat(interpolator.pitch(at: fractionComplete))))
-    }
-
-    // MARK: Cancelable
-
-    public func cancel() {
-        stopAnimation()
     }
 }

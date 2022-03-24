@@ -121,7 +121,7 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
         cameraView.removeFromSuperview()
     }
 
-    /// Starts the animation if this animator is in `inactive` state. Also used to resume a "paused" animation.
+    /// See ``BasicCameraAnimator/startAnimation()``
     internal func startAnimation() {
         switch internalState {
         case .initial:
@@ -134,23 +134,29 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
             internalState = .running(transition)
             propertyAnimator.startAnimation()
         case .final:
-            fatalError("Attempt to restart an animation that has already completed.")
+            // animators cannot be restarted
+            break
         }
     }
 
-    /// Starts the animation after a delay. This cannot be called on a paused animation.
-    /// If animations are cancelled before the end of the delay, it will also be cancelled.
-    /// - Parameter delay: Delay (in seconds) after which the animation should start
+    /// See ``BasicCameraAnimator/startAnimation(afterDelay:)``
     internal func startAnimation(afterDelay delay: TimeInterval) {
-        if internalState != .initial {
-            fatalError("startAnimation(afterDelay:) cannot be called on already-delayed, paused, running, or completed animators.")
+        switch internalState {
+        case .initial:
+            internalState = .running(makeTransition())
+            propertyAnimator.startAnimation(afterDelay: delay)
+        case .running:
+            // already running; do nothing
+            break
+        case .paused:
+            fatalError("A paused animator cannot be started with a delay.")
+        case .final:
+            // animators cannot be restarted
+            break
         }
-
-        internalState = .running(makeTransition())
-        propertyAnimator.startAnimation(afterDelay: delay)
     }
 
-    /// Pauses the animation.
+    /// See ``BasicCameraAnimator/pauseAnimation()``
     internal func pauseAnimation() {
         switch internalState {
         case .initial:
@@ -163,7 +169,8 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
             // already paused; do nothing
             break
         case .final:
-            fatalError("Attempt to pause an animation that has already completed.")
+            // already completed; do nothing
+            break
         }
     }
 

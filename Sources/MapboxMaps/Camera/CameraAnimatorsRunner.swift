@@ -1,7 +1,6 @@
 import UIKit
 
 internal protocol CameraAnimatorsRunnerProtocol: AnyObject {
-    var animationsEnabled: Bool { get set }
     var cameraAnimators: [CameraAnimator] { get }
     func update()
     func cancelAnimations()
@@ -11,8 +10,10 @@ internal protocol CameraAnimatorsRunnerProtocol: AnyObject {
 
 internal final class CameraAnimatorsRunner: CameraAnimatorsRunnerProtocol {
 
-    /// When set to `false`, all animations will be canceled at each invocation of ``CameraAnimationsManagerImpl/update()``
-    internal var animationsEnabled = true
+    /// When ``EnablableProtocol/isEnabled`` is `false`, all existing animations
+    /// will be canceled at each invocation of ``CameraAnimatorsRunner/update()`` and any
+    /// new animations will be canceled immediately.
+    private let enablable: EnablableProtocol
 
     /// See ``CameraAnimationsManager/cameraAnimators``.
     internal var cameraAnimators: [CameraAnimator] {
@@ -27,12 +28,14 @@ internal final class CameraAnimatorsRunner: CameraAnimatorsRunnerProtocol {
 
     private let mapboxMap: MapboxMapProtocol
 
-    internal init(mapboxMap: MapboxMapProtocol) {
+    internal init(mapboxMap: MapboxMapProtocol,
+                  enablable: EnablableProtocol) {
         self.mapboxMap = mapboxMap
+        self.enablable = enablable
     }
 
     internal func update() {
-        guard animationsEnabled else {
+        guard enablable.isEnabled else {
             cancelAnimations()
             return
         }
@@ -57,6 +60,9 @@ internal final class CameraAnimatorsRunner: CameraAnimatorsRunnerProtocol {
     internal func add(_ animator: CameraAnimatorProtocol) {
         animator.delegate = self
         allCameraAnimators.add(animator)
+        if !enablable.isEnabled {
+            animator.stopAnimation()
+        }
     }
 }
 

@@ -1,9 +1,10 @@
 import UIKit
 
 internal protocol MapViewDependencyProviderProtocol: AnyObject {
-    func makeNotificationCenter() -> NotificationCenterProtocol
-    func makeBundle() -> BundleProtocol
-    func makeMapboxObservableProvider() -> (ObservableProtocol) -> MapboxObservableProtocol
+    var notificationCenter: NotificationCenterProtocol { get }
+    var bundle: BundleProtocol { get }
+    var mapboxObservableProvider: (ObservableProtocol) -> MapboxObservableProtocol { get }
+    var cameraAnimatorsRunnerEnablable: MutableEnablableProtocol { get }
     func makeMetalView(frame: CGRect, device: MTLDevice?) -> MTKView
     func makeDisplayLink(window: UIWindow, target: Any, selector: Selector) -> DisplayLinkProtocol?
     func makeCameraAnimatorsRunner(mapboxMap: MapboxMapProtocol) -> CameraAnimatorsRunnerProtocol
@@ -12,8 +13,7 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
                                          cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol) -> CameraAnimationsManagerProtocol
     func makeGestureManager(view: UIView,
                             mapboxMap: MapboxMapProtocol,
-                            cameraAnimationsManager: CameraAnimationsManagerProtocol,
-                            cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol) -> GestureManager
+                            cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager
     func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool) -> LocationProducerProtocol
     func makeInterpolatedLocationProducer(locationProducer: LocationProducerProtocol,
                                           displayLinkCoordinator: DisplayLinkCoordinator) -> InterpolatedLocationProducerProtocol
@@ -28,33 +28,35 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
 }
 
 internal final class MapViewDependencyProvider: MapViewDependencyProviderProtocol {
-    func makeNotificationCenter() -> NotificationCenterProtocol {
-        return NotificationCenter.default
-    }
+    internal let notificationCenter: NotificationCenterProtocol = NotificationCenter.default
 
-    func makeBundle() -> BundleProtocol {
-        return Bundle.main
-    }
+    internal let bundle: BundleProtocol = Bundle.main
 
-    func makeMapboxObservableProvider() -> (ObservableProtocol) -> MapboxObservableProtocol {
-        return MapboxObservable.init
-    }
+    internal let mapboxObservableProvider: (ObservableProtocol) -> MapboxObservableProtocol = MapboxObservable.init
 
-    func makeMetalView(frame: CGRect, device: MTLDevice?) -> MTKView {
+    internal let cameraAnimatorsRunnerEnablable: MutableEnablableProtocol = Enablable()
+    private let gesturesCameraAnimatorsRunnerEnablable = Enablable()
+
+    internal func makeMetalView(frame: CGRect, device: MTLDevice?) -> MTKView {
         MTKView(frame: frame, device: device)
     }
 
-    func makeDisplayLink(window: UIWindow, target: Any, selector: Selector) -> DisplayLinkProtocol? {
+    internal func makeDisplayLink(window: UIWindow, target: Any, selector: Selector) -> DisplayLinkProtocol? {
         window.screen.displayLink(withTarget: target, selector: selector)
     }
 
-    func makeCameraAnimatorsRunner(mapboxMap: MapboxMapProtocol) -> CameraAnimatorsRunnerProtocol {
-        CameraAnimatorsRunner(mapboxMap: mapboxMap)
+    internal func makeCameraAnimatorsRunner(mapboxMap: MapboxMapProtocol) -> CameraAnimatorsRunnerProtocol {
+        CameraAnimatorsRunner(
+            mapboxMap: mapboxMap,
+            enablable: CompositeEnablable(
+                enablables: [
+                    cameraAnimatorsRunnerEnablable,
+                    gesturesCameraAnimatorsRunnerEnablable]))
     }
 
-    func makeCameraAnimationsManagerImpl(cameraViewContainerView: UIView,
-                                         mapboxMap: MapboxMapProtocol,
-                                         cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol) -> CameraAnimationsManagerProtocol {
+    internal func makeCameraAnimationsManagerImpl(cameraViewContainerView: UIView,
+                                                  mapboxMap: MapboxMapProtocol,
+                                                  cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol) -> CameraAnimationsManagerProtocol {
         CameraAnimationsManagerImpl(
             factory: CameraAnimatorsFactory(
                 cameraViewContainerView: cameraViewContainerView,
@@ -63,9 +65,9 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             runner: cameraAnimatorsRunner)
     }
 
-    func makePanGestureHandler(view: UIView,
-                               mapboxMap: MapboxMapProtocol,
-                               cameraAnimationsManager: CameraAnimationsManagerProtocol) -> PanGestureHandlerProtocol {
+    private func makePanGestureHandler(view: UIView,
+                                       mapboxMap: MapboxMapProtocol,
+                                       cameraAnimationsManager: CameraAnimationsManagerProtocol) -> PanGestureHandlerProtocol {
         let gestureRecognizer = UIPanGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         return PanGestureHandler(
@@ -75,8 +77,8 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             dateProvider: DefaultDateProvider())
     }
 
-    func makePinchGestureHandler(view: UIView,
-                                 mapboxMap: MapboxMapProtocol) -> PinchGestureHandlerProtocol {
+    private func makePinchGestureHandler(view: UIView,
+                                         mapboxMap: MapboxMapProtocol) -> PinchGestureHandlerProtocol {
         let gestureRecognizer = UIPinchGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         return PinchGestureHandler(
@@ -86,8 +88,8 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                 mapboxMap: mapboxMap))
     }
 
-    func makePitchGestureHandler(view: UIView,
-                                 mapboxMap: MapboxMapProtocol) -> GestureHandler {
+    private func makePitchGestureHandler(view: UIView,
+                                         mapboxMap: MapboxMapProtocol) -> GestureHandler {
         let gestureRecognizer = UIPanGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         return PitchGestureHandler(
@@ -95,9 +97,9 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             mapboxMap: mapboxMap)
     }
 
-    func makeDoubleTapToZoomInGestureHandler(view: UIView,
-                                             mapboxMap: MapboxMapProtocol,
-                                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> FocusableGestureHandlerProtocol {
+    private func makeDoubleTapToZoomInGestureHandler(view: UIView,
+                                                     mapboxMap: MapboxMapProtocol,
+                                                     cameraAnimationsManager: CameraAnimationsManagerProtocol) -> FocusableGestureHandlerProtocol {
         let gestureRecognizer = UITapGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         return DoubleTapToZoomInGestureHandler(
@@ -106,9 +108,9 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             cameraAnimationsManager: cameraAnimationsManager)
     }
 
-    func makeDoubleTouchToZoomOutGestureHandler(view: UIView,
-                                                mapboxMap: MapboxMapProtocol,
-                                                cameraAnimationsManager: CameraAnimationsManagerProtocol) -> FocusableGestureHandlerProtocol {
+    private func makeDoubleTouchToZoomOutGestureHandler(view: UIView,
+                                                        mapboxMap: MapboxMapProtocol,
+                                                        cameraAnimationsManager: CameraAnimationsManagerProtocol) -> FocusableGestureHandlerProtocol {
         let gestureRecognizer = UITapGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         return DoubleTouchToZoomOutGestureHandler(
@@ -117,8 +119,8 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             cameraAnimationsManager: cameraAnimationsManager)
     }
 
-    func makeQuickZoomGestureHandler(view: UIView,
-                                     mapboxMap: MapboxMapProtocol) -> FocusableGestureHandlerProtocol {
+    private func makeQuickZoomGestureHandler(view: UIView,
+                                             mapboxMap: MapboxMapProtocol) -> FocusableGestureHandlerProtocol {
         let gestureRecognizer = UILongPressGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         return QuickZoomGestureHandler(
@@ -126,8 +128,8 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             mapboxMap: mapboxMap)
     }
 
-    func makeSingleTapGestureHandler(view: UIView,
-                                     cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
+    private func makeSingleTapGestureHandler(view: UIView,
+                                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
         let gestureRecognizer = UITapGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         return SingleTapGestureHandler(
@@ -135,8 +137,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             cameraAnimationsManager: cameraAnimationsManager)
     }
 
-    func makeAnyTouchGestureHandler(view: UIView,
-                                    cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol) -> GestureHandler {
+    private func makeAnyTouchGestureHandler(view: UIView) -> GestureHandler {
         // 0.15 seconds is a sufficient delay to avoid interrupting animations
         // in between a rapid succession of double tap or double touch gestures.
         // It's also not so long as to feel unnatural when touching the map to
@@ -149,13 +150,12 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
         view.addGestureRecognizer(gestureRecognizer)
         return AnyTouchGestureHandler(
             gestureRecognizer: gestureRecognizer,
-            cameraAnimatorsRunner: cameraAnimatorsRunner)
+            cameraAnimatorsRunnerEnablable: gesturesCameraAnimatorsRunnerEnablable)
     }
 
-    func makeGestureManager(view: UIView,
-                            mapboxMap: MapboxMapProtocol,
-                            cameraAnimationsManager: CameraAnimationsManagerProtocol,
-                            cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol) -> GestureManager {
+    internal func makeGestureManager(view: UIView,
+                                     mapboxMap: MapboxMapProtocol,
+                                     cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager {
         return GestureManager(
             panGestureHandler: makePanGestureHandler(
                 view: view,
@@ -181,21 +181,19 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             singleTapGestureHandler: makeSingleTapGestureHandler(
                 view: view,
                 cameraAnimationsManager: cameraAnimationsManager),
-            anyTouchGestureHandler: makeAnyTouchGestureHandler(
-                view: view,
-                cameraAnimatorsRunner: cameraAnimatorsRunner),
+            anyTouchGestureHandler: makeAnyTouchGestureHandler(view: view),
             mapboxMap: mapboxMap)
     }
 
-    func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool) -> LocationProducerProtocol {
+    internal func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool) -> LocationProducerProtocol {
         let locationProvider = AppleLocationProvider()
         return LocationProducer(
             locationProvider: locationProvider,
             mayRequestWhenInUseAuthorization: mayRequestWhenInUseAuthorization)
     }
 
-    func makeInterpolatedLocationProducer(locationProducer: LocationProducerProtocol,
-                                          displayLinkCoordinator: DisplayLinkCoordinator) -> InterpolatedLocationProducerProtocol {
+    internal func makeInterpolatedLocationProducer(locationProducer: LocationProducerProtocol,
+                                                   displayLinkCoordinator: DisplayLinkCoordinator) -> InterpolatedLocationProducerProtocol {
         let doubleInterpolator = DoubleInterpolator()
         let wrappingInterpolator = WrappingInterpolator()
         let directionInterpolator = DirectionInterpolator(
@@ -217,9 +215,9 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             displayLinkCoordinator: displayLinkCoordinator)
     }
 
-    func makeLocationManager(locationProducer: LocationProducerProtocol,
-                             interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
-                             style: StyleProtocol) -> LocationManager {
+    internal func makeLocationManager(locationProducer: LocationProducerProtocol,
+                                      interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
+                                      style: StyleProtocol) -> LocationManager {
         let puckManager = PuckManager(
             puck2DProvider: { configuration in
                 Puck2D(
@@ -239,11 +237,11 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             puckManager: puckManager)
     }
 
-    func makeViewportImpl(mapboxMap: MapboxMapProtocol,
-                          cameraAnimationsManager: CameraAnimationsManagerProtocol,
-                          anyTouchGestureRecognizer: UIGestureRecognizer,
-                          doubleTapGestureRecognizer: UIGestureRecognizer,
-                          doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol {
+    internal func makeViewportImpl(mapboxMap: MapboxMapProtocol,
+                                   cameraAnimationsManager: CameraAnimationsManagerProtocol,
+                                   anyTouchGestureRecognizer: UIGestureRecognizer,
+                                   doubleTapGestureRecognizer: UIGestureRecognizer,
+                                   doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol {
         return ViewportImpl(
             options: .init(),
             mainQueue: MainQueue(),

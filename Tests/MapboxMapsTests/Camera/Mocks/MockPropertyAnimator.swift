@@ -19,6 +19,12 @@ final class MockPropertyAnimator: UIViewPropertyAnimator {
         startAnimationStub.call()
     }
 
+    let startAnimationAfterDelayStub = Stub<TimeInterval, Void>()
+    override func startAnimation(afterDelay delay: TimeInterval) {
+        super.startAnimation(afterDelay: delay)
+        startAnimationAfterDelayStub.call(with: delay)
+    }
+
     let pauseAnimationStub = Stub<Void, Void>()
     override func pauseAnimation() {
         super.pauseAnimation()

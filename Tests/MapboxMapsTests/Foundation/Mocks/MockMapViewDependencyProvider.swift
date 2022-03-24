@@ -2,20 +2,13 @@ import Foundation
 @testable import MapboxMaps
 
 final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
-    let makeNotificationCenterStub = Stub<Void, NotificationCenterProtocol>(defaultReturnValue: MockNotificationCenter())
-    func makeNotificationCenter() -> NotificationCenterProtocol {
-        makeNotificationCenterStub.call()
-    }
+    @Stubbed var notificationCenter: NotificationCenterProtocol = MockNotificationCenter()
 
-    let makeBundleStub = Stub<Void, BundleProtocol>(defaultReturnValue: MockBundle())
-    func makeBundle() -> BundleProtocol {
-        makeBundleStub.call()
-    }
+    @Stubbed var bundle: BundleProtocol = MockBundle()
 
-    let makeMapboxObservableProviderStub = Stub<Void, (ObservableProtocol) -> MapboxObservableProtocol>(defaultReturnValue: { _ in MockMapboxObservable() })
-    func makeMapboxObservableProvider() -> (ObservableProtocol) -> MapboxObservableProtocol {
-        makeMapboxObservableProviderStub.call()
-    }
+    @Stubbed var mapboxObservableProvider: (ObservableProtocol) -> MapboxObservableProtocol = { _ in MockMapboxObservable() }
+
+    @Stubbed var cameraAnimatorsRunnerEnablable: MutableEnablableProtocol = Enablable()
 
     struct MakeMetalViewParams {
         var frame: CGRect
@@ -59,8 +52,7 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
     func makeGestureManager(
         view: UIView,
         mapboxMap: MapboxMapProtocol,
-        cameraAnimationsManager: CameraAnimationsManagerProtocol,
-        cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol) -> GestureManager {
+        cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager {
         return GestureManager(
             panGestureHandler: MockPanGestureHandler(
                 gestureRecognizer: UIGestureRecognizer()),

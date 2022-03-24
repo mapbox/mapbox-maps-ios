@@ -68,10 +68,10 @@ jobs:
     executor: base-docker
     environment:
       AWS_DEVICE_FARM_PROJECT_ARN: "arn:aws:devicefarm:us-west-2:234858372212:project:c29e8fde-6337-461b-af58-b6a7f93f043c"
+      AWS_DEVICE_POOL_ARN: "arn:aws:devicefarm:us-west-2:234858372212:devicepool:c29e8fde-6337-461b-af58-b6a7f93f043c/bfbd31ba-dac3-4962-8ecb-52d6d6302aa8"
     steps:
       - checkout
       - mapbox/add-mapbox-ssh-key
-      - run: echo $PATH
       - mapbox/install-mbx-ci:
           platform: linux
       - checkout-mobile-metrics
@@ -79,9 +79,6 @@ jobs:
           at: Products
       - run: ls -l Products/
       - run: |
-          # sudo apt-get update
-          # sudo apt-get install python3-pip
-          # pip3 install awscli
           cd /tmp
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
           unzip awscliv2.zip
@@ -91,11 +88,12 @@ jobs:
           command: |
             mobile-metrics/ios-maps/Scripts/devicefarm.py \
               "$AWS_DEVICE_FARM_PROJECT_ARN" \
-              --name "$CIRCLE_SHA1-$CIRCLE_BUILD_NUM" \
-              --device-pool "arn:aws:devicefarm:us-west-2:234858372212:devicepool:c29e8fde-6337-461b-af58-b6a7f93f043c/bfbd31ba-dac3-4962-8ecb-52d6d6302aa8" \
+              --name "Benchmark_v2-$CIRCLE_SHA1-$CIRCLE_BUILD_NUM" \
+              --device-pool "$AWS_DEVICE_POOL_ARN" \
               --ipa "Products/App.ipa" \
-              --tests "Products/AppTests.zip" \
-              --test-type XCTEST \
+              --tests "Products/App.ipa" \
+              --test-type XCTEST_UI \
+              --spec benchmark/testspec.yml \
               --output benchmark_waiter.json
       - store_artifacts:
           path: benchmark_waiter.json
@@ -109,8 +107,15 @@ jobs:
               --output benchmark_results.json
 
             zip -r BenchmarkResults.zip BenchmarkResults
+
+            ARTIFACTS_PATH=$(find BenchmarkResults -name "Customer_Artifacts.zip" | head -n 1)
+            unzip "$ARTIFACTS_PATH" -d artifacts
+            find artifacts -name "*.xcresult" -exec cp -r {} metrics.xcresult \;
+            zip -r metrics.xcresult.zip metrics.xcresult
       - store_artifacts:
           path: BenchmarkResults.zip
+      - store_artifacts:
+          path: metrics.xcresult.zip
       - store_artifacts:
           path: benchmark_results.json
 
@@ -352,7 +357,7 @@ orbs:
 
                 # Copy the testrun in
                 TMP_PAYLOAD_APP=$(find "$PAYLOAD_PATH" -name "*.app")
-                # cp "$DERIVED_DATA_PATH/Build/Products/"*.xctestrun  "$TMP_PAYLOAD_APP"
+                cp "$DERIVED_DATA_PATH/Build/Products/"*.xctestrun  "$TMP_PAYLOAD_APP"
 
                 # Zip up
                 (

@@ -4,5 +4,7 @@
 <dict>
 	<key>MBXAccessToken</key>
 	<string></string>
+	<key>UIFileSharingEnabled</key>
+	<true/>
 </dict>
 </plist>

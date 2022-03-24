@@ -1,0 +1,61 @@
+version: 0.1
+
+# Phases are collection of commands that get executed on Device Farm.
+phases:
+  # The install phase includes commands that install dependencies that your tests use.
+  # Default dependencies for testing frameworks supported on Device Farm are already installed.
+  install:
+    commands:
+      # - XCODE_VERSION=$(xcodebuild -version |head -n 1|cut -d" " -f2|cut -d"." -f1)
+      # - >-
+      #  if [ "$XCODE_VERSION" -lt 12 ];
+      #  then
+      #    echo "Xcode version is $XCODE_VERSION; switching to a higher version";
+      #    sudo /usr/bin/xcode-select --switch /Applications/Xcode.app/;
+      #    xcodebuild -version;
+      #  fi;
+
+  # The pre-test phase includes commands that setup your test environment.
+  pre_test:
+    commands:
+      # The xctestrun file contains the following line
+      #
+      #   __TESTROOT__/Release-iphoneos/MobileMetrics.app
+      #
+      # where __TESTROOT__ is the directory where the xctestrun file lives.
+      # The following recreates that hierarchy, based on the IPA that was uploaded (the testrun
+      # file is included in the app package.)
+      - mkdir -p /tmp/test-root/Release-iphoneos
+      - mkdir -p /tmp/build
+
+      - unzip $DEVICEFARM_TEST_PACKAGE_PATH -d /tmp/unzipped-ipa
+      - cp -R /tmp/unzipped-ipa/Payload/MobileMetrics.app /tmp/test-root/Release-iphoneos
+      - mv /tmp/test-root/Release-iphoneos/MobileMetrics.app/*.xctestrun /tmp/test-root
+      - xcodebuild -version
+
+
+  # The test phase includes commands that run your test suite execution.
+  test:
+    commands:
+      - cd /tmp/test-root && xcodebuild test-without-building -destination id=$DEVICEFARM_DEVICE_UDID -xctestrun *.xctestrun      -derivedDataPath /tmp/build -resultBundlePath /tmp/build/metrics.xcresult
+
+  # The post test phase includes are commands that are run after your tests are executed.
+  post_test:
+    commands:
+      # We created a separate /tmp/build directory as we were seeing some "permission denied" errors
+      # with the xcresult package (resulting in an essentially empty result folder).
+      - cp -R /tmp/build $DEVICEFARM_LOG_DIR
+      - mkdir ~/ios-documents
+      - ifuse ~/ios-documents --documents com.mapbox.MobileMetrics
+      - cp -R ~/ios-documents $DEVICEFARM_LOG_DIR
+      - chmod -R 777 $DEVICEFARM_LOG_DIR
+
+# The artifacts phase lets you specify the location where your tests logs, device logs will be stored.
+# And also let you specify the location of your test logs and artifacts which you want to be collected by Device Farm.
+# These logs and artifacts will be available through ListArtifacts API in Device Farm.
+artifacts:
+  # By default, Device Farm will collect your artifacts from following directories
+  - $DEVICEFARM_LOG_DIR
+
+  # This appears necessary, even though it is specified on the schedule-run command-line
+  - Documents

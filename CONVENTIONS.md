@@ -6,7 +6,9 @@
        and will help us communicate what they should do instead. Customers who
        treat warnings as errors will have broken builds, which we consider an
        acceptable tradeoff relative to the communication benefit.
-    2. Exclude deprecated symbols from the generated documentation.
+    2. Exclude deprecated symbols from the generated documentation by adding
+       `:nodoc:` to the documentation comment and omitting any top-level symbols
+       from the [Jazzy config file](https://github.com/mapbox/mapbox-maps-ios/blob/main/scripts/doc-generation/.jazzy.yaml).
     3. In the documentation comment, link to the APIs that should be used
        instead.
 2. **Public Protocols**

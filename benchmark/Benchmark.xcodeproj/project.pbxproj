@@ -7,13 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7412CF5E27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF5D27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift */; };
 		745D052527C8D185004E7B53 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 745D052427C8D185004E7B53 /* MapboxMaps */; };
 		7499661827C64ECD00DA186A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499661727C64ECD00DA186A /* AppDelegate.swift */; };
 		7499661C27C64ECD00DA186A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499661B27C64ECD00DA186A /* ViewController.swift */; };
 		7499661F27C64ECD00DA186A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7499661D27C64ECD00DA186A /* Main.storyboard */; };
 		7499662127C64ECE00DA186A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7499662027C64ECE00DA186A /* Assets.xcassets */; };
 		7499662427C64ECE00DA186A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7499662227C64ECE00DA186A /* LaunchScreen.storyboard */; };
-		7499663527C7AD2A00DA186A /* BenchmarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499663427C7AD2A00DA186A /* BenchmarkTests.swift */; };
+		74F237EF27E32FFA009F304C /* BaseBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F237EE27E32FFA009F304C /* BaseBenchmark.swift */; };
+		74F237F127E3326E009F304C /* InitSDKBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F237F027E3326E009F304C /* InitSDKBenchmark.swift */; };
+		74F237F327E3338A009F304C /* NotifyingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F237F227E3338A009F304C /* NotifyingViewController.swift */; };
+		74F2381327E3730C009F304C /* WarmCacheBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F2381227E3730C009F304C /* WarmCacheBenchmark.swift */; };
+		74F2381527E39A33009F304C /* AnimationFlyToBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F2381427E39A33009F304C /* AnimationFlyToBenchmark.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -27,6 +32,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7412CF5D27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationEaseToBenchmark.swift; sourceTree = "<group>"; };
 		745D052327C8D15F004E7B53 /* mapbox-maps-ios */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "mapbox-maps-ios"; path = "../mapbox-maps-ios"; sourceTree = "<group>"; };
 		7499661427C64ECD00DA186A /* Benchmark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Benchmark.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7499661727C64ECD00DA186A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -36,7 +42,11 @@
 		7499662327C64ECE00DA186A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7499662527C64ECE00DA186A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7499663227C7AD2900DA186A /* BenchmarkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BenchmarkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		7499663427C7AD2A00DA186A /* BenchmarkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BenchmarkTests.swift; sourceTree = "<group>"; };
+		74F237EE27E32FFA009F304C /* BaseBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseBenchmark.swift; sourceTree = "<group>"; };
+		74F237F027E3326E009F304C /* InitSDKBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitSDKBenchmark.swift; sourceTree = "<group>"; };
+		74F237F227E3338A009F304C /* NotifyingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotifyingViewController.swift; sourceTree = "<group>"; };
+		74F2381227E3730C009F304C /* WarmCacheBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarmCacheBenchmark.swift; sourceTree = "<group>"; };
+		74F2381427E39A33009F304C /* AnimationFlyToBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationFlyToBenchmark.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,7 +111,11 @@
 		7499663327C7AD2A00DA186A /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				7499663427C7AD2A00DA186A /* BenchmarkTests.swift */,
+				74F237EA27E32DE8009F304C /* Base */,
+				74F237F027E3326E009F304C /* InitSDKBenchmark.swift */,
+				74F2381227E3730C009F304C /* WarmCacheBenchmark.swift */,
+				74F2381427E39A33009F304C /* AnimationFlyToBenchmark.swift */,
+				7412CF5D27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -112,6 +126,15 @@
 				745D052327C8D15F004E7B53 /* mapbox-maps-ios */,
 			);
 			name = Packages;
+			sourceTree = "<group>";
+		};
+		74F237EA27E32DE8009F304C /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				74F237EE27E32FFA009F304C /* BaseBenchmark.swift */,
+				74F237F227E3338A009F304C /* NotifyingViewController.swift */,
+			);
+			path = Base;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -163,7 +186,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1320;
+				LastSwiftUpdateCheck = 1330;
 				LastUpgradeCheck = 1320;
 				TargetAttributes = {
 					7499661327C64ECD00DA186A = {
@@ -223,6 +246,7 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
+				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
 			);
 			name = "Insert access token";
 			outputFileListPaths = (
@@ -249,7 +273,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7499663527C7AD2A00DA186A /* BenchmarkTests.swift in Sources */,
+				74F237EF27E32FFA009F304C /* BaseBenchmark.swift in Sources */,
+				7412CF5E27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift in Sources */,
+				74F2381327E3730C009F304C /* WarmCacheBenchmark.swift in Sources */,
+				74F237F127E3326E009F304C /* InitSDKBenchmark.swift in Sources */,
+				74F237F327E3338A009F304C /* NotifyingViewController.swift in Sources */,
+				74F2381527E39A33009F304C /* AnimationFlyToBenchmark.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -334,7 +363,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -389,7 +418,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

@@ -1,0 +1,86 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.5,
+          41.9
+        ]
+      },
+      "properties": {
+        "icon-image": "cafe-15",
+        "is-draggable": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          10.5,
+          35.9
+        ]
+      },
+      "properties": {
+        "circle-color": "rgba(255, 255, 255, 1)",
+        "circle-radius": "25",
+        "is-draggable": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            10.5,
+            35.9
+          ],
+          [
+            12.5,
+            41.9
+          ]
+        ]
+      },
+      "properties": {
+        "line-color": "rgba(255, 255, 255, 1)",
+        "line-width": "15",
+        "is-draggable": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              12.5,
+              41.9
+            ],
+            [
+              10.5,
+              35.9
+            ],
+            [
+              41.9,
+              35.9
+            ],
+            [
+              12.5,
+              41.9
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "fill-color": "rgba(255, 255, 255, 1)",
+        "fill-outline-color": "rgba(255, 0, 0, 1)",
+        "is-draggable": true
+      }
+    }
+  ]
+}

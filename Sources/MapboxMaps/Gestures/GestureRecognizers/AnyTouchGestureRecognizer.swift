@@ -27,7 +27,6 @@ internal final class AnyTouchGestureRecognizer: UIGestureRecognizer {
                     state = .ended
                 default:
                     state = .failed
-                    break
                 }
             }
         }

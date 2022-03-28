@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>MBMImage Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    <link rel='shortcut icon' href='https://www.mapbox.com/img/favicon.ico' type='image/x-icon' />
+
+    <style type="text/css">
+      .nav-group-name[data-name="MBMImage"] > .small-heading,
+      .nav-group-task[data-name="MBMImage"] {
+        background-color: #f5f8fc;
+        font-family: "Open Sans Bold";
+        border-left: 3px solid #3a68d8;
+        padding-left: 5px
+      }
+    </style>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Class/MBMImage" class="dashAnchor"></a>
+
+    <a title="MBMImage Class Reference"></a>
+
+    <header class="header-container">
+      <div class="limiter">
+        <div class="header">
+        <p class="header-col header-col--primary">
+          <a class="header-link" href="../index.html">
+            <img style="height: 25px;"  class="header-icon" src="../img/mapbox.svg" alt="MapboxCoreMaps Docs"/>
+            <span class='header-tag'>MapboxCoreMaps for iOS Reference (10.4.1)</span>
+          </a>
+          
+        </p>
+    
+    
+      </div>
+      </div>
+    </header>
+
+    <div class="breadcrumbs">
+      <div class="limiter">
+        <a class="breadcrumb" href="../index.html">MapboxCoreMaps Reference</a>
+        <img class="carat" src="../img/carat.png" />
+        MBMImage Class Reference
+      </div>
+    </div>
+
+    <div class="content-wrapper limiter">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name" data-name="Map">
+            <a class="small-heading" href="../Map.html">Map<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMMap" data-url="Classes/MBMMap.html">
+                <a title="MBMMap" class="nav-group-task-link" href="../Classes/MBMMap.html">MBMMap</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMMapOptions" data-url="Classes/MBMMapOptions.html">
+                <a title="MBMMapOptions" class="nav-group-task-link" href="../Classes/MBMMapOptions.html">MBMMapOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMResourceOptions" data-url="Classes/MBMResourceOptions.html">
+                <a title="MBMResourceOptions" class="nav-group-task-link" href="../Classes/MBMResourceOptions.html">MBMResourceOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMContextMode" data-url="Enums/MBMContextMode.html">
+                <a title="MBMContextMode" class="nav-group-task-link" href="../Enums/MBMContextMode.html">MBMContextMode</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMConstrainMode" data-url="Enums/MBMConstrainMode.html">
+                <a title="MBMConstrainMode" class="nav-group-task-link" href="../Enums/MBMConstrainMode.html">MBMConstrainMode</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMViewportMode" data-url="Enums/MBMViewportMode.html">
+                <a title="MBMViewportMode" class="nav-group-task-link" href="../Enums/MBMViewportMode.html">MBMViewportMode</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMGlyphsRasterizationOptions" data-url="Classes/MBMGlyphsRasterizationOptions.html">
+                <a title="MBMGlyphsRasterizationOptions" class="nav-group-task-link" href="../Classes/MBMGlyphsRasterizationOptions.html">MBMGlyphsRasterizationOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMGlyphsRasterizationMode" data-url="Enums/MBMGlyphsRasterizationMode.html">
+                <a title="MBMGlyphsRasterizationMode" class="nav-group-task-link" href="../Enums/MBMGlyphsRasterizationMode.html">MBMGlyphsRasterizationMode</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMNorthOrientation" data-url="Enums/MBMNorthOrientation.html">
+                <a title="MBMNorthOrientation" class="nav-group-task-link" href="../Enums/MBMNorthOrientation.html">MBMNorthOrientation</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMScreenCoordinate" data-url="Classes/MBMScreenCoordinate.html">
+                <a title="MBMScreenCoordinate" class="nav-group-task-link" href="../Classes/MBMScreenCoordinate.html">MBMScreenCoordinate</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMScreenBox" data-url="Classes/MBMScreenBox.html">
+                <a title="MBMScreenBox" class="nav-group-task-link" href="../Classes/MBMScreenBox.html">MBMScreenBox</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMCoordinateBoundsZoom" data-url="Classes/MBMCoordinateBoundsZoom.html">
+                <a title="MBMCoordinateBoundsZoom" class="nav-group-task-link" href="../Classes/MBMCoordinateBoundsZoom.html">MBMCoordinateBoundsZoom</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMMapDebugOptions" data-url="Enums/MBMMapDebugOptions.html">
+                <a title="MBMMapDebugOptions" class="nav-group-task-link" href="../Enums/MBMMapDebugOptions.html">MBMMapDebugOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMMapConstants" data-url="Classes/MBMMapConstants.html">
+                <a title="MBMMapConstants" class="nav-group-task-link" href="../Classes/MBMMapConstants.html">MBMMapConstants</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMSize" data-url="Classes/MBMSize.html">
+                <a title="MBMSize" class="nav-group-task-link" href="../Classes/MBMSize.html">MBMSize</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Map style management">
+            <a class="small-heading" href="../Map style management.html">Map style management<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMStyleManager" data-url="Classes/MBMStyleManager.html">
+                <a title="MBMStyleManager" class="nav-group-task-link" href="../Classes/MBMStyleManager.html">MBMStyleManager</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMImage" data-url="Classes/MBMImage.html">
+                <a title="MBMImage" class="nav-group-task-link" href="../Classes/MBMImage.html">MBMImage</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMImageContent" data-url="Classes/MBMImageContent.html">
+                <a title="MBMImageContent" class="nav-group-task-link" href="../Classes/MBMImageContent.html">MBMImageContent</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMImageStretches" data-url="Classes/MBMImageStretches.html">
+                <a title="MBMImageStretches" class="nav-group-task-link" href="../Classes/MBMImageStretches.html">MBMImageStretches</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMLayerPosition" data-url="Classes/MBMLayerPosition.html">
+                <a title="MBMLayerPosition" class="nav-group-task-link" href="../Classes/MBMLayerPosition.html">MBMLayerPosition</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMTileOptions" data-url="Classes/MBMTileOptions.html">
+                <a title="MBMTileOptions" class="nav-group-task-link" href="../Classes/MBMTileOptions.html">MBMTileOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMCanonicalTileID" data-url="Classes/MBMCanonicalTileID.html">
+                <a title="MBMCanonicalTileID" class="nav-group-task-link" href="../Classes/MBMCanonicalTileID.html">MBMCanonicalTileID</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMCustomGeometrySourceOptions" data-url="Classes/MBMCustomGeometrySourceOptions.html">
+                <a title="MBMCustomGeometrySourceOptions" class="nav-group-task-link" href="../Classes/MBMCustomGeometrySourceOptions.html">MBMCustomGeometrySourceOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMCancelTileFunctionCallback" data-url="Map%20style%20management.html#/c:MBMCancelTileFunctionCallback.h@T@MBMCancelTileFunctionCallback">
+                <a title="MBMCancelTileFunctionCallback" class="nav-group-task-link" href="../Map%20style%20management.html#/c:MBMCancelTileFunctionCallback.h@T@MBMCancelTileFunctionCallback">MBMCancelTileFunctionCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMFetchTileFunctionCallback" data-url="Map%20style%20management.html#/c:MBMFetchTileFunctionCallback.h@T@MBMFetchTileFunctionCallback">
+                <a title="MBMFetchTileFunctionCallback" class="nav-group-task-link" href="../Map%20style%20management.html#/c:MBMFetchTileFunctionCallback.h@T@MBMFetchTileFunctionCallback">MBMFetchTileFunctionCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStylePropertyValue" data-url="Classes/MBMStylePropertyValue.html">
+                <a title="MBMStylePropertyValue" class="nav-group-task-link" href="../Classes/MBMStylePropertyValue.html">MBMStylePropertyValue</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStylePropertyValueKind" data-url="Enums/MBMStylePropertyValueKind.html">
+                <a title="MBMStylePropertyValueKind" class="nav-group-task-link" href="../Enums/MBMStylePropertyValueKind.html">MBMStylePropertyValueKind</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMElevationData" data-url="Protocols/MBMElevationData.html">
+                <a title="MBMElevationData" class="nav-group-task-link" href="../Protocols/MBMElevationData.html">MBMElevationData</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMCustomLayerRenderParameters" data-url="Classes/MBMCustomLayerRenderParameters.html">
+                <a title="MBMCustomLayerRenderParameters" class="nav-group-task-link" href="../Classes/MBMCustomLayerRenderParameters.html">MBMCustomLayerRenderParameters</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMCustomLayerHost" data-url="Protocols/MBMCustomLayerHost.html">
+                <a title="MBMCustomLayerHost" class="nav-group-task-link" href="../Protocols/MBMCustomLayerHost.html">MBMCustomLayerHost</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStyleObjectInfo" data-url="Classes/MBMStyleObjectInfo.html">
+                <a title="MBMStyleObjectInfo" class="nav-group-task-link" href="../Classes/MBMStyleObjectInfo.html">MBMStyleObjectInfo</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Map camera management">
+            <a class="small-heading" href="../Map camera management.html">Map camera management<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMCameraManager" data-url="Classes/MBMCameraManager.html">
+                <a title="MBMCameraManager" class="nav-group-task-link" href="../Classes/MBMCameraManager.html">MBMCameraManager</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMCameraBounds" data-url="Classes/MBMCameraBounds.html">
+                <a title="MBMCameraBounds" class="nav-group-task-link" href="../Classes/MBMCameraBounds.html">MBMCameraBounds</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMCameraBoundsOptions" data-url="Classes/MBMCameraBoundsOptions.html">
+                <a title="MBMCameraBoundsOptions" class="nav-group-task-link" href="../Classes/MBMCameraBoundsOptions.html">MBMCameraBoundsOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMCameraOptions" data-url="Classes/MBMCameraOptions.html">
+                <a title="MBMCameraOptions" class="nav-group-task-link" href="../Classes/MBMCameraOptions.html">MBMCameraOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMCameraState" data-url="Classes/MBMCameraState.html">
+                <a title="MBMCameraState" class="nav-group-task-link" href="../Classes/MBMCameraState.html">MBMCameraState</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMCoordinateBounds" data-url="Classes/MBMCoordinateBounds.html">
+                <a title="MBMCoordinateBounds" class="nav-group-task-link" href="../Classes/MBMCoordinateBounds.html">MBMCoordinateBounds</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMEdgeInsets" data-url="Classes/MBMEdgeInsets.html">
+                <a title="MBMEdgeInsets" class="nav-group-task-link" href="../Classes/MBMEdgeInsets.html">MBMEdgeInsets</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMFreeCameraOptions" data-url="Classes/MBMFreeCameraOptions.html">
+                <a title="MBMFreeCameraOptions" class="nav-group-task-link" href="../Classes/MBMFreeCameraOptions.html">MBMFreeCameraOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMTransitionOptions" data-url="Classes/MBMTransitionOptions.html">
+                <a title="MBMTransitionOptions" class="nav-group-task-link" href="../Classes/MBMTransitionOptions.html">MBMTransitionOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMVec3" data-url="Classes/MBMVec3.html">
+                <a title="MBMVec3" class="nav-group-task-link" href="../Classes/MBMVec3.html">MBMVec3</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMVec4" data-url="Classes/MBMVec4.html">
+                <a title="MBMVec4" class="nav-group-task-link" href="../Classes/MBMVec4.html">MBMVec4</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Map querying and feature state">
+            <a class="small-heading" href="../Map querying and feature state.html">Map querying and feature state<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMQueryFeatureExtensionCallback" data-url="Map%20querying%20and%20feature%20state.html#/c:MBMQueryFeatureExtensionCallback_Internal.h@T@MBMQueryFeatureExtensionCallback">
+                <a title="MBMQueryFeatureExtensionCallback" class="nav-group-task-link" href="../Map%20querying%20and%20feature%20state.html#/c:MBMQueryFeatureExtensionCallback_Internal.h@T@MBMQueryFeatureExtensionCallback">MBMQueryFeatureExtensionCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMQueryFeatureStateCallback" data-url="Map%20querying%20and%20feature%20state.html#/c:MBMQueryFeatureStateCallback_Internal.h@T@MBMQueryFeatureStateCallback">
+                <a title="MBMQueryFeatureStateCallback" class="nav-group-task-link" href="../Map%20querying%20and%20feature%20state.html#/c:MBMQueryFeatureStateCallback_Internal.h@T@MBMQueryFeatureStateCallback">MBMQueryFeatureStateCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMQueryFeaturesCallback" data-url="Map%20querying%20and%20feature%20state.html#/c:MBMQueryFeaturesCallback_Internal.h@T@MBMQueryFeaturesCallback">
+                <a title="MBMQueryFeaturesCallback" class="nav-group-task-link" href="../Map%20querying%20and%20feature%20state.html#/c:MBMQueryFeaturesCallback_Internal.h@T@MBMQueryFeaturesCallback">MBMQueryFeaturesCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMQueriedFeature" data-url="Classes/MBMQueriedFeature.html">
+                <a title="MBMQueriedFeature" class="nav-group-task-link" href="../Classes/MBMQueriedFeature.html">MBMQueriedFeature</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMRenderedQueryOptions" data-url="Classes/MBMRenderedQueryOptions.html">
+                <a title="MBMRenderedQueryOptions" class="nav-group-task-link" href="../Classes/MBMRenderedQueryOptions.html">MBMRenderedQueryOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMSourceQueryOptions" data-url="Classes/MBMSourceQueryOptions.html">
+                <a title="MBMSourceQueryOptions" class="nav-group-task-link" href="../Classes/MBMSourceQueryOptions.html">MBMSourceQueryOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMFeatureExtensionValue" data-url="Classes/MBMFeatureExtensionValue.html">
+                <a title="MBMFeatureExtensionValue" class="nav-group-task-link" href="../Classes/MBMFeatureExtensionValue.html">MBMFeatureExtensionValue</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Map events">
+            <a class="small-heading" href="../Map events.html">Map events<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMEvent" data-url="Classes/MBMEvent.html">
+                <a title="MBMEvent" class="nav-group-task-link" href="../Classes/MBMEvent.html">MBMEvent</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMMapEvents" data-url="Classes/MBMMapEvents.html">
+                <a title="MBMMapEvents" class="nav-group-task-link" href="../Classes/MBMMapEvents.html">MBMMapEvents</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMObservable" data-url="Classes/MBMObservable.html">
+                <a title="MBMObservable" class="nav-group-task-link" href="../Classes/MBMObservable.html">MBMObservable</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMObserver" data-url="Protocols/MBMObserver.html">
+                <a title="MBMObserver" class="nav-group-task-link" href="../Protocols/MBMObserver.html">MBMObserver</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Map render cache">
+            <a class="small-heading" href="../Map render cache.html">Map render cache<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMRenderCacheOptions" data-url="Classes/MBMRenderCacheOptions.html">
+                <a title="MBMRenderCacheOptions" class="nav-group-task-link" href="../Classes/MBMRenderCacheOptions.html">MBMRenderCacheOptions</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Map embedding">
+            <a class="small-heading" href="../Map embedding.html">Map embedding<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMMapClient" data-url="Protocols/MBMMapClient.html">
+                <a title="MBMMapClient" class="nav-group-task-link" href="../Protocols/MBMMapClient.html">MBMMapClient</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMMetalViewProvider" data-url="Protocols/MBMMetalViewProvider.html">
+                <a title="MBMMetalViewProvider" class="nav-group-task-link" href="../Protocols/MBMMetalViewProvider.html">MBMMetalViewProvider</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMTask" data-url="Map%20embedding.html#/c:MBMTask_Internal.h@T@MBMTask">
+                <a title="MBMTask" class="nav-group-task-link" href="../Map%20embedding.html#/c:MBMTask_Internal.h@T@MBMTask">MBMTask</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Map snapshotter">
+            <a class="small-heading" href="../Map snapshotter.html">Map snapshotter<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMMapSnapshotter" data-url="Classes/MBMMapSnapshotter.html">
+                <a title="MBMMapSnapshotter" class="nav-group-task-link" href="../Classes/MBMMapSnapshotter.html">MBMMapSnapshotter</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMMapSnapshotOptions" data-url="Classes/MBMMapSnapshotOptions.html">
+                <a title="MBMMapSnapshotOptions" class="nav-group-task-link" href="../Classes/MBMMapSnapshotOptions.html">MBMMapSnapshotOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMSnapshotCompleteCallback" data-url="Map%20snapshotter.html#/c:MBMSnapshotCompleteCallback_Internal.h@T@MBMSnapshotCompleteCallback">
+                <a title="MBMSnapshotCompleteCallback" class="nav-group-task-link" href="../Map%20snapshotter.html#/c:MBMSnapshotCompleteCallback_Internal.h@T@MBMSnapshotCompleteCallback">MBMSnapshotCompleteCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMMapSnapshot" data-url="Classes/MBMMapSnapshot.html">
+                <a title="MBMMapSnapshot" class="nav-group-task-link" href="../Classes/MBMMapSnapshot.html">MBMMapSnapshot</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Offline">
+            <a class="small-heading" href="../Offline.html">Offline<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMAsyncOperationResultCallback" data-url="Offline.html#/c:MBMAsyncOperationResultCallback_Internal.h@T@MBMAsyncOperationResultCallback">
+                <a title="MBMAsyncOperationResultCallback" class="nav-group-task-link" href="../Offline.html#/c:MBMAsyncOperationResultCallback_Internal.h@T@MBMAsyncOperationResultCallback">MBMAsyncOperationResultCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMOfflineManager" data-url="Classes/MBMOfflineManager.html">
+                <a title="MBMOfflineManager" class="nav-group-task-link" href="../Classes/MBMOfflineManager.html">MBMOfflineManager</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMTileStoreUsageMode" data-url="Enums/MBMTileStoreUsageMode.html">
+                <a title="MBMTileStoreUsageMode" class="nav-group-task-link" href="../Enums/MBMTileStoreUsageMode.html">MBMTileStoreUsageMode</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMTilesetDescriptorOptions" data-url="Classes/MBMTilesetDescriptorOptions.html">
+                <a title="MBMTilesetDescriptorOptions" class="nav-group-task-link" href="../Classes/MBMTilesetDescriptorOptions.html">MBMTilesetDescriptorOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStylePack" data-url="Classes/MBMStylePack.html">
+                <a title="MBMStylePack" class="nav-group-task-link" href="../Classes/MBMStylePack.html">MBMStylePack</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStylePackError" data-url="Classes/MBMStylePackError.html">
+                <a title="MBMStylePackError" class="nav-group-task-link" href="../Classes/MBMStylePackError.html">MBMStylePackError</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStylePackLoadOptions" data-url="Classes/MBMStylePackLoadOptions.html">
+                <a title="MBMStylePackLoadOptions" class="nav-group-task-link" href="../Classes/MBMStylePackLoadOptions.html">MBMStylePackLoadOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStylePackLoadProgress" data-url="Classes/MBMStylePackLoadProgress.html">
+                <a title="MBMStylePackLoadProgress" class="nav-group-task-link" href="../Classes/MBMStylePackLoadProgress.html">MBMStylePackLoadProgress</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStylePackCallback" data-url="Offline.html#/c:MBMStylePackCallback_Internal.h@T@MBMStylePackCallback">
+                <a title="MBMStylePackCallback" class="nav-group-task-link" href="../Offline.html#/c:MBMStylePackCallback_Internal.h@T@MBMStylePackCallback">MBMStylePackCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStylePacksCallback" data-url="Offline.html#/c:MBMStylePacksCallback_Internal.h@T@MBMStylePacksCallback">
+                <a title="MBMStylePacksCallback" class="nav-group-task-link" href="../Offline.html#/c:MBMStylePacksCallback_Internal.h@T@MBMStylePacksCallback">MBMStylePacksCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStylePackLoadProgressCallback" data-url="Offline.html#/c:MBMStylePackLoadProgressCallback.h@T@MBMStylePackLoadProgressCallback">
+                <a title="MBMStylePackLoadProgressCallback" class="nav-group-task-link" href="../Offline.html#/c:MBMStylePackLoadProgressCallback.h@T@MBMStylePackLoadProgressCallback">MBMStylePackLoadProgressCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStylePackMetadataCallback" data-url="Offline.html#/c:MBMStylePackMetadataCallback_Internal.h@T@MBMStylePackMetadataCallback">
+                <a title="MBMStylePackMetadataCallback" class="nav-group-task-link" href="../Offline.html#/c:MBMStylePackMetadataCallback_Internal.h@T@MBMStylePackMetadataCallback">MBMStylePackMetadataCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStylePackErrorType" data-url="Enums/MBMStylePackErrorType.html">
+                <a title="MBMStylePackErrorType" class="nav-group-task-link" href="../Enums/MBMStylePackErrorType.html">MBMStylePackErrorType</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStylePackErrorTypeToString" data-url="Offline.html#/c:@F@MBMStylePackErrorTypeToString">
+                <a title="MBMStylePackErrorTypeToString" class="nav-group-task-link" href="../Offline.html#/c:@F@MBMStylePackErrorTypeToString">MBMStylePackErrorTypeToString</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMTileStoreUsageModeToString" data-url="Offline.html#/c:@F@MBMTileStoreUsageModeToString">
+                <a title="MBMTileStoreUsageModeToString" class="nav-group-task-link" href="../Offline.html#/c:@F@MBMTileStoreUsageModeToString">MBMTileStoreUsageModeToString</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Utilities">
+            <a class="small-heading" href="../Utilities.html">Utilities<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMSettings" data-url="Classes/MBMSettings.html">
+                <a title="MBMSettings" class="nav-group-task-link" href="../Classes/MBMSettings.html">MBMSettings</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMProjection" data-url="Classes/MBMProjection.html">
+                <a title="MBMProjection" class="nav-group-task-link" href="../Classes/MBMProjection.html">MBMProjection</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMProjectedMeters" data-url="Classes/MBMProjectedMeters.html">
+                <a title="MBMProjectedMeters" class="nav-group-task-link" href="../Classes/MBMProjectedMeters.html">MBMProjectedMeters</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMMercatorCoordinate" data-url="Classes/MBMMercatorCoordinate.html">
+                <a title="MBMMercatorCoordinate" class="nav-group-task-link" href="../Classes/MBMMercatorCoordinate.html">MBMMercatorCoordinate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Offline region management (deprecated)">
+            <a class="small-heading" href="../Offline region management (deprecated).html">Offline region management (deprecated)<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMOfflineRegionManager" data-url="Classes/MBMOfflineRegionManager.html">
+                <a title="MBMOfflineRegionManager" class="nav-group-task-link" href="../Classes/MBMOfflineRegionManager.html">MBMOfflineRegionManager</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMOfflineRegion" data-url="Classes/MBMOfflineRegion.html">
+                <a title="MBMOfflineRegion" class="nav-group-task-link" href="../Classes/MBMOfflineRegion.html">MBMOfflineRegion</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMOfflineRegionGeometryDefinition" data-url="Classes/MBMOfflineRegionGeometryDefinition.html">
+                <a title="MBMOfflineRegionGeometryDefinition" class="nav-group-task-link" href="../Classes/MBMOfflineRegionGeometryDefinition.html">MBMOfflineRegionGeometryDefinition</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMOfflineRegionTilePyramidDefinition" data-url="Classes/MBMOfflineRegionTilePyramidDefinition.html">
+                <a title="MBMOfflineRegionTilePyramidDefinition" class="nav-group-task-link" href="../Classes/MBMOfflineRegionTilePyramidDefinition.html">MBMOfflineRegionTilePyramidDefinition</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMResponseErrorReason" data-url="Enums/MBMResponseErrorReason.html">
+                <a title="MBMResponseErrorReason" class="nav-group-task-link" href="../Enums/MBMResponseErrorReason.html">MBMResponseErrorReason</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMResponseError" data-url="Classes/MBMResponseError.html">
+                <a title="MBMResponseError" class="nav-group-task-link" href="../Classes/MBMResponseError.html">MBMResponseError</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMOfflineRegionDownloadState" data-url="Enums/MBMOfflineRegionDownloadState.html">
+                <a title="MBMOfflineRegionDownloadState" class="nav-group-task-link" href="../Enums/MBMOfflineRegionDownloadState.html">MBMOfflineRegionDownloadState</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMOfflineRegionStatus" data-url="Classes/MBMOfflineRegionStatus.html">
+                <a title="MBMOfflineRegionStatus" class="nav-group-task-link" href="../Classes/MBMOfflineRegionStatus.html">MBMOfflineRegionStatus</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMOfflineDatabaseMergeCallback" data-url="Offline%20region%20management%20%28deprecated%29.html#/c:MBMOfflineDatabaseMergeCallback_Internal.h@T@MBMOfflineDatabaseMergeCallback">
+                <a title="MBMOfflineDatabaseMergeCallback" class="nav-group-task-link" href="../Offline%20region%20management%20%28deprecated%29.html#/c:MBMOfflineDatabaseMergeCallback_Internal.h@T@MBMOfflineDatabaseMergeCallback">MBMOfflineDatabaseMergeCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMOfflineRegionCallback" data-url="Offline%20region%20management%20%28deprecated%29.html#/c:MBMOfflineRegionCallback_Internal.h@T@MBMOfflineRegionCallback">
+                <a title="MBMOfflineRegionCallback" class="nav-group-task-link" href="../Offline%20region%20management%20%28deprecated%29.html#/c:MBMOfflineRegionCallback_Internal.h@T@MBMOfflineRegionCallback">MBMOfflineRegionCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMOfflineRegionCreateCallback" data-url="Offline%20region%20management%20%28deprecated%29.html#/c:MBMOfflineRegionCreateCallback_Internal.h@T@MBMOfflineRegionCreateCallback">
+                <a title="MBMOfflineRegionCreateCallback" class="nav-group-task-link" href="../Offline%20region%20management%20%28deprecated%29.html#/c:MBMOfflineRegionCreateCallback_Internal.h@T@MBMOfflineRegionCreateCallback">MBMOfflineRegionCreateCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMOfflineRegionObserver" data-url="Protocols/MBMOfflineRegionObserver.html">
+                <a title="MBMOfflineRegionObserver" class="nav-group-task-link" href="../Protocols/MBMOfflineRegionObserver.html">MBMOfflineRegionObserver</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Other Classes">
+            <a class="small-heading" href="../Other Classes.html">Other Classes<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMMapMemoryBudget" data-url="Classes/MBMMapMemoryBudget.html">
+                <a title="MBMMapMemoryBudget" class="nav-group-task-link" href="../Classes/MBMMapMemoryBudget.html">MBMMapMemoryBudget</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMMapMemoryBudgetInMegabytes" data-url="Classes/MBMMapMemoryBudgetInMegabytes.html">
+                <a title="MBMMapMemoryBudgetInMegabytes" class="nav-group-task-link" href="../Classes/MBMMapMemoryBudgetInMegabytes.html">MBMMapMemoryBudgetInMegabytes</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMMapMemoryBudgetInTiles" data-url="Classes/MBMMapMemoryBudgetInTiles.html">
+                <a title="MBMMapMemoryBudgetInTiles" class="nav-group-task-link" href="../Classes/MBMMapMemoryBudgetInTiles.html">MBMMapMemoryBudgetInTiles</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMRenderedQueryGeometry" data-url="Classes/MBMRenderedQueryGeometry.html">
+                <a title="MBMRenderedQueryGeometry" class="nav-group-task-link" href="../Classes/MBMRenderedQueryGeometry.html">MBMRenderedQueryGeometry</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMViewAnnotationOptions" data-url="Classes/MBMViewAnnotationOptions.html">
+                <a title="MBMViewAnnotationOptions" class="nav-group-task-link" href="../Classes/MBMViewAnnotationOptions.html">MBMViewAnnotationOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMViewAnnotationPositionDescriptor" data-url="Classes/MBMViewAnnotationPositionDescriptor.html">
+                <a title="MBMViewAnnotationPositionDescriptor" class="nav-group-task-link" href="../Classes/MBMViewAnnotationPositionDescriptor.html">MBMViewAnnotationPositionDescriptor</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Other Enumerations">
+            <a class="small-heading" href="../Other Enumerations.html">Other Enumerations<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMMapMemoryBudgetType" data-url="Enums/MBMMapMemoryBudgetType.html">
+                <a title="MBMMapMemoryBudgetType" class="nav-group-task-link" href="../Enums/MBMMapMemoryBudgetType.html">MBMMapMemoryBudgetType</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMRenderedQueryGeometryType" data-url="Enums/MBMRenderedQueryGeometryType.html">
+                <a title="MBMRenderedQueryGeometryType" class="nav-group-task-link" href="../Enums/MBMRenderedQueryGeometryType.html">MBMRenderedQueryGeometryType</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMViewAnnotationAnchor" data-url="Enums/MBMViewAnnotationAnchor.html">
+                <a title="MBMViewAnnotationAnchor" class="nav-group-task-link" href="../Enums/MBMViewAnnotationAnchor.html">MBMViewAnnotationAnchor</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Other Protocols">
+            <a class="small-heading" href="../Other Protocols.html">Other Protocols<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMViewAnnotationPositionsUpdateListener" data-url="Protocols/MBMViewAnnotationPositionsUpdateListener.html">
+                <a title="MBMViewAnnotationPositionsUpdateListener" class="nav-group-task-link" href="../Protocols/MBMViewAnnotationPositionsUpdateListener.html">MBMViewAnnotationPositionsUpdateListener</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            <a href="#/MBMImage"><h1 id="MBMImage">MBMImage<span class="anchor-icon" /></h1></a>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight objective_c"><code>
+<span class="k">@interface</span> <span class="nc">MBMImage</span> <span class="p">:</span> <span class="nc">NSObject</span></code></pre>
+
+                </div>
+              </div>
+            <p>Image type.</p>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMImage(im)init"></a>
+                    <a name="//apple_ref/swift/Method/-init" class="dashAnchor"></a>
+                    <a class="token discouraged" href="#/c:objc(cs)MBMImage(im)init"><span class="token-name">-init</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="aside aside-unavailable">
+                        <p class="aside-title">Unavailable</p>
+                        
+                      </div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="n">init</span> <span class="n">NS_UNAVAILABLE</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMImage(cm)new"></a>
+                    <a name="//apple_ref/swift/Method/+new" class="dashAnchor"></a>
+                    <a class="token discouraged" href="#/c:objc(cs)MBMImage(cm)new"><span class="token-name">+new</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="aside aside-unavailable">
+                        <p class="aside-title">Unavailable</p>
+                        
+                      </div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="n">new</span> <span class="n">NS_UNAVAILABLE</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMImage(im)initWithWidth:height:data:"></a>
+                    <a name="//apple_ref/swift/Method/-initWithWidth:height:data:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMImage(im)initWithWidth:height:data:"><span class="token-name">-initWithWidth:height:data:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithWidth</span><span class="p">:(</span><span class="kt">uint32_t</span><span class="p">)</span><span class="nv">width</span>
+                               <span class="nf">height</span><span class="p">:(</span><span class="kt">uint32_t</span><span class="p">)</span><span class="nv">height</span>
+                                 <span class="nf">data</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSData</span> <span class="o">*</span><span class="p">)</span><span class="nv">data</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="nf">init</span><span class="p">(</span><span class="nv">width</span><span class="p">:</span> <span class="kt">UInt32</span><span class="p">,</span> <span class="nv">height</span><span class="p">:</span> <span class="kt">UInt32</span><span class="p">,</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMImage(py)width"></a>
+                    <a name="//apple_ref/swift/Property/width" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMImage(py)width"><span class="token-name">width</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The width of the image, in screen pixels.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="kt">uint32_t</span> <span class="n">width</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">width</span><span class="p">:</span> <span class="kt">UInt32</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMImage(py)height"></a>
+                    <a name="//apple_ref/swift/Property/height" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMImage(py)height"><span class="token-name">height</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The height of the image, in screen pixels.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="kt">uint32_t</span> <span class="n">height</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">height</span><span class="p">:</span> <span class="kt">UInt32</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMImage(py)data"></a>
+                    <a name="//apple_ref/swift/Property/data" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMImage(py)data"><span class="token-name">data</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>32-bit premultiplied RGBA image data.</p>
+
+<p>An uncompressed image data encoded in 32-bit RGBA format with premultiplied
+ alpha channel. This field should contain exactly <code>4 * width * height</code> bytes. It
+ should consist of a sequence of scanlines.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">nonnull</span><span class="p">)</span> <span class="n">NSData</span> <span class="o">*</span><span class="n">data</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Additions"></a>
+                <a name="//apple_ref/swift/Section/Additions" class="dashAnchor"></a>
+                <a href="#/Additions">
+                  <h3 id="Additions" class="section-name">Additions<span class="anchor-icon" /></h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMImage(im)initWithUIImage:"></a>
+                    <a name="//apple_ref/swift/Method/-initWithUIImage:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMImage(im)initWithUIImage:"><span class="token-name">-initWithUIImage:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Initializes and returns an image.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithUIImage</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="nv">uiImage</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="nf">init</span><span class="p">?(</span><span class="nv">uiImage</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                  uiImage
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The UIImage used to construct image.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>an image initialized with UIImage or nil if conversion fails.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMImage(cm)imageWithUIImage:"></a>
+                    <a name="//apple_ref/swift/Method/+imageWithUIImage:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMImage(cm)imageWithUIImage:"><span class="token-name">+imageWithUIImage:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Allocates, initializes and returns an image.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">instancetype</span><span class="p">)</span><span class="nf">imageWithUIImage</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="nv">uiImage</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                  uiImage
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The UIImage used to construct image.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>an image initialized with UIImage or nil if conversion fails.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMImage(im)cgImage"></a>
+                    <a name="//apple_ref/swift/Method/-cgImage" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMImage(im)cgImage"><span class="token-name">-cgImage</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Converts an <code>MBMImage</code> to a <code>CGImage</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">CGImageRef</span><span class="p">)</span><span class="n">cgImage</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">cgImage</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Unmanaged</span><span class="o">&lt;</span><span class="kt">CGImage</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer limiter">
+      <p>&copy; 2022 <a class="link" href="" target="_blank" rel="external noopener">Mapbox</a>. All rights reserved. (Last updated: 2022-03-10)</p> Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.
+    </section>
+  </body>
+</div>
+</html>

@@ -1,11 +1,9 @@
 import MetalKit
 
 final class MockMetalView: MTKView {
-    let drawStub = Stub<Void, Void>()
-
-    override func draw() {
-        super.draw()
-
-        drawStub.call()
+    let setNeedsDisplayStub = Stub<Void, Void>()
+    override func setNeedsDisplay() {
+        super.setNeedsDisplay()
+        setNeedsDisplayStub.call()
     }
 }

@@ -2,16 +2,6 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-## main
-
-* Mitigate `OfflineRegionManager.mergeOfflineDatabase(for:completion)` throwing `TypeConversionError.unexpectedType` on a successfull merge. Introduce `OfflineRegionManager.mergeOfflineDatabase(forPath:completion)` as the correct way to merge offline database. ([#1192](https://github.com/mapbox/mapbox-maps-ios/pull/1192))
-* Limit MapboxMap.point(for: CLLocationCoordinate2D) to the bounds of map view ([#1195](https://github.com/mapbox/mapbox-maps-ios/pull/1195))
-* Add support for app extensions. ([#1183](https://github.com/mapbox/mapbox-maps-ios/pull/1183))
-* `BasicCameraAnimator.cancel()` and `.stopAnimation()` now invoke the completion blocks with `UIViewAnimatingPosition.current` instead of crashing with a `fatalError` when invoked prior to `.startAnimation()` or `.startAnimation(afterDelay:)`. ([#1197](https://github.com/mapbox/mapbox-maps-ios/pull/1197))
-* `CameraAnimationsManager.stopAnimations()` will now cancel all animators regardless of their state. Previously, only animators with `state == .active` were canceled. ([#1197](https://github.com/mapbox/mapbox-maps-ios/pull/1197))
-* Fix animator-related leaks. ([#1200](https://github.com/mapbox/mapbox-maps-ios/pull/1200))
-* Improve AnyTouchGestureRecognizer's interaction with other gesture recognizers. ([#1210](https://github.com/mapbox/mapbox-maps-ios/pull/1210))
-
 ## 10.4.1 - March 28, 2022
 
 * Revert to using metal view draw notifications (`setNeedsDisplay()` instead of `draw()`). ([#1216](https://github.com/mapbox/mapbox-maps-ios/pull/1216))

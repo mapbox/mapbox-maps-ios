@@ -2,7 +2,9 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-## main
+## 10.4.1 - March 28, 2022
+
+* Revert to using metal view draw notifications (`setNeedsDisplay()` instead of `draw()`). ([#1216](https://github.com/mapbox/mapbox-maps-ios/pull/1216))
 
 ## 10.4.0 - March 23, 2022
 

@@ -78,11 +78,13 @@ jobs:
       - attach_workspace:
           at: Products
       - run: ls -l Products/
-      - run: |
-          cd /tmp
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
+      - run:
+          name: Install AWSCLI
+          command: |
+            cd /tmp
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
       - run:
           name: Schedule DeviceFarm run
           command: |
@@ -105,13 +107,16 @@ jobs:
               --run-arn-file benchmark_waiter.json \
               --artifacts-dir BenchmarkResults \
               --output benchmark_results.json
-
+      - run:
+          name: Collect artifacts
+          command: |
             zip -r BenchmarkResults.zip BenchmarkResults
 
             ARTIFACTS_PATH=$(find BenchmarkResults -name "Customer_Artifacts.zip" | head -n 1)
             unzip "$ARTIFACTS_PATH" -d artifacts
             find artifacts -name "*.xcresult" -exec cp -r {} metrics.xcresult \;
             zip -r metrics.xcresult.zip metrics.xcresult
+          when: always
       - store_artifacts:
           path: BenchmarkResults.zip
       - store_artifacts:
@@ -140,7 +145,7 @@ commands:
 executors:
   xcode-min:
     macos:
-      xcode: 13.2.1
+      xcode: 13.3.0
     resource_class: macos.x86.medium.gen2
   base-docker:
     docker:

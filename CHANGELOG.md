@@ -11,7 +11,10 @@ Mapbox welcomes participation and contributions from everyone.
 * `CameraAnimationsManager.stopAnimations()` will now cancel all animators regardless of their state. Previously, only animators with `state == .active` were canceled. ([#1197](https://github.com/mapbox/mapbox-maps-ios/pull/1197))
 * Fix animator-related leaks. ([#1200](https://github.com/mapbox/mapbox-maps-ios/pull/1200))
 * Improve AnyTouchGestureRecognizer's interaction with other gesture recognizers. ([#1210](https://github.com/mapbox/mapbox-maps-ios/pull/1210))
-* Revert to using draw notifications for metal view(call `setNeedsDisplay` instead of `draw()` when the view's content needs to be redrawn.([#1216](https://github.com/mapbox/mapbox-maps-ios/pull/1216))
+
+## 10.4.1 - March 28, 2022
+
+* Revert to using metal view draw notifications (`setNeedsDisplay()` instead of `draw()`). ([#1216](https://github.com/mapbox/mapbox-maps-ios/pull/1216))
 
 ## 10.4.0 - March 23, 2022
 

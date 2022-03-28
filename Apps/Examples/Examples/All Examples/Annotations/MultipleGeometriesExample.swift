@@ -51,7 +51,6 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
         return featureCollection
     }
 
-
     private func addGeoJSONSource() {
         // Attempt to decode GeoJSON from file bundled with application.
         guard let featureCollection = try? decodeGeoJSON(from: "GeoJSONSourceExample") else { return }

@@ -43,4 +43,3 @@ final class AddOneMarkerSymbolExample: UIViewController, ExampleProtocol {
         try? style.addLayer(layer)
     }
 }
-

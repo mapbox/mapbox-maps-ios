@@ -40,7 +40,7 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
             CLLocationCoordinate2D(latitude: 42.354950, longitude: -71.065634), // Boston Common Park
             CLLocationCoordinate2D(latitude: 42.346645, longitude: -71.097293), // Fenway Park
             CLLocationCoordinate2D(latitude: 42.363725, longitude: -71.053694) // The Paul Revere House
-        ].map ({ Feature(geometry: .point(Point($0))) })
+        ].map({ Feature(geometry: .point(Point($0))) })
 
         // Create a GeoJSON data source for markers
         var markerSource = GeoJSONSource()

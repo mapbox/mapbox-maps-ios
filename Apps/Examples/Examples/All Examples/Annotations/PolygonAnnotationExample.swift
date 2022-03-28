@@ -32,7 +32,7 @@ final class PolygonAnnotationExample: UIViewController, ExampleProtocol {
         // by calling `mapView.annotations.removeAnnotationManager(withId:)`
         let polygonAnnotationManager = mapView.annotations.makePolygonAnnotationManager()
         polygonAnnotationManager.delegate = self
-        
+
         // Create the polygon annotation
         var polygonAnnotation = PolygonAnnotation(polygon: makePolygon())
 

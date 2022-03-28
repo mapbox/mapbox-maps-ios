@@ -10,6 +10,7 @@ Mapbox welcomes participation and contributions from everyone.
 * `BasicCameraAnimator.cancel()` and `.stopAnimation()` now invoke the completion blocks with `UIViewAnimatingPosition.current` instead of crashing with a `fatalError` when invoked prior to `.startAnimation()` or `.startAnimation(afterDelay:)`. ([#1197](https://github.com/mapbox/mapbox-maps-ios/pull/1197))
 * `CameraAnimationsManager.stopAnimations()` will now cancel all animators regardless of their state. Previously, only animators with `state == .active` were canceled. ([#1197](https://github.com/mapbox/mapbox-maps-ios/pull/1197))
 * Fix animator-related leaks. ([#1200](https://github.com/mapbox/mapbox-maps-ios/pull/1200))
+* Improve AnyTouchGestureRecognizer's interaction with other gesture recognizers. ([#1210](https://github.com/mapbox/mapbox-maps-ios/pull/1210))
 
 ## 10.4.0 - March 23, 2022
 

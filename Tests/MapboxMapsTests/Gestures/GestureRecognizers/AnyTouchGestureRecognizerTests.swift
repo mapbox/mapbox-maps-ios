@@ -104,10 +104,10 @@ final class AnyTouchGestureRecognizerTests: XCTestCase {
         // touch ends
         gestureRecognizer.touchesEnded([touch], with: event)
 
-        // the timer is invalidated and the state does not change
+        // the timer is invalidated and the state is set to .failed
         let timer = try XCTUnwrap(makeTimerInvocation.returnValue as? MockTimer)
         XCTAssertEqual(timer.invalidateStub.invocations.count, 1)
-        XCTAssertEqual(gestureRecognizer.state, .possible)
+        XCTAssertEqual(gestureRecognizer.state, .failed)
     }
 
     func testTouchHandlingWithChangedTouches() throws {

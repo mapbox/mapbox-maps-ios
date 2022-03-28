@@ -24,19 +24,19 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
 
     public func drawLineLayer() {
 
-        let sourceIdentifier = "data-source"
+        let sourceIdentifier = "mapillary"
 
         var vectorSource = VectorSource()
 
         // For sources using the {z}/{x}/{y} URL scheme, use the `tiles`
         // property on `VectorSource` to set the URL.
-        vectorSource.tiles = ["https://d25uarhxywzl1j.cloudfront.net/v0.1/{z}/{x}/{y}.mvt"]
+        vectorSource.tiles = ["https://tiles.mapillary.com/maps/vtp/mly1_public/2/{z}/{x}/{y}?access_token=MLY%7C4142433049200173%7C72206abe5035850d6743b23a49c41333"]
         vectorSource.minzoom = 6
         vectorSource.maxzoom = 14
 
         var lineLayer = LineLayer(id: "line-layer")
         lineLayer.source = sourceIdentifier
-        lineLayer.sourceLayer = "mapillary-sequences"
+        lineLayer.sourceLayer = "sequence"
         let lineColor = StyleColor(UIColor(red: 0.21, green: 0.69, blue: 0.43, alpha: 1.00))
         lineLayer.lineColor = .constant(lineColor)
         lineLayer.lineOpacity = .constant(0.6)

@@ -291,16 +291,6 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
         XCTAssertNotNil(animator.transition, "The transition should not be nil while the animation is delayed. Got \(animator.transition.debugDescription)")
     }
 
-    func testPauseAndStartAnimationAfterDelayError() throws {
-        animator.addAnimations { (transition) in
-            transition.zoom.toValue = cameraStateTestValue.zoom
-        }
-        animator.pauseAnimation()
-        expectFatalError(expectedMessage: "A paused animator cannot be started with a delay.") {
-            self.animator.startAnimation(afterDelay: 0)
-        }
-    }
-
     func testStartandPauseAnimationAfterDelayTransitionNotNil() {
         animator.addAnimations { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom

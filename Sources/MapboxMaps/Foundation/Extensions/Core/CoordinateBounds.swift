@@ -5,11 +5,26 @@ import MapboxCoreMaps
 
 public extension CoordinateBounds {
 
+    /// Returns the southern latitude of the bounds.
+    var south: CLLocationDegrees { __south() }
+
+    /// Returns the western longitude of the bounds.
+    var west: CLLocationDegrees { __west() }
+
+    /// Returns the northern latitude of the bounds.
+    var north: CLLocationDegrees { __north() }
+
+    /// Returns the eastern longitude of the bounds.
+    var east: CLLocationDegrees { __east() }
+
     /// The centerpoint of this `CoordinateBounds` calculated by simple interpolation.
     /// This is a non-geodesic calculation which is not the geographic center.
     var center: CLLocationCoordinate2D {
         return __center()
     }
+
+    /// Returns whether the bounds are empty or not.
+    var isEmpty: Bool { __isEmpty() }
 
     /// The absolute distance, in degrees, between the north and south boundaries of these bounds.
     ///
@@ -27,15 +42,14 @@ public extension CoordinateBounds {
         __longitudeSpan()
     }
 
-
-    /// The northwest coordinate of an internal `CoordinateBounds` type.
+    /// The northwest coordinate of the bounds.
     var northwest: CLLocationCoordinate2D {
-        return CLLocationCoordinate2D(latitude: __north(), longitude: __west())
+        return __northwest()
     }
 
-    /// The northwest coordinate of an internal `CoordinateBounds` type.
+    /// The southeast coordinate of the bounds.
     var southeast: CLLocationCoordinate2D {
-        return CLLocationCoordinate2D(latitude: __south(), longitude: __east())
+        return __southeast()
     }
 
     /// Returns a new `CoordinateBounds` that stretches to contain both this and another `CoordinateBounds`.
@@ -56,18 +70,42 @@ public extension CoordinateBounds {
     /// - Parameter coordinateBounds: The `CoordinateBounds` to intersect with.
     /// - Returns: The bounds representing the intersection of the two bounds or null if there is no intersection.
     func intersect(_ coordinateBounds: CoordinateBounds) -> CoordinateBounds? {
-        let minWest = max(coordinateBounds.__west(), __west())
-        let maxEast = min(coordinateBounds.__east(), __east())
+        let minWest = max(coordinateBounds.west, west)
+        let maxEast = min(coordinateBounds.east, east)
 
         guard maxEast >= minWest else { return nil }
 
-        let minSouth = max(coordinateBounds.__south(), __south())
-        let maxNorth = min(coordinateBounds.__north(), __north())
+        let minSouth = max(coordinateBounds.south, south)
+        let maxNorth = min(coordinateBounds.north, north)
 
         guard maxNorth >= minSouth else { return nil }
 
         return CoordinateBounds(southwest: CLLocationCoordinate2D(latitude: minSouth, longitude: minWest),
                                 northeast: CLLocationCoordinate2D(latitude: maxNorth, longitude: maxEast))
+    }
+
+    // MARK: - Equality
+
+    override var hash: Int {
+        return Int((north + 90)
+        + (south + 90) * 1000
+        + (east + 180) * 1000000
+        + (west + 180) * 1000000000)
+    }
+
+    override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? CoordinateBounds else {
+            return false
+        }
+
+        return self == other
+    }
+
+    static func == (lhs: CoordinateBounds, rhs: CoordinateBounds) -> Bool {
+        return lhs.north == rhs.north &&
+        lhs.south == rhs.south &&
+        lhs.west == rhs.west &&
+        lhs.east == rhs.east
     }
 }
 

@@ -97,20 +97,4 @@ final class CoordinateBoundsTests: XCTestCase {
         XCTAssertEqual(neLat.hash, 180_1800_900_91)
         XCTAssertEqual(neLon.hash, 180_1810_900_90)
     }
-
-    func testContains() {
-        let bounds = CoordinateBounds(
-            southwest: CLLocationCoordinate2D(latitude: 59.87239799228177, longitude: 21.46728515625),
-            northeast: CLLocationCoordinate2D(latitude: 63.28306240110864, longitude: 28.575439453125))
-        let pointsInside = [CLLocationCoordinate2D(latitude: 62.11416112594049, longitude: 26.25732421875),
-                            CLLocationCoordinate2D(latitude: 61.079544234557304, longitude: 23.31298828125)]
-        let pointsOnSides = [CLLocationCoordinate2D(latitude: 59.87239799228177, longitude: 26.25732421875),
-                             CLLocationCoordinate2D(latitude: 61.079544234557304, longitude: 28.575439453125)]
-        let pointsOutside = [CLLocationCoordinate2D(latitude: 62.11416112594049, longitude: 21.25732421875),
-                            CLLocationCoordinate2D(latitude: 59.079544234557304, longitude: 23.31298828125)]
-
-        XCTAssertTrue(bounds.contains(pointsInside))
-        XCTAssertTrue(bounds.contains(pointsOnSides))
-        XCTAssertFalse(bounds.contains(pointsOutside))
-    }
 }

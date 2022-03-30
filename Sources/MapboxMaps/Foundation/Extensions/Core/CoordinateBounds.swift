@@ -108,9 +108,3 @@ public extension CoordinateBounds {
         lhs.east == rhs.east
     }
 }
-
-internal extension CoordinateBounds {
-    func contains(_ coordinates: [CLLocationCoordinate2D]) -> Bool {
-        return coordinates.first { contains(forPoint: $0, wrappedCoordinates: false) } != nil
-    }
-}

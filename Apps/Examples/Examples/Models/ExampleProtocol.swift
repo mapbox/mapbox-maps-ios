@@ -25,7 +25,7 @@ extension ExampleProtocol where Self: UIViewController {
                                                 message: nil,
                                                 preferredStyle: .alert)
 
-        alertController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        alertController.addAction(UIAlertAction(title: "Close", style: .default, handler: nil))
 
         present(alertController, animated: true, completion: nil)
     }

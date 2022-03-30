@@ -146,7 +146,7 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
     private func addMarker(at point: Point) -> String {
         let currentId = "\(Constants.MARKER_ID_PREFIX)\(markerId)"
         markerId += 1
-        var feature = Feature(geometry: Geometry.point(point))
+        var feature = Feature(geometry: point)
         feature.identifier = .string(currentId)
         pointList.append(feature)
         if (try? mapView.mapboxMap.style.source(withId: Constants.SOURCE_ID)) != nil {

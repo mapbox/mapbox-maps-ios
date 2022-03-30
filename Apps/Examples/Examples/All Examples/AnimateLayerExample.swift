@@ -65,7 +65,7 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
     public func addLayers(for routeLine: LineString) {
 
         // Define the source data and style layer for the airplane's route line.
-        airplaneRoute.source.data = .feature(Feature(geometry: .lineString(routeLine)))
+        airplaneRoute.source.data = .feature(Feature(geometry: routeLine))
         var lineLayer = LineLayer(id: "line-layer")
         lineLayer.source = airplaneRoute.identifier
         lineLayer.lineColor = .constant(StyleColor(.red))
@@ -74,7 +74,7 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
 
         // Define the source data and style layer for the airplane symbol.
         let point = Point(routeLine.coordinates[0])
-        airplaneSymbol.source.data = .feature(Feature(geometry: .point(point)))
+        airplaneSymbol.source.data = .feature(Feature(geometry: point))
         var airplaneSymbolLayer = SymbolLayer(id: "airplane")
         airplaneSymbolLayer.source = airplaneSymbol.identifier
         // "airport-15" is the name the image that belongs in the style's sprite by default.
@@ -108,7 +108,7 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
 
             // Identify the new coordinate to animate to, and calculate
             // the bearing between the new coordinate and the following coordinate.
-            var geoJSON = Feature(geometry: .point(Point(coordinate)))
+            var geoJSON = Feature(geometry: Point(coordinate))
             geoJSON.properties = ["bearing": .number(coordinate.direction(to: nextCoordinate))]
 
             // Update the airplane source layer with the new coordinate and bearing.

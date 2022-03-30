@@ -26,7 +26,7 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
 
         // Create a `GeoJSONSource` from a Turf geometry.
         var source = GeoJSONSource()
-        point = Feature(geometry: .point(Point(center)))
+        point = Feature(geometry: Point(center))
 
         // Filter out POI labels that are more than 150 meters from the point.
         self.filterPoiLabels()

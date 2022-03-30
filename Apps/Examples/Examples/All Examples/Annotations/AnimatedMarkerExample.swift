@@ -66,7 +66,7 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
 
         // Create a GeoJSON data source.
         var source = GeoJSONSource()
-        source.data = .feature(Feature(geometry: .point(Point(currentPosition))))
+        source.data = .feature(Feature(geometry: Point(currentPosition)))
 
         try? mapView.mapboxMap.style.addSource(source, id: Constants.sourceId)
 
@@ -110,7 +110,7 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
 
         // update source with the new marker location
         try? self.mapView.mapboxMap.style.updateGeoJSONSource(withId: Constants.sourceId,
-                                                              geoJSON: .feature(Feature(geometry: .point(Point(coordinate)))))
+                                                              geoJSON: .feature(Feature(geometry: Point(coordinate))))
 
     }
 

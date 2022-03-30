@@ -45,11 +45,11 @@ final class AddMarkersSymbolExample: UIViewController, ExampleProtocol {
         try? style.addImage(UIImage(named: "red_marker")!, id: Constants.RED_ICON_ID, stretchX: [], stretchY: [])
 
         var features = [Feature]()
-        var feature = Feature(geometry: Geometry.point(Point(LocationCoordinate2D(latitude: 55.608166, longitude: 12.65147))))
+        var feature = Feature(geometry: Point(LocationCoordinate2D(latitude: 55.608166, longitude: 12.65147)))
         feature.properties = [Constants.ICON_KEY: .string(Constants.BLUE_MARKER_PROPERTY)]
         features.append(feature)
 
-        var feature1 = Feature(geometry: Geometry.point(Point(LocationCoordinate2D(latitude: 55.70651, longitude: 12.554729))))
+        var feature1 = Feature(geometry: Point(LocationCoordinate2D(latitude: 55.70651, longitude: 12.554729)))
         feature1.properties = [Constants.ICON_KEY: .string(Constants.RED_MARKER_PROPERTY)]
         features.append(feature1)
 

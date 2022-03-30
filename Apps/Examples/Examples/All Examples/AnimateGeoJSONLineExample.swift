@@ -37,7 +37,7 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
 
         // Create a GeoJSON data source.
         routeLineSource = GeoJSONSource()
-        routeLineSource.data = .feature(Feature(geometry: .lineString(LineString([allCoordinates[currentIndex]]))))
+        routeLineSource.data = .feature(Feature(geometry: LineString([allCoordinates[currentIndex]])))
 
         // Create a line layer
         var lineLayer = LineLayer(id: "line-layer")
@@ -82,7 +82,7 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
             // Create a subarray of locations up to the current index.
             currentCoordinates = Array(self.allCoordinates[0..<self.currentIndex - 1])
 
-            let updatedLine = Feature(geometry: .lineString(LineString(currentCoordinates)))
+            let updatedLine = Feature(geometry: LineString(currentCoordinates))
             self.routeLineSource.data = .feature(updatedLine)
             try! self.mapView.mapboxMap.style.updateGeoJSONSource(withId: self.sourceIdentifier,
                                                                   geoJSON: .feature(updatedLine))

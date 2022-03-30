@@ -5,8 +5,9 @@ import CoreLocation
 @objc(ViewAnnotationWithPointAnnotationExample)
 final class ViewAnnotationWithPointAnnotationExample: UIViewController, ExampleProtocol {
     private enum Constants {
-        static let BLUE_ICON_ID = "blue"
-        static let SELECTED_ADD_COEF_PX: CGFloat = 50
+        static let blueIconId = "blue"
+        static let selectedAddCoefPX: CGFloat = 50
+        static let markerId = UUID().uuidString
     }
 
     private var mapView: MapView!
@@ -29,43 +30,53 @@ final class ViewAnnotationWithPointAnnotationExample: UIViewController, ExampleP
 
         mapView.mapboxMap.onNext(.mapLoaded) { [weak self] _ in
             guard let self = self else { return }
-            self.finish()
-        }
 
-        mapView.mapboxMap.onEvery(.styleLoaded) { [weak self] _ in
-            guard let self = self else { return }
-            try? self.mapView.mapboxMap.style.addImage(self.image, id: Constants.BLUE_ICON_ID, stretchX: [], stretchY: [])
+            try? self.mapView.mapboxMap.style.addImage(self.image, id: Constants.blueIconId, stretchX: [], stretchY: [])
+            self.addPointAndViewAnnotation(at: self.mapView.mapboxMap.coordinate(for: self.mapView.center))
+
+            // The below line is used for internal testing purposes only.
+            self.finish()
         }
 
         mapView.mapboxMap.style.uri = .streets
 
-        addPointAndViewAnnotation(at: mapView.mapboxMap.coordinate(for: mapView.center))
+        mapView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onMapTapped(_:))))
+    }
+
+    // MARK: - Actions
+
+    @objc private func onMapTapped(_ sender: UITapGestureRecognizer) {
+        guard mapView.viewAnnotations.view(forFeatureId: Constants.markerId) == nil,
+        let pointAnnotationCoordinates = pointAnnotationManager.annotations.first?.point.coordinates else {
+            return
+        }
+
+
+        addViewAnnotation(at: pointAnnotationCoordinates)
     }
 
     // MARK: - Annotation management
 
     private func addPointAndViewAnnotation(at coordinate: CLLocationCoordinate2D) {
-        let markerId = addPointAnnotation(at: coordinate)
-        addViewAnnotation(at: coordinate, withPointAnnotationId: markerId)
+        addPointAnnotation(at: coordinate)
+        addViewAnnotation(at: coordinate)
     }
 
-    private func addPointAnnotation(at coordinate: CLLocationCoordinate2D) -> String {
-        var pointAnnotation = PointAnnotation(coordinate: coordinate)
-        pointAnnotation.iconImage = Constants.BLUE_ICON_ID
+    private func addPointAnnotation(at coordinate: CLLocationCoordinate2D) {
+        var pointAnnotation = PointAnnotation(id: Constants.markerId, coordinate: coordinate)
+        pointAnnotation.iconImage = Constants.blueIconId
         pointAnnotation.iconAnchor = .bottom
 
         pointAnnotationManager.annotations.append(pointAnnotation)
-
-        return pointAnnotation.id
     }
 
     // Add a view annotation at a specified location and optionally bind it to an ID of a marker
-    private func addViewAnnotation(at coordinate: CLLocationCoordinate2D, withPointAnnotationId markerId: String? = nil) {
+    private func addViewAnnotation(at coordinate: CLLocationCoordinate2D) {
         let options = ViewAnnotationOptions(
             geometry: Point(coordinate),
             width: 128,
             height: 64,
-            associatedFeatureId: markerId,
+            associatedFeatureId: Constants.markerId,
             allowOverlap: false,
             anchor: .bottom,
             offsetY: markerHeight
@@ -82,8 +93,8 @@ extension ViewAnnotationWithPointAnnotationExample: AnnotationViewDelegate {
         guard let options = self.mapView.viewAnnotations.options(for: annotationView) else { return }
 
         let updateOptions = ViewAnnotationOptions(
-            width: (options.width ?? 0.0) + Constants.SELECTED_ADD_COEF_PX,
-            height: (options.height ?? 0.0) + Constants.SELECTED_ADD_COEF_PX,
+            width: (options.width ?? 0.0) + Constants.selectedAddCoefPX,
+            height: (options.height ?? 0.0) + Constants.selectedAddCoefPX,
             selected: true
         )
         try? self.mapView.viewAnnotations.update(annotationView, options: updateOptions)
@@ -93,8 +104,8 @@ extension ViewAnnotationWithPointAnnotationExample: AnnotationViewDelegate {
         guard let options = self.mapView.viewAnnotations.options(for: annotationView) else { return }
 
         let updateOptions = ViewAnnotationOptions(
-            width: (options.width ?? 0.0) - Constants.SELECTED_ADD_COEF_PX,
-            height: (options.height ?? 0.0) - Constants.SELECTED_ADD_COEF_PX,
+            width: (options.width ?? 0.0) - Constants.selectedAddCoefPX,
+            height: (options.height ?? 0.0) - Constants.selectedAddCoefPX,
             selected: false
         )
         try? self.mapView.viewAnnotations.update(annotationView, options: updateOptions)

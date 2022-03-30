@@ -16,7 +16,9 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
     private var animationStartTimestamp: CFTimeInterval = 0
     private var origin: CLLocationCoordinate2D!
     private var destination: CLLocationCoordinate2D!
-    private var displayLink: CADisplayLink?
+    private var displayLink: CADisplayLink? {
+        didSet { oldValue?.invalidate() }
+    }
 
     deinit {
         displayLink?.invalidate()
@@ -76,6 +78,16 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
         symbolLayer.iconAllowOverlap = .constant(true)
 
         try? mapView.mapboxMap.style.addLayer(symbolLayer)
+    }
+
+
+    override func didMove(toParent parent: UIViewController?) {
+        super.didMove(toParent: parent)
+
+        // break reference cycle when moving away from screen
+        if parent == nil {
+            displayLink = nil
+        }
     }
 
     @objc private func updateFromDisplayLink(displayLink: CADisplayLink) {

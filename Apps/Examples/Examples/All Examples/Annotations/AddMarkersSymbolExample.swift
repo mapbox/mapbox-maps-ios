@@ -27,11 +27,10 @@ final class AddMarkersSymbolExample: UIViewController, ExampleProtocol {
 
         mapView.mapboxMap.onNext(.mapLoaded) { [weak self] _ in
             guard let self = self else { return }
-            self.finish()
-        }
+            self.prepareStyle()
 
-        mapView.mapboxMap.onEvery(.styleLoaded) { [weak self] _ in
-            self?.prepareStyle()
+            // The following line is just for testing purposes.
+            self.finish()
         }
 
         mapView.mapboxMap.style.uri = .streets

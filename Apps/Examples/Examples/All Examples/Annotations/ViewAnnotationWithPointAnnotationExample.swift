@@ -51,7 +51,6 @@ final class ViewAnnotationWithPointAnnotationExample: UIViewController, ExampleP
             return
         }
 
-
         addViewAnnotation(at: pointAnnotationCoordinates)
     }
 

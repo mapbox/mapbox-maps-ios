@@ -80,7 +80,6 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
         try? mapView.mapboxMap.style.addLayer(symbolLayer)
     }
 
-
     override func didMove(toParent parent: UIViewController?) {
         super.didMove(toParent: parent)
 

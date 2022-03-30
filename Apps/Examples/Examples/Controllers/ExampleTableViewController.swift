@@ -99,6 +99,11 @@ extension ExampleTableViewController {
         cell.textLabel?.numberOfLines = 2
         cell.detailTextLabel?.text = example.description.trimmingCharacters(in: .whitespacesAndNewlines)
         cell.detailTextLabel?.numberOfLines = 2
+        if #available(iOS 13.0, *) {
+            cell.detailTextLabel?.textColor = .secondaryLabel
+        } else {
+            cell.detailTextLabel?.textColor = .lightGray
+        }
         return cell
     }
 

@@ -64,6 +64,9 @@ public struct Examples {
         Example(title: "Display a map view using storyboard",
                 description: "Create and display a map using a storyboard.",
                 type: StoryboardMapViewExample.self),
+        Example(title: "Debug Map",
+                description: "This example shows how the map looks like with different debug options",
+                type: DebugMapExample.self),
     ]
 
     // Examples that show how to use 3D terrain or fill extrusions.

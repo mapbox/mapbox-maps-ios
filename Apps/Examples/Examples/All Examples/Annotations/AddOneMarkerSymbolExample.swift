@@ -26,6 +26,8 @@ final class AddOneMarkerSymbolExample: UIViewController, ExampleProtocol {
             guard let style = try? result.get() else { return }
 
             self.addMarkerAnnotation(toStyle: style)
+            // The following line is just for testing purposes.
+            self.finish()
         }
     }
 

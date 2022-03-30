@@ -27,6 +27,9 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         mapView.mapboxMap.onNext(.mapLoaded) { _ in
             self.addStyleLayers()
             self.addVisibilitySwitches()
+
+            // The following line is just for testing purposes.
+            self.finish()
         }
     }
 

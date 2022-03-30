@@ -29,6 +29,8 @@ final class CircleAnnotationExample: UIViewController, ExampleProtocol {
         }
 
         circleAnnotationManager.annotations = annotations
+        // The following line is just for testing purposes.
+        finish()
     }
 }
 

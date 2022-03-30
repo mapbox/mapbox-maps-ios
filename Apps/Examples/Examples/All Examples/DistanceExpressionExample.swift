@@ -17,6 +17,9 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
 
         mapView.mapboxMap.onNext(.mapLoaded) { _ in
             self.addCircleLayer()
+
+            // The following line is just for testing purposes.
+            self.finish()
         }
     }
 

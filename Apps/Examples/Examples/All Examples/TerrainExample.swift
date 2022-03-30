@@ -25,6 +25,8 @@ public class TerrainExample: UIViewController, ExampleProtocol {
 
         mapView.mapboxMap.onNext(.styleLoaded) { _ in
             self.addTerrain()
+            // The following line is just for testing purposes.
+            self.finish()
         }
     }
 

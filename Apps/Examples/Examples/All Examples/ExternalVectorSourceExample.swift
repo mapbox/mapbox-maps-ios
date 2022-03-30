@@ -19,6 +19,8 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
         // Allow the view controller to receive information about map events.
         mapView.mapboxMap.onNext(.mapLoaded) { _ in
             self.drawLineLayer()
+            // The following line is just for testing purposes.
+            self.finish()
         }
     }
 
@@ -46,7 +48,7 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
         do {
             try mapView.mapboxMap.style.addSource(vectorSource, id: sourceIdentifier)
         } catch {
-            displayAlert(message: error.localizedDescription)
+            showAlert(with: error.localizedDescription)
         }
 
         // Define the layer's positioning within the layer stack so
@@ -54,16 +56,7 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
         do {
             try mapView.mapboxMap.style.addLayer(lineLayer, layerPosition: .below("waterway-label"))
         } catch let layerError {
-            displayAlert(message: layerError.localizedDescription)
+            showAlert(with: layerError.localizedDescription)
         }
-    }
-
-    public func displayAlert(message: String) {
-        let alertController = UIAlertController(title: "An error occurred",
-                                                message: message,
-                                                preferredStyle: .alert)
-        let dismissAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
-        alertController.addAction(dismissAction)
-        present(alertController, animated: true, completion: nil)
     }
 }

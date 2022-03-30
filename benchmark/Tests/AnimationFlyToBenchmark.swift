@@ -20,7 +20,6 @@ final class AnimationFlyToBenchmark: BaseBenchmark {
         flyTo(cities, completion: completion)
     }
 
-
     private func flyTo(_ cities: [CameraOptions], completion: @escaping () -> ()) {
         guard let city = cities.first else {
             completion()

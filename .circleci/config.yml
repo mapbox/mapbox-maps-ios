@@ -66,14 +66,64 @@ jobs:
 
   run-benchmark:
     executor: base-docker
+    environment:
+      AWS_DEVICE_FARM_PROJECT_ARN: "arn:aws:devicefarm:us-west-2:234858372212:project:c29e8fde-6337-461b-af58-b6a7f93f043c"
+      AWS_DEVICE_POOL_ARN: "arn:aws:devicefarm:us-west-2:234858372212:devicepool:c29e8fde-6337-461b-af58-b6a7f93f043c/bfbd31ba-dac3-4962-8ecb-52d6d6302aa8"
     steps:
       - checkout
       - mapbox/add-mapbox-ssh-key
+      - mapbox/install-mbx-ci:
+          platform: linux
       - checkout-mobile-metrics
       - attach_workspace:
           at: Products
       - run: ls -l Products/
-      - run: cat mobile-metrics/ios-maps/Scripts/devicefarm.py
+      - run:
+          name: Install AWSCLI
+          command: |
+            cd /tmp
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+      - run:
+          name: Schedule DeviceFarm run
+          command: |
+            mobile-metrics/ios-maps/Scripts/devicefarm.py \
+              "$AWS_DEVICE_FARM_PROJECT_ARN" \
+              --name "Benchmark_v2-$CIRCLE_SHA1-$CIRCLE_BUILD_NUM" \
+              --device-pool "$AWS_DEVICE_POOL_ARN" \
+              --ipa "Products/App.ipa" \
+              --tests "Products/App.ipa" \
+              --test-type XCTEST_UI \
+              --spec benchmark/testspec.yml \
+              --output benchmark_waiter.json
+      - store_artifacts:
+          path: benchmark_waiter.json
+      - run:
+          name: Wait for DeviceFarm results
+          command: |
+            mobile-metrics/ios-maps/Scripts/devicefarm.py \
+              "$AWS_DEVICE_FARM_PROJECT_ARN" \
+              --run-arn-file benchmark_waiter.json \
+              --artifacts-dir BenchmarkResults \
+              --output benchmark_results.json
+      - run:
+          name: Collect artifacts
+          command: |
+            zip -r BenchmarkResults.zip BenchmarkResults
+
+            ARTIFACTS_PATH=$(find BenchmarkResults -name "Customer_Artifacts.zip" | head -n 1)
+            unzip "$ARTIFACTS_PATH" -d artifacts
+            find artifacts -name "*.xcresult" -exec cp -r {} metrics.xcresult \;
+            zip -r metrics.xcresult.zip metrics.xcresult
+          when: always
+      - store_artifacts:
+          path: BenchmarkResults.zip
+      - store_artifacts:
+          path: metrics.xcresult.zip
+      - store_artifacts:
+          path: benchmark_results.json
+
 
 commands:
   build-benchmark:
@@ -81,8 +131,8 @@ commands:
       - run:
           name: Build Benchmark
           command: |
-            xcodebuild -resolvePackageDependencies -scheme Benchmark -derivedDataPath DerivedData
-            xcodebuild build-for-testing -scheme Benchmark CODE_SIGNING_ALLOWED=NO -derivedDataPath DerivedData
+            xcodebuild -resolvePackageDependencies -scheme MobileMetrics -derivedDataPath DerivedData
+            xcodebuild build-for-testing -scheme MobileMetrics -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO ENABLE_TESTABILITY=YES -derivedDataPath DerivedData
           working_directory: benchmark/
 
 
@@ -95,7 +145,7 @@ commands:
 executors:
   xcode-min:
     macos:
-      xcode: 12.5.1
+      xcode: 13.3.0
     resource_class: macos.x86.medium.gen2
   base-docker:
     docker:
@@ -154,15 +204,18 @@ orbs:
           version:
             type: string
             default: latest
-          install_path:
-            type: string
-            default: /usr/local/bin
         steps:
           - run:
               name: Install << parameters.version >> mbx-ci
               command: |
-                curl -Ls https://mapbox-release-engineering.s3.amazonaws.com/mbx-ci/<<parameters.version>>/mbx-ci-<<parameters.platform>>-<<parameters.arch>> > <<parameters.install_path>>/mbx-ci
-                chmod 755 <<parameters.install_path>>/mbx-ci
+                unameOut="$(uname -s)"
+                case "${unameOut}" in
+                    Linux*)     MBX_INSTALL_PATH="$HOME/bin";;
+                    Darwin*)    MBX_INSTALL_PATH="/usr/local/bin/";;
+                    *)          MBX_INSTALL_PATH="/usr/local/bin/"
+                esac
+                curl -Ls https://mapbox-release-engineering.s3.amazonaws.com/mbx-ci/<<parameters.version>>/mbx-ci-<<parameters.platform>>-<<parameters.arch>> > $MBX_INSTALL_PATH/mbx-ci
+                chmod 755 $MBX_INSTALL_PATH/mbx-ci
                 mbx-ci aws setup
 
       set-github-commit-status:
@@ -293,6 +346,7 @@ orbs:
                 DERIVED_DATA_PATH: << parameters.derivedDataPath >>
                 OUTPUT_DATA_PATH: << parameters.outputPath >>
               command: |
+                zip -r Products.zip $DERIVED_DATA_PATH/Build/Products/
                 APP_PATH=$(find "$DERIVED_DATA_PATH" -name "*.app")
                 TMP_PATH=$(mktemp -d)
                 PAYLOAD_PATH="$TMP_PATH/Payload"
@@ -323,6 +377,8 @@ orbs:
               steps:
                 - store_artifacts:
                     path: << parameters.outputPath >>/App.ipa
+                - store_artifacts:
+                    path: Products.zip
                 - store_artifacts:
                     path: << parameters.outputPath >>/AppTests.zip
                 - persist_to_workspace:

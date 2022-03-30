@@ -3,9 +3,7 @@ import MapboxMaps
 
 @objc(CircleAnnotationExample)
 final class CircleAnnotationExample: UIViewController, ExampleProtocol {
-    private lazy var mapView: MapView = {
-        MapView(frame: view.bounds)
-    }()
+    private lazy var mapView: MapView = MapView(frame: view.bounds)
 
     override func viewDidLoad() {
         super.viewDidLoad()

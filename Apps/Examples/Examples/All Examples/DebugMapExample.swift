@@ -35,6 +35,12 @@ final class DebugMapExample: UIViewController, ExampleProtocol, DebugOptionSetti
         navigationItem.rightBarButtonItems?.insert(debugOptionsBarItem, at: 0)
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        // The below line is used for internal testing purposes only.
+        finish()
+    }
+
     @objc private func openDebugOptionsMenu(_ sender: UIBarButtonItem) {
         let settingsViewController = SettingsViewController(debugOptions: mapView.mapboxMap.debugOptions)
         settingsViewController.delegate = self

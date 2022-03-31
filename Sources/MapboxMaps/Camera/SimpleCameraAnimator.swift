@@ -172,9 +172,8 @@ internal final class SimpleCameraAnimator: NSObject, SimpleCameraAnimatorProtoco
     }
 
     private func invokeCompletionBlocks(with position: UIViewAnimatingPosition) {
-        let handlers = completionHandlers
-        for handler in handlers {
-            handler(position)
+        for completionHandler in completionHandlers {
+            completionHandler(position)
         }
         completionHandlers.removeAll()
     }

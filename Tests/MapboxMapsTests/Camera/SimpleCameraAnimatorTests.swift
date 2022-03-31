@@ -379,4 +379,18 @@ final class SimpleCameraAnimatorTests: XCTestCase {
 
         XCTAssertEqual(completionStub.invocations.count, 0)
     }
+
+    func testCompletionHandlerAddedInsideOtherCompletionHandlerIsNotInvoked() {
+        let completionStub1 = Stub<UIViewAnimatingPosition, Void>()
+        let completionStub2 = Stub<UIViewAnimatingPosition, Void>()
+        completionStub1.defaultSideEffect = { _ in
+            self.animator.addCompletion(completionStub2.call(with:))
+        }
+        animator.addCompletion(completionStub1.call(with:))
+
+        animator.cancel()
+
+        XCTAssertEqual(completionStub1.invocations.count, 1)
+        XCTAssertEqual(completionStub2.invocations.count, 0)
+    }
 }

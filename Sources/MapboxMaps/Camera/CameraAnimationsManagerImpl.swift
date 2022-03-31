@@ -44,6 +44,12 @@ internal protocol CameraAnimationsManagerProtocol: AnyObject {
                       dampingRatio: CGFloat,
                       animationOwner: AnimationOwner,
                       animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimator
+
+    func makeSimpleCameraAnimator(from: CameraOptions,
+                                  to: CameraOptions,
+                                  duration: TimeInterval,
+                                  curve: TimingCurve,
+                                  owner: AnimationOwner) -> SimpleCameraAnimatorProtocol
 }
 
 internal final class CameraAnimationsManagerImpl: CameraAnimationsManagerProtocol {
@@ -205,6 +211,21 @@ internal final class CameraAnimationsManagerImpl: CameraAnimationsManagerProtoco
             animationOwner: animationOwner,
             animations: animations)
         let animator = BasicCameraAnimator(impl: animatorImpl)
+        runner.add(animator)
+        return animator
+    }
+
+    internal func makeSimpleCameraAnimator(from: CameraOptions,
+                                           to: CameraOptions,
+                                           duration: TimeInterval,
+                                           curve: TimingCurve,
+                                           owner: AnimationOwner) -> SimpleCameraAnimatorProtocol {
+        let animator = factory.makeSimpleCameraAnimator(
+            from: from,
+            to: to,
+            duration: duration,
+            curve: curve,
+            owner: owner)
         runner.add(animator)
         return animator
     }

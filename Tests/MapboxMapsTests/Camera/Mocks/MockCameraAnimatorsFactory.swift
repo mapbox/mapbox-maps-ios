@@ -127,4 +127,28 @@ final class MockCameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
             animationOwner: animationOwner,
             locationChangeHandler: locationChangeHandler))
     }
+
+    struct MakeSimpleCameraAnimatorParams {
+        var from: CameraOptions
+        var to: CameraOptions
+        var duration: TimeInterval
+        var curve: TimingCurve
+        var owner: AnimationOwner
+    }
+    let makeSimpleCameraAnimatorStub = Stub<
+        MakeSimpleCameraAnimatorParams,
+        SimpleCameraAnimatorProtocol>(
+            defaultReturnValue: MockSimpleCameraAnimator())
+    func makeSimpleCameraAnimator(from: CameraOptions,
+                                  to: CameraOptions,
+                                  duration: TimeInterval,
+                                  curve: TimingCurve,
+                                  owner: AnimationOwner) -> SimpleCameraAnimatorProtocol {
+        makeSimpleCameraAnimatorStub.call(with: .init(
+            from: from,
+            to: to,
+            duration: duration,
+            curve: curve,
+            owner: owner))
+    }
 }

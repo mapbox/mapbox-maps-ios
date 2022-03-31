@@ -57,11 +57,28 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     internal func makeCameraAnimationsManagerImpl(cameraViewContainerView: UIView,
                                                   mapboxMap: MapboxMapProtocol,
                                                   cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol) -> CameraAnimationsManagerProtocol {
-        CameraAnimationsManagerImpl(
+        let doubleInterpolator = DoubleInterpolator()
+        let wrappingInterpolator = WrappingInterpolator()
+        let longitudeInterpolator = LongitudeInterpolator(
+            wrappingInterpolator: wrappingInterpolator)
+        let coordinateInterpolator = CoordinateInterpolator(
+            doubleInterpolator: doubleInterpolator,
+            longitudeInterpolator: longitudeInterpolator)
+        let uiEdgeInsetsInterpolator = UIEdgeInsetsInterpolator(
+            doubleInterpolator: doubleInterpolator)
+        let directionInterpolator = DirectionInterpolator(
+            wrappingInterpolator: wrappingInterpolator)
+        let cameraOptionsInterpolator = CameraOptionsInterpolator(
+            coordinateInterpolator: coordinateInterpolator,
+            uiEdgeInsetsInterpolator: uiEdgeInsetsInterpolator,
+            doubleInterpolator: doubleInterpolator,
+            directionInterpolator: directionInterpolator)
+        return CameraAnimationsManagerImpl(
             factory: CameraAnimatorsFactory(
                 cameraViewContainerView: cameraViewContainerView,
                 mapboxMap: mapboxMap,
-                dateProvider: DefaultDateProvider()),
+                dateProvider: DefaultDateProvider(),
+                cameraOptionsInterpolator: cameraOptionsInterpolator),
             runner: cameraAnimatorsRunner)
     }
 

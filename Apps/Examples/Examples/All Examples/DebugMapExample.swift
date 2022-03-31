@@ -123,7 +123,9 @@ private final class SettingsViewController: UIViewController, UITableViewDataSou
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellID = String(describing: DebugOptionCell.self)
+        // swiftlint:disable force_cast
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! DebugOptionCell
+        // swiftlint:enable force_cast
 
         let setting = allSettings[indexPath.row]
         cell.configure(with: setting, isOptionEnabled: enabledDebugOptions.contains(setting.debugOption))

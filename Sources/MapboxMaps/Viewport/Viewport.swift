@@ -120,7 +120,6 @@
                 options: options,
                 interpolatedLocationProducer: interpolatedLocationProducer,
                 observableCameraOptions: ObservableCameraOptions()),
-            cameraAnimationsManager: cameraAnimationsManager,
             mapboxMap: mapboxMap)
     }
 

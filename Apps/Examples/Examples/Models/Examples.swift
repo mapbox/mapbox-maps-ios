@@ -65,7 +65,7 @@ public struct Examples {
                 description: "Create and display a map using a storyboard.",
                 type: StoryboardMapViewExample.self),
         Example(title: "Debug Map",
-                description: "This example shows how the map looks like with different debug options",
+                description: "This example shows how the map looks with different debug options",
                 type: DebugMapExample.self),
     ]
 

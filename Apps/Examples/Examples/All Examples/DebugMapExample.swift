@@ -12,28 +12,31 @@ private struct MapDebugOptionSetting {
 
 final class DebugMapExample: UIViewController, ExampleProtocol, DebugOptionSettingsDelegate {
 
-    private var map: MapboxMap!
-
-    override func loadView() {
-        let mapView = MapView(frame: .zero)
-        map = mapView.mapboxMap
-
-        view = mapView
-    }
+    private var mapView: MapView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let rightBarButtonItems = navigationItem.rightBarButtonItems ?? []
+        mapView = MapView(frame: view.bounds)
+        view.addSubview(mapView)
+
+        mapView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            mapView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            mapView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
+            mapView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            mapView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
+        ])
+
         let debugOptionsBarItem = UIBarButtonItem(
             barButtonSystemItem: .edit,
             target: self,
             action: #selector(openDebugOptionsMenu(_:)))
-        navigationItem.rightBarButtonItems = [debugOptionsBarItem] + rightBarButtonItems
+        navigationItem.rightBarButtonItems?.insert(debugOptionsBarItem, at: 0)
     }
 
     @objc private func openDebugOptionsMenu(_ sender: UIBarButtonItem) {
-        let settingsViewController = SettingsViewController(debugOptions: map.debugOptions)
+        let settingsViewController = SettingsViewController(debugOptions: mapView.mapboxMap.debugOptions)
         settingsViewController.delegate = self
 
         let navigationController = UINavigationController(rootViewController: settingsViewController)
@@ -45,7 +48,7 @@ final class DebugMapExample: UIViewController, ExampleProtocol, DebugOptionSetti
 
     fileprivate func debugOptionSettingsDidChange(_ controller: SettingsViewController) {
         controller.dismiss(animated: true, completion: nil)
-        map.debugOptions = controller.enabledDebugOptions
+        mapView.mapboxMap.debugOptions = Array(controller.enabledDebugOptions)
     }
 }
 
@@ -54,7 +57,7 @@ private final class SettingsViewController: UIViewController, UITableViewDataSou
     weak var delegate: DebugOptionSettingsDelegate?
     private var listView: UITableView!
 
-    private(set) var enabledDebugOptions: [MapDebugOptions]
+    private(set) var enabledDebugOptions: Set<MapDebugOptions>
     private let allSettings: [MapDebugOptionSetting] = [
         MapDebugOptionSetting(debugOption: .collision, displayTitle: "Debug collision"),
         MapDebugOptionSetting(debugOption: .depthBuffer, displayTitle: "Show depth buffer"),
@@ -67,7 +70,7 @@ private final class SettingsViewController: UIViewController, UITableViewDataSou
     ]
 
     init(debugOptions: [MapDebugOptions]) {
-        enabledDebugOptions = debugOptions
+        enabledDebugOptions = Set(debugOptions)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -80,6 +83,7 @@ private final class SettingsViewController: UIViewController, UITableViewDataSou
 
         listView = UITableView()
         listView.dataSource = self
+        listView.register(DebugOptionCell.self, forCellReuseIdentifier: String(describing: DebugOptionCell.self))
 
         view.addSubview(listView)
 
@@ -113,15 +117,15 @@ private final class SettingsViewController: UIViewController, UITableViewDataSou
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellID = String(describing: DebugOptionCell.self)
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellID) as? DebugOptionCell ?? DebugOptionCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! DebugOptionCell
 
         let setting = allSettings[indexPath.row]
         cell.configure(with: setting, isOptionEnabled: enabledDebugOptions.contains(setting.debugOption))
         cell.onToggled { [unowned self] isEnabled in
-            if !isEnabled {
-                self.enabledDebugOptions.removeAll(where: { $0 == setting.debugOption })
-            } else if !self.enabledDebugOptions.contains(setting.debugOption) {
-                self.enabledDebugOptions.append(setting.debugOption)
+            if isEnabled {
+                self.enabledDebugOptions.insert(setting.debugOption)
+            } else {
+                self.enabledDebugOptions.remove(setting.debugOption)
             }
         }
 
@@ -136,8 +140,8 @@ private class DebugOptionCell: UITableViewCell {
     private let titleLabel = UILabel()
     private let toggle = UISwitch()
 
-    init() {
-        super.init(style: .default, reuseIdentifier: String(describing: Self.self))
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         toggle.addTarget(self, action: #selector(didToggle(_:)), for: .valueChanged)
 
         contentView.addSubview(titleLabel)
@@ -167,13 +171,13 @@ private class DebugOptionCell: UITableViewCell {
         toggle.isOn = isOptionEnabled
     }
 
-    private var _onToggled: ((Bool) -> Void)?
+    private var onToggleHandler: ((Bool) -> Void)?
 
     func onToggled(_ handler: @escaping (Bool) -> Void) {
-        _onToggled = handler
+        onToggleHandler = handler
     }
 
     @objc private func didToggle(_ sender: UISwitch) {
-        _onToggled?(sender.isOn)
+        onToggleHandler?(sender.isOn)
     }
 }

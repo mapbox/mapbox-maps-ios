@@ -26,13 +26,21 @@ extension DefaultViewportTransition: ViewportTransition {
     public func run(to toState: ViewportState,
                     completion: @escaping (Bool) -> Void) -> Cancelable {
         let resultCancelable = CompositeCancelable()
+        var animation: DefaultViewportTransitionAnimationProtocol?
         resultCancelable.add(toState.observeDataSource { [options, animationHelper] cameraOptions in
-            resultCancelable.add(animationHelper.animate(
-                to: cameraOptions,
-                maxDuration: options.maxDuration,
-                completion: completion))
-            // stop receiving updates (ignore moving targets)
-            return false
+            if let animation = animation {
+                animation.updateTargetCamera(with: cameraOptions)
+            } else {
+                animation = animationHelper.makeAnimation(
+                    cameraOptions: cameraOptions,
+                    maxDuration: options.maxDuration)
+                animation?.start { isFinished in
+                    resultCancelable.cancel()
+                    completion(isFinished)
+                }
+                resultCancelable.add(animation!)
+            }
+            return true
         })
         return resultCancelable
     }

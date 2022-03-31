@@ -15,5 +15,6 @@ final class AnimationOwnerTests: XCTestCase {
         XCTAssertEqual(AnimationOwner.gestures.rawValue, "com.mapbox.maps.gestures")
         XCTAssertEqual(AnimationOwner.unspecified.rawValue, "com.mapbox.maps.unspecified")
         XCTAssertEqual(AnimationOwner.cameraAnimationsManager.rawValue, "com.mapbox.maps.cameraAnimationsManager")
+        XCTAssertEqual(AnimationOwner.defaultViewportTransition.rawValue, "com.mapbox.maps.viewport.defaultTransition")
     }
 }

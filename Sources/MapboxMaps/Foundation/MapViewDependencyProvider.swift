@@ -27,6 +27,7 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
                           doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol
 }
 
+// swiftlint:disable:next type_body_length
 internal final class MapViewDependencyProvider: MapViewDependencyProviderProtocol {
     internal let notificationCenter: NotificationCenterProtocol = NotificationCenter.default
 
@@ -259,14 +260,28 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                                    anyTouchGestureRecognizer: UIGestureRecognizer,
                                    doubleTapGestureRecognizer: UIGestureRecognizer,
                                    doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol {
+        let lowZoomToHighZoomAnimationSpecProvider = LowZoomToHighZoomAnimationSpecProvider(
+            mapboxMap: mapboxMap)
+        let highZoomToLowZoomAnimationSpecProvider = HighZoomToLowZoomAnimationSpecProvider(
+            mapboxMap: mapboxMap)
+        let animationSpecProvider = DefaultViewportTransitionAnimationSpecProvider(
+            mapboxMap: mapboxMap,
+            lowZoomToHighZoomAnimationSpecProvider: lowZoomToHighZoomAnimationSpecProvider,
+            highZoomToLowZoomAnimationSpecProvider: highZoomToLowZoomAnimationSpecProvider)
+        let animationFactory = DefaultViewportTransitionAnimationFactory(
+            mapboxMap: mapboxMap)
+        let animationHelper = DefaultViewportTransitionAnimationHelper(
+            mapboxMap: mapboxMap,
+            animationSpecProvider: animationSpecProvider,
+            cameraAnimationsManager: cameraAnimationsManager,
+            animationFactory: animationFactory)
+        let defaultViewportTransition = DefaultViewportTransition(
+            options: .init(),
+            animationHelper: animationHelper)
         return ViewportImpl(
             options: .init(),
             mainQueue: MainQueue(),
-            defaultTransition: DefaultViewportTransition(
-                options: .init(),
-                animationHelper: DefaultViewportTransitionAnimationHelper(
-                    mapboxMap: mapboxMap,
-                    cameraAnimationsManager: cameraAnimationsManager)),
+            defaultTransition: defaultViewportTransition,
             anyTouchGestureRecognizer: anyTouchGestureRecognizer,
             doubleTapGestureRecognizer: doubleTapGestureRecognizer,
             doubleTouchGestureRecognizer: doubleTouchGestureRecognizer)

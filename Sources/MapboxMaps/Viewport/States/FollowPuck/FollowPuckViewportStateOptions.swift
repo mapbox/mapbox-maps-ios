@@ -23,6 +23,10 @@
     /// not be modified.
     public var pitch: CGFloat?
 
+    /// :nodoc:
+    @available(*, deprecated, message: "This option is no longer used and will be removed in a future release.")
+    public var animationDuration: TimeInterval = 1
+
     /// Memberwise initializer for `FollowPuckViewportStateOptions`.
     ///
     /// All parameters have default values.
@@ -36,6 +40,22 @@
                 zoom: CGFloat? = 16.35,
                 bearing: FollowPuckViewportStateBearing? = .heading,
                 pitch: CGFloat? = 45) {
+        self.padding = padding
+        self.zoom = zoom
+        self.bearing = bearing
+        self.pitch = pitch
+    }
+
+    /// :nodoc:
+    @available(*,
+                deprecated,
+                message: "animationDuration parameter is ignored. This initializer will be removed in a future release.",
+                renamed: "init(padding:zoom:bearing:pitch:)")
+    public init(padding: UIEdgeInsets? = .zero,
+                zoom: CGFloat? = 16.35,
+                bearing: FollowPuckViewportStateBearing? = .heading,
+                pitch: CGFloat? = 45,
+                animationDuration: TimeInterval = 1) {
         self.padding = padding
         self.zoom = zoom
         self.bearing = bearing

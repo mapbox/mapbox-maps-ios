@@ -21,7 +21,6 @@
 		0C78AC2925BF70E40057F570 /* LineGradientExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C78AC2825BF70E40057F570 /* LineGradientExample.swift */; };
 		0C78AC2F25BF72C70057F570 /* GradientLine.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 0C78AC2C25BF71E40057F570 /* GradientLine.geojson */; };
 		0CC4ECEA25B8AD3000F998B8 /* Custom2DPuckExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC4ECE925B8AD3000F998B8 /* Custom2DPuckExample.swift */; };
-		17483DFD2670113300396F8D /* MultiplePointAnnotationsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17483DFC2670113300396F8D /* MultiplePointAnnotationsExample.swift */; };
 		177C9D47269CA61100D13A2D /* ShowHideLayerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177C9D46269CA61100D13A2D /* ShowHideLayerExample.swift */; };
 		17AF784026837E91006EA30D /* Fire_Hydrants.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 17AF783F26837E91006EA30D /* Fire_Hydrants.geojson */; };
 		17B40D2426A85500000887EF /* LiveDataExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B40D2326A85500000887EF /* LiveDataExample.swift */; };
@@ -44,6 +43,16 @@
 		58A3C0C925C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */; };
 		73694BD325D4B2CE0064F636 /* TrackingModeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73694BD225D4B2CE0064F636 /* TrackingModeExample.swift */; };
 		73E27C2627AF024C0067F277 /* DataJoinExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73E27C2527AF024C0067F277 /* DataJoinExample.swift */; };
+		7412CF6227E8DD1E00F03B1C /* AddOneMarkerSymbolExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF6127E8DD1E00F03B1C /* AddOneMarkerSymbolExample.swift */; };
+		7412CF6427E8EA2A00F03B1C /* CircleAnnotationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF6327E8EA2A00F03B1C /* CircleAnnotationExample.swift */; };
+		7412CF6627E9A7FF00F03B1C /* CLLocationCoordinate2D+Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF6527E9A7FF00F03B1C /* CLLocationCoordinate2D+Random.swift */; };
+		7412CF6827E9A8D600F03B1C /* UIColor+Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF6727E9A8D600F03B1C /* UIColor+Random.swift */; };
+		7412CF6C27E9D48700F03B1C /* AddMarkersSymbolExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF6B27E9D48700F03B1C /* AddMarkersSymbolExample.swift */; };
+		74A2313127EB306F0065FB7D /* Array+Split.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A2313027EB306F0065FB7D /* Array+Split.swift */; };
+		74A2313627EB37EE0065FB7D /* AnimatedMarkerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A2313527EB37EE0065FB7D /* AnimatedMarkerExample.swift */; };
+		74A2313827EC6B360065FB7D /* IconSizeChangeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A2313727EC6B360065FB7D /* IconSizeChangeExample.swift */; };
+		74A2313C27EDCE7F0065FB7D /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A2313B27EDCE7F0065FB7D /* AnnotationView.swift */; };
+		74A2313E27EE1C640065FB7D /* ViewAnnotationWithPointAnnotationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A2313D27EE1C630065FB7D /* ViewAnnotationWithPointAnnotationExample.swift */; };
 		A41E58342654593500D8B946 /* SwitchStylesExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E58332654593500D8B946 /* SwitchStylesExample.swift */; };
 		A41E584C26555A3400D8B946 /* PointClusteringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E584B26555A3400D8B946 /* PointClusteringExample.swift */; };
 		A41E58F4265C005300D8B946 /* blueprint_style.json in Resources */ = {isa = PBXBuildFile; fileRef = A41E58F3265C005300D8B946 /* blueprint_style.json */; };
@@ -64,10 +73,8 @@
 		CADCF71D2584990E0065C51B /* CustomPointAnnotationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64ED3C42540DD6E00ADADFB /* CustomPointAnnotationExample.swift */; };
 		CADCF71E2584990E0065C51B /* ExternalVectorSourceExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077E3B2B2581810600564A3E /* ExternalVectorSourceExample.swift */; };
 		CADCF71F2584990E0065C51B /* DataDrivenSymbolsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69F01EC2543646A001AB49B /* DataDrivenSymbolsExample.swift */; };
-		CADCF7202584990E0065C51B /* SelectAnnotationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0773528E25438CCA00B48DB6 /* SelectAnnotationExample.swift */; };
 		CADCF7212584990E0065C51B /* PolygonAnnotationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07A8D86825422C190068D50D /* PolygonAnnotationExample.swift */; };
 		CADCF7222584990E0065C51B /* ColorExpressionExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE3D3BE25818626000585A2 /* ColorExpressionExample.swift */; };
-		CADCF7232584990E0065C51B /* UpdatePointAnnotationPositionExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077E3B932581987B00564A3E /* UpdatePointAnnotationPositionExample.swift */; };
 		CADCF7242584990E0065C51B /* AnimateLayerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07DBDC91254C94C500F89304 /* AnimateLayerExample.swift */; };
 		CADCF7252584990E0065C51B /* CameraAnimationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64ED3842540A2BE00ADADFB /* CameraAnimationExample.swift */; };
 		CADCF7262584990E0065C51B /* SnapshotterExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 072C79EA25685D23006E47A7 /* SnapshotterExample.swift */; };
@@ -126,7 +133,6 @@
 		0746C14D252FA9D4001638BD /* Examples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Examples.swift; sourceTree = "<group>"; };
 		0746C152252FAA03001638BD /* UIViewController+Children.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Children.swift"; sourceTree = "<group>"; };
 		0746C15F252FADE4001638BD /* ExampleTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleTableViewController.swift; sourceTree = "<group>"; };
-		0773528E25438CCA00B48DB6 /* SelectAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectAnnotationExample.swift; sourceTree = "<group>"; };
 		077C4EEA252F7E88007636F1 /* Examples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Examples.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		077C4EED252F7E88007636F1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		077C4EF9252F7E89007636F1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -140,7 +146,6 @@
 		077C4F4B252FA7CD007636F1 /* base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = base.xcconfig; sourceTree = "<group>"; };
 		077E3B2B2581810600564A3E /* ExternalVectorSourceExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalVectorSourceExample.swift; sourceTree = "<group>"; };
 		077E3B8F2581966300564A3E /* FitCameraToGeometryExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitCameraToGeometryExample.swift; sourceTree = "<group>"; };
-		077E3B932581987B00564A3E /* UpdatePointAnnotationPositionExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatePointAnnotationPositionExample.swift; sourceTree = "<group>"; };
 		07A2E03C25CB64E20082BC31 /* SwiftUIExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIExample.swift; sourceTree = "<group>"; };
 		07A8D86825422C190068D50D /* PolygonAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolygonAnnotationExample.swift; sourceTree = "<group>"; };
 		07B0715F254789D6007F2865 /* FeaturesAtPointExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturesAtPointExample.swift; sourceTree = "<group>"; };
@@ -156,7 +161,6 @@
 		0CC4ECE925B8AD3000F998B8 /* Custom2DPuckExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Custom2DPuckExample.swift; sourceTree = "<group>"; };
 		0CE3D3BE25818626000585A2 /* ColorExpressionExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExpressionExample.swift; sourceTree = "<group>"; };
 		0CE3D3C225818786000585A2 /* FlyToExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyToExample.swift; sourceTree = "<group>"; };
-		17483DFC2670113300396F8D /* MultiplePointAnnotationsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplePointAnnotationsExample.swift; sourceTree = "<group>"; };
 		177C9D46269CA61100D13A2D /* ShowHideLayerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowHideLayerExample.swift; sourceTree = "<group>"; };
 		17AF783F26837E91006EA30D /* Fire_Hydrants.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Fire_Hydrants.geojson; sourceTree = "<group>"; };
 		17B40D2326A85500000887EF /* LiveDataExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveDataExample.swift; sourceTree = "<group>"; };
@@ -180,6 +184,17 @@
 		666E0D4925664EE7000B8AF5 /* LayerPositionExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayerPositionExample.swift; sourceTree = "<group>"; };
 		73694BD225D4B2CE0064F636 /* TrackingModeExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingModeExample.swift; sourceTree = "<group>"; };
 		73E27C2527AF024C0067F277 /* DataJoinExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataJoinExample.swift; sourceTree = "<group>"; };
+		7412CF6127E8DD1E00F03B1C /* AddOneMarkerSymbolExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOneMarkerSymbolExample.swift; sourceTree = "<group>"; };
+		7412CF6327E8EA2A00F03B1C /* CircleAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleAnnotationExample.swift; sourceTree = "<group>"; };
+		7412CF6527E9A7FF00F03B1C /* CLLocationCoordinate2D+Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Random.swift"; sourceTree = "<group>"; };
+		7412CF6727E9A8D600F03B1C /* UIColor+Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Random.swift"; sourceTree = "<group>"; };
+		7412CF6B27E9D48700F03B1C /* AddMarkersSymbolExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMarkersSymbolExample.swift; sourceTree = "<group>"; };
+		74A2313027EB306F0065FB7D /* Array+Split.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Split.swift"; sourceTree = "<group>"; };
+		74A2313527EB37EE0065FB7D /* AnimatedMarkerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedMarkerExample.swift; sourceTree = "<group>"; };
+		74A2313727EC6B360065FB7D /* IconSizeChangeExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconSizeChangeExample.swift; sourceTree = "<group>"; };
+		74A2313B27EDCE7F0065FB7D /* AnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
+		74A2313D27EE1C630065FB7D /* ViewAnnotationWithPointAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAnnotationWithPointAnnotationExample.swift; sourceTree = "<group>"; };
+		74A2313F27EE243B0065FB7D /* annotations.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = annotations.json; sourceTree = "<group>"; };
 		A41E58332654593500D8B946 /* SwitchStylesExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchStylesExample.swift; sourceTree = "<group>"; };
 		A41E584B26555A3400D8B946 /* PointClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointClusteringExample.swift; sourceTree = "<group>"; };
 		A41E58F3265C005300D8B946 /* blueprint_style.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = blueprint_style.json; sourceTree = "<group>"; };
@@ -252,6 +267,9 @@
 			isa = PBXGroup;
 			children = (
 				0746C152252FAA03001638BD /* UIViewController+Children.swift */,
+				7412CF6527E9A7FF00F03B1C /* CLLocationCoordinate2D+Random.swift */,
+				7412CF6727E9A8D600F03B1C /* UIColor+Random.swift */,
+				74A2313027EB306F0065FB7D /* Array+Split.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -259,6 +277,7 @@
 		0746C182252FB0F4001638BD /* All Examples */ = {
 			isa = PBXGroup;
 			children = (
+				7412CF6027E8DCFB00F03B1C /* Annotations */,
 				58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */,
 				17B480592684FB2300CF0D5E /* AnimateImageLayerExample.swift */,
 				07DBDC91254C94C500F89304 /* AnimateLayerExample.swift */,
@@ -270,7 +289,6 @@
 				0CC4ECE925B8AD3000F998B8 /* Custom2DPuckExample.swift */,
 				0C52BA9725AF8C880054ECA8 /* Custom3DPuckExample.swift */,
 				073475D625AFAE520049B0B8 /* CustomLayerExample.swift */,
-				C64ED3C42540DD6E00ADADFB /* CustomPointAnnotationExample.swift */,
 				5812B55027C5A0E500E10063 /* CustomLocationProviderExample.swift */,
 				A4AC5DEB2542CB2200995E4C /* CustomStyleURLExample.swift */,
 				C69F01EC2543646A001AB49B /* DataDrivenSymbolsExample.swift */,
@@ -283,35 +301,25 @@
 				0CE3D3C225818786000585A2 /* FlyToExample.swift */,
 				30F095BE270B39AF00F368DC /* GlobeViewExample.swift */,
 				666E0D4925664EE7000B8AF5 /* LayerPositionExample.swift */,
-				C64ED3C82541CA3A00ADADFB /* LineAnnotationExample.swift */,
 				0C78AC2825BF70E40057F570 /* LineGradientExample.swift */,
-				17B40D2326A85500000887EF /* LiveDataExample.swift */,
 				C608C106267BC5B1003C86C3 /* LocalizationExample.swift */,
-				07B071CD2547CF2B007F2865 /* MultipleGeometriesExample.swift */,
-				17483DFC2670113300396F8D /* MultiplePointAnnotationsExample.swift */,
 				CA628413262DFD5C00651488 /* OfflineManagerExample.storyboard */,
 				CA03F10E26268DF700673961 /* OfflineManagerExample.swift */,
 				A41E590C265C263700D8B946 /* OfflineRegionManagerExample.swift */,
 				A41E584B26555A3400D8B946 /* PointClusteringExample.swift */,
-				07A8D86825422C190068D50D /* PolygonAnnotationExample.swift */,
+				17B40D2326A85500000887EF /* LiveDataExample.swift */,
 				17B4806A268BD91000CF0D5E /* RasterTileSourceExample.swift */,
 				A4211CE52592549900D215B4 /* RestrictCoordinateBoundsExample.swift */,
 				07B071D12547CF50007F2865 /* Sample Data */,
 				0333B84E25ED942600D667C9 /* SceneKitExample.swift */,
-				0773528E25438CCA00B48DB6 /* SelectAnnotationExample.swift */,
 				177C9D46269CA61100D13A2D /* ShowHideLayerExample.swift */,
 				A495049A2667D64F00130A8F /* SkyLayerExample.swift */,
 				07C1A60C257EF7CF00531205 /* SnapshotterCoreGraphicsExample.swift */,
 				072C79EA25685D23006E47A7 /* SnapshotterExample.swift */,
 				58248C2E2695FF24009AC598 /* StoryboardMapViewExample.swift */,
-				07A2E03C25CB64E20082BC31 /* SwiftUIExample.swift */,
 				A41E58332654593500D8B946 /* SwitchStylesExample.swift */,
-				17E28C5B2672A1160033DF0F /* SymbolClusteringExample.swift */,
 				0706C4A525B1181A008733C0 /* TerrainExample.swift */,
 				73694BD225D4B2CE0064F636 /* TrackingModeExample.swift */,
-				077E3B932581987B00564A3E /* UpdatePointAnnotationPositionExample.swift */,
-				30517C69274BD4D300B706E5 /* ViewAnnotationBasicExample.swift */,
-				304AB3B427439287005B6D09 /* ViewAnnotationMarkerExample.swift */,
 				B57E1BAD27B5B6B900E8E3BA /* ViewportExample.swift */,
 				B58E470827BABE0E00D87FD6 /* AdvancedViewportGesturesExample.swift */,
 			);
@@ -387,6 +395,7 @@
 			isa = PBXGroup;
 			children = (
 				17B4805B26851C0600CF0D5E /* Radar */,
+				74A2313F27EE243B0065FB7D /* annotations.json */,
 				17AF783F26837E91006EA30D /* Fire_Hydrants.geojson */,
 				A41E58F3265C005300D8B946 /* blueprint_style.json */,
 				03BB33F825EDA19200109B28 /* 34M_17.dae */,
@@ -407,6 +416,28 @@
 				17B4805C26851C6E00CF0D5E /* radar4.gif */,
 			);
 			path = Radar;
+			sourceTree = "<group>";
+		};
+		7412CF6027E8DCFB00F03B1C /* Annotations */ = {
+			isa = PBXGroup;
+			children = (
+				7412CF6B27E9D48700F03B1C /* AddMarkersSymbolExample.swift */,
+				7412CF6127E8DD1E00F03B1C /* AddOneMarkerSymbolExample.swift */,
+				74A2313527EB37EE0065FB7D /* AnimatedMarkerExample.swift */,
+				74A2313B27EDCE7F0065FB7D /* AnnotationView.swift */,
+				7412CF6327E8EA2A00F03B1C /* CircleAnnotationExample.swift */,
+				C64ED3C42540DD6E00ADADFB /* CustomPointAnnotationExample.swift */,
+				74A2313727EC6B360065FB7D /* IconSizeChangeExample.swift */,
+				C64ED3C82541CA3A00ADADFB /* LineAnnotationExample.swift */,
+				07B071CD2547CF2B007F2865 /* MultipleGeometriesExample.swift */,
+				07A8D86825422C190068D50D /* PolygonAnnotationExample.swift */,
+				07A2E03C25CB64E20082BC31 /* SwiftUIExample.swift */,
+				17E28C5B2672A1160033DF0F /* SymbolClusteringExample.swift */,
+				30517C69274BD4D300B706E5 /* ViewAnnotationBasicExample.swift */,
+				304AB3B427439287005B6D09 /* ViewAnnotationMarkerExample.swift */,
+				74A2313D27EE1C630065FB7D /* ViewAnnotationWithPointAnnotationExample.swift */,
+			);
+			path = Annotations;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -579,11 +610,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				17483DFD2670113300396F8D /* MultiplePointAnnotationsExample.swift in Sources */,
 				CA03F10F26268DF700673961 /* OfflineManagerExample.swift in Sources */,
 				CADCF73C258499200065C51B /* AppDelegate.swift in Sources */,
 				CADCF7392584991C0065C51B /* UIViewController+Children.swift in Sources */,
 				58248C2F2695FF24009AC598 /* StoryboardMapViewExample.swift in Sources */,
+				74A2313827EC6B360065FB7D /* IconSizeChangeExample.swift in Sources */,
 				B58E470927BABE0E00D87FD6 /* AdvancedViewportGesturesExample.swift in Sources */,
 				30F095BF270B39AF00F368DC /* GlobeViewExample.swift in Sources */,
 				A495049B2667D64F00130A8F /* SkyLayerExample.swift in Sources */,
@@ -595,19 +626,23 @@
 				A41E58342654593500D8B946 /* SwitchStylesExample.swift in Sources */,
 				CADCF7272584990E0065C51B /* FitCameraToGeometryExample.swift in Sources */,
 				B5327EC3260277AC0095B6BD /* ExampleProtocol.swift in Sources */,
+				7412CF6427E8EA2A00F03B1C /* CircleAnnotationExample.swift in Sources */,
 				A41E584C26555A3400D8B946 /* PointClusteringExample.swift in Sources */,
+				7412CF6627E9A7FF00F03B1C /* CLLocationCoordinate2D+Random.swift in Sources */,
 				CADCF7252584990E0065C51B /* CameraAnimationExample.swift in Sources */,
 				CADCF72A2584990E0065C51B /* CustomStyleURLExample.swift in Sources */,
 				177C9D47269CA61100D13A2D /* ShowHideLayerExample.swift in Sources */,
 				0C784D1126D002DC004AE7D0 /* FeatureStateExample.swift in Sources */,
 				CADCF7222584990E0065C51B /* ColorExpressionExample.swift in Sources */,
+				74A2313C27EDCE7F0065FB7D /* AnnotationView.swift in Sources */,
+				7412CF6C27E9D48700F03B1C /* AddMarkersSymbolExample.swift in Sources */,
 				17E28C5C2672A1160033DF0F /* SymbolClusteringExample.swift in Sources */,
 				CADCF733258499130065C51B /* Examples.swift in Sources */,
 				CADCF743258499570065C51B /* BasicMapExample.swift in Sources */,
-				CADCF7232584990E0065C51B /* UpdatePointAnnotationPositionExample.swift in Sources */,
 				17B40D2426A85500000887EF /* LiveDataExample.swift in Sources */,
 				CADCF7242584990E0065C51B /* AnimateLayerExample.swift in Sources */,
 				073475D725AFAE520049B0B8 /* CustomLayerExample.swift in Sources */,
+				7412CF6827E9A8D600F03B1C /* UIColor+Random.swift in Sources */,
 				0CC4ECEA25B8AD3000F998B8 /* Custom2DPuckExample.swift in Sources */,
 				CADCF71F2584990E0065C51B /* DataDrivenSymbolsExample.swift in Sources */,
 				CADCF7302584990E0065C51B /* LayerPositionExample.swift in Sources */,
@@ -620,6 +655,7 @@
 				CA4F1F7225E815CF00822D2A /* SwiftUIExample.swift in Sources */,
 				CAC195B725AC098A00F69FEA /* CameraAnimatorsExample.swift in Sources */,
 				73E27C2627AF024C0067F277 /* DataJoinExample.swift in Sources */,
+				74A2313127EB306F0065FB7D /* Array+Split.swift in Sources */,
 				0C78AC2925BF70E40057F570 /* LineGradientExample.swift in Sources */,
 				17B48067268A4E9300CF0D5E /* DistanceExpressionExample.swift in Sources */,
 				CADCF72B2584990E0065C51B /* FlyToExample.swift in Sources */,
@@ -627,6 +663,7 @@
 				CADCF72D2584990E0065C51B /* MultipleGeometriesExample.swift in Sources */,
 				30517C6A274BD4D300B706E5 /* ViewAnnotationBasicExample.swift in Sources */,
 				A41E590D265C263700D8B946 /* OfflineRegionManagerExample.swift in Sources */,
+				74A2313627EB37EE0065FB7D /* AnimatedMarkerExample.swift in Sources */,
 				58A3C0C925C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift in Sources */,
 				B5327EBF260277930095B6BD /* Example.swift in Sources */,
 				CADCF736258499170065C51B /* ExampleTableViewController.swift in Sources */,
@@ -636,8 +673,9 @@
 				0C52BA9825AF8C880054ECA8 /* Custom3DPuckExample.swift in Sources */,
 				CADCF7292584990E0065C51B /* FeaturesAtPointExample.swift in Sources */,
 				CADCF71E2584990E0065C51B /* ExternalVectorSourceExample.swift in Sources */,
+				7412CF6227E8DD1E00F03B1C /* AddOneMarkerSymbolExample.swift in Sources */,
+				74A2313E27EE1C640065FB7D /* ViewAnnotationWithPointAnnotationExample.swift in Sources */,
 				73694BD325D4B2CE0064F636 /* TrackingModeExample.swift in Sources */,
-				CADCF7202584990E0065C51B /* SelectAnnotationExample.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

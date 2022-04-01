@@ -12,6 +12,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Fix animator-related leaks. ([#1200](https://github.com/mapbox/mapbox-maps-ios/pull/1200))
 * Improve AnyTouchGestureRecognizer's interaction with other gesture recognizers. ([#1210](https://github.com/mapbox/mapbox-maps-ios/pull/1210))
 * Expose convenience properties and methods to transform `CoordinateBounds`. ([1226](https://github.com/mapbox/mapbox-maps-ios/pull/1226))
+* Update annotation examples. ([#1215](https://github.com/mapbox/mapbox-maps-ios/pull/1215))
 
 ## 10.4.1 - March 28, 2022
 

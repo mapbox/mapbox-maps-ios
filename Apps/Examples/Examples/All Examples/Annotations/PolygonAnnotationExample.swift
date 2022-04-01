@@ -31,6 +31,7 @@ final class PolygonAnnotationExample: UIViewController, ExampleProtocol {
         // (`mapView.annotations`) until you explicitly destroy them
         // by calling `mapView.annotations.removeAnnotationManager(withId:)`
         let polygonAnnotationManager = mapView.annotations.makePolygonAnnotationManager()
+        polygonAnnotationManager.delegate = self
 
         // Create the polygon annotation
         var polygonAnnotation = PolygonAnnotation(polygon: makePolygon())
@@ -68,5 +69,11 @@ final class PolygonAnnotationExample: UIViewController, ExampleProtocol {
         let innerRing = Ring(coordinates: innerRingCoords)
 
         return Polygon(outerRing: outerRing, innerRings: [innerRing])
+    }
+}
+
+extension PolygonAnnotationExample: AnnotationInteractionDelegate {
+    func annotationManager(_ manager: AnnotationManager, didDetectTappedAnnotations annotations: [Annotation]) {
+        print("AnnotationManager did detect tapped annotations: \(annotations)")
     }
 }

@@ -26,6 +26,11 @@ internal protocol CameraAnimatorsFactoryProtocol: AnyObject {
                                                decelerationFactor: CGFloat,
                                                animationOwner: AnimationOwner,
                                                locationChangeHandler: @escaping (_ fromLocation: CGPoint, _ toLocation: CGPoint) -> Void) -> CameraAnimatorProtocol
+    func makeSimpleCameraAnimator(from: CameraOptions,
+                                  to: CameraOptions,
+                                  duration: TimeInterval,
+                                  curve: TimingCurve,
+                                  owner: AnimationOwner) -> SimpleCameraAnimatorProtocol
 }
 
 internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
@@ -33,13 +38,16 @@ internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
     private let cameraViewContainerView: UIView
     private let mapboxMap: MapboxMapProtocol
     private let dateProvider: DateProvider
+    private let cameraOptionsInterpolator: CameraOptionsInterpolatorProtocol
 
     internal init(cameraViewContainerView: UIView,
                   mapboxMap: MapboxMapProtocol,
-                  dateProvider: DateProvider) {
+                  dateProvider: DateProvider,
+                  cameraOptionsInterpolator: CameraOptionsInterpolatorProtocol) {
         self.cameraViewContainerView = cameraViewContainerView
         self.mapboxMap = mapboxMap
         self.dateProvider = dateProvider
+        self.cameraOptionsInterpolator = cameraOptionsInterpolator
     }
 
     internal func makeFlyToAnimator(toCamera: CameraOptions,
@@ -132,6 +140,22 @@ internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
             decelerationFactor: decelerationFactor,
             owner: animationOwner,
             locationChangeHandler: locationChangeHandler,
+            dateProvider: dateProvider)
+    }
+
+    internal func makeSimpleCameraAnimator(from: CameraOptions,
+                                           to: CameraOptions,
+                                           duration: TimeInterval,
+                                           curve: TimingCurve,
+                                           owner: AnimationOwner) -> SimpleCameraAnimatorProtocol {
+        return SimpleCameraAnimator(
+            from: from,
+            to: to,
+            duration: duration,
+            curve: curve,
+            owner: owner,
+            mapboxMap: mapboxMap,
+            cameraOptionsInterpolator: cameraOptionsInterpolator,
             dateProvider: dateProvider)
     }
 }

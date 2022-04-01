@@ -41,6 +41,28 @@ final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
                 completion: completion))
     }
 
+    struct DecelerateParams {
+        var location: CGPoint
+        var velocity: CGPoint
+        var decelerationFactor: CGFloat
+        var locationChangeHandler: (_ fromLocation: CGPoint, _ toLocation: CGPoint) -> Void
+        var completion: AnimationCompletion?
+    }
+    let decelerateStub = Stub<DecelerateParams, Void>()
+    func decelerate(location: CGPoint,
+                    velocity: CGPoint,
+                    decelerationFactor: CGFloat,
+                    locationChangeHandler: @escaping (_ fromLocation: CGPoint, _ toLocation: CGPoint) -> Void,
+                    completion: AnimationCompletion?) {
+        decelerateStub.call(
+            with: DecelerateParams(
+                location: location,
+                velocity: velocity,
+                decelerationFactor: decelerationFactor,
+                locationChangeHandler: locationChangeHandler,
+                completion: completion))
+    }
+
     struct MakeAnimatorWithTimingParametersParams {
         var duration: TimeInterval
         var timingParameters: UITimingCurveProvider
@@ -120,25 +142,27 @@ final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
             animations: animations))
     }
 
-    struct DecelerateParameters {
-        var location: CGPoint
-        var velocity: CGPoint
-        var decelerationFactor: CGFloat
-        var locationChangeHandler: (_ fromLocation: CGPoint, _ toLocation: CGPoint) -> Void
-        var completion: AnimationCompletion?
+    struct MakeSimpleCameraAnimatorParams {
+        var from: CameraOptions
+        var to: CameraOptions
+        var duration: TimeInterval
+        var curve: TimingCurve
+        var owner: AnimationOwner
     }
-    let decelerateStub = Stub<DecelerateParameters, Void>()
-    func decelerate(location: CGPoint,
-                    velocity: CGPoint,
-                    decelerationFactor: CGFloat,
-                    locationChangeHandler: @escaping (_ fromLocation: CGPoint, _ toLocation: CGPoint) -> Void,
-                    completion: AnimationCompletion?) {
-        decelerateStub.call(
-            with: DecelerateParameters(
-                location: location,
-                velocity: velocity,
-                decelerationFactor: decelerationFactor,
-                locationChangeHandler: locationChangeHandler,
-                completion: completion))
+    let makeSimpleCameraAnimatorStub = Stub<
+        MakeSimpleCameraAnimatorParams,
+        SimpleCameraAnimatorProtocol>(
+            defaultReturnValue: MockSimpleCameraAnimator())
+    func makeSimpleCameraAnimator(from: CameraOptions,
+                                  to: CameraOptions,
+                                  duration: TimeInterval,
+                                  curve: TimingCurve,
+                                  owner: AnimationOwner) -> SimpleCameraAnimatorProtocol {
+        makeSimpleCameraAnimatorStub.call(with: .init(
+            from: from,
+            to: to,
+            duration: duration,
+            curve: curve,
+            owner: owner))
     }
 }

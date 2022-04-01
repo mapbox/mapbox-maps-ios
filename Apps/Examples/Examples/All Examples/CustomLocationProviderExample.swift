@@ -19,6 +19,8 @@ final class CustomLocationProviderExample: UIViewController, ExampleProtocol {
         let customLocationProvider = CustomLocationProvider(currentLocation: CLLocation(latitude: 40.7131854, longitude: -74.0165265))
         mapView.location.overrideLocationProvider(with: customLocationProvider)
         mapView.location.options.puckType = .puck2D()
+        // The following line is just for testing purposes.
+        finish()
     }
 }
 

@@ -87,6 +87,9 @@ public struct LineLayer: Layer {
     /// Controls the frame of reference for `line-translate`.
     public var lineTranslateAnchor: Value<LineTranslateAnchor>?
 
+    /// The line trim-off percentage range based on the whole line gradinet range [0.0, 1.0]. The line part between [trim-start, trim-end] will be marked as transparent to make a route vanishing effect. If either 'trim-start' or 'trim-end' offset is out of valid range, the default range will be set.
+    public var lineTrimOffset: Value<[Double]>?
+
     /// Stroke thickness.
     public var lineWidth: Value<Double>?
 
@@ -128,6 +131,7 @@ public struct LineLayer: Layer {
         try paintContainer.encodeIfPresent(lineTranslate, forKey: .lineTranslate)
         try paintContainer.encodeIfPresent(lineTranslateTransition, forKey: .lineTranslateTransition)
         try paintContainer.encodeIfPresent(lineTranslateAnchor, forKey: .lineTranslateAnchor)
+        try paintContainer.encodeIfPresent(lineTrimOffset, forKey: .lineTrimOffset)
         try paintContainer.encodeIfPresent(lineWidth, forKey: .lineWidth)
         try paintContainer.encodeIfPresent(lineWidthTransition, forKey: .lineWidthTransition)
 
@@ -169,6 +173,7 @@ public struct LineLayer: Layer {
             lineTranslate = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .lineTranslate)
             lineTranslateTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineTranslateTransition)
             lineTranslateAnchor = try paintContainer.decodeIfPresent(Value<LineTranslateAnchor>.self, forKey: .lineTranslateAnchor)
+            lineTrimOffset = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .lineTrimOffset)
             lineWidth = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineWidth)
             lineWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineWidthTransition)
         }
@@ -223,6 +228,7 @@ public struct LineLayer: Layer {
         case lineTranslate = "line-translate"
         case lineTranslateTransition = "line-translate-transition"
         case lineTranslateAnchor = "line-translate-anchor"
+        case lineTrimOffset = "line-trim-offset"
         case lineWidth = "line-width"
         case lineWidthTransition = "line-width-transition"
     }

@@ -108,6 +108,7 @@ final class LineLayerTests: XCTestCase {
        layer.lineTranslate = Value<[Double]>.testConstantValue()
        layer.lineTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.lineTranslateAnchor = Value<LineTranslateAnchor>.testConstantValue()
+       layer.lineTrimOffset = Value<[Double]>.testConstantValue()
        layer.lineWidth = Value<Double>.testConstantValue()
        layer.lineWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
 
@@ -136,6 +137,7 @@ final class LineLayerTests: XCTestCase {
            XCTAssert(layer.linePattern == Value<ResolvedImage>.testConstantValue())
            XCTAssert(layer.lineTranslate == Value<[Double]>.testConstantValue())
            XCTAssert(layer.lineTranslateAnchor == Value<LineTranslateAnchor>.testConstantValue())
+           XCTAssert(layer.lineTrimOffset == Value<[Double]>.testConstantValue())
            XCTAssert(layer.lineWidth == Value<Double>.testConstantValue())
        } catch {
            XCTFail("Failed to decode LineLayer")

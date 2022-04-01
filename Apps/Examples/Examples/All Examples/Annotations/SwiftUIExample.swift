@@ -270,6 +270,7 @@ final class SwiftUIExample: UIViewController, ExampleProtocol {
                 view.centerXAnchor.constraint(equalTo: label.centerXAnchor),
                 view.centerYAnchor.constraint(equalTo: label.centerYAnchor)
             ])
+            finish()
         }
     }
 }

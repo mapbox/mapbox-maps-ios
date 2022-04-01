@@ -61,7 +61,10 @@ final class LineAnnotationExample: UIViewController, ExampleProtocol {
         // Annotation managers are kept alive by `AnnotationOrchestrator`
         // (`mapView.annotations`) until you explicitly destroy them
         // by calling `mapView.annotations.removeAnnotationManager(withId:)`
-        let lineAnnnotationManager = mapView.annotations.makePolylineAnnotationManager(layerPosition: .below("pitch-outline"))
+        let lineAnnnotationManager = mapView.annotations.makePolylineAnnotationManager(
+            // position line annotations layer in a way that line annotations clipped at land borders
+            layerPosition: .below("pitch-outline")
+        )
 
         // Sync the annotation to the manager.
         lineAnnnotationManager.annotations = annotations

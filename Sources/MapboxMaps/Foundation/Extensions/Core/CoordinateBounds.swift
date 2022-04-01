@@ -5,27 +5,40 @@ import MapboxCoreMaps
 
 public extension CoordinateBounds {
 
-    /// The northwest coordinate of an internal `CoordinateBounds` type.
-    var northwest: CLLocationCoordinate2D {
-        return CLLocationCoordinate2D(latitude: northeast.latitude, longitude: southwest.longitude)
-    }
+    /// Returns the southern latitude of the bounds.
+    var south: CLLocationDegrees { __south() }
 
-    /// The northwest coordinate of an internal `CoordinateBounds` type.
-    var southeast: CLLocationCoordinate2D {
-        return CLLocationCoordinate2D(latitude: southwest.latitude, longitude: northeast.longitude)
-    }
-}
+    /// Returns the western longitude of the bounds.
+    var west: CLLocationDegrees { __west() }
 
-internal extension CoordinateBounds {
-    func contains(_ coordinates: [CLLocationCoordinate2D]) -> Bool {
-        let latitudeRange = southwest.latitude...northeast.latitude
-        let longitudeRange = southwest.longitude...northeast.longitude
+    /// Returns the northern latitude of the bounds.
+    var north: CLLocationDegrees { __north() }
 
-        for coordinate in coordinates {
-            if latitudeRange.contains(coordinate.latitude) || longitudeRange.contains(coordinate.longitude) {
-                return true
-            }
-        }
-        return false
-    }
+    /// Returns the eastern longitude of the bounds.
+    var east: CLLocationDegrees { __east() }
+
+    /// The centerpoint of this `CoordinateBounds` calculated by simple interpolation.
+    /// This is a non-geodesic calculation which is not the geographic center.
+    var center: CLLocationCoordinate2D { __center() }
+
+    /// Returns whether the bounds are empty or not.
+    var isEmpty: Bool { __isEmpty() }
+
+    /// The absolute distance, in degrees, between the north and south boundaries of these bounds.
+    ///
+    /// One degree of latitude is approximately 111 kilometers (69 miles).
+    var latitudeSpan: CLLocationDegrees { __latitudeSpan() }
+
+    /// The absolute distance, in degrees, between the west and east boundaries of these bounds.
+    ///
+    /// The distance represented by a longitude span varies on current latitude.
+    /// At the equator one degree of longitude represents a distance of approximately 111 kilometers (69 miles).
+    /// While at the poles one degree of logitude span is 0 kilometers (0 miles).
+    var longitudeSpan: CLLocationDegrees { __longitudeSpan() }
+
+    /// The northwest coordinate of the bounds.
+    var northwest: CLLocationCoordinate2D { __northwest() }
+
+    /// The southeast coordinate of the bounds.
+    var southeast: CLLocationCoordinate2D { __southeast() }
 }

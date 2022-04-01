@@ -11,6 +11,7 @@ Mapbox welcomes participation and contributions from everyone.
 * `CameraAnimationsManager.stopAnimations()` will now cancel all animators regardless of their state. Previously, only animators with `state == .active` were canceled. ([#1197](https://github.com/mapbox/mapbox-maps-ios/pull/1197))
 * Fix animator-related leaks. ([#1200](https://github.com/mapbox/mapbox-maps-ios/pull/1200))
 * Improve AnyTouchGestureRecognizer's interaction with other gesture recognizers. ([#1210](https://github.com/mapbox/mapbox-maps-ios/pull/1210))
+* Expose convenience properties and methods to transform `CoordinateBounds`. ([1226](https://github.com/mapbox/mapbox-maps-ios/pull/1226))
 * Update annotation examples. ([#1215](https://github.com/mapbox/mapbox-maps-ios/pull/1215))
 * Remove `FollowPuckViewportStateOptions.animationDuration`, a workaround for the moving target problem. ([#1228](https://github.com/mapbox/mapbox-maps-ios/pull/1228))
 * Deprecate `FollowPuckViewportStateOptions.animationDuration`, a workaround for the moving target problem. ([#1228](https://github.com/mapbox/mapbox-maps-ios/pull/1228))

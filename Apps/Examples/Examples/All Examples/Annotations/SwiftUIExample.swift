@@ -180,6 +180,12 @@ struct ContentView: View {
     @State private var camera = Camera(center: CLLocationCoordinate2D(latitude: 40, longitude: -75), zoom: 14)
     @State private var styleURI = StyleURI.streets
 
+    private var onAppear: () -> Void
+
+    init(onAppear: @escaping () -> Void) {
+        self.onAppear = onAppear
+    }
+
     /// When you create an annotation, you can assign it an ID or allow it to generate its own UUID. Here
     /// we assign IDs explicitly to achieve a consistent result whenever this view is reevaluated.
     private let annotations: [PointAnnotation] = [
@@ -231,7 +237,7 @@ struct ContentView: View {
                 Text("Streets").tag(StyleURI.streets)
                 Text("Dark").tag(StyleURI.dark)
             }.pickerStyle(SegmentedPickerStyle())
-        }
+        }.onAppear(perform: onAppear)
     }
 }
 
@@ -243,7 +249,11 @@ final class SwiftUIExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         if #available(iOS 13.0, *) {
-            let hostingViewController = UIHostingController(rootView: ContentView())
+            let contentView = ContentView { [weak self] in
+                // The following line is just for testing purposes.
+                self?.finish()
+            }
+            let hostingViewController = UIHostingController(rootView: contentView)
             addChild(hostingViewController)
             hostingViewController.view.frame = view.bounds
             view.addSubview(hostingViewController.view)

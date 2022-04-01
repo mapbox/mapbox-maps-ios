@@ -107,7 +107,7 @@ final class ExpressionTests: XCTestCase {
             .init(latitude: 41, longitude: -109-2/60-48/60/60),
             .init(latitude: 37, longitude: -109-2/60-48/60/60),
         ]
-        var colorado = Feature(geometry: .polygon(Polygon([coloradoCorners])))
+        var colorado = Feature(geometry: Polygon([coloradoCorners]))
         colorado.identifier = "CO"
         colorado.properties = [
             "population": 5_773_714,

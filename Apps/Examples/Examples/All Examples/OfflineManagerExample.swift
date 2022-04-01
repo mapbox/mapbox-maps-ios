@@ -64,6 +64,8 @@ final class OfflineManagerExample: UIViewController, ExampleProtocol {
         // Initialize a logger that writes into the text view
         logger = OfflineManagerLogWriter(textView: logView)
         state = .initial
+        // The following line is just for testing purposes.
+        finish()
     }
 
     // MARK: - Actions

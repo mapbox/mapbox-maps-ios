@@ -22,6 +22,9 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
         // Allows the view controller to receive information about map events.
         mapView.mapboxMap.onNext(.mapLoaded) { _ in
             self.setupExample()
+
+            // The following line is just for testing purposes.
+            self.finish()
         }
     }
 
@@ -81,16 +84,5 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
                 self?.showAlert(with: "An error occurred: \(error.localizedDescription)")
             }
         }
-    }
-
-    // Present an alert with a given title.
-    public func showAlert(with title: String) {
-        let alertController = UIAlertController(title: title,
-                                                message: nil,
-                                                preferredStyle: .alert)
-
-        alertController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-
-        present(alertController, animated: true, completion: nil)
     }
 }

@@ -21,6 +21,9 @@ final class DataJoinExample: UIViewController, ExampleProtocol {
         // Add the data layer once the map has finished loading.
         mapView.mapboxMap.onNext(.mapLoaded) { _ in
             self.addJSONDataLayer()
+
+            // The following line is just for testing purposes.
+            self.finish()
         }
     }
 

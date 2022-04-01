@@ -24,6 +24,9 @@ class RasterTileSourceExample: UIViewController, ExampleProtocol {
         // Once the map has finished loading, add the `RasterSource` and `RasterLayer` to the map's style.
         mapView.mapboxMap.onNext(.mapLoaded) { _ in
             self.addRasterSource()
+
+            // The following line is just for testing purposes.
+            self.finish()
         }
 
         button.setTitle("Enable tile request delay", for: .normal)

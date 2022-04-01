@@ -23,6 +23,8 @@ final class SceneKitExample: UIViewController, ExampleProtocol {
 
         mapView.mapboxMap.onNext(.styleLoaded) { _ in
             self.addModelAndTerrain()
+            // The following line is just for testing purposes.
+            self.finish()
         }
     }
 

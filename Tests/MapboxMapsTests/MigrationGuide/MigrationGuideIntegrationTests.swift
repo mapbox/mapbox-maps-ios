@@ -384,7 +384,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         myGeoJSONSource.maxzoom = 14
         //<--
 
-        let someTurfFeature = Feature(geometry: .point(Point(CLLocationCoordinate2D(latitude: 0, longitude: 0))))
+        let someTurfFeature = Feature(geometry: Point(CLLocationCoordinate2D(latitude: 0, longitude: 0)))
         let someTurfFeatureCollection = FeatureCollection(features: [someTurfFeature])
         let someGeoJSONDocumentURL = geoJSONURL(from: "polygon")!
 

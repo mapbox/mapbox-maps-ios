@@ -28,7 +28,7 @@ class GeoJSONSourceDataTests: XCTestCase {
     func testGeoJSONSourceDataEncodingDecodingFeature() throws {
 
         let pointCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-        var feature = Feature(geometry: Geometry.point(.init(pointCoordinate)))
+        var feature = Feature(geometry: Point(pointCoordinate))
         feature.identifier = FeatureIdentifier.string("id")
 
         let data: GeoJSONSourceData = GeoJSONSourceData.feature(feature)

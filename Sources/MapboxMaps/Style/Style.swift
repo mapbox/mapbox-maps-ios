@@ -744,6 +744,26 @@ public final class Style: StyleProtocol {
 
     // MARK: - Light
 
+    /// Sets a light on the style.
+    ///
+    /// - Parameter light: The `Light` that should be applied.
+    ///
+    /// - Throws: An error describing why the operation was unsuccessful.
+    public func setLight(_ light: Light) throws {
+        guard let lightDictionary = try light.toJSON() as? [String: Any] else {
+            throw TypeConversionError.unexpectedType
+        }
+
+        try setLight(properties: lightDictionary)
+    }
+
+    /// Removes light from style if it was set.
+    public func removeLight() throws {
+        try handleExpected {
+            styleManager.setStyleLightForProperties([:])
+        }
+    }
+
     /// Sets the style global light source properties.
     ///
     /// - See Also: https://docs.mapbox.com/mapbox-gl-js/style-spec/#light

@@ -170,7 +170,7 @@ final class DownloadStatusTests: XCTestCase {
                                     totalBytes: nil,
                                     downloadOptions: downloadOptions,
                                     httpResult: .success(httpResponseData))
-        
+
         XCTAssertNil(status.totalBytes, "The value for totalBytes should be nil.")
     }
 

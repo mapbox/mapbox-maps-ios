@@ -1008,7 +1008,6 @@ extension Style {
     }
 }
 
-
 // MARK: - StyleTransition -
 
 /**

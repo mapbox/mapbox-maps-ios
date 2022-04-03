@@ -536,9 +536,7 @@ public final class MapboxMap: MapboxMapProtocol {
         let expected = __map.setBoundsFor(MapboxCoreMaps.CameraBoundsOptions(options))
 
         if expected.isError() {
-            // swiftlint:disable force_cast
             throw MapError(coreError: expected.error)
-            // swiftlint:enable force_cast
         }
     }
 

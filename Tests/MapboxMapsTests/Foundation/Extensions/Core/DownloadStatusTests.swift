@@ -35,7 +35,7 @@ final class DownloadStatusTests: XCTestCase {
         XCTAssertEqual(status.transferredBytes, 4, "The value for transferredBytes should be 4, got \(status.transferredBytes)")
         XCTAssertEqual(status.downloadOptions, downloadOptions, "The value for downloadOptions should be \(downloadOptions.debugDescription), got \(status.downloadOptions.debugDescription)")
 
-        if let result = status.__httpResult, result.isValue(), let value = result.value as? HttpResponseData {
+        if let result = status.__httpResult, result.isValue(), let value = result.value {
             XCTAssertEqual(value, httpResponseData)
         } else {
             XCTFail("This should be a value. Instead got \(status.__httpResult.debugDescription).")
@@ -166,19 +166,19 @@ final class DownloadStatusTests: XCTestCase {
     }
 
     func testNilTotalBytes() {
-        let status = DownloadStatus(__error: .none,
+        let status = DownloadStatus(error: .none,
                                     totalBytes: nil,
                                     downloadOptions: downloadOptions,
-                                    httpResult: Expected(value: httpResponseData))
-
+                                    httpResult: .success(httpResponseData))
+        
         XCTAssertNil(status.totalBytes, "The value for totalBytes should be nil.")
     }
 
     func testNotNilTotalBytes() {
-        let status = DownloadStatus(__error: .none,
+        let status = DownloadStatus(error: .none,
                                     totalBytes: 1234,
                                     downloadOptions: downloadOptions,
-                                    httpResult: Expected(value: httpResponseData))
+                                    httpResult: .success(httpResponseData))
         XCTAssertEqual(status.totalBytes, 1234, "The value for totalBytes should be 1234, found \(status.totalBytes.debugDescription).")
     }
 }

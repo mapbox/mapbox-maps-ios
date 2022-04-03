@@ -214,22 +214,6 @@ final class MapboxMapTests: XCTestCase {
         XCTAssertFalse(mapboxMap.__testingMap.isGestureInProgress())
     }
 
-    func testSetMapProjection() {
-        XCTAssertEqual(mapboxMap.__testingMap.getMapProjection() as? [String: String], ["name": "mercator"])
-        try? mapboxMap.setMapProjection(.globe())
-        XCTAssertEqual(mapboxMap.__testingMap.getMapProjection() as? [String: String], ["name": "globe"])
-    }
-
-    func testGetMapProjection() {
-        mapboxMap.__testingMap.setMapProjectionForProjection(["name": "mercator"])
-        var projection = try? mapboxMap.mapProjection()
-        XCTAssertEqual(projection, .mercator())
-
-        mapboxMap.__testingMap.setMapProjectionForProjection(["name": "globe"])
-        projection = try? mapboxMap.mapProjection()
-        XCTAssertEqual(projection, .globe())
-    }
-
     func testSubscribe() throws {
         let observer = MockObserver()
         let events: [String] = .random()

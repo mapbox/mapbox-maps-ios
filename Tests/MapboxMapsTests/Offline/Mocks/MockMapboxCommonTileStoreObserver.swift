@@ -4,7 +4,7 @@ final class MockMapboxCommonTileStoreObserver: MapboxCommon_Private.TileStoreObs
     func onRegionLoadProgress(forId id: String, progress: TileRegionLoadProgress) {
     }
 
-    func onRegionLoadFinished(forId id: String, region: Expected<AnyObject, AnyObject>) {
+    func onRegionLoadFinished(forId id: String, region: Expected<TileRegion, TileRegionError>) {
     }
 
     func onRegionRemoved(forId id: String) {

@@ -16,7 +16,7 @@ extension HttpResponse {
     ///   - request: Original request
     ///   - result: Result type encapsulating response or error
     public convenience init(request: HttpRequest, result: Result<HttpResponseData, HttpRequestError>) {
-        let expected: Expected<AnyObject, AnyObject>
+        let expected: Expected<HttpResponseData, HttpRequestError>
         switch result {
         case let .success(response):
             expected = Expected(value: response)

@@ -537,7 +537,7 @@ public final class MapboxMap: MapboxMapProtocol {
 
         if expected.isError() {
             // swiftlint:disable force_cast
-            throw MapError(coreError: expected.error as! NSString)
+            throw MapError(coreError: expected.error)
             // swiftlint:enable force_cast
         }
     }
@@ -576,7 +576,7 @@ public final class MapboxMap: MapboxMapProtocol {
     }
 
     internal func pointIsAboveHorizon(_ point: CGPoint) -> Bool {
-        guard case .mercator = try? mapProjection() else {
+        guard case .mercator = try? style.mapProjection() else {
             return false
         }
         let topMargin = 0.04 * size.height
@@ -951,7 +951,7 @@ extension MapboxMap {
                               sourceLayerId: sourceLayerId,
                               featureId: featureId,
                               callback: coreAPIClosureAdapter(for: callback,
-                                                              type: NSDictionary.self,
+                                                              type: AnyObject.self,
                                                               concreteErrorType: MapError.self))
     }
 
@@ -1018,6 +1018,7 @@ extension MapboxMap {
 
 extension MapboxMap {
     /// Errors related to MapProjection API
+    @available(iOS, obsoleted: 11.0)
     @_spi(Experimental) public enum MapProjectionError: Error {
         case unsupportedProjection
     }
@@ -1025,8 +1026,9 @@ extension MapboxMap {
     /// Set map projection for Mapbox map.
     /// - Parameter mode: The `MapProjection` to be used by the map.
     /// - Throws: Errors during encoding or `MapProjectionError.unsupportedProjection` if the supplied projection is not compatible with the SDK.
+    @available(*, deprecated, message: "Use `Style.setMapProjection(_:)` instead")
     @_spi(Experimental) public func setMapProjection(_ mapProjection: MapProjection) throws {
-        try __map.setMapProjectionForProjection(mapProjection.toJSON())
+        try style.setMapProjection(mapProjection)
     }
 
     /// Get current map projection for Mapbox map.
@@ -1038,9 +1040,9 @@ extension MapboxMap {
     /// - Returns:
     ///     `MapProjection` map is using.
     /// - Throws: Errors during decoding
+    @available(*, deprecated, message: "Use `Style.mapProjection()` instead")
     @_spi(Experimental) public func mapProjection() throws -> MapProjection {
-        let data = try JSONSerialization.data(withJSONObject: __map.getMapProjection(), options: [])
-        return try JSONDecoder().decode(MapProjection.self, from: data)
+        return try style.mapProjection()
     }
 }
 

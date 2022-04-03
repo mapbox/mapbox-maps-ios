@@ -6,7 +6,12 @@
 /// Describes the projection used to render the map.
 ///
 /// Mapbox map supports Mercator and Globe projections.
-@_spi(Experimental) public enum MapProjection: Codable, Hashable {
+@_spi(Experimental) public enum MapProjection: Codable, Hashable, CaseIterable {
+    public static var allCases: [MapProjection] = [.mercator(), .globe()]
+    enum CodingKeys: String, CodingKey {
+        case name
+    }
+
     // Wraps `MercatorMapProjection`
     case mercator(_ projection: MercatorMapProjection = MercatorMapProjection())
 

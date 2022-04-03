@@ -40,7 +40,7 @@ extension DownloadStatus {
                             downloadOptions: DownloadOptions,
                             httpResult: Result<HttpResponseData, HttpRequestError>?) {
 
-        let expected: Expected<AnyObject, AnyObject>?
+        let expected: Expected<HttpResponseData, HttpRequestError>?
         switch httpResult {
         case let .success(response):
             expected = Expected(value: response)
@@ -79,7 +79,7 @@ extension DownloadStatus {
                             downloadOptions: DownloadOptions,
                             httpResult: Result<HttpResponseData, HttpRequestError>?) {
 
-        let expected: Expected<AnyObject, AnyObject>?
+        let expected: Expected<HttpResponseData, HttpRequestError>?
         switch httpResult {
         case let .success(response):
             expected = Expected(value: response)

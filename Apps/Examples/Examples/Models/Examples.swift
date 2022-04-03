@@ -178,6 +178,7 @@ public struct Examples {
                 type: OfflineManagerExample.self),
         Example(title: "Use OfflineRegionManager to download a region",
                 description: "Use the deprecated OfflineRegionManager to download regions for offline use.",
+                testTimeout: 60,
                 type: OfflineRegionManagerExample.self),
     ]
 

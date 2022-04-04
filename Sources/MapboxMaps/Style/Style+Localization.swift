@@ -11,6 +11,11 @@ extension Style {
             throw MapError(coreError: NSString(string: "Locale: \(String(describing: locale)) is currently not supported"))
         }
 
+        // Style localization will not work with the server side localization.
+        if isServerSideLocalizationSet() {
+            Log.error(forMessage: "Style localization will not work when language or worldview is set. Either remove `Style.localizeLabels(into:forLayerIds:)` method call or remove the server side localization with `SettingsServiceInterface.erase(key:)`.", category: "Localization")
+        }
+
         // Get all symbol layers that are currently on the map
         var symbolLayers = allLayerIdentifiers.filter { layer in
             return layer.type == .symbol
@@ -29,6 +34,23 @@ extension Style {
                 try setLayerProperty(for: symbolLayer.id, property: "text-field", value: convertedExpression)
             }
         }
+    }
+
+    private func isServerSideLocalizationSet() -> Bool {
+        let settings = SettingsServiceFactory.getInstance(storageType: .nonPersistent)
+        let languageResult = settings.has(key: MapboxCommonSettings.language)
+
+        if let isLocalizationSet = try? languageResult.get(), isLocalizationSet {
+            return true
+        }
+
+        let worldviewResult = settings.has(key: MapboxCommonSettings.worldview)
+
+        if let isWorldviewSet = try? worldviewResult.get(), isWorldviewSet {
+            return true
+        }
+
+        return false
     }
 
     /// Filters through source to determine supported locale styles.

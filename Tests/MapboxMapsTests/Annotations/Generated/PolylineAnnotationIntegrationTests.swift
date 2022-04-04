@@ -194,6 +194,28 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(layer.lineTranslateAnchor, .constant(LineTranslateAnchor(rawValue: Style.layerPropertyDefaultValue(for: .line, property: "line-translate-anchor").value as! String)!))
     }
 
+    func testLineTrimOffset() throws {
+        // Test that the setter and getter work
+        let value = Array.random(withLength: 2, generator: { Double.random(in: -100000...100000) })
+        manager.lineTrimOffset = value
+        XCTAssertEqual(manager.lineTrimOffset, value)
+
+        // Test that the value is synced to the layer
+        manager.syncSourceAndLayerIfNeeded()
+        var layer = try style.layer(withId: self.manager.layerId, type: LineLayer.self)
+        XCTAssertEqual(layer.lineTrimOffset, .constant(value.map { Double(Float($0)) }))
+
+        // Test that the property can be reset to nil
+        manager.lineTrimOffset = nil
+        XCTAssertNil(manager.lineTrimOffset)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.syncSourceAndLayerIfNeeded()
+        layer = try style.layer(withId: self.manager.layerId, type: LineLayer.self)
+        XCTAssertEqual(layer.lineTrimOffset, .constant(Style.layerPropertyDefaultValue(for: .line, property: "line-trim-offset").value as! [Double]))
+    }
+
     func testLineJoin() throws {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
         var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))

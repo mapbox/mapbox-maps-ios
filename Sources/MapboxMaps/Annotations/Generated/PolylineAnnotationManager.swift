@@ -226,6 +226,16 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         }
     }
 
+    /// The line trim-off percentage range based on the whole line gradinet range [0.0, 1.0]. The line part between [trim-start, trim-end] will be marked as transparent to make a route vanishing effect. If either 'trim-start' or 'trim-end' offset is out of valid range, the default range will be set.
+    public var lineTrimOffset: [Double]? {
+        get {
+            return layerProperties["line-trim-offset"] as? [Double]
+        }
+        set {
+            layerProperties["line-trim-offset"] = newValue
+        }
+    }
+
     internal func handleQueriedFeatureIds(_ queriedFeatureIds: [String]) {
         // Find if any `queriedFeatureIds` match an annotation's `id`
         let tappedAnnotations = annotations.filter { queriedFeatureIds.contains($0.id) }

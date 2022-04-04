@@ -757,13 +757,6 @@ public final class Style: StyleProtocol {
         try setLight(properties: lightDictionary)
     }
 
-    /// Removes light from style if it was set.
-    public func removeLight() throws {
-        try handleExpected {
-            styleManager.setStyleLightForProperties([:])
-        }
-    }
-
     /// Sets the style global light source properties.
     ///
     /// - See Also: https://docs.mapbox.com/mapbox-gl-js/style-spec/#light

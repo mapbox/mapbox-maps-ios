@@ -19,8 +19,6 @@
 
     private let dataSource: FollowPuckViewportStateDataSourceProtocol
 
-    private let cameraAnimationsManager: CameraAnimationsManagerProtocol
-
     private let mapboxMap: MapboxMapProtocol
 
     // MARK: - Private State
@@ -30,10 +28,8 @@
     // MARK: - Initialization
 
     internal init(dataSource: FollowPuckViewportStateDataSourceProtocol,
-                  cameraAnimationsManager: CameraAnimationsManagerProtocol,
                   mapboxMap: MapboxMapProtocol) {
         self.dataSource = dataSource
-        self.cameraAnimationsManager = cameraAnimationsManager
         self.mapboxMap = mapboxMap
     }
 }
@@ -51,27 +47,11 @@ extension FollowPuckViewportState: ViewportState {
         guard updatingCameraCancelable == nil else {
             return
         }
-        var animationStarted = false
-        var animationComplete = false
 
-        let compositeCancelable = CompositeCancelable()
-
-        updatingCameraCancelable = compositeCancelable
-
-        compositeCancelable.add(dataSource.observe { [mapboxMap, cameraAnimationsManager, options] cameraOptions in
-            if animationComplete {
-                mapboxMap.setCamera(to: cameraOptions)
-            } else if !animationStarted {
-                animationStarted = true
-                compositeCancelable.add(cameraAnimationsManager.ease(
-                    to: cameraOptions,
-                    duration: options.animationDuration,
-                    curve: .linear) { _ in
-                        animationComplete = true
-                    })
-            }
+        updatingCameraCancelable = dataSource.observe { [mapboxMap] cameraOptions in
+            mapboxMap.setCamera(to: cameraOptions)
             return true
-        })
+        }
     }
 
     /// :nodoc:

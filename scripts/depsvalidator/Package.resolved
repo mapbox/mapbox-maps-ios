@@ -2,102 +2,12 @@
   "object": {
     "pins": [
       {
-        "package": "Carthage",
-        "repositoryURL": "https://github.com/Carthage/Carthage",
-        "state": {
-          "branch": null,
-          "revision": "9a3d1799ba8f8b9e2d4514cfa53a2cca6064136e",
-          "version": "0.38.0"
-        }
-      },
-      {
-        "package": "Commandant",
-        "repositoryURL": "https://github.com/Carthage/Commandant.git",
-        "state": {
-          "branch": null,
-          "revision": "a1671cf728db837cf5ec1980a80d276bbba748f6",
-          "version": "0.18.0"
-        }
-      },
-      {
-        "package": "Curry",
-        "repositoryURL": "https://github.com/thoughtbot/Curry.git",
-        "state": {
-          "branch": null,
-          "revision": "4331dd50bc1db007db664a23f32e6f3df93d4e1a",
-          "version": "4.0.2"
-        }
-      },
-      {
-        "package": "Nimble",
-        "repositoryURL": "https://github.com/Quick/Nimble.git",
-        "state": {
-          "branch": null,
-          "revision": "7a46a5fc86cb917f69e3daf79fcb045283d8f008",
-          "version": "8.1.2"
-        }
-      },
-      {
-        "package": "PrettyColors",
-        "repositoryURL": "https://github.com/jdhealy/PrettyColors.git",
-        "state": {
-          "branch": null,
-          "revision": "afd4553a4db6f656521cfe9b1f70bece2748c7d8",
-          "version": "5.0.2"
-        }
-      },
-      {
-        "package": "Quick",
-        "repositoryURL": "https://github.com/Quick/Quick.git",
-        "state": {
-          "branch": null,
-          "revision": "09b3becb37cb2163919a3842a4c5fa6ec7130792",
-          "version": "2.2.1"
-        }
-      },
-      {
-        "package": "ReactiveSwift",
-        "repositoryURL": "https://github.com/ReactiveCocoa/ReactiveSwift.git",
-        "state": {
-          "branch": null,
-          "revision": "c37950dc5020544c58d4bf47c0d028893686b9e6",
-          "version": "5.0.1"
-        }
-      },
-      {
-        "package": "ReactiveTask",
-        "repositoryURL": "https://github.com/Carthage/ReactiveTask.git",
-        "state": {
-          "branch": null,
-          "revision": "df1bf7625684180b9377a8ba3c076db08d98757e",
-          "version": "0.16.0"
-        }
-      },
-      {
-        "package": "Result",
-        "repositoryURL": "https://github.com/antitypical/Result.git",
-        "state": {
-          "branch": null,
-          "revision": "2ca499ba456795616fbc471561ff1d963e6ae160",
-          "version": "4.1.0"
-        }
-      },
-      {
         "package": "swift-argument-parser",
         "repositoryURL": "https://github.com/apple/swift-argument-parser",
         "state": {
           "branch": null,
           "revision": "986d191f94cec88f6350056da59c2e59e83d1229",
           "version": "0.4.3"
-        }
-      },
-      {
-        "package": "Tentacle",
-        "repositoryURL": "https://github.com/mdiep/Tentacle.git",
-        "state": {
-          "branch": null,
-          "revision": "578edd088b03bc749c49253b15ae2d5aaa9aa7df",
-          "version": "0.13.1"
         }
       },
       {

@@ -23,17 +23,9 @@
     /// not be modified.
     public var pitch: CGFloat?
 
-    /// The duration of an animation that happens once when
-    /// ``FollowPuckViewportState/startUpdatingCamera()`` is invoked.
-    ///
-    /// - Note: This option and the animation that it influences may be removed in a future update after
-    ///         a solution to the "moving target problem" is implemented in
-    ///         ``DefaultViewportTransition``. At the moment,
-    ///         ``DefaultViewportTransition`` calculates its animations based on the puck
-    ///         location at the *beginning* of the transition, so the farther the puck moves while the
-    ///         transition is in progress, the larger the jump when it completes and control is transferred
-    ///         to the target state. Tune this value for your use case to reduce the visibility of that jump.
-    public var animationDuration: TimeInterval
+    /// :nodoc:
+    @available(*, deprecated, message: "This option is no longer used and will be removed in a future release.")
+    public var animationDuration: TimeInterval = 1
 
     /// Memberwise initializer for `FollowPuckViewportStateOptions`.
     ///
@@ -44,7 +36,21 @@
     ///   - zoom: Defaults to 16.35.
     ///   - bearing: Defaults to ``FollowPuckViewportStateBearing/heading``.
     ///   - pitch: Defaults to 45.
-    ///   - animationDuration: Defaults to 1.
+    public init(padding: UIEdgeInsets? = .zero,
+                zoom: CGFloat? = 16.35,
+                bearing: FollowPuckViewportStateBearing? = .heading,
+                pitch: CGFloat? = 45) {
+        self.padding = padding
+        self.zoom = zoom
+        self.bearing = bearing
+        self.pitch = pitch
+    }
+
+    /// :nodoc:
+    @available(*,
+                deprecated,
+                message: "animationDuration parameter is ignored. This initializer will be removed in a future release.",
+                renamed: "init(padding:zoom:bearing:pitch:)")
     public init(padding: UIEdgeInsets? = .zero,
                 zoom: CGFloat? = 16.35,
                 bearing: FollowPuckViewportStateBearing? = .heading,
@@ -54,7 +60,6 @@
         self.zoom = zoom
         self.bearing = bearing
         self.pitch = pitch
-        self.animationDuration = animationDuration
     }
 
     /// Combines all fields into `hasher`
@@ -66,6 +71,5 @@
         hasher.combine(zoom)
         hasher.combine(bearing)
         hasher.combine(pitch)
-        hasher.combine(animationDuration)
     }
 }

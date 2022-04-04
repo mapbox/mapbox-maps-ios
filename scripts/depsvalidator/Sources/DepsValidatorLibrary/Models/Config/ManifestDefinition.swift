@@ -1,5 +1,4 @@
 import Foundation
-import CarthageKit
 
 protocol ManifestDefinition {
     var defaultPath: String { get }
@@ -27,22 +26,6 @@ struct PodspecManifestDefinition: ManifestDefinition {
 
     func semanticValueProvider(with url: URL) throws -> SemanticValueProviding {
         try Podspec.from(file: url)
-    }
-}
-
-struct CartfileManifestDefinition: ManifestDefinition {
-    let defaultPath = "Cartfile"
-
-    func semanticValueProvider(with url: URL) throws -> SemanticValueProviding {
-        try Cartfile.from(file: url)
-    }
-}
-
-struct ResolvedCartfileManifestDefinition: ManifestDefinition {
-    let defaultPath = "Cartfile.resolved"
-
-    func semanticValueProvider(with url: URL) throws -> SemanticValueProviding {
-        try ResolvedCartfile.from(file: url)
     }
 }
 

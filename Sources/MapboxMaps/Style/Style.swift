@@ -999,8 +999,9 @@ extension Style {
     @_spi(Experimental) public func mapProjection() throws -> MapProjection {
         let namePropertyName = MapProjection.CodingKeys.name.rawValue
         let projectionName = styleManager.getStyleProjectionProperty(forProperty: namePropertyName).value as? String
+        let projections = [MapProjection.globe(), MapProjection.mercator()]
 
-        guard let projection = MapProjection.allCases.first(where: { projectionName == $0.name }) else {
+        guard let projection = projections.first(where: { projectionName == $0.name }) else {
             throw MapProjectionError.unsupportedProjection
         }
 

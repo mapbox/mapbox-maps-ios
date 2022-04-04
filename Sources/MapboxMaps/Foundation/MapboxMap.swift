@@ -1016,7 +1016,7 @@ extension MapboxMap {
 
 extension MapboxMap {
     /// Errors related to MapProjection API
-    @available(iOS, obsoleted: 11.0)
+    @available(*, deprecated)
     @_spi(Experimental) public enum MapProjectionError: Error {
         case unsupportedProjection
     }
@@ -1024,7 +1024,7 @@ extension MapboxMap {
     /// Set map projection for Mapbox map.
     /// - Parameter mode: The `MapProjection` to be used by the map.
     /// - Throws: Errors during encoding or `MapProjectionError.unsupportedProjection` if the supplied projection is not compatible with the SDK.
-    @available(*, deprecated, message: "Use `Style.setMapProjection(_:)` instead")
+    @available(*, deprecated, renamed: "style.setMapProjection(_:)")
     @_spi(Experimental) public func setMapProjection(_ mapProjection: MapProjection) throws {
         try style.setMapProjection(mapProjection)
     }
@@ -1038,7 +1038,7 @@ extension MapboxMap {
     /// - Returns:
     ///     `MapProjection` map is using.
     /// - Throws: Errors during decoding
-    @available(*, deprecated, message: "Use `Style.mapProjection()` instead")
+    @available(*, deprecated, renamed: "style.mapProjection()")
     @_spi(Experimental) public func mapProjection() throws -> MapProjection {
         return try style.mapProjection()
     }

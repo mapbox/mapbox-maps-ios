@@ -4,7 +4,43 @@ import MapboxMaps
 @objc(BuildingExtrusionsExample)
 public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
 
+    private lazy var lightPositionButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = .systemBlue
+        button.tintColor = .white
+        button.layer.cornerRadius = 4
+        button.clipsToBounds = true
+        button.contentEdgeInsets = UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4)
+        if #available(iOS 13.0, *) {
+            button.setImage(UIImage(systemName: "flashlight.on.fill"), for: .normal)
+        } else {
+            button.setTitle("Position", for: .normal)
+        }
+        button.addTarget(self, action: #selector(lightPositionButtonTapped(_:)), for: .touchUpInside)
+        return button
+    }()
+
+    private lazy var lightColorButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = .systemBlue
+        button.tintColor = .white
+        button.layer.cornerRadius = 4
+        button.clipsToBounds = true
+        button.contentEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        if #available(iOS 13.0, *) {
+            button.setImage(UIImage(systemName: "paintbrush.fill"), for: .normal)
+        } else {
+            button.setTitle("Color", for: .normal)
+        }
+        button.addTarget(self, action: #selector(lightColorButtonTapped(_:)), for: .touchUpInside)
+        return button
+    }()
+
     internal var mapView: MapView!
+
+    private var light = Light()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -17,6 +53,18 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
         mapView.mapboxMap.onNext(.styleLoaded) { _ in
             self.setupExample()
         }
+
+        view.addSubview(lightPositionButton)
+        view.addSubview(lightColorButton)
+
+        NSLayoutConstraint.activate([
+            view.trailingAnchor.constraint(equalToSystemSpacingAfter: lightPositionButton.trailingAnchor, multiplier: 1),
+            view.bottomAnchor.constraint(equalTo: lightPositionButton.bottomAnchor, constant: 100),
+            view.trailingAnchor.constraint(equalToSystemSpacingAfter: lightColorButton.trailingAnchor, multiplier: 1),
+            lightPositionButton.topAnchor.constraint(equalToSystemSpacingBelow: lightColorButton.bottomAnchor, multiplier: 1),
+            lightColorButton.widthAnchor.constraint(equalTo: lightPositionButton.widthAnchor),
+            lightColorButton.heightAnchor.constraint(equalTo: lightPositionButton.heightAnchor)
+        ])
     }
 
     internal func setupExample() {
@@ -76,5 +124,34 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
         )
 
         try! mapView.mapboxMap.style.addLayer(layer)
+    }
+
+    // MARK: - Actions
+
+    @objc private func lightColorButtonTapped(_ sender: UIButton) {
+        if light.color == StyleColor(.red) {
+            light.color = StyleColor(.blue)
+            sender.tintColor = .blue
+        } else {
+            light.color = StyleColor(.red)
+            sender.tintColor = .red
+        }
+
+        try? mapView.mapboxMap.style.setLight(light)
+    }
+
+    @objc private func lightPositionButtonTapped(_ sender: UIButton) {
+        let firstPosition = [1.5, 90, 80]
+        let secondPosition = [1.15, 210, 30]
+
+        if light.position == firstPosition {
+            light.position = secondPosition
+            sender.imageView?.transform = .identity
+        } else {
+            light.position = firstPosition
+            sender.imageView?.transform = CGAffineTransform(rotationAngle: 2.0 * .pi / 3.0)
+        }
+
+        try? mapView.mapboxMap.style.setLight(light)
     }
 }

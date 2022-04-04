@@ -36,7 +36,8 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
 
     @objc
     func increaseTrimOffset() {
-        let trimOffset = (lastTrimOffset + 0.05).wrap(min: 0.0, max: 1.0)
+        lastTrimOffset += 0.05
+        let trimOffset = Double.minimum(lastTrimOffset, 1.0)
         try? mapView.mapboxMap.style.setLayerProperty(for: "line-layer", property: "line-trim-offset", value: [0.0, trimOffset])
     }
 

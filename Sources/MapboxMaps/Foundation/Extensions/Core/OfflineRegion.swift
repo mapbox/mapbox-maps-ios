@@ -32,4 +32,10 @@ extension OfflineRegion {
             }
         }, concreteErrorType: MapError.self))
     }
+
+    public func getStatus(completion: @escaping (Result<OfflineRegionStatus, Error>) -> Void) {
+        getStatusForCallback(
+            coreAPIClosureAdapter(for: completion, type: OfflineRegionStatus.self, concreteErrorType: MapError.self)
+        )
+    }
 }

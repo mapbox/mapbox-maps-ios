@@ -44,7 +44,7 @@ public class GlobeViewExample: UIViewController, ExampleProtocol {
 
         mapView = MapView(frame: view.bounds)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        try! mapView.mapboxMap.setMapProjection(currentProjection)
+        try! mapView.mapboxMap.style.setMapProjection(currentProjection)
         mapView.mapboxMap.setCamera(to: .init(zoom: 1.0))
 
         mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
@@ -132,14 +132,14 @@ public class GlobeViewExample: UIViewController, ExampleProtocol {
 
     @objc private func projectionSwitched(sender: UIButton) {
         currentProjection = currentProjection == .globe() ? .mercator() : .globe()
-        try! mapView.mapboxMap.setMapProjection(currentProjection)
+        try! mapView.mapboxMap.style.setMapProjection(currentProjection)
         updateInfoText()
     }
 
     private func updateInfoText() {
         // The actual projection value of the map might be different from the selected one
         // due to the automatic transition that happens under the hood
-        let actualProjection = try? mapView.mapboxMap.mapProjection()
+        let actualProjection = try? mapView.mapboxMap.style.mapProjection()
         let actualProjectionValue = actualProjection?.name ?? ""
         let selectedProjectionValue = currentProjection.name
         let zoom = mapView.mapboxMap.cameraState.zoom

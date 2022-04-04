@@ -402,6 +402,16 @@ public final class MapboxMap: MapboxMapProtocol {
             forCamera: MapboxCoreMaps.CameraOptions(camera))
     }
 
+    /// Returns the unwrapped coordinate bounds to a given `CameraOptions`.
+    ///
+    /// This function is particularly useful, if the camera shows the antimeridian.
+    ///
+    /// - Parameter camera: The camera for which the coordinate bounds will be returned.
+    /// - Returns: `CoordinateBounds` for the given `CameraOptions`
+    public func coordinateBoundsUnwrapped(for camera: CameraOptions) -> CoordinateBounds {
+        return __map.coordinateBoundsForCameraUnwrapped(forCamera: MapboxCoreMaps.CameraOptions(camera))
+    }
+
     /// Returns the coordinate bounds and zoom for a given `CameraOptions`.
     ///
     /// - Parameter camera: The camera for which the `CoordinateBoundsZoom` will be returned.

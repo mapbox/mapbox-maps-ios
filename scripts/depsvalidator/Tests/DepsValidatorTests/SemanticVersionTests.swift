@@ -1,5 +1,4 @@
 import XCTest
-import CarthageKit
 @testable import struct DepsValidatorLibrary.SemanticVersion
 
 final class SemanticVersionTests: XCTestCase {

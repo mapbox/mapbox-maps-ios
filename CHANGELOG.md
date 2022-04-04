@@ -23,6 +23,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Increase deceleration cutoff threshold from 20 to 35 to prevent camera changes
  after animation stops. ([#1244](https://github.com/mapbox/mapbox-maps-ios/pull/1244))
 * Update to MapboxCoreMaps 10.5.0-beta.1 and MapboxCommon 21.3.0-beta.2. ([]())
+* Update to MapboxCoreMaps 10.5.0-beta.1 and MapboxCommon 21.3.0-beta.2. ([#1235](https://github.com/mapbox/mapbox-maps-ios/pull/1235))
 
 ## 10.4.1 - March 28, 2022
 

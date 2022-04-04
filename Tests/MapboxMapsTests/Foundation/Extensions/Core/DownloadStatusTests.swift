@@ -59,7 +59,7 @@ final class DownloadStatusTests: XCTestCase {
         XCTAssertEqual(status.transferredBytes, 4, "The value for transferredBytes should be 4, got \(status.transferredBytes)")
         XCTAssertEqual(status.downloadOptions, downloadOptions, "The value for downloadOptions should be \(downloadOptions.debugDescription), got \(status.downloadOptions)")
 
-        if let result = status.__httpResult, result.isError(), let error = result.error as? HttpRequestError {
+        if let result = status.__httpResult, result.isError(), let error = result.error {
             XCTAssertEqual(error, httpRequestError, "__httpResult should be \(httpRequestError.debugDescription), got \(error)")
         } else {
             XCTFail("__httpResult should be an error, got \(String(describing: status.__httpResult))")
@@ -94,7 +94,7 @@ final class DownloadStatusTests: XCTestCase {
         XCTAssertNil(status.error, "The error should be nil, got \(status.error.debugDescription)")
         XCTAssertEqual(status.__totalBytes, 1234, "The value for __totalBytes should be 1234, got \(status.__totalBytes.debugDescription)")
         XCTAssertEqual(status.downloadOptions, downloadOptions, "The value for downloadOptions should be \(downloadOptions.debugDescription), got \(status.downloadOptions.debugDescription)")
-        if let result = status.__httpResult, result.isValue(), let value = result.value as? HttpResponseData {
+        if let result = status.__httpResult, result.isValue(), let value = result.value {
             XCTAssertEqual(value, httpResponseData)
         } else {
             XCTFail("This should be a value. Instead got \(status.__httpResult.debugDescription).")
@@ -110,7 +110,7 @@ final class DownloadStatusTests: XCTestCase {
         XCTAssertEqual(status.error, downloadError, "The error should be \(downloadError.localizedDescription), got \(status.error.debugDescription)")
         XCTAssertEqual(status.__totalBytes, 1234, "The value for __totalBytes should be 1234, got \(status.__totalBytes.debugDescription)")
         XCTAssertEqual(status.downloadOptions, downloadOptions, "The value for downloadOptions should be \(downloadOptions.debugDescription), got \(status.downloadOptions.debugDescription)")
-        if let result = status.__httpResult, result.isError(), let error = result.error as? HttpRequestError {
+        if let result = status.__httpResult, result.isError(), let error = result.error {
             XCTAssertEqual(error, httpRequestError, "__httpResult should be \(httpRequestError.debugDescription), got \(error)")
         } else {
             XCTFail("__httpResult should be an error, got \(String(describing: status.__httpResult))")

@@ -17,6 +17,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Deprecate `FollowPuckViewportStateOptions.animationDuration`, a workaround for the moving target problem. ([#1228](https://github.com/mapbox/mapbox-maps-ios/pull/1228))
 * Add map view example with `debugOptions`. ([#1225](https://github.com/mapbox/mapbox-maps-ios/pull/1225))
 * Introduce `line-trim-offset` property for LineLayer. ([#1231](https://github.com/mapbox/mapbox-maps-ios/pull/1231))
+* Add `MapboxMap.coordinateBoundsUnwrapped`. ([#1241](https://github.com/mapbox/mapbox-maps-ios/pull/1241))
 
 ## 10.4.1 - March 28, 2022
 

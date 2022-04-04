@@ -127,7 +127,7 @@ internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimator
         velocity.x *= pow(decelerationFactor, (elapsedTime * 1000))
         velocity.y *= pow(decelerationFactor, (elapsedTime * 1000))
 
-        if abs(velocity.x) < 20, abs(velocity.y) < 20 {
+        if abs(velocity.x) < 35, abs(velocity.y) < 35 {
             internalState = .final
             invokeCompletionBlocks(with: .end)
         }

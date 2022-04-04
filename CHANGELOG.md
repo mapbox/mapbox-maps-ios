@@ -15,6 +15,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Update annotation examples. ([#1215](https://github.com/mapbox/mapbox-maps-ios/pull/1215))
 * Remove `FollowPuckViewportStateOptions.animationDuration`, a workaround for the moving target problem. ([#1228](https://github.com/mapbox/mapbox-maps-ios/pull/1228))
 * Deprecate `FollowPuckViewportStateOptions.animationDuration`, a workaround for the moving target problem. ([#1228](https://github.com/mapbox/mapbox-maps-ios/pull/1228))
+* Add map view example with `debugOptions`. ([#1225](https://github.com/mapbox/mapbox-maps-ios/pull/1225))
 
 ## 10.4.1 - March 28, 2022
 

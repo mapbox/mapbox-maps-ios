@@ -8,7 +8,6 @@ It can validate dependencies specified according to Semantic Versioning with:
 
 - Swift Package Manager
 - CocoaPods
-- Carthage
 - User-defined manifest types
 
 ## Usage
@@ -26,14 +25,14 @@ The config file has the following structure:
 ```yaml
 ---
 manifests:
-  - type: [Package.swift, Package.resolved, Podspec, Cartfile, Cartfile.resolved, or the name of a custom manifest definition]
+  - type: [Package.swift, Package.resolved, Podspec, or the name of a custom manifest definition]
     path: {path to manifest}
     omit_for:
       - {dependency name}
 dependencies:
   - name: {dependency name}
     variations:
-      [Package.swift, Package.resolved, Podspec, Cartfile, Cartfile.resolved, or the name of a custom manifest definition]: {name variation}
+      [Package.swift, Package.resolved, Podspec, or the name of a custom manifest definition]: {name variation}
 manifest_definitions:
   - name: {custom manifest definition name}
     type: [SemanticVersion, SemanticVersionRequirement]

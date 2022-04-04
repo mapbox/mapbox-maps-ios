@@ -1,4 +1,3 @@
-import CarthageKit
 import Foundation
 import Yams
 
@@ -34,8 +33,6 @@ struct Config: Decodable {
             .package: PackageManifestDefinition(),
             .resolvedPackage: ResolvedPackageManifestDefinition(),
             .podspec: PodspecManifestDefinition(),
-            .cartfile: CartfileManifestDefinition(),
-            .resolvedCartfile: ResolvedCartfileManifestDefinition(),
         ]
         manifestDefinitions.merge(defaultManifestDefinitions) { (custom, _) in custom }
     }

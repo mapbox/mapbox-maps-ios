@@ -8,9 +8,10 @@ final class StyleTests: XCTestCase {
 
     override func setUpWithError() throws {
         mapClient = MockMapClient()
-        map = Map(client: mapClient,
-                  mapOptions: MapOptions(),
-                  resourceOptions: MapboxCoreMaps.ResourceOptions(ResourceOptions(accessToken: "")))
+        map = Map(
+            client: mapClient,
+            mapOptions: MapOptions(),
+            resourceOptions: MapboxCoreMaps.ResourceOptions(ResourceOptions(accessToken: "")))
         style = Style(with: map)
     }
 
@@ -20,19 +21,27 @@ final class StyleTests: XCTestCase {
         map = nil
     }
 
-    func testSetMapProjection() {
-        XCTAssertNil(style.styleManager.getStyleProjectionProperty(forProperty: "name").value as? String)
-        try? style.setMapProjection(.globe())
+    func testSetProjection() throws {
+        XCTAssertEqual(style.styleManager.getStyleProjectionProperty(forProperty: "name").kind, .undefined)
+        try style.setProjection(StyleProjection(name: .globe))
         XCTAssertEqual(style.styleManager.getStyleProjectionProperty(forProperty: "name").value as? String, "globe")
     }
 
-    func testGetMapProjection() {
+    func testSetProjectionError() throws {
+        XCTAssertThrowsError(try style.setProjection(StyleProjection(name: StyleProjectionName(rawValue: "not a supported name")))) { error in
+            XCTAssertTrue(error is StyleError)
+        }
+    }
+
+    func testProjection() {
+        // defaults to mercator if it's undefined
+        XCTAssertEqual(style.styleManager.getStyleProjectionProperty(forProperty: "name").kind, .undefined)
+        XCTAssertEqual(style.projection, .mercator)
+
         style.styleManager.setStyleProjectionForProperties(["name": "mercator"])
-        var projection = try? style.mapProjection()
-        XCTAssertEqual(projection, .mercator())
+        XCTAssertEqual(style.projection.name, .mercator)
 
         style.styleManager.setStyleProjectionForProperties(["name": "globe"])
-        projection = try? style.mapProjection()
-        XCTAssertEqual(projection, .globe())
+        XCTAssertEqual(style.projection.name, .globe)
     }
 }

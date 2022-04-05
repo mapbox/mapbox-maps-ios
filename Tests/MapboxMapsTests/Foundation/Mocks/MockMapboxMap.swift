@@ -1,4 +1,4 @@
-@testable @_spi(Experimental) import MapboxMaps
+@testable import MapboxMaps
 @_implementationOnly import MapboxCoreMaps_Private
 import CoreLocation
 

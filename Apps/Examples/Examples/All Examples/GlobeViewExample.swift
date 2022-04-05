@@ -13,7 +13,7 @@ public class GlobeViewExample: UIViewController, ExampleProtocol {
     }
 
     internal var mapView: MapView!
-    internal var currentProjection: MapProjection = .globe()
+    internal var currentProjection = StyleProjection(name: .globe)
 
     private lazy var infoLabel: UILabel = {
         let label = UILabel(frame: .zero)
@@ -44,7 +44,7 @@ public class GlobeViewExample: UIViewController, ExampleProtocol {
 
         mapView = MapView(frame: view.bounds)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        try! mapView.mapboxMap.style.setMapProjection(currentProjection)
+        try! mapView.mapboxMap.style.setProjection(currentProjection)
         mapView.mapboxMap.setCamera(to: .init(zoom: 1.0))
 
         mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
@@ -112,44 +112,33 @@ public class GlobeViewExample: UIViewController, ExampleProtocol {
     // MARK: - Action handlers
 
     @objc private func flyPressed(sender: UIButton) {
-        let phaseOne = mapView.camera.makeAnimator(duration: Constants.flyDurationSeconds / 2.0, curve: .easeInOut) { (transition) in
-            transition.zoom.toValue = GlobeMapProjection.transitionZoomLevel
-            transition.bearing.toValue = Constants.targetBearing
-            transition.pitch.toValue = Constants.targetPitch / 2.0
+        mapView.camera.fly(
+            to: CameraOptions(
+                zoom: 5,
+                bearing: Constants.targetBearing,
+                pitch: Constants.targetPitch / 2),
+            duration: Constants.flyDurationSeconds / 2) { _ in
+                self.mapView.camera.fly(
+                    to: CameraOptions(
+                        center: Constants.targetPoint,
+                        zoom: Constants.targetZoom,
+                        pitch: Constants.targetPitch),
+                    duration: Constants.flyDurationSeconds / 2)
         }
-        let phaseTwo = mapView.camera.makeAnimator(duration: Constants.flyDurationSeconds / 2.0, curve: .easeInOut) { (transition) in
-            transition.center.toValue = Constants.targetPoint
-            transition.zoom.toValue = Constants.targetZoom
-            transition.pitch.toValue = Constants.targetPitch
-        }
-
-        phaseOne.addCompletion { _ in
-            phaseTwo.startAnimation()
-        }
-
-        phaseOne.startAnimation()
     }
 
     @objc private func projectionSwitched(sender: UIButton) {
-        currentProjection = currentProjection == .globe() ? .mercator() : .globe()
-        try! mapView.mapboxMap.style.setMapProjection(currentProjection)
+        currentProjection.name = currentProjection.name == .globe ? .mercator : .globe
+        try! mapView.mapboxMap.style.setProjection(currentProjection)
         updateInfoText()
     }
 
     private func updateInfoText() {
-        // The actual projection value of the map might be different from the selected one
-        // due to the automatic transition that happens under the hood
-        let actualProjection = try? mapView.mapboxMap.style.mapProjection()
-        let actualProjectionValue = actualProjection?.name ?? ""
-        let selectedProjectionValue = currentProjection.name
+        let projectionName = mapView.mapboxMap.style.projection.name.rawValue
         let zoom = mapView.mapboxMap.cameraState.zoom
         infoLabel.text = """
-        Current zoom:
-        \(zoom)
-        Current actual projection:
-        \(actualProjectionValue)
-        Current selected projection:
-        \(selectedProjectionValue)
+        Zoom: \(zoom)
+        Projection: \(projectionName)
         """
     }
 }

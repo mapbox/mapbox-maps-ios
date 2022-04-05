@@ -977,35 +977,31 @@ extension Style {
     }
 }
 
-// MARK: - MapProjection
+// MARK: - StyleProjection
 
 extension Style {
-    /// Set map projection for Style.
-    /// - Parameter mode: The `MapProjection` to be used by the style.
-    /// - Throws: Errors during encoding or `MapProjectionError.unsupportedProjection` if the supplied projection is not compatible with the SDK.
-    @_spi(Experimental) public func setMapProjection(_ mapProjection: MapProjection) throws {
-        try styleManager.setStyleProjectionForProperties(mapProjection.toJSON())
+    /// Sets the projection.
+    ///
+    /// - Parameter projection: The ``StyleProjection`` to apply to the style.
+    /// - Throws: ``StyleError`` if the projection could not be applied.
+    public func setProjection(_ projection: StyleProjection) throws {
+        let expected = styleManager.setStyleProjectionPropertyForProperty(
+            StyleProjection.CodingKeys.name.rawValue,
+            value: projection.name.rawValue)
+        if expected.isError() {
+            throw StyleError(message: expected.error as String)
+        }
     }
 
-    /// Get current map projection for Style.
-    ///
-    /// Please note that even if Style is configured to use `MapProjection.globe`
-    /// starting from `GlobeMapProjection.transitionZoomLevel` and above
-    /// this method will return `MapProjection.mercator`.
-    ///
-    /// - Returns:
-    ///     `MapProjection` map is using.
-    /// - Throws: `MapProjectionError.unsupportedProjection` if the projection is not compatible with the SDK.
-    @_spi(Experimental) public func mapProjection() throws -> MapProjection {
-        let namePropertyName = MapProjection.CodingKeys.name.rawValue
-        let projectionName = styleManager.getStyleProjectionProperty(forProperty: namePropertyName).value as? String
-        let projections = [MapProjection.globe(), MapProjection.mercator()]
-
-        guard let projection = projections.first(where: { projectionName == $0.name }) else {
-            throw MapProjectionError.unsupportedProjection
+    /// The current projection.
+    public var projection: StyleProjection {
+        let projectionName = styleManager.getStyleProjectionProperty(
+            forProperty: StyleProjection.CodingKeys.name.rawValue)
+        if projectionName.kind == .undefined {
+            return StyleProjection(name: .mercator)
+        } else {
+            return StyleProjection(name: StyleProjectionName(rawValue: projectionName.value as! String))
         }
-
-        return projection
     }
 }
 

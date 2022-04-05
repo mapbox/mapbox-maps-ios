@@ -574,7 +574,7 @@ public final class MapboxMap: MapboxMapProtocol {
     }
 
     internal func pointIsAboveHorizon(_ point: CGPoint) -> Bool {
-        guard case .mercator = try? style.mapProjection() else {
+        guard style.projection.name == .mercator else {
             return false
         }
         let topMargin = 0.04 * size.height
@@ -1010,38 +1010,6 @@ extension MapboxMap {
         return ViewAnnotationOptions(options)
     }
 
-}
-
-// MARK: - MapProjection
-
-extension MapboxMap {
-    /// Errors related to MapProjection API
-    @available(*, deprecated)
-    @_spi(Experimental) public enum MapProjectionError: Error {
-        case unsupportedProjection
-    }
-
-    /// Set map projection for Mapbox map.
-    /// - Parameter mode: The `MapProjection` to be used by the map.
-    /// - Throws: Errors during encoding or `MapProjectionError.unsupportedProjection` if the supplied projection is not compatible with the SDK.
-    @available(*, deprecated, renamed: "style.setMapProjection(_:)")
-    @_spi(Experimental) public func setMapProjection(_ mapProjection: MapProjection) throws {
-        try style.setMapProjection(mapProjection)
-    }
-
-    /// Get current map projection for Mapbox map.
-    ///
-    /// Please note that even if MapboxMap is configured to use `MapProjection.globe`
-    /// starting from `GlobeMapProjection.transitionZoomLevel` and above
-    /// this method will return `MapProjection.mercator`.
-    ///
-    /// - Returns:
-    ///     `MapProjection` map is using.
-    /// - Throws: Errors during decoding
-    @available(*, deprecated, renamed: "style.mapProjection()")
-    @_spi(Experimental) public func mapProjection() throws -> MapProjection {
-        return try style.mapProjection()
-    }
 }
 
 // MARK: - Testing only!

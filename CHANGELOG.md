@@ -27,6 +27,7 @@ Mapbox welcomes participation and contributions from everyone.
 * API for using globe projection has been moved to `Style.setProjection(_:)` and `Style.projection` and is no longer experimental. ([#1235](https://github.com/mapbox/mapbox-maps-ios/pull/1235)) 
 * Add `OfflineRegion.getStatus(completion:)`. ([#1239](https://github.com/mapbox/mapbox-maps-ios/pull/1239))
  * Add a prefix `maps-ios` to all Log message's category. ([#1250](https://github.com/mapbox/mapbox-maps-ios/pull/1250)))
+* Add server-side localization example. ([#1246](https://github.com/mapbox/mapbox-maps-ios/pull/1246))
 
 ## 10.4.1 - March 28, 2022
 

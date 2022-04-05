@@ -34,25 +34,38 @@ final class DefaultViewportTransitionTests: XCTestCase {
         XCTAssertEqual(toState.observeDataSourceStub.invocations.count, 1)
         let observeInvocation = try XCTUnwrap(toState.observeDataSourceStub.invocations.first)
         let observeHandler = observeInvocation.parameters
+        let observeCancelable = try XCTUnwrap(observeInvocation.returnValue as? MockCancelable)
 
         let cameraOptions = CameraOptions.random()
         let result = observeHandler(cameraOptions)
 
-        // the handler returns false because it only wants one update
-        XCTAssertFalse(result)
+        // the handler returns true because it wants continual updates
+        XCTAssertTrue(result)
 
-        // verify that animate was invoked as expected
-        XCTAssertEqual(animationHelper.animateStub.invocations.count, 1)
-        let animateInvocation = try XCTUnwrap(animationHelper.animateStub.invocations.first)
-        XCTAssertEqual(animateInvocation.parameters.cameraOptions, cameraOptions)
-        XCTAssertEqual(animateInvocation.parameters.maxDuration, options.maxDuration)
+        // verify that makeAnimation was invoked as expected
+        XCTAssertEqual(animationHelper.makeAnimationStub.invocations.count, 1)
+        let makeAnimationInvocation = try XCTUnwrap(animationHelper.makeAnimationStub.invocations.first)
+        XCTAssertEqual(makeAnimationInvocation.parameters.cameraOptions, cameraOptions)
+        XCTAssertEqual(makeAnimationInvocation.parameters.maxDuration, options.maxDuration)
+        let animation = try XCTUnwrap(makeAnimationInvocation.returnValue as? MockDefaultViewportTransitionAnimation)
 
-        let animateCompletion = animateInvocation.parameters.completion
+        // verify that the returned animation was started
+        XCTAssertEqual(animation.startStub.invocations.count, 1)
+        let animateCompletion = try XCTUnwrap(animation.startStub.invocations.first?.parameters)
+
+        // invoke the observe handler again to verify that updateTargetCamera is called
+        let cameraOptions2 = CameraOptions.random()
+        XCTAssertTrue(observeHandler(cameraOptions2))
+
+        XCTAssertEqual(animation.updateTargetCameraStub.invocations.count, 1)
+        XCTAssertEqual(animation.updateTargetCameraStub.invocations.first?.parameters, cameraOptions2)
 
         // exercise the animation completion
         animateCompletion(true) // true means the animation wasn't canceled
 
         XCTAssertEqual(completionStub.invocations.map(\.parameters), [true])
+        XCTAssertEqual(animation.cancelStub.invocations.count, 1)
+        XCTAssertEqual(observeCancelable.cancelStub.invocations.count, 1)
     }
 
     func testRunAnimationCanceled() throws {
@@ -66,25 +79,31 @@ final class DefaultViewportTransitionTests: XCTestCase {
         XCTAssertEqual(toState.observeDataSourceStub.invocations.count, 1)
         let observeInvocation = try XCTUnwrap(toState.observeDataSourceStub.invocations.first)
         let observeHandler = observeInvocation.parameters
+        let observeCancelable = try XCTUnwrap(observeInvocation.returnValue as? MockCancelable)
 
         let cameraOptions = CameraOptions.random()
         let result = observeHandler(cameraOptions)
 
-        // the handler returns false because it only wants one update
-        XCTAssertFalse(result)
+        // the handler returns true because it wants continual updates
+        XCTAssertTrue(result)
 
-        // verify that animate was invoked as expected
-        XCTAssertEqual(animationHelper.animateStub.invocations.count, 1)
-        let animateInvocation = try XCTUnwrap(animationHelper.animateStub.invocations.first)
-        XCTAssertEqual(animateInvocation.parameters.cameraOptions, cameraOptions)
-        XCTAssertEqual(animateInvocation.parameters.maxDuration, options.maxDuration)
+        // verify that makeAnimation was invoked as expected
+        XCTAssertEqual(animationHelper.makeAnimationStub.invocations.count, 1)
+        let makeAnimationInvocation = try XCTUnwrap(animationHelper.makeAnimationStub.invocations.first)
+        XCTAssertEqual(makeAnimationInvocation.parameters.cameraOptions, cameraOptions)
+        XCTAssertEqual(makeAnimationInvocation.parameters.maxDuration, options.maxDuration)
+        let animation = try XCTUnwrap(makeAnimationInvocation.returnValue as? MockDefaultViewportTransitionAnimation)
 
-        let animateCompletion = animateInvocation.parameters.completion
+        // verify that the returned animation was started
+        XCTAssertEqual(animation.startStub.invocations.count, 1)
+        let animateCompletion = try XCTUnwrap(animation.startStub.invocations.first?.parameters)
 
         // exercise the animation completion
         animateCompletion(false) // false means the animation was canceled
 
         XCTAssertEqual(completionStub.invocations.map(\.parameters), [false])
+        XCTAssertEqual(animation.cancelStub.invocations.count, 1)
+        XCTAssertEqual(observeCancelable.cancelStub.invocations.count, 1)
     }
 
     func testRunAndCancelAfterAnimationStarts() throws {
@@ -102,21 +121,20 @@ final class DefaultViewportTransitionTests: XCTestCase {
         let cameraOptions = CameraOptions.random()
         let result = observeHandler(cameraOptions)
 
-        // the handler returns false because it only wants one update
-        XCTAssertFalse(result)
+        // the handler returns true because it wants continual updates
+        XCTAssertTrue(result)
 
-        // verify that animate was invoked as expected
-        XCTAssertEqual(animationHelper.animateStub.invocations.count, 1)
-        let animateInvocation = try XCTUnwrap(animationHelper.animateStub.invocations.first)
-        XCTAssertEqual(animateInvocation.parameters.cameraOptions, cameraOptions)
-        XCTAssertEqual(animateInvocation.parameters.maxDuration, options.maxDuration)
-
-        let animateCancelable = try XCTUnwrap(animateInvocation.returnValue as? MockCancelable)
+        // verify that makeAnimation was invoked as expected
+        XCTAssertEqual(animationHelper.makeAnimationStub.invocations.count, 1)
+        let makeAnimationInvocation = try XCTUnwrap(animationHelper.makeAnimationStub.invocations.first)
+        XCTAssertEqual(makeAnimationInvocation.parameters.cameraOptions, cameraOptions)
+        XCTAssertEqual(makeAnimationInvocation.parameters.maxDuration, options.maxDuration)
+        let animation = try XCTUnwrap(makeAnimationInvocation.returnValue as? MockDefaultViewportTransitionAnimation)
 
         cancelable.cancel()
 
         XCTAssertEqual(observeCancelable.cancelStub.invocations.count, 1)
-        XCTAssertEqual(animateCancelable.cancelStub.invocations.count, 1)
+        XCTAssertEqual(animation.cancelStub.invocations.count, 1)
     }
 
     func testRunAndCancelBeforeAnimationStarts() throws {

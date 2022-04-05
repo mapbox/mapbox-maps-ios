@@ -139,11 +139,24 @@
     ///                      ``DefaultViewportTransitionOptions/init(maxDuration:)`` with the default value specified for all parameters
     /// - Returns: The newly-created ``DefaultViewportTransition``.
     public func makeDefaultViewportTransition(options: DefaultViewportTransitionOptions = .init()) -> DefaultViewportTransition {
+        let lowZoomToHighZoomAnimationSpecProvider = LowZoomToHighZoomAnimationSpecProvider(
+            mapboxMap: mapboxMap)
+        let highZoomToLowZoomAnimationSpecProvider = HighZoomToLowZoomAnimationSpecProvider(
+            mapboxMap: mapboxMap)
+        let animationSpecProvider = DefaultViewportTransitionAnimationSpecProvider(
+            mapboxMap: mapboxMap,
+            lowZoomToHighZoomAnimationSpecProvider: lowZoomToHighZoomAnimationSpecProvider,
+            highZoomToLowZoomAnimationSpecProvider: highZoomToLowZoomAnimationSpecProvider)
+        let animationFactory = DefaultViewportTransitionAnimationFactory(
+            mapboxMap: mapboxMap)
+        let animationHelper = DefaultViewportTransitionAnimationHelper(
+            mapboxMap: mapboxMap,
+            animationSpecProvider: animationSpecProvider,
+            cameraAnimationsManager: cameraAnimationsManager,
+            animationFactory: animationFactory)
         return DefaultViewportTransition(
             options: options,
-            animationHelper: DefaultViewportTransitionAnimationHelper(
-                mapboxMap: mapboxMap,
-                cameraAnimationsManager: cameraAnimationsManager))
+            animationHelper: animationHelper)
     }
 
     /// Creates a new instance of ``ImmediateViewportTransition``.

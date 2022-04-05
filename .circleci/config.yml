@@ -42,7 +42,7 @@ workflows:
     jobs:
       - swiftlint
       - depsvalidator:
-          xcode: "13.0.0"
+          xcode: "13.3.0"
       - build-sdk:
           configuration: "Release"
           report_failure: true

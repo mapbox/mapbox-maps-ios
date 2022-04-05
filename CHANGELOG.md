@@ -19,6 +19,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Add map view example with `debugOptions`. ([#1225](https://github.com/mapbox/mapbox-maps-ios/pull/1225))
 * Introduce `line-trim-offset` property for LineLayer. ([#1231](https://github.com/mapbox/mapbox-maps-ios/pull/1231))
 * Add `MapboxMap.coordinateBoundsUnwrapped`. ([#1241](https://github.com/mapbox/mapbox-maps-ios/pull/1241))
+* Update `DefaultViewportTransition` to solve the moving target problem. ([#1245](https://github.com/mapbox/mapbox-maps-ios/pull/1245))
 
 ## 10.4.1 - March 28, 2022
 

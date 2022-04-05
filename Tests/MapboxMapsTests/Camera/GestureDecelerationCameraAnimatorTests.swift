@@ -17,7 +17,7 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
     override func setUp() {
         super.setUp()
         location = .zero
-        velocity = CGPoint(x: 1000, y: -1000)
+        velocity = CGPoint(x: 2000, y: -2000)
         decelerationFactor = 0.7
         owner = .random()
         locationChangeHandler = MockLocationChangeHandler()
@@ -115,7 +115,7 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
         animator.update()
 
         // Expected value is duration * velocity;
-        XCTAssertEqual(locationChangeHandler.invocations.map(\.parameters), [.init(fromLocation: location, toLocation: CGPoint(x: 10, y: -10))])
+        XCTAssertEqual(locationChangeHandler.invocations.map(\.parameters), [.init(fromLocation: location, toLocation: CGPoint(x: 20, y: -20))])
         // The previous update() should also have reduced the velocity
         // by multiplying it by the decelerationFactor once for each elapsed
         // millisecond. In this simulateion, 10 ms have elapsed.
@@ -142,7 +142,7 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
                        accuracy: 0.0000000001)
         locationChangeHandler.reset()
         // After the previous update() call, the velocity should have also been reduced
-        // to be sufficiently low (< 20 in both x and y) to end the animation.
+        // to be sufficiently low (< 35 in both x and y) to end the animation.
         XCTAssertEqual(animator.state, .inactive)
         XCTAssertEqual(completion.invocations.map(\.parameters), [.end])
         XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)

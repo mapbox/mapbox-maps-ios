@@ -20,6 +20,8 @@ Mapbox welcomes participation and contributions from everyone.
 * Introduce `line-trim-offset` property for LineLayer. ([#1231](https://github.com/mapbox/mapbox-maps-ios/pull/1231))
 * Add `MapboxMap.coordinateBoundsUnwrapped`. ([#1241](https://github.com/mapbox/mapbox-maps-ios/pull/1241))
 * Update `DefaultViewportTransition` to solve the moving target problem. ([#1245](https://github.com/mapbox/mapbox-maps-ios/pull/1245))
+* Increase deceleration cutoff threshold from 20 to 35 to prevent camera changes
+ after animation stops. ([#1244](https://github.com/mapbox/mapbox-maps-ios/pull/1244))
 
 ## 10.4.1 - March 28, 2022
 

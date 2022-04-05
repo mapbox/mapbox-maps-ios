@@ -14,6 +14,10 @@ public struct Examples {
             "examples": gettingStartedExamples
         ],
         [
+            "title": "Localization",
+            "examples": localizationExamples
+        ],
+        [
             "title": "3D and Fill Extrusions",
             "examples": threeDExamples
         ],
@@ -67,6 +71,16 @@ public struct Examples {
         Example(title: "Debug Map",
                 description: "This example shows how the map looks with different debug options",
                 type: DebugMapExample.self),
+    ]
+
+    // Examples that show how to change map language and worldview
+    private static let localizationExamples = [
+        Example(title: "Change the map's language",
+                description: "Switch between supported languages for Symbol Layers",
+                type: LocalizationExample.self),
+        Example(title: "Server-based localization",
+                description: "Configure the language and worldview of the map.",
+                type: LocalizationSettingsExample.self)
     ]
 
     // Examples that show how to use 3D terrain or fill extrusions.
@@ -237,9 +251,6 @@ public struct Examples {
         Example(title: "Change the map's style",
                 description: "Switch between local and default Mapbox styles for the same map view.",
                 type: SwitchStylesExample.self),
-        Example(title: "Change the map's language",
-                description: "Switch between supported languages for Symbol Layers",
-                type: LocalizationExample.self),
         Example(title: "Add animated weather data",
                 description: "Load a raster image to a style using ImageSource and display it on a map as animated weather data using RasterLayer.",
                 type: AnimateImageLayerExample.self),

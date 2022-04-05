@@ -49,6 +49,7 @@
 		7412CF6627E9A7FF00F03B1C /* CLLocationCoordinate2D+Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF6527E9A7FF00F03B1C /* CLLocationCoordinate2D+Random.swift */; };
 		7412CF6827E9A8D600F03B1C /* UIColor+Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF6727E9A8D600F03B1C /* UIColor+Random.swift */; };
 		7412CF6C27E9D48700F03B1C /* AddMarkersSymbolExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF6B27E9D48700F03B1C /* AddMarkersSymbolExample.swift */; };
+		74994B5027FB7914003A6EAE /* LocalizationSettingsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74994B4F27FB7914003A6EAE /* LocalizationSettingsExample.swift */; };
 		74A2313127EB306F0065FB7D /* Array+Split.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A2313027EB306F0065FB7D /* Array+Split.swift */; };
 		74A2313627EB37EE0065FB7D /* AnimatedMarkerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A2313527EB37EE0065FB7D /* AnimatedMarkerExample.swift */; };
 		74A2313827EC6B360065FB7D /* IconSizeChangeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A2313727EC6B360065FB7D /* IconSizeChangeExample.swift */; };
@@ -191,6 +192,7 @@
 		7412CF6527E9A7FF00F03B1C /* CLLocationCoordinate2D+Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Random.swift"; sourceTree = "<group>"; };
 		7412CF6727E9A8D600F03B1C /* UIColor+Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Random.swift"; sourceTree = "<group>"; };
 		7412CF6B27E9D48700F03B1C /* AddMarkersSymbolExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMarkersSymbolExample.swift; sourceTree = "<group>"; };
+		74994B4F27FB7914003A6EAE /* LocalizationSettingsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationSettingsExample.swift; sourceTree = "<group>"; };
 		74A2313027EB306F0065FB7D /* Array+Split.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Split.swift"; sourceTree = "<group>"; };
 		74A2313527EB37EE0065FB7D /* AnimatedMarkerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedMarkerExample.swift; sourceTree = "<group>"; };
 		74A2313727EC6B360065FB7D /* IconSizeChangeExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconSizeChangeExample.swift; sourceTree = "<group>"; };
@@ -279,6 +281,7 @@
 		0746C182252FB0F4001638BD /* All Examples */ = {
 			isa = PBXGroup;
 			children = (
+				74994B4E27FB78F8003A6EAE /* Localization */,
 				7412CF6027E8DCFB00F03B1C /* Annotations */,
 				58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */,
 				17B480592684FB2300CF0D5E /* AnimateImageLayerExample.swift */,
@@ -304,7 +307,6 @@
 				30F095BE270B39AF00F368DC /* GlobeViewExample.swift */,
 				666E0D4925664EE7000B8AF5 /* LayerPositionExample.swift */,
 				0C78AC2825BF70E40057F570 /* LineGradientExample.swift */,
-				C608C106267BC5B1003C86C3 /* LocalizationExample.swift */,
 				CA628413262DFD5C00651488 /* OfflineManagerExample.storyboard */,
 				CA03F10E26268DF700673961 /* OfflineManagerExample.swift */,
 				A41E590C265C263700D8B946 /* OfflineRegionManagerExample.swift */,
@@ -441,6 +443,15 @@
 				74A2313D27EE1C630065FB7D /* ViewAnnotationWithPointAnnotationExample.swift */,
 			);
 			path = Annotations;
+			sourceTree = "<group>";
+		};
+		74994B4E27FB78F8003A6EAE /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				C608C106267BC5B1003C86C3 /* LocalizationExample.swift */,
+				74994B4F27FB7914003A6EAE /* LocalizationSettingsExample.swift */,
+			);
+			path = Localization;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -639,6 +650,7 @@
 				0C784D1126D002DC004AE7D0 /* FeatureStateExample.swift in Sources */,
 				CADCF7222584990E0065C51B /* ColorExpressionExample.swift in Sources */,
 				74A2313C27EDCE7F0065FB7D /* AnnotationView.swift in Sources */,
+				74994B5027FB7914003A6EAE /* LocalizationSettingsExample.swift in Sources */,
 				7412CF6C27E9D48700F03B1C /* AddMarkersSymbolExample.swift in Sources */,
 				17E28C5C2672A1160033DF0F /* SymbolClusteringExample.swift in Sources */,
 				CADCF733258499130065C51B /* Examples.swift in Sources */,

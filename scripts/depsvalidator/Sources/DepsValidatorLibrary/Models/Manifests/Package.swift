@@ -74,6 +74,24 @@ struct Package: Decodable, SemanticValueProviding {
     }
 }
 
+extension Package.Dependency {
+    init(from decoder: Decoder) throws {
+        enum SourceControlNestedKeys: String, CodingKey {
+            case sourceControl
+        }
+        enum CodingKeys: String, CodingKey {
+            case name = "nameForTargetDependencyResolutionOnly"
+            case requirement
+        }
+        let container = try decoder.container(keyedBy: SourceControlNestedKeys.self)
+        var sourceControls = try container.nestedUnkeyedContainer(forKey: .sourceControl)
+        let firstSourceControl = try sourceControls.nestedContainer(keyedBy: CodingKeys.self)
+
+        name = try firstSourceControl.decode(String.self, forKey: .name)
+        requirement = try firstSourceControl.decode(Requirement.self, forKey: .requirement)
+    }
+}
+
 extension SemanticVersionRequirement {
     init(_ packageDependencyRequirement: Package.Dependency.Requirement) throws {
         switch packageDependencyRequirement {

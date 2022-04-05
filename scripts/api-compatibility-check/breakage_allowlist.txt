@@ -9,3 +9,13 @@ Var GestureOptions.pinchBehavior has been removed
 // https://github.com/mapbox/mapbox-maps-ios/pull/1183
 Constructor MapView.init(frame:mapInitOptions:orientationProvider:urlOpener:) has been added as a designated initializer to an open class
 Constructor MapView.init(frame:mapInitOptions:urlOpener:) has been added as a designated initializer to an open class
+
+// This has moved to MapboxCommon
+Constructor DownloadStatus.init(downloadId:state:error:totalBytes:receivedBytes:transferredBytes:downloadOptions:httpResult:) has been removed
+Constructor DownloadStatus.init(error:totalBytes:downloadOptions:httpResult:) has been removed
+Constructor HttpResponse.init(request:result:) has been removed
+Var DownloadError.errorDescription has been removed
+Var DownloadStatus.httpResult has been removed
+Var DownloadStatus.totalBytes has been removed
+Var HttpRequestError.errorDescription has been removed
+Var HttpResponse.result has been removed

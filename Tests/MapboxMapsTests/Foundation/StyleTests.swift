@@ -1,5 +1,5 @@
 import XCTest
-@_spi(Experimental) @testable import MapboxMaps
+@testable import MapboxMaps
 
 final class StyleTests: XCTestCase {
     var mapClient: MockMapClient!
@@ -36,7 +36,7 @@ final class StyleTests: XCTestCase {
     func testProjection() {
         // defaults to mercator if it's undefined
         XCTAssertEqual(style.styleManager.getStyleProjectionProperty(forProperty: "name").kind, .undefined)
-        XCTAssertEqual(style.projection, .mercator)
+        XCTAssertEqual(style.projection.name, .mercator)
 
         style.styleManager.setStyleProjectionForProperties(["name": "mercator"])
         XCTAssertEqual(style.projection.name, .mercator)

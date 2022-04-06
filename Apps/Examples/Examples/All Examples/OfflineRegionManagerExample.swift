@@ -70,6 +70,12 @@ public class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
     func startDownload(for region: OfflineRegion) {
         observer.offlineRegion = region
         observer.statusChanged = { [weak self] (status: OfflineRegionStatus) in
+            region.getStatus { result in
+                switch result.map(\.downloadState) {
+                case .success(let downloadState): print("\(downloadState.rawValue)")
+                case .failure: break
+                }
+            }
             print("Downloaded \(status.completedResourceCount)/\(status.requiredResourceCount) resources; \(status.completedResourceSize) bytes downloaded.")
 
             self?.progressView.progress = Float(status.completedResourceCount)/Float(status.requiredResourceCount)

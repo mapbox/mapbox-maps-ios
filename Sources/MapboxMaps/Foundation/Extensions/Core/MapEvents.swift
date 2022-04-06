@@ -144,8 +144,6 @@ public extension MapEvents {
          * .
          * └── id - String
          * ```
-         *
-         * - Todo: Support removal using Style.removeImage.
          */
         case styleImageRemoveUnused
 

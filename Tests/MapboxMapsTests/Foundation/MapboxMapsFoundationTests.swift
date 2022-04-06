@@ -211,9 +211,6 @@ class MapboxMapsFoundationTests: XCTestCase {
         }
 
          XCTAssertEqual(original.size, roundtripped.size)
-         // TODO: Fix roundtrip image inconsistency - there's a small
-         // amount of byte difference that can't be accounted for.
-         // XCTAssertEqual(original.pngData(), roundtripped.pngData())
     }
 
 // MARK: Debug options

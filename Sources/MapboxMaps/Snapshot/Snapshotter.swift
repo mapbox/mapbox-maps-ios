@@ -174,9 +174,7 @@ public class Snapshotter {
                     }
 
                     let coordinateForPoint = { (point: CGPoint) -> CLLocationCoordinate2D in
-                        // TODO: Fix circular dependency issues with MapboxMapsStyle/Foundation in order to use point.screenCoordinate extension
-                        let screenCoordinate = ScreenCoordinate(x: Double(point.x), y: Double(point.y))
-                        return snapshot.coordinate(for: screenCoordinate)
+                        return snapshot.coordinate(for: point.screenCoordinate)
                     }
 
                     // Apply the overlay, if provided.

@@ -70,7 +70,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconAllowOverlap, .constant(value))
+        if case .constant(let actualValue) = layer.iconAllowOverlap {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.iconAllowOverlap = nil
@@ -92,7 +96,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconIgnorePlacement, .constant(value))
+        if case .constant(let actualValue) = layer.iconIgnorePlacement {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.iconIgnorePlacement = nil
@@ -114,7 +122,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconKeepUpright, .constant(value))
+        if case .constant(let actualValue) = layer.iconKeepUpright {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.iconKeepUpright = nil
@@ -136,7 +148,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconOptional, .constant(value))
+        if case .constant(let actualValue) = layer.iconOptional {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.iconOptional = nil
@@ -158,7 +174,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconPadding, .constant(Double(Float(value))))
+        if case .constant(let actualValue) = layer.iconPadding {
+            XCTAssertEqual(actualValue, value, accuracy: 0.1)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.iconPadding = nil
@@ -180,7 +200,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconPitchAlignment, .constant(value))
+        if case .constant(let actualValue) = layer.iconPitchAlignment {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.iconPitchAlignment = nil
@@ -202,7 +226,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconRotationAlignment, .constant(value))
+        if case .constant(let actualValue) = layer.iconRotationAlignment {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.iconRotationAlignment = nil
@@ -224,7 +252,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconTextFit, .constant(value))
+        if case .constant(let actualValue) = layer.iconTextFit {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.iconTextFit = nil
@@ -239,14 +271,20 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testIconTextFitPadding() throws {
         // Test that the setter and getter work
-        let value = Array.random(withLength: 4, generator: { Double.random(in: -100000...100000) })
+        let value = [Double.random(in: -100000...100000),Double.random(in: -100000...100000),Double.random(in: -100000...100000),Double.random(in: -100000...100000)]
         manager.iconTextFitPadding = value
         XCTAssertEqual(manager.iconTextFitPadding, value)
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconTextFitPadding, .constant(value.map { Double(Float($0)) }))
+        if case .constant(let actualValue) = layer.iconTextFitPadding {
+            for (actual, expected) in zip(actualValue, value) {
+                XCTAssertEqual(actual, expected, accuracy: 0.1)
+            }
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.iconTextFitPadding = nil
@@ -268,7 +306,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.symbolAvoidEdges, .constant(value))
+        if case .constant(let actualValue) = layer.symbolAvoidEdges {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.symbolAvoidEdges = nil
@@ -290,7 +332,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.symbolPlacement, .constant(value))
+        if case .constant(let actualValue) = layer.symbolPlacement {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.symbolPlacement = nil
@@ -312,7 +358,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.symbolSpacing, .constant(Double(Float(value))))
+        if case .constant(let actualValue) = layer.symbolSpacing {
+            XCTAssertEqual(actualValue, value, accuracy: 0.1)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.symbolSpacing = nil
@@ -334,7 +384,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.symbolZOrder, .constant(value))
+        if case .constant(let actualValue) = layer.symbolZOrder {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.symbolZOrder = nil
@@ -356,7 +410,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textAllowOverlap, .constant(value))
+        if case .constant(let actualValue) = layer.textAllowOverlap {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.textAllowOverlap = nil
@@ -378,7 +436,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textFont, .constant(value))
+        if case .constant(let actualValue) = layer.textFont {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.textFont = nil
@@ -400,7 +462,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textIgnorePlacement, .constant(value))
+        if case .constant(let actualValue) = layer.textIgnorePlacement {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.textIgnorePlacement = nil
@@ -422,7 +488,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textKeepUpright, .constant(value))
+        if case .constant(let actualValue) = layer.textKeepUpright {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.textKeepUpright = nil
@@ -444,7 +514,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textLineHeight, .constant(Double(Float(value))))
+        if case .constant(let actualValue) = layer.textLineHeight {
+            XCTAssertEqual(actualValue, value, accuracy: 0.1)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.textLineHeight = nil
@@ -466,7 +540,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textMaxAngle, .constant(Double(Float(value))))
+        if case .constant(let actualValue) = layer.textMaxAngle {
+            XCTAssertEqual(actualValue, value, accuracy: 0.1)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.textMaxAngle = nil
@@ -488,7 +566,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textOptional, .constant(value))
+        if case .constant(let actualValue) = layer.textOptional {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.textOptional = nil
@@ -510,7 +592,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textPadding, .constant(Double(Float(value))))
+        if case .constant(let actualValue) = layer.textPadding {
+            XCTAssertEqual(actualValue, value, accuracy: 0.1)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.textPadding = nil
@@ -532,7 +618,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textPitchAlignment, .constant(value))
+        if case .constant(let actualValue) = layer.textPitchAlignment {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.textPitchAlignment = nil
@@ -554,7 +644,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textRotationAlignment, .constant(value))
+        if case .constant(let actualValue) = layer.textRotationAlignment {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.textRotationAlignment = nil
@@ -576,7 +670,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textVariableAnchor, .constant(value))
+        if case .constant(let actualValue) = layer.textVariableAnchor {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.textVariableAnchor = nil
@@ -598,7 +696,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textWritingMode, .constant(value))
+        if case .constant(let actualValue) = layer.textWritingMode {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.textWritingMode = nil
@@ -613,14 +715,20 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testIconTranslate() throws {
         // Test that the setter and getter work
-        let value = Array.random(withLength: 2, generator: { Double.random(in: -100000...100000) })
+        let value = [Double.random(in: -100000...100000),Double.random(in: -100000...100000)]
         manager.iconTranslate = value
         XCTAssertEqual(manager.iconTranslate, value)
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconTranslate, .constant(value.map { Double(Float($0)) }))
+        if case .constant(let actualValue) = layer.iconTranslate {
+            for (actual, expected) in zip(actualValue, value) {
+                XCTAssertEqual(actual, expected, accuracy: 0.1)
+            }
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.iconTranslate = nil
@@ -642,7 +750,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconTranslateAnchor, .constant(value))
+        if case .constant(let actualValue) = layer.iconTranslateAnchor {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.iconTranslateAnchor = nil
@@ -657,14 +769,20 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testTextTranslate() throws {
         // Test that the setter and getter work
-        let value = Array.random(withLength: 2, generator: { Double.random(in: -100000...100000) })
+        let value = [Double.random(in: -100000...100000),Double.random(in: -100000...100000)]
         manager.textTranslate = value
         XCTAssertEqual(manager.textTranslate, value)
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textTranslate, .constant(value.map { Double(Float($0)) }))
+        if case .constant(let actualValue) = layer.textTranslate {
+            for (actual, expected) in zip(actualValue, value) {
+                XCTAssertEqual(actual, expected, accuracy: 0.1)
+            }
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.textTranslate = nil
@@ -686,7 +804,11 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textTranslateAnchor, .constant(value))
+        if case .constant(let actualValue) = layer.textTranslateAnchor {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.textTranslateAnchor = nil
@@ -774,7 +896,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testIconOffset() throws {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
         // Test that the setter and getter work
-        let value = Array.random(withLength: 2, generator: { Double.random(in: -100000...100000) })
+        let value = [Double.random(in: -100000...100000),Double.random(in: -100000...100000)]
         annotation.iconOffset = value
         XCTAssertEqual(annotation.iconOffset, value)
 
@@ -1104,7 +1226,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testTextOffset() throws {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
         // Test that the setter and getter work
-        let value = Array.random(withLength: 2, generator: { Double.random(in: -100000...100000) })
+        let value = [Double.random(in: -100000...100000),Double.random(in: -100000...100000)]
         annotation.textOffset = value
         XCTAssertEqual(annotation.textOffset, value)
 
@@ -1430,7 +1552,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testIconOpacity() throws {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
         // Test that the setter and getter work
-        let value = Double.random(in: 0...100000)
+        let value = Double.random(in: 0...1)
         annotation.iconOpacity = value
         XCTAssertEqual(annotation.iconOpacity, value)
 
@@ -1610,7 +1732,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testTextOpacity() throws {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
         // Test that the setter and getter work
-        let value = Double.random(in: 0...100000)
+        let value = Double.random(in: 0...1)
         annotation.textOpacity = value
         XCTAssertEqual(annotation.textOpacity, value)
 

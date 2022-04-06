@@ -1000,7 +1000,8 @@ extension Style {
         if projectionName.kind == .undefined {
             return StyleProjection(name: .mercator)
         } else {
-            return StyleProjection(name: StyleProjectionName(rawValue: projectionName.value as! String))
+            // swiftlint:disable:next force_cast
+            return StyleProjection(name: StyleProjectionName(rawValue: projectionName.value as! String)!)
         }
     }
 }

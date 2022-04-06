@@ -28,6 +28,7 @@ extension LineCap {
         return LineCap(rawValue: "butt")!
     }
 }
+
 // MARK: LINE_JOIN
 
 extension Value where T == LineJoin {
@@ -41,6 +42,7 @@ extension LineJoin {
         return LineJoin(rawValue: "bevel")!
     }
 }
+
 // MARK: ICON_ANCHOR
 
 extension Value where T == IconAnchor {
@@ -54,6 +56,7 @@ extension IconAnchor {
         return IconAnchor(rawValue: "center")!
     }
 }
+
 // MARK: ICON_PITCH_ALIGNMENT
 
 extension Value where T == IconPitchAlignment {
@@ -67,6 +70,7 @@ extension IconPitchAlignment {
         return IconPitchAlignment(rawValue: "map")!
     }
 }
+
 // MARK: ICON_ROTATION_ALIGNMENT
 
 extension Value where T == IconRotationAlignment {
@@ -80,6 +84,7 @@ extension IconRotationAlignment {
         return IconRotationAlignment(rawValue: "map")!
     }
 }
+
 // MARK: ICON_TEXT_FIT
 
 extension Value where T == IconTextFit {
@@ -93,6 +98,7 @@ extension IconTextFit {
         return IconTextFit(rawValue: "none")!
     }
 }
+
 // MARK: SYMBOL_PLACEMENT
 
 extension Value where T == SymbolPlacement {
@@ -106,6 +112,7 @@ extension SymbolPlacement {
         return SymbolPlacement(rawValue: "point")!
     }
 }
+
 // MARK: SYMBOL_Z_ORDER
 
 extension Value where T == SymbolZOrder {
@@ -119,6 +126,7 @@ extension SymbolZOrder {
         return SymbolZOrder(rawValue: "auto")!
     }
 }
+
 // MARK: TEXT_ANCHOR
 
 extension Value where T == TextAnchor {
@@ -132,6 +140,7 @@ extension TextAnchor {
         return TextAnchor(rawValue: "center")!
     }
 }
+
 // MARK: TEXT_JUSTIFY
 
 extension Value where T == TextJustify {
@@ -145,6 +154,7 @@ extension TextJustify {
         return TextJustify(rawValue: "auto")!
     }
 }
+
 // MARK: TEXT_PITCH_ALIGNMENT
 
 extension Value where T == TextPitchAlignment {
@@ -158,6 +168,7 @@ extension TextPitchAlignment {
         return TextPitchAlignment(rawValue: "map")!
     }
 }
+
 // MARK: TEXT_ROTATION_ALIGNMENT
 
 extension Value where T == TextRotationAlignment {
@@ -171,6 +182,7 @@ extension TextRotationAlignment {
         return TextRotationAlignment(rawValue: "map")!
     }
 }
+
 // MARK: TEXT_TRANSFORM
 
 extension Value where T == TextTransform {
@@ -184,6 +196,7 @@ extension TextTransform {
         return TextTransform(rawValue: "none")!
     }
 }
+
 // MARK: FILL_TRANSLATE_ANCHOR
 
 extension Value where T == FillTranslateAnchor {
@@ -197,6 +210,7 @@ extension FillTranslateAnchor {
         return FillTranslateAnchor(rawValue: "map")!
     }
 }
+
 // MARK: LINE_TRANSLATE_ANCHOR
 
 extension Value where T == LineTranslateAnchor {
@@ -210,6 +224,7 @@ extension LineTranslateAnchor {
         return LineTranslateAnchor(rawValue: "map")!
     }
 }
+
 // MARK: ICON_TRANSLATE_ANCHOR
 
 extension Value where T == IconTranslateAnchor {
@@ -223,6 +238,7 @@ extension IconTranslateAnchor {
         return IconTranslateAnchor(rawValue: "map")!
     }
 }
+
 // MARK: TEXT_TRANSLATE_ANCHOR
 
 extension Value where T == TextTranslateAnchor {
@@ -236,6 +252,7 @@ extension TextTranslateAnchor {
         return TextTranslateAnchor(rawValue: "map")!
     }
 }
+
 // MARK: CIRCLE_PITCH_ALIGNMENT
 
 extension Value where T == CirclePitchAlignment {
@@ -249,6 +266,7 @@ extension CirclePitchAlignment {
         return CirclePitchAlignment(rawValue: "map")!
     }
 }
+
 // MARK: CIRCLE_PITCH_SCALE
 
 extension Value where T == CirclePitchScale {
@@ -262,6 +280,7 @@ extension CirclePitchScale {
         return CirclePitchScale(rawValue: "map")!
     }
 }
+
 // MARK: CIRCLE_TRANSLATE_ANCHOR
 
 extension Value where T == CircleTranslateAnchor {
@@ -275,6 +294,7 @@ extension CircleTranslateAnchor {
         return CircleTranslateAnchor(rawValue: "map")!
     }
 }
+
 // MARK: FILL_EXTRUSION_TRANSLATE_ANCHOR
 
 extension Value where T == FillExtrusionTranslateAnchor {
@@ -288,6 +308,7 @@ extension FillExtrusionTranslateAnchor {
         return FillExtrusionTranslateAnchor(rawValue: "map")!
     }
 }
+
 // MARK: RASTER_RESAMPLING
 
 extension Value where T == RasterResampling {
@@ -301,6 +322,7 @@ extension RasterResampling {
         return RasterResampling(rawValue: "linear")!
     }
 }
+
 // MARK: HILLSHADE_ILLUMINATION_ANCHOR
 
 extension Value where T == HillshadeIlluminationAnchor {
@@ -314,6 +336,7 @@ extension HillshadeIlluminationAnchor {
         return HillshadeIlluminationAnchor(rawValue: "map")!
     }
 }
+
 // MARK: SKY_TYPE
 
 extension Value where T == SkyType {
@@ -327,6 +350,7 @@ extension SkyType {
         return SkyType(rawValue: "gradient")!
     }
 }
+
 // MARK: ANCHOR
 
 extension Value where T == Anchor {
@@ -340,6 +364,21 @@ extension Anchor {
         return Anchor(rawValue: "map")!
     }
 }
+
+// MARK: NAME
+
+extension Value where T == StyleProjectionName {
+    static func testConstantValue() -> Value<StyleProjectionName> {
+        return .constant(StyleProjectionName.testConstantValue())
+    }
+}
+
+extension StyleProjectionName {
+    static func testConstantValue() -> StyleProjectionName {
+        return StyleProjectionName(rawValue: "mercator")!
+    }
+}
+
 // MARK: TEXT_WRITING_MODE
 
 extension Value where T == TextWritingMode {

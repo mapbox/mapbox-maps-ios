@@ -4,8 +4,7 @@ import XCTest
 final class StyleProjectionTests: XCTestCase {
 
     func testMemberwiseInit() {
-        let string = String.randomASCII(withLength: .random(in: 0...10))
-        let name = StyleProjectionName(rawValue: string)
+        let name: StyleProjectionName = [.mercator, .globe].randomElement()!
 
         let projection = StyleProjection(name: name)
 
@@ -13,15 +12,14 @@ final class StyleProjectionTests: XCTestCase {
     }
 
     func testCodable() throws {
-        let string = String.randomASCII(withLength: .random(in: 0...10))
-        let name = StyleProjectionName(rawValue: string)
+        let name: StyleProjectionName = [.mercator, .globe].randomElement()!
         let projection = StyleProjection(name: name)
 
         let jsonData = try JSONEncoder().encode(projection)
 
         let jsonObject = try JSONSerialization.jsonObject(with: jsonData) as? [String: String]
 
-        XCTAssertEqual(jsonObject, ["name": string])
+        XCTAssertEqual(jsonObject, ["name": name.rawValue])
 
         let decodedProjection = try JSONDecoder().decode(StyleProjection.self, from: jsonData)
 
@@ -31,29 +29,14 @@ final class StyleProjectionTests: XCTestCase {
 
 final class StyleProjectionNameTests: XCTestCase {
 
-    func testInitWithRawValue() {
-        let string = String.randomASCII(withLength: .random(in: 0...10))
-
-        let name = StyleProjectionName(rawValue: string)
-
-        XCTAssertEqual(name.rawValue, string)
-    }
-
-    func testStaticValues() {
-        XCTAssertEqual(StyleProjectionName.mercator.rawValue, "mercator")
-        XCTAssertEqual(StyleProjectionName.globe.rawValue, "globe")
-    }
-
     func testCodable() throws {
-        let string = String.randomASCII(withLength: .random(in: 0...10))
-
-        let name = StyleProjectionName(rawValue: string)
+        let name: StyleProjectionName = [.mercator, .globe].randomElement()!
 
         let jsonData = try JSONEncoder().encode([name])
 
         let jsonObject = try JSONSerialization.jsonObject(with: jsonData) as? [String]
 
-        XCTAssertEqual(jsonObject, [string])
+        XCTAssertEqual(jsonObject, [name.rawValue])
 
         let decodedName = try JSONDecoder().decode([StyleProjectionName].self, from: jsonData)
 

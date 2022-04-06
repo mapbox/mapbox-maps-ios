@@ -27,12 +27,6 @@ final class StyleTests: XCTestCase {
         XCTAssertEqual(style.styleManager.getStyleProjectionProperty(forProperty: "name").value as? String, "globe")
     }
 
-    func testSetProjectionError() throws {
-        XCTAssertThrowsError(try style.setProjection(StyleProjection(name: StyleProjectionName(rawValue: "not a supported name")))) { error in
-            XCTAssertTrue(error is StyleError)
-        }
-    }
-
     func testProjection() {
         // defaults to mercator if it's undefined
         XCTAssertEqual(style.styleManager.getStyleProjectionProperty(forProperty: "name").kind, .undefined)

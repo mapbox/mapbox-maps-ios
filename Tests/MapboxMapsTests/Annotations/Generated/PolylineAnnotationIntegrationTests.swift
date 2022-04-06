@@ -71,7 +71,11 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineCap, .constant(value))
+        if case .constant(let actualValue) = layer.lineCap {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.lineCap = nil
@@ -93,7 +97,11 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineMiterLimit, .constant(Double(Float(value))))
+        if case .constant(let actualValue) = layer.lineMiterLimit {
+            XCTAssertEqual(actualValue, value, accuracy: 0.1)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.lineMiterLimit = nil
@@ -115,7 +123,11 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineRoundLimit, .constant(Double(Float(value))))
+        if case .constant(let actualValue) = layer.lineRoundLimit {
+            XCTAssertEqual(actualValue, value, accuracy: 0.1)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.lineRoundLimit = nil
@@ -137,7 +149,13 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineDasharray, .constant(value.map { Double(Float($0)) }))
+        if case .constant(let actualValue) = layer.lineDasharray {
+            for (actual, expected) in zip(actualValue, value) {
+                XCTAssertEqual(actual, expected, accuracy: 0.1)
+            }
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.lineDasharray = nil
@@ -152,14 +170,20 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineTranslate() throws {
         // Test that the setter and getter work
-        let value = Array.random(withLength: 2, generator: { Double.random(in: -100000...100000) })
+        let value = [Double.random(in: -100000...100000),Double.random(in: -100000...100000)]
         manager.lineTranslate = value
         XCTAssertEqual(manager.lineTranslate, value)
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineTranslate, .constant(value.map { Double(Float($0)) }))
+        if case .constant(let actualValue) = layer.lineTranslate {
+            for (actual, expected) in zip(actualValue, value) {
+                XCTAssertEqual(actual, expected, accuracy: 0.1)
+            }
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.lineTranslate = nil
@@ -181,7 +205,11 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineTranslateAnchor, .constant(value))
+        if case .constant(let actualValue) = layer.lineTranslateAnchor {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.lineTranslateAnchor = nil
@@ -196,14 +224,20 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineTrimOffset() throws {
         // Test that the setter and getter work
-        let value = Array.random(withLength: 2, generator: { Double.random(in: -100000...100000) })
+        let value = [Double.random(in: 0...1),Double.random(in: 0...1)].sorted()
         manager.lineTrimOffset = value
         XCTAssertEqual(manager.lineTrimOffset, value)
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineTrimOffset, .constant(value.map { Double(Float($0)) }))
+        if case .constant(let actualValue) = layer.lineTrimOffset {
+            for (actual, expected) in zip(actualValue, value) {
+                XCTAssertEqual(actual, expected, accuracy: 0.1)
+            }
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.lineTrimOffset = nil
@@ -442,7 +476,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
         var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
         // Test that the setter and getter work
-        let value = Double.random(in: 0...100000)
+        let value = Double.random(in: 0...1)
         annotation.lineOpacity = value
         XCTAssertEqual(annotation.lineOpacity, value)
 

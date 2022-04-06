@@ -271,7 +271,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testIconTextFitPadding() throws {
         // Test that the setter and getter work
-        let value = [Double.random(in: -100000...100000),Double.random(in: -100000...100000),Double.random(in: -100000...100000),Double.random(in: -100000...100000)]
+        let value = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
         manager.iconTextFitPadding = value
         XCTAssertEqual(manager.iconTextFitPadding, value)
 
@@ -715,7 +715,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testIconTranslate() throws {
         // Test that the setter and getter work
-        let value = [Double.random(in: -100000...100000),Double.random(in: -100000...100000)]
+        let value = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
         manager.iconTranslate = value
         XCTAssertEqual(manager.iconTranslate, value)
 
@@ -769,7 +769,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testTextTranslate() throws {
         // Test that the setter and getter work
-        let value = [Double.random(in: -100000...100000),Double.random(in: -100000...100000)]
+        let value = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
         manager.textTranslate = value
         XCTAssertEqual(manager.textTranslate, value)
 
@@ -896,7 +896,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testIconOffset() throws {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
         // Test that the setter and getter work
-        let value = [Double.random(in: -100000...100000),Double.random(in: -100000...100000)]
+        let value = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
         annotation.iconOffset = value
         XCTAssertEqual(annotation.iconOffset, value)
 
@@ -1226,7 +1226,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testTextOffset() throws {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
         // Test that the setter and getter work
-        let value = [Double.random(in: -100000...100000),Double.random(in: -100000...100000)]
+        let value = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
         annotation.textOffset = value
         XCTAssertEqual(annotation.textOffset, value)
 

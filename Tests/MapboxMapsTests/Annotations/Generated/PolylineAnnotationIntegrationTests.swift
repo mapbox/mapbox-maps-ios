@@ -170,7 +170,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineTranslate() throws {
         // Test that the setter and getter work
-        let value = [Double.random(in: -100000...100000),Double.random(in: -100000...100000)]
+        let value = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
         manager.lineTranslate = value
         XCTAssertEqual(manager.lineTranslate, value)
 
@@ -224,7 +224,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineTrimOffset() throws {
         // Test that the setter and getter work
-        let value = [Double.random(in: 0...1),Double.random(in: 0...1)].sorted()
+        let value = [Double.random(in: 0...1), Double.random(in: 0...1)].sorted()
         manager.lineTrimOffset = value
         XCTAssertEqual(manager.lineTrimOffset, value)
 

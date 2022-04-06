@@ -96,7 +96,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testFillTranslate() throws {
         // Test that the setter and getter work
-        let value = [Double.random(in: -100000...100000),Double.random(in: -100000...100000)]
+        let value = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
         manager.fillTranslate = value
         XCTAssertEqual(manager.fillTranslate, value)
 

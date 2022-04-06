@@ -115,7 +115,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testCircleTranslate() throws {
         // Test that the setter and getter work
-        let value = [Double.random(in: -100000...100000),Double.random(in: -100000...100000)]
+        let value = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
         manager.circleTranslate = value
         XCTAssertEqual(manager.circleTranslate, value)
 

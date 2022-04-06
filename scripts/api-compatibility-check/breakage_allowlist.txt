@@ -19,3 +19,12 @@ Var DownloadStatus.httpResult has been removed
 Var DownloadStatus.totalBytes has been removed
 Var HttpRequestError.errorDescription has been removed
 Var HttpResponse.result has been removed
+
+// Experimental projections API got moved to Style
+Enum MapProjection has been removed
+Enum MapProjectionError has been removed
+Enum MapboxMap.MapProjectionError has been removed
+Func MapboxMap.mapProjection() has been removed
+Func MapboxMap.setMapProjection(_:) has been removed
+Struct GlobeMapProjection has been removed
+Struct MercatorMapProjection has been removed

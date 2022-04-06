@@ -11,10 +11,8 @@ internal func coreAPIClosureAdapter<T, SwiftError, ObjCType>(
     for closure: @escaping (Result<T, Error>) -> Void,
     type: ObjCType.Type,
     concreteErrorType: SwiftError.Type,
-    converter: @escaping (ObjCType) -> T? = { $0 as? T }) -> ((Expected<AnyObject, AnyObject>?) -> Void) where ObjCType: AnyObject,
-                                                                                                               SwiftError: CoreErrorRepresentable,
-                                                                                                               SwiftError.CoreErrorType: AnyObject {
-    return { (expected: Expected?) in
+    converter: @escaping (ObjCType) -> T? = { $0 as? T }) -> (Expected<ObjCType, SwiftError.CoreErrorType>?) -> Void where SwiftError: CoreErrorRepresentable {
+    return { (expected: Expected<ObjCType, SwiftError.CoreErrorType>?) -> Void in
         closure(
             Result(
                 expected: expected,
@@ -25,32 +23,22 @@ internal func coreAPIClosureAdapter<T, SwiftError, ObjCType>(
 }
 
 internal extension Result where Failure == Error {
-    init<Value, Error>(expected: Expected<AnyObject, AnyObject>?,
+    init<Value, Error>(expected: Expected<Value, Error.CoreErrorType>?,
                        valueType: Value.Type,
                        errorType: Error.Type,
-                       valueConverter: @escaping (Value) -> Success? = { $0 as? Success }) where Value: AnyObject,
-                                                                                                 Error: CoreErrorRepresentable,
-                                                                                                 Error.CoreErrorType: AnyObject {
+                       valueConverter: @escaping (Value) -> Success? = { $0 as? Success }) where Error: CoreErrorRepresentable {
         guard let expected = expected else {
             self = .failure(TypeConversionError.unexpectedType)
             return
         }
         if expected.isValue(), let value = expected.value {
-            guard let typedValue = value as? Value else {
-                self = .failure(TypeConversionError.unexpectedType)
-                return
-            }
-            guard let convertedValue = valueConverter(typedValue) else {
+            guard let convertedValue = valueConverter(value) else {
                 self = .failure(TypeConversionError.unsuccessfulConversion)
                 return
             }
             self = .success(convertedValue)
         } else if expected.isError(), let error = expected.error {
-            guard let typedError = error as? Error.CoreErrorType else {
-                self = .failure(TypeConversionError.unexpectedType)
-                return
-            }
-            self = .failure(Error(coreError: typedError))
+            self = .failure(Error(coreError: error))
         } else {
             assertionFailure("Encountered invalid object: \(expected)")
             self = .failure(TypeConversionError.invalidObject)
@@ -58,10 +46,9 @@ internal extension Result where Failure == Error {
     }
 }
 
-internal func coreAPIClosureAdapter<SwiftError>(
+internal func coreAPIClosureAdapter<SwiftError, ObjCType>(
     for closure: @escaping (Error?) -> Void,
-    concreteErrorType: SwiftError.Type) -> ((Expected<AnyObject, AnyObject>?) -> Void) where SwiftError: CoreErrorRepresentable,
-                                                                                             SwiftError.CoreErrorType: AnyObject {
+    concreteErrorType: SwiftError.Type) -> (Expected<ObjCType, SwiftError.CoreErrorType>?) -> Void where SwiftError: CoreErrorRepresentable {
     return { (expected: Expected?) in
         var error: Error?
 
@@ -75,11 +62,7 @@ internal func coreAPIClosureAdapter<SwiftError>(
         }
 
         if expected.isError(), let expectedError = expected.error {
-            guard let typedError = expectedError as? SwiftError.CoreErrorType else {
-                error = TypeConversionError.unexpectedType
-                return
-            }
-            error = SwiftError(coreError: typedError)
+            error = SwiftError(coreError: expectedError)
         } else if !expected.isValue() {
             assertionFailure("Encountered invalid object: \(expected)")
             error = TypeConversionError.invalidObject

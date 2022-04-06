@@ -45,7 +45,7 @@ final class TileStoreObserverWrapperTests: XCTestCase {
             completedResourceCount: 0,
             completedResourceSize: 0,
             expires: nil)
-        let expected = Expected<AnyObject, AnyObject>(value: tileRegion)
+        let expected = Expected<TileRegion, MapboxCommon.TileRegionError>(value: tileRegion)
 
         wrapper.onRegionLoadFinished(forId: id, region: expected)
 
@@ -59,24 +59,10 @@ final class TileStoreObserverWrapperTests: XCTestCase {
         XCTAssertTrue(tileRegion === regionParameter)
     }
 
-    func testOnRegionLoadFinishedWithInalidValue() throws {
-        let expected = Expected<AnyObject, AnyObject>(value: NSNull())
-
-        wrapper.onRegionLoadFinished(forId: id, region: expected)
-
-        XCTAssertEqual(observer.onRegionLoadFinishedStub.invocations.count, 1)
-        let parameters = try XCTUnwrap(observer.onRegionLoadFinishedStub.invocations.first?.parameters)
-        XCTAssertEqual(parameters.id, id)
-        guard case .failure(TypeConversionError.unexpectedType) = parameters.region else {
-            XCTFail("Expected region parameter to be Result.failure(TypeConversionError.unexpectedType), but found \(parameters.region)")
-            return
-        }
-    }
-
     func testOnRegionLoadFinishedWithValidError() throws {
         let types: [TileRegionErrorType] = [.canceled, .diskFull, .doesNotExist, .other, .tileCountExceeded, .tilesetDescriptor]
         let error = MapboxCommon.TileRegionError(type: types.randomElement()!, message: .randomASCII(withLength: 10))
-        let expected = Expected<AnyObject, AnyObject>(error: error)
+        let expected = Expected<TileRegion, MapboxCommon.TileRegionError>(error: error)
 
         wrapper.onRegionLoadFinished(forId: id, region: expected)
 
@@ -88,19 +74,6 @@ final class TileStoreObserverWrapperTests: XCTestCase {
             return
         }
         XCTAssertEqual(tileRegionError, TileRegionError(coreError: error))
-    }
-
-    func testOnRegionLoadFinishedWithInvalidError() throws {
-        let expected = Expected<AnyObject, AnyObject>(error: NSError())
-        wrapper.onRegionLoadFinished(forId: id, region: expected)
-
-        XCTAssertEqual(observer.onRegionLoadFinishedStub.invocations.count, 1)
-        let parameters = try XCTUnwrap(observer.onRegionLoadFinishedStub.invocations.first?.parameters)
-        XCTAssertEqual(parameters.id, id)
-        guard case .failure(TypeConversionError.unexpectedType) = parameters.region else {
-            XCTFail("Expected region parameter to be Result.failure(TypeConversionError.unexpectedType), but found \(parameters.region)")
-            return
-        }
     }
 
     func testOnRegionRemoved() {

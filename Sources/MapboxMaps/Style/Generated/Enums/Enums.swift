@@ -416,6 +416,19 @@ public enum Anchor: String, Codable, CaseIterable {
 
 }
 
+// MARK: NAME
+
+/// The name of the projection to be used for rendering the map.
+public enum StyleProjectionName: String, Codable, CaseIterable {
+
+    /// The Mercator projection is the default projection.
+    case mercator = "mercator"
+
+    /// A globe projection.
+    case globe = "globe"
+
+}
+
 // MARK: TEXT_WRITING_MODE
 
 /// The property allows control over a symbol's orientation. Note that the property values act as a hint, so that a symbol whose language doesn’t support the provided orientation will be laid out in its natural orientation. Example: English point symbol will be rendered horizontally even if array value contains single 'vertical' enum value. The order of elements in an array define priority order for the placement of an orientation variant.

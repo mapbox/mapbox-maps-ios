@@ -77,7 +77,11 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: FillLayer.self)
-        XCTAssertEqual(layer.fillAntialias, .constant(value))
+        if case .constant(let actualValue) = layer.fillAntialias {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.fillAntialias = nil
@@ -92,14 +96,20 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testFillTranslate() throws {
         // Test that the setter and getter work
-        let value = Array.random(withLength: 2, generator: { Double.random(in: -100000...100000) })
+        let value = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
         manager.fillTranslate = value
         XCTAssertEqual(manager.fillTranslate, value)
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: FillLayer.self)
-        XCTAssertEqual(layer.fillTranslate, .constant(value.map { Double(Float($0)) }))
+        if case .constant(let actualValue) = layer.fillTranslate {
+            for (actual, expected) in zip(actualValue, value) {
+                XCTAssertEqual(actual, expected, accuracy: 0.1)
+            }
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.fillTranslate = nil
@@ -121,7 +131,11 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: FillLayer.self)
-        XCTAssertEqual(layer.fillTranslateAnchor, .constant(value))
+        if case .constant(let actualValue) = layer.fillTranslateAnchor {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.fillTranslateAnchor = nil
@@ -230,7 +244,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         ]
         var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
         // Test that the setter and getter work
-        let value = Double.random(in: 0...100000)
+        let value = Double.random(in: 0...1)
         annotation.fillOpacity = value
         XCTAssertEqual(annotation.fillOpacity, value)
 

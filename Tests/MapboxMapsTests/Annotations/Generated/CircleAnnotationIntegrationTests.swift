@@ -70,7 +70,11 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circlePitchAlignment, .constant(value))
+        if case .constant(let actualValue) = layer.circlePitchAlignment {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.circlePitchAlignment = nil
@@ -92,7 +96,11 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circlePitchScale, .constant(value))
+        if case .constant(let actualValue) = layer.circlePitchScale {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.circlePitchScale = nil
@@ -107,14 +115,20 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testCircleTranslate() throws {
         // Test that the setter and getter work
-        let value = Array.random(withLength: 2, generator: { Double.random(in: -100000...100000) })
+        let value = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
         manager.circleTranslate = value
         XCTAssertEqual(manager.circleTranslate, value)
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleTranslate, .constant(value.map { Double(Float($0)) }))
+        if case .constant(let actualValue) = layer.circleTranslate {
+            for (actual, expected) in zip(actualValue, value) {
+                XCTAssertEqual(actual, expected, accuracy: 0.1)
+            }
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.circleTranslate = nil
@@ -136,7 +150,11 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
         var layer = try style.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleTranslateAnchor, .constant(value))
+        if case .constant(let actualValue) = layer.circleTranslateAnchor {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
 
         // Test that the property can be reset to nil
         manager.circleTranslateAnchor = nil
@@ -260,7 +278,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testCircleOpacity() throws {
         var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
         // Test that the setter and getter work
-        let value = Double.random(in: 0...100000)
+        let value = Double.random(in: 0...1)
         annotation.circleOpacity = value
         XCTAssertEqual(annotation.circleOpacity, value)
 
@@ -368,7 +386,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testCircleStrokeOpacity() throws {
         var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
         // Test that the setter and getter work
-        let value = Double.random(in: 0...100000)
+        let value = Double.random(in: 0...1)
         annotation.circleStrokeOpacity = value
         XCTAssertEqual(annotation.circleStrokeOpacity, value)
 

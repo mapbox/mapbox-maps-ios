@@ -11,7 +11,7 @@ internal class TileStoreObserverWrapper: MapboxCommon_Private.TileStoreObserver 
         observer.onRegionLoadProgress(forId: id, progress: progress)
     }
 
-    internal func onRegionLoadFinished(forId id: String, region: Expected<AnyObject, AnyObject>) {
+    internal func onRegionLoadFinished(forId id: String, region: Expected<TileRegion, TileRegionError.CoreErrorType>) {
         observer.onRegionLoadFinished(forId: id, region: Result(expected: region, valueType: TileRegion.self, errorType: TileRegionError.self))
     }
 

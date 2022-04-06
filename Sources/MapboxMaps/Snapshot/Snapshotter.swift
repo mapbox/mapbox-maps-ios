@@ -97,7 +97,7 @@ public class Snapshotter {
                 return
             }
 
-            guard expected.isValue(), let snapshot = expected.value as? MapSnapshot else {
+            guard expected.isValue(), let snapshot = expected.value else {
                 completion(.failure(.snapshotFailed(reason: expected.error as? String)))
                 return
             }

@@ -189,6 +189,6 @@ extension TileStore {
 
 private func tileStoreClosureAdapter<T, ObjCType>(
     for closure: @escaping (Result<T, Error>) -> Void,
-    type: ObjCType.Type) -> ((Expected<AnyObject, AnyObject>?) -> Void) where ObjCType: AnyObject {
+    type: ObjCType.Type) -> ((Expected<ObjCType, TileRegionError.CoreErrorType>?) -> Void) where ObjCType: AnyObject {
     return coreAPIClosureAdapter(for: closure, type: type, concreteErrorType: TileRegionError.self)
 }

@@ -11,9 +11,7 @@ internal func coreAPIClosureAdapter<T, SwiftError, ObjCType>(
     for closure: @escaping (Result<T, Error>) -> Void,
     type: ObjCType.Type,
     concreteErrorType: SwiftError.Type,
-    converter: @escaping (ObjCType) -> T? = { $0 as? T }) -> ((Expected<ObjCType, SwiftError.CoreErrorType>?) -> Void) where ObjCType: AnyObject,
-                                                                                                                             SwiftError: CoreErrorRepresentable,
-                                                                                                                             SwiftError.CoreErrorType: AnyObject {
+    converter: @escaping (ObjCType) -> T? = { $0 as? T }) -> (Expected<ObjCType, SwiftError.CoreErrorType>?) -> Void where SwiftError: CoreErrorRepresentable {
     return { (expected: Expected<ObjCType, SwiftError.CoreErrorType>?) -> Void in
         closure(
             Result(
@@ -28,9 +26,7 @@ internal extension Result where Failure == Error {
     init<Value, Error>(expected: Expected<Value, Error.CoreErrorType>?,
                        valueType: Value.Type,
                        errorType: Error.Type,
-                       valueConverter: @escaping (Value) -> Success? = { $0 as? Success }) where Value: AnyObject,
-                                                                                                 Error: CoreErrorRepresentable,
-                                                                                                 Error.CoreErrorType: AnyObject {
+                       valueConverter: @escaping (Value) -> Success? = { $0 as? Success }) where Error: CoreErrorRepresentable {
         guard let expected = expected else {
             self = .failure(TypeConversionError.unexpectedType)
             return
@@ -52,8 +48,7 @@ internal extension Result where Failure == Error {
 
 internal func coreAPIClosureAdapter<SwiftError, ObjCType>(
     for closure: @escaping (Error?) -> Void,
-    concreteErrorType: SwiftError.Type) -> ((Expected<ObjCType, SwiftError.CoreErrorType>?) -> Void) where SwiftError: CoreErrorRepresentable,
-                                                                                                           SwiftError.CoreErrorType: AnyObject {
+    concreteErrorType: SwiftError.Type) -> (Expected<ObjCType, SwiftError.CoreErrorType>?) -> Void where SwiftError: CoreErrorRepresentable {
     return { (expected: Expected?) in
         var error: Error?
 

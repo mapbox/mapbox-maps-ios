@@ -5,6 +5,8 @@ import MapboxMaps
 public class LineGradientExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
+    internal var lastTrimOffset = 0.0
+    let button = UIButton(type: .system)
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -23,6 +25,20 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
             let camera = CameraOptions(center: centerCoordinate, zoom: 12.0)
             self.mapView.mapboxMap.setCamera(to: camera)
         }
+        button.setTitle("Increase trim offset", for: .normal)
+        button.backgroundColor = .white
+        button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(button)
+        NSLayoutConstraint.activate([button.centerXAnchor.constraint(equalTo: view.centerXAnchor), button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)])
+        button.addTarget(self, action: #selector(increaseTrimOffset), for: .touchUpInside)
+    }
+
+    @objc
+    func increaseTrimOffset() {
+        lastTrimOffset += 0.05
+        let trimOffset = Double.minimum(lastTrimOffset, 1.0)
+        try? mapView.mapboxMap.style.setLayerProperty(for: "line-layer", property: "line-trim-offset", value: [0.0, trimOffset])
     }
 
     // Load GeoJSON file from local bundle and decode into a `FeatureCollection`.

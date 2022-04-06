@@ -18,8 +18,7 @@ targets:
         DEFINES_MODULE: "YES"
         PRODUCT_NAME: $(TARGET_NAME:c99extidentifier)
         CODE_SIGN_STYLE: Automatic
-        SWIFT_TREAT_WARNINGS_AS_ERRORS: "YES"
-        GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS: "NO"
+        SWIFT_TREAT_WARNINGS_AS_ERRORS: "NO"
         SWIFT_EMIT_PRIVATE_MODULE_INTERFACE: "YES"
       configs:
         Debug:

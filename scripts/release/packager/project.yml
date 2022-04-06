@@ -1,7 +1,7 @@
 ---
 name: MapboxMaps
 options:
-  xcodeVersion: 1250
+  xcodeVersion: 1300
 targets:
   MapboxMaps:
     type: framework

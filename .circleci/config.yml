@@ -19,7 +19,7 @@ release-precheck: &release-anchor
 executors:
   xcode-latest:
     macos:
-      xcode: 13.2.1
+      xcode: 13.3.0
   # Note that `create-github-draft-release.sh` depends on this structure to parse the minimum supported Xcode version.
   # Please keep them in sync if this structure changes.
   xcode-sdk-min:

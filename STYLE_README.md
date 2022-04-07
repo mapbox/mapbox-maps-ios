@@ -85,7 +85,7 @@ Exp(.interpolate) {
 You also have the full power of Swift and the iOS runtime when defining this expression. So let's assume that you want to tweak this expression based on whether the user has dark mode enabled. Doing so becomes straightforward:
 
 ```swift
-var isDarkModeEnabled = traitCollection.userInterfaceStyle == .dark ? true : false
+var isDarkModeEnabled = traitCollection.userInterfaceStyle == .dark
 
 Exp(.interpolate) {
     Exp(.linear)

@@ -122,7 +122,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
             let event: ResourceEvent
             do {
                 event = try JSONDecoder().decode(ResourceEvent.self, from: jsonData)
-            } catch let error {
+            } catch {
                 XCTFail("Failed to decode to ResourceEvent: \(error)")
                 return
             }

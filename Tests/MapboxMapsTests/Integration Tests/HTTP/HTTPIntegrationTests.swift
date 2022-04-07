@@ -12,7 +12,6 @@ class CustomHttpService: HttpServiceInterface {
     // MARK: - HttpServiceInterface conformance
 
     func setMaxRequestsPerHostForMax(_ max: UInt8) {
-        print("TODO: setMaxRequestsPerHostForMax conformance")
     }
 
     func request(for request: HttpRequest, callback: @escaping HttpResponseCallback) -> UInt64 {
@@ -84,7 +83,6 @@ class CustomHttpService: HttpServiceInterface {
     }
 
     func cancelRequest(forId id: UInt64, callback: @escaping ResultCallback) {
-        print("TODO: cancelRequest(forId:callback:) conformance")
     }
 
     func supportsKeepCompression() -> Bool {
@@ -92,12 +90,10 @@ class CustomHttpService: HttpServiceInterface {
     }
 
     func download(for options: DownloadOptions, callback: @escaping DownloadStatusCallback) -> UInt64 {
-        print("TODO: download(for:callback:) conformance")
         return 0
     }
 
     func setInterceptorForInterceptor(_ interceptor: HttpServiceInterceptorInterface?) {
-        print("TODO: setInterceptorForInterceptor(_:) conformance")
     }
 }
 

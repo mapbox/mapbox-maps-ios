@@ -282,11 +282,11 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         //<--
 
             func setMaxRequestsPerHostForMax(_ max: UInt8) {
-                fatalError("TODO")
+                fatalError()
             }
 
             func cancelRequest(forId id: UInt64, callback: @escaping ResultCallback) {
-                fatalError("TODO")
+                fatalError()
             }
 
             func supportsKeepCompression() -> Bool {
@@ -294,11 +294,11 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
             }
 
             func download(for options: DownloadOptions, callback: @escaping DownloadStatusCallback) -> UInt64 {
-                fatalError("TODO")
+                fatalError()
             }
 
             func setInterceptorForInterceptor(_ interceptor: HttpServiceInterceptorInterface?) {
-                fatalError("TODO")
+                fatalError()
             }
         }
 
@@ -471,37 +471,6 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
             }
         }
         wait(for: [expectation], timeout: 10.0)
-    }
-
-    func todo_testAnnotationInteraction() {
-        //-->
-        class MyViewController: UIViewController, AnnotationInteractionDelegate {
-            @IBOutlet var mapView: MapView!
-
-            lazy var pointAnnotationManager: PointAnnotationManager = {
-                return mapView.annotations.makePointAnnotationManager()
-            }()
-
-            override func viewDidLoad() {
-                super.viewDidLoad()
-                mapView.mapboxMap.onNext(.mapLoaded) { _ in
-                    self.pointAnnotationManager.delegate = self
-                    let coordinate = CLLocationCoordinate2DMake(24, -89)
-                    var pointAnnotation = PointAnnotation(coordinate: coordinate)
-                    pointAnnotation.image = .init(image: UIImage(named: "green-star")!, name: "star")
-                    self.pointAnnotationManager.annotations = [pointAnnotation]
-                }
-            }
-
-            // MARK: - AnnotationInteractionDelegate
-            func annotationManager(_ manager: AnnotationManager,
-                                   didDetectTappedAnnotations annotations: [Annotation]) {
-                print("Annotations tapped: \(annotations)")
-            }
-        }
-        //<--
-
-        // TODO: Test above
     }
 
     func testEnableLocation() {

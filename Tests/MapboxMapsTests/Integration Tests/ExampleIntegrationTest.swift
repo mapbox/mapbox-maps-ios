@@ -2,13 +2,9 @@ import XCTest
 import MapboxMaps
 import CoreLocation
 
-internal class ExampleIntegrationTest: MapViewIntegrationTestCase {
+final class ExampleIntegrationTest: MapViewIntegrationTestCase {
 
-    internal func testBaseClass() throws {
-        // Do nothing
-    }
-
-    internal func testWaitForIdle() throws {
+    func testWaitForIdle() throws {
         let style = try XCTUnwrap(self.style)
 
         let expectation = XCTestExpectation(description: "Wait for map to idle")
@@ -21,15 +17,6 @@ internal class ExampleIntegrationTest: MapViewIntegrationTestCase {
         }
 
         didBecomeIdle = { _ in
-
-//            if let snapshot = mapView.snapshot() {
-//                let attachment = XCTAttachment(image: snapshot)
-//                self.add(attachment)
-//
-//                // TODO: Compare images...
-//                //
-//            }
-
             expectation.fulfill()
         }
 

@@ -39,7 +39,7 @@ extension AppDelegate: MXMetricManagerSubscriber {
 
             print("Wrote metric data to \(cacheDirectoryURL)")
 
-        } catch let error {
+        } catch {
             print("Payload error: \(error)")
         }
     }

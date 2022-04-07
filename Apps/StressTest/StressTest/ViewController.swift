@@ -266,7 +266,7 @@ class ViewController: UIViewController {
                 for: land,
                 property: "background-color",
                 value: jsonObject)
-        } catch let error {
+        } catch {
             print("Error setting background color: \(error)")
         }
     }

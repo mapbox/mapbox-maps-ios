@@ -6,12 +6,6 @@
 
 ALWAYS_SEARCH_USER_PATHS = NO
 
-// TODO: Re-enable APPLICATION_EXTENSION_API_ONLY
-// This should be enabled for the frameworks. It'll be necessary to add a config
-// for applications should those fail with this enabled.
-//APPLICATION_EXTENSION_API_ONLY = YES
-
-// TODO: Move into developer config?
 DEVELOPMENT_TEAM = GJZR2MEM28
 
 ENABLE_TESTABILITY[config=Release] = NO

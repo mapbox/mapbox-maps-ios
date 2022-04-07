@@ -63,8 +63,9 @@ Only create a release branch for RC and final releases. Beta releases may be tag
     - This triggers the [release workflow](https://app.circleci.com/pipelines/github/mapbox/mapbox-maps-ios) which automates most of the release actions.
 - [ ] Review and merge the api-downloads PR.
     - [ ] Approve `wait-registry-pr` job in CircleCI release workflow.
-- [ ] Review and merge the ios-sdk PR.
 - [ ] Review and merge the mapbox-maps-ios@publisher-production PR.
+- [ ] Wait for mapbox-maps-ios@publisher-production PR be merged.
+- [ ] Review and merge the ios-sdk PR.
 - [ ] Update the [draft GitHub Release](https://github.com/mapbox/mapbox-maps-ios/releases)
     - Draft may include the latest changelog entries and links to dependencies releases. Please, replace that content with more descritive release notes. It's also make sense to copy-paste public changelog from gl-native-internal.
     - You can include information that developers will need to update successfully, organize the changes by theme, etc.

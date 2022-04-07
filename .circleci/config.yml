@@ -664,6 +664,9 @@ jobs:
       - run:
           name: Podspec points to the release version
           command: '[[ $(pod ipc spec  MapboxMaps.podspec | jq -r .version) == "$VERSION" ]]'
+      - run:
+          name: General podspec check
+          command: pod spec lint --verbose --allow-warnings
       - slack-notify-failure-if-any
 
   build-dynamic:
@@ -787,7 +790,7 @@ jobs:
       - configure-environment
       - run:
           name: Publish CocoaPods Podspec
-          command: pod trunk push
+          command: pod trunk push --allow-warnings
       - slack-notify-failure-if-any
 
   create-draft-release:

@@ -30,6 +30,11 @@ Mapbox welcomes participation and contributions from everyone.
 * Add `OfflineRegion.getStatus(completion:)`. ([#1239](https://github.com/mapbox/mapbox-maps-ios/pull/1239))
 * Add a prefix `maps-ios` to all Log message's category. ([#1250](https://github.com/mapbox/mapbox-maps-ios/pull/1250)))
 
+## 10.4.2 - April 7, 2022
+
+* Update to MapboxCoreMaps 10.4.2 ([#1256](https://github.com/mapbox/mapbox-maps-ios/pull/1256))
+* Add `OfflineRegion.getStatus(completion:)`. ([#1239](https://github.com/mapbox/mapbox-maps-ios/pull/1239))
+
 ## 10.4.1 - March 28, 2022
 
 * Revert to using metal view draw notifications (`setNeedsDisplay()` instead of `draw()`). ([#1216](https://github.com/mapbox/mapbox-maps-ios/pull/1216))

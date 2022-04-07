@@ -754,7 +754,7 @@ jobs:
       - configure-environment
       - run:
           name: Publish CocoaPods Podspec
-          command: pod trunk push
+          command: pod trunk push --allow-warnings
       - slack-notify-failure-if-any
 
   create-draft-release:

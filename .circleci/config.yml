@@ -563,7 +563,7 @@ jobs:
             condition:
               not:
                 matches:
-                  pattern: "^12.*$"
+                  pattern: "^13.0.*$"
                   value: << parameters.xcode >>
             steps:
               - check-breaking-api:
@@ -577,7 +577,7 @@ jobs:
             condition:
               not:
                 matches:
-                  pattern: "^12.*$"
+                  pattern: "^13.0.*$"
                   value: << parameters.xcode >>
             steps:
               - check-breaking-api:

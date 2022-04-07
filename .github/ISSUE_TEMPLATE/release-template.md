@@ -22,6 +22,7 @@ assignees: ''
 - [ ] Ensure you have `jq` installed: `$ brew install jq`
 
 ### Pull requests:
+CircleCI Release workflow: <circleci-url>
 
 - [ ] mapbox-maps-ios version & changlog updates on main ->
 - [ ] mapbox-maps-ios release branch updates ->

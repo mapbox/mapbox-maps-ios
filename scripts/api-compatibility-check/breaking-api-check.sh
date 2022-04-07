@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -eo pipefail
-
+set -x
 print_usage() {
         cat <<HELP_USAGE
 Usage:

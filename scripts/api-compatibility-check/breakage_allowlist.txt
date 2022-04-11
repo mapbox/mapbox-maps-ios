@@ -1,11 +1,3 @@
-// https://github.com/mapbox/mapbox-maps-ios/pull/1095
-Func MapView.didMoveToSuperview() has been removed
-Func MapView.willMove(toWindow:) has been removed
-
-// _spi(Experimental)
-Enum PinchGestureBehavior has been removed
-Var GestureOptions.pinchBehavior has been removed
-
 // https://github.com/mapbox/mapbox-maps-ios/pull/1183
 Constructor MapView.init(frame:mapInitOptions:orientationProvider:urlOpener:) has been added as a designated initializer to an open class
 Constructor MapView.init(frame:mapInitOptions:urlOpener:) has been added as a designated initializer to an open class

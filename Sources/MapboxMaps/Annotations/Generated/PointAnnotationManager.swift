@@ -317,10 +317,10 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     /// Font stack to use for displaying text.
     public var textFont: [String]? {
         get {
-            return layerProperties["text-font"] as? [String]
+            return (layerProperties["text-font"] as? [Any])?[1] as? [String]
         }
         set {
-            layerProperties["text-font"] = newValue
+            layerProperties["text-font"] = newValue.map { ["literal", $0] }
         }
     }
 

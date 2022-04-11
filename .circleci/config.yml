@@ -604,7 +604,8 @@ jobs:
       - store-default-artifacts
 
   check-api-compatibility:
-    executor: xcode-latest
+    macos:
+      xcode: 13.2.1
     steps:
       - checkout
       - configure-environment

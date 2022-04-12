@@ -30,8 +30,7 @@ internal final class LowZoomToHighZoomAnimationSpecProvider: DefaultViewportTran
         var zoomDelay: TimeInterval = 0
         var zoomDuration: TimeInterval = 0
         if let zoom = cameraOptions.zoom {
-            let currentMapCameraZoom = cameraState.zoom
-            let zoomDelta = abs(zoom - currentMapCameraZoom)
+            let zoomDelta = abs(zoom - cameraState.zoom)
             // zoom level / s
             let zoomAnimationRate = 2.2
             zoomDelay = centerDuration / 2

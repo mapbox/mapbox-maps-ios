@@ -113,4 +113,34 @@ final class ObservableValueTests: XCTestCase {
 
         XCTAssertEqual(handlerStub.invocations.map(\.parameters), [value, value2])
     }
+
+    func testOnFirstSubscribe() {
+        let onFirstSubscribeStub = Stub<Void, Void>()
+        observableValue.onFirstSubscribe = onFirstSubscribeStub.call
+
+        for _ in 0...Int.random(in: 1...10) {
+            _ = observableValue.observe(with: { _ in true })
+        }
+
+        XCTAssertEqual(onFirstSubscribeStub.invocations.count, 1)
+    }
+
+    func testOnLastUnsubscribe() {
+        let onLastUnsubscribeStub = Stub<Void, Void>()
+        observableValue.onLastUnsubscribe = onLastUnsubscribeStub.call
+
+        let cancelables = (0...Int.random(in: 1...10)).map { i in
+            observableValue.observe(with: { _ in i.isMultiple(of: 2) })
+        }
+
+        cancelables.enumerated().forEach { (i, cancelable) in
+            if i.isMultiple(of: 2) {
+                cancelable.cancel()
+            }
+        }
+
+        observableValue.notify(with: 0)
+
+        XCTAssertEqual(onLastUnsubscribeStub.invocations.count, 1)
+    }
 }

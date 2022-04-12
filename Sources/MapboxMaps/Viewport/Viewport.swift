@@ -141,8 +141,7 @@
     public func makeDefaultViewportTransition(options: DefaultViewportTransitionOptions = .init()) -> DefaultViewportTransition {
         let lowZoomToHighZoomAnimationSpecProvider = LowZoomToHighZoomAnimationSpecProvider(
             mapboxMap: mapboxMap)
-        let highZoomToLowZoomAnimationSpecProvider = HighZoomToLowZoomAnimationSpecProvider(
-            mapboxMap: mapboxMap)
+        let highZoomToLowZoomAnimationSpecProvider = HighZoomToLowZoomAnimationSpecProvider()
         let animationSpecProvider = DefaultViewportTransitionAnimationSpecProvider(
             mapboxMap: mapboxMap,
             lowZoomToHighZoomAnimationSpecProvider: lowZoomToHighZoomAnimationSpecProvider,

@@ -262,8 +262,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                                    doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol {
         let lowZoomToHighZoomAnimationSpecProvider = LowZoomToHighZoomAnimationSpecProvider(
             mapboxMap: mapboxMap)
-        let highZoomToLowZoomAnimationSpecProvider = HighZoomToLowZoomAnimationSpecProvider(
-            mapboxMap: mapboxMap)
+        let highZoomToLowZoomAnimationSpecProvider = HighZoomToLowZoomAnimationSpecProvider()
         let animationSpecProvider = DefaultViewportTransitionAnimationSpecProvider(
             mapboxMap: mapboxMap,
             lowZoomToHighZoomAnimationSpecProvider: lowZoomToHighZoomAnimationSpecProvider,

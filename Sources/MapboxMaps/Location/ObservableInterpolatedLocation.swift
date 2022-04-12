@@ -1,4 +1,6 @@
 internal protocol ObservableInterpolatedLocationProtocol: AnyObject {
+    var onFirstSubscribe: (() -> Void)? { get set }
+    var onLastUnsubscribe: (() -> Void)? { get set }
     var value: InterpolatedLocation? { get }
     func notify(with newValue: InterpolatedLocation)
     func observe(with handler: @escaping (InterpolatedLocation) -> Bool) -> Cancelable
@@ -21,5 +23,15 @@ internal final class ObservableInterpolatedLocation: ObservableInterpolatedLocat
 
     internal func observe(with handler: @escaping (InterpolatedLocation) -> Bool) -> Cancelable {
         return observableValue.observe(with: handler)
+    }
+
+    internal var onFirstSubscribe: (() -> Void)? {
+        get { observableValue.onFirstSubscribe }
+        set { observableValue.onFirstSubscribe = newValue }
+    }
+
+    internal var onLastUnsubscribe: (() -> Void)? {
+        get { observableValue.onLastUnsubscribe }
+        set { observableValue.onLastUnsubscribe = newValue }
     }
 }

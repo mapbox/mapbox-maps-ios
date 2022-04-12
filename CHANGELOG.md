@@ -5,6 +5,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 * Add support for runtime source properties. ([#1267](https://github.com/mapbox/mapbox-maps-ios/pull/1267))
+* Start location services lazily. ([#1262](https://github.com/mapbox/mapbox-maps-ios/pull/1262))
 
 ## 10.5.0-beta.1 - April 7, 2022
 

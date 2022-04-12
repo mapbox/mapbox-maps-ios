@@ -28,8 +28,16 @@ internal final class InterpolatedLocationProducer: NSObject, InterpolatedLocatio
         self.locationInterpolator = locationInterpolator
         self.dateProvider = dateProvider
         super.init()
-        locationProducer.add(self)
-        displayLinkCoordinator.add(self)
+        observableInterpolatedLocation.onFirstSubscribe = { [weak self, weak displayLinkCoordinator] in
+            guard let self = self else { return }
+            locationProducer.add(self)
+            displayLinkCoordinator?.add(self)
+        }
+        observableInterpolatedLocation.onLastUnsubscribe = { [weak self, weak displayLinkCoordinator] in
+            guard let self = self else { return }
+            locationProducer.remove(self)
+            displayLinkCoordinator?.remove(self)
+        }
     }
 
     // delivers the latest location synchronously, if available

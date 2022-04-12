@@ -12,4 +12,8 @@ final class MockObservableInterpolatedLocation: ObservableInterpolatedLocationPr
     func notify(with newValue: InterpolatedLocation) {
         notifyStub.call(with: newValue)
     }
+
+    var onFirstSubscribe: (() -> Void)?
+
+    var onLastUnsubscribe: (() -> Void)?
 }

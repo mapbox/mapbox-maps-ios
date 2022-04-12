@@ -61,4 +61,55 @@ public struct GeoJSONSource: Source {
     }
 }
 
+extension GeoJSONSource {
+    enum CodingKeys: String, CodingKey {
+        case type = "type"
+        case data = "data"
+        case maxzoom = "maxzoom"
+        case attribution = "attribution"
+        case buffer = "buffer"
+        case tolerance = "tolerance"
+        case cluster = "cluster"
+        case clusterRadius = "clusterRadius"
+        case clusterMaxZoom = "clusterMaxZoom"
+        case clusterProperties = "clusterProperties"
+        case lineMetrics = "lineMetrics"
+        case generateId = "generateId"
+        case promoteId = "promoteId"
+        case prefetchZoomDelta = "prefetch-zoom-delta"
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        if encoder.userInfo[.volatilePropertiesOnly] as? Bool == true  {
+            try encodeVolatile(to: encoder, into: &container)
+        } else if encoder.userInfo[.nonVolatilePropertiesOnly] as? Bool == true  {
+            try encodeNonVolatile(to: encoder, into: &container)
+        } else {
+            try encodeVolatile(to: encoder, into: &container)
+            try encodeNonVolatile(to: encoder, into: &container)
+        }
+    }
+
+    private func encodeVolatile(to encoder: Encoder, into container: inout KeyedEncodingContainer<CodingKeys>) throws {
+        try container.encodeIfPresent(prefetchZoomDelta, forKey: .prefetchZoomDelta)
+    }
+
+    private func encodeNonVolatile(to encoder: Encoder, into container: inout KeyedEncodingContainer<CodingKeys>) throws {
+        try container.encodeIfPresent(type, forKey: .type)
+        try container.encodeIfPresent(data, forKey: .data)
+        try container.encodeIfPresent(maxzoom, forKey: .maxzoom)
+        try container.encodeIfPresent(attribution, forKey: .attribution)
+        try container.encodeIfPresent(buffer, forKey: .buffer)
+        try container.encodeIfPresent(tolerance, forKey: .tolerance)
+        try container.encodeIfPresent(cluster, forKey: .cluster)
+        try container.encodeIfPresent(clusterRadius, forKey: .clusterRadius)
+        try container.encodeIfPresent(clusterMaxZoom, forKey: .clusterMaxZoom)
+        try container.encodeIfPresent(clusterProperties, forKey: .clusterProperties)
+        try container.encodeIfPresent(lineMetrics, forKey: .lineMetrics)
+        try container.encodeIfPresent(generateId, forKey: .generateId)
+        try container.encodeIfPresent(promoteId, forKey: .promoteId)
+    }
+}
 // End of generated file.

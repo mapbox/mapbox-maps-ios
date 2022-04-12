@@ -59,7 +59,7 @@ private struct TestStruct: StyleEncodable, Encodable {
             throw Error.customUserInfoMissing
         }
 
-        // encode passed key/valu instead of actual values for testing purposes
+        // encode passed key/value instead of actual values for testing purposes
         try container.encode(key.rawValue, forKey: .customUserInfoKey)
         try container.encode(stringValue, forKey: .customUserInfoValue)
     }

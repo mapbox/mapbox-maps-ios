@@ -19,7 +19,9 @@ struct MetricsCommand: ParsableCommand {
     @Flag(help: "Generate human-readable JSON")
     var humanReadable: Bool = false
 
-    @Option(name: [.short, .customLong("output")], help: "Save generated content to the file")
+    @Option(name: [.short, .customLong("output")], help: "Save generated content to the file", transform: { path in
+        (path as NSString).expandingTildeInPath
+    })
     var outputPath: String?
 
     func run() throws {

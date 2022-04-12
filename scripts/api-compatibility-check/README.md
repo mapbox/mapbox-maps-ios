@@ -22,6 +22,8 @@ To update the baseline, update the `.baseapi` file to include a new git referenc
 
 Upon success, you will get an updated version of `.baseline.zip`. This archive represents folder structure with JSON SDK API dump made by swift-api-digester. It is a native structure for `swift-api-digester` so we can easily extend our platform validations to include macosx/watchos or any other Apple platform.
 
+This script currently requires to run on Xcode 13.3.0 or later.
+
 ## What is `swift-api-digester`?
 
 Swift API digester is an official tool to dump public API to JSON representation based on AST and compare dumps if needed.

@@ -158,8 +158,13 @@ public final class Style: StyleProtocol {
      - Throws: StyleError or type conversion errors
      */
     public func addSource(_ source: Source, id: String) throws {
-        let sourceDictionary = try source.jsonObject()
+        let sourceDictionary = try source.jsonObject(userInfo: [.nonVolatilePropertiesOnly: true])
         try addSource(withId: id, properties: sourceDictionary)
+
+        // volatile properties have to be set after the source has been added to the style
+        let volatileProperties = try source.jsonObject(userInfo: [.volatilePropertiesOnly: true])
+
+        try setSourceProperties(for: id, properties: volatileProperties)
     }
 
     /**

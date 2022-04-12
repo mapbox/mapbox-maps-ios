@@ -55,4 +55,57 @@ public struct RasterSource: Source {
     }
 }
 
+extension RasterSource {
+    enum CodingKeys: String, CodingKey {
+        case type = "type"
+        case url = "url"
+        case tiles = "tiles"
+        case bounds = "bounds"
+        case minzoom = "minzoom"
+        case maxzoom = "maxzoom"
+        case tileSize = "tileSize"
+        case scheme = "scheme"
+        case attribution = "attribution"
+        case volatile = "volatile"
+        case prefetchZoomDelta = "prefetch-zoom-delta"
+        case minimumTileUpdateInterval = "minimum-tile-update-interval"
+        case maxOverscaleFactorForParentTiles = "max-overscale-factor-for-parent-tiles"
+        case tileRequestsDelay = "tile-requests-delay"
+        case tileNetworkRequestsDelay = "tile-network-requests-delay"
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        if encoder.userInfo[.volatilePropertiesOnly] as? Bool == true  {
+            try encodeVolatile(to: encoder, into: &container)
+        } else if encoder.userInfo[.nonVolatilePropertiesOnly] as? Bool == true  {
+            try encodeNonVolatile(to: encoder, into: &container)
+        } else {
+            try encodeVolatile(to: encoder, into: &container)
+            try encodeNonVolatile(to: encoder, into: &container)
+        }
+    }
+
+    private func encodeVolatile(to encoder: Encoder, into container: inout KeyedEncodingContainer<CodingKeys>) throws {
+        try container.encodeIfPresent(prefetchZoomDelta, forKey: .prefetchZoomDelta)
+        try container.encodeIfPresent(minimumTileUpdateInterval, forKey: .minimumTileUpdateInterval)
+        try container.encodeIfPresent(maxOverscaleFactorForParentTiles, forKey: .maxOverscaleFactorForParentTiles)
+        try container.encodeIfPresent(tileRequestsDelay, forKey: .tileRequestsDelay)
+        try container.encodeIfPresent(tileNetworkRequestsDelay, forKey: .tileNetworkRequestsDelay)
+    }
+
+    private func encodeNonVolatile(to encoder: Encoder, into container: inout KeyedEncodingContainer<CodingKeys>) throws {
+        try container.encodeIfPresent(type, forKey: .type)
+        try container.encodeIfPresent(url, forKey: .url)
+        try container.encodeIfPresent(tiles, forKey: .tiles)
+        try container.encodeIfPresent(bounds, forKey: .bounds)
+        try container.encodeIfPresent(minzoom, forKey: .minzoom)
+        try container.encodeIfPresent(maxzoom, forKey: .maxzoom)
+        try container.encodeIfPresent(tileSize, forKey: .tileSize)
+        try container.encodeIfPresent(scheme, forKey: .scheme)
+        try container.encodeIfPresent(attribution, forKey: .attribution)
+        try container.encodeIfPresent(volatile, forKey: .volatile)
+    }
+}
 // End of generated file.

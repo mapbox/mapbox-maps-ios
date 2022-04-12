@@ -22,4 +22,35 @@ public struct ImageSource: Source {
     }
 }
 
+extension ImageSource {
+    enum CodingKeys: String, CodingKey {
+        case type = "type"
+        case url = "url"
+        case coordinates = "coordinates"
+        case prefetchZoomDelta = "prefetch-zoom-delta"
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        if encoder.userInfo[.volatilePropertiesOnly] as? Bool == true  {
+            try encodeVolatile(to: encoder, into: &container)
+        } else if encoder.userInfo[.nonVolatilePropertiesOnly] as? Bool == true  {
+            try encodeNonVolatile(to: encoder, into: &container)
+        } else {
+            try encodeVolatile(to: encoder, into: &container)
+            try encodeNonVolatile(to: encoder, into: &container)
+        }
+    }
+
+    private func encodeVolatile(to encoder: Encoder, into container: inout KeyedEncodingContainer<CodingKeys>) throws {
+        try container.encodeIfPresent(prefetchZoomDelta, forKey: .prefetchZoomDelta)
+    }
+
+    private func encodeNonVolatile(to encoder: Encoder, into container: inout KeyedEncodingContainer<CodingKeys>) throws {
+        try container.encodeIfPresent(type, forKey: .type)
+        try container.encodeIfPresent(url, forKey: .url)
+        try container.encodeIfPresent(coordinates, forKey: .coordinates)
+    }
+}
 // End of generated file.

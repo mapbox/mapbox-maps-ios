@@ -5,10 +5,15 @@ import ArgumentParser
 struct MetricsCommand: ParsableCommand {
     static var configuration = CommandConfiguration(commandName: "metrics")
 
-    @Option(name: [.customLong("path")], help: ArgumentHelp("Path to XCResult with perfomance metrics", valueName: "path-to-xcresult" ))
-    var pathToXCResult: String
+    @Option(name: [.customLong("path")], help: ArgumentHelp("Path to XCResult with perfomance metrics", valueName: "path-to-xcresult" ), transform: { (path: String) in
+        return URL(fileURLWithPath: (path as NSString).expandingTildeInPath,
+            relativeTo: URL(fileURLWithPath: FileManager.default.currentDirectoryPath))
+    })
+    var pathToXCResult: URL
 
-    @Option(name: [.short, .long], help: "Git repository to be used for build metadata")
+    @Option(name: [.short, .long], help: "Git repository to be used for build metadata", transform: { path in
+        (path as NSString).expandingTildeInPath
+    })
     var repositoryPath: String
 
     @Flag(help: "Generate human-readable JSON")
@@ -18,14 +23,30 @@ struct MetricsCommand: ParsableCommand {
     var outputPath: String?
 
     func run() throws {
-        let xcresultPath = URL(fileURLWithPath: pathToXCResult,
-                               relativeTo: URL(fileURLWithPath: FileManager.default.currentDirectoryPath))
-
-        let resultFile = XCResultFile(url: xcresultPath)
+        let resultFile = XCResultFile(url: pathToXCResult)
         let metricTests = try parseMetrics(resultFile: resultFile)
         let content = try generateOutputContent(tests: metricTests)
 
         try outputContent(content)
+    }
+
+    func validate() throws {
+        var isDirectory: ObjCBool = false
+        guard
+            FileManager.default.fileExists(atPath: repositoryPath, isDirectory: &isDirectory),
+            isDirectory.boolValue else {
+            throw ValidationError("Repository path argument should be a directory (input: '\(repositoryPath)')")
+        }
+
+        guard !shell("git -C \(repositoryPath) rev-parse HEAD ").starts(with: "fatal") else {
+            throw ValidationError("Repository path argument should be a git repository")
+        }
+
+        guard
+            FileManager.default.fileExists(atPath: pathToXCResult.path, isDirectory: &isDirectory),
+            isDirectory.boolValue else {
+            throw ValidationError("Path [to XCResult] argument should be a directory (input: '\(pathToXCResult.path)')")
+        }
     }
 
     struct PerfomanceTest {

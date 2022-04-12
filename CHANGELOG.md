@@ -5,6 +5,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## 10.4.3 - April 13, 2022
 
 * Update to MapboxCommon 21.2.1 ([#](https://github.com/mapbox/mapbox-maps-ios/pull/))
+* Start location services lazily. ([#1262](https://github.com/mapbox/mapbox-maps-ios/pull/1262))
 
 ## 10.4.2 - April 7, 2022
 

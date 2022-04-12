@@ -1,11 +1,6 @@
 import Foundation
 
 internal final class HighZoomToLowZoomAnimationSpecProvider: DefaultViewportTransitionAnimationSpecProviderProtocol {
-    private let mapboxMap: MapboxMapProtocol
-
-    internal init(mapboxMap: MapboxMapProtocol) {
-        self.mapboxMap = mapboxMap
-    }
 
     internal func makeAnimationSpecs(cameraOptions: CameraOptions) -> [DefaultViewportTransitionAnimationSpec] {
         var animationSpecs = [DefaultViewportTransitionAnimationSpec]()

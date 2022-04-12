@@ -250,6 +250,7 @@ func shell(_ command: String) -> String {
     task.arguments = ["-c", command]
     task.launchPath = "/bin/zsh"
     task.launch()
+    task.waitUntilExit()
 
     let data = pipe.fileHandleForReading.readDataToEndOfFile()
     let output = String(data: data, encoding: .utf8)!

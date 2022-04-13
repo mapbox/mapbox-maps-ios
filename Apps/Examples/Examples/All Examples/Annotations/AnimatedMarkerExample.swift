@@ -62,7 +62,7 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
     }
 
     private func setupExample() {
-        try? mapView.mapboxMap.style.addImage(UIImage(named: "red_marker")!, id: Constants.markerIconId, stretchX: [], stretchY: [])
+        try? mapView.mapboxMap.style.addImage(UIImage(named: "red_marker")!, id: Constants.markerIconId)
 
         // Create a GeoJSON data source.
         var source = GeoJSONSource()

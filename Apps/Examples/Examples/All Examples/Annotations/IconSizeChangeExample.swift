@@ -48,7 +48,7 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
         try? mapView.mapboxMap.style.addSource(markerSource, id: Constants.markerSourceId)
 
         // Add marker image to the map
-        try? mapView.mapboxMap.style.addImage(UIImage(named: "blue_marker_view")!, id: Constants.blueMarkerImageId, stretchX: [], stretchY: [])
+        try? mapView.mapboxMap.style.addImage(UIImage(named: "blue_marker_view")!, id: Constants.blueMarkerImageId)
 
         // Create a symbol layer for markers
         var markerLayer = SymbolLayer(id: Constants.markerLayerId)

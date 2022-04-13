@@ -40,8 +40,8 @@ final class AddMarkersSymbolExample: UIViewController, ExampleProtocol {
 
     private func prepareStyle() {
         let style = mapView.mapboxMap.style
-        try? style.addImage(UIImage(named: "blue_marker_view")!, id: Constants.BLUE_ICON_ID, stretchX: [], stretchY: [])
-        try? style.addImage(UIImage(named: "red_marker")!, id: Constants.RED_ICON_ID, stretchX: [], stretchY: [])
+        try? style.addImage(UIImage(named: "blue_marker_view")!, id: Constants.BLUE_ICON_ID)
+        try? style.addImage(UIImage(named: "red_marker")!, id: Constants.RED_ICON_ID)
 
         var features = [Feature]()
         var feature = Feature(geometry: Point(LocationCoordinate2D(latitude: 55.608166, longitude: 12.65147)))

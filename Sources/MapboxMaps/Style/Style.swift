@@ -682,6 +682,9 @@ public final class Style: StyleProtocol {
     /// [`fill-pattern`](https://www.mapbox.com/mapbox-gl-js/style-spec/#paint-fill-fill-pattern), and
     /// [`line-pattern`](https://www.mapbox.com/mapbox-gl-js/style-spec/#paint-line-line-pattern).
     ///
+    /// For more information on how `stretchX` and `stretchY` parameters affect image stretching
+    /// see [this Mapbox GL-JS example](https://docs.mapbox.com/mapbox-gl-js/example/add-image-stretchable).
+    ///
     /// - Parameters:
     ///   - image: Image to add.
     ///   - id: ID of the image.
@@ -720,6 +723,34 @@ public final class Style: StyleProtocol {
                                               stretchY: stretchY,
                                               content: content)
         }
+    }
+
+    /// Adds an image to be used in the style.
+    ///
+    /// This API can also be used for
+    /// updating an image. If the image id was already added, it gets replaced
+    /// by the new image.
+    ///
+    /// The image can be used in
+    /// [`icon-image`](https://www.mapbox.com/mapbox-gl-js/style-spec/#layout-symbol-icon-image),
+    /// [`fill-pattern`](https://www.mapbox.com/mapbox-gl-js/style-spec/#paint-fill-fill-pattern), and
+    /// [`line-pattern`](https://www.mapbox.com/mapbox-gl-js/style-spec/#paint-line-line-pattern).
+    ///
+    /// - Parameters:
+    ///   - image: Image to add.
+    ///   - id: ID of the image.
+    ///   - sdf: Option to treat whether image is SDF(signed distance field) or not.
+    ///         Setting this to `true` allows template images to be recolored. The
+    ///         default value is `false`.
+    ///   - content: An array of four numbers, with the first two specifying the
+    ///         left, top corner, and the last two specifying the right, bottom
+    ///         corner. If present, and if the icon uses icon-text-fit, the
+    ///         symbol's text will be fit inside the content box.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    public func addImage(_ image: UIImage, id: String, sdf: Bool = false, content: ImageContent? = nil) throws {
+        try addImage(image, id: id, stretchX: [], stretchY: [])
     }
 
     /// Adds a resizable image to be used in the style.

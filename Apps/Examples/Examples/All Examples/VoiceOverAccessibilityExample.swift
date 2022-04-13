@@ -88,7 +88,9 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
 
         // Observe events that require recomputing accessibility elements
         mapView.mapboxMap.onNext(.mapLoaded) { [weak self] _ in
-            self?.updateAllAccessibilityElements()
+            self?.updateAllAccessibilityElements {
+                self?.finish()
+            }
         }
         mapView.gestures.delegate = self
         mapView.location.addLocationConsumer(newConsumer: self)
@@ -135,10 +137,13 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
         }
     }
 
-    func updateAllAccessibilityElements() {
+    func updateAllAccessibilityElements(completion: @escaping () -> Void = {}) {
         updateLocationAccessibilityElement()
 
+        let group = DispatchGroup()
+
         // update accessibility elements for annotations
+        group.enter()
         let pointAnnotationsQueryOptions = RenderedQueryOptions(
             layerIds: [pointAnnotationManager.layerId],
             filter: nil)
@@ -166,9 +171,11 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
                     self.annotationAccessibilityElements = []
                     print(error)
                 }
+                group.leave()
             }
 
         // update accessibility elements for route shields
+        group.enter()
         let routeShieldsQueryOptions = RenderedQueryOptions(
             layerIds: ["road-number-shield"],
             filter: Exp(.eq) {
@@ -201,7 +208,10 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
                     self.routeShieldAccessibilityElements = []
                     print(error)
                 }
+                group.leave()
             }
+
+        group.notify(queue: .main, execute: completion)
     }
 }
 

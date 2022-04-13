@@ -1,6 +1,7 @@
 // swiftlint:disable file_length
 @_implementationOnly import MapboxCommon_Private
 @_implementationOnly import MapboxCoreMaps_Private
+import UIKit
 
 internal protocol StyleProtocol: AnyObject {
     func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition?) throws
@@ -719,6 +720,43 @@ public final class Style: StyleProtocol {
                                               stretchY: stretchY,
                                               content: content)
         }
+    }
+
+    /// Adds a resizable image to be used in the style.
+    /// X- and Y-stretches will be calculated from `UIImage.capInsets`
+    ///
+    /// - Parameters:
+    ///   - image: Image to add.
+    ///   - id: ID of the image.
+    ///   - sdf: Option to treat whether image is SDF(signed distance field) or not.
+    ///         Setting this to `true` allows template images to be recolored. The
+    ///         default value is `false`.
+    ///   - content: An array of four numbers, with the first two specifying the
+    ///         left, top corner, and the last two specifying the right, bottom
+    ///         corner. If present, and if the icon uses icon-text-fit, the
+    ///         symbol's text will be fit inside the content box.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    public func addImageResizable(_ image: UIImage, id: String, sdf: Bool = false, content: ImageContent? = nil) throws {
+        guard image.capInsets != .zero else {
+            Log.warning(forMessage: "The supplied image is missing cap insets and might be resized incorrectly.")
+            try addImage(image, id: id, stretchX: [], stretchY: [])
+            return
+        }
+
+        let insets = image.capInsets
+        let scale = Float(image.scale)
+        let stretchXFirst = Float(insets.left) * scale
+        let stretchXSecond = Float(image.size.width - insets.right) * scale
+        let stretchYFirst = Float(insets.top) * scale
+        let stretchYSecond = Float(image.size.height - insets.bottom) * scale
+
+        try addImage(image,
+                     id: id,
+                     stretchX:  [ImageStretches(first: stretchXFirst, second: stretchXSecond)],
+                     stretchY: [ImageStretches(first: stretchYFirst, second: stretchYSecond)],
+                     content: content)
     }
 
     /// Removes an image from the style.

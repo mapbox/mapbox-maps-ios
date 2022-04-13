@@ -2,19 +2,19 @@ import UIKit
 import ObjectiveC
 
 //swiftlint:disable force_cast
-public class ExampleTableViewController: UITableViewController {
+final class ExampleTableViewController: UITableViewController {
 
     internal var searchBar = UISearchBar()
 
-    public let allExamples = Examples.all
-    public var filteredExamples = [Example]()
+    let allExamples = Examples.all
+    var filteredExamples = [Example]()
 
-    public var isFiltering: Bool {
+    var isFiltering: Bool {
         let searchText = searchBar.text?.isEmpty ?? true
         return !searchText
     }
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         title = "Examples"
 
@@ -25,20 +25,20 @@ public class ExampleTableViewController: UITableViewController {
 }
 
 extension ExampleTableViewController: UISearchBarDelegate {
-    public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if let searchText = searchBar.text {
             filterContentForSearchText(searchText)
         }
     }
 
-    public func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
     }
 }
 
 extension ExampleTableViewController {
 
-    public override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 0 {
             searchBar.placeholder = "Search examples"
             return searchBar
@@ -47,7 +47,7 @@ extension ExampleTableViewController {
         return nil
     }
 
-    public override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 {
             return 60.0
         }
@@ -55,7 +55,7 @@ extension ExampleTableViewController {
         return 30
     }
 
-    public override func numberOfSections(in tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         if isFiltering {
             return 1
         }
@@ -63,14 +63,15 @@ extension ExampleTableViewController {
         return allExamples.count + 1
     }
 
-    public override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 {
             return nil
         } else {
             return allExamples[section - 1]["title"] as? String
         }
     }
-    public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
         if isFiltering {
           return filteredExamples.count
@@ -83,7 +84,7 @@ extension ExampleTableViewController {
         return examples.count
     }
 
-    public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         var example: Example
 
@@ -107,7 +108,7 @@ extension ExampleTableViewController {
         return cell
     }
 
-    public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         var example: Example
 
@@ -122,7 +123,7 @@ extension ExampleTableViewController {
         navigationController?.pushViewController(exampleViewController, animated: true)
     }
 
-    public func filterContentForSearchText(_ searchText: String) {
+    func filterContentForSearchText(_ searchText: String) {
         var examples = [Example]()
 
         for array in allExamples {

@@ -2,247 +2,248 @@ import UIKit
 import CoreLocation
 import MapboxMaps
 
-struct MyData {
-    var id: Int
-    var coordinate: CLLocationCoordinate2D
-    var name: String
-}
-
 @objc(VoiceOverAccessibilityExample)
-class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
+final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
+    struct MyData {
+        var id: Int
+        var coordinate: CLLocationCoordinate2D
+        var name: String
+    }
 
     let data: [MyData] = [
-        MyData(id: 0, coordinate: CLLocationCoordinate2D(latitude: 40.727405, longitude: -73.981926), name: "Tomkins Square Park"),
-        MyData(id: 1, coordinate: CLLocationCoordinate2D(latitude: 40.7308963, longitude: -73.998694), name: "Washington Square Park"),
-        MyData(id: 2, coordinate: CLLocationCoordinate2D(latitude: 40.715225, longitude: -74.000086), name: "Columbus Park"),
-        MyData(id: 3, coordinate: CLLocationCoordinate2D(latitude: 40.692813, longitude: -73.976161), name: "Fort Greene Park")
-    ]
+        MyData(id: 0, coordinate: .init(latitude: 40.727405, longitude: -73.981926), name: "Tomkins Square Park"),
+        MyData(id: 1, coordinate: .init(latitude: 40.7308963, longitude: -73.998694), name: "Washington Square Park"),
+        MyData(id: 2, coordinate: .init(latitude: 40.715225, longitude: -74.000086), name: "Columbus Park"),
+        MyData(id: 3, coordinate: .init(latitude: 40.692813, longitude: -73.976161), name: "Fort Greene Park")]
 
-    var mapView: MapViewView!
-    var markerAccessibilityElements: [Int: UIAccessibilityElement] = [:]
-    var routeShields: [UIAccessibilityElement] = []
-    var pointAnnotation: PointAnnotation?
-    var pointAnnotationManager: PointAnnotationManager?
-    var visibleAnnotationArray: [PointAnnotation] = []
-    var accessibilityInfoLabel = UILabel(frame: CGRect.zero)
+    var mapView: MapView!
+    var pointAnnotationManager: PointAnnotationManager!
+    var instructionsLabel: UILabel!
+
+    var currentLocationAccessibilityElement: UIAccessibilityElement? {
+        didSet {
+            accessibilityElementsDidChange()
+        }
+    }
+
+    var annotationAccessibilityElements = [UIAccessibilityElement]() {
+        didSet {
+            accessibilityElementsDidChange()
+        }
+    }
+
+    var routeShieldAccessibilityElements = [UIAccessibilityElement]() {
+        didSet {
+            accessibilityElementsDidChange()
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         let centerCoordinate = CLLocationCoordinate2D(latitude: 40.7131854, longitude: -74.0165265)
         let options = MapInitOptions(cameraOptions: CameraOptions(center: centerCoordinate, zoom: 10))
-        mapView = MapViewView(frame: view.frame, mapInitOptions: options)
+        mapView = MapView(frame: view.frame, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        mapView.isAccessibilityElement = true
-
         view.addSubview(mapView)
 
-        setUserLocation()
+        mapView.isAccessibilityElement = false
+        mapView.accessibilityElements = []
+
+        let customLocationProvider = SimulatedLocationProvider(
+            currentLocation: CLLocation(
+                latitude: centerCoordinate.latitude,
+                longitude: centerCoordinate.longitude))
+        mapView.location.overrideLocationProvider(with: customLocationProvider)
+        mapView.location.options.puckType = .puck2D(.makeDefault())
 
         // create point annotation manager to house point annotations
-        pointAnnotationManager =  mapView.annotations.makePointAnnotationManager(id: "annotation-manager")
+        pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
+        pointAnnotationManager.annotations = data.map { dataElement in
+            var annotation = PointAnnotation(id: dataElement.id.description, coordinate: dataElement.coordinate)
+            annotation.image = .init(image: UIImage(named: "custom_marker")!, name: "custom_marker")
+            annotation.userInfo = ["name": dataElement.name]
+            return annotation
+        }
 
         // configure example instructions label
-        accessibilityInfoLabel.translatesAutoresizingMaskIntoConstraints = false
-        accessibilityInfoLabel.backgroundColor = .lightGray
-        accessibilityInfoLabel.textColor = .black
-        accessibilityInfoLabel.text = "Turn on VoiceOver to interact with the mapview annotations."
-        accessibilityInfoLabel.textAlignment = .center
-        accessibilityInfoLabel.lineBreakMode = .byWordWrapping
-        accessibilityInfoLabel.numberOfLines = 0
-        view.addSubview(accessibilityInfoLabel)
-        labelConstraints()
-
-        mapView.mapboxMap.onNext(.mapLoaded) { _ in
-            self.calculateVisibleAnnotations()
-            self.queryRenderedHighwayShields()
-        }
-
-        mapView.mapboxMap.onEvery(.cameraChanged) { _ in
-            for datum in self.data {
-                let element = self.markerAccessibilityElements[datum.id]
-                element?.accessibilityFrame = self.mapView.rect(for: datum.coordinate)
-            }
-
-            // query newly visible route shields and location at current map view
-            self.setUserLocation()
-            self.queryRenderedHighwayShields()
-        }
-
-        mapView.coordinates = data.map(\.coordinate)
-
-        // create UIAccessibilityElements from data points
-        for datum in data {
-            let element = UIAccessibilityElement(accessibilityContainer: view!)
-            element.accessibilityIdentifier = datum.id.description
-            element.accessibilityFrame = mapView.rect(for: datum.coordinate)
-            element.accessibilityLabel = datum.name
-            markerAccessibilityElements[datum.id] = element
-
-            pointAnnotation = PointAnnotation(id: datum.name, coordinate: datum.coordinate)
-            pointAnnotation!.image = .init(image: UIImage(named: "custom_marker")!, name: "custom_marker")
-            pointAnnotationManager?.annotations.append(pointAnnotation!)
-        }
-
-        // add shield layer elements to the array
-        view.accessibilityElements = [Array(self.markerAccessibilityElements.values), self.mapView]
-        calculateVisibleAnnotations()
-    }
-
-    func labelConstraints() {
-        let safeAreaLayoutForView = view.safeAreaLayoutGuide
+        instructionsLabel = UILabel()
+        instructionsLabel.backgroundColor = .lightGray
+        instructionsLabel.textColor = .black
+        instructionsLabel.text = "Turn on VoiceOver to interact with the annotations."
+        instructionsLabel.textAlignment = .center
+        instructionsLabel.lineBreakMode = .byWordWrapping
+        instructionsLabel.numberOfLines = 0
+        instructionsLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(instructionsLabel)
         NSLayoutConstraint.activate([
-            accessibilityInfoLabel.topAnchor.constraint(equalTo: safeAreaLayoutForView.topAnchor),
-            accessibilityInfoLabel.leadingAnchor.constraint(equalTo: safeAreaLayoutForView.leadingAnchor),
-            accessibilityInfoLabel.trailingAnchor.constraint(equalTo: safeAreaLayoutForView.trailingAnchor),
-        ])
+            instructionsLabel.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
+            instructionsLabel.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
+            instructionsLabel.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor)])
+        instructionsLabel.isHidden = UIAccessibility.isVoiceOverRunning
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(voiceOverStatusDidChange),
+            name: UIAccessibility.voiceOverStatusDidChangeNotification,
+            object: nil)
+
+        // Observe events that require recomputing accessibility elements
+        mapView.mapboxMap.onNext(.mapLoaded) { [weak self] _ in
+            self?.updateAllAccessibilityElements()
+        }
+        mapView.gestures.delegate = self
+        mapView.location.addLocationConsumer(newConsumer: self)
     }
 
-    func setUserLocation() {
-        // set custom location to New York City using CustomLocationProvider
-        let customLocationProvider = CustomLocationProvider(currentLocation: CLLocation(latitude: 40.7131854, longitude: -74.0165265))
-        mapView.location.overrideLocationProvider(with: customLocationProvider)
-        mapView.location.options.puckType = .puck2D()
-        mapView.location.isAccessibilityElement = true
-        mapView.location.accessibilityLabel = "Current location"
-        mapView.location.accessibilityFrame = self.mapView.rect(for: (self.mapView.location.latestLocation?.location.coordinate)!)
-        view.accessibilityElements?.append(self.mapView.location.latestLocation!)
+    @objc private func voiceOverStatusDidChange() {
+        instructionsLabel.isHidden = UIAccessibility.isVoiceOverRunning
     }
 
-    func queryRenderedHighwayShields() {
-        routeShields = []
+    func accessibilityElementsDidChange() {
+        let summaryAccessibilityElement = UIAccessibilityElement(accessibilityContainer: mapView!)
+        summaryAccessibilityElement.accessibilityIdentifier = "map-view-summary"
+        summaryAccessibilityElement.accessibilityFrame = UIAccessibility.convertToScreenCoordinates(mapView.bounds, in: mapView)
 
-        // reset accessibility elements aray to only include existing point
-        // annotations, location annotation and mapview
-        view.accessibilityElements = [Array(self.markerAccessibilityElements.values), self.mapView.location, self.mapView]
-
-        let filterExpression = Exp(.neq) {
-            Exp(.get) {
-                "shield"
-            }
-            "default"
+        switch annotationAccessibilityElements.count {
+        case 0:
+            summaryAccessibilityElement.accessibilityLabel = "Map view selected. There are 0 visible annotations."
+        case 1:
+            summaryAccessibilityElement.accessibilityLabel = "Map view selected. There is 1 visible annotation: \(annotationAccessibilityElements.first!.accessibilityLabel!)."
+        default:
+            summaryAccessibilityElement.accessibilityLabel = "Map view selected. There are \(annotationAccessibilityElements.count) visible annotations: \(annotationAccessibilityElements.compactMap { $0.accessibilityLabel }.joined(separator: ", "))."
         }
 
-        // query route-shields visible in current map view
+        var allAccessibilityElements = [summaryAccessibilityElement]
+        if let currentLocationAccessibilityElement = currentLocationAccessibilityElement {
+            allAccessibilityElements.append(currentLocationAccessibilityElement)
+        }
+        allAccessibilityElements.append(contentsOf: annotationAccessibilityElements)
+        allAccessibilityElements.append(contentsOf: routeShieldAccessibilityElements)
+
+        mapView.accessibilityElements = allAccessibilityElements
+    }
+
+    func updateLocationAccessibilityElement() {
+        if let location = mapView.location.latestLocation,
+           let accessibilityFrame = mapView.accessibilityFrame(for: location.coordinate) {
+            let element = UIAccessibilityElement(accessibilityContainer: mapView!)
+            element.accessibilityIdentifier = "puck"
+            element.accessibilityLabel = "Current Location"
+            element.accessibilityFrame = accessibilityFrame
+            currentLocationAccessibilityElement = element
+        } else {
+            currentLocationAccessibilityElement = nil
+        }
+    }
+
+    func updateAllAccessibilityElements() {
+        updateLocationAccessibilityElement()
+
+        // update accessibility elements for annotations
+        let pointAnnotationsQueryOptions = RenderedQueryOptions(
+            layerIds: [pointAnnotationManager.layerId],
+            filter: nil)
         mapView.mapboxMap.queryRenderedFeatures(
             in: mapView.safeAreaLayoutGuide.layoutFrame,
-            options: RenderedQueryOptions(layerIds: ["road-number-shield"], filter: filterExpression)) { [weak self] result in
+            options: pointAnnotationsQueryOptions) { [weak self] result in
+                guard let self = self, let mapView = self.mapView else { return }
                 switch result {
-                case .success(let queriedfeatures):
-                    for queriedFeature in queriedfeatures {
-                        let shield = queriedFeature.feature.properties!["shield"]!!.rawValue as? String
-                        let shieldNumber = queriedFeature.feature.properties!["ref"]!!.rawValue as? String
-                        let geometry = queriedFeature.feature.geometry
-
-                        switch geometry {
-                        case .point(let point):
-                            // create the UIAccessibility element for each route
-                            // shield in the map view.
-                            let element = UIAccessibilityElement(accessibilityContainer: self?.mapView.mapboxMap.style)
-                            element.accessibilityIdentifier = queriedFeature.feature.identifier.debugDescription
-                            element.accessibilityLabel = "U.S. interstate\(shieldNumber!)"
-                            element.accessibilityFrame = (self?.mapView.rect(for: point.coordinates))!
-                            self?.routeShields.append(element)
-                            self?.view.accessibilityElements?.append(self!.routeShields)
-                        default:  break
+                case .success(let queriedFeatures):
+                    self.annotationAccessibilityElements = queriedFeatures.compactMap { queriedFeature -> UIAccessibilityElement? in
+                        guard case .point(let point) = queriedFeature.feature.geometry,
+                              let accessibilityFrame = mapView.accessibilityFrame(for: point.coordinates),
+                              let properties = queriedFeature.feature.properties?.rawValue as? [String: Any],
+                              let userInfo = properties["userInfo"] as? [String: Any],
+                              let name = userInfo["name"] as? String else {
+                            return nil
                         }
+                        let element = UIAccessibilityElement(accessibilityContainer: mapView)
+                        element.accessibilityIdentifier = queriedFeature.feature.identifier?.description
+                        element.accessibilityFrame = accessibilityFrame
+                        element.accessibilityLabel = name
+                        return element
                     }
-
                 case .failure(let error):
-                    print("Error:", error)
+                    self.annotationAccessibilityElements = []
+                    print(error)
+                }
+            }
+
+        // update accessibility elements for route shields
+        let routeShieldsQueryOptions = RenderedQueryOptions(
+            layerIds: ["road-number-shield"],
+            filter: Exp(.eq) {
+                Exp(.get) {
+                    "shield"
+                }
+                "us-interstate"
+            })
+        mapView.mapboxMap.queryRenderedFeatures(
+            in: mapView.safeAreaLayoutGuide.layoutFrame,
+            options: routeShieldsQueryOptions) { [weak self] result in
+                guard let self = self, let mapView = self.mapView else { return }
+                switch result {
+                case .success(let queriedFeatures):
+                    // create the UIAccessibility element for each route shield in the map view.
+                    self.routeShieldAccessibilityElements = queriedFeatures.compactMap { queriedFeature -> UIAccessibilityElement? in
+                        guard case .point(let point) = queriedFeature.feature.geometry,
+                              let accessibilityFrame = mapView.accessibilityFrame(for: point.coordinates),
+                              let properties = queriedFeature.feature.properties?.rawValue as? [String: Any],
+                              let shieldNumber = properties["ref"] as? String else {
+                            return nil
+                        }
+                        let element = UIAccessibilityElement(accessibilityContainer: mapView)
+                        element.accessibilityIdentifier = "shield-\(shieldNumber)"
+                        element.accessibilityLabel = "U.S. interstate \(shieldNumber)"
+                        element.accessibilityFrame = accessibilityFrame
+                        return element
+                    }
+                case .failure(let error):
+                    self.routeShieldAccessibilityElements = []
+                    print(error)
                 }
             }
     }
+}
 
-    func calculateVisibleAnnotations() {
-        visibleAnnotationArray = []
-        let cameraOptions = CameraOptions(cameraState: mapView.cameraState)
-        for annotation in pointAnnotationManager!.annotations {
-            if mapView.mapboxMap.coordinateBounds(for: cameraOptions).contains(forPoint: annotation.point.coordinates, wrappedCoordinates: true) {
-                visibleAnnotationArray.append(annotation)
-            }
+extension VoiceOverAccessibilityExample: GestureManagerDelegate {
+    func gestureManager(_ gestureManager: GestureManager, didBegin gestureType: GestureType) {
+    }
+
+    func gestureManager(_ gestureManager: GestureManager, didEnd gestureType: GestureType, willAnimate: Bool) {
+        if !willAnimate {
+            updateAllAccessibilityElements()
         }
-        if visibleAnnotationArray.count > 1 {
-            mapView.accessibilityLabel = "Map view selected. There are \(visibleAnnotationArray.count) visible point annotations: \(visibleAnnotationArray.map {$0.id}). There are also other accessibility elements, including a location component and interstate route shields"
-        } else if visibleAnnotationArray.count == 1 {
-            mapView.accessibilityLabel = "Map view selected. There is \(visibleAnnotationArray.count) visible annotation: \(visibleAnnotationArray.first?.id)."
-        } else if visibleAnnotationArray.count == 0 {
-            mapView.accessibilityLabel = "Map view selected. There are no visible annotations."
-        }
+    }
+
+    func gestureManager(_ gestureManager: GestureManager, didEndAnimatingFor gestureType: GestureType) {
+        updateAllAccessibilityElements()
     }
 }
 
-class MapViewView: MapView {
-    var coordinates: [CLLocationCoordinate2D] = []
-
-    func point(for coordinate: CLLocationCoordinate2D) -> CGPoint {
-        let point = mapboxMap.point(for: coordinate)
-        return point
-    }
-
-    func rect(for coordinate: CLLocationCoordinate2D) -> CGRect {
-        CGRect(origin: point(for: coordinate), size: .zero).insetBy(dx: -20, dy: -20)
+extension VoiceOverAccessibilityExample: LocationConsumer {
+    func locationUpdate(newLocation: Location) {
+        updateLocationAccessibilityElement()
     }
 }
 
-class CustomLocationProvider: LocationProvider {
-    var locationProviderOptions: LocationOptions
-
-    let authorizationStatus: CLAuthorizationStatus
-
-    let accuracyAuthorization: CLAccuracyAuthorization
-
-    let heading: CLHeading?
-
-    private let currentLocation: CLLocation
-
-    private weak var delegate: LocationProviderDelegate?
-
-    func setDelegate(_ delegate: LocationProviderDelegate) {
-        self.delegate = delegate
-        delegate.locationProvider(self, didUpdateLocations: [currentLocation])
-        delegate.locationProviderDidChangeAuthorization(self)
+private extension MapView {
+    func accessibilityFrame(for coordinate: CLLocationCoordinate2D) -> CGRect? {
+        let pointInViewSpace = mapboxMap.point(for: coordinate)
+        guard pointInViewSpace != CGPoint(x: -1, y: -1) else {
+            return nil
+        }
+        let rectInViewSpace = CGRect(origin: pointInViewSpace, size: .zero).insetBy(dx: -20, dy: -20)
+        return UIAccessibility.convertToScreenCoordinates(rectInViewSpace, in: self)
     }
+}
 
-    func requestAlwaysAuthorization() {
-        // not required for this example
-    }
-
-    func requestWhenInUseAuthorization() {
-        // not required for this example
-    }
-
-    func requestTemporaryFullAccuracyAuthorization(withPurposeKey purposeKey: String) {
-        // not required for this example
-    }
-
-    func startUpdatingLocation() {
-        // not required for this example
-    }
-
-    func stopUpdatingLocation() {
-        // not required for this example
-    }
-
-    var headingOrientation: CLDeviceOrientation
-
-    func startUpdatingHeading() {
-        // not required for this example
-    }
-
-    func stopUpdatingHeading() {
-        // not required for this example
-    }
-
-    func dismissHeadingCalibrationDisplay() {
-        // not required for this example
-    }
-
-    init(currentLocation: CLLocation) {
-        self.locationProviderOptions = .init()
-        self.authorizationStatus = .notDetermined
-        self.accuracyAuthorization = .fullAccuracy
-        self.headingOrientation = .portrait
-        self.heading = nil
-        self.currentLocation = currentLocation
+extension FeatureIdentifier: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .number(let number):
+            return number.description
+        case .string(let string):
+            return string
+        }
     }
 }

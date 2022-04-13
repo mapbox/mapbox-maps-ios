@@ -7,8 +7,8 @@ import MapboxMaps
 // you added in Examples/All Examples. See the README.md for more details.
 
 // swiftlint:disable:next type_body_length
-public struct Examples {
-    public static let all = [
+struct Examples {
+    static let all = [
         [
             "title": "Getting started",
             "examples": gettingStartedExamples
@@ -56,7 +56,7 @@ public struct Examples {
     ]
 
     // Examples that show how to get started with Mapbox, such as creating a basic map view or setting a style once.
-    public static let gettingStartedExamples = [
+    static let gettingStartedExamples = [
         Example(title: "Display a map view",
                 description: """
                 Create and display a map that uses the default Mapbox streets style. This example also shows how to update the starting camera for a map.
@@ -74,7 +74,7 @@ public struct Examples {
     ]
 
     // Examples that show how to use 3D terrain or fill extrusions.
-    public static let threeDExamples = [
+    static let threeDExamples = [
         Example(title: "Show 3D terrain",
                 description: "Show realistic elevation by enabling terrain.",
                 type: TerrainExample.self),
@@ -90,7 +90,7 @@ public struct Examples {
     ]
 
     // Examples that focus on annotations.
-    public static let annotationExamples = [
+    static let annotationExamples = [
         Example(title: "Add a polygon annotation",
                 description: "Add a polygon annotation to the map.",
                 type: PolygonAnnotationExample.self),
@@ -136,7 +136,7 @@ public struct Examples {
     ]
 
     // Examples that focus on setting, animating, or otherwise changing the map's camera.
-    public static let cameraExamples = [
+    static let cameraExamples = [
         Example(title: "Fly-to camera animation",
                 description: """
                     Smoothly interpolate between locations with the fly-to animation.
@@ -154,7 +154,7 @@ public struct Examples {
     ]
 
     // Examples focused on displaying the user's location.
-    public static let locationExamples = [
+    static let locationExamples = [
         Example(title: "Display the user's location",
                 description: "Display the user's location on a map with the default user location puck.",
                 type: TrackingModeExample.self),
@@ -170,7 +170,7 @@ public struct Examples {
     ]
 
     // Examples that highlight using the Offline APIs.
-    public static let offlineExamples = [
+    static let offlineExamples = [
         Example(title: "Use OfflineManager and TileStore to download a region",
                 description: """
                     Shows how to use OfflineManager and TileStore to download regions
@@ -190,7 +190,7 @@ public struct Examples {
     ]
 
     // Examples that show how to use the map's snapshotter.
-    public static let snapshotExamples = [
+    static let snapshotExamples = [
         Example(title: "Create a static map snapshot",
                 description: """
                     Create a static, non-interactive image of a map style with specified camera position. The resulting snapshot is provided as a `UIImage`.
@@ -206,7 +206,7 @@ public struct Examples {
     ]
 
     // Examples that highlight how to set or modify the map's style and its contents.
-    public static let styleExamples = [
+    static let styleExamples = [
         Example(title: "Display multiple icon images in a symbol layer",
                 description: """
             Add point data and several images to a style and use the switchCase and get expressions to choose which image to display at each point in a SymbolLayer based on a data property.
@@ -263,7 +263,7 @@ public struct Examples {
     ]
 
     // Examples that show use cases related to user interaction with the map.
-    public static let userInteractionExamples = [
+    static let userInteractionExamples = [
         Example(title: "Find features at a point",
                 description: "Query the map for rendered features belonging to a specific layer.",
                 type: FeaturesAtPointExample.self),
@@ -278,14 +278,14 @@ public struct Examples {
                 type: SymbolClusteringExample.self),
     ]
 
-    public static let accessibilityExamples = [
+    static let accessibilityExamples = [
         Example(title: "Access map features using VoiceOver",
-                description: "Use voice over to highlight annotations and hear their associated features.",
+                description: "Use VoiceOver to highlight annotations and hear their associated features.",
                 type: VoiceOverAccessibilityExample.self),
     ]
 
     // Examples that uses experimental APIs
-    public static let experimentalExamples = [
+    static let experimentalExamples = [
         Example(title: "Globe View",
                 description: "Display map on a globe.",
                 type: GlobeViewExample.self),

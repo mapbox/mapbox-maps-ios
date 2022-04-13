@@ -1,5 +1,13 @@
 internal final class ObservableValue<Value> where Value: Equatable {
-    private var observers = [Observer]()
+    private var observers = [Observer]() {
+        didSet {
+            if !observers.isEmpty, oldValue.isEmpty {
+                onFirstSubscribe?()
+            } else if observers.isEmpty, !oldValue.isEmpty {
+                onLastUnsubscribe?()
+            }
+        }
+    }
 
     internal private(set) var value: Value?
 
@@ -28,6 +36,10 @@ internal final class ObservableValue<Value> where Value: Equatable {
             self?.observers.removeAll { $0 === observer }
         }
     }
+
+    internal var onFirstSubscribe: (() -> Void)?
+
+    internal var onLastUnsubscribe: (() -> Void)?
 
     private final class Observer {
         private let handler: (Observer, Value) -> Void

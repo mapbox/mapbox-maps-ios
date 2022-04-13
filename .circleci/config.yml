@@ -28,6 +28,9 @@ workflows:
       - run-benchmark:
           requires:
             - build-benchmark
+      - collect-metrics:
+          requires:
+            - run-benchmark
 
 jobs:
   build-benchmark:
@@ -66,9 +69,6 @@ jobs:
 
   run-benchmark:
     executor: base-docker
-    environment:
-      AWS_DEVICE_FARM_PROJECT_ARN: "arn:aws:devicefarm:us-west-2:234858372212:project:c29e8fde-6337-461b-af58-b6a7f93f043c"
-      AWS_DEVICE_POOL_ARN: "arn:aws:devicefarm:us-west-2:234858372212:devicepool:c29e8fde-6337-461b-af58-b6a7f93f043c/bfbd31ba-dac3-4962-8ecb-52d6d6302aa8"
     steps:
       - checkout
       - mapbox/add-mapbox-ssh-key
@@ -117,6 +117,11 @@ jobs:
             find artifacts -name "*.xcresult" -exec cp -r {} metrics.xcresult \;
             zip -r metrics.xcresult.zip metrics.xcresult
           when: always
+      - persist_to_workspace:
+          root: .
+          paths:
+            - metrics.xcresult
+            - BenchmarkResults
       - store_artifacts:
           path: BenchmarkResults.zip
       - store_artifacts:
@@ -124,6 +129,43 @@ jobs:
       - store_artifacts:
           path: benchmark_results.json
 
+  collect-metrics:
+    executor: xcode-min
+    steps:
+      - checkout
+      - mapbox/add-mapbox-ssh-key
+      - mapbox/install-mbx-ci
+      - run:
+          name: Checkout Maps iOS
+          command: |
+            git submodule update --init
+
+            cd mapbox-maps-ios
+            git checkout main
+
+            git submodule status
+      - run:
+          name: Install AWSCLI
+          command: |
+            cd /tmp
+            curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
+            sudo installer -pkg AWSCLIV2.pkg -target /
+      - attach_workspace:
+          at: workspace
+      - run:
+          name: Parse XCResult
+          command: |
+            swift run xcparty metrics --path "$CIRCLE_WORKING_DIRECTORY/workspace/metrics.xcresult" -r . --output "$CIRCLE_WORKING_DIRECTORY/ios-maps-carbon-v2.json"
+          working_directory: mapbox-maps-ios/scripts/xcparty
+      - store_artifacts:
+          path: ios-maps-carbon-v2.json
+      - checkout-mobile-metrics
+      - run:
+          name: Upload metrics to AWS
+          command: |
+            gzip ios-maps-carbon-v2.json
+            mv ios-maps-carbon-v2.json.gz ios-maps-carbon-v2-${CIRCLE_BUILD_NUM-1}.json.gz
+            sh mobile-metrics/scripts/publish_to_aws.sh mobile_production.performance ios-maps-carbon-v2-${CIRCLE_BUILD_NUM-1}.json.gz
 
 commands:
   build-benchmark:

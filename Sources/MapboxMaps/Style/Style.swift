@@ -785,7 +785,7 @@ public final class Style: StyleProtocol {
 
         try addImage(image,
                      id: id,
-                     stretchX:  [ImageStretches(first: stretchXFirst, second: stretchXSecond)],
+                     stretchX: [ImageStretches(first: stretchXFirst, second: stretchXSecond)],
                      stretchY: [ImageStretches(first: stretchYFirst, second: stretchYSecond)],
                      content: content)
     }

@@ -134,5 +134,8 @@ final class ImageTests: XCTestCase {
         XCTAssertEqual(mbmImage.data[1], 128)
         XCTAssertEqual(mbmImage.data[2], 0)
         XCTAssertEqual(mbmImage.data[3], 128)
+
+        // The resulting image should not have padded rows.
+        XCTAssertEqual(Int(mbmImage.width * mbmImage.height) * bytesPerPixel, mbmImage.data.count)
     }
 }

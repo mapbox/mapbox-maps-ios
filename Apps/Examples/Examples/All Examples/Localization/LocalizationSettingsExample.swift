@@ -46,7 +46,7 @@ final class LocalizationSettingsExample: UIViewController, ExampleProtocol {
         button.backgroundColor = .systemBlue
         button.layer.cornerRadius = 4
         button.clipsToBounds = true
-        button.setTitle("Language: XX", for: .normal)
+        button.setTitle("Language: --", for: .normal)
         button.addTarget(self, action: #selector(languageButtonPressed(_:)), for: .touchUpInside)
         button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -58,14 +58,14 @@ final class LocalizationSettingsExample: UIViewController, ExampleProtocol {
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .systemBlue
         button.layer.cornerRadius = 4
-        button.setTitle("Worldview: XX", for: .normal)
+        button.setTitle("Worldview: --", for: .normal)
         button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
         button.addTarget(self, action: #selector(worldviewButtonPressed(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    // Non-persistent storage for demo purposes, in order for the settings to persist choose `.persistent`
-    private let settings = SettingsServiceFactory.getInstance(storageType: .nonPersistent)
+    // Persistent storage is required in order for the server-side localization to work
+    private let settings = SettingsServiceFactory.getInstance(storageType: .persistent)
 
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -37,7 +37,7 @@ extension Style {
     }
 
     private func isServerSideLocalizationSet() -> Bool {
-        let settings = SettingsServiceFactory.getInstance(storageType: .nonPersistent)
+        let settings = SettingsServiceFactory.getInstance(storageType: .persistent)
         let languageResult = settings.has(key: MapboxCommonSettings.language)
 
         if let isLocalizationSet = try? languageResult.get(), isLocalizationSet {

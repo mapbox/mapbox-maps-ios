@@ -6,6 +6,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Add support for runtime source properties. ([#1267](https://github.com/mapbox/mapbox-maps-ios/pull/1267))
 * Start location services lazily. ([#1262](https://github.com/mapbox/mapbox-maps-ios/pull/1262))
+* Fix localization crash on iOS 11 and 12. ([#1278](https://github.com/mapbox/mapbox-maps-ios/pull/1278))
 
 ## 10.5.0-beta.1 - April 7, 2022
 

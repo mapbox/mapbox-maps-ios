@@ -81,4 +81,21 @@ final class StyleLocalizationTests: MapViewIntegrationTestCase {
             }
         ))
     }
+
+    func testSkipsSymbolLayersWhereTextFieldIsNil() throws {
+        var source = GeoJSONSource()
+        source.data = .feature(Feature(geometry: Point(CLLocationCoordinate2D(latitude: 0, longitude: 0))))
+        try style.addSource(source, id: "a")
+
+        var symbolLayer = SymbolLayer(id: "a")
+        symbolLayer.source = "a"
+
+        try style.addLayer(symbolLayer)
+
+        try style.localizeLabels(into: Locale(identifier: "de"))
+
+        let updatedLayer = try style.layer(withId: "a", type: SymbolLayer.self)
+
+        XCTAssertNil(updatedLayer.textField)
+    }
 }

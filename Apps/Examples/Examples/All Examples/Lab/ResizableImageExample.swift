@@ -59,7 +59,7 @@ final class ResizableImageExample: UIViewController, ExampleProtocol {
         // create an image of a circle and specify the corners that should remain unchanged
         let image = UIImage(named: "circle")!
             .resizableImage(withCapInsets: UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12))
-        try? style.addImageResizable(image, id: "circle")
+        try? style.addImage(image, id: "circle")
 
         // add a GeoJSON source with a single point to the style
         var source = GeoJSONSource()

@@ -538,7 +538,7 @@ open class MapView: UIView {
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: ibStyleURI)
     }
 
-    public override func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
         mapboxMap.size = bounds.size
     }

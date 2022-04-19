@@ -54,7 +54,6 @@ public class ResourceOptionsManager {
     }
 
     private var _resourceOptions: ResourceOptions!
-    private var tileStore: TileStore?
     private var bundle: Bundle
 
     /// Initializes a `ResourceOptionsManager` with an optional access token.
@@ -99,8 +98,6 @@ public class ResourceOptionsManager {
 
         _resourceOptions = resourceOptions
         _resourceOptions.accessToken = token
-
-        tileStore = resourceOptions.tileStore
     }
 
     internal func defaultAccessToken() -> String {

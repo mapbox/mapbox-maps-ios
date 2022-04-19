@@ -195,8 +195,9 @@ public class AnnotationOrchestrator {
 
         let layerIds = managers.map { $0.layerId }
         let options = RenderedQueryOptions(layerIds: layerIds, filter: nil)
+        let point = tap.location(in: tap.view)
         mapFeatureQueryable.queryRenderedFeatures(
-            at: tap.location(in: tap.view),
+            in: CGRect(origin: point, size: CGSize.zero).insetBy(dx: -20.0, dy: -20.0),
             options: options) { (result) in
 
             switch result {

@@ -21,7 +21,7 @@ extension PointAnnotationManager {
             // If the image is not found, add it to the style
             if style.image(withId: pointAnnotationImage.name) == nil {
                 do {
-                    try style.addImage(pointAnnotationImage.image, id: pointAnnotationImage.name, stretchX: [], stretchY: [])
+                    try style.addImage(pointAnnotationImage.image, id: pointAnnotationImage.name)
                 } catch {
                     Log.warning(
                         forMessage: "Could not add image to style in PointAnnotationManager due to error: \(error)",

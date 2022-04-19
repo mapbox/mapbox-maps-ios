@@ -110,7 +110,7 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
 
     private func prepareStyle() {
         let style = mapView.mapboxMap.style
-        try? style.addImage(image, id: Constants.BLUE_ICON_ID, stretchX: [], stretchY: [])
+        try? style.addImage(image, id: Constants.BLUE_ICON_ID)
 
         var source = GeoJSONSource()
         source.data = .featureCollection(FeatureCollection(features: pointList))

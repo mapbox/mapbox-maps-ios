@@ -31,7 +31,7 @@ final class ViewAnnotationWithPointAnnotationExample: UIViewController, ExampleP
         mapView.mapboxMap.onNext(.mapLoaded) { [weak self] _ in
             guard let self = self else { return }
 
-            try? self.mapView.mapboxMap.style.addImage(self.image, id: Constants.blueIconId, stretchX: [], stretchY: [])
+            try? self.mapView.mapboxMap.style.addImage(self.image, id: Constants.blueIconId)
             self.addPointAndViewAnnotation(at: self.mapView.mapboxMap.coordinate(for: self.mapView.center))
 
             // The below line is used for internal testing purposes only.

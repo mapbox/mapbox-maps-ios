@@ -26,6 +26,10 @@ struct Examples {
             "examples": cameraExamples
         ],
         [
+            "title": "Lab",
+            "examples": labExamples
+        ],
+        [
             "title": "Location",
             "examples": locationExamples
         ],
@@ -153,8 +157,15 @@ struct Examples {
 
     ]
 
+    // Miscellaneous examples
+    public static let labExamples = [
+        Example(title: "Resizable image",
+                description: "Add a resizable image with cap insets to a style.",
+                type: ResizableImageExample.self)
+    ]
+
     // Examples focused on displaying the user's location.
-    static let locationExamples = [
+    public static let locationExamples = [
         Example(title: "Display the user's location",
                 description: "Display the user's location on a map with the default user location puck.",
                 type: TrackingModeExample.self),

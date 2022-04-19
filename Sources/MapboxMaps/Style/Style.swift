@@ -1,6 +1,7 @@
 // swiftlint:disable file_length
 @_implementationOnly import MapboxCommon_Private
 @_implementationOnly import MapboxCoreMaps_Private
+import UIKit
 
 internal protocol StyleProtocol: AnyObject {
     func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition?) throws
@@ -681,6 +682,9 @@ public final class Style: StyleProtocol {
     /// [`fill-pattern`](https://www.mapbox.com/mapbox-gl-js/style-spec/#paint-fill-fill-pattern), and
     /// [`line-pattern`](https://www.mapbox.com/mapbox-gl-js/style-spec/#paint-line-line-pattern).
     ///
+    /// For more information on how `stretchX` and `stretchY` parameters affect image stretching
+    /// see [this Mapbox GL-JS example](https://docs.mapbox.com/mapbox-gl-js/example/add-image-stretchable).
+    ///
     /// - Parameters:
     ///   - image: Image to add.
     ///   - id: ID of the image.
@@ -719,6 +723,46 @@ public final class Style: StyleProtocol {
                                               stretchY: stretchY,
                                               content: content)
         }
+    }
+
+    /// Adds an image to be used in the style.
+    ///
+    /// If the image has non-zero `UIImage.capInsets` it will be stretched accordingly,
+    /// regardless of the value in `UIImage.resizingMode`.
+    ///
+    /// - Parameters:
+    ///   - image: Image to add.
+    ///   - id: ID of the image.
+    ///   - sdf: Option to treat whether image is SDF(signed distance field) or not.
+    ///         Setting this to `true` allows template images to be recolored. The
+    ///         default value is `false`.
+    ///   - contentInsets: The distances the edges of content are inset from the image rectangle.
+    ///         If present, and if the icon uses icon-text-fit, the
+    ///         symbol's text will be fit inside the content box.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    public func addImage(_ image: UIImage, id: String, sdf: Bool = false, contentInsets: UIEdgeInsets = .zero) throws {
+        let scale = Float(image.scale)
+        let stretchXFirst = Float(image.capInsets.left) * scale
+        let stretchXSecond = Float(image.size.width - image.capInsets.right) * scale
+        let stretchYFirst = Float(image.capInsets.top) * scale
+        let stretchYSecond = Float(image.size.height - image.capInsets.bottom) * scale
+
+        let contentBoxLeft = Float(contentInsets.left) * scale
+        let contentBoxRight = Float(image.size.width - contentInsets.right) * scale
+        let contentBoxTop = Float(contentInsets.top) * scale
+        let contentBoxBottom = Float(image.size.height - contentInsets.bottom) * scale
+
+        let contentBox = ImageContent(left: contentBoxLeft,
+                                      top: contentBoxTop,
+                                      right: contentBoxRight,
+                                      bottom: contentBoxBottom)
+        try addImage(image,
+                     id: id,
+                     stretchX: [ImageStretches(first: stretchXFirst, second: stretchXSecond)],
+                     stretchY: [ImageStretches(first: stretchYFirst, second: stretchYSecond)],
+                     content: contentBox)
     }
 
     /// Removes an image from the style.

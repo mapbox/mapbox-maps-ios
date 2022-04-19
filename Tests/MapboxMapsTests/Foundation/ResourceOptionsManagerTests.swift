@@ -55,4 +55,17 @@ class ResourceOptionsManagerTests: XCTestCase {
 
         XCTAssertEqual(token, ResourceOptionsManager.default.resourceOptions.accessToken, "Token should have been reset")
     }
+
+    func testResourceOptionsManagerCanInitializeWithAccessToken() {
+        let sut = ResourceOptionsManager(accessToken: "dummy-mapbox-access-token")
+        XCTAssertEqual(sut.resourceOptions.accessToken, "dummy-mapbox-access-token")
+    }
+
+    func testResourceOptionsManagerCanUpdateResourceOptions() {
+        let sut = ResourceOptionsManager(accessToken: "dummy-mapbox-access-token")
+        let newResourceOptions = ResourceOptions(accessToken: "new-dummy-mapbox-access-token")
+        sut.resourceOptions = newResourceOptions
+
+        XCTAssertEqual(sut.resourceOptions, newResourceOptions)
+    }
 }

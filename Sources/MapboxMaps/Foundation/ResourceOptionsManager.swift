@@ -100,7 +100,7 @@ public class ResourceOptionsManager {
         _resourceOptions.accessToken = token
     }
 
-    internal func defaultAccessToken() -> String {
+    private func defaultAccessToken() -> String {
         // Check User defaults
         #if DEBUG
         if let accessToken = UserDefaults.standard.string(forKey: "MBXAccessToken") {

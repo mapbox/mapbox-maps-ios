@@ -8,6 +8,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Start location services lazily. ([#1262](https://github.com/mapbox/mapbox-maps-ios/pull/1262))
 * Fix localization crash on iOS 11 and 12. ([#1278](https://github.com/mapbox/mapbox-maps-ios/pull/1278))
 * Increase tap target to conform to Apple Human Interface guidelines. ([#1283](https://github.com/mapbox/mapbox-maps-ios/pull/1283))
+* Update to MapboxCoreMaps 10.5.0-rc.1 and MapboxCommon 21.3.0-rc.2. ([#1281](https://github.com/mapbox/mapbox-maps-ios/pull/1281))
 
 ## 10.5.0-beta.1 - April 7, 2022
 
@@ -29,7 +30,6 @@ Mapbox welcomes participation and contributions from everyone.
 * Update `DefaultViewportTransition` to solve the moving target problem. ([#1245](https://github.com/mapbox/mapbox-maps-ios/pull/1245))
 * Increase deceleration cutoff threshold from 20 to 35 to prevent camera changes
  after animation stops. ([#1244](https://github.com/mapbox/mapbox-maps-ios/pull/1244))
-* Update to MapboxCoreMaps 10.5.0-beta.1 and MapboxCommon 21.3.0-beta.2. ([]())
 * Update to MapboxCoreMaps 10.5.0-beta.1 and MapboxCommon 21.3.0-beta.2. ([#1235](https://github.com/mapbox/mapbox-maps-ios/pull/1235))
 * API for using globe projection has been moved to `Style.setProjection(_:)` and `Style.projection` and is no longer experimental. ([#1235](https://github.com/mapbox/mapbox-maps-ios/pull/1235))
 * Add `OfflineRegion.getStatus(completion:)`. ([#1239](https://github.com/mapbox/mapbox-maps-ios/pull/1239))

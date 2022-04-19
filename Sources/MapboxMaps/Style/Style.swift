@@ -727,7 +727,7 @@ public final class Style: StyleProtocol {
 
     /// Adds an image to be used in the style.
     ///
-    /// If the image has non-zero `UIImage.capInsets` it will be resized accordingly,
+    /// If the image has non-zero `UIImage.capInsets` it will be stretched accordingly,
     /// regardless of the value in `UIImage.resizingMode`.
     ///
     /// - Parameters:

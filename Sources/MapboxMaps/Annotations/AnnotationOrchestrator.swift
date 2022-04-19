@@ -209,7 +209,6 @@ public class AnnotationOrchestrator {
                     guard case let .string(featureId) = $0.feature.identifier else {
                         return nil
                     }
-                    print("here is our rect: \(CGRect(origin: point, size: CGSize.zero).insetBy(dx: -20.0, dy: -20.0))")
                     return featureId
                 }
 

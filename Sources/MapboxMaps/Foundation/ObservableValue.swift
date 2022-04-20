@@ -15,10 +15,10 @@ internal final class ObservableValue<Value> where Value: Equatable {
         guard newValue != value else {
             return
         }
+        value = newValue
         observers.forEach { (observer) in
             observer.invokeHandler(with: newValue)
         }
-        value = newValue
     }
 
     internal func observe(with handler: @escaping (Value) -> Bool) -> Cancelable {

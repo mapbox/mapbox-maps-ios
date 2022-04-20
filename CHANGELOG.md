@@ -9,6 +9,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Fix localization crash on iOS 11 and 12. ([#1278](https://github.com/mapbox/mapbox-maps-ios/pull/1278))
 * Increase tap target to conform to Apple Human Interface guidelines. ([#1283](https://github.com/mapbox/mapbox-maps-ios/pull/1283))
 * Update to MapboxCoreMaps 10.5.0-rc.1 and MapboxCommon 21.3.0-rc.2. ([#1281](https://github.com/mapbox/mapbox-maps-ios/pull/1281))
+* Expose API to set memory budget for `MapboxMap`. ([#1288](https://github.com/mapbox/mapbox-maps-ios/pull/1288))
 
 ## 10.5.0-beta.1 - April 7, 2022
 

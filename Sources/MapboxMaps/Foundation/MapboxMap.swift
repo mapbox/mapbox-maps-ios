@@ -150,6 +150,21 @@ public final class MapboxMap: MapboxMapProtocol {
         __map.reduceMemoryUse()
     }
 
+    /// The memory budget hint to be used by the map. The budget can be given in
+    /// tile units or in megabytes. A Map will do its best to keep the memory
+    /// allocations for non-essential resources within the budget.
+    ///
+    /// The memory budget distribution and resource
+    /// eviction logic is subject to change. Current implementation sets a memory budget
+    /// hint per data source.
+    ///
+    /// If nil is set, the memory budget in tile units will be dynamically calculated based on
+    /// the current viewport size.
+    /// - Parameter memoryBudget: The memory budget hint to be used by the Map.
+    @_spi(Experimental) public func setMemoryBudget(_ memoryBudget: MapMemoryBudget?) {
+        __map.__setMemoryBudgetFor(memoryBudget)
+    }
+
     /// Gets the resource options for the map.
     ///
     /// All optional fields of the returned object are initialized with the

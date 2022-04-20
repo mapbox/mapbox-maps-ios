@@ -15,7 +15,9 @@ class BaseBenchmark: XCTestCase {
 
     var styleURI: StyleURI = .streets
 
-    internal var mapView: MapView!
+    internal var mapView: MapView! {
+        didSet { oldValue?.removeFromSuperview() }
+    }
     private var viewController: UIViewController!
     private var measurementExpectation: XCTestExpectation?
     private var adHocWaitExpectation: XCTestExpectation?
@@ -43,6 +45,7 @@ class BaseBenchmark: XCTestCase {
     func stopBenchmark() {
         stopMeasuring()
 
+        mapView = nil
         measurementExpectation?.fulfill()
     }
 
@@ -50,6 +53,7 @@ class BaseBenchmark: XCTestCase {
     /// - Parameter block: A block whose performance is measured.
     func benchmark(timeout: TimeInterval = 10, block: () -> Void) {
         let options = XCTMeasureOptions()
+        options.iterationCount = 10
         options.invocationOptions = [.manuallyStop]
 
         measure(options: options) {
@@ -58,7 +62,6 @@ class BaseBenchmark: XCTestCase {
             waitForExpectations(timeout: timeout)
         }
     }
-
 
     /// Sets up an expectation and waits until it's fulfilled with `BaseBenchmark.notifyTestDidFinish`.
     /// - Parameters:

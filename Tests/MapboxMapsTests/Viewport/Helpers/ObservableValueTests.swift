@@ -56,6 +56,16 @@ final class ObservableValueTests: XCTestCase {
         XCTAssertEqual(handlerStub.invocations.map(\.parameters), [value])
     }
 
+    func testValueUpdatedBeforeNotifyingObservers() {
+        let handlerStub = Stub<Int, Bool>(defaultReturnValue: true)
+        handlerStub.defaultSideEffect = { invocation in
+            XCTAssertEqual(self.observableValue.value, invocation.parameters)
+        }
+        _ = observableValue.observe(with: handlerStub.call(with:))
+
+        update()
+    }
+
     func testHandlerReturnsTrueToContinueAndFalseToUnsubscribe() {
         let handlerStub = Stub<Int, Bool>(defaultReturnValue: false)
         handlerStub.returnValueQueue = [true, true]

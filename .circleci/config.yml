@@ -665,6 +665,7 @@ jobs:
       - run:
           name: Podspec points to the release version
           command: '[[ $(pod ipc spec  MapboxMaps.podspec | jq -r .version) == "$VERSION" ]]'
+      - inject-netrc-credentials
       - run:
           name: General podspec check
           command: pod spec lint --verbose --allow-warnings

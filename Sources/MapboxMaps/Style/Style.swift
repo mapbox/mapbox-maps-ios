@@ -34,10 +34,13 @@ internal protocol StyleProtocol: AnyObject {
 /// Note: Style should only be used from the main thread.
 public final class Style: StyleProtocol {
 
-    public private(set) weak var styleManager: StyleManager!
+    private let _styleManager: StyleManagerType
+    public weak var styleManager: StyleManager! {
+        _styleManager.asStyleManager()
+    }
 
-    internal init(with styleManager: StyleManager) {
-        self.styleManager = styleManager
+    internal init(with styleManager: StyleManagerType) {
+        self._styleManager = styleManager
 
         if let uri = StyleURI(rawValue: styleManager.getStyleURI()) {
             self.uri = uri

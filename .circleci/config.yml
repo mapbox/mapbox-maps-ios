@@ -108,6 +108,12 @@ workflows:
             - Build Examples tests [non-main]
           devices: --device model=iphone8,version=14.7
 
+      - trigger-compatibility-verification?:
+          type: approval
+      - trigger-compatibility-verification:
+          requires:
+            - trigger-compatibility-verification?
+
   steve:
     jobs:
       - swiftlint
@@ -406,6 +412,21 @@ jobs:
       - report-failure:
           report_failure: << parameters.report_failure >>
           message: "metrics"
+
+  trigger-compatibility-verification:
+    <<: *base-job
+    steps:
+      - checkout
+      - run:
+          name: Install python depedencies
+          command: |
+            pip3 install PyYAML
+            pip3 install GitPython
+            pip3 install requests
+      - run:
+          name: Trigger compatibility test
+          command: |
+            python3 scripts/ci-trigger/ci-compatibility-start-pipeline.py --target-slug mapbox/mapbox-sdk --token ${CIRCLECI_API_TOKEN_MAPBOX_MAPS_IOS_INTERNAL} --config mapbox-maps-ios=${CIRCLE_SHA1} --origin-slug mapbox/mapbox-maps-ios --platform ios
 
   unit-test-sdk:
     <<: *base-job

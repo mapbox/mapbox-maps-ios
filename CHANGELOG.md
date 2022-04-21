@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## main
+
+* Expose API to check whether an image exists in `Style`. ([#1297](https://github.com/mapbox/mapbox-maps-ios/pull/1297))
+
 ## 10.5.0-rc.1 - April 20, 2022
 
 * Add support for runtime source properties. ([#1267](https://github.com/mapbox/mapbox-maps-ios/pull/1267))

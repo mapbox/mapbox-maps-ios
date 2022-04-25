@@ -37,15 +37,18 @@ internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
 
     private let cameraViewContainerView: UIView
     private let mapboxMap: MapboxMapProtocol
+    private let mainQueue: MainQueueProtocol
     private let dateProvider: DateProvider
     private let cameraOptionsInterpolator: CameraOptionsInterpolatorProtocol
 
     internal init(cameraViewContainerView: UIView,
                   mapboxMap: MapboxMapProtocol,
+                  mainQueue: MainQueueProtocol,
                   dateProvider: DateProvider,
                   cameraOptionsInterpolator: CameraOptionsInterpolatorProtocol) {
         self.cameraViewContainerView = cameraViewContainerView
         self.mapboxMap = mapboxMap
+        self.mainQueue = mainQueue
         self.dateProvider = dateProvider
         self.cameraOptionsInterpolator = cameraOptionsInterpolator
     }
@@ -58,6 +61,7 @@ internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
             owner: animationOwner,
             duration: duration,
             mapboxMap: mapboxMap,
+            mainQueue: mainQueue,
             dateProvider: dateProvider)
     }
 
@@ -124,6 +128,7 @@ internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
             propertyAnimator: propertyAnimator,
             owner: animationOwner,
             mapboxMap: mapboxMap,
+            mainQueue: mainQueue,
             cameraView: cameraView)
         cameraAnimator.addAnimations(animations)
         return cameraAnimator
@@ -140,6 +145,7 @@ internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
             decelerationFactor: decelerationFactor,
             owner: animationOwner,
             locationChangeHandler: locationChangeHandler,
+            mainQueue: mainQueue,
             dateProvider: dateProvider)
     }
 
@@ -155,6 +161,7 @@ internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
             curve: curve,
             owner: owner,
             mapboxMap: mapboxMap,
+            mainQueue: mainQueue,
             cameraOptionsInterpolator: cameraOptionsInterpolator,
             dateProvider: dateProvider)
     }

@@ -5,6 +5,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 * Expose API to check whether an image exists in `Style`. ([#1297](https://github.com/mapbox/mapbox-maps-ios/pull/1297))
+* Invoke animator completion handlers added after completion or cancellation. ([#1305])(https://github.com/mapbox/mapbox-maps-ios/pull/1305))
 
 ## 10.5.0-rc.1 - April 20, 2022
 

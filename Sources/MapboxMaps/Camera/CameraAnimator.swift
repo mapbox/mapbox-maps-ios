@@ -18,7 +18,9 @@ internal protocol CameraAnimatorProtocol: CameraAnimator {
     /// Implementations must use a weak reference.
     var delegate: CameraAnimatorDelegate? { get set }
 
-    /// Adds a completion block to the animator.
+    /// Adds a completion block to the animator. If the animator is already complete,
+    /// implementations should invoke the completion block asynchronously with the
+    /// same `UIViewAnimatingPosition` value as when it completed.
     func addCompletion(_ completion: @escaping AnimationCompletion)
 
     /// Starts the animation. Does nothing if the animator has already completed.

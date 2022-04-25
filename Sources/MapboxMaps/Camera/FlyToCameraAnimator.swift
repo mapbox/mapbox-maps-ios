@@ -9,10 +9,12 @@ public final class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimator
     private enum InternalState: Equatable {
         case initial
         case running(startDate: Date)
-        case final
+        case final(UIViewAnimatingPosition)
     }
 
     private let mapboxMap: MapboxMapProtocol
+
+    private let mainQueue: MainQueueProtocol
 
     /// The animator's owner
     public let owner: AnimationOwner
@@ -63,6 +65,7 @@ public final class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimator
                   owner: AnimationOwner,
                   duration: TimeInterval? = nil,
                   mapboxMap: MapboxMapProtocol,
+                  mainQueue: MainQueueProtocol,
                   dateProvider: DateProvider) {
         let flyToInterpolator = FlyToInterpolator(
             from: mapboxMap.cameraState,
@@ -74,6 +77,7 @@ public final class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimator
         }
         self.interpolator = flyToInterpolator
         self.mapboxMap = mapboxMap
+        self.mainQueue = mainQueue
         self.owner = owner
         self.finalCameraOptions = toCamera
         self.duration = duration ?? flyToInterpolator.duration()
@@ -96,7 +100,7 @@ public final class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimator
     public func stopAnimation() {
         switch internalState {
         case .initial, .running:
-            internalState = .final
+            internalState = .final(.current)
             invokeCompletionBlocks(with: .current) // `current` represents an interrupted animation.
         case .final:
             // Already stopped, so do nothing
@@ -109,7 +113,14 @@ public final class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimator
     }
 
     internal func addCompletion(_ completion: @escaping AnimationCompletion) {
-        completionBlocks.append(completion)
+        switch internalState {
+        case .initial, .running:
+            completionBlocks.append(completion)
+        case .final(let position):
+            mainQueue.async {
+                completion(position)
+            }
+        }
     }
 
     private func invokeCompletionBlocks(with position: UIViewAnimatingPosition) {
@@ -126,7 +137,7 @@ public final class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimator
         }
         let fractionComplete = min(dateProvider.now.timeIntervalSince(startDate) / duration, 1)
         guard fractionComplete < 1 else {
-            internalState = .final
+            internalState = .final(.end)
             mapboxMap.setCamera(to: finalCameraOptions)
             invokeCompletionBlocks(with: .end)
             return

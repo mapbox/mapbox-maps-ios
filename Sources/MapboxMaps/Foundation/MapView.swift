@@ -479,6 +479,7 @@ open class MapView: UIView {
 
     @objc private func appDidEnterBackground() {
         displayLink?.isPaused = true
+        mapboxMap.reduceMemoryUse()
     }
 
     @available(iOS 13.0, *)
@@ -494,6 +495,7 @@ open class MapView: UIView {
         guard notification.object as? UIScene == window?.parentScene else { return }
 
         displayLink?.isPaused = true
+        mapboxMap.reduceMemoryUse()
     }
 
     @objc private func didReceiveMemoryWarning() {

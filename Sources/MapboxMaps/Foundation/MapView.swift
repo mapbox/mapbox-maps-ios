@@ -595,6 +595,8 @@ open class MapView: UIView {
             return
         }
 
+        subscribeToLifecycleNotifications()
+
         displayLink = dependencyProvider.makeDisplayLink(
             window: window,
             target: ForwardingDisplayLinkTarget { [weak self] in
@@ -612,8 +614,6 @@ open class MapView: UIView {
 
         updateDisplayLinkPreferredFramesPerSecond()
         displayLink.add(to: .current, forMode: .common)
-
-        subscribeToLifecycleNotifications()
     }
 
     // MARK: Location

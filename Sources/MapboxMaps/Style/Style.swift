@@ -782,7 +782,7 @@ public final class Style: StyleProtocol {
     /// - Parameter id: The identifier of the image.
     ///
     /// - Returns: `true` if the given image exists, `false` otherwise.
-    public func hasImage(withId id: String) -> Bool {
+    public func imageExists(withId id: String) -> Bool {
         return styleManager.hasStyleImage(forImageId: id)
     }
 

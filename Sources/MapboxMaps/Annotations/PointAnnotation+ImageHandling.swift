@@ -19,7 +19,7 @@ extension PointAnnotationManager {
         let pointAnnotationImages = Set(annotations.compactMap(\.image))
         for pointAnnotationImage in pointAnnotationImages {
             // If the image is not found, add it to the style
-            if !style.hasImage(withId: pointAnnotationImage.name) {
+            if !style.imageExists(withId: pointAnnotationImage.name) {
                 do {
                     try style.addImage(pointAnnotationImage.image, id: pointAnnotationImage.name)
                 } catch {

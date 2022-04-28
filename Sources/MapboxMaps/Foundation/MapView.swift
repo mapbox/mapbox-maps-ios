@@ -594,7 +594,6 @@ open class MapView: UIView {
             return
         }
 
-
         displayLink = dependencyProvider.makeDisplayLink(
             window: window,
             target: ForwardingDisplayLinkTarget { [weak self] in

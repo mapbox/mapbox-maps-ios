@@ -361,35 +361,23 @@ final class MapViewTestsWithScene: XCTestCase {
         super.tearDown()
     }
 
-    @available(iOS 13, *)
     func testDisplayLinkResumedWhenSceneMovingToForeground() throws {
-        bundle.infoDictionaryStub.defaultReturnValue = ["UIApplicationSceneManifest": []]
-        mapView = MapView(
-            frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
-            mapInitOptions: MapInitOptions(),
-            dependencyProvider: dependencyProvider,
-            orientationProvider: orientationProvider,
-            urlOpener: attributionURLOpener)
+        guard #available(iOS 13.0, *) else {
+            throw XCTSkip("Test requires iOS 13 or higher.")
+        }
 
         mapView.didMoveToWindow()
-
         notificationCenter.post(name: UIScene.willEnterForegroundNotification, object: window.parentScene)
 
         XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [false])
     }
 
-    @available(iOS 13, *)
     func testDisplayLinkPausedWhenSceneMovingToBackground() throws {
-        bundle.infoDictionaryStub.defaultReturnValue = ["UIApplicationSceneManifest": []]
+        guard #available(iOS 13.0, *) else {
+            throw XCTSkip("Test requires iOS 13 or higher.")
+        }
 
-        mapView = MapView(
-            frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
-            mapInitOptions: MapInitOptions(),
-            dependencyProvider: dependencyProvider,
-            orientationProvider: orientationProvider,
-            urlOpener: attributionURLOpener)
         mapView.didMoveToWindow()
-
         notificationCenter.post(name: UIScene.didEnterBackgroundNotification, object: window.parentScene)
 
         XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])

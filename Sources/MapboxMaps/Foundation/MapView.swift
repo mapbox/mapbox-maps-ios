@@ -322,6 +322,7 @@ open class MapView: UIView {
             mapInitOptions: resolvedMapInitOptions,
             mapboxObservableProvider: dependencyProvider.mapboxObservableProvider)
 
+        subscribeToLifecycleNotifications()
         notificationCenter.addObserver(self,
                                        selector: #selector(didReceiveMemoryWarning),
                                        name: UIApplication.didReceiveMemoryWarningNotification,
@@ -584,8 +585,6 @@ open class MapView: UIView {
     open override func didMoveToWindow() {
         super.didMoveToWindow()
 
-        unsubscribeFromLifecycleNotifications()
-
         displayLink?.invalidate()
         displayLink = nil
 
@@ -595,7 +594,6 @@ open class MapView: UIView {
             return
         }
 
-        subscribeToLifecycleNotifications()
 
         displayLink = dependencyProvider.makeDisplayLink(
             window: window,

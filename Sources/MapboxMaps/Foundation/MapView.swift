@@ -465,15 +465,6 @@ open class MapView: UIView {
         }
     }
 
-    private func unsubscribeFromLifecycleNotifications() {
-        if #available(iOS 13.0, *) {
-            notificationCenter.removeObserver(self, name: UIScene.willEnterForegroundNotification, object: nil)
-            notificationCenter.removeObserver(self, name: UIScene.didEnterBackgroundNotification, object: nil)
-        }
-        notificationCenter.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
-        notificationCenter.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
-    }
-
     @objc private func appWillEnterForeground() {
         displayLink?.isPaused = false
     }

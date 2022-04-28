@@ -1,4 +1,5 @@
 @_implementationOnly import MapboxCommon_Private
+import UIKit
 
 internal protocol SimpleCameraAnimatorProtocol: CameraAnimatorProtocol {
     var to: CameraOptions { get set }
@@ -15,7 +16,7 @@ internal final class SimpleCameraAnimator: NSObject, SimpleCameraAnimatorProtoco
     private enum InternalState: Equatable {
         case initial
         case running(startDate: Date)
-        case final
+        case final(UIViewAnimatingPosition)
     }
 
     /// The animator's owner
@@ -48,6 +49,7 @@ internal final class SimpleCameraAnimator: NSObject, SimpleCameraAnimatorProtoco
     private let duration: TimeInterval
     private let unitBezier: UnitBezier
     private let mapboxMap: MapboxMapProtocol
+    private let mainQueue: MainQueueProtocol
     private let cameraOptionsInterpolator: CameraOptionsInterpolatorProtocol
     private let dateProvider: DateProvider
     internal weak var delegate: CameraAnimatorDelegate?
@@ -91,6 +93,7 @@ internal final class SimpleCameraAnimator: NSObject, SimpleCameraAnimatorProtoco
     ///   - duration: How long the animation should take.
     ///   - curve: Allows applying easing effects.
     ///   - mapboxMap: The map whose camera should be updated.
+    ///   - mainQueue: The app's main queue.
     ///   - cameraOptionsInterpolator: An object that calculates interpolated camera values.
     ///   - dateProvider: An object that provides the current date.
     ///   - delegate: A delegate to inform when the animation starts or stops running.
@@ -100,6 +103,7 @@ internal final class SimpleCameraAnimator: NSObject, SimpleCameraAnimatorProtoco
                   curve: TimingCurve,
                   owner: AnimationOwner,
                   mapboxMap: MapboxMapProtocol,
+                  mainQueue: MainQueueProtocol,
                   cameraOptionsInterpolator: CameraOptionsInterpolatorProtocol,
                   dateProvider: DateProvider) {
         self.from = from
@@ -108,6 +112,7 @@ internal final class SimpleCameraAnimator: NSObject, SimpleCameraAnimatorProtoco
         self.unitBezier = UnitBezier(p1: curve.p1, p2: curve.p2)
         self.owner = owner
         self.mapboxMap = mapboxMap
+        self.mainQueue = mainQueue
         self.cameraOptionsInterpolator = cameraOptionsInterpolator
         self.dateProvider = dateProvider
         super.init()
@@ -144,7 +149,7 @@ internal final class SimpleCameraAnimator: NSObject, SimpleCameraAnimatorProtoco
     internal func cancel() {
         switch internalState {
         case .initial, .running:
-            internalState = .final
+            internalState = .final(.current)
             invokeCompletionBlocks(with: .current) // `current` represents an interrupted animation.
         case .final:
             // Already stopped, so do nothing
@@ -158,16 +163,18 @@ internal final class SimpleCameraAnimator: NSObject, SimpleCameraAnimatorProtoco
     }
 
     /// Adds completion to the list of completion handlers to be invoked when the animation completes or is
-    /// canceled. If the animation has already completed or been canceled, this method does nothing.
+    /// canceled. If the animation has already completed or been canceled, this method invokes the
+    /// completion handler asynchronously with the same `UIViewAnimatingPosition` value.
     /// The animator only holds a strong reference to the handler until it finishes or is canceled.
     /// - Parameter completion: A handler to invoke when the animator completes.
     internal func addCompletion(_ completion: @escaping AnimationCompletion) {
         switch internalState {
         case .initial, .running:
             completionHandlers.append(completion)
-        case .final:
-            // already stopped, so do nothing
-            break
+        case .final(let position):
+            mainQueue.async {
+                completion(position)
+            }
         }
     }
 
@@ -200,7 +207,7 @@ internal final class SimpleCameraAnimator: NSObject, SimpleCameraAnimatorProtoco
         let fractionComplete = unitBezier.solve(min(elapsedTime / duration, 1), 1e-6)
         guard fractionComplete < 1 else {
             mapboxMap.setCamera(to: to)
-            internalState = .final
+            internalState = .final(.end)
             invokeCompletionBlocks(with: .end)
             return
         }

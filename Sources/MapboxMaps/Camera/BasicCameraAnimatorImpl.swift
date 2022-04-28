@@ -29,7 +29,7 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
         case initial
         case running(CameraTransition)
         case paused(CameraTransition)
-        case final
+        case final(UIViewAnimatingPosition)
     }
 
     /// Instance of the property animator that will run animations.
@@ -42,6 +42,8 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
     private let cameraView: CameraView
 
     private let mapboxMap: MapboxMapProtocol
+
+    private let mainQueue: MainQueueProtocol
 
     internal weak var delegate: BasicCameraAnimatorDelegate?
 
@@ -109,10 +111,12 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
     internal init(propertyAnimator: UIViewPropertyAnimator,
                   owner: AnimationOwner,
                   mapboxMap: MapboxMapProtocol,
+                  mainQueue: MainQueueProtocol,
                   cameraView: CameraView) {
         self.propertyAnimator = propertyAnimator
         self.owner = owner
         self.mapboxMap = mapboxMap
+        self.mainQueue = mainQueue
         self.cameraView = cameraView
     }
 
@@ -178,7 +182,7 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
     internal func stopAnimation() {
         switch internalState {
         case .initial:
-            internalState = .final
+            internalState = .final(.current)
             for completion in completions {
                 completion(.current)
             }
@@ -201,8 +205,14 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
 
     /// Add a completion block to the animator.
     internal func addCompletion(_ completion: @escaping AnimationCompletion) {
-        precondition(internalState != .final, "Attempt to add a completion block to an animation that has already completed.")
-        completions.append(completion)
+        switch internalState {
+        case .initial, .running, .paused:
+            completions.append(completion)
+        case .final(let position):
+            mainQueue.async {
+                completion(position)
+            }
+        }
     }
 
     /// Continue the animation with a timing parameter (`UITimingCurveProvider`) and duration factor (`CGFloat`).
@@ -287,7 +297,7 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
 
         propertyAnimator.addCompletion { [weak self] (animatingPosition) in
             guard let self = self else { return }
-            self.internalState = .final
+            self.internalState = .final(animatingPosition)
             // if the animation was stopped/canceled before finishing,
             // do not update the camera again.
             if animatingPosition != .current {

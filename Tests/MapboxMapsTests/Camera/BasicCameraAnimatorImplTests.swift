@@ -29,6 +29,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     var owner: AnimationOwner!
     var cameraView: MockCameraView!
     var mapboxMap: MockMapboxMap!
+    var mainQueue: MockMainQueue!
     var animator: BasicCameraAnimatorImpl!
     // swiftlint:disable:next weak_delegate
     var delegate: MockBasicCameraAnimatorDelegate!
@@ -39,10 +40,12 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
         owner = .random()
         cameraView = MockCameraView()
         mapboxMap = MockMapboxMap()
+        mainQueue = MockMainQueue()
         animator = BasicCameraAnimatorImpl(
             propertyAnimator: propertyAnimator,
             owner: owner,
             mapboxMap: mapboxMap,
+            mainQueue: mainQueue,
             cameraView: cameraView)
         delegate = MockBasicCameraAnimatorDelegate()
         animator.delegate = delegate
@@ -51,6 +54,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     override func tearDown() {
         delegate = nil
         animator = nil
+        mainQueue = nil
         mapboxMap = nil
         cameraView = nil
         owner = nil
@@ -125,19 +129,81 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
 
-        let expectation = XCTestExpectation(description: "The completion for the animator should be called when the animation is stopped.")
-
-        let completion: AnimationCompletion = { _ in
-            expectation.fulfill()
-        }
-        animator.addCompletion(completion)
+        let completion = Stub<UIViewAnimatingPosition, Void>()
+        animator.addCompletion(completion.call(with:))
 
         let randomInterval: TimeInterval = .random(in: 1...10)
         animator.startAnimation(afterDelay: randomInterval)
 
         animator.stopAnimation()
 
-        wait(for: [expectation], timeout: 15)
+        XCTAssertEqual(completion.invocations.map(\.parameters), [.current])
+    }
+
+    func testAddCompletionToRunningAnimator() {
+        animator.addAnimations { (transition) in
+            transition.zoom.toValue = cameraStateTestValue.zoom
+        }
+        animator.startAnimation()
+
+        let completion = Stub<UIViewAnimatingPosition, Void>()
+        animator.addCompletion(completion.call(with:))
+
+        animator.stopAnimation()
+
+        XCTAssertEqual(completion.invocations.map(\.parameters), [.current])
+    }
+
+    func testAddCompletionToPausedAnimator() {
+        animator.addAnimations { (transition) in
+            transition.zoom.toValue = cameraStateTestValue.zoom
+        }
+        animator.startAnimation()
+        animator.pauseAnimation()
+
+        let completion = Stub<UIViewAnimatingPosition, Void>()
+        animator.addCompletion(completion.call(with:))
+
+        animator.stopAnimation()
+
+        XCTAssertEqual(completion.invocations.map(\.parameters), [.current])
+    }
+
+    func testAddCompletionToCanceledAnimator() throws {
+        animator.addAnimations { (transition) in
+            transition.zoom.toValue = cameraStateTestValue.zoom
+        }
+        animator.startAnimation()
+        animator.stopAnimation()
+
+        let completion = Stub<UIViewAnimatingPosition, Void>()
+        animator.addCompletion(completion.call(with:))
+
+        XCTAssertEqual(mainQueue.asyncStub.invocations.count, 1)
+        let closure = try XCTUnwrap(mainQueue.asyncStub.invocations.first?.parameters)
+
+        closure()
+
+        XCTAssertEqual(completion.invocations.map(\.parameters), [.current])
+    }
+
+    func testAddCompletionToCompletedAnimator() throws {
+        animator.addAnimations { (transition) in
+            transition.zoom.toValue = cameraStateTestValue.zoom
+        }
+        animator.startAnimation()
+        let propertyAnimatorCompletion = try XCTUnwrap(propertyAnimator.addCompletionStub.invocations.first?.parameters)
+        propertyAnimatorCompletion(.end)
+
+        let completion = Stub<UIViewAnimatingPosition, Void>()
+        animator.addCompletion(completion.call(with:))
+
+        XCTAssertEqual(mainQueue.asyncStub.invocations.count, 1)
+        let closure = try XCTUnwrap(mainQueue.asyncStub.invocations.first?.parameters)
+
+        closure()
+
+        XCTAssertEqual(completion.invocations.map(\.parameters), [.end])
     }
 
     func testStopAnimationWithoutStarting() {

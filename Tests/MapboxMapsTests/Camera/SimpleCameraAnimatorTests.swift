@@ -9,6 +9,7 @@ final class SimpleCameraAnimatorTests: XCTestCase {
     var curve: TimingCurve!
     var owner: AnimationOwner!
     var mapboxMap: MockMapboxMap!
+    var mainQueue: MockMainQueue!
     var cameraOptionsInterpolator: MockCameraOptionsInterpolator!
     var dateProvider: MockDateProvider!
     var animator: SimpleCameraAnimator!
@@ -22,6 +23,7 @@ final class SimpleCameraAnimatorTests: XCTestCase {
         curve = .random()
         owner = .random()
         mapboxMap = MockMapboxMap()
+        mainQueue = MockMainQueue()
         cameraOptionsInterpolator = MockCameraOptionsInterpolator()
         dateProvider = MockDateProvider()
         animator = SimpleCameraAnimator(
@@ -31,6 +33,7 @@ final class SimpleCameraAnimatorTests: XCTestCase {
             curve: curve,
             owner: owner,
             mapboxMap: mapboxMap,
+            mainQueue: mainQueue,
             cameraOptionsInterpolator: cameraOptionsInterpolator,
             dateProvider: dateProvider)
         delegate = MockCameraAnimatorDelegate()
@@ -42,6 +45,7 @@ final class SimpleCameraAnimatorTests: XCTestCase {
         animator = nil
         dateProvider = nil
         cameraOptionsInterpolator = nil
+        mainQueue = nil
         mapboxMap = nil
         owner = nil
         curve = nil
@@ -59,6 +63,7 @@ final class SimpleCameraAnimatorTests: XCTestCase {
             curve: curve,
             owner: owner,
             mapboxMap: mapboxMap,
+            mainQueue: mainQueue,
             cameraOptionsInterpolator: cameraOptionsInterpolator,
             dateProvider: dateProvider)
         animator.delegate = delegate
@@ -370,17 +375,38 @@ final class SimpleCameraAnimatorTests: XCTestCase {
         XCTAssertEqual(completionStub.invocations.map(\.parameters), [.current])
     }
 
-    func testAddCompletionAfterTheAnimatorIsComplete() {
+    func testAddCompletionAfterTheAnimatorIsCanceled() throws {
         animator.startAnimation()
         animator.cancel()
 
         let completionStub = Stub<UIViewAnimatingPosition, Void>()
         animator.addCompletion(completionStub.call(with:))
 
-        XCTAssertEqual(completionStub.invocations.count, 0)
+        XCTAssertEqual(mainQueue.asyncStub.invocations.count, 1)
+        let closure = try XCTUnwrap(mainQueue.asyncStub.invocations.first?.parameters)
+
+        closure()
+
+        XCTAssertEqual(completionStub.invocations.map(\.parameters), [.current])
     }
 
-    func testCompletionHandlerAddedInsideOtherCompletionHandlerIsNotInvoked() {
+    func testAddCompletionAfterTheAnimatorIsStopped() throws {
+        animator.startAnimation()
+        dateProvider.nowStub.defaultReturnValue = dateProvider.now + duration
+        animator.update()
+
+        let completionStub = Stub<UIViewAnimatingPosition, Void>()
+        animator.addCompletion(completionStub.call(with:))
+
+        XCTAssertEqual(mainQueue.asyncStub.invocations.count, 1)
+        let closure = try XCTUnwrap(mainQueue.asyncStub.invocations.first?.parameters)
+
+        closure()
+
+        XCTAssertEqual(completionStub.invocations.map(\.parameters), [.end])
+    }
+
+    func testCompletionHandlerAddedInsideOtherCompletionHandlerIsInvokedAsynchronously() throws {
         let completionStub1 = Stub<UIViewAnimatingPosition, Void>()
         let completionStub2 = Stub<UIViewAnimatingPosition, Void>()
         completionStub1.defaultSideEffect = { _ in
@@ -392,5 +418,9 @@ final class SimpleCameraAnimatorTests: XCTestCase {
 
         XCTAssertEqual(completionStub1.invocations.count, 1)
         XCTAssertEqual(completionStub2.invocations.count, 0)
+        XCTAssertEqual(mainQueue.asyncStub.invocations.count, 1)
+        let closure = try XCTUnwrap(mainQueue.asyncStub.invocations.first?.parameters)
+        closure()
+        XCTAssertEqual(completionStub2.invocations.count, 1)
     }
 }

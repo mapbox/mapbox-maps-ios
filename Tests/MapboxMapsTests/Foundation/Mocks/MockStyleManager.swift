@@ -256,6 +256,7 @@ final class MockStyleManager: StyleManagerType, Stubbable {
         return stub.call(with: self)(property, value)
     }
 
+    // swiftlint:disable:next function_parameter_count
     func addStyleImage(
         forImageId imageId: String,
         scale: Float,
@@ -312,8 +313,6 @@ final class MockStyleManager: StyleManagerType, Stubbable {
         return stub.call(with: self)(sourceId, bounds)
     }
 }
-
-// MARK
 
 struct NonEncodableLayer: Layer {
     var id: String = "dummy-non-encodable-layer-id"

@@ -110,6 +110,7 @@ internal protocol StyleManagerType {
         _ property: String,
         value: Any) -> Expected<NSNull, NSString>
 
+    // swiftlint:disable:next function_parameter_count
     func addStyleImage(
         forImageId imageId: String,
         scale: Float,

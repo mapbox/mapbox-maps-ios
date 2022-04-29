@@ -344,8 +344,6 @@ final class MapViewTestsWithScene: XCTestCase {
         metalView = try XCTUnwrap(dependencyProvider.makeMetalViewStub.invocations.first?.returnValue)
         // reset is required here to ignore the setNeedsDisplay() invocation during initialization
         metalView.setNeedsDisplayStub.reset()
-
-        mapView.didMoveToWindow()
     }
 
     override func tearDown() {

@@ -344,6 +344,8 @@ final class MapViewTestsWithScene: XCTestCase {
         metalView = try XCTUnwrap(dependencyProvider.makeMetalViewStub.invocations.first?.returnValue)
         // reset is required here to ignore the setNeedsDisplay() invocation during initialization
         metalView.setNeedsDisplayStub.reset()
+
+        mapView.didMoveToWindow()
     }
 
     override func tearDown() {
@@ -366,7 +368,6 @@ final class MapViewTestsWithScene: XCTestCase {
             throw XCTSkip("Test requires iOS 13 or higher.")
         }
 
-        mapView.didMoveToWindow()
         notificationCenter.post(name: UIScene.willEnterForegroundNotification, object: window.parentScene)
 
         XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [false])
@@ -377,7 +378,6 @@ final class MapViewTestsWithScene: XCTestCase {
             throw XCTSkip("Test requires iOS 13 or higher.")
         }
 
-        mapView.didMoveToWindow()
         notificationCenter.post(name: UIScene.didEnterBackgroundNotification, object: window.parentScene)
 
         XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])

@@ -647,7 +647,6 @@ public final class Style: StyleProtocol {
     /// - Returns:
     ///     The default value for the named property for the sources with type sourceType.
     public static func sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue {
-        // TODO: MMM
         return StyleManager.getStyleSourcePropertyDefaultValue(forSourceType: sourceType, property: property)
     }
 

@@ -1,7 +1,7 @@
 import Foundation
 import MapboxCoreMaps
 @_implementationOnly import MapboxCommon_Private
-@_implementationOnly import MapboxCoreMaps_Private.MBMStyleManager_Internal
+@_implementationOnly import MapboxCoreMaps_Private
 
 internal protocol StyleManagerType {
 

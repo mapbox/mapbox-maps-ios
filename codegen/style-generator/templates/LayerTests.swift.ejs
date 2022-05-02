@@ -1,0 +1,130 @@
+<%
+  const type = locals.type
+  const properties = locals.properties
+  const layoutProperties = locals.layoutProperties
+  const paintProperties = locals.paintProperties
+  const doc = locals.doc
+-%>
+// This file is generated
+import XCTest
+@testable import MapboxMaps
+
+final class <%- camelize(type) %>LayerTests: XCTestCase {
+
+    func testLayerProtocolMembers() {
+
+        var layer = <%- camelize(type) %>Layer(id: "test-id")
+        layer.source = "some-source"
+        layer.sourceLayer = nil
+        layer.minZoom = 10.0
+        layer.maxZoom = 20.0
+
+        XCTAssert(layer.id == "test-id")
+        XCTAssert(layer.type == LayerType.<%- camelizeWithLeadingLowercase(type) %>)
+        XCTAssert(layer.filter == nil)
+        XCTAssert(layer.source == "some-source")
+        XCTAssertNil(layer.sourceLayer)
+        XCTAssert(layer.minZoom == 10.0)
+        XCTAssert(layer.maxZoom == 20.0)
+    }
+
+    func testEncodingAndDecodingOfLayerProtocolProperties() {
+        var layer = <%- camelize(type) %>Layer(id: "test-id")
+        layer.source = "some-source"
+        layer.sourceLayer = nil
+        layer.minZoom = 10.0
+        layer.maxZoom = 20.0
+
+        var data: Data?
+        do {
+            data = try JSONEncoder().encode(layer)
+        } catch {
+            XCTFail("Failed to encode <%- camelize(type) %>Layer")
+        }
+
+        guard let validData = data else {
+            XCTFail("Failed to encode <%- camelize(type) %>Layer")
+            return
+        }
+
+        do {
+            let decodedLayer = try JSONDecoder().decode(<%- camelize(type) %>Layer.self, from: validData)
+            XCTAssert(decodedLayer.id == "test-id")
+            XCTAssert(decodedLayer.type == LayerType.<%- camelizeWithLeadingLowercase(type) %>)
+            XCTAssert(decodedLayer.filter == nil)
+            XCTAssert(decodedLayer.source == "some-source")
+            XCTAssertNil(decodedLayer.sourceLayer)
+            XCTAssert(decodedLayer.minZoom == 10.0)
+            XCTAssert(decodedLayer.maxZoom == 20.0)
+        } catch {
+            XCTFail("Failed to decode <%- camelize(type) %>Layer")
+        }
+    }
+
+    func testEncodingAndDecodingOfLayoutProperties() {
+        var layer = <%- camelize(type) %>Layer(id: "test-id")
+        layer.visibility = .constant(.visible)
+        <%_ for (const property of layoutProperties) { -%>
+        layer.<%- camelizeWithLeadingLowercase(property.name) %> = <%- propertySwiftValueType(property) %>.testConstantValue()
+        <%_ if (property.transition) { -%>
+        layer.<%- camelizeWithLeadingLowercase(property.name) %>Transition = StyleTransition(duration: 10.0, delay: 10.0)
+        <%_ } -%>
+        <%_ } -%>
+
+        var data: Data?
+        do {
+            data = try JSONEncoder().encode(layer)
+        } catch {
+            XCTFail("Failed to encode <%- camelize(type) %>Layer")
+        }
+
+        guard let validData = data else {
+            XCTFail("Failed to encode <%- camelize(type) %>Layer")
+            return
+        }
+
+        do {
+            let decodedLayer = try JSONDecoder().decode(<%- camelize(type) %>Layer.self, from: validData)
+            XCTAssert(decodedLayer.visibility == .constant(.visible))
+            <%_ for (const property of layoutProperties) { -%>
+            XCTAssert(layer.<%- camelizeWithLeadingLowercase(property.name) %> == <%- propertySwiftValueType(property) %>.testConstantValue())
+            <%_ } -%>
+        } catch {
+            XCTFail("Failed to decode <%- camelize(type) %>Layer")
+        }
+    }
+
+    func testEncodingAndDecodingOfPaintProperties() {
+       var layer = <%- camelize(type) %>Layer(id: "test-id")
+       <%_ for (const property of paintProperties) { -%>
+       layer.<%- camelizeWithLeadingLowercase(property.name) %> = <%- propertySwiftValueType(property) %>.testConstantValue()
+       <%_ if (property.transition) { -%>
+       layer.<%- camelizeWithLeadingLowercase(property.name) %>Transition = StyleTransition(duration: 10.0, delay: 10.0)
+       <%_ } -%>
+       <%_ } -%>
+
+       var data: Data?
+       do {
+           data = try JSONEncoder().encode(layer)
+       } catch {
+           XCTFail("Failed to encode <%- camelize(type) %>Layer")
+       }
+
+       guard let validData = data else {
+           XCTFail("Failed to encode <%- camelize(type) %>Layer")
+           return
+       }
+
+       do {
+           let decodedLayer = try JSONDecoder().decode(<%- camelize(type) %>Layer.self, from: validData)
+           XCTAssert(decodedLayer.visibility == .constant(.visible))
+           <%_ for (const property of paintProperties) { -%>
+           XCTAssert(layer.<%- camelizeWithLeadingLowercase(property.name) %> == <%- propertySwiftValueType(property) %>.testConstantValue())
+           <%_ } -%>
+       } catch {
+           XCTFail("Failed to decode <%- camelize(type) %>Layer")
+       }
+    }
+}
+
+// End of generated file

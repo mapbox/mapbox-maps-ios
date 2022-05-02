@@ -1,0 +1,34 @@
+<%
+  const expressions = locals.expressions
+  const valueExpressions = expressions.filter(expression => expression[`group`] === 'Types')
+  const logicExpressions = expressions.filter(expression => expression[`group`] !== 'Types')
+  const literalTypes = expressions.filter(expression => isExpressionLiteral(expression))
+-%>
+// This file is generated.
+import Foundation
+
+public extension Expression {
+    enum Operator: String, Codable, CaseIterable {
+        <%_ for (const expression of expressions) { -%>
+
+        <%_ %><%- blockDoc(expression, 8) %>
+        case <%- compatibleSwiftExpressionName(expression) %> = "<%- expression.name %>"
+        <%_ } -%>
+
+        /// Interpolates linearly between the pair of stops just less than and just greater than the input
+        case linear = "linear"
+
+        /// `["exponential", base]`
+        /// Interpolates exponentially between the stops just less than and just
+        /// greater than the input. base controls the rate at which the output increases: higher values make the output
+        /// increase more towards the high end of the range.
+        /// With values close to 1 the output increases linearly.
+        case exponential = "exponential"
+
+        /// `["cubic-bezier", x1, y1, x2, y2]`
+        /// Interpolates using the cubic bezier curve defined by the given control points.
+        case cubicBezier = "cubic-bezier"
+    }
+}
+
+// End of generated file.

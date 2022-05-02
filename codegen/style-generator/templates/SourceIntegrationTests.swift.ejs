@@ -1,0 +1,54 @@
+<%
+  const source = locals
+  const name = locals.name
+  const type = locals.type
+  const doc = locals.doc
+  const properties = locals.properties
+-%>
+// This file is generated.
+import XCTest
+@testable import MapboxMaps
+
+final class <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>SourceIntegrationTests: MapViewIntegrationTestCase {
+
+    func testAdditionAndRemovalOfSource() throws {
+        let style = try XCTUnwrap(self.style)
+
+        let successfullyAddedSourceExpectation = XCTestExpectation(description: "Successfully added <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>Source to Map")
+        successfullyAddedSourceExpectation.expectedFulfillmentCount = 1
+
+        let successfullyRetrievedSourceExpectation = XCTestExpectation(description: "Successfully retrieved <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>Source from Map")
+        successfullyRetrievedSourceExpectation.expectedFulfillmentCount = 1
+
+        style.uri = .streets
+
+        didFinishLoadingStyle = { _ in
+            var source = <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>Source()
+            <%_ for (const property of properties) { -%>
+            <%_ if (property[`name`] !== '*' && property[`name`] !== 'type' && property[`name`] !== 'clusterProperties') { -%>
+            source.<%- camelizeWithLeadingLowercase(property.name) %> = <%- propertySwiftType(property)%>.testSourceValue()
+            <%_ } -%>
+            <%_ } -%>
+
+            // Add the source
+            do {
+                try style.addSource(source, id: "test-source")
+                successfullyAddedSourceExpectation.fulfill()
+            } catch {
+                XCTFail("Failed to add <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>Source because of error: \(error)")
+            }
+
+            // Retrieve the source
+            do {
+                _ = try style.source(withId: "test-source", type: <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>Source.self)
+                successfullyRetrievedSourceExpectation.fulfill()
+            } catch {
+                XCTFail("Failed to retrieve <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>Source because of error: \(error)")
+            }
+        }
+
+        wait(for: [successfullyAddedSourceExpectation, successfullyRetrievedSourceExpectation], timeout: 5.0)
+    }
+}
+
+// End of generated file

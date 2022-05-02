@@ -1,0 +1,31 @@
+<%_
+switch (locals.annotationType) {
+  case 'point':
+_%>
+<%- locals.declarationKeyword %> annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+<%_
+    break;
+  case 'circle':
+_%>
+<%- locals.declarationKeyword %> annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+<%_
+    break;
+  case 'polygon':
+_%>
+let polygonCoords = [
+    CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+    CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+    CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+    CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+    CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+]
+<%- locals.declarationKeyword %> annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+<%_
+    break;
+  case 'polyline':
+_%>
+let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
+<%- locals.declarationKeyword %> annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+<%_
+}
+_%>

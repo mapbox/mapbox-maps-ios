@@ -1,0 +1,35 @@
+<%
+  const properties = locals.properties
+  const doc = locals.doc
+-%>
+// This file is generated.
+import Foundation
+
+/// The global light source.
+///
+/// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#light)
+public struct Light: Codable {
+    <%_ for (const property of properties) { -%>
+
+    /// <%- markdownFriendlyDoc(property) %>
+    public var <%- camelizeWithLeadingLowercase(property.name) %>: <%- propertySwiftType(property) %>?
+    <%_ if (property.transition) { -%>
+
+    /// Transition property for `<%- camelizeWithLeadingLowercase(property.name) %>`
+    public var <%- camelizeWithLeadingLowercase(property.name) %>Transition: StyleTransition?
+    <%_ } -%>
+    <%_ } -%>
+
+    public init() {}
+
+    enum CodingKeys: String, CodingKey {
+        <%_ for (const property of properties) { -%>
+        case <%- camelizeWithLeadingLowercase(property.name) %> = "<%- property.name %>"
+        <%_ if (property.transition) { -%>
+        case <%- camelizeWithLeadingLowercase(property.name) %>Transition = "<%- property.name %>-transition"
+        <%_ } -%>
+        <%_ } -%>
+    }
+}
+
+// End of generated file.

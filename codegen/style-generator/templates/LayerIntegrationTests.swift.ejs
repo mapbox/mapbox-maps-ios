@@ -1,0 +1,80 @@
+<%
+  const type = locals.type
+  const properties = locals.properties
+  const layoutProperties = locals.layoutProperties
+  const paintProperties = locals.paintProperties
+  const doc = locals.doc
+-%>
+// This file is generated
+import XCTest
+@testable import MapboxMaps
+
+final class <%- camelize(type) %>LayerIntegrationTests: MapViewIntegrationTestCase {
+
+    internal func testBaseClass() throws {
+        // Do nothing
+    }
+
+    internal func testWaitForIdle() throws {
+        let style = try XCTUnwrap(self.style)
+
+        let successfullyAddedLayerExpectation = XCTestExpectation(description: "Successfully added <%- camelize(type) %>Layer to Map")
+        successfullyAddedLayerExpectation.expectedFulfillmentCount = 1
+
+        let successfullyRetrievedLayerExpectation = XCTestExpectation(description: "Successfully retrieved <%- camelize(type) %>Layer from Map")
+        successfullyRetrievedLayerExpectation.expectedFulfillmentCount = 1
+
+        style.uri = .streets
+
+        didFinishLoadingStyle = { _ in
+
+            var layer = <%- camelize(type) %>Layer(id: "test-id")
+            layer.source = "some-source"
+            layer.sourceLayer = nil
+            layer.minZoom = 10.0
+            layer.maxZoom = 20.0
+            layer.visibility = .constant(.visible)
+            <%_ for (const property of layoutProperties) { -%>
+            <%_ if (propertySwiftValueType(property) !== "Value<[Double]>") { -%>
+            layer.<%- camelizeWithLeadingLowercase(property.name) %> = <%- propertySwiftValueType(property) %>.testConstantValue()
+            <%_ } -%>
+            <%_ if (property.transition) { -%>
+            layer.<%- camelizeWithLeadingLowercase(property.name) %>Transition = StyleTransition(duration: 10.0, delay: 10.0)
+            <%_ } -%>
+            <%_ } -%>
+
+            <%_ for (const property of paintProperties) { -%>
+            <%_ if (propertySwiftValueType(property) !== "Value<[Double]>") { -%>
+            layer.<%- camelizeWithLeadingLowercase(property.name) %> = <%- propertySwiftValueType(property) %>.testConstantValue()
+            <%_ } -%>
+            <%_ if (property.transition) { -%>
+            layer.<%- camelizeWithLeadingLowercase(property.name) %>Transition = StyleTransition(duration: 10.0, delay: 10.0)
+            <%_ } -%>
+            <%_ } -%>
+
+            // Add the layer
+            do {
+            <%_ if (type === 'location-indicator') { -%>
+                try style.addPersistentLayer(layer)
+            <%_ } else { -%>
+                try style.addLayer(layer)
+            <%_ } -%>
+                successfullyAddedLayerExpectation.fulfill()
+            } catch {
+                XCTFail("Failed to add <%- camelize(type) %>Layer because of error: \(error)")
+            }
+
+            // Retrieve the layer
+            do {
+                _ = try style.layer(withId: "test-id", type: <%- camelize(type) %>Layer.self)
+                successfullyRetrievedLayerExpectation.fulfill()
+            } catch {
+                XCTFail("Failed to retrieve <%- camelize(type) %>Layer because of error: \(error)")
+            }
+        }
+
+        wait(for: [successfullyAddedLayerExpectation, successfullyRetrievedLayerExpectation], timeout: 5.0)
+    }
+}
+
+// End of generated file

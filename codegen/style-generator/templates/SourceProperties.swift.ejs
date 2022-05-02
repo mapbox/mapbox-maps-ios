@@ -1,0 +1,18 @@
+<%
+  const enums = locals
+-%>
+// This file is generated.
+import Foundation
+<%_ for(const property of enums) { -%>
+
+/// <%- property.doc %>
+public enum <%- camelize(property.name) %>: String, Codable {
+    <%_ for(const value of Object.keys(property.values)) { -%>
+
+    /// <%- propertyValueDoc(property, value) %>
+    case <%- camelizeWithLeadingLowercase(value) %> = "<%- value %>"
+    <%_ } %>
+}
+<%_ } -%>
+
+// End of generated file.

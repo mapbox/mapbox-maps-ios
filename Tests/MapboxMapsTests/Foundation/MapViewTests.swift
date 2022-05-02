@@ -261,91 +261,6 @@ final class MapViewTests: XCTestCase {
         XCTAssertEqual(runner.updateStub.invocations.count, 1)
     }
 
-    func testAppLifecycleNotificationSubscribedWhenDidMoveToNewWindow() {
-        notificationCenter.addObserverStub.reset()
-        bundle.infoDictionaryStub.defaultReturnValue = [:]
-        let mapView = MapView(
-            frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
-            mapInitOptions: MapInitOptions(),
-            dependencyProvider: dependencyProvider,
-            orientationProvider: orientationProvider,
-            urlOpener: attributionURLOpener)
-
-        window.addSubview(mapView)
-
-        XCTAssertTrue(notificationCenter.addObserverStub.invocations.contains(where: { invocation in
-            invocation.parameters.name == UIApplication.didEnterBackgroundNotification
-        }))
-        XCTAssertTrue(notificationCenter.addObserverStub.invocations.contains(where: { invocation in
-            invocation.parameters.name == UIApplication.willEnterForegroundNotification
-        }))
-        XCTAssertTrue(notificationCenter.addObserverStub.invocations.contains(where: { invocation in
-            invocation.parameters.name == UIApplication.didReceiveMemoryWarningNotification
-        }))
-        XCTAssertEqual(notificationCenter.addObserverStub.invocations.count, 3)
-    }
-
-    func testSceneLifecycleNotificationSubscribedWhenDidMoveToNewWindow() throws {
-        guard #available(iOS 13.0, *) else {
-            throw XCTSkip("Test requires iOS 13 or higher.")
-        }
-
-        notificationCenter.addObserverStub.reset()
-        bundle.infoDictionaryStub.defaultReturnValue = ["UIApplicationSceneManifest": []]
-        let mapView = MapView(
-            frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
-            mapInitOptions: MapInitOptions(),
-            dependencyProvider: dependencyProvider,
-            orientationProvider: orientationProvider,
-            urlOpener: attributionURLOpener)
-
-        window.addSubview(mapView)
-
-        XCTAssertTrue(notificationCenter.addObserverStub.invocations.contains(where: { invocation in
-            return invocation.parameters.name == UIScene.didEnterBackgroundNotification &&
-            invocation.parameters.object as? UIScene == window.parentScene
-        }))
-        XCTAssertTrue(notificationCenter.addObserverStub.invocations.contains(where: { invocation in
-            return invocation.parameters.name == UIScene.willEnterForegroundNotification &&
-            invocation.parameters.object as? UIScene == window.parentScene
-        }))
-        XCTAssertTrue(notificationCenter.addObserverStub.invocations.contains(where: { invocation in
-            invocation.parameters.name == UIApplication.didReceiveMemoryWarningNotification
-        }))
-        XCTAssertEqual(notificationCenter.addObserverStub.invocations.count, 3)
-    }
-
-    func testLifecycleNotificationsUnsubscribedWhenMovingFromWindow() throws {
-        guard #available(iOS 13.0, *) else {
-            throw XCTSkip("Test requires iOS 13 or higher.")
-        }
-
-        let mapView = MapView(
-            frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
-            mapInitOptions: MapInitOptions(),
-            dependencyProvider: dependencyProvider,
-            orientationProvider: orientationProvider,
-            urlOpener: attributionURLOpener)
-        window.addSubview(mapView)
-        notificationCenter.removeObserverStub.reset()
-
-        mapView.removeFromSuperview()
-
-        XCTAssertTrue(notificationCenter.removeObserverStub.invocations.contains(where: { invocation in
-            invocation.parameters.name == UIApplication.didEnterBackgroundNotification
-        }))
-        XCTAssertTrue(notificationCenter.removeObserverStub.invocations.contains(where: { invocation in
-            invocation.parameters.name == UIApplication.willEnterForegroundNotification
-        }))
-        XCTAssertTrue(notificationCenter.removeObserverStub.invocations.contains(where: { invocation in
-            invocation.parameters.name == UIScene.didEnterBackgroundNotification
-        }))
-        XCTAssertTrue(notificationCenter.removeObserverStub.invocations.contains(where: { invocation in
-            return invocation.parameters.name == UIScene.willEnterForegroundNotification
-        }))
-        XCTAssertEqual(notificationCenter.removeObserverStub.invocations.count, 4)
-    }
-
     func testDisplayLinkPausedWhenAppMovingToBackground() {
         notificationCenter.post(name: UIApplication.didEnterBackgroundNotification, object: nil)
 
@@ -356,30 +271,6 @@ final class MapViewTests: XCTestCase {
         notificationCenter.post(name: UIApplication.willEnterForegroundNotification, object: nil)
 
         XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [false])
-    }
-
-    func testDisplayLinkResumedWhenSceneMovingToForeground() throws {
-        guard #available(iOS 13.0, *) else {
-            throw XCTSkip("Test requires iOS 13 or higher.")
-        }
-        bundle.infoDictionaryStub.defaultReturnValue = ["UIApplicationSceneManifest": []]
-        mapView.didMoveToWindow()
-
-        notificationCenter.post(name: UIScene.willEnterForegroundNotification, object: window.parentScene)
-
-        XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [false])
-    }
-
-    func testDisplayLinkPausedWhenSceneMovingToBackground() throws {
-        guard #available(iOS 13.0, *) else {
-            throw XCTSkip("Test requires iOS 13 or higher.")
-        }
-        bundle.infoDictionaryStub.defaultReturnValue = ["UIApplicationSceneManifest": []]
-        mapView.didMoveToWindow()
-
-        notificationCenter.post(name: UIScene.didEnterBackgroundNotification, object: window.parentScene)
-
-        XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
     }
 
     func testOrientationProviderIsUsed() throws {
@@ -408,5 +299,85 @@ final class MapViewTests: XCTestCase {
 
         XCTAssertEqual(attributionURLOpener.openAttributionURLStub.invocations.count, 1)
         XCTAssertEqual(attributionURLOpener.openAttributionURLStub.invocations.first?.parameters, url)
+    }
+}
+
+final class MapViewTestsWithScene: XCTestCase {
+
+    var notificationCenter: MockNotificationCenter!
+    var bundle: MockBundle!
+    var cameraAnimatorsRunnerEnablable: MockMutableEnablable!
+    var displayLink: MockDisplayLink!
+    var locationProducer: MockLocationProducer!
+    var dependencyProvider: MockMapViewDependencyProvider!
+    var orientationProvider: MockInterfaceOrientationProvider!
+    var attributionURLOpener: MockAttributionURLOpener!
+    var mapView: MapView!
+    var window: UIWindow!
+    var metalView: MockMetalView!
+
+    override func setUpWithError() throws {
+        try super.setUpWithError()
+        notificationCenter = MockNotificationCenter()
+        bundle = MockBundle()
+        bundle.infoDictionaryStub.defaultReturnValue = ["UIApplicationSceneManifest": []]
+        cameraAnimatorsRunnerEnablable = MockMutableEnablable()
+        displayLink = MockDisplayLink()
+        locationProducer = MockLocationProducer()
+        dependencyProvider = MockMapViewDependencyProvider()
+        dependencyProvider.notificationCenter = notificationCenter
+        dependencyProvider.bundle = bundle
+        dependencyProvider.cameraAnimatorsRunnerEnablable = cameraAnimatorsRunnerEnablable
+        dependencyProvider.makeDisplayLinkStub.defaultReturnValue = displayLink
+        dependencyProvider.makeLocationProducerStub.defaultReturnValue = locationProducer
+        orientationProvider = MockInterfaceOrientationProvider()
+        attributionURLOpener = MockAttributionURLOpener()
+        mapView = MapView(
+            frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
+            mapInitOptions: MapInitOptions(),
+            dependencyProvider: dependencyProvider,
+            orientationProvider: orientationProvider,
+            urlOpener: attributionURLOpener)
+        window = UIWindow()
+        window.addSubview(mapView)
+
+        metalView = try XCTUnwrap(dependencyProvider.makeMetalViewStub.invocations.first?.returnValue)
+        // reset is required here to ignore the setNeedsDisplay() invocation during initialization
+        metalView.setNeedsDisplayStub.reset()
+    }
+
+    override func tearDown() {
+        metalView = nil
+        window = nil
+        mapView = nil
+        attributionURLOpener = nil
+        orientationProvider = nil
+        dependencyProvider = nil
+        locationProducer = nil
+        displayLink = nil
+        cameraAnimatorsRunnerEnablable = nil
+        bundle = nil
+        notificationCenter = nil
+        super.tearDown()
+    }
+
+    func testDisplayLinkResumedWhenSceneMovingToForeground() throws {
+        guard #available(iOS 13.0, *) else {
+            throw XCTSkip("Test requires iOS 13 or higher.")
+        }
+
+        notificationCenter.post(name: UIScene.willEnterForegroundNotification, object: window.parentScene)
+
+        XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [false])
+    }
+
+    func testDisplayLinkPausedWhenSceneMovingToBackground() throws {
+        guard #available(iOS 13.0, *) else {
+            throw XCTSkip("Test requires iOS 13 or higher.")
+        }
+
+        notificationCenter.post(name: UIScene.didEnterBackgroundNotification, object: window.parentScene)
+
+        XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
     }
 }

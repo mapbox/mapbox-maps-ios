@@ -322,6 +322,7 @@ open class MapView: UIView {
             mapInitOptions: resolvedMapInitOptions,
             mapboxObservableProvider: dependencyProvider.mapboxObservableProvider)
 
+        subscribeToLifecycleNotifications()
         notificationCenter.addObserver(self,
                                        selector: #selector(didReceiveMemoryWarning),
                                        name: UIApplication.didReceiveMemoryWarningNotification,
@@ -464,21 +465,13 @@ open class MapView: UIView {
         }
     }
 
-    private func unsubscribeFromLifecycleNotifications() {
-        if #available(iOS 13.0, *) {
-            notificationCenter.removeObserver(self, name: UIScene.willEnterForegroundNotification, object: nil)
-            notificationCenter.removeObserver(self, name: UIScene.didEnterBackgroundNotification, object: nil)
-        }
-        notificationCenter.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
-        notificationCenter.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
-    }
-
     @objc private func appWillEnterForeground() {
         displayLink?.isPaused = false
     }
 
     @objc private func appDidEnterBackground() {
         displayLink?.isPaused = true
+        mapboxMap.reduceMemoryUse()
     }
 
     @available(iOS 13.0, *)
@@ -494,6 +487,7 @@ open class MapView: UIView {
         guard notification.object as? UIScene == window?.parentScene else { return }
 
         displayLink?.isPaused = true
+        mapboxMap.reduceMemoryUse()
     }
 
     @objc private func didReceiveMemoryWarning() {
@@ -582,8 +576,6 @@ open class MapView: UIView {
     open override func didMoveToWindow() {
         super.didMoveToWindow()
 
-        unsubscribeFromLifecycleNotifications()
-
         displayLink?.invalidate()
         displayLink = nil
 
@@ -610,8 +602,6 @@ open class MapView: UIView {
 
         updateDisplayLinkPreferredFramesPerSecond()
         displayLink.add(to: .current, forMode: .common)
-
-        subscribeToLifecycleNotifications()
     }
 
     // MARK: Location

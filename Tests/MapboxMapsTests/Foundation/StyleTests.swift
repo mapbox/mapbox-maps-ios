@@ -180,4 +180,23 @@ final class StyleTests: XCTestCase {
         )
         XCTAssertThrowsError(try sut.addPersistentLayer(with: ["foo": "bar"], layerPosition: .at(0)))
     }
+
+    func testStyleGetLayerCanFail() {
+        let mockStyleManager = MockStyleManager()
+        let sut = Style(with: mockStyleManager)
+
+        mockStyleManager.mockery.registerStub(
+            name: "getStyleLayerProperties(forLayerId:)",
+            for: MockStyleManager.getStyleLayerProperties,
+            stubbedValue: { layerID in
+                if layerID == "dummy-layer-id1" {
+                    return Expected(error: "Cannot get layer properties")
+                } else {
+                    return Expected(value: NSDictionary(dictionary: ["type": "Not a valid type"]))
+                }
+            })
+
+        XCTAssertThrowsError(try sut.layer(withId: "dummy-style-id1"))
+        XCTAssertThrowsError(try sut.layer(withId: "dummy-style-id2"))
+    }
 }

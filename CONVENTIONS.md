@@ -29,3 +29,43 @@
        `BImpl`.
     3. When testing `A`, instantiate `B` using a mock implementation `MockB`
        that implements `BProtocol`.
+4. **Experimental APIs**
+    1. Significant new APIs are typically considered experimental when they are
+       first introduced. This means that the APIs are considered production-
+       ready, but are subject to change without triggering a major version bump.
+       After one or more customers successfully adopts the new APIs, the
+       experimental designation is removed.
+    2. Experimental APIs are marked with the `@_spi(Experimental)` attribute. To
+       use them, developers must add the same attribute to their import
+       statement: `@_spi(Experimental) import MapboxMaps`.
+    3. APIs annotated with `@_spi` APIs are only included in XCFrameworks if the
+       project is [configured](https://github.com/mapbox/mapbox-maps-ios/pull/854)
+       with `SWIFT_EMIT_PRIVATE_MODULE_INTERFACE = YES`.
+5. **Restricted APIs**
+    1. Some customers have special permission to use the SDK in ways that are
+       typically not allowed. For example, there are customers who are allowed
+       to hide the Mapbox logo.
+    2. The APIs that enable these behaviors are marked with the
+       `@_spi(Restricted)` attribute. To use them, developers must add the same
+       attribute to their import statement: `@_spi(Restricted) import MapboxMaps`.
+6. **Metrics APIs**
+    1. Our internal SDK performance metrics need to measure certain aspects of
+       the SDK that are typically fully encapsulated and not available through
+       its public API. The APIs that expose these values are marked with the
+       `@_spi(Metrics)` attribute. To use them, our metrics project adds the
+       same attribute to its import statement:
+       `@_spi(Metrics) import MapboxMaps`. These APIs are not intended for use
+       by external developers.
+7. **Private GL Native and Common APIs**
+    1. GL Native and Common expose certain APIs that are needed by the iOS SDK
+       but are not designed for use by developers. These APIs are added to a
+       separate module in the same dependency that is suffixed with the string
+       `_Private`. For example, in the MapboxCommon dependency, there is a
+       public module, `MapboxCommon` and a private module `MapboxCommon_Private`.
+    2. When the SDK imports the private module to use its APIs, the import
+       statement is marked with the `@_implementationOnly` attribute. This
+       causes the compiler to emit an error if any symbols from the private
+       module are accidentally exposed in the SDK's public API. Attempting to
+       import the private module without the `@_implementationOnly` attribute
+       will emit a warning about the attribute being applied inconsistently
+       throughtout the SDK.

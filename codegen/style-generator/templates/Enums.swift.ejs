@@ -1,0 +1,33 @@
+<%
+  const properties = locals.properties
+-%>
+// This file is generated.
+import Foundation
+
+public enum Visibility: String, Codable {
+
+    /// The layer is shown.
+    case visible = "visible"
+
+    /// The layer is not shown.
+    case none = "none"
+}
+<%_ for (const property of properties) { -%>
+<%_ if (property.name !== 'visibility') { _%>
+<%_ const propertyName = (property['projection-property'] === true) ? `StyleProjection${camelize(property.name)}` : camelize(property.name) _%>
+
+// MARK: <%- snakeCaseUpper(property.name) %>
+
+/// <%- property.doc %>
+public enum <%- camelize(propertyName) %>: String, Codable, CaseIterable {
+
+    <%_ for (const value of Object.keys(property.values)) { -%>
+    /// <%- propertyValueDoc(property, value) %>
+    case <%- camelizeWithLeadingLowercase(value) %> = "<%- value %>"
+
+    <%_ } -%>
+}
+<%_ } -%>
+<%_ } -%>
+
+// End of generated file.

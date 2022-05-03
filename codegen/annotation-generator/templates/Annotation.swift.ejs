@@ -1,0 +1,142 @@
+<%_
+  const type = locals.type
+  const properties = locals.properties
+  const symbol = "point"
+  const circle = "circle"
+  const fill = "polygon"
+  const line = "polyline"
+_%>
+// This file is generated.
+import Foundation
+
+public struct <%- camelize(type) %>Annotation: Annotation {
+
+    /// Identifier for this annotation
+    public let id: String
+
+    /// The geometry backing this annotation
+    public var geometry: Geometry {
+        <%_ if (type === symbol) { _%>
+        return .point(point)
+        <%_ } else if(type === circle) { _%>
+        return .point(point)
+        <%_ } else if(type === fill) { _%>
+        return .polygon(polygon)
+        <%_ } else if(type === line) { _%>
+        return .lineString(lineString)
+        <%_ } _%>
+    }
+
+    <%_ if (type === symbol) { _%>
+    /// The point backing this annotation
+    public var point: Point
+    <%_ } else if (type === circle) { _%>
+    /// The point backing this annotation
+    public var point: Point
+    <%_ } else if (type === fill) { _%>
+    /// The polygon backing this annotation
+    public var polygon: Polygon
+    <%_ } else if (type === line) { _%>
+    /// The line string backing this annotation
+    public var lineString: LineString
+    <%_ } _%>
+
+    /// Properties associated with the annotation
+    public var userInfo: [String: Any]?
+
+    /// Storage for layer properties
+    internal var layerProperties: [String: Any] = [:]
+
+    internal var feature: Feature {
+        var feature = Feature(geometry: geometry)
+        feature.identifier = .string(id)
+        var properties = JSONObject()
+        properties["layerProperties"] = JSONValue(rawValue: layerProperties)
+        if let userInfoValue = userInfo.flatMap(JSONValue.init(rawValue:)) {
+            properties["userInfo"] = userInfoValue
+        }
+        feature.properties = properties
+        return feature
+    }
+    <%_ if (type === symbol) { _%>
+
+    /// Create a point annotation with a `Point` and an optional identifier.
+    public init(id: String = UUID().uuidString, point: Point) {
+        self.id = id
+        self.point = point
+    }
+
+    /// Create a point annotation with a coordinate and an optional identifier
+    /// - Parameters:
+    ///   - id: Optional identifier for this annotation
+    ///   - coordinate: Coordinate where this annotation should be rendered
+    public init(id: String = UUID().uuidString, coordinate: CLLocationCoordinate2D) {
+        let point = Point(coordinate)
+        self.init(id: id, point: point)
+    }
+    <%_ } else if(type === circle) { _%>
+
+    /// Create a circle annotation with a `Point` and an optional identifier.
+    public init(id: String = UUID().uuidString, point: Point) {
+        self.id = id
+        self.point = point
+    }
+
+    /// Create a circle annotation with a center coordinate and an optional identifier
+    /// - Parameters:
+    ///   - id: Optional identifier for this annotation
+    ///   - coordinate: Coordinate where this circle annotation should be centered
+    public init(id: String = UUID().uuidString, centerCoordinate: CLLocationCoordinate2D) {
+        let point = Point(centerCoordinate)
+        self.init(id: id, point: point)
+    }
+    <%_ } else if(type === fill) { _%>
+
+    /// Create a polygon annotation with a `Polygon` and an optional identifier.
+    public init(id: String = UUID().uuidString, polygon: Polygon) {
+        self.id = id
+        self.polygon = polygon
+    }
+    <%_ } else if(type === line) { _%>
+
+    /// Create a polyline annotation with a `LineString` and an optional identifier.
+    public init(id: String = UUID().uuidString, lineString: LineString) {
+        self.id = id
+        self.lineString = lineString
+    }
+
+    /// Create a polyline annotation with an array of coordinates and an optional identifier.
+    public init(id: String = UUID().uuidString, lineCoordinates: [CLLocationCoordinate2D]) {
+        let lineString = LineString(lineCoordinates)
+        self.init(id: id, lineString: lineString)
+    }
+    <%_ } _%>
+
+    // MARK: - Style Properties -
+    <%_ for (const property of properties) { _%>
+    <%_ if (supportsPropertyFunction(property) && !shouldSkipAnnotationProperty(type, property)) { _%>
+
+    /// <%- markdownFriendlyDoc(property) %>
+    public var <%- camelizeWithLeadingLowercase(property.name) %>: <%- propertySwiftType(property) %>? {
+        get {
+            return <%- propertyJSONValueToSwiftTypeConvertor(property) %>
+        }
+        set {
+            layerProperties["<%- property.name %>"] = <%- propertySwiftTypeToJSONValueConvertor(property) %>
+        }
+    }
+    <%_ } _%>
+    <%_ } _%>
+
+    <%_ if (type === symbol) { _%>
+    // MARK: - Image Convenience -
+
+    public var image: Image? {
+        didSet {
+            self.iconImage = image?.name
+        }
+    }
+    <%_ } _%>
+}
+
+// End of generated file.

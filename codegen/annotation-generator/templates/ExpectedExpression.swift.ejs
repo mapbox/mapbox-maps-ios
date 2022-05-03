@@ -1,0 +1,96 @@
+<%_
+switch (locals.property.type) {
+  case 'boolean':
+  case 'string':
+  case 'number':
+_%>
+.expression(Exp(.<%- locals.property.type %>) {
+    Exp(.get) {
+        "<%- locals.property.name %>"
+        Exp(.objectExpression) {
+            Exp(.get) {
+                "layerProperties"
+            }
+        }
+    }
+})
+<%_
+    break;
+  case 'formatted':
+_%>
+.expression(Exp(.format) {
+    Exp(.get) {
+        "<%- locals.property.name %>"
+        Exp(.objectExpression) {
+            Exp(.get) {
+                "layerProperties"
+            }
+        }
+    }
+    FormatOptions()
+})
+<%_
+    break;
+  case 'enum':
+_%>
+.expression(Exp(.toString) {
+    Exp(.get) {
+        "<%- locals.property.name %>"
+        Exp(.objectExpression) {
+            Exp(.get) {
+                "layerProperties"
+            }
+        }
+    }
+})
+<%_
+    break;
+  case 'resolvedImage':
+_%>
+.expression(Exp(.image) {
+    Exp(.get) {
+        "<%- locals.property.name %>"
+        Exp(.objectExpression) {
+            Exp(.get) {
+                "layerProperties"
+            }
+        }
+    }
+})
+<%_
+    break;
+  case 'array':
+    const length = (typeof locals.property.length !== 'undefined') ? locals.property.length : "";
+_%>
+.expression(Exp(.array) {
+    "<%- locals.property.value %>"
+    <%- length %>
+    Exp(.get) {
+        "<%- locals.property.name %>"
+        Exp(.objectExpression) {
+            Exp(.get) {
+                "layerProperties"
+            }
+        }
+    }
+})
+<%_
+    break;
+  case 'color':
+_%>
+.expression(Exp(.toColor) {
+    Exp(.get) {
+        "<%- locals.property.name %>"
+        Exp(.objectExpression) {
+            Exp(.get) {
+                "layerProperties"
+            }
+        }
+    }
+})
+<%_
+    break;
+  default:
+    throw new Error(`unknown type for ${locals.property.name}. Property type = ${locals.property.type}`);
+}
+_%>

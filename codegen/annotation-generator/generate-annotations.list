@@ -1,0 +1,16 @@
+../mapbox-maps-ios/Sources/MapboxMaps/Annotations/Generated/PolygonAnnotationManager.swift
+../mapbox-maps-ios/Sources/MapboxMaps/Annotations/Generated/PolygonAnnotation.swift
+../mapbox-maps-ios/Tests/MapboxMapsTests/Annotations/Generated/PolygonAnnotationIntegrationTests.swift
+../mapbox-maps-ios/Tests/MapboxMapsTests/Annotations/Generated/PolygonAnnotationTests.swift
+../mapbox-maps-ios/Sources/MapboxMaps/Annotations/Generated/PolylineAnnotationManager.swift
+../mapbox-maps-ios/Sources/MapboxMaps/Annotations/Generated/PolylineAnnotation.swift
+../mapbox-maps-ios/Tests/MapboxMapsTests/Annotations/Generated/PolylineAnnotationIntegrationTests.swift
+../mapbox-maps-ios/Tests/MapboxMapsTests/Annotations/Generated/PolylineAnnotationTests.swift
+../mapbox-maps-ios/Sources/MapboxMaps/Annotations/Generated/PointAnnotationManager.swift
+../mapbox-maps-ios/Sources/MapboxMaps/Annotations/Generated/PointAnnotation.swift
+../mapbox-maps-ios/Tests/MapboxMapsTests/Annotations/Generated/PointAnnotationIntegrationTests.swift
+../mapbox-maps-ios/Tests/MapboxMapsTests/Annotations/Generated/PointAnnotationTests.swift
+../mapbox-maps-ios/Sources/MapboxMaps/Annotations/Generated/CircleAnnotationManager.swift
+../mapbox-maps-ios/Sources/MapboxMaps/Annotations/Generated/CircleAnnotation.swift
+../mapbox-maps-ios/Tests/MapboxMapsTests/Annotations/Generated/CircleAnnotationIntegrationTests.swift
+../mapbox-maps-ios/Tests/MapboxMapsTests/Annotations/Generated/CircleAnnotationTests.swift

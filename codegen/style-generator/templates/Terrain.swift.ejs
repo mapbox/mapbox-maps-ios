@@ -1,0 +1,26 @@
+<%
+  const properties = locals.properties
+  const doc = locals.doc
+-%>
+// This file is generated.
+import Foundation
+
+
+/// The global terrain source.
+///
+/// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#terrain)
+public struct Terrain: Codable  {
+
+    public var source: String
+
+    public init(sourceId: String) {
+        self.source = sourceId
+    }
+    <%_ for (const property of properties) { -%>
+
+    /// <%- markdownFriendlyDoc(property) %>
+    public var <%- camelizeWithLeadingLowercase(property.name) %>: <%- propertySwiftValueType(property) %>?
+    <%_ } -%>
+}
+
+// End of generated file.

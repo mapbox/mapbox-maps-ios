@@ -1,0 +1,39 @@
+<%
+  const properties = locals.properties
+-%>
+// This file is generated.
+// swiftlint:disable file_length
+import Foundation
+@testable import MapboxMaps
+
+extension Value where T == Visibility {
+    static func testConstantValue() -> Value<Visibility> {
+        return .constant(Visibility.testConstantValue())
+    }
+}
+
+extension Visibility {
+    static func testConstantValue() -> Visibility {
+        return .visible
+    }
+}
+<% for (const property of properties) { -%>
+<% if (property.name !== 'visibility') { -%>
+<%_ const propertyName = (property['projection-property'] === true) ? `StyleProjection${camelize(property.name)}` : camelize(property.name) _%>
+
+// MARK: <%- snakeCaseUpper(property.name) %>
+
+extension Value where T == <%- camelize(propertyName) %> {
+    static func testConstantValue() -> Value<<%- camelize(propertyName) %>> {
+        return .constant(<%- camelize(propertyName) %>.testConstantValue())
+    }
+}
+
+extension <%- camelize(propertyName) %> {
+    static func testConstantValue() -> <%- camelize(propertyName) %> {
+        return <%- camelize(propertyName) %>(rawValue: "<%- Object.keys(property.values)[0] %>")!
+    }
+}
+<% } -%>
+<% } -%>
+// End of generated file.

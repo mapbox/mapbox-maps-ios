@@ -1,0 +1,48 @@
+<%
+  const source = locals
+  const name = locals.name
+  const type = locals.type
+  const doc = locals.doc
+  const properties = locals.properties
+-%>
+// This file is generated.
+import XCTest
+@testable import MapboxMaps
+
+final class <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>SourceTests: XCTestCase {
+
+    func testEncodingAndDecoding() {
+        var source = <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>Source()
+        <%_ for (const property of properties) { -%>
+        <%_ if (property[`name`] !== '*' && property[`name`] !== 'type') { -%>
+        source.<%- camelizeWithLeadingLowercase(property.name) %> = <%- propertySwiftType(property)%>.testSourceValue()
+        <%_ } -%>
+        <%_ } -%>
+
+        var data: Data?
+        do {
+            data = try JSONEncoder().encode(source)
+        } catch {
+            XCTFail("Failed to encode <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>Source.")
+        }
+
+        guard let validData = data else {
+            XCTFail("Failed to encode <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>Source.")
+            return
+        }
+
+        do {
+            let decodedSource = try JSONDecoder().decode(<%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>Source.self, from: validData)
+            XCTAssert(decodedSource.type == SourceType.<%- camelizeWithLeadingLowercaseUndercoreRemoved(name) %>)
+            <%_ for (const property of properties) { -%>
+            <%_ if (property[`name`] !== '*' && property[`name`] !== 'type') { -%>
+            XCTAssert(decodedSource.<%- camelizeWithLeadingLowercase(property.name) %> == <%- propertySwiftType(property)%>.testSourceValue())
+            <%_ } -%>
+            <%_ } -%>
+        } catch {
+            XCTFail("Failed to decode <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>Source.")
+        }
+    }
+}
+
+// End of generated file

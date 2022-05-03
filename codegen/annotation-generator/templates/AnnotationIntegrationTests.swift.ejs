@@ -1,0 +1,279 @@
+<%_
+  const type = locals.type
+  const originalType = locals.orignalType
+  const properties = locals.properties
+
+  const testPropertyForType = function testPropertyForType(type) {
+    switch (type) {
+      case 'point':
+        return { type: "number", name: "text-size" };
+      case 'circle':
+        return { type: "number", name: "circle-radius" };
+      case 'polygon':
+        return { type: "number", name: "fill-opacity" };
+      case 'polyline':
+        return { type: "number", name: "line-width" };
+      default:
+        throw new Error(`unknown type ${type}`);
+    }
+  }
+
+  const elementPropertyForArray = function elementPropertyForArray(property, i) {
+    let elementProperty;
+    if (property.value === "string") {
+      elementProperty = {type: property.value};
+    } else if (property.value === "number") {
+      elementProperty = {type: property.value};
+      if (typeof property.minimum !== 'undefined') {
+        elementProperty["minimum"] = property.minimum[i]
+      }
+      if (typeof property.maximum !== 'undefined') {
+        elementProperty["maximum"] = property.maximum[i]
+      }
+    } else if (property.value === "enum") {
+      elementProperty = {type: property.value, name: property.name};
+    } else {
+      elementProperty = property.value;
+    }
+    return elementProperty;
+  }
+
+  const randomElement = function randomElement(property) {
+    switch (property.type) {
+      case 'boolean':
+        return `Bool.random()`;
+      case 'string':
+      case 'formatted':
+      case 'resolvedImage':
+        return `String.randomASCII(withLength: .random(in: 0...100))`;
+      case 'number':
+        const minimum = (typeof property.minimum !== 'undefined') ? property.minimum : -100000;
+        const maximum = (typeof property.maximum !== 'undefined') ? property.maximum : 100000;
+        return `Double.random(in: ${minimum}...${maximum})`;
+      case 'array':
+        let elements = [];
+        if (typeof property.length !== 'undefined') {
+          for (var i=0; i<property.length; i++) {
+            let elementProperty = elementPropertyForArray(property, i);
+            elements.push(randomElement(elementProperty));
+          }
+          return `[${elements.join(", ")}]${property.name == 'line-trim-offset' ? '.sorted()' : ''}`;
+        } else {
+          let elementProperty = elementPropertyForArray(property);
+          return `Array.random(withLength: .random(in: 0...10), generator: { ${randomElement(elementProperty)} })`;
+        }
+      case 'enum':
+        if (property.name === "text-variable-anchor") {
+          return `TextAnchor.allCases.randomElement()!`;
+        } else {
+          return `${propertySwiftType(property)}.allCases.randomElement()!`;
+        }
+      case 'color':
+        return `StyleColor.random()`;
+      default:
+        throw new Error(`unknown type for ${property.name}. Property type = ${property.type}`);
+    }
+  }
+
+  const defaultValue = function defaultValue(property) {
+    if (property.name === "text-field") {
+      return `.expression(Exp(.format) {
+            ""
+            FormatOptions()
+        })`;
+    }
+
+    const layerPropertyDefaultValue = `Style.layerPropertyDefaultValue(for: .${originalType}, property: "${property.name}").value`
+    switch (property.type) {
+      case 'boolean':
+        return `.constant((${layerPropertyDefaultValue} as! NSNumber).boolValue)`;
+      case 'string':
+        return `.constant(${layerPropertyDefaultValue} as! String)`;
+      case 'formatted':
+        return `.constant((${layerPropertyDefaultValue} as! [Any]).enumerated().compactMap { (idx, element) in (idx % 2) == 1 ? element as? String : nil }.joined())`;
+      case 'resolvedImage':
+        return `.constant(.name(${layerPropertyDefaultValue} as! String))`
+      case 'number':
+        return `.constant((${layerPropertyDefaultValue} as! NSNumber).doubleValue)`;
+      case 'array':
+        return `.constant(${layerPropertyDefaultValue} as! ${propertySwiftType(property)})`;
+      case 'enum':
+        return `.constant(${propertySwiftType(property)}(rawValue: ${layerPropertyDefaultValue} as! String)!)`;
+      case 'color':
+        return `.constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: ${layerPropertyDefaultValue} as! [Any], options: [])))`;
+      default:
+        throw new Error(`unknown type for ${property.name}. Property type = ${property.type}`);
+    }
+  }
+
+  const expectedValue = function expectedValue(property) {
+    switch (property.type) {
+      case 'boolean':
+      case 'string':
+      case 'formatted':
+      case 'enum':
+      case 'color':
+      case 'number':
+        return `value`;
+      case 'resolvedImage':
+        return `.name(value)`
+      case 'array':
+        if (property.value === "number") {
+          return `.constant(value.map { Double(Float($0)) })`;
+        } else {
+          return `value`;
+        }
+      default:
+        throw new Error(`unknown type for ${property.name}. Property type = ${property.type}`);
+    }
+  }
+
+  const assertions = function assertions(property) {
+    switch (property.type) {
+      case 'boolean':
+      case 'string':
+      case 'formatted':
+      case 'enum':
+      case 'color':
+      case 'resolvedImage':
+        return `XCTAssertEqual(actualValue, ${expectedValue(property)})`;
+      case 'number':
+        return `XCTAssertEqual(actualValue, ${expectedValue(property)}, accuracy: 0.1)`;
+      case 'array':
+        if (property.value === "number") {
+          return `for (actual, expected) in zip(actualValue, value) {
+                XCTAssertEqual(actual, expected, accuracy: 0.1)
+            }`;
+        } else {
+          return `XCTAssertEqual(actualValue, ${expectedValue(property)})`;
+        }
+      default:
+        throw new Error(`unknown type for ${property.name}. Property type = ${property.type}`);
+    }
+  }
+
+  const expectedExpressionValue = function expectedExpressionValue(property, indentAmount) {
+    return indent(indentAmount)(include('ExpectedExpression.swift.ejs', { "property": property })).trim();
+  }
+
+  const annotationLocal = function annotationLocal() {
+    return indent(8)(include('AnnotationLocal.swift.ejs', { "annotationType": type, "declarationKeyword": "var" })).trim();
+  }
+_%>
+// This file is generated
+import XCTest
+@testable import MapboxMaps
+
+final class <%- camelize(type) %>AnnotationIntegrationTests: MapViewIntegrationTestCase {
+
+    var manager: <%- camelize(type) %>AnnotationManager!
+
+    override func setUpWithError() throws {
+        try super.setUpWithError()
+        manager = mapView.annotations.make<%- camelize(type) %>AnnotationManager()
+    }
+
+    override func tearDownWithError() throws {
+        manager = nil
+        try super.tearDownWithError()
+    }
+
+    internal func testSourceAndLayerSetup() throws {
+        XCTAssertTrue(style.layerExists(withId: manager.layerId))
+        XCTAssertTrue(try style.isPersistentLayer(id: manager.layerId),
+                      "The layer with id \(manager.layerId) should be persistent.")
+        XCTAssertTrue(style.sourceExists(withId: manager.sourceId))
+    }
+
+    func testSourceAndLayerRemovedUponDestroy() {
+        manager.destroy()
+
+        XCTAssertFalse(style.allLayerIdentifiers.map { $0.id }.contains(manager.layerId))
+        XCTAssertFalse(style.allSourceIdentifiers.map { $0.id }.contains(manager.sourceId))
+    }
+
+    func testCreatingSecondAnnotationManagerWithTheSameId() throws {
+        let secondAnnotationManager = mapView.annotations.make<%- camelize(type) %>AnnotationManager(id: manager.id)
+
+        XCTAssertTrue(mapView.annotations.annotationManagersById[manager.id] === secondAnnotationManager)
+    }
+
+    func testSynchronizesAnnotationsEventually() throws {
+        <%- annotationLocal() %>
+        annotation.<%- camelizeWithLeadingLowercase(testPropertyForType(type).name) %> = 10
+
+        manager.annotations.append(annotation)
+
+        expectation(for: NSPredicate(block: { (_, _) in
+            guard let layer = try? self.style.layer(withId: self.manager.layerId, type: <%- camelize(originalType) %>Layer.self) else {
+                return false
+            }
+            return layer.<%- camelizeWithLeadingLowercase(testPropertyForType(type).name) %> == <%- expectedExpressionValue(testPropertyForType(type), 12) %>
+        }), evaluatedWith: nil, handler: nil)
+
+        waitForExpectations(timeout: 2, handler: nil)
+    }
+    <%_ for (const property of properties) { _%>
+    <%_ if (!supportsPropertyFunction(property) && !shouldSkipAnnotationProperty(type, property)) { _%>
+
+    func test<%- camelize(property.name) -%>() throws {
+        // Test that the setter and getter work
+        let value = <%- randomElement(property) %>
+        manager.<%- camelizeWithLeadingLowercase(property.name) -%> = value
+        XCTAssertEqual(manager.<%- camelizeWithLeadingLowercase(property.name) -%>, value)
+
+        // Test that the value is synced to the layer
+        manager.syncSourceAndLayerIfNeeded()
+        var layer = try style.layer(withId: self.manager.layerId, type: <%- camelize(originalType) %>Layer.self)
+        if case .constant(let actualValue) = layer.<%- camelizeWithLeadingLowercase(property.name) -%> {
+            <%- assertions(property) %>
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.<%- camelizeWithLeadingLowercase(property.name) -%> = nil
+        XCTAssertNil(manager.<%- camelizeWithLeadingLowercase(property.name) -%>)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.syncSourceAndLayerIfNeeded()
+        layer = try style.layer(withId: self.manager.layerId, type: <%- camelize(originalType) %>Layer.self)
+        XCTAssertEqual(layer.<%- camelizeWithLeadingLowercase(property.name) -%>, <%- defaultValue(property) -%>)
+    }
+    <%_ } _%>
+    <%_ } _%>
+    <%_ for (const property of properties) { _%>
+    <%_ if (supportsPropertyFunction(property) && !shouldSkipAnnotationProperty(type, property)) { _%>
+
+    func test<%- camelize(property.name) -%>() throws {
+        <%- annotationLocal() %>
+        // Test that the setter and getter work
+        let value = <%- randomElement(property) %>
+        annotation.<%- camelizeWithLeadingLowercase(property.name) -%> = value
+        XCTAssertEqual(annotation.<%- camelizeWithLeadingLowercase(property.name) -%>, value)
+
+        manager.annotations = [annotation]
+
+        // Test that the value is synced to the layer
+        manager.syncSourceAndLayerIfNeeded()
+        var layer = try style.layer(withId: self.manager.layerId, type: <%- camelize(originalType) %>Layer.self)
+        XCTAssertEqual(layer.<%- camelizeWithLeadingLowercase(property.name) -%>, <%- expectedExpressionValue(property, 12) %>)
+
+        // Test that the property can be reset to nil
+        annotation.<%- camelizeWithLeadingLowercase(property.name) -%> = nil
+        XCTAssertNil(annotation.<%- camelizeWithLeadingLowercase(property.name) -%>)
+
+        manager.annotations = [annotation]
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.syncSourceAndLayerIfNeeded()
+        layer = try style.layer(withId: self.manager.layerId, type: <%- camelize(originalType) %>Layer.self)
+        XCTAssertEqual(layer.<%- camelizeWithLeadingLowercase(property.name) -%>, <%- defaultValue(property) -%>)
+    }
+    <%_ } _%>
+    <%_ } _%>
+}
+
+// End of generated file

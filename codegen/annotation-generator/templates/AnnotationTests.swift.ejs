@@ -1,0 +1,54 @@
+<%_
+  const type = locals.type
+  const properties = locals.properties
+
+  const annotationLocal = function annotationLocal() {
+    return indent(8)(include('AnnotationLocal.swift.ejs', { "annotationType": type, "declarationKeyword": "var" })).trim();
+  }
+_%>
+// This file is generated
+import XCTest
+@testable import MapboxMaps
+
+final class <%- camelize(type) %>AnnotationTests: XCTestCase {
+    <%_ for (const property of properties) { _%>
+    <%_ if (supportsPropertyFunction(property) && !shouldSkipAnnotationProperty(type, property)) { _%>
+
+    func test<%- camelize(property.name) %>() {
+        <%- annotationLocal() %>
+        annotation.<%- camelizeWithLeadingLowercase(property.name) %> =  <%- propertySwiftType(property) %>.testConstantValue()
+
+        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
+            return
+        }
+        <%_ if (property.type === "enum") { _%>
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .string(<%- camelizeWithLeadingLowercase(property.name) %>) = layerProperties["<%- property.name %>"] else {
+            return XCTFail("Layer property <%- property.name %> should be set to a string.")
+        }
+        XCTAssertEqual(<%- camelizeWithLeadingLowercase(property.name) %>, annotation.<%- camelizeWithLeadingLowercase(property.name) %>?.rawValue)
+        <%_ } else if (property.type === "color") { _%>
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .string(<%- camelizeWithLeadingLowercase(property.name) %>) = layerProperties["<%- property.name %>"] else {
+            return XCTFail("Layer property <%- property.name %> should be set to a string.")
+        }
+        XCTAssertEqual(<%- camelizeWithLeadingLowercase(property.name) %>, annotation.<%- camelizeWithLeadingLowercase(property.name) %>.flatMap { $0.rgbaString })
+        <%_ } else if (propertySwiftTurfJSONValueCase(property) === "array") { _%>
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .array(<%- camelizeWithLeadingLowercase(property.name) %>) = layerProperties["<%- property.name %>"] else {
+            return XCTFail("Layer property <%- property.name %> should be set to a array of <%- propertySwiftElementType(property) %>s.")
+        }
+        XCTAssertEqual(<%- camelizeWithLeadingLowercase(property.name) %>.compactMap { $0?.rawValue } as? [<%- propertySwiftElementType(property) %>], annotation.<%- camelizeWithLeadingLowercase(property.name) %>)
+        <%_ } else {_%>
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .<%- propertySwiftTurfJSONValueCase(property) %>(<%- camelizeWithLeadingLowercase(property.name) %>) = layerProperties["<%- property.name %>"] else {
+            return XCTFail("Layer property <%- property.name %> should be set to a <%- propertySwiftTurfJSONValueCase(property) %>.")
+        }
+        XCTAssertEqual(<%- camelizeWithLeadingLowercase(property.name) %>, annotation.<%- camelizeWithLeadingLowercase(property.name) %>)
+        <%_ } _%>
+    }
+    <%_ } _%>
+    <%_ } _%>
+}
+
+// End of generated file

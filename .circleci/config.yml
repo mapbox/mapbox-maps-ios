@@ -18,6 +18,9 @@ workflows:
           context:
             - SDK Registry Token
             - MapboxCI GitHub UserToken
+      - build-maps:
+          context:
+            - SDK Registry Token
   run-benchmark:
     when: << pipeline.parameters.run-tests >>
     jobs:
@@ -32,28 +35,28 @@ workflows:
           requires:
             - run-benchmark
 
+      - build-maps:
+          context:
+            - SDK Registry Token
+
 jobs:
+  build-maps:
+    executor: xcode-min
+    steps:
+      - checkout
+      - mapbox/add-mapbox-ssh-key
+      - mapbox/add-mapbox-netrc
+      - mapbox/add-mapbox-filetoken
+      - mapbox/install-mbx-ci
+      - checkout-maps-submodule
+      - build-maps-xcframework
+
   build-benchmark:
     executor: xcode-min
     steps:
       - checkout
       - mapbox/add-mapbox-ssh-key
-      - run:
-          name: Checkout Maps iOS
-          command: |
-            git submodule update --init
-
-            # If parameter is not empty, checkout the commit
-            if [[ -n "<< pipeline.parameters.maps-ios-checkout-reference >>" ]];then
-              cd mapbox-maps-ios
-              git checkout << pipeline.parameters.maps-ios-checkout-reference >>
-              MAPS_COMMIT_HASH=$(git rev-parse HEAD)
-              echo "export MAPS_COMMIT_HASH=${MAPS_COMMIT_HASH}" >> $BASH_ENV
-              cat $BASH_ENV
-
-            fi
-
-            git submodule status
+      - checkout-maps-submodule
       - mapbox/github-commit-progress:
           commit: $MAPS_COMMIT_HASH
           repository: mapbox-maps-ios
@@ -177,6 +180,60 @@ commands:
             xcodebuild build-for-testing -scheme MobileMetrics -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO ENABLE_TESTABILITY=YES -derivedDataPath DerivedData
           working_directory: benchmark/
 
+  build-maps-xcframework:
+    steps:
+      - run:
+          name: Install dependencies
+          command: brew install xcodegen
+      - run:
+          name: Build Maps SDK (dynamic)
+          working_directory: mapbox-maps-ios/scripts/release/packager
+          command: |
+            ./package-mapbox-maps.sh dynamic
+            cp MapboxMaps.zip ~/project/MapboxMaps.zip
+      - store_artifacts:
+          path: MapboxMaps.zip
+      - persist_to_workspace:
+          root: .
+          paths:
+            - MapboxMaps.zip
+      - run:
+          name: Install binary size metrics dependencies
+          command: |
+            brew install mint
+            pip3 install gitpython awscli
+            echo "export PATH=\"$HOME/.mint/bin:$PATH\"" >> $BASH_ENV
+            mint install git@github.com:mapbox/ios-binary-size.git
+      - run:
+          name: Calculate binary size metrics
+          command: |
+            unzip MapboxMaps.zip "artifacts/MapboxMaps.xcframework/*"
+            ios-binary-size xc artifacts/MapboxMaps.xcframework
+            mobile-metrics/scripts/ios-binary-analyzer.py \
+                -r . \
+                -g "mapbox-maps-ios" \
+                -x "artifacts/MapboxMaps.xcframework" \
+                --name "ios-maps-v10-benchmark" \
+                --build ${CIRCLE_BUILD_NUM}
+
+  checkout-maps-submodule:
+    steps:
+      - run:
+          name: Checkout Maps iOS
+          command: |
+            git submodule update --init
+
+            # If parameter is not empty, checkout the commit
+            if [[ -n "<< pipeline.parameters.maps-ios-checkout-reference >>" ]];then
+              cd mapbox-maps-ios
+              git checkout << pipeline.parameters.maps-ios-checkout-reference >>
+              MAPS_COMMIT_HASH=$(git rev-parse HEAD)
+              echo "export MAPS_COMMIT_HASH=${MAPS_COMMIT_HASH}" >> $BASH_ENV
+              cat $BASH_ENV
+
+            fi
+
+            git submodule status
 
   checkout-mobile-metrics:
     steps:

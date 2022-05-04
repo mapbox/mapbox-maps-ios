@@ -194,7 +194,7 @@ public final class Style: StyleProtocol {
      - Returns: The fully formed `source` object.
      - Throws: Type conversion errors.
      */
-    public func source(withId id: String) throws  -> Source {
+    public func source(withId id: String) throws -> Source {
         // Get the source properties for a given identifier
         let sourceProps = try sourceProperties(for: id)
 
@@ -829,7 +829,7 @@ public final class Style: StyleProtocol {
     ///     An error describing why the operation was unsuccessful.
     public func setLight(properties: [String: Any]) throws {
         try handleExpected {
-            styleManager.setStyleLightForProperties(properties)
+            _styleManager.setStyleLightForProperties(properties)
         }
     }
 
@@ -843,7 +843,7 @@ public final class Style: StyleProtocol {
     ///     An error describing why the operation was unsuccessful.
     public func setLightProperty(_ property: String, value: Any) throws {
         try handleExpected {
-            styleManager.setStyleLightPropertyForProperty(property, value: value)
+            _styleManager.setStyleLightPropertyForProperty(property, value: value)
         }
     }
 
@@ -862,7 +862,7 @@ public final class Style: StyleProtocol {
     ///
     /// - Returns: Style light property value.
     public func lightProperty(_ property: String) -> StylePropertyValue {
-        return styleManager.getStyleLightProperty(forProperty: property)
+        return _styleManager.getStyleLightProperty(forProperty: property)
     }
 
     // MARK: - Terrain
@@ -883,7 +883,7 @@ public final class Style: StyleProtocol {
 
     /// Removes terrain from style if it was set.
     public func removeTerrain() {
-        styleManager.setStyleTerrainForProperties(NSNull())
+        _styleManager.setStyleTerrainForProperties(NSNull())
     }
 
     /// Sets the style global terrain source properties.
@@ -897,7 +897,7 @@ public final class Style: StyleProtocol {
     ///     An error describing why the operation was unsuccessful.
     public func setTerrain(properties: [String: Any]) throws {
         try handleExpected {
-            styleManager.setStyleTerrainForProperties(properties)
+            _styleManager.setStyleTerrainForProperties(properties)
         }
     }
 
@@ -911,7 +911,7 @@ public final class Style: StyleProtocol {
     ///     An error describing why the operation was unsuccessful.
     public func setTerrainProperty(_ property: String, value: Any) throws {
         try handleExpected {
-            styleManager.setStyleTerrainPropertyForProperty(property, value: value)
+            _styleManager.setStyleTerrainPropertyForProperty(property, value: value)
         }
     }
 
@@ -930,7 +930,7 @@ public final class Style: StyleProtocol {
     ///
     /// - Returns: Style terrain property value.
     public func terrainProperty(_ property: String) -> StylePropertyValue {
-        return styleManager.getStyleTerrainProperty(forProperty: property)
+        return _styleManager.getStyleTerrainProperty(forProperty: property)
     }
 
     // MARK: - Custom geometry
@@ -948,7 +948,7 @@ public final class Style: StyleProtocol {
     ///     An error describing why the operation was unsuccessful.
     public func addCustomGeometrySource(withId id: String, options: CustomGeometrySourceOptions) throws {
         try handleExpected {
-            return styleManager.addStyleCustomGeometrySource(forSourceId: id, options: options)
+            return _styleManager.addStyleCustomGeometrySource(forSourceId: id, options: options)
         }
     }
 
@@ -964,7 +964,7 @@ public final class Style: StyleProtocol {
     public func setCustomGeometrySourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, features: [Feature]) throws {
         let mbxFeatures = features.compactMap { MapboxCommon.Feature($0) }
         try handleExpected {
-            return styleManager.setStyleCustomGeometrySourceTileDataForSourceId(sourceId, tileId: tileId, featureCollection: mbxFeatures)
+            return _styleManager.setStyleCustomGeometrySourceTileDataForSourceId(sourceId, tileId: tileId, featureCollection: mbxFeatures)
         }
     }
 
@@ -978,7 +978,7 @@ public final class Style: StyleProtocol {
     ///     An error describing why the operation was unsuccessful.
     public func invalidateCustomGeometrySourceTile(forSourceId sourceId: String, tileId: CanonicalTileID) throws {
         try handleExpected {
-            return styleManager.invalidateStyleCustomGeometrySourceTile(forSourceId: sourceId, tileId: tileId)
+            return _styleManager.invalidateStyleCustomGeometrySourceTile(forSourceId: sourceId, tileId: tileId)
         }
     }
 
@@ -992,7 +992,7 @@ public final class Style: StyleProtocol {
     ///     An error describing why the operation was unsuccessful.
     public func invalidateCustomGeometrySourceRegion(forSourceId sourceId: String, bounds: CoordinateBounds) throws {
         try handleExpected {
-            return styleManager.invalidateStyleCustomGeometrySourceRegion(forSourceId: sourceId, bounds: bounds)
+            return _styleManager.invalidateStyleCustomGeometrySourceRegion(forSourceId: sourceId, bounds: bounds)
         }
     }
 

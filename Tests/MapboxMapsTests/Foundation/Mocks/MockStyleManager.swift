@@ -42,7 +42,7 @@ final class MockStyleManager: StyleManagerType, Stubbable {
 
     // MARK: Style Layers
 
-    private let stubStyleLayers: [MapboxCoreMaps.StyleObjectInfo] = .random(withLength: 3) {
+    @Stubbed var stubStyleLayers: [MapboxCoreMaps.StyleObjectInfo] = .random(withLength: 3) {
         MapboxCoreMaps.StyleObjectInfo(
             id: .randomAlphanumeric(withLength: 12),
             type: MapboxMaps.LayerType.random().rawValue)
@@ -60,32 +60,30 @@ final class MockStyleManager: StyleManagerType, Stubbable {
         property: String
     ) -> MapboxCoreMaps.StylePropertyValue {
 
-        fatalError()
-    }
-
-    static func getStyleLayerPropertyDefaultValue(
-        forLayerType layerType: String,
-        property: String)
-    -> MapboxCoreMaps.StylePropertyValue {
-
-        fatalError()
+        if let stub = mockery.stub(of: MockStyleManager.getStyleLayerProperty(forLayerId:property:)) {
+            return stub.call(with: self)(layerId, property)
+        } else {
+            return MapboxCoreMaps.StylePropertyValue(value: "foo", kind: .undefined)
+        }
     }
 
     // MARK: Source Info
 
     @Stubbed var stubStyleSources: [StyleObjectInfo] = .random(withLength: 3) {
-        MapboxCoreMaps.StyleObjectInfo(id: .randomAlphanumeric(withLength: 12), type: MapboxMaps.SourceType.random().rawValue)
+        MapboxCoreMaps.StyleObjectInfo(
+            id: .randomAlphanumeric(withLength: 12),
+            type: MapboxMaps.SourceType.random().rawValue)
     }
     func getStyleSourceProperty(forSourceId sourceId: String, property: String) -> MapboxCoreMaps.StylePropertyValue {
-        fatalError()
-    }
-
-    static func getStyleSourcePropertyDefaultValue(forSourceType sourceType: String, property: String) -> MapboxCoreMaps.StylePropertyValue {
-        fatalError()
+        if let stub = mockery.stub(of: MockStyleManager.getStyleSourceProperty(forSourceId:property:)) {
+            return stub.call(with: self)(sourceId, property)
+        } else {
+            return MapboxCoreMaps.StylePropertyValue(value: "foo", kind: .undefined)
+        }
     }
 
     func styleSourceExists(forSourceId sourceId: String) -> Bool {
-        fatalError()
+        stubStyleSources.contains(where: { $0.id == sourceId })
     }
 
     func getStyleSources() -> [MapboxCoreMaps.StyleObjectInfo] {
@@ -93,27 +91,41 @@ final class MockStyleManager: StyleManagerType, Stubbable {
     }
 
     func getStyleLightProperty(forProperty property: String) -> MapboxCoreMaps.StylePropertyValue {
-        fatalError()
+        if let stub = mockery.stub(of: MockStyleManager.getStyleLightProperty(forProperty:)) {
+            return stub.call(with: self)(property)
+        } else {
+            return MapboxCoreMaps.StylePropertyValue(value: "foo", kind: .undefined)
+        }
     }
 
     func getStyleTerrainProperty(forProperty property: String) -> MapboxCoreMaps.StylePropertyValue {
-        fatalError()
+        if let stub = mockery.stub(of: MockStyleManager.getStyleTerrainProperty(forProperty:)) {
+            return stub.call(with: self)(property)
+        } else {
+            return MapboxCoreMaps.StylePropertyValue(value: "foo", kind: .undefined)
+        }
     }
 
     func getStyleProjectionProperty(forProperty property: String) -> MapboxCoreMaps.StylePropertyValue {
-        fatalError()
+        if let stub = mockery.stub(of: MockStyleManager.getStyleProjectionProperty(forProperty:)) {
+            return stub.call(with: self)(property)
+        } else {
+            return MapboxCoreMaps.StylePropertyValue(value: "foo", kind: .undefined)
+        }
     }
 
     func getStyleImage(forImageId imageId: String) -> MapboxCoreMaps.Image? {
-        fatalError()
+        let stub = mockery.stub(of: MockStyleManager.getStyleImage(forImageId:))
+        return stub?.call(with: self)(imageId)
     }
 
     func hasStyleImage(forImageId imageId: String) -> Bool {
-        Bool.random()
+        getStyleImage(forImageId: imageId) != nil
     }
 
     func isStyleLoaded() -> Bool {
-        Bool.random()
+        let stub = mockery.stub(of: MockStyleManager.isStyleLoaded)
+        return stub?.call(with: self)() ?? false
     }
 
     // MARK: Layers

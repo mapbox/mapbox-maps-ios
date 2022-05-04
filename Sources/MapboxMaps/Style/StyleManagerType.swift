@@ -22,10 +22,8 @@ internal protocol StyleManagerType {
     func getStyleLayers() -> [MapboxCoreMaps.StyleObjectInfo]
 
     func getStyleLayerProperty(forLayerId layerId: String, property: String) -> MapboxCoreMaps.StylePropertyValue
-    static func getStyleLayerPropertyDefaultValue(forLayerType layerType: String, property: String) -> MapboxCoreMaps.StylePropertyValue
 
     func getStyleSourceProperty(forSourceId sourceId: String, property: String) -> MapboxCoreMaps.StylePropertyValue
-    static func getStyleSourcePropertyDefaultValue(forSourceType sourceType: String, property: String) -> MapboxCoreMaps.StylePropertyValue
 
     func styleSourceExists(forSourceId sourceId: String) -> Bool
     func getStyleSources() -> [MapboxCoreMaps.StyleObjectInfo]
@@ -98,6 +96,7 @@ internal protocol StyleManagerType {
         _ property: String,
         value: Any) -> Expected<NSNull, NSString>
 
+    @discardableResult
     func setStyleTerrainForProperties(_ properties: Any) -> Expected<NSNull, NSString>
 
     func setStyleTerrainPropertyForProperty(

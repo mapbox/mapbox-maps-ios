@@ -41,6 +41,19 @@ final class StyleTests: XCTestCase {
         XCTAssertEqual(style.projection.name, .globe)
     }
 
+    func testStyleIsLoaded() {
+        let mockStyleManager = MockStyleManager()
+        let sut = Style(with: mockStyleManager)
+
+        var isStyleLoaded: Bool = .random()
+
+        mockStyleManager.mockery.registerStub(
+            name: "isStyleLoaded()",
+            for: MockStyleManager.isStyleLoaded,
+            stubbedValue: { in isStyleLoaded })
+        XCTAssertEqual(sut.isLoaded, isStyleLoaded)
+    }
+
     func testGetStyleURI() {
         let mockStyleManager = MockStyleManager()
         let sut = Style(with: mockStyleManager)
@@ -113,6 +126,8 @@ final class StyleTests: XCTestCase {
         XCTAssertEqual(mockStyleManager.getStyleTransition(), stubTransition)
     }
 
+    // MARK: Layer
+
     func testStyleLayerExistence() {
         let mockStyleManager = MockStyleManager()
         let sut = Style(with: mockStyleManager)
@@ -127,15 +142,6 @@ final class StyleTests: XCTestCase {
 
         XCTAssertTrue(sut.allLayerIdentifiers.allSatisfy { layerInfo in
             mockStyleManager.getStyleLayers().contains(where: { $0.id == layerInfo.id && $0.type == layerInfo.type.rawValue })
-        })
-    }
-
-    func testGetAllSourceIdentifiers() {
-        let mockStyleManager = MockStyleManager()
-        let sut = Style(with: mockStyleManager)
-
-        XCTAssertTrue(sut.allSourceIdentifiers.allSatisfy { sourceInfo in
-            mockStyleManager.getStyleSources().contains(where: { $0.id == sourceInfo.id && $0.type == sourceInfo.type.rawValue })
         })
     }
 
@@ -188,15 +194,240 @@ final class StyleTests: XCTestCase {
         mockStyleManager.mockery.registerStub(
             name: "getStyleLayerProperties(forLayerId:)",
             for: MockStyleManager.getStyleLayerProperties,
-            stubbedValue: { layerID in
-                if layerID == "dummy-layer-id1" {
-                    return Expected(error: "Cannot get layer properties")
-                } else {
-                    return Expected(value: NSDictionary(dictionary: ["type": "Not a valid type"]))
-                }
-            })
+            stubbedValue: { _ in Expected(error: "Cannot get layer properties") }
+        )
+        XCTAssertThrowsError(try sut.layer(withId: "dummy-style-id"))
 
-        XCTAssertThrowsError(try sut.layer(withId: "dummy-style-id1"))
-        XCTAssertThrowsError(try sut.layer(withId: "dummy-style-id2"))
+        mockStyleManager.mockery.registerStub(
+            name: "getStyleLayerProperties(forLayerId:)",
+            for: MockStyleManager.getStyleLayerProperties,
+            stubbedValue: { _ in Expected(value: NSDictionary(dictionary: ["type": "Not a valid type"])) }
+        )
+        XCTAssertThrowsError(try sut.layer(withId: "dummy-style-id"))
+    }
+
+    // MARK: Source
+
+    func testGetAllSourceIdentifiers() {
+        let mockStyleManager = MockStyleManager()
+        let sut = Style(with: mockStyleManager)
+
+        XCTAssertTrue(sut.allSourceIdentifiers.allSatisfy { sourceInfo in
+            mockStyleManager.stubStyleSources.contains(where: { $0.id == sourceInfo.id && $0.type == sourceInfo.type.rawValue })
+        })
+    }
+
+    func testStyleGetSourceCanFail() {
+        let mockStyleManager = MockStyleManager()
+        let sut = Style(with: mockStyleManager)
+
+        mockStyleManager.mockery.registerStub(
+            name: "getStyleSourceProperties(forSourceId:)",
+            for: MockStyleManager.getStyleSourceProperties,
+            stubbedValue: { _ in Expected(error: "Cannot get source properties") }
+        )
+        XCTAssertThrowsError(try sut.source(withId: "dummy-source-id"))
+
+        mockStyleManager.mockery.registerStub(
+            name: "getStyleSourceProperties(forSourceId:)",
+            for: MockStyleManager.getStyleSourceProperties,
+            stubbedValue: { _ in Expected(value: NSDictionary(dictionary: ["type": "Not a valid type"])) }
+        )
+        XCTAssertThrowsError(try sut.source(withId: "dummy-source-id"))
+    }
+
+    func testStyleCanAddStyleSource() {
+        let mockStyleManager = MockStyleManager()
+        let sut = Style(with: mockStyleManager)
+
+        mockStyleManager.mockery.registerStub(
+            name: "addStyleSource(forSourceId:properties:)",
+            for: MockStyleManager.addStyleSource,
+            stubbedValue: { _, _ in Expected(value: NSNull()) }
+        )
+        XCTAssertNoThrow(try sut.addSource(withId: "dummy-source-id", properties: ["foo": "bar"]))
+
+        mockStyleManager.mockery.registerStub(
+            name: "addStyleSource(forSourceId:properties:)",
+            for: MockStyleManager.addStyleSource,
+            stubbedValue: { _, _ in Expected(error: "Cannot add style source") }
+        )
+        XCTAssertThrowsError(try sut.addSource(withId: "dummy-source-id", properties: ["foo": "bar"]))
+    }
+
+    func testStyleCanRemoveSource() {
+        let mockStyleManager = MockStyleManager()
+        let sut = Style(with: mockStyleManager)
+
+        mockStyleManager.mockery.registerStub(
+            name: "removeStyleSource(forSourceId:)",
+            for: MockStyleManager.removeStyleSource,
+            stubbedValue: { _ in Expected(error: "Cannot remove source") }
+        )
+        XCTAssertThrowsError(try sut.removeSource(withId: "dummy-source-id"))
+
+        mockStyleManager.mockery.registerStub(
+            name: "removeStyleSource(forSourceId:)",
+            for: MockStyleManager.removeStyleSource,
+            stubbedValue: { _ in Expected(value: NSNull()) }
+        )
+        XCTAssertNoThrow(try sut.removeSource(withId: "dummy-source-id"))
+    }
+
+    func testStyleCanCheckIfSourceExist() {
+        let mockStyleManager = MockStyleManager()
+        let sut = Style(with: mockStyleManager)
+
+        mockStyleManager.stubStyleSources = [
+            MapboxCoreMaps.StyleObjectInfo(id: "dummy-source-id", type: SourceType.random().rawValue)
+        ]
+
+        XCTAssertTrue(sut.sourceExists(withId: "dummy-source-id"))
+        XCTAssertFalse(sut.sourceExists(withId: "non-exist-source-id"))
+    }
+
+    // MARK: Light
+
+    func testStyleCanSetLightSourceProperties() {
+        let mockStyleManager = MockStyleManager()
+        let sut = Style(with: mockStyleManager)
+
+        mockStyleManager.mockery.registerStub(
+            name: "setStyleLightForProperties(_:)",
+            for: MockStyleManager.setStyleLightForProperties,
+            stubbedValue: { _ in Expected(value: NSNull()) }
+        )
+        XCTAssertNoThrow(try sut.setLight(properties: ["foo": "bar"]))
+
+        mockStyleManager.mockery.registerStub(
+            name: "setStyleLightForProperties(_:)",
+            for: MockStyleManager.setStyleLightForProperties,
+            stubbedValue: { _ in Expected(error: "Cannot set light source properties") }
+        )
+        XCTAssertThrowsError(try sut.setLight(properties: ["foo": "bar"]))
+    }
+
+    // MARK: Terrain
+
+    func testStyleCanSetTerrainSourceProperties() {
+        let mockStyleManager = MockStyleManager()
+        let sut = Style(with: mockStyleManager)
+
+        mockStyleManager.mockery.registerStub(
+            name: "setStyleTerrainForProperties(_:)",
+            for: MockStyleManager.setStyleTerrainForProperties,
+            stubbedValue: { _ in Expected(value: NSNull()) }
+        )
+        XCTAssertNoThrow(try sut.setTerrain(properties: ["foo": "bar"]))
+
+        mockStyleManager.mockery.registerStub(
+            name: "setStyleTerrainForProperties(_:)",
+            for: MockStyleManager.setStyleTerrainForProperties,
+            stubbedValue: { _ in Expected(error: "Cannot set light source properties") }
+        )
+        XCTAssertThrowsError(try sut.setTerrain(properties: ["foo": "bar"]))
+    }
+
+    // MARK: Custom Geometry
+
+    func testStyleCanAddCustomGeometrySource() {
+        let mockStyleManager = MockStyleManager()
+        let sut = Style(with: mockStyleManager)
+
+        let options = CustomGeometrySourceOptions(
+            fetchTileFunction: { _ in },
+            cancelTileFunction: { _ in },
+            tileOptions: TileOptions(tolerance: 0, tileSize: 0, buffer: 0, clip: .random(), wrap: .random()))
+
+        mockStyleManager.mockery.registerStub(
+            name: "addStyleCustomGeometrySource(forSourceId:options:)",
+            for: MockStyleManager.addStyleCustomGeometrySource,
+            stubbedValue: { _, _ in Expected(value: NSNull()) }
+        )
+        XCTAssertNoThrow(try sut.addCustomGeometrySource(withId: "dummy-custom-geometry-source-id", options: options))
+
+        mockStyleManager.mockery.registerStub(
+            name: "addStyleCustomGeometrySource(forSourceId:options:)",
+            for: MockStyleManager.addStyleCustomGeometrySource,
+            stubbedValue: { _, _ in Expected(error: "Cannot add style custom geometry source") }
+        )
+        XCTAssertThrowsError(try sut.addCustomGeometrySource(withId: "dummy-custom-geometry-source-id", options: options))
+    }
+
+    func testStyleCanSetCustomGeometrySourceTileData() {
+        let mockStyleManager = MockStyleManager()
+        let sut = Style(with: mockStyleManager)
+
+        mockStyleManager.mockery.registerStub(
+            name: "setStyleCustomGeometrySourceTileDataForSourceId(_:tileId:featureCollection:)",
+            for: MockStyleManager.setStyleCustomGeometrySourceTileDataForSourceId,
+            stubbedValue: { _, _, _ in Expected(value: NSNull()) }
+        )
+        XCTAssertNoThrow(try sut.setCustomGeometrySourceTileData(
+            forSourceId: "dummy-source-id",
+            tileId: CanonicalTileID(z: 0, x: 0, y: 0),
+            features: [])
+        )
+
+        mockStyleManager.mockery.registerStub(
+            name: "setStyleCustomGeometrySourceTileDataForSourceId(_:tileId:featureCollection:)",
+            for: MockStyleManager.setStyleCustomGeometrySourceTileDataForSourceId,
+            stubbedValue: { _, _, _ in Expected(error: "Cannot set custom geometry source tile data") }
+        )
+        XCTAssertThrowsError(try sut.setCustomGeometrySourceTileData(
+            forSourceId: "dummy-source-id",
+            tileId: CanonicalTileID(z: 0, x: 0, y: 0),
+            features: [])
+        )
+    }
+
+    func testStyleCanInvalidateCustomGeometrySourceTile() {
+        let mockStyleManager = MockStyleManager()
+        let sut = Style(with: mockStyleManager)
+
+        mockStyleManager.mockery.registerStub(
+            name: "invalidateStyleCustomGeometrySourceTile(forSourceId:tileId:)",
+            for: MockStyleManager.invalidateStyleCustomGeometrySourceTile,
+            stubbedValue: { _, _ in Expected(value: NSNull()) }
+        )
+        XCTAssertNoThrow(try sut.invalidateCustomGeometrySourceTile(
+            forSourceId: "dummy-source-id",
+            tileId: CanonicalTileID(z: 0, x: 0, y: 0))
+        )
+
+        mockStyleManager.mockery.registerStub(
+            name: "invalidateStyleCustomGeometrySourceTile(forSourceId:tileId:)",
+            for: MockStyleManager.invalidateStyleCustomGeometrySourceTile,
+            stubbedValue: { _, _ in Expected(error: "Cannot invalidate custom geometry source tile") }
+        )
+        XCTAssertThrowsError(try sut.invalidateCustomGeometrySourceTile(
+            forSourceId: "dummy-source-id",
+            tileId: CanonicalTileID(z: 0, x: 0, y: 0))
+        )
+    }
+
+    func testStyleCanInvalidateCustomGeometrySourceRegion() {
+        let mockStyleManager = MockStyleManager()
+        let sut = Style(with: mockStyleManager)
+
+        mockStyleManager.mockery.registerStub(
+            name: "invalidateStyleCustomGeometrySourceRegion(forSourceId:bounds:)",
+            for: MockStyleManager.invalidateStyleCustomGeometrySourceRegion,
+            stubbedValue: { _, _ in Expected(value: NSNull()) }
+        )
+        XCTAssertNoThrow(try sut.invalidateCustomGeometrySourceRegion(
+            forSourceId: "dummy-source-id",
+            bounds: CoordinateBounds(southwest: .random(), northeast: .random()))
+        )
+
+        mockStyleManager.mockery.registerStub(
+            name: "invalidateStyleCustomGeometrySourceRegion(forSourceId:bounds:)",
+            for: MockStyleManager.invalidateStyleCustomGeometrySourceRegion,
+            stubbedValue: { _, _ in Expected(error: "Cannot invalidate custom geometry source tile") }
+        )
+        XCTAssertThrowsError(try sut.invalidateCustomGeometrySourceRegion(
+            forSourceId: "dummy-source-id",
+            bounds: CoordinateBounds(southwest: .random(), northeast: .random()))
+        )
     }
 }

@@ -50,7 +50,7 @@ final class StyleTests: XCTestCase {
         mockStyleManager.mockery.registerStub(
             name: "isStyleLoaded()",
             for: MockStyleManager.isStyleLoaded,
-            stubbedValue: { in isStyleLoaded })
+            stubbedValue: { isStyleLoaded })
         XCTAssertEqual(sut.isLoaded, isStyleLoaded)
     }
 

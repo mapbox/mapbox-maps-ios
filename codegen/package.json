@@ -1,25 +1,25 @@
 {
   "name": "style-generator",
   "version": "1.0.0",
-  "description": "Style code generator for Mapbox Maps Android",
+  "description": "Style code generator for Mapbox Maps iOS",
   "main": "style-code.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mapbox/mapbox-maps-android.git"
+    "url": "git+https://github.com/mapbox/mapbox-maps-ios-internal.git"
   },
   "author": "@pengdev",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/mapbox/mapbox-maps-android/issues"
+    "url": "https://github.com/mapbox/mapbox-maps-ios-internal/issues"
   },
   "dependencies": {
     "@mapbox/flow-remove-types": "^1.3.0-await.upstream.2",
     "array.prototype.flatmap": "^1.2.1",
     "csscolorparser": "~1.0.2",
-    "ejs": "2.6.1",
+    "ejs": "^3.1.7",
     "es": "^0.7.3",
     "esm": "^3.0.9",
     "fs-extra": "^5.0.0",
@@ -27,5 +27,5 @@
     "parsimmon": "^1.7.2",
     "yargs": "^15.0.0"
   },
-  "homepage": "https://github.com/mapbox/mapbox-maps-android#readme"
+  "homepage": "https://github.com/mapbox/mapbox-maps-ios-internal/tree/main/codegen#readme"
 }

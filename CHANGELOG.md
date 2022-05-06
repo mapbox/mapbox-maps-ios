@@ -2,13 +2,6 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-## main
-
-* Expose API to check whether an image exists in `Style`. ([#1297](https://github.com/mapbox/mapbox-maps-ios/pull/1297))
-* Invoke animator completion handlers added after completion or cancellation. ([#1305])(https://github.com/mapbox/mapbox-maps-ios/pull/1305))
-* Invoke animator completion handlers added after completion or cancellation. ([#1305](https://github.com/mapbox/mapbox-maps-ios/pull/1305))
-* Call `MapboxMap.reduceMemoryUse` when application goes to background. ([#1301](https://github.com/mapbox/mapbox-maps-ios/pull/1301))
-
 ## 10.5.0 - May 5, 2022
 
 * Update to MapboxCoreMaps 10.5.1 and MapboxCommon 21.3.0. ([#1310](https://github.com/mapbox/mapbox-maps-ios/pull/1310), [#1313](https://github.com/mapbox/mapbox-maps-ios/pull/1313))

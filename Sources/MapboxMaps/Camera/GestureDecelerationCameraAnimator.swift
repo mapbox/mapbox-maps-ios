@@ -4,7 +4,7 @@ internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimator
     private enum InternalState: Equatable {
         case initial
         case running
-        case final
+        case final(UIViewAnimatingPosition)
     }
 
     private let location: CGPoint
@@ -12,6 +12,7 @@ internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimator
     private let decelerationFactor: CGFloat
     private var previousDate: Date?
     private let locationChangeHandler: (_ fromLocation: CGPoint, _ toLocation: CGPoint) -> Void
+    private let mainQueue: MainQueueProtocol
     private let dateProvider: DateProvider
     private var completionBlocks = [AnimationCompletion]()
 
@@ -51,12 +52,14 @@ internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimator
                   decelerationFactor: CGFloat,
                   owner: AnimationOwner,
                   locationChangeHandler: @escaping (_ fromLocation: CGPoint, _ toLocation: CGPoint) -> Void,
+                  mainQueue: MainQueueProtocol,
                   dateProvider: DateProvider) {
         self.location = location
         self.velocity = velocity
         self.decelerationFactor = decelerationFactor
         self.owner = owner
         self.locationChangeHandler = locationChangeHandler
+        self.mainQueue = mainQueue
         self.dateProvider = dateProvider
     }
 
@@ -77,7 +80,7 @@ internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimator
     internal func stopAnimation() {
         switch internalState {
         case .initial, .running:
-            internalState = .final
+            internalState = .final(.current)
             invokeCompletionBlocks(with: .current) // `current` represents an interrupted animation.
         case .final:
             // Already stopped, so do nothing
@@ -90,7 +93,14 @@ internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimator
     }
 
     internal func addCompletion(_ completion: @escaping AnimationCompletion) {
-        completionBlocks.append(completion)
+        switch internalState {
+        case .initial, .running:
+            completionBlocks.append(completion)
+        case .final(let position):
+            mainQueue.async {
+                completion(position)
+            }
+        }
     }
 
     private func invokeCompletionBlocks(with position: UIViewAnimatingPosition) {
@@ -128,7 +138,7 @@ internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimator
         velocity.y *= pow(decelerationFactor, (elapsedTime * 1000))
 
         if abs(velocity.x) < 35, abs(velocity.y) < 35 {
-            internalState = .final
+            internalState = .final(.end)
             invokeCompletionBlocks(with: .end)
         }
     }

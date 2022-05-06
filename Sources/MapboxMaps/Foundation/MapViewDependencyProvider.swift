@@ -37,6 +37,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
 
     internal let cameraAnimatorsRunnerEnablable: MutableEnablableProtocol = Enablable()
     private let gesturesCameraAnimatorsRunnerEnablable = Enablable()
+    private let mainQueue = MainQueue()
 
     internal func makeMetalView(frame: CGRect, device: MTLDevice?) -> MTKView {
         MTKView(frame: frame, device: device)
@@ -78,6 +79,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             factory: CameraAnimatorsFactory(
                 cameraViewContainerView: cameraViewContainerView,
                 mapboxMap: mapboxMap,
+                mainQueue: mainQueue,
                 dateProvider: DefaultDateProvider(),
                 cameraOptionsInterpolator: cameraOptionsInterpolator),
             runner: cameraAnimatorsRunner)
@@ -279,7 +281,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             animationHelper: animationHelper)
         return ViewportImpl(
             options: .init(),
-            mainQueue: MainQueue(),
+            mainQueue: mainQueue,
             defaultTransition: defaultViewportTransition,
             anyTouchGestureRecognizer: anyTouchGestureRecognizer,
             doubleTapGestureRecognizer: doubleTapGestureRecognizer,

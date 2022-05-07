@@ -144,15 +144,7 @@ jobs:
       - checkout
       - mapbox/add-mapbox-ssh-key
       - mapbox/install-mbx-ci
-      - run:
-          name: Checkout Maps iOS
-          command: |
-            git submodule update --init
-
-            cd mapbox-maps-ios
-            git checkout main
-
-            git submodule status
+      - checkout-maps-submodule
       - run:
           name: Install AWSCLI
           command: pip3 install awscli

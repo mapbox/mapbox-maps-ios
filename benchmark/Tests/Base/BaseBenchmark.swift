@@ -161,7 +161,6 @@ class BaseBenchmark: XCTestCase {
 
         let childController = NotifyingViewController()
 
-        childController.willMove(toParent: rootViewController)
         childController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         childController.view.translatesAutoresizingMaskIntoConstraints = true
         childController.view.frame = rootViewController.view.bounds
@@ -187,7 +186,6 @@ class BaseBenchmark: XCTestCase {
         childController.willMove(toParent: nil)
         childController.view.removeFromSuperview()
         childController.removeFromParent()
-        childController.didMove(toParent: nil)
 
         viewController = nil
     }

@@ -6,7 +6,7 @@ final class AnimationEaseToBenchmark: BaseBenchmark {
     private let startPoint = CLLocationCoordinate2D(latitude: 40.0, longitude: -74.5)
     private let endPoint = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
 
-    func test_sla_easeTo() {
+    func sla_easeTo() {
         benchmark(timeout: 141) {
             onStyleLoaded { mapView, _ in
                 mapView.mapboxMap.setCamera(to: CameraOptions(center: self.startPoint))

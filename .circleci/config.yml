@@ -19,6 +19,7 @@ workflows:
             - SDK Registry Token
             - MapboxCI GitHub UserToken
       - build-maps:
+          upload-size-metrics: false
           context:
             - SDK Registry Token
   run-benchmark:
@@ -38,10 +39,14 @@ workflows:
       - build-maps:
           context:
             - SDK Registry Token
+          upload-size-metrics: true
 
 jobs:
   build-maps:
     executor: xcode-min
+    parameters:
+      upload-size-metrics:
+        type: boolean
     steps:
       - checkout
       - mapbox/add-mapbox-ssh-key
@@ -49,7 +54,8 @@ jobs:
       - mapbox/add-mapbox-filetoken
       - mapbox/install-mbx-ci
       - checkout-maps-submodule
-      - build-maps-xcframework
+      - build-maps-xcframework:
+          upload-size-metrics: << parameters.upload-size-metrics >>
 
   build-benchmark:
     executor: xcode-min
@@ -149,16 +155,15 @@ jobs:
             git submodule status
       - run:
           name: Install AWSCLI
-          command: |
-            cd /tmp
-            curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
-            sudo installer -pkg AWSCLIV2.pkg -target /
+          command: pip3 install awscli
       - attach_workspace:
           at: workspace
       - run:
           name: Parse XCResult
           command: |
-            swift run xcparty metrics --path "$CIRCLE_WORKING_DIRECTORY/workspace/metrics.xcresult" -r . --output "$CIRCLE_WORKING_DIRECTORY/ios-maps-carbon-v2.json"
+            swift run xcparty metrics --path "$CIRCLE_WORKING_DIRECTORY/workspace/metrics.xcresult" \
+              -r . \
+              --output "$CIRCLE_WORKING_DIRECTORY/ios-maps-carbon-v2.json"
           working_directory: mapbox-maps-ios/scripts/xcparty
       - store_artifacts:
           path: ios-maps-carbon-v2.json
@@ -181,6 +186,10 @@ commands:
           working_directory: benchmark/
 
   build-maps-xcframework:
+    parameters:
+      upload-size-metrics:
+        type: boolean
+        default: true
     steps:
       - run:
           name: Install dependencies
@@ -198,23 +207,41 @@ commands:
           paths:
             - MapboxMaps.zip
       - run:
-          name: Install binary size metrics dependencies
+          name: Prepare for binary size metrics
           command: |
             brew install mint
             pip3 install gitpython awscli
             echo "export PATH=\"$HOME/.mint/bin:$PATH\"" >> $BASH_ENV
             mint install git@github.com:mapbox/ios-binary-size.git
-      - run:
-          name: Calculate binary size metrics
-          command: |
             unzip MapboxMaps.zip "artifacts/MapboxMaps.xcframework/*"
-            ios-binary-size xc artifacts/MapboxMaps.xcframework
-            mobile-metrics/scripts/ios-binary-analyzer.py \
-                -r . \
-                -g "mapbox-maps-ios" \
-                -x "artifacts/MapboxMaps.xcframework" \
-                --name "ios-maps-v10-benchmark" \
-                --build ${CIRCLE_BUILD_NUM}
+      - unless:
+          condition: << parameters.upload-size-metrics >>
+          steps:
+            - run:
+                name: Calculate binary size metrics
+                command: |
+                  BASELINE_TOLERANCE=${BASELINE_TOLERANCE:-10}
+                  mobile-metrics/scripts/ios-binary-analyzer.py \
+                      -r . \
+                      -g "mapbox-maps-ios" \
+                      -x "artifacts/MapboxMaps.xcframework" \
+                      --name "ios-maps-v10-benchmark" \
+                      --build ${CIRCLE_BUILD_NUM} \
+                      -t ${BASELINE_TOLERANCE} \
+                      --baseline mapbox-maps-ios/baselines/binary-size/MapboxMaps.json \
+                      --dryrun
+      - when:
+          condition: << parameters.upload-size-metrics >>
+          steps:
+            - run:
+                name: Calculate and upload binary size metrics
+                command: |
+                  mobile-metrics/scripts/ios-binary-analyzer.py \
+                      -r . \
+                      -g "mapbox-maps-ios" \
+                      -x "artifacts/MapboxMaps.xcframework" \
+                      --name "ios-maps-v10-benchmark" \
+                      --build ${CIRCLE_BUILD_NUM}
 
   checkout-maps-submodule:
     steps:

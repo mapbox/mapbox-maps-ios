@@ -115,7 +115,7 @@ jobs:
               "$AWS_DEVICE_FARM_PROJECT_ARN" \
               --run-arn-file benchmark_waiter.json \
               --artifacts-dir BenchmarkResults \
-              --output benchmark_results.json
+              --output benchmark_results.json || true
       - run:
           name: Collect artifacts
           command: |
@@ -151,6 +151,14 @@ jobs:
       - attach_workspace:
           at: workspace
       - run:
+          name: Check DeviceFarm results
+          command: |
+            mobile-metrics/ios-maps/Scripts/devicefarm.py \
+              "$AWS_DEVICE_FARM_PROJECT_ARN" \
+              --run-arn-file benchmark_waiter.json \
+              --artifacts-dir BenchmarkResults \
+              --output benchmark_results.json
+      - run:
           name: Parse XCResult
           command: |
             swift run xcparty metrics --path "$CIRCLE_WORKING_DIRECTORY/workspace/metrics.xcresult" \
@@ -159,6 +167,11 @@ jobs:
           working_directory: mapbox-maps-ios/scripts/xcparty
       - store_artifacts:
           path: ios-maps-carbon-v2.json
+      - run:
+          name: Test failures
+          command: swift run xcparty failures "$CIRCLE_WORKING_DIRECTORY/workspace/metrics.xcresult"
+          working_directory: mapbox-maps-ios/scripts/xcparty
+          when: on_fail
       - checkout-mobile-metrics
       - run:
           name: Upload metrics to AWS

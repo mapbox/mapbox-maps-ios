@@ -88,7 +88,7 @@ jobs:
           at: Products
       - run: ls -l Products/
       - run:
-          name: Install AWSCLI
+          name: Install AWSCLI (Linux)
           command: |
             cd /tmp
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -116,6 +116,11 @@ jobs:
               --run-arn-file benchmark_waiter.json \
               --artifacts-dir BenchmarkResults \
               --output benchmark_results.json || true
+      - persist_to_workspace:
+          root: .
+          paths:
+            - benchmark_waiter.json
+            - benchmark_results.json
       - run:
           name: Collect artifacts
           command: |
@@ -147,15 +152,17 @@ jobs:
       - checkout-maps-submodule
       - run:
           name: Install AWSCLI
-          command: pip3 install awscli
+          command: pip3 install awscli requests
       - attach_workspace:
           at: workspace
       - run:
           name: Check DeviceFarm results
           command: |
+            /usr/bin/python3 -m pip install requests
+
             mobile-metrics/ios-maps/Scripts/devicefarm.py \
               "$AWS_DEVICE_FARM_PROJECT_ARN" \
-              --run-arn-file benchmark_waiter.json \
+              --run-arn-file workspace/benchmark_waiter.json \
               --artifacts-dir BenchmarkResults \
               --output benchmark_results.json
       - run:

@@ -288,6 +288,7 @@ executors:
   base-docker:
     docker:
       - image: cimg/base:stable
+    resource_class: small
 
 orbs:
   mapbox:

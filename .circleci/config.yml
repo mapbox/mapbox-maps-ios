@@ -1,6 +1,11 @@
 ---
 version: 2.1
 
+parameters:
+  turf-revision:
+    type: string
+    default: ""
+
 orbs:
   # https://circleci.com/orbs/registry/orb/circleci/slack
   slack: circleci/slack@4.5
@@ -75,6 +80,7 @@ workflows:
           xcode: "13.0.0"
 
   optional-tests:
+    unless: << pipeline.parameters.turf-revision >>
     jobs:
       - run-tests?:
           type: approval
@@ -115,6 +121,7 @@ workflows:
             - trigger-compatibility-verification?
 
   steve:
+    unless: << pipeline.parameters.turf-revision >>
     jobs:
       - swiftlint
       - depsvalidator:
@@ -149,6 +156,11 @@ workflows:
       - unit-test-sdk:
           name: "Run Unit tests"
           xcode: "13.0.0"
+
+      - unit-test-sdk:
+          name: "Run Unit Tests with min Turf"
+          xcode: "13.0.0"
+          turf-requirement: --version 2.0.0
 
       # Build all tests with host application
       # Run on main by default
@@ -236,6 +248,14 @@ workflows:
             - update-examples
             - validate-integrations
 
+  turf-integration:
+    when: << pipeline.parameters.turf-revision >>
+    jobs:
+      - unit-test-sdk:
+          name: "Run Unit Tests"
+          xcode: "13.0.0"
+          turf-requirement: --revision << pipeline.parameters.turf-revision >>
+
 # ==============================================================================
 
 jobs:
@@ -263,6 +283,9 @@ jobs:
       app-name:
         type: string
         default: "MapboxTestHost"
+      turf-requirement:
+        type: string
+        default: ""
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -435,6 +458,12 @@ jobs:
     steps:
       - checkout
       - configure-environment
+      - when:
+          condition: << parameters.turf-requirement >>
+          steps:
+            - run:
+                name: Resolve Turf
+                command: swift package resolve && swift package resolve << parameters.turf-requirement >> turf-swift
       # Building and testing are split into 2, with the aim that we'll be able to reuse
       # the build product and test on multiple simulators
       - run:

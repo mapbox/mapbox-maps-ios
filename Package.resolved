@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-events-ios.git",
         "state": {
           "branch": null,
-          "revision": "1b6c2a34086de40c26f2f97a716ac419f46eb630",
-          "version": "1.0.7"
+          "revision": "5e130fba637f5bbb0bb8bca0dec8d38a06ce07bf",
+          "version": "1.0.8"
         }
       },
       {

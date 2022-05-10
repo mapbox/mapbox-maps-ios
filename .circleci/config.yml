@@ -18,6 +18,10 @@ workflows:
           context:
             - SDK Registry Token
             - MapboxCI GitHub UserToken
+      - build-maps:
+          upload-size-metrics: false
+          context:
+            - SDK Registry Token
   run-benchmark:
     when: << pipeline.parameters.run-tests >>
     jobs:
@@ -32,28 +36,33 @@ workflows:
           requires:
             - run-benchmark
 
+      - build-maps:
+          context:
+            - SDK Registry Token
+          upload-size-metrics: true
+
 jobs:
+  build-maps:
+    executor: xcode-min
+    parameters:
+      upload-size-metrics:
+        type: boolean
+    steps:
+      - checkout
+      - mapbox/add-mapbox-ssh-key
+      - mapbox/add-mapbox-netrc
+      - mapbox/add-mapbox-filetoken
+      - mapbox/install-mbx-ci
+      - checkout-maps-submodule
+      - build-maps-xcframework:
+          upload-size-metrics: << parameters.upload-size-metrics >>
+
   build-benchmark:
     executor: xcode-min
     steps:
       - checkout
       - mapbox/add-mapbox-ssh-key
-      - run:
-          name: Checkout Maps iOS
-          command: |
-            git submodule update --init
-
-            # If parameter is not empty, checkout the commit
-            if [[ -n "<< pipeline.parameters.maps-ios-checkout-reference >>" ]];then
-              cd mapbox-maps-ios
-              git checkout << pipeline.parameters.maps-ios-checkout-reference >>
-              MAPS_COMMIT_HASH=$(git rev-parse HEAD)
-              echo "export MAPS_COMMIT_HASH=${MAPS_COMMIT_HASH}" >> $BASH_ENV
-              cat $BASH_ENV
-
-            fi
-
-            git submodule status
+      - checkout-maps-submodule
       - mapbox/github-commit-progress:
           commit: $MAPS_COMMIT_HASH
           repository: mapbox-maps-ios
@@ -79,7 +88,7 @@ jobs:
           at: Products
       - run: ls -l Products/
       - run:
-          name: Install AWSCLI
+          name: Install AWSCLI (Linux)
           command: |
             cd /tmp
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -106,7 +115,12 @@ jobs:
               "$AWS_DEVICE_FARM_PROJECT_ARN" \
               --run-arn-file benchmark_waiter.json \
               --artifacts-dir BenchmarkResults \
-              --output benchmark_results.json
+              --output benchmark_results.json || true
+      - persist_to_workspace:
+          root: .
+          paths:
+            - benchmark_waiter.json
+            - benchmark_results.json
       - run:
           name: Collect artifacts
           command: |
@@ -135,30 +149,34 @@ jobs:
       - checkout
       - mapbox/add-mapbox-ssh-key
       - mapbox/install-mbx-ci
-      - run:
-          name: Checkout Maps iOS
-          command: |
-            git submodule update --init
-
-            cd mapbox-maps-ios
-            git checkout main
-
-            git submodule status
+      - checkout-maps-submodule
       - run:
           name: Install AWSCLI
-          command: |
-            cd /tmp
-            curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
-            sudo installer -pkg AWSCLIV2.pkg -target /
+          command: pip3 install awscli requests
       - attach_workspace:
           at: workspace
       - run:
+          name: Check DeviceFarm results
+          command: |
+            mobile-metrics/ios-maps/Scripts/devicefarm.py \
+              "$AWS_DEVICE_FARM_PROJECT_ARN" \
+              --run-arn-file workspace/benchmark_waiter.json \
+              --artifacts-dir BenchmarkResults \
+              --output benchmark_results.json
+      - run:
           name: Parse XCResult
           command: |
-            swift run xcparty metrics --path "$CIRCLE_WORKING_DIRECTORY/workspace/metrics.xcresult" -r . --output "$CIRCLE_WORKING_DIRECTORY/ios-maps-carbon-v2.json"
+            swift run xcparty metrics --path "$CIRCLE_WORKING_DIRECTORY/workspace/metrics.xcresult" \
+              -r . \
+              --output "$CIRCLE_WORKING_DIRECTORY/ios-maps-carbon-v2.json"
           working_directory: mapbox-maps-ios/scripts/xcparty
       - store_artifacts:
           path: ios-maps-carbon-v2.json
+      - run:
+          name: Test failures
+          command: swift run xcparty failures "$CIRCLE_WORKING_DIRECTORY/workspace/metrics.xcresult"
+          working_directory: mapbox-maps-ios/scripts/xcparty
+          when: on_fail
       - checkout-mobile-metrics
       - run:
           name: Upload metrics to AWS
@@ -177,6 +195,82 @@ commands:
             xcodebuild build-for-testing -scheme MobileMetrics -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO ENABLE_TESTABILITY=YES -derivedDataPath DerivedData
           working_directory: benchmark/
 
+  build-maps-xcframework:
+    parameters:
+      upload-size-metrics:
+        type: boolean
+        default: true
+    steps:
+      - run:
+          name: Install dependencies
+          command: brew install xcodegen
+      - run:
+          name: Build Maps SDK (dynamic)
+          working_directory: mapbox-maps-ios/scripts/release/packager
+          command: |
+            ./package-mapbox-maps.sh dynamic
+            cp MapboxMaps.zip ~/project/MapboxMaps.zip
+      - store_artifacts:
+          path: MapboxMaps.zip
+      - persist_to_workspace:
+          root: .
+          paths:
+            - MapboxMaps.zip
+      - run:
+          name: Prepare for binary size metrics
+          command: |
+            brew install mint
+            pip3 install gitpython awscli
+            echo "export PATH=\"$HOME/.mint/bin:$PATH\"" >> $BASH_ENV
+            mint install git@github.com:mapbox/ios-binary-size.git
+            unzip MapboxMaps.zip "artifacts/MapboxMaps.xcframework/*"
+      - unless:
+          condition: << parameters.upload-size-metrics >>
+          steps:
+            - run:
+                name: Calculate binary size metrics
+                command: |
+                  BASELINE_TOLERANCE=${BASELINE_TOLERANCE:-10}
+                  mobile-metrics/scripts/ios-binary-analyzer.py \
+                      -r . \
+                      -g "mapbox-maps-ios" \
+                      -x "artifacts/MapboxMaps.xcframework" \
+                      --name "ios-maps-v10-benchmark" \
+                      --build ${CIRCLE_BUILD_NUM} \
+                      -t ${BASELINE_TOLERANCE} \
+                      --baseline mapbox-maps-ios/baselines/binary-size/MapboxMaps.json \
+                      --dryrun
+      - when:
+          condition: << parameters.upload-size-metrics >>
+          steps:
+            - run:
+                name: Calculate and upload binary size metrics
+                command: |
+                  mobile-metrics/scripts/ios-binary-analyzer.py \
+                      -r . \
+                      -g "mapbox-maps-ios" \
+                      -x "artifacts/MapboxMaps.xcframework" \
+                      --name "ios-maps-v10-benchmark" \
+                      --build ${CIRCLE_BUILD_NUM}
+
+  checkout-maps-submodule:
+    steps:
+      - run:
+          name: Checkout Maps iOS
+          command: |
+            git submodule update --init
+
+            # If parameter is not empty, checkout the commit
+            if [[ -n "<< pipeline.parameters.maps-ios-checkout-reference >>" ]];then
+              cd mapbox-maps-ios
+              git checkout << pipeline.parameters.maps-ios-checkout-reference >>
+              MAPS_COMMIT_HASH=$(git rev-parse HEAD)
+              echo "export MAPS_COMMIT_HASH=${MAPS_COMMIT_HASH}" >> $BASH_ENV
+              cat $BASH_ENV
+
+            fi
+
+            git submodule status
 
   checkout-mobile-metrics:
     steps:
@@ -192,6 +286,7 @@ executors:
   base-docker:
     docker:
       - image: cimg/base:stable
+    resource_class: small
 
 orbs:
   mapbox:

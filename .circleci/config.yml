@@ -251,7 +251,7 @@ workflows:
   turf-integration:
     when: << pipeline.parameters.turf-revision >>
     jobs:
-      - unit-test-sdk:
+      - turf-integration:
           name: "Run Unit Tests"
           xcode: "13.0.0"
           turf-requirement: --revision << pipeline.parameters.turf-revision >>
@@ -873,6 +873,42 @@ jobs:
             timeout 1800 bash -c 'while [[ "$(curl -n -s -o /dev/null -w ''%{http_code}'' https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/$VERSION/MapboxMaps.zip)" != "200" ]]; do sleep 5; done' || false
           no_output_timeout: 30m
 
+  turf-integration:
+    <<: *base-job
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - checkout
+      - configure-environment
+      - turf-report-pending:
+          turf-revision: << pipeline.parameters.turf-revision >>
+      - run:
+          name: Resolve Turf
+          command: swift package resolve && swift package resolve << parameters.turf-requirement >> turf-swift
+      # Building and testing are split into 2, with the aim that we'll be able to reuse
+      # the build product and test on multiple simulators
+      - run:
+          name: Building MapboxMaps for simulator
+          command: make build-sdk-for-testing-simulator
+          no_output_timeout: 5m
+      - run:
+          name: Testing MapboxMaps with simulator
+          command: make test-sdk-without-building-simulator
+      - run:
+          name: Compress XCResult
+          command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
+          when: always
+      - store_artifacts:
+          path: MapboxMapsTests.xcresult.zip
+      - locate-derived-data-directory:
+          base_name: $(basename $(pwd))
+      - store-logs:
+          artifact_name: MapboxMaps
+          derived_data_path: $DERIVED_DATA_PATH
+      - turf-report-success:
+          turf-revision: << pipeline.parameters.turf-revision >>
+      - turf-report-failure:
+          turf-revision: << pipeline.parameters.turf-revision >>
+
 # ==============================================================================
 # Reusable commands
 commands:
@@ -1260,3 +1296,46 @@ commands:
           when: always
       - store_artifacts:
           path: artifacts.zip
+
+  turf-report-pending:
+    parameters:
+      turf-revision:
+        type: string
+    steps:
+      - run:
+          name: Set Turf commit status to pending
+          command: |
+            curl --request POST \
+              --url https://api.github.com/repos/mapbox/turf-swift/statuses/<< parameters.turf-revision >> \
+              --header 'Accept: application/vnd.github.v3+json' \
+              --header "Authorization: token $(mbx-ci github notifier token)" \
+              --data "{\"state\":\"pending\",\"target_url\":\"$CIRCLE_BUILD_URL\",\"description\":\"MapboxMaps SDK integration tests are running\",\"context\":\"Maps SDK Integration\"}"
+
+  turf-report-success:
+    parameters:
+      turf-revision:
+        type: string
+    steps:
+      - run:
+          name: Set Turf commit status to success
+          command: |
+            curl --request POST \
+              --url https://api.github.com/repos/mapbox/turf-swift/statuses/<< parameters.turf-revision >> \
+              --header 'Accept: application/vnd.github.v3+json' \
+              --header "Authorization: token $(mbx-ci github notifier token)" \
+              --data "{\"state\":\"success\",\"target_url\":\"$CIRCLE_BUILD_URL\",\"description\":\"MapboxMaps SDK integration tests passed\",\"context\":\"Maps SDK Integration\"}"
+
+  turf-report-failure:
+    parameters:
+      turf-revision:
+        type: string
+    steps:
+      - run:
+          when: on_fail
+          name: Set Turf commit status to failure
+          command: |
+            curl --request POST \
+              --url https://api.github.com/repos/mapbox/turf-swift/statuses/<< parameters.turf-revision >> \
+              --header 'Accept: application/vnd.github.v3+json' \
+              --header "Authorization: token $(mbx-ci github notifier token)" \
+              --data "{\"state\":\"failure\",\"target_url\":\"$CIRCLE_BUILD_URL\",\"description\":\"MapboxMaps SDK integration tests failed\",\"context\":\"Maps SDK Integration\"}"

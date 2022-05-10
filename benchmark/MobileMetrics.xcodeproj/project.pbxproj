@@ -19,6 +19,7 @@
 		74F237F327E3338A009F304C /* NotifyingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F237F227E3338A009F304C /* NotifyingViewController.swift */; };
 		74F2381327E3730C009F304C /* WarmCacheBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F2381227E3730C009F304C /* WarmCacheBenchmark.swift */; };
 		74F2381527E39A33009F304C /* AnimationFlyToBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F2381427E39A33009F304C /* AnimationFlyToBenchmark.swift */; };
+		FEFAF5F4282A7A990002CF6E /* PrivatePerformanceMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEFAF5F3282A7A990002CF6E /* PrivatePerformanceMetrics.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		74F237F227E3338A009F304C /* NotifyingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotifyingViewController.swift; sourceTree = "<group>"; };
 		74F2381227E3730C009F304C /* WarmCacheBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarmCacheBenchmark.swift; sourceTree = "<group>"; };
 		74F2381427E39A33009F304C /* AnimationFlyToBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationFlyToBenchmark.swift; sourceTree = "<group>"; };
+		FEFAF5F3282A7A990002CF6E /* PrivatePerformanceMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivatePerformanceMetrics.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +135,7 @@
 			children = (
 				74F237EE27E32FFA009F304C /* BaseBenchmark.swift */,
 				74F237F227E3338A009F304C /* NotifyingViewController.swift */,
+				FEFAF5F3282A7A990002CF6E /* PrivatePerformanceMetrics.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -207,6 +210,8 @@
 				Base,
 			);
 			mainGroup = 7499660B27C64ECD00DA186A;
+			packageReferences = (
+			);
 			productRefGroup = 7499661527C64ECD00DA186A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -273,6 +278,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FEFAF5F4282A7A990002CF6E /* PrivatePerformanceMetrics.swift in Sources */,
 				74F237EF27E32FFA009F304C /* BaseBenchmark.swift in Sources */,
 				7412CF5E27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift in Sources */,
 				74F2381327E3730C009F304C /* WarmCacheBenchmark.swift in Sources */,

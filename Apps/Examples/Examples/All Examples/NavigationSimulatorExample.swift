@@ -1,6 +1,7 @@
 import UIKit
 import MapboxMaps
 
+// swiftlint:disable:next type_body_length
 final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
     private enum ID {
         static let routeSource = "route-line-source-id"

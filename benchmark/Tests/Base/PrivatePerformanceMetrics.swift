@@ -16,17 +16,17 @@ public extension XCTPerformanceMetric {
     static let transientHeapNodes = XCTPerformanceMetric(rawValue: "com.apple.XCTPerformanceMetric_TransientHeapAllocationsNodes")
 
     static let all: [XCTPerformanceMetric] = [.wallClockTime,
-                                                     .userTime,
-                                                     .runTime,
-                                                     .systemTime,
-                                                     .transientVMKB,
-                                                     .temporaryHeapKB,
-                                                     .highWatermarkVM,
-                                                     .totalHeapKB,
-                                                     .persistentVM,
-                                                     .persistentHeap,
-                                                     .transientHeapKB,
-                                                     .persistentHeapNodes,
-                                                     .highWatermarkHeap,
-                                                     .transientHeapNodes]
+                                              .userTime,
+                                              .runTime,
+                                              .systemTime,
+                                              .transientVMKB,
+                                              .temporaryHeapKB,
+                                              .highWatermarkVM,
+                                              .totalHeapKB,
+                                              .persistentVM,
+                                              .persistentHeap,
+                                              .transientHeapKB,
+                                              .persistentHeapNodes,
+                                              .highWatermarkHeap,
+                                              .transientHeapNodes]
 }

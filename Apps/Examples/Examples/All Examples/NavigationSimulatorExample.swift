@@ -11,8 +11,6 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
     private var navigationSimulator: NavigationSimulator!
 
-    private var routeLine: LineLayer!
-    private var casingLine: LineLayer!
     private lazy var routeSource: Source = {
         var source = GeoJSONSource()
         source.data = .geometry(Geometry(sampleRouteLine))
@@ -40,9 +38,6 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
     private func configureMap() {
         navigationSimulator = NavigationSimulator(mapView: mapView, route: sampleRouteLine)
 
-        routeLine = makeRouteLineLayer()
-        casingLine = makeCasingLayer()
-
         mapView.location.options.puckType = .puck2D(.makeDefault(showBearing: true))
         mapView.location.options.puckBearingSource = .course
         mapView.location.overrideLocationProvider(with: navigationSimulator)
@@ -52,8 +47,8 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
             guard let self = self else { return }
             do {
                 try self.mapView.mapboxMap.style.addSource(self.routeSource, id: "route-line-source-id")
-                try self.mapView.mapboxMap.style.addLayer(self.casingLine)
-                try self.mapView.mapboxMap.style.addLayer(self.routeLine)
+                try self.mapView.mapboxMap.style.addLayer(self.makeCasingLayer())
+                try self.mapView.mapboxMap.style.addLayer(self.makeRouteLineLayer())
 
                 self.navigationSimulator.start()
             } catch {
@@ -267,8 +262,13 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
 extension NavigationSimulatorExample: LocationConsumer {
 
     func locationUpdate(newLocation: Location) {
+        let style = mapView.mapboxMap.style
         let progress = navigationSimulator.distanceTravelled / navigationSimulator.routeLength
-        routeLine.lineTrimOffset = .constant([0, progress])
-        casingLine.lineTrimOffset = .constant([0, progress])
+
+        let trimLineLayer: (inout LineLayer) -> Void = { layer in
+            layer.lineTrimOffset = .constant([0, progress])
+        }
+        try? style.updateLayer(withId: ID.routeLineLayer, type: LineLayer.self, update: trimLineLayer)
+        try? style.updateLayer(withId: ID.casingLineLayer, type: LineLayer.self, update: trimLineLayer)
     }
 }

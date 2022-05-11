@@ -4,9 +4,8 @@ import MapboxMobileEvents
 
 class BaseBenchmark: XCTestCase {
 
-    @available(iOS 13.0, *)
-    override class var defaultMetrics: [XCTMetric] {
-        return [XCTClockMetric(), XCTMemoryMetric(), XCTCPUMetric()]
+    override class var defaultPerformanceMetrics: [XCTPerformanceMetric] {
+        return XCTPerformanceMetric.all
     }
 
     enum Error: Swift.Error {
@@ -52,11 +51,7 @@ class BaseBenchmark: XCTestCase {
     /// Records the performance, for a block of code. `stopBenchmark` should be called once before the end of the block.
     /// - Parameter block: A block whose performance is measured.
     func benchmark(timeout: TimeInterval = 10, block: () -> Void) {
-        let options = XCTMeasureOptions()
-        options.iterationCount = 10
-        options.invocationOptions = [.manuallyStop]
-
-        measure(options: options) {
+        measureMetrics(Self.defaultPerformanceMetrics, automaticallyStartMeasuring: true) {
             measurementExpectation = self.expectation(description: "Measure expectation")
             block()
             waitForExpectations(timeout: timeout)

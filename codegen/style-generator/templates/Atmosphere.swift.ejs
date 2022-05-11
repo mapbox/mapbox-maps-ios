@@ -1,0 +1,26 @@
+<%
+  const properties = locals.properties
+  const doc = locals.doc
+-%>
+// This file is generated.
+import Foundation
+
+
+/// A style's fog property is a global effect that improves depth perception by fading out distant objects.
+///
+/// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/mapbox-gl-js/style-spec/fog/)
+public struct Atmosphere: Codable  {
+
+    public var source: String
+
+    public init(sourceId: String) {
+        self.source = sourceId
+    }
+    <%_ for (const property of properties) { -%>
+
+    /// <%- markdownFriendlyDoc(property) %>
+    public var <%- camelizeWithLeadingLowercase(property.name) %>: <%- propertySwiftValueType(property) %>?
+    <%_ } -%>
+}
+
+// End of generated file.

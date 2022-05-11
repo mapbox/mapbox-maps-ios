@@ -70,3 +70,7 @@ writeIfModified(`../mapbox-maps-ios/Sources/MapboxMaps/Style/Generated/Expressio
 // Swift Terrain
 const terrainSwift = ejs.compile(fs.readFileSync('style-generator/templates/Terrain.swift.ejs', 'utf8'), { strict: true });
 writeIfModified(`../mapbox-maps-ios/Sources/MapboxMaps/Style/Generated/Terrain.swift`, terrainSwift({ properties: style.terrainProperties }));
+
+// Swift Atmosphere
+const atmosphereSwift = ejs.compile(fs.readFileSync('style-generator/templates/Atmosphere.swift.ejs', 'utf8'), { strict: true });
+writeIfModified(`../mapbox-maps-ios/Sources/MapboxMaps/Style/Generated/Atmosphere.swift`, atmosphereSwift({ properties: style.atmosphereProperties }));

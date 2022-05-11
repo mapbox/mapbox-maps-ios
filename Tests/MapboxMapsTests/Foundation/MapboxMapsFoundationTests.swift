@@ -202,8 +202,6 @@ class MapboxMapsFoundationTests: XCTestCase {
         try! mapView.mapboxMap.setCameraBounds(with: CameraBoundsOptions(bounds: bounds))
 
         let convertedBounds = mapView.mapboxMap.coordinateBounds(for: mapView.bounds)
-        print(convertedBounds.southwest)
-        print(convertedBounds.northeast)
 
         XCTAssertEqual(bounds.southwest.latitude, convertedBounds.southwest.latitude, accuracy: 0.1)
         XCTAssertEqual(bounds.southwest.longitude, convertedBounds.southwest.longitude, accuracy: 0.1)

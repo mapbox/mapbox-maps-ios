@@ -42,10 +42,14 @@ final class NavigationSimulator: LocationProvider {
         guard !isStarted else { return }
         isStarted = true
         viewport.transition(to: followPuckViewPortState) { _ in
-
-            Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-                // Move forward 20 meters.
-                self.distanceTravelled += 20
+            Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+                if self.distanceTravelled < self.routeLength {
+                    // Move forward 20 meters.
+                    self.distanceTravelled = min(self.distanceTravelled + 100, self.routeLength)
+                } else {
+                    // Journey completed.
+                    timer.invalidate()
+                }
             }
         }
     }

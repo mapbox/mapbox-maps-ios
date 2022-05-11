@@ -30,7 +30,7 @@ internal protocol AnnotationManagerInternal: AnnotationManager {
 
     func destroy()
 
-    func handleQueriedFeatureIds(_ queriedFeatureIds: [String])
+    func handleQueriedFeatureIds(_ queriedFeatureIds: [String], point: CGPoint)
 }
 
 /// A delegate that is called when a tap is detected on an annotation (or on several of them).
@@ -41,7 +41,7 @@ public protocol AnnotationInteractionDelegate: AnyObject {
     ///   - manager: The `AnnotationManager` that detected this tap gesture
     ///   - annotations: A list of `Annotations` that were tapped
     func annotationManager(_ manager: AnnotationManager,
-                           didDetectTappedAnnotations annotations: [Annotation])
+                           didDetectTappedAnnotations annotations: [Annotation], point: CGPoint)
 
 }
 
@@ -213,7 +213,7 @@ public class AnnotationOrchestrator {
                 }
 
                 for manager in managers {
-                    manager.handleQueriedFeatureIds(queriedFeatureIds)
+                  manager.handleQueriedFeatureIds(queriedFeatureIds, point: point)
                 }
             case .failure(let error):
                 Log.warning(forMessage: "Failed to query map for annotations due to error: \(error)",

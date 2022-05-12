@@ -160,7 +160,7 @@ workflows:
       - unit-test-sdk:
           name: "Run Unit Tests with min Turf"
           xcode: "13.0.0"
-          turf-requirement: --version 2.0.0
+          turf-revision: v2.0.0
 
       # Build all tests with host application
       # Run on main by default
@@ -194,7 +194,7 @@ workflows:
     jobs:
       - release-precheck:
           <<: *release-anchor
-          requires: [ ]
+          requires: []
       - trigger-metrics-v2:
           <<: *release-anchor
       - build-dynamic:
@@ -254,7 +254,6 @@ workflows:
       - turf-integration:
           name: "Run Unit Tests"
           xcode: "13.0.0"
-          turf-requirement: --revision << pipeline.parameters.turf-revision >>
 
 # ==============================================================================
 
@@ -283,7 +282,7 @@ jobs:
       app-name:
         type: string
         default: "MapboxTestHost"
-      turf-requirement:
+      turf-revision:
         type: string
         default: ""
     macos:
@@ -459,11 +458,12 @@ jobs:
       - checkout
       - configure-environment
       - when:
-          condition: << parameters.turf-requirement >>
+          condition: << parameters.turf-revision >>
           steps:
             - run:
-                name: Resolve Turf
-                command: swift package resolve && swift package resolve << parameters.turf-requirement >> turf-swift
+                name: Set Turf Revision
+                command: |
+                  sed -i '' 's/turf-swift.git", from: "2.0.0"/turf-swift.git", revision: "<< parameters.turf-revision >>"/' Package.swift
       # Building and testing are split into 2, with the aim that we'll be able to reuse
       # the build product and test on multiple simulators
       - run:
@@ -882,8 +882,9 @@ jobs:
       - turf-report-pending:
           turf-revision: << pipeline.parameters.turf-revision >>
       - run:
-          name: Resolve Turf
-          command: swift package resolve && swift package resolve << parameters.turf-requirement >> turf-swift
+          name: Set Turf Revision
+          command: |
+            sed -i '' 's/turf-swift.git", from: "2.0.0"/turf-swift.git", revision: "<< pipeline.parameters.turf-revision >>"/' Package.swift
       # Building and testing are split into 2, with the aim that we'll be able to reuse
       # the build product and test on multiple simulators
       - run:

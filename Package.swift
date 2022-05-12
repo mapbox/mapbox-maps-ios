@@ -1,4 +1,4 @@
-// swift-tools-version:5.4
+// swift-tools-version:5.5
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -13,26 +13,34 @@ let package = Package(
             targets: ["MapboxMaps"]),
     ],
     dependencies: [
-        .package(name: "MapboxCoreMaps", url: "https://github.com/mapbox/mapbox-core-maps-ios.git", .exact("10.5.1")),
-        .package(name: "MapboxCommon", url: "https://github.com/mapbox/mapbox-common-ios.git", .exact("21.3.0")),
-        .package(name: "MapboxMobileEvents", url: "https://github.com/mapbox/mapbox-events-ios.git", .exact("1.0.8")),
-        .package(name: "Turf", url: "https://github.com/mapbox/turf-swift.git", from: "2.0.0"),
-        .package(name: "CocoaImageHashing", url: "https://github.com/ameingast/cocoaimagehashing", .exact("1.9.0"))
+        .package(url: "https://github.com/mapbox/mapbox-core-maps-ios.git", revision: "v10.5.1"),
+        .package(url: "https://github.com/mapbox/mapbox-common-ios.git", revision: "v21.3.0"),
+        .package(url: "https://github.com/mapbox/mapbox-events-ios.git", revision: "v1.0.8"),
+        .package(url: "https://github.com/mapbox/turf-swift.git", from: "2.0.0"),
+        .package(url: "https://github.com/ameingast/cocoaimagehashing", from: "1.9.0"),
     ],
     targets: [
         .target(
             name: "MapboxMaps",
-            dependencies: ["MapboxCoreMaps", "Turf", "MapboxMobileEvents", "MapboxCommon"],
+            dependencies: [
+                .product(name: "MapboxCoreMaps", package: "mapbox-core-maps-ios"),
+                .product(name: "Turf", package: "turf-swift"),
+                .product(name: "MapboxMobileEvents", package: "mapbox-events-ios"),
+                .product(name: "MapboxCommon", package: "mapbox-common-ios"),
+            ],
             exclude: [
-                "Info.plist"
+                "Info.plist",
             ],
             resources: [
-                .copy("MapboxMaps.json")
+                .copy("MapboxMaps.json"),
             ]
         ),
         .testTarget(
             name: "MapboxMapsTests",
-            dependencies: ["MapboxMaps", "CocoaImageHashing"],
+            dependencies: [
+                .target(name: "MapboxMaps"),
+                .product(name: "CocoaImageHashing", package: "cocoaimagehashing"),
+            ],
             exclude: [
                 "Info.plist",
                 "Integration Tests/HTTP/HTTPIntegrationTests.swift",

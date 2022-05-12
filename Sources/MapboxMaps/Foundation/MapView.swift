@@ -82,7 +82,6 @@ open class MapView: UIView {
     internal private(set) var resourceOptions: ResourceOptions!
 
     private var needsDisplayRefresh: Bool = false
-    private var displayCallback: (() -> Void)?
     private var displayLink: DisplayLinkProtocol?
 
     /// Holding onto this value that comes from `MapOptions` since there is a race condition between
@@ -552,7 +551,7 @@ open class MapView: UIView {
 
         if needsDisplayRefresh {
             needsDisplayRefresh = false
-            displayCallback?()
+            metalView?.draw()
         }
     }
 
@@ -636,9 +635,6 @@ extension MapView: DelegatingMapClientDelegate {
 
     internal func getMetalView(for metalDevice: MTLDevice?) -> MTKView? {
         let metalView = dependencyProvider.makeMetalView(frame: bounds, device: metalDevice)
-        displayCallback = {
-            metalView.setNeedsDisplay()
-        }
 
         metalView.translatesAutoresizingMaskIntoConstraints = false
         metalView.autoResizeDrawable = true
@@ -647,7 +643,7 @@ extension MapView: DelegatingMapClientDelegate {
         metalView.isOpaque = isOpaque
         metalView.layer.isOpaque = isOpaque
         metalView.isPaused = true
-        metalView.enableSetNeedsDisplay = true
+        metalView.enableSetNeedsDisplay = false
         metalView.presentsWithTransaction = false
 
         insertSubview(metalView, at: 0)

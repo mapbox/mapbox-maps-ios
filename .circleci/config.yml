@@ -460,7 +460,7 @@ jobs:
             - run:
                 name: Set Turf Revision
                 command: |
-                  sed -i '' 's/turf-swift.git", from: "2.0.0"/turf-swift.git", revision: "<< parameters.turf-revision >>"/' Package.swift
+                  sed -i '' 's/turf-swift.git", from: "2.0.0"/turf-swift.git", .revision("<< parameters.turf-revision >>")/' Package.swift
       # Building and testing are split into 2, with the aim that we'll be able to reuse
       # the build product and test on multiple simulators
       - run:
@@ -890,7 +890,7 @@ jobs:
       - run:
           name: Set Turf Revision
           command: |
-            sed -i '' 's/turf-swift.git", from: "2.0.0"/turf-swift.git", revision: "<< parameters.turf-revision >>"/' Package.swift
+            sed -i '' 's/turf-swift.git", from: "2.0.0"/turf-swift.git", .revision("<< parameters.turf-revision >>")/' Package.swift
       # Building and testing are split into 2, with the aim that we'll be able to reuse
       # the build product and test on multiple simulators
       - run:

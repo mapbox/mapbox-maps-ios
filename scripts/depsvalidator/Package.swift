@@ -1,9 +1,9 @@
-// swift-tools-version:5.4
+// swift-tools-version:5.5
 import PackageDescription
 
 let package = Package(
     name: "DepsValidator",
-    platforms: [.macOS(.v10_13)],
+    platforms: [.macOS(.v10_15)],
     products: [
         .executable(name: "depsvalidator", targets: ["DepsValidator"]),
         .library(name: "DepsValidatorLibrary", targets: ["DepsValidatorLibrary"]),

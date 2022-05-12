@@ -16,15 +16,11 @@ final class PackageTests: XCTestCase {
         let package = try Package.from(file: packageURL)
 
         try XCTAssertEqual(package.dependencies, [
-            Dependency(name: "A", requirement: .range(lowerBound: SemanticVersion(string: "1.0.0"),
-                                                      upperBound: SemanticVersion(string: "2.0.0"))),
-            Dependency(name: "B", requirement: .branch("abranch")),
-            Dependency(name: "C", requirement: .exact(SemanticVersion(string: "1.2.0"))),
-            Dependency(name: "D", requirement: .revision("abcdef")),
-            Dependency(name: "E", requirement: .range(lowerBound: SemanticVersion(string: "1.2.0"),
-                                                      upperBound: SemanticVersion(string: "2.0.0"))),
-            Dependency(name: "F", requirement: .range(lowerBound: SemanticVersion(string: "1.2.0"),
-                                                      upperBound: SemanticVersion(string: "1.3.0"))),
+            Dependency(sourceControl: [.init(identity: "a", requirement: .range(lowerBound: SemanticVersion(string: "1.0.0"),
+                                                                                upperBound: SemanticVersion(string: "2.0.0")))]),
+            Dependency(sourceControl: [.init(identity: "b", requirement: .branch("abranch"))]),
+            Dependency(sourceControl: [.init(identity: "c", requirement: .exact(SemanticVersion(string: "1.2.0")))]),
+            Dependency(sourceControl: [.init(identity: "d", requirement: .revision("abcdef"))]),
         ])
     }
 }

@@ -12,10 +12,12 @@ let package = Package(
             name: "MapboxMaps",
             targets: ["MapboxMaps"]),
     ],
+    // when upgrading to swift tools version 5.6 or later,
+    // replace `.package(name:url:_: .exact())` with `.package(url:exact:)`
     dependencies: [
-        .package(url: "https://github.com/mapbox/mapbox-core-maps-ios.git", revision: "v10.5.1"),
-        .package(url: "https://github.com/mapbox/mapbox-common-ios.git", revision: "v21.3.0"),
-        .package(url: "https://github.com/mapbox/mapbox-events-ios.git", revision: "v1.0.8"),
+        .package(name: "mapbox-core-maps-ios", url: "https://github.com/mapbox/mapbox-core-maps-ios.git", .exact("10.5.1")),
+        .package(name: "mapbox-common-ios", url: "https://github.com/mapbox/mapbox-common-ios.git", .exact("21.3.0")),
+        .package(name: "mapbox-events-ios", url: "https://github.com/mapbox/mapbox-events-ios.git", .exact("1.0.8")),
         .package(url: "https://github.com/mapbox/turf-swift.git", from: "2.0.0"),
         .package(url: "https://github.com/ameingast/cocoaimagehashing", from: "1.9.0"),
     ],

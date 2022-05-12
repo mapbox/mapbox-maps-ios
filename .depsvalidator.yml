@@ -8,9 +8,17 @@ manifests:
   - type: packager
 dependencies:
   - name: MapboxCoreMaps
+    variations:
+      Package.swift: mapbox-core-maps-ios
   - name: MapboxCommon
+    variations:
+      Package.swift: mapbox-common-ios
   - name: Turf
+    variations:
+      Package.swift: turf-swift
   - name: MapboxMobileEvents
+    variations:
+      Package.swift: mapbox-events-ios
 manifest_definitions:
   - name: packager
     type: SemanticVersion

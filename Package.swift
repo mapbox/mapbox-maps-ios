@@ -15,9 +15,9 @@ let package = Package(
     // when upgrading to swift tools version 5.6 or later,
     // replace `.package(name:url:_: .exact())` with `.package(url:exact:)`
     dependencies: [
-        .package(name: "mapbox-core-maps-ios", url: "https://github.com/mapbox/mapbox-core-maps-ios.git", .exact("10.5.1")),
-        .package(name: "mapbox-common-ios", url: "https://github.com/mapbox/mapbox-common-ios.git", .exact("21.3.0")),
-        .package(name: "mapbox-events-ios", url: "https://github.com/mapbox/mapbox-events-ios.git", .exact("1.0.8")),
+        .package(name: "MapboxCoreMaps", url: "https://github.com/mapbox/mapbox-core-maps-ios.git", .exact("10.5.1")),
+        .package(name: "MapboxCommon", url: "https://github.com/mapbox/mapbox-common-ios.git", .exact("21.3.0")),
+        .package(name: "MapboxMobileEvents", url: "https://github.com/mapbox/mapbox-events-ios.git", .exact("1.0.8")),
         .package(url: "https://github.com/mapbox/turf-swift.git", from: "2.0.0"),
         .package(url: "https://github.com/ameingast/cocoaimagehashing", from: "1.9.0"),
     ],
@@ -25,10 +25,10 @@ let package = Package(
         .target(
             name: "MapboxMaps",
             dependencies: [
-                .product(name: "MapboxCoreMaps", package: "mapbox-core-maps-ios"),
+                .product(name: "MapboxCoreMaps", package: "MapboxCoreMaps"),
                 .product(name: "Turf", package: "turf-swift"),
-                .product(name: "MapboxMobileEvents", package: "mapbox-events-ios"),
-                .product(name: "MapboxCommon", package: "mapbox-common-ios"),
+                .product(name: "MapboxMobileEvents", package: "MapboxMobileEvents"),
+                .product(name: "MapboxCommon", package: "MapboxCommon"),
             ],
             exclude: [
                 "Info.plist",

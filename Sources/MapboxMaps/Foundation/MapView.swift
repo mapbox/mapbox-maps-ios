@@ -634,7 +634,12 @@ extension MapView: DelegatingMapClientDelegate {
     }
 
     internal func getMetalView(for metalDevice: MTLDevice?) -> MTKView? {
-        let metalView = dependencyProvider.makeMetalView(frame: bounds, device: metalDevice)
+        let minSize = CGSize(width: 1, height: 1)
+        let finalSize = CGSize(
+            width: max(minSize.width, bounds.width),
+            height: max(minSize.height, bounds.height))
+
+        let metalView = dependencyProvider.makeMetalView(frame: CGRect(origin: .zero, size: finalSize), device: metalDevice)
 
         metalView.translatesAutoresizingMaskIntoConstraints = false
         metalView.autoResizeDrawable = true
@@ -651,13 +656,13 @@ extension MapView: DelegatingMapClientDelegate {
         let sameHeightConstraint = metalView.heightAnchor.constraint(equalTo: heightAnchor)
         sameHeightConstraint.priority = .defaultHigh
 
-        let minHeightConstraint = metalView.heightAnchor.constraint(greaterThanOrEqualToConstant: 1)
+        let minHeightConstraint = metalView.heightAnchor.constraint(greaterThanOrEqualToConstant: minSize.height)
         minHeightConstraint.priority = .required
 
         let sameWidthConstraint = metalView.widthAnchor.constraint(equalTo: widthAnchor)
         sameWidthConstraint.priority = .defaultHigh
 
-        let minWidthConstraint = metalView.widthAnchor.constraint(greaterThanOrEqualToConstant: 1)
+        let minWidthConstraint = metalView.widthAnchor.constraint(greaterThanOrEqualToConstant: minSize.width)
         minWidthConstraint.priority = .required
 
         NSLayoutConstraint.activate([

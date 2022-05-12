@@ -253,7 +253,7 @@ workflows:
     jobs:
       - turf-integration:
           name: "Run Unit Tests"
-          xcode: "13.0.0"
+          turf-revision: << pipeline.parameters.turf-revision >>
 
 # ==============================================================================
 
@@ -277,9 +277,6 @@ jobs:
         type: boolean
         default: false
       scheme:
-        type: string
-        default: "MapboxTestHost"
-      app-name:
         type: string
         default: "MapboxTestHost"
       turf-revision:
@@ -874,17 +871,26 @@ jobs:
           no_output_timeout: 30m
 
   turf-integration:
-    <<: *base-job
+    parameters:
+      turf-revision:
+        type: string
+        default: ""
+    macos:
+      xcode: "13.0.0"
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
+      CONFIGURATION: "Debug"
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
       - configure-environment
       - turf-report-pending:
-          turf-revision: << pipeline.parameters.turf-revision >>
+          turf-revision: << parameters.turf-revision >>
       - run:
           name: Set Turf Revision
           command: |
-            sed -i '' 's/turf-swift.git", from: "2.0.0"/turf-swift.git", revision: "<< pipeline.parameters.turf-revision >>"/' Package.swift
+            sed -i '' 's/turf-swift.git", from: "2.0.0"/turf-swift.git", revision: "<< parameters.turf-revision >>"/' Package.swift
       # Building and testing are split into 2, with the aim that we'll be able to reuse
       # the build product and test on multiple simulators
       - run:
@@ -906,9 +912,9 @@ jobs:
           artifact_name: MapboxMaps
           derived_data_path: $DERIVED_DATA_PATH
       - turf-report-success:
-          turf-revision: << pipeline.parameters.turf-revision >>
+          turf-revision: << parameters.turf-revision >>
       - turf-report-failure:
-          turf-revision: << pipeline.parameters.turf-revision >>
+          turf-revision: << parameters.turf-revision >>
 
 # ==============================================================================
 # Reusable commands

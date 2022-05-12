@@ -7,6 +7,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Expose API to check whether an image exists in `Style`. ([#1297](https://github.com/mapbox/mapbox-maps-ios/pull/1297))
 * Call `MapboxMap.reduceMemoryUse` when application goes to background. ([#1301](https://github.com/mapbox/mapbox-maps-ios/pull/1301))
 * Update to MapboxMobileEvents v1.0.8. ([#1324](https://github.com/mapbox/mapbox-maps-ios/pull/1324))
+* Enable explicit drawing behavior for metal view(call `draw()` explicitly instead of `setNeedsDisplay` when view's content need to be redrawn) again.([#1331](https://github.com/mapbox/mapbox-maps-ios/pull/1331))
 
 ## 10.5.0 - May 5, 2022
 

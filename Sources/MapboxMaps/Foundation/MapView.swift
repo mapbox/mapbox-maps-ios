@@ -626,6 +626,10 @@ open class MapView: UIView {
 
 extension MapView: DelegatingMapClientDelegate {
     internal func scheduleRepaint() {
+        guard let metalView = metalView, !metalView.bounds.isEmpty else {
+            return
+        }
+
         needsDisplayRefresh = true
     }
 

@@ -40,8 +40,8 @@ final class MapViewTests: XCTestCase {
         window.addSubview(mapView)
 
         metalView = try XCTUnwrap(dependencyProvider.makeMetalViewStub.invocations.first?.returnValue)
-        // reset is required here to ignore the setNeedsDisplay() invocation during initialization
-        metalView.setNeedsDisplayStub.reset()
+        // reset is required here to ignore the draw() invocation during initialization
+        metalView.drawStub.reset()
     }
 
     override func tearDown() {
@@ -203,7 +203,7 @@ final class MapViewTests: XCTestCase {
 
         try invokeDisplayLinkCallback()
 
-        XCTAssertEqual(metalView.setNeedsDisplayStub.invocations.count, 1)
+        XCTAssertEqual(metalView.drawStub.invocations.count, 1)
     }
 
     func testMetalViewDoesFitMapView() {
@@ -342,8 +342,8 @@ final class MapViewTestsWithScene: XCTestCase {
         window.addSubview(mapView)
 
         metalView = try XCTUnwrap(dependencyProvider.makeMetalViewStub.invocations.first?.returnValue)
-        // reset is required here to ignore the setNeedsDisplay() invocation during initialization
-        metalView.setNeedsDisplayStub.reset()
+        // reset is required here to ignore the draw() invocation during initialization
+        metalView.drawStub.reset()
     }
 
     override func tearDown() {

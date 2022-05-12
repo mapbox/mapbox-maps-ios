@@ -380,4 +380,42 @@ final class MapViewTestsWithScene: XCTestCase {
 
         XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
     }
+
+    func testMetalViewHasCorrectParameters() {
+        let mapViewSize = CGSize(width: 100, height: 100)
+        mapView = MapView(
+            frame: CGRect(origin: .zero, size: mapViewSize),
+            mapInitOptions: MapInitOptions(),
+            dependencyProvider: dependencyProvider,
+            orientationProvider: orientationProvider,
+            urlOpener: attributionURLOpener)
+
+        let metalView = mapView.getMetalView(for: nil)
+
+        XCTAssertEqual(metalView?.translatesAutoresizingMaskIntoConstraints, false)
+        XCTAssertEqual(metalView?.autoResizeDrawable, true)
+        XCTAssertEqual(metalView?.contentScaleFactor, window.screen.scale)
+        XCTAssertEqual(metalView?.contentMode, .center)
+        XCTAssertEqual(metalView?.isOpaque, true)
+        XCTAssertEqual(metalView?.layer.isOpaque, true)
+        XCTAssertEqual(metalView?.isPaused, true)
+        XCTAssertEqual(metalView?.enableSetNeedsDisplay, false)
+        XCTAssertEqual(metalView?.presentsWithTransaction, false)
+        XCTAssertEqual(metalView?.bounds.size, mapViewSize)
+    }
+
+    func testMetalViewHasMinimumSize() {
+        let mapViewSize = CGSize.zero
+        let minimumMetalViewSize = CGSize(width: 1, height: 1)
+        mapView = MapView(
+            frame: CGRect(origin: .zero, size: mapViewSize),
+            mapInitOptions: MapInitOptions(),
+            dependencyProvider: dependencyProvider,
+            orientationProvider: orientationProvider,
+            urlOpener: attributionURLOpener)
+
+        let metalView = mapView.getMetalView(for: nil)
+
+        XCTAssertEqual(metalView?.bounds.size, minimumMetalViewSize)
+    }
 }

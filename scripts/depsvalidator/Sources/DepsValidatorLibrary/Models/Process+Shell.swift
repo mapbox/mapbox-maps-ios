@@ -7,8 +7,8 @@ extension Process {
         process.arguments = ["-c", command]
         if let environment = environment {
             process.environment = process.environment ?? [:]
-            process.environment?.merge(environment, uniquingKeysWith: { (_, rhs) in rhs })
             process.environment?.merge(ProcessInfo.processInfo.environment, uniquingKeysWith: { (_, rhs) in rhs })
+            process.environment?.merge(environment, uniquingKeysWith: { (_, rhs) in rhs })
         }
         return process
     }

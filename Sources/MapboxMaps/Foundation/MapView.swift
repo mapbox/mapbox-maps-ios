@@ -638,12 +638,8 @@ extension MapView: DelegatingMapClientDelegate {
     }
 
     internal func getMetalView(for metalDevice: MTLDevice?) -> MTKView? {
-        let minSize = CGSize(width: 1, height: 1)
-        let finalSize = CGSize(
-            width: max(minSize.width, bounds.width),
-            height: max(minSize.height, bounds.height))
-
-        let metalView = dependencyProvider.makeMetalView(frame: CGRect(origin: .zero, size: finalSize), device: metalDevice)
+        let minSize = CGRect(x: 0, y: 0, width: 1, height: 1)
+        let metalView = dependencyProvider.makeMetalView(frame: minSize.union(bounds), device: metalDevice)
 
         metalView.translatesAutoresizingMaskIntoConstraints = false
         metalView.autoResizeDrawable = true

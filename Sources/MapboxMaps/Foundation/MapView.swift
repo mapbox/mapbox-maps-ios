@@ -82,7 +82,6 @@ open class MapView: UIView {
     internal private(set) var resourceOptions: ResourceOptions!
 
     private var needsDisplayRefresh: Bool = false
-    private var displayCallback: (() -> Void)?
     private var displayLink: DisplayLinkProtocol?
 
     /// Holding onto this value that comes from `MapOptions` since there is a race condition between
@@ -552,7 +551,7 @@ open class MapView: UIView {
 
         if needsDisplayRefresh {
             needsDisplayRefresh = false
-            displayCallback?()
+            metalView?.draw()
         }
     }
 
@@ -627,6 +626,10 @@ open class MapView: UIView {
 
 extension MapView: DelegatingMapClientDelegate {
     internal func scheduleRepaint() {
+        guard let metalView = metalView, !metalView.bounds.isEmpty else {
+            return
+        }
+
         needsDisplayRefresh = true
     }
 
@@ -635,10 +638,8 @@ extension MapView: DelegatingMapClientDelegate {
     }
 
     internal func getMetalView(for metalDevice: MTLDevice?) -> MTKView? {
-        let metalView = dependencyProvider.makeMetalView(frame: bounds, device: metalDevice)
-        displayCallback = {
-            metalView.setNeedsDisplay()
-        }
+        let minSize = CGRect(x: 0, y: 0, width: 1, height: 1)
+        let metalView = dependencyProvider.makeMetalView(frame: minSize.union(bounds), device: metalDevice)
 
         metalView.translatesAutoresizingMaskIntoConstraints = false
         metalView.autoResizeDrawable = true
@@ -647,7 +648,7 @@ extension MapView: DelegatingMapClientDelegate {
         metalView.isOpaque = isOpaque
         metalView.layer.isOpaque = isOpaque
         metalView.isPaused = true
-        metalView.enableSetNeedsDisplay = true
+        metalView.enableSetNeedsDisplay = false
         metalView.presentsWithTransaction = false
 
         insertSubview(metalView, at: 0)
@@ -655,13 +656,13 @@ extension MapView: DelegatingMapClientDelegate {
         let sameHeightConstraint = metalView.heightAnchor.constraint(equalTo: heightAnchor)
         sameHeightConstraint.priority = .defaultHigh
 
-        let minHeightConstraint = metalView.heightAnchor.constraint(greaterThanOrEqualToConstant: 1)
+        let minHeightConstraint = metalView.heightAnchor.constraint(greaterThanOrEqualToConstant: minSize.height)
         minHeightConstraint.priority = .required
 
         let sameWidthConstraint = metalView.widthAnchor.constraint(equalTo: widthAnchor)
         sameWidthConstraint.priority = .defaultHigh
 
-        let minWidthConstraint = metalView.widthAnchor.constraint(greaterThanOrEqualToConstant: 1)
+        let minWidthConstraint = metalView.widthAnchor.constraint(greaterThanOrEqualToConstant: minSize.width)
         minWidthConstraint.priority = .required
 
         NSLayoutConstraint.activate([

@@ -40,8 +40,8 @@ final class MapViewTests: XCTestCase {
         window.addSubview(mapView)
 
         metalView = try XCTUnwrap(dependencyProvider.makeMetalViewStub.invocations.first?.returnValue)
-        // reset is required here to ignore the setNeedsDisplay() invocation during initialization
-        metalView.setNeedsDisplayStub.reset()
+        // reset is required here to ignore the draw() invocation during initialization
+        metalView.drawStub.reset()
     }
 
     override func tearDown() {
@@ -203,7 +203,7 @@ final class MapViewTests: XCTestCase {
 
         try invokeDisplayLinkCallback()
 
-        XCTAssertEqual(metalView.setNeedsDisplayStub.invocations.count, 1)
+        XCTAssertEqual(metalView.drawStub.invocations.count, 1)
     }
 
     func testMetalViewDoesFitMapView() {
@@ -342,8 +342,8 @@ final class MapViewTestsWithScene: XCTestCase {
         window.addSubview(mapView)
 
         metalView = try XCTUnwrap(dependencyProvider.makeMetalViewStub.invocations.first?.returnValue)
-        // reset is required here to ignore the setNeedsDisplay() invocation during initialization
-        metalView.setNeedsDisplayStub.reset()
+        // reset is required here to ignore the draw() invocation during initialization
+        metalView.drawStub.reset()
     }
 
     override func tearDown() {
@@ -379,5 +379,43 @@ final class MapViewTestsWithScene: XCTestCase {
         notificationCenter.post(name: UIScene.didEnterBackgroundNotification, object: window.parentScene)
 
         XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
+    }
+
+    func testMetalViewHasCorrectParameters() {
+        let mapViewSize = CGSize(width: 100, height: 100)
+        mapView = MapView(
+            frame: CGRect(origin: .zero, size: mapViewSize),
+            mapInitOptions: MapInitOptions(),
+            dependencyProvider: dependencyProvider,
+            orientationProvider: orientationProvider,
+            urlOpener: attributionURLOpener)
+
+        let metalView = mapView.getMetalView(for: nil)
+
+        XCTAssertEqual(metalView?.translatesAutoresizingMaskIntoConstraints, false)
+        XCTAssertEqual(metalView?.autoResizeDrawable, true)
+        XCTAssertEqual(metalView?.contentScaleFactor, window.screen.scale)
+        XCTAssertEqual(metalView?.contentMode, .center)
+        XCTAssertEqual(metalView?.isOpaque, true)
+        XCTAssertEqual(metalView?.layer.isOpaque, true)
+        XCTAssertEqual(metalView?.isPaused, true)
+        XCTAssertEqual(metalView?.enableSetNeedsDisplay, false)
+        XCTAssertEqual(metalView?.presentsWithTransaction, false)
+        XCTAssertEqual(metalView?.bounds.size, mapViewSize)
+    }
+
+    func testMetalViewHasMinimumSize() {
+        let mapViewSize = CGSize.zero
+        let minimumMetalViewSize = CGSize(width: 1, height: 1)
+        mapView = MapView(
+            frame: CGRect(origin: .zero, size: mapViewSize),
+            mapInitOptions: MapInitOptions(),
+            dependencyProvider: dependencyProvider,
+            orientationProvider: orientationProvider,
+            urlOpener: attributionURLOpener)
+
+        let metalView = mapView.getMetalView(for: nil)
+
+        XCTAssertEqual(metalView?.bounds.size, minimumMetalViewSize)
     }
 }

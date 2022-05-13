@@ -930,6 +930,74 @@ public final class Style: StyleProtocol {
         return styleManager.getStyleTerrainProperty(forProperty: property)
     }
 
+    // MARK: - Atmosphere
+
+    /// Set the atmosphere of the style
+    /// - Parameter atmosphere: ``Atmosphere`` object describing the fog, space and stars.
+    public func setAtmosphere(_ atmosphere: Atmosphere) throws {
+        guard let atmosphereDictionary = try atmosphere.toJSON() as? [String: Any] else {
+            throw TypeConversionError.unexpectedType
+        }
+
+        try setAtmosphere(properties: atmosphereDictionary)
+    }
+
+    /// Remove the atmosphere of the style. No fog, space or stars would be rendered.
+    public func removeAtmosphere() throws {
+        styleManager.setStyleAtmosphereForProperties(NSNull())
+    }
+
+    /// Set an explicit atmosphere properties
+    ///
+    /// - See Also [style-spec/fog](https://docs.mapbox.com/mapbox-gl-js/style-spec/fog/)
+    ///
+    /// - Parameter properties: A dictionary of style fog (aka atmosphere) properties values,
+    ///     with their names as key.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    public func setAtmosphere(properties: [String: Any]) throws {
+        try handleExpected {
+            styleManager.setStyleAtmosphereForProperties(properties)
+        }
+    }
+
+    /// Sets the value of a style atmosphere property.
+    ///
+    /// - See Also [style-spec/fog](https://docs.mapbox.com/mapbox-gl-js/style-spec/fog/)
+    ///
+    /// - Parameter property: Style atmosphere property name.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    public func setAtmosphereProperty(_ property: String, value: Any) throws {
+        try handleExpected {
+            styleManager.setStyleAtmospherePropertyForProperty(property, value: value)
+        }
+    }
+
+    /// Gets the value of a style atmosphere property.
+    ///
+    /// - See Also [style-spec/fog](https://docs.mapbox.com/mapbox-gl-js/style-spec/fog/)
+    ///
+    /// - Parameter property: Style atmosphere property name.
+    ///
+    /// - Returns: Style atmosphere property value.
+    public func atmosphereProperty(_ property: String) -> Any {
+        return atmosphereProperty(property).value
+    }
+
+    /// Gets the value of a style atmosphere property.
+    ///
+    /// - See Also: https://docs.mapbox.com/mapbox-gl-js/style-spec/fog/
+    ///
+    /// - Parameter property: Style atmosphere property name.
+    ///
+    /// - Returns: Style atmosphere property value.
+    public func atmosphereProperty(_ property: String) -> StylePropertyValue {
+        return styleManager.getStyleAtmosphereProperty(forProperty: property)
+    }
+
     // MARK: - Custom geometry
 
     /// Adds a custom geometry to be used in the style.

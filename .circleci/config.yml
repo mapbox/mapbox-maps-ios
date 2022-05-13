@@ -1,6 +1,11 @@
 ---
 version: 2.1
 
+parameters:
+  turf-revision:
+    type: string
+    default: ""
+
 orbs:
   # https://circleci.com/orbs/registry/orb/circleci/slack
   slack: circleci/slack@4.5
@@ -75,6 +80,7 @@ workflows:
           xcode: "13.0.0"
 
   optional-tests:
+    unless: << pipeline.parameters.turf-revision >>
     jobs:
       - run-tests?:
           type: approval
@@ -115,6 +121,7 @@ workflows:
             - trigger-compatibility-verification?
 
   steve:
+    unless: << pipeline.parameters.turf-revision >>
     jobs:
       - swiftlint
       - depsvalidator:
@@ -150,6 +157,11 @@ workflows:
           name: "Run Unit tests"
           xcode: "13.0.0"
 
+      - unit-test-sdk:
+          name: "Run Unit Tests with min Turf"
+          xcode: "13.0.0"
+          turf-revision: v2.0.0
+
       # Build all tests with host application
       # Run on main by default
       # Can be approved to run on other branches
@@ -182,7 +194,7 @@ workflows:
     jobs:
       - release-precheck:
           <<: *release-anchor
-          requires: [ ]
+          requires: []
       - trigger-metrics-v2:
           <<: *release-anchor
       - build-dynamic:
@@ -236,6 +248,13 @@ workflows:
             - update-examples
             - validate-integrations
 
+  turf-integration:
+    when: << pipeline.parameters.turf-revision >>
+    jobs:
+      - turf-integration:
+          name: "Run Unit Tests"
+          turf-revision: << pipeline.parameters.turf-revision >>
+
 # ==============================================================================
 
 jobs:
@@ -260,9 +279,9 @@ jobs:
       scheme:
         type: string
         default: "MapboxTestHost"
-      app-name:
+      turf-revision:
         type: string
-        default: "MapboxTestHost"
+        default: ""
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -435,6 +454,13 @@ jobs:
     steps:
       - checkout
       - configure-environment
+      - when:
+          condition: << parameters.turf-revision >>
+          steps:
+            - run:
+                name: Set Turf Revision
+                command: |
+                  sed -i '' 's/turf-swift.git", from: "2.0.0"/turf-swift.git", .revision("<< parameters.turf-revision >>")/' Package.swift
       # Building and testing are split into 2, with the aim that we'll be able to reuse
       # the build product and test on multiple simulators
       - run:
@@ -844,6 +870,52 @@ jobs:
             timeout 1800 bash -c 'while [[ "$(curl -n -s -o /dev/null -w ''%{http_code}'' https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/$VERSION/MapboxMaps.zip)" != "200" ]]; do sleep 5; done' || false
           no_output_timeout: 30m
 
+  turf-integration:
+    parameters:
+      turf-revision:
+        type: string
+        default: ""
+    macos:
+      xcode: "13.0.0"
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
+      CONFIGURATION: "Debug"
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - checkout
+      - configure-environment
+      - turf-report-pending:
+          turf-revision: << parameters.turf-revision >>
+      - run:
+          name: Set Turf Revision
+          command: |
+            sed -i '' 's/turf-swift.git", from: "2.0.0"/turf-swift.git", .revision("<< parameters.turf-revision >>")/' Package.swift
+      # Building and testing are split into 2, with the aim that we'll be able to reuse
+      # the build product and test on multiple simulators
+      - run:
+          name: Building MapboxMaps for simulator
+          command: make build-sdk-for-testing-simulator
+          no_output_timeout: 5m
+      - run:
+          name: Testing MapboxMaps with simulator
+          command: make test-sdk-without-building-simulator
+      - run:
+          name: Compress XCResult
+          command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
+          when: always
+      - store_artifacts:
+          path: MapboxMapsTests.xcresult.zip
+      - locate-derived-data-directory:
+          base_name: $(basename $(pwd))
+      - store-logs:
+          artifact_name: MapboxMaps
+          derived_data_path: $DERIVED_DATA_PATH
+      - turf-report-success:
+          turf-revision: << parameters.turf-revision >>
+      - turf-report-failure:
+          turf-revision: << parameters.turf-revision >>
+
 # ==============================================================================
 # Reusable commands
 commands:
@@ -1231,3 +1303,46 @@ commands:
           when: always
       - store_artifacts:
           path: artifacts.zip
+
+  turf-report-pending:
+    parameters:
+      turf-revision:
+        type: string
+    steps:
+      - run:
+          name: Set Turf commit status to pending
+          command: |
+            curl --request POST \
+              --url https://api.github.com/repos/mapbox/turf-swift/statuses/<< parameters.turf-revision >> \
+              --header 'Accept: application/vnd.github.v3+json' \
+              --header "Authorization: token $(mbx-ci github notifier token)" \
+              --data "{\"state\":\"pending\",\"target_url\":\"$CIRCLE_BUILD_URL\",\"description\":\"MapboxMaps SDK integration tests are running\",\"context\":\"Maps SDK Integration\"}"
+
+  turf-report-success:
+    parameters:
+      turf-revision:
+        type: string
+    steps:
+      - run:
+          name: Set Turf commit status to success
+          command: |
+            curl --request POST \
+              --url https://api.github.com/repos/mapbox/turf-swift/statuses/<< parameters.turf-revision >> \
+              --header 'Accept: application/vnd.github.v3+json' \
+              --header "Authorization: token $(mbx-ci github notifier token)" \
+              --data "{\"state\":\"success\",\"target_url\":\"$CIRCLE_BUILD_URL\",\"description\":\"MapboxMaps SDK integration tests passed\",\"context\":\"Maps SDK Integration\"}"
+
+  turf-report-failure:
+    parameters:
+      turf-revision:
+        type: string
+    steps:
+      - run:
+          when: on_fail
+          name: Set Turf commit status to failure
+          command: |
+            curl --request POST \
+              --url https://api.github.com/repos/mapbox/turf-swift/statuses/<< parameters.turf-revision >> \
+              --header 'Accept: application/vnd.github.v3+json' \
+              --header "Authorization: token $(mbx-ci github notifier token)" \
+              --data "{\"state\":\"failure\",\"target_url\":\"$CIRCLE_BUILD_URL\",\"description\":\"MapboxMaps SDK integration tests failed\",\"context\":\"Maps SDK Integration\"}"

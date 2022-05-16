@@ -1,7 +1,6 @@
 import UIKit
 import MapboxMaps
 
-// swiftlint:disable:next type_body_length
 final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
     private enum ID {
         static let routeSource = "route-line-source-id"
@@ -34,6 +33,9 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
             mapView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             mapView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
         ])
+
+        // The below line is used for internal testing purposes only.
+        finish()
     }
 
     private func configureMap() {
@@ -44,20 +46,14 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
         mapView.location.overrideLocationProvider(with: navigationSimulator)
         mapView.location.addLocationConsumer(newConsumer: self)
 
-        mapView.mapboxMap.onNext(.mapLoaded) { [weak self] _ in
-            guard let self = self else { return }
-            do {
-                try self.mapView.mapboxMap.style.addSource(self.routeSource, id: "route-line-source-id")
-                try self.mapView.mapboxMap.style.addLayer(self.makeCasingLayer())
-                try self.mapView.mapboxMap.style.addLayer(self.makeRouteLineLayer())
+        do {
+            try mapView.mapboxMap.style.addSource(routeSource, id: ID.routeSource)
+            try mapView.mapboxMap.style.addPersistentLayer(makeCasingLayer())
+            try mapView.mapboxMap.style.addPersistentLayer(makeRouteLineLayer())
 
-                self.navigationSimulator.start()
-            } catch {
-                print("Unexpected error when adding source/style: \(error)")
-            }
-
-            // The below line is used for internal testing purposes only.
-            self.finish()
+            navigationSimulator.start()
+        } catch {
+            print("Unexpected error when adding source/style: \(error)")
         }
     }
 
@@ -264,7 +260,7 @@ extension NavigationSimulatorExample: LocationConsumer {
 
     func locationUpdate(newLocation: Location) {
         let style = mapView.mapboxMap.style
-        let progress = navigationSimulator.distanceTravelled / navigationSimulator.routeLength
+        let progress = navigationSimulator.progressFromStart(to: newLocation)
 
         let trimLineLayer: (inout LineLayer) -> Void = { layer in
             layer.lineTrimOffset = .constant([0, progress])

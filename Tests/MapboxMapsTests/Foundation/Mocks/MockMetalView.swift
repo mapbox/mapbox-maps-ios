@@ -6,4 +6,10 @@ final class MockMetalView: MTKView {
         super.draw()
         drawStub.call()
     }
+
+    let releaseDrawablesStub = Stub<Void, Void>()
+    override func releaseDrawables() {
+        super.releaseDrawables()
+        releaseDrawablesStub.call()
+    }
 }

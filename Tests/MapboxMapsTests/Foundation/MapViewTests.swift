@@ -267,6 +267,12 @@ final class MapViewTests: XCTestCase {
         XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
     }
 
+    func testReleaseDrawablesInvokedWhenAppMovingToBackground() {
+        notificationCenter.post(name: UIApplication.didEnterBackgroundNotification, object: nil)
+
+        XCTAssertEqual(metalView.releaseDrawablesStub.invocations.count, 1)
+    }
+
     func testDisplayLinkResumedWhenAppMovingToForeground() {
         notificationCenter.post(name: UIApplication.willEnterForegroundNotification, object: nil)
 
@@ -379,6 +385,16 @@ final class MapViewTestsWithScene: XCTestCase {
         notificationCenter.post(name: UIScene.didEnterBackgroundNotification, object: window.parentScene)
 
         XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
+    }
+
+    func testReleaseDrawablesInvokedWhenSceneMovingToBackground() throws {
+        guard #available(iOS 13.0, *) else {
+            throw XCTSkip("Test requires iOS 13 or higher.")
+        }
+
+        notificationCenter.post(name: UIScene.didEnterBackgroundNotification, object: window.parentScene)
+
+        XCTAssertEqual(metalView.releaseDrawablesStub.invocations.count, 1)
     }
 
     func testMetalViewHasCorrectParameters() {

@@ -115,7 +115,7 @@ extension AttributionDialogManager: InfoButtonOrnamentDelegate {
 
         let title = NSLocalizedString("SDK_NAME",
                                       tableName: nil,
-                                      value: "Mapbox Maps SDK for iOS",
+                                      value: "Powered by Mapbox Maps",
                                       comment: "Action sheet title")
 
         let alert: UIAlertController

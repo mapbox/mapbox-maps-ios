@@ -22,7 +22,6 @@ Mapbox welcomes participation and contributions from everyone.
 * Add support for runtime source properties. ([#1267](https://github.com/mapbox/mapbox-maps-ios/pull/1267))
 * Start location services lazily. ([#1262](https://github.com/mapbox/mapbox-maps-ios/pull/1262))
 * Fix localization crash on iOS 11 and 12. ([#1278](https://github.com/mapbox/mapbox-maps-ios/pull/1278))
-* Increase tap target to conform to Apple Human Interface guidelines. ([#1283](https://github.com/mapbox/mapbox-maps-ios/pull/1283))
 * Update to MapboxCoreMaps 10.5.0-rc.1 and MapboxCommon 21.3.0-rc.2. ([#1281](https://github.com/mapbox/mapbox-maps-ios/pull/1281))
 * Expose API to set memory budget for `MapboxMap`. ([#1288](https://github.com/mapbox/mapbox-maps-ios/pull/1288))
 

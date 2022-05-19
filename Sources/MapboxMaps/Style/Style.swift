@@ -944,7 +944,9 @@ public final class Style: StyleProtocol {
 
     /// Remove the atmosphere of the style. No fog, space or stars would be rendered.
     public func removeAtmosphere() throws {
-        styleManager.setStyleAtmosphereForProperties(NSNull())
+        try handleExpected {
+            styleManager.setStyleAtmosphereForProperties(NSNull())
+        }
     }
 
     /// Set an explicit atmosphere properties

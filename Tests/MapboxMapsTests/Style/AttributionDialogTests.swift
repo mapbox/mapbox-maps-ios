@@ -131,7 +131,7 @@ class AttributionDialogTests: XCTestCase {
         let alert = try XCTUnwrap(viewController.presentedViewController as? UIAlertController)
         let alertTitle = NSLocalizedString("SDK_NAME",
                                            tableName: nil,
-                                           value: "Mapbox Maps SDK for iOS",
+                                           value: "Powered by Mapbox Maps",
                                            comment: "")
         XCTAssertEqual(alert.title, alertTitle)
         XCTAssertNil(alert.message)
@@ -169,7 +169,7 @@ class AttributionDialogTests: XCTestCase {
         let alert = try XCTUnwrap(viewController.presentedViewController as? UIAlertController)
         let alertTitle = NSLocalizedString("SDK_NAME",
                                            tableName: nil,
-                                           value: "Mapbox Maps SDK for iOS",
+                                           value: "Powered by Mapbox Maps",
                                            comment: "")
 
         // Alert dialog should still have just the telemetry and cancel actions
@@ -199,7 +199,7 @@ class AttributionDialogTests: XCTestCase {
         let alert = try XCTUnwrap(viewController.presentedViewController as? UIAlertController)
         let alertTitle = NSLocalizedString("SDK_NAME",
                                            tableName: nil,
-                                           value: "Mapbox Maps SDK for iOS",
+                                           value: "Powered by Mapbox Maps",
                                            comment: "")
 
         XCTAssertEqual(alert.title, alertTitle)

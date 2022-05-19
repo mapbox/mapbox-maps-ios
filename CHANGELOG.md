@@ -10,6 +10,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Enable explicit drawing behavior for metal view(call `draw()` explicitly instead of `setNeedsDisplay` when view's content need to be redrawn) again.([#1331](https://github.com/mapbox/mapbox-maps-ios/pull/1331))
 * Update to MapboxCoreMaps 10.6.0-beta.1 and MapboxCommon 22.0.0-beta.1. ([#1335](https://github.com/mapbox/mapbox-maps-ios/pull/1335))
 * Add Atmosphere API ([#1329](https://github.com/mapbox/mapbox-maps-ios/pull/1329))
+* Update SDK name in attribution action sheet. ([1338](https://github.com/mapbox/mapbox-maps-ios/pull/1338))
 
 ## 10.5.0 - May 5, 2022
 

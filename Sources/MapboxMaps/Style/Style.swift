@@ -980,17 +980,6 @@ public final class Style: StyleProtocol {
 
     /// Gets the value of a style atmosphere property.
     ///
-    /// - See Also [style-spec/fog](https://docs.mapbox.com/mapbox-gl-js/style-spec/fog/)
-    ///
-    /// - Parameter property: Style atmosphere property name.
-    ///
-    /// - Returns: Style atmosphere property value.
-    public func atmosphereProperty(_ property: String) -> Any {
-        return atmosphereProperty(property).value
-    }
-
-    /// Gets the value of a style atmosphere property.
-    ///
     /// - See Also: https://docs.mapbox.com/mapbox-gl-js/style-spec/fog/
     ///
     /// - Parameter property: Style atmosphere property name.

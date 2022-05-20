@@ -22,14 +22,15 @@ final class StyleTests: XCTestCase {
     }
 
     func testSetProjection() throws {
-        XCTAssertEqual(style.styleManager.getStyleProjectionProperty(forProperty: "name").kind, .undefined)
+        XCTAssertEqual(style.styleManager.getStyleProjectionProperty(forProperty: "name").kind, .constant)
+        XCTAssertEqual(style.styleManager.getStyleProjectionProperty(forProperty: "name").value as? String, "mercator")
         try style.setProjection(StyleProjection(name: .globe))
         XCTAssertEqual(style.styleManager.getStyleProjectionProperty(forProperty: "name").value as? String, "globe")
     }
 
     func testProjection() {
-        // defaults to mercator if it's undefined
-        XCTAssertEqual(style.styleManager.getStyleProjectionProperty(forProperty: "name").kind, .undefined)
+        XCTAssertEqual(style.styleManager.getStyleProjectionProperty(forProperty: "name").kind, .constant)
+        XCTAssertEqual(style.styleManager.getStyleProjectionProperty(forProperty: "name").value as? String, "mercator")
         XCTAssertEqual(style.projection.name, .mercator)
 
         style.styleManager.setStyleProjectionForProperties(["name": "mercator"])

@@ -8,9 +8,9 @@ Mapbox welcomes participation and contributions from everyone.
 * Call `MapboxMap.reduceMemoryUse` when application goes to background. ([#1301](https://github.com/mapbox/mapbox-maps-ios/pull/1301))
 * Update to MapboxMobileEvents v1.0.8. ([#1324](https://github.com/mapbox/mapbox-maps-ios/pull/1324))
 * Enable explicit drawing behavior for metal view(call `draw()` explicitly instead of `setNeedsDisplay` when view's content need to be redrawn) again.([#1331](https://github.com/mapbox/mapbox-maps-ios/pull/1331))
-* Update to MapboxCoreMaps 10.6.0-beta.1 and MapboxCommon 22.0.0-beta.1. ([#1335](https://github.com/mapbox/mapbox-maps-ios/pull/1335))
+* Update to MapboxCoreMaps 10.6.0-beta.3 and MapboxCommon 22.0.0-beta.1. ([#1335](https://github.com/mapbox/mapbox-maps-ios/pull/1335), [#1342](https://github.com/mapbox/mapbox-maps-ios/pull/1342))
 * Add Atmosphere API ([#1329](https://github.com/mapbox/mapbox-maps-ios/pull/1329))
-* Update SDK name in attribution action sheet. ([1338](https://github.com/mapbox/mapbox-maps-ios/pull/1338))
+* Update SDK name in attribution action sheet. ([#1338](https://github.com/mapbox/mapbox-maps-ios/pull/1338))
 * Revert tap target to original value. ([#1339](https://github.com/mapbox/mapbox-maps-ios/pull/1339))
 
 ## 10.5.0 - May 5, 2022

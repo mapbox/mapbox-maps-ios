@@ -2,7 +2,7 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-## main
+## 10.6.0-beta.1 - May 20, 2022
 
 * Expose API to check whether an image exists in `Style`. ([#1297](https://github.com/mapbox/mapbox-maps-ios/pull/1297))
 * Call `MapboxMap.reduceMemoryUse` when application goes to background. ([#1301](https://github.com/mapbox/mapbox-maps-ios/pull/1301))

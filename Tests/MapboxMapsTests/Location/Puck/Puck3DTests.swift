@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class Puck3DTests: XCTestCase {
 
@@ -112,7 +112,7 @@ final class Puck3DTests: XCTestCase {
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 1)
         let actualLayer = try XCTUnwrap(style.addPersistentLayerStub.invocations.first?.parameters.layer as? ModelLayer)
         XCTAssertEqual(actualLayer.id, "puck-model-layer")
-        XCTAssertEqual(actualLayer.paint?.modelLayerType, .constant(.locationIndicator))
+        XCTAssertEqual(actualLayer.modelType, .constant(.locationIndicator))
         XCTAssertEqual(actualLayer.source, "puck-model-source")
         XCTAssertEqual(style.addPersistentLayerStub.invocations.first?.parameters.layerPosition, nil)
     }
@@ -207,8 +207,8 @@ final class Puck3DTests: XCTestCase {
         puck3D.isActive = true
 
         let actualLayer = try XCTUnwrap(style.addPersistentLayerStub.invocations.first?.parameters.layer as? ModelLayer)
-        XCTAssertEqual(actualLayer.paint?.modelScale, configuration.modelScale)
-        XCTAssertEqual(actualLayer.paint?.modelRotation, configuration.modelRotation)
+        XCTAssertEqual(actualLayer.modelScale, configuration.modelScale)
+        XCTAssertEqual(actualLayer.modelRotation, configuration.modelRotation)
     }
 
     func testUpdateExistingSource() throws {

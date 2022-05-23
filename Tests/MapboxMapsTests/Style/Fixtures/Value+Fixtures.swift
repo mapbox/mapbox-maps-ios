@@ -66,9 +66,3 @@ internal extension Array where Element == TextWritingMode {
         return [.horizontal, .vertical]
     }
 }
-
-internal extension Value where T == ModelLayerType {
-    static func testConstantValue() -> Value<ModelLayerType> {
-        return .constant(.locationIndicator)
-    }
-}

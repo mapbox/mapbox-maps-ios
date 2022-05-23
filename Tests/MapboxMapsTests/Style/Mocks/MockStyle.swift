@@ -100,5 +100,5 @@ final class MockStyle: StyleProtocol {
         withId id: String,
         type: T.Type,
         update: (inout T) throws -> Void
-    ) throws where T : Layer {}
+    ) throws where T: Layer {}
 }

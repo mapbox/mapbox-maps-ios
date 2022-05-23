@@ -51,6 +51,7 @@
 		7412CF6627E9A7FF00F03B1C /* CLLocationCoordinate2D+Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF6527E9A7FF00F03B1C /* CLLocationCoordinate2D+Random.swift */; };
 		7412CF6827E9A8D600F03B1C /* UIColor+Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF6727E9A8D600F03B1C /* UIColor+Random.swift */; };
 		7412CF6C27E9D48700F03B1C /* AddMarkersSymbolExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF6B27E9D48700F03B1C /* AddMarkersSymbolExample.swift */; };
+		748C8BF3283B90280035A979 /* ModelLayerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 748C8BF2283B90280035A979 /* ModelLayerExample.swift */; };
 		74A2313127EB306F0065FB7D /* Array+Split.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A2313027EB306F0065FB7D /* Array+Split.swift */; };
 		74A2313627EB37EE0065FB7D /* AnimatedMarkerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A2313527EB37EE0065FB7D /* AnimatedMarkerExample.swift */; };
 		74A2313827EC6B360065FB7D /* IconSizeChangeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A2313727EC6B360065FB7D /* IconSizeChangeExample.swift */; };
@@ -196,6 +197,7 @@
 		7412CF6527E9A7FF00F03B1C /* CLLocationCoordinate2D+Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Random.swift"; sourceTree = "<group>"; };
 		7412CF6727E9A8D600F03B1C /* UIColor+Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Random.swift"; sourceTree = "<group>"; };
 		7412CF6B27E9D48700F03B1C /* AddMarkersSymbolExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMarkersSymbolExample.swift; sourceTree = "<group>"; };
+		748C8BF2283B90280035A979 /* ModelLayerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelLayerExample.swift; sourceTree = "<group>"; };
 		74A2313027EB306F0065FB7D /* Array+Split.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Split.swift"; sourceTree = "<group>"; };
 		74A2313527EB37EE0065FB7D /* AnimatedMarkerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedMarkerExample.swift; sourceTree = "<group>"; };
 		74A2313727EC6B360065FB7D /* IconSizeChangeExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconSizeChangeExample.swift; sourceTree = "<group>"; };
@@ -288,7 +290,6 @@
 			children = (
 				B58E470827BABE0E00D87FD6 /* AdvancedViewportGesturesExample.swift */,
 				7406E36E2806B659002CC41F /* Lab */,
-				7412CF6027E8DCFB00F03B1C /* Annotations */,
 				58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */,
 				17B480592684FB2300CF0D5E /* AnimateImageLayerExample.swift */,
 				07DBDC91254C94C500F89304 /* AnimateLayerExample.swift */,
@@ -335,6 +336,7 @@
 				73694BD225D4B2CE0064F636 /* TrackingModeExample.swift */,
 				B57E1BAD27B5B6B900E8E3BA /* ViewportExample.swift */,
 				587429BF27BBFDA100104CCA /* VoiceOverAccessibilityExample.swift */,
+				748C8BF2283B90280035A979 /* ModelLayerExample.swift */,
 			);
 			path = "All Examples";
 			sourceTree = "<group>";
@@ -663,6 +665,7 @@
 				CADCF743258499570065C51B /* BasicMapExample.swift in Sources */,
 				7406E3702806B66F002CC41F /* ResizableImageExample.swift in Sources */,
 				17B40D2426A85500000887EF /* LiveDataExample.swift in Sources */,
+				748C8BF3283B90280035A979 /* ModelLayerExample.swift in Sources */,
 				CADCF7242584990E0065C51B /* AnimateLayerExample.swift in Sources */,
 				073475D725AFAE520049B0B8 /* CustomLayerExample.swift in Sources */,
 				7412CF6827E9A8D600F03B1C /* UIColor+Random.swift in Sources */,

@@ -97,6 +97,7 @@ custom_categories:
       - RasterLayer
       - SkyLayer
       - SymbolLayer
+      - ModelLayer
 
   - name: Layer Property Values
     children:

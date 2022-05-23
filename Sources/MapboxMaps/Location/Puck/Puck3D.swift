@@ -148,10 +148,7 @@ internal final class Puck3D: Puck {
                         }
                         maxZoom
                         Exp(.literal) {
-                            scales.map { scale -> Double in
-                                let modelScale = pow(2.0, maxZoom - minZoom)
-                                return modelScale * scale * mercatorScale
-                            }
+                            scales.map { $0 * mercatorScale }
                         }
                     }
                 )

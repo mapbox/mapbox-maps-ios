@@ -95,4 +95,10 @@ final class MockStyle: StyleProtocol {
     func removeImage(withId id: String) throws {
         removeImageStub.call(with: id)
     }
+
+    func updateLayer<T>(
+        withId id: String,
+        type: T.Type,
+        update: (inout T) throws -> Void
+    ) throws where T : Layer {}
 }

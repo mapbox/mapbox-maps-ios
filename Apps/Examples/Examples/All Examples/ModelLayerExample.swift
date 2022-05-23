@@ -38,7 +38,7 @@ final class ModelLayerExample: UIViewController, ExampleProtocol {
     private func setupExample() {
         let style = mapView.mapboxMap.style
 
-        try! style.addModel(withId:Constants.duckModelId, modelURI: Constants.duck)
+        try! style.addModel(withId: Constants.duckModelId, modelURI: Constants.duck)
         try! style.addModel(withId: Constants.carModelId, modelURI: Constants.car)
 
         var source = GeoJSONSource()

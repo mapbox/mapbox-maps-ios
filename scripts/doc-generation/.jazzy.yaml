@@ -121,6 +121,7 @@ custom_categories:
       - ResolvedImage
       - ResolvedImageData
       - SkyType
+      - ModelType
       - StyleColor
       - StyleTransition
       - SymbolPlacement

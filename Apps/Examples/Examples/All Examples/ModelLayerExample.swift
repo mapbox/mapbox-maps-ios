@@ -56,7 +56,10 @@ final class ModelLayerExample: UIViewController, ExampleProtocol {
         layer.modelId = .expression(Exp(.get) { Constants.modelIdKey })
         layer.modelType = .constant(.common3d)
         layer.modelScale = .constant([100, 100, 100])
-
+        layer.modelTranslation = .constant([0, 0, 0])
+        layer.modelRotation = .constant([0, 0, 90])
+        layer.modelOpacity = .constant(0.7)
+        
         try! style.addLayer(layer)
     }
 

@@ -1,0 +1,16 @@
+[
+  [
+    "ClearOfflineData"
+  ],
+  [
+    "CreateMap",
+    {
+      "style": "mapbox://styles/mapbox/navigation-day-v1",
+      "camera": {
+        "center": [11.5736, 48.1386],
+        "zoom": 12.0,
+        "pitch": 0.0
+      }
+    }
+  ]
+]

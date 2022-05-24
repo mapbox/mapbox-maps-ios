@@ -17,7 +17,7 @@ class BaseBenchmark: XCTestCase {
     internal var mapView: MapView! {
         didSet { oldValue?.removeFromSuperview() }
     }
-    private var viewController: UIViewController!
+    private(set) var viewController: UIViewController!
     private var measurementExpectation: XCTestExpectation?
     private var adHocWaitExpectation: XCTestExpectation?
 
@@ -91,12 +91,7 @@ class BaseBenchmark: XCTestCase {
     ///   - handler: A handler that is invoked after the map view is setup.
     func onMapReady(cameraOptions: CameraOptions? = nil, handler: (MapView) -> ()) {
         let frame = viewController?.view.frame ?? .zero
-        guard let token = Bundle.main.infoDictionary?["MBXAccessToken"] as? String else {
-            XCTFail("Access token not found")
-            return
-        }
-        let resourceOptions = ResourceOptions(accessToken: token)
-        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions, cameraOptions: cameraOptions)
+        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
         mapView = MapView(frame: frame, mapInitOptions: mapInitOptions)
 
         viewController.view.addSubview(mapView)
@@ -150,7 +145,7 @@ class BaseBenchmark: XCTestCase {
     // MARK: - Private
 
     private func addTestViewController(timeout: TimeInterval = 1.0) throws -> UIViewController {
-        guard let rootViewController = UIApplication.shared.keyWindow?.rootViewController else {
+        guard let rootViewController = UIViewController.rootController else {
             throw Error.rootViewControllerNotFound
         }
 

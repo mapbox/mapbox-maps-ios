@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		7412CF5E27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF5D27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift */; };
 		745D052527C8D185004E7B53 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 745D052427C8D185004E7B53 /* MapboxMaps */; };
+		74673149282EA6FA00B7D044 /* streets-munich-ttrc-cold.json in Resources */ = {isa = PBXBuildFile; fileRef = 74673145282EA6FA00B7D044 /* streets-munich-ttrc-cold.json */; };
+		7467314A282EA6FA00B7D044 /* streets-munich-ttrc-warm.json in Resources */ = {isa = PBXBuildFile; fileRef = 74673146282EA6FA00B7D044 /* streets-munich-ttrc-warm.json */; };
+		7467314B282EA6FA00B7D044 /* nav-day-munich-ttrc-warm.json in Resources */ = {isa = PBXBuildFile; fileRef = 74673147282EA6FA00B7D044 /* nav-day-munich-ttrc-warm.json */; };
+		7467314C282EA6FA00B7D044 /* nav-day-munich-ttrc-cold.json in Resources */ = {isa = PBXBuildFile; fileRef = 74673148282EA6FA00B7D044 /* nav-day-munich-ttrc-cold.json */; };
 		7499661827C64ECD00DA186A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499661727C64ECD00DA186A /* AppDelegate.swift */; };
 		7499661C27C64ECD00DA186A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499661B27C64ECD00DA186A /* ViewController.swift */; };
 		7499661F27C64ECD00DA186A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7499661D27C64ECD00DA186A /* Main.storyboard */; };
@@ -19,6 +23,18 @@
 		74F237F327E3338A009F304C /* NotifyingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F237F227E3338A009F304C /* NotifyingViewController.swift */; };
 		74F2381327E3730C009F304C /* WarmCacheBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F2381227E3730C009F304C /* WarmCacheBenchmark.swift */; };
 		74F2381527E39A33009F304C /* AnimationFlyToBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F2381427E39A33009F304C /* AnimationFlyToBenchmark.swift */; };
+		FE555B7C2836939B002751C7 /* AsyncCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE555B7B2836939B002751C7 /* AsyncCommand.swift */; };
+		FE555B7E283774EF002751C7 /* SetOnlineStateCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE555B7D283774EF002751C7 /* SetOnlineStateCommand.swift */; };
+		FE555B80283775F3002751C7 /* CameraOptions+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE555B7F283775F3002751C7 /* CameraOptions+Decodable.swift */; };
+		FEA8FD9D2834F69F00CDDA97 /* SpecsBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA8FD9B2834F5E400CDDA97 /* SpecsBenchmark.swift */; };
+		FEA8FD9E2834F6D100CDDA97 /* Scenario.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7467312B282E949100B7D044 /* Scenario.swift */; };
+		FEA8FDA4283510DD00CDDA97 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA8FDA3283510DD00CDDA97 /* UIViewController+Extensions.swift */; };
+		FEA8FDA52835110000CDDA97 /* CreateMapCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74673135282E963000B7D044 /* CreateMapCommand.swift */; };
+		FEA8FDA62835110400CDDA97 /* CreateOfflinePacksCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74673136282E963000B7D044 /* CreateOfflinePacksCommand.swift */; };
+		FEB2802B2837C1BE00E903D2 /* ClearOfflineDataCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB2802A2837C1BE00E903D2 /* ClearOfflineDataCommand.swift */; };
+		FED7F06D283BA56900AD2313 /* OfflineManager+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED7F06C283BA56900AD2313 /* OfflineManager+Async.swift */; };
+		FED7F06F283BA59800AD2313 /* MapboxMap+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED7F06E283BA59800AD2313 /* MapboxMap+Async.swift */; };
+		FED7F071283BA5AB00AD2313 /* TileStore+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED7F070283BA5AB00AD2313 /* TileStore+Async.swift */; };
 		FEFAF5F4282A7A990002CF6E /* PrivatePerformanceMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEFAF5F3282A7A990002CF6E /* PrivatePerformanceMetrics.swift */; };
 /* End PBXBuildFile section */
 
@@ -35,6 +51,13 @@
 /* Begin PBXFileReference section */
 		7412CF5D27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationEaseToBenchmark.swift; sourceTree = "<group>"; };
 		745D052327C8D15F004E7B53 /* mapbox-maps-ios */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "mapbox-maps-ios"; path = "../mapbox-maps-ios"; sourceTree = "<group>"; };
+		7467312B282E949100B7D044 /* Scenario.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scenario.swift; sourceTree = "<group>"; };
+		74673135282E963000B7D044 /* CreateMapCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateMapCommand.swift; sourceTree = "<group>"; };
+		74673136282E963000B7D044 /* CreateOfflinePacksCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateOfflinePacksCommand.swift; sourceTree = "<group>"; };
+		74673145282EA6FA00B7D044 /* streets-munich-ttrc-cold.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "streets-munich-ttrc-cold.json"; sourceTree = "<group>"; };
+		74673146282EA6FA00B7D044 /* streets-munich-ttrc-warm.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "streets-munich-ttrc-warm.json"; sourceTree = "<group>"; };
+		74673147282EA6FA00B7D044 /* nav-day-munich-ttrc-warm.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "nav-day-munich-ttrc-warm.json"; sourceTree = "<group>"; };
+		74673148282EA6FA00B7D044 /* nav-day-munich-ttrc-cold.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "nav-day-munich-ttrc-cold.json"; sourceTree = "<group>"; };
 		7499661427C64ECD00DA186A /* MobileMetrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileMetrics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7499661727C64ECD00DA186A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7499661B27C64ECD00DA186A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -48,6 +71,15 @@
 		74F237F227E3338A009F304C /* NotifyingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotifyingViewController.swift; sourceTree = "<group>"; };
 		74F2381227E3730C009F304C /* WarmCacheBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarmCacheBenchmark.swift; sourceTree = "<group>"; };
 		74F2381427E39A33009F304C /* AnimationFlyToBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationFlyToBenchmark.swift; sourceTree = "<group>"; };
+		FE555B7B2836939B002751C7 /* AsyncCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncCommand.swift; sourceTree = "<group>"; };
+		FE555B7D283774EF002751C7 /* SetOnlineStateCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetOnlineStateCommand.swift; sourceTree = "<group>"; };
+		FE555B7F283775F3002751C7 /* CameraOptions+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CameraOptions+Decodable.swift"; sourceTree = "<group>"; };
+		FEA8FD9B2834F5E400CDDA97 /* SpecsBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecsBenchmark.swift; sourceTree = "<group>"; };
+		FEA8FDA3283510DD00CDDA97 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
+		FEB2802A2837C1BE00E903D2 /* ClearOfflineDataCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearOfflineDataCommand.swift; sourceTree = "<group>"; };
+		FED7F06C283BA56900AD2313 /* OfflineManager+Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OfflineManager+Async.swift"; sourceTree = "<group>"; };
+		FED7F06E283BA59800AD2313 /* MapboxMap+Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MapboxMap+Async.swift"; sourceTree = "<group>"; };
+		FED7F070283BA5AB00AD2313 /* TileStore+Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TileStore+Async.swift"; sourceTree = "<group>"; };
 		FEFAF5F3282A7A990002CF6E /* PrivatePerformanceMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivatePerformanceMetrics.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -75,6 +107,30 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		74673132282E961E00B7D044 /* Commands */ = {
+			isa = PBXGroup;
+			children = (
+				FE555B7B2836939B002751C7 /* AsyncCommand.swift */,
+				7467312B282E949100B7D044 /* Scenario.swift */,
+				FEB2802A2837C1BE00E903D2 /* ClearOfflineDataCommand.swift */,
+				74673135282E963000B7D044 /* CreateMapCommand.swift */,
+				74673136282E963000B7D044 /* CreateOfflinePacksCommand.swift */,
+				FE555B7D283774EF002751C7 /* SetOnlineStateCommand.swift */,
+			);
+			path = Commands;
+			sourceTree = "<group>";
+		};
+		74673144282EA6F100B7D044 /* Specs */ = {
+			isa = PBXGroup;
+			children = (
+				74673148282EA6FA00B7D044 /* nav-day-munich-ttrc-cold.json */,
+				74673147282EA6FA00B7D044 /* nav-day-munich-ttrc-warm.json */,
+				74673145282EA6FA00B7D044 /* streets-munich-ttrc-cold.json */,
+				74673146282EA6FA00B7D044 /* streets-munich-ttrc-warm.json */,
+			);
+			path = Specs;
 			sourceTree = "<group>";
 		};
 		7499660B27C64ECD00DA186A = {
@@ -118,6 +174,11 @@
 				74F2381227E3730C009F304C /* WarmCacheBenchmark.swift */,
 				74F2381427E39A33009F304C /* AnimationFlyToBenchmark.swift */,
 				7412CF5D27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift */,
+				FEA8FD9B2834F5E400CDDA97 /* SpecsBenchmark.swift */,
+				74673144282EA6F100B7D044 /* Specs */,
+				FED7F06B283BA55800AD2313 /* Extensions */,
+				74673132282E961E00B7D044 /* Commands */,
+				FE555B7F283775F3002751C7 /* CameraOptions+Decodable.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -138,6 +199,17 @@
 				FEFAF5F3282A7A990002CF6E /* PrivatePerformanceMetrics.swift */,
 			);
 			path = Base;
+			sourceTree = "<group>";
+		};
+		FED7F06B283BA55800AD2313 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				FEA8FDA3283510DD00CDDA97 /* UIViewController+Extensions.swift */,
+				FED7F06C283BA56900AD2313 /* OfflineManager+Async.swift */,
+				FED7F06E283BA59800AD2313 /* MapboxMap+Async.swift */,
+				FED7F070283BA5AB00AD2313 /* TileStore+Async.swift */,
+			);
+			name = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -178,6 +250,8 @@
 				7499663727C7AD2A00DA186A /* PBXTargetDependency */,
 			);
 			name = MobileMetricsTests;
+			packageProductDependencies = (
+			);
 			productName = BenchmarkTests;
 			productReference = 7499663227C7AD2900DA186A /* MobileMetricsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -227,8 +301,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7467314B282EA6FA00B7D044 /* nav-day-munich-ttrc-warm.json in Resources */,
+				7467314A282EA6FA00B7D044 /* streets-munich-ttrc-warm.json in Resources */,
 				7499662427C64ECE00DA186A /* LaunchScreen.storyboard in Resources */,
+				74673149282EA6FA00B7D044 /* streets-munich-ttrc-cold.json in Resources */,
 				7499662127C64ECE00DA186A /* Assets.xcassets in Resources */,
+				7467314C282EA6FA00B7D044 /* nav-day-munich-ttrc-cold.json in Resources */,
 				7499661F27C64ECD00DA186A /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -278,12 +356,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FEA8FD9D2834F69F00CDDA97 /* SpecsBenchmark.swift in Sources */,
 				FEFAF5F4282A7A990002CF6E /* PrivatePerformanceMetrics.swift in Sources */,
+				FEA8FDA4283510DD00CDDA97 /* UIViewController+Extensions.swift in Sources */,
+				FEA8FD9E2834F6D100CDDA97 /* Scenario.swift in Sources */,
+				FED7F06F283BA59800AD2313 /* MapboxMap+Async.swift in Sources */,
 				74F237EF27E32FFA009F304C /* BaseBenchmark.swift in Sources */,
+				FE555B7C2836939B002751C7 /* AsyncCommand.swift in Sources */,
+				FED7F071283BA5AB00AD2313 /* TileStore+Async.swift in Sources */,
 				7412CF5E27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift in Sources */,
+				FE555B7E283774EF002751C7 /* SetOnlineStateCommand.swift in Sources */,
 				74F2381327E3730C009F304C /* WarmCacheBenchmark.swift in Sources */,
+				FE555B80283775F3002751C7 /* CameraOptions+Decodable.swift in Sources */,
 				74F237F127E3326E009F304C /* InitSDKBenchmark.swift in Sources */,
+				FEB2802B2837C1BE00E903D2 /* ClearOfflineDataCommand.swift in Sources */,
+				FEA8FDA62835110400CDDA97 /* CreateOfflinePacksCommand.swift in Sources */,
 				74F237F327E3338A009F304C /* NotifyingViewController.swift in Sources */,
+				FED7F06D283BA56900AD2313 /* OfflineManager+Async.swift in Sources */,
+				FEA8FDA52835110000CDDA97 /* CreateMapCommand.swift in Sources */,
 				74F2381527E39A33009F304C /* AnimationFlyToBenchmark.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -506,6 +596,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSPrincipalClass = MobileMetricsTests.Main;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MobileMetricsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -523,6 +614,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSPrincipalClass = MobileMetricsTests.Main;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MobileMetricsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";

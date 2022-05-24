@@ -20,6 +20,20 @@
                ReferencedContainer = "container:MobileMetrics.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "7499663127C7AD2900DA186A"
+               BuildableName = "MobileMetricsTests.xctest"
+               BlueprintName = "MobileMetricsTests"
+               ReferencedContainer = "container:MobileMetrics.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction

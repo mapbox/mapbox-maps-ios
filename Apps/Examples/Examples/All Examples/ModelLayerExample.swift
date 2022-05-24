@@ -59,7 +59,7 @@ final class ModelLayerExample: UIViewController, ExampleProtocol {
         layer.modelTranslation = .constant([0, 0, 0])
         layer.modelRotation = .constant([0, 0, 90])
         layer.modelOpacity = .constant(0.7)
-        
+
         try! style.addLayer(layer)
     }
 

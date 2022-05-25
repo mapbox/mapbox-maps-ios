@@ -111,7 +111,7 @@ internal final class Puck3D: Puck {
 
     /// - returns: `true` if the `mercatorScale` is updated, `false` otherwise.
     private func updateMercatorScaleIfNeeded(at latitude: Double) -> Bool {
-        let validLatitudeRange = -85.051128779806604...85.051128779806604
+        let validLatitudeRange = Projection.latitudeMin...Projection.latitudeMax
         // In Mercator projection the scale factor is changed along the meridians as a function of latitude
         // to keep the scale factor equal in all direction: k=sec(latitude), where sec(α) = 1 / cos(α).
         // Here we are inverting the logic, as the 3D puck is using real-world size, and we are revising

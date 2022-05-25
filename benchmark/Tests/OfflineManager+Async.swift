@@ -16,7 +16,7 @@ extension OfflineManager {
     @discardableResult
     func loadStylePack(for styleURI: StyleURI,
                        loadOptions: StylePackLoadOptions,
-                       progress: StylePackLoadProgressCallback? = nil) async throws-> StylePack {
+                       progress: StylePackLoadProgressCallback? = nil) async throws -> StylePack {
 
         return try await withCheckedThrowingContinuation { continuation in
             loadStylePack(for: styleURI, loadOptions: loadOptions, progress: progress) { result in

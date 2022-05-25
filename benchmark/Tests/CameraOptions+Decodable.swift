@@ -26,11 +26,6 @@ extension CameraOptions: Decodable {
 }
 
 extension CLLocationCoordinate2D: Decodable {
-    enum CodingKeys: CodingKey {
-        case latitide
-        case longitude
-    }
-
     public init(from decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
         let longitude = try container.decode(Double.self)

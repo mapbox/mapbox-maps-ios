@@ -2,7 +2,7 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-## main
+## 10.6.0-beta.2 - May 25, 2022
 
 * Introduce ModelLayer experimental API to render 3D models on the map. ([#1348](https://github.com/mapbox/mapbox-maps-ios/pull/1348))
 

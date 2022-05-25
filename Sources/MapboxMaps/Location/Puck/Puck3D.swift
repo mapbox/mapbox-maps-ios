@@ -34,12 +34,7 @@ internal final class Puck3D: Puck {
     }
 
     internal var puckBearingEnabled: Bool = true
-
-    private var mercatorScale: Double = 1.0 {
-        didSet {
-            try? style.updateLayer(withId: Self.layerID, type: ModelLayer.self, update: updateModelScale(layer:))
-        }
-    }
+    private var mercatorScale: Double = 1.0
 
     private let configuration: Puck3DConfiguration
     private let style: StyleProtocol
@@ -96,20 +91,26 @@ internal final class Puck3D: Puck {
         }
 
         // Mercator scale
-        maybeUpdateMercatorScale(at: location.coordinate.latitude)
+        let needsUpdateModelScale = updateMercatorScaleIfNeeded(at: location.coordinate.latitude)
 
         // create the layer if needed
         if !style.layerExists(withId: Self.layerID) {
             var modelLayer = ModelLayer(id: Self.layerID)
             modelLayer.source = Self.sourceID
+            modelLayer.modelScale = modelScale
             modelLayer.modelType = .constant(.locationIndicator)
             modelLayer.modelRotation = configuration.modelRotation
-            updateModelScale(layer: &modelLayer)
             try! style.addPersistentLayer(modelLayer, layerPosition: nil)
+        } else if needsUpdateModelScale {
+            try? style.setLayerProperty(
+                for: Self.layerID,
+                property: "model-scale",
+                value: modelScale?.toJSON() as Any)
         }
     }
 
-    private func maybeUpdateMercatorScale(at latitude: Double) {
+    /// - returns: `true` if the `mercatorScale` is updated, `false` otherwise.
+    private func updateMercatorScaleIfNeeded(at latitude: Double) -> Bool {
         let validLatitudeRange = -85.051128779806604...85.051128779806604
         // In Mercator projection the scale factor is changed along the meridians as a function of latitude
         // to keep the scale factor equal in all direction: k=sec(latitude), where sec(α) = 1 / cos(α).
@@ -121,42 +122,40 @@ internal final class Puck3D: Puck {
         // so that we don't update the scale expression too frequently and cause performance issues.
         if abs(newMercatorScale - mercatorScale) > 0.01 {
             mercatorScale = newMercatorScale
+            return true
         }
+        return false
     }
 
-    private func updateModelScale(layer: inout ModelLayer) {
-        let modelScale: Value<[Double]>? = {
-            switch configuration.modelScale {
-            case .constant(let scales):
-                let maxZoom = 22.0
-                let minZoom = 0.5
-                // To make the 3D puck's size constant across different zoom levels, the 3D puck's size (real world object size)
-                // should be exponential to the zoom level.
-                // The base of the exponential expression is decided by how the tile pyramid works:
-                // at zoom level n, we have 2^(n+1) tiles to cover the earth.
-                let exponentialBase = 0.5
-                return .expression(
-                    Exp(.interpolate) {
-                        Exp(.exponential) { exponentialBase }
-                        Exp(.zoom)
-                        minZoom
-                        Exp(.literal) {
-                            scales.map { scale -> Double in
-                                let modelScale = pow(2.0, maxZoom - minZoom)
-                                return modelScale * scale * mercatorScale
-                            }
-                        }
-                        maxZoom
-                        Exp(.literal) {
-                            scales.map { $0 * mercatorScale }
+    private var modelScale: Value<[Double]>? {
+        switch configuration.modelScale {
+        case .constant(let scales):
+            let maxZoom = 22.0
+            let minZoom = 0.5
+            // To make the 3D puck's size constant across different zoom levels, the 3D puck's size (real world object size)
+            // should be exponential to the zoom level.
+            // The base of the exponential expression is decided by how the tile pyramid works:
+            // at zoom level n, we have 2^(n+1) tiles to cover the earth.
+            let exponentialBase = 0.5
+            return .expression(
+                Exp(.interpolate) {
+                    Exp(.exponential) { exponentialBase }
+                    Exp(.zoom)
+                    minZoom
+                    Exp(.literal) {
+                        scales.map { scale -> Double in
+                            let modelScale = pow(2.0, maxZoom - minZoom)
+                            return modelScale * scale * mercatorScale
                         }
                     }
-                )
+                    maxZoom
+                    Exp(.literal) {
+                        scales.map { $0 * mercatorScale }
+                    }
+                }
+            )
 
-            default: return configuration.modelScale
-            }
-        }()
-
-        layer.modelScale = modelScale
+        default: return configuration.modelScale
+        }
     }
 }

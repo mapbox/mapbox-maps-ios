@@ -9,12 +9,7 @@ internal protocol StyleProtocol: AnyObject {
     func removeLayer(withId id: String) throws
     func layerExists(withId id: String) -> Bool
     func setLayerProperties(for layerId: String, properties: [String: Any]) throws
-
-    func updateLayer<T>(
-        withId id: String,
-        type: T.Type,
-        update: (inout T) throws -> Void
-    ) throws where T: Layer
+    func setLayerProperty(for layerId: String, property: String, value: Any) throws
 
     func addSource(_ source: Source, id: String) throws
     func removeSource(withId id: String) throws

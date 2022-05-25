@@ -38,6 +38,16 @@ final class MockStyle: StyleProtocol {
         setLayerPropertiesStub.call(with: .init(layerId: layerId, properties: properties))
     }
 
+    struct SetLayerPropertyParams {
+        let layerId: String
+        let property: String
+        let value: Any
+    }
+    let setLayerPropertyStub = Stub<SetLayerPropertyParams, Void>()
+    func setLayerProperty(for layerId: String, property: String, value: Any) throws {
+        setLayerPropertyStub.call(with: .init(layerId: layerId, property: property, value: value))
+    }
+
     struct AddSourceParams {
         var source: Source
         var id: String
@@ -95,10 +105,4 @@ final class MockStyle: StyleProtocol {
     func removeImage(withId id: String) throws {
         removeImageStub.call(with: id)
     }
-
-    func updateLayer<T>(
-        withId id: String,
-        type: T.Type,
-        update: (inout T) throws -> Void
-    ) throws where T: Layer {}
 }

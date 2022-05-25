@@ -6,7 +6,8 @@ import MapboxMaps
 /// It adds a delay to each step to make sure we capture the rendering in cloud test services.
 final class AnimationFlyToBenchmark: BaseBenchmark {
 
-    func test_sla_WarmCacheBenchmark1() {
+    func test_sla_WarmCacheBenchmark1() throws {
+        try XCTSkipIf(true)
         benchmark(timeout: 61) {
             onStyleLoaded { mapView, _ in
                 self.visit(.tokyo, .minsk, .helsinki, .tokyo, .helsinki, .minsk) {

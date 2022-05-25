@@ -7,9 +7,9 @@ struct Scenario {
 
     func run() async throws {
         for command in commands {
-            print("Start command: \(command)")
+            print(">> Start command: \(type(of: command))")
             try await command.execute()
-            print("Finish command: \(command)")
+            print("<< Finish command: \(type(of: command))\n")
         }
     }
 

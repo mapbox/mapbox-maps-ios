@@ -24,8 +24,10 @@ public struct CreateOfflinePacksCommand: AsyncCommand {
             )
         )
 
+        let polygonId = "\(geometry.coordinates[0][0].longitude):\(geometry.coordinates[0][0].latitude)"
+
         let regionLoadOptions = TileRegionLoadOptions(geometry: geometry.geometry, descriptors: [descriptor])!
-        try await TileStore.default.loadTileRegion(forId: "$style-$minZoom-$maxZoom-$polygonId",
+        try await TileStore.default.loadTileRegion(forId: "\(style)-\(minZoom)-\(maxZoom)-\(polygonId)",
                                          loadOptions: regionLoadOptions)
     }
 }

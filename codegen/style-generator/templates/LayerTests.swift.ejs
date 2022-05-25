@@ -4,10 +4,11 @@
   const layoutProperties = locals.layoutProperties
   const paintProperties = locals.paintProperties
   const doc = locals.doc
+  const isExperimental = locals.experimental
 -%>
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+<%if (isExperimental) { -%>@_spi(Experimental) <% } -%>@testable import MapboxMaps
 
 final class <%- camelize(type) %>LayerTests: XCTestCase {
 

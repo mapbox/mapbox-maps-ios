@@ -4,14 +4,18 @@
   const layoutProperties = locals.layoutProperties
   const paintProperties = locals.paintProperties
   const doc = locals.doc
+  const isExperimental = locals.experimental
+  const isInternal = locals.internal
 -%>
 // This file is generated.
 import Foundation
 
 /// <%- doc %>
+<% if (!isInternal) { -%>
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-<%- type %>)
-public struct <%- camelize(type) %>Layer: Layer {
+<% } -%>
+<%if (isExperimental) { -%>@_spi(Experimental) <% } -%>public struct <%- camelize(type) %>Layer: Layer {
 
     // MARK: - Conformance to `Layer` protocol
     public var id: String

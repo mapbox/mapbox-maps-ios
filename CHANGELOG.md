@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## main
+
+* Introduce ModelLayer experimental API to render 3D models on the map. ([#1348](https://github.com/mapbox/mapbox-maps-ios/pull/1348))
+
 ## 10.6.0-beta.1 - May 20, 2022
 
 * Expose API to check whether an image exists in `Style`. ([#1297](https://github.com/mapbox/mapbox-maps-ios/pull/1297))

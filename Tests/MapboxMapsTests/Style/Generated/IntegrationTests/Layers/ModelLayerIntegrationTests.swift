@@ -1,8 +1,8 @@
-// This file is NOT CURRENTLY generated
+// This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
-class ModelLayerIntegrationTests: MapViewIntegrationTestCase {
+final class ModelLayerIntegrationTests: MapViewIntegrationTestCase {
 
     internal func testBaseClass() throws {
         // Do nothing
@@ -26,11 +26,19 @@ class ModelLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.layout?.visibility = .constant(.visible)
+            layer.visibility = .constant(.visible)
+            layer.modelId = Value<String>.testConstantValue()
 
-            layer.paint?.modelOpacity = Value<Double>.testConstantValue()
-            layer.paint?.modelOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.modelRotationTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.modelColor = Value<StyleColor>.testConstantValue()
+            layer.modelColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.modelColorMixIntensity = Value<Double>.testConstantValue()
+            layer.modelColorMixIntensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.modelOpacity = Value<Double>.testConstantValue()
+            layer.modelOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.modelRotationTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.modelScaleTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.modelTranslationTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.modelType = Value<ModelType>.testConstantValue()
 
             // Add the layer
             do {
@@ -52,3 +60,5 @@ class ModelLayerIntegrationTests: MapViewIntegrationTestCase {
         wait(for: [successfullyAddedLayerExpectation, successfullyRetrievedLayerExpectation], timeout: 5.0)
     }
 }
+
+// End of generated file

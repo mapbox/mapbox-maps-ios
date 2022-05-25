@@ -351,6 +351,20 @@ extension SkyType {
     }
 }
 
+// MARK: MODEL_TYPE
+
+extension Value where T == ModelType {
+    static func testConstantValue() -> Value<ModelType> {
+        return .constant(ModelType.testConstantValue())
+    }
+}
+
+extension ModelType {
+    static func testConstantValue() -> ModelType {
+        return ModelType(rawValue: "common-3d")!
+    }
+}
+
 // MARK: ANCHOR
 
 extension Value where T == Anchor {

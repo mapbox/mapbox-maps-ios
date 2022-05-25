@@ -989,6 +989,42 @@ public final class Style: StyleProtocol {
         return styleManager.getStyleAtmosphereProperty(forProperty: property)
     }
 
+    // MARK: - Models
+
+    /// Adds a `model` to the map
+    ///
+    /// - Parameters:
+    ///   - model: The model to add to the map.
+    ///   - Parameter identifier: A unique source identifier.
+    ///
+    /// - Throws: StyleError or type conversion errors
+    @_spi(Experimental) public func addModel(withId id: String, modelURI: String) throws {
+        try handleExpected {
+            styleManager.addStyleModel(forModelId: id, modelUri: modelURI)
+        }
+    }
+
+    /// Removes an existing style model.
+    ///
+    /// - Parameter id: Identifier of the style model to remove.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    @_spi(Experimental) public func removeModel(withId id: String) throws {
+        try handleExpected {
+            styleManager.removeStyleModel(forModelId: id)
+        }
+    }
+
+    /// Checks whether a given style model exists.
+    ///
+    /// - Parameter id: Style model identifier.
+    ///
+    /// - Returns: `true` if the given model exists, `false` otherwise.
+    @_spi(Experimental) public func modelExists(withId id: String) -> Bool {
+        styleManager.hasStyleModel(forModelId: id)
+    }
+
     // MARK: - Custom geometry
 
     /// Adds a custom geometry to be used in the style.

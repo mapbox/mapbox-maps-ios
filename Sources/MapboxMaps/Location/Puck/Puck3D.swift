@@ -93,10 +93,9 @@ internal final class Puck3D: Puck {
         if !style.layerExists(withId: Self.layerID) {
             var modelLayer = ModelLayer(id: Self.layerID)
             modelLayer.source = Self.sourceID
-            assert(modelLayer.paint != nil)
-            modelLayer.paint?.modelLayerType = .constant(.locationIndicator)
-            modelLayer.paint?.modelScale = configuration.modelScale
-            modelLayer.paint?.modelRotation = configuration.modelRotation
+            modelLayer.modelType = .constant(.locationIndicator)
+            modelLayer.modelScale = configuration.modelScale
+            modelLayer.modelRotation = configuration.modelRotation
             try! style.addPersistentLayer(modelLayer, layerPosition: nil)
         }
     }

@@ -32,5 +32,3 @@ public struct CreateMapCommand: AsyncCommand, Decodable {
         as Void // This cast is nessesary to help type checker find <T> for …Continuation func
     }
 }
-
-extension StyleURI: Decodable { }

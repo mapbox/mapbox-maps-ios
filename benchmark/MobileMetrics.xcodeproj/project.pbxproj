@@ -23,6 +23,7 @@
 		74F237F327E3338A009F304C /* NotifyingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F237F227E3338A009F304C /* NotifyingViewController.swift */; };
 		74F2381327E3730C009F304C /* WarmCacheBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F2381227E3730C009F304C /* WarmCacheBenchmark.swift */; };
 		74F2381527E39A33009F304C /* AnimationFlyToBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F2381427E39A33009F304C /* AnimationFlyToBenchmark.swift */; };
+		FE18AEE22840ED4D001B9E6F /* StyleURI+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE18AEE12840ED4D001B9E6F /* StyleURI+Decodable.swift */; };
 		FE555B7C2836939B002751C7 /* AsyncCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE555B7B2836939B002751C7 /* AsyncCommand.swift */; };
 		FE555B7E283774EF002751C7 /* SetOnlineStateCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE555B7D283774EF002751C7 /* SetOnlineStateCommand.swift */; };
 		FE555B80283775F3002751C7 /* CameraOptions+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE555B7F283775F3002751C7 /* CameraOptions+Decodable.swift */; };
@@ -71,6 +72,7 @@
 		74F237F227E3338A009F304C /* NotifyingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotifyingViewController.swift; sourceTree = "<group>"; };
 		74F2381227E3730C009F304C /* WarmCacheBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarmCacheBenchmark.swift; sourceTree = "<group>"; };
 		74F2381427E39A33009F304C /* AnimationFlyToBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationFlyToBenchmark.swift; sourceTree = "<group>"; };
+		FE18AEE12840ED4D001B9E6F /* StyleURI+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StyleURI+Decodable.swift"; sourceTree = "<group>"; };
 		FE555B7B2836939B002751C7 /* AsyncCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncCommand.swift; sourceTree = "<group>"; };
 		FE555B7D283774EF002751C7 /* SetOnlineStateCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetOnlineStateCommand.swift; sourceTree = "<group>"; };
 		FE555B7F283775F3002751C7 /* CameraOptions+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CameraOptions+Decodable.swift"; sourceTree = "<group>"; };
@@ -208,6 +210,7 @@
 				FED7F06C283BA56900AD2313 /* OfflineManager+Async.swift */,
 				FED7F06E283BA59800AD2313 /* MapboxMap+Async.swift */,
 				FED7F070283BA5AB00AD2313 /* TileStore+Async.swift */,
+				FE18AEE12840ED4D001B9E6F /* StyleURI+Decodable.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -366,6 +369,7 @@
 				FED7F071283BA5AB00AD2313 /* TileStore+Async.swift in Sources */,
 				7412CF5E27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift in Sources */,
 				FE555B7E283774EF002751C7 /* SetOnlineStateCommand.swift in Sources */,
+				FE18AEE22840ED4D001B9E6F /* StyleURI+Decodable.swift in Sources */,
 				74F2381327E3730C009F304C /* WarmCacheBenchmark.swift in Sources */,
 				FE555B80283775F3002751C7 /* CameraOptions+Decodable.swift in Sources */,
 				74F237F127E3326E009F304C /* InitSDKBenchmark.swift in Sources */,

@@ -10,9 +10,4 @@ public protocol MapEventsObservable: AnyObject {
     @available(*, deprecated, renamed: "onTypedNext(_:handler:)")
     @discardableResult
     func onNext(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable
-
-    @discardableResult
-    func onTypedNext<Payload: Decodable>(_ eventType: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable
-    @discardableResult
-    func onTypedEvery<Payload: Decodable>(_ eventType: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable
 }

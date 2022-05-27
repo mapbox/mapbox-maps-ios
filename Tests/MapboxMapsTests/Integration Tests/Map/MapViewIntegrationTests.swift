@@ -62,7 +62,7 @@ final class MapViewIntegrationTests: IntegrationTestCase {
 
             rootView.addSubview(mapView)
 
-            mapView.mapboxMap.onNext(.mapLoaded) { [weak mapView] _ in
+            mapView.mapboxMap.onTypedNext(.mapLoaded) { [weak mapView] _ in
                 let dest = CameraOptions(center: CLLocationCoordinate2D(latitude: 10, longitude: 10), zoom: 10)
                 mapView?.camera.ease(to: dest, duration: 5) { (_) in
                     expectation.fulfill()

@@ -23,7 +23,7 @@ public class TerrainExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(.styleLoaded) { _ in
+        mapView.mapboxMap.onTypedNext(.styleLoaded) { _ in
             self.addTerrain()
             // The following line is just for testing purposes.
             self.finish()

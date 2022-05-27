@@ -330,7 +330,7 @@ final class OfflineManagerExample: UIViewController, ExampleProtocol {
 
         // Add a point annotation that shows the point geometry that were passed
         // to the tile region API.
-        mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
+        mapView.mapboxMap.onTypedNext(.styleLoaded) { [weak self] _ in
             guard let self = self,
                   let mapView = self.mapView else {
                 return

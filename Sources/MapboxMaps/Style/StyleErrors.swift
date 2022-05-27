@@ -33,7 +33,7 @@ public enum TypeConversionError: Error {
 ///
 /// The associated message (which is returned by `errorDescription`) contains
 /// a descriptive error message.
-public enum MapLoadingError: LocalizedError {
+public enum MapLoadingError: LocalizedError, Decodable {
     /// Style could not be loaded
     case style(String)
 
@@ -56,6 +56,10 @@ public enum MapLoadingError: LocalizedError {
             fatalError("Invalid event data format")
         }
 
+        self.init(type: type, message: message)
+    }
+
+    internal init(type: String, message: String) {
         switch type {
         case "style":
             self = .style(message)

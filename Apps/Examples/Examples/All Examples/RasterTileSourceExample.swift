@@ -22,7 +22,7 @@ class RasterTileSourceExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Once the map has finished loading, add the `RasterSource` and `RasterLayer` to the map's style.
-        mapView.mapboxMap.onNext(.mapLoaded) { _ in
+        mapView.mapboxMap.onTypedNext(.mapLoaded) { _ in
             self.addRasterSource()
 
             // The following line is just for testing purposes.

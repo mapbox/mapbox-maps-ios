@@ -3,8 +3,12 @@ import MapboxCoreMaps
 internal protocol MapboxObservableProtocol: AnyObject {
     func subscribe(_ observer: Observer, events: [String])
     func unsubscribe(_ observer: Observer, events: [String])
+    @available(*, deprecated)
     func onNext(_ eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable
+    @available(*, deprecated)
     func onEvery(_ eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable
+    func onTypedNext<Payload: Decodable>(_ eventType: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable
+    func onTypedEvery<Payload: Decodable>(_ eventType: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable
     func performWithoutNotifying(_ block: () -> Void)
 }
 
@@ -71,7 +75,7 @@ internal final class MapboxObservable: MapboxObservableProtocol {
             }
         }
     }
-
+    @available(*, deprecated)
     internal func onNext(_ eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable {
         let cancelable = CompositeCancelable()
         let observer = BlockObserver {
@@ -92,9 +96,42 @@ internal final class MapboxObservable: MapboxObservableProtocol {
         return cancelable
     }
 
+    internal func onTypedNext<Payload: Decodable>(_ eventType: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
+        let cancelable = CompositeCancelable()
+        let observer = BlockObserver {
+            handler(TypedEvent(event: $0))
+            cancelable.cancel()
+        }
+        subscribe(observer, events: [eventType.name])
+        // Capturing self and observer with weak refs in the closure passed to BlockCancelable
+        // avoids a retain cycle. MapboxObservable holds a strong reference to observer, which has a
+        // strong reference to cancelable, which has a strong reference to BlockCancelable, which only
+        // has weak references back to MapboxObservable and observer. If MapboxObservable is deinited,
+        // observer will be released.
+        cancelable.add(BlockCancelable { [weak self, weak observer] in
+            if let self = self, let observer = observer {
+                self.unsubscribe(observer, events: [])
+            }
+        })
+        return cancelable
+    }
+
+    @available(*, deprecated)
     internal func onEvery(_ eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable {
         let observer = BlockObserver(block: handler)
         subscribe(observer, events: eventTypes.map(\.rawValue))
+        return BlockCancelable { [weak self, weak observer] in
+            if let self = self, let observer = observer {
+                self.unsubscribe(observer, events: [])
+            }
+        }
+    }
+
+    internal func onTypedEvery<Payload: Decodable>(_ eventType: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
+        let observer = BlockObserver {
+            handler(TypedEvent(event: $0))
+        }
+        subscribe(observer, events: [eventType.name])
         return BlockCancelable { [weak self, weak observer] in
             if let self = self, let observer = observer {
                 self.unsubscribe(observer, events: [])

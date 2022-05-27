@@ -47,10 +47,10 @@ public class GlobeViewExample: UIViewController, ExampleProtocol {
         try! mapView.mapboxMap.style.setProjection(currentProjection)
         mapView.mapboxMap.setCamera(to: .init(zoom: 1.0))
 
-        mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
+        mapView.mapboxMap.onTypedNext(.styleLoaded) { [weak self] _ in
             self?.addSkyLayer()
         }
-        mapView.mapboxMap.onEvery(.cameraChanged) { [weak self] _ in
+        mapView.mapboxMap.onTypedEvery(.cameraChanged) { [weak self] _ in
             self?.updateInfoText()
         }
 

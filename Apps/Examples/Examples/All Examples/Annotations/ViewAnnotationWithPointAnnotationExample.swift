@@ -28,7 +28,7 @@ final class ViewAnnotationWithPointAnnotationExample: UIViewController, ExampleP
 
         pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
 
-        mapView.mapboxMap.onNext(.mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onTypedNext(.mapLoaded) { [weak self] _ in
             guard let self = self else { return }
 
             try? self.mapView.mapboxMap.style.addImage(self.image, id: Constants.blueIconId)

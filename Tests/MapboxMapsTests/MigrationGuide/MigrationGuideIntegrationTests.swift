@@ -74,7 +74,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         class BasicMapViewController: UIViewController {
             var mapView: MapView!
             var accessToken: String!
-            var handler: ((Event) -> Void)?
+            var handler: (() -> Void)?
 
             override func viewDidLoad() {
                 super.viewDidLoad()
@@ -93,15 +93,13 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                  `-[MGLMapViewDelegate mapView:didFinishLoadingStyle:]` in SDK versions
                  prior to v10.
                  */
-                mapView.mapboxMap.onEvery(.styleDataLoaded) { [weak self] (event) in
-                    guard let data = event.data as? [String: Any],
-                          let type = data["type"],
-                          let handler = self?.handler else {
+                mapView.mapboxMap.onTypedEvery(.styleDataLoaded) { [weak self] (event) in
+                    guard let handler = self?.handler else {
                         return
                     }
 
-                    print("The map has finished loading style data of type = \(type)")
-                    handler(event)
+                    print("The map has finished loading style data of type = \(event.payload.type)")
+                    handler()
                 }
 
                 /**
@@ -118,9 +116,9 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                  Changes to sources or layers of the current style do not cause this
                  event to be emitted.
                  */
-                mapView.mapboxMap.onNext(.styleLoaded) { (event) in
+                mapView.mapboxMap.onTypedNext(.styleLoaded) { (event) in
                     print("The map has finished loading style ... Event = \(event)")
-                    self.handler?(event)
+                    self.handler?()
                 }
 
                 /**
@@ -132,9 +130,9 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                  map and ensures that these layers would only be shown after the map has
                  been fully rendered.
                  */
-                mapView.mapboxMap.onNext(.mapLoaded) { (event) in
+                mapView.mapboxMap.onTypedNext(.mapLoaded) { (event) in
                     print("The map has finished loading... Event = \(event)")
-                    self.handler?(event)
+                    self.handler?()
                 }
 
                 /**
@@ -145,9 +143,9 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                  - All currently requested tiles have been rendered
                  - All fade/transition animations have completed
                  */
-                mapView.mapboxMap.onNext(.mapIdle) { (event) in
+                mapView.mapboxMap.onTypedNext(.mapIdle) { (event) in
                     print("The map is idle... Event = \(event)")
-                    self.handler?(event)
+                    self.handler?()
                 }
 
                 /**
@@ -158,14 +156,8 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                  You can use the associated error message to notify the user that map
                  data is unavailable.
                  */
-                mapView.mapboxMap.onNext(.mapLoadingError) { (event) in
-                    guard let data = event.data as? [String: Any],
-                          let type = data["type"],
-                          let message = data["message"] else {
-                        return
-                    }
-
-                    print("The map failed to load.. \(type) = \(message)")
+                mapView.mapboxMap.onTypedNext(.mapLoadingError) { (event) in
+                    print("The map failed to load.. \(event.payload.error)")
                 }
             }
         }
@@ -173,7 +165,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
         let vc = BasicMapViewController(nibName: nil, bundle: nil)
         vc.accessToken = accessToken
-        vc.handler = { _ in
+        vc.handler = {
             expectation.fulfill()
         }
 
@@ -404,7 +396,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
         let mapView = MapView(frame: testRect)
         let expectation = self.expectation(description: "Source was added")
-        mapView.mapboxMap.onNext(.styleLoaded) { _ in
+        mapView.mapboxMap.onTypedNext(.styleLoaded) { _ in
             do {
                 //-->
                 try mapView.mapboxMap.style.addSource(myGeoJSONSource, id: "my-geojson-source")
@@ -440,7 +432,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
     func testExpression() throws {
         let mapView = MapView(frame: testRect)
         let expectation = self.expectation(description: "layer updated")
-        mapView.mapboxMap.onNext(.styleLoaded) { _ in
+        mapView.mapboxMap.onTypedNext(.styleLoaded) { _ in
             do {
 
                 //-->
@@ -488,7 +480,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
     func testAdd3DTerrain() {
         let mapView = MapView(frame: testRect)
         let expectation = self.expectation(description: "Source was added")
-        mapView.mapboxMap.onNext(.styleLoaded) { _ in
+        mapView.mapboxMap.onTypedNext(.styleLoaded) { _ in
             do {
                 //-->
                 // Add terrain

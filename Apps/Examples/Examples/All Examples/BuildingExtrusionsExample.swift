@@ -50,7 +50,7 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(.styleLoaded) { _ in
+        mapView.mapboxMap.onTypedNext(.styleLoaded) { _ in
             self.setupExample()
         }
 

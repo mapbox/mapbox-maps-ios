@@ -87,7 +87,7 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
             object: nil)
 
         // Observe events that require recomputing accessibility elements
-        mapView.mapboxMap.onNext(.mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onTypedNext(.mapLoaded) { [weak self] _ in
             self?.updateAllAccessibilityElements {
                 self?.finish()
             }

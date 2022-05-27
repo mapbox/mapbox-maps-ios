@@ -305,9 +305,15 @@ extension Snapshotter: MapEventsObservable {
     /// - Returns: A `Cancelable` object that you can use to stop listening for
     ///     the event. This is especially important if you have a retain cycle in
     ///     the handler.
+    @available(*, deprecated, renamed: "onTypedNext(_:handler:)")
     @discardableResult
     public func onNext(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
         observable.onNext([eventType], handler: handler)
+    }
+
+    @discardableResult
+    public func onTypedNext<Payload: Decodable>(_ eventType: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
+        return observable.onTypedNext(eventType, handler: handler)
     }
 
     /// Listen to multiple occurrences of a Map event.
@@ -319,9 +325,15 @@ extension Snapshotter: MapEventsObservable {
     /// - Returns: A `Cancelable` object that you can use to stop listening for
     ///     events. This is especially important if you have a retain cycle in
     ///     the handler.
+    @available(*, deprecated, renamed: "onTypedEvery(_:handler:)")
     @discardableResult
     public func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
         observable.onEvery([eventType], handler: handler)
+    }
+
+    @discardableResult
+    public func onTypedEvery<Payload: Decodable>(_ eventType: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
+        return observable.onTypedEvery(eventType, handler: handler)
     }
 }
 

@@ -110,7 +110,7 @@ final class OrnamentManagerTests: XCTestCase {
         let compass = try XCTUnwrap(view.subviews.compactMap { $0 as? MapboxCompassOrnamentView }.first)
 
         XCTAssertEqual(mapboxMap.onEveryStub.invocations.count, 1)
-        XCTAssertEqual(mapboxMap.onEveryStub.invocations.first?.parameters.eventType, .cameraChanged)
+        XCTAssertEqual(mapboxMap.onEveryStub.invocations.first?.parameters.eventName, MapEvents.cameraChanged)
         let onEveryCameraChangeHandler = try XCTUnwrap(mapboxMap.onEveryStub.invocations.first?.parameters.handler)
 
         XCTAssertEqual(mapboxMap.cameraState.bearing, 0)
@@ -118,13 +118,13 @@ final class OrnamentManagerTests: XCTestCase {
         XCTAssertEqual(mapboxMap.cameraState.bearing, compass.currentBearing)
 
         mapboxMap.cameraState.bearing += .random(in: (.leastNonzeroMagnitude)..<360)
-        onEveryCameraChangeHandler(Event(type: "", data: ""))
+        onEveryCameraChangeHandler(TypedEvent<NoPayload>(event: Event(type: "", data: 0)))
 
         XCTAssertFalse(compass.containerView.isHidden, "The compass should not be hidden when the bearing is non-zero.")
         XCTAssertEqual(mapboxMap.cameraState.bearing, compass.currentBearing)
 
         mapboxMap.cameraState.bearing = 0
-        onEveryCameraChangeHandler(Event(type: "", data: ""))
+        onEveryCameraChangeHandler(TypedEvent<NoPayload>(event: Event(type: "", data: 0)))
 
         XCTAssertTrue(compass.containerView.isHidden)
         XCTAssertEqual(mapboxMap.cameraState.bearing, compass.currentBearing)

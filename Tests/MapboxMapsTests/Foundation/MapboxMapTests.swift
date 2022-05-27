@@ -238,6 +238,7 @@ final class MapboxMapTests: XCTestCase {
         XCTAssertEqual(mapboxObservable.unsubscribeStub.invocations.first?.parameters.events, events)
     }
 
+    @available(*, deprecated)
     func testOnNext() throws {
         let handlerStub = Stub<Event, Void>()
         let eventType = MapEvents.EventKind.allCases.randomElement()!
@@ -257,6 +258,47 @@ final class MapboxMapTests: XCTestCase {
         XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
     }
 
+    func testOnTypedNext() throws {
+        func verifyInvocation<Payload: Decodable>(
+            eventType: MapEvents.Event<Payload>,
+            event: TypedEvent<Payload> = .init(event: Event(type: "", data: 0)),
+            handlerStub: Stub<TypedEvent<Payload>, Void> = .init()
+        ) throws {
+            let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
+
+            mapboxMap.onTypedNext(eventType, handler: handlerStub.call(with:))
+
+            XCTAssertEqual(mapboxObservable.onTypedNextStub.invocations.count, 1)
+            XCTAssertEqual(mapboxObservable.onTypedNextStub.invocations.first?.parameters.eventName, eventType.name)
+            // To verify that the handler passed to MapboxMap is effectively the same as the one received by MapboxObservable,
+            // we exercise the received handler and verify that the passed one is invoked. If blocks were identifiable, maybe
+            // we'd just write this as `passedHandler === receivedHandler`.
+            let handler = try XCTUnwrap(mapboxObservable.onTypedNextStub.invocations.first?.parameters.handler)
+            handler(event)
+            XCTAssertEqual(handlerStub.invocations.count, 1)
+            XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
+        }
+
+        let eventInvocations = [
+            { try verifyInvocation(eventType: .mapLoaded) },
+            { try verifyInvocation(eventType: .mapLoadingError) },
+            { try verifyInvocation(eventType: .mapIdle) },
+            { try verifyInvocation(eventType: .styleDataLoaded) },
+            { try verifyInvocation(eventType: .styleLoaded) },
+            { try verifyInvocation(eventType: .styleImageMissing) },
+            { try verifyInvocation(eventType: .styleImageRemoveUnused) },
+            { try verifyInvocation(eventType: .sourceDataLoaded) },
+            { try verifyInvocation(eventType: .sourceAdded) },
+            { try verifyInvocation(eventType: .sourceRemoved) },
+            { try verifyInvocation(eventType: .renderFrameStarted) },
+            { try verifyInvocation(eventType: .renderFrameFinished) },
+            { try verifyInvocation(eventType: .cameraChanged) },
+            { try verifyInvocation(eventType: .resourceRequest) }
+        ]
+        try eventInvocations.randomElement()!()
+    }
+
+    @available(*, deprecated)
     func testOnEvery() throws {
         let handlerStub = Stub<Event, Void>()
         let eventType = MapEvents.EventKind.allCases.randomElement()!
@@ -274,6 +316,46 @@ final class MapboxMapTests: XCTestCase {
         handler(event)
         XCTAssertEqual(handlerStub.invocations.count, 1)
         XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
+    }
+
+    func testOnTypedEvery() throws {
+        func verifyInvocation<Payload: Decodable>(
+            eventType: MapEvents.Event<Payload>,
+            event: TypedEvent<Payload> = .init(event: Event(type: "", data: 0)),
+            handlerStub: Stub<TypedEvent<Payload>, Void> = .init()
+        ) throws {
+            let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
+
+            mapboxMap.onTypedEvery(eventType, handler: handlerStub.call(with:))
+
+            XCTAssertEqual(mapboxObservable.onTypedEveryStub.invocations.count, 1)
+            XCTAssertEqual(mapboxObservable.onTypedEveryStub.invocations.first?.parameters.eventName, eventType.name)
+            // To verify that the handler passed to MapboxMap is effectively the same as the one received by MapboxObservable,
+            // we exercise the received handler and verify that the passed one is invoked. If blocks were identifiable, maybe
+            // we'd just write this as `passedHandler === receivedHandler`.
+            let handler = try XCTUnwrap(mapboxObservable.onTypedEveryStub.invocations.first?.parameters.handler)
+            handler(event)
+            XCTAssertEqual(handlerStub.invocations.count, 1)
+            XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
+        }
+
+        let eventInvocations = [
+            { try verifyInvocation(eventType: .mapLoaded) },
+            { try verifyInvocation(eventType: .mapLoadingError) },
+            { try verifyInvocation(eventType: .mapIdle) },
+            { try verifyInvocation(eventType: .styleDataLoaded) },
+            { try verifyInvocation(eventType: .styleLoaded) },
+            { try verifyInvocation(eventType: .styleImageMissing) },
+            { try verifyInvocation(eventType: .styleImageRemoveUnused) },
+            { try verifyInvocation(eventType: .sourceDataLoaded) },
+            { try verifyInvocation(eventType: .sourceAdded) },
+            { try verifyInvocation(eventType: .sourceRemoved) },
+            { try verifyInvocation(eventType: .renderFrameStarted) },
+            { try verifyInvocation(eventType: .renderFrameFinished) },
+            { try verifyInvocation(eventType: .cameraChanged) },
+            { try verifyInvocation(eventType: .resourceRequest) }
+        ]
+        try eventInvocations.randomElement()!()
     }
 
     func testPerformWithoutNotifying() throws {

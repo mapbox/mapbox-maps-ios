@@ -35,9 +35,7 @@ extension MapLoadingErrorPayload: Decodable {
 
 internal struct DecodableCanonicalTileID: Decodable {
     enum CodingKeys: String, CodingKey {
-        case x = "x"
-        case y = "y"
-        case z = "z"
+        case x, y, z
     }
 
     let tileID: CanonicalTileID

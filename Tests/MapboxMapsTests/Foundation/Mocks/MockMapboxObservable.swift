@@ -48,8 +48,8 @@ final class MockMapboxObservable: MapboxObservableProtocol {
         var handler: (Any) -> Void
     }
     let onTypedNextStub = Stub<OnTypedNextParams, Cancelable>(defaultReturnValue: MockCancelable())
-    func onTypedNext<Payload>(_ eventType: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable where Payload : Decodable {
-        onTypedNextStub.call(with: OnTypedNextParams(eventName: eventType.name, handler: { handler($0 as! TypedEvent<Payload>)} ))
+    func onTypedNext<Payload>(_ eventType: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable where Payload: Decodable {
+        onTypedNextStub.call(with: OnTypedNextParams(eventName: eventType.name, handler: { handler($0 as! TypedEvent<Payload>)}))
     }
 
     struct OnTypedEveryParams {

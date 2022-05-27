@@ -4,7 +4,6 @@ public struct ResourceRequestPayload {
     public let dataSource: ResourceDataSource
     public let request: ResourceRequest
     public let response: ResourceResponse
-
 }
 
 extension ResourceRequestPayload: Decodable {
@@ -50,6 +49,7 @@ public struct ResourceResponse: Decodable {
     }
 
     public struct Error: Swift.Error, Decodable {
+        // swiftlint:disable:next nesting
         public enum Reason: String, Decodable {
             case success
             case notFound = "not-found"

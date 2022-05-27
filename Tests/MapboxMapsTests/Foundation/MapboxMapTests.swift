@@ -279,6 +279,7 @@ final class MapboxMapTests: XCTestCase {
             XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
         }
 
+        // swiftlint:disable opening_brace
         let eventInvocations = [
             { try verifyInvocation(eventType: .mapLoaded) },
             { try verifyInvocation(eventType: .mapLoadingError) },
@@ -295,6 +296,8 @@ final class MapboxMapTests: XCTestCase {
             { try verifyInvocation(eventType: .cameraChanged) },
             { try verifyInvocation(eventType: .resourceRequest) }
         ]
+        // swiftlint:enable opening_brace
+
         try eventInvocations.randomElement()!()
     }
 
@@ -339,6 +342,7 @@ final class MapboxMapTests: XCTestCase {
             XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
         }
 
+        // swiftlint:disable opening_brace
         let eventInvocations = [
             { try verifyInvocation(eventType: .mapLoaded) },
             { try verifyInvocation(eventType: .mapLoadingError) },
@@ -355,6 +359,8 @@ final class MapboxMapTests: XCTestCase {
             { try verifyInvocation(eventType: .cameraChanged) },
             { try verifyInvocation(eventType: .resourceRequest) }
         ]
+        // swiftlint:enable opening_brace
+
         try eventInvocations.randomElement()!()
     }
 

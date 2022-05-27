@@ -127,7 +127,7 @@ final class SwiftUIMapViewCoordinator {
 
             /// The coordinator observes the `.cameraChanged` event, and
             /// whenever the camera changes, it updates the camera binding.
-            cancelable = mapView.mapboxMap.onTypedEvery(.cameraChanged) { [unowned self] (event) in
+            cancelable = mapView.mapboxMap.onTypedEvery(.cameraChanged) { [unowned self] _ in
                 guard !ignoreNotifications else {
                     return
                 }

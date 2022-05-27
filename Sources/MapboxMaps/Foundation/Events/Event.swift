@@ -11,6 +11,7 @@ extension Event {
     }
 }
 
+/// A container for information broadcast about an event.
 public class TypedEvent<Payload: Decodable> {
     /// Type of the event.
     public var name: String { event.type }

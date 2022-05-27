@@ -854,6 +854,22 @@ extension MapboxMap {
 
 extension MapboxMap: MapEventsObservable {
 
+    /// Listen to a single occurrence of a Map event.
+    ///
+    /// This will observe the next (and only the next) event of the specified
+    /// type. After observation, the underlying subscriber will unsubscribe from
+    /// the map or snapshotter.
+    ///
+    /// If you need to unsubscribe before the event fires, call `cancel()` on
+    /// the returned `Cancelable` object.
+    ///
+    /// - Parameters:
+    ///   - eventType: The event type to listen to.
+    ///   - handler: The closure to execute when the event occurs.
+    ///
+    /// - Returns: A `Cancelable` object that you can use to stop listening for
+    ///     the event. This is especially important if you have a retain cycle in
+    ///     the handler.
     @discardableResult
     public func onTypedNext<Payload: Decodable>(_ eventType: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
         return observable.onTypedNext(eventType, handler: handler)
@@ -896,6 +912,15 @@ extension MapboxMap: MapEventsObservable {
         return observable.onEvery([eventType], handler: handler)
     }
 
+    /// Listen to multiple occurrences of a Map event.
+    ///
+    /// - Parameters:
+    ///   - eventType: The event type to listen to.
+    ///   - handler: The closure to execute when the event occurs.
+    ///
+    /// - Returns: A `Cancelable` object that you can use to stop listening for
+    ///     events. This is especially important if you have a retain cycle in
+    ///     the handler.
     @discardableResult
     public func onTypedEvery<Payload: Decodable>(_ eventType: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
         return observable.onTypedEvery(eventType, handler: handler)

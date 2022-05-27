@@ -60,14 +60,18 @@ internal final class Puck3D: Puck {
 
         var model = configuration.model
         model.position = [location.coordinate.longitude, location.coordinate.latitude]
-        if model.orientation?.count != 3 {
-            if let invalidOrientation = model.orientation {
-                Log.warning(
-                    forMessage: "Puck3DConfiguration.model.orientation?.count must be 3 or nil. Actual orientation is \(invalidOrientation). Resetting it to [0, 0, 0].",
-                    category: "Puck")
-            }
-            model.orientation = [0, 0, 0]
-        }
+
+        model.orientation = model.orientation
+            .flatMap { orientation -> [Double]? in
+                guard orientation.count == 3 else {
+                    Log.warning(
+                        forMessage: "Puck3DConfiguration.model.orientation?.count must be 3 or nil. Actual orientation is \(orientation). Resetting it to [0, 0, 0].",
+                        category: "Puck")
+                    return nil
+                }
+                return orientation
+            } ?? [0, 0, 0]
+
         if puckBearingEnabled {
             switch puckBearingSource {
             case .heading:

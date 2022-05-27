@@ -2,7 +2,7 @@ import Foundation
 @testable import MapboxMaps
 @_implementationOnly import MapboxCommon_Private
 
-final class MockStyleManager: StyleManagerType {
+final class MockStyleManager: StyleManagerProtocol {
 
     func asStyleManager() -> StyleManager {
         fatalError()
@@ -174,7 +174,7 @@ final class MockStyleManager: StyleManagerType {
     let addPersistentStyleLayerStub = Stub<AddStyleLayerParameters, Expected<NSNull, NSString>>(
         defaultReturnValue: .init(value: NSNull())
     )
-    @objc func addPersistentStyleLayer(
+    func addPersistentStyleLayer(
         forProperties properties: Any,
         layerPosition: MapboxCoreMaps.LayerPosition?
     ) -> Expected<NSNull, NSString> {
@@ -436,7 +436,7 @@ final class MockStyleManager: StyleManagerType {
     let invalidateStyleCustomGeometrySourceRegionStub = Stub<InvalidateCustomGeometrySourceRegionParameters, Expected<NSNull, NSString>>(
         defaultReturnValue: .init(value: NSNull())
     )
-    @objc func invalidateStyleCustomGeometrySourceRegion(
+    func invalidateStyleCustomGeometrySourceRegion(
         forSourceId sourceId: String,
         bounds: CoordinateBounds
     ) -> Expected<NSNull, NSString> {

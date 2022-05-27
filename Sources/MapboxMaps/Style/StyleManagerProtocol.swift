@@ -3,7 +3,7 @@ import MapboxCoreMaps
 @_implementationOnly import MapboxCommon_Private
 @_implementationOnly import MapboxCoreMaps_Private
 
-internal protocol StyleManagerType {
+internal protocol StyleManagerProtocol {
 
     func asStyleManager() -> StyleManager
 
@@ -141,7 +141,7 @@ internal protocol StyleManagerType {
 
 // MARK: Conformance
 
-extension StyleManager: StyleManagerType {
+extension StyleManager: StyleManagerProtocol {
 
     func asStyleManager() -> StyleManager {
         return self

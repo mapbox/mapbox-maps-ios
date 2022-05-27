@@ -1,5 +1,5 @@
 import XCTest
-import MapboxCommon_Private
+@_implementationOnly import MapboxCommon_Private
 @testable import MapboxMaps
 
 final class TileStoreObserverWrapperTests: XCTestCase {

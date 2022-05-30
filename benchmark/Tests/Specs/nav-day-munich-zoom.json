@@ -1,0 +1,23 @@
+[
+  [
+    "ClearOfflineData"
+  ],
+  [
+    "CreateMap",
+    {
+      "style": "mapbox://styles/mapbox/navigation-day-v1",
+      "camera": {
+        "center": [11.5736, 48.1386],
+        "zoom": 10.0,
+        "pitch": 0.0
+      }
+    }
+  ],
+  [
+    "PlaySequence",
+    {
+      "fileName": "munich-zoom-in-out-z10-z20.json",
+      "playbackCount": 10
+    }
+  ]
+]

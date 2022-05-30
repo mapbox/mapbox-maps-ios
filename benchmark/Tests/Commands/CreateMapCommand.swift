@@ -19,13 +19,11 @@ public struct CreateMapCommand: AsyncCommand, Decodable {
         viewController.view.addSubview(mapView)
 
         try await withCheckedThrowingContinuation { continuation in
-            mapView.mapboxMap.onNext(.mapLoaded) { [weak mapView] event in
-                mapView?.removeFromSuperview()
+            mapView.mapboxMap.onNext(.mapLoaded) { event in
                 return continuation.resume(returning: ())
             }
 
-            mapView.mapboxMap.onNext(.mapLoadingError) { [weak mapView] event in
-                mapView?.removeFromSuperview()
+            mapView.mapboxMap.onNext(.mapLoadingError) { event in
                 return continuation.resume(throwing: Error.cannotLoadMap)
             }
         }

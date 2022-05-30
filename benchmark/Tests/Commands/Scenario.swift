@@ -11,6 +11,16 @@ struct Scenario {
             try await command.execute()
             print("<< Finish command: \(type(of: command))\n")
         }
+
+        await MainActor.run {
+            // Cleanup views from rootController.
+            // Mostly for 'CreateMap' command.
+            // We cannot make this cleanup inside the command as MapView might be needed
+            // by following commands like 'PlaySequence'
+            UIViewController.rootController?.view.subviews.forEach {
+                $0.removeFromSuperview()
+            }
+        }
     }
 
     enum SupportedCommands: String {
@@ -18,6 +28,7 @@ struct Scenario {
         case setOnlineState = "SetOnlineState"
         case clearOfflineData = "ClearOfflineData"
         case createOfflinePacks = "CreateOfflinePacks"
+        case playSequence = "PlaySequence"
     }
 
     struct ScenarioData: Decodable {
@@ -47,6 +58,8 @@ struct Scenario {
                     command = ClearOfflineDataCommand()
                 case .createOfflinePacks:
                     command = try commandContainer.decode(CreateOfflinePacksCommand.self)
+                case .playSequence:
+                    command = try commandContainer.decode(PlaySequenceCommand.self)
                 }
                 commands.append(command)
             }

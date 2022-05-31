@@ -1,7 +1,7 @@
 import Foundation
 @_implementationOnly import MapboxCoreMaps_Private
 
-internal class MapRecorder {
+final internal class MapRecorder {
     let recorder: MapboxCoreMaps_Private.MapRecorder
 
     internal init(mapView: Map) {

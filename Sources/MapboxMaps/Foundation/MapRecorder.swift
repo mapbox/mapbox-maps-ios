@@ -14,7 +14,7 @@ final internal class MapRecorder {
         recorder.startRecording()
     }
 
-    internal func stop() {
+    internal func stop() -> String {
         recorder.stopRecording()
     }
 

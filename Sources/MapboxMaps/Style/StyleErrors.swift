@@ -33,7 +33,7 @@ public enum TypeConversionError: Error {
 ///
 /// The associated message (which is returned by `errorDescription`) contains
 /// a descriptive error message.
-public enum MapLoadingError: LocalizedError, Decodable {
+public enum MapLoadingError: LocalizedError {
     /// Style could not be loaded
     case style(String)
 

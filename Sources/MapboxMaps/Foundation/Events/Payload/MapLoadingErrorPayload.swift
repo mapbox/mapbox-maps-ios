@@ -13,8 +13,8 @@ public struct MapLoadingErrorPayload {
 
 extension MapLoadingErrorPayload: Decodable {
     enum CodingKeys: String, CodingKey {
-        case type = "type"
-        case message = "message"
+        case type
+        case message
         case sourceId = "source-id"
         case tileId = "tile-id"
     }

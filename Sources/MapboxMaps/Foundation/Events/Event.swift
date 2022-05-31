@@ -17,7 +17,7 @@ public class TypedEvent<Payload: Decodable> {
     public var name: String { event.type }
 
     /// The payload associated with the event.
-    public lazy var payload: Payload = try! event.typedPayload()
+    public lazy var payload: Payload! = try? event.typedPayload()
 
     internal let event: Event
 

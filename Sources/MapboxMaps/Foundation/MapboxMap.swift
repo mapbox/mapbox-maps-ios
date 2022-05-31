@@ -1027,6 +1027,13 @@ extension MapboxMap {
 
 }
 
+// MARK: - Map Recorder
+extension MapboxMap {
+    internal func makeRecorder() -> MapRecorder {
+        MapRecorder(mapView: __map)
+    }
+}
+
 // MARK: - Testing only!
 
 extension MapboxMap {

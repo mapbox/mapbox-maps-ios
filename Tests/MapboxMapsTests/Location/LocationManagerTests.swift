@@ -151,4 +151,12 @@ final class LocationManagerTests: XCTestCase {
         XCTAssertTrue(delegate.didChangeAccuracyAuthorizationStub.invocations.first?.parameters.locationManager === locationManager)
         XCTAssertEqual(delegate.didChangeAccuracyAuthorizationStub.invocations.first?.parameters.accuracyAuthorization, accuracyAuthorization)
     }
+
+    func testPuckLocationObserving() {
+        let newInterpolatedLocation = InterpolatedLocation.random()
+        locationManager.onPuckLocationUpdated { location in
+            XCTAssertEqual(location, newInterpolatedLocation)
+        }
+        puckManager.onPuckLocationUpdatedStub.invocations.first?.parameters(newInterpolatedLocation)
+    }
 }

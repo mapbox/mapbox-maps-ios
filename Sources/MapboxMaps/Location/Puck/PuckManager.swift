@@ -6,6 +6,7 @@ internal protocol PuckManagerProtocol: AnyObject {
     var puckType: PuckType? { get set }
     var puckBearingSource: PuckBearingSource { get set }
     var puckBearingEnabled: Bool { get set }
+    func onPuckLocationUpdated(_ handler: @escaping (InterpolatedLocation) -> Void) -> Cancelable
 }
 
 internal final class PuckManager: PuckManagerProtocol {
@@ -56,12 +57,22 @@ internal final class PuckManager: PuckManagerProtocol {
         }
     }
 
+    private let interpolatedLocationProducer: InterpolatedLocationProducerProtocol
     private let puck2DProvider: (Puck2DConfiguration) -> Puck
     private let puck3DProvider: (Puck3DConfiguration) -> Puck
 
-    internal init(puck2DProvider: @escaping (Puck2DConfiguration) -> Puck,
+    internal init(interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
+                  puck2DProvider: @escaping (Puck2DConfiguration) -> Puck,
                   puck3DProvider: @escaping (Puck3DConfiguration) -> Puck) {
+        self.interpolatedLocationProducer = interpolatedLocationProducer
         self.puck2DProvider = puck2DProvider
         self.puck3DProvider = puck3DProvider
+    }
+
+    internal func onPuckLocationUpdated(_ handler: @escaping (InterpolatedLocation) -> Void) -> Cancelable {
+        interpolatedLocationProducer.observe { interpolatedLocation in
+            handler(interpolatedLocation)
+            return true
+        }
     }
 }

@@ -1,12 +1,12 @@
 import CoreLocation
 
-internal struct InterpolatedLocation: Equatable {
-    internal var coordinate: CLLocationCoordinate2D
-    internal var altitude: CLLocationDistance
-    internal var horizontalAccuracy: CLLocationAccuracy
-    internal var course: CLLocationDirection?
-    internal var heading: CLLocationDirection?
-    internal var accuracyAuthorization: CLAccuracyAuthorization
+public struct InterpolatedLocation: Equatable {
+    public internal(set) var coordinate: CLLocationCoordinate2D
+    public internal(set) var altitude: CLLocationDistance
+    public internal(set) var horizontalAccuracy: CLLocationAccuracy
+    public internal(set) var course: CLLocationDirection?
+    public internal(set) var heading: CLLocationDirection?
+    public internal(set) var accuracyAuthorization: CLAccuracyAuthorization
 
     internal init(coordinate: CLLocationCoordinate2D,
                   altitude: CLLocationDistance,

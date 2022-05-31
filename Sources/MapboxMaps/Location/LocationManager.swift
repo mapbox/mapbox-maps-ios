@@ -62,6 +62,12 @@ public final class LocationManager: NSObject {
         locationProducer.remove(consumer)
     }
 
+    /// Evaluates the given closure when puck location is updated, passing new location as parameter.
+    @discardableResult
+    public func onPuckLocationUpdated(_ handler: @escaping (InterpolatedLocation) -> Void) -> Cancelable {
+        puckManager.onPuckLocationUpdated(handler)
+    }
+
     /// Allows a custom case to request full accuracy
     @available(iOS 14.0, *)
     public func requestTemporaryFullAccuracyPermissions(withPurposeKey purposeKey: String) {

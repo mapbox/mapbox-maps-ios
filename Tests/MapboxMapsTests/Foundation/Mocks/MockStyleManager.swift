@@ -206,6 +206,17 @@ final class MockStyleManager: StyleManagerProtocol {
         removeStyleLayerStub.call(with: layerId)
     }
 
+    struct MoveStyleLayerParameters {
+        let layerId: String
+        let layerPosition: MapboxCoreMaps.LayerPosition?
+    }
+    let moveStyleLayerStub = Stub<MoveStyleLayerParameters, Expected<NSNull, NSString>>(
+        defaultReturnValue: .init(value: NSNull())
+    )
+    func moveStyleLayer(forLayerId layerId: String, layerPosition: MapboxCoreMaps.LayerPosition?) -> Expected<NSNull, NSString> {
+        moveStyleLayerStub.call(with: MoveStyleLayerParameters(layerId: layerId, layerPosition: layerPosition))
+    }
+
     struct SetStyleLayerPropertyParameters {
         let layerId: String
         let property: String

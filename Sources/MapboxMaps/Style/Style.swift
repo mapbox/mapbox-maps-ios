@@ -85,14 +85,8 @@ public final class Style: StyleProtocol {
      - Throws: `StyleError` on failure, or `NSError` with a _domain of "com.mapbox.bindgen"
      */
     public func moveLayer(withId id: String, to position: LayerPosition) throws {
-        let properties = try layerProperties(for: id)
-        let isPersistent = try isPersistentLayer(id: id)
-        try removeLayer(withId: id)
-
-        if isPersistent {
-            try addPersistentLayer(with: properties, layerPosition: position)
-        } else {
-            try addLayer(with: properties, layerPosition: position)
+        try handleExpected {
+            _styleManager.moveStyleLayer(forLayerId: id, layerPosition: position.corePosition)
         }
     }
 

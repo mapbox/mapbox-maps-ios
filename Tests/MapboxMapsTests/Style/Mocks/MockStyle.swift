@@ -38,6 +38,16 @@ final class MockStyle: StyleProtocol {
         setLayerPropertiesStub.call(with: .init(layerId: layerId, properties: properties))
     }
 
+    struct SetLayerPropertyParams {
+        let layerId: String
+        let property: String
+        let value: Any
+    }
+    let setLayerPropertyStub = Stub<SetLayerPropertyParams, Void>()
+    func setLayerProperty(for layerId: String, property: String, value: Any) throws {
+        setLayerPropertyStub.call(with: .init(layerId: layerId, property: property, value: value))
+    }
+
     struct AddSourceParams {
         var source: Source
         var id: String

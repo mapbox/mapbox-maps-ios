@@ -4,56 +4,62 @@ import MapboxMaps
 
 @available(*, deprecated)
 @objc(OfflineRegionManagerExample)
-public class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
+final class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
 
-    internal var mapView: MapView!
-    private var offlineManager: OfflineRegionManager!
-    private var observer = OfflineRegionExampleObserver()
+    private var mapView: MapView!
     private var progressView: UIProgressView!
 
-    private let tag   = "Offline"
-    private let zoom  = 16.0
-    private let coord = CLLocationCoordinate2D(latitude: 57.818901, longitude: 20.071357)
+    private var offlineManager: OfflineRegionManager!
+    private var offlineRegion: OfflineRegion!
 
-    override public func viewDidLoad() {
+    private let center = CLLocationCoordinate2D(
+        latitude: 60.17195694011002,
+        longitude: 24.945389069265598)
+    private let zoom: CGFloat = 16
+
+    override func viewDidLoad() {
         super.viewDidLoad()
-
         print("This example uses a deprecated API, and will be removed in a future release.")
-        let options = MapInitOptions(styleURI: .light)
+
+        let options = MapInitOptions(
+            cameraOptions: CameraOptions(
+                center: center,
+                zoom: zoom),
+            styleURI: .light)
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
         progressView = UIProgressView(progressViewStyle: .bar)
-        progressView.progress                                  = 0.0
+        progressView.progress = 0.0
         progressView.translatesAutoresizingMaskIntoConstraints = false
-        progressView.trackTintColor                            = .white
-        progressView.progressTintColor                         = .red
+        progressView.trackTintColor = .white
+        progressView.progressTintColor = .red
 
         mapView.addSubview(progressView)
 
         NSLayoutConstraint.activate([
-            progressView.bottomAnchor.constraint(equalTo: mapView.bottomAnchor, constant: -100.0),
+            progressView.bottomAnchor.constraint(equalTo: mapView.ornaments.logoView.topAnchor, constant: -20.0),
             progressView.leftAnchor.constraint(equalTo: mapView.leftAnchor, constant: 20),
-            progressView.rightAnchor.constraint(equalTo: mapView.rightAnchor, constant: -20)
+            progressView.rightAnchor.constraint(equalTo: mapView.rightAnchor, constant: -20),
         ])
 
-        mapView.mapboxMap.onNext(.styleLoaded) { _ in
+        mapView.mapboxMap.onNext(.mapLoaded) { _ in
             self.setupExample()
         }
     }
 
-    internal func setupExample() {
+    private func setupExample() {
         let uriString = mapView.mapboxMap.style.uri!.rawValue
         let offlineRegionDef = OfflineRegionGeometryDefinition(
             styleURL: uriString,
-            geometry: .point(Point(coord)),
+            geometry: .point(Point(center)),
             minZoom: zoom - 2,
             maxZoom: zoom + 2,
             pixelRatio: Float(UIScreen.main.scale),
             glyphsRasterizationMode: .noGlyphsRasterizedLocally)
 
-        // Please note - this is using a deprecated API, and will be removed in a future release.
+        // Please note: this uses a deprecated API and will be removed in the future.
         offlineManager = OfflineRegionManager(resourceOptions: resourceOptions())
 
         offlineManager.createOfflineRegion(for: offlineRegionDef) { [weak self] result in
@@ -67,49 +73,64 @@ public class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
         }
     }
 
-    func startDownload(for region: OfflineRegion) {
-        observer.offlineRegion = region
-        observer.statusChanged = { [weak self] (status: OfflineRegionStatus) in
-            region.getStatus { result in
-                switch result.map(\.downloadState) {
-                case .success(let downloadState): print("\(downloadState.rawValue)")
-                case .failure: break
-                }
+    private func startDownload(for region: OfflineRegion) {
+        let observer = OfflineRegionExampleObserver { [weak self] (status) in
+            guard let self = self else {
+                return
             }
-            print("Downloaded \(status.completedResourceCount)/\(status.requiredResourceCount) resources; \(status.completedResourceSize) bytes downloaded.")
 
-            self?.progressView.progress = Float(status.completedResourceCount)/Float(status.requiredResourceCount)
+            self.progressView.progress = Float(status.completedResourceCount)/Float(status.requiredResourceCount)
+
+            let sentences = [
+                "Downloaded \(status.completedResourceCount)/\(status.requiredResourceCount) resources and \(status.completedResourceSize) bytes.",
+                "Required resource count is \(status.isRequiredResourceCountIsPrecise ? "precise" : "a lower bound").",
+                "Download state is \(status.downloadState == .active ? "active" : "inactive").",
+            ]
+            print(sentences.joined(separator: " "))
+
             if status.downloadState == .inactive {
                 print("Download complete.")
 
+                // A download that was completely successful should meet the following criteria:
+                if status.isRequiredResourceCountIsPrecise, status.completedResourceCount == status.requiredResourceCount {
+                    print("Success")
+                } else {
+                    print("Some resources failed to download. Resources that did download will be available offline.")
+                }
+
                 // The line below is used for internal testing purposes only.
-                self?.finish()
+                self.finish()
             }
         }
 
-        region.setOfflineRegionObserverFor(observer)
-        region.setOfflineRegionDownloadStateFor(.active)
+        // must keep a strong reference to the region or it will get
+        // deallocated and the observer will not be notified.
+        offlineRegion = region
+        offlineRegion.setOfflineRegionObserverFor(observer)
+        offlineRegion.setOfflineRegionDownloadStateFor(.active)
     }
 }
 
 /// Delegate for OfflineRegion
 @available(*, deprecated)
-public class OfflineRegionExampleObserver: OfflineRegionObserver {
+final class OfflineRegionExampleObserver: OfflineRegionObserver {
 
-    weak var offlineRegion: OfflineRegion?
-    var statusChanged: ((OfflineRegionStatus) -> Void)?
+    private let statusChanged: (OfflineRegionStatus) -> Void
 
-    public func statusChanged(for status: OfflineRegionStatus) {
-        statusChanged?(status)
+    init(statusChanged: @escaping (OfflineRegionStatus) -> Void) {
+        self.statusChanged = statusChanged
     }
 
-    public func responseError(forError error: ResponseError) {
-        print("Offline region download failed: \(error.reason), \(error.message)")
-        offlineRegion?.setOfflineRegionDownloadStateFor(.inactive)
+    func statusChanged(for status: OfflineRegionStatus) {
+        statusChanged(status)
     }
 
-    public func mapboxTileCountLimitExceeded(forLimit limit: UInt64) {
+    func responseError(forError error: ResponseError) {
+        // Some errors are considered recoverable and will be retried
+        print("Offline resource download error: \(error.reason), \(error.message)")
+    }
+
+    func mapboxTileCountLimitExceeded(forLimit limit: UInt64) {
         print("Mapbox tile count max (\(limit)) has been exceeded!")
     }
-
 }

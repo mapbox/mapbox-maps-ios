@@ -21,7 +21,7 @@ final class SceneKitExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onTypedNext(.styleLoaded) { _ in
+        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
             self.addModelAndTerrain()
             // The following line is just for testing purposes.
             self.finish()

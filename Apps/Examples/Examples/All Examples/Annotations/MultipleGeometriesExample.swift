@@ -20,7 +20,7 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allow the view controller to receive information about map events.
-        mapView.mapboxMap.onTypedNext(.mapLoaded) { _ in
+        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
             self.addGeoJSONSource()
             self.addPolygonLayer()
             self.addLineStringLayer()

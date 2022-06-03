@@ -18,7 +18,7 @@ internal protocol MapboxMapProtocol: AnyObject {
     func beginGesture()
     func endGesture()
     @discardableResult
-    func onTypedEvery<Payload: Decodable>(_ eventType: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable
+    func onEvery<Payload: Decodable>(event eventType: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable
     // View annotation management
     func setViewAnnotationPositionsUpdateListener(_ listener: ViewAnnotationPositionsUpdateListener?)
     func addViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws
@@ -78,14 +78,14 @@ public final class MapboxMap: MapboxMapProtocol {
     // MARK: - Style loading
 
     private func observeStyleLoad(_ completion: @escaping (Result<Style, Error>) -> Void) {
-        onTypedNext(.styleLoaded) { _ in
+        onNext(event: .styleLoaded) { _ in
             if !self.style.isLoaded {
                 Log.warning(forMessage: "style.isLoaded == false, was this an empty style?", category: "Style")
             }
             completion(.success(self.style))
         }
 
-        onTypedNext(.mapLoadingError) { event in
+        onNext(event: .mapLoadingError) { event in
             completion(.failure(event.payload.error))
         }
     }
@@ -871,8 +871,8 @@ extension MapboxMap: MapEventsObservable {
     ///     the event. This is especially important if you have a retain cycle in
     ///     the handler.
     @discardableResult
-    public func onTypedNext<Payload: Decodable>(_ eventType: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
-        return observable.onTypedNext(eventType, handler: handler)
+    public func onNext<Payload: Decodable>(event eventType: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
+        return observable.onNext(event: eventType, handler: handler)
     }
 
     /// Listen to a single occurrence of a Map event.
@@ -891,7 +891,7 @@ extension MapboxMap: MapEventsObservable {
     /// - Returns: A `Cancelable` object that you can use to stop listening for
     ///     the event. This is especially important if you have a retain cycle in
     ///     the handler.
-    @available(*, deprecated, renamed: "onTypedNext(_:handler:)")
+    @available(*, deprecated, renamed: "onNext(event:handler:)")
     @discardableResult
     public func onNext(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
         return observable.onNext([eventType], handler: handler)
@@ -906,7 +906,7 @@ extension MapboxMap: MapEventsObservable {
     /// - Returns: A `Cancelable` object that you can use to stop listening for
     ///     events. This is especially important if you have a retain cycle in
     ///     the handler.
-    @available(*, deprecated, renamed: "onTypedEvery(_:handler:)")
+    @available(*, deprecated, renamed: "onEvery(event:handler:)")
     @discardableResult
     public func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
         return observable.onEvery([eventType], handler: handler)
@@ -922,8 +922,8 @@ extension MapboxMap: MapEventsObservable {
     ///     events. This is especially important if you have a retain cycle in
     ///     the handler.
     @discardableResult
-    public func onTypedEvery<Payload: Decodable>(_ eventType: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
-        return observable.onTypedEvery(eventType, handler: handler)
+    public func onEvery<Payload: Decodable>(event: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
+        return observable.onEvery(event: event, handler: handler)
     }
 
     internal func performWithoutNotifying(_ block: () -> Void) {

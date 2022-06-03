@@ -28,12 +28,12 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
                                             styleURI: nil)
         let view = MapView(frame: window.bounds, mapInitOptions: mapInitOptions)
 
-        view.mapboxMap.onTypedEvery(.styleLoaded) { [weak self] _ in
+        view.mapboxMap.onEvery(event: .styleLoaded) { [weak self] _ in
             guard let self = self, let mapView = self.mapView else { return }
             self.didFinishLoadingStyle?(mapView)
         }
 
-        view.mapboxMap.onTypedEvery(.mapIdle) { [weak self] _ in
+        view.mapboxMap.onEvery(event: .mapIdle) { [weak self] _ in
             guard let self = self, let mapView = self.mapView else { return }
             self.didBecomeIdle?(mapView)
         }

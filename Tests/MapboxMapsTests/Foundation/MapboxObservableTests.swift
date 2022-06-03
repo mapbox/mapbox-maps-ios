@@ -184,7 +184,7 @@ final class MapboxObservableTests: XCTestCase {
             eventType: MapEvents.Event<Payload>,
             handlerStub: Stub<TypedEvent<Payload>, Void> = .init()
         ) throws {
-            _ = mapboxObservable.onTypedNext(eventType, handler: handlerStub.call(with:))
+            _ = mapboxObservable.onNext(event: eventType, handler: handlerStub.call(with:))
 
             // Initial subscribe invokes subscribe only with expected events
             XCTAssertEqual(observable.unsubscribeStub.invocations.count, 0)
@@ -249,7 +249,7 @@ final class MapboxObservableTests: XCTestCase {
             eventType: MapEvents.Event<Payload>,
             handlerStub: Stub<TypedEvent<Payload>, Void> = .init()
         ) throws {
-            let cancelable = mapboxObservable.onTypedNext(eventType, handler: handlerStub.call(with:))
+            let cancelable = mapboxObservable.onNext(event: eventType, handler: handlerStub.call(with:))
             let subscribedObserver = try XCTUnwrap(observable.subscribeStub.invocations.first?.parameters.observer)
 
             cancelable.cancel()
@@ -316,7 +316,7 @@ final class MapboxObservableTests: XCTestCase {
                 invocation.parameters.observer.notify(for: Event(type: "", data: 0))
             }
 
-            let cancelable = mapboxObservable.onTypedNext(eventType, handler: handlerStub.call(with:))
+            let cancelable = mapboxObservable.onNext(event: eventType, handler: handlerStub.call(with:))
 
             let subscribedObserver = try XCTUnwrap(observable.subscribeStub.invocations.first?.parameters.observer)
             XCTAssertEqual(observable.unsubscribeStub.invocations.count, 1)
@@ -391,7 +391,7 @@ final class MapboxObservableTests: XCTestCase {
             eventType: MapEvents.Event<Payload>,
             handlerStub: Stub<TypedEvent<Payload>, Void> = .init()
         ) throws {
-            let cancelable = mapboxObservable.onTypedEvery(eventType, handler: handlerStub.call(with:))
+            let cancelable = mapboxObservable.onEvery(event: eventType, handler: handlerStub.call(with:))
 
             // Initial subscribe invokes subscribe only with expected events
             XCTAssertEqual(observable.unsubscribeStub.invocations.count, 0)
@@ -481,8 +481,8 @@ final class MapboxObservableTests: XCTestCase {
                 let mapboxObservable = MapboxObservable(observable: observable)
                 mapboxObservable.subscribe(observer, events: events)
                 mapboxObservable.subscribe(otherObserver, events: events)
-                _ = mapboxObservable.onTypedNext(eventType, handler: handlerStub.call(with:))
-                _ = mapboxObservable.onTypedEvery(eventType, handler: handlerStub.call(with:))
+                _ = mapboxObservable.onNext(event: eventType, handler: handlerStub.call(with:))
+                _ = mapboxObservable.onEvery(event: eventType, handler: handlerStub.call(with:))
 
                 XCTAssertEqual(observable.subscribeStub.invocations.count, 4)
                 subscribedObservers = observable.subscribeStub.invocations.map(\.parameters.observer)
@@ -560,8 +560,8 @@ final class MapboxObservableTests: XCTestCase {
             let otherObserver = MockObserver()
             mapboxObservable.subscribe(observer, events: events)
             mapboxObservable.subscribe(otherObserver, events: events)
-            _ = mapboxObservable.onTypedNext(eventType, handler: handlerStub.call(with:))
-            _ = mapboxObservable.onTypedEvery(eventType, handler: otherHandlerStub.call(with:))
+            _ = mapboxObservable.onNext(event: eventType, handler: handlerStub.call(with:))
+            _ = mapboxObservable.onEvery(event: eventType, handler: otherHandlerStub.call(with:))
 
             mapboxObservable.performWithoutNotifying {
                 // do actions that trigger notifications
@@ -641,8 +641,8 @@ final class MapboxObservableTests: XCTestCase {
             let otherObserver = MockObserver()
             mapboxObservable.subscribe(observer, events: events)
             mapboxObservable.subscribe(otherObserver, events: events)
-            _ = mapboxObservable.onTypedNext(eventType, handler: handlerStub.call(with:))
-            _ = mapboxObservable.onTypedEvery(eventType, handler: otherHandlerStub.call(with:))
+            _ = mapboxObservable.onNext(event: eventType, handler: handlerStub.call(with:))
+            _ = mapboxObservable.onEvery(event: eventType, handler: otherHandlerStub.call(with:))
 
             mapboxObservable.performWithoutNotifying {
                 mapboxObservable.performWithoutNotifying {

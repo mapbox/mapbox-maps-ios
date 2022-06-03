@@ -266,7 +266,7 @@ final class MapboxMapTests: XCTestCase {
         ) throws {
             let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
 
-            mapboxMap.onTypedNext(eventType, handler: handlerStub.call(with:))
+            mapboxMap.onNext(event: eventType, handler: handlerStub.call(with:))
 
             XCTAssertEqual(mapboxObservable.onTypedNextStub.invocations.count, 1)
             XCTAssertEqual(mapboxObservable.onTypedNextStub.invocations.first?.parameters.eventName, eventType.name)
@@ -329,7 +329,7 @@ final class MapboxMapTests: XCTestCase {
         ) throws {
             let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
 
-            mapboxMap.onTypedEvery(eventType, handler: handlerStub.call(with:))
+            mapboxMap.onEvery(event: eventType, handler: handlerStub.call(with:))
 
             XCTAssertEqual(mapboxObservable.onTypedEveryStub.invocations.count, 1)
             XCTAssertEqual(mapboxObservable.onTypedEveryStub.invocations.first?.parameters.eventName, eventType.name)

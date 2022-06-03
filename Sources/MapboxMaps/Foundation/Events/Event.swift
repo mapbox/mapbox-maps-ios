@@ -4,10 +4,15 @@ public typealias Event = MapboxCoreMaps.Event
 
 extension Event {
     fileprivate func typedPayload<Payload>() throws -> Payload where Payload: Decodable {
-        let data = try JSONSerialization.data(withJSONObject: data)
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .formatted(.rfc1123)
-        return try decoder.decode(Payload.self, from: data)
+        do {
+            let data = try JSONSerialization.data(withJSONObject: data)
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .formatted(.rfc1123)
+            return try decoder.decode(Payload.self, from: data)
+        } catch {
+            Log.error(forMessage: "Cannot decode \(Payload.self) for \(self.data), error \(error)")
+            throw error
+        }
     }
 }
 

@@ -116,7 +116,7 @@ public class OrnamentsManager: NSObject {
         // MapboxMap should not be allowed to own a strong ref to compassView
         // since compassView owns a tapAction that captures a strong ref to
         // cameraAnimationsManager which has a strong ref to mapboxMap.
-        mapboxMap.onTypedEvery(.cameraChanged) { [weak mapboxMap, weak scaleBarView, weak compassView] _ in
+        mapboxMap.onEvery(event: .cameraChanged) { [weak mapboxMap, weak scaleBarView, weak compassView] _ in
             guard let mapboxMap = mapboxMap,
                   let scaleBarView = scaleBarView,
                   let compassView = compassView else {

@@ -93,7 +93,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                  `-[MGLMapViewDelegate mapView:didFinishLoadingStyle:]` in SDK versions
                  prior to v10.
                  */
-                mapView.mapboxMap.onTypedEvery(.styleDataLoaded) { [weak self] (event) in
+                mapView.mapboxMap.onEvery(event: .styleDataLoaded) { [weak self] (event) in
                     guard let handler = self?.handler else {
                         return
                     }
@@ -116,7 +116,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                  Changes to sources or layers of the current style do not cause this
                  event to be emitted.
                  */
-                mapView.mapboxMap.onTypedNext(.styleLoaded) { (event) in
+                mapView.mapboxMap.onNext(event: .styleLoaded) { (event) in
                     print("The map has finished loading style ... Event = \(event)")
                     self.handler?()
                 }
@@ -130,7 +130,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                  map and ensures that these layers would only be shown after the map has
                  been fully rendered.
                  */
-                mapView.mapboxMap.onTypedNext(.mapLoaded) { (event) in
+                mapView.mapboxMap.onNext(event: .mapLoaded) { (event) in
                     print("The map has finished loading... Event = \(event)")
                     self.handler?()
                 }
@@ -143,7 +143,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                  - All currently requested tiles have been rendered
                  - All fade/transition animations have completed
                  */
-                mapView.mapboxMap.onTypedNext(.mapIdle) { (event) in
+                mapView.mapboxMap.onNext(event: .mapIdle) { (event) in
                     print("The map is idle... Event = \(event)")
                     self.handler?()
                 }
@@ -156,7 +156,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                  You can use the associated error message to notify the user that map
                  data is unavailable.
                  */
-                mapView.mapboxMap.onTypedNext(.mapLoadingError) { (event) in
+                mapView.mapboxMap.onNext(event: .mapLoadingError) { (event) in
                     print("The map failed to load.. \(event.payload.error)")
                 }
             }
@@ -396,7 +396,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
         let mapView = MapView(frame: testRect)
         let expectation = self.expectation(description: "Source was added")
-        mapView.mapboxMap.onTypedNext(.styleLoaded) { _ in
+        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
             do {
                 //-->
                 try mapView.mapboxMap.style.addSource(myGeoJSONSource, id: "my-geojson-source")
@@ -432,7 +432,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
     func testExpression() throws {
         let mapView = MapView(frame: testRect)
         let expectation = self.expectation(description: "layer updated")
-        mapView.mapboxMap.onTypedNext(.styleLoaded) { _ in
+        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
             do {
 
                 //-->
@@ -480,7 +480,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
     func testAdd3DTerrain() {
         let mapView = MapView(frame: testRect)
         let expectation = self.expectation(description: "Source was added")
-        mapView.mapboxMap.onTypedNext(.styleLoaded) { _ in
+        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
             do {
                 //-->
                 // Add terrain

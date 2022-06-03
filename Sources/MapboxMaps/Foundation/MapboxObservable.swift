@@ -7,8 +7,8 @@ internal protocol MapboxObservableProtocol: AnyObject {
     func onNext(_ eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable
     @available(*, deprecated)
     func onEvery(_ eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable
-    func onTypedNext<Payload: Decodable>(_ eventType: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable
-    func onTypedEvery<Payload: Decodable>(_ eventType: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable
+    func onNext<Payload: Decodable>(event: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable
+    func onEvery<Payload: Decodable>(event: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable
     func performWithoutNotifying(_ block: () -> Void)
 }
 
@@ -96,13 +96,13 @@ internal final class MapboxObservable: MapboxObservableProtocol {
         return cancelable
     }
 
-    internal func onTypedNext<Payload: Decodable>(_ eventType: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
+    internal func onNext<Payload: Decodable>(event: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
         let cancelable = CompositeCancelable()
         let observer = BlockObserver {
             handler(TypedEvent(event: $0))
             cancelable.cancel()
         }
-        subscribe(observer, events: [eventType.name])
+        subscribe(observer, events: [event.name])
         // Capturing self and observer with weak refs in the closure passed to BlockCancelable
         // avoids a retain cycle. MapboxObservable holds a strong reference to observer, which has a
         // strong reference to cancelable, which has a strong reference to BlockCancelable, which only
@@ -127,11 +127,11 @@ internal final class MapboxObservable: MapboxObservableProtocol {
         }
     }
 
-    internal func onTypedEvery<Payload: Decodable>(_ eventType: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
+    internal func onEvery<Payload: Decodable>(event: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
         let observer = BlockObserver {
             handler(TypedEvent(event: $0))
         }
-        subscribe(observer, events: [eventType.name])
+        subscribe(observer, events: [event.name])
         return BlockCancelable { [weak self, weak observer] in
             if let self = self, let observer = observer {
                 self.unsubscribe(observer, events: [])

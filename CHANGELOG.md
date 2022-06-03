@@ -6,6 +6,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Add well-formed(type-safe) map event types. ([#1362](https://github.com/mapbox/mapbox-maps-ios/pull/1362))
 
+## 10.6.0-rc.1 - June 2, 2022
+
+* Update to MapboxCoreMaps 10.6.0-rc.1 and MapboxCommon 22.0.0-rc.2. ([#1368](https://github.com/mapbox/mapbox-maps-ios/pull/1368))
+* Add mercator scale factor to 3D puck, so that the 3D puck size won't increase as latitude increases. ([#1347](https://github.com/mapbox/mapbox-maps-ios/pull/1347))
+
 ## 10.6.0-beta.2 - May 25, 2022
 
 * Introduce ModelLayer experimental API to render 3D models on the map. ([#1348](https://github.com/mapbox/mapbox-maps-ios/pull/1348))

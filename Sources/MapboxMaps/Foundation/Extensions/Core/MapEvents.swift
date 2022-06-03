@@ -72,7 +72,7 @@ import Foundation
 /// and event data format specification for each event.
 public extension MapEvents {
     /// Typed events emitted by the SDK
-    struct Event<Payload: Decodable> {
+    struct Event<Payload> {
         /// The style has been fully loaded, and the map has rendered all visible tiles.
         public static var mapLoaded: Event<NoPayload> { .init(name: MapEvents.mapLoaded) }
 

@@ -180,7 +180,7 @@ final class MapboxObservableTests: XCTestCase {
     }
 
     func testOnTypedNext() throws {
-        func verifyInvocation<Payload: Decodable>(
+        func verifyInvocation<Payload>(
             eventType: MapEvents.Event<Payload>,
             handlerStub: Stub<TypedEvent<Payload>, Void> = .init()
         ) throws {
@@ -245,7 +245,7 @@ final class MapboxObservableTests: XCTestCase {
     }
 
     func testOnTypedNextCancellation() throws {
-        func verifyInvocation<Payload: Decodable>(
+        func verifyInvocation<Payload>(
             eventType: MapEvents.Event<Payload>,
             handlerStub: Stub<TypedEvent<Payload>, Void> = .init()
         ) throws {
@@ -308,7 +308,7 @@ final class MapboxObservableTests: XCTestCase {
     }
 
     func testOnTypedNextWithSynchronousInvocation() throws {
-        func verifyInvocation<Payload: Decodable>(
+        func verifyInvocation<Payload>(
             eventType: MapEvents.Event<Payload>,
             handlerStub: Stub<TypedEvent<Payload>, Void> = .init()
         ) throws {
@@ -387,7 +387,7 @@ final class MapboxObservableTests: XCTestCase {
     }
 
     func testOnTypedEvery() throws {
-        func verifyInvocation<Payload: Decodable>(
+        func verifyInvocation<Payload>(
             eventType: MapEvents.Event<Payload>,
             handlerStub: Stub<TypedEvent<Payload>, Void> = .init()
         ) throws {
@@ -470,7 +470,7 @@ final class MapboxObservableTests: XCTestCase {
     }
 
     func testTypedUnsubscribesOnDeinit() throws {
-        func verifyInvocation<Payload: Decodable>(
+        func verifyInvocation<Payload>(
             eventType: MapEvents.Event<Payload>,
             handlerStub: Stub<TypedEvent<Payload>, Void> = .init()
         ) throws {
@@ -552,7 +552,7 @@ final class MapboxObservableTests: XCTestCase {
     }
 
     func testTypedPerformWithoutNotifying() throws {
-        func verifyInvocation<Payload: Decodable>(
+        func verifyInvocation<Payload>(
             eventType: MapEvents.Event<Payload>,
             handlerStub: Stub<TypedEvent<Payload>, Void> = .init(),
             otherHandlerStub: Stub<TypedEvent<Payload>, Void> = .init()
@@ -633,7 +633,7 @@ final class MapboxObservableTests: XCTestCase {
     }
 
     func testTypedReentrantPerformWithoutNotifying() throws {
-        func verifyInvocation<Payload: Decodable>(
+        func verifyInvocation<Payload>(
             eventType: MapEvents.Event<Payload>,
             handlerStub: Stub<TypedEvent<Payload>, Void> = .init(),
             otherHandlerStub: Stub<TypedEvent<Payload>, Void> = .init()

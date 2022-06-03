@@ -58,7 +58,7 @@ final class MockMapboxObservable: MapboxObservableProtocol {
         var handler: (Any) -> Void
     }
     let onTypedEveryStub = Stub<OnTypedEveryParams, Cancelable>(defaultReturnValue: MockCancelable())
-    func onEvery<Payload: Decodable>(event: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
+    func onEvery<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
         // swiftlint:disable:next force_cast
         onTypedEveryStub.call(with: OnTypedEveryParams(eventName: event.name, handler: { handler($0 as! TypedEvent<Payload>)}))
     }

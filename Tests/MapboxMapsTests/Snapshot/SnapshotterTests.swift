@@ -73,7 +73,7 @@ final class SnapshotterTests: XCTestCase {
     }
 
     func testOnTypedNext() throws {
-        func verifyInvocation<Payload: Decodable>(
+        func verifyInvocation<Payload>(
             eventType: MapEvents.Event<Payload>,
             event: TypedEvent<Payload> = .init(event: Event(type: "", data: 0)),
             handlerStub: Stub<TypedEvent<Payload>, Void> = .init()
@@ -136,7 +136,7 @@ final class SnapshotterTests: XCTestCase {
     }
 
     func testOnTypedEvery() throws {
-        func verifyInvocation<Payload: Decodable>(
+        func verifyInvocation<Payload>(
             eventType: MapEvents.Event<Payload>,
             event: TypedEvent<Payload> = .init(event: Event(type: "", data: 0)),
             handlerStub: Stub<TypedEvent<Payload>, Void> = .init()

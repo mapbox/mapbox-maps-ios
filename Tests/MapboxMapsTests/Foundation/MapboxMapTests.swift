@@ -259,7 +259,7 @@ final class MapboxMapTests: XCTestCase {
     }
 
     func testOnTypedNext() throws {
-        func verifyInvocation<Payload: Decodable>(
+        func verifyInvocation<Payload>(
             eventType: MapEvents.Event<Payload>,
             event: TypedEvent<Payload> = .init(event: Event(type: "", data: 0)),
             handlerStub: Stub<TypedEvent<Payload>, Void> = .init()
@@ -322,7 +322,7 @@ final class MapboxMapTests: XCTestCase {
     }
 
     func testOnTypedEvery() throws {
-        func verifyInvocation<Payload: Decodable>(
+        func verifyInvocation<Payload>(
             eventType: MapEvents.Event<Payload>,
             event: TypedEvent<Payload> = .init(event: Event(type: "", data: 0)),
             handlerStub: Stub<TypedEvent<Payload>, Void> = .init()

@@ -328,7 +328,7 @@ extension Snapshotter: MapEventsObservable {
     ///     the event. This is especially important if you have a retain cycle in
     ///     the handler.
     @discardableResult
-    public func onNext<Payload: Decodable>(event: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
+    public func onNext<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
         return observable.onNext(event: event, handler: handler)
     }
 
@@ -357,7 +357,7 @@ extension Snapshotter: MapEventsObservable {
     ///     events. This is especially important if you have a retain cycle in
     ///     the handler.
     @discardableResult
-    public func onEvery<Payload: Decodable>(event: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
+    public func onEvery<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
         return observable.onEvery(event: event, handler: handler)
     }
 }

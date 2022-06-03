@@ -7,8 +7,8 @@ internal protocol MapboxObservableProtocol: AnyObject {
     func onNext(_ eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable
     @available(*, deprecated)
     func onEvery(_ eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable
-    func onNext<Payload: Decodable>(event: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable
-    func onEvery<Payload: Decodable>(event: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable
+    func onNext<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable
+    func onEvery<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable
     func performWithoutNotifying(_ block: () -> Void)
 }
 
@@ -96,7 +96,7 @@ internal final class MapboxObservable: MapboxObservableProtocol {
         return cancelable
     }
 
-    internal func onNext<Payload: Decodable>(event: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
+    internal func onNext<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
         let cancelable = CompositeCancelable()
         let observer = BlockObserver {
             handler(TypedEvent(event: $0))
@@ -127,7 +127,7 @@ internal final class MapboxObservable: MapboxObservableProtocol {
         }
     }
 
-    internal func onEvery<Payload: Decodable>(event: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
+    internal func onEvery<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
         let observer = BlockObserver {
             handler(TypedEvent(event: $0))
         }

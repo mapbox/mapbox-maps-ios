@@ -3,7 +3,7 @@ import Foundation
 public struct ResourceRequestPayload {
     public let dataSource: ResourceDataSource
     public let request: ResourceRequest
-    public let response: ResourceResponse
+    public let response: ResourceResponse?
 }
 
 extension ResourceRequestPayload: Decodable {

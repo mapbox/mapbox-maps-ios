@@ -16,5 +16,10 @@ final class DebugViewController: UIViewController {
         mapView = MapView(frame: view.bounds)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
+
+        mapView.mapboxMap.onEvery(.cameraChanged) { _ in
+            print(self.mapView.mapboxMap.cameraState.zoom)
+        }
+        WeatherService.service.start()
     }
 }

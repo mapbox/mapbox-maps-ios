@@ -11,7 +11,9 @@ final class SimulatedLocationProvider: LocationProvider {
 
     var headingOrientation = CLDeviceOrientation.portrait
 
-    private let currentLocation: CLLocation
+    var currentLocation: CLLocation {
+        didSet { delegate?.locationProvider(self, didUpdateLocations: [currentLocation]) }
+    }
 
     private weak var delegate: LocationProviderDelegate?
 

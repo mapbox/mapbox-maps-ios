@@ -57,10 +57,16 @@ public class OrnamentsManager: NSObject {
         return _attributionButton
     }
 
+    public var weatherBugView: UIView {
+        return _weatherBug
+    }
+
     private let _logoView: LogoView
     private let _scaleBarView: MapboxScaleBarOrnamentView
     private let _compassView: MapboxCompassOrnamentView
     private let _attributionButton: InfoButtonOrnament
+    private let _weatherBug: WeatherBugView
+    private let weatherService: WeatherServiceProtocol
 
     private var constraints = [NSLayoutConstraint]()
 
@@ -72,9 +78,11 @@ public class OrnamentsManager: NSObject {
                   logoView: LogoView,
                   scaleBarView: MapboxScaleBarOrnamentView,
                   compassView: MapboxCompassOrnamentView,
-                  attributionButton: InfoButtonOrnament) {
+                  attributionButton: InfoButtonOrnament,
+                  weatherBugView: WeatherBugView,
+                  weatherService: WeatherServiceProtocol) {
         self.options = options
-
+        self.weatherService = weatherService
         // Logo View
         logoView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(logoView)
@@ -106,8 +114,15 @@ public class OrnamentsManager: NSObject {
         view.addSubview(attributionButton)
         self._attributionButton = attributionButton
 
+        // Weather bug
+        weatherBugView.translatesAutoresizingMaskIntoConstraints = false
+        weatherBugView.alpha = 0
+        view.addSubview(weatherBugView)
+        self._weatherBug = weatherBugView
+
         super.init()
 
+        weatherService.delegate = self
         _attributionButton.delegate = infoButtonOrnamentDelegate
 
         updateOrnaments()
@@ -162,6 +177,11 @@ public class OrnamentsManager: NSObject {
                                                        margins: options.attributionButton.margins)
         constraints.append(contentsOf: attributionButtonConstraints)
 
+        let weatherBugConstraints = constraints(with: _weatherBug,
+                                                position: .bottomRight,
+                                                margins: CGPoint(x: 8.0, y: 40))
+        constraints.append(contentsOf: weatherBugConstraints)
+
         // Activate new constraints
         NSLayoutConstraint.activate(constraints)
 
@@ -191,6 +211,49 @@ public class OrnamentsManager: NSObject {
             return [
                 view.rightAnchor.constraint(equalTo: layoutGuide.rightAnchor, constant: -margins.x),
                 view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y)]
+        }
+    }
+}
+
+extension OrnamentsManager: WeatherServiceDelegate {
+    func weatherService(_ weatherService: WeatherService, didUpdateForecast forecast: WeatherForecast) {
+        if forecast.temperature == nil {
+            UIView.animate(withDuration: 0.3) {
+                self._weatherBug.alpha = 0
+            }
+            return
+        }
+        let conditions = [
+            "sun.max.fill",
+            "cloud.fill",
+            "cloud.drizzle.fill",
+            "cloud.rain.fill",
+            "cloud.heavyrain.fill",
+            "cloud.fog.fill",
+            "cloud.hail.fill",
+            "cloud.snow.fill",
+            "cloud.sleet.fill",
+            "cloud.bolt.fill",
+            "cloud.sun.fill",
+            "cloud.sun.rain.fill",
+            "cloud.sun.bolt.fill"
+        ]
+        if let temp = forecast.temperature {
+            let formatter = MeasurementFormatter()
+            formatter.unitStyle = .short
+            formatter.locale = Locale(identifier: "fi_FI")
+            formatter.numberFormatter.maximumFractionDigits = 0
+            formatter.numberFormatter.roundingMode = .halfUp
+            let tempString = formatter.string(from: Measurement(value: temp, unit: UnitTemperature.fahrenheit))
+            self._weatherBug.textLabel.text = tempString
+        }
+
+        if #available(iOS 13.0, *) {
+            self._weatherBug.imageView.image = UIImage(systemName: conditions.randomElement()!)
+        }
+
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut) {
+            self._weatherBug.alpha = 1
         }
     }
 }

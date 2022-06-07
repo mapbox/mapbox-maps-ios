@@ -363,6 +363,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
         let maximumDistance: CLLocationDistance = Double(maximumWidth) * unitsPerPoint
         let allowedDistance = isMetricLocale ?
                               Constants.metricTable.last!.distance : Constants.imperialTable.last!.distance
+        print("max \(maximumDistance), allowed \(allowedDistance)")
         let alpha: CGFloat = maximumDistance >= allowedDistance ? 0 : 1
 
         if alpha != staticContainerView.alpha {

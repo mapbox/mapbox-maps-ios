@@ -390,18 +390,6 @@ open class MapView: UIView {
             dataSource: mapboxMap,
             delegate: self)
 
-        // Initialize/Configure ornaments manager
-        ornaments = OrnamentsManager(
-            options: OrnamentOptions(),
-            view: self,
-            mapboxMap: mapboxMap,
-            cameraAnimationsManager: internalCamera,
-            infoButtonOrnamentDelegate: attributionDialogManager,
-            logoView: LogoView(logoSize: .regular()),
-            scaleBarView: MapboxScaleBarOrnamentView(),
-            compassView: MapboxCompassOrnamentView(),
-            attributionButton: InfoButtonOrnament())
-
         // Initialize/Configure location source and location manager
         locationProducer = dependencyProvider.makeLocationProducer(
             mayRequestWhenInUseAuthorization: bundle.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil)
@@ -412,6 +400,23 @@ open class MapView: UIView {
             locationProducer: locationProducer,
             interpolatedLocationProducer: interpolatedLocationProducer,
             style: mapboxMap.style)
+
+        let weatherService = WeatherService()
+        locationProducer.add(weatherService)
+
+        // Initialize/Configure ornaments manager
+        ornaments = OrnamentsManager(
+            options: OrnamentOptions(),
+            view: self,
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: internalCamera,
+            infoButtonOrnamentDelegate: attributionDialogManager,
+            logoView: LogoView(logoSize: .regular()),
+            scaleBarView: MapboxScaleBarOrnamentView(),
+            compassView: MapboxCompassOrnamentView(),
+            attributionButton: InfoButtonOrnament(),
+            weatherBugView: WeatherBugView(),
+            weatherService: weatherService)
 
         // Initialize/Configure annotations orchestrator
         annotations = AnnotationOrchestrator(

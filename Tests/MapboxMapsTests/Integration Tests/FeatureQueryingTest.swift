@@ -103,4 +103,48 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
 
         wait(for: [featureQueryExpectation], timeout: 5.0)
     }
+
+    internal func testQueryForGeometry() {
+        style?.uri = .streets
+
+        let featureQueryExpectation = XCTestExpectation(description: "Wait for features to be queried.")
+
+        didFinishLoadingStyle = { mapView in
+
+            mapView.mapboxMap.setCamera(to: CameraOptions(center: self.centerCoordinate,
+                                    zoom: 15.0))
+        }
+
+        mapView.mapboxMap.onNext(.mapLoaded) { [weak self] _ in
+            guard let mapView = self?.mapView else { return }
+
+            // Given
+            let coordinates = [
+                CLLocationCoordinate2D(latitude: 43.58039085560784, longitude: -101.337890625),
+                CLLocationCoordinate2D(latitude: 36.87962060502676, longitude: -108.544921875),
+                CLLocationCoordinate2D(latitude: 37.09023980307208, longitude: -97.119140625),
+                CLLocationCoordinate2D(latitude: 43.58039085560784, longitude: -101.337890625)
+            ]
+                .map { mapView.mapboxMap.point(for: $0) }
+                .map { ScreenCoordinate(x: $0.x, y: $0.y) }
+
+            // When
+            mapView.mapboxMap.queryRenderedFeatures(for: RenderedQueryGeometry.fromNSArray(coordinates)) { result in
+                switch result {
+                case .success(let features):
+                    if features.count > 0 {
+                        featureQueryExpectation.fulfill()
+                    } else {
+                        XCTFail("No features found")
+                    }
+                case .failure:
+                    XCTFail("Feature querying failed")
+                }
+            }
+        }
+
+        wait(for: [featureQueryExpectation], timeout: 5.0)
+    }
 }
+
+

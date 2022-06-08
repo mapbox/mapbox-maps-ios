@@ -196,7 +196,7 @@ public class AnnotationOrchestrator {
         let layerIds = managers.map { $0.layerId }
         let options = RenderedQueryOptions(layerIds: layerIds, filter: nil)
         mapFeatureQueryable.queryRenderedFeatures(
-            at: tap.location(in: tap.view),
+            for: RenderedQueryGeometry(value: tap.location(in: tap.view)),
             options: options) { (result) in
 
             switch result {

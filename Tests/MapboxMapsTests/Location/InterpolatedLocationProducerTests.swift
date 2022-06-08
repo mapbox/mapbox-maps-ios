@@ -84,6 +84,19 @@ final class InterpolatedLocationProducerTests: XCTestCase {
         XCTAssertEqual(returnedCancelable.cancelStub.invocations.count, 1)
     }
 
+    func testStartMulticastingPuckLocationIfEnabled() {
+        interpolatedLocationProducer.isEnabled = false
+        interpolatedLocationProducer.addPuckLocationConsumer(MockPuckLocationConsumer())
+        XCTAssertEqual(observableInterpolatedLocation.observeStub.invocations.count, 0)
+
+        interpolatedLocationProducer.isEnabled = true
+        let invocationCount = observableInterpolatedLocation.observeStub.invocations.count
+        XCTAssertGreaterThanOrEqual(invocationCount, 1)
+
+        interpolatedLocationProducer.addPuckLocationConsumer(MockPuckLocationConsumer())
+        XCTAssertEqual(observableInterpolatedLocation.observeStub.invocations.count, invocationCount)
+    }
+
     func testParticipateBeforeInitialLocationDelivery() {
         interpolatedLocationProducer.participate()
 

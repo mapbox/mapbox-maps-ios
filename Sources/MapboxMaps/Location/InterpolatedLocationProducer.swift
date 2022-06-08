@@ -1,8 +1,11 @@
 import CoreLocation
 
 internal protocol InterpolatedLocationProducerProtocol: AnyObject {
+    var isEnabled: Bool { get set }
     var location: InterpolatedLocation? { get }
     func observe(with handler: @escaping (InterpolatedLocation) -> Bool) -> Cancelable
+    func addPuckLocationConsumer(_ consumer: PuckLocationConsumer)
+    func removePuckLocationConsumer(_ consumer: PuckLocationConsumer)
 }
 
 internal final class InterpolatedLocationProducer: NSObject, InterpolatedLocationProducerProtocol {
@@ -15,8 +18,17 @@ internal final class InterpolatedLocationProducer: NSObject, InterpolatedLocatio
     private let locationInterpolator: LocationInterpolatorProtocol
     private let dateProvider: DateProvider
 
+    private let consumers = NSHashTable<PuckLocationConsumer>.weakObjects()
+    private var cancelableToken: Cancelable?
+
     internal var location: InterpolatedLocation? {
         observableInterpolatedLocation.value
+    }
+
+    internal var isEnabled: Bool = true {
+        didSet {
+            syncConsumers()
+        }
     }
 
     internal init(observableInterpolatedLocation: ObservableInterpolatedLocationProtocol,
@@ -40,10 +52,46 @@ internal final class InterpolatedLocationProducer: NSObject, InterpolatedLocatio
         }
     }
 
+    // MARK: Puck Location Consumers.
+
     // delivers the latest location synchronously, if available
     internal func observe(with handler: @escaping (InterpolatedLocation) -> Bool) -> Cancelable {
         return observableInterpolatedLocation.observe(with: handler)
     }
+
+    private var hasPuckLocationConsumers: Bool {
+        consumers.count > 0
+    }
+
+    internal func addPuckLocationConsumer(_ consumer: PuckLocationConsumer) {
+        consumers.add(consumer)
+        syncConsumers()
+    }
+
+    internal func removePuckLocationConsumer(_ consumer: PuckLocationConsumer) {
+        consumers.remove(consumer)
+        syncConsumers()
+    }
+
+    private func syncConsumers() {
+        guard isEnabled, hasPuckLocationConsumers else {
+            cancelableToken?.cancel()
+            cancelableToken = nil
+            return
+        }
+
+        if cancelableToken == nil {
+            cancelableToken = observableInterpolatedLocation.observe(with: { [weak self] interpolatedLocation in
+                guard let self = self else { return false }
+                for puckLocationConsumer in self.consumers.allObjects {
+                    puckLocationConsumer.puckLocationUpdate(newLocation: interpolatedLocation.toLocation())
+                }
+                return true
+            })
+        }
+    }
+
+    // MARK: Interpolation.
 
     private func interpolatedLocation(with date: Date) -> InterpolatedLocation? {
         guard let startDate = startDate,

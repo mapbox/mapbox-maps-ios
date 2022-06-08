@@ -12,7 +12,6 @@ final class PuckManagerTests: XCTestCase {
         puck2DProvider = Stub(defaultReturnValue: MockPuck())
         puck3DProvider = Stub(defaultReturnValue: MockPuck())
         puckManager = PuckManager(
-            interpolatedLocationProducer: MockInterpolatedLocationProducer(),
             puck2DProvider: puck2DProvider.call(with:),
             puck3DProvider: puck3DProvider.call(with:))
     }

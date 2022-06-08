@@ -239,7 +239,6 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                                       interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
                                       style: StyleProtocol) -> LocationManager {
         let puckManager = PuckManager(
-            interpolatedLocationProducer: interpolatedLocationProducer,
             puck2DProvider: { configuration in
                 Puck2D(
                     configuration: configuration,
@@ -255,6 +254,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
 
         return LocationManager(
             locationProducer: locationProducer,
+            interpolatedLocationProducer: interpolatedLocationProducer,
             puckManager: puckManager)
     }
 

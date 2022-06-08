@@ -31,6 +31,14 @@ class SpecsBenchmark: XCTestCase {
         try runScenarioBenchmark(name: "streets-munich-ttrc-warm")
     }
 
+    func testNavDayMunichZoom() throws {
+        try runScenarioBenchmark(name: "nav-day-munich-zoom", timeout: 120)
+    }
+
+    func testNavDayMunichZoomTilepack() throws {
+        try runScenarioBenchmark(name: "nav-day-munich-zoom-tilepack", timeout: 120)
+    }
+
 }
 
 extension SpecsBenchmark {

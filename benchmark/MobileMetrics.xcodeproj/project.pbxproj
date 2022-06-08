@@ -24,6 +24,11 @@
 		74F2381327E3730C009F304C /* WarmCacheBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F2381227E3730C009F304C /* WarmCacheBenchmark.swift */; };
 		74F2381527E39A33009F304C /* AnimationFlyToBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F2381427E39A33009F304C /* AnimationFlyToBenchmark.swift */; };
 		FE18AEE22840ED4D001B9E6F /* StyleURI+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE18AEE12840ED4D001B9E6F /* StyleURI+Decodable.swift */; };
+		FE18AEE6284113F3001B9E6F /* nav-day-munich-zoom.json in Resources */ = {isa = PBXBuildFile; fileRef = FE18AEE3284113F2001B9E6F /* nav-day-munich-zoom.json */; };
+		FE18AEE7284113F3001B9E6F /* munich-zoom-in-out-z10-z20.json in Resources */ = {isa = PBXBuildFile; fileRef = FE18AEE4284113F2001B9E6F /* munich-zoom-in-out-z10-z20.json */; };
+		FE18AEE8284113F3001B9E6F /* nav-day-munich-zoom-tilepack.json in Resources */ = {isa = PBXBuildFile; fileRef = FE18AEE5284113F3001B9E6F /* nav-day-munich-zoom-tilepack.json */; };
+		FE18AEEB2841148F001B9E6F /* PlaySequenceCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE18AEE928411426001B9E6F /* PlaySequenceCommand.swift */; };
+		FE18AEEE2844F47D001B9E6F /* MapRecorder+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE18AEEC2844F47B001B9E6F /* MapRecorder+Async.swift */; };
 		FE555B7C2836939B002751C7 /* AsyncCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE555B7B2836939B002751C7 /* AsyncCommand.swift */; };
 		FE555B7E283774EF002751C7 /* SetOnlineStateCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE555B7D283774EF002751C7 /* SetOnlineStateCommand.swift */; };
 		FE555B80283775F3002751C7 /* CameraOptions+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE555B7F283775F3002751C7 /* CameraOptions+Decodable.swift */; };
@@ -73,6 +78,11 @@
 		74F2381227E3730C009F304C /* WarmCacheBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarmCacheBenchmark.swift; sourceTree = "<group>"; };
 		74F2381427E39A33009F304C /* AnimationFlyToBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationFlyToBenchmark.swift; sourceTree = "<group>"; };
 		FE18AEE12840ED4D001B9E6F /* StyleURI+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StyleURI+Decodable.swift"; sourceTree = "<group>"; };
+		FE18AEE3284113F2001B9E6F /* nav-day-munich-zoom.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "nav-day-munich-zoom.json"; sourceTree = "<group>"; };
+		FE18AEE4284113F2001B9E6F /* munich-zoom-in-out-z10-z20.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "munich-zoom-in-out-z10-z20.json"; sourceTree = "<group>"; };
+		FE18AEE5284113F3001B9E6F /* nav-day-munich-zoom-tilepack.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "nav-day-munich-zoom-tilepack.json"; sourceTree = "<group>"; };
+		FE18AEE928411426001B9E6F /* PlaySequenceCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaySequenceCommand.swift; sourceTree = "<group>"; };
+		FE18AEEC2844F47B001B9E6F /* MapRecorder+Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MapRecorder+Async.swift"; sourceTree = "<group>"; };
 		FE555B7B2836939B002751C7 /* AsyncCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncCommand.swift; sourceTree = "<group>"; };
 		FE555B7D283774EF002751C7 /* SetOnlineStateCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetOnlineStateCommand.swift; sourceTree = "<group>"; };
 		FE555B7F283775F3002751C7 /* CameraOptions+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CameraOptions+Decodable.swift"; sourceTree = "<group>"; };
@@ -120,6 +130,7 @@
 				74673135282E963000B7D044 /* CreateMapCommand.swift */,
 				74673136282E963000B7D044 /* CreateOfflinePacksCommand.swift */,
 				FE555B7D283774EF002751C7 /* SetOnlineStateCommand.swift */,
+				FE18AEE928411426001B9E6F /* PlaySequenceCommand.swift */,
 			);
 			path = Commands;
 			sourceTree = "<group>";
@@ -131,6 +142,9 @@
 				74673147282EA6FA00B7D044 /* nav-day-munich-ttrc-warm.json */,
 				74673145282EA6FA00B7D044 /* streets-munich-ttrc-cold.json */,
 				74673146282EA6FA00B7D044 /* streets-munich-ttrc-warm.json */,
+				FE18AEE4284113F2001B9E6F /* munich-zoom-in-out-z10-z20.json */,
+				FE18AEE5284113F3001B9E6F /* nav-day-munich-zoom-tilepack.json */,
+				FE18AEE3284113F2001B9E6F /* nav-day-munich-zoom.json */,
 			);
 			path = Specs;
 			sourceTree = "<group>";
@@ -211,6 +225,7 @@
 				FED7F06E283BA59800AD2313 /* MapboxMap+Async.swift */,
 				FED7F070283BA5AB00AD2313 /* TileStore+Async.swift */,
 				FE18AEE12840ED4D001B9E6F /* StyleURI+Decodable.swift */,
+				FE18AEEC2844F47B001B9E6F /* MapRecorder+Async.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -304,6 +319,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE18AEE8284113F3001B9E6F /* nav-day-munich-zoom-tilepack.json in Resources */,
+				FE18AEE7284113F3001B9E6F /* munich-zoom-in-out-z10-z20.json in Resources */,
+				FE18AEE6284113F3001B9E6F /* nav-day-munich-zoom.json in Resources */,
 				7467314B282EA6FA00B7D044 /* nav-day-munich-ttrc-warm.json in Resources */,
 				7467314A282EA6FA00B7D044 /* streets-munich-ttrc-warm.json in Resources */,
 				7499662427C64ECE00DA186A /* LaunchScreen.storyboard in Resources */,
@@ -360,6 +378,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FEA8FD9D2834F69F00CDDA97 /* SpecsBenchmark.swift in Sources */,
+				FE18AEEE2844F47D001B9E6F /* MapRecorder+Async.swift in Sources */,
 				FEFAF5F4282A7A990002CF6E /* PrivatePerformanceMetrics.swift in Sources */,
 				FEA8FDA4283510DD00CDDA97 /* UIViewController+Extensions.swift in Sources */,
 				FEA8FD9E2834F6D100CDDA97 /* Scenario.swift in Sources */,
@@ -374,6 +393,7 @@
 				FE555B80283775F3002751C7 /* CameraOptions+Decodable.swift in Sources */,
 				74F237F127E3326E009F304C /* InitSDKBenchmark.swift in Sources */,
 				FEB2802B2837C1BE00E903D2 /* ClearOfflineDataCommand.swift in Sources */,
+				FE18AEEB2841148F001B9E6F /* PlaySequenceCommand.swift in Sources */,
 				FEA8FDA62835110400CDDA97 /* CreateOfflinePacksCommand.swift in Sources */,
 				74F237F327E3338A009F304C /* NotifyingViewController.swift in Sources */,
 				FED7F06D283BA56900AD2313 /* OfflineManager+Async.swift in Sources */,

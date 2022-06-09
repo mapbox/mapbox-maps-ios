@@ -146,7 +146,8 @@
 				FE18AEE5284113F3001B9E6F /* nav-day-munich-zoom-tilepack.json */,
 				FE18AEE3284113F2001B9E6F /* nav-day-munich-zoom.json */,
 			);
-			path = Specs;
+			name = Specs;
+			path = "../../mapbox-maps-internal/test-spec/tests";
 			sourceTree = "<group>";
 		};
 		7499660B27C64ECD00DA186A = {

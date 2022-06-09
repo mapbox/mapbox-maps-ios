@@ -146,5 +146,3 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
         wait(for: [featureQueryExpectation], timeout: 5.0)
     }
 }
-
-

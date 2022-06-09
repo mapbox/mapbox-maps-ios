@@ -199,7 +199,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
             let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
 
             snapshotter.setCamera(to: cameraOptions)
-            snapshotter.style.uri = .light
+            snapshotter.style.JSON = emptyBlueStyle
             let expectation = self.expectation(description: "snapshot")
 
             snapshotter.start(overlayHandler: nil) { result in

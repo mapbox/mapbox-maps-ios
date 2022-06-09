@@ -57,6 +57,10 @@ internal protocol StyleManagerProtocol {
     func isStyleLayerPersistent(forLayerId layerId: String) -> Expected<NSNumber, NSString>
 
     func removeStyleLayer(forLayerId layerId: String) -> Expected<NSNull, NSString>
+    func moveStyleLayer(
+        forLayerId layerId: String,
+        layerPosition: MapboxCoreMaps.LayerPosition?
+    ) -> Expected<NSNull, NSString>
 
     func setStyleLayerPropertyForLayerId(
         _ layerId: String,

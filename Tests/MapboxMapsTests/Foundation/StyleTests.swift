@@ -168,6 +168,17 @@ final class StyleTests: XCTestCase {
         XCTAssertThrowsError(try sut.addPersistentLayer(with: ["foo": "bar"], layerPosition: .at(0)))
     }
 
+    func testStyleCanMoveLayer() {
+        let mockStyleManager = MockStyleManager()
+        let sut = Style(with: mockStyleManager)
+
+        mockStyleManager.moveStyleLayerStub.defaultReturnValue = .init(value: NSNull())
+        XCTAssertNoThrow(try sut.moveLayer(withId: "foo", to: .default))
+
+        mockStyleManager.moveStyleLayerStub.defaultReturnValue = .init(error: "Cannot move layer")
+        XCTAssertThrowsError(try sut.moveLayer(withId: "foo", to: .default))
+    }
+
     func testStyleGetLayerCanFail() {
         let mockStyleManager = MockStyleManager()
         let sut = Style(with: mockStyleManager)

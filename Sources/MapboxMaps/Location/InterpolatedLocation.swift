@@ -31,7 +31,7 @@ internal struct InterpolatedLocation: Equatable {
         self.accuracyAuthorization = location.accuracyAuthorization
     }
 
-    internal func toLocation() -> Location {
+    internal var location: Location {
         Location(
             location: CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude),
             heading: nil,

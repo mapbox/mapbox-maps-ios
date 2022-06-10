@@ -68,7 +68,7 @@ public final class LocationManager: NSObject {
     /// Adds ``PuckLocationConsumer`` to the location manager.
     ///
     /// An instance of ``PuckLocationConsumer`` will get the accurate (interpolated) location of the puck as it moves,
-    /// as oposed to the ``LocationConsumer`` that gets updated only when the ``LocationProvider`` has emitted a new location.
+    /// as opposed to the ``LocationConsumer`` that gets updated only when the ``LocationProvider`` has emitted a new location.
     /// - Important: The location manager holds a weak reference to the consumer, thus client should retain these references.
     public func addPuckLocationConsumer(_ consumer: PuckLocationConsumer) {
         interpolatedLocationProducer.addPuckLocationConsumer(consumer)

@@ -91,10 +91,24 @@ final class InterpolatedLocationProducerTests: XCTestCase {
 
         interpolatedLocationProducer.isEnabled = true
         let invocationCount = observableInterpolatedLocation.observeStub.invocations.count
-        XCTAssertGreaterThanOrEqual(invocationCount, 1)
+        XCTAssertEqual(invocationCount, 1)
 
         interpolatedLocationProducer.addPuckLocationConsumer(MockPuckLocationConsumer())
         XCTAssertEqual(observableInterpolatedLocation.observeStub.invocations.count, invocationCount)
+    }
+
+    func testPuckLocationConsumerGetNotified() {
+        let consumer = MockPuckLocationConsumer()
+        let location = InterpolatedLocation.random()
+
+        observableInterpolatedLocation.observeStub.defaultSideEffect = {
+            _ = $0.parameters(location)
+        }
+        interpolatedLocationProducer.addPuckLocationConsumer(consumer)
+
+        let receivedLocation = consumer.locationUpdateStub.invocations.first?.parameters
+        XCTAssertEqual(receivedLocation?.coordinate, location.coordinate)
+        XCTAssertEqual(receivedLocation?.accuracyAuthorization, location.accuracyAuthorization)
     }
 
     func testParticipateBeforeInitialLocationDelivery() {

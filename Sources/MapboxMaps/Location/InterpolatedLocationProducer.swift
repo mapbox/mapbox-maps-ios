@@ -79,15 +79,15 @@ internal final class InterpolatedLocationProducer: NSObject, InterpolatedLocatio
             cancelableToken = nil
             return
         }
+        guard cancelableToken == nil else { return }
 
-        if cancelableToken == nil {
-            cancelableToken = observableInterpolatedLocation.observe(with: { [weak self] interpolatedLocation in
-                guard let self = self else { return false }
-                for puckLocationConsumer in self.consumers.allObjects {
-                    puckLocationConsumer.puckLocationUpdate(newLocation: interpolatedLocation.toLocation())
-                }
-                return true
-            })
+        cancelableToken = observableInterpolatedLocation.observe { [weak self] interpolatedLocation in
+            guard let self = self else { return false }
+            
+            for puckLocationConsumer in self.consumers.allObjects {
+                puckLocationConsumer.puckLocationUpdate(newLocation: interpolatedLocation.toLocation())
+            }
+            return true
         }
     }
 

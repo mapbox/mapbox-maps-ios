@@ -7,10 +7,3 @@ import CoreLocation
     /// New location update received
     func locationUpdate(newLocation: Location)
 }
-
-/// The `PuckLocationConsumer` protocol defines a method that a conformer must implement to consumer a puck's accurate location.
-@objc public protocol PuckLocationConsumer {
-
-    /// To be invoked when a new puck's location is received.
-    func puckLocationUpdate(newLocation: Location)
-}

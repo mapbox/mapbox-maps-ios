@@ -470,7 +470,8 @@
 			children = (
 				FECD234628539D130070F30F /* ci_post_clone.sh */,
 			);
-			path = ci_scripts;
+			name = ci_scripts;
+			path = ../ci_scripts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

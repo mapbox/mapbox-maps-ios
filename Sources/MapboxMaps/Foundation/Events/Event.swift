@@ -3,7 +3,7 @@ import Foundation
 public typealias Event = MapboxCoreMaps.Event
 
 extension Event {
-    fileprivate func typedPayload<Payload>() throws -> Payload where Payload: Decodable {
+    fileprivate func typedPayload<Payload: Decodable>() throws -> Payload {
         do {
             let data = try JSONSerialization.data(withJSONObject: data)
             let decoder = JSONDecoder()

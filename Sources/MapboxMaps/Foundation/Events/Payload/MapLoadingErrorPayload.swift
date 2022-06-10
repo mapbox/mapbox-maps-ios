@@ -40,7 +40,7 @@ internal struct DecodableCanonicalTileID: Decodable {
 
     let tileID: CanonicalTileID
 
-    public init(from decoder: Decoder) throws {
+    internal init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let z = try container.decode(UInt8.self, forKey: .z)
         let x = try container.decode(UInt32.self, forKey: .x)

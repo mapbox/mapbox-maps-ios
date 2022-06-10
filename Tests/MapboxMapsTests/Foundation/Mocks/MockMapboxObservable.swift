@@ -48,9 +48,9 @@ final class MockMapboxObservable: MapboxObservableProtocol {
         var handler: (Any) -> Void
     }
     let onTypedNextStub = Stub<OnTypedNextParams, Cancelable>(defaultReturnValue: MockCancelable())
-    func onNext<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable where Payload: Decodable {
+    func onNext<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable where Payload: Decodable {
         // swiftlint:disable:next force_cast
-        onTypedNextStub.call(with: OnTypedNextParams(eventName: event.name, handler: { handler($0 as! TypedEvent<Payload>)}))
+        onTypedNextStub.call(with: OnTypedNextParams(eventName: event.name, handler: { handler($0 as! MapEvent<Payload>)}))
     }
 
     struct OnTypedEveryParams {
@@ -58,9 +58,9 @@ final class MockMapboxObservable: MapboxObservableProtocol {
         var handler: (Any) -> Void
     }
     let onTypedEveryStub = Stub<OnTypedEveryParams, Cancelable>(defaultReturnValue: MockCancelable())
-    func onEvery<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
+    func onEvery<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable {
         // swiftlint:disable:next force_cast
-        onTypedEveryStub.call(with: OnTypedEveryParams(eventName: event.name, handler: { handler($0 as! TypedEvent<Payload>)}))
+        onTypedEveryStub.call(with: OnTypedEveryParams(eventName: event.name, handler: { handler($0 as! MapEvent<Payload>)}))
     }
 
     // not using Stub here since the block is not escaping

@@ -118,13 +118,13 @@ final class OrnamentManagerTests: XCTestCase {
         XCTAssertEqual(mapboxMap.cameraState.bearing, compass.currentBearing)
 
         mapboxMap.cameraState.bearing += .random(in: (.leastNonzeroMagnitude)..<360)
-        onEveryCameraChangeHandler(TypedEvent<NoPayload>(event: Event(type: "", data: 0)))
+        onEveryCameraChangeHandler(MapEvent<NoPayload>(event: Event(type: "", data: 0)))
 
         XCTAssertFalse(compass.containerView.isHidden, "The compass should not be hidden when the bearing is non-zero.")
         XCTAssertEqual(mapboxMap.cameraState.bearing, compass.currentBearing)
 
         mapboxMap.cameraState.bearing = 0
-        onEveryCameraChangeHandler(TypedEvent<NoPayload>(event: Event(type: "", data: 0)))
+        onEveryCameraChangeHandler(MapEvent<NoPayload>(event: Event(type: "", data: 0)))
 
         XCTAssertTrue(compass.containerView.isHidden)
         XCTAssertEqual(mapboxMap.cameraState.bearing, compass.currentBearing)

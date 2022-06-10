@@ -64,9 +64,9 @@ final class MockMapboxMap: MapboxMapProtocol {
     }
     let onEveryStub = Stub<OnEveryParams, Cancelable>(defaultReturnValue: MockCancelable())
     @discardableResult
-    func onEvery<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
+    func onEvery<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable {
         // swiftlint:disable:next force_cast
-        onEveryStub.call(with: OnEveryParams(eventName: event.name, handler: { handler($0 as! TypedEvent<Payload>)}))
+        onEveryStub.call(with: OnEveryParams(eventName: event.name, handler: { handler($0 as! MapEvent<Payload>)}))
     }
 
     let beginAnimationStub = Stub<Void, Void>()

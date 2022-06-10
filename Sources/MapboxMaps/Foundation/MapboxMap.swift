@@ -18,7 +18,7 @@ internal protocol MapboxMapProtocol: AnyObject {
     func beginGesture()
     func endGesture()
     @discardableResult
-    func onEvery<Payload>(event eventType: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable
+    func onEvery<Payload>(event eventType: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable
     // View annotation management
     func setViewAnnotationPositionsUpdateListener(_ listener: ViewAnnotationPositionsUpdateListener?)
     func addViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws
@@ -871,7 +871,7 @@ extension MapboxMap: MapEventsObservable {
     ///     the event. This is especially important if you have a retain cycle in
     ///     the handler.
     @discardableResult
-    public func onNext<Payload>(event eventType: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
+    public func onNext<Payload>(event eventType: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable {
         return observable.onNext(event: eventType, handler: handler)
     }
 
@@ -922,7 +922,7 @@ extension MapboxMap: MapEventsObservable {
     ///     events. This is especially important if you have a retain cycle in
     ///     the handler.
     @discardableResult
-    public func onEvery<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (TypedEvent<Payload>) -> Void) -> Cancelable {
+    public func onEvery<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable {
         return observable.onEvery(event: event, handler: handler)
     }
 

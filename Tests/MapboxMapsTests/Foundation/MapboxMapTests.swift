@@ -261,8 +261,8 @@ final class MapboxMapTests: XCTestCase {
     func testOnTypedNext() throws {
         func verifyInvocation<Payload>(
             eventType: MapEvents.Event<Payload>,
-            event: TypedEvent<Payload> = .init(event: Event(type: "", data: 0)),
-            handlerStub: Stub<TypedEvent<Payload>, Void> = .init()
+            event: MapEvent<Payload> = .init(event: Event(type: "", data: 0)),
+            handlerStub: Stub<MapEvent<Payload>, Void> = .init()
         ) throws {
             let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
 
@@ -324,8 +324,8 @@ final class MapboxMapTests: XCTestCase {
     func testOnTypedEvery() throws {
         func verifyInvocation<Payload>(
             eventType: MapEvents.Event<Payload>,
-            event: TypedEvent<Payload> = .init(event: Event(type: "", data: 0)),
-            handlerStub: Stub<TypedEvent<Payload>, Void> = .init()
+            event: MapEvent<Payload> = .init(event: Event(type: "", data: 0)),
+            handlerStub: Stub<MapEvent<Payload>, Void> = .init()
         ) throws {
             let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
 

@@ -182,7 +182,7 @@ final class MapboxObservableTests: XCTestCase {
     func testOnTypedNext() throws {
         func verifyInvocation<Payload>(
             eventType: MapEvents.Event<Payload>,
-            handlerStub: Stub<TypedEvent<Payload>, Void> = .init()
+            handlerStub: Stub<MapEvent<Payload>, Void> = .init()
         ) throws {
             _ = mapboxObservable.onNext(event: eventType, handler: handlerStub.call(with:))
 
@@ -247,7 +247,7 @@ final class MapboxObservableTests: XCTestCase {
     func testOnTypedNextCancellation() throws {
         func verifyInvocation<Payload>(
             eventType: MapEvents.Event<Payload>,
-            handlerStub: Stub<TypedEvent<Payload>, Void> = .init()
+            handlerStub: Stub<MapEvent<Payload>, Void> = .init()
         ) throws {
             let cancelable = mapboxObservable.onNext(event: eventType, handler: handlerStub.call(with:))
             let subscribedObserver = try XCTUnwrap(observable.subscribeStub.invocations.first?.parameters.observer)
@@ -310,7 +310,7 @@ final class MapboxObservableTests: XCTestCase {
     func testOnTypedNextWithSynchronousInvocation() throws {
         func verifyInvocation<Payload>(
             eventType: MapEvents.Event<Payload>,
-            handlerStub: Stub<TypedEvent<Payload>, Void> = .init()
+            handlerStub: Stub<MapEvent<Payload>, Void> = .init()
         ) throws {
             observable.subscribeStub.defaultSideEffect = { invocation in
                 invocation.parameters.observer.notify(for: Event(type: "", data: 0))
@@ -389,7 +389,7 @@ final class MapboxObservableTests: XCTestCase {
     func testOnTypedEvery() throws {
         func verifyInvocation<Payload>(
             eventType: MapEvents.Event<Payload>,
-            handlerStub: Stub<TypedEvent<Payload>, Void> = .init()
+            handlerStub: Stub<MapEvent<Payload>, Void> = .init()
         ) throws {
             let cancelable = mapboxObservable.onEvery(event: eventType, handler: handlerStub.call(with:))
 
@@ -472,7 +472,7 @@ final class MapboxObservableTests: XCTestCase {
     func testTypedUnsubscribesOnDeinit() throws {
         func verifyInvocation<Payload>(
             eventType: MapEvents.Event<Payload>,
-            handlerStub: Stub<TypedEvent<Payload>, Void> = .init()
+            handlerStub: Stub<MapEvent<Payload>, Void> = .init()
         ) throws {
             let otherObserver = MockObserver()
             let subscribedObservers: [Observer]
@@ -554,8 +554,8 @@ final class MapboxObservableTests: XCTestCase {
     func testTypedPerformWithoutNotifying() throws {
         func verifyInvocation<Payload>(
             eventType: MapEvents.Event<Payload>,
-            handlerStub: Stub<TypedEvent<Payload>, Void> = .init(),
-            otherHandlerStub: Stub<TypedEvent<Payload>, Void> = .init()
+            handlerStub: Stub<MapEvent<Payload>, Void> = .init(),
+            otherHandlerStub: Stub<MapEvent<Payload>, Void> = .init()
         ) throws {
             let otherObserver = MockObserver()
             mapboxObservable.subscribe(observer, events: events)
@@ -635,8 +635,8 @@ final class MapboxObservableTests: XCTestCase {
     func testTypedReentrantPerformWithoutNotifying() throws {
         func verifyInvocation<Payload>(
             eventType: MapEvents.Event<Payload>,
-            handlerStub: Stub<TypedEvent<Payload>, Void> = .init(),
-            otherHandlerStub: Stub<TypedEvent<Payload>, Void> = .init()
+            handlerStub: Stub<MapEvent<Payload>, Void> = .init(),
+            otherHandlerStub: Stub<MapEvent<Payload>, Void> = .init()
         ) throws {
             let otherObserver = MockObserver()
             mapboxObservable.subscribe(observer, events: events)

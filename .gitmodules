@@ -7,3 +7,6 @@
 [submodule "codegen/vendor/mapbox-maps-stylegen"]
 	path = codegen/vendor/mapbox-maps-stylegen
 	url = git@github.com:mapbox/mapbox-maps-stylegen.git
+[submodule "mapbox-maps-internal"]
+	path = mapbox-maps-internal
+	url = git@github.com:mapbox/mapbox-maps-internal.git

@@ -63,6 +63,7 @@ jobs:
       - checkout
       - mapbox/add-mapbox-ssh-key
       - checkout-maps-submodule
+      - checkout-maps-internal
       - mapbox/github-commit-progress:
           commit: $MAPS_COMMIT_HASH
           repository: mapbox-maps-ios
@@ -277,6 +278,12 @@ commands:
       - run:
           name: Checkout Mobile Metrics repository
           command: git submodule update --init mobile-metrics
+
+  checkout-maps-internal:
+    steps:
+      - run:
+          name: Checkout Maps Internal repository
+          command: git submodule update --init mapbox-maps-internal
 
 executors:
   xcode-min:

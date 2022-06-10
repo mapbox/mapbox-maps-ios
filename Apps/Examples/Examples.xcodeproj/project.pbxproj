@@ -227,6 +227,7 @@
 		CAC195B625AC098A00F69FEA /* CameraAnimatorsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraAnimatorsExample.swift; sourceTree = "<group>"; };
 		CADCF742258499570065C51B /* BasicMapExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicMapExample.swift; sourceTree = "<group>"; };
 		CAF9A9802583E49B007EF9EC /* TestableExampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestableExampleTests.swift; sourceTree = "<group>"; };
+		FECD234628539D130070F30F /* ci_post_clone.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -344,6 +345,7 @@
 		077C4EE1252F7E88007636F1 = {
 			isa = PBXGroup;
 			children = (
+				FECD234528539D050070F30F /* ci_scripts */,
 				077C4F4A252FA7A5007636F1 /* Configurations */,
 				077C4EEC252F7E88007636F1 /* Examples */,
 				077C4F03252F7E89007636F1 /* ExamplesTests */,
@@ -461,6 +463,14 @@
 				74A2313D27EE1C630065FB7D /* ViewAnnotationWithPointAnnotationExample.swift */,
 			);
 			path = Annotations;
+			sourceTree = "<group>";
+		};
+		FECD234528539D050070F30F /* ci_scripts */ = {
+			isa = PBXGroup;
+			children = (
+				FECD234628539D130070F30F /* ci_post_clone.sh */,
+			);
+			path = ci_scripts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -397,7 +397,7 @@ final class MapViewTestsWithScene: XCTestCase {
         XCTAssertEqual(metalView.releaseDrawablesStub.invocations.count, 1)
     }
 
-    func testMetalViewHasCorrectParameters() {
+    func testMetalViewHasCorrectParameters() throws {
         let mapViewSize = CGSize(width: 100, height: 100)
         mapView = MapView(
             frame: CGRect(origin: .zero, size: mapViewSize),
@@ -406,18 +406,18 @@ final class MapViewTestsWithScene: XCTestCase {
             orientationProvider: orientationProvider,
             urlOpener: attributionURLOpener)
 
-        let metalView = mapView.getMetalView(for: nil)
+        let metalView = try XCTUnwrap(mapView.getMetalView(for: nil))
 
-        XCTAssertEqual(metalView?.translatesAutoresizingMaskIntoConstraints, false)
-        XCTAssertEqual(metalView?.autoResizeDrawable, true)
-        XCTAssertEqual(metalView?.contentScaleFactor, window.screen.scale)
-        XCTAssertEqual(metalView?.contentMode, .center)
-        XCTAssertEqual(metalView?.isOpaque, true)
-        XCTAssertEqual(metalView?.layer.isOpaque, true)
-        XCTAssertEqual(metalView?.isPaused, true)
-        XCTAssertEqual(metalView?.enableSetNeedsDisplay, false)
-        XCTAssertEqual(metalView?.presentsWithTransaction, false)
-        XCTAssertEqual(metalView?.bounds.size, mapViewSize)
+        XCTAssertEqual(metalView.translatesAutoresizingMaskIntoConstraints, false)
+        XCTAssertEqual(metalView.autoResizeDrawable, true)
+        XCTAssertEqual(metalView.contentScaleFactor, window.screen.nativeScale, accuracy: 0.000001)
+        XCTAssertEqual(metalView.contentMode, .center)
+        XCTAssertEqual(metalView.isOpaque, true)
+        XCTAssertEqual(metalView.layer.isOpaque, true)
+        XCTAssertEqual(metalView.isPaused, true)
+        XCTAssertEqual(metalView.enableSetNeedsDisplay, false)
+        XCTAssertEqual(metalView.presentsWithTransaction, false)
+        XCTAssertEqual(metalView.bounds.size, mapViewSize)
     }
 
     func testMetalViewHasMinimumSize() {

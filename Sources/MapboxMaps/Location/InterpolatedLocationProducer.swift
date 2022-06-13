@@ -31,6 +31,10 @@ internal final class InterpolatedLocationProducer: NSObject, InterpolatedLocatio
         }
     }
 
+    deinit {
+        cancelableToken?.cancel()
+    }
+
     internal init(observableInterpolatedLocation: ObservableInterpolatedLocationProtocol,
                   locationInterpolator: LocationInterpolatorProtocol,
                   dateProvider: DateProvider,

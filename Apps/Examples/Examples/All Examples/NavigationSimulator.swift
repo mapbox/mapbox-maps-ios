@@ -5,16 +5,10 @@ import CoreLocation
 final class NavigationSimulator: LocationProvider {
 
     private let viewport: Viewport
-    private var route: LineString
+    private let route: LineString
 
     private lazy var followPuckViewPortState = viewport.makeFollowPuckViewportState(
         options: FollowPuckViewportStateOptions(bearing: .course)
-    )
-    private lazy var overviewViewportState = viewport.makeOverviewViewportState(
-        options: OverviewViewportStateOptions(
-            geometry: route,
-            padding: UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100)
-        )
     )
 
     var locationProviderOptions = LocationOptions()
@@ -83,8 +77,8 @@ final class NavigationSimulator: LocationProvider {
         let location = CLLocation(
             coordinate: currentLocation,
             altitude: 0,
-            horizontalAccuracy: 0,
-            verticalAccuracy: 0,
+            horizontalAccuracy: kCLLocationAccuracyBestForNavigation,
+            verticalAccuracy: kCLLocationAccuracyBestForNavigation,
             // Turf calculates bearing in decimal degrees within -180 to 180,
             // while Apple's course requires value in decimal degrees from 0 - 359.9
             course: direction < 0 ? 360 + direction : direction,

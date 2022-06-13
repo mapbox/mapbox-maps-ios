@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## 10.5.1 - June 13, 2022
+
+* Update to MapboxCoreMaps 10.5.3 and MapboxCommon 21.3.0. ([#]())
+
 ## 10.5.0 - May 5, 2022
 
 * Update to MapboxCoreMaps 10.5.1 and MapboxCommon 21.3.0. ([#1310](https://github.com/mapbox/mapbox-maps-ios/pull/1310), [#1313](https://github.com/mapbox/mapbox-maps-ios/pull/1313))

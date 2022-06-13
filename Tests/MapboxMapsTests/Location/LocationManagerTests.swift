@@ -4,15 +4,18 @@ import XCTest
 final class LocationManagerTests: XCTestCase {
 
     var locationProducer: MockLocationProducer!
+    var interpolatedLocationProducer: MockInterpolatedLocationProducer!
     var puckManager: MockPuckManager!
     var locationManager: LocationManager!
 
     override func setUp() {
         super.setUp()
         locationProducer = MockLocationProducer()
+        interpolatedLocationProducer = MockInterpolatedLocationProducer()
         puckManager = MockPuckManager()
         locationManager = LocationManager(
             locationProducer: locationProducer,
+            interpolatedLocationProducer: interpolatedLocationProducer,
             puckManager: puckManager)
     }
 
@@ -150,5 +153,17 @@ final class LocationManagerTests: XCTestCase {
         XCTAssertEqual(delegate.didChangeAccuracyAuthorizationStub.invocations.count, 1)
         XCTAssertTrue(delegate.didChangeAccuracyAuthorizationStub.invocations.first?.parameters.locationManager === locationManager)
         XCTAssertEqual(delegate.didChangeAccuracyAuthorizationStub.invocations.first?.parameters.accuracyAuthorization, accuracyAuthorization)
+    }
+
+    func testAddPuckLocationConsumer() {
+        let consumer = MockPuckLocationConsumer()
+        locationManager.addPuckLocationConsumer(consumer)
+        XCTAssertIdentical(interpolatedLocationProducer.addPuckLocationConsumerStub.invocations.first?.parameters, consumer)
+    }
+
+    func testRemovePuckLocationConsumer() {
+        let consumer = MockPuckLocationConsumer()
+        locationManager.removePuckLocationConsumer(consumer)
+        XCTAssertIdentical(interpolatedLocationProducer.removePuckLocationConsumerStub.invocations.first?.parameters, consumer)
     }
 }

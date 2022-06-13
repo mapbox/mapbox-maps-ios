@@ -34,14 +34,17 @@ public final class LocationManager: NSObject {
     }
 
     private let locationProducer: LocationProducerProtocol
+    private let interpolatedLocationProducer: InterpolatedLocationProducerProtocol
 
     /// Manager that handles the visual puck element.
     /// Only created if `showsUserLocation` is `true`.
     private let puckManager: PuckManagerProtocol
 
     internal init(locationProducer: LocationProducerProtocol,
+                  interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
                   puckManager: PuckManagerProtocol) {
         self.locationProducer = locationProducer
+        self.interpolatedLocationProducer = interpolatedLocationProducer
         self.puckManager = puckManager
         super.init()
         locationProducer.delegate = self
@@ -60,6 +63,20 @@ public final class LocationManager: NSObject {
     /// Removes a location consumer from the location manager.
     public func removeLocationConsumer(consumer: LocationConsumer) {
         locationProducer.remove(consumer)
+    }
+
+    /// Adds ``PuckLocationConsumer`` to the location manager.
+    ///
+    /// An instance of ``PuckLocationConsumer`` will get the accurate (interpolated) location of the puck as it moves,
+    /// as opposed to the ``LocationConsumer`` that gets updated only when the ``LocationProvider`` has emitted a new location.
+    /// - Important: The location manager holds a weak reference to the consumer, thus client should retain these references.
+    public func addPuckLocationConsumer(_ consumer: PuckLocationConsumer) {
+        interpolatedLocationProducer.addPuckLocationConsumer(consumer)
+    }
+
+    /// Removes a ``PuckLocationConsumer`` from the location manager.
+    public func removePuckLocationConsumer(_ consumer: PuckLocationConsumer) {
+        interpolatedLocationProducer.removePuckLocationConsumer(consumer)
     }
 
     /// Allows a custom case to request full accuracy
@@ -86,6 +103,8 @@ public final class LocationManager: NSObject {
         puckManager.puckType = options.puckType
         puckManager.puckBearingSource = options.puckBearingSource
         puckManager.puckBearingEnabled = options.puckBearingEnabled
+
+        interpolatedLocationProducer.isEnabled = options.puckType != nil
     }
 }
 

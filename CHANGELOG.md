@@ -3,6 +3,7 @@
 Mapbox welcomes participation and contributions from everyone.
 
 * Use MapboxCoreMaps API to move a Layer instead of manually removing the layer then adding it back. ([#1367](https://github.com/mapbox/mapbox-maps-ios/pull/1367))
+* Expose API to get puck's location updates. ([#1365](https://github.com/mapbox/mapbox-maps-ios/pull/1365))
 
 ## 10.6.0-rc.1 - June 2, 2022
 

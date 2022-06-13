@@ -44,7 +44,7 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
         mapView.location.options.puckType = .puck2D(.makeDefault(showBearing: true))
         mapView.location.options.puckBearingSource = .course
         mapView.location.overrideLocationProvider(with: navigationSimulator)
-        mapView.location.addLocationConsumer(newConsumer: self)
+        mapView.location.addPuckLocationConsumer(self)
 
         do {
             try mapView.mapboxMap.style.addSource(routeSource, id: ID.routeSource)
@@ -179,93 +179,24 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
 
     // MARK: Sample Data
 
-    private let sampleRouteLine = LineString([
-        CLLocationCoordinate2D(latitude: 45.52214, longitude: -122.63748),
-        CLLocationCoordinate2D(latitude: 45.52218, longitude: -122.64855),
-        CLLocationCoordinate2D(latitude: 45.52219, longitude: -122.6545),
-        CLLocationCoordinate2D(latitude: 45.52196, longitude: -122.65497),
-        CLLocationCoordinate2D(latitude: 45.52104, longitude: -122.65631),
-        CLLocationCoordinate2D(latitude: 45.51935, longitude: -122.6578),
-        CLLocationCoordinate2D(latitude: 45.51848, longitude: -122.65867),
-        CLLocationCoordinate2D(latitude: 45.51293, longitude: -122.65872),
-        CLLocationCoordinate2D(latitude: 45.51295, longitude: -122.66576),
-        CLLocationCoordinate2D(latitude: 45.51252, longitude: -122.66745),
-        CLLocationCoordinate2D(latitude: 45.51244, longitude: -122.66813),
-        CLLocationCoordinate2D(latitude: 45.51385, longitude: -122.67359),
-        CLLocationCoordinate2D(latitude: 45.51406, longitude: -122.67415),
-        CLLocationCoordinate2D(latitude: 45.51484, longitude: -122.67481),
-        CLLocationCoordinate2D(latitude: 45.51532, longitude: -122.676),
-        CLLocationCoordinate2D(latitude: 45.51668, longitude: -122.68106),
-        CLLocationCoordinate2D(latitude: 45.50934, longitude: -122.68503),
-        CLLocationCoordinate2D(latitude: 45.50858, longitude: -122.68546),
-        CLLocationCoordinate2D(latitude: 45.50783, longitude: -122.6852),
-        CLLocationCoordinate2D(latitude: 45.50714, longitude: -122.68424),
-        CLLocationCoordinate2D(latitude: 45.50585, longitude: -122.68433),
-        CLLocationCoordinate2D(latitude: 45.50521, longitude: -122.68429),
-        CLLocationCoordinate2D(latitude: 45.50445, longitude: -122.68456),
-        CLLocationCoordinate2D(latitude: 45.50371, longitude: -122.68538),
-        CLLocationCoordinate2D(latitude: 45.50311, longitude: -122.68653),
-        CLLocationCoordinate2D(latitude: 45.50292, longitude: -122.68731),
-        CLLocationCoordinate2D(latitude: 45.50253, longitude: -122.68742),
-        CLLocationCoordinate2D(latitude: 45.50239, longitude: -122.6867),
-        CLLocationCoordinate2D(latitude: 45.5026, longitude: -122.68545),
-        CLLocationCoordinate2D(latitude: 45.50294, longitude: -122.68407),
-        CLLocationCoordinate2D(latitude: 45.50271, longitude: -122.68357),
-        CLLocationCoordinate2D(latitude: 45.50055, longitude: -122.68236),
-        CLLocationCoordinate2D(latitude: 45.49994, longitude: -122.68233),
-        CLLocationCoordinate2D(latitude: 45.49955, longitude: -122.68267),
-        CLLocationCoordinate2D(latitude: 45.49919, longitude: -122.68257),
-        CLLocationCoordinate2D(latitude: 45.49842, longitude: -122.68376),
-        CLLocationCoordinate2D(latitude: 45.49821, longitude: -122.68428),
-        CLLocationCoordinate2D(latitude: 45.49798, longitude: -122.68573),
-        CLLocationCoordinate2D(latitude: 45.49805, longitude: -122.68923),
-        CLLocationCoordinate2D(latitude: 45.49857, longitude: -122.68926),
-        CLLocationCoordinate2D(latitude: 45.49911, longitude: -122.68814),
-        CLLocationCoordinate2D(latitude: 45.49921, longitude: -122.68865),
-        CLLocationCoordinate2D(latitude: 45.49905, longitude: -122.6897),
-        CLLocationCoordinate2D(latitude: 45.49917, longitude: -122.69346),
-        CLLocationCoordinate2D(latitude: 45.49902, longitude: -122.69404),
-        CLLocationCoordinate2D(latitude: 45.49796, longitude: -122.69438),
-        CLLocationCoordinate2D(latitude: 45.49697, longitude: -122.69504),
-        CLLocationCoordinate2D(latitude: 45.49661, longitude: -122.69624),
-        CLLocationCoordinate2D(latitude: 45.4955, longitude: -122.69781),
-        CLLocationCoordinate2D(latitude: 45.49517, longitude: -122.69803),
-        CLLocationCoordinate2D(latitude: 45.49508, longitude: -122.69711),
-        CLLocationCoordinate2D(latitude: 45.4948, longitude: -122.69688),
-        CLLocationCoordinate2D(latitude: 45.49368, longitude: -122.69744),
-        CLLocationCoordinate2D(latitude: 45.49311, longitude: -122.69702),
-        CLLocationCoordinate2D(latitude: 45.49294, longitude: -122.69665),
-        CLLocationCoordinate2D(latitude: 45.49212, longitude: -122.69788),
-        CLLocationCoordinate2D(latitude: 45.49264, longitude: -122.69771),
-        CLLocationCoordinate2D(latitude: 45.49332, longitude: -122.69835),
-        CLLocationCoordinate2D(latitude: 45.49334, longitude: -122.7007),
-        CLLocationCoordinate2D(latitude: 45.49358, longitude: -122.70167),
-        CLLocationCoordinate2D(latitude: 45.49401, longitude: -122.70215),
-        CLLocationCoordinate2D(latitude: 45.49439, longitude: -122.70229),
-        CLLocationCoordinate2D(latitude: 45.49566, longitude: -122.70185),
-        CLLocationCoordinate2D(latitude: 45.49635, longitude: -122.70215),
-        CLLocationCoordinate2D(latitude: 45.49674, longitude: -122.70346),
-        CLLocationCoordinate2D(latitude: 45.49758, longitude: -122.70517),
-        CLLocationCoordinate2D(latitude: 45.49736, longitude: -122.70614),
-        CLLocationCoordinate2D(latitude: 45.49736, longitude: -122.70663),
-        CLLocationCoordinate2D(latitude: 45.49767, longitude: -122.70807),
-        CLLocationCoordinate2D(latitude: 45.49798, longitude: -122.70807),
-        CLLocationCoordinate2D(latitude: 45.49798, longitude: -122.70717),
-        CLLocationCoordinate2D(latitude: 45.4984, longitude: -122.70713),
-        CLLocationCoordinate2D(latitude: 45.49893, longitude: -122.70774)
-    ])
+    private lazy var sampleRouteLine: LineString = {
+        do {
+            return try Bundle.main.url(forResource: "route", withExtension: "geojson")
+                .map { url in try Data(contentsOf: url) }
+                .map { data in try JSONDecoder().decode(LineString.self, from: data) }!
+        } catch {
+            fatalError("Unable to decode Route GeoJSON source")
+        }
+    }()
 }
 
-extension NavigationSimulatorExample: LocationConsumer {
+extension NavigationSimulatorExample: PuckLocationConsumer {
 
-    func locationUpdate(newLocation: Location) {
+    func puckLocationUpdate(newLocation: Location) {
         let style = mapView.mapboxMap.style
         let progress = navigationSimulator.progressFromStart(to: newLocation)
 
-        let trimLineLayer: (inout LineLayer) -> Void = { layer in
-            layer.lineTrimOffset = .constant([0, progress])
-        }
-        try? style.updateLayer(withId: ID.routeLineLayer, type: LineLayer.self, update: trimLineLayer)
-        try? style.updateLayer(withId: ID.casingLineLayer, type: LineLayer.self, update: trimLineLayer)
+        try? style.setLayerProperty(for: ID.routeLineLayer, property: "line-trim-offset", value: [0, progress])
+        try? style.setLayerProperty(for: ID.casingLineLayer, property: "line-trim-offset", value: [0, progress])
     }
 }

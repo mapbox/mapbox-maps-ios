@@ -48,7 +48,6 @@ class KebabCaseKeyDecodingStrategyTests: XCTestCase {
         XCTAssertEqual(converter([TestingKey(intValue: 10325346)!]).stringValue, "10325346")
     }
 
-
     func testMultipleKeys() throws {
         guard case let JSONDecoder.KeyDecodingStrategy.custom(converter) = .convertFromKebabCase else {
             XCTFail("Kebab case strategy is a not custom decoding strategy.")

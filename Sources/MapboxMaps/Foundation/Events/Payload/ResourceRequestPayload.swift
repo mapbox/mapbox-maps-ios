@@ -7,12 +7,12 @@ public struct ResourceRequestPayload: Decodable {
 }
 
 public enum ResourceDataSource: String, Decodable {
-    case resourceLoader, network, database, asset, fileSystem
+    case resourceLoader = "resource-loader", network, database, asset, fileSystem = "file-system"
 }
 
 public struct ResourceRequest: Decodable {
     public enum Kind: String, Decodable {
-        case unknown, style, source, tile, glyphs, spriteImage, spriteJSON, image
+        case unknown, style, source, tile, glyphs, spriteImage = "sprite-image", spriteJSON = "sprite-json", image
     }
     public enum Priority: String, Decodable {
         case regular, low
@@ -29,18 +29,18 @@ public struct ResourceRequest: Decodable {
 
 public struct ResourceResponse: Decodable {
     public enum Source: String, Decodable {
-        case network, cache, tileStore, localFile
+        case network, cache, tileStore = "tile-store", localFile = "local-file"
     }
 
     public struct Error: Swift.Error, Decodable {
         // swiftlint:disable:next nesting
         public enum Reason: String, Decodable {
             case success
-            case notFound
+            case notFound = "not-found"
             case server
             case connection
-            case rateLimit
-            case inOfflineMode
+            case rateLimit = "rate-limit"
+            case inOfflineMode = "in-offline-mode"
             case other
         }
         public let reason: Reason

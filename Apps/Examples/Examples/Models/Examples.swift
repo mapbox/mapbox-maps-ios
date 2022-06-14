@@ -182,7 +182,7 @@ struct Examples {
                 description: "Display the location puck at a custom location.",
                 type: CustomLocationProviderExample.self),
         Example(title: "Simulate navigation",
-                description: "Simulate a navigation route with pre-defined route (from LA to San Francisco) with location puck",
+                description: "Simulate a driving trip from LA to San Francisco along a pre-defined route",
                 type: NavigationSimulatorExample.self),
     ]
 

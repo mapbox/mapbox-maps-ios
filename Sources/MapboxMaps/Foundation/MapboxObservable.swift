@@ -77,32 +77,22 @@ internal final class MapboxObservable: MapboxObservableProtocol {
     }
     @available(*, deprecated)
     internal func onNext(_ eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable {
+        return onNext(eventTypes.map(\.rawValue), handler: handler)
+    }
+
+    internal func onNext<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable {
+        return onNext([event.name]) { event in
+            handler(MapEvent(event: event))
+        }
+    }
+
+    private func onNext(_ events: [String], handler: @escaping (Event) -> Void) -> Cancelable {
         let cancelable = CompositeCancelable()
         let observer = BlockObserver {
             handler($0)
             cancelable.cancel()
         }
-        subscribe(observer, events: eventTypes.map(\.rawValue))
-        // Capturing self and observer with weak refs in the closure passed to BlockCancelable
-        // avoids a retain cycle. MapboxObservable holds a strong reference to observer, which has a
-        // strong reference to cancelable, which has a strong reference to BlockCancelable, which only
-        // has weak references back to MapboxObservable and observer. If MapboxObservable is deinited,
-        // observer will be released.
-        cancelable.add(BlockCancelable { [weak self, weak observer] in
-            if let self = self, let observer = observer {
-                self.unsubscribe(observer, events: [])
-            }
-        })
-        return cancelable
-    }
-
-    internal func onNext<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable {
-        let cancelable = CompositeCancelable()
-        let observer = BlockObserver {
-            handler(MapEvent(event: $0))
-            cancelable.cancel()
-        }
-        subscribe(observer, events: [event.name])
+        subscribe(observer, events: events)
         // Capturing self and observer with weak refs in the closure passed to BlockCancelable
         // avoids a retain cycle. MapboxObservable holds a strong reference to observer, which has a
         // strong reference to cancelable, which has a strong reference to BlockCancelable, which only
@@ -118,20 +108,18 @@ internal final class MapboxObservable: MapboxObservableProtocol {
 
     @available(*, deprecated)
     internal func onEvery(_ eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable {
-        let observer = BlockObserver(block: handler)
-        subscribe(observer, events: eventTypes.map(\.rawValue))
-        return BlockCancelable { [weak self, weak observer] in
-            if let self = self, let observer = observer {
-                self.unsubscribe(observer, events: [])
-            }
-        }
+        return onEvery(eventTypes.map(\.rawValue), handler: handler)
     }
 
     internal func onEvery<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable {
-        let observer = BlockObserver {
-            handler(MapEvent(event: $0))
+        onEvery([event.name]) { event in
+            handler(MapEvent(event: event))
         }
-        subscribe(observer, events: [event.name])
+    }
+
+    private func onEvery(_ events: [String], handler: @escaping (Event) -> Void) -> Cancelable {
+        let observer = BlockObserver(block: handler)
+        subscribe(observer, events: events)
         return BlockCancelable { [weak self, weak observer] in
             if let self = self, let observer = observer {
                 self.unsubscribe(observer, events: [])

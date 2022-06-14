@@ -181,9 +181,18 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
 
     private lazy var sampleRouteLine: LineString = {
         do {
+            enum Error: Swift.Error {
+                case invalidGeoJSON
+            }
             return try Bundle.main.url(forResource: "route", withExtension: "geojson")
                 .map { url in try Data(contentsOf: url) }
-                .map { data in try JSONDecoder().decode(LineString.self, from: data) }!
+                .map { data in
+                    let feature = try JSONDecoder().decode(Feature.self, from: data)
+                    switch feature.geometry {
+                    case .lineString(let lineString): return lineString
+                    default: throw Error.invalidGeoJSON
+                    }
+                }!
         } catch {
             fatalError("Unable to decode Route GeoJSON source")
         }

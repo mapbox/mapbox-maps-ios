@@ -1,6 +1,6 @@
 import Foundation
 
-public struct SourceDataLoadedPayload {
+public struct SourceDataLoadedPayload: Decodable {
     public let id: String
     public let type: SourceDataType
     public let loaded: Bool?
@@ -9,12 +9,6 @@ public struct SourceDataLoadedPayload {
     }
 
     internal let decodedTileId: DecodableCanonicalTileID?
-}
-
-extension SourceDataLoadedPayload: Decodable {
-    enum CodingKeys: String, CodingKey {
-        case id, type, loaded, decodedTileId = "tile-id"
-    }
 }
 
 public enum SourceDataType: String, Decodable {

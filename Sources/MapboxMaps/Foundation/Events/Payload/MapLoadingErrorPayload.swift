@@ -15,8 +15,8 @@ extension MapLoadingErrorPayload: Decodable {
     enum CodingKeys: String, CodingKey {
         case type
         case message
-        case sourceId = "source-id"
-        case tileId = "tile-id"
+        case sourceId
+        case tileId
     }
 
     public init(from decoder: Decoder) throws {

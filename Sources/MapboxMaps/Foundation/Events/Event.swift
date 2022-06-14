@@ -8,6 +8,7 @@ extension Event {
             let data = try JSONSerialization.data(withJSONObject: data)
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .formatted(.rfc1123)
+            decoder.keyDecodingStrategy = .convertFromKebabCase
             return try decoder.decode(Payload.self, from: data)
         } catch {
             Log.error(forMessage: "Cannot decode \(Payload.self) for \(self.data), error \(error)")

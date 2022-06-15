@@ -6,7 +6,7 @@
 ///  - idle (not updating the camera)
 ///  - in a state (camera is being managed by a ``ViewportState``)
 ///  - transitioning (camera is being managed by a ``ViewportTransition``)
-@_spi(Experimental) public final class Viewport {
+public final class Viewport {
 
     /// Configuration options for adjusting the viewport's behavior.
     public var options: ViewportOptions {

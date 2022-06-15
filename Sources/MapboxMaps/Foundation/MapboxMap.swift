@@ -652,6 +652,7 @@ public final class MapboxMap: MapboxMapProtocol {
 // MARK: - MapFeatureQueryable
 
 extension MapboxMap: MapFeatureQueryable {
+
     /// Queries the map for rendered features.
     ///
     /// - Parameters:
@@ -659,7 +660,7 @@ extension MapboxMap: MapFeatureQueryable {
     ///         for rendered features.
     ///   - options: Options for querying rendered features.
     ///   - completion: Callback called when the query completes
-    @available(*, deprecated)
+    @available(*, deprecated, renamed: "queryRenderedFeatures(with:options:completion:)")
     public func queryRenderedFeatures(for shape: [CGPoint], options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
         __map.queryRenderedFeatures(forShape: shape.map { $0.screenCoordinate },
                                     options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
@@ -668,13 +669,22 @@ extension MapboxMap: MapFeatureQueryable {
                                                                     concreteErrorType: MapError.self))
     }
 
+    @discardableResult
+    public func queryRenderedFeatures(with shape: [CGPoint], options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) -> Cancelable {
+        return __map.__queryRenderedFeatures(for: .fromNSArray(shape.map {$0.screenCoordinate}),
+                                       options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
+                                       callback: coreAPIClosureAdapter(for: completion,
+                                                                       type: NSArray.self,
+                                                                       concreteErrorType: MapError.self)).asCancelable()
+    }
+
     /// Queries the map for rendered features.
     ///
     /// - Parameters:
     ///   - rect: Screen rect to query for rendered features.
     ///   - options: Options for querying rendered features.
     ///   - completion: Callback called when the query completes
-    @available(*, deprecated)
+    @available(*, deprecated, renamed: "queryRenderedFeatures(with:options:completion:)")
     public func queryRenderedFeatures(in rect: CGRect, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
         __map.queryRenderedFeatures(for: ScreenBox(rect),
                                     options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
@@ -682,13 +692,23 @@ extension MapboxMap: MapFeatureQueryable {
                                                                     type: NSArray.self,
                                                                     concreteErrorType: MapError.self))
     }
+
+    @discardableResult
+    public func queryRenderedFeatures(with rect: CGRect, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) -> Cancelable {
+        return __map.__queryRenderedFeatures(for: .fromScreenBox(.init(rect)),
+                                       options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
+                                       callback: coreAPIClosureAdapter(for: completion,
+                                                                       type: NSArray.self,
+                                                                       concreteErrorType: MapError.self)).asCancelable()
+    }
+
     /// Queries the map for rendered features.
     ///
     /// - Parameters:
     ///   - point: Screen point at which to query for rendered features.
     ///   - options: Options for querying rendered features.
     ///   - completion: Callback called when the query completes
-    @available(*, deprecated)
+    @available(*, deprecated, renamed: "queryRenderedFeatures(with:options:completion:)")
     public func queryRenderedFeatures(at point: CGPoint, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
         __map.queryRenderedFeatures(forPixel: point.screenCoordinate,
                                     options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
@@ -697,19 +717,13 @@ extension MapboxMap: MapFeatureQueryable {
                                                                     concreteErrorType: MapError.self))
     }
 
-    /// Queries the map for rendered features.
-    ///
-    /// - Parameters:
-    ///   - geometry: The `screen pixel coordinates` (point, line string or box) to query for rendered features.
-    ///   - options: Options for querying rendered features.
-    ///   - completion: Callback called when the query completes
-    func queryRenderedFeatures(for geometry: RenderedQueryGeometry, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
-
-        __map.__queryRenderedFeatures(for: geometry,
-                                      options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
-                                      callback: coreAPIClosureAdapter(for: completion,
-                                                                      type: NSArray.self,
-                                                                      concreteErrorType: MapError.self))
+    @discardableResult
+    public func queryRenderedFeatures(with point: CGPoint, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) -> Cancelable {
+        return __map.__queryRenderedFeatures(for: .fromScreenCoordinate(point.screenCoordinate),
+                                             options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
+                                             callback: coreAPIClosureAdapter(for: completion,
+                                                                             type: NSArray.self,
+                                                                             concreteErrorType: MapError.self)).asCancelable()
     }
 
     /// Queries the map for source features.

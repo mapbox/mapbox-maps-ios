@@ -126,10 +126,9 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                 CLLocationCoordinate2D(latitude: 43.58039085560784, longitude: -101.337890625)
             ]
                 .map { mapView.mapboxMap.point(for: $0) }
-                .map { ScreenCoordinate(x: $0.x, y: $0.y) }
-
+            
             // When
-            mapView.mapboxMap.queryRenderedFeatures(for: RenderedQueryGeometry.fromNSArray(coordinates)) { result in
+            mapView.mapboxMap.queryRenderedFeatures(with: coordinates) { result in
                 switch result {
                 case .success(let features):
                     if features.count > 0 {

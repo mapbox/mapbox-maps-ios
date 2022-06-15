@@ -1,7 +1,15 @@
 @_implementationOnly import MapboxCoreMaps_Private
 
 internal protocol MapFeatureQueryable: AnyObject {
-    func queryRenderedFeatures(for geometry: RenderedQueryGeometry,
+    func queryRenderedFeatures(for shape: [CGPoint],
+                                   options: RenderedQueryOptions?,
+                                   completion: @escaping (Result<[QueriedFeature], Error>) -> Void)
+
+    func queryRenderedFeatures(in rect: CGRect,
+                               options: RenderedQueryOptions?,
+                               completion: @escaping (Result<[QueriedFeature], Error>) -> Void)
+
+    func queryRenderedFeatures(at point: CGPoint,
                                options: RenderedQueryOptions?,
                                completion: @escaping (Result<[QueriedFeature], Error>) -> Void)
 

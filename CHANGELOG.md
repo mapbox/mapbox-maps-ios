@@ -1,7 +1,7 @@
 # Changelog for Mapbox Maps SDK v10 for iOS
 
 Mapbox welcomes participation and contributions from everyone.
-
+* Remove experimental annotation from Viewport API. ([#1392](https://github.com/mapbox/mapbox-maps-ios/pull/1392))
 * Use MapboxCoreMaps API to move a Layer instead of manually removing the layer then adding it back. ([#1367](https://github.com/mapbox/mapbox-maps-ios/pull/1367))
 * Expose API to get puck's location updates. ([#1365](https://github.com/mapbox/mapbox-maps-ios/pull/1365))
 

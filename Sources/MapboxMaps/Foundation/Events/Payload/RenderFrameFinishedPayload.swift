@@ -7,5 +7,6 @@ public struct RenderFrameFinishedPayload: Decodable {
 }
 
 public enum RenderMode: String, Decodable {
-    case partial, full
+    case partial
+    case full
 }

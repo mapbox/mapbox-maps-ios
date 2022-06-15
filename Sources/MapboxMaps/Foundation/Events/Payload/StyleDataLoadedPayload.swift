@@ -5,5 +5,7 @@ public struct StyleDataLoadedPayload: Decodable {
 }
 
 public enum StyleDataType: String, Decodable {
-    case style, sprite, sources
+    case style
+    case sprite
+    case sources
 }

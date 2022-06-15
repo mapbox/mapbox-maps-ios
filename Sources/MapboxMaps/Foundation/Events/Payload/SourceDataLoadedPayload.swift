@@ -12,5 +12,6 @@ public struct SourceDataLoadedPayload: Decodable {
 }
 
 public enum SourceDataType: String, Decodable {
-    case metadata, tile
+    case metadata
+    case tile
 }

@@ -7,18 +7,31 @@ public struct ResourceRequestPayload: Decodable {
 }
 
 public enum ResourceDataSource: String, Decodable {
-    case resourceLoader = "resource-loader", network, database, asset, fileSystem = "file-system"
+    case resourceLoader = "resource-loader"
+    case network
+    case database
+    case asset
+    case fileSystem = "file-system"
 }
 
 public struct ResourceRequest: Decodable {
     public enum Kind: String, Decodable {
-        case unknown, style, source, tile, glyphs, spriteImage = "sprite-image", spriteJSON = "sprite-json", image
+        case unknown
+        case style
+        case source
+        case tile
+        case glyphs
+        case spriteImage = "sprite-image"
+        case spriteJSON = "sprite-json"
+        case image
     }
     public enum Priority: String, Decodable {
-        case regular, low
+        case regular
+        case low
     }
     public enum LoadingMethod: String, Decodable {
-        case cache, network
+        case cache
+        case network
     }
 
     let url: String
@@ -29,7 +42,10 @@ public struct ResourceRequest: Decodable {
 
 public struct ResourceResponse: Decodable {
     public enum Source: String, Decodable {
-        case network, cache, tileStore = "tile-store", localFile = "local-file"
+        case network
+        case cache
+        case tileStore = "tile-store"
+        case localFile = "local-file"
     }
 
     public struct Error: Swift.Error, Decodable {

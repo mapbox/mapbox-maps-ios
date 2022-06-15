@@ -3,7 +3,7 @@ import Foundation
 extension JSONDecoder.KeyDecodingStrategy {
     internal static var convertFromKebabCase: Self {
         return .custom { keys in
-            let lastKey = keys.last!.stringValue.camelCased
+            let lastKey = keys.last!.stringValue.camelCased(separator: "-")
 
             return AnyKey(stringValue: lastKey)!
         }
@@ -26,9 +26,9 @@ private struct AnyKey: CodingKey {
 }
 
 private extension String {
-    var camelCased: String {
+    func camelCased(separator: Element) -> Self {
         return lowercased()
-            .split(separator: "-")
+            .split(separator: separator)
             .enumerated()
             .map { $0.offset > 0 ? $0.element.capitalized : $0.element.lowercased() }
             .joined()

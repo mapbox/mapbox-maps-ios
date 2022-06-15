@@ -28,7 +28,6 @@ class KebabCaseKeyDecodingStrategyTests: XCTestCase {
             return
         }
 
-        XCTAssertEqual(converter([TestingKey(intValue: 0)!]).stringValue, "0")
         XCTAssertEqual(converter([TestingKey("")]).stringValue, "")
         XCTAssertEqual(converter([TestingKey("key")]).stringValue, "key")
         XCTAssertEqual(converter([TestingKey("-key")]).stringValue, "key")
@@ -37,6 +36,8 @@ class KebabCaseKeyDecodingStrategyTests: XCTestCase {
         XCTAssertEqual(converter([TestingKey("a-key")]).stringValue, "aKey")
         XCTAssertEqual(converter([TestingKey("a-long-key")]).stringValue, "aLongKey")
         XCTAssertEqual(converter([TestingKey("a-very-long-key")]).stringValue, "aVeryLongKey")
+        XCTAssertEqual(converter([TestingKey("12-3-a-numkey")]).stringValue, "123ANumkey")
+        XCTAssertEqual(converter([TestingKey("a-numkey-1-23")]).stringValue, "aNumkey123")
     }
 
     func testIntConversion() throws {

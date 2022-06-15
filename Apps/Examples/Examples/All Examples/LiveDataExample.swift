@@ -27,7 +27,7 @@ final class LiveDataExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Add the live data layer once the map has finished loading.
-        mapView.mapboxMap.onNext(.mapLoaded) { _ in
+        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
             self.addStyleLayer()
 
             // The following line is just for testing purposes.

@@ -9,7 +9,6 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
     /// Closures for map view delegate 
     internal var didFinishLoadingStyle: ((MapView) -> Void)?
     internal var didBecomeIdle: ((MapView) -> Void)?
-    internal var didFailLoadingMap: ((MapView, NSError) -> Void)?
 
     internal override func setUpWithError() throws {
         try guardForMetalDevice()
@@ -29,22 +28,14 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
                                             styleURI: nil)
         let view = MapView(frame: window.bounds, mapInitOptions: mapInitOptions)
 
-        view.mapboxMap.onEvery(.styleLoaded) { [weak self] _ in
+        view.mapboxMap.onEvery(event: .styleLoaded) { [weak self] _ in
             guard let self = self, let mapView = self.mapView else { return }
             self.didFinishLoadingStyle?(mapView)
         }
 
-        view.mapboxMap.onEvery(.mapIdle) { [weak self] _ in
+        view.mapboxMap.onEvery(event: .mapIdle) { [weak self] _ in
             guard let self = self, let mapView = self.mapView else { return }
             self.didBecomeIdle?(mapView)
-        }
-
-        view.mapboxMap.onEvery(.mapLoadingError) { [weak self] event in
-            guard let self = self, let mapView = self.mapView else { return }
-
-            let userInfo: [String: Any] = (event.data as? [String: Any]) ?? [:]
-            let error = NSError(domain: "MapLoadError", code: -1, userInfo: userInfo)
-            self.didFailLoadingMap?(mapView, error)
         }
 
         style = view.mapboxMap.style
@@ -83,7 +74,6 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
 
         didFinishLoadingStyle = nil
         didBecomeIdle = nil
-        didFailLoadingMap = nil
 
         try super.tearDownWithError()
     }

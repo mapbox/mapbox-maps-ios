@@ -60,7 +60,7 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
 
         // Set the camera of the snapshotter
 
-        mapView.mapboxMap.onEvery(.mapIdle) { [weak self] _ in
+        mapView.mapboxMap.onEvery(event: .mapIdle) { [weak self] _ in
             // Allow the previous snapshot to complete before starting a new one.
             guard let self = self, !self.snapshotting else {
                 return

@@ -16,7 +16,7 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(.mapLoaded) { _ in
+        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
 
             self.setupExample()
 

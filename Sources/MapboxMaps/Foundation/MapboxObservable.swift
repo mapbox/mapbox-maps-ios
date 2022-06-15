@@ -3,9 +3,9 @@ import MapboxCoreMaps
 internal protocol MapboxObservableProtocol: AnyObject {
     func subscribe(_ observer: Observer, events: [String])
     func unsubscribe(_ observer: Observer, events: [String])
-    @available(*, deprecated)
+    @available(*, deprecated, renamed: "onNext(event:handler:)")
     func onNext(_ eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable
-    @available(*, deprecated)
+    @available(*, deprecated, renamed: "onEvery(event:handler:)")
     func onEvery(_ eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable
     func onNext<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable
     func onEvery<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable

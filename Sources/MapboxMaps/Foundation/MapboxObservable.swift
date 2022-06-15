@@ -75,7 +75,8 @@ internal final class MapboxObservable: MapboxObservableProtocol {
             }
         }
     }
-    @available(*, deprecated)
+
+    @available(*, deprecated, renamed: "onNext(event:handler:)")
     internal func onNext(_ eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable {
         return onNext(eventTypes.map(\.rawValue), handler: handler)
     }
@@ -106,7 +107,7 @@ internal final class MapboxObservable: MapboxObservableProtocol {
         return cancelable
     }
 
-    @available(*, deprecated)
+    @available(*, deprecated, renamed: "onEvery(event:handler:)")
     internal func onEvery(_ eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable {
         return onEvery(eventTypes.map(\.rawValue), handler: handler)
     }

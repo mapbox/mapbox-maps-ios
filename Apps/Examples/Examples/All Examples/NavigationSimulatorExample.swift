@@ -1,5 +1,5 @@
 import UIKit
-import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 
 final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
     private enum ID {
@@ -29,9 +29,9 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
         mapView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             mapView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            mapView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
+            mapView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             mapView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            mapView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
+            mapView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
         ])
 
         // The below line is used for internal testing purposes only.
@@ -39,7 +39,7 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
     }
 
     private func configureMap() {
-        navigationSimulator = NavigationSimulator(mapView: mapView, route: sampleRouteLine)
+        navigationSimulator = NavigationSimulator(viewport: mapView.viewport, route: sampleRouteLine)
 
         mapView.location.options.puckType = .puck2D(.makeDefault(showBearing: true))
         mapView.location.options.puckBearingSource = .course

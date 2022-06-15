@@ -32,8 +32,8 @@ final class NavigationSimulator: LocationProvider {
         }
     }
 
-    init(mapView: MapView, route: LineString) {
-        self.viewport = mapView.viewport
+    init(viewport: Viewport, route: LineString) {
+        self.viewport = viewport
         self.route = route
         routeLength = route.distance()!
         routePointsToTravel = route.coordinates

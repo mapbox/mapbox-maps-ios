@@ -28,7 +28,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         mapView.location.options.puckBearingSource = .course
 
         // Center map over the user's current location
-        mapView.mapboxMap.onNext(.mapLoaded, handler: { [weak self] _ in
+        mapView.mapboxMap.onNext(event: .mapLoaded, handler: { [weak self] _ in
             guard let self = self else { return }
 
             if let currentLocation = self.mapView.location.latestLocation {
@@ -38,7 +38,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         })
 
         // Accuracy ring is only shown when zoom is greater than or equal to 18
-        mapView.mapboxMap.onEvery(.cameraChanged, handler: { [weak self] _ in
+        mapView.mapboxMap.onEvery(event: .cameraChanged, handler: { [weak self] _ in
             guard let self = self else { return }
             self.toggleAccuracyRadiusButton.isHidden = self.mapView.cameraState.zoom < 18.0
         })

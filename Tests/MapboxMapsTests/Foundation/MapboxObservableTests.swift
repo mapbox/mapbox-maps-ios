@@ -157,6 +157,7 @@ final class MapboxObservableTests: XCTestCase {
         XCTAssertEqual(Set(subscribeInvocation.parameters.events), Set(events[1..<events.count]))
     }
 
+    @available(*, deprecated)
     func testOnNext() throws {
         _ = mapboxObservable.onNext(eventTypes, handler: handlerStub.call(with:))
 
@@ -178,6 +179,54 @@ final class MapboxObservableTests: XCTestCase {
         XCTAssertIdentical(observable.unsubscribeStub.invocations.first?.parameters, subscribedObserver)
     }
 
+    func testOnTypedNext() throws {
+        func verifyInvocation<Payload>(
+            eventType: MapEvents.Event<Payload>,
+            handlerStub: Stub<MapEvent<Payload>, Void> = .init()
+        ) throws {
+            _ = mapboxObservable.onNext(event: eventType, handler: handlerStub.call(with:))
+
+            // Initial subscribe invokes subscribe only with expected events
+            XCTAssertEqual(observable.unsubscribeStub.invocations.count, 0)
+            XCTAssertEqual(observable.subscribeStub.invocations.count, 1)
+            let subscribeInvocation = try XCTUnwrap(observable.subscribeStub.invocations.first)
+            XCTAssertEqual(subscribeInvocation.parameters.events, [eventType.name])
+
+            // notifying the observer passed to the observable should notify the handler passed to mapboxObservable
+            let event = Event(type: "", data: 0)
+            notify(with: event)
+            XCTAssertEqual(handlerStub.invocations.count, 1)
+            XCTAssertIdentical(handlerStub.invocations.first?.parameters.event, event)
+
+            // event delivery ends the subscription
+            let subscribedObserver = subscribeInvocation.parameters.observer
+            XCTAssertEqual(observable.unsubscribeStub.invocations.count, 1)
+            XCTAssertIdentical(observable.unsubscribeStub.invocations.first?.parameters, subscribedObserver)
+        }
+
+        // swiftlint:disable opening_brace
+        let eventInvocations = [
+            { try verifyInvocation(eventType: .mapLoaded) },
+            { try verifyInvocation(eventType: .mapLoadingError) },
+            { try verifyInvocation(eventType: .mapIdle) },
+            { try verifyInvocation(eventType: .styleDataLoaded) },
+            { try verifyInvocation(eventType: .styleLoaded) },
+            { try verifyInvocation(eventType: .styleImageMissing) },
+            { try verifyInvocation(eventType: .styleImageRemoveUnused) },
+            { try verifyInvocation(eventType: .sourceDataLoaded) },
+            { try verifyInvocation(eventType: .sourceAdded) },
+            { try verifyInvocation(eventType: .sourceRemoved) },
+            { try verifyInvocation(eventType: .renderFrameStarted) },
+            { try verifyInvocation(eventType: .renderFrameFinished) },
+            { try verifyInvocation(eventType: .cameraChanged) },
+            { try verifyInvocation(eventType: .resourceRequest) }
+        ]
+        // swiftlint:enable opening_brace
+
+        try eventInvocations.randomElement()!()
+    }
+
+    @available(*, deprecated)
     func testOnNextCancellation() throws {
         let cancelable = mapboxObservable.onNext(eventTypes, handler: handlerStub.call(with:))
         let subscribedObserver = try XCTUnwrap(observable.subscribeStub.invocations.first?.parameters.observer)
@@ -195,6 +244,50 @@ final class MapboxObservableTests: XCTestCase {
         XCTAssertEqual(observable.unsubscribeStub.invocations.count, 0)
     }
 
+    func testOnTypedNextCancellation() throws {
+        func verifyInvocation<Payload>(
+            eventType: MapEvents.Event<Payload>,
+            handlerStub: Stub<MapEvent<Payload>, Void> = .init()
+        ) throws {
+            let cancelable = mapboxObservable.onNext(event: eventType, handler: handlerStub.call(with:))
+            let subscribedObserver = try XCTUnwrap(observable.subscribeStub.invocations.first?.parameters.observer)
+
+            cancelable.cancel()
+
+            XCTAssertEqual(observable.unsubscribeStub.invocations.count, 1)
+            XCTAssertIdentical(observable.unsubscribeStub.invocations.first?.parameters, subscribedObserver)
+
+            // invoking the cancelable again does nothing
+            observable.unsubscribeStub.reset()
+
+            cancelable.cancel()
+
+            XCTAssertEqual(observable.unsubscribeStub.invocations.count, 0)
+        }
+
+        // swiftlint:disable opening_brace
+        let eventInvocations = [
+            { try verifyInvocation(eventType: .mapLoaded) },
+            { try verifyInvocation(eventType: .mapLoadingError) },
+            { try verifyInvocation(eventType: .mapIdle) },
+            { try verifyInvocation(eventType: .styleDataLoaded) },
+            { try verifyInvocation(eventType: .styleLoaded) },
+            { try verifyInvocation(eventType: .styleImageMissing) },
+            { try verifyInvocation(eventType: .styleImageRemoveUnused) },
+            { try verifyInvocation(eventType: .sourceDataLoaded) },
+            { try verifyInvocation(eventType: .sourceAdded) },
+            { try verifyInvocation(eventType: .sourceRemoved) },
+            { try verifyInvocation(eventType: .renderFrameStarted) },
+            { try verifyInvocation(eventType: .renderFrameFinished) },
+            { try verifyInvocation(eventType: .cameraChanged) },
+            { try verifyInvocation(eventType: .resourceRequest) }
+        ]
+        // swiftlint:enable opening_brace
+
+        try eventInvocations.randomElement()!()
+    }
+
+    @available(*, deprecated)
     func testOnNextWithSynchronousInvocation() throws {
         observable.subscribeStub.defaultSideEffect = { invocation in
             invocation.parameters.observer.notify(for: Event(type: "", data: 0))
@@ -214,6 +307,52 @@ final class MapboxObservableTests: XCTestCase {
         XCTAssertEqual(observable.unsubscribeStub.invocations.count, 0)
     }
 
+    func testOnTypedNextWithSynchronousInvocation() throws {
+        func verifyInvocation<Payload>(
+            eventType: MapEvents.Event<Payload>,
+            handlerStub: Stub<MapEvent<Payload>, Void> = .init()
+        ) throws {
+            observable.subscribeStub.defaultSideEffect = { invocation in
+                invocation.parameters.observer.notify(for: Event(type: "", data: 0))
+            }
+
+            let cancelable = mapboxObservable.onNext(event: eventType, handler: handlerStub.call(with:))
+
+            let subscribedObserver = try XCTUnwrap(observable.subscribeStub.invocations.first?.parameters.observer)
+            XCTAssertEqual(observable.unsubscribeStub.invocations.count, 1)
+            XCTAssertIdentical(observable.unsubscribeStub.invocations.first?.parameters, subscribedObserver)
+
+            // invoking the cancelable does not attempt to unsubscribe a second time
+            observable.unsubscribeStub.reset()
+
+            cancelable.cancel()
+
+            XCTAssertEqual(observable.unsubscribeStub.invocations.count, 0)
+        }
+
+        // swiftlint:disable opening_brace
+        let eventInvocations = [
+            { try verifyInvocation(eventType: .mapLoaded) },
+            { try verifyInvocation(eventType: .mapLoadingError) },
+            { try verifyInvocation(eventType: .mapIdle) },
+            { try verifyInvocation(eventType: .styleDataLoaded) },
+            { try verifyInvocation(eventType: .styleLoaded) },
+            { try verifyInvocation(eventType: .styleImageMissing) },
+            { try verifyInvocation(eventType: .styleImageRemoveUnused) },
+            { try verifyInvocation(eventType: .sourceDataLoaded) },
+            { try verifyInvocation(eventType: .sourceAdded) },
+            { try verifyInvocation(eventType: .sourceRemoved) },
+            { try verifyInvocation(eventType: .renderFrameStarted) },
+            { try verifyInvocation(eventType: .renderFrameFinished) },
+            { try verifyInvocation(eventType: .cameraChanged) },
+            { try verifyInvocation(eventType: .resourceRequest) }
+        ]
+        // swiftlint:enable opening_brace
+
+        try eventInvocations.randomElement()!()
+    }
+
+    @available(*, deprecated)
     func testOnEvery() throws {
         let cancelable = mapboxObservable.onEvery(eventTypes, handler: handlerStub.call(with:))
 
@@ -247,6 +386,66 @@ final class MapboxObservableTests: XCTestCase {
         XCTAssertEqual(observable.unsubscribeStub.invocations.count, 0)
     }
 
+    func testOnTypedEvery() throws {
+        func verifyInvocation<Payload>(
+            eventType: MapEvents.Event<Payload>,
+            handlerStub: Stub<MapEvent<Payload>, Void> = .init()
+        ) throws {
+            let cancelable = mapboxObservable.onEvery(event: eventType, handler: handlerStub.call(with:))
+
+            // Initial subscribe invokes subscribe only with expected events
+            XCTAssertEqual(observable.unsubscribeStub.invocations.count, 0)
+            XCTAssertEqual(observable.subscribeStub.invocations.count, 1)
+            let subscribeInvocation = try XCTUnwrap(observable.subscribeStub.invocations.first)
+            XCTAssertEqual(subscribeInvocation.parameters.events, [eventType.name])
+
+            // notifying the observer passed to the observable should notify the handler passed to mapboxObservable
+            let event = Event(type: "", data: 0)
+            notify(with: event)
+            XCTAssertEqual(handlerStub.invocations.count, 1)
+            XCTAssertIdentical(handlerStub.invocations.first?.parameters.event, event)
+
+            // event delivery does not end the subscription
+            XCTAssertEqual(observable.unsubscribeStub.invocations.count, 0)
+
+            // invoking the cancelable ends the subscription
+            cancelable.cancel()
+
+            let subscribedObserver = subscribeInvocation.parameters.observer
+            XCTAssertEqual(observable.unsubscribeStub.invocations.count, 1)
+            XCTAssertIdentical(observable.unsubscribeStub.invocations.first?.parameters, subscribedObserver)
+
+            // invoking the cancelable again does nothing
+            observable.unsubscribeStub.reset()
+
+            cancelable.cancel()
+
+            XCTAssertEqual(observable.unsubscribeStub.invocations.count, 0)
+        }
+
+        // swiftlint:disable opening_brace
+        let eventInvocations = [
+            { try verifyInvocation(eventType: .mapLoaded) },
+            { try verifyInvocation(eventType: .mapLoadingError) },
+            { try verifyInvocation(eventType: .mapIdle) },
+            { try verifyInvocation(eventType: .styleDataLoaded) },
+            { try verifyInvocation(eventType: .styleLoaded) },
+            { try verifyInvocation(eventType: .styleImageMissing) },
+            { try verifyInvocation(eventType: .styleImageRemoveUnused) },
+            { try verifyInvocation(eventType: .sourceDataLoaded) },
+            { try verifyInvocation(eventType: .sourceAdded) },
+            { try verifyInvocation(eventType: .sourceRemoved) },
+            { try verifyInvocation(eventType: .renderFrameStarted) },
+            { try verifyInvocation(eventType: .renderFrameFinished) },
+            { try verifyInvocation(eventType: .cameraChanged) },
+            { try verifyInvocation(eventType: .resourceRequest) }
+        ]
+        // swiftlint:enable opening_brace
+
+        try eventInvocations.randomElement()!()
+    }
+
+    @available(*, deprecated)
     func testUnsubscribesOnDeinit() {
         let otherObserver = MockObserver()
         let subscribedObservers: [Observer]
@@ -270,6 +469,56 @@ final class MapboxObservableTests: XCTestCase {
             Set(unsubscribedObservers.map(ObjectIdentifier.init)))
     }
 
+    func testTypedUnsubscribesOnDeinit() throws {
+        func verifyInvocation<Payload>(
+            eventType: MapEvents.Event<Payload>,
+            handlerStub: Stub<MapEvent<Payload>, Void> = .init()
+        ) throws {
+            let otherObserver = MockObserver()
+            let subscribedObservers: [Observer]
+
+            do {
+                let mapboxObservable = MapboxObservable(observable: observable)
+                mapboxObservable.subscribe(observer, events: events)
+                mapboxObservable.subscribe(otherObserver, events: events)
+                _ = mapboxObservable.onNext(event: eventType, handler: handlerStub.call(with:))
+                _ = mapboxObservable.onEvery(event: eventType, handler: handlerStub.call(with:))
+
+                XCTAssertEqual(observable.subscribeStub.invocations.count, 4)
+                subscribedObservers = observable.subscribeStub.invocations.map(\.parameters.observer)
+            }
+
+            XCTAssertEqual(observable.unsubscribeStub.invocations.count, 4)
+            let unsubscribedObservers = observable.unsubscribeStub.invocations.map(\.parameters)
+
+            XCTAssertEqual(
+                Set(subscribedObservers.map(ObjectIdentifier.init)),
+                Set(unsubscribedObservers.map(ObjectIdentifier.init)))
+        }
+
+        // swiftlint:disable opening_brace
+        let eventInvocations = [
+            { try verifyInvocation(eventType: .mapLoaded) },
+            { try verifyInvocation(eventType: .mapLoadingError) },
+            { try verifyInvocation(eventType: .mapIdle) },
+            { try verifyInvocation(eventType: .styleDataLoaded) },
+            { try verifyInvocation(eventType: .styleLoaded) },
+            { try verifyInvocation(eventType: .styleImageMissing) },
+            { try verifyInvocation(eventType: .styleImageRemoveUnused) },
+            { try verifyInvocation(eventType: .sourceDataLoaded) },
+            { try verifyInvocation(eventType: .sourceAdded) },
+            { try verifyInvocation(eventType: .sourceRemoved) },
+            { try verifyInvocation(eventType: .renderFrameStarted) },
+            { try verifyInvocation(eventType: .renderFrameFinished) },
+            { try verifyInvocation(eventType: .cameraChanged) },
+            { try verifyInvocation(eventType: .resourceRequest) }
+        ]
+        // swiftlint:enable opening_brace
+
+        try eventInvocations.randomElement()!()
+    }
+
+    @available(*, deprecated)
     func testPerformWithoutNotifying() {
         let otherObserver = MockObserver()
         let otherHandlerStub = Stub<Event, Void>()
@@ -302,6 +551,65 @@ final class MapboxObservableTests: XCTestCase {
         XCTAssertIdentical(otherHandlerStub.invocations.first?.parameters, event)
     }
 
+    func testTypedPerformWithoutNotifying() throws {
+        func verifyInvocation<Payload>(
+            eventType: MapEvents.Event<Payload>,
+            handlerStub: Stub<MapEvent<Payload>, Void> = .init(),
+            otherHandlerStub: Stub<MapEvent<Payload>, Void> = .init()
+        ) throws {
+            let otherObserver = MockObserver()
+            mapboxObservable.subscribe(observer, events: events)
+            mapboxObservable.subscribe(otherObserver, events: events)
+            _ = mapboxObservable.onNext(event: eventType, handler: handlerStub.call(with:))
+            _ = mapboxObservable.onEvery(event: eventType, handler: otherHandlerStub.call(with:))
+
+            mapboxObservable.performWithoutNotifying {
+                // do actions that trigger notifications
+                notify(with: Event(type: "", data: 0))
+            }
+
+            XCTAssertEqual(observer.notifyStub.invocations.count, 0)
+            XCTAssertEqual(otherObserver.notifyStub.invocations.count, 0)
+            XCTAssertEqual(handlerStub.invocations.count, 0)
+            XCTAssertEqual(otherHandlerStub.invocations.count, 0)
+
+            // do actions that trigger notifications again
+            let event = Event(type: "", data: 0)
+            notify(with: event)
+
+            XCTAssertEqual(observer.notifyStub.invocations.count, 1)
+            XCTAssertIdentical(observer.notifyStub.invocations.first?.parameters, event)
+            XCTAssertEqual(otherObserver.notifyStub.invocations.count, 1)
+            XCTAssertIdentical(otherObserver.notifyStub.invocations.first?.parameters, event)
+            XCTAssertEqual(handlerStub.invocations.count, 1)
+            XCTAssertIdentical(handlerStub.invocations.first?.parameters.event, event)
+            XCTAssertEqual(otherHandlerStub.invocations.count, 1)
+            XCTAssertIdentical(otherHandlerStub.invocations.first?.parameters.event, event)
+        }
+
+        // swiftlint:disable opening_brace
+        let eventInvocations = [
+            { try verifyInvocation(eventType: .mapLoaded) },
+            { try verifyInvocation(eventType: .mapLoadingError) },
+            { try verifyInvocation(eventType: .mapIdle) },
+            { try verifyInvocation(eventType: .styleDataLoaded) },
+            { try verifyInvocation(eventType: .styleLoaded) },
+            { try verifyInvocation(eventType: .styleImageMissing) },
+            { try verifyInvocation(eventType: .styleImageRemoveUnused) },
+            { try verifyInvocation(eventType: .sourceDataLoaded) },
+            { try verifyInvocation(eventType: .sourceAdded) },
+            { try verifyInvocation(eventType: .sourceRemoved) },
+            { try verifyInvocation(eventType: .renderFrameStarted) },
+            { try verifyInvocation(eventType: .renderFrameFinished) },
+            { try verifyInvocation(eventType: .cameraChanged) },
+            { try verifyInvocation(eventType: .resourceRequest) }
+        ]
+        // swiftlint:enable opening_brace
+
+        try eventInvocations.randomElement()!()
+    }
+
+    @available(*, deprecated)
     func testReentrantPerformWithoutNotifying() {
         let otherObserver = MockObserver()
         let otherHandlerStub = Stub<Event, Void>()
@@ -322,5 +630,53 @@ final class MapboxObservableTests: XCTestCase {
         XCTAssertEqual(otherObserver.notifyStub.invocations.count, 0)
         XCTAssertEqual(handlerStub.invocations.count, 0)
         XCTAssertEqual(otherHandlerStub.invocations.count, 0)
+    }
+
+    func testTypedReentrantPerformWithoutNotifying() throws {
+        func verifyInvocation<Payload>(
+            eventType: MapEvents.Event<Payload>,
+            handlerStub: Stub<MapEvent<Payload>, Void> = .init(),
+            otherHandlerStub: Stub<MapEvent<Payload>, Void> = .init()
+        ) throws {
+            let otherObserver = MockObserver()
+            mapboxObservable.subscribe(observer, events: events)
+            mapboxObservable.subscribe(otherObserver, events: events)
+            _ = mapboxObservable.onNext(event: eventType, handler: handlerStub.call(with:))
+            _ = mapboxObservable.onEvery(event: eventType, handler: otherHandlerStub.call(with:))
+
+            mapboxObservable.performWithoutNotifying {
+                mapboxObservable.performWithoutNotifying {
+                    notify(with: Event(type: "", data: 0))
+                }
+
+                notify(with: Event(type: "", data: 0))
+            }
+
+            XCTAssertEqual(observer.notifyStub.invocations.count, 0)
+            XCTAssertEqual(otherObserver.notifyStub.invocations.count, 0)
+            XCTAssertEqual(handlerStub.invocations.count, 0)
+            XCTAssertEqual(otherHandlerStub.invocations.count, 0)
+        }
+
+        // swiftlint:disable opening_brace
+        let eventInvocations = [
+            { try verifyInvocation(eventType: .mapLoaded) },
+            { try verifyInvocation(eventType: .mapLoadingError) },
+            { try verifyInvocation(eventType: .mapIdle) },
+            { try verifyInvocation(eventType: .styleDataLoaded) },
+            { try verifyInvocation(eventType: .styleLoaded) },
+            { try verifyInvocation(eventType: .styleImageMissing) },
+            { try verifyInvocation(eventType: .styleImageRemoveUnused) },
+            { try verifyInvocation(eventType: .sourceDataLoaded) },
+            { try verifyInvocation(eventType: .sourceAdded) },
+            { try verifyInvocation(eventType: .sourceRemoved) },
+            { try verifyInvocation(eventType: .renderFrameStarted) },
+            { try verifyInvocation(eventType: .renderFrameFinished) },
+            { try verifyInvocation(eventType: .cameraChanged) },
+            { try verifyInvocation(eventType: .resourceRequest) }
+        ]
+        // swiftlint:enable opening_brace
+
+        try eventInvocations.randomElement()!()
     }
 }

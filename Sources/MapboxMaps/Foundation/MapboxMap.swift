@@ -18,7 +18,7 @@ internal protocol MapboxMapProtocol: AnyObject {
     func beginGesture()
     func endGesture()
     @discardableResult
-    func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable
+    func onEvery<Payload>(event eventType: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable
     // View annotation management
     func setViewAnnotationPositionsUpdateListener(_ listener: ViewAnnotationPositionsUpdateListener?)
     func addViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws
@@ -78,21 +78,15 @@ public final class MapboxMap: MapboxMapProtocol {
     // MARK: - Style loading
 
     private func observeStyleLoad(_ completion: @escaping (Result<Style, Error>) -> Void) {
-        onNext(eventTypes: [.styleLoaded, .mapLoadingError]) { event in
-            switch event.type {
-            case MapEvents.styleLoaded:
-                if !self.style.isLoaded {
-                    Log.warning(forMessage: "style.isLoaded == false, was this an empty style?", category: "Style")
-                }
-                completion(.success(self.style))
-
-            case MapEvents.mapLoadingError:
-                let error = MapLoadingError(data: event.data)
-                completion(.failure(error))
-
-            default:
-                fatalError("Unexpected event type")
+        onNext(event: .styleLoaded) { _ in
+            if !self.style.isLoaded {
+                Log.warning(forMessage: "style.isLoaded == false, was this an empty style?", category: "Style")
             }
+            completion(.success(self.style))
+        }
+
+        onNext(event: .mapLoadingError) { event in
+            completion(.failure(event.payload.error))
         }
     }
 
@@ -860,9 +854,25 @@ extension MapboxMap {
 
 extension MapboxMap: MapEventsObservable {
 
+    /// Listen to a single occurrence of a Map event.
+    ///
+    /// This will observe the next (and only the next) event of the specified
+    /// type. After observation, the underlying subscriber will unsubscribe from
+    /// the map or snapshotter.
+    ///
+    /// If you need to unsubscribe before the event fires, call `cancel()` on
+    /// the returned `Cancelable` object.
+    ///
+    /// - Parameters:
+    ///   - eventType: The event type to listen to.
+    ///   - handler: The closure to execute when the event occurs.
+    ///
+    /// - Returns: A `Cancelable` object that you can use to stop listening for
+    ///     the event. This is especially important if you have a retain cycle in
+    ///     the handler.
     @discardableResult
-    private func onNext(eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable {
-        return observable.onNext(eventTypes, handler: handler)
+    public func onNext<Payload>(event eventType: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable {
+        return observable.onNext(event: eventType, handler: handler)
     }
 
     /// Listen to a single occurrence of a Map event.
@@ -881,6 +891,7 @@ extension MapboxMap: MapEventsObservable {
     /// - Returns: A `Cancelable` object that you can use to stop listening for
     ///     the event. This is especially important if you have a retain cycle in
     ///     the handler.
+    @available(*, deprecated, renamed: "onNext(event:handler:)")
     @discardableResult
     public func onNext(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
         return observable.onNext([eventType], handler: handler)
@@ -895,9 +906,24 @@ extension MapboxMap: MapEventsObservable {
     /// - Returns: A `Cancelable` object that you can use to stop listening for
     ///     events. This is especially important if you have a retain cycle in
     ///     the handler.
+    @available(*, deprecated, renamed: "onEvery(event:handler:)")
     @discardableResult
     public func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
         return observable.onEvery([eventType], handler: handler)
+    }
+
+    /// Listen to multiple occurrences of a Map event.
+    ///
+    /// - Parameters:
+    ///   - eventType: The event type to listen to.
+    ///   - handler: The closure to execute when the event occurs.
+    ///
+    /// - Returns: A `Cancelable` object that you can use to stop listening for
+    ///     events. This is especially important if you have a retain cycle in
+    ///     the handler.
+    @discardableResult
+    public func onEvery<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable {
+        return observable.onEvery(event: event, handler: handler)
     }
 
     internal func performWithoutNotifying(_ block: () -> Void) {

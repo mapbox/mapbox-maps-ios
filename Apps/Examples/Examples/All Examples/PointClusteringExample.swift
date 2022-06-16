@@ -21,7 +21,7 @@ public class PointClusteringExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(.styleLoaded) { _ in
+        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
             self.addPointClusters()
         }
     }

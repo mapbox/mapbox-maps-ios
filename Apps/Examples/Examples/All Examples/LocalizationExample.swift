@@ -17,7 +17,7 @@ public class LocalizationExample: UIViewController, ExampleProtocol {
         configureLanguageButton()
 
         // Allows the delegate to receive information about map events.
-        mapView.mapboxMap.onNext(.mapLoaded) { _ in
+        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
             self.finish() // Needed for internal testing purposes.
         }
     }

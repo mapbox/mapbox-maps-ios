@@ -2,8 +2,8 @@
 
 internal protocol MapFeatureQueryable: AnyObject {
     func queryRenderedFeatures(for shape: [CGPoint],
-                                   options: RenderedQueryOptions?,
-                                   completion: @escaping (Result<[QueriedFeature], Error>) -> Void)
+                               options: RenderedQueryOptions?,
+                               completion: @escaping (Result<[QueriedFeature], Error>) -> Void)
 
     func queryRenderedFeatures(in rect: CGRect,
                                options: RenderedQueryOptions?,

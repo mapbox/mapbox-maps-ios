@@ -126,7 +126,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                 CLLocationCoordinate2D(latitude: 43.58039085560784, longitude: -101.337890625)
             ]
                 .map { mapView.mapboxMap.point(for: $0) }
-            
+
             // When
             mapView.mapboxMap.queryRenderedFeatures(with: coordinates) { result in
                 switch result {

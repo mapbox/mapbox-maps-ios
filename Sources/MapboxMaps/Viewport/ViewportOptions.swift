@@ -1,5 +1,5 @@
 /// Configuraton options for ``Viewport``.
-@_spi(Experimental) public struct ViewportOptions: Hashable {
+public struct ViewportOptions: Hashable {
     /// Indicates whether the ``Viewport`` should idle when the ``MapView``
     /// receives touch input.
     ///

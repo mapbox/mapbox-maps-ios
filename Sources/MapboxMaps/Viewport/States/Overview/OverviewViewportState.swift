@@ -5,7 +5,7 @@ import Turf
 ///
 /// Use ``Viewport/makeOverviewViewportState(options:)`` to create instances of this
 /// class.
-@_spi(Experimental) public final class OverviewViewportState {
+public final class OverviewViewportState {
 
     /// Configuration options.
     ///

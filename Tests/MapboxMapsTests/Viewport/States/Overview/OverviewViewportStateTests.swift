@@ -1,5 +1,5 @@
 import XCTest
-@testable @_spi(Experimental) import MapboxMaps
+@testable import MapboxMaps
 
 final class OverviewViewportStateTest: XCTestCase {
     var mapboxMap: MockMapboxMap!

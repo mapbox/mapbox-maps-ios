@@ -1,5 +1,5 @@
 import UIKit
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 
 // This example configures the viewport so that when it's in the follow puck state,
 // zoom and pitch gestures work alongside updates coming from the state itself.

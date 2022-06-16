@@ -5,7 +5,7 @@
 /// zoom gestures to work simultaneously with ``FollowPuckViewportState``.
 ///
 /// - SeeAlso: ``ViewportOptions/transitionsToIdleUponUserInteraction``
-@_spi(Experimental) public struct FollowPuckViewportStateOptions: Hashable {
+public struct FollowPuckViewportStateOptions: Hashable {
 
     /// The value to use for ``CameraOptions/padding`` when setting the camera. If `nil`, padding
     /// will not be modified.

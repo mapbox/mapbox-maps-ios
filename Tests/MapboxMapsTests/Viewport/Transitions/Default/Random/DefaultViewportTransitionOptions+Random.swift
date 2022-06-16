@@ -1,4 +1,4 @@
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 
 extension DefaultViewportTransitionOptions {
     static func random() -> Self {

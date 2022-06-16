@@ -1,5 +1,5 @@
 import UIKit
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 
 // This example shows how to use the viewport API to keep the camera in sync with the puck,
 // show an overview of a region, and toggle between those states with transitions.

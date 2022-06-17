@@ -536,14 +536,14 @@ open class MapView: UIView {
     open override func layoutSubviews() {
         super.layoutSubviews()
         mapboxMap.size = bounds.size
+
+        updateHeadingOrientationIfNeeded()
     }
 
     private func updateFromDisplayLink(displayLink: CADisplayLink) {
         if window == nil {
             return
         }
-
-        updateHeadingOrientationIfNeeded()
 
         for participant in displayLinkParticipants.allObjects {
             participant.participate()

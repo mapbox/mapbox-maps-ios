@@ -29,9 +29,9 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
         mapView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             mapView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            mapView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            mapView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            mapView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
 
         // The below line is used for internal testing purposes only.

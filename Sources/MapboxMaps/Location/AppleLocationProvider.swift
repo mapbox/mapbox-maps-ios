@@ -2,6 +2,9 @@ import Foundation
 import CoreLocation
 
 public final class AppleLocationProvider: NSObject {
+    public var headingOrientation: CLDeviceOrientation {
+        didSet { locationProvider.headingOrientation = headingOrientation }
+    }
     private var locationProvider: CLLocationManager
     private var privateLocationProviderOptions: LocationOptions {
         didSet {
@@ -15,6 +18,7 @@ public final class AppleLocationProvider: NSObject {
     public override init() {
         locationProvider = CLLocationManager()
         privateLocationProviderOptions = LocationOptions()
+        headingOrientation = locationProvider.headingOrientation
         super.init()
         locationProvider.delegate = self
     }
@@ -70,11 +74,6 @@ extension AppleLocationProvider: LocationProvider {
 
     public func stopUpdatingLocation() {
         locationProvider.stopUpdatingLocation()
-    }
-
-    public var headingOrientation: CLDeviceOrientation {
-        get { locationProvider.headingOrientation }
-        set { locationProvider.headingOrientation = newValue }
     }
 
     public func startUpdatingHeading() {

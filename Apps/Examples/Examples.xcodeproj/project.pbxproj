@@ -36,7 +36,10 @@
 		304AB3B527439287005B6D09 /* ViewAnnotationMarkerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 304AB3B427439287005B6D09 /* ViewAnnotationMarkerExample.swift */; };
 		30517C6A274BD4D300B706E5 /* ViewAnnotationBasicExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30517C69274BD4D300B706E5 /* ViewAnnotationBasicExample.swift */; };
 		30F095BF270B39AF00F368DC /* GlobeViewExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F095BE270B39AF00F368DC /* GlobeViewExample.swift */; };
+		3A3AF0032836499F0036F483 /* route.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 3A3AF0022836499F0036F483 /* route.geojson */; };
 		3A7432EF27F3096100E06485 /* DebugMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7432EE27F3096100E06485 /* DebugMapExample.swift */; };
+		3A7CE986282511C900C3A0B8 /* NavigationSimulatorExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CE985282511C900C3A0B8 /* NavigationSimulatorExample.swift */; };
+		3A7CE98B282AB0DE00C3A0B8 /* NavigationSimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CE98A282AB0DE00C3A0B8 /* NavigationSimulator.swift */; };
 		5812B55127C5A0E500E10063 /* CustomLocationProviderExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5812B55027C5A0E500E10063 /* CustomLocationProviderExample.swift */; };
 		58248C2F2695FF24009AC598 /* StoryboardMapViewExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58248C2E2695FF24009AC598 /* StoryboardMapViewExample.swift */; };
 		5830FDB7270B5AF7005549EE /* sportcar.glb in Resources */ = {isa = PBXBuildFile; fileRef = 5830FDB6270B5AF7005549EE /* sportcar.glb */; };
@@ -181,7 +184,10 @@
 		304AB3B427439287005B6D09 /* ViewAnnotationMarkerExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewAnnotationMarkerExample.swift; sourceTree = "<group>"; };
 		30517C69274BD4D300B706E5 /* ViewAnnotationBasicExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAnnotationBasicExample.swift; sourceTree = "<group>"; };
 		30F095BE270B39AF00F368DC /* GlobeViewExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobeViewExample.swift; sourceTree = "<group>"; };
+		3A3AF0022836499F0036F483 /* route.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = route.geojson; sourceTree = "<group>"; };
 		3A7432EE27F3096100E06485 /* DebugMapExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugMapExample.swift; sourceTree = "<group>"; };
+		3A7CE985282511C900C3A0B8 /* NavigationSimulatorExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSimulatorExample.swift; sourceTree = "<group>"; };
+		3A7CE98A282AB0DE00C3A0B8 /* NavigationSimulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSimulator.swift; sourceTree = "<group>"; };
 		5812B55027C5A0E500E10063 /* CustomLocationProviderExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLocationProviderExample.swift; sourceTree = "<group>"; };
 		58248C2E2695FF24009AC598 /* StoryboardMapViewExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardMapViewExample.swift; sourceTree = "<group>"; };
 		5830FDB6270B5AF7005549EE /* sportcar.glb */ = {isa = PBXFileReference; lastKnownFileType = file; path = sportcar.glb; sourceTree = "<group>"; };
@@ -337,6 +343,7 @@
 				B57E1BAD27B5B6B900E8E3BA /* ViewportExample.swift */,
 				587429BF27BBFDA100104CCA /* VoiceOverAccessibilityExample.swift */,
 				748C8BF2283B90280035A979 /* ModelLayerExample.swift */,
+				3A7CE989282AB0BC00C3A0B8 /* NavigationSimulator */,
 			);
 			path = "All Examples";
 			sourceTree = "<group>";
@@ -409,6 +416,7 @@
 		07B071D12547CF50007F2865 /* Sample Data */ = {
 			isa = PBXGroup;
 			children = (
+				3A3AF0022836499F0036F483 /* route.geojson */,
 				17B4805B26851C0600CF0D5E /* Radar */,
 				74A2313F27EE243B0065FB7D /* annotations.json */,
 				17AF783F26837E91006EA30D /* Fire_Hydrants.geojson */,
@@ -431,6 +439,15 @@
 				17B4805C26851C6E00CF0D5E /* radar4.gif */,
 			);
 			path = Radar;
+			sourceTree = "<group>";
+		};
+		3A7CE989282AB0BC00C3A0B8 /* NavigationSimulator */ = {
+			isa = PBXGroup;
+			children = (
+				3A7CE985282511C900C3A0B8 /* NavigationSimulatorExample.swift */,
+				3A7CE98A282AB0DE00C3A0B8 /* NavigationSimulator.swift */,
+			);
+			name = NavigationSimulator;
 			sourceTree = "<group>";
 		};
 		7406E36E2806B659002CC41F /* Lab */ = {
@@ -586,6 +603,7 @@
 				5830FDB7270B5AF7005549EE /* sportcar.glb in Resources */,
 				17B4806226851C6E00CF0D5E /* radar2.gif in Resources */,
 				077C4EFA252F7E89007636F1 /* LaunchScreen.storyboard in Resources */,
+				3A3AF0032836499F0036F483 /* route.geojson in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -645,6 +663,7 @@
 				5812B55127C5A0E500E10063 /* CustomLocationProviderExample.swift in Sources */,
 				CADCF71D2584990E0065C51B /* CustomPointAnnotationExample.swift in Sources */,
 				17B4806B268BD91000CF0D5E /* RasterTileSourceExample.swift in Sources */,
+				3A7CE98B282AB0DE00C3A0B8 /* NavigationSimulator.swift in Sources */,
 				CADCF7212584990E0065C51B /* PolygonAnnotationExample.swift in Sources */,
 				A41E58342654593500D8B946 /* SwitchStylesExample.swift in Sources */,
 				CADCF7272584990E0065C51B /* FitCameraToGeometryExample.swift in Sources */,
@@ -655,6 +674,7 @@
 				3A7432EF27F3096100E06485 /* DebugMapExample.swift in Sources */,
 				CADCF7252584990E0065C51B /* CameraAnimationExample.swift in Sources */,
 				CADCF72A2584990E0065C51B /* CustomStyleURLExample.swift in Sources */,
+				3A7CE986282511C900C3A0B8 /* NavigationSimulatorExample.swift in Sources */,
 				177C9D47269CA61100D13A2D /* ShowHideLayerExample.swift in Sources */,
 				0C784D1126D002DC004AE7D0 /* FeatureStateExample.swift in Sources */,
 				CADCF7222584990E0065C51B /* ColorExpressionExample.swift in Sources */,

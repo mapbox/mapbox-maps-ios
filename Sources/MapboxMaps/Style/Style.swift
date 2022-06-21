@@ -141,7 +141,7 @@ public final class Style: StyleProtocol {
 
         // Call closure to update the retrieved layer
         try update(&layer)
-        let value = try layer.jsonObject()
+        let value = try layer.jsonObject(userInfo: [.shouldEncodeNilValues: true])
 
         // Apply the changes to the layer properties to the style
         try setLayerProperties(for: id, properties: value)

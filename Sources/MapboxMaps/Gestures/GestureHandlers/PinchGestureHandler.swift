@@ -5,6 +5,7 @@ internal protocol PinchGestureHandlerProtocol: FocusableGestureHandlerProtocol {
     var rotateEnabled: Bool { get set }
     var zoomEnabled: Bool { get set }
     var panEnabled: Bool { get set }
+    var simultaneousRotateAndPinchZoomEnabled: Bool { get set }
     var focalPoint: CGPoint? { get set }
 }
 
@@ -19,6 +20,8 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
 
     /// Whether pinch gesture can pan map or not
     internal var panEnabled: Bool = true
+
+    internal var simultaneousRotateAndPinchZoomEnabled: Bool = true
 
     /// Anchor point for rotating and zooming
     internal var focalPoint: CGPoint?
@@ -102,6 +105,7 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
             panEnabled: panEnabled,
             zoomEnabled: zoomEnabled,
             rotateEnabled: rotateEnabled,
+            simultaneousRotateAndPinchZoomEnabled: simultaneousRotateAndPinchZoomEnabled,
             initialCameraState: mapboxMap.cameraState,
             initialPinchMidpoint: gestureRecognizer.location(in: view),
             initialPinchAngle: pinchAngle(with: gestureRecognizer),

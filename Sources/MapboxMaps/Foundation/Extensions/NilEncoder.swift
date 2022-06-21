@@ -1,7 +1,7 @@
 import Foundation
 
 internal struct NilEncoder {
-    var userInfo: [CodingUserInfoKey : Any]
+    var userInfo: [CodingUserInfoKey: Any]
 
     func encode<E: Encodable, K: KeyedEncodingContainerProtocol>(
         _ encodable: E?,

@@ -29,7 +29,7 @@ final class NilEncoderTests: XCTestCase {
     }
 }
 
-class MockKeyedEncodingContainer: KeyedEncodingContainerProtocol {
+private class MockKeyedEncodingContainer: KeyedEncodingContainerProtocol {
     enum Key: String, CodingKey {
         case one
     }
@@ -102,11 +102,11 @@ class MockKeyedEncodingContainer: KeyedEncodingContainerProtocol {
         encodeStub.call(with: EncodeParameters(value: value, key: key))
     }
 
-    func encode<T>(_ value: T, forKey key: Key) throws where T : Encodable {
+    func encode<T>(_ value: T, forKey key: Key) throws where T: Encodable {
         encodeStub.call(with: EncodeParameters(value: value, key: key))
     }
 
-    func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type, forKey key: Key) -> KeyedEncodingContainer<NestedKey> where NestedKey : CodingKey {
+    func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type, forKey key: Key) -> KeyedEncodingContainer<NestedKey> where NestedKey: CodingKey {
         fatalError()
     }
 

@@ -64,32 +64,34 @@ public struct FillLayer: Layer {
     }
 
     public func encode(to encoder: Encoder) throws {
+        let nilEncoder = NilEncoder(userInfo: encoder.userInfo)
+
         var container = encoder.container(keyedBy: RootCodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(type, forKey: .type)
-        try container.encodeIfPresent(filter, forKey: .filter)
-        try container.encodeIfPresent(source, forKey: .source)
-        try container.encodeIfPresent(sourceLayer, forKey: .sourceLayer)
-        try container.encodeIfPresent(minZoom, forKey: .minZoom)
-        try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
+        try nilEncoder.encode(filter, forKey: .filter, to: &container)
+        try nilEncoder.encode(source, forKey: .source, to: &container)
+        try nilEncoder.encode(sourceLayer, forKey: .sourceLayer, to: &container)
+        try nilEncoder.encode(minZoom, forKey: .minZoom, to: &container)
+        try nilEncoder.encode(maxZoom, forKey: .maxZoom, to: &container)
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
-        try paintContainer.encodeIfPresent(fillAntialias, forKey: .fillAntialias)
-        try paintContainer.encodeIfPresent(fillColor, forKey: .fillColor)
-        try paintContainer.encodeIfPresent(fillColorTransition, forKey: .fillColorTransition)
-        try paintContainer.encodeIfPresent(fillOpacity, forKey: .fillOpacity)
-        try paintContainer.encodeIfPresent(fillOpacityTransition, forKey: .fillOpacityTransition)
-        try paintContainer.encodeIfPresent(fillOutlineColor, forKey: .fillOutlineColor)
-        try paintContainer.encodeIfPresent(fillOutlineColorTransition, forKey: .fillOutlineColorTransition)
-        try paintContainer.encodeIfPresent(fillPattern, forKey: .fillPattern)
-        try paintContainer.encodeIfPresent(fillPatternTransition, forKey: .fillPatternTransition)
-        try paintContainer.encodeIfPresent(fillTranslate, forKey: .fillTranslate)
-        try paintContainer.encodeIfPresent(fillTranslateTransition, forKey: .fillTranslateTransition)
-        try paintContainer.encodeIfPresent(fillTranslateAnchor, forKey: .fillTranslateAnchor)
+        try nilEncoder.encode(fillAntialias, forKey: .fillAntialias, to: &paintContainer)
+        try nilEncoder.encode(fillColor, forKey: .fillColor, to: &paintContainer)
+        try nilEncoder.encode(fillColorTransition, forKey: .fillColorTransition, to: &paintContainer)
+        try nilEncoder.encode(fillOpacity, forKey: .fillOpacity, to: &paintContainer)
+        try nilEncoder.encode(fillOpacityTransition, forKey: .fillOpacityTransition, to: &paintContainer)
+        try nilEncoder.encode(fillOutlineColor, forKey: .fillOutlineColor, to: &paintContainer)
+        try nilEncoder.encode(fillOutlineColorTransition, forKey: .fillOutlineColorTransition, to: &paintContainer)
+        try nilEncoder.encode(fillPattern, forKey: .fillPattern, to: &paintContainer)
+        try nilEncoder.encode(fillPatternTransition, forKey: .fillPatternTransition, to: &paintContainer)
+        try nilEncoder.encode(fillTranslate, forKey: .fillTranslate, to: &paintContainer)
+        try nilEncoder.encode(fillTranslateTransition, forKey: .fillTranslateTransition, to: &paintContainer)
+        try nilEncoder.encode(fillTranslateAnchor, forKey: .fillTranslateAnchor, to: &paintContainer)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
-        try layoutContainer.encodeIfPresent(fillSortKey, forKey: .fillSortKey)
+        try nilEncoder.encode(visibility, forKey: .visibility, to: &layoutContainer)
+        try nilEncoder.encode(fillSortKey, forKey: .fillSortKey, to: &layoutContainer)
     }
 
     public init(from decoder: Decoder) throws {

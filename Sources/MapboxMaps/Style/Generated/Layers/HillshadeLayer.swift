@@ -55,29 +55,31 @@ public struct HillshadeLayer: Layer {
     }
 
     public func encode(to encoder: Encoder) throws {
+        let nilEncoder = NilEncoder(userInfo: encoder.userInfo)
+
         var container = encoder.container(keyedBy: RootCodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(type, forKey: .type)
-        try container.encodeIfPresent(filter, forKey: .filter)
-        try container.encodeIfPresent(source, forKey: .source)
-        try container.encodeIfPresent(sourceLayer, forKey: .sourceLayer)
-        try container.encodeIfPresent(minZoom, forKey: .minZoom)
-        try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
+        try nilEncoder.encode(filter, forKey: .filter, to: &container)
+        try nilEncoder.encode(source, forKey: .source, to: &container)
+        try nilEncoder.encode(sourceLayer, forKey: .sourceLayer, to: &container)
+        try nilEncoder.encode(minZoom, forKey: .minZoom, to: &container)
+        try nilEncoder.encode(maxZoom, forKey: .maxZoom, to: &container)
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
-        try paintContainer.encodeIfPresent(hillshadeAccentColor, forKey: .hillshadeAccentColor)
-        try paintContainer.encodeIfPresent(hillshadeAccentColorTransition, forKey: .hillshadeAccentColorTransition)
-        try paintContainer.encodeIfPresent(hillshadeExaggeration, forKey: .hillshadeExaggeration)
-        try paintContainer.encodeIfPresent(hillshadeExaggerationTransition, forKey: .hillshadeExaggerationTransition)
-        try paintContainer.encodeIfPresent(hillshadeHighlightColor, forKey: .hillshadeHighlightColor)
-        try paintContainer.encodeIfPresent(hillshadeHighlightColorTransition, forKey: .hillshadeHighlightColorTransition)
-        try paintContainer.encodeIfPresent(hillshadeIlluminationAnchor, forKey: .hillshadeIlluminationAnchor)
-        try paintContainer.encodeIfPresent(hillshadeIlluminationDirection, forKey: .hillshadeIlluminationDirection)
-        try paintContainer.encodeIfPresent(hillshadeShadowColor, forKey: .hillshadeShadowColor)
-        try paintContainer.encodeIfPresent(hillshadeShadowColorTransition, forKey: .hillshadeShadowColorTransition)
+        try nilEncoder.encode(hillshadeAccentColor, forKey: .hillshadeAccentColor, to: &paintContainer)
+        try nilEncoder.encode(hillshadeAccentColorTransition, forKey: .hillshadeAccentColorTransition, to: &paintContainer)
+        try nilEncoder.encode(hillshadeExaggeration, forKey: .hillshadeExaggeration, to: &paintContainer)
+        try nilEncoder.encode(hillshadeExaggerationTransition, forKey: .hillshadeExaggerationTransition, to: &paintContainer)
+        try nilEncoder.encode(hillshadeHighlightColor, forKey: .hillshadeHighlightColor, to: &paintContainer)
+        try nilEncoder.encode(hillshadeHighlightColorTransition, forKey: .hillshadeHighlightColorTransition, to: &paintContainer)
+        try nilEncoder.encode(hillshadeIlluminationAnchor, forKey: .hillshadeIlluminationAnchor, to: &paintContainer)
+        try nilEncoder.encode(hillshadeIlluminationDirection, forKey: .hillshadeIlluminationDirection, to: &paintContainer)
+        try nilEncoder.encode(hillshadeShadowColor, forKey: .hillshadeShadowColor, to: &paintContainer)
+        try nilEncoder.encode(hillshadeShadowColorTransition, forKey: .hillshadeShadowColorTransition, to: &paintContainer)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
+        try nilEncoder.encode(visibility, forKey: .visibility, to: &layoutContainer)
     }
 
     public init(from decoder: Decoder) throws {

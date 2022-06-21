@@ -10,13 +10,27 @@ import Foundation
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/mapbox-gl-js/style-spec/fog/)
 public struct Atmosphere: Codable  {
-
-    public init() { }
     <%_ for (const property of properties) { -%>
 
     /// <%- markdownFriendlyDoc(property) %>
-    public var <%- camelizeWithLeadingLowercase(property.name) %>: <%- propertySwiftValueType(property) %>?
+    <% if (property.experimental) { -%>@_spi(Experimental) <% } -%>public var <%- camelizeWithLeadingLowercase(property.name) %>: <%- propertySwiftValueType(property) %>?
+    <%_ if (property.transition) { -%>
+
+    /// Transition property for `<%- camelizeWithLeadingLowercase(property.name) %>`
+    <% if (property.experimental) { -%>@_spi(Experimental) <% } -%>public var <%- camelizeWithLeadingLowercase(property.name) %>Transition: StyleTransition?
     <%_ } -%>
+    <%_ } -%>
+
+    public init() {}
+
+    enum CodingKeys: String, CodingKey {
+        <%_ for (const property of properties) { -%>
+        case <%- camelizeWithLeadingLowercase(property.name) %> = "<%- property.name %>"
+        <%_ if (property.transition) { -%>
+        case <%- camelizeWithLeadingLowercase(property.name) %>Transition = "<%- property.name %>-transition"
+        <%_ } -%>
+        <%_ } -%>
+    }
 }
 
 // End of generated file.

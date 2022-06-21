@@ -6,6 +6,7 @@ internal protocol PinchBehaviorProviderProtocol: AnyObject {
     func makePinchBehavior(panEnabled: Bool,
                            zoomEnabled: Bool,
                            rotateEnabled: Bool,
+                           simultaneousRotateAndPinchZoomEnabled: Bool,
                            initialCameraState: CameraState,
                            initialPinchMidpoint: CGPoint,
                            initialPinchAngle: CGFloat,
@@ -24,6 +25,7 @@ internal final class PinchBehaviorProvider: PinchBehaviorProviderProtocol {
     internal func makePinchBehavior(panEnabled: Bool,
                                     zoomEnabled: Bool,
                                     rotateEnabled: Bool,
+                                    simultaneousRotateAndPinchZoomEnabled: Bool,
                                     initialCameraState: CameraState,
                                     initialPinchMidpoint: CGPoint,
                                     initialPinchAngle: CGFloat,
@@ -34,6 +36,7 @@ internal final class PinchBehaviorProvider: PinchBehaviorProviderProtocol {
                 initialCameraState: initialCameraState,
                 initialPinchMidpoint: initialPinchMidpoint,
                 initialPinchAngle: initialPinchAngle,
+                simultaneousRotateAndPinchZoomEnabled: simultaneousRotateAndPinchZoomEnabled,
                 mapboxMap: mapboxMap)
         case (true, true, false):
             return PanZoomPinchBehavior(

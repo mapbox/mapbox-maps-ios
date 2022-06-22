@@ -2,6 +2,14 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## main
+
+* Deprecate existing QueryRenderedFeatures methods and add cancellable counterparts. ([#1378](https://github.com/mapbox/mapbox-maps-ios/pull/1378))
+* Add well-formed(type-safe) map event types. ([#1362](https://github.com/mapbox/mapbox-maps-ios/pull/1362))
+* Use MapboxCoreMaps API to move a Layer instead of manually removing the layer then adding it back. ([#1367](https://github.com/mapbox/mapbox-maps-ios/pull/1367))
+* Expose API to get puck's location updates. ([#1365](https://github.com/mapbox/mapbox-maps-ios/pull/1365))
+* Add example for simulating a route with vanishing effects. ([#1328](https://github.com/mapbox/mapbox-maps-ios/pull/1328))
+
 ## 10.6.0-rc.1 - June 2, 2022
 
 * Update to MapboxCoreMaps 10.6.0-rc.1 and MapboxCommon 22.0.0-rc.2. ([#1368](https://github.com/mapbox/mapbox-maps-ios/pull/1368))

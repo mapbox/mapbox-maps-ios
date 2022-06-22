@@ -3,8 +3,12 @@ import Foundation
 internal struct NilEncoder {
     private let shouldEncodeNil: Bool
 
+    internal init(shouldEncodeNil: Bool = false) {
+        self.shouldEncodeNil = shouldEncodeNil
+    }
+
     internal init(userInfo: [CodingUserInfoKey: Any]) {
-        shouldEncodeNil = userInfo[.shouldEncodeNilValues] as? Bool ?? false
+        self.init(shouldEncodeNil: userInfo[.shouldEncodeNilValues] as? Bool ?? false)
     }
 
     func encode<E: Encodable, K: KeyedEncodingContainerProtocol>(

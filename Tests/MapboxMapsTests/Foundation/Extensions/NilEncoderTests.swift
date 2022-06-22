@@ -4,7 +4,7 @@ import XCTest
 final class NilEncoderTests: XCTestCase {
 
     func testEncodeNilOnlyIfPresent() throws {
-        let sut = NilEncoder(userInfo: [:])
+        let sut = NilEncoder(shouldEncodeNil: false)
         var encoder = MockKeyedEncodingContainer()
         var valueToEncode: Int? = 1
 
@@ -19,7 +19,7 @@ final class NilEncoderTests: XCTestCase {
     }
 
     func testEncodeNilAlways() throws {
-        let sut = NilEncoder(userInfo: [.shouldEncodeNilValues: true])
+        let sut = NilEncoder(shouldEncodeNil: true)
         var encoder = MockKeyedEncodingContainer()
         let valueToEncode: Int? = nil
 

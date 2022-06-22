@@ -16,13 +16,13 @@ class CameraAnimatorsExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(.styleLoaded) { _ in
+        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
             // Center the map over New York City.
             self.mapView.mapboxMap.setCamera(to: CameraOptions(center: self.newYork))
         }
 
         // Allows the delegate to receive information about map events.
-        mapView.mapboxMap.onNext(.mapLoaded) { _ in
+        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
             print("Animating zoom from zoom lvl 3 -> zoom lvl 14")
             self.startCameraAnimations()
             self.finish()

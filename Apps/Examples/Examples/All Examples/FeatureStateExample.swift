@@ -42,7 +42,7 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
         descriptionView.widthAnchor.constraint(equalToConstant: 200).isActive = true
         descriptionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2.0).isActive = true
 
-        mapView.mapboxMap.onNext(.mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
             guard let self = self else { return }
 
             self.setupSourceAndLayer()

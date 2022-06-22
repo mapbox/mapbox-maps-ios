@@ -289,19 +289,15 @@ final class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
             let mapWasLoaded = XCTestExpectation(description: "Map was loaded")
 
-            let cancelable = mapView.mapboxMap.onEvery(.resourceRequest) { event in
-                // swiftlint:disable:next force_cast
-                let eventElements = event.data as! [String: Any]
-                // swiftlint:disable:next force_cast
-                let source = eventElements["data-source"] as! String
-                if source == "network" {
+            let cancelable = mapView.mapboxMap.onEvery(event: .resourceRequest) { event in
+                if event.payload.dataSource == .network {
                     XCTFail("Loading is occurring from the network")
                 } else {
                     mapIsUsingDatabase.fulfill()
                 }
             }
 
-            mapView.mapboxMap.onNext(.mapLoaded) { _ in
+            mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
                 print("Map was loaded")
                 mapWasLoaded.fulfill()
             }

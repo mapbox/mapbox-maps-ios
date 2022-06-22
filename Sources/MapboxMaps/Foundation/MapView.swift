@@ -506,7 +506,7 @@ open class MapView: UIView {
     }
 
     @objc private func didReceiveMemoryWarning() {
-        mapboxMap.reduceMemoryUse()
+        reduceMemoryUse()
     }
 
     private func reduceMemoryUse() {

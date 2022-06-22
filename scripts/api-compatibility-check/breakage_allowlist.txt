@@ -20,3 +20,7 @@ Func MapboxMap.mapProjection() has been removed
 Func MapboxMap.setMapProjection(_:) has been removed
 Struct GlobeMapProjection has been removed
 Struct MercatorMapProjection has been removed
+
+// Removed deprecated animationDuration parameter from FollowPuckViewportStateOptions
+Constructor FollowPuckViewportStateOptions.init(padding:zoom:bearing:pitch:animationDuration:) has been removed
+Var FollowPuckViewportStateOptions.animationDuration has been removed

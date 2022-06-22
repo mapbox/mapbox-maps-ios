@@ -123,6 +123,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## 10.6.0 - June 16, 2022
 
 * Update to MapboxCoreMaps 10.6.0 and MapboxCommon to 22.0.0. ([#1394](https://github.com/mapbox/mapbox-maps-ios/pull/1394))
+* Pause metal rendering earlier in app/scene life-cycle to address rendering artifacts when coming from background. ([#1402](https://github.com/mapbox/mapbox-maps-ios/pull/1402))
 
 ## 10.6.0-rc.1 - June 2, 2022
 

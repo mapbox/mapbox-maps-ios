@@ -43,25 +43,27 @@ public struct BackgroundLayer: Layer {
     }
 
     public func encode(to encoder: Encoder) throws {
+        let nilEncoder = NilEncoder(userInfo: encoder.userInfo)
+
         var container = encoder.container(keyedBy: RootCodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(type, forKey: .type)
-        try container.encodeIfPresent(filter, forKey: .filter)
-        try container.encodeIfPresent(source, forKey: .source)
-        try container.encodeIfPresent(sourceLayer, forKey: .sourceLayer)
-        try container.encodeIfPresent(minZoom, forKey: .minZoom)
-        try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
+        try nilEncoder.encode(filter, forKey: .filter, to: &container)
+        try nilEncoder.encode(source, forKey: .source, to: &container)
+        try nilEncoder.encode(sourceLayer, forKey: .sourceLayer, to: &container)
+        try nilEncoder.encode(minZoom, forKey: .minZoom, to: &container)
+        try nilEncoder.encode(maxZoom, forKey: .maxZoom, to: &container)
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
-        try paintContainer.encodeIfPresent(backgroundColor, forKey: .backgroundColor)
-        try paintContainer.encodeIfPresent(backgroundColorTransition, forKey: .backgroundColorTransition)
-        try paintContainer.encodeIfPresent(backgroundOpacity, forKey: .backgroundOpacity)
-        try paintContainer.encodeIfPresent(backgroundOpacityTransition, forKey: .backgroundOpacityTransition)
-        try paintContainer.encodeIfPresent(backgroundPattern, forKey: .backgroundPattern)
-        try paintContainer.encodeIfPresent(backgroundPatternTransition, forKey: .backgroundPatternTransition)
+        try nilEncoder.encode(backgroundColor, forKey: .backgroundColor, to: &paintContainer)
+        try nilEncoder.encode(backgroundColorTransition, forKey: .backgroundColorTransition, to: &paintContainer)
+        try nilEncoder.encode(backgroundOpacity, forKey: .backgroundOpacity, to: &paintContainer)
+        try nilEncoder.encode(backgroundOpacityTransition, forKey: .backgroundOpacityTransition, to: &paintContainer)
+        try nilEncoder.encode(backgroundPattern, forKey: .backgroundPattern, to: &paintContainer)
+        try nilEncoder.encode(backgroundPatternTransition, forKey: .backgroundPatternTransition, to: &paintContainer)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
+        try nilEncoder.encode(visibility, forKey: .visibility, to: &layoutContainer)
     }
 
     public init(from decoder: Decoder) throws {

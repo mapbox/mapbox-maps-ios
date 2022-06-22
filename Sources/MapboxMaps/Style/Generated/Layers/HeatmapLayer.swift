@@ -49,27 +49,29 @@ public struct HeatmapLayer: Layer {
     }
 
     public func encode(to encoder: Encoder) throws {
+        let nilEncoder = NilEncoder(userInfo: encoder.userInfo)
+
         var container = encoder.container(keyedBy: RootCodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(type, forKey: .type)
-        try container.encodeIfPresent(filter, forKey: .filter)
-        try container.encodeIfPresent(source, forKey: .source)
-        try container.encodeIfPresent(sourceLayer, forKey: .sourceLayer)
-        try container.encodeIfPresent(minZoom, forKey: .minZoom)
-        try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
+        try nilEncoder.encode(filter, forKey: .filter, to: &container)
+        try nilEncoder.encode(source, forKey: .source, to: &container)
+        try nilEncoder.encode(sourceLayer, forKey: .sourceLayer, to: &container)
+        try nilEncoder.encode(minZoom, forKey: .minZoom, to: &container)
+        try nilEncoder.encode(maxZoom, forKey: .maxZoom, to: &container)
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
-        try paintContainer.encodeIfPresent(heatmapColor, forKey: .heatmapColor)
-        try paintContainer.encodeIfPresent(heatmapIntensity, forKey: .heatmapIntensity)
-        try paintContainer.encodeIfPresent(heatmapIntensityTransition, forKey: .heatmapIntensityTransition)
-        try paintContainer.encodeIfPresent(heatmapOpacity, forKey: .heatmapOpacity)
-        try paintContainer.encodeIfPresent(heatmapOpacityTransition, forKey: .heatmapOpacityTransition)
-        try paintContainer.encodeIfPresent(heatmapRadius, forKey: .heatmapRadius)
-        try paintContainer.encodeIfPresent(heatmapRadiusTransition, forKey: .heatmapRadiusTransition)
-        try paintContainer.encodeIfPresent(heatmapWeight, forKey: .heatmapWeight)
+        try nilEncoder.encode(heatmapColor, forKey: .heatmapColor, to: &paintContainer)
+        try nilEncoder.encode(heatmapIntensity, forKey: .heatmapIntensity, to: &paintContainer)
+        try nilEncoder.encode(heatmapIntensityTransition, forKey: .heatmapIntensityTransition, to: &paintContainer)
+        try nilEncoder.encode(heatmapOpacity, forKey: .heatmapOpacity, to: &paintContainer)
+        try nilEncoder.encode(heatmapOpacityTransition, forKey: .heatmapOpacityTransition, to: &paintContainer)
+        try nilEncoder.encode(heatmapRadius, forKey: .heatmapRadius, to: &paintContainer)
+        try nilEncoder.encode(heatmapRadiusTransition, forKey: .heatmapRadiusTransition, to: &paintContainer)
+        try nilEncoder.encode(heatmapWeight, forKey: .heatmapWeight, to: &paintContainer)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
+        try nilEncoder.encode(visibility, forKey: .visibility, to: &layoutContainer)
     }
 
     public init(from decoder: Decoder) throws {

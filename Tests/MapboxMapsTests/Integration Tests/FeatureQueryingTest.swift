@@ -27,7 +27,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                                     zoom: 15.0))
         }
 
-        mapView.mapboxMap.onNext(.mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
             guard let mapView = self?.mapView else { return }
 
             // Given

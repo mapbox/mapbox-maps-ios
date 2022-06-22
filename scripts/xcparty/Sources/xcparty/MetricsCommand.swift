@@ -53,18 +53,18 @@ struct MetricsCommand: ParsableCommand {
 
     struct PerfomanceTest {
         let testName: String
-        let metric: ActionTestPerformanceMetricSummary
+        let metrics: [ActionTestPerformanceMetricSummary]
         let actionRecord: ActionRecord
 
-        static func metrics(from test: ActionTestMetadata, in resultFile: XCResultFile, for actionRecord: ActionRecord) -> [PerfomanceTest] {
+        static func metrics(from test: ActionTestMetadata, in resultFile: XCResultFile, for actionRecord: ActionRecord) -> PerfomanceTest? {
             guard
                 let testSummaryRef = test.summaryRef,
                 let actionTestSummary = resultFile.getActionTestSummary(id: testSummaryRef.id)
-            else { return [] }
+            else { return nil }
 
-            return actionTestSummary.performanceMetrics.map { metric in
-                return PerfomanceTest(testName: refineTestFunctionName(test.name), metric: metric, actionRecord: actionRecord)
-            }
+            return PerfomanceTest(testName: refineTestFunctionName(test.name),
+                                  metrics: actionTestSummary.performanceMetrics,
+                                  actionRecord: actionRecord)
         }
     }
 
@@ -81,25 +81,30 @@ struct MetricsCommand: ParsableCommand {
             .subtestGroups[0]
 
         let testMetrics = testTargetResults.subtestGroups.flatMap { testSuit in
-            testSuit.subtests.flatMap({ PerfomanceTest.metrics(from: $0, in: resultFile, for: actionRecord) })
+            testSuit.subtests.compactMap({ PerfomanceTest.metrics(from: $0, in: resultFile, for: actionRecord) })
         }
 
         return testMetrics
     }
 
     func generateOutputContent(tests: [PerfomanceTest]) throws -> String {
+        let valueFormatter = NumberFormatter()
+        valueFormatter.numberStyle = .decimal
+        valueFormatter.usesGroupingSeparator = false
+        valueFormatter.locale = Locale(identifier: "en_US_POSIX")
+
         return try tests
             .map { test in
-                [
+                return [
                     "name": "ios-maps-v2",
-                    "version": 2,
+                    "version": 3,
                     "created": ISO8601DateFormatter.string(from: Date(), timeZone: .current, formatOptions: [.withInternetDateTime]),
-                    "counters": [
-                        "id": test.metric.identifier!,
-                        "displayName": test.metric.displayName,
-                        "average": test.metric.measurements.reduce(0.0, +) / Double(test.metric.measurements.count),
-                        "units": test.metric.unitOfMeasurement
-                    ],
+                    "counters": test.metrics.reduce(into: [:]) { partialResult, metric in
+                        let value = metric.measurements.reduce(0.0, +) / Double(metric.measurements.count)
+                        let metricName = metric.displayName.replacingOccurrences(of: " ", with: "")
+                        partialResult[metricName] = valueFormatter.string(from: value as NSNumber)
+                        partialResult[metricName+"_units"] = metric.unitOfMeasurement
+                    },
                     "attributes": [
                         "test_name": refineTestFunctionName(test.testName)
                     ],

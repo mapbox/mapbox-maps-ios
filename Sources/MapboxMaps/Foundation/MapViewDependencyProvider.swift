@@ -254,6 +254,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
 
         return LocationManager(
             locationProducer: locationProducer,
+            interpolatedLocationProducer: interpolatedLocationProducer,
             puckManager: puckManager)
     }
 

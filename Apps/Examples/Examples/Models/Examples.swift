@@ -181,6 +181,9 @@ struct Examples {
         Example(title: "Add a custom location provider",
                 description: "Display the location puck at a custom location.",
                 type: CustomLocationProviderExample.self),
+        Example(title: "Simulate navigation",
+                description: "Simulate a driving trip from LA to San Francisco along a pre-defined route",
+                type: NavigationSimulatorExample.self),
     ]
 
     // Examples that highlight using the Offline APIs.

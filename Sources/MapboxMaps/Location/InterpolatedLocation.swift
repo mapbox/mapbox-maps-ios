@@ -30,4 +30,12 @@ internal struct InterpolatedLocation: Equatable {
         self.heading = location.headingDirection
         self.accuracyAuthorization = location.accuracyAuthorization
     }
+
+    internal var location: Location {
+        Location(
+            location: CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude),
+            heading: nil,
+            accuracyAuthorization: accuracyAuthorization
+        )
+    }
 }

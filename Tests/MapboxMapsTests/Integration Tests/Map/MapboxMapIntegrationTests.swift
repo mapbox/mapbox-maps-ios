@@ -126,7 +126,7 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
 
     private func waitForNextIdle() {
         let waitForIdle = expectation(description: "Wait for idle")
-        mapView.mapboxMap.onNext(.mapIdle) { _ in
+        mapView.mapboxMap.onNext(event: .mapIdle) { _ in
             waitForIdle.fulfill()
         }
         wait(for: [waitForIdle], timeout: 30)

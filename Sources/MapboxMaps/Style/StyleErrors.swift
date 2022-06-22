@@ -56,6 +56,10 @@ public enum MapLoadingError: LocalizedError {
             fatalError("Invalid event data format")
         }
 
+        self.init(type: type, message: message)
+    }
+
+    internal init(type: String, message: String) {
         switch type {
         case "style":
             self = .style(message)

@@ -30,7 +30,7 @@ public class SnapshotterCoreGraphicsExample: UIViewController, ExampleProtocol {
         snapshotter = Snapshotter(options: options)
         snapshotter.style.uri = .dark
 
-        snapshotter.onNext(.styleLoaded) { [weak self] _ in
+        snapshotter.onNext(event: .styleLoaded) { [weak self] _ in
             self?.startSnapshot()
         }
     }

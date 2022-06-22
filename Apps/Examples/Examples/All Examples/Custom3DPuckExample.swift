@@ -13,7 +13,7 @@ final class Custom3DPuckExample: UIViewController, ExampleProtocol, LocationCons
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(.styleLoaded) { _ in
+        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
             self.setupExample()
         }
     }

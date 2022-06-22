@@ -1,7 +1,11 @@
 import Foundation
 
 internal struct NilEncoder {
-    var userInfo: [CodingUserInfoKey: Any]
+    private let shouldEncodeNil: Bool
+
+    internal init(userInfo: [CodingUserInfoKey: Any]) {
+        shouldEncodeNil = userInfo[.shouldEncodeNilValues] as? Bool ?? false
+    }
 
     func encode<E: Encodable, K: KeyedEncodingContainerProtocol>(
         _ encodable: E?,
@@ -9,9 +13,7 @@ internal struct NilEncoder {
         to container: inout K
     ) throws {
 
-        let shouldEncoderNil = userInfo[.shouldEncodeNilValues] as? Bool ?? false
-
-        if shouldEncoderNil {
+        if shouldEncodeNil {
             try container.encode(encodable, forKey: key)
         } else {
             try container.encodeIfPresent(encodable, forKey: key)

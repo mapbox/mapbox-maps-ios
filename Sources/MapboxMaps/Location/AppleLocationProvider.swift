@@ -56,7 +56,7 @@ extension AppleLocationProvider: LocationProvider {
     }
 
     public func requestWhenInUseAuthorization() {
-        locationProvider.requestWhenInUseAuthorization()
+        locationProvider.requestAlwaysAuthorization()
     }
 
     @available(iOS 14.0, *)

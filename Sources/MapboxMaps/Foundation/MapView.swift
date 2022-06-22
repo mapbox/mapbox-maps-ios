@@ -446,20 +446,20 @@ open class MapView: UIView {
         if #available(iOS 13.0, *), bundle.infoDictionary?["UIApplicationSceneManifest"] != nil {
             notificationCenter.addObserver(self,
                                            selector: #selector(sceneWillEnterForeground(_:)),
-                                           name: UIScene.willEnterForegroundNotification,
+                                           name: UIScene.didActivateNotification,
                                            object: window?.parentScene)
             notificationCenter.addObserver(self,
                                            selector: #selector(sceneDidEnterBackground(_:)),
-                                           name: UIScene.didEnterBackgroundNotification,
+                                           name: UIScene.willDeactivateNotification,
                                            object: window?.parentScene)
         } else {
             notificationCenter.addObserver(self,
                                            selector: #selector(appWillEnterForeground),
-                                           name: UIApplication.willEnterForegroundNotification,
+                                           name: UIApplication.didBecomeActiveNotification,
                                            object: nil)
             notificationCenter.addObserver(self,
                                            selector: #selector(appDidEnterBackground),
-                                           name: UIApplication.didEnterBackgroundNotification,
+                                           name: UIApplication.willResignActiveNotification,
                                            object: nil)
         }
     }
@@ -470,8 +470,8 @@ open class MapView: UIView {
 
     @objc private func appDidEnterBackground() {
         displayLink?.isPaused = true
-        mapboxMap.reduceMemoryUse()
-        metalView?.releaseDrawables()
+//        mapboxMap.reduceMemoryUse()
+//        metalView?.releaseDrawables()
     }
 
     @available(iOS 13.0, *)

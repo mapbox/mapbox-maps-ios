@@ -1,5 +1,5 @@
 import UIKit
-import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 
 /**
  NOTE: This view controller should be used as a scratchpad
@@ -16,5 +16,15 @@ final class DebugViewController: UIViewController {
         mapView = MapView(frame: view.bounds)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
+
+        mapView.location.options.puckType = .puck2D(.makeDefault())
+        mapView.location.options.puckBearingSource = .course
+
+        mapView.mapboxMap.loadStyleURI(StyleURI.init(rawValue: "mapbox://styles/mapbox-map-design/ckvmcnpk54xxy15tjy15i9pij")!)
+        let followPuckViewportState = mapView.viewport.makeFollowPuckViewportState(
+            options: FollowPuckViewportStateOptions(
+                bearing: .course)
+        )
+        mapView.viewport.transition(to: followPuckViewportState)
     }
 }

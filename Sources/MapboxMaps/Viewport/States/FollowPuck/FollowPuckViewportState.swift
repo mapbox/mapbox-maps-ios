@@ -3,7 +3,7 @@
 ///
 /// Use ``Viewport/makeFollowPuckViewportState(options:)`` to create instances of this
 /// class.
-@_spi(Experimental) public final class FollowPuckViewportState {
+public final class FollowPuckViewportState {
 
     /// Configuration options for this state.
     public var options: FollowPuckViewportStateOptions {

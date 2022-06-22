@@ -8,7 +8,7 @@
 /// - SeeAlso:
 ///   - ``DefaultViewportTransition``
 ///   - ``ImmediateViewportTransition``
-@_spi(Experimental) public protocol ViewportTransition: AnyObject {
+public protocol ViewportTransition: AnyObject {
     /// Runs the transition to `toState`.
     ///
     /// The completion block must be invoked with `true` if the transition completes successfully. If the

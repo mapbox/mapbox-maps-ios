@@ -4,7 +4,7 @@
 ///
 /// - SeeAlso: ``Viewport/addStatusObserver(_:)`` for an important note about how
 ///            these notifications are delivered asynchronously.
-@_spi(Experimental) public protocol ViewportStatusObserver: AnyObject {
+public protocol ViewportStatusObserver: AnyObject {
 
     /// Called whenever ``Viewport/status`` changes.
     /// - Parameters:
@@ -17,7 +17,7 @@
 }
 
 /// Constants that describe why ``Viewport/status`` changed.
-@_spi(Experimental) public struct ViewportStatusChangeReason: Hashable {
+public struct ViewportStatusChangeReason: Hashable {
     private var rawValue: String
 
     private init(rawValue: String) {

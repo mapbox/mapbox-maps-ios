@@ -46,7 +46,7 @@ open class MapView: UIView {
     /// a GeoJSON geometry, and enables the creation of custom states. Transitions
     /// between states can be animated with a built-in default transition and via custom
     /// transitions.
-    @_spi(Experimental) public private(set) var viewport: Viewport!
+    public private(set) var viewport: Viewport!
 
     /// Controls the display of attribution dialogs
     private var attributionDialogManager: AttributionDialogManager!

@@ -513,7 +513,6 @@ open class MapView: UIView {
     @objc private func sceneDidEnterBackground(_ notification: Notification) {
         guard notification.object as? UIScene == window?.parentScene else { return }
 
-        displayLink?.isPaused = true
         reduceMemoryUse()
     }
 

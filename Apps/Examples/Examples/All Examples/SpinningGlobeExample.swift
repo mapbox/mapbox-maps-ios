@@ -19,13 +19,14 @@ class SpinningGlobeExample: UIViewController, GestureManagerDelegate, ExamplePro
         mapView = MapView(frame: view.bounds, mapInitOptions: .init(styleURI: .satellite))
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         try! mapView.mapboxMap.style.setProjection(currentProjection)
-//        try! mapView.mapboxMap.style.setAtmosphere(properties: ["color": "rgb(220, 159, 159)",
-//                                                                "highColor": "rgb(220, 159, 159)",
-//                                                                "horizonBlend": 0.4])
+
         mapView.mapboxMap.setCamera(to: .init(center: CLLocationCoordinate2D(latitude: 40, longitude: -90), zoom: 1.0))
 
         mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
             try! self.mapView.mapboxMap.style.setAtmosphere(self.currentAtmosphere)
+            //        try! mapView.mapboxMap.style.setAtmosphere(properties: ["color": "rgb(220, 159, 159)",
+            //                                                                "highColor": "rgb(220, 159, 159)",
+            //                                                                "horizonBlend": 0.4])
             self.spinGlobe()
         }
 

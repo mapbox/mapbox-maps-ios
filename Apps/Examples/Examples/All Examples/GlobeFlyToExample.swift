@@ -6,7 +6,6 @@ import CoreLocation
 class GlobeFlyToExample: UIViewController, ExampleProtocol {
     internal var mapView: MapView!
     internal var currentProjection = StyleProjection(name: .globe)
-    internal var currentAtmosphere = Atmosphere()
     internal var isAtStart = true
     var instuctionLabel = UILabel(frame: CGRect.zero)
 
@@ -29,13 +28,12 @@ class GlobeFlyToExample: UIViewController, ExampleProtocol {
         mapView = MapView(frame: view.bounds, mapInitOptions: .init(styleURI: .satelliteStreets))
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         try! mapView.mapboxMap.style.setProjection(currentProjection)
-        try! mapView.mapboxMap.style.setAtmosphere(properties: ["color": "rgb(220, 159, 159)",
-                                                                "highColor": "rgb(220, 159, 159)",
-                                                                "horizonBlend": 0.4])
         mapView.mapboxMap.setCamera(to: .init(center: CLLocationCoordinate2D(latitude: 40, longitude: -78), zoom: 1.0))
 
         mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
-            try! self.mapView.mapboxMap.style.setAtmosphere(self.currentAtmosphere)
+            try! self.mapView.mapboxMap.style.setAtmosphere(properties: ["color": "rgb(220, 159, 159)",
+                                                                         "highColor": "rgb(220, 159, 159)",
+                                                                         "horizonBlend": 0.4])
             self.addTerrain()
         }
 

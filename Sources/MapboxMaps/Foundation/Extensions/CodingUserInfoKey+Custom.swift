@@ -8,6 +8,4 @@ internal extension CodingUserInfoKey {
     static var volatilePropertiesOnly: CodingUserInfoKey {
         return CodingUserInfoKey(rawValue: "volatilePropertiesOnly")!
     }
-
-    static let shouldEncodeNilValues = CodingUserInfoKey(rawValue: "shouldEncodeNilValues")!
 }

@@ -147,10 +147,11 @@ public class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
             print("Ran into an error adding a source: \(error)")
         }
 
-        // Add earthquake-viz layer
+        // Add circle layer
         var circleLayer = CircleLayer(id: self.circleLayerId)
         circleLayer.source = self.earthquakeSourceId
 
+        // Adjust the circle layer radius by zoom level
         circleLayer.circleRadius = .expression(
             Exp(.interpolate) {
                 Exp(.linear)
@@ -183,9 +184,7 @@ public class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
         circleLayer.circleStrokeColor = .constant(StyleColor(.black))
         circleLayer.circleStrokeWidth = .constant(1)
 
-        // The feature-state dependent circle-color expression will render
-        // the color according to its magnitude when
-        // a feature's hover state is set to true
+        // Set circle layer color by mag level
         circleLayer.circleColor = .expression(
             Exp(.interpolate) {
                 Exp(.linear)
@@ -205,6 +204,7 @@ public class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
             }
         )
 
+        // Adjust the circle laye opacity by zoom level
         circleLayer.circleOpacity = .expression(
             Exp(.interpolate) {
                 Exp(.linear)

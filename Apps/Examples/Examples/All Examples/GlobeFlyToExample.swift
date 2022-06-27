@@ -31,9 +31,6 @@ class GlobeFlyToExample: UIViewController, ExampleProtocol {
 
         mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
             try! self.mapView.mapboxMap.style.setProjection(self.currentProjection)
-//            try! self.mapView.mapboxMap.style.setAtmosphere(properties: ["color": "rgb(220, 159, 159)",
-//                                                                         "highColor": "rgb(220, 159, 159)",
-//                                                                         "horizonBlend": 0.4])
             self.addTerrain()
             self.finish()
         }

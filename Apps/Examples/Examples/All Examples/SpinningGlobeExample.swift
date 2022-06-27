@@ -23,9 +23,6 @@ class SpinningGlobeExample: UIViewController, GestureManagerDelegate, ExamplePro
         mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
             try! self.mapView.mapboxMap.style.setProjection(self.currentProjection)
             try! self.mapView.mapboxMap.style.setAtmosphere(self.currentAtmosphere)
-            //        try! mapView.mapboxMap.style.setAtmosphere(properties: ["color": "rgb(220, 159, 159)",
-            //                                                                "highColor": "rgb(220, 159, 159)",
-            //                                                                "horizonBlend": 0.4])
             self.spinGlobe()
             self.finish()
         }
@@ -56,31 +53,34 @@ class SpinningGlobeExample: UIViewController, GestureManagerDelegate, ExamplePro
 
             // Smoothly animate the map over one second.
             // When this animation is complete, call it again
-            mapView.camera.ease(to: .init(center: targetCenter), duration: 1.0, curve: .linear) { _ in
+            mapView.camera.ease(to: .init(center: targetCenter), duration: 1.0, curve: .linear) { rotating in
 
+                guard rotating == .end else {
+                    return
+                }
                 self.spinGlobe()
             }
         }
-
     }
 
     func gestureManager(_ gestureManager: GestureManager, didBegin gestureType: GestureType) {
-        // do nothing
+        userInteracting = true
     }
 
     func gestureManager(_ gestureManager: GestureManager, didEnd gestureType: GestureType, willAnimate: Bool) {
-        if gestureType == .doubleTouchToZoomOut || gestureType == .pinch || gestureType == .doubleTapToZoomIn {
-            if mapView.cameraState.zoom < 5 {
-                if userInteracting == true {
-                    self.spinGlobe()
-                }
-            } else {
-                print("dont spin")
+
+        if !willAnimate {
+            userInteracting = false
+            DispatchQueue.main.async {
+                self.spinGlobe()
             }
         }
     }
 
     func gestureManager(_ gestureManager: GestureManager, didEndAnimatingFor gestureType: GestureType) {
-        // do nothing
+        userInteracting = false
+        DispatchQueue.main.async {
+            self.spinGlobe()
+        }
     }
 }

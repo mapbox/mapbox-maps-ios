@@ -11,6 +11,8 @@ class LightTests: XCTestCase {
         light.intensityTransition = StyleTransition(duration: 10.0, delay: 20.0)
         light.position = [1.0, 2.0, 3.0]
         light.colorTransition = StyleTransition(duration: 10.0, delay: 20.0)
+        light.castShadows = true
+        light.shadowIntensity = 0.5
 
         var data: Data?
         do {
@@ -31,6 +33,8 @@ class LightTests: XCTestCase {
             XCTAssert(decodedLight.color == StyleColor(.red))
             XCTAssert(decodedLight.intensity == 1.0)
             XCTAssert(decodedLight.position == [1.0, 2.0, 3.0])
+            XCTAssert(decodedLight.castShadows == true)
+            XCTAssert(decodedLight.shadowIntensity == 0.5)
         }
     }
 

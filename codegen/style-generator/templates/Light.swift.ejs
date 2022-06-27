@@ -12,11 +12,11 @@ public struct Light: Codable {
     <%_ for (const property of properties) { -%>
 
     /// <%- markdownFriendlyDoc(property) %>
-    public var <%- camelizeWithLeadingLowercase(property.name) %>: <%- propertySwiftType(property) %>?
+    <% if (property.experimental) { -%>@_spi(Experimental) <% } -%>public var <%- camelizeWithLeadingLowercase(property.name) %>: <%- propertySwiftType(property) %>?
     <%_ if (property.transition) { -%>
 
     /// Transition property for `<%- camelizeWithLeadingLowercase(property.name) %>`
-    public var <%- camelizeWithLeadingLowercase(property.name) %>Transition: StyleTransition?
+    <% if (property.experimental) { -%>@_spi(Experimental) <% } -%>public var <%- camelizeWithLeadingLowercase(property.name) %>Transition: StyleTransition?
     <%_ } -%>
     <%_ } -%>
 

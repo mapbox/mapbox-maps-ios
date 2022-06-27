@@ -261,20 +261,20 @@ final class MapViewTests: XCTestCase {
         XCTAssertEqual(runner.updateStub.invocations.count, 1)
     }
 
-    func testDisplayLinkPausedWhenAppMovingToBackground() {
-        notificationCenter.post(name: UIApplication.didEnterBackgroundNotification, object: nil)
+    func testDisplayLinkPausedWhenAppWillResignActive() {
+        notificationCenter.post(name: UIApplication.willResignActiveNotification, object: nil)
 
         XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
     }
 
-    func testReleaseDrawablesInvokedWhenAppMovingToBackground() {
+    func testReleaseDrawablesInvokedWhenAppDidBecomeActive() {
         notificationCenter.post(name: UIApplication.didEnterBackgroundNotification, object: nil)
 
         XCTAssertEqual(metalView.releaseDrawablesStub.invocations.count, 1)
     }
 
-    func testDisplayLinkResumedWhenAppMovingToForeground() {
-        notificationCenter.post(name: UIApplication.willEnterForegroundNotification, object: nil)
+    func testDisplayLinkResumedWhenAppDidBecomeActive() {
+        notificationCenter.post(name: UIApplication.didBecomeActiveNotification, object: nil)
 
         XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [false])
     }
@@ -367,22 +367,22 @@ final class MapViewTestsWithScene: XCTestCase {
         super.tearDown()
     }
 
-    func testDisplayLinkResumedWhenSceneMovingToForeground() throws {
+    func testDisplayLinkResumedWhenSceneDidActivate() throws {
         guard #available(iOS 13.0, *) else {
             throw XCTSkip("Test requires iOS 13 or higher.")
         }
 
-        notificationCenter.post(name: UIScene.willEnterForegroundNotification, object: window.parentScene)
+        notificationCenter.post(name: UIScene.didActivateNotification, object: window.parentScene)
 
         XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [false])
     }
 
-    func testDisplayLinkPausedWhenSceneMovingToBackground() throws {
+    func testDisplayLinkPausedWhenSceneWillDeactivate() throws {
         guard #available(iOS 13.0, *) else {
             throw XCTSkip("Test requires iOS 13 or higher.")
         }
 
-        notificationCenter.post(name: UIScene.didEnterBackgroundNotification, object: window.parentScene)
+        notificationCenter.post(name: UIScene.willDeactivateNotification, object: window.parentScene)
 
         XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
     }

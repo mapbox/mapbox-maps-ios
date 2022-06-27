@@ -12,6 +12,7 @@
 		35F08DE52347987900768B9F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35F08DE42347987900768B9F /* Assets.xcassets */; };
 		35F08DE82347987900768B9F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35F08DE62347987900768B9F /* LaunchScreen.storyboard */; };
 		7473C3BA288995B40022279E /* DebugViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7473C3B9288995B40022279E /* DebugViewController.xib */; };
+		745B379B2869EAF40068187A /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 745B379A2869EAF40068187A /* Entitlements.plist */; };
 		B569C20125FEBC2E008B0D92 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = B569C20025FEBC2E008B0D92 /* MapboxMaps */; };
 /* End PBXBuildFile section */
 
@@ -36,6 +37,7 @@
 		35F08DE72347987900768B9F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		35F08DE92347987900768B9F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7473C3B9288995B40022279E /* DebugViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DebugViewController.xib; sourceTree = "<group>"; };
+		745B379A2869EAF40068187A /* Entitlements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
 		CA56651F24479764006F392C /* base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = base.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -77,6 +79,7 @@
 				7473C3B9288995B40022279E /* DebugViewController.xib */,
 				35F08DE42347987900768B9F /* Assets.xcassets */,
 				35F08DE62347987900768B9F /* LaunchScreen.storyboard */,
+				745B379A2869EAF40068187A /* Entitlements.plist */,
 			);
 			path = DebugApp;
 			sourceTree = "<group>";
@@ -154,6 +157,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				745B379B2869EAF40068187A /* Entitlements.plist in Resources */,
 				35F08DE82347987900768B9F /* LaunchScreen.storyboard in Resources */,
 				35F08DE52347987900768B9F /* Assets.xcassets in Resources */,
 				7473C3BA288995B40022279E /* DebugViewController.xib in Resources */,
@@ -262,6 +266,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = DebugApp/Entitlements.plist;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = DebugApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -278,6 +283,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = DebugApp/Entitlements.plist;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = DebugApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

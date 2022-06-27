@@ -16,5 +16,8 @@ final class DebugViewController: UIViewController {
         mapView = MapView(frame: view.bounds)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
+
+        mapView.location.options.puckType = .puck2D(.makeDefault())
+        mapView.location.options.puckBearingSource = .course
     }
 }

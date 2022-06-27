@@ -107,8 +107,8 @@ internal final class PanZoomRotatePinchBehavior: PinchBehavior {
         mapboxMap.setCamera(
             to: CameraOptions(
                 anchor: pinchMidpoint,
-                zoom: initialCameraState.zoom + (simultaneousRotateAndPinchZoomEnabled || mode == .zooming ? zoomIncrement : 0),
-                bearing: finalBearing))
+                zoom: initialCameraState.zoom + (simultaneousRotateAndPinchZoomEnabled || mode == .zooming ? zoomIncrement : 0)))
+//                bearing: finalBearing))
 
         previousPinchAngle = pinchAngle
         prevTime = CACurrentMediaTime()

@@ -50,6 +50,9 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
             return
         }
         switch gestureRecognizer.state {
+        case .possible:
+            print("kkk possible \(gestureRecognizer.velocity)")
+            print("kkk possible \(pinchAngle(with: gestureRecognizer))")
         case .began:
             // UIPinchGestureRecognizer sometimes begins with 1 touch.
             // If that happens, we ignore it here, but will start handling it
@@ -58,7 +61,10 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
                 return
             }
             start(with: gestureRecognizer)
+            print("kkk began \(gestureRecognizer.velocity)")
+            print("kkk began \(pinchAngle(with: gestureRecognizer))")
         case .changed:
+            print("kkk changed \(gestureRecognizer.velocity)")
             // UIPinchGestureRecognizer sends a .changed event when the number
             // of touches decreases from 2 to 1. If this happens, we pause our
             // gesture handling.

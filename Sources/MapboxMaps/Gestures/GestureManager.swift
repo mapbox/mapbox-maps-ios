@@ -64,6 +64,11 @@ public final class GestureManager: GestureHandlerDelegate {
         return pinchGestureHandler.gestureRecognizer
     }
 
+    /// The gesture recognizer for the rotate gesture
+    public var rotateGestureRecognizer: UIGestureRecognizer {
+        return rotateGestureHandler.gestureRecognizer
+    }
+
     /// The gesture recognizer for the pitch gesture
     public var pitchGestureRecognizer: UIGestureRecognizer {
         return pitchGestureHandler.gestureRecognizer
@@ -101,6 +106,7 @@ public final class GestureManager: GestureHandlerDelegate {
 
     private let panGestureHandler: PanGestureHandlerProtocol
     private let pinchGestureHandler: PinchGestureHandlerProtocol
+    private let rotateGestureHandler: RotateGestureHandler
     private let pitchGestureHandler: GestureHandler
     private let doubleTapToZoomInGestureHandler: FocusableGestureHandlerProtocol
     private let doubleTouchToZoomOutGestureHandler: FocusableGestureHandlerProtocol
@@ -111,6 +117,7 @@ public final class GestureManager: GestureHandlerDelegate {
 
     internal init(panGestureHandler: PanGestureHandlerProtocol,
                   pinchGestureHandler: PinchGestureHandlerProtocol,
+                  rotateGestureHandler: RotateGestureHandler,
                   pitchGestureHandler: GestureHandler,
                   doubleTapToZoomInGestureHandler: FocusableGestureHandlerProtocol,
                   doubleTouchToZoomOutGestureHandler: FocusableGestureHandlerProtocol,
@@ -126,10 +133,12 @@ public final class GestureManager: GestureHandlerDelegate {
         self.quickZoomGestureHandler = quickZoomGestureHandler
         self.singleTapGestureHandler = singleTapGestureHandler
         self.anyTouchGestureHandler = anyTouchGestureHandler
+        self.rotateGestureHandler = rotateGestureHandler
         self.mapboxMap = mapboxMap
 
         panGestureHandler.delegate = self
         pinchGestureHandler.delegate = self
+        rotateGestureHandler.delegate = self
         pitchGestureHandler.delegate = self
         doubleTapToZoomInGestureHandler.delegate = self
         doubleTouchToZoomOutGestureHandler.delegate = self

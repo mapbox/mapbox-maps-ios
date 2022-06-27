@@ -46,7 +46,7 @@ public extension Expression {
         /// Returns the absolute value of the input.
         case abs = "abs"
 
-        /// Gets the value of a cluster property accumulated so far. Can only be used in the `clusterProperties` option of a clustered GeoJSON source.
+        /// Returns the value of a cluster property accumulated so far. Can only be used in the `clusterProperties` option of a clustered GeoJSON source.
         case accumulated = "accumulated"
 
         /// Returns the arccosine of the input.
@@ -79,7 +79,7 @@ public extension Expression {
         /// Returns the smallest integer that is greater than or equal to the input.
         case ceil = "ceil"
 
-        /// Evaluates each expression in turn until the first non-null value is obtained, and returns that value.
+        /// Evaluates each expression in turn until the first valid value is obtained. Invalid values are `null` and [`'image'`](#types-image) expressions that are unavailable in the style. If all values are invalid, `coalesce` returns the first value listed.
         case coalesce = "coalesce"
 
         /// Returns a `collator` for use in locale-dependent comparison operations. The `case-sensitive` and `diacritic-sensitive` options default to `false`. The `locale` argument specifies the IETF language tag of the locale to use. If none is provided, the default locale is used. If the requested locale is not available, the `collator` will use a system-defined fallback locale. Use `resolved-locale` to test the results of locale fallback behavior.
@@ -100,7 +100,7 @@ public extension Expression {
         /// Returns the mathematical constant e.
         case e = "e"
 
-        /// Retrieves a property value from the current feature's state. Returns null if the requested property is not present on the feature's state. A feature's state is not part of the GeoJSON or vector tile data, and must be set programmatically on each feature. Features are identified by their `id` attribute, which must be an integer or a string that can be cast to an integer. Note that ["feature-state"] can only be used with paint properties that support data-driven styling.
+        /// Retrieves a property value from the current feature's state. Returns `null` if the requested property is not present on the feature's state. A feature's state is not part of the GeoJSON or vector tile data, and must be set programmatically on each feature. Features are identified by their `id` attribute, which must be an integer or a string that can be cast to an integer. Note that ["feature-state"] can only be used with paint properties that support data-driven styling.
         case featureState = "feature-state"
 
         /// Returns the largest integer that is less than or equal to the input.
@@ -112,25 +112,25 @@ public extension Expression {
         /// - `"font-scale"`: Applies a scaling factor on `text-size` as specified by the root layout property.
         case format = "format"
 
-        /// Gets the feature's geometry type: `Point`, `MultiPoint`, `LineString`, `MultiLineString`, `Polygon`, `MultiPolygon`.
+        /// Returns the feature's geometry type: `Point`, `MultiPoint`, `LineString`, `MultiLineString`, `Polygon`, `MultiPolygon`. `Multi*` feature types are only returned in GeoJSON sources. When working with vector tile sources, use the singular forms.
         case geometryType = "geometry-type"
 
-        /// Retrieves a property value from the current feature's properties, or from another object if a second argument is provided. Returns null if the requested property is missing.
+        /// Retrieves a property value from the current feature's properties, or from another object if a second argument is provided. Returns `null` if the requested property is missing.
         case get = "get"
 
         /// Tests for the presence of an property value in the current feature's properties, or from another object if a second argument is provided.
         case has = "has"
 
-        /// Gets the kernel density estimation of a pixel in a heatmap layer, which is a relative measure of how many data points are crowded around a particular pixel. Can only be used in the `heatmap-color` property.
+        /// Returns the kernel density estimation of a pixel in a heatmap layer, which is a relative measure of how many data points are crowded around a particular pixel. Can only be used in the `heatmap-color` property.
         case heatmapDensity = "heatmap-density"
 
-        /// Gets the feature's id, if it has one.
+        /// Returns the feature's id, if it has one.
         case id = "id"
 
-        /// Returns an `image` type for use in `icon-image`, `*-pattern` entries and as a section in the `format` expression. If set, the `image` argument will check that the requested image exists in the style and will return either the resolved image name or `null`, depending on whether or not the image is currently in the style. This validation process is synchronous and requires the image to have been added to the style before requesting it in the `image` argument.
+        /// Returns a [`ResolvedImage`](/mapbox-gl-js/style-spec/types/#resolvedimage) for use in [`icon-image`](/mapbox-gl-js/style-spec/layers/#layout-symbol-icon-image), `*-pattern` entries, and as a section in the [`'format'`](#types-format) expression. A [`'coalesce'`](#coalesce) expression containing `image` expressions will evaluate to the first listed image that is currently in the style. This validation process is synchronous and requires the image to have been added to the style before requesting it in the `'image'` argument.
         case image = "image"
 
-        /// Determines whether an item exists in an array or a substring exists in a string.
+        /// Determines whether an item exists in an array or a substring exists in a string. In the specific case when the second and third arguments are string literals, you must wrap at least one of them in a [`literal`](#types-literal) expression to hint correct interpretation to the [type system](#type-system).
         case inExpression = "in"
 
         /// Returns the first position at which an item can be found in an array or a substring can be found in a string, or `-1` if the input cannot be found. Accepts an optional index from where to begin the search.
@@ -147,13 +147,13 @@ public extension Expression {
         /// Returns `true` if the input string is expected to render legibly. Returns `false` if the input string contains sections that cannot be rendered without potential loss of meaning (e.g. Indic scripts that require complex text shaping, or right-to-left scripts if the the `mapbox-gl-rtl-text` plugin is not in use in Mapbox GL JS).
         case isSupportedScript = "is-supported-script"
 
-        /// Gets the length of an array or string.
+        /// Returns the length of an array or string.
         case length = "length"
 
         /// Binds expressions to named variables, which can then be referenced in the result expression using ["var", "variable_name"].
         case letExpression = "let"
 
-        /// Gets the progress along a gradient line. Can only be used in the `line-gradient` property.
+        /// Returns the progress along a gradient line. Can only be used in the `line-gradient` property.
         case lineProgress = "line-progress"
 
         /// Provides a literal array or object value.
@@ -171,10 +171,12 @@ public extension Expression {
         /// Returns the base-two logarithm of the input.
         case log2 = "log2"
 
-        /// Selects the output whose label value matches the input value, or the fallback value if no match is found. The input can be any expression (e.g. `["get", "building_type"]`). Each label must be either:
+        /// Selects the output for which the label value matches the input value, or the fallback value if no match is found. The input can be any expression (for example, `["get", "building_type"]`). Each label must be unique, and must be either:
         ///  - a single literal value; or
-        ///  - an array of literal values, whose values must be all strings or all numbers (e.g. `[100, 101]` or `["c", "b"]`). The input matches if any of the values in the array matches, similar to the `"in"` operator.
-        /// Each label must be unique. If the input type does not match the type of the labels, the result will be the fallback value.
+        ///  - an array of literal values, the values of which must be all strings or all numbers (for example `[100, 101]` or `["c", "b"]`).
+        ///
+        /// The input matches if any of the values in the array matches using strict equality, similar to the `"in"` operator.
+        /// If the input type does not match the type of the labels, the result will be the fallback value.
         case match = "match"
 
         /// Returns the maximum value of the inputs.
@@ -186,7 +188,7 @@ public extension Expression {
         /// Asserts that the input value is a number. If multiple values are provided, each one is evaluated in order until a number is obtained. If none of the inputs are numbers, the expression is an error.
         case number = "number"
 
-        /// Converts the input number into a string representation using the providing formatting rules. If set, the `locale` argument specifies the locale to use, as a BCP 47 language tag. If set, the `currency` argument specifies an ISO 4217 code to use for currency-style formatting. If set, the `min-fraction-digits` and `max-fraction-digits` arguments specify the minimum and maximum number of fractional digits to include.
+        /// Converts the input number into a string representation using the providing formatting rules. If set, the `locale` argument specifies the locale to use, as a BCP 47 language tag. If set, the `currency` argument specifies an ISO 4217 code to use for currency-style formatting. If set, the `unit` argument specifies a [simple ECMAScript unit](https://tc39.es/proposal-unified-intl-numberformat/section6/locales-currencies-tz_proposed_out.html#sec-issanctionedsimpleunitidentifier) to use for unit-style formatting. If set, the `min-fraction-digits` and `max-fraction-digits` arguments specify the minimum and maximum number of fractional digits to include.
         case numberFormat = "number-format"
 
         /// Asserts that the input value is an object. If multiple values are provided, each one is evaluated in order until an object is obtained. If none of the inputs are objects, the expression is an error.
@@ -195,7 +197,7 @@ public extension Expression {
         /// Returns the mathematical constant pi.
         case pi = "pi"
 
-        /// Gets the feature properties object.  Note that in some cases, it may be more efficient to use ["get", "property_name"] directly.
+        /// Returns the feature properties object.  Note that in some cases, it may be more efficient to use `["get", "property_name"]` directly.
         case properties = "properties"
 
         /// Returns the IETF language tag of the locale being used by the provided `collator`. This can be used to determine the default system locale, or to determine if a requested locale was successfully loaded.
@@ -213,7 +215,7 @@ public extension Expression {
         /// Returns the sine of the input.
         case sin = "sin"
 
-        /// Gets the distance of a point on the sky from the sun position. Returns 0 at sun position and 1 when the distance reaches `sky-gradient-radius`. Can only be used in the `sky-gradient` property.
+        /// Returns the distance of a point on the sky from the sun position. Returns 0 at sun position and 1 when the distance reaches `sky-gradient-radius`. Can only be used in the `sky-gradient` property.
         case skyRadialProgress = "sky-radial-progress"
 
         /// Returns an item from an array or a substring from a string from a specified start index, or between a start index and an end index if set. The return value is inclusive of the start index but not of the end index.
@@ -243,7 +245,7 @@ public extension Expression {
         /// Returns a four-element array containing the input color's red, green, blue, and alpha components, in that order.
         case toRgba = "to-rgba"
 
-        /// Converts the input value to a string. If the input is `null`, the result is `""`. If the input is a boolean, the result is `"true"` or `"false"`. If the input is a number, it is converted to a string as specified by the ["NumberToString" algorithm](https://tc39.github.io/ecma262/#sec-tostring-applied-to-the-number-type) of the ECMAScript Language Specification. If the input is a color, it is converted to a string of the form `"rgba(r,g,b,a)"`, where `r`, `g`, and `b` are numerals ranging from 0 to 255, and `a` ranges from 0 to 1. Otherwise, the input is converted to a string in the format specified by the [`JSON.stringify`](https://tc39.github.io/ecma262/#sec-json.stringify) function of the ECMAScript Language Specification.
+        /// Converts the input value to a string. If the input is `null`, the result is `""`. If the input is a [`boolean`](#types-boolean), the result is `"true"` or `"false"`. If the input is a number, it is converted to a string as specified by the ["NumberToString" algorithm](https://tc39.github.io/ecma262/#sec-tostring-applied-to-the-number-type) of the ECMAScript Language Specification. If the input is a [`color`](#color), it is converted to a string of the form `"rgba(r,g,b,a)"`, where `r`, `g`, and `b` are numerals ranging from 0 to 255, and `a` ranges from 0 to 1. If the input is an [`'image'`](#types-image) expression, `'to-string'` returns the image name. Otherwise, the input is converted to a string in the format specified by the [`JSON.stringify`](https://tc39.github.io/ecma262/#sec-json.stringify) function of the ECMAScript Language Specification.
         case toString = "to-string"
 
         /// Returns a string describing the type of the given value.
@@ -260,7 +262,7 @@ public extension Expression {
         /// - `LineString`: Returns `false` if any part of a line falls outside the boundary, the line intersects the boundary, or a line's endpoint is on the boundary.
         case within = "within"
 
-        /// Gets the current zoom level.  Note that in style layout and paint properties, ["zoom"] may only appear as the input to a top-level "step" or "interpolate" expression.
+        /// Returns the current zoom level.  Note that in style layout and paint properties, ["zoom"] may only appear as the input to a top-level "step" or "interpolate" expression.
         case zoom = "zoom"
 
         /// Interpolates linearly between the pair of stops just less than and just greater than the input

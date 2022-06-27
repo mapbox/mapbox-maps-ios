@@ -119,7 +119,7 @@ public struct PointAnnotation: Annotation {
         }
     }
 
-    /// Value to use for a text label. If a plain `string` is provided, it will be treated as a `formatted` with default/inherited formatting options.
+    /// Value to use for a text label. If a plain `string` is provided, it will be treated as a `formatted` with default/inherited formatting options. SDF images are not supported in formatted text and will be ignored.
     public var textField: String? {
         get {
             return layerProperties["text-field"] as? String
@@ -146,6 +146,16 @@ public struct PointAnnotation: Annotation {
         }
         set {
             layerProperties["text-letter-spacing"] = newValue
+        }
+    }
+
+    /// Text leading value for multi-line text.
+    public var textLineHeight: Double? {
+        get {
+            return layerProperties["text-line-height"] as? Double
+        }
+        set {
+            layerProperties["text-line-height"] = newValue
         }
     }
 
@@ -209,7 +219,7 @@ public struct PointAnnotation: Annotation {
         }
     }
 
-    /// The color of the icon. This can only be used with sdf icons.
+    /// The color of the icon. This can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
     public var iconColor: StyleColor? {
         get {
             return layerProperties["icon-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rgbaString:))
@@ -229,7 +239,7 @@ public struct PointAnnotation: Annotation {
         }
     }
 
-    /// The color of the icon's halo. Icon halos can only be used with SDF icons.
+    /// The color of the icon's halo. Icon halos can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
     public var iconHaloColor: StyleColor? {
         get {
             return layerProperties["icon-halo-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rgbaString:))

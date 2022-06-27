@@ -144,6 +144,20 @@ final class PointAnnotationTests: XCTestCase {
         XCTAssertEqual(textLetterSpacing, annotation.textLetterSpacing)
     }
 
+    func testTextLineHeight() {
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        annotation.textLineHeight =  Double.testConstantValue()
+
+        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
+            return
+        }
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(textLineHeight) = layerProperties["text-line-height"] else {
+            return XCTFail("Layer property text-line-height should be set to a number.")
+        }
+        XCTAssertEqual(textLineHeight, annotation.textLineHeight)
+    }
+
     func testTextMaxWidth() {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
         annotation.textMaxWidth =  Double.testConstantValue()

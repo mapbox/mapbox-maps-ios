@@ -25,6 +25,7 @@ struct MetricsCommand: ParsableCommand {
     var outputPath: String?
 
     struct BaselineList: Decodable {
+        // swiftlint:disable nesting
         struct Record: Decodable {
             let testName: String
             let metrics: [String: String]

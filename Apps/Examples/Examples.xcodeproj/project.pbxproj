@@ -93,7 +93,6 @@
 		CADCF7282584990E0065C51B /* LineAnnotationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64ED3C82541CA3A00ADADFB /* LineAnnotationExample.swift */; };
 		CADCF7292584990E0065C51B /* FeaturesAtPointExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B0715F254789D6007F2865 /* FeaturesAtPointExample.swift */; };
 		CADCF72A2584990E0065C51B /* CustomStyleURLExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4AC5DEB2542CB2200995E4C /* CustomStyleURLExample.swift */; };
-		CADCF72B2584990E0065C51B /* FlyToExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE3D3C225818786000585A2 /* FlyToExample.swift */; };
 		CADCF72D2584990E0065C51B /* MultipleGeometriesExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B071CD2547CF2B007F2865 /* MultipleGeometriesExample.swift */; };
 		CADCF72F2584990E0065C51B /* SnapshotterCoreGraphicsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07C1A60C257EF7CF00531205 /* SnapshotterCoreGraphicsExample.swift */; };
 		CADCF7302584990E0065C51B /* LayerPositionExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666E0D4925664EE7000B8AF5 /* LayerPositionExample.swift */; };
@@ -171,7 +170,6 @@
 		0C78AC2C25BF71E40057F570 /* GradientLine.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = GradientLine.geojson; sourceTree = "<group>"; };
 		0CC4ECE925B8AD3000F998B8 /* Custom2DPuckExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Custom2DPuckExample.swift; sourceTree = "<group>"; };
 		0CE3D3BE25818626000585A2 /* ColorExpressionExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExpressionExample.swift; sourceTree = "<group>"; };
-		0CE3D3C225818786000585A2 /* FlyToExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyToExample.swift; sourceTree = "<group>"; };
 		177C9D46269CA61100D13A2D /* ShowHideLayerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowHideLayerExample.swift; sourceTree = "<group>"; };
 		17AF783F26837E91006EA30D /* Fire_Hydrants.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Fire_Hydrants.geojson; sourceTree = "<group>"; };
 		17B40D2326A85500000887EF /* LiveDataExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveDataExample.swift; sourceTree = "<group>"; };
@@ -327,7 +325,6 @@
 				58A28B572869F69B006F7D93 /* HeatmapLayerGlobeExample.swift */,
 				0C784D1026D002DC004AE7D0 /* FeatureStateExample.swift */,
 				077E3B8F2581966300564A3E /* FitCameraToGeometryExample.swift */,
-				0CE3D3C225818786000585A2 /* FlyToExample.swift */,
 				666E0D4925664EE7000B8AF5 /* LayerPositionExample.swift */,
 				0C78AC2825BF70E40057F570 /* LineGradientExample.swift */,
 				58A28B5F2869F728006F7D93 /* SpinningGlobeExample.swift */,
@@ -718,7 +715,6 @@
 				74A2313127EB306F0065FB7D /* Array+Split.swift in Sources */,
 				0C78AC2925BF70E40057F570 /* LineGradientExample.swift in Sources */,
 				17B48067268A4E9300CF0D5E /* DistanceExpressionExample.swift in Sources */,
-				CADCF72B2584990E0065C51B /* FlyToExample.swift in Sources */,
 				0333B84F25ED942600D667C9 /* SceneKitExample.swift in Sources */,
 				CADCF72D2584990E0065C51B /* MultipleGeometriesExample.swift in Sources */,
 				30517C6A274BD4D300B706E5 /* ViewAnnotationBasicExample.swift in Sources */,

@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 class LightTests: XCTestCase {
 
@@ -11,8 +11,8 @@ class LightTests: XCTestCase {
         light.intensityTransition = StyleTransition(duration: 10.0, delay: 20.0)
         light.position = [1.0, 2.0, 3.0]
         light.colorTransition = StyleTransition(duration: 10.0, delay: 20.0)
-        light.castShadows = true
-        light.shadowIntensity = 0.5
+        light.castShadows = Value<Bool>.testConstantValue()
+        light.shadowIntensity = Value<Double>.testConstantValue()
 
         var data: Data?
         do {
@@ -33,8 +33,8 @@ class LightTests: XCTestCase {
             XCTAssert(decodedLight.color == StyleColor(.red))
             XCTAssert(decodedLight.intensity == 1.0)
             XCTAssert(decodedLight.position == [1.0, 2.0, 3.0])
-            XCTAssert(decodedLight.castShadows == true)
-            XCTAssert(decodedLight.shadowIntensity == 0.5)
+            XCTAssert(decodedLight.castShadows == Value<Bool>.testConstantValue())
+            XCTAssert(decodedLight.shadowIntensity == Value<Double>.testConstantValue())
         }
     }
 

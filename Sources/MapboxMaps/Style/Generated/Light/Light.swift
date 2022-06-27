@@ -10,7 +10,7 @@ public struct Light: Codable {
     public var anchor: Anchor?
 
     /// Enable/Disable shadow casting for this light
-    @_spi(Experimental) public var castShadows: Bool?
+    @_spi(Experimental) public var castShadows: Value<Bool>?
 
     /// Color tint for lighting extruded geometries.
     public var color: StyleColor?
@@ -31,7 +31,7 @@ public struct Light: Codable {
     public var positionTransition: StyleTransition?
 
     /// Determines the shadow strength, affecting the shadow receiver surfaces final color. Values near 0.0 reduce the shadow contribution to the final color. Values near to 1.0 make occluded surfaces almost black.
-    @_spi(Experimental) public var shadowIntensity: Double?
+    @_spi(Experimental) public var shadowIntensity: Value<Double>?
 
     /// Transition property for `shadowIntensity`
     @_spi(Experimental) public var shadowIntensityTransition: StyleTransition?

@@ -55,31 +55,29 @@ public struct SkyLayer: Layer {
     }
 
     public func encode(to encoder: Encoder) throws {
-        let nilEncoder = NilEncoder(userInfo: encoder.userInfo)
-
         var container = encoder.container(keyedBy: RootCodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(type, forKey: .type)
-        try nilEncoder.encode(filter, forKey: .filter, to: &container)
-        try nilEncoder.encode(source, forKey: .source, to: &container)
-        try nilEncoder.encode(sourceLayer, forKey: .sourceLayer, to: &container)
-        try nilEncoder.encode(minZoom, forKey: .minZoom, to: &container)
-        try nilEncoder.encode(maxZoom, forKey: .maxZoom, to: &container)
+        try container.encodeIfPresent(filter, forKey: .filter)
+        try container.encodeIfPresent(source, forKey: .source)
+        try container.encodeIfPresent(sourceLayer, forKey: .sourceLayer)
+        try container.encodeIfPresent(minZoom, forKey: .minZoom)
+        try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
-        try nilEncoder.encode(skyAtmosphereColor, forKey: .skyAtmosphereColor, to: &paintContainer)
-        try nilEncoder.encode(skyAtmosphereHaloColor, forKey: .skyAtmosphereHaloColor, to: &paintContainer)
-        try nilEncoder.encode(skyAtmosphereSun, forKey: .skyAtmosphereSun, to: &paintContainer)
-        try nilEncoder.encode(skyAtmosphereSunIntensity, forKey: .skyAtmosphereSunIntensity, to: &paintContainer)
-        try nilEncoder.encode(skyGradient, forKey: .skyGradient, to: &paintContainer)
-        try nilEncoder.encode(skyGradientCenter, forKey: .skyGradientCenter, to: &paintContainer)
-        try nilEncoder.encode(skyGradientRadius, forKey: .skyGradientRadius, to: &paintContainer)
-        try nilEncoder.encode(skyOpacity, forKey: .skyOpacity, to: &paintContainer)
-        try nilEncoder.encode(skyOpacityTransition, forKey: .skyOpacityTransition, to: &paintContainer)
-        try nilEncoder.encode(skyType, forKey: .skyType, to: &paintContainer)
+        try paintContainer.encodeIfPresent(skyAtmosphereColor, forKey: .skyAtmosphereColor)
+        try paintContainer.encodeIfPresent(skyAtmosphereHaloColor, forKey: .skyAtmosphereHaloColor)
+        try paintContainer.encodeIfPresent(skyAtmosphereSun, forKey: .skyAtmosphereSun)
+        try paintContainer.encodeIfPresent(skyAtmosphereSunIntensity, forKey: .skyAtmosphereSunIntensity)
+        try paintContainer.encodeIfPresent(skyGradient, forKey: .skyGradient)
+        try paintContainer.encodeIfPresent(skyGradientCenter, forKey: .skyGradientCenter)
+        try paintContainer.encodeIfPresent(skyGradientRadius, forKey: .skyGradientRadius)
+        try paintContainer.encodeIfPresent(skyOpacity, forKey: .skyOpacity)
+        try paintContainer.encodeIfPresent(skyOpacityTransition, forKey: .skyOpacityTransition)
+        try paintContainer.encodeIfPresent(skyType, forKey: .skyType)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try nilEncoder.encode(visibility, forKey: .visibility, to: &layoutContainer)
+        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
     }
 
     public init(from decoder: Decoder) throws {

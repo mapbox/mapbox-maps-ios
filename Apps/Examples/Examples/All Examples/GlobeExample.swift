@@ -6,7 +6,6 @@ import UIKit
 class GlobeExample: UIViewController, ExampleProtocol {
     internal var mapView: MapView!
     internal var currentProjection = StyleProjection(name: .globe)
-    internal var currentAtmosphere = Atmosphere()
 
     override public func viewDidLoad() {
         super.viewDidLoad()

@@ -3,7 +3,7 @@
 /// The ``ViewportStatus/state(_:)`` and ``ViewportStatus/transition(_:toState:)``
 /// cases have associated values that are reference types, so equality and hash are implemented in terms of
 /// the identities of those objects.
-@_spi(Experimental) public enum ViewportStatus: Hashable {
+public enum ViewportStatus: Hashable {
 
     /// The `idle` status indicates that ``Viewport`` is inactive.
     case idle

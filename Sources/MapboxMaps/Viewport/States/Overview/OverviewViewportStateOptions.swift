@@ -2,7 +2,7 @@ import Turf
 import CoreLocation
 
 /// Configuration options for ``OverviewViewportState``.
-@_spi(Experimental) public struct OverviewViewportStateOptions: Equatable {
+public struct OverviewViewportStateOptions: Equatable {
 
     /// The geometry that the ``OverviewViewportState`` should use when calculating its camera.
     public var geometry: Geometry

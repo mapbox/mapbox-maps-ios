@@ -1,4 +1,4 @@
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 
 extension FollowPuckViewportStateBearing {
     static func random() -> Self {

@@ -2,7 +2,7 @@
 ///
 /// Use ``Viewport/makeDefaultViewportTransition(options:)`` to create instances of this
 /// class.
-@_spi(Experimental) public final class DefaultViewportTransition {
+public final class DefaultViewportTransition {
 
     /// Configuration options.
     ///

@@ -21,7 +21,6 @@ class GlobeFlyToExample: UIViewController, ExampleProtocol {
         bearing: 130.0,
         pitch: 75.0)
 
-
     override public func viewDidLoad() {
         super.viewDidLoad()
 

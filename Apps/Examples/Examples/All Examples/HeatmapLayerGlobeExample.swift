@@ -62,7 +62,6 @@ public class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
         heatmapLayer.maxZoom = 9.0
         heatmapLayer.sourceLayer  = self.heatmapLayerSource
 
-
         heatmapLayer.heatmapColor = .expression(
             Exp(.interpolate) {
                 Exp(.linear)

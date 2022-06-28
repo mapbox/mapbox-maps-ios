@@ -16,7 +16,6 @@ class GlobeExample: UIViewController, ExampleProtocol {
         mapView.mapboxMap.setCamera(to: .init(center: CLLocationCoordinate2D(latitude: 50, longitude: 30), zoom: 0.45))
 
         mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
-            try! self.mapView.mapboxMap.style.setProjection(self.currentProjection)
             try! self.mapView.mapboxMap.style.setAtmosphere(self.currentAtmosphere)
             self.finish()
         }

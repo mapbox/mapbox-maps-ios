@@ -53,6 +53,9 @@ struct Examples {
             "title": "Accessibility",
             "examples": accessibilityExamples
         ],
+        [   "title": "Globe and Atmosphere",
+            "examples": globeAndAtmosphere
+        ],
         [
             "title": "Experimental",
             "examples": experimentalExamples
@@ -144,11 +147,6 @@ struct Examples {
 
     // Examples that focus on setting, animating, or otherwise changing the map's camera.
     static let cameraExamples = [
-        Example(title: "Fly-to camera animation",
-                description: """
-                    Smoothly interpolate between locations with the fly-to animation.
-                """,
-                type: FlyToExample.self),
             Example(title: "Use custom camera animations",
                 description: """
                     Animate the map camera to a new position using camera animators. Individual camera properties such as zoom, bearing, and center coordinate can be animated independently.
@@ -301,11 +299,24 @@ struct Examples {
                 type: VoiceOverAccessibilityExample.self),
     ]
 
+    // Examples that display maps using the globe projection
+    static let globeAndAtmosphere = [
+        Example(title: "Display a globe",
+                description: "Create a map using the globe projection.",
+                type: GlobeExample.self),
+        Example(title: "Fly-to camera animation",
+                description: "Smoothly interpolate between locations with the fly-to animation.",
+                type: GlobeFlyToExample.self),
+        Example(title: "Create a rotating globe",
+                description: "Display your map as an interactive, rotating globe.",
+                type: SpinningGlobeExample.self),
+        Example(title: "Visualize data as a heatmap",
+                description: "Display your heatmap using the globe projection.",
+                type: HeatmapLayerGlobeExample.self)
+    ]
+
     // Examples that uses experimental APIs
     static let experimentalExamples = [
-        Example(title: "Globe View",
-                description: "Display map on a globe.",
-                type: GlobeViewExample.self),
         Example(title: "Viewport",
                 description: "Viewport camera showcase",
                 type: ViewportExample.self),

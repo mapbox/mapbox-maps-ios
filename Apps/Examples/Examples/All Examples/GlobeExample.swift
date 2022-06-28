@@ -1,6 +1,6 @@
 import Foundation
 import UIKit
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 
 @objc(GlobeExample)
 class GlobeExample: UIViewController, ExampleProtocol {

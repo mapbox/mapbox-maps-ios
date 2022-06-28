@@ -5,7 +5,6 @@ import MapboxMaps
 @objc(GlobeExample)
 class GlobeExample: UIViewController, ExampleProtocol {
     internal var mapView: MapView!
-    internal var currentProjection = StyleProjection(name: .globe)
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -14,7 +13,7 @@ class GlobeExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.mapboxMap.setCamera(to: .init(center: CLLocationCoordinate2D(latitude: 50, longitude: 30), zoom: 0.45))
         try! self.mapView.mapboxMap.style.setProjection(StyleProjection(name: .globe))
-        
+
         mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
             try! self.mapView.mapboxMap.style.setAtmosphere(Atmosphere())
             self.finish()

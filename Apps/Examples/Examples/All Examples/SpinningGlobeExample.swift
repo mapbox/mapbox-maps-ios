@@ -1,16 +1,12 @@
 import Foundation
 import UIKit
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 import CoreLocation
 
 class SpinningGlobeExample: UIViewController, GestureManagerDelegate, ExampleProtocol {
 
     var userInteracting = false
-    var spinEnabled = true
-    var currentProjection = StyleProjection(name: .globe)
-    var currentAtmosphere = Atmosphere()
     var mapView: MapView!
-    var runningAnimation: Cancelable!
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -18,10 +14,10 @@ class SpinningGlobeExample: UIViewController, GestureManagerDelegate, ExamplePro
         mapView = MapView(frame: view.bounds, mapInitOptions: .init(styleURI: .satellite))
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.mapboxMap.setCamera(to: .init(center: CLLocationCoordinate2D(latitude: 40, longitude: -90), zoom: 1.0))
+        try! self.mapView.mapboxMap.style.setProjection(StyleProjection(name: .globe))
 
         mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
-            try! self.mapView.mapboxMap.style.setProjection(self.currentProjection)
-            try! self.mapView.mapboxMap.style.setAtmosphere(self.currentAtmosphere)
+            try! self.mapView.mapboxMap.style.setAtmosphere(Atmosphere())
             self.spinGlobe()
             self.finish()
         }
@@ -40,7 +36,7 @@ class SpinningGlobeExample: UIViewController, GestureManagerDelegate, ExamplePro
         let slowSpinZoom = 3.0
 
         let zoom = mapView.cameraState.zoom
-        if spinEnabled && !userInteracting && zoom < maxSpinZoom {
+        if !userInteracting && zoom < maxSpinZoom {
             var distancePerSecond = 360.0 / secPerRevolution
             if zoom > slowSpinZoom {
                 // Slow spinning at higher zooms

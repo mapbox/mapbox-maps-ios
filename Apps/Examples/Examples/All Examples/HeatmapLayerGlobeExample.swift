@@ -1,12 +1,10 @@
 import UIKit
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 
 @objc(HeatmapLayerGlobeExample)
 public class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
-    internal var currentProjection = StyleProjection(name: .globe)
-    internal var currentAtmosphere = Atmosphere()
     internal let earthquakeSourceId: String = "earthquakes"
     internal let earthquakeLayerId: String = "earthquake-viz"
     internal let heatmapLayerId = "earthquakes-heat"
@@ -25,12 +23,12 @@ public class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.ornaments.options.scaleBar.visibility = .hidden
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        try! self.mapView.mapboxMap.style.setProjection(StyleProjection(name: .globe))
         view.addSubview(mapView)
 
         mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
             guard let self = self else { return }
-            try! self.mapView.mapboxMap.style.setProjection(self.currentProjection)
-            try! self.mapView.mapboxMap.style.setAtmosphere(self.currentAtmosphere)
+            try! self.mapView.mapboxMap.style.setAtmosphere(Atmosphere())
             self.addRuntimeLayers()
             self.finish()
         }

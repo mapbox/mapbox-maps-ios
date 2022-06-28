@@ -5,17 +5,16 @@ import CoreLocation
 
 class GlobeFlyToExample: UIViewController, ExampleProtocol {
     internal var mapView: MapView!
-    internal var currentProjection = StyleProjection(name: .globe)
     internal var isAtStart = true
     var instuctionLabel = UILabel(frame: CGRect.zero)
 
-    private var CAMERA_START = CameraOptions(
+    private var cameraStart = CameraOptions(
         center: CLLocationCoordinate2D(latitude: 36, longitude: 80),
         zoom: 1.0,
         bearing: 0,
         pitch: 0)
 
-    private var CAMERA_END = CameraOptions(
+    private var cameraEnd = CameraOptions(
         center: CLLocationCoordinate2D(latitude: 46.58842, longitude: 8.11862),
         zoom: 12.5,
         bearing: 130.0,
@@ -27,9 +26,10 @@ class GlobeFlyToExample: UIViewController, ExampleProtocol {
         mapView = MapView(frame: view.bounds, mapInitOptions: .init(styleURI: .satelliteStreets))
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.mapboxMap.setCamera(to: .init(center: CLLocationCoordinate2D(latitude: 40, longitude: -78), zoom: 1.0))
+        try! self.mapView.mapboxMap.style.setProjection(StyleProjection(name: .globe))
 
         mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
-            try! self.mapView.mapboxMap.style.setProjection(self.currentProjection)
+            try! self.mapView.mapboxMap.style.setAtmosphere(Atmosphere())
             self.addTerrain()
             self.finish()
         }
@@ -39,7 +39,6 @@ class GlobeFlyToExample: UIViewController, ExampleProtocol {
 
         instuctionLabel.text = "Tap anywhere on the map"
         instuctionLabel.textColor = UIColor.black
-
         instuctionLabel.textAlignment = .center
         instuctionLabel.layer.backgroundColor = UIColor.gray.cgColor
         instuctionLabel.layer.cornerRadius = 20.0
@@ -81,9 +80,9 @@ class GlobeFlyToExample: UIViewController, ExampleProtocol {
         instuctionLabel.isHidden = true
         var target = CameraOptions()
         if isAtStart {
-            target = CAMERA_END
+            target = self.cameraEnd
         } else {
-            target = CAMERA_START
+            target = self.cameraStart
         }
         isAtStart = !isAtStart
         mapView.camera.fly(to: target, duration: 12)

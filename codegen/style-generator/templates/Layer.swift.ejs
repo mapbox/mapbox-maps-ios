@@ -56,31 +56,29 @@ import Foundation
     }
 
     public func encode(to encoder: Encoder) throws {
-        let nilEncoder = NilEncoder(userInfo: encoder.userInfo)
-
         var container = encoder.container(keyedBy: RootCodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(type, forKey: .type)
-        try nilEncoder.encode(filter, forKey: .filter, to: &container)
-        try nilEncoder.encode(source, forKey: .source, to: &container)
-        try nilEncoder.encode(sourceLayer, forKey: .sourceLayer, to: &container)
-        try nilEncoder.encode(minZoom, forKey: .minZoom, to: &container)
-        try nilEncoder.encode(maxZoom, forKey: .maxZoom, to: &container)
+        try container.encodeIfPresent(filter, forKey: .filter)
+        try container.encodeIfPresent(source, forKey: .source)
+        try container.encodeIfPresent(sourceLayer, forKey: .sourceLayer)
+        try container.encodeIfPresent(minZoom, forKey: .minZoom)
+        try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
         <%_ for (const property of paintProperties) { -%>
-        try nilEncoder.encode(<%- camelizeWithLeadingLowercase(property.name) %>, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>, to: &paintContainer)
+        try paintContainer.encodeIfPresent(<%- camelizeWithLeadingLowercase(property.name) %>, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>)
         <%_ if (property.transition) { -%>
-        try nilEncoder.encode(<%- camelizeWithLeadingLowercase(property.name) %>Transition, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>Transition, to: &paintContainer)
+        try paintContainer.encodeIfPresent(<%- camelizeWithLeadingLowercase(property.name) %>Transition, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>Transition)
         <%_ } -%>
         <%_ } -%>
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try nilEncoder.encode(visibility, forKey: .visibility, to: &layoutContainer)
+        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
         <%_ for (const property of layoutProperties) { -%>
-        try nilEncoder.encode(<%- camelizeWithLeadingLowercase(property.name) %>, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>, to: &layoutContainer)
+        try layoutContainer.encodeIfPresent(<%- camelizeWithLeadingLowercase(property.name) %>, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>)
         <%_ if (property.transition) { -%>
-        try nilEncoder.encode(<%- camelizeWithLeadingLowercase(property.name) %>Transition, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>Transition, to: &layoutContainer)
+        try layoutContainer.encodeIfPresent(<%- camelizeWithLeadingLowercase(property.name) %>Transition, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>Transition)
         <%_ } -%>
         <%_ } -%>
     }

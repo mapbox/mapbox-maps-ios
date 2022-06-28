@@ -488,25 +488,25 @@ open class MapView: UIView {
     }
 
     @objc private func appDidBecomeActive() {
-        displayLink?.isPaused = false
+//        displayLink?.isPaused = false
     }
 
     @objc private func appWillResignActive() {
-        displayLink?.isPaused = true
+//        displayLink?.isPaused = true
     }
 
     @available(iOS 13.0, *)
     @objc private func sceneDidActivate(_ notification: Notification) {
         guard notification.object as? UIScene == window?.parentScene else { return }
 
-        displayLink?.isPaused = false
+//        displayLink?.isPaused = false
     }
 
     @available(iOS 13, *)
     @objc private func sceneWillDeactivate(_ notification: Notification) {
         guard notification.object as? UIScene == window?.parentScene else { return }
 
-        displayLink?.isPaused = true
+//        displayLink?.isPaused = true
     }
 
     @available(iOS 13, *)

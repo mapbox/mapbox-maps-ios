@@ -1,5 +1,6 @@
 import UIKit
 import MapboxMaps
+import CarPlay
 
 /**
  NOTE: This view controller should be used as a scratchpad
@@ -17,4 +18,34 @@ final class DebugViewController: UIViewController {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.insertSubview(mapView, at: 0)
     }
+
+    func zoomIn() {
+        let cameraOptions = CameraOptions(zoom: mapView.cameraState.zoom + 1)
+        mapView.camera.ease(to: cameraOptions, duration: 1)
+    }
+
+    func zoomOut() {
+        let cameraOptions = CameraOptions(zoom: mapView.cameraState.zoom - 1)
+        mapView.camera.ease(to: cameraOptions, duration: 1)
+    }
+}
+
+@available(iOS 12.0, *)
+extension DebugViewController: CPMapTemplateDelegate {
+    func mapTemplateDidBeginPanGesture(_ mapTemplate: CPMapTemplate) {
+
+    }
+
+    func mapTemplate(_ mapTemplate: CPMapTemplate, didUpdatePanGestureWithTranslation translation: CGPoint, velocity: CGPoint) {
+
+    }
+
+    func mapTemplate(_ mapTemplate: CPMapTemplate, panWith direction: CPMapTemplate.PanDirection) {
+        
+    }
+}
+
+@available(iOS 12.0, *)
+final class Foo: CPMapTemplate {
+    
 }

@@ -86,8 +86,7 @@ class GlobeFlyToExample: UIViewController, ExampleProtocol {
             target = CAMERA_START
         }
         isAtStart = !isAtStart
-        mapView.camera.fly(to: target, duration: 12) { _ in
-        }
+        mapView.camera.fly(to: target, duration: 12)
 
     }
 }

@@ -2,7 +2,8 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-## main
+## 10.7.0-beta.1 - June 29, 2022
+
 * Introduce `FillExtrusionLayer.fillExtrusionAmbientOcclusionIntensity` and `FillExtrusionLayer.fillExtrusionAmbientOcclusionRadius` properties for FillExtrusionLayer. ([1410](https://github.com/mapbox/mapbox-maps-ios/pull/1410))
 * Introduce `PointAnnotation.textLineHeight` and deprecated `PointAnnotationManager.textLineHeight`, as `text-line-height` is data-driven property now. ([1410](https://github.com/mapbox/mapbox-maps-ios/pull/1410))
 * Expose experimental shadow APIs for `Light`. ([#1409](https://github.com/mapbox/mapbox-maps-ios/pull/1409))

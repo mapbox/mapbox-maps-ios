@@ -56,7 +56,7 @@ public class SwitchStylesExample: UIViewController, ExampleProtocol {
     @objc func switchStyle(sender: UISegmentedControl) {
         guard let style = Style(rawValue: sender.selectedSegmentIndex) else { return }
 
-        mapView.mapboxMap.style.uri = style.uri
+        style = Style(rawValue: sender.selectedSegmentIndex) ?? . satelliteStreets
     }
 
     func addStyleToggle() {

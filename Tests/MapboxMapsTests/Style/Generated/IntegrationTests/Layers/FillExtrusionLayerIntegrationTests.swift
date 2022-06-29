@@ -28,6 +28,10 @@ final class FillExtrusionLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
 
+            layer.fillExtrusionAmbientOcclusionIntensity = Value<Double>.testConstantValue()
+            layer.fillExtrusionAmbientOcclusionIntensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.fillExtrusionAmbientOcclusionRadius = Value<Double>.testConstantValue()
+            layer.fillExtrusionAmbientOcclusionRadiusTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillExtrusionBase = Value<Double>.testConstantValue()
             layer.fillExtrusionBaseTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillExtrusionColor = Value<StyleColor>.testConstantValue()

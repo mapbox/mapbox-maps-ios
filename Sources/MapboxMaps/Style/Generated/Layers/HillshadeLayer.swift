@@ -21,19 +21,19 @@ public struct HillshadeLayer: Layer {
     /// The shading color used to accentuate rugged terrain like sharp cliffs and gorges.
     public var hillshadeAccentColor: Value<StyleColor>?
 
-    /// Transition options for `hillshadeAccentColor`.
+    /// Transition property for `hillshadeAccentColor`
     public var hillshadeAccentColorTransition: StyleTransition?
 
     /// Intensity of the hillshade
     public var hillshadeExaggeration: Value<Double>?
 
-    /// Transition options for `hillshadeExaggeration`.
+    /// Transition property for `hillshadeExaggeration`
     public var hillshadeExaggerationTransition: StyleTransition?
 
     /// The shading color of areas that faces towards the light source.
     public var hillshadeHighlightColor: Value<StyleColor>?
 
-    /// Transition options for `hillshadeHighlightColor`.
+    /// Transition property for `hillshadeHighlightColor`
     public var hillshadeHighlightColorTransition: StyleTransition?
 
     /// Direction of light source when map is rotated.
@@ -45,7 +45,7 @@ public struct HillshadeLayer: Layer {
     /// The shading color of areas that face away from the light source.
     public var hillshadeShadowColor: Value<StyleColor>?
 
-    /// Transition options for `hillshadeShadowColor`.
+    /// Transition property for `hillshadeShadowColor`
     public var hillshadeShadowColorTransition: StyleTransition?
 
     public init(id: String) {

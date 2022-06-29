@@ -17,7 +17,6 @@ public struct SymbolLayer: Layer {
 
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>?
-
     /// If true, the icon will be visible even if it collides with other previously drawn symbols.
     public var iconAllowOverlap: Value<Bool>?
 
@@ -81,7 +80,7 @@ public struct SymbolLayer: Layer {
     /// Part of the text placed closest to the anchor.
     public var textAnchor: Value<TextAnchor>?
 
-    /// Value to use for a text label. If a plain `string` is provided, it will be treated as a `formatted` with default/inherited formatting options.
+    /// Value to use for a text label. If a plain `string` is provided, it will be treated as a `formatted` with default/inherited formatting options. SDF images are not supported in formatted text and will be ignored.
     public var textField: Value<String>?
 
     /// Font stack to use for displaying text.
@@ -138,43 +137,42 @@ public struct SymbolLayer: Layer {
     /// To increase the chance of placing high-priority labels on the map, you can provide an array of `text-anchor` locations: the renderer will attempt to place the label at each location, in order, before moving onto the next label. Use `text-justify: auto` to choose justification based on anchor position. To apply an offset, use the `text-radial-offset` or the two-dimensional `text-offset`.
     public var textVariableAnchor: Value<[TextAnchor]>?
 
-    /// The property allows control over a symbol's orientation. Note that the property values act as a hint, so that a symbol whose language doesn’t support the provided orientation will be laid out in its natural orientation. Example: English point symbol will be rendered horizontally even if array value contains single 'vertical' enum value. The order of elements in an array define priority order for the placement of an orientation variant.
+    /// The property allows control over a symbol's orientation. Note that the property values act as a hint, so that a symbol whose language doesn’t support the provided orientation will be laid out in its natural orientation. Example: English point symbol will be rendered horizontally even if array value contains single 'vertical' enum value. For symbol with point placement, the order of elements in an array define priority order for the placement of an orientation variant. For symbol with line placement, the default text writing mode is either ['horizontal', 'vertical'] or ['vertical', 'horizontal'], the order doesn't affect the placement.
     public var textWritingMode: Value<[TextWritingMode]>?
-
-    /// The color of the icon. This can only be used with sdf icons.
+    /// The color of the icon. This can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
     public var iconColor: Value<StyleColor>?
 
-    /// Transition options for `iconColor`.
+    /// Transition property for `iconColor`
     public var iconColorTransition: StyleTransition?
 
     /// Fade out the halo towards the outside.
     public var iconHaloBlur: Value<Double>?
 
-    /// Transition options for `iconHaloBlur`.
+    /// Transition property for `iconHaloBlur`
     public var iconHaloBlurTransition: StyleTransition?
 
-    /// The color of the icon's halo. Icon halos can only be used with SDF icons.
+    /// The color of the icon's halo. Icon halos can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
     public var iconHaloColor: Value<StyleColor>?
 
-    /// Transition options for `iconHaloColor`.
+    /// Transition property for `iconHaloColor`
     public var iconHaloColorTransition: StyleTransition?
 
     /// Distance of halo to the icon outline.
     public var iconHaloWidth: Value<Double>?
 
-    /// Transition options for `iconHaloWidth`.
+    /// Transition property for `iconHaloWidth`
     public var iconHaloWidthTransition: StyleTransition?
 
     /// The opacity at which the icon will be drawn.
     public var iconOpacity: Value<Double>?
 
-    /// Transition options for `iconOpacity`.
+    /// Transition property for `iconOpacity`
     public var iconOpacityTransition: StyleTransition?
 
     /// Distance that the icon's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
     public var iconTranslate: Value<[Double]>?
 
-    /// Transition options for `iconTranslate`.
+    /// Transition property for `iconTranslate`
     public var iconTranslateTransition: StyleTransition?
 
     /// Controls the frame of reference for `icon-translate`.
@@ -183,37 +181,37 @@ public struct SymbolLayer: Layer {
     /// The color with which the text will be drawn.
     public var textColor: Value<StyleColor>?
 
-    /// Transition options for `textColor`.
+    /// Transition property for `textColor`
     public var textColorTransition: StyleTransition?
 
     /// The halo's fadeout distance towards the outside.
     public var textHaloBlur: Value<Double>?
 
-    /// Transition options for `textHaloBlur`.
+    /// Transition property for `textHaloBlur`
     public var textHaloBlurTransition: StyleTransition?
 
     /// The color of the text's halo, which helps it stand out from backgrounds.
     public var textHaloColor: Value<StyleColor>?
 
-    /// Transition options for `textHaloColor`.
+    /// Transition property for `textHaloColor`
     public var textHaloColorTransition: StyleTransition?
 
     /// Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
     public var textHaloWidth: Value<Double>?
 
-    /// Transition options for `textHaloWidth`.
+    /// Transition property for `textHaloWidth`
     public var textHaloWidthTransition: StyleTransition?
 
     /// The opacity at which the text will be drawn.
     public var textOpacity: Value<Double>?
 
-    /// Transition options for `textOpacity`.
+    /// Transition property for `textOpacity`
     public var textOpacityTransition: StyleTransition?
 
     /// Distance that the text's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
     public var textTranslate: Value<[Double]>?
 
-    /// Transition options for `textTranslate`.
+    /// Transition property for `textTranslate`
     public var textTranslateTransition: StyleTransition?
 
     /// Controls the frame of reference for `text-translate`.

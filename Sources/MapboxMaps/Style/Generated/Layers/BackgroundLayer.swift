@@ -21,19 +21,19 @@ public struct BackgroundLayer: Layer {
     /// The color with which the background will be drawn.
     public var backgroundColor: Value<StyleColor>?
 
-    /// Transition options for `backgroundColor`.
+    /// Transition property for `backgroundColor`
     public var backgroundColorTransition: StyleTransition?
 
     /// The opacity at which the background will be drawn.
     public var backgroundOpacity: Value<Double>?
 
-    /// Transition options for `backgroundOpacity`.
+    /// Transition property for `backgroundOpacity`
     public var backgroundOpacityTransition: StyleTransition?
 
     /// Name of image in sprite to use for drawing an image background. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public var backgroundPattern: Value<ResolvedImage>?
 
-    /// Transition options for `backgroundPattern`.
+    /// Transition property for `backgroundPattern`
     public var backgroundPatternTransition: StyleTransition?
 
     public init(id: String) {

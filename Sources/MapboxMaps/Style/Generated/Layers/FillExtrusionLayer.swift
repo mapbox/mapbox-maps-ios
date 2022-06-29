@@ -18,40 +18,52 @@ public struct FillExtrusionLayer: Layer {
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>?
 
+    /// Controls the intensity of ambient occlusion (AO) shading. Current AO implementation is a low-cost best-effort approach that shades area near ground and concave angles between walls. Default value 0.0 disables ambient occlusion and values around 0.3 provide the most plausible results for buildings.
+    public var fillExtrusionAmbientOcclusionIntensity: Value<Double>?
+
+    /// Transition property for `fillExtrusionAmbientOcclusionIntensity`
+    public var fillExtrusionAmbientOcclusionIntensityTransition: StyleTransition?
+
+    /// The radius of ambient occlusion (AO) shading, in meters. Current AO implementation is a low-cost best-effort approach that shades area near ground and concave angles between walls where the radius defines only vertical impact. Default value 3.0 corresponds to hight of one floor and brings the most plausible results for buildings.
+    public var fillExtrusionAmbientOcclusionRadius: Value<Double>?
+
+    /// Transition property for `fillExtrusionAmbientOcclusionRadius`
+    public var fillExtrusionAmbientOcclusionRadiusTransition: StyleTransition?
+
     /// The height with which to extrude the base of this layer. Must be less than or equal to `fill-extrusion-height`.
     public var fillExtrusionBase: Value<Double>?
 
-    /// Transition options for `fillExtrusionBase`.
+    /// Transition property for `fillExtrusionBase`
     public var fillExtrusionBaseTransition: StyleTransition?
 
     /// The base color of the extruded fill. The extrusion's surfaces will be shaded differently based on this color in combination with the root `light` settings. If this color is specified as `rgba` with an alpha component, the alpha component will be ignored; use `fill-extrusion-opacity` to set layer opacity.
     public var fillExtrusionColor: Value<StyleColor>?
 
-    /// Transition options for `fillExtrusionColor`.
+    /// Transition property for `fillExtrusionColor`
     public var fillExtrusionColorTransition: StyleTransition?
 
     /// The height with which to extrude this layer.
     public var fillExtrusionHeight: Value<Double>?
 
-    /// Transition options for `fillExtrusionHeight`.
+    /// Transition property for `fillExtrusionHeight`
     public var fillExtrusionHeightTransition: StyleTransition?
 
     /// The opacity of the entire fill extrusion layer. This is rendered on a per-layer, not per-feature, basis, and data-driven styling is not available.
     public var fillExtrusionOpacity: Value<Double>?
 
-    /// Transition options for `fillExtrusionOpacity`.
+    /// Transition property for `fillExtrusionOpacity`
     public var fillExtrusionOpacityTransition: StyleTransition?
 
     /// Name of image in sprite to use for drawing images on extruded fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public var fillExtrusionPattern: Value<ResolvedImage>?
 
-    /// Transition options for `fillExtrusionPattern`.
+    /// Transition property for `fillExtrusionPattern`
     public var fillExtrusionPatternTransition: StyleTransition?
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up (on the flat plane), respectively.
     public var fillExtrusionTranslate: Value<[Double]>?
 
-    /// Transition options for `fillExtrusionTranslate`.
+    /// Transition property for `fillExtrusionTranslate`
     public var fillExtrusionTranslateTransition: StyleTransition?
 
     /// Controls the frame of reference for `fill-extrusion-translate`.
@@ -77,6 +89,10 @@ public struct FillExtrusionLayer: Layer {
         try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
+        try paintContainer.encodeIfPresent(fillExtrusionAmbientOcclusionIntensity, forKey: .fillExtrusionAmbientOcclusionIntensity)
+        try paintContainer.encodeIfPresent(fillExtrusionAmbientOcclusionIntensityTransition, forKey: .fillExtrusionAmbientOcclusionIntensityTransition)
+        try paintContainer.encodeIfPresent(fillExtrusionAmbientOcclusionRadius, forKey: .fillExtrusionAmbientOcclusionRadius)
+        try paintContainer.encodeIfPresent(fillExtrusionAmbientOcclusionRadiusTransition, forKey: .fillExtrusionAmbientOcclusionRadiusTransition)
         try paintContainer.encodeIfPresent(fillExtrusionBase, forKey: .fillExtrusionBase)
         try paintContainer.encodeIfPresent(fillExtrusionBaseTransition, forKey: .fillExtrusionBaseTransition)
         try paintContainer.encodeIfPresent(fillExtrusionColor, forKey: .fillExtrusionColor)
@@ -107,6 +123,10 @@ public struct FillExtrusionLayer: Layer {
         maxZoom = try container.decodeIfPresent(Double.self, forKey: .maxZoom)
 
         if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
+            fillExtrusionAmbientOcclusionIntensity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionAmbientOcclusionIntensity)
+            fillExtrusionAmbientOcclusionIntensityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionAmbientOcclusionIntensityTransition)
+            fillExtrusionAmbientOcclusionRadius = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionAmbientOcclusionRadius)
+            fillExtrusionAmbientOcclusionRadiusTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionAmbientOcclusionRadiusTransition)
             fillExtrusionBase = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionBase)
             fillExtrusionBaseTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionBaseTransition)
             fillExtrusionColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .fillExtrusionColor)
@@ -145,6 +165,10 @@ public struct FillExtrusionLayer: Layer {
     }
 
     enum PaintCodingKeys: String, CodingKey {
+        case fillExtrusionAmbientOcclusionIntensity = "fill-extrusion-ambient-occlusion-intensity"
+        case fillExtrusionAmbientOcclusionIntensityTransition = "fill-extrusion-ambient-occlusion-intensity-transition"
+        case fillExtrusionAmbientOcclusionRadius = "fill-extrusion-ambient-occlusion-radius"
+        case fillExtrusionAmbientOcclusionRadiusTransition = "fill-extrusion-ambient-occlusion-radius-transition"
         case fillExtrusionBase = "fill-extrusion-base"
         case fillExtrusionBaseTransition = "fill-extrusion-base-transition"
         case fillExtrusionColor = "fill-extrusion-color"

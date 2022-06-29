@@ -17,7 +17,6 @@ public struct LocationIndicatorLayer: Layer {
 
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>?
-
     /// Name of image in sprite to use as the middle of the location indicator.
     public var bearingImage: Value<ResolvedImage>?
 
@@ -26,47 +25,46 @@ public struct LocationIndicatorLayer: Layer {
 
     /// Name of image in sprite to use as the top of the location indicator.
     public var topImage: Value<ResolvedImage>?
-
     /// The accuracy, in meters, of the position source used to retrieve the position of the location indicator.
     public var accuracyRadius: Value<Double>?
 
-    /// Transition options for `accuracyRadius`.
+    /// Transition property for `accuracyRadius`
     public var accuracyRadiusTransition: StyleTransition?
 
     /// The color for drawing the accuracy radius border. To adjust transparency, set the alpha component of the color accordingly.
     public var accuracyRadiusBorderColor: Value<StyleColor>?
 
-    /// Transition options for `accuracyRadiusBorderColor`.
+    /// Transition property for `accuracyRadiusBorderColor`
     public var accuracyRadiusBorderColorTransition: StyleTransition?
 
     /// The color for drawing the accuracy radius, as a circle. To adjust transparency, set the alpha component of the color accordingly.
     public var accuracyRadiusColor: Value<StyleColor>?
 
-    /// Transition options for `accuracyRadiusColor`.
+    /// Transition property for `accuracyRadiusColor`
     public var accuracyRadiusColorTransition: StyleTransition?
 
     /// The bearing of the location indicator.
     public var bearing: Value<Double>?
 
-    /// Transition options for `bearing`.
+    /// Transition property for `bearing`
     public var bearingTransition: StyleTransition?
 
     /// The size of the bearing image, as a scale factor applied to the size of the specified image.
     public var bearingImageSize: Value<Double>?
 
-    /// Transition options for `bearingImageSize`.
+    /// Transition property for `bearingImageSize`
     public var bearingImageSizeTransition: StyleTransition?
 
     /// The color of the circle emphasizing the indicator. To adjust transparency, set the alpha component of the color accordingly.
     public var emphasisCircleColor: Value<StyleColor>?
 
-    /// Transition options for `emphasisCircleColor`.
+    /// Transition property for `emphasisCircleColor`
     public var emphasisCircleColorTransition: StyleTransition?
 
     /// The radius, in pixel, of the circle emphasizing the indicator, drawn between the accuracy radius and the indicator shadow.
     public var emphasisCircleRadius: Value<Double>?
 
-    /// Transition options for `emphasisCircleRadius`.
+    /// Transition property for `emphasisCircleRadius`
     public var emphasisCircleRadiusTransition: StyleTransition?
 
     /// The displacement off the center of the top image and the shadow image when the pitch of the map is greater than 0. This helps producing a three-dimensional appearence.
@@ -75,7 +73,7 @@ public struct LocationIndicatorLayer: Layer {
     /// An array of [latitude, longitude, altitude] position of the location indicator.
     public var location: Value<[Double]>?
 
-    /// Transition options for `location`.
+    /// Transition property for `location`
     public var locationTransition: StyleTransition?
 
     /// The amount of the perspective compensation, between 0 and 1. A value of 1 produces a location indicator of constant width across the screen. A value of 0 makes it scale naturally according to the viewing projection.
@@ -84,13 +82,13 @@ public struct LocationIndicatorLayer: Layer {
     /// The size of the shadow image, as a scale factor applied to the size of the specified image.
     public var shadowImageSize: Value<Double>?
 
-    /// Transition options for `shadowImageSize`.
+    /// Transition property for `shadowImageSize`
     public var shadowImageSizeTransition: StyleTransition?
 
     /// The size of the top image, as a scale factor applied to the size of the specified image.
     public var topImageSize: Value<Double>?
 
-    /// Transition options for `topImageSize`.
+    /// Transition property for `topImageSize`
     public var topImageSizeTransition: StyleTransition?
 
     public init(id: String) {

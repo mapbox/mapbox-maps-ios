@@ -42,7 +42,7 @@ public struct SkyLayer: Layer {
     /// The opacity of the entire sky layer.
     public var skyOpacity: Value<Double>?
 
-    /// Transition options for `skyOpacity`.
+    /// Transition property for `skyOpacity`
     public var skyOpacityTransition: StyleTransition?
 
     /// The type of the sky

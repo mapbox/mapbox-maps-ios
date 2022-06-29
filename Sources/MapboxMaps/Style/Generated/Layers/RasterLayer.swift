@@ -21,19 +21,19 @@ public struct RasterLayer: Layer {
     /// Increase or reduce the brightness of the image. The value is the maximum brightness.
     public var rasterBrightnessMax: Value<Double>?
 
-    /// Transition options for `rasterBrightnessMax`.
+    /// Transition property for `rasterBrightnessMax`
     public var rasterBrightnessMaxTransition: StyleTransition?
 
     /// Increase or reduce the brightness of the image. The value is the minimum brightness.
     public var rasterBrightnessMin: Value<Double>?
 
-    /// Transition options for `rasterBrightnessMin`.
+    /// Transition property for `rasterBrightnessMin`
     public var rasterBrightnessMinTransition: StyleTransition?
 
     /// Increase or reduce the contrast of the image.
     public var rasterContrast: Value<Double>?
 
-    /// Transition options for `rasterContrast`.
+    /// Transition property for `rasterContrast`
     public var rasterContrastTransition: StyleTransition?
 
     /// Fade duration when a new tile is added.
@@ -42,13 +42,13 @@ public struct RasterLayer: Layer {
     /// Rotates hues around the color wheel.
     public var rasterHueRotate: Value<Double>?
 
-    /// Transition options for `rasterHueRotate`.
+    /// Transition property for `rasterHueRotate`
     public var rasterHueRotateTransition: StyleTransition?
 
     /// The opacity at which the image will be drawn.
     public var rasterOpacity: Value<Double>?
 
-    /// Transition options for `rasterOpacity`.
+    /// Transition property for `rasterOpacity`
     public var rasterOpacityTransition: StyleTransition?
 
     /// The resampling/interpolation method to use for overscaling, also known as texture magnification filter
@@ -57,7 +57,7 @@ public struct RasterLayer: Layer {
     /// Increase or reduce the saturation of the image.
     public var rasterSaturation: Value<Double>?
 
-    /// Transition options for `rasterSaturation`.
+    /// Transition property for `rasterSaturation`
     public var rasterSaturationTransition: StyleTransition?
 
     public init(id: String) {

@@ -15,6 +15,14 @@ public struct Terrain: Codable  {
 
     /// Exaggerates the elevation of the terrain by multiplying the data from the DEM with this value.
     public var exaggeration: Value<Double>?
+
+    /// Transition property for `exaggeration`
+    public var exaggerationTransition: StyleTransition?
+
+    enum CodingKeys: String, CodingKey {
+        case exaggeration = "exaggeration"
+        case exaggerationTransition = "exaggeration-transition"
+    }
 }
 
 // End of generated file.

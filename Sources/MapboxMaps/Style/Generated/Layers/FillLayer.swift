@@ -17,41 +17,39 @@ public struct FillLayer: Layer {
 
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>?
-
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public var fillSortKey: Value<Double>?
-
     /// Whether or not the fill should be antialiased.
     public var fillAntialias: Value<Bool>?
 
     /// The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
     public var fillColor: Value<StyleColor>?
 
-    /// Transition options for `fillColor`.
+    /// Transition property for `fillColor`
     public var fillColorTransition: StyleTransition?
 
     /// The opacity of the entire fill layer. In contrast to the `fill-color`, this value will also affect the 1px stroke around the fill, if the stroke is used.
     public var fillOpacity: Value<Double>?
 
-    /// Transition options for `fillOpacity`.
+    /// Transition property for `fillOpacity`
     public var fillOpacityTransition: StyleTransition?
 
     /// The outline color of the fill. Matches the value of `fill-color` if unspecified.
     public var fillOutlineColor: Value<StyleColor>?
 
-    /// Transition options for `fillOutlineColor`.
+    /// Transition property for `fillOutlineColor`
     public var fillOutlineColorTransition: StyleTransition?
 
     /// Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public var fillPattern: Value<ResolvedImage>?
 
-    /// Transition options for `fillPattern`.
+    /// Transition property for `fillPattern`
     public var fillPatternTransition: StyleTransition?
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     public var fillTranslate: Value<[Double]>?
 
-    /// Transition options for `fillTranslate`.
+    /// Transition property for `fillTranslate`
     public var fillTranslateTransition: StyleTransition?
 
     /// Controls the frame of reference for `fill-translate`.

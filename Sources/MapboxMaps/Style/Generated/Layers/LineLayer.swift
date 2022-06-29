@@ -17,7 +17,6 @@ public struct LineLayer: Layer {
 
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>?
-
     /// The display of line endings.
     public var lineCap: Value<LineCap>?
 
@@ -32,29 +31,28 @@ public struct LineLayer: Layer {
 
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public var lineSortKey: Value<Double>?
-
     /// Blur applied to the line, in pixels.
     public var lineBlur: Value<Double>?
 
-    /// Transition options for `lineBlur`.
+    /// Transition property for `lineBlur`
     public var lineBlurTransition: StyleTransition?
 
     /// The color with which the line will be drawn.
     public var lineColor: Value<StyleColor>?
 
-    /// Transition options for `lineColor`.
+    /// Transition property for `lineColor`
     public var lineColorTransition: StyleTransition?
 
     /// Specifies the lengths of the alternating dashes and gaps that form the dash pattern. The lengths are later scaled by the line width. To convert a dash length to pixels, multiply the length by the current line width. Note that GeoJSON sources with `lineMetrics: true` specified won't render dashed lines to the expected scale. Also note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public var lineDasharray: Value<[Double]>?
 
-    /// Transition options for `lineDasharray`.
+    /// Transition property for `lineDasharray`
     public var lineDasharrayTransition: StyleTransition?
 
     /// Draws a line casing outside of a line's actual path. Value indicates the width of the inner gap.
     public var lineGapWidth: Value<Double>?
 
-    /// Transition options for `lineGapWidth`.
+    /// Transition property for `lineGapWidth`
     public var lineGapWidthTransition: StyleTransition?
 
     /// Defines a gradient with which to color a line feature. Can only be used with GeoJSON sources that specify `"lineMetrics": true`.
@@ -63,25 +61,25 @@ public struct LineLayer: Layer {
     /// The line's offset. For linear features, a positive value offsets the line to the right, relative to the direction of the line, and a negative value to the left. For polygon features, a positive value results in an inset, and a negative value results in an outset.
     public var lineOffset: Value<Double>?
 
-    /// Transition options for `lineOffset`.
+    /// Transition property for `lineOffset`
     public var lineOffsetTransition: StyleTransition?
 
     /// The opacity at which the line will be drawn.
     public var lineOpacity: Value<Double>?
 
-    /// Transition options for `lineOpacity`.
+    /// Transition property for `lineOpacity`
     public var lineOpacityTransition: StyleTransition?
 
     /// Name of image in sprite to use for drawing image lines. For seamless patterns, image width must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public var linePattern: Value<ResolvedImage>?
 
-    /// Transition options for `linePattern`.
+    /// Transition property for `linePattern`
     public var linePatternTransition: StyleTransition?
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     public var lineTranslate: Value<[Double]>?
 
-    /// Transition options for `lineTranslate`.
+    /// Transition property for `lineTranslate`
     public var lineTranslateTransition: StyleTransition?
 
     /// Controls the frame of reference for `line-translate`.
@@ -93,7 +91,7 @@ public struct LineLayer: Layer {
     /// Stroke thickness.
     public var lineWidth: Value<Double>?
 
-    /// Transition options for `lineWidth`.
+    /// Transition property for `lineWidth`
     public var lineWidthTransition: StyleTransition?
 
     public init(id: String) {

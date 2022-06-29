@@ -24,19 +24,19 @@ public struct HeatmapLayer: Layer {
     /// Similar to `heatmap-weight` but controls the intensity of the heatmap globally. Primarily used for adjusting the heatmap based on zoom level.
     public var heatmapIntensity: Value<Double>?
 
-    /// Transition options for `heatmapIntensity`.
+    /// Transition property for `heatmapIntensity`
     public var heatmapIntensityTransition: StyleTransition?
 
     /// The global opacity at which the heatmap layer will be drawn.
     public var heatmapOpacity: Value<Double>?
 
-    /// Transition options for `heatmapOpacity`.
+    /// Transition property for `heatmapOpacity`
     public var heatmapOpacityTransition: StyleTransition?
 
-    /// Radius of influence of one heatmap point in pixels. Increasing the value makes the heatmap smoother, but less detailed.
+    /// Radius of influence of one heatmap point in pixels. Increasing the value makes the heatmap smoother, but less detailed. `queryRenderedFeatures` on heatmap layers will return points within this radius.
     public var heatmapRadius: Value<Double>?
 
-    /// Transition options for `heatmapRadius`.
+    /// Transition property for `heatmapRadius`
     public var heatmapRadiusTransition: StyleTransition?
 
     /// A measure of how much an individual point contributes to the heatmap. A value of 10 would be equivalent to having 10 points of weight 1 in the same spot. Especially useful when combined with clustering.

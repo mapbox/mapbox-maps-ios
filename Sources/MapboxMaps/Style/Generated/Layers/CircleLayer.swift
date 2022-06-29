@@ -17,26 +17,24 @@ public struct CircleLayer: Layer {
 
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>?
-
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public var circleSortKey: Value<Double>?
-
     /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.
     public var circleBlur: Value<Double>?
 
-    /// Transition options for `circleBlur`.
+    /// Transition property for `circleBlur`
     public var circleBlurTransition: StyleTransition?
 
     /// The fill color of the circle.
     public var circleColor: Value<StyleColor>?
 
-    /// Transition options for `circleColor`.
+    /// Transition property for `circleColor`
     public var circleColorTransition: StyleTransition?
 
     /// The opacity at which the circle will be drawn.
     public var circleOpacity: Value<Double>?
 
-    /// Transition options for `circleOpacity`.
+    /// Transition property for `circleOpacity`
     public var circleOpacityTransition: StyleTransition?
 
     /// Orientation of circle when map is pitched.
@@ -48,31 +46,31 @@ public struct CircleLayer: Layer {
     /// Circle radius.
     public var circleRadius: Value<Double>?
 
-    /// Transition options for `circleRadius`.
+    /// Transition property for `circleRadius`
     public var circleRadiusTransition: StyleTransition?
 
     /// The stroke color of the circle.
     public var circleStrokeColor: Value<StyleColor>?
 
-    /// Transition options for `circleStrokeColor`.
+    /// Transition property for `circleStrokeColor`
     public var circleStrokeColorTransition: StyleTransition?
 
     /// The opacity of the circle's stroke.
     public var circleStrokeOpacity: Value<Double>?
 
-    /// Transition options for `circleStrokeOpacity`.
+    /// Transition property for `circleStrokeOpacity`
     public var circleStrokeOpacityTransition: StyleTransition?
 
     /// The width of the circle's stroke. Strokes are placed outside of the `circle-radius`.
     public var circleStrokeWidth: Value<Double>?
 
-    /// Transition options for `circleStrokeWidth`.
+    /// Transition property for `circleStrokeWidth`
     public var circleStrokeWidthTransition: StyleTransition?
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     public var circleTranslate: Value<[Double]>?
 
-    /// Transition options for `circleTranslate`.
+    /// Transition property for `circleTranslate`
     public var circleTranslateTransition: StyleTransition?
 
     /// Controls the frame of reference for `circle-translate`.

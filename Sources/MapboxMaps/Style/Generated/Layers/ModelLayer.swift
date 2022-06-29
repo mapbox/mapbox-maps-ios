@@ -15,44 +15,42 @@ import Foundation
 
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>?
-
     /// Model to render.
     public var modelId: Value<String>?
-
     /// The tint color of the model layer. model-color-mix-intensity (defaults to 0) defines tint(mix) intensity - this means that, this color is not used unless model-color-mix-intensity gets value greater than 0.
     public var modelColor: Value<StyleColor>?
 
-    /// Transition options for `modelColor`.
+    /// Transition property for `modelColor`
     public var modelColorTransition: StyleTransition?
 
     /// Intensity of model-color (on a scale from 0 to 1) in color mix with original 3D model's colors. Higher number will present a higher model-color contribution in mix.
     public var modelColorMixIntensity: Value<Double>?
 
-    /// Transition options for `modelColorMixIntensity`.
+    /// Transition property for `modelColorMixIntensity`
     public var modelColorMixIntensityTransition: StyleTransition?
 
     /// The opacity of the model layer.
     public var modelOpacity: Value<Double>?
 
-    /// Transition options for `modelOpacity`.
+    /// Transition property for `modelOpacity`
     public var modelOpacityTransition: StyleTransition?
 
     /// The rotation of the model in euler angles [lon, lat, z].
     public var modelRotation: Value<[Double]>?
 
-    /// Transition options for `modelRotation`.
+    /// Transition property for `modelRotation`
     public var modelRotationTransition: StyleTransition?
 
     /// The scale of the model.
     public var modelScale: Value<[Double]>?
 
-    /// Transition options for `modelScale`.
+    /// Transition property for `modelScale`
     public var modelScaleTransition: StyleTransition?
 
     /// The translation of the model in meters in form of [longitudal, latitudal, altitude] offsets.
     public var modelTranslation: Value<[Double]>?
 
-    /// Transition options for `modelTranslation`.
+    /// Transition property for `modelTranslation`
     public var modelTranslationTransition: StyleTransition?
 
     /// Defines rendering behavior of model in respect to other 3D scene objects.

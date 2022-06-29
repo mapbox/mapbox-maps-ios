@@ -12,15 +12,17 @@ public class SwitchStylesExample: UIViewController, ExampleProtocol {
         var description: String {
             switch self {
             case .light:
-                return "light"
+                return "light".capitalized
             case .satelliteStreets:
-                return "s. streets"
+                return "s. streets".capitalized
             case .customUri:
-                return "custom"
+                return "custom".capitalized
             }
         }
 
-        case light, satelliteStreets, customUri
+        case light
+        case satelliteStreets
+        case customUri
 
         var uri: StyleURI {
             switch self {
@@ -54,14 +56,14 @@ public class SwitchStylesExample: UIViewController, ExampleProtocol {
     }
 
     @objc func switchStyle(sender: UISegmentedControl) {
-        guard let style = Style(rawValue: sender.selectedSegmentIndex) else { return }
+        guard var style = Style(rawValue: sender.selectedSegmentIndex) else { return }
 
         style = Style(rawValue: sender.selectedSegmentIndex) ?? . satelliteStreets
     }
 
     func addStyleToggle() {
         // Create a UISegmentedControl to toggle between map styles
-        styleToggle = UISegmentedControl(items: Style.allCases.map(\.name))
+        styleToggle = UISegmentedControl(items: Style.allCases.map(\.description))
         styleToggle.tintColor = UIColor(red: 0.976, green: 0.843, blue: 0.831, alpha: 1)
         styleToggle.backgroundColor = .white
         styleToggle.selectedSegmentIndex = Style.allCases.firstIndex(of: .satelliteStreets)!

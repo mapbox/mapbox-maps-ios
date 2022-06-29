@@ -19,15 +19,17 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         var description: String {
             switch self {
             case .light:
-                return "light"
+                return "light".capitalized
             case .satelliteStreets:
-                return "s. streets"
+                return "s. streets".capitalized
             case .customUri:
-                return "custom"
+                return "custom".capitalized
             }
         }
 
-        case light, satelliteStreets, customUri
+        case light
+        case satelliteStreets
+        case customUri
 
         var uri: StyleURI {
             switch self {
@@ -105,14 +107,14 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
     }
 
     @objc func switchStyle(sender: UISegmentedControl) {
-        guard let style = Style(rawValue: sender.selectedSegmentIndex) else { return }
+        guard var style = Style(rawValue: sender.selectedSegmentIndex) else { return }
 
-        mapView.mapboxMap.style.uri = style.uri
+        style = Style(rawValue: sender.selectedSegmentIndex) ?? . satelliteStreets
     }
 
     func addStyleToggle() {
         // Create a UISegmentedControl to toggle between map styles
-        styleToggle = UISegmentedControl(items: Style.allCases.map({ "\($0)".capitalized }))
+        styleToggle = UISegmentedControl(items: Style.allCases.map(\.description))
         styleToggle.tintColor = .white
         styleToggle.backgroundColor = .systemBlue
         styleToggle.selectedSegmentIndex = Style.allCases.firstIndex(of: .satelliteStreets)!

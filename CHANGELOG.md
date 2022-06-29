@@ -13,7 +13,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Add example for simulating a route with vanishing effects. ([#1328](https://github.com/mapbox/mapbox-maps-ios/pull/1328))
 * Expose transition properties for Atmosphere API. ([#1401](https://github.com/mapbox/mapbox-maps-ios/pull/1401))
 * Fix Atmosphere API coding keys so engine can read the new values properly. ([#1401](https://github.com/mapbox/mapbox-maps-ios/pull/1401))
-
+* Pause metal rendering earlier in app/scene life-cycle to address rendering artifacts when coming from background. ([#1402](https://github.com/mapbox/mapbox-maps-ios/pull/1402))
 
 ## 10.6.0-rc.1 - June 2, 2022
 

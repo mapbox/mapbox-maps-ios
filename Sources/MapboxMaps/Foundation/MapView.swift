@@ -445,54 +445,73 @@ open class MapView: UIView {
     private func subscribeToLifecycleNotifications() {
         if #available(iOS 13.0, *), bundle.infoDictionary?["UIApplicationSceneManifest"] != nil {
             notificationCenter.addObserver(self,
-                                           selector: #selector(sceneWillEnterForeground(_:)),
-                                           name: UIScene.willEnterForegroundNotification,
-                                           object: window?.parentScene)
-            notificationCenter.addObserver(self,
                                            selector: #selector(sceneDidEnterBackground(_:)),
                                            name: UIScene.didEnterBackgroundNotification,
                                            object: window?.parentScene)
-        } else {
             notificationCenter.addObserver(self,
-                                           selector: #selector(appWillEnterForeground),
-                                           name: UIApplication.willEnterForegroundNotification,
-                                           object: nil)
+                                           selector: #selector(sceneWillDeactivate(_:)),
+                                           name: UIScene.willDeactivateNotification,
+                                           object: window?.parentScene)
+            notificationCenter.addObserver(self,
+                                           selector: #selector(sceneDidActivate(_:)),
+                                           name: UIScene.didActivateNotification,
+                                           object: window?.parentScene)
+        } else {
             notificationCenter.addObserver(self,
                                            selector: #selector(appDidEnterBackground),
                                            name: UIApplication.didEnterBackgroundNotification,
                                            object: nil)
+            notificationCenter.addObserver(self,
+                                           selector: #selector(appDidBecomeActive),
+                                           name: UIApplication.didBecomeActiveNotification,
+                                           object: nil)
+            notificationCenter.addObserver(self,
+                                           selector: #selector(appWillResignActive),
+                                           name: UIApplication.willResignActiveNotification,
+                                           object: nil)
         }
     }
 
-    @objc private func appWillEnterForeground() {
+    @objc private func appDidEnterBackground() {
+        reduceMemoryUse()
+    }
+
+    @objc private func appDidBecomeActive() {
         displayLink?.isPaused = false
     }
 
-    @objc private func appDidEnterBackground() {
+    @objc private func appWillResignActive() {
         displayLink?.isPaused = true
-        mapboxMap.reduceMemoryUse()
-        metalView?.releaseDrawables()
     }
 
     @available(iOS 13.0, *)
-    @objc private func sceneWillEnterForeground(_ notification: Notification) {
+    @objc private func sceneDidActivate(_ notification: Notification) {
         guard notification.object as? UIScene == window?.parentScene else { return }
 
         displayLink?.isPaused = false
+    }
 
+    @available(iOS 13, *)
+    @objc private func sceneWillDeactivate(_ notification: Notification) {
+        guard notification.object as? UIScene == window?.parentScene else { return }
+
+        displayLink?.isPaused = true
     }
 
     @available(iOS 13, *)
     @objc private func sceneDidEnterBackground(_ notification: Notification) {
         guard notification.object as? UIScene == window?.parentScene else { return }
 
-        displayLink?.isPaused = true
-        mapboxMap.reduceMemoryUse()
-        metalView?.releaseDrawables()
+        reduceMemoryUse()
     }
 
     @objc private func didReceiveMemoryWarning() {
+        reduceMemoryUse()
+    }
+
+    private func reduceMemoryUse() {
         mapboxMap.reduceMemoryUse()
+        metalView?.releaseDrawables()
     }
 
     private func checkForMetalSupport() {

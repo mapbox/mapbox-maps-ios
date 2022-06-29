@@ -61,7 +61,7 @@ public class SwitchStylesExample: UIViewController, ExampleProtocol {
 
     func addStyleToggle() {
         // Create a UISegmentedControl to toggle between map styles
-        styleToggle = UISegmentedControl(items: Style.allCases.map({ "\($0)".capitalized }))
+        styleToggle = UISegmentedControl(items: Style.allCases.map(\.name))
         styleToggle.tintColor = UIColor(red: 0.976, green: 0.843, blue: 0.831, alpha: 1)
         styleToggle.backgroundColor = .white
         styleToggle.selectedSegmentIndex = Style.allCases.firstIndex(of: .satelliteStreets)!

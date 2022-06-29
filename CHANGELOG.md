@@ -3,7 +3,7 @@
 Mapbox welcomes participation and contributions from everyone.
 
 ## main
-
+* Expose experimental shadow APIs for `Light`. ([#1409](https://github.com/mapbox/mapbox-maps-ios/pull/1409))
 * Remove experimental annotation from Viewport API. ([#1392](https://github.com/mapbox/mapbox-maps-ios/pull/1392))
 * Remove deprecated `animationDuration` parameter in `FollowPuckViewportStateOptions` initializer.([#1390](https://github.com/mapbox/mapbox-maps-ios/pull/1390))
 * Deprecate existing QueryRenderedFeatures methods and add cancellable counterparts. ([#1378](https://github.com/mapbox/mapbox-maps-ios/pull/1378))

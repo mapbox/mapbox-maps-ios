@@ -8,16 +8,45 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
     internal var mapView: MapView!
     internal var cameraLocationConsumer: CameraLocationConsumer!
     internal let toggleBearingImageButton: UIButton = UIButton(frame: .zero)
+    internal var styleToggle: UISegmentedControl!
     internal var showsBearingImage: Bool = false {
         didSet {
             syncPuckAndButton()
         }
     }
+
+    enum Style: Int, CaseIterable, CustomStringConvertible {
+        var description: String {
+            switch self {
+            case .light:
+                return "light"
+            case .satelliteStreets:
+                return "s. streets"
+            case .customUri:
+                return "custom"
+            }
+        }
+
+        case light, satelliteStreets, customUri
+
+        var uri: StyleURI {
+            switch self {
+            case .light:
+                return .light
+            case .satelliteStreets:
+                return .satelliteStreets
+            case .customUri:
+                let localStyleURL = Bundle.main.url(forResource: "blueprint_style", withExtension: "json")!
+                return .init(url: localStyleURL)!
+            }
+        }
+    }
+
     override public func viewDidLoad() {
         super.viewDidLoad()
 
         // Set initial camera settings
-        let options = MapInitOptions(cameraOptions: CameraOptions(zoom: 15.0))
+        let options = MapInitOptions(cameraOptions: CameraOptions(zoom: 15.0), styleURI: .satelliteStreets)
 
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -27,6 +56,8 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
 
         // Setup and create button for toggling show bearing image
         setupToggleShowBearingImageButton()
+
+        installConstraints()
 
         cameraLocationConsumer = CameraLocationConsumer(mapView: mapView)
 
@@ -74,38 +105,32 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
     }
 
     @objc func switchStyle(sender: UISegmentedControl) {
-        switch sender.selectedSegmentIndex {
-        case 0:
-            // Set the map's style to the default Mapbox Streets style.
-            // The map's `StyleURI` can be set to default Mapbox styles: `.light`, `.dark`, `.satellite`, `.satelliteStreets`, and `.outdoors`.
-            mapView.mapboxMap.style.uri = .light
-        case 1:
-            // Set the map's style to Mapbox Satellite Streets.
-            mapView.mapboxMap.style.uri = .streets
-        case 2:
-            // Set the map's style to Mapbox Satellite Streets.
-            mapView.mapboxMap.style.uri = .dark
-        default:
-            mapView.mapboxMap.style.uri = .streets
-        }
+        guard let style = Style(rawValue: sender.selectedSegmentIndex) else { return }
+
+        mapView.mapboxMap.style.uri = style.uri
     }
 
     func addStyleToggle() {
         // Create a UISegmentedControl to toggle between map styles
-        let styleToggle = UISegmentedControl(items: ["Light", "Streets", "Dark"])
-        styleToggle.translatesAutoresizingMaskIntoConstraints = false
-        styleToggle.tintColor = UIColor(red: 0.976, green: 0.843, blue: 0.831, alpha: 1)
+        styleToggle = UISegmentedControl(items: Style.allCases.map({ "\($0)".capitalized }))
+        styleToggle.tintColor = .white
         styleToggle.backgroundColor = .systemBlue
-        styleToggle.layer.cornerRadius = 4
-        styleToggle.clipsToBounds = true
-        styleToggle.selectedSegmentIndex = 1
+        styleToggle.selectedSegmentIndex = Style.allCases.firstIndex(of: .satelliteStreets)!
         view.insertSubview(styleToggle, aboveSubview: mapView)
         styleToggle.addTarget(self, action: #selector(switchStyle(sender:)), for: .valueChanged)
+        styleToggle.translatesAutoresizingMaskIntoConstraints = false
+    }
 
+    func installConstraints() {
         // Configure autolayout constraints for the UISegmentedControl to align
         // at the bottom of the map view.
-        NSLayoutConstraint(item: styleToggle, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: mapView, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1.0, constant: 0.0).isActive = true
-        styleToggle.bottomAnchor.constraint(equalTo: mapView.bottomAnchor, constant: -60).isActive = true
+        NSLayoutConstraint.activate([
+            styleToggle.bottomAnchor.constraint(equalTo: mapView.bottomAnchor, constant: -60),
+            styleToggle.centerXAnchor.constraint(equalTo: mapView.centerXAnchor),
+            toggleBearingImageButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20.0),
+            toggleBearingImageButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20.0),
+            toggleBearingImageButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -100.0)
+        ])
     }
 }
 

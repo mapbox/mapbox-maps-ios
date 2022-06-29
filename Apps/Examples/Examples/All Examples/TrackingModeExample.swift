@@ -23,6 +23,8 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
+        addStyleToggle()
+
         // Setup and create button for toggling show bearing image
         setupToggleShowBearingImageButton()
 
@@ -68,7 +70,42 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         // Constraints
         toggleBearingImageButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20.0).isActive = true
         toggleBearingImageButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20.0).isActive = true
-        toggleBearingImageButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -100.0).isActive = true
+        toggleBearingImageButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -70.0).isActive = true
+    }
+
+    @objc func switchStyle(sender: UISegmentedControl) {
+        switch sender.selectedSegmentIndex {
+        case 0:
+            // Set the map's style to the default Mapbox Streets style.
+            // The map's `StyleURI` can be set to default Mapbox styles: `.light`, `.dark`, `.satellite`, `.satelliteStreets`, and `.outdoors`.
+            mapView.mapboxMap.style.uri = .light
+        case 1:
+            // Set the map's style to Mapbox Satellite Streets.
+            mapView.mapboxMap.style.uri = .streets
+        case 2:
+            // Set the map's style to Mapbox Satellite Streets.
+            mapView.mapboxMap.style.uri = .dark
+        default:
+            mapView.mapboxMap.style.uri = .streets
+        }
+    }
+
+    func addStyleToggle() {
+        // Create a UISegmentedControl to toggle between map styles
+        let styleToggle = UISegmentedControl(items: ["Light", "Streets", "Dark"])
+        styleToggle.translatesAutoresizingMaskIntoConstraints = false
+        styleToggle.tintColor = UIColor(red: 0.976, green: 0.843, blue: 0.831, alpha: 1)
+        styleToggle.backgroundColor = .systemBlue
+        styleToggle.layer.cornerRadius = 4
+        styleToggle.clipsToBounds = true
+        styleToggle.selectedSegmentIndex = 1
+        view.insertSubview(styleToggle, aboveSubview: mapView)
+        styleToggle.addTarget(self, action: #selector(switchStyle(sender:)), for: .valueChanged)
+
+        // Configure autolayout constraints for the UISegmentedControl to align
+        // at the bottom of the map view.
+        NSLayoutConstraint(item: styleToggle, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: mapView, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1.0, constant: 0.0).isActive = true
+        styleToggle.bottomAnchor.constraint(equalTo: mapView.bottomAnchor, constant: -60).isActive = true
     }
 }
 

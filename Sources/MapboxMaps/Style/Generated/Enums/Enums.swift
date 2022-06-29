@@ -444,13 +444,13 @@ public enum StyleProjectionName: String, Codable, CaseIterable {
 
 // MARK: TEXT_WRITING_MODE
 
-/// The property allows control over a symbol's orientation. Note that the property values act as a hint, so that a symbol whose language doesn’t support the provided orientation will be laid out in its natural orientation. Example: English point symbol will be rendered horizontally even if array value contains single 'vertical' enum value. The order of elements in an array define priority order for the placement of an orientation variant.
+/// The property allows control over a symbol's orientation. Note that the property values act as a hint, so that a symbol whose language doesn’t support the provided orientation will be laid out in its natural orientation. Example: English point symbol will be rendered horizontally even if array value contains single 'vertical' enum value. For symbol with point placement, the order of elements in an array define priority order for the placement of an orientation variant. For symbol with line placement, the default text writing mode is either ['horizontal', 'vertical'] or ['vertical', 'horizontal'], the order doesn't affect the placement.
 public enum TextWritingMode: String, Codable, CaseIterable {
 
-    /// If a text's language supports horizontal writing mode, symbols with point placement would be laid out horizontally.
+    /// If a text's language supports horizontal writing mode, symbols would be laid out horizontally.
     case horizontal = "horizontal"
 
-    /// If a text's language supports vertical writing mode, symbols with point placement would be laid out vertically.
+    /// If a text's language supports vertical writing mode, symbols would be laid out vertically.
     case vertical = "vertical"
 
 }

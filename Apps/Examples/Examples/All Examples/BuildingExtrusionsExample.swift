@@ -123,6 +123,10 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
             }
         )
 
+        layer.fillExtrusionAmbientOcclusionIntensity = .constant(0.3)
+
+        layer.fillExtrusionAmbientOcclusionRadius = .constant(3.0)
+
         try! mapView.mapboxMap.style.addLayer(layer)
     }
 

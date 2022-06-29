@@ -344,16 +344,6 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    /// Text leading value for multi-line text.
-    public var textLineHeight: Double? {
-        get {
-            return layerProperties["text-line-height"] as? Double
-        }
-        set {
-            layerProperties["text-line-height"] = newValue
-        }
-    }
-
     /// Maximum angle change between adjacent characters.
     public var textMaxAngle: Double? {
         get {
@@ -414,7 +404,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    /// The property allows control over a symbol's orientation. Note that the property values act as a hint, so that a symbol whose language doesn’t support the provided orientation will be laid out in its natural orientation. Example: English point symbol will be rendered horizontally even if array value contains single 'vertical' enum value. The order of elements in an array define priority order for the placement of an orientation variant.
+    /// The property allows control over a symbol's orientation. Note that the property values act as a hint, so that a symbol whose language doesn’t support the provided orientation will be laid out in its natural orientation. Example: English point symbol will be rendered horizontally even if array value contains single 'vertical' enum value. For symbol with point placement, the order of elements in an array define priority order for the placement of an orientation variant. For symbol with line placement, the default text writing mode is either ['horizontal', 'vertical'] or ['vertical', 'horizontal'], the order doesn't affect the placement.
     public var textWritingMode: [TextWritingMode]? {
         get {
             return layerProperties["text-writing-mode"].flatMap { $0 as? [String] }.flatMap { $0.compactMap(TextWritingMode.init(rawValue:)) }
@@ -461,6 +451,17 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
         set {
             layerProperties["text-translate-anchor"] = newValue?.rawValue
+        }
+    }
+
+    /// Text leading value for multi-line text.
+    @available(*, deprecated, message: "text-line-height property is now data driven, use `PointAnnotation.textLineHeight` instead.")
+    public var textLineHeight: Double? {
+        get {
+            return layerProperties["text-line-height"] as? Double
+        }
+        set {
+            layerProperties["text-line-height"] = newValue
         }
     }
 

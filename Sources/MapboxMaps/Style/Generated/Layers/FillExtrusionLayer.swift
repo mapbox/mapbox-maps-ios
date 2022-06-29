@@ -18,6 +18,18 @@ public struct FillExtrusionLayer: Layer {
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>?
 
+    /// Controls the intensity of ambient occlusion (AO) shading. Current AO implementation is a low-cost best-effort approach that shades area near ground and concave angles between walls. Default value 0.0 disables ambient occlusion and values around 0.3 provide the most plausible results for buildings.
+    public var fillExtrusionAmbientOcclusionIntensity: Value<Double>?
+
+    /// Transition options for `fillExtrusionAmbientOcclusionIntensity`.
+    public var fillExtrusionAmbientOcclusionIntensityTransition: StyleTransition?
+
+    /// The radius of ambient occlusion (AO) shading, in meters. Current AO implementation is a low-cost best-effort approach that shades area near ground and concave angles between walls where the radius defines only vertical impact. Default value 3.0 corresponds to hight of one floor and brings the most plausible results for buildings.
+    public var fillExtrusionAmbientOcclusionRadius: Value<Double>?
+
+    /// Transition options for `fillExtrusionAmbientOcclusionRadius`.
+    public var fillExtrusionAmbientOcclusionRadiusTransition: StyleTransition?
+
     /// The height with which to extrude the base of this layer. Must be less than or equal to `fill-extrusion-height`.
     public var fillExtrusionBase: Value<Double>?
 
@@ -77,6 +89,10 @@ public struct FillExtrusionLayer: Layer {
         try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
+        try paintContainer.encodeIfPresent(fillExtrusionAmbientOcclusionIntensity, forKey: .fillExtrusionAmbientOcclusionIntensity)
+        try paintContainer.encodeIfPresent(fillExtrusionAmbientOcclusionIntensityTransition, forKey: .fillExtrusionAmbientOcclusionIntensityTransition)
+        try paintContainer.encodeIfPresent(fillExtrusionAmbientOcclusionRadius, forKey: .fillExtrusionAmbientOcclusionRadius)
+        try paintContainer.encodeIfPresent(fillExtrusionAmbientOcclusionRadiusTransition, forKey: .fillExtrusionAmbientOcclusionRadiusTransition)
         try paintContainer.encodeIfPresent(fillExtrusionBase, forKey: .fillExtrusionBase)
         try paintContainer.encodeIfPresent(fillExtrusionBaseTransition, forKey: .fillExtrusionBaseTransition)
         try paintContainer.encodeIfPresent(fillExtrusionColor, forKey: .fillExtrusionColor)
@@ -107,6 +123,10 @@ public struct FillExtrusionLayer: Layer {
         maxZoom = try container.decodeIfPresent(Double.self, forKey: .maxZoom)
 
         if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
+            fillExtrusionAmbientOcclusionIntensity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionAmbientOcclusionIntensity)
+            fillExtrusionAmbientOcclusionIntensityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionAmbientOcclusionIntensityTransition)
+            fillExtrusionAmbientOcclusionRadius = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionAmbientOcclusionRadius)
+            fillExtrusionAmbientOcclusionRadiusTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionAmbientOcclusionRadiusTransition)
             fillExtrusionBase = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionBase)
             fillExtrusionBaseTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionBaseTransition)
             fillExtrusionColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .fillExtrusionColor)
@@ -145,6 +165,10 @@ public struct FillExtrusionLayer: Layer {
     }
 
     enum PaintCodingKeys: String, CodingKey {
+        case fillExtrusionAmbientOcclusionIntensity = "fill-extrusion-ambient-occlusion-intensity"
+        case fillExtrusionAmbientOcclusionIntensityTransition = "fill-extrusion-ambient-occlusion-intensity-transition"
+        case fillExtrusionAmbientOcclusionRadius = "fill-extrusion-ambient-occlusion-radius"
+        case fillExtrusionAmbientOcclusionRadiusTransition = "fill-extrusion-ambient-occlusion-radius-transition"
         case fillExtrusionBase = "fill-extrusion-base"
         case fillExtrusionBaseTransition = "fill-extrusion-base-transition"
         case fillExtrusionColor = "fill-extrusion-color"

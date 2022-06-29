@@ -33,7 +33,7 @@ public struct HeatmapLayer: Layer {
     /// Transition options for `heatmapOpacity`.
     public var heatmapOpacityTransition: StyleTransition?
 
-    /// Radius of influence of one heatmap point in pixels. Increasing the value makes the heatmap smoother, but less detailed.
+    /// Radius of influence of one heatmap point in pixels. Increasing the value makes the heatmap smoother, but less detailed. `queryRenderedFeatures` on heatmap layers will return points within this radius.
     public var heatmapRadius: Value<Double>?
 
     /// Transition options for `heatmapRadius`.

@@ -505,32 +505,6 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(layer.textKeepUpright, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-keep-upright").value as! NSNumber).boolValue))
     }
 
-    func testTextLineHeight() throws {
-        // Test that the setter and getter work
-        let value = Double.random(in: -100000...100000)
-        manager.textLineHeight = value
-        XCTAssertEqual(manager.textLineHeight, value)
-
-        // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
-        var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        if case .constant(let actualValue) = layer.textLineHeight {
-            XCTAssertEqual(actualValue, value, accuracy: 0.1)
-        } else {
-            XCTFail("Expected constant")
-        }
-
-        // Test that the property can be reset to nil
-        manager.textLineHeight = nil
-        XCTAssertNil(manager.textLineHeight)
-
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
-        layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textLineHeight, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-line-height").value as! NSNumber).doubleValue))
-    }
-
     func testTextMaxAngle() throws {
         // Test that the setter and getter work
         let value = Double.random(in: -100000...100000)
@@ -1185,6 +1159,42 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.syncSourceAndLayerIfNeeded()
         layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
         XCTAssertEqual(layer.textLetterSpacing, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-letter-spacing").value as! NSNumber).doubleValue))
+    }
+
+    func testTextLineHeight() throws {
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        // Test that the setter and getter work
+        let value = Double.random(in: -100000...100000)
+        annotation.textLineHeight = value
+        XCTAssertEqual(annotation.textLineHeight, value)
+
+        manager.annotations = [annotation]
+
+        // Test that the value is synced to the layer
+        manager.syncSourceAndLayerIfNeeded()
+        var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        XCTAssertEqual(layer.textLineHeight, .expression(Exp(.number) {
+                Exp(.get) {
+                    "text-line-height"
+                    Exp(.objectExpression) {
+                        Exp(.get) {
+                            "layerProperties"
+                        }
+                    }
+                }
+            }))
+
+        // Test that the property can be reset to nil
+        annotation.textLineHeight = nil
+        XCTAssertNil(annotation.textLineHeight)
+
+        manager.annotations = [annotation]
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.syncSourceAndLayerIfNeeded()
+        layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        XCTAssertEqual(layer.textLineHeight, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-line-height").value as! NSNumber).doubleValue))
     }
 
     func testTextMaxWidth() throws {

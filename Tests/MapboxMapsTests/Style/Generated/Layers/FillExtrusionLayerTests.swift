@@ -80,6 +80,10 @@ final class FillExtrusionLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfPaintProperties() {
        var layer = FillExtrusionLayer(id: "test-id")
+       layer.fillExtrusionAmbientOcclusionIntensity = Value<Double>.testConstantValue()
+       layer.fillExtrusionAmbientOcclusionIntensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.fillExtrusionAmbientOcclusionRadius = Value<Double>.testConstantValue()
+       layer.fillExtrusionAmbientOcclusionRadiusTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.fillExtrusionBase = Value<Double>.testConstantValue()
        layer.fillExtrusionBaseTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.fillExtrusionColor = Value<StyleColor>.testConstantValue()
@@ -110,6 +114,8 @@ final class FillExtrusionLayerTests: XCTestCase {
        do {
            let decodedLayer = try JSONDecoder().decode(FillExtrusionLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
+           XCTAssert(layer.fillExtrusionAmbientOcclusionIntensity == Value<Double>.testConstantValue())
+           XCTAssert(layer.fillExtrusionAmbientOcclusionRadius == Value<Double>.testConstantValue())
            XCTAssert(layer.fillExtrusionBase == Value<Double>.testConstantValue())
            XCTAssert(layer.fillExtrusionColor == Value<StyleColor>.testConstantValue())
            XCTAssert(layer.fillExtrusionHeight == Value<Double>.testConstantValue())

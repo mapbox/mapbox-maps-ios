@@ -38,10 +38,6 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
             }
         }
 
-        case light
-        case satelliteStreets
-        case customUri
-
         var uri: StyleURI {
             switch self {
             case .light:
@@ -53,6 +49,10 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
                 return .init(url: localStyleURL)!
             }
         }
+
+        case light
+        case satelliteStreets
+        case customUri
     }
 
     override public func viewDidLoad() {
@@ -118,9 +118,9 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
     }
 
     @objc func switchStyle(sender: UISegmentedControl) {
-        guard var style = Style(rawValue: sender.selectedSegmentIndex) else { return }
+        guard let style = Style(rawValue: sender.selectedSegmentIndex) else { return }
 
-        style = Style(rawValue: sender.selectedSegmentIndex) ?? . satelliteStreets
+        mapView.mapboxMap.style.uri = style.uri
     }
 
     func addStyleToggle() {

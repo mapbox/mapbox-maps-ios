@@ -37,8 +37,13 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
             // Note that the location manager holds weak references to consumers, which should be retained
             self.mapView.location.addLocationConsumer(newConsumer: self.cameraLocationConsumer)
 
-            self.finish() // Needed for internal testing purposes.
         }
+    }
+
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        // The below line is used for internal testing purposes only.
+        finish()
     }
 
     @objc func showHideBearingImage() {

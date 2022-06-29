@@ -24,7 +24,7 @@ sed -i '' -E "s/(.*MapboxCoreMaps.*exact).*/\1\(\"$CORE_MAPS_VERSION\"\)\),/"  P
 sed -i '' -E "s/(.*MapboxCommon.*exact).*/\1\(\"$COMMON_VERSION\"\)\),/"  Package.swift
 
 info "Resolve SPM dependencies"
-xcodebuild -resolvePackageDependencies
+swift package update
 xcodebuild -resolvePackageDependencies -workspace Apps/Apps.xcworkspace -scheme MapboxMaps
 
 finish "Updated dependency versions"

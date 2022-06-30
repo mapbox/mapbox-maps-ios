@@ -8,10 +8,7 @@ final class EmptyPinchBehaviorTests: BasePinchBehaviorTests {
     }
 
     func testUpdate() {
-        behavior.update(
-            pinchMidpoint: .random(),
-            pinchScale: .random(in: 0..<2),
-            pinchAngle: .random(in: 0..<2 * .pi))
+        behavior.update(pinchMidpoint: .random(), pinchScale: .random(in: 0..<2))
 
         XCTAssertTrue(mapboxMap.setCameraStub.invocations.isEmpty)
     }

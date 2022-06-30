@@ -20,7 +20,7 @@ public final class GestureManager: GestureHandlerDelegate {
         set {
             panGestureRecognizer.isEnabled = newValue.panEnabled
             pinchGestureRecognizer.isEnabled = newValue.pinchEnabled
-            rotateGestureHandler.rotateEnabled = newValue.rotateEnabled || newValue.pinchRotateEnabled
+            rotateGestureHandler.rotateEnabled = newValue.rotateEnabled
             pinchGestureHandler.zoomEnabled = newValue.pinchZoomEnabled
             pinchGestureHandler.panEnabled = newValue.pinchPanEnabled
             pinchGestureHandler.simultaneousRotateAndPinchZoomEnabled = newValue.simultaneousRotateAndPinchZoomEnabled
@@ -40,7 +40,6 @@ public final class GestureManager: GestureHandlerDelegate {
             gestureOptions.panEnabled = panGestureRecognizer.isEnabled
             gestureOptions.pinchEnabled = pinchGestureRecognizer.isEnabled
             gestureOptions.rotateEnabled = rotateGestureHandler.rotateEnabled
-            gestureOptions.pinchRotateEnabled = rotateGestureHandler.rotateEnabled
             gestureOptions.pinchZoomEnabled = pinchGestureHandler.zoomEnabled
             gestureOptions.pinchPanEnabled = pinchGestureHandler.panEnabled
             gestureOptions.simultaneousRotateAndPinchZoomEnabled = pinchGestureHandler.simultaneousRotateAndPinchZoomEnabled
@@ -107,7 +106,7 @@ public final class GestureManager: GestureHandlerDelegate {
 
     private let panGestureHandler: PanGestureHandlerProtocol
     private let pinchGestureHandler: PinchGestureHandlerProtocol
-    private let rotateGestureHandler: RotateGestureHandler
+    private let rotateGestureHandler: RotateGestureHandlerProtocol
     private let pitchGestureHandler: GestureHandler
     private let doubleTapToZoomInGestureHandler: FocusableGestureHandlerProtocol
     private let doubleTouchToZoomOutGestureHandler: FocusableGestureHandlerProtocol
@@ -118,7 +117,7 @@ public final class GestureManager: GestureHandlerDelegate {
 
     internal init(panGestureHandler: PanGestureHandlerProtocol,
                   pinchGestureHandler: PinchGestureHandlerProtocol,
-                  rotateGestureHandler: RotateGestureHandler,
+                  rotateGestureHandler: RotateGestureHandlerProtocol,
                   pitchGestureHandler: GestureHandler,
                   doubleTapToZoomInGestureHandler: FocusableGestureHandlerProtocol,
                   doubleTouchToZoomOutGestureHandler: FocusableGestureHandlerProtocol,

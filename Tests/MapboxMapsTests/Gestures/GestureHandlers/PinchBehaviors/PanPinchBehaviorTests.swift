@@ -15,10 +15,7 @@ final class PanPinchBehaviorTests: BasePinchBehaviorTests {
         let dragCameraOptions = CameraOptions.random()
         mapboxMap.dragCameraOptionsStub.defaultReturnValue = dragCameraOptions
 
-        behavior.update(
-            pinchMidpoint: pinchMidpoint,
-            pinchScale: .random(in: 0..<2),
-            pinchAngle: .random(in: 0..<2 * .pi))
+        behavior.update(pinchMidpoint: pinchMidpoint, pinchScale: .random(in: 0..<2))
 
         // verify camera gets set twice
         guard mapboxMap.setCameraStub.invocations.count == 2 else {

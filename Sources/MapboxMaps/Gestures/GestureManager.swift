@@ -20,7 +20,7 @@ public final class GestureManager: GestureHandlerDelegate {
         set {
             panGestureRecognizer.isEnabled = newValue.panEnabled
             pinchGestureRecognizer.isEnabled = newValue.pinchEnabled
-            pinchGestureHandler.rotateEnabled = newValue.pinchRotateEnabled
+            rotateGestureHandler.rotateEnabled = newValue.rotateEnabled || newValue.pinchRotateEnabled
             pinchGestureHandler.zoomEnabled = newValue.pinchZoomEnabled
             pinchGestureHandler.panEnabled = newValue.pinchPanEnabled
             pinchGestureHandler.simultaneousRotateAndPinchZoomEnabled = newValue.simultaneousRotateAndPinchZoomEnabled
@@ -39,7 +39,8 @@ public final class GestureManager: GestureHandlerDelegate {
             var gestureOptions = GestureOptions()
             gestureOptions.panEnabled = panGestureRecognizer.isEnabled
             gestureOptions.pinchEnabled = pinchGestureRecognizer.isEnabled
-            gestureOptions.pinchRotateEnabled = pinchGestureHandler.rotateEnabled
+            gestureOptions.rotateEnabled = rotateGestureHandler.rotateEnabled
+            gestureOptions.pinchRotateEnabled = rotateGestureHandler.rotateEnabled
             gestureOptions.pinchZoomEnabled = pinchGestureHandler.zoomEnabled
             gestureOptions.pinchPanEnabled = pinchGestureHandler.panEnabled
             gestureOptions.simultaneousRotateAndPinchZoomEnabled = pinchGestureHandler.simultaneousRotateAndPinchZoomEnabled

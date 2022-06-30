@@ -7,7 +7,7 @@ final class MockPinchBehavior: PinchBehavior {
         var pinchAngle: CGFloat
     }
     let updateStub = Stub<UpdateParams, Void>()
-    func update(pinchMidpoint: CGPoint, pinchScale: CGFloat, pinchAngle: CGFloat) {
+    func update(pinchMidpoint: CGPoint, pinchScale: CGFloat) {
         updateStub.call(with: .init(
             pinchMidpoint: pinchMidpoint,
             pinchScale: pinchScale,

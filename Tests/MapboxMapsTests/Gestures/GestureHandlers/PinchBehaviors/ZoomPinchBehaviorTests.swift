@@ -37,9 +37,7 @@ final class ZoomPinchBehaviorTests: BasePinchBehaviorTests {
             focalPoint: focalPoint,
             mapboxMap: mapboxMap)
 
-        behavior.update(pinchMidpoint: .random(),
-                        pinchScale: .random(in: 1...10),
-                        pinchAngle: .random(in: 0..<2 * .pi))
+        behavior.update(pinchMidpoint: .random(), pinchScale: .random(in: 1...10))
 
         XCTAssertEqual(mapboxMap.setCameraStub.invocations.first?.parameters.anchor, focalPoint)
     }

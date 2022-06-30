@@ -3,6 +3,9 @@ import CoreLocation
 
  /// `RotateGestureHandler` updates the map camera in response to 2-touch rotate gestures
  internal final class RotateGestureHandler: GestureHandler {
+     /// Whether pinch gesture can rotate map or not
+     internal var rotateEnabled: Bool = true
+
      private let mapboxMap: MapboxMapProtocol
 
      private var initialBearing: CLLocationDirection?

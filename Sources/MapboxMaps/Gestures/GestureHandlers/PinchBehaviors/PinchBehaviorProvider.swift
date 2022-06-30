@@ -5,11 +5,9 @@ internal protocol PinchBehaviorProviderProtocol: AnyObject {
     // swiftlint:disable:next function_parameter_count
     func makePinchBehavior(panEnabled: Bool,
                            zoomEnabled: Bool,
-                           rotateEnabled: Bool,
                            simultaneousRotateAndPinchZoomEnabled: Bool,
                            initialCameraState: CameraState,
                            initialPinchMidpoint: CGPoint,
-                           initialPinchAngle: CGFloat,
                            focalPoint: CGPoint?) -> PinchBehavior
 }
 
@@ -24,57 +22,28 @@ internal final class PinchBehaviorProvider: PinchBehaviorProviderProtocol {
     // swiftlint:disable:next function_parameter_count
     internal func makePinchBehavior(panEnabled: Bool,
                                     zoomEnabled: Bool,
-                                    rotateEnabled: Bool,
                                     simultaneousRotateAndPinchZoomEnabled: Bool,
                                     initialCameraState: CameraState,
                                     initialPinchMidpoint: CGPoint,
-                                    initialPinchAngle: CGFloat,
                                     focalPoint: CGPoint?) -> PinchBehavior {
-        switch (panEnabled, zoomEnabled, rotateEnabled) {
-        case (true, true, true):
-            return PanZoomRotatePinchBehavior(
-                initialCameraState: initialCameraState,
-                initialPinchMidpoint: initialPinchMidpoint,
-                initialPinchAngle: initialPinchAngle,
-                simultaneousRotateAndPinchZoomEnabled: simultaneousRotateAndPinchZoomEnabled,
-                mapboxMap: mapboxMap)
-        case (true, true, false):
+        switch (panEnabled, zoomEnabled) {
+        case (true, true):
             return PanZoomPinchBehavior(
                 initialCameraState: initialCameraState,
                 initialPinchMidpoint: initialPinchMidpoint,
                 mapboxMap: mapboxMap)
-        case (true, false, true):
-            return PanRotatePinchBehavior(
-                initialCameraState: initialCameraState,
-                initialPinchMidpoint: initialPinchMidpoint,
-                initialPinchAngle: initialPinchAngle,
-                mapboxMap: mapboxMap)
-        case (true, false, false):
+        case (true, false):
             return PanPinchBehavior(
                 initialCameraState: initialCameraState,
                 initialPinchMidpoint: initialPinchMidpoint,
                 mapboxMap: mapboxMap)
-        case (false, true, true):
-            return ZoomRotatePinchBehavior(
-                initialCameraState: initialCameraState,
-                initialPinchMidpoint: initialPinchMidpoint,
-                initialPinchAngle: initialPinchAngle,
-                focalPoint: focalPoint,
-                mapboxMap: mapboxMap)
-        case (false, true, false):
+        case (false, true):
             return ZoomPinchBehavior(
                 initialCameraState: initialCameraState,
                 initialPinchMidpoint: initialPinchMidpoint,
                 focalPoint: focalPoint,
                 mapboxMap: mapboxMap)
-        case (false, false, true):
-            return RotatePinchBehavior(
-                initialCameraState: initialCameraState,
-                initialPinchMidpoint: initialPinchMidpoint,
-                initialPinchAngle: initialPinchAngle,
-                focalPoint: focalPoint,
-                mapboxMap: mapboxMap)
-        case (false, false, false):
+        case (false, false):
             return EmptyPinchBehavior()
         }
     }

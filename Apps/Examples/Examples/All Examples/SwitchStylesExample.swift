@@ -7,6 +7,11 @@ public class SwitchStylesExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
     internal var styleToggle: UISegmentedControl!
+    internal var style: Style! {
+        didSet {
+            mapView.mapboxMap.style.uri = style.uri
+        }
+    }
 
     enum Style: Int, CaseIterable, CustomStringConvertible {
         var description: String {
@@ -67,9 +72,7 @@ public class SwitchStylesExample: UIViewController, ExampleProtocol {
     }
 
     @objc func switchStyle(sender: UISegmentedControl) {
-        guard let style = Style(rawValue: sender.selectedSegmentIndex) else { return }
-
-        mapView.mapboxMap.style.uri = style.uri
+        style = Style(rawValue: sender.selectedSegmentIndex) ?? . satelliteStreets
     }
 
     func addStyleToggle() {

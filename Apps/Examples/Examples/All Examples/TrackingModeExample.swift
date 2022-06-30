@@ -9,6 +9,11 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
     internal var cameraLocationConsumer: CameraLocationConsumer!
     internal let toggleBearingImageButton: UIButton = UIButton(frame: .zero)
     internal var styleToggle: UISegmentedControl!
+    internal var style: Style! {
+        didSet {
+            mapView.mapboxMap.style.uri = style.uri
+        }
+    }
     internal var showsBearingImage: Bool = false {
         didSet {
             syncPuckAndButton()
@@ -118,9 +123,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
     }
 
     @objc func switchStyle(sender: UISegmentedControl) {
-        guard let style = Style(rawValue: sender.selectedSegmentIndex) else { return }
-
-        mapView.mapboxMap.style.uri = style.uri
+        style = Style(rawValue: sender.selectedSegmentIndex) ?? . satelliteStreets
     }
 
     func addStyleToggle() {

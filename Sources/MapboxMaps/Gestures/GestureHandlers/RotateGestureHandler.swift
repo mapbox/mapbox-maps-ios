@@ -1,67 +1,76 @@
 import UIKit
+import CoreLocation
 
  /// `RotateGestureHandler` updates the map camera in response to 2-touch rotate gestures
- internal final class RotateGestureHandler: GestureHandler, UIGestureRecognizerDelegate {
-
-     private var initialBearing: Double?
-
+ internal final class RotateGestureHandler: GestureHandler {
      private let mapboxMap: MapboxMapProtocol
 
-     internal init(gestureRecognizer: UIRotationGestureRecognizer,
-                   mapboxMap: MapboxMapProtocol) {
+     private var initialBearing: CLLocationDirection?
+     private var isMapRotating = false
+     private var discardedRotationAngle: CGFloat = 0
+
+     internal init(gestureRecognizer: UIRotationGestureRecognizer, mapboxMap: MapboxMapProtocol) {
          self.mapboxMap = mapboxMap
+         self.initialBearing = mapboxMap.cameraState.bearing
          super.init(gestureRecognizer: gestureRecognizer)
          gestureRecognizer.delegate = self
          gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
-     }
-
-     internal func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
-                                     shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-         return self.gestureRecognizer === gestureRecognizer && otherGestureRecognizer is UIPinchGestureRecognizer
-     }
-
-     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-         let recognizer = (gestureRecognizer as! UIRotationGestureRecognizer)
-         let speed = recognizer.velocity
-         let rotation = recognizer.rotation.toDegrees()
-         let deltaSinceStart = 0
-         print("rrr velocity: \(speed), rotation: \(rotation)")
-//         if (speed < 0.04 ||
-//             speed > 0.07 && deltaSinceStart < 5 ||
-//             speed > 0.15 && deltaSinceStart < 7 ||
-//             speed > 0.5 && deltaSinceStart < 15) {
-//             return false
-//         }
-
-         return true
      }
 
      @objc private func handleGesture(_ gestureRecognizer: UIRotationGestureRecognizer) {
          guard let view = gestureRecognizer.view else {
              return
          }
-         switch gestureRecognizer.state {
-         case .began:
-//             cameraAnimationsManager.cancelAnimations()
-//             delegate?.gestureBegan(for: .rotate)
-             initialBearing = mapboxMap.cameraState.bearing
-         case .changed:
+         switch (gestureRecognizer.state, isMapRotating) {
+         case (.changed, false):
+             guard shouldStartRotating(with: gestureRecognizer.velocity, deltaSinceStart: discardedRotationAngle) else {
+                 discardedRotationAngle += abs(gestureRecognizer.rotation)
+                 gestureRecognizer.rotation = 0
+                 return
+             }
+
+             isMapRotating = true
+             self.initialBearing = mapboxMap.cameraState.bearing
+         case (.changed, true):
              guard let initialBearing = initialBearing else {
                  return
              }
-             let rotationInDegrees = Double(gestureRecognizer.rotation * 180.0 / .pi * -1)
-             print("rrr changed velocity: \(gestureRecognizer.velocity), rotation: \(rotationInDegrees)")
-//             cameraAnimationsManager.cancelAnimations()
+             let rotationInDegrees = gestureRecognizer.rotation.toDegrees() * -1
              let midpoint = gestureRecognizer.location(in: view)
+
              mapboxMap.setCamera(
                  to: CameraOptions(
                     anchor: midpoint,
                     bearing: (initialBearing + rotationInDegrees).truncatingRemainder(dividingBy: 360.0))
              )
-         case .ended, .cancelled:
-             initialBearing = nil
+         case (.ended, _):
+             fallthrough
+         case (.cancelled, _):
+             isMapRotating = false
+             discardedRotationAngle = 0
+             initialBearing = 0
          default:
              break
          }
      }
+
+     private func shouldStartRotating(with velocity: CGFloat, deltaSinceStart: CGFloat) -> Bool {
+         let deltaSinceStartInDegrees = deltaSinceStart.toDegrees()
+         let velocityInDegreesPerMillisecond = abs(velocity) * 0.057295779513082
+
+         let lowVelocity = velocityInDegreesPerMillisecond < 0.04 ||
+         velocityInDegreesPerMillisecond > 0.07 && deltaSinceStartInDegrees < 5 ||
+         velocityInDegreesPerMillisecond > 0.15 && deltaSinceStartInDegrees < 7 ||
+         velocityInDegreesPerMillisecond > 0.5 && deltaSinceStartInDegrees < 15
+         let notEnoughRotation = deltaSinceStartInDegrees < 3
+
+         return !lowVelocity && !notEnoughRotation
+     }
  }
+
+extension RotateGestureHandler: UIGestureRecognizerDelegate {
+    internal func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                                    shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return self.gestureRecognizer === gestureRecognizer && otherGestureRecognizer is UIPinchGestureRecognizer
+    }
+}

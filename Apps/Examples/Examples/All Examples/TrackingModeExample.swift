@@ -11,7 +11,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
     internal var styleToggle: UISegmentedControl!
     internal var style: Style! {
         didSet {
-            mapView.mapboxMap.style.uri = style.uri
+            mapView.mapboxMap.style.uri = style.uri ?? .satelliteStreets
         }
     }
     internal var showsBearingImage: Bool = false {
@@ -131,7 +131,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         styleToggle = UISegmentedControl(items: Style.allCases.map(\.name))
         styleToggle.tintColor = .white
         styleToggle.backgroundColor = .systemBlue
-        styleToggle.selectedSegmentIndex = Style.satelliteStreets.rawValue
+        styleToggle.selectedSegmentIndex = style.rawValue
         view.insertSubview(styleToggle, aboveSubview: mapView)
         styleToggle.addTarget(self, action: #selector(switchStyle(sender:)), for: .valueChanged)
         styleToggle.translatesAutoresizingMaskIntoConstraints = false

@@ -14,10 +14,7 @@ final class ZoomPinchBehaviorTests: BasePinchBehaviorTests {
     func testUpdate() {
         let pinchScale = CGFloat.random(in: 0.1..<10)
 
-        behavior.update(
-            pinchMidpoint: .random(),
-            pinchScale: pinchScale,
-            pinchAngle: .random(in: 0..<2 * .pi))
+        behavior.update(pinchMidpoint: .random(), pinchScale: pinchScale)
 
         XCTAssertEqual(
             mapboxMap.setCameraStub.invocations.map(\.parameters),

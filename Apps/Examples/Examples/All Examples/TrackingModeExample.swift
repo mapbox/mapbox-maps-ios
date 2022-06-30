@@ -9,9 +9,9 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
     internal var cameraLocationConsumer: CameraLocationConsumer!
     internal let toggleBearingImageButton: UIButton = UIButton(frame: .zero)
     internal var styleToggle: UISegmentedControl!
-    internal var style: Style! {
+    internal var style: Style! = .satelliteStreets {
         didSet {
-            mapView.mapboxMap.style.uri = style.uri ?? .satelliteStreets
+            mapView.mapboxMap.style.uri = style.uri
         }
     }
     internal var showsBearingImage: Bool = false {

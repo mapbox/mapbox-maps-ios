@@ -7,9 +7,9 @@ public class SwitchStylesExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
     internal var styleToggle: UISegmentedControl!
-    internal var style: Style! {
+    internal var style: Style! = .satelliteStreets {
         didSet {
-            mapView.mapboxMap.style.uri = style.uri ?? .satelliteStreets
+            mapView.mapboxMap.style.uri = style.uri
         }
     }
 

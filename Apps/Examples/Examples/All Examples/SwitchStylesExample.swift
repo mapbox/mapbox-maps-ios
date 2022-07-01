@@ -7,23 +7,13 @@ public class SwitchStylesExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
     internal var styleToggle: UISegmentedControl!
-    internal var style: Style! = .satelliteStreets {
+    internal var style: Style = .satelliteStreets {
         didSet {
             mapView.mapboxMap.style.uri = style.uri
         }
     }
 
-    enum Style: Int, CaseIterable, CustomStringConvertible {
-        var description: String {
-            switch self {
-            case .light:
-                return "light".capitalized
-            case .satelliteStreets:
-                return "s. streets".capitalized
-            case .customUri:
-                return "custom".capitalized
-            }
-        }
+    enum Style: Int, CaseIterable {
 
         var name: String {
             switch self {
@@ -58,10 +48,9 @@ public class SwitchStylesExample: UIViewController, ExampleProtocol {
 
         // Initialize a map centered near El Ejido, Spain and with a zoom level of 13.
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 36.77271, longitude: -2.81361), zoom: 13)
-        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .satelliteStreets)
+        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: style.uri)
 
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
-        mapView.mapboxMap.style.uri = .satelliteStreets
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
         view.addSubview(mapView)

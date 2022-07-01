@@ -9,7 +9,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
     internal var cameraLocationConsumer: CameraLocationConsumer!
     internal let toggleBearingImageButton: UIButton = UIButton(frame: .zero)
     internal var styleToggle: UISegmentedControl!
-    internal var style: Style! = .satelliteStreets {
+    internal var style: Style = .satelliteStreets {
         didSet {
             mapView.mapboxMap.style.uri = style.uri
         }
@@ -20,17 +20,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         }
     }
 
-    enum Style: Int, CaseIterable, CustomStringConvertible {
-        var description: String {
-            switch self {
-            case .light:
-                return "light".capitalized
-            case .satelliteStreets:
-                return "s. streets".capitalized
-            case .customUri:
-                return "custom".capitalized
-            }
-        }
+    enum Style: Int, CaseIterable {
 
         var name: String {
             switch self {
@@ -64,7 +54,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         // Set initial camera settings
-        let options = MapInitOptions(cameraOptions: CameraOptions(zoom: 15.0), styleURI: .satelliteStreets)
+        let options = MapInitOptions(cameraOptions: CameraOptions(zoom: 15.0), styleURI: style.uri)
 
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]

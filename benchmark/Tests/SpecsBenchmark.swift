@@ -38,7 +38,10 @@ class SpecsBenchmark: XCTestCase {
     func testNavDayMunichZoomTilepack() throws {
         try runScenarioBenchmark(name: "nav-day-munich-zoom-tilepack", timeout: 120)
     }
-
+    
+    func testNavDayMunichDriveTilePack() throws {
+        try runScenarioBenchmark(name: "nav-day-munich-drive-tilepack", timeout: 1800)
+    }
 }
 
 extension SpecsBenchmark {

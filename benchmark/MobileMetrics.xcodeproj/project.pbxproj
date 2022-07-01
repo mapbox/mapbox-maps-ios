@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A011CB728631D6A004713DA /* AddRouteCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A011CB628631D6A004713DA /* AddRouteCommand.swift */; };
+		3A011CBB286343E9004713DA /* nav-day-munich-drive-tilepack.json in Resources */ = {isa = PBXBuildFile; fileRef = 3A011CB8286343E9004713DA /* nav-day-munich-drive-tilepack.json */; };
+		3A011CBC286343E9004713DA /* munich-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 3A011CB9286343E9004713DA /* munich-route.json */; };
+		3A011CBD286343E9004713DA /* munich-animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 3A011CBA286343E9004713DA /* munich-animation.json */; };
+		3A56266C286436C400107E56 /* ExecutionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A56266B286436C400107E56 /* ExecutionError.swift */; };
+		3A56266E28645AE200107E56 /* OnDemandLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A56266D28645AE200107E56 /* OnDemandLocationProvider.swift */; };
 		7412CF5E27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF5D27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift */; };
 		745D052527C8D185004E7B53 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 745D052427C8D185004E7B53 /* MapboxMaps */; };
 		74673149282EA6FA00B7D044 /* streets-munich-ttrc-cold.json in Resources */ = {isa = PBXBuildFile; fileRef = 74673145282EA6FA00B7D044 /* streets-munich-ttrc-cold.json */; };
@@ -55,6 +61,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3A011CB628631D6A004713DA /* AddRouteCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRouteCommand.swift; sourceTree = "<group>"; };
+		3A011CB8286343E9004713DA /* nav-day-munich-drive-tilepack.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "nav-day-munich-drive-tilepack.json"; sourceTree = "<group>"; };
+		3A011CB9286343E9004713DA /* munich-route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "munich-route.json"; sourceTree = "<group>"; };
+		3A011CBA286343E9004713DA /* munich-animation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "munich-animation.json"; sourceTree = "<group>"; };
+		3A56266B286436C400107E56 /* ExecutionError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecutionError.swift; sourceTree = "<group>"; };
+		3A56266D28645AE200107E56 /* OnDemandLocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDemandLocationProvider.swift; sourceTree = "<group>"; };
 		7412CF5D27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationEaseToBenchmark.swift; sourceTree = "<group>"; };
 		745D052327C8D15F004E7B53 /* mapbox-maps-ios */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "mapbox-maps-ios"; path = "../mapbox-maps-ios"; sourceTree = "<group>"; };
 		7467312B282E949100B7D044 /* Scenario.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scenario.swift; sourceTree = "<group>"; };
@@ -131,6 +143,8 @@
 				74673136282E963000B7D044 /* CreateOfflinePacksCommand.swift */,
 				FE555B7D283774EF002751C7 /* SetOnlineStateCommand.swift */,
 				FE18AEE928411426001B9E6F /* PlaySequenceCommand.swift */,
+				3A011CB628631D6A004713DA /* AddRouteCommand.swift */,
+				3A56266B286436C400107E56 /* ExecutionError.swift */,
 			);
 			path = Commands;
 			sourceTree = "<group>";
@@ -138,6 +152,9 @@
 		74673144282EA6F100B7D044 /* Specs */ = {
 			isa = PBXGroup;
 			children = (
+				3A011CBA286343E9004713DA /* munich-animation.json */,
+				3A011CB9286343E9004713DA /* munich-route.json */,
+				3A011CB8286343E9004713DA /* nav-day-munich-drive-tilepack.json */,
 				74673148282EA6FA00B7D044 /* nav-day-munich-ttrc-cold.json */,
 				74673147282EA6FA00B7D044 /* nav-day-munich-ttrc-warm.json */,
 				74673145282EA6FA00B7D044 /* streets-munich-ttrc-cold.json */,
@@ -196,6 +213,7 @@
 				FED7F06B283BA55800AD2313 /* Extensions */,
 				74673132282E961E00B7D044 /* Commands */,
 				FE555B7F283775F3002751C7 /* CameraOptions+Decodable.swift */,
+				3A56266D28645AE200107E56 /* OnDemandLocationProvider.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -321,9 +339,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				FE18AEE8284113F3001B9E6F /* nav-day-munich-zoom-tilepack.json in Resources */,
+				3A011CBD286343E9004713DA /* munich-animation.json in Resources */,
 				FE18AEE7284113F3001B9E6F /* munich-zoom-in-out-z10-z20.json in Resources */,
 				FE18AEE6284113F3001B9E6F /* nav-day-munich-zoom.json in Resources */,
+				3A011CBB286343E9004713DA /* nav-day-munich-drive-tilepack.json in Resources */,
 				7467314B282EA6FA00B7D044 /* nav-day-munich-ttrc-warm.json in Resources */,
+				3A011CBC286343E9004713DA /* munich-route.json in Resources */,
 				7467314A282EA6FA00B7D044 /* streets-munich-ttrc-warm.json in Resources */,
 				7499662427C64ECE00DA186A /* LaunchScreen.storyboard in Resources */,
 				74673149282EA6FA00B7D044 /* streets-munich-ttrc-cold.json in Resources */,
@@ -387,6 +408,7 @@
 				74F237EF27E32FFA009F304C /* BaseBenchmark.swift in Sources */,
 				FE555B7C2836939B002751C7 /* AsyncCommand.swift in Sources */,
 				FED7F071283BA5AB00AD2313 /* TileStore+Async.swift in Sources */,
+				3A011CB728631D6A004713DA /* AddRouteCommand.swift in Sources */,
 				7412CF5E27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift in Sources */,
 				FE555B7E283774EF002751C7 /* SetOnlineStateCommand.swift in Sources */,
 				FE18AEE22840ED4D001B9E6F /* StyleURI+Decodable.swift in Sources */,
@@ -396,8 +418,10 @@
 				FEB2802B2837C1BE00E903D2 /* ClearOfflineDataCommand.swift in Sources */,
 				FE18AEEB2841148F001B9E6F /* PlaySequenceCommand.swift in Sources */,
 				FEA8FDA62835110400CDDA97 /* CreateOfflinePacksCommand.swift in Sources */,
+				3A56266E28645AE200107E56 /* OnDemandLocationProvider.swift in Sources */,
 				74F237F327E3338A009F304C /* NotifyingViewController.swift in Sources */,
 				FED7F06D283BA56900AD2313 /* OfflineManager+Async.swift in Sources */,
+				3A56266C286436C400107E56 /* ExecutionError.swift in Sources */,
 				FEA8FDA52835110000CDDA97 /* CreateMapCommand.swift in Sources */,
 				74F2381527E39A33009F304C /* AnimationFlyToBenchmark.swift in Sources */,
 			);

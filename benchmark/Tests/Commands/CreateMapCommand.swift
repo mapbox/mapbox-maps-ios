@@ -19,12 +19,14 @@ public struct CreateMapCommand: AsyncCommand, Decodable {
         viewController.view.addSubview(mapView)
 
         try await withCheckedThrowingContinuation { continuation in
-            mapView.mapboxMap.onNext(.mapLoaded) { event in
+            mapView.mapboxMap.onNext(event: .mapLoaded) { event in
                 return continuation.resume(returning: ())
             }
 
-            mapView.mapboxMap.onNext(.mapLoadingError) { event in
-                return continuation.resume(throwing: Error.cannotLoadMap)
+            mapView.mapboxMap.onNext(event: .mapLoadingError) { event in
+                if case .source = event.payload.error {
+                    return continuation.resume(throwing: Error.cannotLoadMap)
+                }
             }
         }
         as Void // This cast is nessesary to help type checker find <T> for …Continuation func

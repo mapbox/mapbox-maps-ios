@@ -6,10 +6,6 @@ struct PlaySequenceCommand: AsyncCommand, Decodable {
     let filename: String
     let playbackCount: Int
 
-    enum Error: Swift.Error {
-        case cannotFindMapboxMap
-    }
-
     enum CodingKeys: String, CodingKey {
         case filename = "fileName"
         case playbackCount
@@ -19,7 +15,7 @@ struct PlaySequenceCommand: AsyncCommand, Decodable {
     func execute() async throws {
         let subviews = UIViewController.rootController!.view.subviews
         guard let mapView = subviews.lazy.compactMap({ $0 as? MapView }).first else {
-            throw Error.cannotFindMapboxMap
+            throw ExecutionError.cannotFindMapboxMap
         }
 
         let url = Bundle.main.bundleURL.appendingPathComponent(filename, isDirectory: false)

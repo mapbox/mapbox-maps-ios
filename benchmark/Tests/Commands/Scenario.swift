@@ -29,6 +29,7 @@ struct Scenario {
         case clearOfflineData = "ClearOfflineData"
         case createOfflinePacks = "CreateOfflinePacks"
         case playSequence = "PlaySequence"
+        case addRoute = "AddRoute"
     }
 
     struct ScenarioData: Decodable {
@@ -60,6 +61,8 @@ struct Scenario {
                     command = try commandContainer.decode(CreateOfflinePacksCommand.self)
                 case .playSequence:
                     command = try commandContainer.decode(PlaySequenceCommand.self)
+                case .addRoute:
+                    command = try commandContainer.decode(AddRouteCommand.self)
                 }
                 commands.append(command)
             }

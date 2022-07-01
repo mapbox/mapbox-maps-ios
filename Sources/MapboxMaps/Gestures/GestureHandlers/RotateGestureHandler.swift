@@ -3,12 +3,13 @@ import CoreLocation
 
 internal protocol RotateGestureHandlerProtocol: GestureHandler {
     var rotateEnabled: Bool { get set }
+    var simultaneousRotateAndPinchZoomEnabled: Bool { get set }
 }
 
  /// `RotateGestureHandler` updates the map camera in response to 2-touch rotate gestures
  internal final class RotateGestureHandler: GestureHandler, RotateGestureHandlerProtocol {
-     /// Whether pinch gesture can rotate map or not
      internal var rotateEnabled: Bool = true
+     internal var simultaneousRotateAndPinchZoomEnabled: Bool = true
 
      private let mapboxMap: MapboxMapProtocol
 
@@ -78,6 +79,8 @@ internal protocol RotateGestureHandlerProtocol: GestureHandler {
 extension RotateGestureHandler: UIGestureRecognizerDelegate {
     internal func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
                                     shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return self.gestureRecognizer === gestureRecognizer && otherGestureRecognizer is UIPinchGestureRecognizer
+        return self.gestureRecognizer === gestureRecognizer &&
+        otherGestureRecognizer is UIPinchGestureRecognizer &&
+        simultaneousRotateAndPinchZoomEnabled
     }
 }

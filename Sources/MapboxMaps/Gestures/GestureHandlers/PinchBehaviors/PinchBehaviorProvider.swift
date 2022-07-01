@@ -2,10 +2,8 @@ import CoreFoundation
 import CoreLocation
 
 internal protocol PinchBehaviorProviderProtocol: AnyObject {
-    // swiftlint:disable:next function_parameter_count
     func makePinchBehavior(panEnabled: Bool,
                            zoomEnabled: Bool,
-                           simultaneousRotateAndPinchZoomEnabled: Bool,
                            initialCameraState: CameraState,
                            initialPinchMidpoint: CGPoint,
                            focalPoint: CGPoint?) -> PinchBehavior
@@ -19,10 +17,8 @@ internal final class PinchBehaviorProvider: PinchBehaviorProviderProtocol {
         self.mapboxMap = mapboxMap
     }
 
-    // swiftlint:disable:next function_parameter_count
     internal func makePinchBehavior(panEnabled: Bool,
                                     zoomEnabled: Bool,
-                                    simultaneousRotateAndPinchZoomEnabled: Bool,
                                     initialCameraState: CameraState,
                                     initialPinchMidpoint: CGPoint,
                                     focalPoint: CGPoint?) -> PinchBehavior {

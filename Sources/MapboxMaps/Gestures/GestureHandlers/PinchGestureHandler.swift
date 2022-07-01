@@ -38,6 +38,7 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
         self.mapboxMap = mapboxMap
         self.pinchBehaviorProvider = pinchBehaviorProvider
         super.init(gestureRecognizer: gestureRecognizer)
+        gestureRecognizer.delegate = self
         gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
     }
 
@@ -99,7 +100,6 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
         pinchBehavior = pinchBehaviorProvider.makePinchBehavior(
             panEnabled: panEnabled,
             zoomEnabled: zoomEnabled,
-            simultaneousRotateAndPinchZoomEnabled: simultaneousRotateAndPinchZoomEnabled,
             initialCameraState: mapboxMap.cameraState,
             initialPinchMidpoint: gestureRecognizer.location(in: view),
             focalPoint: focalPoint)
@@ -109,5 +109,14 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
             invokedGestureBegan = true
             delegate?.gestureBegan(for: .pinch)
         }
+    }
+}
+
+extension PinchGestureHandler: UIGestureRecognizerDelegate {
+    internal func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                                    shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return self.gestureRecognizer === gestureRecognizer &&
+        otherGestureRecognizer is UIRotationGestureRecognizer &&
+        simultaneousRotateAndPinchZoomEnabled
     }
 }

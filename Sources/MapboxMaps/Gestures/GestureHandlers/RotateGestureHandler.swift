@@ -1,14 +1,12 @@
 import UIKit
 import CoreLocation
 
-internal protocol RotateGestureHandlerProtocol: GestureHandler, FocusableGestureHandlerProtocol {
-    var rotateEnabled: Bool { get set }
+internal protocol RotateGestureHandlerProtocol: FocusableGestureHandlerProtocol {
     var simultaneousRotateAndPinchZoomEnabled: Bool { get set }
 }
 
  /// `RotateGestureHandler` updates the map camera in response to 2-touch rotate gestures
  internal final class RotateGestureHandler: GestureHandler, RotateGestureHandlerProtocol {
-     internal var rotateEnabled: Bool = true
      internal var simultaneousRotateAndPinchZoomEnabled: Bool = true
      internal var focalPoint: CGPoint?
 

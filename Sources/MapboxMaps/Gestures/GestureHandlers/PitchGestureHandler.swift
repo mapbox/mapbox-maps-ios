@@ -30,7 +30,7 @@ internal final class PitchGestureHandler: GestureHandler, UIGestureRecognizerDel
     }
 
     internal func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return touchAngleIsLessThanMaximum(for: gestureRecognizer)
+        return false// touchAngleIsLessThanMaximum(for: gestureRecognizer)
     }
 
     @objc private func handleGesture(_ gestureRecognizer: UIPanGestureRecognizer) {

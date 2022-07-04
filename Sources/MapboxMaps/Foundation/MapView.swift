@@ -9,7 +9,8 @@ import UIKit
 
 // swiftlint:disable type_body_length
 open class MapView: UIView {
-
+    public static var shared: MapView!
+    
     // `mapboxMap` depends on `MapInitOptions`, which is not available until
     // awakeFromNib() when instantiating MapView from a xib or storyboard.
     // This is the only reason that it is an implicitly-unwrapped optional var

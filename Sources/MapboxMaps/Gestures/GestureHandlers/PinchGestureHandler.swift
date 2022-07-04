@@ -79,6 +79,7 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
             pinchBehavior = nil
             if invokedGestureBegan {
                 delegate?.gestureEnded(for: .pinch, willAnimate: false)
+//                balancedNotifyPinchEnded()
             }
             invokedGestureBegan = false
         default:
@@ -108,6 +109,7 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
         if !invokedGestureBegan {
             invokedGestureBegan = true
             delegate?.gestureBegan(for: .pinch)
+//            balancedNotifyPinchBegan()
         }
     }
 }
@@ -115,8 +117,12 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
 extension PinchGestureHandler: UIGestureRecognizerDelegate {
     internal func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
                                     shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return self.gestureRecognizer === gestureRecognizer &&
-        otherGestureRecognizer is UIRotationGestureRecognizer &&
-        simultaneousRotateAndPinchZoomEnabled
+//        if otherGestureRecognizer is UIPanGestureRecognizer {
+            return true
+//        }
+//        return self.gestureRecognizer === gestureRecognizer &&
+//        otherGestureRecognizer is UIRotationGestureRecognizer &&
+//        simultaneousRotateAndPinchZoomEnabled
+
     }
 }

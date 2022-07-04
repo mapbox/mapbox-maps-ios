@@ -14,10 +14,28 @@ final class DebugViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView = MapView(frame: view.bounds)
+        MapView.shared = mapView
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.location.options.puckType = .puck2D(.makeDefault())
-        mapView.location.options.puckBearingSource = .course
+//        mapView.gestures.options.simultaneousRotateAndPinchZoomEnabled = false
+        mapView.gestures.delegate = self
+//        mapView.location.options.puckType = .puck2D(.makeDefault())
+//        mapView.location.options.puckBearingSource = .course
+    }
+}
+
+extension DebugViewController: GestureManagerDelegate {
+    func gestureManager(_ gestureManager: GestureManager, didBegin gestureType: GestureType) {
+        print("fff begin \(gestureType)")
+    }
+
+    func gestureManager(_ gestureManager: GestureManager, didEnd gestureType: GestureType, willAnimate: Bool) {
+        print("fff end \(gestureType) willAnimate: \(willAnimate)")
+
+    }
+
+    func gestureManager(_ gestureManager: GestureManager, didEndAnimatingFor gestureType: GestureType) {
+        print("fff didEndAnimatingFor \(gestureType)")
     }
 }

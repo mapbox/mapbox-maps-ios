@@ -20,7 +20,7 @@ public final class GestureManager: GestureHandlerDelegate {
         set {
             panGestureRecognizer.isEnabled = newValue.panEnabled
             pinchGestureRecognizer.isEnabled = newValue.pinchEnabled
-            rotateGestureHandler.rotateEnabled = newValue.rotateEnabled
+            rotateGestureRecognizer.isEnabled = newValue.rotateEnabled
             pinchGestureHandler.zoomEnabled = newValue.pinchZoomEnabled
             pinchGestureHandler.panEnabled = newValue.pinchPanEnabled
             pinchGestureHandler.simultaneousRotateAndPinchZoomEnabled = newValue.simultaneousRotateAndPinchZoomEnabled
@@ -40,7 +40,7 @@ public final class GestureManager: GestureHandlerDelegate {
             var gestureOptions = GestureOptions()
             gestureOptions.panEnabled = panGestureRecognizer.isEnabled
             gestureOptions.pinchEnabled = pinchGestureRecognizer.isEnabled
-            gestureOptions.rotateEnabled = rotateGestureHandler.rotateEnabled
+            gestureOptions.rotateEnabled = rotateGestureRecognizer.isEnabled
             gestureOptions.pinchZoomEnabled = pinchGestureHandler.zoomEnabled
             gestureOptions.pinchPanEnabled = pinchGestureHandler.panEnabled
             gestureOptions.simultaneousRotateAndPinchZoomEnabled = pinchGestureHandler.simultaneousRotateAndPinchZoomEnabled
@@ -146,7 +146,7 @@ public final class GestureManager: GestureHandlerDelegate {
         quickZoomGestureHandler.delegate = self
         singleTapGestureHandler.delegate = self
 
-        pinchGestureHandler.gestureRecognizer.require(toFail: panGestureHandler.gestureRecognizer)
+//        pinchGestureHandler.gestureRecognizer.require(toFail: panGestureHandler.gestureRecognizer)
         pitchGestureHandler.gestureRecognizer.require(toFail: panGestureHandler.gestureRecognizer)
         quickZoomGestureHandler.gestureRecognizer.require(toFail: doubleTapToZoomInGestureHandler.gestureRecognizer)
         singleTapGestureHandler.gestureRecognizer.require(toFail: doubleTapToZoomInGestureHandler.gestureRecognizer)

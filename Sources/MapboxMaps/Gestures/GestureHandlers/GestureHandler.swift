@@ -20,4 +20,23 @@ internal class GestureHandler: NSObject {
     deinit {
         gestureRecognizer.view?.removeGestureRecognizer(gestureRecognizer)
     }
+
+    private var pinchBeganCallCount = 0
+
+    func balancedNotifyPinchBegan() {
+        if pinchBeganCallCount == 0 {
+            delegate?.gestureBegan(for: .pinch)
+        }
+        pinchBeganCallCount += 1
+    }
+
+    func balancedNotifyPinchEnded() {
+        pinchBeganCallCount -= 1
+
+        guard pinchBeganCallCount == 0 else {
+            return
+        }
+
+        delegate?.gestureEnded(for: .pinch, willAnimate: false)
+    }
 }

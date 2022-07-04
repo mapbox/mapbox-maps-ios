@@ -118,7 +118,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     private func makePitchGestureHandler(view: UIView,
                                          mapboxMap: MapboxMapProtocol) -> GestureHandler {
         let gestureRecognizer = UIPanGestureRecognizer()
-        view.addGestureRecognizer(gestureRecognizer)
+//        view.addGestureRecognizer(gestureRecognizer)
         return PitchGestureHandler(
             gestureRecognizer: gestureRecognizer,
             mapboxMap: mapboxMap)
@@ -128,7 +128,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                                                      mapboxMap: MapboxMapProtocol,
                                                      cameraAnimationsManager: CameraAnimationsManagerProtocol) -> FocusableGestureHandlerProtocol {
         let gestureRecognizer = UITapGestureRecognizer()
-        view.addGestureRecognizer(gestureRecognizer)
+//        view.addGestureRecognizer(gestureRecognizer)
         return DoubleTapToZoomInGestureHandler(
             gestureRecognizer: gestureRecognizer,
             mapboxMap: mapboxMap,
@@ -139,7 +139,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                                                         mapboxMap: MapboxMapProtocol,
                                                         cameraAnimationsManager: CameraAnimationsManagerProtocol) -> FocusableGestureHandlerProtocol {
         let gestureRecognizer = UITapGestureRecognizer()
-        view.addGestureRecognizer(gestureRecognizer)
+//        view.addGestureRecognizer(gestureRecognizer)
         return DoubleTouchToZoomOutGestureHandler(
             gestureRecognizer: gestureRecognizer,
             mapboxMap: mapboxMap,
@@ -149,7 +149,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     private func makeQuickZoomGestureHandler(view: UIView,
                                              mapboxMap: MapboxMapProtocol) -> FocusableGestureHandlerProtocol {
         let gestureRecognizer = UILongPressGestureRecognizer()
-        view.addGestureRecognizer(gestureRecognizer)
+//        view.addGestureRecognizer(gestureRecognizer)
         return QuickZoomGestureHandler(
             gestureRecognizer: gestureRecognizer,
             mapboxMap: mapboxMap)
@@ -158,7 +158,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     private func makeSingleTapGestureHandler(view: UIView,
                                              cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
         let gestureRecognizer = UITapGestureRecognizer()
-        view.addGestureRecognizer(gestureRecognizer)
+//        view.addGestureRecognizer(gestureRecognizer)
         return SingleTapGestureHandler(
             gestureRecognizer: gestureRecognizer,
             cameraAnimationsManager: cameraAnimationsManager)
@@ -174,7 +174,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
         let gestureRecognizer = AnyTouchGestureRecognizer(
             minimumPressDuration: 0.15,
             timerProvider: TimerProvider())
-        view.addGestureRecognizer(gestureRecognizer)
+//        view.addGestureRecognizer(gestureRecognizer)
         return AnyTouchGestureHandler(
             gestureRecognizer: gestureRecognizer,
             cameraAnimatorsRunnerEnablable: gesturesCameraAnimatorsRunnerEnablable)

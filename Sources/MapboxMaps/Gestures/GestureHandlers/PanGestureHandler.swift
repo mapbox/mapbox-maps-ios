@@ -36,11 +36,12 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
                   mapboxMap: MapboxMapProtocol,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol,
                   dateProvider: DateProvider) {
-        gestureRecognizer.maximumNumberOfTouches = 1
+//        gestureRecognizer.maximumNumberOfTouches = 1
         self.mapboxMap = mapboxMap
         self.cameraAnimationsManager = cameraAnimationsManager
         self.dateProvider = dateProvider
         super.init(gestureRecognizer: gestureRecognizer)
+        gestureRecognizer.delegate = self
         gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
     }
 
@@ -73,21 +74,27 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
         }
     }
 
+    private var numberOfTouches: Int?
     private func handleGesture(withState state: UIGestureRecognizer.State, touchLocation: CGPoint, velocity: CGPoint) {
         switch state {
         case .began:
             if !mapboxMap.pointIsAboveHorizon(touchLocation) {
                 beginInteraction(withTouchLocation: touchLocation)
             }
+            numberOfTouches = gestureRecognizer.numberOfTouches
         case .changed:
+            guard numberOfTouches == gestureRecognizer.numberOfTouches else { return }
+
             guard let previousTouchLocation = previousTouchLocation else {
                 return
             }
             lastChangedDate = dateProvider.now
             let clampedTouchLocation = touchLocation.clamped(to: previousTouchLocation, panMode: panMode)
+            print("pan to: \(clampedTouchLocation)")
             pan(from: previousTouchLocation, to: clampedTouchLocation)
             self.previousTouchLocation = clampedTouchLocation
         case .ended:
+            guard numberOfTouches == gestureRecognizer.numberOfTouches else { return }
             // Only decelerate if the gesture ended quickly. Otherwise,
             // you get a deceleration in situations where you drag, then
             // hold the touch in place for several seconds, then release
@@ -163,5 +170,18 @@ private extension CGPoint {
         case .horizontalAndVertical:
             return self
         }
+    }
+}
+
+extension PanGestureHandler: UIGestureRecognizerDelegate {
+    internal func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                                    shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+//        if otherGestureRecognizer is UIPanGestureRecognizer {
+            return true
+//        }
+//        return self.gestureRecognizer === gestureRecognizer &&
+//        otherGestureRecognizer is UIRotationGestureRecognizer &&
+//        simultaneousRotateAndPinchZoomEnabled
+
     }
 }

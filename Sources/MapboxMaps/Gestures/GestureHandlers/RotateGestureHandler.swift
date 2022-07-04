@@ -1,7 +1,7 @@
 import UIKit
 import CoreLocation
 
-internal protocol RotateGestureHandlerProtocol: GestureHandler {
+internal protocol RotateGestureHandlerProtocol: GestureHandler, FocusableGestureHandlerProtocol {
     var rotateEnabled: Bool { get set }
     var simultaneousRotateAndPinchZoomEnabled: Bool { get set }
 }
@@ -10,6 +10,7 @@ internal protocol RotateGestureHandlerProtocol: GestureHandler {
  internal final class RotateGestureHandler: GestureHandler, RotateGestureHandlerProtocol {
      internal var rotateEnabled: Bool = true
      internal var simultaneousRotateAndPinchZoomEnabled: Bool = true
+     internal var focalPoint: CGPoint?
 
      private let mapboxMap: MapboxMapProtocol
 
@@ -48,7 +49,7 @@ internal protocol RotateGestureHandlerProtocol: GestureHandler {
 
              mapboxMap.setCamera(
                  to: CameraOptions(
-                    anchor: midpoint,
+                    anchor: focalPoint ?? midpoint,
                     bearing: (initialBearing + rotationInDegrees).truncatingRemainder(dividingBy: 360.0))
              )
          case (.ended, _):

@@ -8,23 +8,64 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
     internal var mapView: MapView!
     internal var cameraLocationConsumer: CameraLocationConsumer!
     internal let toggleBearingImageButton: UIButton = UIButton(frame: .zero)
+    internal var styleToggle: UISegmentedControl!
+    internal var style: Style = .satelliteStreets {
+        didSet {
+            mapView.mapboxMap.style.uri = style.uri
+        }
+    }
     internal var showsBearingImage: Bool = false {
         didSet {
             syncPuckAndButton()
         }
     }
+
+    enum Style: Int, CaseIterable {
+
+        var name: String {
+            switch self {
+            case .light:
+                return "light".capitalized
+            case .satelliteStreets:
+                return "s. streets".capitalized
+            case .customUri:
+                return "custom".capitalized
+            }
+        }
+
+        var uri: StyleURI {
+            switch self {
+            case .light:
+                return .light
+            case .satelliteStreets:
+                return .satelliteStreets
+            case .customUri:
+                let localStyleURL = Bundle.main.url(forResource: "blueprint_style", withExtension: "json")!
+                return .init(url: localStyleURL)!
+            }
+        }
+
+        case light
+        case satelliteStreets
+        case customUri
+    }
+
     override public func viewDidLoad() {
         super.viewDidLoad()
 
         // Set initial camera settings
-        let options = MapInitOptions(cameraOptions: CameraOptions(zoom: 15.0))
+        let options = MapInitOptions(cameraOptions: CameraOptions(zoom: 15.0), styleURI: style.uri)
 
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
+        addStyleToggle()
+
         // Setup and create button for toggling show bearing image
         setupToggleShowBearingImageButton()
+
+        installConstraints()
 
         cameraLocationConsumer = CameraLocationConsumer(mapView: mapView)
 
@@ -73,7 +114,34 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         // Constraints
         toggleBearingImageButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20.0).isActive = true
         toggleBearingImageButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20.0).isActive = true
-        toggleBearingImageButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -100.0).isActive = true
+        toggleBearingImageButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -70.0).isActive = true
+    }
+
+    @objc func switchStyle(sender: UISegmentedControl) {
+        style = Style(rawValue: sender.selectedSegmentIndex) ?? . satelliteStreets
+    }
+
+    func addStyleToggle() {
+        // Create a UISegmentedControl to toggle between map styles
+        styleToggle = UISegmentedControl(items: Style.allCases.map(\.name))
+        styleToggle.tintColor = .white
+        styleToggle.backgroundColor = .systemBlue
+        styleToggle.selectedSegmentIndex = style.rawValue
+        view.insertSubview(styleToggle, aboveSubview: mapView)
+        styleToggle.addTarget(self, action: #selector(switchStyle(sender:)), for: .valueChanged)
+        styleToggle.translatesAutoresizingMaskIntoConstraints = false
+    }
+
+    func installConstraints() {
+        // Configure autolayout constraints for the UISegmentedControl to align
+        // at the bottom of the map view.
+        NSLayoutConstraint.activate([
+            styleToggle.bottomAnchor.constraint(equalTo: mapView.bottomAnchor, constant: -60),
+            styleToggle.centerXAnchor.constraint(equalTo: mapView.centerXAnchor),
+            toggleBearingImageButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20.0),
+            toggleBearingImageButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20.0),
+            toggleBearingImageButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -100.0)
+        ])
     }
 }
 

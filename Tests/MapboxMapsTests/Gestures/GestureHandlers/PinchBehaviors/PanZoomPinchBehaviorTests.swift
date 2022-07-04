@@ -29,7 +29,8 @@ final class PanZoomPinchBehaviorTests: BasePinchBehaviorTests {
             mapboxMap.setCameraStub.invocations[0].parameters,
             CameraOptions(
                 center: initialCameraState.center,
-                zoom: initialCameraState.zoom))
+                zoom: initialCameraState.zoom,
+                bearing: initialCameraState.bearing))
 
         // verify that dragStart is invoked once with the initial pinch midpoint
         XCTAssertEqual(

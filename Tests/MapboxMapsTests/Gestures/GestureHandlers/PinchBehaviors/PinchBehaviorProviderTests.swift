@@ -9,7 +9,6 @@ final class PinchBehaviorProviderTests: XCTestCase {
             provider.makePinchBehavior(
                 panEnabled: true,
                 zoomEnabled: true,
-                simultaneousRotateAndPinchZoomEnabled: true,
                 initialCameraState: .random(),
                 initialPinchMidpoint: .random(),
                 focalPoint: .random(.random()))
@@ -18,7 +17,6 @@ final class PinchBehaviorProviderTests: XCTestCase {
             provider.makePinchBehavior(
                 panEnabled: true,
                 zoomEnabled: false,
-                simultaneousRotateAndPinchZoomEnabled: true,
                 initialCameraState: .random(),
                 initialPinchMidpoint: .random(),
                 focalPoint: .random(.random()))
@@ -27,7 +25,6 @@ final class PinchBehaviorProviderTests: XCTestCase {
             provider.makePinchBehavior(
                 panEnabled: false,
                 zoomEnabled: true,
-                simultaneousRotateAndPinchZoomEnabled: true,
                 initialCameraState: .random(),
                 initialPinchMidpoint: .random(),
                 focalPoint: .random(.random()))
@@ -36,7 +33,6 @@ final class PinchBehaviorProviderTests: XCTestCase {
             provider.makePinchBehavior(
                 panEnabled: false,
                 zoomEnabled: false,
-                simultaneousRotateAndPinchZoomEnabled: true,
                 initialCameraState: .random(),
                 initialPinchMidpoint: .random(),
                 focalPoint: .random(.random()))

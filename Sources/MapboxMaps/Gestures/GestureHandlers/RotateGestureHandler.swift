@@ -38,6 +38,8 @@ internal protocol RotateGestureHandlerProtocol: FocusableGestureHandlerProtocol 
 
              isMapRotating = true
              self.initialBearing = mapboxMap.cameraState.bearing
+             // pretend to be pinch gesture for backwards compatibility
+             delegate?.gestureBegan(for: .pinch)
          case (.changed, true):
              guard let initialBearing = initialBearing else {
                  return
@@ -56,6 +58,7 @@ internal protocol RotateGestureHandlerProtocol: FocusableGestureHandlerProtocol 
              isMapRotating = false
              discardedRotationAngle = 0
              initialBearing = 0
+             delegate?.gestureEnded(for: .pinch, willAnimate: false)
          default:
              break
          }

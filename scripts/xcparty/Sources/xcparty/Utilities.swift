@@ -23,7 +23,7 @@ func shell(_ command: String) -> Process {
 extension Process {
     var output: String? {
         guard terminatedSuccessfully else { return nil }
-        
+
         guard let pipe = standardOutput as? Pipe else { return nil }
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
         return String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines)

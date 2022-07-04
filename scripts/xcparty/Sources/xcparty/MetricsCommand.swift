@@ -257,7 +257,7 @@ struct MetricsCommand: ParsableCommand {
         buildMetadata["branch"] = git("rev-parse --abbrev-ref HEAD").output
         buildMetadata["message"] = git("log -1 --format=%B").output
         buildMetadata["project"] = git("rev-parse --show-toplevel").output
-            .map{ URL(fileURLWithPath: $0).lastPathComponent }
+            .map { URL(fileURLWithPath: $0).lastPathComponent }
         buildMetadata["timestamp"] = git("log -1 --format=%at").output.flatMap(Int.init)
 
         if let ciBuildNumber = ProcessInfo.processInfo.environment["CIRCLE_BUILD_NUM"] {

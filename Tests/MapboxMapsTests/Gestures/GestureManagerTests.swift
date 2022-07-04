@@ -399,27 +399,27 @@ final class GestureManagerTests: XCTestCase {
 
     func testOptionsPinchRotateEnabled() {
         XCTAssertTrue(gestureManager.options.rotateEnabled)
-        XCTAssertTrue(rotateGestureHandler.rotateEnabled)
+        XCTAssertTrue(gestureManager.rotateGestureRecognizer.isEnabled)
 
         gestureManager.options.rotateEnabled = false
 
         XCTAssertFalse(gestureManager.options.rotateEnabled)
-        XCTAssertFalse(rotateGestureHandler.rotateEnabled)
+        XCTAssertFalse(gestureManager.rotateGestureRecognizer.isEnabled)
 
         gestureManager.options.rotateEnabled = true
 
         XCTAssertTrue(gestureManager.options.rotateEnabled)
-        XCTAssertTrue(rotateGestureHandler.rotateEnabled)
+        XCTAssertTrue(gestureManager.rotateGestureRecognizer.isEnabled)
 
-        rotateGestureHandler.rotateEnabled = false
+        gestureManager.rotateGestureRecognizer.isEnabled = false
 
         XCTAssertFalse(gestureManager.options.rotateEnabled)
-        XCTAssertFalse(rotateGestureHandler.rotateEnabled)
+        XCTAssertFalse(gestureManager.rotateGestureRecognizer.isEnabled)
 
-        rotateGestureHandler.rotateEnabled = true
+        gestureManager.rotateGestureRecognizer.isEnabled = true
 
         XCTAssertTrue(gestureManager.options.rotateEnabled)
-        XCTAssertTrue(rotateGestureHandler.rotateEnabled)
+        XCTAssertTrue(gestureManager.rotateGestureRecognizer.isEnabled)
     }
 
     func testOptionsPinchZoomEnabled() {

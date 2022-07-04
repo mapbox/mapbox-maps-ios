@@ -12,7 +12,6 @@ final class MockPinchBehaviorProvider: PinchBehaviorProviderProtocol {
     // swiftlint:disable:next function_parameter_count
     func makePinchBehavior(panEnabled: Bool,
                            zoomEnabled: Bool,
-                           simultaneousRotateAndPinchZoomEnabled: Bool,
                            initialCameraState: CameraState,
                            initialPinchMidpoint: CGPoint,
                            focalPoint: CGPoint?) -> PinchBehavior {

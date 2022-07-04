@@ -35,6 +35,7 @@ public final class GestureManager: GestureHandlerDelegate {
             doubleTouchToZoomOutGestureHandler.focalPoint = newValue.focalPoint
             quickZoomGestureHandler.focalPoint = newValue.focalPoint
             pinchGestureHandler.focalPoint = newValue.focalPoint
+            rotateGestureHandler.focalPoint = newValue.focalPoint
         }
         get {
             var gestureOptions = GestureOptions()

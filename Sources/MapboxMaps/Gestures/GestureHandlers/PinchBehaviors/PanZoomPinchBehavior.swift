@@ -18,7 +18,8 @@ internal final class PanZoomPinchBehavior: PinchBehavior {
             mapboxMap.setCamera(
                 to: CameraOptions(
                     center: initialCameraState.center,
-                    zoom: initialCameraState.zoom))
+                    zoom: initialCameraState.zoom,
+                    bearing: initialCameraState.bearing))
 
             mapboxMap.dragStart(for: initialPinchMidpoint)
             let dragOptions = mapboxMap.dragCameraOptions(

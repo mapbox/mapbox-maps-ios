@@ -63,7 +63,7 @@ struct MetricsCommand: ParsableCommand {
             throw ValidationError("Repository path argument should be a directory (input: '\(repositoryPath)')")
         }
 
-        guard !shell("git -C \(repositoryPath) rev-parse HEAD ").starts(with: "fatal") else {
+        guard shell("git -C \(repositoryPath) rev-parse HEAD").terminatedSuccessfully else {
             throw ValidationError("Repository path argument should be a git repository")
         }
 
@@ -247,20 +247,25 @@ struct MetricsCommand: ParsableCommand {
 
         let repoFullPath = repositoryURL.path
 
-        func git(_ command: String) -> String {
+        func git(_ command: String) -> Process {
             return shell("git -C '\(repoFullPath)' \(command)")
         }
 
-        var buildMetadata: [String: Any] = [
-            "sha": git("rev-parse HEAD"),
-            "author": git("log -1 --pretty=format:'%an'"),
-            "branch": git("rev-parse --abbrev-ref HEAD"),
-            "message": git("log -1 --pretty=%B"),
-            "project": shell("basename \(git("rev-parse --show-toplevel"))"),
-            "timestamp": Int(git("log -1 --format=%at"))!
-        ]
+        var buildMetadata: [String: Any] = [:]
+        buildMetadata["sha"] = git("rev-parse HEAD").output
+        buildMetadata["author"] = git("log -1 --pretty=format:'%an'").output
+        buildMetadata["branch"] = git("rev-parse --abbrev-ref HEAD").output
+        buildMetadata["message"] = git("log -1 --pretty=%B").output
+        buildMetadata["project"] = git("rev-parse --show-toplevel").output
+            .map{ URL(fileURLWithPath: $0).lastPathComponent }
+        buildMetadata["timestamp"] = git("log -1 --format=%at").output.flatMap(Int.init)
+
         if let ciBuildNumber = ProcessInfo.processInfo.environment["CIRCLE_BUILD_NUM"] {
             buildMetadata["ci_ref"] = ciBuildNumber
+        }
+
+        if let tagName = git("describe --tags --exact-match HEAD").output, tagName.starts(with: "v") {
+            buildMetadata["tag_name"] = tagName
         }
 
         MetricsCommand.cachedBuildMetadata = buildMetadata

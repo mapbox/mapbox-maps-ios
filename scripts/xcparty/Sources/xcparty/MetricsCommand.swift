@@ -253,9 +253,9 @@ struct MetricsCommand: ParsableCommand {
 
         var buildMetadata: [String: Any] = [:]
         buildMetadata["sha"] = git("rev-parse HEAD").output
-        buildMetadata["author"] = git("log -1 --pretty=format:'%an'").output
+        buildMetadata["author"] = git("log -1 --format=%an").output
         buildMetadata["branch"] = git("rev-parse --abbrev-ref HEAD").output
-        buildMetadata["message"] = git("log -1 --pretty=%B").output
+        buildMetadata["message"] = git("log -1 --format=%B").output
         buildMetadata["project"] = git("rev-parse --show-toplevel").output
             .map{ URL(fileURLWithPath: $0).lastPathComponent }
         buildMetadata["timestamp"] = git("log -1 --format=%at").output.flatMap(Int.init)

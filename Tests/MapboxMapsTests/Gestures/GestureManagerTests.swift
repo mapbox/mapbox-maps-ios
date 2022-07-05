@@ -495,4 +495,36 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertNil(quickZoomGestureHandler.focalPoint)
         XCTAssertNil(pinchGestureHandler.focalPoint)
     }
+
+    func testBalancedConsecutivePinchDelegateEvents() {
+        gestureManager.gestureBegan(for: .pinch)
+        XCTAssertEqual(delegate.gestureDidBeginStub.invocations.count, 1)
+
+        gestureManager.gestureBegan(for: .pinch)
+
+        XCTAssertEqual(delegate.gestureDidBeginStub.invocations.count, 1)
+
+
+        gestureManager.gestureEnded(for: .pinch, willAnimate: false)
+        XCTAssertEqual(delegate.gestureDidEndStub.invocations.count, 0)
+
+        gestureManager.gestureEnded(for: .pinch, willAnimate: false)
+        XCTAssertEqual(delegate.gestureDidEndStub.invocations.count, 1)
+    }
+
+    func testBalancedMixedPinchDelegateEvents() {
+        gestureManager.gestureBegan(for: .pinch)
+        gestureManager.gestureBegan(for: .pinch)
+        XCTAssertEqual(delegate.gestureDidBeginStub.invocations.count, 1)
+
+        gestureManager.gestureEnded(for: .pinch, willAnimate: false)
+        XCTAssertEqual(delegate.gestureDidEndStub.invocations.count, 0)
+
+        gestureManager.gestureBegan(for: .pinch)
+        XCTAssertEqual(delegate.gestureDidBeginStub.invocations.count, 1)
+
+        gestureManager.gestureEnded(for: .pinch, willAnimate: false)
+        gestureManager.gestureEnded(for: .pinch, willAnimate: false)
+        XCTAssertEqual(delegate.gestureDidEndStub.invocations.count, 1)
+    }
 }

@@ -2,6 +2,11 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## main
+
+* Add rotation threshold to prevent map from being rotated accidentally. ([1429](https://github.com/mapbox/mapbox-maps-ios/pull/1429))
+* Introduce `GestureOptions.simultaneousRotateAndPinchZoomEnabled` and deprecate `GestureOptions.pinchRotateEnabled` in favor of `GestureOptions.rotateEnabled`. ([1429](https://github.com/mapbox/mapbox-maps-ios/pull/1429))
+
 ## 10.7.0-beta.1 - June 29, 2022
 
 * Introduce `FillExtrusionLayer.fillExtrusionAmbientOcclusionIntensity` and `FillExtrusionLayer.fillExtrusionAmbientOcclusionRadius` properties for FillExtrusionLayer. ([1410](https://github.com/mapbox/mapbox-maps-ios/pull/1410))

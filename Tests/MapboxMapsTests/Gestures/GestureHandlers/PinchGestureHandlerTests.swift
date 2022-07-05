@@ -176,4 +176,41 @@ final class PinchGestureHandlerTests: XCTestCase {
         sendActions(with: .ended, numberOfTouches: 2)
         verifyGestureEnded()
     }
+
+    func testSimultaneousRotateAndPinchZoomEnabledDefaultValue() {
+        XCTAssertEqual(pinchGestureHandler.simultaneousRotateAndPinchZoomEnabled, true)
+    }
+
+    func testPinchRecognizesSimultaneouslyWithRotation() {
+        let shouldRecognizeSimultaneously = pinchGestureHandler.gestureRecognizer(
+            gestureRecognizer,
+            shouldRecognizeSimultaneouslyWith: UIRotationGestureRecognizer()
+        )
+
+        XCTAssertTrue(shouldRecognizeSimultaneously)
+    }
+
+    func testPinchShouldNotRecognizeSimultaneouslyWithNonRotation() {
+        let recognizers = [UIPanGestureRecognizer(), UILongPressGestureRecognizer(), UISwipeGestureRecognizer(), UIScreenEdgePanGestureRecognizer(), UITapGestureRecognizer()]
+
+        for recognizer in recognizers {
+            let shouldRecognizeSimultaneously = pinchGestureHandler.gestureRecognizer(
+                gestureRecognizer,
+                shouldRecognizeSimultaneouslyWith: recognizer
+            )
+
+            XCTAssertFalse(shouldRecognizeSimultaneously)
+        }
+    }
+
+    func testPinchShouldNotRecognizeSimultaneouslyWhenRotateAndPinchDisabled() {
+        pinchGestureHandler.simultaneousRotateAndPinchZoomEnabled = false
+
+        let shouldRecognizeSimultaneously = pinchGestureHandler.gestureRecognizer(
+            gestureRecognizer,
+            shouldRecognizeSimultaneouslyWith: UIRotationGestureRecognizer()
+        )
+
+        XCTAssertFalse(shouldRecognizeSimultaneously)
+    }
 }

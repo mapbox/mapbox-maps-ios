@@ -18,7 +18,6 @@ internal protocol RotateGestureHandlerProtocol: FocusableGestureHandlerProtocol 
 
      internal init(gestureRecognizer: UIRotationGestureRecognizer, mapboxMap: MapboxMapProtocol) {
          self.mapboxMap = mapboxMap
-         self.initialBearing = mapboxMap.cameraState.bearing
          super.init(gestureRecognizer: gestureRecognizer)
          gestureRecognizer.delegate = self
          gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
@@ -29,17 +28,21 @@ internal protocol RotateGestureHandlerProtocol: FocusableGestureHandlerProtocol 
              return
          }
          switch (gestureRecognizer.state, isMapRotating) {
+         case (.began, _):
+             discardedRotationAngle += abs(gestureRecognizer.rotation)
+             gestureRecognizer.rotation = 0
+             self.initialBearing = mapboxMap.cameraState.bearing
          case (.changed, false):
-             guard shouldStartRotating(with: gestureRecognizer.velocity, deltaSinceStart: discardedRotationAngle) else {
+             guard shouldStartRotating(with: gestureRecognizer.velocity, deltaSinceStart: discardedRotationAngle + abs(gestureRecognizer.rotation)) else {
                  discardedRotationAngle += abs(gestureRecognizer.rotation)
                  gestureRecognizer.rotation = 0
                  return
              }
 
              isMapRotating = true
-             self.initialBearing = mapboxMap.cameraState.bearing
              // pretend to be pinch gesture for backwards compatibility
              delegate?.gestureBegan(for: .pinch)
+             fallthrough
          case (.changed, true):
              guard let initialBearing = initialBearing else {
                  return
@@ -52,12 +55,9 @@ internal protocol RotateGestureHandlerProtocol: FocusableGestureHandlerProtocol 
                     anchor: focalPoint ?? midpoint,
                     bearing: (initialBearing + rotationInDegrees).truncatingRemainder(dividingBy: 360.0))
              )
-         case (.ended, _):
-             fallthrough
-         case (.cancelled, _):
+         case (.cancelled, _), (.ended, _):
              isMapRotating = false
              discardedRotationAngle = 0
-             initialBearing = 0
              delegate?.gestureEnded(for: .pinch, willAnimate: false)
          default:
              break

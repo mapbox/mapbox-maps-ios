@@ -56,9 +56,11 @@ internal protocol RotateGestureHandlerProtocol: FocusableGestureHandlerProtocol 
                     bearing: (initialBearing + rotationInDegrees).truncatingRemainder(dividingBy: 360.0))
              )
          case (.cancelled, _), (.ended, _):
+             if isMapRotating {
+                 delegate?.gestureEnded(for: .pinch, willAnimate: false)
+             }
              isMapRotating = false
              discardedRotationAngle = 0
-             delegate?.gestureEnded(for: .pinch, willAnimate: false)
          default:
              break
          }

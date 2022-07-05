@@ -38,24 +38,6 @@ final class RotateGestureHandlerTests: XCTestCase {
         XCTAssertTrue(gestureRecognizer === rotateGestureHandler.gestureRecognizer)
     }
 
-    func testAllowedSimultaneousGestures() {
-        XCTAssertTrue(rotateGestureHandler.gestureRecognizer(
-                        rotateGestureHandler.gestureRecognizer,
-                        shouldRecognizeSimultaneouslyWith: UIPinchGestureRecognizer()))
-    }
-
-    func testDisallowedSimultaneousGestures() {
-        XCTAssertFalse(rotateGestureHandler.gestureRecognizer(
-                        rotateGestureHandler.gestureRecognizer,
-                        shouldRecognizeSimultaneouslyWith: UIPanGestureRecognizer()))
-        XCTAssertFalse(rotateGestureHandler.gestureRecognizer(
-                        rotateGestureHandler.gestureRecognizer,
-                        shouldRecognizeSimultaneouslyWith: UITapGestureRecognizer()))
-        XCTAssertFalse(rotateGestureHandler.gestureRecognizer(
-                        rotateGestureHandler.gestureRecognizer,
-                        shouldRecognizeSimultaneouslyWith: UIRotationGestureRecognizer()))
-    }
-
     func testRotationAngleBelowThresholdIgnored() {
         gestureRecognizer.getRotationStub.defaultReturnValue = 2
         gestureRecognizer.getStateStub.defaultReturnValue = .changed

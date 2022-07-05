@@ -82,6 +82,10 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertTrue(gestureManager.pitchGestureRecognizer === pitchGestureHandler.gestureRecognizer)
     }
 
+    func testRotateGestureRecognizer() {
+        XCTAssertTrue(gestureManager.rotateGestureRecognizer === rotateGestureHandler.gestureRecognizer)
+    }
+
     func testSingleTapGestureRecognizer() {
         XCTAssertTrue(gestureManager.singleTapGestureRecognizer === singleTapGestureHandler.gestureRecognizer)
     }
@@ -110,6 +114,10 @@ final class GestureManagerTests: XCTestCase {
 
     func testPinchGestureHandlerDelegate() {
         XCTAssertTrue(pinchGestureHandler.delegate === gestureManager)
+    }
+
+    func testRotateGestureHandlerDelegate() {
+        XCTAssertTrue(rotateGestureHandler.delegate === gestureManager)
     }
 
     func testPitchGestureHandlerDelegate() {
@@ -397,7 +405,7 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertEqual(gestureManager.options.panMode, panGestureHandler.panMode)
     }
 
-    func testOptionsPinchRotateEnabled() {
+    func testOptionsRotateEnabled() {
         XCTAssertTrue(gestureManager.options.rotateEnabled)
         XCTAssertTrue(gestureManager.rotateGestureRecognizer.isEnabled)
 
@@ -487,6 +495,7 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertEqual(doubleTouchToZoomOutGestureHandler.focalPoint, firstFocalPoint)
         XCTAssertEqual(quickZoomGestureHandler.focalPoint, firstFocalPoint)
         XCTAssertEqual(pinchGestureHandler.focalPoint, firstFocalPoint)
+        XCTAssertEqual(rotateGestureHandler.focalPoint, firstFocalPoint)
 
         gestureManager.options.focalPoint = nil
 
@@ -494,6 +503,19 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertNil(doubleTouchToZoomOutGestureHandler.focalPoint)
         XCTAssertNil(quickZoomGestureHandler.focalPoint)
         XCTAssertNil(pinchGestureHandler.focalPoint)
+        XCTAssertNil(rotateGestureHandler.focalPoint)
+    }
+
+    func testOptionsSimultaneousRotateAndPinchZoomEnabled() {
+        XCTAssertTrue(gestureManager.options.simultaneousRotateAndPinchZoomEnabled)
+        XCTAssertTrue(rotateGestureHandler.simultaneousRotateAndPinchZoomEnabled)
+        XCTAssertTrue(pinchGestureHandler.simultaneousRotateAndPinchZoomEnabled)
+
+        gestureManager.options.simultaneousRotateAndPinchZoomEnabled = false
+
+        XCTAssertFalse(gestureManager.options.simultaneousRotateAndPinchZoomEnabled)
+        XCTAssertFalse(rotateGestureHandler.simultaneousRotateAndPinchZoomEnabled)
+        XCTAssertFalse(pinchGestureHandler.simultaneousRotateAndPinchZoomEnabled)
     }
 
     func testBalancedConsecutivePinchDelegateEvents() {

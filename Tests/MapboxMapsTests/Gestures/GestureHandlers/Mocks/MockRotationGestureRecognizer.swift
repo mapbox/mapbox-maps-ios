@@ -23,7 +23,6 @@ final class MockRotationGestureRecognizer: UIRotationGestureRecognizer {
         }
     }
 
-
     let getRotationStub = Stub<Void, CGFloat>(defaultReturnValue: 0)
     let setRotationStub = Stub<CGFloat, Void>()
     override var rotation: CGFloat {

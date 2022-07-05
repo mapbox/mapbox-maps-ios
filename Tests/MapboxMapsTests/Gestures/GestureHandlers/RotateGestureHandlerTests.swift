@@ -107,6 +107,11 @@ final class RotateGestureHandlerTests: XCTestCase {
     }
 
     func testDelegateGetsNotifiedAboutPinchGestureEnded() {
+        gestureRecognizer.getStateStub.defaultReturnValue = .changed
+        gestureRecognizer.getVelocityStub.defaultReturnValue = 1.radiansPerSecond
+        gestureRecognizer.getRotationStub.defaultReturnValue = 30.toRadians()
+        gestureRecognizer.sendActions()
+
         gestureRecognizer.getStateStub.defaultReturnValue = .ended
         gestureRecognizer.sendActions()
 
@@ -114,6 +119,11 @@ final class RotateGestureHandlerTests: XCTestCase {
     }
 
     func testDelegateGetsNotifiedAboutPinchGestureCancelled() {
+        gestureRecognizer.getStateStub.defaultReturnValue = .changed
+        gestureRecognizer.getVelocityStub.defaultReturnValue = 1.radiansPerSecond
+        gestureRecognizer.getRotationStub.defaultReturnValue = 30.toRadians()
+        gestureRecognizer.sendActions()
+
         gestureRecognizer.getStateStub.defaultReturnValue = .cancelled
         gestureRecognizer.sendActions()
 

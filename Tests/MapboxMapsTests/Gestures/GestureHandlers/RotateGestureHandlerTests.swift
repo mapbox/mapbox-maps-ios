@@ -48,7 +48,6 @@ final class RotateGestureHandlerTests: XCTestCase {
         XCTAssertEqual(delegate.gestureBeganStub.invocations.count, 0)
     }
 
-
     func testRotationVelocityBelowThresholdIgnored() {
         gestureRecognizer.getStateStub.defaultReturnValue = .began
         gestureRecognizer.sendActions()
@@ -148,7 +147,7 @@ final class RotateGestureHandlerTests: XCTestCase {
     func testFocalPointOveridesTouchMidpointAnchor() {
         gestureRecognizer.getStateStub.defaultReturnValue = .began
         gestureRecognizer.sendActions()
-        
+
         rotateGestureHandler.focalPoint = .random()
         gestureRecognizer.getStateStub.defaultReturnValue = .changed
         gestureRecognizer.getVelocityStub.defaultReturnValue = 1.radiansPerSecond

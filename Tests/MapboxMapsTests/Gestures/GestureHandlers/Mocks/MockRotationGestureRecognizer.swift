@@ -12,15 +12,33 @@ final class MockRotationGestureRecognizer: UIRotationGestureRecognizer {
         }
     }
 
-    let getRotationStub = Stub<Void, CGFloat>(defaultReturnValue: 2)
+    let getVelocityStub = Stub<Void, CGFloat>(defaultReturnValue: 0)
+    override var velocity: CGFloat {
+        get {
+            getVelocityStub.call()
+        }
+        // swiftlint:disable:next unused_setter_value
+        set {
+            fatalError("unimplemented")
+        }
+    }
+
+
+    let getRotationStub = Stub<Void, CGFloat>(defaultReturnValue: 0)
+    let setRotationStub = Stub<CGFloat, Void>()
     override var rotation: CGFloat {
         get {
             getRotationStub.call()
         }
         // swiftlint:disable:next unused_setter_value
         set {
-            fatalError("unimplemented")
+            setRotationStub.call(with: newValue)
         }
+    }
+
+    let locationInViewStub = Stub<UIView?, CGPoint>(defaultReturnValue: .zero)
+    override func location(in view: UIView?) -> CGPoint {
+        locationInViewStub.call(with: view)
     }
 
     struct AddTargetParams {

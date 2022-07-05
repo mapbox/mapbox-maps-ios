@@ -526,7 +526,6 @@ final class GestureManagerTests: XCTestCase {
 
         XCTAssertEqual(delegate.gestureDidBeginStub.invocations.count, 1)
 
-
         gestureManager.gestureEnded(for: .pinch, willAnimate: false)
         XCTAssertEqual(delegate.gestureDidEndStub.invocations.count, 0)
 

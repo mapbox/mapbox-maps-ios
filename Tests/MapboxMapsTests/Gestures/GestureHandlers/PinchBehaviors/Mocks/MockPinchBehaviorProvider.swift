@@ -9,7 +9,6 @@ final class MockPinchBehaviorProvider: PinchBehaviorProviderProtocol {
         var focalPoint: CGPoint?
     }
     let makePinchBehaviorStub = Stub<MakePinchBehaviorParams, PinchBehavior>(defaultReturnValue: MockPinchBehavior())
-    // swiftlint:disable:next function_parameter_count
     func makePinchBehavior(panEnabled: Bool,
                            zoomEnabled: Bool,
                            initialCameraState: CameraState,

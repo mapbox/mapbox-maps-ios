@@ -108,8 +108,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                 mapboxMap: mapboxMap))
     }
 
-    private func makeRotateGestureHandler(view: UIView,
-                                         mapboxMap: MapboxMapProtocol) -> RotateGestureHandler {
+    private func makeRotateGestureHandler(view: UIView, mapboxMap: MapboxMapProtocol) -> RotateGestureHandler {
         let gestureRecognizer = UIRotationGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         return RotateGestureHandler(gestureRecognizer: gestureRecognizer, mapboxMap: mapboxMap)

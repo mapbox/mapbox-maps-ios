@@ -29,7 +29,6 @@ final class MockRotationGestureRecognizer: UIRotationGestureRecognizer {
         get {
             getRotationStub.call()
         }
-        // swiftlint:disable:next unused_setter_value
         set {
             setRotationStub.call(with: newValue)
         }

@@ -47,7 +47,9 @@ internal protocol RotateGestureHandlerProtocol: FocusableGestureHandlerProtocol 
              guard let initialBearing = initialBearing else {
                  return
              }
-             let rotationInDegrees = CLLocationDirection(gestureRecognizer.rotation.toDegrees() * -1)
+             // flip the sign since the UIKit coordinate system is flipped
+              // relative to the coordinate system used for bearing.
+             let rotationInDegrees = -CLLocationDirection(gestureRecognizer.rotation.toDegrees())
              let midpoint = gestureRecognizer.location(in: view)
 
              mapboxMap.setCamera(

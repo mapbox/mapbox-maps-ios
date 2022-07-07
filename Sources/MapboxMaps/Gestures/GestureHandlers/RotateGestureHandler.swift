@@ -70,7 +70,7 @@ internal protocol RotateGestureHandlerProtocol: FocusableGestureHandlerProtocol 
 
      private func shouldStartRotating(with velocity: CGFloat, deltaSinceStart: CGFloat) -> Bool {
          let deltaSinceStartInDegrees = deltaSinceStart.toDegrees()
-         let velocityInDegreesPerMillisecond = abs(velocity) * 0.057295779513082
+         let velocityInDegreesPerMillisecond = abs(velocity).toDegrees() / 1000.0
 
          let lowVelocity = velocityInDegreesPerMillisecond < 0.04 ||
          velocityInDegreesPerMillisecond > 0.07 && deltaSinceStartInDegrees < 5 ||

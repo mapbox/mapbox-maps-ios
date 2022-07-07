@@ -31,12 +31,14 @@ phases:
       - unzip $DEVICEFARM_TEST_PACKAGE_PATH -d /tmp/unzipped-ipa
       - cp -R /tmp/unzipped-ipa/Payload/MobileMetrics.app /tmp/test-root/Release-iphoneos
       - mv /tmp/test-root/Release-iphoneos/MobileMetrics.app/*.xctestrun /tmp/test-root
+      - cp -RL /tmp/unzipped-ipa/Payload/DebugSymbols ~/
       - xcodebuild -version
 
 
   # The test phase includes commands that run your test suite execution.
   test:
     commands:
+      - find ~/DebugSymbols -iname "*.dSYM" -exec echo {} \; -exec mdls {} \;
       - cd /tmp/test-root && xcodebuild test-without-building -destination id=$DEVICEFARM_DEVICE_UDID -xctestrun *.xctestrun      -derivedDataPath /tmp/build -resultBundlePath /tmp/build/metrics.xcresult
 
   # The post test phase includes are commands that are run after your tests are executed.

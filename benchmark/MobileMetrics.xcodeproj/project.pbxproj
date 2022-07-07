@@ -101,6 +101,7 @@
 		FEA8FD9B2834F5E400CDDA97 /* SpecsBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecsBenchmark.swift; sourceTree = "<group>"; };
 		FEA8FDA3283510DD00CDDA97 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		FEB2802A2837C1BE00E903D2 /* ClearOfflineDataCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearOfflineDataCommand.swift; sourceTree = "<group>"; };
+		FEB9DB59287322ED0041F020 /* MobileMetrics.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MobileMetrics.xctestplan; sourceTree = "<group>"; };
 		FED7F06C283BA56900AD2313 /* OfflineManager+Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OfflineManager+Async.swift"; sourceTree = "<group>"; };
 		FED7F06E283BA59800AD2313 /* MapboxMap+Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MapboxMap+Async.swift"; sourceTree = "<group>"; };
 		FED7F070283BA5AB00AD2313 /* TileStore+Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TileStore+Async.swift"; sourceTree = "<group>"; };
@@ -203,6 +204,7 @@
 		7499663327C7AD2A00DA186A /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				FEB9DB59287322ED0041F020 /* MobileMetrics.xctestplan */,
 				74F237EA27E32DE8009F304C /* Base */,
 				74F237F027E3326E009F304C /* InitSDKBenchmark.swift */,
 				74F2381227E3730C009F304C /* WarmCacheBenchmark.swift */,

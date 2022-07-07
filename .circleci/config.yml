@@ -206,6 +206,9 @@ commands:
       - run:
           name: Install dependencies
           command: brew install xcodegen
+          environment:
+            HOMEBREW_NO_AUTO_UPDATE: 1
+            HOMEBREW_NO_INSTALL_CLEANUP: 1
       - run:
           name: Build Maps SDK (dynamic)
           working_directory: mapbox-maps-ios/scripts/release/packager
@@ -486,7 +489,7 @@ orbs:
             default: true
         steps:
           - run:
-              name: Build
+              name: Assemble packages for device testing
               environment:
                 DERIVED_DATA_PATH: << parameters.derivedDataPath >>
                 OUTPUT_DATA_PATH: << parameters.outputPath >>
@@ -498,6 +501,13 @@ orbs:
 
                 mkdir -p "$PAYLOAD_PATH"
                 mkdir -p "$OUTPUT_DATA_PATH"
+
+                # Copy debug symbols
+                DEBUG_SYMBOLS_PATH="$PAYLOAD_PATH/DebugSymbols"
+                mkdir $DEBUG_SYMBOLS_PATH
+                find $DERIVED_DATA_PATH/Build/Products/ -iname "*.dSYM" -exec cp -r {} $DEBUG_SYMBOLS_PATH \;
+                find $DERIVED_DATA_PATH/Build/Products/ -iname "*.bcsymbolmap" -exec cp -r {} $DEBUG_SYMBOLS_PATH \;
+
                 cp -R "$APP_PATH" "$PAYLOAD_PATH"
 
                 # Copy the tests out

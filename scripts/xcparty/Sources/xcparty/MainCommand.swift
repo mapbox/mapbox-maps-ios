@@ -6,7 +6,8 @@ struct MainCommand: ParsableCommand {
         commandName: "xcparty",
         subcommands: [
             FailuresCommand.self,
-            MetricsCommand.self
+            MetricsCommand.self,
+            ExportCrashesCommand.self
         ],
         defaultSubcommand: FailuresCommand.self)
 }

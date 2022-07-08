@@ -1,0 +1,30 @@
+{
+  "configurations" : [
+    {
+      "id" : "5619A59C-5585-4A99-BB37-F95AB720E40C",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:MobileMetrics.xcodeproj",
+      "identifier" : "7499661327C64ECD00DA186A",
+      "name" : "MobileMetrics"
+    },
+    "testRepetitionMode" : "retryOnFailure"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:MobileMetrics.xcodeproj",
+        "identifier" : "7499663127C7AD2900DA186A",
+        "name" : "MobileMetricsTests"
+      }
+    }
+  ],
+  "version" : 1
+}

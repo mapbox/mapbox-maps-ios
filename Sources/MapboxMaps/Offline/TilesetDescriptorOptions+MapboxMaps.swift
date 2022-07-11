@@ -15,18 +15,18 @@ extension TilesetDescriptorOptions {
     ///
     /// - Note: The implementation loads and stores the loaded tiles in batches,
     ///     each batch has a pre-defined zoom range and it contains all child
-    ///     tiles within the range. The currently used tile batches zoom ranges
-    ///     are:
+    ///     tiles within the range. TThe zoom leveling scheme for the tile batches
+    ///     can be defined in Tile JSON, otherwise the default scheme is used:
     ///
-    ///     - Global coverage: 0 - 5
-    ///     - Regional information: 6 - 10
-    ///     - Local information: 11 - 14
-    ///     - Streets detail: 15 - 16
+    /// * Global coverage: 0 - 5
+    /// * Regional information: 6 - 10
+    /// * Local information: 11 - 14
+    /// * Streets detail: 15 - 16
     ///
-    ///     Internally, the implementation maps the given tile pack zoom range
-    ///     and geometry to a set of pre-defined batches to load, therefore
-    ///     it is highly recommended to choose the minZoom and maxZoom values
-    ///     in accordance with the tile batches zoom ranges (see the list above).
+    /// Internally, the implementation maps the given tile pack zoom range
+    /// and geometry to a set of pre-defined batches to load, therefore
+    /// it is highly recommended to choose the minZoom and maxZoom values
+    /// in accordance with the tile batches zoom ranges (see the list above).
     ///
     /// - Note: If a `stylePackOptions` is provided, OfflineManager will create a
     ///     style package while resolving the corresponding tileset descriptor

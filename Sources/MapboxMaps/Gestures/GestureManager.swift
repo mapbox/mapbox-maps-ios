@@ -146,7 +146,7 @@ public final class GestureManager: GestureHandlerDelegate {
         doubleTouchToZoomOutGestureHandler.delegate = self
         quickZoomGestureHandler.delegate = self
         singleTapGestureHandler.delegate = self
-
+        (pinchGestureHandler as! PinchGestureHandler).rotateHandler = (rotateGestureHandler as! RotateGestureHandler)
         pinchGestureHandler.gestureRecognizer.require(toFail: panGestureHandler.gestureRecognizer)
         pitchGestureHandler.gestureRecognizer.require(toFail: panGestureHandler.gestureRecognizer)
         quickZoomGestureHandler.gestureRecognizer.require(toFail: doubleTapToZoomInGestureHandler.gestureRecognizer)

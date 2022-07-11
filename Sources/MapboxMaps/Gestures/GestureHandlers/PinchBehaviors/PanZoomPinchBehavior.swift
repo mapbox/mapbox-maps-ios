@@ -1,4 +1,5 @@
 import CoreGraphics
+import CoreLocation
 
 internal final class PanZoomPinchBehavior: PinchBehavior {
     private let initialCameraState: CameraState
@@ -13,14 +14,14 @@ internal final class PanZoomPinchBehavior: PinchBehavior {
         self.mapboxMap = mapboxMap
     }
 
-    internal func update(pinchMidpoint: CGPoint, pinchScale: CGFloat) {
+    internal func update(pinchMidpoint: CGPoint, pinchScale: CGFloat, handler: RotateGestureHandler) {
         mapboxMap.performWithoutNotifying {
             mapboxMap.setCamera(
                 to: CameraOptions(
                     center: initialCameraState.center,
                     zoom: initialCameraState.zoom,
                     bearing: initialCameraState.bearing))
-
+            print("rrr reset bearing to \(initialCameraState.bearing)")
             mapboxMap.dragStart(for: initialPinchMidpoint)
             let dragOptions = mapboxMap.dragCameraOptions(
                 from: initialPinchMidpoint,

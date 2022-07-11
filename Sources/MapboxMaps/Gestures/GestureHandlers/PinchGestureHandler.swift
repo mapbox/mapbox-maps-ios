@@ -30,7 +30,7 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
     private let mapboxMap: MapboxMapProtocol
 
     private let pinchBehaviorProvider: PinchBehaviorProviderProtocol
-
+    var rotateHandler: RotateGestureHandler!
     /// Initialize the handler which creates the panGestureRecognizer and adds to the view
     internal init(gestureRecognizer: UIPinchGestureRecognizer,
                   mapboxMap: MapboxMapProtocol,
@@ -71,7 +71,10 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
             if let pinchBehavior = pinchBehavior {
                 pinchBehavior.update(
                     pinchMidpoint: gestureRecognizer.location(in: view),
-                    pinchScale: gestureRecognizer.scale)
+                    pinchScale: gestureRecognizer.scale,
+                    handler: rotateHandler)
+
+                rotateHandler.scheduleRotationUpdate()
             } else {
                 start(with: gestureRecognizer)
             }
@@ -97,6 +100,7 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
                 category: "Gestures")
         }
 
+        print("rrr pinch detected initial bearing \(mapboxMap.cameraState.bearing)")
         pinchBehavior = pinchBehaviorProvider.makePinchBehavior(
             panEnabled: panEnabled,
             zoomEnabled: zoomEnabled,

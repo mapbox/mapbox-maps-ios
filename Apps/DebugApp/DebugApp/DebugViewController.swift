@@ -16,5 +16,7 @@ final class DebugViewController: UIViewController {
         mapView = MapView(frame: view.bounds)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
+
+//        mapView.gestures.options.simultaneousRotateAndPinchZoomEnabled = false
     }
 }

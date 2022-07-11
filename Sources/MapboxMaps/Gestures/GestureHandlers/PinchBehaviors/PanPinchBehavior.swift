@@ -1,3 +1,4 @@
+import CoreGraphics
 internal final class PanPinchBehavior: PinchBehavior {
     private let initialCameraState: CameraState
     private let initialPinchMidpoint: CGPoint
@@ -11,7 +12,7 @@ internal final class PanPinchBehavior: PinchBehavior {
         self.mapboxMap = mapboxMap
     }
 
-    internal func update(pinchMidpoint: CGPoint, pinchScale: CGFloat) {
+    internal func update(pinchMidpoint: CGPoint, pinchScale: CGFloat, handler: RotateGestureHandler) {
         mapboxMap.performWithoutNotifying {
             mapboxMap.setCamera(to: CameraOptions(
                 center: initialCameraState.center))

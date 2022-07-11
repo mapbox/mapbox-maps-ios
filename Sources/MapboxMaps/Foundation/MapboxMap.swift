@@ -314,6 +314,8 @@ public final class MapboxMap: MapboxMapProtocol {
 
     /// Calculates a `CameraOptions` to fit a `CoordinateBounds`
     ///
+    /// This API isn't supported by Globe projection.
+    ///
     /// - Parameters:
     ///   - coordinateBounds: The coordinate bounds that will be displayed within the viewport.
     ///   - padding: The new padding to be used by the camera.
@@ -333,6 +335,8 @@ public final class MapboxMap: MapboxMapProtocol {
     }
 
     /// Calculates a `CameraOptions` to fit a list of coordinates.
+    ///
+    /// This API isn't supported by Globe projection.
     ///
     /// - Parameters:
     ///   - coordinates: Array of coordinates that should fit within the new viewport.
@@ -361,6 +365,8 @@ public final class MapboxMap: MapboxMapProtocol {
     /// camera center at the principal point of the projection (defined by padding)
     /// fit into the rect.
     ///
+    /// This API isn't supported by Globe projection.
+    ///
     /// - Note:
     ///     This method may fail if the principal point of the projection is not
     ///     inside `rect` or if there is insufficient screen space, defined by
@@ -382,6 +388,8 @@ public final class MapboxMap: MapboxMapProtocol {
     }
 
     /// Calculates a `CameraOptions` to fit a geometry
+    ///
+    /// This API isn't supported by Globe projection.
     ///
     /// - Parameters:
     ///   - geometry: The geoemtry that will be displayed within the viewport.
@@ -405,6 +413,8 @@ public final class MapboxMap: MapboxMapProtocol {
 
     /// Returns the coordinate bounds corresponding to a given `CameraOptions`
     ///
+    /// This API isn't supported by Globe projection.
+    ///
     /// - Parameter camera: The camera for which the coordinate bounds will be returned.
     /// - Returns: `CoordinateBounds` for the given `CameraOptions`
     public func coordinateBounds(for camera: CameraOptions) -> CoordinateBounds {
@@ -416,6 +426,8 @@ public final class MapboxMap: MapboxMapProtocol {
     ///
     /// This function is particularly useful, if the camera shows the antimeridian.
     ///
+    /// This API isn't supported by Globe projection.
+    ///
     /// - Parameter camera: The camera for which the coordinate bounds will be returned.
     /// - Returns: `CoordinateBounds` for the given ``CameraOptions``.
     public func coordinateBoundsUnwrapped(for camera: CameraOptions) -> CoordinateBounds {
@@ -423,6 +435,8 @@ public final class MapboxMap: MapboxMapProtocol {
     }
 
     /// Returns the coordinate bounds and zoom for a given `CameraOptions`.
+    ///
+    /// This API isn't supported by Globe projection.
     ///
     /// - Parameter camera: The camera for which the `CoordinateBoundsZoom` will be returned.
     /// - Returns: `CoordinateBoundsZoom` for the given `CameraOptions`
@@ -433,6 +447,8 @@ public final class MapboxMap: MapboxMapProtocol {
     /// Returns the unwrapped coordinate bounds and zoom for a given `CameraOptions`.
     ///
     /// This function is particularly useful, if the camera shows the antimeridian.
+    ///
+    /// This API isn't supported by Globe projection.
     ///
     /// - Parameter camera: The camera for which the `CoordinateBoundsZoom` will
     ///     be returned.
@@ -446,6 +462,8 @@ public final class MapboxMap: MapboxMapProtocol {
     /// Converts a point in the mapView's coordinate system to a geographic coordinate.
     /// The point must exist in the coordinate space of the `MapView`
     ///
+    /// This API isn't supported by Globe projection.
+    ///
     /// - Parameter point: The point to convert. Must exist in the coordinate space
     ///     of the `MapView`
     /// - Returns: A `CLLocationCoordinate` that represents the geographic location
@@ -455,6 +473,9 @@ public final class MapboxMap: MapboxMapProtocol {
     }
 
     /// Converts a map coordinate to a `CGPoint`, relative to the `MapView`.
+    ///
+    /// This API isn't supported by Globe projection.
+    ///
     /// - Parameter coordinate: The coordinate to convert.
     /// - Returns: A `CGPoint` relative to the `UIView`. If the point is outside of the bounds
     ///     of `MapView` the returned point contains `-1.0` for both coordinates.
@@ -464,6 +485,8 @@ public final class MapboxMap: MapboxMapProtocol {
     }
 
     /// Converts map coordinates to an array of `CGPoint`, relative to the `MapView`.
+    ///
+    /// This API isn't supported by Globe projection.
     ///
     /// - Parameter coordinates: The coordinate to convert.
     /// - Returns: An array of `CGPoint` relative to the `UIView`.
@@ -475,6 +498,8 @@ public final class MapboxMap: MapboxMapProtocol {
 
     /// Converts points in the mapView's coordinate system to geographic coordinates.
     /// The points must exist in the coordinate space of the `MapView`.
+    ///
+    /// This API isn't supported by Globe projection.
     ///
     /// - Parameter point: The point to convert. Must exist in the coordinate space
     ///     of the `MapView`

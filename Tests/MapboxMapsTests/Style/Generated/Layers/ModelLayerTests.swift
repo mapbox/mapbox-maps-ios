@@ -82,6 +82,7 @@ final class ModelLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfPaintProperties() {
        var layer = ModelLayer(id: "test-id")
+       layer.modelCastShadows = Value<Bool>.testConstantValue()
        layer.modelColor = Value<StyleColor>.testConstantValue()
        layer.modelColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.modelColorMixIntensity = Value<Double>.testConstantValue()
@@ -111,6 +112,7 @@ final class ModelLayerTests: XCTestCase {
        do {
            let decodedLayer = try JSONDecoder().decode(ModelLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
+           XCTAssert(layer.modelCastShadows == Value<Bool>.testConstantValue())
            XCTAssert(layer.modelColor == Value<StyleColor>.testConstantValue())
            XCTAssert(layer.modelColorMixIntensity == Value<Double>.testConstantValue())
            XCTAssert(layer.modelOpacity == Value<Double>.testConstantValue())

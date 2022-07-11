@@ -4,6 +4,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Add experimental `Puck3DConfiguration.modelCastShadows` option to control shadow casting for the 3D puck. ([#1435](https://github.com/mapbox/mapbox-maps-ios/pull/1435))
 * Expose public initializer for `TilesetDescriptorOptionsForTilesets`. ([1431](https://github.com/mapbox/mapbox-maps-ios/pull/1431))
 
 ## 10.7.0-beta.1 - June 29, 2022

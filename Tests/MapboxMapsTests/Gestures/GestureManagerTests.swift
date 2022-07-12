@@ -548,4 +548,10 @@ final class GestureManagerTests: XCTestCase {
         gestureManager.gestureEnded(for: .pinch, willAnimate: false)
         XCTAssertEqual(delegate.gestureDidEndStub.invocations.count, 1)
     }
+
+    func testRotationUpdateScheduledAfterPinchUpdate() {
+        gestureManager.pinchGestureHandlerDidUpdateGesture(pinchGestureHandler)
+
+        XCTAssertEqual(rotateGestureHandler.scheduleRotationUpdateIfNeededStub.invocations.count, 1)
+    }
 }

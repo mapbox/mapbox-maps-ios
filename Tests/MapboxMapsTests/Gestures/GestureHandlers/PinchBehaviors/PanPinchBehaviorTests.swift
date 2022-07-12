@@ -26,7 +26,7 @@ final class PanPinchBehaviorTests: BasePinchBehaviorTests {
         // verify that the first set camera invocation resets the center
         XCTAssertEqual(
             mapboxMap.setCameraStub.invocations[0].parameters,
-            CameraOptions(center: initialCameraState.center))
+            CameraOptions(center: initialCameraState.center, bearing: initialCameraState.bearing))
 
         // verify that dragStart is called once with initial midpoint
         XCTAssertEqual(

@@ -114,12 +114,6 @@ workflows:
             - Build Examples tests [non-main]
           devices: --device model=iphone8,version=14.7
 
-      - trigger-compatibility-verification?:
-          type: approval
-      - trigger-compatibility-verification:
-          requires:
-            - trigger-compatibility-verification?
-
   steve:
     unless: << pipeline.parameters.turf-revision >>
     jobs:
@@ -189,6 +183,23 @@ workflows:
           filters:
             branches:
               only: main
+
+      # Configure triggering end-to-end verification
+      - sdk-e2e-test:
+          filters:
+              branches:
+                  ignore:
+                      - main
+          name: run-sdk-e2e-test-devel
+      - sdk-e2e-test:
+          filters:
+              branches:
+                  only:
+                      - main
+              tags:
+                  only: /^v.*/
+          name: run-sdk-e2e-test-validation
+          validation: true
 
   release:
     jobs:
@@ -432,21 +443,66 @@ jobs:
           report_failure: << parameters.report_failure >>
           message: "metrics"
 
-  trigger-compatibility-verification:
-    docker:
-      - image: cimg/python:3.10.4
-    steps:
-      - checkout
-      - run:
-          name: Install python depedencies
-          command: |
-            pip3 install PyYAML
-            pip3 install GitPython
-            pip3 install requests
-      - run:
-          name: Trigger compatibility test
-          command: |
-            python3 scripts/ci-trigger/ci-compatibility-start-pipeline.py --target-slug mapbox/mapbox-sdk --token ${CIRCLECI_API_TOKEN_MAPBOX_MAPS_IOS_INTERNAL} --config mapbox-maps-ios=${CIRCLE_SHA1} --origin-slug mapbox/mapbox-maps-ios --platform ios
+  sdk-e2e-test:
+      docker:
+        - image: "mbxci/linux-base:ebee268fbe3d078cdacefee679f09c609006cdf4"
+      resource_class: small
+      parameters:
+          validation:
+              default: false
+              type: boolean
+      steps:
+          - add_ssh_keys:
+              fingerprints:
+                  - 3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e
+          - checkout
+          - run:
+              command: |
+                  curl -Ls https://mapbox-release-engineering.s3.amazonaws.com/mbx-ci/latest/mbx-ci-linux-amd64 > mbx-ci && chmod 755 ./mbx-ci
+                  ./mbx-ci aws setup
+              name: Install mbx-ci    
+          - run:
+              command: |
+                  curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+                  echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+                  sudo apt update && sudo apt install gh -y
+                  sudo pip3 install gitpython
+                  sudo cp ./mbx-ci /usr/local/bin/
+                  echo "export CIRCLE_API_TOKEN=$CIRCLECI_API_TOKEN_MAPBOX_MAPS_IOS_INTERNAL" >> $BASH_ENV
+                  source $BASH_ENV
+              name: Install dependency
+          - when:
+              condition:
+                  not: << parameters.validation >>
+              steps:
+                  - run:
+                      command: |
+                          E2E_TRIGGER=$(./scripts/ci-trigger/ci-e2e-job-trigger-checker.sh || echo -n "retval $?")
+                          if [[ $E2E_TRIGGER == *"retval 1"* ]]; then
+                              echo "E2E tests not requested, skipping."
+                              exit 0
+                          fi
+                          export GITHUB_TOKEN=$(mbx-ci github reader token)
+                          LABELS=$(gh pr view --repo $CIRCLE_REPOSITORY_URL $CIRCLE_PULL_REQUEST --json labels)
+                          if [[ $LABELS == *"e2e_trunk"* ]]; then
+                              export E2E_VERSION_CONFIG="trunk"
+                          elif [[ $LABELS == *"e2e_latest"* ]]; then
+                              export E2E_VERSION_CONFIG="latest"
+                          else
+                              export E2E_VERSION_CONFIG="default"
+                          fi
+                          echo "Run E2E tests with ${E2E_VERSION_CONFIG} config."
+                          scripts/ci-trigger/ci-e2e-compatibility-start-pipeline.py --config mapbox-maps-ios=${CIRCLE_SHA1} --platform all --versions ${E2E_VERSION_CONFIG}
+                      name: Trigger E2E SDK test devel pipeline
+          - when:
+              condition: << parameters.validation >>
+              steps:
+                  - run:
+                      command: |
+                          export E2E_VERSION_CONFIG="latest"
+                          echo "Run E2E tests with ${E2E_VERSION_CONFIG} config."
+                          scripts/ci-trigger/ci-e2e-compatibility-start-pipeline.py --config mapbox-maps-ios=${CIRCLE_SHA1} --platform all --versions ${E2E_VERSION_CONFIG}
+                      name: Trigger E2E SDK test validation pipeline
 
   unit-test-sdk:
     <<: *base-job

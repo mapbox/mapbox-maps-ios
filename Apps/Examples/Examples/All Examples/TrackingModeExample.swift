@@ -6,8 +6,8 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
 
     private var mapView: MapView!
     private var cameraLocationConsumer: CameraLocationConsumer!
-    private lazy var toggleBearingImageButton: UIButton = UIButton(frame: .zero)
-    private lazy var styleToggle: UISegmentedControl = UISegmentedControl(items: Style.allCases.map(\.name))
+    private lazy var toggleBearingImageButton = UIButton(frame: .zero)
+    private lazy var styleToggle = UISegmentedControl(items: Style.allCases.map(\.name))
     private var style: Style = .satelliteStreets {
         didSet {
             mapView.mapboxMap.style.uri = style.uri

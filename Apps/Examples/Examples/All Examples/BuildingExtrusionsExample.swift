@@ -158,4 +158,16 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
 
         try? mapView.mapboxMap.style.setLight(light)
     }
+
+    public func locationUpdate(newLocation: Location) {
+        mapView.camera.ease(
+            to: CameraOptions(
+                center: newLocation.coordinate,
+                zoom: 15,
+                bearing: 0,
+                pitch: 55),
+            duration: 1,
+            curve: .linear,
+            completion: nil)
+    }
 }

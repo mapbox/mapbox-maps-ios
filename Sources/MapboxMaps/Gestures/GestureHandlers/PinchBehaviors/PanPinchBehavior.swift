@@ -14,7 +14,8 @@ internal final class PanPinchBehavior: PinchBehavior {
     internal func update(pinchMidpoint: CGPoint, pinchScale: CGFloat) {
         mapboxMap.performWithoutNotifying {
             mapboxMap.setCamera(to: CameraOptions(
-                center: initialCameraState.center))
+                center: initialCameraState.center,
+                bearing: initialCameraState.bearing))
         }
 
         mapboxMap.dragStart(for: initialPinchMidpoint)

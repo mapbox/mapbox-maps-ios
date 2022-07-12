@@ -86,7 +86,7 @@ internal protocol RotateGestureHandlerProtocol: FocusableGestureHandlerProtocol 
           // relative to the coordinate system used for bearing.
          let rotationInDegrees = -CLLocationDirection(rotateGestureRecognizer.rotation.toDegrees())
          let midpoint = gestureRecognizer.location(in: view)
-         let bearing = (initialBearing + rotationInDegrees).truncatingRemainder(dividingBy: 360.0)
+         let bearing = (initialBearing + rotationInDegrees).wrapped(to: 0..<360)
 
          mapboxMap.setCamera(to: CameraOptions(anchor: focalPoint ?? midpoint, bearing: bearing))
      }

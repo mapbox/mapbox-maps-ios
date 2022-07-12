@@ -114,9 +114,7 @@ final class Custom3DPuckExample: UIViewController, ExampleProtocol, LocationCons
         )
 
         layer.fillExtrusionBase = .expression(
-
             Exp(.get) { "min_height"}
-
         )
 
         layer.fillExtrusionAmbientOcclusionIntensity = .constant(0.3)

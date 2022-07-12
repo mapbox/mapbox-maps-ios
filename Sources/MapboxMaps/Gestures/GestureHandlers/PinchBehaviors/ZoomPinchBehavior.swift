@@ -14,12 +14,10 @@ internal final class ZoomPinchBehavior: PinchBehavior {
         self.mapboxMap = mapboxMap
     }
 
-    internal func update(pinchMidpoint: CGPoint,
-                         pinchScale: CGFloat,
-                         pinchAngle: CGFloat) {
+    internal func update(pinchMidpoint: CGPoint, pinchScale: CGFloat) {
         let zoomIncrement = log2(pinchScale)
         mapboxMap.setCamera(to: CameraOptions(
-            anchor: focalPoint ?? initialPinchMidpoint,
+            anchor: focalPoint ?? pinchMidpoint,
             zoom: initialCameraState.zoom + zoomIncrement))
     }
 }

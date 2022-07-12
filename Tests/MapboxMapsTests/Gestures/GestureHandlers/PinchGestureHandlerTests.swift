@@ -27,7 +27,6 @@ final class PinchGestureHandlerTests: XCTestCase {
 
         pinchGestureHandler.panEnabled = .random()
         pinchGestureHandler.zoomEnabled = .random()
-        pinchGestureHandler.rotateEnabled = .random()
         gestureRecognizer.locationOfTouchStub.returnValueQueue = [
             CGPoint(x: -1, y: -1),
             CGPoint(x: 1, y: 1)]
@@ -60,10 +59,8 @@ final class PinchGestureHandlerTests: XCTestCase {
         let parameters = pinchBehaviorProvider.makePinchBehaviorStub.invocations[0].parameters
         XCTAssertEqual(parameters.panEnabled, pinchGestureHandler.panEnabled)
         XCTAssertEqual(parameters.zoomEnabled, pinchGestureHandler.zoomEnabled)
-        XCTAssertEqual(parameters.rotateEnabled, pinchGestureHandler.rotateEnabled)
         XCTAssertEqual(parameters.initialCameraState, mapboxMap.cameraState)
         XCTAssertEqual(parameters.initialPinchMidpoint, initialPinchMidpoint)
-        XCTAssertEqual(parameters.initialPinchAngle, .pi / 4)
     }
 
     func verifyGestureBegan() {
@@ -152,10 +149,7 @@ final class PinchGestureHandlerTests: XCTestCase {
             pinchBehaviorProvider.makePinchBehaviorStub.invocations.first?.returnValue as? MockPinchBehavior)
         XCTAssertEqual(
             behavior.updateStub.invocations.map(\.parameters),
-            [.init(
-                pinchMidpoint: pinchMidpoint,
-                pinchScale: pinchScale,
-                pinchAngle: .pi / 2)])
+            [.init(pinchMidpoint: pinchMidpoint, pinchScale: pinchScale)])
 
         sendActions(with: .ended, numberOfTouches: 2)
 
@@ -181,5 +175,49 @@ final class PinchGestureHandlerTests: XCTestCase {
 
         sendActions(with: .ended, numberOfTouches: 2)
         verifyGestureEnded()
+    }
+
+    func testSimultaneousRotateAndPinchZoomEnabledDefaultValue() {
+        XCTAssertEqual(pinchGestureHandler.simultaneousRotateAndPinchZoomEnabled, true)
+    }
+
+    func testPinchRecognizesSimultaneouslyWithRotation() {
+        let shouldRecognizeSimultaneously = pinchGestureHandler.gestureRecognizer(
+            gestureRecognizer,
+            shouldRecognizeSimultaneouslyWith: UIRotationGestureRecognizer()
+        )
+
+        XCTAssertTrue(shouldRecognizeSimultaneously)
+    }
+
+    func testPinchShouldNotRecognizeSimultaneouslyWithNonRotation() {
+        let recognizers = [UIPanGestureRecognizer(), UILongPressGestureRecognizer(), UISwipeGestureRecognizer(), UIScreenEdgePanGestureRecognizer(), UITapGestureRecognizer()]
+
+        for recognizer in recognizers {
+            let shouldRecognizeSimultaneously = pinchGestureHandler.gestureRecognizer(
+                gestureRecognizer,
+                shouldRecognizeSimultaneouslyWith: recognizer
+            )
+
+            XCTAssertFalse(shouldRecognizeSimultaneously)
+        }
+    }
+
+    func testPinchShouldNotRecognizeSimultaneouslyWhenRotateAndPinchDisabled() {
+        pinchGestureHandler.simultaneousRotateAndPinchZoomEnabled = false
+
+        let shouldRecognizeSimultaneously = pinchGestureHandler.gestureRecognizer(
+            gestureRecognizer,
+            shouldRecognizeSimultaneouslyWith: UIRotationGestureRecognizer()
+        )
+
+        XCTAssertFalse(shouldRecognizeSimultaneously)
+    }
+
+    func testPinchUpdateShouldNotifyDelegate() {
+        sendActions(with: .began, numberOfTouches: 2)
+        sendActions(with: .changed, numberOfTouches: 2)
+
+        XCTAssertEqual(delegate.pinchGestureHandlerDidUpdateGestureStub.invocations.count, 1)
     }
 }

@@ -20,9 +20,11 @@ public final class GestureManager: GestureHandlerDelegate {
         set {
             panGestureRecognizer.isEnabled = newValue.panEnabled
             pinchGestureRecognizer.isEnabled = newValue.pinchEnabled
-            pinchGestureHandler.rotateEnabled = newValue.pinchRotateEnabled
+            rotateGestureRecognizer.isEnabled = newValue.rotateEnabled
             pinchGestureHandler.zoomEnabled = newValue.pinchZoomEnabled
             pinchGestureHandler.panEnabled = newValue.pinchPanEnabled
+            pinchGestureHandler.simultaneousRotateAndPinchZoomEnabled = newValue.simultaneousRotateAndPinchZoomEnabled
+            rotateGestureHandler.simultaneousRotateAndPinchZoomEnabled = newValue.simultaneousRotateAndPinchZoomEnabled
             pitchGestureRecognizer.isEnabled = newValue.pitchEnabled
             doubleTapToZoomInGestureRecognizer.isEnabled = newValue.doubleTapToZoomInEnabled
             doubleTouchToZoomOutGestureRecognizer.isEnabled = newValue.doubleTouchToZoomOutEnabled
@@ -33,14 +35,16 @@ public final class GestureManager: GestureHandlerDelegate {
             doubleTouchToZoomOutGestureHandler.focalPoint = newValue.focalPoint
             quickZoomGestureHandler.focalPoint = newValue.focalPoint
             pinchGestureHandler.focalPoint = newValue.focalPoint
+            rotateGestureHandler.focalPoint = newValue.focalPoint
         }
         get {
             var gestureOptions = GestureOptions()
             gestureOptions.panEnabled = panGestureRecognizer.isEnabled
             gestureOptions.pinchEnabled = pinchGestureRecognizer.isEnabled
-            gestureOptions.pinchRotateEnabled = pinchGestureHandler.rotateEnabled
+            gestureOptions.rotateEnabled = rotateGestureRecognizer.isEnabled
             gestureOptions.pinchZoomEnabled = pinchGestureHandler.zoomEnabled
             gestureOptions.pinchPanEnabled = pinchGestureHandler.panEnabled
+            gestureOptions.simultaneousRotateAndPinchZoomEnabled = pinchGestureHandler.simultaneousRotateAndPinchZoomEnabled
             gestureOptions.pitchEnabled = pitchGestureRecognizer.isEnabled
             gestureOptions.doubleTapToZoomInEnabled = doubleTapToZoomInGestureRecognizer.isEnabled
             gestureOptions.doubleTouchToZoomOutEnabled = doubleTouchToZoomOutGestureRecognizer.isEnabled
@@ -60,6 +64,11 @@ public final class GestureManager: GestureHandlerDelegate {
     /// The gesture recognizer for the "pinch to zoom" gesture
     public var pinchGestureRecognizer: UIGestureRecognizer {
         return pinchGestureHandler.gestureRecognizer
+    }
+
+    /// The gesture recognizer for the rotate gesture
+    public var rotateGestureRecognizer: UIGestureRecognizer {
+        return rotateGestureHandler.gestureRecognizer
     }
 
     /// The gesture recognizer for the pitch gesture
@@ -99,6 +108,7 @@ public final class GestureManager: GestureHandlerDelegate {
 
     private let panGestureHandler: PanGestureHandlerProtocol
     private let pinchGestureHandler: PinchGestureHandlerProtocol
+    private let rotateGestureHandler: RotateGestureHandlerProtocol
     private let pitchGestureHandler: GestureHandler
     private let doubleTapToZoomInGestureHandler: FocusableGestureHandlerProtocol
     private let doubleTouchToZoomOutGestureHandler: FocusableGestureHandlerProtocol
@@ -109,6 +119,7 @@ public final class GestureManager: GestureHandlerDelegate {
 
     internal init(panGestureHandler: PanGestureHandlerProtocol,
                   pinchGestureHandler: PinchGestureHandlerProtocol,
+                  rotateGestureHandler: RotateGestureHandlerProtocol,
                   pitchGestureHandler: GestureHandler,
                   doubleTapToZoomInGestureHandler: FocusableGestureHandlerProtocol,
                   doubleTouchToZoomOutGestureHandler: FocusableGestureHandlerProtocol,
@@ -124,10 +135,12 @@ public final class GestureManager: GestureHandlerDelegate {
         self.quickZoomGestureHandler = quickZoomGestureHandler
         self.singleTapGestureHandler = singleTapGestureHandler
         self.anyTouchGestureHandler = anyTouchGestureHandler
+        self.rotateGestureHandler = rotateGestureHandler
         self.mapboxMap = mapboxMap
 
         panGestureHandler.delegate = self
         pinchGestureHandler.delegate = self
+        rotateGestureHandler.delegate = self
         pitchGestureHandler.delegate = self
         doubleTapToZoomInGestureHandler.delegate = self
         doubleTouchToZoomOutGestureHandler.delegate = self
@@ -143,17 +156,47 @@ public final class GestureManager: GestureHandlerDelegate {
         self.options = GestureOptions()
     }
 
+    private var pinchBeganCallCount = 0
+
     internal func gestureBegan(for gestureType: GestureType) {
+        // filter out duplicate pinch events coming from pinch and rotate handlers
+        // TODO: Remove this once GestureType.rotate is added
+        if gestureType == .pinch {
+            pinchBeganCallCount += 1
+
+            guard pinchBeganCallCount == 1 else {
+                return
+            }
+        }
+
         mapboxMap.beginGesture()
         delegate?.gestureManager(self, didBegin: gestureType)
     }
 
     internal func gestureEnded(for gestureType: GestureType, willAnimate: Bool) {
+        // filter out duplicate pinch events coming from pinch and rotate handlers
+        // TODO: Remove this once GestureType.rotate is added
+        if gestureType == .pinch {
+            assert(pinchBeganCallCount > 0)
+            pinchBeganCallCount -= 1
+
+            guard pinchBeganCallCount == 0 else {
+                return
+            }
+        }
         mapboxMap.endGesture()
         delegate?.gestureManager(self, didEnd: gestureType, willAnimate: willAnimate)
     }
 
     internal func animationEnded(for gestureType: GestureType) {
         delegate?.gestureManager(self, didEndAnimatingFor: gestureType)
+    }
+}
+
+extension GestureManager: PinchGestureHandlerDelegate {
+    func pinchGestureHandlerDidUpdateGesture(_ handler: PinchGestureHandlerProtocol) {
+        // Because of a bug in core maps camera state has to be reset before updating pinch drag.
+        // This call will make sure that bearing is set to correct value after pinch dragging.
+        rotateGestureHandler.scheduleRotationUpdateIfNeeded()
     }
 }

@@ -15,10 +15,7 @@ final class PanPinchBehaviorTests: BasePinchBehaviorTests {
         let dragCameraOptions = CameraOptions.random()
         mapboxMap.dragCameraOptionsStub.defaultReturnValue = dragCameraOptions
 
-        behavior.update(
-            pinchMidpoint: pinchMidpoint,
-            pinchScale: .random(in: 0..<2),
-            pinchAngle: .random(in: 0..<2 * .pi))
+        behavior.update(pinchMidpoint: pinchMidpoint, pinchScale: .random(in: 0..<2))
 
         // verify camera gets set twice
         guard mapboxMap.setCameraStub.invocations.count == 2 else {
@@ -29,7 +26,7 @@ final class PanPinchBehaviorTests: BasePinchBehaviorTests {
         // verify that the first set camera invocation resets the center
         XCTAssertEqual(
             mapboxMap.setCameraStub.invocations[0].parameters,
-            CameraOptions(center: initialCameraState.center))
+            CameraOptions(center: initialCameraState.center, bearing: initialCameraState.bearing))
 
         // verify that dragStart is called once with initial midpoint
         XCTAssertEqual(

@@ -9,80 +9,32 @@ final class PinchBehaviorProviderTests: XCTestCase {
             provider.makePinchBehavior(
                 panEnabled: true,
                 zoomEnabled: true,
-                rotateEnabled: true,
                 initialCameraState: .random(),
                 initialPinchMidpoint: .random(),
-                initialPinchAngle: .random(in: 0..<2 * .pi),
-                focalPoint: .random(.random()))
-            is PanZoomRotatePinchBehavior)
-        XCTAssertTrue(
-            provider.makePinchBehavior(
-                panEnabled: true,
-                zoomEnabled: true,
-                rotateEnabled: false,
-                initialCameraState: .random(),
-                initialPinchMidpoint: .random(),
-                initialPinchAngle: .random(in: 0..<2 * .pi),
                 focalPoint: .random(.random()))
             is PanZoomPinchBehavior)
         XCTAssertTrue(
             provider.makePinchBehavior(
                 panEnabled: true,
                 zoomEnabled: false,
-                rotateEnabled: true,
                 initialCameraState: .random(),
                 initialPinchMidpoint: .random(),
-                initialPinchAngle: .random(in: 0..<2 * .pi),
-                focalPoint: .random(.random()))
-            is PanRotatePinchBehavior)
-        XCTAssertTrue(
-            provider.makePinchBehavior(
-                panEnabled: true,
-                zoomEnabled: false,
-                rotateEnabled: false,
-                initialCameraState: .random(),
-                initialPinchMidpoint: .random(),
-                initialPinchAngle: .random(in: 0..<2 * .pi),
                 focalPoint: .random(.random()))
             is PanPinchBehavior)
         XCTAssertTrue(
             provider.makePinchBehavior(
                 panEnabled: false,
                 zoomEnabled: true,
-                rotateEnabled: true,
                 initialCameraState: .random(),
                 initialPinchMidpoint: .random(),
-                initialPinchAngle: .random(in: 0..<2 * .pi),
-                focalPoint: .random(.random()))
-            is ZoomRotatePinchBehavior)
-        XCTAssertTrue(
-            provider.makePinchBehavior(
-                panEnabled: false,
-                zoomEnabled: true,
-                rotateEnabled: false,
-                initialCameraState: .random(),
-                initialPinchMidpoint: .random(),
-                initialPinchAngle: .random(in: 0..<2 * .pi),
                 focalPoint: .random(.random()))
             is ZoomPinchBehavior)
         XCTAssertTrue(
             provider.makePinchBehavior(
                 panEnabled: false,
                 zoomEnabled: false,
-                rotateEnabled: true,
                 initialCameraState: .random(),
                 initialPinchMidpoint: .random(),
-                initialPinchAngle: .random(in: 0..<2 * .pi),
-                focalPoint: .random(.random()))
-            is RotatePinchBehavior)
-        XCTAssertTrue(
-            provider.makePinchBehavior(
-                panEnabled: false,
-                zoomEnabled: false,
-                rotateEnabled: false,
-                initialCameraState: .random(),
-                initialPinchMidpoint: .random(),
-                initialPinchAngle: .random(in: 0..<2 * .pi),
                 focalPoint: .random(.random()))
             is EmptyPinchBehavior)
     }

@@ -189,7 +189,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
         style.uri = .streets
 
         mapView.mapboxMap.onNext(event: .mapLoadingError) { event in
-            XCTFail("Failed to load map with \(event.payload)")
+            XCTFail("Failed to load map with \(String(describing: event.payload))")
         }
 
         mapView.mapboxMap.onNext(event: .styleLoaded) { _ in

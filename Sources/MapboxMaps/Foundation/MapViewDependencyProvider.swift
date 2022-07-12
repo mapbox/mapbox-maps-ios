@@ -108,6 +108,12 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                 mapboxMap: mapboxMap))
     }
 
+    private func makeRotateGestureHandler(view: UIView, mapboxMap: MapboxMapProtocol) -> RotateGestureHandler {
+        let gestureRecognizer = UIRotationGestureRecognizer()
+        view.addGestureRecognizer(gestureRecognizer)
+        return RotateGestureHandler(gestureRecognizer: gestureRecognizer, mapboxMap: mapboxMap)
+    }
+
     private func makePitchGestureHandler(view: UIView,
                                          mapboxMap: MapboxMapProtocol) -> GestureHandler {
         let gestureRecognizer = UIPanGestureRecognizer()
@@ -184,6 +190,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             pinchGestureHandler: makePinchGestureHandler(
                 view: view,
                 mapboxMap: mapboxMap),
+            rotateGestureHandler: makeRotateGestureHandler(view: view, mapboxMap: mapboxMap),
             pitchGestureHandler: makePitchGestureHandler(
                 view: view,
                 mapboxMap: mapboxMap),

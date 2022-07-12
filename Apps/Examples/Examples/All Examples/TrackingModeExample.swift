@@ -2,34 +2,32 @@ import UIKit
 import MapboxMaps
 
 @objc(TrackingModeExample)
-
 public class TrackingModeExample: UIViewController, ExampleProtocol {
 
-    internal var mapView: MapView!
-    internal var cameraLocationConsumer: CameraLocationConsumer!
-    internal let toggleBearingImageButton: UIButton = UIButton(frame: .zero)
-    internal var styleToggle: UISegmentedControl!
-    internal var style: Style = .satelliteStreets {
+    private var mapView: MapView!
+    private var cameraLocationConsumer: CameraLocationConsumer!
+    private lazy var toggleBearingImageButton: UIButton = UIButton(frame: .zero)
+    private lazy var styleToggle: UISegmentedControl = UISegmentedControl(items: Style.allCases.map(\.name))
+    private var style: Style = .satelliteStreets {
         didSet {
             mapView.mapboxMap.style.uri = style.uri
         }
     }
-    internal var showsBearingImage: Bool = false {
+    private var showsBearingImage: Bool = false {
         didSet {
             syncPuckAndButton()
         }
     }
 
-    enum Style: Int, CaseIterable {
-
+    private enum Style: Int, CaseIterable {
         var name: String {
             switch self {
             case .light:
-                return "light".capitalized
+                return "Light"
             case .satelliteStreets:
-                return "s. streets".capitalized
+                return "Satelite"
             case .customUri:
-                return "custom".capitalized
+                return "Custom"
             }
         }
 
@@ -54,7 +52,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         // Set initial camera settings
-        let options = MapInitOptions(cameraOptions: CameraOptions(zoom: 15.0), styleURI: style.uri)
+        let options = MapInitOptions(styleURI: style.uri)
 
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -64,8 +62,6 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
 
         // Setup and create button for toggling show bearing image
         setupToggleShowBearingImageButton()
-
-        installConstraints()
 
         cameraLocationConsumer = CameraLocationConsumer(mapView: mapView)
 
@@ -107,7 +103,10 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         toggleBearingImageButton.backgroundColor = .systemBlue
         toggleBearingImageButton.addTarget(self, action: #selector(showHideBearingImage), for: .touchUpInside)
         toggleBearingImageButton.setTitleColor(.white, for: .normal)
-        syncPuckAndButton()
+        toggleBearingImageButton.layer.cornerRadius = 4
+        toggleBearingImageButton.clipsToBounds = true
+        toggleBearingImageButton.contentEdgeInsets = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+
         toggleBearingImageButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(toggleBearingImageButton)
 
@@ -115,6 +114,8 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         toggleBearingImageButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20.0).isActive = true
         toggleBearingImageButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20.0).isActive = true
         toggleBearingImageButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -70.0).isActive = true
+
+        syncPuckAndButton()
     }
 
     @objc func switchStyle(sender: UISegmentedControl) {
@@ -123,25 +124,12 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
 
     func addStyleToggle() {
         // Create a UISegmentedControl to toggle between map styles
-        styleToggle = UISegmentedControl(items: Style.allCases.map(\.name))
-        styleToggle.tintColor = .white
-        styleToggle.backgroundColor = .systemBlue
         styleToggle.selectedSegmentIndex = style.rawValue
-        view.insertSubview(styleToggle, aboveSubview: mapView)
         styleToggle.addTarget(self, action: #selector(switchStyle(sender:)), for: .valueChanged)
         styleToggle.translatesAutoresizingMaskIntoConstraints = false
-    }
 
-    func installConstraints() {
-        // Configure autolayout constraints for the UISegmentedControl to align
-        // at the bottom of the map view.
-        NSLayoutConstraint.activate([
-            styleToggle.bottomAnchor.constraint(equalTo: mapView.bottomAnchor, constant: -60),
-            styleToggle.centerXAnchor.constraint(equalTo: mapView.centerXAnchor),
-            toggleBearingImageButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20.0),
-            toggleBearingImageButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20.0),
-            toggleBearingImageButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -100.0)
-        ])
+        // set the segmented control as the title view
+        navigationItem.titleView = styleToggle
     }
 }
 

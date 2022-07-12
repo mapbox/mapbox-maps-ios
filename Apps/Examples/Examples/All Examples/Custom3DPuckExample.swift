@@ -18,13 +18,7 @@ final class Custom3DPuckExample: UIViewController, ExampleProtocol, LocationCons
         }
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        // The below line is used for internal testing purposes only.
-        finish()
-    }
-
-    internal func setupExample() {
+    private func setupExample() {
         addBuildingExtrusions()
 
         // set light configuration for shadow visibility
@@ -93,7 +87,7 @@ final class Custom3DPuckExample: UIViewController, ExampleProtocol, LocationCons
     }
 
     // See https://docs.mapbox.com/mapbox-gl-js/example/3d-buildings/ for equivalent gl-js example
-    internal func addBuildingExtrusions() {
+    private func addBuildingExtrusions() {
         var layer = FillExtrusionLayer(id: "3d-buildings")
 
         layer.source                      = "composite"

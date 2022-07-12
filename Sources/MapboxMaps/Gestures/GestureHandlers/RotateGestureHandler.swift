@@ -17,6 +17,7 @@ internal protocol RotateGestureHandlerProtocol: FocusableGestureHandlerProtocol 
      private var isMapRotating = false
      private var discardedRotationAngle: CGFloat = 0
 
+     // swiftlint:disable:next force_cast
      private var rotateGestureRecognizer: UIRotationGestureRecognizer { gestureRecognizer as! UIRotationGestureRecognizer }
 
      internal init(gestureRecognizer: UIRotationGestureRecognizer, mapboxMap: MapboxMapProtocol) {

@@ -13,16 +13,13 @@ final class ZoomPinchBehaviorTests: BasePinchBehaviorTests {
 
     func testUpdate() {
         let pinchScale = CGFloat.random(in: 0.1..<10)
-
-        behavior.update(
-            pinchMidpoint: .random(),
-            pinchScale: pinchScale,
-            pinchAngle: .random(in: 0..<2 * .pi))
+        let pinchMidpoint = CGPoint.random()
+        behavior.update(pinchMidpoint: pinchMidpoint, pinchScale: pinchScale)
 
         XCTAssertEqual(
             mapboxMap.setCameraStub.invocations.map(\.parameters),
             [CameraOptions(
-                anchor: initialPinchMidpoint,
+                anchor: pinchMidpoint,
                 zoom: initialCameraState.zoom + log2(pinchScale))])
 
         // verify that only one camera changed notification was emitted
@@ -37,9 +34,7 @@ final class ZoomPinchBehaviorTests: BasePinchBehaviorTests {
             focalPoint: focalPoint,
             mapboxMap: mapboxMap)
 
-        behavior.update(pinchMidpoint: .random(),
-                        pinchScale: .random(in: 1...10),
-                        pinchAngle: .random(in: 0..<2 * .pi))
+        behavior.update(pinchMidpoint: .random(), pinchScale: .random(in: 1...10))
 
         XCTAssertEqual(mapboxMap.setCameraStub.invocations.first?.parameters.anchor, focalPoint)
     }

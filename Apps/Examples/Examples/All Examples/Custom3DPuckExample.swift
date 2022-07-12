@@ -1,5 +1,5 @@
 import UIKit
-import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 
 @objc(Custom3DPuckExample)
 final class Custom3DPuckExample: UIViewController, ExampleProtocol, LocationConsumer {
@@ -63,7 +63,7 @@ final class Custom3DPuckExample: UIViewController, ExampleProtocol, LocationCons
             }
         }
 
-        let configuration = Puck3DConfiguration(model: myModel, modelScale: .expression(scalingExpression))
+        let configuration = Puck3DConfiguration(model: myModel, modelScale: .expression(scalingExpression), modelCastShadows: .constant(true))
         mapView.location.options.puckType = .puck3D(configuration)
         mapView.location.options.puckBearingSource = .course
 

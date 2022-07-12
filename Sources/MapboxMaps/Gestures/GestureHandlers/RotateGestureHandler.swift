@@ -3,6 +3,7 @@ import CoreLocation
 
 internal protocol RotateGestureHandlerProtocol: FocusableGestureHandlerProtocol {
     var simultaneousRotateAndPinchZoomEnabled: Bool { get set }
+    func scheduleRotationUpdateIfNeeded()
 }
 
  /// `RotateGestureHandler` updates the map camera in response to 2-touch rotate gestures
@@ -12,21 +13,21 @@ internal protocol RotateGestureHandlerProtocol: FocusableGestureHandlerProtocol 
 
      private let mapboxMap: MapboxMapProtocol
 
-     private var initialBearing: CLLocationDirection?
+     private var initialBearing: CLLocationDirection
      private var isMapRotating = false
      private var discardedRotationAngle: CGFloat = 0
 
+     private var rotateGestureRecognizer: UIRotationGestureRecognizer { gestureRecognizer as! UIRotationGestureRecognizer }
+
      internal init(gestureRecognizer: UIRotationGestureRecognizer, mapboxMap: MapboxMapProtocol) {
          self.mapboxMap = mapboxMap
+         self.initialBearing = mapboxMap.cameraState.bearing
          super.init(gestureRecognizer: gestureRecognizer)
          gestureRecognizer.delegate = self
          gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
      }
 
      @objc private func handleGesture(_ gestureRecognizer: UIRotationGestureRecognizer) {
-         guard let view = gestureRecognizer.view else {
-             return
-         }
          switch (gestureRecognizer.state, isMapRotating) {
          case (.began, _):
              discardedRotationAngle += abs(gestureRecognizer.rotation)
@@ -44,19 +45,7 @@ internal protocol RotateGestureHandlerProtocol: FocusableGestureHandlerProtocol 
              delegate?.gestureBegan(for: .pinch)
              fallthrough
          case (.changed, true):
-             guard let initialBearing = initialBearing else {
-                 return
-             }
-             // flip the sign since the UIKit coordinate system is flipped
-              // relative to the coordinate system used for bearing.
-             let rotationInDegrees = -CLLocationDirection(gestureRecognizer.rotation.toDegrees())
-             let midpoint = gestureRecognizer.location(in: view)
-
-             mapboxMap.setCamera(
-                 to: CameraOptions(
-                    anchor: focalPoint ?? midpoint,
-                    bearing: (initialBearing + rotationInDegrees).truncatingRemainder(dividingBy: 360.0))
-             )
+             updateBearing()
          case (.cancelled, _), (.ended, _):
              if isMapRotating {
                  delegate?.gestureEnded(for: .pinch, willAnimate: false)
@@ -66,6 +55,40 @@ internal protocol RotateGestureHandlerProtocol: FocusableGestureHandlerProtocol 
          default:
              break
          }
+     }
+
+     private var rotationUpdateNeeded = false
+
+     /// Appends bearing update to the end of the main queue.
+     /// The update will be performed only if no other bearing update precedes it.
+     func scheduleRotationUpdateIfNeeded() {
+         guard isMapRotating else {
+             return
+         }
+         rotationUpdateNeeded = true
+         DispatchQueue.main.async {
+             guard self.rotationUpdateNeeded else {
+                 return
+             }
+
+             self.updateBearing()
+         }
+     }
+
+     private func updateBearing() {
+         guard let view = gestureRecognizer.view else {
+             return
+         }
+
+         rotationUpdateNeeded = false
+
+         // flip the sign since the UIKit coordinate system is flipped
+          // relative to the coordinate system used for bearing.
+         let rotationInDegrees = -CLLocationDirection(rotateGestureRecognizer.rotation.toDegrees())
+         let midpoint = gestureRecognizer.location(in: view)
+         let bearing = (initialBearing + rotationInDegrees).truncatingRemainder(dividingBy: 360.0)
+
+         mapboxMap.setCamera(to: CameraOptions(anchor: focalPoint ?? midpoint, bearing: bearing))
      }
 
      private func shouldStartRotating(with velocity: CGFloat, deltaSinceStart: CGFloat) -> Bool {

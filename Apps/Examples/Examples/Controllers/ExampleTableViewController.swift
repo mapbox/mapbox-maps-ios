@@ -18,7 +18,7 @@ final class ExampleTableViewController: UITableViewController {
         searchController.searchBar.placeholder = "Search examples"
         searchController.obscuresBackgroundDuringPresentation = false
         navigationItem.searchController = searchController
-
+        navigationItem.hidesSearchBarWhenScrolling = false
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
     }
 }

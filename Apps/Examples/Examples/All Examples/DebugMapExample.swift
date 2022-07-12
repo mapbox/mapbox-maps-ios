@@ -31,7 +31,7 @@ final class DebugMapExample: UIViewController, ExampleProtocol, DebugOptionSetti
             barButtonSystemItem: .edit,
             target: self,
             action: #selector(openDebugOptionsMenu(_:)))
-        navigationItem.rightBarButtonItems?.insert(debugOptionsBarItem, at: 0)
+        navigationItem.rightBarButtonItem = debugOptionsBarItem
     }
 
     override func viewDidAppear(_ animated: Bool) {

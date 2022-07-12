@@ -37,7 +37,7 @@ final class Custom3DPuckExample: UIViewController, ExampleProtocol, LocationCons
         mapView.mapboxMap.setCamera(to: cameraOptions)
 
         // The below lines are used for internal testing purposes only.
-        DispatchQueue.main.asyncAfter(deadline: .now()+5.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             self.finish()
         }
 

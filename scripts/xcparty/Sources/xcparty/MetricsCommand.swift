@@ -24,6 +24,9 @@ struct MetricsCommand: ParsableCommand {
     })
     var outputPath: String?
 
+    @Option(name: [.customLong("single-run-test-ids")], help: "Pass test id in format 'TestSuite/testExample()' to ignore all but last run measurements")
+    var listOfSingleRunTests: [String]
+
     struct BaselineList: Decodable {
         // swiftlint:disable nesting
         struct Record: Decodable {
@@ -78,16 +81,21 @@ struct MetricsCommand: ParsableCommand {
         let testName: String
         let metrics: [ActionTestPerformanceMetricSummary]
         let actionRecord: ActionRecord
+        let shouldProcessOnlyLastRun: Bool
 
-        static func metrics(from test: ActionTestMetadata, in resultFile: XCResultFile, for actionRecord: ActionRecord) -> PerformanceTest? {
+        static func metrics(from test: ActionTestMetadata,
+                            in resultFile: XCResultFile,
+                            for actionRecord: ActionRecord,
+                            shouldProcessOnlyLastRun: Bool) -> PerformanceTest? {
             guard
                 let testSummaryRef = test.summaryRef,
                 let actionTestSummary = resultFile.getActionTestSummary(id: testSummaryRef.id)
             else { return nil }
 
             return PerformanceTest(testName: refineTestFunctionName(test.name),
-                                  metrics: actionTestSummary.performanceMetrics,
-                                  actionRecord: actionRecord)
+                                   metrics: actionTestSummary.performanceMetrics,
+                                   actionRecord: actionRecord,
+                                   shouldProcessOnlyLastRun: shouldProcessOnlyLastRun)
         }
     }
 
@@ -105,7 +113,12 @@ struct MetricsCommand: ParsableCommand {
                 .subtestGroups[0]
 
             return testTargetResults.subtestGroups.flatMap { testSuit in
-                testSuit.subtests.compactMap({ PerformanceTest.metrics(from: $0, in: resultFile, for: actionOnConcreteDevice) })
+                testSuit.subtests.compactMap({
+                    PerformanceTest.metrics(from: $0,
+                                            in: resultFile,
+                                            for: actionOnConcreteDevice,
+                                            shouldProcessOnlyLastRun: listOfSingleRunTests.contains($0.identifier))
+                })
             }
         }
     }
@@ -131,7 +144,12 @@ struct MetricsCommand: ParsableCommand {
         let baseline = baseline.record(forTestName: testName)
 
         let counters = test.metrics.reduce(into: [:]) { partialResult, metric in
-            let value = metric.measurements.reduce(0.0, +) / Double(metric.measurements.count)
+            let value: Double
+            if test.shouldProcessOnlyLastRun {
+                value = metric.measurements.last ?? 0
+            } else {
+                value = metric.measurements.reduce(0, +) / Double(metric.measurements.count)
+            }
             let metricName = metric.displayName.replacingOccurrences(of: " ", with: "")
 
             partialResult[metricName] = MetricsCommand.decimalValueFormatter.string(from: value as NSNumber)

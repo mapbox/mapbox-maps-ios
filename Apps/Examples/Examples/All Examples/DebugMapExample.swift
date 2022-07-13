@@ -11,7 +11,6 @@ private struct MapDebugOptionSetting {
 }
 
 final class DebugMapExample: UIViewController, ExampleProtocol, DebugOptionSettingsDelegate {
-
     private var mapView: MapView!
 
     override func viewDidLoad() {
@@ -19,20 +18,20 @@ final class DebugMapExample: UIViewController, ExampleProtocol, DebugOptionSetti
 
         mapView = MapView(frame: view.bounds)
         view.addSubview(mapView)
-
+        view.backgroundColor = .skyBlue
         mapView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             mapView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            mapView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
-            mapView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            mapView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
+            mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
 
         let debugOptionsBarItem = UIBarButtonItem(
             barButtonSystemItem: .edit,
             target: self,
             action: #selector(openDebugOptionsMenu(_:)))
-        navigationItem.rightBarButtonItems?.insert(debugOptionsBarItem, at: 0)
+        navigationItem.rightBarButtonItem = debugOptionsBarItem
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -87,6 +86,7 @@ private final class SettingsViewController: UIViewController, UITableViewDataSou
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        title = "Debug options"
         listView = UITableView()
         listView.dataSource = self
         listView.register(DebugOptionCell.self, forCellReuseIdentifier: String(describing: DebugOptionCell.self))
@@ -95,10 +95,10 @@ private final class SettingsViewController: UIViewController, UITableViewDataSou
 
         listView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            listView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            listView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
-            listView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            listView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
+            listView.topAnchor.constraint(equalTo: view.topAnchor),
+            listView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            listView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            listView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
 
         navigationItem.largeTitleDisplayMode = .never

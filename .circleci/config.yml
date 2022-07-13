@@ -170,6 +170,7 @@ jobs:
             swift run xcparty metrics --path "$CIRCLE_WORKING_DIRECTORY/workspace/metrics.xcresult" \
               -r . \
               --baseline ../../baselines/performance/MapboxMaps.json \
+              --single-run-test-ids "SpecsBenchmark/testStreetsMunichTtrcCold()" \
               --output "$CIRCLE_WORKING_DIRECTORY/ios-maps-carbon-v2.json"
           working_directory: mapbox-maps-ios/scripts/xcparty
       - store_artifacts:

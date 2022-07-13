@@ -8,7 +8,13 @@ class SpecsBenchmark: XCTestCase {
         XCTPerformanceMetric.all
     }
 
+    private var baselineRunCount = 0 {
+        didSet {
+            print("baselineRunCount = \(baselineRunCount)")
+        }
+    }
     func testBaselineMeasure() throws {
+        baselineRunCount += 1
         let scenario = Scenario(name: "manual", commands: [
         ])
 
@@ -40,20 +46,37 @@ class SpecsBenchmark: XCTestCase {
     }
     
     func testNavDayMunichDriveTilePack() throws {
-        try runScenarioBenchmark(name: "nav-day-munich-drive-tilepack", timeout: 1800)
+        try runScenarioBenchmark(name: "nav-day-munich-drive-tilepack",
+                                 maxRepeatCount: 1,
+                                 timeout: 1800)
     }
 }
 
 extension SpecsBenchmark {
-    func runScenarioBenchmark(name: String, timeout: TimeInterval = 60) throws {
+    func runScenarioBenchmark(name: String, maxRepeatCount: Int? = nil, timeout: TimeInterval = 60) throws {
         let url = try XCTUnwrap(Bundle.main.url(forResource: name, withExtension: "json"))
         let scenario = try Scenario(filePath: url)
 
-        try measureScenario(scenario, timeout: timeout)
+        try measureScenario(scenario, maxRepeatCount: maxRepeatCount, timeout: timeout)
     }
 
-    func measureScenario(_ scenario: Scenario, timeout: TimeInterval = 60) throws {
+    func measureScenario(_ scenario: Scenario, maxRepeatCount: Int? = nil, timeout: TimeInterval = 60) throws {
+        /// This value cannot be configured and depends on Xcode version.
+        /// In next Xcode version this value might change.
+        /// XCTest skips first 10 runs performance results and do not include it in XCResult bundle
+        /// That's why we have to skip first N runs instead of skip runs at the end
+        let numberOfRepeats = 20
+        let numberOfSkips = maxRepeatCount.map({ numberOfRepeats - $0 }) ?? 0
+        var counter = 0
+
         measure {
+            defer {
+                counter += 1
+            }
+            if counter < numberOfSkips {
+                return
+            }
+
             let scenarioExpectation = expectation(description: "Scenario '\(name)' finished")
             Task {
                 try await scenario.run()

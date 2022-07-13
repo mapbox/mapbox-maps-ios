@@ -9,11 +9,22 @@ public struct LocationIndicatorLayer: Layer {
     // MARK: - Conformance to `Layer` protocol
     public var id: String
     public let type: LayerType
-    public var filter: Expression?
-    public var source: String?
-    public var sourceLayer: String?
-    public var minZoom: Double?
-    public var maxZoom: Double?
+    public var filter: Expression? {
+        didSet { modifiedProperties.insert(RootCodingKeys.filter.rawValue) }
+    }
+    public var source: String? {
+        didSet { modifiedProperties.insert(RootCodingKeys.source.rawValue) }
+    }
+
+    public var sourceLayer: String? {
+        didSet { modifiedProperties.insert(RootCodingKeys.sourceLayer.rawValue) }
+    }
+    public var minZoom: Double? {
+        didSet { modifiedProperties.insert(RootCodingKeys.minZoom.rawValue) }
+    }
+    public var maxZoom: Double? {
+        didSet { modifiedProperties.insert(RootCodingKeys.maxZoom.rawValue) }
+    }
 
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>?
@@ -93,6 +104,8 @@ public struct LocationIndicatorLayer: Layer {
     /// Transition options for `topImageSize`.
     public var topImageSizeTransition: StyleTransition?
 
+    private var modifiedProperties = Set<String>()
+
     public init(id: String) {
         self.id = id
         self.type = LayerType.locationIndicator
@@ -103,41 +116,41 @@ public struct LocationIndicatorLayer: Layer {
         var container = encoder.container(keyedBy: RootCodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(type, forKey: .type)
-        try container.encodeIfPresent(filter, forKey: .filter)
-        try container.encodeIfPresent(source, forKey: .source)
-        try container.encodeIfPresent(sourceLayer, forKey: .sourceLayer)
-        try container.encodeIfPresent(minZoom, forKey: .minZoom)
-        try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
+        try encodeIfModified(filter, forKey: .filter, to: &container)
+        try encodeIfModified(source, forKey: .source, to: &container)
+        try encodeIfModified(sourceLayer, forKey: .sourceLayer, to: &container)
+        try encodeIfModified(minZoom, forKey: .minZoom, to: &container)
+        try encodeIfModified(maxZoom, forKey: .maxZoom, to: &container)
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
-        try paintContainer.encodeIfPresent(accuracyRadius, forKey: .accuracyRadius)
-        try paintContainer.encodeIfPresent(accuracyRadiusTransition, forKey: .accuracyRadiusTransition)
-        try paintContainer.encodeIfPresent(accuracyRadiusBorderColor, forKey: .accuracyRadiusBorderColor)
-        try paintContainer.encodeIfPresent(accuracyRadiusBorderColorTransition, forKey: .accuracyRadiusBorderColorTransition)
-        try paintContainer.encodeIfPresent(accuracyRadiusColor, forKey: .accuracyRadiusColor)
-        try paintContainer.encodeIfPresent(accuracyRadiusColorTransition, forKey: .accuracyRadiusColorTransition)
-        try paintContainer.encodeIfPresent(bearing, forKey: .bearing)
-        try paintContainer.encodeIfPresent(bearingTransition, forKey: .bearingTransition)
-        try paintContainer.encodeIfPresent(bearingImageSize, forKey: .bearingImageSize)
-        try paintContainer.encodeIfPresent(bearingImageSizeTransition, forKey: .bearingImageSizeTransition)
-        try paintContainer.encodeIfPresent(emphasisCircleColor, forKey: .emphasisCircleColor)
-        try paintContainer.encodeIfPresent(emphasisCircleColorTransition, forKey: .emphasisCircleColorTransition)
-        try paintContainer.encodeIfPresent(emphasisCircleRadius, forKey: .emphasisCircleRadius)
-        try paintContainer.encodeIfPresent(emphasisCircleRadiusTransition, forKey: .emphasisCircleRadiusTransition)
-        try paintContainer.encodeIfPresent(imagePitchDisplacement, forKey: .imagePitchDisplacement)
-        try paintContainer.encodeIfPresent(location, forKey: .location)
-        try paintContainer.encodeIfPresent(locationTransition, forKey: .locationTransition)
-        try paintContainer.encodeIfPresent(perspectiveCompensation, forKey: .perspectiveCompensation)
-        try paintContainer.encodeIfPresent(shadowImageSize, forKey: .shadowImageSize)
-        try paintContainer.encodeIfPresent(shadowImageSizeTransition, forKey: .shadowImageSizeTransition)
-        try paintContainer.encodeIfPresent(topImageSize, forKey: .topImageSize)
-        try paintContainer.encodeIfPresent(topImageSizeTransition, forKey: .topImageSizeTransition)
+        try paintContainer.encode(accuracyRadius, forKey: .accuracyRadius)
+        try paintContainer.encode(accuracyRadiusTransition, forKey: .accuracyRadiusTransition)
+        try paintContainer.encode(accuracyRadiusBorderColor, forKey: .accuracyRadiusBorderColor)
+        try paintContainer.encode(accuracyRadiusBorderColorTransition, forKey: .accuracyRadiusBorderColorTransition)
+        try paintContainer.encode(accuracyRadiusColor, forKey: .accuracyRadiusColor)
+        try paintContainer.encode(accuracyRadiusColorTransition, forKey: .accuracyRadiusColorTransition)
+        try paintContainer.encode(bearing, forKey: .bearing)
+        try paintContainer.encode(bearingTransition, forKey: .bearingTransition)
+        try paintContainer.encode(bearingImageSize, forKey: .bearingImageSize)
+        try paintContainer.encode(bearingImageSizeTransition, forKey: .bearingImageSizeTransition)
+        try paintContainer.encode(emphasisCircleColor, forKey: .emphasisCircleColor)
+        try paintContainer.encode(emphasisCircleColorTransition, forKey: .emphasisCircleColorTransition)
+        try paintContainer.encode(emphasisCircleRadius, forKey: .emphasisCircleRadius)
+        try paintContainer.encode(emphasisCircleRadiusTransition, forKey: .emphasisCircleRadiusTransition)
+        try paintContainer.encode(imagePitchDisplacement, forKey: .imagePitchDisplacement)
+        try paintContainer.encode(location, forKey: .location)
+        try paintContainer.encode(locationTransition, forKey: .locationTransition)
+        try paintContainer.encode(perspectiveCompensation, forKey: .perspectiveCompensation)
+        try paintContainer.encode(shadowImageSize, forKey: .shadowImageSize)
+        try paintContainer.encode(shadowImageSizeTransition, forKey: .shadowImageSizeTransition)
+        try paintContainer.encode(topImageSize, forKey: .topImageSize)
+        try paintContainer.encode(topImageSizeTransition, forKey: .topImageSizeTransition)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
-        try layoutContainer.encodeIfPresent(bearingImage, forKey: .bearingImage)
-        try layoutContainer.encodeIfPresent(shadowImage, forKey: .shadowImage)
-        try layoutContainer.encodeIfPresent(topImage, forKey: .topImage)
+        try layoutContainer.encode(visibility, forKey: .visibility)
+        try layoutContainer.encode(bearingImage, forKey: .bearingImage)
+        try layoutContainer.encode(shadowImage, forKey: .shadowImage)
+        try layoutContainer.encode(topImage, forKey: .topImage)
     }
 
     public init(from decoder: Decoder) throws {
@@ -225,6 +238,17 @@ public struct LocationIndicatorLayer: Layer {
         case shadowImageSizeTransition = "shadow-image-size-transition"
         case topImageSize = "top-image-size"
         case topImageSizeTransition = "top-image-size-transition"
+    }
+
+    private func encodeIfModified<E: Encodable, Key: CodingKey>(
+        _ encodable: E?,
+        forKey key: Key,
+        to container: inout KeyedEncodingContainer<Key>
+    ) throws {
+        guard modifiedProperties.contains(key.stringValue) else {
+            return
+        }
+        try container.encode(encodable ?? defaultValue(for: key), forKey: key)
     }
 }
 

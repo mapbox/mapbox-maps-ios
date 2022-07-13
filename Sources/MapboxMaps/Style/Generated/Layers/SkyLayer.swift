@@ -9,11 +9,22 @@ public struct SkyLayer: Layer {
     // MARK: - Conformance to `Layer` protocol
     public var id: String
     public let type: LayerType
-    public var filter: Expression?
-    public var source: String?
-    public var sourceLayer: String?
-    public var minZoom: Double?
-    public var maxZoom: Double?
+    public var filter: Expression? {
+        didSet { modifiedProperties.insert(RootCodingKeys.filter.rawValue) }
+    }
+    public var source: String? {
+        didSet { modifiedProperties.insert(RootCodingKeys.source.rawValue) }
+    }
+
+    public var sourceLayer: String? {
+        didSet { modifiedProperties.insert(RootCodingKeys.sourceLayer.rawValue) }
+    }
+    public var minZoom: Double? {
+        didSet { modifiedProperties.insert(RootCodingKeys.minZoom.rawValue) }
+    }
+    public var maxZoom: Double? {
+        didSet { modifiedProperties.insert(RootCodingKeys.maxZoom.rawValue) }
+    }
 
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>?
@@ -48,6 +59,8 @@ public struct SkyLayer: Layer {
     /// The type of the sky
     public var skyType: Value<SkyType>?
 
+    private var modifiedProperties = Set<String>()
+
     public init(id: String) {
         self.id = id
         self.type = LayerType.sky
@@ -58,26 +71,26 @@ public struct SkyLayer: Layer {
         var container = encoder.container(keyedBy: RootCodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(type, forKey: .type)
-        try container.encodeIfPresent(filter, forKey: .filter)
-        try container.encodeIfPresent(source, forKey: .source)
-        try container.encodeIfPresent(sourceLayer, forKey: .sourceLayer)
-        try container.encodeIfPresent(minZoom, forKey: .minZoom)
-        try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
+        try encodeIfModified(filter, forKey: .filter, to: &container)
+        try encodeIfModified(source, forKey: .source, to: &container)
+        try encodeIfModified(sourceLayer, forKey: .sourceLayer, to: &container)
+        try encodeIfModified(minZoom, forKey: .minZoom, to: &container)
+        try encodeIfModified(maxZoom, forKey: .maxZoom, to: &container)
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
-        try paintContainer.encodeIfPresent(skyAtmosphereColor, forKey: .skyAtmosphereColor)
-        try paintContainer.encodeIfPresent(skyAtmosphereHaloColor, forKey: .skyAtmosphereHaloColor)
-        try paintContainer.encodeIfPresent(skyAtmosphereSun, forKey: .skyAtmosphereSun)
-        try paintContainer.encodeIfPresent(skyAtmosphereSunIntensity, forKey: .skyAtmosphereSunIntensity)
-        try paintContainer.encodeIfPresent(skyGradient, forKey: .skyGradient)
-        try paintContainer.encodeIfPresent(skyGradientCenter, forKey: .skyGradientCenter)
-        try paintContainer.encodeIfPresent(skyGradientRadius, forKey: .skyGradientRadius)
-        try paintContainer.encodeIfPresent(skyOpacity, forKey: .skyOpacity)
-        try paintContainer.encodeIfPresent(skyOpacityTransition, forKey: .skyOpacityTransition)
-        try paintContainer.encodeIfPresent(skyType, forKey: .skyType)
+        try paintContainer.encode(skyAtmosphereColor, forKey: .skyAtmosphereColor)
+        try paintContainer.encode(skyAtmosphereHaloColor, forKey: .skyAtmosphereHaloColor)
+        try paintContainer.encode(skyAtmosphereSun, forKey: .skyAtmosphereSun)
+        try paintContainer.encode(skyAtmosphereSunIntensity, forKey: .skyAtmosphereSunIntensity)
+        try paintContainer.encode(skyGradient, forKey: .skyGradient)
+        try paintContainer.encode(skyGradientCenter, forKey: .skyGradientCenter)
+        try paintContainer.encode(skyGradientRadius, forKey: .skyGradientRadius)
+        try paintContainer.encode(skyOpacity, forKey: .skyOpacity)
+        try paintContainer.encode(skyOpacityTransition, forKey: .skyOpacityTransition)
+        try paintContainer.encode(skyType, forKey: .skyType)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
+        try layoutContainer.encode(visibility, forKey: .visibility)
     }
 
     public init(from decoder: Decoder) throws {
@@ -135,6 +148,17 @@ public struct SkyLayer: Layer {
         case skyOpacity = "sky-opacity"
         case skyOpacityTransition = "sky-opacity-transition"
         case skyType = "sky-type"
+    }
+
+    private func encodeIfModified<E: Encodable, Key: CodingKey>(
+        _ encodable: E?,
+        forKey key: Key,
+        to container: inout KeyedEncodingContainer<Key>
+    ) throws {
+        guard modifiedProperties.contains(key.stringValue) else {
+            return
+        }
+        try container.encode(encodable ?? defaultValue(for: key), forKey: key)
     }
 }
 

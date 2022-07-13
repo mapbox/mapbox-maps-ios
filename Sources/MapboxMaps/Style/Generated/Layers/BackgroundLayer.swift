@@ -9,11 +9,22 @@ public struct BackgroundLayer: Layer {
     // MARK: - Conformance to `Layer` protocol
     public var id: String
     public let type: LayerType
-    public var filter: Expression?
-    public var source: String?
-    public var sourceLayer: String?
-    public var minZoom: Double?
-    public var maxZoom: Double?
+    public var filter: Expression? {
+        didSet { modifiedProperties.insert(RootCodingKeys.filter.rawValue) }
+    }
+    public var source: String? {
+        didSet { modifiedProperties.insert(RootCodingKeys.source.rawValue) }
+    }
+
+    public var sourceLayer: String? {
+        didSet { modifiedProperties.insert(RootCodingKeys.sourceLayer.rawValue) }
+    }
+    public var minZoom: Double? {
+        didSet { modifiedProperties.insert(RootCodingKeys.minZoom.rawValue) }
+    }
+    public var maxZoom: Double? {
+        didSet { modifiedProperties.insert(RootCodingKeys.maxZoom.rawValue) }
+    }
 
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>?
@@ -36,6 +47,8 @@ public struct BackgroundLayer: Layer {
     /// Transition options for `backgroundPattern`.
     public var backgroundPatternTransition: StyleTransition?
 
+    private var modifiedProperties = Set<String>()
+
     public init(id: String) {
         self.id = id
         self.type = LayerType.background
@@ -46,22 +59,22 @@ public struct BackgroundLayer: Layer {
         var container = encoder.container(keyedBy: RootCodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(type, forKey: .type)
-        try container.encodeIfPresent(filter, forKey: .filter)
-        try container.encodeIfPresent(source, forKey: .source)
-        try container.encodeIfPresent(sourceLayer, forKey: .sourceLayer)
-        try container.encodeIfPresent(minZoom, forKey: .minZoom)
-        try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
+        try encodeIfModified(filter, forKey: .filter, to: &container)
+        try encodeIfModified(source, forKey: .source, to: &container)
+        try encodeIfModified(sourceLayer, forKey: .sourceLayer, to: &container)
+        try encodeIfModified(minZoom, forKey: .minZoom, to: &container)
+        try encodeIfModified(maxZoom, forKey: .maxZoom, to: &container)
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
-        try paintContainer.encodeIfPresent(backgroundColor, forKey: .backgroundColor)
-        try paintContainer.encodeIfPresent(backgroundColorTransition, forKey: .backgroundColorTransition)
-        try paintContainer.encodeIfPresent(backgroundOpacity, forKey: .backgroundOpacity)
-        try paintContainer.encodeIfPresent(backgroundOpacityTransition, forKey: .backgroundOpacityTransition)
-        try paintContainer.encodeIfPresent(backgroundPattern, forKey: .backgroundPattern)
-        try paintContainer.encodeIfPresent(backgroundPatternTransition, forKey: .backgroundPatternTransition)
+        try paintContainer.encode(backgroundColor, forKey: .backgroundColor)
+        try paintContainer.encode(backgroundColorTransition, forKey: .backgroundColorTransition)
+        try paintContainer.encode(backgroundOpacity, forKey: .backgroundOpacity)
+        try paintContainer.encode(backgroundOpacityTransition, forKey: .backgroundOpacityTransition)
+        try paintContainer.encode(backgroundPattern, forKey: .backgroundPattern)
+        try paintContainer.encode(backgroundPatternTransition, forKey: .backgroundPatternTransition)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
+        try layoutContainer.encode(visibility, forKey: .visibility)
     }
 
     public init(from decoder: Decoder) throws {
@@ -111,6 +124,17 @@ public struct BackgroundLayer: Layer {
         case backgroundOpacityTransition = "background-opacity-transition"
         case backgroundPattern = "background-pattern"
         case backgroundPatternTransition = "background-pattern-transition"
+    }
+
+    private func encodeIfModified<E: Encodable, Key: CodingKey>(
+        _ encodable: E?,
+        forKey key: Key,
+        to container: inout KeyedEncodingContainer<Key>
+    ) throws {
+        guard modifiedProperties.contains(key.stringValue) else {
+            return
+        }
+        try container.encode(encodable ?? defaultValue(for: key), forKey: key)
     }
 }
 

@@ -9,11 +9,22 @@ public struct LineLayer: Layer {
     // MARK: - Conformance to `Layer` protocol
     public var id: String
     public let type: LayerType
-    public var filter: Expression?
-    public var source: String?
-    public var sourceLayer: String?
-    public var minZoom: Double?
-    public var maxZoom: Double?
+    public var filter: Expression? {
+        didSet { modifiedProperties.insert(RootCodingKeys.filter.rawValue) }
+    }
+    public var source: String? {
+        didSet { modifiedProperties.insert(RootCodingKeys.source.rawValue) }
+    }
+
+    public var sourceLayer: String? {
+        didSet { modifiedProperties.insert(RootCodingKeys.sourceLayer.rawValue) }
+    }
+    public var minZoom: Double? {
+        didSet { modifiedProperties.insert(RootCodingKeys.minZoom.rawValue) }
+    }
+    public var maxZoom: Double? {
+        didSet { modifiedProperties.insert(RootCodingKeys.maxZoom.rawValue) }
+    }
 
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>?
@@ -96,6 +107,8 @@ public struct LineLayer: Layer {
     /// Transition options for `lineWidth`.
     public var lineWidthTransition: StyleTransition?
 
+    private var modifiedProperties = Set<String>()
+
     public init(id: String) {
         self.id = id
         self.type = LayerType.line
@@ -106,42 +119,42 @@ public struct LineLayer: Layer {
         var container = encoder.container(keyedBy: RootCodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(type, forKey: .type)
-        try container.encodeIfPresent(filter, forKey: .filter)
-        try container.encodeIfPresent(source, forKey: .source)
-        try container.encodeIfPresent(sourceLayer, forKey: .sourceLayer)
-        try container.encodeIfPresent(minZoom, forKey: .minZoom)
-        try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
+        try encodeIfModified(filter, forKey: .filter, to: &container)
+        try encodeIfModified(source, forKey: .source, to: &container)
+        try encodeIfModified(sourceLayer, forKey: .sourceLayer, to: &container)
+        try encodeIfModified(minZoom, forKey: .minZoom, to: &container)
+        try encodeIfModified(maxZoom, forKey: .maxZoom, to: &container)
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
-        try paintContainer.encodeIfPresent(lineBlur, forKey: .lineBlur)
-        try paintContainer.encodeIfPresent(lineBlurTransition, forKey: .lineBlurTransition)
-        try paintContainer.encodeIfPresent(lineColor, forKey: .lineColor)
-        try paintContainer.encodeIfPresent(lineColorTransition, forKey: .lineColorTransition)
-        try paintContainer.encodeIfPresent(lineDasharray, forKey: .lineDasharray)
-        try paintContainer.encodeIfPresent(lineDasharrayTransition, forKey: .lineDasharrayTransition)
-        try paintContainer.encodeIfPresent(lineGapWidth, forKey: .lineGapWidth)
-        try paintContainer.encodeIfPresent(lineGapWidthTransition, forKey: .lineGapWidthTransition)
-        try paintContainer.encodeIfPresent(lineGradient, forKey: .lineGradient)
-        try paintContainer.encodeIfPresent(lineOffset, forKey: .lineOffset)
-        try paintContainer.encodeIfPresent(lineOffsetTransition, forKey: .lineOffsetTransition)
-        try paintContainer.encodeIfPresent(lineOpacity, forKey: .lineOpacity)
-        try paintContainer.encodeIfPresent(lineOpacityTransition, forKey: .lineOpacityTransition)
-        try paintContainer.encodeIfPresent(linePattern, forKey: .linePattern)
-        try paintContainer.encodeIfPresent(linePatternTransition, forKey: .linePatternTransition)
-        try paintContainer.encodeIfPresent(lineTranslate, forKey: .lineTranslate)
-        try paintContainer.encodeIfPresent(lineTranslateTransition, forKey: .lineTranslateTransition)
-        try paintContainer.encodeIfPresent(lineTranslateAnchor, forKey: .lineTranslateAnchor)
-        try paintContainer.encodeIfPresent(lineTrimOffset, forKey: .lineTrimOffset)
-        try paintContainer.encodeIfPresent(lineWidth, forKey: .lineWidth)
-        try paintContainer.encodeIfPresent(lineWidthTransition, forKey: .lineWidthTransition)
+        try paintContainer.encode(lineBlur, forKey: .lineBlur)
+        try paintContainer.encode(lineBlurTransition, forKey: .lineBlurTransition)
+        try paintContainer.encode(lineColor, forKey: .lineColor)
+        try paintContainer.encode(lineColorTransition, forKey: .lineColorTransition)
+        try paintContainer.encode(lineDasharray, forKey: .lineDasharray)
+        try paintContainer.encode(lineDasharrayTransition, forKey: .lineDasharrayTransition)
+        try paintContainer.encode(lineGapWidth, forKey: .lineGapWidth)
+        try paintContainer.encode(lineGapWidthTransition, forKey: .lineGapWidthTransition)
+        try paintContainer.encode(lineGradient, forKey: .lineGradient)
+        try paintContainer.encode(lineOffset, forKey: .lineOffset)
+        try paintContainer.encode(lineOffsetTransition, forKey: .lineOffsetTransition)
+        try paintContainer.encode(lineOpacity, forKey: .lineOpacity)
+        try paintContainer.encode(lineOpacityTransition, forKey: .lineOpacityTransition)
+        try paintContainer.encode(linePattern, forKey: .linePattern)
+        try paintContainer.encode(linePatternTransition, forKey: .linePatternTransition)
+        try paintContainer.encode(lineTranslate, forKey: .lineTranslate)
+        try paintContainer.encode(lineTranslateTransition, forKey: .lineTranslateTransition)
+        try paintContainer.encode(lineTranslateAnchor, forKey: .lineTranslateAnchor)
+        try paintContainer.encode(lineTrimOffset, forKey: .lineTrimOffset)
+        try paintContainer.encode(lineWidth, forKey: .lineWidth)
+        try paintContainer.encode(lineWidthTransition, forKey: .lineWidthTransition)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
-        try layoutContainer.encodeIfPresent(lineCap, forKey: .lineCap)
-        try layoutContainer.encodeIfPresent(lineJoin, forKey: .lineJoin)
-        try layoutContainer.encodeIfPresent(lineMiterLimit, forKey: .lineMiterLimit)
-        try layoutContainer.encodeIfPresent(lineRoundLimit, forKey: .lineRoundLimit)
-        try layoutContainer.encodeIfPresent(lineSortKey, forKey: .lineSortKey)
+        try layoutContainer.encode(visibility, forKey: .visibility)
+        try layoutContainer.encode(lineCap, forKey: .lineCap)
+        try layoutContainer.encode(lineJoin, forKey: .lineJoin)
+        try layoutContainer.encode(lineMiterLimit, forKey: .lineMiterLimit)
+        try layoutContainer.encode(lineRoundLimit, forKey: .lineRoundLimit)
+        try layoutContainer.encode(lineSortKey, forKey: .lineSortKey)
     }
 
     public init(from decoder: Decoder) throws {
@@ -231,6 +244,17 @@ public struct LineLayer: Layer {
         case lineTrimOffset = "line-trim-offset"
         case lineWidth = "line-width"
         case lineWidthTransition = "line-width-transition"
+    }
+
+    private func encodeIfModified<E: Encodable, Key: CodingKey>(
+        _ encodable: E?,
+        forKey key: Key,
+        to container: inout KeyedEncodingContainer<Key>
+    ) throws {
+        guard modifiedProperties.contains(key.stringValue) else {
+            return
+        }
+        try container.encode(encodable ?? defaultValue(for: key), forKey: key)
     }
 }
 

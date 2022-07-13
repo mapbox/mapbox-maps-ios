@@ -9,11 +9,22 @@ public struct CircleLayer: Layer {
     // MARK: - Conformance to `Layer` protocol
     public var id: String
     public let type: LayerType
-    public var filter: Expression?
-    public var source: String?
-    public var sourceLayer: String?
-    public var minZoom: Double?
-    public var maxZoom: Double?
+    public var filter: Expression? {
+        didSet { modifiedProperties.insert(RootCodingKeys.filter.rawValue) }
+    }
+    public var source: String? {
+        didSet { modifiedProperties.insert(RootCodingKeys.source.rawValue) }
+    }
+
+    public var sourceLayer: String? {
+        didSet { modifiedProperties.insert(RootCodingKeys.sourceLayer.rawValue) }
+    }
+    public var minZoom: Double? {
+        didSet { modifiedProperties.insert(RootCodingKeys.minZoom.rawValue) }
+    }
+    public var maxZoom: Double? {
+        didSet { modifiedProperties.insert(RootCodingKeys.maxZoom.rawValue) }
+    }
 
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>?
@@ -78,6 +89,8 @@ public struct CircleLayer: Layer {
     /// Controls the frame of reference for `circle-translate`.
     public var circleTranslateAnchor: Value<CircleTranslateAnchor>?
 
+    private var modifiedProperties = Set<String>()
+
     public init(id: String) {
         self.id = id
         self.type = LayerType.circle
@@ -88,36 +101,36 @@ public struct CircleLayer: Layer {
         var container = encoder.container(keyedBy: RootCodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(type, forKey: .type)
-        try container.encodeIfPresent(filter, forKey: .filter)
-        try container.encodeIfPresent(source, forKey: .source)
-        try container.encodeIfPresent(sourceLayer, forKey: .sourceLayer)
-        try container.encodeIfPresent(minZoom, forKey: .minZoom)
-        try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
+        try encodeIfModified(filter, forKey: .filter, to: &container)
+        try encodeIfModified(source, forKey: .source, to: &container)
+        try encodeIfModified(sourceLayer, forKey: .sourceLayer, to: &container)
+        try encodeIfModified(minZoom, forKey: .minZoom, to: &container)
+        try encodeIfModified(maxZoom, forKey: .maxZoom, to: &container)
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
-        try paintContainer.encodeIfPresent(circleBlur, forKey: .circleBlur)
-        try paintContainer.encodeIfPresent(circleBlurTransition, forKey: .circleBlurTransition)
-        try paintContainer.encodeIfPresent(circleColor, forKey: .circleColor)
-        try paintContainer.encodeIfPresent(circleColorTransition, forKey: .circleColorTransition)
-        try paintContainer.encodeIfPresent(circleOpacity, forKey: .circleOpacity)
-        try paintContainer.encodeIfPresent(circleOpacityTransition, forKey: .circleOpacityTransition)
-        try paintContainer.encodeIfPresent(circlePitchAlignment, forKey: .circlePitchAlignment)
-        try paintContainer.encodeIfPresent(circlePitchScale, forKey: .circlePitchScale)
-        try paintContainer.encodeIfPresent(circleRadius, forKey: .circleRadius)
-        try paintContainer.encodeIfPresent(circleRadiusTransition, forKey: .circleRadiusTransition)
-        try paintContainer.encodeIfPresent(circleStrokeColor, forKey: .circleStrokeColor)
-        try paintContainer.encodeIfPresent(circleStrokeColorTransition, forKey: .circleStrokeColorTransition)
-        try paintContainer.encodeIfPresent(circleStrokeOpacity, forKey: .circleStrokeOpacity)
-        try paintContainer.encodeIfPresent(circleStrokeOpacityTransition, forKey: .circleStrokeOpacityTransition)
-        try paintContainer.encodeIfPresent(circleStrokeWidth, forKey: .circleStrokeWidth)
-        try paintContainer.encodeIfPresent(circleStrokeWidthTransition, forKey: .circleStrokeWidthTransition)
-        try paintContainer.encodeIfPresent(circleTranslate, forKey: .circleTranslate)
-        try paintContainer.encodeIfPresent(circleTranslateTransition, forKey: .circleTranslateTransition)
-        try paintContainer.encodeIfPresent(circleTranslateAnchor, forKey: .circleTranslateAnchor)
+        try paintContainer.encode(circleBlur, forKey: .circleBlur)
+        try paintContainer.encode(circleBlurTransition, forKey: .circleBlurTransition)
+        try paintContainer.encode(circleColor, forKey: .circleColor)
+        try paintContainer.encode(circleColorTransition, forKey: .circleColorTransition)
+        try paintContainer.encode(circleOpacity, forKey: .circleOpacity)
+        try paintContainer.encode(circleOpacityTransition, forKey: .circleOpacityTransition)
+        try paintContainer.encode(circlePitchAlignment, forKey: .circlePitchAlignment)
+        try paintContainer.encode(circlePitchScale, forKey: .circlePitchScale)
+        try paintContainer.encode(circleRadius, forKey: .circleRadius)
+        try paintContainer.encode(circleRadiusTransition, forKey: .circleRadiusTransition)
+        try paintContainer.encode(circleStrokeColor, forKey: .circleStrokeColor)
+        try paintContainer.encode(circleStrokeColorTransition, forKey: .circleStrokeColorTransition)
+        try paintContainer.encode(circleStrokeOpacity, forKey: .circleStrokeOpacity)
+        try paintContainer.encode(circleStrokeOpacityTransition, forKey: .circleStrokeOpacityTransition)
+        try paintContainer.encode(circleStrokeWidth, forKey: .circleStrokeWidth)
+        try paintContainer.encode(circleStrokeWidthTransition, forKey: .circleStrokeWidthTransition)
+        try paintContainer.encode(circleTranslate, forKey: .circleTranslate)
+        try paintContainer.encode(circleTranslateTransition, forKey: .circleTranslateTransition)
+        try paintContainer.encode(circleTranslateAnchor, forKey: .circleTranslateAnchor)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
-        try layoutContainer.encodeIfPresent(circleSortKey, forKey: .circleSortKey)
+        try layoutContainer.encode(visibility, forKey: .visibility)
+        try layoutContainer.encode(circleSortKey, forKey: .circleSortKey)
     }
 
     public init(from decoder: Decoder) throws {
@@ -195,6 +208,17 @@ public struct CircleLayer: Layer {
         case circleTranslate = "circle-translate"
         case circleTranslateTransition = "circle-translate-transition"
         case circleTranslateAnchor = "circle-translate-anchor"
+    }
+
+    private func encodeIfModified<E: Encodable, Key: CodingKey>(
+        _ encodable: E?,
+        forKey key: Key,
+        to container: inout KeyedEncodingContainer<Key>
+    ) throws {
+        guard modifiedProperties.contains(key.stringValue) else {
+            return
+        }
+        try container.encode(encodable ?? defaultValue(for: key), forKey: key)
     }
 }
 

@@ -9,11 +9,22 @@ public struct SymbolLayer: Layer {
     // MARK: - Conformance to `Layer` protocol
     public var id: String
     public let type: LayerType
-    public var filter: Expression?
-    public var source: String?
-    public var sourceLayer: String?
-    public var minZoom: Double?
-    public var maxZoom: Double?
+    public var filter: Expression? {
+        didSet { modifiedProperties.insert(RootCodingKeys.filter.rawValue) }
+    }
+    public var source: String? {
+        didSet { modifiedProperties.insert(RootCodingKeys.source.rawValue) }
+    }
+
+    public var sourceLayer: String? {
+        didSet { modifiedProperties.insert(RootCodingKeys.sourceLayer.rawValue) }
+    }
+    public var minZoom: Double? {
+        didSet { modifiedProperties.insert(RootCodingKeys.minZoom.rawValue) }
+    }
+    public var maxZoom: Double? {
+        didSet { modifiedProperties.insert(RootCodingKeys.maxZoom.rawValue) }
+    }
 
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>?
@@ -219,6 +230,8 @@ public struct SymbolLayer: Layer {
     /// Controls the frame of reference for `text-translate`.
     public var textTranslateAnchor: Value<TextTranslateAnchor>?
 
+    private var modifiedProperties = Set<String>()
+
     public init(id: String) {
         self.id = id
         self.type = LayerType.symbol
@@ -229,83 +242,83 @@ public struct SymbolLayer: Layer {
         var container = encoder.container(keyedBy: RootCodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(type, forKey: .type)
-        try container.encodeIfPresent(filter, forKey: .filter)
-        try container.encodeIfPresent(source, forKey: .source)
-        try container.encodeIfPresent(sourceLayer, forKey: .sourceLayer)
-        try container.encodeIfPresent(minZoom, forKey: .minZoom)
-        try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
+        try encodeIfModified(filter, forKey: .filter, to: &container)
+        try encodeIfModified(source, forKey: .source, to: &container)
+        try encodeIfModified(sourceLayer, forKey: .sourceLayer, to: &container)
+        try encodeIfModified(minZoom, forKey: .minZoom, to: &container)
+        try encodeIfModified(maxZoom, forKey: .maxZoom, to: &container)
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
-        try paintContainer.encodeIfPresent(iconColor, forKey: .iconColor)
-        try paintContainer.encodeIfPresent(iconColorTransition, forKey: .iconColorTransition)
-        try paintContainer.encodeIfPresent(iconHaloBlur, forKey: .iconHaloBlur)
-        try paintContainer.encodeIfPresent(iconHaloBlurTransition, forKey: .iconHaloBlurTransition)
-        try paintContainer.encodeIfPresent(iconHaloColor, forKey: .iconHaloColor)
-        try paintContainer.encodeIfPresent(iconHaloColorTransition, forKey: .iconHaloColorTransition)
-        try paintContainer.encodeIfPresent(iconHaloWidth, forKey: .iconHaloWidth)
-        try paintContainer.encodeIfPresent(iconHaloWidthTransition, forKey: .iconHaloWidthTransition)
-        try paintContainer.encodeIfPresent(iconOpacity, forKey: .iconOpacity)
-        try paintContainer.encodeIfPresent(iconOpacityTransition, forKey: .iconOpacityTransition)
-        try paintContainer.encodeIfPresent(iconTranslate, forKey: .iconTranslate)
-        try paintContainer.encodeIfPresent(iconTranslateTransition, forKey: .iconTranslateTransition)
-        try paintContainer.encodeIfPresent(iconTranslateAnchor, forKey: .iconTranslateAnchor)
-        try paintContainer.encodeIfPresent(textColor, forKey: .textColor)
-        try paintContainer.encodeIfPresent(textColorTransition, forKey: .textColorTransition)
-        try paintContainer.encodeIfPresent(textHaloBlur, forKey: .textHaloBlur)
-        try paintContainer.encodeIfPresent(textHaloBlurTransition, forKey: .textHaloBlurTransition)
-        try paintContainer.encodeIfPresent(textHaloColor, forKey: .textHaloColor)
-        try paintContainer.encodeIfPresent(textHaloColorTransition, forKey: .textHaloColorTransition)
-        try paintContainer.encodeIfPresent(textHaloWidth, forKey: .textHaloWidth)
-        try paintContainer.encodeIfPresent(textHaloWidthTransition, forKey: .textHaloWidthTransition)
-        try paintContainer.encodeIfPresent(textOpacity, forKey: .textOpacity)
-        try paintContainer.encodeIfPresent(textOpacityTransition, forKey: .textOpacityTransition)
-        try paintContainer.encodeIfPresent(textTranslate, forKey: .textTranslate)
-        try paintContainer.encodeIfPresent(textTranslateTransition, forKey: .textTranslateTransition)
-        try paintContainer.encodeIfPresent(textTranslateAnchor, forKey: .textTranslateAnchor)
+        try paintContainer.encode(iconColor, forKey: .iconColor)
+        try paintContainer.encode(iconColorTransition, forKey: .iconColorTransition)
+        try paintContainer.encode(iconHaloBlur, forKey: .iconHaloBlur)
+        try paintContainer.encode(iconHaloBlurTransition, forKey: .iconHaloBlurTransition)
+        try paintContainer.encode(iconHaloColor, forKey: .iconHaloColor)
+        try paintContainer.encode(iconHaloColorTransition, forKey: .iconHaloColorTransition)
+        try paintContainer.encode(iconHaloWidth, forKey: .iconHaloWidth)
+        try paintContainer.encode(iconHaloWidthTransition, forKey: .iconHaloWidthTransition)
+        try paintContainer.encode(iconOpacity, forKey: .iconOpacity)
+        try paintContainer.encode(iconOpacityTransition, forKey: .iconOpacityTransition)
+        try paintContainer.encode(iconTranslate, forKey: .iconTranslate)
+        try paintContainer.encode(iconTranslateTransition, forKey: .iconTranslateTransition)
+        try paintContainer.encode(iconTranslateAnchor, forKey: .iconTranslateAnchor)
+        try paintContainer.encode(textColor, forKey: .textColor)
+        try paintContainer.encode(textColorTransition, forKey: .textColorTransition)
+        try paintContainer.encode(textHaloBlur, forKey: .textHaloBlur)
+        try paintContainer.encode(textHaloBlurTransition, forKey: .textHaloBlurTransition)
+        try paintContainer.encode(textHaloColor, forKey: .textHaloColor)
+        try paintContainer.encode(textHaloColorTransition, forKey: .textHaloColorTransition)
+        try paintContainer.encode(textHaloWidth, forKey: .textHaloWidth)
+        try paintContainer.encode(textHaloWidthTransition, forKey: .textHaloWidthTransition)
+        try paintContainer.encode(textOpacity, forKey: .textOpacity)
+        try paintContainer.encode(textOpacityTransition, forKey: .textOpacityTransition)
+        try paintContainer.encode(textTranslate, forKey: .textTranslate)
+        try paintContainer.encode(textTranslateTransition, forKey: .textTranslateTransition)
+        try paintContainer.encode(textTranslateAnchor, forKey: .textTranslateAnchor)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
-        try layoutContainer.encodeIfPresent(iconAllowOverlap, forKey: .iconAllowOverlap)
-        try layoutContainer.encodeIfPresent(iconAnchor, forKey: .iconAnchor)
-        try layoutContainer.encodeIfPresent(iconIgnorePlacement, forKey: .iconIgnorePlacement)
-        try layoutContainer.encodeIfPresent(iconImage, forKey: .iconImage)
-        try layoutContainer.encodeIfPresent(iconKeepUpright, forKey: .iconKeepUpright)
-        try layoutContainer.encodeIfPresent(iconOffset, forKey: .iconOffset)
-        try layoutContainer.encodeIfPresent(iconOptional, forKey: .iconOptional)
-        try layoutContainer.encodeIfPresent(iconPadding, forKey: .iconPadding)
-        try layoutContainer.encodeIfPresent(iconPitchAlignment, forKey: .iconPitchAlignment)
-        try layoutContainer.encodeIfPresent(iconRotate, forKey: .iconRotate)
-        try layoutContainer.encodeIfPresent(iconRotationAlignment, forKey: .iconRotationAlignment)
-        try layoutContainer.encodeIfPresent(iconSize, forKey: .iconSize)
-        try layoutContainer.encodeIfPresent(iconTextFit, forKey: .iconTextFit)
-        try layoutContainer.encodeIfPresent(iconTextFitPadding, forKey: .iconTextFitPadding)
-        try layoutContainer.encodeIfPresent(symbolAvoidEdges, forKey: .symbolAvoidEdges)
-        try layoutContainer.encodeIfPresent(symbolPlacement, forKey: .symbolPlacement)
-        try layoutContainer.encodeIfPresent(symbolSortKey, forKey: .symbolSortKey)
-        try layoutContainer.encodeIfPresent(symbolSpacing, forKey: .symbolSpacing)
-        try layoutContainer.encodeIfPresent(symbolZOrder, forKey: .symbolZOrder)
-        try layoutContainer.encodeIfPresent(textAllowOverlap, forKey: .textAllowOverlap)
-        try layoutContainer.encodeIfPresent(textAnchor, forKey: .textAnchor)
-        try layoutContainer.encodeIfPresent(textField, forKey: .textField)
-        try layoutContainer.encodeIfPresent(textFont, forKey: .textFont)
-        try layoutContainer.encodeIfPresent(textIgnorePlacement, forKey: .textIgnorePlacement)
-        try layoutContainer.encodeIfPresent(textJustify, forKey: .textJustify)
-        try layoutContainer.encodeIfPresent(textKeepUpright, forKey: .textKeepUpright)
-        try layoutContainer.encodeIfPresent(textLetterSpacing, forKey: .textLetterSpacing)
-        try layoutContainer.encodeIfPresent(textLineHeight, forKey: .textLineHeight)
-        try layoutContainer.encodeIfPresent(textMaxAngle, forKey: .textMaxAngle)
-        try layoutContainer.encodeIfPresent(textMaxWidth, forKey: .textMaxWidth)
-        try layoutContainer.encodeIfPresent(textOffset, forKey: .textOffset)
-        try layoutContainer.encodeIfPresent(textOptional, forKey: .textOptional)
-        try layoutContainer.encodeIfPresent(textPadding, forKey: .textPadding)
-        try layoutContainer.encodeIfPresent(textPitchAlignment, forKey: .textPitchAlignment)
-        try layoutContainer.encodeIfPresent(textRadialOffset, forKey: .textRadialOffset)
-        try layoutContainer.encodeIfPresent(textRotate, forKey: .textRotate)
-        try layoutContainer.encodeIfPresent(textRotationAlignment, forKey: .textRotationAlignment)
-        try layoutContainer.encodeIfPresent(textSize, forKey: .textSize)
-        try layoutContainer.encodeIfPresent(textTransform, forKey: .textTransform)
-        try layoutContainer.encodeIfPresent(textVariableAnchor, forKey: .textVariableAnchor)
-        try layoutContainer.encodeIfPresent(textWritingMode, forKey: .textWritingMode)
+        try layoutContainer.encode(visibility, forKey: .visibility)
+        try layoutContainer.encode(iconAllowOverlap, forKey: .iconAllowOverlap)
+        try layoutContainer.encode(iconAnchor, forKey: .iconAnchor)
+        try layoutContainer.encode(iconIgnorePlacement, forKey: .iconIgnorePlacement)
+        try layoutContainer.encode(iconImage, forKey: .iconImage)
+        try layoutContainer.encode(iconKeepUpright, forKey: .iconKeepUpright)
+        try layoutContainer.encode(iconOffset, forKey: .iconOffset)
+        try layoutContainer.encode(iconOptional, forKey: .iconOptional)
+        try layoutContainer.encode(iconPadding, forKey: .iconPadding)
+        try layoutContainer.encode(iconPitchAlignment, forKey: .iconPitchAlignment)
+        try layoutContainer.encode(iconRotate, forKey: .iconRotate)
+        try layoutContainer.encode(iconRotationAlignment, forKey: .iconRotationAlignment)
+        try layoutContainer.encode(iconSize, forKey: .iconSize)
+        try layoutContainer.encode(iconTextFit, forKey: .iconTextFit)
+        try layoutContainer.encode(iconTextFitPadding, forKey: .iconTextFitPadding)
+        try layoutContainer.encode(symbolAvoidEdges, forKey: .symbolAvoidEdges)
+        try layoutContainer.encode(symbolPlacement, forKey: .symbolPlacement)
+        try layoutContainer.encode(symbolSortKey, forKey: .symbolSortKey)
+        try layoutContainer.encode(symbolSpacing, forKey: .symbolSpacing)
+        try layoutContainer.encode(symbolZOrder, forKey: .symbolZOrder)
+        try layoutContainer.encode(textAllowOverlap, forKey: .textAllowOverlap)
+        try layoutContainer.encode(textAnchor, forKey: .textAnchor)
+        try layoutContainer.encode(textField, forKey: .textField)
+        try layoutContainer.encode(textFont, forKey: .textFont)
+        try layoutContainer.encode(textIgnorePlacement, forKey: .textIgnorePlacement)
+        try layoutContainer.encode(textJustify, forKey: .textJustify)
+        try layoutContainer.encode(textKeepUpright, forKey: .textKeepUpright)
+        try layoutContainer.encode(textLetterSpacing, forKey: .textLetterSpacing)
+        try layoutContainer.encode(textLineHeight, forKey: .textLineHeight)
+        try layoutContainer.encode(textMaxAngle, forKey: .textMaxAngle)
+        try layoutContainer.encode(textMaxWidth, forKey: .textMaxWidth)
+        try layoutContainer.encode(textOffset, forKey: .textOffset)
+        try layoutContainer.encode(textOptional, forKey: .textOptional)
+        try layoutContainer.encode(textPadding, forKey: .textPadding)
+        try layoutContainer.encode(textPitchAlignment, forKey: .textPitchAlignment)
+        try layoutContainer.encode(textRadialOffset, forKey: .textRadialOffset)
+        try layoutContainer.encode(textRotate, forKey: .textRotate)
+        try layoutContainer.encode(textRotationAlignment, forKey: .textRotationAlignment)
+        try layoutContainer.encode(textSize, forKey: .textSize)
+        try layoutContainer.encode(textTransform, forKey: .textTransform)
+        try layoutContainer.encode(textVariableAnchor, forKey: .textVariableAnchor)
+        try layoutContainer.encode(textWritingMode, forKey: .textWritingMode)
     }
 
     public init(from decoder: Decoder) throws {
@@ -477,6 +490,17 @@ public struct SymbolLayer: Layer {
         case textTranslate = "text-translate"
         case textTranslateTransition = "text-translate-transition"
         case textTranslateAnchor = "text-translate-anchor"
+    }
+
+    private func encodeIfModified<E: Encodable, Key: CodingKey>(
+        _ encodable: E?,
+        forKey key: Key,
+        to container: inout KeyedEncodingContainer<Key>
+    ) throws {
+        guard modifiedProperties.contains(key.stringValue) else {
+            return
+        }
+        try container.encode(encodable ?? defaultValue(for: key), forKey: key)
     }
 }
 

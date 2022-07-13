@@ -9,11 +9,22 @@ public struct FillLayer: Layer {
     // MARK: - Conformance to `Layer` protocol
     public var id: String
     public let type: LayerType
-    public var filter: Expression?
-    public var source: String?
-    public var sourceLayer: String?
-    public var minZoom: Double?
-    public var maxZoom: Double?
+    public var filter: Expression? {
+        didSet { modifiedProperties.insert(RootCodingKeys.filter.rawValue) }
+    }
+    public var source: String? {
+        didSet { modifiedProperties.insert(RootCodingKeys.source.rawValue) }
+    }
+
+    public var sourceLayer: String? {
+        didSet { modifiedProperties.insert(RootCodingKeys.sourceLayer.rawValue) }
+    }
+    public var minZoom: Double? {
+        didSet { modifiedProperties.insert(RootCodingKeys.minZoom.rawValue) }
+    }
+    public var maxZoom: Double? {
+        didSet { modifiedProperties.insert(RootCodingKeys.maxZoom.rawValue) }
+    }
 
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>?
@@ -57,6 +68,8 @@ public struct FillLayer: Layer {
     /// Controls the frame of reference for `fill-translate`.
     public var fillTranslateAnchor: Value<FillTranslateAnchor>?
 
+    private var modifiedProperties = Set<String>()
+
     public init(id: String) {
         self.id = id
         self.type = LayerType.fill
@@ -67,29 +80,29 @@ public struct FillLayer: Layer {
         var container = encoder.container(keyedBy: RootCodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(type, forKey: .type)
-        try container.encodeIfPresent(filter, forKey: .filter)
-        try container.encodeIfPresent(source, forKey: .source)
-        try container.encodeIfPresent(sourceLayer, forKey: .sourceLayer)
-        try container.encodeIfPresent(minZoom, forKey: .minZoom)
-        try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
+        try encodeIfModified(filter, forKey: .filter, to: &container)
+        try encodeIfModified(source, forKey: .source, to: &container)
+        try encodeIfModified(sourceLayer, forKey: .sourceLayer, to: &container)
+        try encodeIfModified(minZoom, forKey: .minZoom, to: &container)
+        try encodeIfModified(maxZoom, forKey: .maxZoom, to: &container)
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
-        try paintContainer.encodeIfPresent(fillAntialias, forKey: .fillAntialias)
-        try paintContainer.encodeIfPresent(fillColor, forKey: .fillColor)
-        try paintContainer.encodeIfPresent(fillColorTransition, forKey: .fillColorTransition)
-        try paintContainer.encodeIfPresent(fillOpacity, forKey: .fillOpacity)
-        try paintContainer.encodeIfPresent(fillOpacityTransition, forKey: .fillOpacityTransition)
-        try paintContainer.encodeIfPresent(fillOutlineColor, forKey: .fillOutlineColor)
-        try paintContainer.encodeIfPresent(fillOutlineColorTransition, forKey: .fillOutlineColorTransition)
-        try paintContainer.encodeIfPresent(fillPattern, forKey: .fillPattern)
-        try paintContainer.encodeIfPresent(fillPatternTransition, forKey: .fillPatternTransition)
-        try paintContainer.encodeIfPresent(fillTranslate, forKey: .fillTranslate)
-        try paintContainer.encodeIfPresent(fillTranslateTransition, forKey: .fillTranslateTransition)
-        try paintContainer.encodeIfPresent(fillTranslateAnchor, forKey: .fillTranslateAnchor)
+        try paintContainer.encode(fillAntialias, forKey: .fillAntialias)
+        try paintContainer.encode(fillColor, forKey: .fillColor)
+        try paintContainer.encode(fillColorTransition, forKey: .fillColorTransition)
+        try paintContainer.encode(fillOpacity, forKey: .fillOpacity)
+        try paintContainer.encode(fillOpacityTransition, forKey: .fillOpacityTransition)
+        try paintContainer.encode(fillOutlineColor, forKey: .fillOutlineColor)
+        try paintContainer.encode(fillOutlineColorTransition, forKey: .fillOutlineColorTransition)
+        try paintContainer.encode(fillPattern, forKey: .fillPattern)
+        try paintContainer.encode(fillPatternTransition, forKey: .fillPatternTransition)
+        try paintContainer.encode(fillTranslate, forKey: .fillTranslate)
+        try paintContainer.encode(fillTranslateTransition, forKey: .fillTranslateTransition)
+        try paintContainer.encode(fillTranslateAnchor, forKey: .fillTranslateAnchor)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
-        try layoutContainer.encodeIfPresent(fillSortKey, forKey: .fillSortKey)
+        try layoutContainer.encode(visibility, forKey: .visibility)
+        try layoutContainer.encode(fillSortKey, forKey: .fillSortKey)
     }
 
     public init(from decoder: Decoder) throws {
@@ -153,6 +166,17 @@ public struct FillLayer: Layer {
         case fillTranslate = "fill-translate"
         case fillTranslateTransition = "fill-translate-transition"
         case fillTranslateAnchor = "fill-translate-anchor"
+    }
+
+    private func encodeIfModified<E: Encodable, Key: CodingKey>(
+        _ encodable: E?,
+        forKey key: Key,
+        to container: inout KeyedEncodingContainer<Key>
+    ) throws {
+        guard modifiedProperties.contains(key.stringValue) else {
+            return
+        }
+        try container.encode(encodable ?? defaultValue(for: key), forKey: key)
     }
 }
 

@@ -7,11 +7,22 @@ import Foundation
     // MARK: - Conformance to `Layer` protocol
     public var id: String
     public let type: LayerType
-    public var filter: Expression?
-    public var source: String?
-    public var sourceLayer: String?
-    public var minZoom: Double?
-    public var maxZoom: Double?
+    public var filter: Expression? {
+        didSet { modifiedProperties.insert(RootCodingKeys.filter.rawValue) }
+    }
+    public var source: String? {
+        didSet { modifiedProperties.insert(RootCodingKeys.source.rawValue) }
+    }
+
+    public var sourceLayer: String? {
+        didSet { modifiedProperties.insert(RootCodingKeys.sourceLayer.rawValue) }
+    }
+    public var minZoom: Double? {
+        didSet { modifiedProperties.insert(RootCodingKeys.minZoom.rawValue) }
+    }
+    public var maxZoom: Double? {
+        didSet { modifiedProperties.insert(RootCodingKeys.maxZoom.rawValue) }
+    }
 
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>?
@@ -61,6 +72,8 @@ import Foundation
     /// Defines rendering behavior of model in respect to other 3D scene objects.
     public var modelType: Value<ModelType>?
 
+    private var modifiedProperties = Set<String>()
+
     public init(id: String) {
         self.id = id
         self.type = LayerType.model
@@ -71,31 +84,31 @@ import Foundation
         var container = encoder.container(keyedBy: RootCodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(type, forKey: .type)
-        try container.encodeIfPresent(filter, forKey: .filter)
-        try container.encodeIfPresent(source, forKey: .source)
-        try container.encodeIfPresent(sourceLayer, forKey: .sourceLayer)
-        try container.encodeIfPresent(minZoom, forKey: .minZoom)
-        try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
+        try encodeIfModified(filter, forKey: .filter, to: &container)
+        try encodeIfModified(source, forKey: .source, to: &container)
+        try encodeIfModified(sourceLayer, forKey: .sourceLayer, to: &container)
+        try encodeIfModified(minZoom, forKey: .minZoom, to: &container)
+        try encodeIfModified(maxZoom, forKey: .maxZoom, to: &container)
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
-        try paintContainer.encodeIfPresent(modelCastShadows, forKey: .modelCastShadows)
-        try paintContainer.encodeIfPresent(modelColor, forKey: .modelColor)
-        try paintContainer.encodeIfPresent(modelColorTransition, forKey: .modelColorTransition)
-        try paintContainer.encodeIfPresent(modelColorMixIntensity, forKey: .modelColorMixIntensity)
-        try paintContainer.encodeIfPresent(modelColorMixIntensityTransition, forKey: .modelColorMixIntensityTransition)
-        try paintContainer.encodeIfPresent(modelOpacity, forKey: .modelOpacity)
-        try paintContainer.encodeIfPresent(modelOpacityTransition, forKey: .modelOpacityTransition)
-        try paintContainer.encodeIfPresent(modelRotation, forKey: .modelRotation)
-        try paintContainer.encodeIfPresent(modelRotationTransition, forKey: .modelRotationTransition)
-        try paintContainer.encodeIfPresent(modelScale, forKey: .modelScale)
-        try paintContainer.encodeIfPresent(modelScaleTransition, forKey: .modelScaleTransition)
-        try paintContainer.encodeIfPresent(modelTranslation, forKey: .modelTranslation)
-        try paintContainer.encodeIfPresent(modelTranslationTransition, forKey: .modelTranslationTransition)
-        try paintContainer.encodeIfPresent(modelType, forKey: .modelType)
+        try paintContainer.encode(modelCastShadows, forKey: .modelCastShadows)
+        try paintContainer.encode(modelColor, forKey: .modelColor)
+        try paintContainer.encode(modelColorTransition, forKey: .modelColorTransition)
+        try paintContainer.encode(modelColorMixIntensity, forKey: .modelColorMixIntensity)
+        try paintContainer.encode(modelColorMixIntensityTransition, forKey: .modelColorMixIntensityTransition)
+        try paintContainer.encode(modelOpacity, forKey: .modelOpacity)
+        try paintContainer.encode(modelOpacityTransition, forKey: .modelOpacityTransition)
+        try paintContainer.encode(modelRotation, forKey: .modelRotation)
+        try paintContainer.encode(modelRotationTransition, forKey: .modelRotationTransition)
+        try paintContainer.encode(modelScale, forKey: .modelScale)
+        try paintContainer.encode(modelScaleTransition, forKey: .modelScaleTransition)
+        try paintContainer.encode(modelTranslation, forKey: .modelTranslation)
+        try paintContainer.encode(modelTranslationTransition, forKey: .modelTranslationTransition)
+        try paintContainer.encode(modelType, forKey: .modelType)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
-        try layoutContainer.encodeIfPresent(modelId, forKey: .modelId)
+        try layoutContainer.encode(visibility, forKey: .visibility)
+        try layoutContainer.encode(modelId, forKey: .modelId)
     }
 
     public init(from decoder: Decoder) throws {
@@ -163,6 +176,17 @@ import Foundation
         case modelTranslation = "model-translation"
         case modelTranslationTransition = "model-translation-transition"
         case modelType = "model-type"
+    }
+
+    private func encodeIfModified<E: Encodable, Key: CodingKey>(
+        _ encodable: E?,
+        forKey key: Key,
+        to container: inout KeyedEncodingContainer<Key>
+    ) throws {
+        guard modifiedProperties.contains(key.stringValue) else {
+            return
+        }
+        try container.encode(encodable ?? defaultValue(for: key), forKey: key)
     }
 }
 

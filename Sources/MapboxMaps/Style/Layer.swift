@@ -32,4 +32,19 @@ extension Layer {
         let layerData = try JSONSerialization.data(withJSONObject: jsonObject)
         self = try JSONDecoder().decode(Self.self, from: layerData)
     }
+
+    internal func defaultValue<T>(for property: CodingKey) -> T? {
+        convert(Style.layerPropertyDefaultValue(for: type, property: property.stringValue).value)
+    }
+
+    private func convert<T>(_ value: Any) -> T? {
+        switch (T.self, value.self) {
+        case (is Value<StyleColor>.Type, let array as Array<Any>) where array.first as? String == "rgba":
+            let rgba = Array(array.dropFirst()) as! [Double]
+            let color = StyleColor(red: rgba[0], green: rgba[1], blue: rgba[2], alpha: rgba[3])!
+            return Value<StyleColor>.constant(color) as? T
+        default:
+            return value as? T
+        }
+    }
 }

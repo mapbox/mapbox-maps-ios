@@ -9,11 +9,22 @@ public struct FillExtrusionLayer: Layer {
     // MARK: - Conformance to `Layer` protocol
     public var id: String
     public let type: LayerType
-    public var filter: Expression?
-    public var source: String?
-    public var sourceLayer: String?
-    public var minZoom: Double?
-    public var maxZoom: Double?
+    public var filter: Expression? {
+        didSet { modifiedProperties.insert(RootCodingKeys.filter.rawValue) }
+    }
+    public var source: String? {
+        didSet { modifiedProperties.insert(RootCodingKeys.source.rawValue) }
+    }
+
+    public var sourceLayer: String? {
+        didSet { modifiedProperties.insert(RootCodingKeys.sourceLayer.rawValue) }
+    }
+    public var minZoom: Double? {
+        didSet { modifiedProperties.insert(RootCodingKeys.minZoom.rawValue) }
+    }
+    public var maxZoom: Double? {
+        didSet { modifiedProperties.insert(RootCodingKeys.maxZoom.rawValue) }
+    }
 
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>?
@@ -72,6 +83,8 @@ public struct FillExtrusionLayer: Layer {
     /// Whether to apply a vertical gradient to the sides of a fill-extrusion layer. If true, sides will be shaded slightly darker farther down.
     public var fillExtrusionVerticalGradient: Value<Bool>?
 
+    private var modifiedProperties = Set<String>()
+
     public init(id: String) {
         self.id = id
         self.type = LayerType.fillExtrusion
@@ -82,34 +95,34 @@ public struct FillExtrusionLayer: Layer {
         var container = encoder.container(keyedBy: RootCodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(type, forKey: .type)
-        try container.encodeIfPresent(filter, forKey: .filter)
-        try container.encodeIfPresent(source, forKey: .source)
-        try container.encodeIfPresent(sourceLayer, forKey: .sourceLayer)
-        try container.encodeIfPresent(minZoom, forKey: .minZoom)
-        try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
+        try encodeIfModified(filter, forKey: .filter, to: &container)
+        try encodeIfModified(source, forKey: .source, to: &container)
+        try encodeIfModified(sourceLayer, forKey: .sourceLayer, to: &container)
+        try encodeIfModified(minZoom, forKey: .minZoom, to: &container)
+        try encodeIfModified(maxZoom, forKey: .maxZoom, to: &container)
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
-        try paintContainer.encodeIfPresent(fillExtrusionAmbientOcclusionIntensity, forKey: .fillExtrusionAmbientOcclusionIntensity)
-        try paintContainer.encodeIfPresent(fillExtrusionAmbientOcclusionIntensityTransition, forKey: .fillExtrusionAmbientOcclusionIntensityTransition)
-        try paintContainer.encodeIfPresent(fillExtrusionAmbientOcclusionRadius, forKey: .fillExtrusionAmbientOcclusionRadius)
-        try paintContainer.encodeIfPresent(fillExtrusionAmbientOcclusionRadiusTransition, forKey: .fillExtrusionAmbientOcclusionRadiusTransition)
-        try paintContainer.encodeIfPresent(fillExtrusionBase, forKey: .fillExtrusionBase)
-        try paintContainer.encodeIfPresent(fillExtrusionBaseTransition, forKey: .fillExtrusionBaseTransition)
-        try paintContainer.encodeIfPresent(fillExtrusionColor, forKey: .fillExtrusionColor)
-        try paintContainer.encodeIfPresent(fillExtrusionColorTransition, forKey: .fillExtrusionColorTransition)
-        try paintContainer.encodeIfPresent(fillExtrusionHeight, forKey: .fillExtrusionHeight)
-        try paintContainer.encodeIfPresent(fillExtrusionHeightTransition, forKey: .fillExtrusionHeightTransition)
-        try paintContainer.encodeIfPresent(fillExtrusionOpacity, forKey: .fillExtrusionOpacity)
-        try paintContainer.encodeIfPresent(fillExtrusionOpacityTransition, forKey: .fillExtrusionOpacityTransition)
-        try paintContainer.encodeIfPresent(fillExtrusionPattern, forKey: .fillExtrusionPattern)
-        try paintContainer.encodeIfPresent(fillExtrusionPatternTransition, forKey: .fillExtrusionPatternTransition)
-        try paintContainer.encodeIfPresent(fillExtrusionTranslate, forKey: .fillExtrusionTranslate)
-        try paintContainer.encodeIfPresent(fillExtrusionTranslateTransition, forKey: .fillExtrusionTranslateTransition)
-        try paintContainer.encodeIfPresent(fillExtrusionTranslateAnchor, forKey: .fillExtrusionTranslateAnchor)
-        try paintContainer.encodeIfPresent(fillExtrusionVerticalGradient, forKey: .fillExtrusionVerticalGradient)
+        try paintContainer.encode(fillExtrusionAmbientOcclusionIntensity, forKey: .fillExtrusionAmbientOcclusionIntensity)
+        try paintContainer.encode(fillExtrusionAmbientOcclusionIntensityTransition, forKey: .fillExtrusionAmbientOcclusionIntensityTransition)
+        try paintContainer.encode(fillExtrusionAmbientOcclusionRadius, forKey: .fillExtrusionAmbientOcclusionRadius)
+        try paintContainer.encode(fillExtrusionAmbientOcclusionRadiusTransition, forKey: .fillExtrusionAmbientOcclusionRadiusTransition)
+        try paintContainer.encode(fillExtrusionBase, forKey: .fillExtrusionBase)
+        try paintContainer.encode(fillExtrusionBaseTransition, forKey: .fillExtrusionBaseTransition)
+        try paintContainer.encode(fillExtrusionColor, forKey: .fillExtrusionColor)
+        try paintContainer.encode(fillExtrusionColorTransition, forKey: .fillExtrusionColorTransition)
+        try paintContainer.encode(fillExtrusionHeight, forKey: .fillExtrusionHeight)
+        try paintContainer.encode(fillExtrusionHeightTransition, forKey: .fillExtrusionHeightTransition)
+        try paintContainer.encode(fillExtrusionOpacity, forKey: .fillExtrusionOpacity)
+        try paintContainer.encode(fillExtrusionOpacityTransition, forKey: .fillExtrusionOpacityTransition)
+        try paintContainer.encode(fillExtrusionPattern, forKey: .fillExtrusionPattern)
+        try paintContainer.encode(fillExtrusionPatternTransition, forKey: .fillExtrusionPatternTransition)
+        try paintContainer.encode(fillExtrusionTranslate, forKey: .fillExtrusionTranslate)
+        try paintContainer.encode(fillExtrusionTranslateTransition, forKey: .fillExtrusionTranslateTransition)
+        try paintContainer.encode(fillExtrusionTranslateAnchor, forKey: .fillExtrusionTranslateAnchor)
+        try paintContainer.encode(fillExtrusionVerticalGradient, forKey: .fillExtrusionVerticalGradient)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
+        try layoutContainer.encode(visibility, forKey: .visibility)
     }
 
     public init(from decoder: Decoder) throws {
@@ -183,6 +196,17 @@ public struct FillExtrusionLayer: Layer {
         case fillExtrusionTranslateTransition = "fill-extrusion-translate-transition"
         case fillExtrusionTranslateAnchor = "fill-extrusion-translate-anchor"
         case fillExtrusionVerticalGradient = "fill-extrusion-vertical-gradient"
+    }
+
+    private func encodeIfModified<E: Encodable, Key: CodingKey>(
+        _ encodable: E?,
+        forKey key: Key,
+        to container: inout KeyedEncodingContainer<Key>
+    ) throws {
+        guard modifiedProperties.contains(key.stringValue) else {
+            return
+        }
+        try container.encode(encodable ?? defaultValue(for: key), forKey: key)
     }
 }
 

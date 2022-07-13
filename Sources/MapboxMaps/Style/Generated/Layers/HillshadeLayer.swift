@@ -9,11 +9,22 @@ public struct HillshadeLayer: Layer {
     // MARK: - Conformance to `Layer` protocol
     public var id: String
     public let type: LayerType
-    public var filter: Expression?
-    public var source: String?
-    public var sourceLayer: String?
-    public var minZoom: Double?
-    public var maxZoom: Double?
+    public var filter: Expression? {
+        didSet { modifiedProperties.insert(RootCodingKeys.filter.rawValue) }
+    }
+    public var source: String? {
+        didSet { modifiedProperties.insert(RootCodingKeys.source.rawValue) }
+    }
+
+    public var sourceLayer: String? {
+        didSet { modifiedProperties.insert(RootCodingKeys.sourceLayer.rawValue) }
+    }
+    public var minZoom: Double? {
+        didSet { modifiedProperties.insert(RootCodingKeys.minZoom.rawValue) }
+    }
+    public var maxZoom: Double? {
+        didSet { modifiedProperties.insert(RootCodingKeys.maxZoom.rawValue) }
+    }
 
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>?
@@ -48,6 +59,8 @@ public struct HillshadeLayer: Layer {
     /// Transition options for `hillshadeShadowColor`.
     public var hillshadeShadowColorTransition: StyleTransition?
 
+    private var modifiedProperties = Set<String>()
+
     public init(id: String) {
         self.id = id
         self.type = LayerType.hillshade
@@ -58,26 +71,26 @@ public struct HillshadeLayer: Layer {
         var container = encoder.container(keyedBy: RootCodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(type, forKey: .type)
-        try container.encodeIfPresent(filter, forKey: .filter)
-        try container.encodeIfPresent(source, forKey: .source)
-        try container.encodeIfPresent(sourceLayer, forKey: .sourceLayer)
-        try container.encodeIfPresent(minZoom, forKey: .minZoom)
-        try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
+        try encodeIfModified(filter, forKey: .filter, to: &container)
+        try encodeIfModified(source, forKey: .source, to: &container)
+        try encodeIfModified(sourceLayer, forKey: .sourceLayer, to: &container)
+        try encodeIfModified(minZoom, forKey: .minZoom, to: &container)
+        try encodeIfModified(maxZoom, forKey: .maxZoom, to: &container)
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
-        try paintContainer.encodeIfPresent(hillshadeAccentColor, forKey: .hillshadeAccentColor)
-        try paintContainer.encodeIfPresent(hillshadeAccentColorTransition, forKey: .hillshadeAccentColorTransition)
-        try paintContainer.encodeIfPresent(hillshadeExaggeration, forKey: .hillshadeExaggeration)
-        try paintContainer.encodeIfPresent(hillshadeExaggerationTransition, forKey: .hillshadeExaggerationTransition)
-        try paintContainer.encodeIfPresent(hillshadeHighlightColor, forKey: .hillshadeHighlightColor)
-        try paintContainer.encodeIfPresent(hillshadeHighlightColorTransition, forKey: .hillshadeHighlightColorTransition)
-        try paintContainer.encodeIfPresent(hillshadeIlluminationAnchor, forKey: .hillshadeIlluminationAnchor)
-        try paintContainer.encodeIfPresent(hillshadeIlluminationDirection, forKey: .hillshadeIlluminationDirection)
-        try paintContainer.encodeIfPresent(hillshadeShadowColor, forKey: .hillshadeShadowColor)
-        try paintContainer.encodeIfPresent(hillshadeShadowColorTransition, forKey: .hillshadeShadowColorTransition)
+        try paintContainer.encode(hillshadeAccentColor, forKey: .hillshadeAccentColor)
+        try paintContainer.encode(hillshadeAccentColorTransition, forKey: .hillshadeAccentColorTransition)
+        try paintContainer.encode(hillshadeExaggeration, forKey: .hillshadeExaggeration)
+        try paintContainer.encode(hillshadeExaggerationTransition, forKey: .hillshadeExaggerationTransition)
+        try paintContainer.encode(hillshadeHighlightColor, forKey: .hillshadeHighlightColor)
+        try paintContainer.encode(hillshadeHighlightColorTransition, forKey: .hillshadeHighlightColorTransition)
+        try paintContainer.encode(hillshadeIlluminationAnchor, forKey: .hillshadeIlluminationAnchor)
+        try paintContainer.encode(hillshadeIlluminationDirection, forKey: .hillshadeIlluminationDirection)
+        try paintContainer.encode(hillshadeShadowColor, forKey: .hillshadeShadowColor)
+        try paintContainer.encode(hillshadeShadowColorTransition, forKey: .hillshadeShadowColorTransition)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
+        try layoutContainer.encode(visibility, forKey: .visibility)
     }
 
     public init(from decoder: Decoder) throws {
@@ -135,6 +148,17 @@ public struct HillshadeLayer: Layer {
         case hillshadeIlluminationDirection = "hillshade-illumination-direction"
         case hillshadeShadowColor = "hillshade-shadow-color"
         case hillshadeShadowColorTransition = "hillshade-shadow-color-transition"
+    }
+
+    private func encodeIfModified<E: Encodable, Key: CodingKey>(
+        _ encodable: E?,
+        forKey key: Key,
+        to container: inout KeyedEncodingContainer<Key>
+    ) throws {
+        guard modifiedProperties.contains(key.stringValue) else {
+            return
+        }
+        try container.encode(encodable ?? defaultValue(for: key), forKey: key)
     }
 }
 

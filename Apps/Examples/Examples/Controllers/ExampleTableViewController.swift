@@ -4,83 +4,57 @@ import ObjectiveC
 //swiftlint:disable force_cast
 final class ExampleTableViewController: UITableViewController {
 
-    internal var searchBar = UISearchBar()
-
     let allExamples = Examples.all
     var filteredExamples = [Example]()
 
-    var isFiltering: Bool {
-        let searchText = searchBar.text?.isEmpty ?? true
-        return !searchText
-    }
+    var isFiltering: Bool { navigationItem.searchController?.isActive ?? false }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Examples"
 
-        searchBar.delegate = self
-
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.placeholder = "Search examples"
+        searchController.obscuresBackgroundDuringPresentation = false
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
     }
 }
 
-extension ExampleTableViewController: UISearchBarDelegate {
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if let searchText = searchBar.text {
+extension ExampleTableViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        if let searchText = searchController.searchBar.text {
             filterContentForSearchText(searchText)
         }
-    }
-
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
     }
 }
 
 extension ExampleTableViewController {
-
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if section == 0 {
-            searchBar.placeholder = "Search examples"
-            return searchBar
-        }
-
-        return nil
-    }
-
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 {
-            return 60.0
-        }
-
-        return 30
-    }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         if isFiltering {
             return 1
         }
 
-        return allExamples.count + 1
+        return allExamples.count
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == 0 {
+        if isFiltering {
             return nil
-        } else {
-            return allExamples[section - 1]["title"] as? String
         }
+
+        return allExamples[section]["title"] as? String
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
         if isFiltering {
           return filteredExamples.count
         }
 
-        if section == 0 {
-            return 0
-        }
-        let examples = allExamples[section - 1]["examples"] as! [Example]
+        let examples = allExamples[section]["examples"] as! [Example]
         return examples.count
     }
 
@@ -91,7 +65,7 @@ extension ExampleTableViewController {
         if isFiltering {
           example = filteredExamples[indexPath.row]
         } else {
-            let examples = allExamples[indexPath.section - 1]["examples"] as! [Example]
+            let examples = allExamples[indexPath.section]["examples"] as! [Example]
           example = examples[indexPath.row]
         }
 
@@ -115,7 +89,7 @@ extension ExampleTableViewController {
         if isFiltering {
           example = filteredExamples[indexPath.row]
         } else {
-            let examples = allExamples[indexPath.section - 1]["examples"] as! [Example]
+            let examples = allExamples[indexPath.section]["examples"] as! [Example]
           example = examples[indexPath.row]
         }
 
@@ -124,13 +98,11 @@ extension ExampleTableViewController {
     }
 
     func filterContentForSearchText(_ searchText: String) {
-        var examples = [Example]()
-
-        for array in allExamples {
-            examples.append(contentsOf: array["examples"] as! [Example])
-        }
-        filteredExamples = examples.filter {
-            return $0.title.lowercased().contains(searchText.lowercased())
+        let flatExamples = allExamples.flatMap { $0["examples"] as! [Example] }
+        if searchText.isEmpty {
+            filteredExamples = flatExamples
+        } else {
+            filteredExamples = flatExamples.filter { $0.title.lowercased().contains(searchText.lowercased()) }
         }
 
       tableView.reloadData()

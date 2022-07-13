@@ -137,6 +137,25 @@ final class ViewAnnotationManagerTests: XCTestCase {
         XCTAssertEqual(optionsB, manager.options(forFeatureId: testIdB))
     }
 
+    func testAssociatedFeatureIdUpdateDoesNotDissociate() throws {
+        let testIdA = "testIdA"
+        let testView = UIView()
+        let optionsA = ViewAnnotationOptions(geometry: Point(.random()),
+                                             width: 0,
+                                             height: 0,
+                                             associatedFeatureId: testIdA)
+        let updateOptions = ViewAnnotationOptions(geometry: optionsA.geometry,
+                                                  width: 100,
+                                                  height: 100,
+                                                  associatedFeatureId: nil)
+        try manager.add(testView, options: optionsA)
+        mapboxMap.optionsForViewAnnotationWithIdStub.defaultReturnValue = optionsA
+
+        try manager.update(testView, options: updateOptions)
+
+        XCTAssertEqual(testView, manager.view(forFeatureId: testIdA))
+    }
+
     func testUpdate() {
         let annotationView = addTestAnnotationView()
         XCTAssertEqual(mapboxMap.updateViewAnnotationStub.invocations.count, 0)

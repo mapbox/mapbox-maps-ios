@@ -19,9 +19,6 @@
   },
   "testTargets" : [
     {
-      "skippedTests" : [
-        "SpecsBenchmark\/testNavDayMunichDriveTilePack()"
-      ],
       "target" : {
         "containerPath" : "container:MobileMetrics.xcodeproj",
         "identifier" : "7499663127C7AD2900DA186A",

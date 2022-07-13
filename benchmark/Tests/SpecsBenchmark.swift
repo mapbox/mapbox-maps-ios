@@ -8,17 +8,20 @@ class SpecsBenchmark: XCTestCase {
         XCTPerformanceMetric.all
     }
 
-    private var baselineRunCount = 0 {
-        didSet {
-            print("baselineRunCount = \(baselineRunCount)")
-        }
-    }
+    /// This value cannot be configured and depends on Xcode version.
+    /// In next Xcode version this value might change.
+    /// XCTest skips first 10 runs performance results and do not include it in XCResult bundle
+    /// That's why we have to skip first N runs instead of skip runs at the end
+    var numberOfPerformanceRepeats = 20
+
     func testBaselineMeasure() throws {
-        baselineRunCount += 1
         let scenario = Scenario(name: "manual", commands: [
         ])
 
-        try measureScenario(scenario)
+        // Assign actual number of repeats
+        // to support changes over Xcode versions
+        numberOfPerformanceRepeats = try measureScenario(scenario)
+        print("Actual number of times Xcode run Performance test is \(numberOfPerformanceRepeats)")
     }
 
     func testNavDayMunichTtrcCold() throws {
@@ -53,20 +56,23 @@ class SpecsBenchmark: XCTestCase {
 }
 
 extension SpecsBenchmark {
-    func runScenarioBenchmark(name: String, maxRepeatCount: Int? = nil, timeout: TimeInterval = 60) throws {
+
+    @discardableResult
+    func runScenarioBenchmark(name: String,
+                              maxRepeatCount: Int? = nil,
+                              timeout: TimeInterval = 60,
+                              functionName: String = #function) throws -> Int {
         let url = try XCTUnwrap(Bundle.main.url(forResource: name, withExtension: "json"))
         let scenario = try Scenario(filePath: url)
 
-        try measureScenario(scenario, maxRepeatCount: maxRepeatCount, timeout: timeout)
+        return try measureScenario(scenario, maxRepeatCount: maxRepeatCount, timeout: timeout, functionName: functionName)
     }
 
-    func measureScenario(_ scenario: Scenario, maxRepeatCount: Int? = nil, timeout: TimeInterval = 60) throws {
-        /// This value cannot be configured and depends on Xcode version.
-        /// In next Xcode version this value might change.
-        /// XCTest skips first 10 runs performance results and do not include it in XCResult bundle
-        /// That's why we have to skip first N runs instead of skip runs at the end
-        let numberOfRepeats = 20
-        let numberOfSkips = maxRepeatCount.map({ numberOfRepeats - $0 }) ?? 0
+    func measureScenario(_ scenario: Scenario,
+                         maxRepeatCount: Int? = nil,
+                         timeout: TimeInterval = 60,
+                         functionName: String = #function) throws -> Int {
+        let numberOfSkips = maxRepeatCount.map({ numberOfPerformanceRepeats - $0 }) ?? 0
         var counter = 0
 
         measure {
@@ -74,7 +80,10 @@ extension SpecsBenchmark {
                 counter += 1
             }
             if counter < numberOfSkips {
+                print("Skipping test '\(functionName)' #\(counter + 1)")
                 return
+            } else {
+                print("Executing test '\(functionName)' #\(counter + 1)")
             }
 
             let scenarioExpectation = expectation(description: "Scenario '\(name)' finished")
@@ -88,5 +97,6 @@ extension SpecsBenchmark {
                 self.stopMeasuring()
             }
         }
+        return counter
     }
 }

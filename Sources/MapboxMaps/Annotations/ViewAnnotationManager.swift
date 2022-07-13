@@ -193,7 +193,7 @@ public final class ViewAnnotationManager {
         let isHidden = !(options.visible ?? true)
         expectedHiddenByView[view] = isHidden
         viewsById[id]?.isHidden = isHidden
-        if let id = currentFeatureId, id != options.associatedFeatureId {
+        if let id = currentFeatureId, let updatedId = options.associatedFeatureId, id != updatedId {
             viewsByFeatureIds[id] = nil
         }
         if let featureId = options.associatedFeatureId {

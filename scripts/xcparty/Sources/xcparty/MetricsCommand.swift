@@ -25,7 +25,7 @@ struct MetricsCommand: ParsableCommand {
     var outputPath: String?
 
     @Option(name: [.customLong("single-run-test-ids")], help: "Pass test id in format 'TestSuite/testExample()' to ignore all but last run measurements")
-    var listOfSingleRunTests: [String]
+    var listOfSingleRunTests: [String] = []
 
     struct BaselineList: Decodable {
         // swiftlint:disable nesting

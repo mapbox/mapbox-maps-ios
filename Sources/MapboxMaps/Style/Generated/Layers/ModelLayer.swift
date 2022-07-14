@@ -19,6 +19,9 @@ import Foundation
     /// Model to render.
     public var modelId: Value<String>?
 
+    /// Enable/Disable shadow casting for this layer
+    public var modelCastShadows: Value<Bool>?
+
     /// The tint color of the model layer. model-color-mix-intensity (defaults to 0) defines tint(mix) intensity - this means that, this color is not used unless model-color-mix-intensity gets value greater than 0.
     public var modelColor: Value<StyleColor>?
 
@@ -75,6 +78,7 @@ import Foundation
         try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
+        try paintContainer.encodeIfPresent(modelCastShadows, forKey: .modelCastShadows)
         try paintContainer.encodeIfPresent(modelColor, forKey: .modelColor)
         try paintContainer.encodeIfPresent(modelColorTransition, forKey: .modelColorTransition)
         try paintContainer.encodeIfPresent(modelColorMixIntensity, forKey: .modelColorMixIntensity)
@@ -105,6 +109,7 @@ import Foundation
         maxZoom = try container.decodeIfPresent(Double.self, forKey: .maxZoom)
 
         if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
+            modelCastShadows = try paintContainer.decodeIfPresent(Value<Bool>.self, forKey: .modelCastShadows)
             modelColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .modelColor)
             modelColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelColorTransition)
             modelColorMixIntensity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .modelColorMixIntensity)
@@ -144,6 +149,7 @@ import Foundation
     }
 
     enum PaintCodingKeys: String, CodingKey {
+        case modelCastShadows = "model-cast-shadows"
         case modelColor = "model-color"
         case modelColorTransition = "model-color-transition"
         case modelColorMixIntensity = "model-color-mix-intensity"

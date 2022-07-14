@@ -24,6 +24,9 @@ struct MetricsCommand: ParsableCommand {
     })
     var outputPath: String?
 
+    @Option(name: [.customLong("single-run-test-ids")], help: "Pass test id in format 'TestSuite/testExample()' to ignore all but last run measurements")
+    var listOfSingleRunTests: [String] = []
+
     struct BaselineList: Decodable {
         // swiftlint:disable nesting
         struct Record: Decodable {
@@ -63,7 +66,7 @@ struct MetricsCommand: ParsableCommand {
             throw ValidationError("Repository path argument should be a directory (input: '\(repositoryPath)')")
         }
 
-        guard !shell("git -C \(repositoryPath) rev-parse HEAD ").starts(with: "fatal") else {
+        guard shell("git -C \(repositoryPath) rev-parse HEAD").terminatedSuccessfully else {
             throw ValidationError("Repository path argument should be a git repository")
         }
 
@@ -78,16 +81,21 @@ struct MetricsCommand: ParsableCommand {
         let testName: String
         let metrics: [ActionTestPerformanceMetricSummary]
         let actionRecord: ActionRecord
+        let shouldProcessOnlyLastRun: Bool
 
-        static func metrics(from test: ActionTestMetadata, in resultFile: XCResultFile, for actionRecord: ActionRecord) -> PerformanceTest? {
+        static func metrics(from test: ActionTestMetadata,
+                            in resultFile: XCResultFile,
+                            for actionRecord: ActionRecord,
+                            shouldProcessOnlyLastRun: Bool) -> PerformanceTest? {
             guard
                 let testSummaryRef = test.summaryRef,
                 let actionTestSummary = resultFile.getActionTestSummary(id: testSummaryRef.id)
             else { return nil }
 
             return PerformanceTest(testName: refineTestFunctionName(test.name),
-                                  metrics: actionTestSummary.performanceMetrics,
-                                  actionRecord: actionRecord)
+                                   metrics: actionTestSummary.performanceMetrics,
+                                   actionRecord: actionRecord,
+                                   shouldProcessOnlyLastRun: shouldProcessOnlyLastRun)
         }
     }
 
@@ -105,7 +113,12 @@ struct MetricsCommand: ParsableCommand {
                 .subtestGroups[0]
 
             return testTargetResults.subtestGroups.flatMap { testSuit in
-                testSuit.subtests.compactMap({ PerformanceTest.metrics(from: $0, in: resultFile, for: actionOnConcreteDevice) })
+                testSuit.subtests.compactMap({
+                    PerformanceTest.metrics(from: $0,
+                                            in: resultFile,
+                                            for: actionOnConcreteDevice,
+                                            shouldProcessOnlyLastRun: listOfSingleRunTests.contains($0.identifier))
+                })
             }
         }
     }
@@ -131,7 +144,12 @@ struct MetricsCommand: ParsableCommand {
         let baseline = baseline.record(forTestName: testName)
 
         let counters = test.metrics.reduce(into: [:]) { partialResult, metric in
-            let value = metric.measurements.reduce(0.0, +) / Double(metric.measurements.count)
+            let value: Double
+            if test.shouldProcessOnlyLastRun {
+                value = metric.measurements.last ?? 0
+            } else {
+                value = metric.measurements.reduce(0, +) / Double(metric.measurements.count)
+            }
             let metricName = metric.displayName.replacingOccurrences(of: " ", with: "")
 
             partialResult[metricName] = MetricsCommand.decimalValueFormatter.string(from: value as NSNumber)
@@ -247,20 +265,25 @@ struct MetricsCommand: ParsableCommand {
 
         let repoFullPath = repositoryURL.path
 
-        func git(_ command: String) -> String {
+        func git(_ command: String) -> Process {
             return shell("git -C '\(repoFullPath)' \(command)")
         }
 
-        var buildMetadata: [String: Any] = [
-            "sha": git("rev-parse HEAD"),
-            "author": git("log -1 --pretty=format:'%an'"),
-            "branch": git("rev-parse --abbrev-ref HEAD"),
-            "message": git("log -1 --pretty=%B"),
-            "project": shell("basename \(git("rev-parse --show-toplevel"))"),
-            "timestamp": Int(git("log -1 --format=%at"))!
-        ]
+        var buildMetadata: [String: Any] = [:]
+        buildMetadata["sha"] = git("rev-parse HEAD").output
+        buildMetadata["author"] = git("log -1 --format=%an").output
+        buildMetadata["branch"] = git("rev-parse --abbrev-ref HEAD").output
+        buildMetadata["message"] = git("log -1 --format=%B").output
+        buildMetadata["project"] = git("rev-parse --show-toplevel").output
+            .map { URL(fileURLWithPath: $0).lastPathComponent }
+        buildMetadata["timestamp"] = git("log -1 --format=%at").output.flatMap(Int.init)
+
         if let ciBuildNumber = ProcessInfo.processInfo.environment["CIRCLE_BUILD_NUM"] {
             buildMetadata["ci_ref"] = ciBuildNumber
+        }
+
+        if let tagName = git("describe --tags --exact-match HEAD").output, tagName.starts(with: "v") {
+            buildMetadata["tag_name"] = tagName
         }
 
         MetricsCommand.cachedBuildMetadata = buildMetadata

@@ -16,10 +16,7 @@ final class PanZoomPinchBehaviorTests: BasePinchBehaviorTests {
         let dragCameraOptions = CameraOptions.random()
         mapboxMap.dragCameraOptionsStub.defaultReturnValue = dragCameraOptions
 
-        behavior.update(
-            pinchMidpoint: pinchMidpoint,
-            pinchScale: pinchScale,
-            pinchAngle: .random(in: 0..<2 * .pi))
+        behavior.update(pinchMidpoint: pinchMidpoint, pinchScale: pinchScale)
 
         // verify that setCamera is invoked 3 times
         guard mapboxMap.setCameraStub.invocations.count == 3 else {
@@ -32,7 +29,8 @@ final class PanZoomPinchBehaviorTests: BasePinchBehaviorTests {
             mapboxMap.setCameraStub.invocations[0].parameters,
             CameraOptions(
                 center: initialCameraState.center,
-                zoom: initialCameraState.zoom))
+                zoom: initialCameraState.zoom,
+                bearing: initialCameraState.bearing))
 
         // verify that dragStart is invoked once with the initial pinch midpoint
         XCTAssertEqual(

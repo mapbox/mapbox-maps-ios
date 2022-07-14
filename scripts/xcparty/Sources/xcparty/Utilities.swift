@@ -6,7 +6,7 @@ func refineTestFunctionName(_ name: String) -> String {
         .replacingOccurrences(of: "()", with: "")
 }
 
-func shell(_ command: String) -> String {
+func shell(_ command: String) -> Process {
     let task = Process()
     let pipe = Pipe()
 
@@ -17,8 +17,19 @@ func shell(_ command: String) -> String {
     task.launch()
     task.waitUntilExit()
 
-    let data = pipe.fileHandleForReading.readDataToEndOfFile()
-    let output = String(data: data, encoding: .utf8)!
+    return task
+}
 
-    return output.trimmingCharacters(in: .whitespacesAndNewlines)
+extension Process {
+    var output: String? {
+        guard terminatedSuccessfully else { return nil }
+
+        guard let pipe = standardOutput as? Pipe else { return nil }
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        return String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    var terminatedSuccessfully: Bool {
+        return terminationStatus == EXIT_SUCCESS
+    }
 }

@@ -2,26 +2,63 @@ import UIKit
 import MapboxMaps
 
 @objc(TrackingModeExample)
-
 public class TrackingModeExample: UIViewController, ExampleProtocol {
 
-    internal var mapView: MapView!
-    internal var cameraLocationConsumer: CameraLocationConsumer!
-    internal let toggleBearingImageButton: UIButton = UIButton(frame: .zero)
-    internal var showsBearingImage: Bool = false {
+    private var mapView: MapView!
+    private var cameraLocationConsumer: CameraLocationConsumer!
+    private lazy var toggleBearingImageButton = UIButton(frame: .zero)
+    private lazy var styleToggle = UISegmentedControl(items: Style.allCases.map(\.name))
+    private var style: Style = .satelliteStreets {
+        didSet {
+            mapView.mapboxMap.style.uri = style.uri
+        }
+    }
+    private var showsBearingImage: Bool = false {
         didSet {
             syncPuckAndButton()
         }
     }
+
+    private enum Style: Int, CaseIterable {
+        var name: String {
+            switch self {
+            case .light:
+                return "Light"
+            case .satelliteStreets:
+                return "Satelite"
+            case .customUri:
+                return "Custom"
+            }
+        }
+
+        var uri: StyleURI {
+            switch self {
+            case .light:
+                return .light
+            case .satelliteStreets:
+                return .satelliteStreets
+            case .customUri:
+                let localStyleURL = Bundle.main.url(forResource: "blueprint_style", withExtension: "json")!
+                return .init(url: localStyleURL)!
+            }
+        }
+
+        case light
+        case satelliteStreets
+        case customUri
+    }
+
     override public func viewDidLoad() {
         super.viewDidLoad()
 
         // Set initial camera settings
-        let options = MapInitOptions(cameraOptions: CameraOptions(zoom: 15.0))
+        let options = MapInitOptions(styleURI: style.uri)
 
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
+
+        addStyleToggle()
 
         // Setup and create button for toggling show bearing image
         setupToggleShowBearingImageButton()
@@ -66,14 +103,33 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         toggleBearingImageButton.backgroundColor = .systemBlue
         toggleBearingImageButton.addTarget(self, action: #selector(showHideBearingImage), for: .touchUpInside)
         toggleBearingImageButton.setTitleColor(.white, for: .normal)
-        syncPuckAndButton()
+        toggleBearingImageButton.layer.cornerRadius = 4
+        toggleBearingImageButton.clipsToBounds = true
+        toggleBearingImageButton.contentEdgeInsets = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+
         toggleBearingImageButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(toggleBearingImageButton)
 
         // Constraints
         toggleBearingImageButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20.0).isActive = true
         toggleBearingImageButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20.0).isActive = true
-        toggleBearingImageButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -100.0).isActive = true
+        toggleBearingImageButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -70.0).isActive = true
+
+        syncPuckAndButton()
+    }
+
+    @objc func switchStyle(sender: UISegmentedControl) {
+        style = Style(rawValue: sender.selectedSegmentIndex) ?? . satelliteStreets
+    }
+
+    func addStyleToggle() {
+        // Create a UISegmentedControl to toggle between map styles
+        styleToggle.selectedSegmentIndex = style.rawValue
+        styleToggle.addTarget(self, action: #selector(switchStyle(sender:)), for: .valueChanged)
+        styleToggle.translatesAutoresizingMaskIntoConstraints = false
+
+        // set the segmented control as the title view
+        navigationItem.titleView = styleToggle
     }
 }
 

@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 10.7.0-rc.1 - July 14, 2022
+
 * Add rotation threshold to prevent map from being rotated accidentally. ([#1429](https://github.com/mapbox/mapbox-maps-ios/pull/1429))
 * Introduce `GestureOptions.simultaneousRotateAndPinchZoomEnabled` and deprecate `GestureOptions.pinchRotateEnabled` in favor of `GestureOptions.rotateEnabled`. ([1429](https://github.com/mapbox/mapbox-maps-ios/pull/1429))
 * Add experimental `Puck3DConfiguration.modelCastShadows` option to control shadow casting for the 3D puck. ([#1435](https://github.com/mapbox/mapbox-maps-ios/pull/1435))

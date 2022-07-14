@@ -41,7 +41,17 @@ extension MapboxScaleBarOrnamentView {
             (distance: 400000, numberOfBars: 2),
             (distance: 500000, numberOfBars: 2),
             (distance: 600000, numberOfBars: 3),
-            (distance: 800000, numberOfBars: 2)
+            (distance: 800000, numberOfBars: 2),
+            (distance: 1000000, numberOfBars: 2),
+            (distance: 2000000, numberOfBars: 2),
+            (distance: 3000000, numberOfBars: 3),
+            (distance: 4000000, numberOfBars: 2),
+            (distance: 5000000, numberOfBars: 2),
+            (distance: 6000000, numberOfBars: 3),
+            (distance: 8000000, numberOfBars: 2),
+            (distance: 10000000, numberOfBars: 2),
+            (distance: 12000000, numberOfBars: 2),
+            (distance: 15000000, numberOfBars: 2)
         ]
 
         internal static let imperialTable: [Row] = [
@@ -75,7 +85,17 @@ extension MapboxScaleBarOrnamentView {
             (distance: 120*feetPerMile, numberOfBars: 2),
             (distance: 200*feetPerMile, numberOfBars: 2),
             (distance: 300*feetPerMile, numberOfBars: 3),
-            (distance: 400*feetPerMile, numberOfBars: 2)
+            (distance: 400*feetPerMile, numberOfBars: 2),
+            (distance: 600*feetPerMile, numberOfBars: 3),
+            (distance: 1000*feetPerMile, numberOfBars: 2),
+            (distance: 1500*feetPerMile, numberOfBars: 3),
+            (distance: 2000*feetPerMile, numberOfBars: 2),
+            (distance: 3000*feetPerMile, numberOfBars: 2),
+            (distance: 4000*feetPerMile, numberOfBars: 2),
+            (distance: 5000*feetPerMile, numberOfBars: 2),
+            (distance: 6000*feetPerMile, numberOfBars: 3),
+            (distance: 8000*feetPerMile, numberOfBars: 2),
+            (distance: 10000*feetPerMile, numberOfBars: 2)
         ]
 
         private init() {}

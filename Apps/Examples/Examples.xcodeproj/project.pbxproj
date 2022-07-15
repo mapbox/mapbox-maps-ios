@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -497,6 +497,7 @@
 				077C4EE7252F7E88007636F1 /* Frameworks */,
 				077C4EE8252F7E88007636F1 /* Resources */,
 				077C4F3E252F7F9C007636F1 /* Embed Frameworks */,
+				FE9223362881673C006A7B2A /* Run swiftlint */,
 				0746C187252FB153001638BD /* Insert Mapbox access token */,
 			);
 			buildRules = (
@@ -554,7 +555,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1200;
-				LastUpgradeCheck = 1330;
+				LastUpgradeCheck = 1340;
 				TargetAttributes = {
 					077C4EE9252F7E88007636F1 = {
 						CreatedOnToolsVersion = 12.0;
@@ -649,6 +650,25 @@
 			shellPath = /bin/sh;
 			shellScript = "$SRCROOT/../../scripts/insert_access_token.sh\n";
 			showEnvVarsInLog = 0;
+		};
+		FE9223362881673C006A7B2A /* Run swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run swiftlint";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "$SRCROOT/../../scripts/run_swiftlint.sh\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

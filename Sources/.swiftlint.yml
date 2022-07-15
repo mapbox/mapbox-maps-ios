@@ -1,3 +1,4 @@
 ---
 opt_in_rules:
   - explicit_top_level_acl
+  - missing_docs

@@ -12,3 +12,5 @@ scripts/release/packager/artifacts
 scripts/release/packager/build
 scripts/xcparty/.swiftpm
 MapboxMaps.xcodeproj
+
+.vscode

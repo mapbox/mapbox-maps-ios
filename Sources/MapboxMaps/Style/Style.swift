@@ -58,9 +58,9 @@ public final class Style: StyleProtocol {
     ///
     /// - Throws: StyleError or type conversion errors
     public func addLayer(_ layer: Layer, layerPosition: LayerPosition? = nil) throws {
-        // Attempt to encode the provided layer into JSON and apply it to the map
-        let layerJSON = try layer.jsonObject()
-        try addLayer(with: layerJSON, layerPosition: layerPosition)
+        // Attempt to encode the provided layer into a dictionary and apply it to the map.
+        let layerProperties = try layer.allStyleProperties()
+        try addLayer(with: layerProperties, layerPosition: layerPosition)
     }
 
     /// Adds a  persistent `layer` to the map
@@ -72,9 +72,9 @@ public final class Style: StyleProtocol {
     ///
     /// - Throws: StyleError or type conversion errors
     public func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition? = nil) throws {
-        // Attempt to encode the provided layer into JSON and apply it to the map
-        let layerJSON = try layer.jsonObject()
-        try addPersistentLayer(with: layerJSON, layerPosition: layerPosition)
+        // Attempt to encode the provided layer into a dictionary and apply it to the map.
+        let layerProperties = try layer.allStyleProperties()
+        try addPersistentLayer(with: layerProperties, layerPosition: layerPosition)
     }
 
     /**
@@ -141,10 +141,10 @@ public final class Style: StyleProtocol {
 
         // Call closure to update the retrieved layer
         try update(&layer)
-        let value = try layer.jsonObject()
+        let layerProperties = try layer.allStyleProperties(userInfo: [.shouldEncodeNilValues: true])
 
         // Apply the changes to the layer properties to the style
-        try setLayerProperties(for: id, properties: value)
+        try setLayerProperties(for: id, properties: layerProperties)
     }
 
     // MARK: - Sources

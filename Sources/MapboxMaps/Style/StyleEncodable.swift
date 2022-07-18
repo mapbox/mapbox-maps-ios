@@ -1,6 +1,7 @@
 import Foundation
 public protocol StyleEncodable {
     func jsonObject() throws -> [String: Any]
+    func allStyleProperties() throws -> [String: Any]
 }
 
 public protocol StyleDecodable {
@@ -13,6 +14,10 @@ public extension StyleEncodable where Self: Encodable {
     /// - Returns: A JSON dictionary representing the object.
     func jsonObject() throws -> [String: Any] {
         try jsonObject(userInfo: [:])
+    }
+
+    func allStyleProperties() throws -> [String: Any] {
+        try allStyleProperties(userInfo: [:])
     }
 }
 
@@ -30,5 +35,15 @@ internal extension StyleEncodable where Self: Encodable {
             throw TypeConversionError.invalidObject
         }
         return jsonObject
+    }
+
+    /// Encodes to a dictionary representation.
+    /// - Parameter userInfo: Provides some contexts for the encoding.
+    /// - returns: A dictionary representation of the object.
+    func allStyleProperties(userInfo: [CodingUserInfoKey: Any]) throws -> [String: Any] {
+        let encoder = DictionaryEncoder()
+        encoder.userInfo = userInfo
+
+        return try encoder.encode(self)
     }
 }

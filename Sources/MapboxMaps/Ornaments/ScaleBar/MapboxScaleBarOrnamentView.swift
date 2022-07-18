@@ -93,7 +93,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
     private var shouldLayoutBars = false
 
     internal var unitsPerPoint: Double {
-        return isMetricLocale ? metersPerPoint : metersPerPoint * Constants.feetPerMeter
+        return useMetricUnits ? metersPerPoint : metersPerPoint * Constants.feetPerMeter
     }
 
     internal var maximumWidth: CGFloat {
@@ -103,8 +103,18 @@ internal class MapboxScaleBarOrnamentView: UIView {
         return floor(bounds.width / 2)
     }
 
-    internal var isMetricLocale: Bool {
-        return Locale.current.usesMetricSystem
+    internal var useMetricUnits: Bool = true {
+        didSet {
+            guard useMetricUnits != oldValue else {
+                return
+            }
+
+            updateVisibility()
+            needsRecalculateSize = true
+            updateScaleBar()
+
+            resetLabelImageCache()
+        }
     }
 
     internal override var intrinsicContentSize: CGSize {
@@ -305,7 +315,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
         if let image = labelImageCache[distance] {
             return image
         } else {
-            let text = formatter.string(fromDistance: distance)
+            let text = formatter.string(fromDistance: distance, useMetricSystem: useMetricUnits)
             let image = renderImageFor(text: text)
             labelImageCache[distance] = image
             return image
@@ -315,7 +325,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
     private func updateLabels() {
         var multiplier = row.distance / Double(row.numberOfBars)
 
-        if !isMetricLocale {
+        if !useMetricUnits {
             multiplier /= Constants.feetPerMeter
         }
 
@@ -341,7 +351,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
 
     internal func preferredRow() -> Row {
         let maximumDistance: CLLocationDistance = Double(maximumWidth) * unitsPerPoint
-        let table = isMetricLocale ? Constants.metricTable : Constants.imperialTable
+        let table = useMetricUnits ? Constants.metricTable : Constants.imperialTable
         var rowIndex = table.firstIndex {
             return $0.distance > maximumDistance
         }
@@ -361,7 +371,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
 
     private func updateVisibility() {
         let maximumDistance: CLLocationDistance = Double(maximumWidth) * unitsPerPoint
-        let allowedDistance = isMetricLocale ?
+        let allowedDistance = useMetricUnits ?
                               Constants.metricTable.last!.distance : Constants.imperialTable.last!.distance
         let alpha: CGFloat = maximumDistance >= allowedDistance ? 0 : 1
 

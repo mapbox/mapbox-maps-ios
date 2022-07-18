@@ -5,10 +5,10 @@ class MapboxScaleBarOrnamentViewTests: XCTestCase {
 
     func testImperialScaleBar() {
         let scaleBar = MockMapboxScaleBarOrnamentView()
-        scaleBar._isMetricLocale = false
+        scaleBar.useMetricUnits = false
 
         for row in ScaleBarTestValues.imperialValues {
-            scaleBar.metersPerPoint =  row.metersPerPoint
+            scaleBar.metersPerPoint = row.metersPerPoint
 
             let numberOfBars = scaleBar.preferredRow().numberOfBars
             XCTAssertEqual(Int(numberOfBars), row.numberOfBars, "The number of scale bars should be \(row.numberOfBars) when there are \(scaleBar.metersPerPoint) feet per point.")
@@ -17,6 +17,7 @@ class MapboxScaleBarOrnamentViewTests: XCTestCase {
 
     func testMetricScaleBar() {
         let scaleBar = MockMapboxScaleBarOrnamentView()
+        scaleBar.useMetricUnits = true
 
         for row in ScaleBarTestValues.metricValues {
             scaleBar.metersPerPoint = row.metersPerPoint
@@ -28,7 +29,7 @@ class MapboxScaleBarOrnamentViewTests: XCTestCase {
 
     func testImperialVisibleBars() {
             let scaleBar = MockMapboxScaleBarOrnamentView()
-            scaleBar._isMetricLocale = false
+            scaleBar.useMetricUnits = false
 
             for row in ScaleBarTestValues.imperialValues {
                 scaleBar.metersPerPoint = row.metersPerPoint
@@ -43,6 +44,7 @@ class MapboxScaleBarOrnamentViewTests: XCTestCase {
 
         func testMetricVisibleBars() {
             let scaleBar = MockMapboxScaleBarOrnamentView()
+            scaleBar.useMetricUnits = true
 
             for row in ScaleBarTestValues.metricValues {
                 scaleBar.metersPerPoint = row.metersPerPoint
@@ -60,12 +62,6 @@ class MapboxScaleBarOrnamentViewTests: XCTestCase {
 final class MockMapboxScaleBarOrnamentView: MapboxScaleBarOrnamentView {
     override var maximumWidth: CGFloat {
         return 200
-    }
-
-    internal var _isMetricLocale: Bool = true
-
-    override var isMetricLocale: Bool {
-        return _isMetricLocale
     }
 }
 

@@ -170,6 +170,7 @@ public class OrnamentsManager: NSObject {
         _compassView.visibility = options.compass.visibility
         _compassView.isHidden = options.compass.visibility == .hidden
         _attributionButton.isHidden = options.attributionButton.visibility == .hidden
+        _scaleBarView.useMetricUnits = options.scaleBar.useMetricUnits
     }
 
     private func constraints(with view: UIView, position: OrnamentPosition, margins: CGPoint) -> [NSLayoutConstraint] {

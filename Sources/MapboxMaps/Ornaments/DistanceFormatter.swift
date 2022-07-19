@@ -19,14 +19,14 @@ internal class DistanceFormatter: MeasurementFormatter {
 
         let shouldUseMetricSystem = useMetricSystem ?? locale.usesMetricSystem
 
-        if !shouldUseMetricSystem {
+        if shouldUseMetricSystem {
+            unitOptions = [.providedUnit, .naturalScale]
+        } else {
             unitOptions = .providedUnit
             measurement.convert(to: .miles)
             if measurement.value <= 0.2 {
                 measurement.convert(to: .feet)
             }
-        } else {
-            unitOptions = [.providedUnit, .naturalScale]
         }
         return string(from: measurement)
     }

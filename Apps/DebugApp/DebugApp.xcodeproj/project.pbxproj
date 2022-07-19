@@ -11,6 +11,9 @@
 		35F08DE02347987700768B9F /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F08DDF2347987700768B9F /* DebugViewController.swift */; };
 		35F08DE52347987900768B9F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35F08DE42347987900768B9F /* Assets.xcassets */; };
 		35F08DE82347987900768B9F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35F08DE62347987900768B9F /* LaunchScreen.storyboard */; };
+		749274812886C2FA00879108 /* red_marker.png in Resources */ = {isa = PBXBuildFile; fileRef = 749274802886C2FA00879108 /* red_marker.png */; };
+		749274832886DED000879108 /* DebugViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 749274822886DED000879108 /* DebugViewController.xib */; };
+		749274852887010600879108 /* sportcar.glb in Resources */ = {isa = PBXBuildFile; fileRef = 749274842887010600879108 /* sportcar.glb */; };
 		B569C20125FEBC2E008B0D92 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = B569C20025FEBC2E008B0D92 /* MapboxMaps */; };
 /* End PBXBuildFile section */
 
@@ -34,6 +37,9 @@
 		35F08DE42347987900768B9F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		35F08DE72347987900768B9F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		35F08DE92347987900768B9F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		749274802886C2FA00879108 /* red_marker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = red_marker.png; path = ../../Examples/Examples/Assets.xcassets/red_marker.imageset/red_marker.png; sourceTree = "<group>"; };
+		749274822886DED000879108 /* DebugViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DebugViewController.xib; sourceTree = "<group>"; };
+		749274842887010600879108 /* sportcar.glb */ = {isa = PBXFileReference; lastKnownFileType = file; name = sportcar.glb; path = "../../Examples/Examples/All Examples/Sample Data/sportcar.glb"; sourceTree = "<group>"; };
 		CA56651F24479764006F392C /* base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = base.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -71,7 +77,10 @@
 			children = (
 				35F08DE92347987900768B9F /* Info.plist */,
 				35F08DDB2347987700768B9F /* AppDelegate.swift */,
+				749274842887010600879108 /* sportcar.glb */,
+				749274802886C2FA00879108 /* red_marker.png */,
 				35F08DDF2347987700768B9F /* DebugViewController.swift */,
+				749274822886DED000879108 /* DebugViewController.xib */,
 				35F08DE42347987900768B9F /* Assets.xcassets */,
 				35F08DE62347987900768B9F /* LaunchScreen.storyboard */,
 			);
@@ -151,7 +160,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				749274812886C2FA00879108 /* red_marker.png in Resources */,
+				749274852887010600879108 /* sportcar.glb in Resources */,
 				35F08DE82347987900768B9F /* LaunchScreen.storyboard in Resources */,
+				749274832886DED000879108 /* DebugViewController.xib in Resources */,
 				35F08DE52347987900768B9F /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -232,6 +244,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_TESTABILITY = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = "$(GCC_WARN_64_TO_32_BIT_CONVERSION)";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -247,6 +260,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = "$(GCC_WARN_64_TO_32_BIT_CONVERSION)";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;

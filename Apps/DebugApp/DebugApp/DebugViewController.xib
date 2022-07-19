@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DebugViewController" customModule="DebugApp" customModuleProvider="target">
+            <connections>
+                <outlet property="view" destination="iN0-l3-epB" id="VAr-qI-muv"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="QZx-Oi-0DO">
+                    <rect key="frame" x="333" y="44" width="81" height="119.5"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Speed" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dkg-8R-ZUw">
+                            <rect key="frame" x="0.0" y="0.0" width="81" height="14.5"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SKt-K8-qEs">
+                            <rect key="frame" x="0.0" y="18.5" width="81" height="31"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="filled" title="Faaast!!1"/>
+                            <connections>
+                                <action selector="fastPressed:" destination="-1" eventType="touchUpInside" id="yWu-bl-8CX"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RQW-3H-kth">
+                            <rect key="frame" x="0.0" y="53.5" width="81" height="31"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="filled" title="Slow 🐢"/>
+                            <connections>
+                                <action selector="slowPressed:" destination="-1" eventType="touchUpInside" id="gGl-8W-Rer"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZZY-1z-Uqf">
+                            <rect key="frame" x="0.0" y="88.5" width="81" height="31"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="filled" title="Natural"/>
+                            <connections>
+                                <action selector="clearSpeedOverridePressed:" destination="-1" eventType="touchUpInside" id="ykM-Qi-8d2"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                </stackView>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="aOa-ta-Jq3">
+                    <rect key="frame" x="0.0" y="44" width="93" height="189.5"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add asset" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PmO-ml-XGu">
+                            <rect key="frame" x="0.0" y="0.0" width="93" height="14.5"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OtV-82-f1r">
+                            <rect key="frame" x="0.0" y="18.5" width="93" height="31"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="filled" title="Pedestrian"/>
+                            <connections>
+                                <action selector="addPedestrianPressed:" destination="-1" eventType="touchUpInside" id="YIC-8d-wuO"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IJr-jt-IdG">
+                            <rect key="frame" x="0.0" y="53.5" width="93" height="31"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="filled" title="Scooter"/>
+                            <connections>
+                                <action selector="addScooterPressed:" destination="-1" eventType="touchUpInside" id="tNY-dH-vQk"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bup-6G-S2k">
+                            <rect key="frame" x="0.0" y="88.5" width="93" height="31"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="filled" title="Bike"/>
+                            <connections>
+                                <action selector="addBikePressed:" destination="-1" eventType="touchUpInside" id="cyy-7h-u2O"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bzd-6S-rtL">
+                            <rect key="frame" x="0.0" y="123.5" width="93" height="31"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="filled" title="3D Car"/>
+                            <connections>
+                                <action selector="add3DCarPressed:" destination="-1" eventType="touchUpInside" id="gZp-zK-g2F"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5wH-TJ-4Ql">
+                            <rect key="frame" x="0.0" y="158.5" width="93" height="31"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="filled" title="Car"/>
+                            <connections>
+                                <action selector="addCarPressed:" destination="-1" eventType="touchUpInside" id="BLQ-Ze-2M2"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                </stackView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FGH-6s-EcR">
+                    <rect key="frame" x="0.0" y="810" width="120.5" height="31"/>
+                    <state key="normal" title="Button"/>
+                    <buttonConfiguration key="configuration" style="filled" title="Clear selection"/>
+                    <connections>
+                        <action selector="clearSelectionButtonPressed:" destination="-1" eventType="touchUpInside" id="9Vp-gI-CtJ"/>
+                    </connections>
+                </button>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="mD6-9G-Yf6">
+                    <rect key="frame" x="303.5" y="777.5" width="110.5" height="84.5"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tracking" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mNj-70-HIi">
+                            <rect key="frame" x="0.0" y="0.0" width="110.5" height="14.5"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1IJ-Ka-xYU">
+                            <rect key="frame" x="0.0" y="18.5" width="110.5" height="31"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="filled" title="Track"/>
+                            <connections>
+                                <action selector="trackButtonPressed:" destination="-1" eventType="touchUpInside" id="x6f-TK-U81"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Llg-DO-bpB">
+                            <rect key="frame" x="0.0" y="53.5" width="110.5" height="31"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="filled" title="Stop tracking"/>
+                            <connections>
+                                <action selector="clearTrackingPressed:" destination="-1" eventType="touchUpInside" id="tcj-tt-2Yh"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="mD6-9G-Yf6" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" id="6Ji-SM-fWS"/>
+                <constraint firstItem="aOa-ta-Jq3" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="9BD-Te-2Zd"/>
+                <constraint firstItem="mD6-9G-Yf6" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="Ew9-su-FB7"/>
+                <constraint firstItem="FGH-6s-EcR" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="RFv-uS-0nW"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="FGH-6s-EcR" secondAttribute="bottom" constant="21" id="RWU-Tk-Bbn"/>
+                <constraint firstItem="aOa-ta-Jq3" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="ker-47-7aN"/>
+                <constraint firstItem="QZx-Oi-0DO" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="x8c-61-i1J"/>
+                <constraint firstItem="QZx-Oi-0DO" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="yta-26-lpR"/>
+            </constraints>
+            <point key="canvasLocation" x="139" y="107"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

@@ -42,4 +42,27 @@ class DistanceFormatterTests: XCTestCase {
         XCTAssert(!sut.locale.usesMetricSystem, "Selected locale does not use Imperial system")
         XCTAssertEqual(formattedString, "0.75 mi", "Miles distance is not formatted correctly!")
     }
+
+    func testMetricOverride() {
+        let sut = DistanceFormatter()
+        sut.locale = Locale(identifier: "EN_US")
+
+        let formattedString = sut.string(fromDistance: 1337, useMetricSystem: true)
+
+        XCTAssertFalse(sut.locale.usesMetricSystem, "Selected locale does not use Metric system")
+        XCTAssertEqual(formattedString, "1.25 km", "Kilometers distance is not formatted correctly!")
+    }
+
+    func testImperialOverride() {
+        let sut = DistanceFormatter()
+        sut.locale = Locale(identifier: "EN_CA")
+
+        let formattedString = sut.string(fromDistance: 1337, useMetricSystem: false)
+
+        XCTAssert(sut.locale.usesMetricSystem, "Selected locale does not use Metric system")
+        XCTAssertEqual(
+            formattedString.trimmingCharacters(in: CharacterSet(charactersIn: ".")),
+            "0.75 mi",
+            "Miles distance is not formatted correctly!")
+    }
 }

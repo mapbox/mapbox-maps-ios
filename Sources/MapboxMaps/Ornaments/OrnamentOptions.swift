@@ -50,6 +50,9 @@ public struct ScaleBarViewOptions: OrnamentOptionsProtocol, Equatable {
     public var margins: CGPoint = defaultOrnamentsMargin
     /// The default value for this property is `.adaptive`.
     public var visibility: OrnamentVisibility = .adaptive
+    /// Specifies the whether the scale bar uses the metric system.
+    /// True if the scale bar is using metric units, false if the scale bar is using imperial units.
+    public var useMetricUnits: Bool = Locale.current.usesMetricSystem
 }
 
 /// Used to configure position, margin, and visibility for the map's compass view.

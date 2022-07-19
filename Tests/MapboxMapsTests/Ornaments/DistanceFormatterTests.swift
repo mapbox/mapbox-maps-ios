@@ -60,10 +60,9 @@ class DistanceFormatterTests: XCTestCase {
         let formattedString = sut.string(fromDistance: 1337, useMetricSystem: false)
 
         XCTAssert(sut.locale.usesMetricSystem, "Selected locale does not use Metric system")
-        if #available(iOS 15, *) {
-            XCTAssertEqual(formattedString, "0.75 mi", "Miles distance is not formatted correctly!")
-        } else {
-            XCTAssertEqual(formattedString, "0.75 mi.", "Miles distance is not formatted correctly!")
-        }
+        XCTAssertEqual(
+            formattedString.trimmingCharacters(in: CharacterSet(charactersIn: ".")),
+            "0.75 mi",
+            "Miles distance is not formatted correctly!")
     }
 }

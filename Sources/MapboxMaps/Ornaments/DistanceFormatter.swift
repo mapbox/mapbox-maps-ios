@@ -17,12 +17,7 @@ internal class DistanceFormatter: MeasurementFormatter {
 
         var measurement = Measurement(value: distance, unit: UnitLength.meters)
 
-        let shouldUseMetricSystem: Bool
-        if let useMetricSystem = useMetricSystem {
-            shouldUseMetricSystem = useMetricSystem
-        } else {
-            shouldUseMetricSystem = locale.usesMetricSystem
-        }
+        let shouldUseMetricSystem = useMetricSystem ?? locale.usesMetricSystem
 
         if !shouldUseMetricSystem {
             unitOptions = .providedUnit

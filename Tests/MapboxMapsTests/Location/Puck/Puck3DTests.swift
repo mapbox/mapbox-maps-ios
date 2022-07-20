@@ -209,6 +209,30 @@ final class Puck3DTests: XCTestCase {
         XCTAssertEqual(actualLayer.modelRotation, configuration.modelRotation)
     }
 
+    func testModelCastShadows() throws {
+        configuration.modelCastShadows = .constant(.random())
+        recreatePuck()
+        interpolatedLocationProducer.location = .random()
+        style.layerExistsStub.defaultReturnValue = false
+
+        puck3D.isActive = true
+
+        let actualLayer = try XCTUnwrap(style.addPersistentLayerStub.invocations.first?.parameters.layer as? ModelLayer)
+        XCTAssertEqual(actualLayer.modelCastShadows, configuration.modelCastShadows)
+    }
+
+    func testModelReceiveShadows() throws {
+        configuration.modelReceiveShadows = .constant(.random())
+        recreatePuck()
+        interpolatedLocationProducer.location = .random()
+        style.layerExistsStub.defaultReturnValue = false
+
+        puck3D.isActive = true
+
+        let actualLayer = try XCTUnwrap(style.addPersistentLayerStub.invocations.first?.parameters.layer as? ModelLayer)
+        XCTAssertEqual(actualLayer.modelReceiveShadows, configuration.modelReceiveShadows)
+    }
+
     func testDefaultModelScale() throws {
         let stubbedModelScale = 1.0
         configuration.modelScale = .constant([stubbedModelScale, stubbedModelScale, stubbedModelScale])

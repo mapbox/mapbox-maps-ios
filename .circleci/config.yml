@@ -268,14 +268,16 @@ commands:
 
             # If parameter is not empty, checkout the commit
             if [[ -n "<< pipeline.parameters.maps-ios-checkout-reference >>" ]];then
-              cd mapbox-maps-ios
-              git checkout << pipeline.parameters.maps-ios-checkout-reference >>
-              MAPS_COMMIT_HASH=$(git rev-parse HEAD)
+              git -C mapbox-maps-ios checkout << pipeline.parameters.maps-ios-checkout-reference >>
+              MAPS_COMMIT_HASH=$(git -C mapbox-maps-ios rev-parse HEAD)
               echo "export MAPS_COMMIT_HASH=${MAPS_COMMIT_HASH}" >> $BASH_ENV
               cat $BASH_ENV
 
+              git -C mapbox-maps-ios branch -a --contains HEAD | cat
+
             fi
 
+            set -x
             git submodule status
 
   checkout-mobile-metrics:

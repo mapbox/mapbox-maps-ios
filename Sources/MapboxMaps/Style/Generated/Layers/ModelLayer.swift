@@ -40,6 +40,9 @@ import Foundation
     /// Transition options for `modelOpacity`.
     public var modelOpacityTransition: StyleTransition?
 
+    /// Enable/Disable shadow receiving for this layer
+    public var modelReceiveShadows: Value<Bool>?
+
     /// The rotation of the model in euler angles [lon, lat, z].
     public var modelRotation: Value<[Double]>?
 
@@ -85,6 +88,7 @@ import Foundation
         try paintContainer.encodeIfPresent(modelColorMixIntensityTransition, forKey: .modelColorMixIntensityTransition)
         try paintContainer.encodeIfPresent(modelOpacity, forKey: .modelOpacity)
         try paintContainer.encodeIfPresent(modelOpacityTransition, forKey: .modelOpacityTransition)
+        try paintContainer.encodeIfPresent(modelReceiveShadows, forKey: .modelReceiveShadows)
         try paintContainer.encodeIfPresent(modelRotation, forKey: .modelRotation)
         try paintContainer.encodeIfPresent(modelRotationTransition, forKey: .modelRotationTransition)
         try paintContainer.encodeIfPresent(modelScale, forKey: .modelScale)
@@ -116,6 +120,7 @@ import Foundation
             modelColorMixIntensityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelColorMixIntensityTransition)
             modelOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .modelOpacity)
             modelOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelOpacityTransition)
+            modelReceiveShadows = try paintContainer.decodeIfPresent(Value<Bool>.self, forKey: .modelReceiveShadows)
             modelRotation = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .modelRotation)
             modelRotationTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelRotationTransition)
             modelScale = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .modelScale)
@@ -156,6 +161,7 @@ import Foundation
         case modelColorMixIntensityTransition = "model-color-mix-intensity-transition"
         case modelOpacity = "model-opacity"
         case modelOpacityTransition = "model-opacity-transition"
+        case modelReceiveShadows = "model-receive-shadows"
         case modelRotation = "model-rotation"
         case modelRotationTransition = "model-rotation-transition"
         case modelScale = "model-scale"

@@ -247,6 +247,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                                       interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
                                       style: StyleProtocol,
                                       displayLinkCoordinator: DisplayLinkCoordinator) -> LocationManager {
+#warning("Make 2D puck respect is pulsing enabled config by subscribing/unsubscribing from display link updates")
         let puckManager = PuckManager(
             puck2DProvider: { configuration in
                 Puck2D(

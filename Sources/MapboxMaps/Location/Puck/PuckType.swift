@@ -10,20 +10,37 @@ public enum PuckType: Equatable {
 }
 
 public struct Puck2DConfiguration: Equatable {
+    #warning("This API actually makes more sense then having pulsing and accuracy separate")
+    public struct AccuracyCircle {
+        public enum Radius: Equatable {
+            case constant(Double)
+            case accuracy
+        }
+
+        public var color: UIColor
+        public var borderColor: UIColor
+        public var radius: Radius
+        public var animates: Bool
+        public var visible: Bool
+    }
+
+
     public struct Pulsing: Equatable {
-        internal static var defaultRadiusValue: Double = 30
         public static let `default` = Pulsing()
 
         public enum Radius: Equatable {
             case constant(Double)
             case accuracy
         }
+        public var isEnabled: Bool
         public var color: UIColor
         public var radius: Radius
 
-        public init(color: UIColor = UIColor(red: 0.29, green: 0.565, blue: 0.886, alpha: 1), radius: Radius = .constant(30)) {
+        public init(color: UIColor = UIColor(red: 0.29, green: 0.565, blue: 0.886, alpha: 1),
+                    radius: Radius = .constant(30)) {
             self.color = color
             self.radius = radius
+            self.isEnabled = true
         }
     }
 
@@ -40,7 +57,8 @@ public struct Puck2DConfiguration: Equatable {
     public var scale: Value<Double>?
 
     // Pulsing Whether the location puck is pulsing on the map. Works for 2D location puck only
-    public var pulsing: Pulsing?
+    #warning("Alternative name: accuracySonar/accuracyRadar")
+    public var pulsing: Pulsing = .default
 
     /// Flag determining if the horizontal accuracy ring should be shown arround the `Puck`. default value is false
     public var showsAccuracyRing: Bool

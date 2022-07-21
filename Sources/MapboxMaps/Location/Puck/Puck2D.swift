@@ -243,7 +243,9 @@ internal final class Puck2D: Puck {
 
 extension Puck2D: DisplayLinkParticipant {
     func participate() {
-        guard isActive, style.layerExists(withId: Self.layerID), let config = configuration.pulsing else { return }
+        guard isActive, style.layerExists(withId: Self.layerID), let location = latestLocation else {
+            return
+        }
 
         guard let startTimestamp = emphasisCirclePulseStartTimestamp else {
             emphasisCirclePulseStartTimestamp = CACurrentMediaTime()
@@ -254,11 +256,11 @@ extension Puck2D: DisplayLinkParticipant {
         let progress = min((currentTime - startTimestamp) / emphasisCirclePulseDuration, 1)
         let curvedProgress = interpolationCurve.solve(progress, 1e-6)
         let baseRadius: Double
-        switch config.radius {
+        switch configuration.pulsing.radius {
         case .constant(let value):
             baseRadius = value
         case .accuracy:
-            baseRadius = latestLocation?.horizontalAccuracy ?? Puck2DConfiguration.Pulsing.defaultRadiusValue
+            baseRadius = location.horizontalAccuracy
         }
         let radius = baseRadius * curvedProgress
         let alpha = 1 - curvedProgress
@@ -269,7 +271,7 @@ extension Puck2D: DisplayLinkParticipant {
         // Note: hydrogen has pretty extensive logic with "user tracking" modes - the puck seems to emit these sonar-like
         // pulsations, along with inner dot "breasing" - who knows the logic begind it? Does it make sense for carbon?
         let properties: [LocationIndicatorLayer.PaintCodingKeys: Any] = [
-            .accuracyRadiusColor: StyleColor(config.color.withAlphaComponent(progress <= 0.1 ? 0 : alpha)).rgbaString,
+            .accuracyRadiusColor: StyleColor(configuration.pulsing.color.withAlphaComponent(progress <= 0.1 ? 0 : alpha)).rgbaString,
             .accuracyRadius: radius
         ]
 

@@ -144,6 +144,7 @@ public final class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimator
         }
         mapboxMap.setCamera(to: CameraOptions(
             center: interpolator.coordinate(at: fractionComplete),
+            padding: interpolator.padding(at: fractionComplete),
             zoom: CGFloat(interpolator.zoom(at: fractionComplete)),
             bearing: interpolator.bearing(at: fractionComplete),
             pitch: CGFloat(interpolator.pitch(at: fractionComplete))))

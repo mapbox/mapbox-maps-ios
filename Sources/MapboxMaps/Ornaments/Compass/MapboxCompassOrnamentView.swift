@@ -9,6 +9,7 @@ internal class MapboxCompassOrnamentView: UIButton {
     }
 
     internal var containerView = UIImageView()
+    internal var containerViewConstraints = [NSLayoutConstraint]()
     internal var visibility: OrnamentVisibility = .adaptive {
         didSet {
             animateVisibilityUpdate()
@@ -60,14 +61,15 @@ internal class MapboxCompassOrnamentView: UIButton {
 
     func updateImage(image: UIImage?) {
         guard let image = image else { return }
-
+        NSLayoutConstraint.deactivate(containerViewConstraints)
         containerView.image = image
-        NSLayoutConstraint.activate([
+        containerViewConstraints = [
             widthAnchor.constraint(equalToConstant: image.size.width),
             heightAnchor.constraint(equalToConstant: image.size.height),
             containerView.widthAnchor.constraint(equalToConstant: image.size.width),
             containerView.heightAnchor.constraint(equalToConstant: image.size.height)
-        ])
+        ]
+        NSLayoutConstraint.activate(containerViewConstraints)
     }
 
     required internal init?(coder: NSCoder) {

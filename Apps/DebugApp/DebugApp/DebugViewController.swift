@@ -23,6 +23,15 @@ final class DebugViewController: UIViewController {
         mapView.location.options.puckType = .puck2D(puckConfig)
         mapView.location.addLocationConsumer(newConsumer: self)
     }
+
+    func deviceSelected(deviceName: String) {
+
+        let view = deviceViewMap[deviceName]
+
+        var newOptions = ViewAnnotationOptions()
+        newOptions.height = 100
+        mapView.viewAnnotations.update(myView, options: newOptions)
+    }
 }
 
 extension DebugViewController: LocationConsumer {

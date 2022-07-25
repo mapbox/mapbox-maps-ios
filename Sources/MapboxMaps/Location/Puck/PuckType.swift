@@ -10,21 +10,6 @@ public enum PuckType: Equatable {
 }
 
 public struct Puck2DConfiguration: Equatable {
-    #warning("This API actually makes more sense then having pulsing and accuracy separate")
-    public struct AccuracyCircle {
-        public enum Radius: Equatable {
-            case constant(Double)
-            case accuracy
-        }
-
-        public var color: UIColor
-        public var borderColor: UIColor
-        public var radius: Radius
-        public var animates: Bool
-        public var visible: Bool
-    }
-
-
     public struct Pulsing: Equatable {
         public static let `default` = Pulsing()
 

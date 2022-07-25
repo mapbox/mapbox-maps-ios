@@ -70,6 +70,10 @@
             isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
+      <LocationScenarioReference
+         identifier = "London, England"
+         referenceType = "1">
+      </LocationScenarioReference>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

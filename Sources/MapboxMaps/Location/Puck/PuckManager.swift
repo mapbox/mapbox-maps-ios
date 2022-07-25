@@ -65,3 +65,9 @@ internal final class PuckManager: PuckManagerProtocol {
         self.puck3DProvider = puck3DProvider
     }
 }
+
+extension PuckManager: DisplayLinkParticipant {
+    func participate() {
+        puck?.participate()
+    }
+}

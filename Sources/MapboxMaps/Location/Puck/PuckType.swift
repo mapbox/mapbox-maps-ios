@@ -10,6 +10,22 @@ public enum PuckType: Equatable {
 }
 
 public struct Puck2DConfiguration: Equatable {
+    public struct Pulsing: Equatable {
+        internal static var defaultRadiusValue: Double = 30
+        public static let `default` = Pulsing()
+
+        public enum Radius: Equatable {
+            case constant(Double)
+            case accuracy
+        }
+        public var color: UIColor
+        public var radius: Radius
+
+        public init(color: UIColor = UIColor(red: 0.29, green: 0.565, blue: 0.886, alpha: 1), radius: Radius = .constant(30)) {
+            self.color = color
+            self.radius = radius
+        }
+    }
 
     /// Image to use as the top of the location indicator.
     public var topImage: UIImage?
@@ -22,6 +38,9 @@ public struct Puck2DConfiguration: Equatable {
 
     /// The size of the images, as a scale factor applied to the size of the specified image.
     public var scale: Value<Double>?
+
+    // Pulsing Whether the location puck is pulsing on the map. Works for 2D location puck only
+    public var pulsing: Pulsing?
 
     /// Flag determining if the horizontal accuracy ring should be shown arround the `Puck`. default value is false
     public var showsAccuracyRing: Bool

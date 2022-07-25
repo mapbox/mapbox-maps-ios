@@ -3,6 +3,10 @@ import CoreGraphics
 import UIKit
 
 internal final class Puck2D: Puck {
+    private static let layerID = "puck"
+    private static let topImageId = "locationIndicatorLayerTopImage"
+    private static let bearingImageId = "locationIndicatorLayerBearingImage"
+    private static let shadowImageId = "locationIndicatorLayerShadowImage"
 
     internal var isActive = false {
         didSet {
@@ -59,11 +63,6 @@ internal final class Puck2D: Puck {
     /// Used to identify which styles need to be restored to their default values in
     /// the subsequent sync.
     private var previouslySetLayerPropertyKeys: Set<String> = []
-
-    private static let layerID = "puck"
-    private static let topImageId = "locationIndicatorLayerTopImage"
-    private static let bearingImageId = "locationIndicatorLayerBearingImage"
-    private static let shadowImageId = "locationIndicatorLayerShadowImage"
 
     internal init(configuration: Puck2DConfiguration,
                   style: StyleProtocol,
@@ -235,6 +234,50 @@ internal final class Puck2D: Puck {
         }
 
         try! style.setLayerProperties(for: Self.layerID, properties: layerProperties)
+    }
+
+    private let emphasisCirclePulseDuration: CFTimeInterval = 3
+    private var emphasisCirclePulseStartTimestamp: CFTimeInterval?
+    private let interpolationCurve = UnitBezier(p1: .zero, p2: CGPoint(x: 0.25, y: 1))
+}
+
+extension Puck2D: DisplayLinkParticipant {
+    func participate() {
+        guard isActive, style.layerExists(withId: Self.layerID), let config = configuration.pulsing else { return }
+
+        guard let startTimestamp = emphasisCirclePulseStartTimestamp else {
+            emphasisCirclePulseStartTimestamp = CACurrentMediaTime()
+            return
+        }
+
+        let currentTime = CACurrentMediaTime()
+        let progress = min((currentTime - startTimestamp) / emphasisCirclePulseDuration, 1)
+        let curvedProgress = interpolationCurve.solve(progress, 1e-6)
+        let baseRadius: Double
+        switch config.radius {
+        case .constant(let value):
+            baseRadius = value
+        case .accuracy:
+            baseRadius = latestLocation?.horizontalAccuracy ?? Puck2DConfiguration.Pulsing.defaultRadiusValue
+        }
+        let radius = baseRadius * curvedProgress
+        let alpha = 1 - curvedProgress
+
+        // this can use either emphasis color as in Android(if we want to merely show some arbitrary pulsation around the puck)
+        // or accuracy radius color(along with the acuracy) to show accuracy pulsation
+        //
+        // Note: hydrogen has pretty extensive logic with "user tracking" modes - the puck seems to emit these sonar-like
+        // pulsations, along with inner dot "breasing" - who knows the logic begind it? Does it make sense for carbon?
+        let properties: [LocationIndicatorLayer.PaintCodingKeys: Any] = [
+            .accuracyRadiusColor: StyleColor(config.color.withAlphaComponent(progress <= 0.1 ? 0 : alpha)).rgbaString,
+            .accuracyRadius: radius
+        ]
+
+        if progress >= 1 {
+            emphasisCirclePulseStartTimestamp = currentTime
+        }
+
+        try! style.setLayerProperties(for: Self.layerID, properties: properties.mapKeys(\.rawValue))
     }
 }
 

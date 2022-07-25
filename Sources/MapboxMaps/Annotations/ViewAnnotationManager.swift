@@ -48,7 +48,6 @@ public final class ViewAnnotationManager {
 
     private let containerView: UIView
     private let mapboxMap: MapboxMapProtocol
-    private var currentViewId = 0
     private var viewsById: [String: UIView] = [:]
     private var idsByView: [UIView: String] = [:]
     private var expectedHiddenByView: [UIView: Bool] = [:]
@@ -100,7 +99,7 @@ public final class ViewAnnotationManager {
     ///   -  ``ViewAnnotationManagerError/associatedFeatureIdIsAlreadyInUse`` if the
     ///   supplied ``ViewAnnotationOptions/associatedFeatureId`` is already used by another annotation view
     ///   - ``MapError``: errors during insertion
-    public func add(_ view: UIView, options: ViewAnnotationOptions) throws {
+    public func add(_ view: UIView, id: String = UUID().uuidString, options: ViewAnnotationOptions) throws {
         guard idsByView[view] == nil else {
             throw ViewAnnotationManagerError.viewIsAlreadyAdded
         }
@@ -117,9 +116,6 @@ public final class ViewAnnotationManager {
         if creationOptions.height == nil {
             creationOptions.height = view.bounds.size.height
         }
-
-        let id = String(currentViewId)
-        currentViewId += 1
 
         view.translatesAutoresizingMaskIntoConstraints = false
 
@@ -201,6 +197,13 @@ public final class ViewAnnotationManager {
         }
     }
 
+    public func updateAnnotation(for id: String, with options: ViewAnnotationOptions) throws {
+        guard let view = viewsById[id] else {
+            throw ViewAnnotationManagerError.annotationNotFound
+        }
+
+        try update(view, options: options)
+    }
     /// Find `UIView` by feature id if it was specified as part of ``ViewAnnotationOptions/associatedFeatureId``.
     ///
     /// - Parameters:
@@ -211,6 +214,10 @@ public final class ViewAnnotationManager {
         return viewsByFeatureIds[identifier]
     }
 
+    public func view(forId identifier: String) -> UIView? {
+        return viewsById[identifier]
+    }
+
     /// Find ``ViewAnnotationOptions`` of view annotation by feature id if it was specified as part of ``ViewAnnotationOptions/associatedFeatureId``.
     ///
     /// - Parameters:
@@ -219,6 +226,10 @@ public final class ViewAnnotationManager {
     /// - Returns: ``ViewAnnotationOptions`` if view was found and `nil` otherwise.
     public func options(forFeatureId identifier: String) -> ViewAnnotationOptions? {
         return viewsByFeatureIds[identifier].flatMap { idsByView[$0] }.flatMap { try? mapboxMap.options(forViewAnnotationWithId: $0) }
+    }
+
+    public func options(forId identifier: String) -> ViewAnnotationOptions? {
+        return try? mapboxMap.options(forViewAnnotationWithId: identifier)
     }
 
     /// Get current ``ViewAnnotationOptions`` for given `UIView`.

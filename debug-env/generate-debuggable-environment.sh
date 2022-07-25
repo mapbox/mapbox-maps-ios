@@ -2,8 +2,13 @@
 
 # Usage: ./generate-debuggable-environment.sh <mapbox-maps-ios-commit> <gl-native-internal-commit> <turf-commit> <mme-commit>
 
+deprecation_note() {
+  echo -e "\033[0;33mDEPRECATION: This script was deprecated. Please, use ./generate-debuggable-environment (without the .sh)\033[0m"
+}
+
 if [ -d build ] ; then
   echo "build directory exists; please delete or move the directory before running this script"
+  deprecation_note
   exit 1
 fi
 
@@ -65,3 +70,5 @@ xcodegen -s Examples.yml
 
 # Open the resulting project
 xed Umbrella.xcworkspace
+
+deprecation_note

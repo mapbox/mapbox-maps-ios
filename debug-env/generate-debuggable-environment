@@ -7,7 +7,7 @@ import json
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser = argparse.ArgumentParser(description='Generate project to build Maps SDK dependencies from sources.')
     parser.add_argument('--commit', default="main", type=str,
                         help='commit to use for Mapbox Maps iOS')
     parser.add_argument('--gl-native-commit', default="internal",

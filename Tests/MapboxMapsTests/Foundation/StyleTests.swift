@@ -344,4 +344,44 @@ final class StyleTests: XCTestCase {
             bounds: CoordinateBounds(southwest: .random(), northeast: .random()))
         )
     }
+
+    func testStyleCanUpdateLayer() throws {
+        let mockStyleManager = MockStyleManager()
+        let sut = Style(with: mockStyleManager)
+
+        mockStyleManager.getStyleLayerPropertiesStub.defaultReturnValue = Expected(value: NSDictionary(dictionary: [
+            "id": "dummy-layer-id",
+            "type": "background",
+            "minzoom": 1,
+            "maxzoom": 10,
+            "source": "dummy-source-id",
+            "paint": [
+                "background-opacity-transition": ["delay": 1, "duration": 100],
+            ],
+            "layout": [
+                "visibility": "visible",
+            ],
+        ]))
+        try sut.updateLayer(
+            withId: "dummy-layer-id",
+            type: BackgroundLayer.self) { layer in
+                layer.minZoom = nil
+                layer.maxZoom = nil
+                layer.backgroundOpacityTransition = nil
+                layer.backgroundOpacity = nil
+            }
+
+        let rootProperties = try XCTUnwrap(mockStyleManager.setStyleLayerPropertiesStub.invocations.last!.parameters.properties as? [String: Any])
+        XCTAssertEqual(rootProperties["id"] as? String, "dummy-layer-id", "id should always be presented")
+        XCTAssertEqual(rootProperties["source"] as? String, "dummy-source-id", "source should always be presented")
+        XCTAssertTrue(rootProperties.keys.contains("minzoom"), "minzoom is reset and should be presented")
+        XCTAssertTrue(rootProperties.keys.contains("maxzoom"), "maxzoom is reset and should be presented")
+
+        let paintProperties = try XCTUnwrap(rootProperties["paint"] as? [String: Any])
+        XCTAssertTrue(paintProperties.keys.contains("background-opacity-transition"), "background-opacity-transition is reset and should be presented")
+        XCTAssertFalse(paintProperties.keys.contains("background-opacity"), "background-opacity is not reset and should not be presented")
+
+        let layoutProperties = try XCTUnwrap(rootProperties["layout"] as? [String: Any])
+        XCTAssertEqual(layoutProperties["visibility"] as? String, "visible", "visibility is not reset and should keep old value")
+    }
 }

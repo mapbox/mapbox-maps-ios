@@ -1,0 +1,105 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+import argparse
+import json
+
+
+def main():
+    parser = argparse.ArgumentParser(description='Generate project to build Maps SDK dependencies from sources.')
+    parser.add_argument('--commit', default="main", type=str,
+                        help='commit to use for Mapbox Maps iOS')
+    parser.add_argument('--gl-native-commit', default="internal",
+                        type=str, help='commit to use for GL Native Internal')
+    parser.add_argument('--turf-commit', default="main",
+                        type=str, help='commit to use for Turf')
+    parser.add_argument('--mme-commit', default="main",
+                        type=str, help='commit to use for Mapbox Mobile Events')
+
+    parser.add_argument('--stable', action='store_true',
+                        help='use dependencies from the last release')
+
+    args = parser.parse_args()
+
+    if not os.path.exists("build"):
+        os.mkdir("build")
+    os.chdir("build")
+
+    checkout_repo("mapbox-maps-ios", args.commit)
+
+    if args.stable:
+        with open("mapbox-maps-ios/scripts/release/packager/versions.json") as f:
+            versions = json.load(f)
+
+        args.gl_native_commit = "maps-v" + versions["MapboxCoreMaps"]
+        args.turf_commit = versions["Turf"]
+        args.mme_commit = versions["MapboxMobileEvents"]
+
+    print("Using args: " + str(args))
+
+    checkout_repo("mapbox-gl-native-internal",
+                  args.gl_native_commit, checkout_submodules=True)
+    # configure project
+    os.chdir("mapbox-gl-native-internal")
+    os.system("pwd")
+    configure_command = """cmake -B build/ios
+                            -DBUILD_SHARED_LIBS=OFF
+                            -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY="./lib"
+                            -DCMAKE_BUILD_TYPE=Release
+                            -DCMAKE_OSX_SYSROOT=iphoneos
+                            -DCMAKE_SYSTEM_NAME=iOS
+                            -DMAPBOX_COMMON_BUILD_TYPE='SHARED'
+                            -DMAPBOX_COMMON_TARGET_NAME='MapboxCommon'
+                            -DMAPBOX_COMMON_ADD_LIBOUTDIR_TO_FRAMEWORK_SEARCH_PATH=ON
+                            -DMAPBOX_ENABLE_FRAMEWORK=ON
+                            -DMBGL_WITH_IOS_CCACHE=ON
+                            -DMBGL_WITH_METAL=ON
+                            -GXcode""".replace("\n", "\\\n")
+
+    print(configure_command)
+    os.system(configure_command)
+
+    # xcodegen chokes on the PBXBuildStyle objects in the generated project file.
+    # They're a legacy construct, and everything works if you just delete them.
+    # https://github.com/tuist/XcodeProj/issues/688
+    os.system("sed -i '' '/Begin PBXBuildStyle section/,/End PBXBuildStyle section/d' 'build/ios/Mapbox GL Native.xcodeproj/project.pbxproj'")
+    os.chdir("..")
+
+    checkout_repo("turf-swift", args.turf_commit)
+    checkout_repo("mapbox-events-ios", args.mme_commit)
+
+    # leave build directory
+    os.chdir("..")
+
+    # Generate Xcode projects
+    os.system("xcodegen -s MapboxMaps.yml")
+    os.system("xcodegen -s DebugApp.yml")
+    os.system("xcodegen -s Examples.yml")
+
+#   # Open the resulting project
+    os.system("xed Umbrella.xcworkspace")
+
+
+def checkout_repo(repo_name: str, repo_branch: str, checkout_submodules=False):
+    # checkout the repo if folder doesn't exist. Otherwise, fetch the latest changes
+    os.system("pwd")
+    if not os.path.exists(repo_name):
+        print("Cloning " + repo_name + "...")
+        command = "git clone --branch " + repo_branch + " --recursive " + \
+            f"git@github.com:mapbox/{repo_name}.git " + repo_name
+        print(command)
+        os.system(command)
+    else:
+        print("Fetching latest changes for " + repo_name + "...")
+        os.chdir(repo_name)
+        os.system("git fetch")
+        os.system("git checkout " + repo_branch)
+        os.system("git pull origin " + repo_branch)
+        os.chdir("..")
+
+    if checkout_submodules:
+        os.system("git submodule update --init --recursive")
+
+
+main()

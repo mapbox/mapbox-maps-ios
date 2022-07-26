@@ -5,13 +5,13 @@
 Several utilities are required to use this script. You can install them with:
 
 ```
-$ brew install xcodegen cmake ccache glfw pkgconfig
+$ brew install xcodegen cmake ccache glfw pkgconfig jq
 ```
 
 ## Setup
 
 1. Clone this repository
-2. Run `$ ./generate-debuggable-environment.sh <mapbox-maps-ios-commit> <gl-native-internal-commit> <turf-commit> <mme-commit>`
+2. Run `$ ./generate-debuggable-environment [-h] [--commit COMMIT] [--gl-native-commit GL_NATIVE_COMMIT] [--turf-commit TURF_COMMIT] [--mme-commit MME_COMMIT] [--stable]`
 3. When the script completes, `Umbrella.xcworkspace` will open.
 4. Build and run the `DebugApp` or `Examples` scheme to start debugging:
 

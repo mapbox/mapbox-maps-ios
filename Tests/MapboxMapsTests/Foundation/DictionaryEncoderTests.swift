@@ -163,6 +163,7 @@ final class DictionaryEncoderTests: XCTestCase {
         let sut = DictionaryEncoder()
         sut.userInfo[.shouldEncodeNilValues] = true
 
+        // String
         XCTAssertEqual(
             try sut.encode(DummyNilable(value: "hilla")) as? [String: String?],
             ["value": "hilla"]
@@ -171,18 +172,245 @@ final class DictionaryEncoderTests: XCTestCase {
             try sut.encode(DummyNilable<String>(value: nil)) as? [String: String?],
             ["value": nil]
         )
+
+        // Double
+        XCTAssertEqual(
+            try sut.encode(DummyNilable(value: 10.0)) as? [String: Double?],
+            ["value": 10.0]
+        )
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<Double>(value: nil)) as? [String: Double?],
+            ["value": nil]
+        )
+
+        // Float
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<Float>(value: 10.0)) as? [String: Float?],
+            ["value": 10.0]
+        )
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<Float>(value: nil)) as? [String: Float?],
+            ["value": nil]
+        )
+
+        // Int
+        XCTAssertEqual(
+            try sut.encode(DummyNilable(value: 10)) as? [String: Int?],
+            ["value": 10]
+        )
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<Int>(value: nil)) as? [String: Int?],
+            ["value": nil]
+        )
+
+        XCTAssertEqual(
+            try sut.encode(DummyNilable(value: Int8(10))) as? [String: Int8?],
+            ["value": 10]
+        )
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<Int8>(value: nil)) as? [String: Int8?],
+            ["value": nil]
+        )
+
+        XCTAssertEqual(
+            try sut.encode(DummyNilable(value: Int16(10))) as? [String: Int16?],
+            ["value": 10]
+        )
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<Int16>(value: nil)) as? [String: Int16?],
+            ["value": nil]
+        )
+
+        XCTAssertEqual(
+            try sut.encode(DummyNilable(value: Int32(10))) as? [String: Int32?],
+            ["value": 10]
+        )
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<Int32>(value: nil)) as? [String: Int32?],
+            ["value": nil]
+        )
+
+        XCTAssertEqual(
+            try sut.encode(DummyNilable(value: Int64(10))) as? [String: Int64?],
+            ["value": 10]
+        )
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<Int64>(value: nil)) as? [String: Int64?],
+            ["value": nil]
+        )
+
+        // UInt
+        XCTAssertEqual(
+            try sut.encode(DummyNilable(value: UInt8(10))) as? [String: UInt8?],
+            ["value": 10]
+        )
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<UInt8>(value: nil)) as? [String: UInt8?],
+            ["value": nil]
+        )
+
+        XCTAssertEqual(
+            try sut.encode(DummyNilable(value: UInt16(10))) as? [String: UInt16?],
+            ["value": 10]
+        )
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<UInt16>(value: nil)) as? [String: UInt16?],
+            ["value": nil]
+        )
+
+        XCTAssertEqual(
+            try sut.encode(DummyNilable(value: UInt32(10))) as? [String: UInt32?],
+            ["value": 10]
+        )
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<UInt32>(value: nil)) as? [String: UInt32?],
+            ["value": nil]
+        )
+
+        XCTAssertEqual(
+            try sut.encode(DummyNilable(value: UInt64(10))) as? [String: UInt64?],
+            ["value": 10]
+        )
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<UInt64>(value: nil)) as? [String: UInt64?],
+            ["value": nil]
+        )
+
+        // Boolean
+        XCTAssertEqual(
+            try sut.encode(DummyNilable(value: false)) as? [String: Bool?],
+            ["value": false]
+        )
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<Bool>(value: nil)) as? [String: Bool?],
+            ["value": nil]
+        )
     }
 
     func testEncodeNilOnlyIfPresent() throws {
         let sut = DictionaryEncoder()
         sut.userInfo[.shouldEncodeNilValues] = false
 
+        // String
         XCTAssertEqual(
             try sut.encode(DummyNilable(value: "hilla")) as? [String: String?],
             ["value": "hilla"]
         )
         XCTAssertEqual(
             try sut.encode(DummyNilable<String>(value: nil)) as? [String: String?],
+            [:]
+        )
+
+        // Double
+        XCTAssertEqual(
+            try sut.encode(DummyNilable(value: 10.0)) as? [String: Double?],
+            ["value": 10.0]
+        )
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<Double>(value: nil)) as? [String: Double?],
+            [:]
+        )
+
+        // Float
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<Float>(value: 10.0)) as? [String: Float?],
+            ["value": 10.0]
+        )
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<Float>(value: nil)) as? [String: Float?],
+            [:]
+        )
+
+        // Int
+        XCTAssertEqual(
+            try sut.encode(DummyNilable(value: 10)) as? [String: Int?],
+            ["value": 10]
+        )
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<Int>(value: nil)) as? [String: Int?],
+            [:]
+        )
+
+        XCTAssertEqual(
+            try sut.encode(DummyNilable(value: Int8(10))) as? [String: Int8?],
+            ["value": 10]
+        )
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<Int8>(value: nil)) as? [String: Int8?],
+            [:]
+        )
+
+        XCTAssertEqual(
+            try sut.encode(DummyNilable(value: Int16(10))) as? [String: Int16?],
+            ["value": 10]
+        )
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<Int16>(value: nil)) as? [String: Int16?],
+            [:]
+        )
+
+        XCTAssertEqual(
+            try sut.encode(DummyNilable(value: Int32(10))) as? [String: Int32?],
+            ["value": 10]
+        )
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<Int32>(value: nil)) as? [String: Int32?],
+            [:]
+        )
+
+        XCTAssertEqual(
+            try sut.encode(DummyNilable(value: Int64(10))) as? [String: Int64?],
+            ["value": 10]
+        )
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<Int64>(value: nil)) as? [String: Int64?],
+            [:]
+        )
+
+        // UInt
+        XCTAssertEqual(
+            try sut.encode(DummyNilable(value: UInt8(10))) as? [String: UInt8?],
+            ["value": 10]
+        )
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<UInt8>(value: nil)) as? [String: UInt8?],
+            [:]
+        )
+
+        XCTAssertEqual(
+            try sut.encode(DummyNilable(value: UInt16(10))) as? [String: UInt16?],
+            ["value": 10]
+        )
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<UInt16>(value: nil)) as? [String: UInt16?],
+            [:]
+        )
+
+        XCTAssertEqual(
+            try sut.encode(DummyNilable(value: UInt32(10))) as? [String: UInt32?],
+            ["value": 10]
+        )
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<UInt32>(value: nil)) as? [String: UInt32?],
+            [:]
+        )
+
+        XCTAssertEqual(
+            try sut.encode(DummyNilable(value: UInt64(10))) as? [String: UInt64?],
+            ["value": 10]
+        )
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<UInt64>(value: nil)) as? [String: UInt64?],
+            [:]
+        )
+
+        // Boolean
+        XCTAssertEqual(
+            try sut.encode(DummyNilable(value: false)) as? [String: Bool?],
+            ["value": false]
+        )
+        XCTAssertEqual(
+            try sut.encode(DummyNilable<Bool>(value: nil)) as? [String: Bool?],
             [:]
         )
     }

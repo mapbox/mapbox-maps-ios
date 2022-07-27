@@ -9,7 +9,7 @@ public struct Light: Codable {
     /// Whether extruded geometries are lit relative to the map or viewport.
     public var anchor: Anchor?
 
-    /// Enable/Disable shadow casting for this light
+    /// 
     @_spi(Experimental) public var castShadows: Value<Bool>?
 
     /// Color tint for lighting extruded geometries.
@@ -30,7 +30,7 @@ public struct Light: Codable {
     /// Transition property for `position`
     public var positionTransition: StyleTransition?
 
-    /// Determines the shadow strength, affecting the shadow receiver surfaces final color. Values near 0.0 reduce the shadow contribution to the final color. Values near to 1.0 make occluded surfaces almost black.
+    /// 
     @_spi(Experimental) public var shadowIntensity: Value<Double>?
 
     /// Transition property for `shadowIntensity`

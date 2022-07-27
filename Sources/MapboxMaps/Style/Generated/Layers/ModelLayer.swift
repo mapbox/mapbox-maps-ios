@@ -19,7 +19,7 @@ import Foundation
     /// Model to render.
     public var modelId: Value<String>?
 
-    /// Enable/Disable shadow casting for this layer
+    /// 
     public var modelCastShadows: Value<Bool>?
 
     /// The tint color of the model layer. model-color-mix-intensity (defaults to 0) defines tint(mix) intensity - this means that, this color is not used unless model-color-mix-intensity gets value greater than 0.
@@ -40,7 +40,7 @@ import Foundation
     /// Transition options for `modelOpacity`.
     public var modelOpacityTransition: StyleTransition?
 
-    /// Enable/Disable shadow receiving for this layer
+    /// 
     public var modelReceiveShadows: Value<Bool>?
 
     /// The rotation of the model in euler angles [lon, lat, z].

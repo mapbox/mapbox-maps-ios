@@ -7,13 +7,11 @@ Mapbox welcomes participation and contributions from everyone.
 * Expand scale bar range up to 15000 km/10000 miles. ([#1455](https://github.com/mapbox/mapbox-maps-ios/pull/1455))
 * Add the ability to override scale bar units. ([#1473](https://github.com/mapbox/mapbox-maps-ios/pull/1473))
 * Animate padding changes between 2 camera when used with `FlyToCameraAnimator`. ([#1479](https://github.com/mapbox/mapbox-maps-ios/pull/1479))
-* Add experimental `Puck3DConfiguration.modelReceiveShadows` option to control shadow receiving for the 3D puck model. ([#1478](https://github.com/mapbox/mapbox-maps-ios/pull/1478))
 
 ## 10.7.0-rc.1 - July 14, 2022
 
 * Add rotation threshold to prevent map from being rotated accidentally. ([#1429](https://github.com/mapbox/mapbox-maps-ios/pull/1429))
 * Introduce `GestureOptions.simultaneousRotateAndPinchZoomEnabled` and deprecate `GestureOptions.pinchRotateEnabled` in favor of `GestureOptions.rotateEnabled`. ([1429](https://github.com/mapbox/mapbox-maps-ios/pull/1429))
-* Add experimental `Puck3DConfiguration.modelCastShadows` option to control shadow casting for the 3D puck. ([#1435](https://github.com/mapbox/mapbox-maps-ios/pull/1435))
 * Expose public initializer for `TilesetDescriptorOptionsForTilesets`. ([#1431](https://github.com/mapbox/mapbox-maps-ios/pull/1431))
 * Fix view annotation losing its feature association after update. ([#1446](https://github.com/mapbox/mapbox-maps-ios/pull/1446))
 * Update CoreMaps to `10.7.0-rc.1`. ([#1456](https://github.com/mapbox/mapbox-maps-ios/pull/1456))
@@ -22,7 +20,6 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Introduce `FillExtrusionLayer.fillExtrusionAmbientOcclusionIntensity` and `FillExtrusionLayer.fillExtrusionAmbientOcclusionRadius` properties for FillExtrusionLayer. ([1410](https://github.com/mapbox/mapbox-maps-ios/pull/1410))
 * Introduce `PointAnnotation.textLineHeight` and deprecated `PointAnnotationManager.textLineHeight`, as `text-line-height` is data-driven property now. ([1410](https://github.com/mapbox/mapbox-maps-ios/pull/1410))
-* Expose experimental shadow APIs for `Light`. ([#1409](https://github.com/mapbox/mapbox-maps-ios/pull/1409))
 * Remove experimental annotation from Viewport API. ([#1392](https://github.com/mapbox/mapbox-maps-ios/pull/1392))
 * Remove deprecated `animationDuration` parameter in `FollowPuckViewportStateOptions` initializer.([#1390](https://github.com/mapbox/mapbox-maps-ios/pull/1390))
 * Deprecate existing QueryRenderedFeatures methods and add cancellable counterparts. ([#1378](https://github.com/mapbox/mapbox-maps-ios/pull/1378))

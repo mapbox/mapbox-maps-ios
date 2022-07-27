@@ -6,6 +6,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Expand scale bar range up to 15000 km/10000 miles. ([#1455](https://github.com/mapbox/mapbox-maps-ios/pull/1455))
 * Add the ability to override scale bar units. ([#1473](https://github.com/mapbox/mapbox-maps-ios/pull/1473))
+* Fix `Style.updateLayer(withId:type:update)` so resetting a layer's properties should work. ([#1476](https://github.com/mapbox/mapbox-maps-ios/pull/1476))
 
 ## 10.7.0-rc.1 - July 14, 2022
 

@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import Foundation
 
 private protocol EncoderContainer {
@@ -6,10 +7,12 @@ private protocol EncoderContainer {
 
 internal final class DictionaryEncoder {
     var userInfo: [CodingUserInfoKey: Any] = [:]
+    var shouldEncodeNilValues = false
     init() {}
 
     func encode<T>(_ value: T) throws -> [String: Any] where T: Encodable {
-        guard let dictionary = try Encoder(userInfo: userInfo).encode(value) as? [String: Any] else {
+        let encoder = Encoder(userInfo: userInfo, shouldEncodeNilValues: shouldEncodeNilValues)
+        guard let dictionary = try encoder.encode(value) as? [String: Any] else {
             throw Error.unexpectedType
         }
 
@@ -21,11 +24,29 @@ internal final class DictionaryEncoder {
         case incomplete(at: [CodingKey])
     }
 
-    private static func isSupportedType<T: Encodable>(_ type: T.Type) -> Bool {
-        T.self == Data.self || T.self == NSData.self ||
-        T.self == Date.self || T.self == NSDate.self ||
-        T.self == Decimal.self || T.self == NSDecimalNumber.self ||
-        T.self == URL.self || T.self == NSURL.self
+    private static func encode<T: Encodable>(
+        _ value: T,
+        codingPath: [CodingKey],
+        userInfo: [CodingUserInfoKey: Any],
+        shouldEncodeNilValues: Bool
+    ) throws -> Any {
+
+        switch value {
+        case let date as Date:
+            return date.timeIntervalSinceReferenceDate
+        case let url as URL:
+            return url.absoluteString
+        case let data as Data:
+            return data.base64EncodedString()
+        case is Decimal, is NSDecimalNumber:
+            return value
+        default:
+            let encoder = Encoder(
+                codingPath: codingPath,
+                userInfo: userInfo,
+                shouldEncodeNilValues: shouldEncodeNilValues)
+            return try encoder.encode(value)
+        }
     }
 }
 
@@ -46,14 +67,16 @@ private extension DictionaryEncoder {
     final class Encoder: Swift.Encoder, EncoderContainer {
         let codingPath: [CodingKey]
         let userInfo: [CodingUserInfoKey: Any]
+        let shouldEncodeNilValues: Bool
 
         private(set) var container: EncoderContainer? {
             didSet { precondition(oldValue == nil) }
         }
 
-        init(codingPath: [CodingKey] = [], userInfo: [CodingUserInfoKey: Any]) {
+        init(codingPath: [CodingKey] = [], userInfo: [CodingUserInfoKey: Any], shouldEncodeNilValues: Bool) {
             self.codingPath = codingPath
             self.userInfo = userInfo
+            self.shouldEncodeNilValues = shouldEncodeNilValues
         }
 
         func toAny() throws -> Any {
@@ -63,19 +86,28 @@ private extension DictionaryEncoder {
         }
 
         func container<Key: CodingKey>(keyedBy type: Key.Type) -> Swift.KeyedEncodingContainer<Key> {
-            let keyed = KeyedEncodingContainer<Key>(codingPath: codingPath, userInfo: userInfo)
+            let keyed = KeyedEncodingContainer<Key>(
+                codingPath: codingPath,
+                userInfo: userInfo,
+                shouldEncodeNilValues: shouldEncodeNilValues)
             container = keyed
             return Swift.KeyedEncodingContainer(keyed)
         }
 
         func unkeyedContainer() -> UnkeyedEncodingContainer {
-            let unkeyed = UnkeyedContainer(codingPath: codingPath, userInfo: userInfo)
+            let unkeyed = UnkeyedContainer(
+                codingPath: codingPath,
+                userInfo: userInfo,
+                shouldEncodeNilValues: shouldEncodeNilValues)
             container = unkeyed
             return unkeyed
         }
 
         func singleValueContainer() -> SingleValueEncodingContainer {
-            let single = SingleContainer(codingPath: codingPath, userInfo: userInfo)
+            let single = SingleContainer(
+                codingPath: codingPath,
+                userInfo: userInfo,
+                shouldEncodeNilValues: shouldEncodeNilValues)
             container = single
             return single
         }
@@ -93,10 +125,16 @@ private extension DictionaryEncoder {
         let codingPath: [CodingKey]
         private let userInfo: [CodingUserInfoKey: Any]
         private var storage: [String: Storage] = [:]
+        private let shouldEncodeNilValues: Bool
 
-        init(codingPath: [CodingKey], userInfo: [CodingUserInfoKey: Any]) {
+        init(
+            codingPath: [CodingKey],
+            userInfo: [CodingUserInfoKey: Any],
+            shouldEncodeNilValues: Bool
+        ) {
             self.codingPath = codingPath
             self.userInfo = userInfo
+            self.shouldEncodeNilValues = shouldEncodeNilValues
         }
 
         func toAny() throws -> Any {
@@ -164,19 +202,73 @@ private extension DictionaryEncoder {
         }
 
         func encode<T: Encodable>(_ value: T, forKey key: Key) throws {
-            if DictionaryEncoder.isSupportedType(T.self) {
-                storage[key.stringValue] = .value(value)
-            } else {
-                let result = try Encoder(codingPath: codingPath.appending(key: key), userInfo: userInfo).encode(value)
-                storage[key.stringValue] = .value(result)
-            }
+            let result = try DictionaryEncoder.encode(
+                value,
+                codingPath: codingPath.appending(key: key),
+                userInfo: userInfo,
+                shouldEncodeNilValues: shouldEncodeNilValues)
+            storage[key.stringValue] = .value(result)
         }
 
         func encodeIfPresent<T: Encodable>(_ value: T?, forKey key: Key) throws {
-            let shouldEncodeNilValue = userInfo[.shouldEncodeNilValues] as? Bool ?? false
-            if value != nil || shouldEncodeNilValue {
-                try encode(value, forKey: key)
-            }
+            guard value != nil || shouldEncodeNilValues else { return }
+            try encode(value, forKey: key)
+        }
+
+        func encodeIfPresent(_ value: Bool?, forKey key: Key) throws {
+            try encodeIfPresent(NilEncodable(value), forKey: key)
+        }
+
+        func encodeIfPresent(_ value: String?, forKey key: Key) throws {
+            try encodeIfPresent(NilEncodable(value), forKey: key)
+        }
+
+        func encodeIfPresent(_ value: Double?, forKey key: Key) throws {
+            try encodeIfPresent(NilEncodable(value), forKey: key)
+        }
+
+        func encodeIfPresent(_ value: Float?, forKey key: Key) throws {
+            try encodeIfPresent(NilEncodable(value), forKey: key)
+        }
+
+        func encodeIfPresent(_ value: Int?, forKey key: Key) throws {
+            try encodeIfPresent(NilEncodable(value), forKey: key)
+        }
+
+        func encodeIfPresent(_ value: Int8?, forKey key: Key) throws {
+            try encodeIfPresent(NilEncodable(value), forKey: key)
+        }
+
+        func encodeIfPresent(_ value: Int16?, forKey key: Key) throws {
+            try encodeIfPresent(NilEncodable(value), forKey: key)
+        }
+
+        func encodeIfPresent(_ value: Int32?, forKey key: Key) throws {
+            try encodeIfPresent(NilEncodable(value), forKey: key)
+        }
+
+        func encodeIfPresent(_ value: Int64?, forKey key: Key) throws {
+            try encodeIfPresent(NilEncodable(value), forKey: key)
+        }
+
+        func encodeIfPresent(_ value: UInt?, forKey key: Key) throws {
+            try encodeIfPresent(NilEncodable(value), forKey: key)
+        }
+
+        func encodeIfPresent(_ value: UInt8?, forKey key: Key) throws {
+            try encodeIfPresent(NilEncodable(value), forKey: key)
+        }
+
+        func encodeIfPresent(_ value: UInt16?, forKey key: Key) throws {
+            try encodeIfPresent(NilEncodable(value), forKey: key)
+        }
+
+        func encodeIfPresent(_ value: UInt32?, forKey key: Key) throws {
+            try encodeIfPresent(NilEncodable(value), forKey: key)
+        }
+
+        func encodeIfPresent(_ value: UInt64?, forKey key: Key) throws {
+            try encodeIfPresent(NilEncodable(value), forKey: key)
         }
 
         func nestedContainer<NestedKey>(
@@ -186,13 +278,17 @@ private extension DictionaryEncoder {
 
             let keyed = KeyedEncodingContainer<NestedKey>(
                 codingPath: codingPath.appending(key: key),
-                userInfo: userInfo)
+                userInfo: userInfo,
+                shouldEncodeNilValues: shouldEncodeNilValues)
             storage[key.stringValue] = .container(keyed)
             return Swift.KeyedEncodingContainer(keyed)
         }
 
         func nestedUnkeyedContainer(forKey key: Key) -> UnkeyedEncodingContainer {
-            let unkeyed = UnkeyedContainer(codingPath: codingPath.appending(key: key), userInfo: userInfo)
+            let unkeyed = UnkeyedContainer(
+                codingPath: codingPath.appending(key: key),
+                userInfo: userInfo,
+                shouldEncodeNilValues: shouldEncodeNilValues)
             storage[key.stringValue] = .container(unkeyed)
             return unkeyed
         }
@@ -202,7 +298,10 @@ private extension DictionaryEncoder {
         }
 
         func superEncoder(forKey key: Key) -> Swift.Encoder {
-            let encoder = Encoder(codingPath: codingPath.appending(key: key), userInfo: userInfo)
+            let encoder = Encoder(
+                codingPath: codingPath.appending(key: key),
+                userInfo: userInfo,
+                shouldEncodeNilValues: shouldEncodeNilValues)
             storage[key.stringValue] = .container(encoder)
             return encoder
         }
@@ -211,12 +310,15 @@ private extension DictionaryEncoder {
     final class UnkeyedContainer: Swift.UnkeyedEncodingContainer, EncoderContainer {
         let codingPath: [CodingKey]
         private let userInfo: [CodingUserInfoKey: Any]
+        private let shouldEncodeNilValues: Bool
+
         private var storage: [Storage] = []
         var count: Int { storage.count }
 
-        init(codingPath: [CodingKey], userInfo: [CodingUserInfoKey: Any]) {
+        init(codingPath: [CodingKey], userInfo: [CodingUserInfoKey: Any], shouldEncodeNilValues: Bool) {
             self.codingPath = codingPath
             self.userInfo = userInfo
+            self.shouldEncodeNilValues = shouldEncodeNilValues
         }
 
         func toAny() throws -> Any {
@@ -284,29 +386,39 @@ private extension DictionaryEncoder {
         }
 
         func encode<T: Encodable>(_ value: T) throws {
-            if DictionaryEncoder.isSupportedType(T.self) {
-                storage.append(.value(value))
-            } else {
-                let result = try Encoder(codingPath: codingPath.appending(index: count), userInfo: userInfo).encode(value)
-                storage.append(.value(result))
-            }
+            storage.append(
+                .value(try DictionaryEncoder.encode(
+                    value,
+                    codingPath: codingPath.appending(index: count),
+                    userInfo: userInfo,
+                    shouldEncodeNilValues: shouldEncodeNilValues)
+                ))
         }
 
         func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type) -> Swift.KeyedEncodingContainer<NestedKey> {
             let path = codingPath.appending(index: count)
-            let keyed = KeyedEncodingContainer<NestedKey>(codingPath: path, userInfo: userInfo)
+            let keyed = KeyedEncodingContainer<NestedKey>(
+                codingPath: path,
+                userInfo: userInfo,
+                shouldEncodeNilValues: shouldEncodeNilValues)
             storage.append(.container(keyed))
             return Swift.KeyedEncodingContainer(keyed)
         }
 
         func nestedUnkeyedContainer() -> UnkeyedEncodingContainer {
-            let unkeyed = UnkeyedContainer(codingPath: codingPath.appending(index: count), userInfo: userInfo)
+            let unkeyed = UnkeyedContainer(
+                codingPath: codingPath.appending(index: count),
+                userInfo: userInfo,
+                shouldEncodeNilValues: shouldEncodeNilValues)
             storage.append(.container(unkeyed))
             return unkeyed
         }
 
         func superEncoder() -> Swift.Encoder {
-            let encoder = Encoder(codingPath: codingPath.appending(index: count), userInfo: userInfo)
+            let encoder = Encoder(
+                codingPath: codingPath.appending(index: count),
+                userInfo: userInfo,
+                shouldEncodeNilValues: shouldEncodeNilValues)
             storage.append(.container(encoder))
             return encoder
         }
@@ -315,11 +427,14 @@ private extension DictionaryEncoder {
     final class SingleContainer: SingleValueEncodingContainer, EncoderContainer {
         let codingPath: [CodingKey]
         private let userInfo: [CodingUserInfoKey: Any]
+        private let shouldEncodeNilValues: Bool
+
         private var storage: Any?
 
-        init(codingPath: [CodingKey], userInfo: [CodingUserInfoKey: Any]) {
+        init(codingPath: [CodingKey], userInfo: [CodingUserInfoKey: Any], shouldEncodeNilValues: Bool) {
             self.codingPath = codingPath
             self.userInfo = userInfo
+            self.shouldEncodeNilValues = shouldEncodeNilValues
         }
 
         func toAny() throws -> Any {
@@ -388,12 +503,25 @@ private extension DictionaryEncoder {
         }
 
         func encode<T>(_ value: T) throws where T: Encodable {
-            if DictionaryEncoder.isSupportedType(T.self) {
-                storage = value
-            } else {
-                let encoder = Encoder(codingPath: codingPath, userInfo: userInfo)
-                storage = try encoder.encode(value)
-            }
+            storage = try DictionaryEncoder.encode(
+                value,
+                codingPath: codingPath,
+                userInfo: userInfo,
+                shouldEncodeNilValues: shouldEncodeNilValues)
         }
+    }
+}
+
+private struct NilEncodable<T: Encodable>: Encodable {
+    let value: T
+
+    init?(_ value: T?) {
+        guard let value = value else { return nil }
+        self.value = value
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(value)
     }
 }

@@ -18,7 +18,7 @@ public extension StyleEncodable where Self: Encodable {
     /// Encodes the receiver into a Dictionary representation.
     /// - returns: A dictionary representation of the receiver.
     func allStyleProperties() throws -> [String: Any] {
-        try allStyleProperties(userInfo: [:])
+        try allStyleProperties(userInfo: [:], shouldEncodeNilValues: false)
     }
 }
 
@@ -41,9 +41,13 @@ internal extension StyleEncodable where Self: Encodable {
     /// Encodes to a dictionary representation.
     /// - Parameter userInfo: Provides some contexts for the encoding.
     /// - returns: A dictionary representation of the object.
-    func allStyleProperties(userInfo: [CodingUserInfoKey: Any]) throws -> [String: Any] {
+    func allStyleProperties(
+        userInfo: [CodingUserInfoKey: Any],
+        shouldEncodeNilValues: Bool
+    ) throws -> [String: Any] {
         let encoder = DictionaryEncoder()
         encoder.userInfo = userInfo
+        encoder.shouldEncodeNilValues = shouldEncodeNilValues
 
         return try encoder.encode(self)
     }

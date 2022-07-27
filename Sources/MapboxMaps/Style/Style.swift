@@ -154,7 +154,7 @@ public final class Style: StyleProtocol {
             }
         }
         let layerProperties: [String: Any] = try layer
-            .allStyleProperties(userInfo: [.shouldEncodeNilValues: true])
+            .allStyleProperties(userInfo: [:], shouldEncodeNilValues: true)
             .reduce(into: oldLayerProperties, { result, element in
                 if let dictionary = element.value as? [String: Any] {
                     result[element.key] = dictionary.reduce(

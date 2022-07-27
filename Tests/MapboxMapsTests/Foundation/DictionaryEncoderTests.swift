@@ -3,434 +3,176 @@ import XCTest
 
 final class DictionaryEncoderTests: XCTestCase {
 
-    // MARK: Encode Integers.
-
-    func testEncodeInt() throws {
-        let intValue = Int.random(in: Int.min...Int.max)
-        XCTAssertEqual(
-            try DictionaryEncoder().encode(DummyEncodable(value: intValue)) as? [String: Int],
-            ["value": intValue]
+    func testEncode() throws {
+        let value = Everything(
+            string: "test",
+            int: -123456, int8: -123, int16: -12345, int32: -123456, int64: -123456789,
+            uint: 123456, uint8: 123, uint16: 12345, uint32: 123456, uint64: 123456789,
+            float: 123.456, double: 12345.6789,
+            bool: true,
+            date: Date(timeIntervalSinceReferenceDate: 123456.789),
+            data: "test".data(using: String.Encoding.utf8)!,
+            url: URL(string: "dummy-mapbox.com")
         )
-    }
 
-    func testEncodeInt8() throws {
-        let int8Value = Int8.random(in: Int8.min...Int8.max)
-        XCTAssertEqual(
-            try DictionaryEncoder().encode(DummyEncodable(value: int8Value)) as? [String: Int8],
-            ["value": int8Value]
-        )
-    }
+        let encoded = try DictionaryEncoder().encode(value)
 
-    func testEncodeInt16() throws {
-        let int16Value = Int16.random(in: Int16.min...Int16.max)
-        XCTAssertEqual(
-            try DictionaryEncoder().encode(DummyEncodable(value: int16Value)) as? [String: Int16],
-            ["value": int16Value]
-        )
-    }
-
-    func testEncodeInt32() throws {
-        let int32Value = Int32.random(in: Int32.min...Int32.max)
-        XCTAssertEqual(
-            try DictionaryEncoder().encode(DummyEncodable(value: int32Value)) as? [String: Int32],
-            ["value": int32Value]
-        )
-    }
-
-    func testEncodeInt64() throws {
-        let int64Value = Int64.random(in: Int64.min...Int64.max)
-        XCTAssertEqual(
-            try DictionaryEncoder().encode(DummyEncodable(value: int64Value)) as? [String: Int64],
-            ["value": int64Value]
-        )
-    }
-
-    func testEncodeUInt() throws {
-        let uintValue = UInt.random(in: UInt.min...UInt.max)
-        XCTAssertEqual(
-            try DictionaryEncoder().encode(DummyEncodable(value: uintValue)) as? [String: UInt],
-            ["value": uintValue]
-        )
-    }
-
-    func testEncodeUInt8() throws {
-        let uint8Value = UInt8.random(in: UInt8.min...UInt8.max)
-        XCTAssertEqual(
-            try DictionaryEncoder().encode(DummyEncodable(value: uint8Value)) as? [String: UInt8],
-            ["value": uint8Value]
-        )
-    }
-
-    func testEncodeUInt16() throws {
-        let uint16Value = UInt16.random(in: UInt16.min...UInt16.max)
-        XCTAssertEqual(
-            try DictionaryEncoder().encode(DummyEncodable(value: uint16Value)) as? [String: UInt16],
-            ["value": uint16Value]
-        )
-    }
-
-    func testEncodeUInt32() throws {
-        let uint32Value = UInt32.random(in: UInt32.min...UInt32.max)
-        XCTAssertEqual(
-            try DictionaryEncoder().encode(DummyEncodable(value: uint32Value)) as? [String: UInt32],
-            ["value": uint32Value]
-        )
-    }
-
-    func testEncodeUInt64() throws {
-        let uint64Value = UInt64.random(in: UInt64.min...UInt64.max)
-        XCTAssertEqual(
-            try DictionaryEncoder().encode(DummyEncodable(value: uint64Value)) as? [String: UInt64],
-            ["value": uint64Value]
-        )
+        XCTAssertEqual(encoded["string"] as? String, value.string)
+        XCTAssertEqual(encoded["int"] as? Int, value.int)
+        XCTAssertEqual(encoded["int8"] as? Int8, value.int8)
+        XCTAssertEqual(encoded["int16"] as? Int16, value.int16)
+        XCTAssertEqual(encoded["int32"] as? Int32, value.int32)
+        XCTAssertEqual(encoded["int64"] as? Int64, value.int64)
+        XCTAssertEqual(encoded["uint"] as? UInt, value.uint)
+        XCTAssertEqual(encoded["uint8"] as? UInt8, value.uint8)
+        XCTAssertEqual(encoded["uint16"] as? UInt16, value.uint16)
+        XCTAssertEqual(encoded["uint32"] as? UInt32, value.uint32)
+        XCTAssertEqual(encoded["uint64"] as? UInt64, value.uint64)
+        XCTAssertEqual(encoded["float"] as? Float, value.float)
+        XCTAssertEqual(encoded["bool"] as? Bool, value.bool)
+        XCTAssertEqual(encoded["date"] as? Double, value.date?.timeIntervalSinceReferenceDate)
+        XCTAssertEqual(encoded["data"] as? String, value.data?.base64EncodedString())
+        XCTAssertEqual(encoded["url"] as? String, value.url?.absoluteString)
     }
 
     // MARK: Encode Float
 
-    func testEncodeFloat() throws {
-        let floatValue = Float.random(in: 0...100)
+    func testEncodeInfinityFloat() throws {
         XCTAssertEqual(
-            try DictionaryEncoder().encode(DummyEncodable(value: floatValue)) as? [String: Float],
-            ["value": floatValue]
-        )
-
-        XCTAssertEqual(
-            try DictionaryEncoder().encode(DummyEncodable(value: Float.infinity)) as? [String: Float],
+            try DictionaryEncoder().encode(FloatEncodable(value: Float.infinity)) as? [String: Float],
             ["value": Float.infinity]
         )
     }
 
     func testEncodeNaNFloat() throws {
-        let encodedDictionary = try XCTUnwrap(try DictionaryEncoder().encode(DummyEncodable(value: Float.nan)) as? [String: Float])
+        let encodedDictionary = try XCTUnwrap(try DictionaryEncoder().encode(FloatEncodable(value: Float.nan)) as? [String: Float])
         XCTAssertTrue(encodedDictionary["value"]!.isNaN)
     }
 
     // MARK: Encode Double
 
-    func testEncodeDouble() throws {
-        let doubleValue = Double.random(in: 0...100)
+    func testEncodeInfinityDouble() throws {
         XCTAssertEqual(
-            try DictionaryEncoder().encode(DummyEncodable(value: doubleValue)) as? [String: Double],
-            ["value": doubleValue]
-        )
-
-        XCTAssertEqual(
-            try DictionaryEncoder().encode(DummyEncodable(value: Double.infinity)) as? [String: Double],
+            try DictionaryEncoder().encode(DoubleEncodable(value: Double.infinity)) as? [String: Double],
             ["value": Double.infinity]
         )
     }
 
     func testEncodeNaNDouble() throws {
-        let encodedDictionary = try XCTUnwrap(try DictionaryEncoder().encode(DummyEncodable(value: Double.nan)) as? [String: Double])
+        let encodedDictionary = try XCTUnwrap(try DictionaryEncoder().encode(DoubleEncodable(value: Double.nan)) as? [String: Double])
         XCTAssertTrue(encodedDictionary["value"]!.isNaN)
-    }
-
-    // MARK: Encode Others
-
-    func testEncodeString() throws {
-        let stringValue = String.randomAlphanumeric(withLength: 10)
-        XCTAssertEqual(
-            try DictionaryEncoder().encode(DummyEncodable(value: stringValue)) as? [String: String],
-            ["value": stringValue]
-        )
-    }
-
-    func testEncodeData() throws {
-        let data = try XCTUnwrap(String.randomAlphanumeric(withLength: 10).data(using: .utf8))
-        XCTAssertEqual(
-            try DictionaryEncoder().encode(DummyEncodable(value: data)) as? [String: Data],
-            ["value": data]
-        )
-    }
-
-    func testEncodeURL() throws {
-        let url = URL(string: "dummy-mapbox.com")!
-        XCTAssertEqual(
-            try DictionaryEncoder().encode(DummyEncodable(value: url)) as? [String: URL],
-            ["value": url]
-        )
-    }
-
-    func testEncodeDate() throws {
-        let date = Date(timeIntervalSince1970: .random(in: 0...100))
-        XCTAssertEqual(
-            try DictionaryEncoder().encode(DummyEncodable(value: date)) as? [String: Date],
-            ["value": date]
-        )
     }
 
     func testEncodeNilAlways() throws {
         let sut = DictionaryEncoder()
-        sut.userInfo[.shouldEncodeNilValues] = true
+        sut.shouldEncodeNilValues = true
 
-        // String
-        XCTAssertEqual(
-            try sut.encode(DummyNilable(value: "hilla")) as? [String: String?],
-            ["value": "hilla"]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<String>(value: nil)) as? [String: String?],
-            ["value": nil]
-        )
-
-        // Double
-        XCTAssertEqual(
-            try sut.encode(DummyNilable(value: 10.0)) as? [String: Double?],
-            ["value": 10.0]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<Double>(value: nil)) as? [String: Double?],
-            ["value": nil]
+        let value = Everything(
+            string: nil,
+            int: nil, int8: nil, int16: nil, int32: nil, int64: nil,
+            uint: nil, uint8: nil, uint16: nil, uint32: nil, uint64: nil,
+            float: nil, double: nil,
+            bool: nil,
+            date: nil,
+            data: nil,
+            url: nil
         )
 
-        // Float
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<Float>(value: 10.0)) as? [String: Float?],
-            ["value": 10.0]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<Float>(value: nil)) as? [String: Float?],
-            ["value": nil]
-        )
+        let encoded = try sut.encode(value)
+        let allKeys = Everything.Keys.allCases.map(\.stringValue)
 
-        // Int
-        XCTAssertEqual(
-            try sut.encode(DummyNilable(value: 10)) as? [String: Int?],
-            ["value": 10]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<Int>(value: nil)) as? [String: Int?],
-            ["value": nil]
-        )
+        func verify(element: Dictionary<String, Any>.Element) -> Bool {
+            guard allKeys.contains(element.key) else { return false }
 
-        XCTAssertEqual(
-            try sut.encode(DummyNilable(value: Int8(10))) as? [String: Int8?],
-            ["value": 10]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<Int8>(value: nil)) as? [String: Int8?],
-            ["value": nil]
-        )
+            switch element.value {
+            case Optional<Any>.none: return true
+            default: return false
+            }
+        }
 
-        XCTAssertEqual(
-            try sut.encode(DummyNilable(value: Int16(10))) as? [String: Int16?],
-            ["value": 10]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<Int16>(value: nil)) as? [String: Int16?],
-            ["value": nil]
-        )
-
-        XCTAssertEqual(
-            try sut.encode(DummyNilable(value: Int32(10))) as? [String: Int32?],
-            ["value": 10]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<Int32>(value: nil)) as? [String: Int32?],
-            ["value": nil]
-        )
-
-        XCTAssertEqual(
-            try sut.encode(DummyNilable(value: Int64(10))) as? [String: Int64?],
-            ["value": 10]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<Int64>(value: nil)) as? [String: Int64?],
-            ["value": nil]
-        )
-
-        // UInt
-        XCTAssertEqual(
-            try sut.encode(DummyNilable(value: UInt8(10))) as? [String: UInt8?],
-            ["value": 10]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<UInt8>(value: nil)) as? [String: UInt8?],
-            ["value": nil]
-        )
-
-        XCTAssertEqual(
-            try sut.encode(DummyNilable(value: UInt16(10))) as? [String: UInt16?],
-            ["value": 10]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<UInt16>(value: nil)) as? [String: UInt16?],
-            ["value": nil]
-        )
-
-        XCTAssertEqual(
-            try sut.encode(DummyNilable(value: UInt32(10))) as? [String: UInt32?],
-            ["value": 10]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<UInt32>(value: nil)) as? [String: UInt32?],
-            ["value": nil]
-        )
-
-        XCTAssertEqual(
-            try sut.encode(DummyNilable(value: UInt64(10))) as? [String: UInt64?],
-            ["value": 10]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<UInt64>(value: nil)) as? [String: UInt64?],
-            ["value": nil]
-        )
-
-        // Boolean
-        XCTAssertEqual(
-            try sut.encode(DummyNilable(value: false)) as? [String: Bool?],
-            ["value": false]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<Bool>(value: nil)) as? [String: Bool?],
-            ["value": nil]
-        )
+        XCTAssertFalse(encoded.isEmpty)
+        XCTAssertTrue(encoded.allSatisfy(verify(element:)))
     }
 
     func testEncodeNilOnlyIfPresent() throws {
         let sut = DictionaryEncoder()
-        sut.userInfo[.shouldEncodeNilValues] = false
+        sut.shouldEncodeNilValues = false
 
-        // String
-        XCTAssertEqual(
-            try sut.encode(DummyNilable(value: "hilla")) as? [String: String?],
-            ["value": "hilla"]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<String>(value: nil)) as? [String: String?],
-            [:]
-        )
-
-        // Double
-        XCTAssertEqual(
-            try sut.encode(DummyNilable(value: 10.0)) as? [String: Double?],
-            ["value": 10.0]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<Double>(value: nil)) as? [String: Double?],
-            [:]
+        let value = Everything(
+            string: nil,
+            int: nil, int8: nil, int16: nil, int32: nil, int64: nil,
+            uint: nil, uint8: nil, uint16: nil, uint32: nil, uint64: nil,
+            float: nil, double: nil,
+            bool: nil,
+            date: nil,
+            data: nil,
+            url: nil
         )
 
-        // Float
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<Float>(value: 10.0)) as? [String: Float?],
-            ["value": 10.0]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<Float>(value: nil)) as? [String: Float?],
-            [:]
-        )
-
-        // Int
-        XCTAssertEqual(
-            try sut.encode(DummyNilable(value: 10)) as? [String: Int?],
-            ["value": 10]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<Int>(value: nil)) as? [String: Int?],
-            [:]
-        )
-
-        XCTAssertEqual(
-            try sut.encode(DummyNilable(value: Int8(10))) as? [String: Int8?],
-            ["value": 10]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<Int8>(value: nil)) as? [String: Int8?],
-            [:]
-        )
-
-        XCTAssertEqual(
-            try sut.encode(DummyNilable(value: Int16(10))) as? [String: Int16?],
-            ["value": 10]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<Int16>(value: nil)) as? [String: Int16?],
-            [:]
-        )
-
-        XCTAssertEqual(
-            try sut.encode(DummyNilable(value: Int32(10))) as? [String: Int32?],
-            ["value": 10]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<Int32>(value: nil)) as? [String: Int32?],
-            [:]
-        )
-
-        XCTAssertEqual(
-            try sut.encode(DummyNilable(value: Int64(10))) as? [String: Int64?],
-            ["value": 10]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<Int64>(value: nil)) as? [String: Int64?],
-            [:]
-        )
-
-        // UInt
-        XCTAssertEqual(
-            try sut.encode(DummyNilable(value: UInt8(10))) as? [String: UInt8?],
-            ["value": 10]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<UInt8>(value: nil)) as? [String: UInt8?],
-            [:]
-        )
-
-        XCTAssertEqual(
-            try sut.encode(DummyNilable(value: UInt16(10))) as? [String: UInt16?],
-            ["value": 10]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<UInt16>(value: nil)) as? [String: UInt16?],
-            [:]
-        )
-
-        XCTAssertEqual(
-            try sut.encode(DummyNilable(value: UInt32(10))) as? [String: UInt32?],
-            ["value": 10]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<UInt32>(value: nil)) as? [String: UInt32?],
-            [:]
-        )
-
-        XCTAssertEqual(
-            try sut.encode(DummyNilable(value: UInt64(10))) as? [String: UInt64?],
-            ["value": 10]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<UInt64>(value: nil)) as? [String: UInt64?],
-            [:]
-        )
-
-        // Boolean
-        XCTAssertEqual(
-            try sut.encode(DummyNilable(value: false)) as? [String: Bool?],
-            ["value": false]
-        )
-        XCTAssertEqual(
-            try sut.encode(DummyNilable<Bool>(value: nil)) as? [String: Bool?],
-            [:]
-        )
+        let encoded = try sut.encode(value)
+        XCTAssertTrue(encoded.isEmpty)
     }
 }
 
 // MARK: Supported Types.
 
-private struct DummyEncodable<T: Encodable>: Encodable {
-    let value: T
+private struct FloatEncodable: Encodable {
+    let value: Float
 }
 
-private struct DummyNilable<T: Encodable>: Encodable {
-    let value: T?
+private struct DoubleEncodable: Encodable {
+    let value: Double
+}
 
-    enum Keys: String, CodingKey {
-        case value
+private struct Everything: Encodable {
+    let string: String?
+    let int: Int?
+    let int8: Int8?
+    let int16: Int16?
+    let int32: Int32?
+    let int64: Int64?
+    let uint: UInt?
+    let uint8: UInt8?
+    let uint16: UInt16?
+    let uint32: UInt32?
+    let uint64: UInt64?
+    let float: Float?
+    let double: Double?
+    let bool: Bool?
+    let date: Date?
+    let data: Data?
+    let url: URL?
+
+    enum Keys: String, CodingKey, CaseIterable {
+        case string
+        case int, int8, int16, int32, int64
+        case uint, uint8, uint16, uint32, uint64
+        case float, double
+        case bool
+        case date, nsDate
+        case data
+        case url
     }
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: Keys.self)
-        try container.encodeIfPresent(value, forKey: .value)
+
+        try container.encodeIfPresent(string, forKey: .string)
+        try container.encodeIfPresent(int, forKey: .int)
+        try container.encodeIfPresent(int8, forKey: .int8)
+        try container.encodeIfPresent(int16, forKey: .int16)
+        try container.encodeIfPresent(int32, forKey: .int32)
+        try container.encodeIfPresent(int64, forKey: .int64)
+        try container.encodeIfPresent(uint, forKey: .uint)
+        try container.encodeIfPresent(uint8, forKey: .uint8)
+        try container.encodeIfPresent(uint16, forKey: .uint16)
+        try container.encodeIfPresent(uint32, forKey: .uint32)
+        try container.encodeIfPresent(uint64, forKey: .uint64)
+        try container.encodeIfPresent(float, forKey: .float)
+        try container.encodeIfPresent(double, forKey: .double)
+        try container.encodeIfPresent(bool, forKey: .bool)
+        try container.encodeIfPresent(date, forKey: .date)
+        try container.encodeIfPresent(data, forKey: .data)
+        try container.encodeIfPresent(url, forKey: .url)
     }
 }

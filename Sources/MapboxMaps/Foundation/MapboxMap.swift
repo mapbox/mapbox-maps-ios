@@ -491,9 +491,10 @@ public final class MapboxMap: MapboxMapProtocol {
     /// - Parameter coordinates: The coordinate to convert.
     /// - Returns: An array of `CGPoint` relative to the `UIView`.
     public func points(for coordinates: [CLLocationCoordinate2D]) -> [CGPoint] {
+        let bounds = CGRect(origin: .zero, size: size)
         let locations = coordinates.map { CLLocation(latitude: $0.latitude, longitude: $0.longitude) }
         let screenCoords = __map.pixelsForCoordinates(forCoordinates: locations)
-        return screenCoords.map { $0.point }
+        return screenCoords.map { bounds.contains($0.point) ? $0.point : CGPoint(x: -1.0, y: -1.0) }
     }
 
     /// Converts points in the mapView's coordinate system to geographic coordinates.

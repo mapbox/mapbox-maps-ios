@@ -15,6 +15,6 @@ final class DebugViewController: UIViewController {
         super.viewDidLoad()
         mapView = MapView(frame: view.bounds)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(mapView)
+        view.insertSubview(mapView, at: 0)
     }
 }

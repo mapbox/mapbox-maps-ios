@@ -36,10 +36,11 @@ final class ModelLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.modelColorMixIntensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.modelOpacity = Value<Double>.testConstantValue()
             layer.modelOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.modelReceiveShadows = Value<Bool>.testConstantValue()
             layer.modelRotationTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.modelScaleTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.modelTranslationTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.modelType = Value<ModelType>.testConstantValue()
+            layer.modelType = .constant(.common3d)
 
             // Add the layer
             do {

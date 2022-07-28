@@ -142,6 +142,33 @@ class MapboxMapsFoundationTests: XCTestCase {
         XCTAssertEqual(originalPoint.y, point.y, accuracy: CGFloat(accuracy))
     }
 
+    func testCoordinatesToPoints() {
+        let centerCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+
+        let maxPoint = CGPoint(x: mapView.bounds.maxX, y: mapView.bounds.maxY)
+        let boundaryCoordinate = mapView.mapboxMap.coordinate(for: maxPoint)
+
+        let outOfBoundsCoordinate = CLLocationCoordinate2D(
+            latitude: boundaryCoordinate.latitude + 1,
+            longitude: boundaryCoordinate.longitude + 1)
+
+        let convertedPoints = mapView.mapboxMap.points(for: [
+            centerCoordinate,
+            boundaryCoordinate,
+            outOfBoundsCoordinate,
+        ])
+
+        // Center point.
+        XCTAssertEqual(convertedPoints[0].x, mapView.bounds.midX, accuracy: 0.01)
+        XCTAssertEqual(convertedPoints[0].y, mapView.bounds.midY, accuracy: 0.01)
+        // Edges.
+        XCTAssertEqual(convertedPoints[1].x, maxPoint.x, accuracy: 0.01)
+        XCTAssertEqual(convertedPoints[1].y, maxPoint.y, accuracy: 0.01)
+        // Out of bounds.
+        XCTAssertEqual(convertedPoints[2].x, -1.0)
+        XCTAssertEqual(convertedPoints[2].y, -1.0)
+    }
+
     // MARK: Converting between CGRect and coordinate bounds
 
     func testRectExtend() {

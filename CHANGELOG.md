@@ -9,11 +9,11 @@ Mapbox welcomes participation and contributions from everyone.
 * Add the ability to override scale bar units. ([#1473](https://github.com/mapbox/mapbox-maps-ios/pull/1473))
 * Animate padding changes between 2 camera when used with `FlyToCameraAnimator`. ([#1479](https://github.com/mapbox/mapbox-maps-ios/pull/1479))
 * Fix NaN latitude crash rarely happening in `CameraAnimationsManager.fly(to:duration:completion)`. ([#1485](https://github.com/mapbox/mapbox-maps-ios/pull/1485))
+* Limit `MapboxMap.points(for:)` to the bounds of the map view, if the coordinate's point is beyond then return (-1, -1) for its corresponding point.([#1490](https://github.com/mapbox/mapbox-maps-ios/pull/1490))
 
 ## 10.7.0 - July 28, 2022
 
 * Update to MapboxCoreMaps 10.7.0 and MapboxCommon 22.1.0. ([#1492](https://github.com/mapbox/mapbox-maps-ios/pull/1492))
-* Limit `MapboxMap.points(for:)` to the bounds of the map view, if the coordinate's point is beyond then return (-1, -1) for its corresponding point.([#1490](https://github.com/mapbox/mapbox-maps-ios/pull/1490))
 * Remove experimental ModelLayer API. ([#1486](https://github.com/mapbox/mapbox-maps-ios/pull/1486))
 
 ## 10.7.0-rc.1 - July 14, 2022

@@ -489,7 +489,8 @@ public final class MapboxMap: MapboxMapProtocol {
     /// This API isn't supported by Globe projection.
     ///
     /// - Parameter coordinates: The coordinate to convert.
-    /// - Returns: An array of `CGPoint` relative to the `UIView`.
+    /// - Returns: An array of `CGPoint` relative to the `UIView.
+    /// If a coordinate's point is outside of map view's bounds, it will be `(-1, -1)`
     public func points(for coordinates: [CLLocationCoordinate2D]) -> [CGPoint] {
         let bounds = CGRect(origin: .zero, size: size)
         let locations = coordinates.map { CLLocation(latitude: $0.latitude, longitude: $0.longitude) }

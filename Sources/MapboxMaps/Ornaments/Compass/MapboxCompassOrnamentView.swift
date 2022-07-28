@@ -9,6 +9,7 @@ internal class MapboxCompassOrnamentView: UIButton {
     }
 
     internal var containerView = UIImageView()
+    internal var containerViewConstraints = [NSLayoutConstraint]()
     internal var visibility: OrnamentVisibility = .adaptive {
         didSet {
             animateVisibilityUpdate()
@@ -50,18 +51,25 @@ internal class MapboxCompassOrnamentView: UIButton {
                                               value: "Rotates the map to face due north",
                                               comment: "Accessibility hint")
 
-        if let image = createCompassImage() {
-            containerView.image = image
-            NSLayoutConstraint.activate([
-                widthAnchor.constraint(equalToConstant: image.size.width),
-                heightAnchor.constraint(equalToConstant: image.size.height),
-                containerView.widthAnchor.constraint(equalToConstant: image.size.width),
-                containerView.heightAnchor.constraint(equalToConstant: image.size.height)
-            ])
-        }
         containerView.translatesAutoresizingMaskIntoConstraints = false
+        if let image = createCompassImage() {
+            updateImage(image: image)
+        }
         addSubview(containerView)
         addTarget(self, action: #selector(didTap), for: .touchUpInside)
+    }
+
+    func updateImage(image: UIImage?) {
+        guard let image = image else { return }
+        NSLayoutConstraint.deactivate(containerViewConstraints)
+        containerView.image = image
+        containerViewConstraints = [
+            widthAnchor.constraint(equalToConstant: image.size.width),
+            heightAnchor.constraint(equalToConstant: image.size.height),
+            containerView.widthAnchor.constraint(equalToConstant: image.size.width),
+            containerView.heightAnchor.constraint(equalToConstant: image.size.height)
+        ]
+        NSLayoutConstraint.activate(containerViewConstraints)
     }
 
     required internal init?(coder: NSCoder) {

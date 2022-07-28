@@ -130,4 +130,25 @@ internal class FlyToTests: XCTestCase {
             }
         }
     }
+
+    func testFlyToUnprojectLatitudeNaNUseCase() {
+        // given
+        let source = CameraState(
+            center: .init(latitude: 48.19267299999896, longitude: 11.57336700000414),
+            padding: .zero,
+            zoom: 19,
+            bearing: 0,
+            pitch: 0
+        )
+        let dest = CameraOptions(center: .init(latitude: 48.192673, longitude: 11.573367), zoom: 16.5)
+        let flyTo = FlyToInterpolator(
+            from: source,
+            to: dest,
+            cameraBounds: .default,
+            size: CGSize(width: 1920, height: 960)
+        )
+
+        // then
+        XCTAssertNoThrow(flyTo.coordinate(at: 0))
+    }
 }

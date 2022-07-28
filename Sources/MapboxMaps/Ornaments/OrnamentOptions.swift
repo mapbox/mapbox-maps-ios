@@ -55,12 +55,14 @@ public struct ScaleBarViewOptions: OrnamentOptionsProtocol, Equatable {
     public var useMetricUnits: Bool = Locale.current.usesMetricSystem
 }
 
-/// Used to configure position, margin, and visibility for the map's compass view.
+/// Used to configure position, margin, image and visibility for the map's compass view.
 public struct CompassViewOptions: OrnamentOptionsProtocol, Equatable {
     /// The default value for this property is `.topRight`.
     public var position: OrnamentPosition = .topRight
     /// The default value for this property is `CGPoint(x: 8.0, y: 8.0)`.
     public var margins: CGPoint = defaultOrnamentsMargin
+    /// The default value for this property is nil, default compass image will be drawn.
+    public var image: UIImage?
     /// The default value for this property is `.adaptive`.
     public var visibility: OrnamentVisibility = .adaptive
 }

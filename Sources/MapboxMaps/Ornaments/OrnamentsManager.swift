@@ -162,6 +162,9 @@ public class OrnamentsManager: NSObject {
                                                        margins: options.attributionButton.margins)
         constraints.append(contentsOf: attributionButtonConstraints)
 
+        // Update the image of compass
+        _compassView.updateImage(image: options.compass.image)
+
         // Activate new constraints
         NSLayoutConstraint.activate(constraints)
 

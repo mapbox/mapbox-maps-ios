@@ -7,6 +7,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Expand scale bar range up to 15000 km/10000 miles. ([#1455](https://github.com/mapbox/mapbox-maps-ios/pull/1455))
 * Add the ability to override scale bar units. ([#1473](https://github.com/mapbox/mapbox-maps-ios/pull/1473))
 * Animate padding changes between 2 camera when used with `FlyToCameraAnimator`. ([#1479](https://github.com/mapbox/mapbox-maps-ios/pull/1479))
+* Fix NaN latitude crash rarely happening in `CameraAnimationsManager.fly(to:duration:completion)`. ([#1485](https://github.com/mapbox/mapbox-maps-ios/pull/1485))
 
 ## 10.7.0-rc.1 - July 14, 2022
 

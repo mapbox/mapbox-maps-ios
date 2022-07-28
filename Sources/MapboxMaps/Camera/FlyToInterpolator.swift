@@ -152,14 +152,11 @@ internal struct FlyToInterpolator {
         }
 
         // r₀: Zoom-out factor during ascent.
-        let r0 = (u1 != 0.0) ? r(0) : .greatestFiniteMagnitude
-        let r1 = (u1 != 0.0) ? r(1) : .greatestFiniteMagnitude
+        let r0 = (u1 != 0.0) ? r(0) : .infinity
+        let r1 = (u1 != 0.0) ? r(1) : .infinity
 
         // When u₀ = u₁, the optimal path doesn’t require both ascent and descent.
-        let isClose =
-            (fabs(u1) < 0.000001) ||
-            (r0 == .greatestFiniteMagnitude) ||
-            (r1 == .greatestFiniteMagnitude)
+        let isClose = (fabs(u1) < 0.000001) || r0.isInfinite || r1.isInfinite
 
         /** w(s): Returns the visible span on the ground, measured in pixels with respect to the initial scale.
          * Assumes an angular field of view of 2 arctan ½ ≈ 53°.

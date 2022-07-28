@@ -93,10 +93,7 @@ struct Examples {
                 type: BuildingExtrusionsExample.self),
         Example(title: "Add a sky layer",
                 description: "Add a customizable sky layer to simulate natural lighting with a Terrain layer.",
-                type: SkyLayerExample.self),
-        Example(title: "Display a 3D model in a model layer",
-                description: "Showcase the usage of a 3D model layer.",
-                type: ModelLayerExample.self)
+                type: SkyLayerExample.self)
     ]
 
     // Examples that focus on annotations.

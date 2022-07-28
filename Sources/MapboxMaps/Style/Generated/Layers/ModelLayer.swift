@@ -1,8 +1,18 @@
 // This file is generated.
 import Foundation
 
+/// Defines rendering behavior of model in respect to other 3D scene objects.
+internal enum ModelType: String, Codable, CaseIterable {
+
+    /// Integrated to 3D scene, using depth testing, along with terrain, fill-extrusions and custom layer.
+    case common3d = "common-3d"
+
+    /// Displayed over other 3D content, occluded by terrain.
+    case locationIndicator = "location-indicator"
+}
+
 /// A layer to render 3D Models.
-@_spi(Experimental) public struct ModelLayer: Layer {
+internal struct ModelLayer: Layer {
 
     // MARK: - Conformance to `Layer` protocol
     public var id: String
@@ -19,7 +29,7 @@ import Foundation
     /// Model to render.
     public var modelId: Value<String>?
 
-    /// Enable/Disable shadow casting for this layer
+    /// 
     public var modelCastShadows: Value<Bool>?
 
     /// The tint color of the model layer. model-color-mix-intensity (defaults to 0) defines tint(mix) intensity - this means that, this color is not used unless model-color-mix-intensity gets value greater than 0.
@@ -39,6 +49,9 @@ import Foundation
 
     /// Transition options for `modelOpacity`.
     public var modelOpacityTransition: StyleTransition?
+
+    /// 
+    public var modelReceiveShadows: Value<Bool>?
 
     /// The rotation of the model in euler angles [lon, lat, z].
     public var modelRotation: Value<[Double]>?
@@ -85,6 +98,7 @@ import Foundation
         try paintContainer.encodeIfPresent(modelColorMixIntensityTransition, forKey: .modelColorMixIntensityTransition)
         try paintContainer.encodeIfPresent(modelOpacity, forKey: .modelOpacity)
         try paintContainer.encodeIfPresent(modelOpacityTransition, forKey: .modelOpacityTransition)
+        try paintContainer.encodeIfPresent(modelReceiveShadows, forKey: .modelReceiveShadows)
         try paintContainer.encodeIfPresent(modelRotation, forKey: .modelRotation)
         try paintContainer.encodeIfPresent(modelRotationTransition, forKey: .modelRotationTransition)
         try paintContainer.encodeIfPresent(modelScale, forKey: .modelScale)
@@ -101,7 +115,7 @@ import Foundation
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: RootCodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
-        type = try container.decode(LayerType.self, forKey: .type)
+        type = .model
         filter = try container.decodeIfPresent(Expression.self, forKey: .filter)
         source = try container.decodeIfPresent(String.self, forKey: .source)
         sourceLayer = try container.decodeIfPresent(String.self, forKey: .sourceLayer)
@@ -116,6 +130,7 @@ import Foundation
             modelColorMixIntensityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelColorMixIntensityTransition)
             modelOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .modelOpacity)
             modelOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelOpacityTransition)
+            modelReceiveShadows = try paintContainer.decodeIfPresent(Value<Bool>.self, forKey: .modelReceiveShadows)
             modelRotation = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .modelRotation)
             modelRotationTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelRotationTransition)
             modelScale = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .modelScale)
@@ -156,6 +171,7 @@ import Foundation
         case modelColorMixIntensityTransition = "model-color-mix-intensity-transition"
         case modelOpacity = "model-opacity"
         case modelOpacityTransition = "model-opacity-transition"
+        case modelReceiveShadows = "model-receive-shadows"
         case modelRotation = "model-rotation"
         case modelRotationTransition = "model-rotation-transition"
         case modelScale = "model-scale"

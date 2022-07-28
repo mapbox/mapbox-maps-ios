@@ -89,13 +89,14 @@ final class ModelLayerTests: XCTestCase {
        layer.modelColorMixIntensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.modelOpacity = Value<Double>.testConstantValue()
        layer.modelOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.modelReceiveShadows = Value<Bool>.testConstantValue()
        layer.modelRotation = Value<[Double]>.testConstantValue()
        layer.modelRotationTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.modelScale = Value<[Double]>.testConstantValue()
        layer.modelScaleTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.modelTranslation = Value<[Double]>.testConstantValue()
        layer.modelTranslationTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.modelType = Value<ModelType>.testConstantValue()
+       layer.modelType = .constant(.common3d)
 
        var data: Data?
        do {
@@ -116,10 +117,11 @@ final class ModelLayerTests: XCTestCase {
            XCTAssert(layer.modelColor == Value<StyleColor>.testConstantValue())
            XCTAssert(layer.modelColorMixIntensity == Value<Double>.testConstantValue())
            XCTAssert(layer.modelOpacity == Value<Double>.testConstantValue())
+           XCTAssert(layer.modelReceiveShadows == Value<Bool>.testConstantValue())
            XCTAssert(layer.modelRotation == Value<[Double]>.testConstantValue())
            XCTAssert(layer.modelScale == Value<[Double]>.testConstantValue())
            XCTAssert(layer.modelTranslation == Value<[Double]>.testConstantValue())
-           XCTAssert(layer.modelType == Value<ModelType>.testConstantValue())
+           XCTAssert(layer.modelType == .constant(.common3d))
        } catch {
            XCTFail("Failed to decode ModelLayer")
        }

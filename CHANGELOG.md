@@ -7,6 +7,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Expand scale bar range up to 15000 km/10000 miles. ([#1455](https://github.com/mapbox/mapbox-maps-ios/pull/1455))
 * Add the ability to override scale bar units. ([#1473](https://github.com/mapbox/mapbox-maps-ios/pull/1473))
 * Animate padding changes between 2 camera when used with `FlyToCameraAnimator`. ([#1479](https://github.com/mapbox/mapbox-maps-ios/pull/1479))
+* Remove experimental ModelLayer API. ([#1486](https://github.com/mapbox/mapbox-maps-ios/pull/1486))
 
 ## 10.7.0-rc.1 - July 14, 2022
 
@@ -40,6 +41,10 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Update to MapboxCoreMaps 10.6.0-rc.1 and MapboxCommon 22.0.0-rc.2. ([#1368](https://github.com/mapbox/mapbox-maps-ios/pull/1368))
 * Add mercator scale factor to 3D puck, so that the 3D puck size won't increase as latitude increases. ([#1347](https://github.com/mapbox/mapbox-maps-ios/pull/1347))
+
+## 10.6.0-beta.2 - May 25, 2022
+
+* Introduce ModelLayer experimental API to render 3D models on the map. ([#1348](https://github.com/mapbox/mapbox-maps-ios/pull/1348))
 
 ## 10.6.0-beta.1 - May 20, 2022
 

@@ -99,10 +99,6 @@ public struct Puck3DConfiguration: Equatable {
     /// The rotation of the model in euler angles [lon, lat, z].
     public var modelRotation: Value<[Double]>?
 
-    @_spi(Experimental) public var modelCastShadows: Value<Bool>?
-
-    @_spi(Experimental) public var modelReceiveShadows: Value<Bool>?
-
     /// Initialize a `Puck3DConfiguration` with a model, scale and rotation.
     /// - Parameters:
     ///   - model: The `gltf` model to use for the puck.
@@ -112,23 +108,6 @@ public struct Puck3DConfiguration: Equatable {
         self.model = model
         self.modelScale = modelScale
         self.modelRotation = modelRotation
-    }
-
-    /// Initialize a `Puck3DConfiguration` with a model, scale, rotation and an parameter to control shadow casting.
-    /// - Parameters:
-    ///   - model: The `gltf` model to use for the puck.
-    ///   - modelScale: The amount to scale the model by.
-    ///   - modelRotation: The rotation of the model in euler angles `[lon, lat, z]`.
-    @_spi(Experimental) public init(model: Model,
-                                    modelScale: Value<[Double]>? = nil,
-                                    modelRotation: Value<[Double]>? = nil,
-                                    modelCastShadows: Value<Bool>? = nil,
-                                    modelReceiveShadows: Value<Bool>? = nil) {
-        self.model = model
-        self.modelScale = modelScale
-        self.modelRotation = modelRotation
-        self.modelCastShadows = modelCastShadows
-        self.modelReceiveShadows = modelReceiveShadows
     }
 }
 

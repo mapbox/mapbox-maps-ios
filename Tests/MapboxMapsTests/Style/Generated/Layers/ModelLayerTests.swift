@@ -96,7 +96,7 @@ final class ModelLayerTests: XCTestCase {
        layer.modelScaleTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.modelTranslation = Value<[Double]>.testConstantValue()
        layer.modelTranslationTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.modelType = Value<ModelType>.testConstantValue()
+       layer.modelType = .constant(.common3d)
 
        var data: Data?
        do {
@@ -121,7 +121,7 @@ final class ModelLayerTests: XCTestCase {
            XCTAssert(layer.modelRotation == Value<[Double]>.testConstantValue())
            XCTAssert(layer.modelScale == Value<[Double]>.testConstantValue())
            XCTAssert(layer.modelTranslation == Value<[Double]>.testConstantValue())
-           XCTAssert(layer.modelType == Value<ModelType>.testConstantValue())
+           XCTAssert(layer.modelType == .constant(.common3d))
        } catch {
            XCTFail("Failed to decode ModelLayer")
        }

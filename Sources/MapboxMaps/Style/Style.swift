@@ -422,7 +422,7 @@ public final class Style: StyleProtocol {
     public var allLayerIdentifiers: [LayerInfo] {
         return _styleManager.getStyleLayers().compactMap { info in
             guard let layerType = LayerType(rawValue: info.type) else {
-                assertionFailure("Failed to create LayerType from \(info.type)")
+//                assertionFailure("Failed to create LayerType from \(info.type)")
                 return nil
             }
             return LayerInfo(id: info.id, type: layerType)

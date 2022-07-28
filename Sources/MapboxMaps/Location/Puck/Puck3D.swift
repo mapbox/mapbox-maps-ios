@@ -104,8 +104,6 @@ internal final class Puck3D: Puck {
             modelLayer.modelScale = modelScale
             modelLayer.modelType = .constant(.locationIndicator)
             modelLayer.modelRotation = configuration.modelRotation
-            modelLayer.modelCastShadows = configuration.modelCastShadows
-            modelLayer.modelReceiveShadows = configuration.modelReceiveShadows
             try! style.addPersistentLayer(modelLayer, layerPosition: nil)
         } else if needsUpdateModelScale {
             try? style.setLayerProperty(

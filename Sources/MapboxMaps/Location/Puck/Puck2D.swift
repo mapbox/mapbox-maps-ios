@@ -100,6 +100,7 @@ internal final class Puck2D: Puck {
                 let color = pulsing.color.withAlphaComponent(progress <= 0.1 ? 0 : alpha)
                 let properties: [LocationIndicatorLayer.PaintCodingKeys: Any] = [
                     .accuracyRadiusColor: StyleColor(color).rgbaString,
+                    .accuracyRadiusBorderColor: "rgba(0, 0, 0, 0)",
                     .accuracyRadius: radius
                 ]
 

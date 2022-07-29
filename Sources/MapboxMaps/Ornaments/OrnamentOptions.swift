@@ -4,13 +4,13 @@ private let defaultOrnamentsMargin = CGPoint(x: 8.0, y: 8.0)
 
 /// Used to configure Ornament-specific capabilities of the map
 ///
-/// All margin values are relative to the MapView's safe area. To allow the safe area
+/// All margin values are relative to the ``MapView``'s safe area. To allow the safe area
 /// (and thereby ornaments) to track the presence of navigation bars and tab bars,
 /// make MapView the root view of a view controller.
 public struct OrnamentOptions: Equatable {
 
     // MARK: - Scale Bar
-    /// The ornament options for the map's scale bar..
+    /// The ornament options for the map's scale bar.
     public var scaleBar = ScaleBarViewOptions()
 
     // MARK: - Compass
@@ -55,7 +55,7 @@ public struct ScaleBarViewOptions: OrnamentOptionsProtocol, Equatable {
     public var useMetricUnits: Bool = Locale.current.usesMetricSystem
 }
 
-/// Used to configure position, margin, image and visibility for the map's compass view.
+/// Used to configure position, margin, image, and visibility for the map's compass view.
 public struct CompassViewOptions: OrnamentOptionsProtocol, Equatable {
     /// The default value for this property is `.topRight`.
     public var position: OrnamentPosition = .topRight

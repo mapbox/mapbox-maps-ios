@@ -14,8 +14,8 @@ extension TileRegionLoadOptions {
     ///   - averageBytesPerSecond: Limits the download speed of the tile region.
     ///
     /// `averageBytesPerSecond` is not a strict bandwidth limit, but only
-    /// limits the average download speed. tile regions may be temporarily
-    /// downloaded with higher speed, then pause downloading until the rolling
+    /// limits the average download speed. Tile regions may be temporarily
+    /// downloaded with higher speed, then downloading will pause until the rolling
     /// average has dropped below this value.
     ///
     /// If `metadata` is not a valid JSON object, then this initializer returns
@@ -50,8 +50,8 @@ extension TileRegionLoadOptions {
     /// Limits the download speed of the tile region.
     ///
     /// Note that this is not a strict bandwidth limit, but only limits the
-    /// average download speed. tile regions may be temporarily downloaded with
-    /// higher speed, then pause downloading until the rolling average has
+    /// average download speed. Tile regions may be temporarily downloaded with
+    /// higher speed, then downloading will pause until the rolling average has
     /// dropped below this value.
     ///
     /// If unspecified, the download speed will not be restricted.

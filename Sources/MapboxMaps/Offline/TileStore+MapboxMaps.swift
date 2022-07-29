@@ -3,7 +3,7 @@ import Foundation
 
 extension TileStore {
 
-    /// Returns a shared TileStore instance at the default location. Creates a
+    /// Returns a shared `TileStore` instance at the default location. Creates a
     /// new one if one doesn't yet exist.
     ///
     /// - See Also:
@@ -12,7 +12,7 @@ extension TileStore {
         return TileStore.__create()
     }
 
-    /// Gets a TileStore instance for the given storage path. Creates a new one
+    /// Gets a `TileStore` instance for the given storage path. Creates a new one
     /// if one doesn't exist.
     ///
     /// If the given path is empty, the tile store at the default location is
@@ -44,21 +44,21 @@ extension TileStore {
     ///
     /// Creating of a new region requires providing both geometry and tileset
     /// descriptors to the given load options, otherwise the load request fails
-    /// with RegionNotFound error.
+    /// with `RegionNotFound` error.
     ///
     /// If a tile region with the given id already exists, it gets updated with
     /// the values provided to the given load options. The missing resources get
     /// loaded and the expired resources get updated.
     ///
-    /// If there no values provided to the given load options, the existing tile
+    /// If there are no values provided to the given load options, the existing tile
     /// region gets refreshed: the missing resources get loaded and the expired
     /// resources get updated.
     ///
-    /// A failed load request can be reattempted with another loadTileRegion() call.
+    /// A failed load request can be reattempted with another `loadTileRegion()` call.
     ///
     /// If there is already a pending loading operation for the tile region with
     /// the given id, the pending loading operation will fail with an error of
-    /// Canceled type.
+    /// `Canceled` type.
     ///
     /// - Note:
     ///     The user-provided callbacks will be executed on a

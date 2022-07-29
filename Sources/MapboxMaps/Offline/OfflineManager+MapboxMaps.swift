@@ -22,7 +22,7 @@ extension OfflineManager {
     ///         `StylePackError`.
     /// - Returns: Returns a Cancelable object to cancel the load request
     ///
-    /// If a style package with the given id already exists, its updated with
+    /// If a style package with the given id already exists, it is updated with
     /// the values provided to the given load options. The missing resources get
     /// loaded and the expired resources get updated.
     ///
@@ -30,7 +30,7 @@ extension OfflineManager {
     /// style package gets refreshed: the missing resources get loaded and the
     /// expired resources get updated.
     ///
-    /// A failed load request can be reattempted with another loadStylePack() call.
+    /// A failed load request can be reattempted with another `loadStylePack()` call.
     ///
     /// If the style cannot be fetched for any reason, the load request is terminated.
     /// If the style is fetched but loading some of the style package resources

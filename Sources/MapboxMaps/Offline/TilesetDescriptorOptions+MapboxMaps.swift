@@ -15,7 +15,7 @@ extension TilesetDescriptorOptions {
     ///
     /// - Note: The implementation loads and stores the loaded tiles in batches,
     ///     each batch has a pre-defined zoom range and it contains all child
-    ///     tiles within the range. TThe zoom leveling scheme for the tile batches
+    ///     tiles within the range. The zoom leveling scheme for the tile batches
     ///     can be defined in Tile JSON, otherwise the default scheme is used:
     ///
     /// * Global coverage: 0 - 5
@@ -28,12 +28,12 @@ extension TilesetDescriptorOptions {
     /// it is highly recommended to choose the minZoom and maxZoom values
     /// in accordance with the tile batches zoom ranges (see the list above).
     ///
-    /// - Note: If a `stylePackOptions` is provided, OfflineManager will create a
+    /// - Note: If a `stylePackOptions` is provided, `OfflineManager` will create a
     ///     style package while resolving the corresponding tileset descriptor
     ///     and load all the resources as defined in the provided style package
-    ///     options, i.e. resolving the corresponding tileset descriptor
-    ///     will be equivalent to calling the loadStylePack() method of
-    ///     OfflineManager.
+    ///     options. i.e. resolving the corresponding tileset descriptor
+    ///     will be equivalent to calling the `loadStylePack()` method of
+    ///     `OfflineManager`.
     ///
     ///     If not provided, resolving of the corresponding tileset descriptor
     ///     will not cause creating of a new style package but the loaded

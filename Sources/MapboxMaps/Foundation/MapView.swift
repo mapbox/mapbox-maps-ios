@@ -411,8 +411,7 @@ open class MapView: UIView {
         location = dependencyProvider.makeLocationManager(
             locationProducer: locationProducer,
             interpolatedLocationProducer: interpolatedLocationProducer,
-            style: mapboxMap.style,
-            displayLinkCoordinator: self)
+            style: mapboxMap.style)
 
         // Initialize/Configure annotations orchestrator
         annotations = AnnotationOrchestrator(

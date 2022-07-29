@@ -19,8 +19,7 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
                                           displayLinkCoordinator: DisplayLinkCoordinator) -> InterpolatedLocationProducerProtocol
     func makeLocationManager(locationProducer: LocationProducerProtocol,
                              interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
-                             style: StyleProtocol,
-                             displayLinkCoordinator: DisplayLinkCoordinator) -> LocationManager
+                             style: StyleProtocol) -> LocationManager
     func makeViewportImpl(mapboxMap: MapboxMapProtocol,
                           cameraAnimationsManager: CameraAnimationsManagerProtocol,
                           anyTouchGestureRecognizer: UIGestureRecognizer,
@@ -245,9 +244,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
 
     internal func makeLocationManager(locationProducer: LocationProducerProtocol,
                                       interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
-                                      style: StyleProtocol,
-                                      displayLinkCoordinator: DisplayLinkCoordinator) -> LocationManager {
-#warning("Make 2D puck respect is pulsing enabled config by subscribing/unsubscribing from display link updates")
+                                      style: StyleProtocol) -> LocationManager {
         let puckManager = PuckManager(
             puck2DProvider: { configuration in
                 Puck2D(
@@ -261,7 +258,6 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                     style: style,
                     interpolatedLocationProducer: interpolatedLocationProducer)
             })
-        displayLinkCoordinator.add(puckManager)
         return LocationManager(
             locationProducer: locationProducer,
             interpolatedLocationProducer: interpolatedLocationProducer,

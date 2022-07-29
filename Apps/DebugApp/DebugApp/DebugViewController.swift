@@ -19,18 +19,10 @@ final class DebugViewController: UIViewController {
 
         var puckConfig = Puck2DConfiguration.makeDefault(showBearing: true)
         puckConfig.pulsing = .default
-        puckConfig.pulsing.radius = .accuracy
+        puckConfig.pulsing?.radius = .accuracy
         mapView.location.options.puckType = .puck2D(puckConfig)
         mapView.location.addLocationConsumer(newConsumer: self)
-    }
-
-    func deviceSelected(deviceName: String) {
-
-        let view = deviceViewMap[deviceName]
-
-        var newOptions = ViewAnnotationOptions()
-        newOptions.height = 100
-        mapView.viewAnnotations.update(myView, options: newOptions)
+        mapView.cameraState
     }
 }
 

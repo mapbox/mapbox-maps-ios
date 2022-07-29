@@ -41,9 +41,8 @@ public struct Puck2DConfiguration: Equatable {
     /// The size of the images, as a scale factor applied to the size of the specified image.
     public var scale: Value<Double>?
 
-    // Pulsing Whether the location puck is pulsing on the map. Works for 2D location puck only
-    #warning("Alternative name: accuracySonar/accuracyRadar")
-    public var pulsing: Pulsing = .default
+    // Whether the location puck is pulsing on the map.
+    public var pulsing: Pulsing?
 
     /// Flag determining if the horizontal accuracy ring should be shown arround the `Puck`. default value is false
     public var showsAccuracyRing: Bool

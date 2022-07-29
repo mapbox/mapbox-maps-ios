@@ -163,9 +163,3 @@ internal final class Puck3D: Puck {
         }
     }
 }
-
-extension Puck3D: DisplayLinkParticipant {
-    func participate() {
-        
-    }
-}

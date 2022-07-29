@@ -177,23 +177,33 @@ public class OrnamentsManager: NSObject {
     }
 
     private func constraints(with view: UIView, position: OrnamentPosition, margins: CGPoint) -> [NSLayoutConstraint] {
+        // handle AutoLayout changes when device character direction changes
+        let currentDeviceLanguage: String! = Locale.current.languageCode
+        let rightToLeft = Locale.LanguageDirection.rightToLeft
+
+        if Locale.characterDirection(forLanguage: currentDeviceLanguage) == rightToLeft {
+            UIView.appearance().semanticContentAttribute = .forceRightToLeft
+            //0 is on the left side
+            _scaleBarView.semanticContentAttribute = .spatial
+        }
+
         let layoutGuide = view.superview!.safeAreaLayoutGuide
         switch position {
         case .topLeft:
             return [
-                view.leftAnchor.constraint(equalTo: layoutGuide.leftAnchor, constant: margins.x),
+                view.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: margins.x),
                 view.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: margins.y)]
         case .topRight:
             return  [
-                view.rightAnchor.constraint(equalTo: layoutGuide.rightAnchor, constant: -margins.x),
+                view.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -margins.x),
                 view.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: margins.y)]
         case .bottomLeft:
             return [
-                view.leftAnchor.constraint(equalTo: layoutGuide.leftAnchor, constant: margins.x),
+                view.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: margins.x),
                 view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y)]
         case .bottomRight:
             return [
-                view.rightAnchor.constraint(equalTo: layoutGuide.rightAnchor, constant: -margins.x),
+                view.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -margins.x),
                 view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y)]
         }
     }

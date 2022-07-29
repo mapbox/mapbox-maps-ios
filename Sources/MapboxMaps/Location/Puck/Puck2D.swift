@@ -88,22 +88,18 @@ internal final class Puck2D: Puck {
         if let pulsing = configuration.pulsing {
             pulsingAnimator.addAnimations { [weak self] progress in
                 guard let self = self else { return }
-                let baseRadius: Double
-                switch pulsing.radius {
-                case .constant(let value):
-                    baseRadius = value
-                case .accuracy:
-                    baseRadius = self.latestLocation?.horizontalAccuracy ?? 30
-                }
+
+                let baseRadius = pulsing.radius.radius(for: self.latestLocation?.horizontalAccuracy) ?? 0
                 let radius = baseRadius * progress
                 let alpha = 1 - progress
                 let color = pulsing.color.withAlphaComponent(progress <= 0.1 ? 0 : alpha)
-                let properties: [LocationIndicatorLayer.PaintCodingKeys: Any] = [
-                    .accuracyRadiusColor: StyleColor(color).rgbaString,
-                    .accuracyRadiusBorderColor: "rgba(0, 0, 0, 0)",
-                    .accuracyRadius: radius
+                var properties: [LocationIndicatorLayer.PaintCodingKeys: Any] = [
+                    pulsing.radius.circleRadiusKey: radius,
+                    pulsing.radius.circleColorKey: StyleColor(color).rgbaString,
                 ]
-
+                if pulsing.radius == .accuracy {
+                    properties[.accuracyRadiusBorderColor] = "rgba(0, 0, 0, 0)"
+                }
                 try! style.setLayerProperties(for: Self.layerID, properties: properties.mapKeys(\.rawValue))
             }
         }
@@ -271,10 +267,6 @@ internal final class Puck2D: Puck {
 
         try! style.setLayerProperties(for: Self.layerID, properties: layerProperties)
     }
-
-    private let emphasisCirclePulseDuration: CFTimeInterval = 3
-    private var emphasisCirclePulseStartTimestamp: CFTimeInterval?
-    private let interpolationCurve = UnitBezier(p1: .zero, p2: CGPoint(x: 0.25, y: 1))
 }
 
 private extension Puck2DConfiguration {
@@ -288,5 +280,34 @@ private extension Puck2DConfiguration {
 
     var resolvedScale: Value<Double> {
         scale ?? .constant(1.0)
+    }
+}
+
+private extension Puck2DConfiguration.Pulsing.Radius {
+    var circleRadiusKey: LocationIndicatorLayer.PaintCodingKeys {
+        switch self {
+        case .constant:
+            return .emphasisCircleRadius
+        case .accuracy:
+            return .accuracyRadius
+        }
+    }
+
+    var circleColorKey: LocationIndicatorLayer.PaintCodingKeys {
+        switch self {
+        case .constant:
+            return .emphasisCircleColor
+        case .accuracy:
+            return .accuracyRadiusColor
+        }
+    }
+
+    func radius(for accuracy: CLLocationAccuracy?) -> Double? {
+        switch self {
+        case .constant(let radius):
+            return radius
+        case .accuracy:
+            return accuracy
+        }
     }
 }

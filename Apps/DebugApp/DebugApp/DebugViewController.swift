@@ -19,10 +19,9 @@ final class DebugViewController: UIViewController {
 
         var puckConfig = Puck2DConfiguration.makeDefault(showBearing: true)
         puckConfig.pulsing = .default
-        puckConfig.pulsing?.radius = .accuracy
+        puckConfig.pulsing?.radius = .constant(30)
         mapView.location.options.puckType = .puck2D(puckConfig)
         mapView.location.addLocationConsumer(newConsumer: self)
-        mapView.cameraState
     }
 }
 

@@ -2,216 +2,6 @@
 import CoreGraphics
 import UIKit
 
-internal final class MapAnimatorImpl {
-    private enum InternalState: Equatable {
-        case initial
-        case running(CFTimeInterval)
-        case paused(CFTimeInterval)
-        case final(UIViewAnimatingPosition)
-    }
-
-    /// The animator's owner.
-    internal let owner: AnimationOwner
-
-    private let mainQueue: MainQueueProtocol
-
-    /// Represents the animation that this animator is attempting to execute
-    private var animations: [(Double) -> Void] = []
-
-    private var completions = [AnimationCompletion]()
-
-    private var internalState = InternalState.initial {
-        didSet {
-            switch (oldValue, internalState) {
-            case (.initial, .running), (.paused, .running):
-//                delegate?.basicCameraAnimatorDidStartRunning(self)
-                break
-            case (.running, .paused), (.running, .final):
-//                delegate?.basicCameraAnimatorDidStopRunning(self)
-                break
-            default:
-                // this matches cases where…
-                // * oldValue and internalState are the same
-                // * initial transitions to paused
-                // * paused transitions to final
-                // * initial transitions to final
-                // * the transition is invalid…
-                //     * running/paused/final --> initial
-                //     * final --> running/paused
-                break
-            }
-        }
-    }
-
-    private let interpolationCurve = UnitBezier(p1: .zero, p2: CGPoint(x: 0.25, y: 1))
-
-    public var duration: TimeInterval
-    /// Boolean that represents if the animation is running or not.
-    internal var isRunning: Bool = false
-
-    /// Boolean that represents if the animation is running normally or in reverse.
-    internal var isReversed: Bool = false
-
-    /// A Boolean value that indicates whether a completed animation remains in the active state.
-    internal var pausesOnCompletion: Bool = false
-
-    /// Value that represents what percentage of the animation has been completed.
-    internal var fractionComplete: Double = 0
-
-    public var repeatCount: Double = 0
-    public var autoreverses: Bool = false
-
-    // MARK: Initializer
-    internal init(duration: TimeInterval, owner: AnimationOwner = .unspecified, mainQueue: MainQueueProtocol = MainQueue()) {
-        self.duration = duration
-        self.owner = owner
-        self.mainQueue = mainQueue
-    }
-
-    /// See ``BasicCameraAnimator/startAnimation()``
-    internal func startAnimation() {
-        switch internalState {
-        case .initial:
-            internalState = .running(CACurrentMediaTime())
-        case .running:
-            // already running; do nothing
-            break
-        case let .paused(startTime):
-            internalState = .running(startTime)
-        case .final:
-            // animators cannot be restarted
-            break
-        }
-    }
-
-    /// See ``BasicCameraAnimator/startAnimation(afterDelay:)``
-    internal func startAnimation(afterDelay delay: TimeInterval) {
-        switch internalState {
-        case .initial:
-            internalState = .running(CACurrentMediaTime() + delay)
-        case .running:
-            // already running; do nothing
-            break
-        case .paused:
-            fatalError("A paused animator cannot be started with a delay.")
-        case .final:
-            // animators cannot be restarted
-            break
-        }
-    }
-
-    /// See ``BasicCameraAnimator/pauseAnimation()``
-    internal func pauseAnimation() {
-        switch internalState {
-        case .initial:
-            internalState = .paused(CACurrentMediaTime())
-        case let .running(startTime):
-            internalState = .paused(startTime)
-        case .paused:
-            // already paused; do nothing
-            break
-        case .final:
-            // already completed; do nothing
-            break
-        }
-    }
-
-    /// Stops the animation.
-    internal func stopAnimation() {
-        switch internalState {
-        case .initial:
-            internalState = .final(.current)
-            for completion in completions {
-                completion(.current)
-            }
-
-            completions.removeAll()
-        case .running, .paused:
-            internalState = .final(.current)
-            completions.forEach { $0(.current) }
-        case .final:
-            // Already stopped, so do nothing
-            break
-        }
-    }
-
-    /// Add animations block to the animator.
-    internal func addAnimations(_ animation: @escaping (Double) -> Void) {
-        animations.append(animation)
-    }
-
-    /// Add a completion block to the animator.
-    internal func addCompletion(_ completion: @escaping AnimationCompletion) {
-        switch internalState {
-        case .initial, .running, .paused:
-            completions.append(completion)
-        case .final(let position):
-            mainQueue.async {
-                completion(position)
-            }
-        }
-    }
-
-    private func completeOrPause() {
-        switch internalState {
-        case .initial:
-            break
-        case .running(let startTime):
-            if pausesOnCompletion {
-                internalState = .paused(startTime)
-            } else {
-                internalState = .final(.end)
-                completions.forEach { $0(.end) }
-            }
-        case .paused:
-            if !pausesOnCompletion {
-                internalState = .final(.end)
-                completions.forEach { $0(.end) }
-            }
-        case .final:
-            break
-        }
-    }
-
-    internal func update() {
-        switch internalState {
-        case .initial, .paused, .final:
-            return
-        case let .running(startTimestamp):
-            let now = CACurrentMediaTime()
-            guard now > startTimestamp else {
-                return
-            }
-            let timePassed = startTimestamp - now
-            let cycle = timePassed.truncatingRemainder(dividingBy: duration)
-            let cycleProgress = timePassed.remainder(dividingBy: duration)
-
-            if cycle > repeatCount {
-                completeOrPause()
-                return
-            }
-
-            let fractionComplete = cycleProgress / duration
-
-            update(for: fractionComplete)
-        }
-    }
-
-    private func update(for fractionComplete: Double) {
-        let curvedProgress = interpolationCurve.solve(fractionComplete, 1e-6)
-
-        for animation in animations {
-            animation(curvedProgress)
-        }
-    }
-}
-
-extension MapAnimatorImpl: DisplayLinkParticipant {
-    func participate() {
-        update()
-    }
-}
-
 internal final class Puck2D: Puck {
     private static let layerID = "puck"
     private static let topImageId = "locationIndicatorLayerTopImage"
@@ -242,11 +32,19 @@ internal final class Puck2D: Puck {
                 try? style.removeImage(withId: Self.shadowImageId)
                 previouslySetLayerPropertyKeys.removeAll()
                 latestLocation = nil
+                if configuration.pulsing != nil {
+                    pulsingAnimator.pauseAnimation()
+                }
             }
         }
     }
 
-//    private let animator = MapAnimatorImpl(duration: 3, owner: <#AnimationOwner#>)
+    private lazy var pulsingAnimator: MapAnimator = {
+        let curve = TimingCurve(p1: .zero, p2: CGPoint(x: 0.25, y: 1))
+        let animator = MapAnimator(duration: 3, curve: curve, owner: .unspecified)
+        animator.repeatCount = .max
+        return animator
+    }()
 
     internal var puckBearingSource: PuckBearingSource = .heading {
         didSet {
@@ -262,6 +60,9 @@ internal final class Puck2D: Puck {
                 updateLayerLocationFastPath()
             } else {
                 updateLayer()
+                if let pulsing = configuration.pulsing, pulsing.isEnabled, !pulsingAnimator.isRunning {
+                    pulsingAnimator.startAnimation()
+                }
             }
         }
     }
@@ -297,6 +98,28 @@ internal final class Puck2D: Puck {
         self.displayLinkCoordinator = displayLinkCoordinator
         self.timeProvider = timeProvider
         self.encodedScale = try! configuration.resolvedScale.toJSON()
+
+        if let pulsing = configuration.pulsing {
+            pulsingAnimator.addAnimations { [weak self] progress in
+                guard let self = self else { return }
+                let baseRadius: Double
+                switch pulsing.radius {
+                case .constant(let value):
+                    baseRadius = value
+                case .accuracy:
+                    baseRadius = self.latestLocation?.horizontalAccuracy ?? 30
+                }
+                let radius = baseRadius * progress
+                let alpha = 1 - progress
+                let color = pulsing.color.withAlphaComponent(progress <= 0.1 ? 0 : alpha)
+                let properties: [LocationIndicatorLayer.PaintCodingKeys: Any] = [
+                    .accuracyRadiusColor: StyleColor(color).rgbaString,
+                    .accuracyRadius: radius
+                ]
+
+                try! style.setLayerProperties(for: Self.layerID, properties: properties.mapKeys(\.rawValue))
+            }
+        }
     }
 
     private func addImages() {

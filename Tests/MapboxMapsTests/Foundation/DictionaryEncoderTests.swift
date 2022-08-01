@@ -92,6 +92,7 @@ final class DictionaryEncoderTests: XCTestCase {
 
         XCTAssertFalse(encoded.isEmpty)
         XCTAssertTrue(encoded.allSatisfy(verify(element:)))
+        XCTAssertTrue(allKeys.allSatisfy(encoded.keys.contains(_:)))
     }
 
     func testEncodeNilOnlyIfPresent() throws {
@@ -149,7 +150,7 @@ private struct Everything: Encodable {
         case uint, uint8, uint16, uint32, uint64
         case float, double
         case bool
-        case date, nsDate
+        case date
         case data
         case url
     }

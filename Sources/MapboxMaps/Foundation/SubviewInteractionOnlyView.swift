@@ -1,6 +1,6 @@
 import UIKit
 
-/// This class is a wrapper view which forwards all touch events to it's subviews
+/// This class is a wrapper view which forwards all touch events to its subviews
 internal class SubviewInteractionOnlyView: UIView {
 
     internal override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {

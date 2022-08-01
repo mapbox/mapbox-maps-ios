@@ -2,10 +2,19 @@ import UIKit
 
 public enum OrnamentPosition: String, Equatable {
     // Clockwise from top left
+    @available(*, deprecated, renamed: "topLeading")
     case topLeft
+    @available(*, deprecated, renamed: "topTrailing")
     case topRight
+    @available(*, deprecated, renamed: "bottomLeading")
     case bottomRight
+    @available(*, deprecated, renamed: "bottomTrailing")
     case bottomLeft
+
+    case topLeading
+    case topTrailing
+    case bottomLeading
+    case bottomTrailing
 }
 
 public enum OrnamentVisibility: String, Equatable {
@@ -177,31 +186,38 @@ public class OrnamentsManager: NSObject {
     }
 
     private func constraints(with view: UIView, position: OrnamentPosition, margins: CGPoint) -> [NSLayoutConstraint] {
-        // handle AutoLayout changes when device character direction changes
-        let currentDeviceLanguage: String! = Locale.current.languageCode
-        let rightToLeft = Locale.LanguageDirection.rightToLeft
-
-        if Locale.characterDirection(forLanguage: currentDeviceLanguage) == rightToLeft {
-            UIView.appearance().semanticContentAttribute = .forceRightToLeft
-            //0 is on the left side
-            _scaleBarView.semanticContentAttribute = .spatial
-        }
-
+        
         let layoutGuide = view.superview!.safeAreaLayoutGuide
         switch position {
         case .topLeft:
             return [
-                view.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: margins.x),
+                view.leftAnchor.constraint(equalTo: layoutGuide.leftAnchor, constant: margins.x),
                 view.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: margins.y)]
         case .topRight:
             return  [
-                view.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -margins.x),
+                view.rightAnchor.constraint(equalTo: layoutGuide.rightAnchor, constant: -margins.x),
                 view.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: margins.y)]
         case .bottomLeft:
             return [
-                view.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: margins.x),
+                view.leftAnchor.constraint(equalTo: layoutGuide.leftAnchor, constant: margins.x),
                 view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y)]
         case .bottomRight:
+            return [
+                view.rightAnchor.constraint(equalTo: layoutGuide.rightAnchor, constant: -margins.x),
+                view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y)]
+        case .topLeading:
+            return [
+                view.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: margins.x),
+                view.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: margins.y)]
+        case .topTrailing:
+            return  [
+                view.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -margins.x),
+                view.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: margins.y)]
+        case .bottomLeading:
+            return [
+                view.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: margins.x),
+                view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y)]
+        case .bottomTrailing:
             return [
                 view.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -margins.x),
                 view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y)]

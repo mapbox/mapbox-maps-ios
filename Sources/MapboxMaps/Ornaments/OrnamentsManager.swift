@@ -186,7 +186,6 @@ public class OrnamentsManager: NSObject {
     }
 
     private func constraints(with view: UIView, position: OrnamentPosition, margins: CGPoint) -> [NSLayoutConstraint] {
-        
         let layoutGuide = view.superview!.safeAreaLayoutGuide
         switch position {
         case .topLeft:

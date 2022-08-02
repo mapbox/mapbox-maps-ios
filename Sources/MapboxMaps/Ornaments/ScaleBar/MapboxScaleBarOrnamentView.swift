@@ -346,7 +346,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
     // MARK: - Convenience Methods
 
     private func usesRightToLeftLayout() -> Bool {
-        return traitCollection.layoutDirection == .rightToLeft
+        return effectiveUserInterfaceLayoutDirection == .rightToLeft
     }
 
     internal func preferredRow() -> Row {

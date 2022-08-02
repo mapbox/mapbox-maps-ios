@@ -213,7 +213,7 @@ public final class Style: StyleProtocol {
     ///   - geoJSON: The new GeoJSON to be associated with the source data. i.e.
     ///   a feature or feature collection.
     ///
-    - Throws: ``StyleError`` if there is a problem when updating GeoJSON source.
+    /// - Throws: ``StyleError`` if there is a problem when updating GeoJSON source.
     ///
     /// - Attention: This method is only effective with sources of `GeoJSONSource`
     /// type, and cannot be used to update other source types.

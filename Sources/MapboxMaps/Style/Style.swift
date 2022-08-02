@@ -56,7 +56,7 @@ public final class Style: StyleProtocol {
     ///   - layer: The layer to apply on the map
     ///   - layerPosition: Position to add the layer in the stack of layers on the map. Defaults to the top layer.
     ///
-    /// - Throws: `StyleError` or type conversion errors
+    /// - Throws: ``StyleError`` if there is a problem adding the given `layer` at the given `position`.
     public func addLayer(_ layer: Layer, layerPosition: LayerPosition? = nil) throws {
         // Attempt to encode the provided layer into JSON and apply it to the map
         let layerJSON = try layer.jsonObject()
@@ -70,7 +70,7 @@ public final class Style: StyleProtocol {
     ///   - layer: The layer to apply on the map
     ///   - layerPosition: Position to add the layer in the stack of layers on the map. Defaults to the top layer.
     ///
-    /// - Throws: `StyleError` or type conversion errors
+    /// - Throws: ``StyleError`` if there is a problem adding the persistent layer.
     public func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition? = nil) throws {
         // Attempt to encode the provided layer into JSON and apply it to the map
         let layerJSON = try layer.jsonObject()
@@ -96,7 +96,8 @@ public final class Style: StyleProtocol {
      - Parameter type: The type of the layer that will be fetched
 
      - Returns: The fully formed `layer` object of type equal to `type`
-     - Throws: `StyleError` or type conversion errors
+     - Throws: ``StyleError`` if there is a problem getting the layer data.
+     - Throws: ``TypeConversionError`` is there is a problem decoding the layer data to the given `type`.
      */
     public func layer<T>(withId id: String, type: T.Type) throws -> T where T: Layer {
         let properties = try layerProperties(for: id)
@@ -133,7 +134,9 @@ public final class Style: StyleProtocol {
     ///   - type: Type of the layer
     ///   - update: Closure that mutates a layer passed to it
     ///
-    /// - Throws: `StyleError` or type conversion errors
+    /// - Throws: ``TypeConversionError`` if there is a problem getting a layer data.
+    /// - Throws: ``StyleError`` if there is a problem updating the layer.
+    /// - Throws: An error when executing `update` block.
     public func updateLayer<T>(withId id: String,
                                type: T.Type,
                                update: (inout T) throws -> Void) throws where T: Layer {
@@ -154,7 +157,7 @@ public final class Style: StyleProtocol {
      - Parameter source: The source to add to the map.
      - Parameter identifier: A unique source identifier.
 
-     - Throws: `StyleError` or type conversion errors
+     - Throws: ``StyleError`` if there is a problem adding the `source`.
      */
     public func addSource(_ source: Source, id: String) throws {
         let sourceDictionary = try source.jsonObject(userInfo: [.nonVolatilePropertiesOnly: true])
@@ -172,7 +175,8 @@ public final class Style: StyleProtocol {
      - Parameter type: The type of the source
 
      - Returns: The fully formed `source` object of type equal to `type`.
-     - Throws: `StyleError` or type conversion errors
+     - Throws: ``StyleError`` if there is a problem getting the source data.
+     - Throws: ``TypeConversionError`` if there is a problem decoding the source data to the given `type`.
      */
     public func source<T>(withId id: String, type: T.Type) throws -> T where T: Source {
         let sourceProps = try sourceProperties(for: id)
@@ -187,7 +191,8 @@ public final class Style: StyleProtocol {
 
      - Parameter id: The id of the `source` to retrieve.
      - Returns: The fully formed `source` object.
-     - Throws: Type conversion errors.
+     - Throws: ``StyleError`` if there is a problem getting the source data.
+     - Throws: ``TypeConversionError`` if there is a problem decoding the source of given `id`.
      */
     public func source(withId id: String) throws -> Source {
         // Get the source properties for a given identifier
@@ -208,7 +213,7 @@ public final class Style: StyleProtocol {
     ///   - geoJSON: The new GeoJSON to be associated with the source data. i.e.
     ///   a feature or feature collection.
     ///
-    /// - Throws: `StyleError` or type conversion errors
+    - Throws: ``StyleError`` if there is a problem when updating GeoJSON source.
     ///
     /// - Attention: This method is only effective with sources of `GeoJSONSource`
     /// type, and cannot be used to update other source types.

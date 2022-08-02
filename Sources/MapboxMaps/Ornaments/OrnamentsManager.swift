@@ -2,10 +2,19 @@ import UIKit
 
 public enum OrnamentPosition: String, Equatable {
     // Clockwise from top left
+    @available(*, deprecated, renamed: "topLeading")
     case topLeft
+    @available(*, deprecated, renamed: "topTrailing")
     case topRight
+    @available(*, deprecated, renamed: "bottomLeading")
     case bottomRight
+    @available(*, deprecated, renamed: "bottomTrailing")
     case bottomLeft
+
+    case topLeading
+    case topTrailing
+    case bottomLeading
+    case bottomTrailing
 }
 
 public enum OrnamentVisibility: String, Equatable {
@@ -194,6 +203,22 @@ public class OrnamentsManager: NSObject {
         case .bottomRight:
             return [
                 view.rightAnchor.constraint(equalTo: layoutGuide.rightAnchor, constant: -margins.x),
+                view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y)]
+        case .topLeading:
+            return [
+                view.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: margins.x),
+                view.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: margins.y)]
+        case .topTrailing:
+            return  [
+                view.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -margins.x),
+                view.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: margins.y)]
+        case .bottomLeading:
+            return [
+                view.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: margins.x),
+                view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y)]
+        case .bottomTrailing:
+            return [
+                view.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -margins.x),
                 view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y)]
         }
     }

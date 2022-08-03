@@ -19,6 +19,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
 
             var newBackgroundLayer = BackgroundLayer(id: "test-id")
             newBackgroundLayer.backgroundColor = .constant(StyleColor(.white))
+            newBackgroundLayer.backgroundColorTransition = .init(duration: 2, delay: 1)
 
             do {
                 try style.addLayer(newBackgroundLayer)
@@ -29,8 +30,12 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
 
             do {
                 try style.updateLayer(withId: newBackgroundLayer.id, type: BackgroundLayer.self) { layer in
-                    XCTAssert(layer.backgroundColor == newBackgroundLayer.backgroundColor)
+                    // Update property
                     layer.backgroundColor = .constant(StyleColor(.blue))
+                    // Reset property
+                    layer.backgroundColorTransition = nil
+                    // New property
+                    layer.minZoom = 10
                 }
                 expectation.fulfill()
             } catch {
@@ -38,8 +43,14 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             }
 
             do {
-                let retrievedLayer: BackgroundLayer = try style.layer(withId: newBackgroundLayer.id, type: BackgroundLayer.self)
+                let retrievedLayer = try style.layer(withId: newBackgroundLayer.id, type: BackgroundLayer.self)
                 XCTAssert(retrievedLayer.backgroundColor == .constant(StyleColor(.blue)))
+                XCTAssertEqual(retrievedLayer.minZoom, 10)
+
+                let defaultBackgroundColorTransition = try XCTUnwrap(Style.layerPropertyDefaultValue(for: newBackgroundLayer.type, property: "background-color-transition").value as? [String: TimeInterval])
+                XCTAssertEqual(retrievedLayer.backgroundColorTransition!.duration * 1000.0, defaultBackgroundColorTransition["duration"])
+                XCTAssertEqual(retrievedLayer.backgroundColorTransition!.delay * 1000.0, defaultBackgroundColorTransition["delay"])
+
                 expectation.fulfill()
             } catch {
                 XCTFail("Could not retrieve background layer due to error: \(error)")

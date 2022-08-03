@@ -58,9 +58,9 @@ public final class Style: StyleProtocol {
     ///
     /// - Throws: StyleError or type conversion errors
     public func addLayer(_ layer: Layer, layerPosition: LayerPosition? = nil) throws {
-        // Attempt to encode the provided layer into JSON and apply it to the map
-        let layerJSON = try layer.jsonObject()
-        try addLayer(with: layerJSON, layerPosition: layerPosition)
+        // Attempt to encode the provided layer into a dictionary and apply it to the map.
+        let layerProperties = try layer.allStyleProperties()
+        try addLayer(with: layerProperties, layerPosition: layerPosition)
     }
 
     /// Adds a  persistent `layer` to the map
@@ -72,9 +72,9 @@ public final class Style: StyleProtocol {
     ///
     /// - Throws: StyleError or type conversion errors
     public func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition? = nil) throws {
-        // Attempt to encode the provided layer into JSON and apply it to the map
-        let layerJSON = try layer.jsonObject()
-        try addPersistentLayer(with: layerJSON, layerPosition: layerPosition)
+        // Attempt to encode the provided layer into a dictionary and apply it to the map.
+        let layerProperties = try layer.allStyleProperties()
+        try addPersistentLayer(with: layerProperties, layerPosition: layerPosition)
     }
 
     /**
@@ -137,14 +137,37 @@ public final class Style: StyleProtocol {
     public func updateLayer<T>(withId id: String,
                                type: T.Type,
                                update: (inout T) throws -> Void) throws where T: Layer {
-        var layer = try self.layer(withId: id, type: T.self)
+        let oldLayerProperties = try layerProperties(for: id)
+        var layer = try T(jsonObject: oldLayerProperties)
 
         // Call closure to update the retrieved layer
         try update(&layer)
-        let value = try layer.jsonObject()
+
+        let reduceStrategy: (inout [String: Any], Dictionary<String, Any>.Element) -> Void = { result, element in
+            let (key, value) = element
+            switch value {
+            case Optional<Any>.none where result.keys.contains(key):
+                result[key] = Style.layerPropertyDefaultValue(for: layer.type, property: key).value
+            case Optional<Any>.some:
+                result[key] = value
+            default: break
+            }
+        }
+        let layerProperties: [String: Any] = try layer
+            .allStyleProperties(userInfo: [:], shouldEncodeNilValues: true)
+            .reduce(into: oldLayerProperties, { result, element in
+                if let dictionary = element.value as? [String: Any] {
+                    result[element.key] = dictionary.reduce(
+                        into: oldLayerProperties[element.key] as? [String: Any] ?? [:],
+                        reduceStrategy
+                    )
+                } else {
+                    reduceStrategy(&result, element)
+                }
+            })
 
         // Apply the changes to the layer properties to the style
-        try setLayerProperties(for: id, properties: value)
+        try setLayerProperties(for: id, properties: layerProperties)
     }
 
     // MARK: - Sources

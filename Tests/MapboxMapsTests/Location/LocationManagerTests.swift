@@ -133,7 +133,7 @@ final class LocationManagerTests: XCTestCase {
 
     func testLocationProducerDidFailWithError() {
         let error = MockError()
-        let delegate = MockLocationPermissionsDelegate()
+        let delegate = MockLocationManagerDelegate()
         locationManager.delegate = delegate
 
         locationManager.locationProducer(locationProducer, didFailWithError: error)
@@ -145,7 +145,7 @@ final class LocationManagerTests: XCTestCase {
 
     func testLocationProducerDidChangeAccuracyAuthorization() {
         let accuracyAuthorization: CLAccuracyAuthorization = [.fullAccuracy, .reducedAccuracy].randomElement()!
-        let delegate = MockLocationPermissionsDelegate()
+        let delegate = MockLocationManagerDelegate()
         locationManager.delegate = delegate
 
         locationManager.locationProducer(locationProducer, didChangeAccuracyAuthorization: accuracyAuthorization)
@@ -153,6 +153,21 @@ final class LocationManagerTests: XCTestCase {
         XCTAssertEqual(delegate.didChangeAccuracyAuthorizationStub.invocations.count, 1)
         XCTAssertTrue(delegate.didChangeAccuracyAuthorizationStub.invocations.first?.parameters.locationManager === locationManager)
         XCTAssertEqual(delegate.didChangeAccuracyAuthorizationStub.invocations.first?.parameters.accuracyAuthorization, accuracyAuthorization)
+    }
+
+    func testShouldDisplayHeadingCalibrationUsesDelegate() {
+        // given
+        let delegate = MockLocationManagerDelegate()
+        locationManager.delegate = delegate
+        delegate.shouldDisplayHeadingCalibrationStub.defaultReturnValue = true
+
+        // when
+        let shouldDisplayCalibration = locationManager.locationProducerShouldDisplayHeadingCalibration(locationProducer)
+
+        // then
+        XCTAssertTrue(shouldDisplayCalibration)
+        XCTAssertEqual(delegate.shouldDisplayHeadingCalibrationStub.invocations.count, 1)
+        XCTAssertTrue(delegate.shouldDisplayHeadingCalibrationStub.invocations.first?.parameters === locationManager)
     }
 
     func testAddPuckLocationConsumer() {

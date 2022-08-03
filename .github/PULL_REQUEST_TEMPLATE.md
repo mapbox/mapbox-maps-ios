@@ -16,10 +16,20 @@ Describe the changes in this PR here.
 -->
 
 ## Pull request checklist:
+ - [ ] Describe the changes in this PR, especially public API changes.
+ - [ ] Include before/after visuals or gifs if this PR includes visual changes.
+    <!--
+        | Before | After |
+        | ----- | ----- |
+        | <img src="" width = 250/> | <img src="" width = 250/> |
+        or
+        | <video src="" width = 250/> | <video src="" width = 250/> |
+    -->
  - [ ] Write tests for all new functionality. If tests were not written, please explain why.
  - [ ] Add documentation comments for any added or updated public APIs.
  - [ ] Add any new public, top-level symbols to the Jazzy config's `custom_categories` (scripts/doc-generation/.jazzy.yaml)
- - [ ] Describe the changes in this PR, especially public API changes.
  - [ ] Add a changelog entry to to bottom of the relevant section (typically the `## main` heading near the top).
  - [ ] Update the guides (internal access only), README.md, and DEVELOPING.md if their contents are impacted by these changes.
- - [ ] Review and agree to the Contributor License Agreement ([CLA](https://github.com/mapbox/mapbox-maps-ios/blob/main/CONTRIBUTING.md#contributor-license-agreement)).
+ - [ ] If this PR is a `v10.[version]` release branch fix / enhancement, merge it to `main` first and then port to `v10.[version]` release branch.
+
+PRs must be submitted under the terms of our Contributor License Agreement [CLA](https://github.com/mapbox/mapbox-maps-ios/blob/main/CONTRIBUTING.md#contributor-license-agreement).

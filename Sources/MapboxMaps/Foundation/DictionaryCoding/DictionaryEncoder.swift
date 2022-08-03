@@ -515,17 +515,3 @@ private extension DictionaryEncoder {
         }
     }
 }
-
-private struct NilEncodable<T: Encodable>: Encodable {
-    let value: T
-
-    init?(_ value: T?) {
-        guard let value = value else { return nil }
-        self.value = value
-    }
-
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(value)
-    }
-}

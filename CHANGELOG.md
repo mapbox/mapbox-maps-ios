@@ -9,6 +9,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Animate padding changes between 2 camera when used with `FlyToCameraAnimator`. ([#1479](https://github.com/mapbox/mapbox-maps-ios/pull/1479))
 * Fix NaN latitude crash rarely happening in `CameraAnimationsManager.fly(to:duration:completion)`. ([#1485](https://github.com/mapbox/mapbox-maps-ios/pull/1485))
 * Fix `Style.updateLayer(withId:type:update)` so resetting a layer's properties should work. ([#1476](https://github.com/mapbox/mapbox-maps-ios/pull/1476))
+* Add the ability to display heading calibration alert. ([#1509](https://github.com/mapbox/mapbox-maps-ios/pull/1509))
 
 ## 10.7.0 - July 28, 2022
 

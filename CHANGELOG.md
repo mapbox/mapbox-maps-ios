@@ -3,7 +3,7 @@
 Mapbox welcomes participation and contributions from everyone.
 
 ## main
-* Expose image property for compass ornament. ([#1466](https://github.com/mapbox/mapbox-maps-ios/pull/1466))
+* Expose image property for compass ornament. ([#1466](https://github.com/mapbox/mapbox-maps-ios/pull/1468))
 * Expand scale bar range up to 15000 km/10000 miles. ([#1455](https://github.com/mapbox/mapbox-maps-ios/pull/1455))
 * Add the ability to override scale bar units. ([#1473](https://github.com/mapbox/mapbox-maps-ios/pull/1473))
 * Animate padding changes between 2 camera when used with `FlyToCameraAnimator`. ([#1479](https://github.com/mapbox/mapbox-maps-ios/pull/1479))

@@ -16,5 +16,18 @@ final class DebugViewController: UIViewController {
         mapView = MapView(frame: view.bounds)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.insertSubview(mapView, at: 0)
+
+        mapView.location.delegate = self
+        mapView.location.options.puckType = .puck2D(.makeDefault(showBearing: true))
+        mapView.location.options.puckBearingSource = .heading
+        mapView.location.options.puckBearingEnabled = true
+
+        mapView.viewport.transition(to: mapView.viewport.makeFollowPuckViewportState())
+    }
+}
+
+extension DebugViewController: LocationManagerDelegate {
+    func locationManagerShouldDisplayHeadingCalibration(_ locationManager: LocationManager) -> Bool {
+        return true
     }
 }

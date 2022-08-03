@@ -208,6 +208,7 @@ custom_categories:
       - Location
       - LocationConsumer
       - LocationPermissionsDelegate
+      - LocationManagerDelegate
       - LocationProvider
       - LocationProviderDelegate
       - AppleLocationProvider

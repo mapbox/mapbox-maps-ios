@@ -11,7 +11,7 @@ public final class LocationManager: NSObject {
     }
 
     /// The object that acts as the delegate of the location manager.
-    public weak var delegate: LocationPermissionsDelegate?
+    public weak var delegate: LocationManagerDelegate?
 
     /// The current underlying location provider. Use `overrideLocationProvider(with:)` to substitute a different provider.
     /// Avoid manipulating the location provider directly. LocationManager assumes full responsibility for starting and stopping location
@@ -138,5 +138,9 @@ extension LocationManager: LocationProducerDelegate {
     internal func locationProducer(_ locationProducer: LocationProducerProtocol,
                                    didChangeAccuracyAuthorization accuracyAuthorization: CLAccuracyAuthorization) {
         delegate?.locationManager?(self, didChangeAccuracyAuthorization: accuracyAuthorization)
+    }
+
+    func locationProducerShouldDisplayHeadingCalibration(_ locationProducer: LocationProducerProtocol) -> Bool {
+        return delegate?.locationManagerShouldDisplayHeadingCalibration?(self) ?? false
     }
 }

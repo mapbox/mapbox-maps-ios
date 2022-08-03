@@ -17,6 +17,8 @@ internal protocol LocationProducerDelegate: AnyObject {
 
     func locationProducer(_ locationProducer: LocationProducerProtocol,
                           didChangeAccuracyAuthorization accuracyAuthorization: CLAccuracyAuthorization)
+
+    func locationProducerShouldDisplayHeadingCalibration(_ locationProducer: LocationProducerProtocol) -> Bool
 }
 
 internal final class LocationProducer: LocationProducerProtocol {
@@ -190,5 +192,11 @@ extension LocationProducer: LocationProviderDelegate {
                 withPurposeKey: "LocationAccuracyAuthorizationDescription")
         }
         latestAccuracyAuthorization = accuracyAuthorization
+    }
+}
+
+extension LocationProducer: CalibratingLocationProviderDelegate {
+    func locationProviderShouldDisplayHeadingCalibration(_ locationProvider: LocationProvider) -> Bool {
+        return delegate?.locationProducerShouldDisplayHeadingCalibration(self) ?? false
     }
 }

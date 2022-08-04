@@ -4,7 +4,7 @@ import CoreLocation
 /// Holds options to be used for setting camera bounds.
 public struct CameraBoundsOptions: Hashable {
 
-    /// The latitude and longitude bounds to which the camera center are constrained.
+    /// The latitude and longitude bounds to which the camera center is constrained.
     /// Defaults to: Southwest: (-90, -180) and Northeast: (90, 180).
     public var bounds: CoordinateBounds?
 

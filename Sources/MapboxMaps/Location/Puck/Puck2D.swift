@@ -63,6 +63,9 @@ internal final class Puck2D: Puck {
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
     // cache the encoded configuration.resolvedScale to avoid work at every location update
     private let encodedScale: Any
+    private let pulsingAnimationDuration: CFTimeInterval = 3
+    private let pulsingAnimationTimingCurve = UnitBezier(p1: .zero, p2: CGPoint(x: 0.25, y: 1))
+    private var pulsingAnimationStartTimestamp: CFTimeInterval?
 
     /// The keys of the style properties that were set during the previous sync.
     /// Used to identify which styles need to be restored to their default values in
@@ -246,10 +249,6 @@ internal final class Puck2D: Puck {
 
         try! style.setLayerProperties(for: Self.layerID, properties: layerProperties)
     }
-
-    private let emphasisCirclePulseDuration: CFTimeInterval = 3
-    private var emphasisCirclePulseStartTimestamp: CFTimeInterval?
-    private let interpolationCurve = UnitBezier(p1: .zero, p2: CGPoint(x: 0.25, y: 1))
 }
 
 extension Puck2D: DisplayLinkParticipant {
@@ -260,14 +259,14 @@ extension Puck2D: DisplayLinkParticipant {
               let pulsing = configuration.pulsing else {
             return
         }
-        guard let startTimestamp = emphasisCirclePulseStartTimestamp else {
-            emphasisCirclePulseStartTimestamp = timeProvider.current
+        guard let startTimestamp = pulsingAnimationStartTimestamp else {
+            pulsingAnimationStartTimestamp = timeProvider.current
             return
         }
 
         let currentTime = timeProvider.current
-        let progress = min((currentTime - startTimestamp) / emphasisCirclePulseDuration, 1)
-        let curvedProgress = interpolationCurve.solve(progress, 1e-6)
+        let progress = min((currentTime - startTimestamp) / pulsingAnimationDuration, 1)
+        let curvedProgress = pulsingAnimationTimingCurve.solve(progress, 1e-6)
 
         let baseRadius = pulsing.radius.value(for: location, zoom: mapboxMap.cameraState.zoom)
         let radius = baseRadius * curvedProgress
@@ -279,7 +278,7 @@ extension Puck2D: DisplayLinkParticipant {
         ]
 
         if progress >= 1 {
-            emphasisCirclePulseStartTimestamp = currentTime
+            pulsingAnimationStartTimestamp = currentTime
         }
 
         try! style.setLayerProperties(for: Self.layerID, properties: properties.mapKeys(\.rawValue))

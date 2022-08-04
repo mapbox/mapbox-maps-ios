@@ -25,7 +25,7 @@ public final class CameraAnimationsManager {
     // MARK: High-Level Animation APIs
 
     /// Moves the viewpoint to a different location using a transition animation that
-    /// evokes powered flight and an optional transition duration and timing function
+    /// evokes powered flight and an optional transition duration and timing function.
     /// It seamlessly incorporates zooming and panning to help
     /// the user find his or her bearings even after traversing a great distance.
     ///

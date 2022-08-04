@@ -3,10 +3,15 @@ import CoreLocation
 import UIKit
 
 public struct CameraState: Hashable {
+    /// The geographic coordinate that will be rendered at the midpoint of the area defined by `padding`.
     public var center: CLLocationCoordinate2D
+    /// Insets from each edge of the map. Impacts the "principal point" of the graphical projection and the location at which `center` is rendered.
     public var padding: UIEdgeInsets
+    /// The zoom level of the map.
     public var zoom: CGFloat
+    /// The bearing of the map, measured in degrees clockwise from true north.
     public var bearing: CLLocationDirection
+    /// Pitch toward the horizon measured in degrees, with 0 degrees resulting in a top-down view for a two-dimensional map.
     public var pitch: CGFloat
 
     public init(center: CLLocationCoordinate2D,

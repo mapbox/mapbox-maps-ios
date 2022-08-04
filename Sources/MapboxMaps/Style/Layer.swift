@@ -14,7 +14,7 @@ public protocol Layer: Codable, StyleEncodable, StyleDecodable {
     var source: String? { get set }
 
     /// Layer to use from a vector tile source.
-    /// Required for vector tile sources/
+    /// Required for vector tile sources.
     /// Prohibited for all other source types, including GeoJSON sources.
     var sourceLayer: String? { get set }
 

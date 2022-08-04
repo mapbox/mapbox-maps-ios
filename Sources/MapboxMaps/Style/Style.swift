@@ -32,7 +32,7 @@ internal protocol StyleProtocol: AnyObject {
 /// to read and write layers, sources, and images. Obtain the Style instance for a MapView
 /// via MapView.mapboxMap.style.
 ///
-/// Note: Style should only be used from the main thread.
+/// - Important: Style should only be used from the main thread.
 public final class Style: StyleProtocol {
 
     private let _styleManager: StyleManagerProtocol
@@ -54,23 +54,23 @@ public final class Style: StyleProtocol {
     ///
     /// - Parameters:
     ///   - layer: The layer to apply on the map
-    ///   - layerPosition: Position at which to add the map.
+    ///   - layerPosition: Position to add the layer in the stack of layers on the map. Defaults to the top layer.
     ///
-    /// - Throws: StyleError or type conversion errors
+    /// - Throws: ``StyleError`` if there is a problem adding the given `layer` at the given `position`.
     public func addLayer(_ layer: Layer, layerPosition: LayerPosition? = nil) throws {
         // Attempt to encode the provided layer into a dictionary and apply it to the map.
         let layerProperties = try layer.allStyleProperties()
         try addLayer(with: layerProperties, layerPosition: layerPosition)
     }
 
-    /// Adds a  persistent `layer` to the map
-    /// Persistent layers are valid across style changes.
+    /// Adds a  persistent `layer` to the map.
+    /// Persistent layers are valid across `style` changes.
     ///
     /// - Parameters:
     ///   - layer: The layer to apply on the map
-    ///   - layerPosition: Position at which to add the map.
+    ///   - layerPosition: Position to add the layer in the stack of layers on the map. Defaults to the top layer.
     ///
-    /// - Throws: StyleError or type conversion errors
+    /// - Throws: ``StyleError`` if there is a problem adding the persistent layer.
     public func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition? = nil) throws {
         // Attempt to encode the provided layer into a dictionary and apply it to the map.
         let layerProperties = try layer.allStyleProperties()
@@ -80,7 +80,7 @@ public final class Style: StyleProtocol {
     /**
      Moves a `layer` to a new layer position in the style.
      - Parameter layerId: The layer to move
-     - Parameter position: The new position to move the layer to
+     - Parameter position: Position to move the layer in the stack of layers on the map. Defaults to the top layer.
 
      - Throws: `StyleError` on failure, or `NSError` with a _domain of "com.mapbox.bindgen"
      */
@@ -96,7 +96,8 @@ public final class Style: StyleProtocol {
      - Parameter type: The type of the layer that will be fetched
 
      - Returns: The fully formed `layer` object of type equal to `type`
-     - Throws: StyleError or type conversion errors
+     - Throws: ``StyleError`` if there is a problem getting the layer data.
+     - Throws: ``TypeConversionError`` is there is a problem decoding the layer data to the given `type`.
      */
     public func layer<T>(withId id: String, type: T.Type) throws -> T where T: Layer {
         let properties = try layerProperties(for: id)
@@ -126,14 +127,16 @@ public final class Style: StyleProtocol {
         return try type.layerType.init(jsonObject: properties)
     }
 
-    /// Updates a layer that exists in the style already
+    /// Updates a `layer` that exists in the `style` already
     ///
     /// - Parameters:
     ///   - id: identifier of layer to update
     ///   - type: Type of the layer
     ///   - update: Closure that mutates a layer passed to it
     ///
-    /// - Throws: StyleError or type conversion errors
+    /// - Throws: ``TypeConversionError`` if there is a problem getting a layer data.
+    /// - Throws: ``StyleError`` if there is a problem updating the layer.
+    /// - Throws: An error when executing `update` block.
     public func updateLayer<T>(withId id: String,
                                type: T.Type,
                                update: (inout T) throws -> Void) throws where T: Layer {
@@ -173,11 +176,11 @@ public final class Style: StyleProtocol {
     // MARK: - Sources
 
     /**
-     Adds a source to the map
+     Adds a `source` to the map
      - Parameter source: The source to add to the map.
      - Parameter identifier: A unique source identifier.
 
-     - Throws: StyleError or type conversion errors
+     - Throws: ``StyleError`` if there is a problem adding the `source`.
      */
     public func addSource(_ source: Source, id: String) throws {
         let sourceDictionary = try source.jsonObject(userInfo: [.nonVolatilePropertiesOnly: true])
@@ -190,12 +193,13 @@ public final class Style: StyleProtocol {
     }
 
     /**
-     Retrieves a source from the map
+     Retrieves a `source` from the map
      - Parameter id: The id of the source to retrieve
      - Parameter type: The type of the source
 
      - Returns: The fully formed `source` object of type equal to `type`.
-     - Throws: StyleError or type conversion errors
+     - Throws: ``StyleError`` if there is a problem getting the source data.
+     - Throws: ``TypeConversionError`` if there is a problem decoding the source data to the given `type`.
      */
     public func source<T>(withId id: String, type: T.Type) throws -> T where T: Source {
         let sourceProps = try sourceProperties(for: id)
@@ -203,14 +207,15 @@ public final class Style: StyleProtocol {
     }
 
     /**
-     Retrieves a source from the map
+     Retrieves a `source` from the map
 
      This function is useful if you do not know the concrete type of the source
      you are fetching, or don't need to know for your situation.
 
-     - Parameter id: The id of the source to retrieve.
+     - Parameter id: The id of the `source` to retrieve.
      - Returns: The fully formed `source` object.
-     - Throws: Type conversion errors.
+     - Throws: ``StyleError`` if there is a problem getting the source data.
+     - Throws: ``TypeConversionError`` if there is a problem decoding the source of given `id`.
      */
     public func source(withId id: String) throws -> Source {
         // Get the source properties for a given identifier
@@ -231,7 +236,7 @@ public final class Style: StyleProtocol {
     ///   - geoJSON: The new GeoJSON to be associated with the source data. i.e.
     ///   a feature or feature collection.
     ///
-    /// - Throws: StyleError or type conversion errors
+    /// - Throws: ``StyleError`` if there is a problem when updating GeoJSON source.
     ///
     /// - Attention: This method is only effective with sources of `GeoJSONSource`
     /// type, and cannot be used to update other source types.
@@ -243,7 +248,7 @@ public final class Style: StyleProtocol {
         try setSourceProperty(for: id, property: "data", value: geoJSON.toJSON())
     }
 
-    /// `true` if and only if the style JSON contents, the style specified sprite
+    /// `true` if and only if the style JSON contents, the style specified sprite,
     /// and sources are all loaded, otherwise returns `false`.
     public var isLoaded: Bool {
         return _styleManager.isStyleLoaded()
@@ -292,20 +297,20 @@ public final class Style: StyleProtocol {
         }
     }
 
-    /// The map style's default camera, if any, or a default camera otherwise.
-    /// The map style default camera is defined as follows:
+    /// The map `style`'s default camera, if any, or a default camera otherwise.
+    /// The map `style` default camera is defined as follows:
     ///
     /// - [center](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-center)
     /// - [zoom](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-zoom)
     /// - [bearing](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-bearing)
     /// - [pitch](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-pitch)
     ///
-    /// The style default camera is re-evaluated when a new style is loaded.
+    /// The `style` default camera is re-evaluated when a new `style` is loaded. Values default to 0.0 if they are not defined in the `style`.
     public var defaultCamera: CameraOptions {
         return CameraOptions(_styleManager.getStyleDefaultCamera())
     }
 
-    /// Get or set the map style's transition options.
+    /// Get or set the map `style`'s transition options.
     ///
     /// By default, the style parser will attempt to read the style default
     /// transition, if any, falling back to a 0.3 s transition otherwise.
@@ -337,8 +342,7 @@ public final class Style: StyleProtocol {
     ///
     /// - Parameters:
     ///   - properties: A JSON dictionary of style layer properties.
-    ///   - layerPosition: If not empty, the new layer will be positioned according
-    ///         to `LayerPosition` parameters.
+    ///   - layerPosition: Position to add the layer in the stack of layers on the map. Defaults to the top layer.
     ///
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
@@ -354,8 +358,7 @@ public final class Style: StyleProtocol {
     ///
     /// - Parameters:
     ///   - properties: A JSON dictionary of style layer properties
-    ///   - layerPosition: If not empty, the new layer will be positioned according
-    ///         to `LayerPosition` parameters.
+    ///   - layerPosition: Position to add the layer in the stack of layers on the map. Defaults to the top layer.
     ///
     /// - Throws:
     ///     An error describing why the operation was unsuccessful
@@ -382,8 +385,7 @@ public final class Style: StyleProtocol {
     /// - Parameters:
     ///   - id: Style layer id.
     ///   - layerHost: Style custom layer host.
-    ///   - layerPosition: If not empty, the new layer will be positioned according
-    ///         to `LayerPosition` parameters.
+    ///   - layerPosition: Position to add the layer in the stack of layers on the map. Defaults to the top layer.
     ///
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
@@ -403,8 +405,7 @@ public final class Style: StyleProtocol {
     /// - Parameters:
     ///   - id: Style layer id.
     ///   - layerHost: Style custom layer host.
-    ///   - layerPosition: If not empty, the new layer will be positioned according
-    ///         to `LayerPosition` parameters.
+    ///   - layerPosition: Position to add the layer in the stack of layers on the map. Defaults to the top layer.
     ///
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.

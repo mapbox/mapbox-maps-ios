@@ -4,21 +4,26 @@ import CoreLocation
 /// Holds options to be used for setting camera bounds.
 public struct CameraBoundsOptions: Hashable {
 
-    /// The latitude and longitude bounds to which the camera center are constrained.
+    /// The latitude and longitude bounds to which the camera center is constrained.
+    /// Defaults to: Southwest: (-90, -180) and Northeast: (90, 180).
     public var bounds: CoordinateBounds?
 
     /// The maximum zoom level, in mapbox zoom levels 0-25.5. At low zoom levels,
     /// a small set of map tiles covers a large geographical area. At higher
     /// zoom levels, a larger number of tiles cover a smaller geographical area.
+    /// Defaults to 22.
     public var maxZoom: CGFloat?
 
     /// The minimum zoom level, in mapbox zoom levels 0-25.5.
+    /// Defaults to 0.
     public var minZoom: CGFloat?
 
     /// The maximum allowed pitch value in degrees.
+    /// Defaults to 85.
     public var maxPitch: CGFloat?
 
     /// The minimum allowed pitch value degrees.
+    /// Defaults to 0.
     public var minPitch: CGFloat?
 
     public init(bounds: CoordinateBounds? = nil,

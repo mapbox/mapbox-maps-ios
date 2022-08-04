@@ -11,7 +11,7 @@ public struct CameraTransition: Equatable {
     /// Represents a change to the zoom of the map.
     public var zoom: Change<CGFloat>
 
-    /// Represetns a change to the padding of the map.
+    /// Represents a change to the padding of the map.
     public var padding: Change<UIEdgeInsets>
 
     /// Represents a change to the anchor of the map
@@ -21,7 +21,7 @@ public struct CameraTransition: Equatable {
     /// Represents a change to the bearing of the map.
     public var bearing: Change<CLLocationDirection>
 
-    /// Ensures that bearing transitions are optimized to take the shortest path.
+    /// Ensures that bearing transitions are optimized to take the shortest path. Defaults to `true`.
     public var shouldOptimizeBearingPath: Bool = true
 
     /// Represents a change to the pitch of the map.

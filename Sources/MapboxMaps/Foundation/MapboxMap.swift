@@ -35,9 +35,9 @@ internal protocol MapboxMapProtocol: AnyObject {
 // swiftlint:disable type_body_length
 
 /// MapboxMap provides access to the map model, including the camera, style, observable map events,
-/// and querying rendered features. Obtain the MapboxMap instance for a MapView via MapView.mapboxMap.
+/// and querying rendered features. Obtain the MapboxMap instance for a `MapView` via MapView.mapboxMap.
 ///
-/// Note: MapboxMap should only be used from the main thread.
+/// - Important: MapboxMap should only be used from the main thread.
 public final class MapboxMap: MapboxMapProtocol {
     /// The underlying renderer object responsible for rendering the map
     private let __map: Map
@@ -91,7 +91,7 @@ public final class MapboxMap: MapboxMapProtocol {
         }
     }
 
-    /// Loads a style from a StyleURI, calling a completion closure when the
+    /// Loads a `style` from a StyleURI, calling a completion closure when the
     /// style is fully loaded or there has been an error during load.
     ///
     /// - Parameters:
@@ -106,7 +106,7 @@ public final class MapboxMap: MapboxMapProtocol {
         __map.setStyleURIForUri(styleURI.rawValue)
     }
 
-    /// Loads a style from a JSON string, calling a completion closure when the
+    /// Loads a `style` from a JSON string, calling a completion closure when the
     /// style is fully loaded or there has been an error during load.
     ///
     /// - Parameters:

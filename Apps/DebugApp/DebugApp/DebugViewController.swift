@@ -16,17 +16,5 @@ final class DebugViewController: UIViewController {
         mapView = MapView(frame: view.bounds)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.insertSubview(mapView, at: 0)
-
-        var puckConfig = Puck2DConfiguration.makeDefault(showBearing: true)
-        puckConfig.pulsing = .default
-        puckConfig.pulsing?.radius = .constant(30)
-        mapView.location.options.puckType = .puck2D(puckConfig)
-        mapView.location.addLocationConsumer(newConsumer: self)
-    }
-}
-
-extension DebugViewController: LocationConsumer {
-    func locationUpdate(newLocation: Location) {
-        mapView.mapboxMap.setCamera(to: CameraOptions(center: newLocation.coordinate, zoom: 18))
     }
 }

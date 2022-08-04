@@ -13,6 +13,7 @@ public struct Puck2DConfiguration: Equatable {
     public struct Pulsing: Equatable {
         public static let `default` = Pulsing()
 
+        // swiftlint:disable:next nesting
         public enum Radius: Equatable {
             case constant(Double)
             case accuracy

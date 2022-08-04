@@ -20,7 +20,11 @@ internal final class Puck2D: Puck {
                         return true
                     }
                     .add(to: cancelables)
+                if let pulsing = configuration.pulsing, pulsing.isEnabled {
+                    displayLinkCoordinator?.add(self)
+                }
             } else {
+                displayLinkCoordinator?.remove(self)
                 cancelables.cancelAll()
                 try? style.removeLayer(withId: Self.layerID)
                 try? style.removeImage(withId: Self.topImageId)
@@ -28,19 +32,9 @@ internal final class Puck2D: Puck {
                 try? style.removeImage(withId: Self.shadowImageId)
                 previouslySetLayerPropertyKeys.removeAll()
                 latestLocation = nil
-                if configuration.pulsing != nil {
-                    pulsingAnimator.pauseAnimation()
-                }
             }
         }
     }
-
-    private lazy var pulsingAnimator: MapAnimator = {
-        let curve = TimingCurve(p1: .zero, p2: CGPoint(x: 0.25, y: 1))
-        let animator = MapAnimator(duration: 3, curve: curve, owner: .unspecified)
-        animator.repeatCount = .max
-        return animator
-    }()
 
     internal var puckBearingSource: PuckBearingSource = .heading {
         didSet {
@@ -56,9 +50,6 @@ internal final class Puck2D: Puck {
                 updateLayerLocationFastPath()
             } else {
                 updateLayer()
-                if let pulsing = configuration.pulsing, pulsing.isEnabled, !pulsingAnimator.isRunning {
-                    pulsingAnimator.startAnimation()
-                }
             }
         }
     }
@@ -66,8 +57,9 @@ internal final class Puck2D: Puck {
     private let configuration: Puck2DConfiguration
     private let style: StyleProtocol
     private let interpolatedLocationProducer: InterpolatedLocationProducerProtocol
-
+    private let mapboxMap: MapboxMapProtocol
     private let cancelables = CancelableContainer()
+    private weak var displayLinkCoordinator: DisplayLinkCoordinator?
 
     // cache the encoded configuration.resolvedScale to avoid work at every location update
     private let encodedScale: Any
@@ -77,32 +69,21 @@ internal final class Puck2D: Puck {
     /// the subsequent sync.
     private var previouslySetLayerPropertyKeys: Set<String> = []
 
+    deinit {
+        displayLinkCoordinator?.remove(self)
+    }
+
     internal init(configuration: Puck2DConfiguration,
                   style: StyleProtocol,
-                  interpolatedLocationProducer: InterpolatedLocationProducerProtocol) {
+                  interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
+                  mapboxMap: MapboxMapProtocol,
+                  displayLinkCoordinator: DisplayLinkCoordinator) {
         self.configuration = configuration
         self.style = style
         self.interpolatedLocationProducer = interpolatedLocationProducer
+        self.mapboxMap = mapboxMap
+        self.displayLinkCoordinator = displayLinkCoordinator
         self.encodedScale = try! configuration.resolvedScale.toJSON()
-
-        if let pulsing = configuration.pulsing {
-            pulsingAnimator.addAnimations { [weak self] progress in
-                guard let self = self else { return }
-
-                let baseRadius = pulsing.radius.radius(for: self.latestLocation?.horizontalAccuracy) ?? 0
-                let radius = baseRadius * progress
-                let alpha = 1 - progress
-                let color = pulsing.color.withAlphaComponent(progress <= 0.1 ? 0 : alpha)
-                var properties: [LocationIndicatorLayer.PaintCodingKeys: Any] = [
-                    pulsing.radius.circleRadiusKey: radius,
-                    pulsing.radius.circleColorKey: StyleColor(color).rgbaString,
-                ]
-                if pulsing.radius == .accuracy {
-                    properties[.accuracyRadiusBorderColor] = "rgba(0, 0, 0, 0)"
-                }
-                try! style.setLayerProperties(for: Self.layerID, properties: properties.mapKeys(\.rawValue))
-            }
-        }
     }
 
     private func addImages() {
@@ -267,6 +248,44 @@ internal final class Puck2D: Puck {
 
         try! style.setLayerProperties(for: Self.layerID, properties: layerProperties)
     }
+
+    private let emphasisCirclePulseDuration: CFTimeInterval = 3
+    private var emphasisCirclePulseStartTimestamp: CFTimeInterval?
+    private let interpolationCurve = UnitBezier(p1: .zero, p2: CGPoint(x: 0.25, y: 1))
+}
+
+extension Puck2D: DisplayLinkParticipant {
+    func participate() {
+        guard isActive,
+              style.layerExists(withId: Self.layerID),
+              let location = latestLocation,
+              let pulsing = configuration.pulsing else {
+            return
+        }
+        guard let startTimestamp = emphasisCirclePulseStartTimestamp else {
+            emphasisCirclePulseStartTimestamp = CACurrentMediaTime()
+            return
+        }
+
+        let currentTime = CACurrentMediaTime()
+        let progress = min((currentTime - startTimestamp) / emphasisCirclePulseDuration, 1)
+        let curvedProgress = interpolationCurve.solve(progress, 1e-6)
+
+        let baseRadius = pulsing.radius.value(for: location, zoom: mapboxMap.cameraState.zoom)
+        let radius = baseRadius * curvedProgress
+        let alpha = 1.0 - curvedProgress
+        let color = pulsing.color.withAlphaComponent(curvedProgress <= 0.1 ? 0 : alpha)
+        let properties: [LocationIndicatorLayer.PaintCodingKeys: Any] = [
+            .emphasisCircleRadius: radius,
+            .emphasisCircleColor: StyleColor(color).rgbaString,
+        ]
+
+        if progress >= 1 {
+            emphasisCirclePulseStartTimestamp = currentTime
+        }
+
+        try! style.setLayerProperties(for: Self.layerID, properties: properties.mapKeys(\.rawValue))
+    }
 }
 
 private extension Puck2DConfiguration {
@@ -284,30 +303,12 @@ private extension Puck2DConfiguration {
 }
 
 private extension Puck2DConfiguration.Pulsing.Radius {
-    var circleRadiusKey: LocationIndicatorLayer.PaintCodingKeys {
-        switch self {
-        case .constant:
-            return .emphasisCircleRadius
-        case .accuracy:
-            return .accuracyRadius
-        }
-    }
-
-    var circleColorKey: LocationIndicatorLayer.PaintCodingKeys {
-        switch self {
-        case .constant:
-            return .emphasisCircleColor
-        case .accuracy:
-            return .accuracyRadiusColor
-        }
-    }
-
-    func radius(for accuracy: CLLocationAccuracy?) -> Double? {
+    func value(for location: InterpolatedLocation, zoom: CGFloat) -> Double {
         switch self {
         case .constant(let radius):
             return radius
         case .accuracy:
-            return accuracy
+            return location.horizontalAccuracy / Projection.metersPerPoint(for: location.coordinate.latitude, zoom: zoom)
         }
     }
 }

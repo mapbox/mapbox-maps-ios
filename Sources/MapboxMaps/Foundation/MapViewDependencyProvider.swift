@@ -19,7 +19,9 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
                                           displayLinkCoordinator: DisplayLinkCoordinator) -> InterpolatedLocationProducerProtocol
     func makeLocationManager(locationProducer: LocationProducerProtocol,
                              interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
-                             style: StyleProtocol) -> LocationManager
+                             style: StyleProtocol,
+                             mapboxMap: MapboxMapProtocol,
+                             displayLinkCoordinator: DisplayLinkCoordinator) -> LocationManager
     func makeViewportImpl(mapboxMap: MapboxMapProtocol,
                           cameraAnimationsManager: CameraAnimationsManagerProtocol,
                           anyTouchGestureRecognizer: UIGestureRecognizer,
@@ -244,13 +246,17 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
 
     internal func makeLocationManager(locationProducer: LocationProducerProtocol,
                                       interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
-                                      style: StyleProtocol) -> LocationManager {
+                                      style: StyleProtocol,
+                                      mapboxMap: MapboxMapProtocol,
+                                      displayLinkCoordinator: DisplayLinkCoordinator) -> LocationManager {
         let puckManager = PuckManager(
             puck2DProvider: { configuration in
                 Puck2D(
                     configuration: configuration,
                     style: style,
-                    interpolatedLocationProducer: interpolatedLocationProducer)
+                    interpolatedLocationProducer: interpolatedLocationProducer,
+                    mapboxMap: mapboxMap,
+                    displayLinkCoordinator: displayLinkCoordinator)
             },
             puck3DProvider: { configuration in
                 Puck3D(

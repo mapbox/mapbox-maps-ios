@@ -33,9 +33,11 @@ public struct LocationOptions: Equatable {
 
 /// Controls how the puck is oriented
 public enum PuckBearingSource: Equatable {
-    /// The puck should set its bearing using `heading: CLHeading`
+    /// The puck should set its bearing using `heading: CLHeading`. Bearing will mimic user's
+    /// spatial orientation.
     case heading
 
-    /// The puck should set its bearing using `course: CLLocationDirection`
+    /// The puck should set its bearing using `course: CLLocationDirection`. Bearing will mimic
+    /// the general direction of travel.
     case course
 }

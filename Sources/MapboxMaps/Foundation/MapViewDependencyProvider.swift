@@ -250,13 +250,17 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                                       mapboxMap: MapboxMapProtocol,
                                       displayLinkCoordinator: DisplayLinkCoordinator) -> LocationManager {
         let puckManager = PuckManager(
-            puck2DProvider: { configuration in
-                Puck2D(
+            puck2DProvider: { [weak displayLinkCoordinator] configuration in
+                guard let displayLinkCoordinator = displayLinkCoordinator else {
+                    fatalError("DisplayLinkCoordinator must be present when creating a 2D puck")
+                }
+                return Puck2D(
                     configuration: configuration,
                     style: style,
                     interpolatedLocationProducer: interpolatedLocationProducer,
                     mapboxMap: mapboxMap,
-                    displayLinkCoordinator: displayLinkCoordinator)
+                    displayLinkCoordinator: displayLinkCoordinator,
+                    timeProvider: DefaultTimeProvider())
             },
             puck3DProvider: { configuration in
                 Puck3D(

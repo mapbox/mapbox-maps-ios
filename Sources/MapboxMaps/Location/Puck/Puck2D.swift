@@ -59,8 +59,8 @@ internal final class Puck2D: Puck {
     private let interpolatedLocationProducer: InterpolatedLocationProducerProtocol
     private let mapboxMap: MapboxMapProtocol
     private let cancelables = CancelableContainer()
+    private let timeProvider: TimeProvider
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
-
     // cache the encoded configuration.resolvedScale to avoid work at every location update
     private let encodedScale: Any
 
@@ -69,20 +69,18 @@ internal final class Puck2D: Puck {
     /// the subsequent sync.
     private var previouslySetLayerPropertyKeys: Set<String> = []
 
-    deinit {
-        displayLinkCoordinator?.remove(self)
-    }
-
     internal init(configuration: Puck2DConfiguration,
                   style: StyleProtocol,
                   interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
                   mapboxMap: MapboxMapProtocol,
-                  displayLinkCoordinator: DisplayLinkCoordinator) {
+                  displayLinkCoordinator: DisplayLinkCoordinator,
+                  timeProvider: TimeProvider) {
         self.configuration = configuration
         self.style = style
         self.interpolatedLocationProducer = interpolatedLocationProducer
         self.mapboxMap = mapboxMap
         self.displayLinkCoordinator = displayLinkCoordinator
+        self.timeProvider = timeProvider
         self.encodedScale = try! configuration.resolvedScale.toJSON()
     }
 
@@ -263,11 +261,11 @@ extension Puck2D: DisplayLinkParticipant {
             return
         }
         guard let startTimestamp = emphasisCirclePulseStartTimestamp else {
-            emphasisCirclePulseStartTimestamp = CACurrentMediaTime()
+            emphasisCirclePulseStartTimestamp = timeProvider.current
             return
         }
 
-        let currentTime = CACurrentMediaTime()
+        let currentTime = timeProvider.current
         let progress = min((currentTime - startTimestamp) / emphasisCirclePulseDuration, 1)
         let curvedProgress = interpolationCurve.solve(progress, 1e-6)
 

@@ -91,6 +91,35 @@ public final class ViewAnnotationManager {
     ///
     /// - Parameters:
     ///   - view: `UIView` to be added to the map
+    ///   - options: ``ViewAnnotationOptions`` to control the layout and visibility of the annotation
+    ///
+    /// - Throws:
+    ///   -  ``ViewAnnotationManagerError/viewIsAlreadyAdded`` if the supplied view is already added as an annotation
+    ///   -  ``ViewAnnotationManagerError/geometryFieldMissing`` if options did not include geometry
+    ///   -  ``ViewAnnotationManagerError/associatedFeatureIdIsAlreadyInUse`` if the
+    ///   supplied ``ViewAnnotationOptions/associatedFeatureId`` is already used by another annotation view
+    ///   - ``MapError``: errors during insertion
+    public func add(_ view: UIView, options: ViewAnnotationOptions) throws {
+        try add(view, id: nil, options: options)
+    }
+
+    /// Add a `UIView` instance which will be displayed as an annotation.
+    /// View dimensions will be taken as width / height from the bounds of the view
+    /// unless they are not specified explicitly with ``ViewAnnotationOptions/width`` and ``ViewAnnotationOptions/height``.
+    ///
+    /// Annotation `options` must include Geometry where we want to bind our view annotation.
+    ///
+    /// Width and height could be specified explicitly but better idea will be not specifying them
+    /// as they will be calculated automatically based on view layout.
+    ///
+    /// > Important: The annotation view to be added should have `UIView.transform` property set to `.identity`.
+    /// Providing a transformed view can result in annotation views being misplaced, overlapped and other layout artifacts.
+    ///
+    /// - Note: Use ``ViewAnnotationManager/update(_:options:)`` for changing the visibilty of the view, instead
+    /// of `UIView.isHidden` so that it is removed from the layout calculation.
+    ///
+    /// - Parameters:
+    ///   - view: `UIView` to be added to the map
     ///   - id: The unique string for the `view`.
     ///   - options: ``ViewAnnotationOptions`` to control the layout and visibility of the annotation
     ///
@@ -100,7 +129,7 @@ public final class ViewAnnotationManager {
     ///   -  ``ViewAnnotationManagerError/associatedFeatureIdIsAlreadyInUse`` if the
     ///   supplied ``ViewAnnotationOptions/associatedFeatureId`` is already used by another annotation view
     ///   - ``MapError``: errors during insertion
-    public func add(_ view: UIView, id: String? = nil, options: ViewAnnotationOptions) throws {
+    public func add(_ view: UIView, id: String?, options: ViewAnnotationOptions) throws {
         guard idsByView[view] == nil && id.flatMap(view(forId:)) == nil else {
             throw ViewAnnotationManagerError.viewIsAlreadyAdded
         }

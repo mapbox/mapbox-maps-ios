@@ -48,7 +48,6 @@ public final class ViewAnnotationManager {
 
     private let containerView: UIView
     private let mapboxMap: MapboxMapProtocol
-    private var currentViewId = 0
     private var viewsById: [String: UIView] = [:]
     private var idsByView: [UIView: String] = [:]
     private var expectedHiddenByView: [UIView: Bool] = [:]
@@ -92,24 +91,26 @@ public final class ViewAnnotationManager {
     ///
     /// - Parameters:
     ///   - view: `UIView` to be added to the map
+    ///   - id: The unique string for the `view`.
     ///   - options: ``ViewAnnotationOptions`` to control the layout and visibility of the annotation
     ///
     /// - Throws:
-    ///   -  ``ViewAnnotationManagerError/viewIsAlreadyAdded`` if the supplied view is already added as an annotation
+    ///   -  ``ViewAnnotationManagerError/viewIsAlreadyAdded`` if the supplied view is already added as an annotation, or there is an existing annotation view with the same `id`.
     ///   -  ``ViewAnnotationManagerError/geometryFieldMissing`` if options did not include geometry
     ///   -  ``ViewAnnotationManagerError/associatedFeatureIdIsAlreadyInUse`` if the
     ///   supplied ``ViewAnnotationOptions/associatedFeatureId`` is already used by another annotation view
     ///   - ``MapError``: errors during insertion
-    public func add(_ view: UIView, options: ViewAnnotationOptions) throws {
-        guard idsByView[view] == nil else {
+    public func add(_ view: UIView, id: String? = nil, options: ViewAnnotationOptions) throws {
+        guard idsByView[view] == nil && id.flatMap(view(forId:)) == nil else {
             throw ViewAnnotationManagerError.viewIsAlreadyAdded
         }
         guard options.geometry != nil else {
             throw ViewAnnotationManagerError.geometryFieldMissing
         }
-        if let associatedFeatureId = options.associatedFeatureId, viewsByFeatureIds[associatedFeatureId] != nil {
+        guard options.associatedFeatureId.flatMap(view(forFeatureId:)) == nil else {
             throw ViewAnnotationManagerError.associatedFeatureIdIsAlreadyInUse
         }
+
         var creationOptions = options
         if creationOptions.width == nil {
             creationOptions.width = view.bounds.size.width
@@ -118,11 +119,9 @@ public final class ViewAnnotationManager {
             creationOptions.height = view.bounds.size.height
         }
 
-        let id = String(currentViewId)
-        currentViewId += 1
-
         view.translatesAutoresizingMaskIntoConstraints = false
 
+        let id = id ?? UUID().uuidString
         try mapboxMap.addViewAnnotation(withId: id, options: creationOptions)
         viewsById[id] = view
         idsByView[view] = id
@@ -199,6 +198,14 @@ public final class ViewAnnotationManager {
         if let featureId = options.associatedFeatureId {
             viewsByFeatureIds[featureId] = view
         }
+    }
+
+    /// Find view annotation by the given `id`.
+    ///
+    /// - Parameter id: The identifier of the view set in ``ViewAnnotationManager/add(_:id:options:)``.
+    /// - Returns: `UIView` if view was found, otherwise `nil`.
+    public func view(forId id: String) -> UIView? {
+        viewsById[id]
     }
 
     /// Find `UIView` by feature id if it was specified as part of ``ViewAnnotationOptions/associatedFeatureId``.

@@ -106,6 +106,13 @@ final class ViewAnnotationManagerTests: XCTestCase {
         XCTAssertTrue(mapboxMap.removeViewAnnotationStub.invocations.isEmpty)
     }
 
+    func testGetViewByID() {
+        let testView = addTestAnnotationView(id: "test-id")
+
+        XCTAssertEqual(manager.view(forId: "test-id"), testView)
+        XCTAssertNotEqual(manager.view(forId: "other-id"), testView)
+    }
+
     func testAssociatedFeatureIdIsAlreadyInUse() {
         let testView = UIView()
         let geometry = Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0))

@@ -5,11 +5,11 @@ internal class WeakSet<T> {
     private let hashTable = NSHashTable<AnyObject>.weakObjects()
 
     internal func add(_ object: T) {
-        hashTable.add((object as! AnyObject))
+        hashTable.add((object as AnyObject))
     }
 
     internal func remove(_ object: T) {
-        hashTable.remove((object as! AnyObject))
+        hashTable.remove((object as AnyObject))
     }
 
     internal func removeAll() {

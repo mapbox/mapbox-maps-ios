@@ -10,18 +10,34 @@ public enum PuckType: Equatable {
 }
 
 public struct Puck2DConfiguration: Equatable {
+
+    /// The configration parameters for sonar-like pulsing circle animation shown around the 2D puck.
     public struct Pulsing: Equatable {
         public static let `default` = Pulsing()
 
-        // swiftlint:disable:next nesting
+        // swiftlint:disable nesting
+        /// Circle radius configuration for the pulsing circle animation.
         public enum Radius: Equatable {
+            /// Pulsing circle should animate with the constant radius.
             case constant(Double)
+            /// Pulsing circle animates with the `horizontalAccuracy` form the latest puck location.
             case accuracy
         }
+        // swiftlint:enable nesting
+
+        /// Flag determining whether the pulsing circle animation. `true` by default.
         public var isEnabled: Bool
+
+        /// The color of the pulsing circle.
         public var color: UIColor
+
+        /// The radius of the pulsing circle.
         public var radius: Radius
 
+        /// Create a pulsing animation config with a color and radius.
+        /// - Parameters:
+        ///   - color: The color of the pulsing circle.
+        ///   - radius: The radius of the pulsing circle.
         public init(color: UIColor = UIColor(red: 0.29, green: 0.565, blue: 0.886, alpha: 1),
                     radius: Radius = .constant(30)) {
             self.color = color
@@ -42,7 +58,7 @@ public struct Puck2DConfiguration: Equatable {
     /// The size of the images, as a scale factor applied to the size of the specified image.
     public var scale: Value<Double>?
 
-    // Whether the location puck is pulsing on the map.
+    // Location puck pulsing configuration is pulsing on the map.
     public var pulsing: Pulsing?
 
     /// Flag determining if the horizontal accuracy ring should be shown arround the `Puck`. default value is false

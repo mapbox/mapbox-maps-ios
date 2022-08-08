@@ -8,6 +8,6 @@ internal protocol DisplayLinkCoordinator: AnyObject {
 }
 
 // The participants must be AnyObjects so that the DisplayLinkCoordinator implementation can use WeakSet
-@objc internal protocol DisplayLinkParticipant {
+internal protocol DisplayLinkParticipant: AnyObject {
     func participate()
 }

@@ -253,8 +253,7 @@ internal final class Puck2D: Puck {
 
 extension Puck2D: DisplayLinkParticipant {
     func participate() {
-        guard isActive,
-              style.layerExists(withId: Self.layerID),
+        guard style.layerExists(withId: Self.layerID),
               let location = latestLocation,
               let pulsing = configuration.pulsing else {
             return

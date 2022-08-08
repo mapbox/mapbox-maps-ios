@@ -26,5 +26,4 @@ import CoreLocation
 /// can use to receive location permission events.
 @available(*, deprecated, renamed: "LocationManagerDelegate")
 @objc public protocol LocationPermissionsDelegate: LocationManagerDelegate {
-    
 }

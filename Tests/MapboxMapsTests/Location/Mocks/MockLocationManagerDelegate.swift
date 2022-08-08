@@ -21,7 +21,6 @@ final class MockLocationManagerDelegate: LocationManagerDelegate {
         didFailToLocateUserWithErrorStub.call(with: .init(locationManager: locationManager, error: error))
     }
 
-
     let shouldDisplayHeadingCalibrationStub = Stub<LocationManager, Bool>(defaultReturnValue: false)
     func locationManagerShouldDisplayHeadingCalibration(_ locationManager: LocationManager) -> Bool {
         return shouldDisplayHeadingCalibrationStub.call(with: locationManager)

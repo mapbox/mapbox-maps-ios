@@ -20,7 +20,7 @@ internal final class Puck2D: Puck {
                         return true
                     }
                     .add(to: cancelables)
-                if let pulsing = configuration.pulsing, pulsing.isEnabled {
+                if configuration.pulsing?.isEnabled == true {
                     displayLinkCoordinator?.add(self)
                 }
             } else {

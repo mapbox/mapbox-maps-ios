@@ -24,3 +24,12 @@ Struct MercatorMapProjection has been removed
 // Removed deprecated animationDuration parameter from FollowPuckViewportStateOptions
 Constructor FollowPuckViewportStateOptions.init(padding:zoom:bearing:pitch:animationDuration:) has been removed
 Var FollowPuckViewportStateOptions.animationDuration has been removed
+
+// LocationPermissionsDelegate renamed to LocationManagerDelegate
+Protocol LocationPermissionsDelegate has generic signature change from <Self : AnyObject> to <Self : MapboxMaps.LocationManagerDelegate>
+Func LocationPermissionsDelegate.locationManager(_:didChangeAccuracyAuthorization:) has been removed
+Func LocationPermissionsDelegate.locationManager(_:didFailToLocateUserWithError:) has been removed
+Accessor LocationManager.delegate.Get() has return type change from MapboxMaps.LocationPermissionsDelegate? to MapboxMaps.LocationManagerDelegate?
+Accessor LocationManager.delegate.Set() has parameter 0 type change from MapboxMaps.LocationPermissionsDelegate? to MapboxMaps.LocationManagerDelegate?
+Protocol LocationPermissionsDelegate has added inherited protocol LocationManagerDelegate
+

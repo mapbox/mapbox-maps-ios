@@ -1,6 +1,6 @@
 import Foundation
 import CoreLocation
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 
 final class NavigationSimulator: LocationProvider {
 

@@ -1,8 +1,8 @@
 import CoreLocation
 
-/// The `LocationManagerDelegate` protocol defines a set of optional methods that you
+/// The `LocationPermissionsDelegate` protocol defines a set of optional methods that you
 /// can use to receive events from an associated location manager object.
-@objc public protocol LocationManagerDelegate {
+@objc public protocol LocationPermissionsDelegate {
     /// Tells the delegate that an attempt to locate the user’s position failed.
     /// - Parameters:
     ///   - locationManager: The location manager that is tracking the user’s location.
@@ -20,10 +20,4 @@ import CoreLocation
     /// - Parameter locationManager: The location manager object coordinating the display of the heading calibration alert.
     /// - Returns: `true` if you want to allow the heading calibration alert to be displayed; `false` if you do not.
     @objc optional func locationManagerShouldDisplayHeadingCalibration(_ locationManager: LocationManager) -> Bool
-}
-
-/// The `LocationPermissionsDelegate` protocol defines a set of optional methods that you
-/// can use to receive location permission events.
-@available(*, deprecated, renamed: "LocationManagerDelegate")
-@objc public protocol LocationPermissionsDelegate: LocationManagerDelegate {
 }

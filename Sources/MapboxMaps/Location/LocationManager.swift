@@ -11,7 +11,7 @@ public final class LocationManager: NSObject {
     }
 
     /// The object that acts as the delegate of the location manager.
-    public weak var delegate: LocationManagerDelegate?
+    public weak var delegate: LocationPermissionsDelegate?
 
     /// The current underlying location provider. Use `overrideLocationProvider(with:)` to substitute a different provider.
     /// Avoid manipulating the location provider directly. LocationManager assumes full responsibility for starting and stopping location

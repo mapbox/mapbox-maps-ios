@@ -1,6 +1,6 @@
 import MapboxMaps
 
-final class MockLocationManagerDelegate: LocationManagerDelegate {
+final class MockLocationManagerDelegate: LocationPermissionsDelegate {
     struct DidChangeAccuracyAuthorizationParams {
         var locationManager: LocationManager
         var accuracyAuthorization: CLAccuracyAuthorization

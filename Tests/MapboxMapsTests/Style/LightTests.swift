@@ -1,5 +1,5 @@
 import XCTest
-@_spi(Experimental) @testable import MapboxMaps
+@testable import MapboxMaps
 
 class LightTests: XCTestCase {
 

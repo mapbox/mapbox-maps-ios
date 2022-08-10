@@ -1,5 +1,5 @@
 import UIKit
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 
 final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
     private enum ID {

@@ -1,6 +1,6 @@
 import UIKit
 
-/// An animator that evokes powered flight and an optional transition duration and timing function
+/// An animator that evokes powered flight and an optional transition duration and timing function.
 /// It seamlessly incorporates zooming and panning to help the user find their bearings even after
 /// traversing a great distance.
 ///

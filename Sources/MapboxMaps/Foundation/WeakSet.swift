@@ -2,14 +2,14 @@ import Foundation
 
 // swiftlint:disable force_cast
 internal class WeakSet<T> {
-    private let hashTable = NSHashTable<NSObject>.weakObjects()
+    private let hashTable = NSHashTable<AnyObject>.weakObjects()
 
     internal func add(_ object: T) {
-        hashTable.add((object as! NSObject))
+        hashTable.add((object as AnyObject))
     }
 
     internal func remove(_ object: T) {
-        hashTable.remove((object as! NSObject))
+        hashTable.remove((object as AnyObject))
     }
 
     internal func removeAll() {

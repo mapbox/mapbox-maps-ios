@@ -1,5 +1,6 @@
 import UIKit
 
+/// Options used to configure the corner position of an ornament
 public enum OrnamentPosition: String, Equatable {
     // Clockwise from top left
     @available(*, deprecated, renamed: "topLeading")
@@ -17,9 +18,13 @@ public enum OrnamentPosition: String, Equatable {
     case bottomTrailing
 }
 
+/// Options used to configure the visibility of an ornament
 public enum OrnamentVisibility: String, Equatable {
+    /// Shows the ornament when relevant
     case adaptive
+    /// Hides the ornament
     case hidden
+    /// Shows the ornament
     case visible
 }
 
@@ -28,9 +33,10 @@ internal struct Ornaments {
     static let telemetryURL = "https://www.mapbox.com/telemetry/"
 }
 
+/// APIs for managing map ornaments
 public class OrnamentsManager: NSObject {
 
-    /// The `OrnamentOptions` object that is used to set up and update the required ornaments on the map.
+    /// The ``OrnamentOptions`` object that is used to set up and update the required ornaments on the map.
     public var options: OrnamentOptions {
         didSet {
             updateOrnaments()
@@ -53,7 +59,7 @@ public class OrnamentsManager: NSObject {
 
     /// The view for the compass ornament. This view can be used to position other views relative to the
     /// compass ornament, but it should not be manipulated. Use ``OrnamentOptions/compass`` to
-    /// configure the compass presentation if customization is needed..
+    /// configure the compass presentation if customization is needed.
     public var compassView: UIView {
         return _compassView
     }
@@ -61,7 +67,7 @@ public class OrnamentsManager: NSObject {
     /// The view for the attribution button ornament. This view can be used to position other views relative
     /// to the attribution button ornament, but it should not be manipulated. Use
     /// ``OrnamentOptions/attributionButton`` to configure the attribution button presentation
-    /// if customization is needed..
+    /// if customization is needed.
     public var attributionButton: UIView {
         return _attributionButton
     }

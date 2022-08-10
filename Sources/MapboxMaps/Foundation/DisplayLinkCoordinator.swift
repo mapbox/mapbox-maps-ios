@@ -7,7 +7,7 @@ internal protocol DisplayLinkCoordinator: AnyObject {
     func remove(_ participant: DisplayLinkParticipant)
 }
 
-// The participants must be NSObjects so that the DisplayLinkCoordinator implementation can use WeakSet
-internal protocol DisplayLinkParticipant: NSObject {
+// The participants must be AnyObjects so that the DisplayLinkCoordinator implementation can use WeakSet
+internal protocol DisplayLinkParticipant: AnyObject {
     func participate()
 }

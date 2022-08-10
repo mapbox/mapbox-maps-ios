@@ -6,6 +6,9 @@ final class Puck2DTests: XCTestCase {
     var style: MockStyle!
     var interpolatedLocationProducer: MockInterpolatedLocationProducer!
     var puck2D: Puck2D!
+    var mapboxMap: MockMapboxMap!
+    var displayLinkCoordinator: MockDisplayLinkCoordinator!
+    var timeProvider: MockTimeProvider!
 
     override func setUp() {
         super.setUp()
@@ -16,14 +19,20 @@ final class Puck2DTests: XCTestCase {
             scale: .constant(.random(in: 1..<10)))
         style = MockStyle()
         interpolatedLocationProducer = MockInterpolatedLocationProducer()
+        mapboxMap = MockMapboxMap()
+        displayLinkCoordinator = MockDisplayLinkCoordinator()
+        timeProvider = MockTimeProvider()
         recreatePuck()
     }
 
     override func tearDown() {
         puck2D = nil
+        displayLinkCoordinator = nil
         interpolatedLocationProducer = nil
         style = nil
+        mapboxMap = nil
         configuration = nil
+        timeProvider = nil
         super.tearDown()
     }
 
@@ -31,17 +40,24 @@ final class Puck2DTests: XCTestCase {
         puck2D = Puck2D(
             configuration: configuration,
             style: style,
-            interpolatedLocationProducer: interpolatedLocationProducer)
+            interpolatedLocationProducer: interpolatedLocationProducer,
+            mapboxMap: mapboxMap,
+            displayLinkCoordinator: displayLinkCoordinator,
+            timeProvider: timeProvider)
     }
 
     @discardableResult
     func updateLocation(with accuracyAuthorization: CLAccuracyAuthorization = .random(),
                         course: CLLocationDirection? = .random(.random(in: 0..<360)),
-                        heading: CLLocationDirection? = .random(.random(in: 0..<360))) -> InterpolatedLocation {
+                        heading: CLLocationDirection? = .random(.random(in: 0..<360)),
+                        coordinate: CLLocationCoordinate2D = .random(),
+                        horizontalAccuracy: CLLocationAccuracy = .random(in: 0...100)) -> InterpolatedLocation {
         var location = InterpolatedLocation.random()
+        location.coordinate = coordinate
         location.accuracyAuthorization = accuracyAuthorization
         location.course = course
         location.heading = heading
+        location.horizontalAccuracy = horizontalAccuracy
         interpolatedLocationProducer.location = location
         // invoke handler synchronously to mimic the actual implementation
         interpolatedLocationProducer.observeStub.defaultSideEffect = {
@@ -111,6 +127,36 @@ final class Puck2DTests: XCTestCase {
 
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
+    }
+
+    func testActivatingPuckAddsDisplayLinkParticipant() {
+        configuration = Puck2DConfiguration(pulsing: .default)
+        recreatePuck()
+
+        puck2D.isActive = true
+
+        XCTAssertEqual(displayLinkCoordinator.addStub.invocations.count, 1)
+        XCTAssertEqual(displayLinkCoordinator.removeStub.invocations.count, 0)
+    }
+
+    func testActivatingPuckDoesnNotAddDisplayLinkParticipant() {
+        var pulsing = Puck2DConfiguration.Pulsing.default
+        pulsing.isEnabled = false
+        configuration = Puck2DConfiguration(pulsing: pulsing)
+        recreatePuck()
+
+        puck2D.isActive = true
+
+        XCTAssertEqual(displayLinkCoordinator.addStub.invocations.count, 0)
+        XCTAssertEqual(displayLinkCoordinator.removeStub.invocations.count, 0)
+    }
+
+    func testDectivatingPuckRemovesDisplayLinkParticipant() {
+        puck2D.isActive = true
+
+        puck2D.isActive = false
+
+        XCTAssertEqual(displayLinkCoordinator.removeStub.invocations.count, 1)
     }
 
     func verifyAddImages(line: UInt = #line) {
@@ -592,5 +638,140 @@ final class Puck2DTests: XCTestCase {
         XCTAssertEqual(invocation.parameters.layerId, "puck")
         XCTAssertEqual(invocation.parameters.properties as NSDictionary,
                        expectedProperties.mapKeys(\.rawValue) as NSDictionary)
+    }
+
+    func testInitialDisplayLinkCallbackNotUpdatingLayer() {
+        configuration = Puck2DConfiguration(pulsing: .default)
+        style.layerExistsStub.defaultReturnValue = true
+        displayLinkCoordinator = MockDisplayLinkCoordinator()
+        recreatePuck()
+        puck2D.isActive = true
+        updateLocation()
+        style.setLayerPropertiesStub.reset()
+
+        puck2D.participate()
+
+        XCTAssertTrue(style.setLayerPropertiesStub.invocations.isEmpty)
+    }
+
+    func testPulsingAnimationDuration() throws {
+        let expectedColor: UIColor = .random()
+        let expectedRadius: Double = 100
+        configuration = Puck2DConfiguration(pulsing: .init(color: expectedColor, radius: .constant(expectedRadius)))
+        style.layerExistsStub.defaultReturnValue = true
+        displayLinkCoordinator = MockDisplayLinkCoordinator()
+        recreatePuck()
+        puck2D.isActive = true
+        updateLocation()
+        puck2D.participate()
+        style.setLayerPropertiesStub.reset()
+
+        timeProvider.currentStub.defaultReturnValue = 3
+        puck2D.participate()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        let radius = try XCTUnwrap(
+            style.setLayerPropertiesStub.invocations.first?
+                .parameters.properties[LocationIndicatorLayer.PaintCodingKeys.emphasisCircleRadius.rawValue] as? Double
+        )
+        let color = try XCTUnwrap(
+            style.setLayerPropertiesStub.invocations.first?
+                .parameters.properties[LocationIndicatorLayer.PaintCodingKeys.emphasisCircleColor.rawValue] as? String
+        )
+        XCTAssertEqual(StyleColor(expectedColor.withAlphaComponent(0)).rgbaString, color)
+        XCTAssertEqual(expectedRadius, radius)
+    }
+
+    func testPulsingAnimationMidway() throws {
+        let curve = UnitBezier(p1: .zero, p2: CGPoint(x: 0.25, y: 1))
+        let curvedProgress = curve.solve(0.5, 1e-6)
+        let expectedColor: UIColor = .random()
+        let expectedRadius: Double = 30
+        configuration = Puck2DConfiguration(pulsing: .init(color: expectedColor, radius: .constant(expectedRadius)))
+        style.layerExistsStub.defaultReturnValue = true
+        displayLinkCoordinator = MockDisplayLinkCoordinator()
+        recreatePuck()
+        puck2D.isActive = true
+        updateLocation()
+        puck2D.participate()
+        style.setLayerPropertiesStub.reset()
+
+        timeProvider.currentStub.defaultReturnValue = 1.5
+        puck2D.participate()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        let radius = try XCTUnwrap(
+            style.setLayerPropertiesStub.invocations.first?
+                .parameters.properties[LocationIndicatorLayer.PaintCodingKeys.emphasisCircleRadius.rawValue] as? Double
+        )
+        let color = try XCTUnwrap(
+            style.setLayerPropertiesStub.invocations.first?
+                .parameters.properties[LocationIndicatorLayer.PaintCodingKeys.emphasisCircleColor.rawValue] as? String
+        )
+        XCTAssertEqual(StyleColor(expectedColor.withAlphaComponent(1 - curvedProgress)).rgbaString, color)
+        XCTAssertEqual(expectedRadius * curvedProgress, radius)
+    }
+
+    func testPulsingCyclesOver() throws {
+        let expectedColor: UIColor = .random()
+        let expectedRadius: Double = 100
+        let curve = UnitBezier(p1: .zero, p2: CGPoint(x: 0.25, y: 1))
+        let curvedProgress = curve.solve(0.5, 1e-6)
+        configuration = Puck2DConfiguration(pulsing: .init(color: expectedColor, radius: .constant(expectedRadius)))
+        style.layerExistsStub.defaultReturnValue = true
+        displayLinkCoordinator = MockDisplayLinkCoordinator()
+        recreatePuck()
+        puck2D.isActive = true
+        updateLocation()
+        puck2D.participate()
+        style.setLayerPropertiesStub.reset()
+
+        timeProvider.currentStub.defaultReturnValue = 3
+        puck2D.participate()
+
+        timeProvider.currentStub.defaultReturnValue = 4.5
+        puck2D.participate()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
+        let radius = try XCTUnwrap(
+            style.setLayerPropertiesStub.invocations.last?
+                .parameters.properties[LocationIndicatorLayer.PaintCodingKeys.emphasisCircleRadius.rawValue] as? Double
+        )
+        let color = try XCTUnwrap(
+            style.setLayerPropertiesStub.invocations.last?
+                .parameters.properties[LocationIndicatorLayer.PaintCodingKeys.emphasisCircleColor.rawValue] as? String
+        )
+        XCTAssertEqual(StyleColor(expectedColor.withAlphaComponent(1 - curvedProgress)).rgbaString, color)
+        XCTAssertEqual(expectedRadius * curvedProgress, radius)
+    }
+
+    func testPulsingAnimationUsesAccuracyRadius() throws {
+        let expectedColor: UIColor = .random()
+        let coordinate: CLLocationCoordinate2D = .random()
+        let horizontalAccuracy: CLLocationAccuracy = .random(in: 500...10000)
+        let expectedRadius: Double = horizontalAccuracy / Projection.metersPerPoint(for: coordinate.latitude, zoom: mapboxMap.cameraState.zoom)
+        configuration = Puck2DConfiguration(pulsing: .init(color: expectedColor, radius: .accuracy))
+        style.layerExistsStub.defaultReturnValue = true
+        displayLinkCoordinator = MockDisplayLinkCoordinator()
+        recreatePuck()
+        puck2D.isActive = true
+        updateLocation(coordinate: coordinate, horizontalAccuracy: horizontalAccuracy)
+        puck2D.participate()
+        style.setLayerPropertiesStub.reset()
+
+        timeProvider.currentStub.defaultReturnValue = 3
+        puck2D.participate()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        let radius = try XCTUnwrap(
+            style.setLayerPropertiesStub.invocations.first?
+                .parameters.properties[LocationIndicatorLayer.PaintCodingKeys.emphasisCircleRadius.rawValue] as? Double
+        )
+        let color = try XCTUnwrap(
+            style.setLayerPropertiesStub.invocations.first?
+                .parameters.properties[LocationIndicatorLayer.PaintCodingKeys.emphasisCircleColor.rawValue] as? String
+        )
+        XCTAssertEqual(StyleColor(expectedColor.withAlphaComponent(0)).rgbaString, color)
+        XCTAssertEqual(expectedRadius, radius)
     }
 }

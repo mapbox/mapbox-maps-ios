@@ -3,13 +3,15 @@
 Mapbox welcomes participation and contributions from everyone.
 
 ## main
-* Expose image property for compass ornament. ([#1466](https://github.com/mapbox/mapbox-maps-ios/pull/1466))
+* Expose image property for compass ornament. ([#1468](https://github.com/mapbox/mapbox-maps-ios/pull/1468))
 * Expand scale bar range up to 15000 km/10000 miles. ([#1455](https://github.com/mapbox/mapbox-maps-ios/pull/1455))
 * Add the ability to override scale bar units. ([#1473](https://github.com/mapbox/mapbox-maps-ios/pull/1473))
 * Animate padding changes between 2 camera when used with `FlyToCameraAnimator`. ([#1479](https://github.com/mapbox/mapbox-maps-ios/pull/1479))
 * Fix NaN latitude crash rarely happening in `CameraAnimationsManager.fly(to:duration:completion)`. ([#1485](https://github.com/mapbox/mapbox-maps-ios/pull/1485))
 * Fix `Style.updateLayer(withId:type:update)` so resetting a layer's properties should work. ([#1476](https://github.com/mapbox/mapbox-maps-ios/pull/1476))
 * Add the ability to display heading calibration alert. ([#1509](https://github.com/mapbox/mapbox-maps-ios/pull/1509))
+* Add support for sonar-like pulsing animation around 2D puck. ([#1513](https://github.com/mapbox/mapbox-maps-ios/pull/1513))
+* Support view annotation lookup by an identifier. ([#1512](https://github.com/mapbox/mapbox-maps-ios/pull/1512))
 
 ## 10.7.0 - July 28, 2022
 

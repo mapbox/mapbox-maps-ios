@@ -151,6 +151,26 @@ internal class PuckTypeTests: XCTestCase {
         XCTAssertEqual(config.accuracyRingBorderColor, accuracyRingBorderColor)
     }
 
+    func testPuck2DPulsingConfigurationInitializerWithDefaultValues() {
+        let pulsing = Puck2DConfiguration.Pulsing()
+
+        XCTAssertEqual(pulsing.color, UIColor(red: 0.29, green: 0.565, blue: 0.886, alpha: 1))
+        XCTAssertEqual(pulsing.radius, .constant(30))
+        XCTAssertTrue(pulsing.isEnabled)
+    }
+
+    func testPuck2DPulsingConfigurationInitializerWithNonDefaultValues() {
+        let color: UIColor = .random()
+        let radius: Puck2DConfiguration.Pulsing.Radius = .accuracy
+
+        var pulsing = Puck2DConfiguration.Pulsing(color: color, radius: radius)
+        pulsing.isEnabled = false
+
+        XCTAssertEqual(pulsing.color, color)
+        XCTAssertEqual(pulsing.radius, radius)
+        XCTAssertFalse(pulsing.isEnabled)
+    }
+
     func testPuck2DMakeDefault() {
         let puck2D = Puck2DConfiguration.makeDefault()
         XCTAssertEqual(puck2D.topImage, UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!)

@@ -24,4 +24,9 @@ final class MockLocationProducerDelegate: LocationProducerDelegate {
             locationProducer: locationProducer,
             accuracyAuthorization: accuracyAuthorization))
     }
+
+    let shouldDisplayHeadingCalibrationStub = Stub<LocationProducerProtocol, Bool>(defaultReturnValue: false)
+    func locationProducerShouldDisplayHeadingCalibration(_ locationProducer: LocationProducerProtocol) -> Bool {
+        return shouldDisplayHeadingCalibrationStub.call(with: locationProducer)
+    }
 }

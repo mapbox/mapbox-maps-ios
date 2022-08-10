@@ -40,3 +40,7 @@ internal class EmptyLocationProviderDelegate: LocationProviderDelegate {
     func locationProvider(_ provider: LocationProvider, didUpdateLocations locations: [CLLocation]) {}
     func locationProviderDidChangeAuthorization(_ provider: LocationProvider) {}
 }
+
+internal protocol CalibratingLocationProviderDelegate: LocationProviderDelegate {
+    func locationProviderShouldDisplayHeadingCalibration(_ locationProvider: LocationProvider) -> Bool
+}

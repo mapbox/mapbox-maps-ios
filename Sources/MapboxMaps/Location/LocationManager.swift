@@ -139,4 +139,8 @@ extension LocationManager: LocationProducerDelegate {
                                    didChangeAccuracyAuthorization accuracyAuthorization: CLAccuracyAuthorization) {
         delegate?.locationManager?(self, didChangeAccuracyAuthorization: accuracyAuthorization)
     }
+
+    func locationProducerShouldDisplayHeadingCalibration(_ locationProducer: LocationProducerProtocol) -> Bool {
+        return delegate?.locationManagerShouldDisplayHeadingCalibration?(self) ?? false
+    }
 }

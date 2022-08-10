@@ -1,6 +1,6 @@
 import MapboxMaps
 
-final class MockLocationPermissionsDelegate: LocationPermissionsDelegate {
+final class MockLocationManagerDelegate: LocationPermissionsDelegate {
     struct DidChangeAccuracyAuthorizationParams {
         var locationManager: LocationManager
         var accuracyAuthorization: CLAccuracyAuthorization
@@ -19,5 +19,10 @@ final class MockLocationPermissionsDelegate: LocationPermissionsDelegate {
     let didFailToLocateUserWithErrorStub = Stub<DidFailToLocateUserWithErrorParams, Void>()
     func locationManager(_ locationManager: LocationManager, didFailToLocateUserWithError error: Error) {
         didFailToLocateUserWithErrorStub.call(with: .init(locationManager: locationManager, error: error))
+    }
+
+    let shouldDisplayHeadingCalibrationStub = Stub<LocationManager, Bool>(defaultReturnValue: false)
+    func locationManagerShouldDisplayHeadingCalibration(_ locationManager: LocationManager) -> Bool {
+        return shouldDisplayHeadingCalibrationStub.call(with: locationManager)
     }
 }

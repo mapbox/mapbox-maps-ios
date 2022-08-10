@@ -408,6 +408,19 @@ final class LocationProducerTests: XCTestCase {
         XCTAssertTrue((actualError as? MockError) === error)
     }
 
+    func testShouldDisplayHeadingCalibrationUsesDelegate() {
+        // given
+        delegate.shouldDisplayHeadingCalibrationStub.defaultReturnValue = true
+
+        // when
+        let shouldDisplayCalibration = locationProducer.locationProviderShouldDisplayHeadingCalibration(locationProvider)
+
+        // then
+        XCTAssertTrue(shouldDisplayCalibration)
+        XCTAssertEqual(delegate.shouldDisplayHeadingCalibrationStub.invocations.count, 1)
+        XCTAssertTrue(delegate.shouldDisplayHeadingCalibrationStub.invocations.first?.parameters === locationProducer)
+    }
+
     func testDidChangeAuthorizationNotifiesDelegateIfAccuracyAuthorizationChanged() {
         let accuracyAuthorizationValues: [CLAccuracyAuthorization] = [.fullAccuracy, .reducedAccuracy]
         let initialIndex = Int.random(in: 0...1)

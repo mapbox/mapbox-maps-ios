@@ -107,4 +107,12 @@ extension AppleLocationProvider: CLLocationManagerDelegate {
     public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         delegate?.locationProviderDidChangeAuthorization(self)
     }
+
+    public func locationManagerShouldDisplayHeadingCalibration(_ manager: CLLocationManager) -> Bool {
+        guard let calibratingDelegate = delegate as? CalibratingLocationProviderDelegate else {
+            return false
+        }
+
+        return calibratingDelegate.locationProviderShouldDisplayHeadingCalibration(self)
+    }
 }

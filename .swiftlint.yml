@@ -6,6 +6,7 @@ excluded:
   - Sources/MapboxMaps/Style/Generated
   - Tests/MapboxMapsTests/Style/Generated
   - "**/.build"
+  - ".build"
 disabled_rules:
   - comment_spacing
   - computed_accessors_order

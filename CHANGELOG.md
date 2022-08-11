@@ -3,6 +3,9 @@
 Mapbox welcomes participation and contributions from everyone.
 
 ## main
+
+## 10.8.0-beta.1 - August 11, 2022
+
 * Expose image property for compass ornament. ([#1468](https://github.com/mapbox/mapbox-maps-ios/pull/1468))
 * Expand scale bar range up to 15000 km/10000 miles. ([#1455](https://github.com/mapbox/mapbox-maps-ios/pull/1455))
 * Add the ability to override scale bar units. ([#1473](https://github.com/mapbox/mapbox-maps-ios/pull/1473))

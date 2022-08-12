@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Apply mercator scale to 3D puck also when its `modelScale` is not specified. ([#1523](https://github.com/mapbox/mapbox-maps-ios/pull/1523))
+
 ## 10.8.0-beta.1 - August 11, 2022
 
 * Expose image property for compass ornament. ([#1468](https://github.com/mapbox/mapbox-maps-ios/pull/1468))

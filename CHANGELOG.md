@@ -12,6 +12,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Add the ability to display heading calibration alert. ([#1509](https://github.com/mapbox/mapbox-maps-ios/pull/1509))
 * Add support for sonar-like pulsing animation around 2D puck. ([#1513](https://github.com/mapbox/mapbox-maps-ios/pull/1513))
 * Support view annotation lookup by an identifier. ([#1512](https://github.com/mapbox/mapbox-maps-ios/pull/1512))
+* Apply mercator scale to 3D puck also when its `modelScale` is not specified. ([#1523](https://github.com/mapbox/mapbox-maps-ios/pull/1523))
 
 ## 10.7.0 - July 28, 2022
 

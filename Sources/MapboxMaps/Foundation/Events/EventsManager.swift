@@ -1,5 +1,6 @@
 import UIKit
 import MapboxMobileEvents
+@_implementationOnly import MapboxCommon_Private
 
 extension UserDefaults {
     // dynamic var's name has to be the same as corresponding key in UserDefaults
@@ -15,6 +16,10 @@ extension UserDefaults {
 }
 
 internal final class EventsManager {
+    private enum Constants {
+            static let userAgentBase = "mapbox-maps-ios"
+            static let sdkVersion = Bundle.mapboxMapsMetadata.version
+        }
     // use a shared instance to avoid redundant calls to
     // MMEEventsManager.shared().pauseOrResumeMetricsCollectionIfRequired()
     // when the MGLMapboxMetricsEnabled UserDefaults key changes and duplicate
@@ -31,14 +36,22 @@ internal final class EventsManager {
 
     private let metricsEnabledObservation: NSKeyValueObservation
 
+    private let coreTelemetry: EventsService
+    private let telemetryService: TelemetryService
+
     private init(accessToken: String) {
-        let sdkVersion = Bundle.mapboxMapsMetadata.version
         mmeEventsManager = .shared()
         mmeEventsManager.initialize(
             withAccessToken: accessToken,
-            userAgentBase: "mapbox-maps-ios",
-            hostSDKVersion: sdkVersion)
+            userAgentBase: Constants.userAgentBase,
+            hostSDKVersion: Constants.sdkVersion)
         mmeEventsManager.skuId = "00"
+
+        let accessTokenCoreTelemetry = Bundle.main.infoDictionary?["MBXEventsServiceAccessToken"]  as? String ?? accessToken
+
+        let eventsServerOptions = EventsServerOptions(token: accessTokenCoreTelemetry, userAgentFragment: Constants.userAgentBase, deferredDeliveryServiceOptions: nil)
+        coreTelemetry = EventsService.getOrCreate(for: eventsServerOptions)
+        telemetryService = TelemetryService.getOrCreate(for: eventsServerOptions)
 
         UserDefaults.standard.register(defaults: [
             #keyPath(UserDefaults.MGLMapboxMetricsEnabled): true
@@ -65,9 +78,15 @@ internal final class EventsManager {
 
     internal func sendTurnstile() {
         mmeEventsManager.sendTurnstileEvent()
+
+        let turnstileEvent = TurnstileEvent.init(skuId: UserSKUIdentifier.mapsMAUS, sdkIdentifier: Constants.userAgentBase, sdkVersion: Constants.sdkVersion)
+        coreTelemetry.sendTurnstileEvent(for: turnstileEvent)
     }
 
     internal func sendMapLoadEvent() {
         mmeEventsManager.enqueueEvent(withName: MMEEventTypeMapLoad)
+
+        let ctEvent = MapboxCommon_Private.Event(priority: .immediate, attributes: ["event": MMEEventTypeMapLoad], deferredOptions: nil)
+        coreTelemetry.sendEvent(for: ctEvent)
     }
 }

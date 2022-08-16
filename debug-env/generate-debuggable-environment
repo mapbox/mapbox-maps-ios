@@ -25,6 +25,7 @@ def main():
                         help='commit to use for private version of Mapbox Maps iOS')
 
     args = parser.parse_args()
+    project = "mapbox-maps-ios-private" if args.private else "mapbox-maps-ios"
 
     if not os.path.exists("build"):
         os.mkdir("build")
@@ -36,7 +37,7 @@ def main():
         checkout_repo("mapbox-maps-ios", args.commit)
 
     if args.stable:
-        with open("mapbox-maps-ios/scripts/release/packager/versions.json") as f:
+        with open(f"{project}/scripts/release/packager/versions.json") as f:
             versions = json.load(f)
 
         args.gl_native_commit = "maps-v" + versions["MapboxCoreMaps"]
@@ -80,14 +81,9 @@ def main():
     os.chdir("..")
 
     # Generate Xcode projects
-    if args.private:
-        os.system("xcodegen -s MapboxMaps-private.yml")
-        os.system("xcodegen -s Examples-private.yml")
-        os.system("xcodegen -s DebugApp-private.yml")
-    else:
-        os.system("xcodegen -s MapboxMaps.yml")
-        os.system("xcodegen -s Examples.yml")
-        os.system("xcodegen -s DebugApp.yml")
+    os.system(f"PROJECT={project} xcodegen -s MapboxMaps.yml")
+    os.system(f"PROJECT={project} xcodegen -s Examples.yml")
+    os.system(f"PROJECT={project} xcodegen -s DebugApp.yml")
 
 #   # Open the resulting project
     os.system("xed Umbrella.xcworkspace")

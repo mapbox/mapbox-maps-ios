@@ -6,7 +6,7 @@ targets:
     platform: iOS
     settings:
       base:
-        INFOPLIST_FILE: "build/mapbox-maps-ios/Sources/MapboxMaps/Info.plist"
+        INFOPLIST_FILE: "build/${PROJECT}/Sources/MapboxMaps/Info.plist"
         PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.MapboxMaps
         INSTALL_PATH: $(LOCAL_LIBRARY_DIR)/Frameworks
         SKIP_INSTALL: "NO"
@@ -17,10 +17,10 @@ targets:
         PRODUCT_NAME: $(TARGET_NAME:c99extidentifier)
         CODE_SIGN_STYLE: Automatic
     configFiles:
-      Debug: "build/mapbox-maps-ios/Configurations/base.xcconfig"
-      Release: "build/mapbox-maps-ios/Configurations/base.xcconfig"
+      Debug: "build/${PROJECT}/Configurations/base.xcconfig"
+      Release: "build/${PROJECT}/Configurations/base.xcconfig"
     sources:
-      - path: "build/mapbox-maps-ios/Sources/MapboxMaps/"
+      - path: "build/${PROJECT}/Sources/MapboxMaps/"
     dependencies:
       - framework: "build/mapbox-gl-native-internal/build/ios/lib/Debug/MapboxCommon.framework"
       - target: "MapboxCoreMaps/MapboxCoreMaps"

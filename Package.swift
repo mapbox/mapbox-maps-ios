@@ -10,7 +10,7 @@ let package = Package(
     products: [
         .library(
             name: "MapboxMaps",
-            targets: ["MapboxMaps"]),
+            targets: ["MapboxMaps", "MapboxMapsObjC"]),
     ],
     dependencies: [
         .package(name: "MapboxCoreMaps", url: "https://github.com/mapbox/mapbox-core-maps-ios.git", .exact("10.8.0-beta.2")),
@@ -22,7 +22,7 @@ let package = Package(
     targets: [
         .target(
             name: "MapboxMaps",
-            dependencies: ["MapboxCoreMaps", "Turf", "MapboxMobileEvents", "MapboxCommon"],
+            dependencies: ["MapboxCoreMaps", "Turf", "MapboxMobileEvents", "MapboxCommon", "MapboxMapsObjC"],
             exclude: [
                 "Info.plist"
             ],
@@ -30,6 +30,7 @@ let package = Package(
                 .copy("MapboxMaps.json")
             ]
         ),
+        .target(name: "MapboxMapsObjC", path: "Sources/MapboxMapsObjC"),
         .testTarget(
             name: "MapboxMapsTests",
             dependencies: ["MapboxMaps", "CocoaImageHashing"],

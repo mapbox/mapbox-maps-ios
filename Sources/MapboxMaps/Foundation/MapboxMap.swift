@@ -4,6 +4,7 @@ import UIKit
 @_implementationOnly import MapboxCommon_Private
 @_implementationOnly import MapboxCoreMaps_Private
 import Turf
+import MapboxMapsObjC
 
 internal protocol MapboxMapProtocol: AnyObject {
     var size: CGSize { get }
@@ -527,7 +528,11 @@ public final class MapboxMap: MapboxMapProtocol {
     ///
     /// - Parameter cameraOptions: New camera options
     public func setCamera(to cameraOptions: CameraOptions) {
-        __map.setCameraFor(MapboxCoreMaps.CameraOptions(cameraOptions))
+        SwiftTryCatch.try {
+            self.__map.setCameraFor(MapboxCoreMaps.CameraOptions(cameraOptions))
+        } catch: { exception in
+            print(exception)
+        }
     }
 
     /// Returns the current camera state

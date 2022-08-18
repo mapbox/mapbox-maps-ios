@@ -5,6 +5,7 @@ final class SnapshotterTests: XCTestCase {
 
     var mapboxObservableProviderStub: Stub<ObservableProtocol, MapboxObservableProtocol>!
     var snapshotter: Snapshotter!
+    var mockMapSnapshotter: MockMapSnapshotter!
 
     override func setUp() {
         super.setUp()
@@ -12,15 +13,56 @@ final class SnapshotterTests: XCTestCase {
             size: CGSize(width: 100, height: 100),
             pixelRatio: .random(in: 1...3))
         mapboxObservableProviderStub = Stub(defaultReturnValue: MockMapboxObservable())
+        mockMapSnapshotter = MockMapSnapshotter()
         snapshotter = Snapshotter(
             options: options,
-            mapboxObservableProvider: mapboxObservableProviderStub.call(with:))
+            mapboxObservableProvider: mapboxObservableProviderStub.call(with:),
+            mapSnapshotter: mockMapSnapshotter)
     }
 
     override func tearDown() {
         snapshotter = nil
         mapboxObservableProviderStub = nil
+        mockMapSnapshotter = nil
         super.tearDown()
+    }
+
+    // Test snapshot start invokes mockMapSnapshotter startStub
+    func testSnapshotterStart() {
+        let snapshotView = UIImageView()
+        var snapshotting = true
+        snapshotter.start(overlayHandler: nil) { ( result ) in
+            switch result {
+            case .success(let image):
+                snapshotView.image = image
+            case .failure(let error):
+                print("Error generating snapshot: \(error)")
+            }
+            snapshotting = false
+        }
+        XCTAssertEqual(mockMapSnapshotter.startStub.invocations.count, 1)
+    }
+
+    // Test snapshot cancellation invokes mockMapSnapshotter cancelStub
+    func testSnapshotterCancel() {
+        // given snapshot is cancelled
+        snapshotter.cancel()
+        // mockMapSnapshotter cancel snapshotter stub should equal that of snapshotter
+        XCTAssertEqual(mockMapSnapshotter.cancelSnapshotterStub.invocations.count, 1)
+    }
+
+    // TestSnapshot size
+    // snapshot size should be the same size as the mock snapshot
+    func testSnapshotterSize() {
+        snapshotter.mapSnapshotter.setSizeFor(.init(width: 200, height: 200))
+        XCTAssertEqual(snapshotter.snapshotSize, CGSize(mockMapSnapshotter.getSize()))
+    }
+
+    //Test snapshot coordinate bounds for camera match thise of mock
+    func testCameraforCoordinateBounds() {
+        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38, longitude: -76), padding: .zero, anchor: .zero, zoom: 15, bearing: .zero, pitch: 90)
+        let coordinateBounds = snapshotter.mapSnapshotter.coordinateBoundsForCamera(forCamera: MapboxCoreMaps.CameraOptions(cameraOptions))
+        XCTAssertEqual(mockMapSnapshotter.coordinateBoundsStub.invocations.count, 1)
     }
 
     func testInitializationMapboxObservable() {

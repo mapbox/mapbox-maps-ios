@@ -2,15 +2,53 @@
 import UIKit
 import CoreLocation
 import CoreImage.CIFilterBuiltins
+import MapboxCoreMaps
 
+@_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
+
+typealias protocolDisaster =  MapSnapshotterProtocol & StyleManagerProtocol & ObservableProtocol
+
+typealias somethingNew = MapSnapshotterProtocol & StyleManagerProtocol & ObservableProtocol
+
+internal protocol MapSnapshotterProtocol {
+    // had to refeence the MapSnapshotter GL Native object (ie. MBMMapSnapshotter) to get the appropriate methods for the protocol
+
+    func setSizeFor(_ size: Size)
+
+    func getSize() -> Size
+
+    func isInTileMode() -> Bool
+
+    func setTileModeForSet(_ set: Bool)
+
+    // if you add a method to your protocol and your extension that conforms to the same protocol makes you add functions, something is wrong. Check the method and its parameters
+    func getCameraState() -> MapboxCoreMaps.CameraState
+
+    func setCameraFor(_ cameraOptions: MapboxCoreMaps.CameraOptions)
+
+    func start(forCallback: @escaping (Expected<MapSnapshot, NSString>) -> ())
+
+    func cancel()
+
+    func cameraForCoordinates(forCoordinates
+                              coordinates: [CLLocation],
+                              padding: EdgeInsets,
+                              bearing: NSNumber?,
+                              pitch: NSNumber?) -> MapboxCoreMaps.CameraOptions
+
+    func coordinateBoundsForCamera(forCamera camera: MapboxCoreMaps.CameraOptions) -> CoordinateBounds
+}
+
+
+extension MapSnapshotter: MapSnapshotterProtocol {}
 
 // MARK: - Snapshotter
 public class Snapshotter {
 
     /// Internal `MapboxCoreMaps.MBXMapSnapshotter` object that takes care of
     /// rendering a snapshot.
-    internal var mapSnapshotter: MapSnapshotter
+    var mapSnapshotter: protocolDisaster
 
     /// A `style` object that can be manipulated to set different styles for a snapshot
     public let style: Style
@@ -32,9 +70,11 @@ public class Snapshotter {
 
     /// Enables injecting mocks when unit testing
     internal init(options: MapSnapshotOptions,
-                  mapboxObservableProvider: (ObservableProtocol) -> MapboxObservableProtocol) {
+                  mapboxObservableProvider: (ObservableProtocol) -> MapboxObservableProtocol,
+                  mapSnapshotter: protocolDisaster) {
         self.options = options
-        mapSnapshotter = MapSnapshotter(options: MapboxCoreMaps.MapSnapshotOptions(options))
+        self.mapSnapshotter = mapSnapshotter
+        self.mapSnapshotter = MapSnapshotter(options: MapboxCoreMaps.MapSnapshotOptions(options))
         style = Style(with: mapSnapshotter)
         observable = mapboxObservableProvider(mapSnapshotter)
         EventsManager.shared(withAccessToken: options.resourceOptions.accessToken).sendTurnstile()
@@ -250,10 +290,10 @@ public class Snapshotter {
                        bearing: Double?,
                        pitch: Double?) -> CameraOptions {
         return CameraOptions(mapSnapshotter.cameraForCoordinates(
-                                forCoordinates: coordinates.map(\.location),
-                                padding: padding.toMBXEdgeInsetsValue(),
-                                bearing: bearing?.NSNumber,
-                                pitch: pitch?.NSNumber))
+            forCoordinates: coordinates.map(\.location),
+            padding: padding.toMBXEdgeInsetsValue(),
+            bearing: bearing?.NSNumber,
+            pitch: pitch?.NSNumber))
     }
 }
 

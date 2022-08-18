@@ -10,3 +10,6 @@
 [submodule "mapbox-maps-internal"]
 	path = mapbox-maps-internal
 	url = git@github.com:mapbox/mapbox-maps-internal.git
+[submodule "mapbox-maps-ios-private"]
+	path = mapbox-maps-ios-private
+	url = git@github.com:mapbox/mapbox-maps-ios-private.git

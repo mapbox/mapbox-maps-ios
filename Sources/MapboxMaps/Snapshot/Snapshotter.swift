@@ -12,8 +12,6 @@ typealias protocolDisaster =  MapSnapshotterProtocol & StyleManagerProtocol & Ob
 typealias somethingNew = MapSnapshotterProtocol & StyleManagerProtocol & ObservableProtocol
 
 internal protocol MapSnapshotterProtocol {
-    // had to refeence the MapSnapshotter GL Native object (ie. MBMMapSnapshotter) to get the appropriate methods for the protocol
-
     func setSizeFor(_ size: Size)
 
     func getSize() -> Size
@@ -22,7 +20,6 @@ internal protocol MapSnapshotterProtocol {
 
     func setTileModeForSet(_ set: Bool)
 
-    // if you add a method to your protocol and your extension that conforms to the same protocol makes you add functions, something is wrong. Check the method and its parameters
     func getCameraState() -> MapboxCoreMaps.CameraState
 
     func setCameraFor(_ cameraOptions: MapboxCoreMaps.CameraOptions)

@@ -7,11 +7,7 @@ import MapboxCoreMaps
 @_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
 
-typealias protocolDisaster =  MapSnapshotterProtocol & StyleManagerProtocol & ObservableProtocol
-
-typealias somethingNew = MapSnapshotterProtocol & StyleManagerProtocol & ObservableProtocol
-
-internal protocol MapSnapshotterProtocol {
+internal protocol MapSnapshotterProtocol: StyleManagerProtocol, ObservableProtocol {
     func setSizeFor(_ size: Size)
 
     func getSize() -> Size
@@ -45,7 +41,7 @@ public class Snapshotter {
 
     /// Internal `MapboxCoreMaps.MBXMapSnapshotter` object that takes care of
     /// rendering a snapshot.
-    var mapSnapshotter: protocolDisaster
+    var mapSnapshotter: MapSnapshotterProtocol
 
     /// A `style` object that can be manipulated to set different styles for a snapshot
     public let style: Style
@@ -68,10 +64,9 @@ public class Snapshotter {
     /// Enables injecting mocks when unit testing
     internal init(options: MapSnapshotOptions,
                   mapboxObservableProvider: (ObservableProtocol) -> MapboxObservableProtocol,
-                  mapSnapshotter: protocolDisaster) {
+                  mapSnapshotter: MapSnapshotterProtocol) {
         self.options = options
         self.mapSnapshotter = mapSnapshotter
-        self.mapSnapshotter = MapSnapshotter(options: MapboxCoreMaps.MapSnapshotOptions(options))
         style = Style(with: mapSnapshotter)
         observable = mapboxObservableProvider(mapSnapshotter)
         EventsManager.shared(withAccessToken: options.resourceOptions.accessToken).sendTurnstile()

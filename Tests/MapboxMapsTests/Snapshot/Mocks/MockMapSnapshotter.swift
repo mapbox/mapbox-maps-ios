@@ -3,15 +3,25 @@ import MapboxCoreMaps
 @_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
 
-final class MockMapSnapshotter: MapSnapshotterProtocol {
+final class MockMapSnapshotter: MockStyleManager, MapSnapshotterProtocol {
+
+    struct SubscribeParams {
+        var observer: Observer
+        var events: [String]
+    }
+    var subscribeStub = Stub<SubscribeParams, Void>()
+    func subscribe(for observer: Observer, events: [String]) {
+        subscribeStub.call(with: SubscribeParams(observer: observer, events: events))
+    }
+
+    var unsubscribeStub = Stub<Observer, Void>()
+    func unsubscribe(for observer: Observer) {
+        unsubscribeStub.call(with: observer)
+    }
 
     @Stubbed var style: Style?
     @Stubbed var options: MapboxCoreMaps.MapSnapshotOptions?
     @Stubbed var size: Size?
-
-    var options = MapboxCoreMaps.MapSnapshotOptions(MapSnapshotOptions(
-        size: CGSize(width: 100, height: 100),
-        pixelRatio: .random(in: 1...3)))
 
     public typealias SnapshotCompletion = (Expected<MapboxCoreMaps.MapSnapshot, NSString>) -> ()
 

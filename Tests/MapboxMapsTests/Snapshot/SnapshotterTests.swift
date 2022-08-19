@@ -28,19 +28,27 @@ final class SnapshotterTests: XCTestCase {
     }
 
     // Test snapshot start invokes mockMapSnapshotter startStub
-    func testSnapshotterStart() {
+    func testSnapshotterStartInvocation() {
+        // asserts that the mock and snapshotter reach start
+        snapshotter.start(overlayHandler: nil) { (result) in
+            XCTAssertEqual(self.mockMapSnapshotter.startStub.invocations.count, 1)
+        }
+    }
+
+    // asserting that the snapshotter image and mock snapshotter image are the same
+    func testSnapshotterImage() {
         let snapshotView = UIImageView()
-        var snapshotting = true
+        var snapshotting: Bool?
         snapshotter.start(overlayHandler: nil) { ( result ) in
             switch result {
             case .success(let image):
                 snapshotView.image = image
+                XCTAssertEqual(image, self.mockMapSnapshotter.image)
             case .failure(let error):
                 print("Error generating snapshot: \(error)")
             }
             snapshotting = false
         }
-        XCTAssertEqual(mockMapSnapshotter.startStub.invocations.count, 1)
     }
 
     // Test snapshot cancellation invokes mockMapSnapshotter cancelStub
@@ -51,18 +59,55 @@ final class SnapshotterTests: XCTestCase {
         XCTAssertEqual(mockMapSnapshotter.cancelSnapshotterStub.invocations.count, 1)
     }
 
-    // TestSnapshot size
-    // snapshot size should be the same size as the mock snapshot
+    // TestSnapshot size is the same size as the mock snapshot
     func testSnapshotterSize() {
-        snapshotter.mapSnapshotter.setSizeFor(.init(width: 200, height: 200))
+        let size = CGSize(width: 200, height: 200)
+
+        snapshotter.mapSnapshotter.setSizeFor(.init(size))
+
         XCTAssertEqual(snapshotter.snapshotSize, CGSize(mockMapSnapshotter.getSize()))
     }
 
-    //Test snapshot coordinate bounds for camera match thise of mock
-    func testCameraforCoordinateBounds() {
+    // TestSnapshot size shares same tile mode as the mock snapshot
+    func testSnapshotterTileMode() {
+
+        snapshotter.mapSnapshotter.setTileModeForSet(true)
+
+        XCTAssertEqual(mockMapSnapshotter.isInTileModeStub.invocations.count, 1)
+        XCTAssertEqual(snapshotter.tileMode, mockMapSnapshotter.isInTileMode())
+    }
+
+    func testSnapshotterSetCamera() {
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38, longitude: -76), padding: .zero, anchor: .zero, zoom: 15, bearing: .zero, pitch: 90)
+
+        snapshotter.setCamera(to: cameraOptions)
+
+        XCTAssertEqual(mockMapSnapshotter.setCameraStub.invocations.count, 1)
+    }
+
+    //Test snapshot coordinate bounds for camera match those of mock
+    func testSnapshotterCoordinateBoundsForCamera() {
+        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38, longitude: -76), padding: .zero, anchor: .zero, zoom: 15, bearing: .zero, pitch: 90)
+
         let coordinateBounds = snapshotter.mapSnapshotter.coordinateBoundsForCamera(forCamera: MapboxCoreMaps.CameraOptions(cameraOptions))
+
         XCTAssertEqual(mockMapSnapshotter.coordinateBoundsStub.invocations.count, 1)
+        XCTAssertIdentical(coordinateBounds, mockMapSnapshotter.coordinateBoundsStub.defaultReturnValue)
+    }
+
+    func testSnapshotterCameraforCoordinateBounds() {
+        let coordinates = [
+            CLLocation(latitude: 44.9753911881, longitude: -124.3348229758),
+            CLLocation(latitude: 48.9862916537, longitude: -124.3635392111),
+            CLLocation(latitude: 49.0163313873, longitude: -114.9828959018),
+            CLLocation(latitude: 45.0077739132, longitude: -114.9541796666),
+            CLLocation(latitude: 44.9753911881, longitude: -124.3348229758)
+        ]
+
+        let snapshotterCameraForCoordinates = snapshotter.mapSnapshotter.cameraForCoordinates(forCoordinates: coordinates, padding: EdgeInsets.init(top: 10, left: 10, bottom: 10, right: 10), bearing: 0, pitch: 0)
+
+        XCTAssertEqual(mockMapSnapshotter.cameraForCoordinatesStub.invocations.count, 1)
+        XCTAssertIdentical(snapshotterCameraForCoordinates, mockMapSnapshotter.cameraForCoordinatesStub.defaultReturnValue)
     }
 
     func testInitializationMapboxObservable() {

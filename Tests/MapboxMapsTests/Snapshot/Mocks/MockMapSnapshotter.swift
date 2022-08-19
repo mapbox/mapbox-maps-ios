@@ -5,23 +5,12 @@ import MapboxCoreMaps
 
 final class MockMapSnapshotter: MockStyleManager, MapSnapshotterProtocol {
 
-    struct SubscribeParams {
-        var observer: Observer
-        var events: [String]
-    }
-    var subscribeStub = Stub<SubscribeParams, Void>()
-    func subscribe(for observer: Observer, events: [String]) {
-        subscribeStub.call(with: SubscribeParams(observer: observer, events: events))
-    }
-
-    var unsubscribeStub = Stub<Observer, Void>()
-    func unsubscribe(for observer: Observer) {
-        unsubscribeStub.call(with: observer)
-    }
-
     @Stubbed var style: Style?
     @Stubbed var options: MapboxCoreMaps.MapSnapshotOptions?
     @Stubbed var size: Size?
+    @Stubbed var image: UIImage?
+    @Stubbed var coordinateBoundsForCamera: CoordinateBounds?
+    @Stubbed var cameraForCoordinates: MapboxCoreMaps.CameraOptions?
 
     public typealias SnapshotCompletion = (Expected<MapboxCoreMaps.MapSnapshot, NSString>) -> ()
 
@@ -30,7 +19,7 @@ final class MockMapSnapshotter: MockStyleManager, MapSnapshotterProtocol {
         setSizeStub.call(with: size)
     }
 
-    var getSizeStub = Stub<Void, Size>(defaultReturnValue: .init(width: 100, height: 100))
+    var getSizeStub = Stub<Void, Size>(defaultReturnValue: .init(width: 0, height: 0))
     func getSize() -> Size {
         getSizeStub.call()
     }
@@ -80,5 +69,19 @@ final class MockMapSnapshotter: MockStyleManager, MapSnapshotterProtocol {
     var coordinateBoundsStub = Stub<MapboxCoreMaps.CameraOptions, CoordinateBounds>(defaultReturnValue: .init(southwest: .random(), northeast: .random()))
     func coordinateBoundsForCamera(forCamera camera: MapboxCoreMaps.CameraOptions) -> CoordinateBounds {
         coordinateBoundsStub.call(with: camera)
+    }
+
+    struct SubscribeParams {
+        var observer: Observer
+        var events: [String]
+    }
+    var subscribeStub = Stub<SubscribeParams, Void>()
+    func subscribe(for observer: Observer, events: [String]) {
+        subscribeStub.call(with: SubscribeParams(observer: observer, events: events))
+    }
+
+    var unsubscribeStub = Stub<Observer, Void>()
+    func unsubscribe(for observer: Observer) {
+        unsubscribeStub.call(with: observer)
     }
 }

@@ -1,5 +1,5 @@
 import XCTest
-@_spi(Experimental) @testable import MapboxMaps
+@testable import MapboxMaps
 
 final class Puck3DTests: XCTestCase {
 

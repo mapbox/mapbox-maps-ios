@@ -9,6 +9,29 @@ import UIKit
 
 // swiftlint:disable type_body_length
 open class MapView: UIView {
+    @_spi(Experimental) public final class Animations {
+        private let displayLinkCoordinator: DisplayLinkCoordinator
+
+        internal init(coordinator: DisplayLinkCoordinator) {
+            self.displayLinkCoordinator = coordinator
+        }
+        public func makeAnimator(
+            duration: TimeInterval,
+            curve: TimingCurve,
+            owner: AnimationOwner = .unspecified
+        ) -> MapAnimator {
+            let impl = MapAnimatorImpl(
+                duration: duration,
+                curve: curve,
+                owner: owner,
+                mainQueue: MainQueue(),
+                displayLinkCoordinator: displayLinkCoordinator
+            )
+            return MapAnimator(impl: impl)
+        }
+    }
+
+    @_spi(Experimental) public lazy var animations = Animations(coordinator: displayLinkCoordinator)
 
     // `mapboxMap` depends on `MapInitOptions`, which is not available until
     // awakeFromNib() when instantiating MapView from a xib or storyboard.
@@ -96,7 +119,7 @@ open class MapView: UIView {
 
     private let dependencyProvider: MapViewDependencyProviderProtocol
 
-    private let displayLinkParticipants = WeakSet<DisplayLinkParticipant>()
+    private var displayLinkCoordinator = ProxyingDisplayLinkCoordinator()
 
     private let notificationCenter: NotificationCenterProtocol
     private let bundle: BundleProtocol
@@ -407,20 +430,20 @@ open class MapView: UIView {
             mayRequestWhenInUseAuthorization: bundle.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil)
         let interpolatedLocationProducer = dependencyProvider.makeInterpolatedLocationProducer(
             locationProducer: locationProducer,
-            displayLinkCoordinator: self)
+            displayLinkCoordinator: displayLinkCoordinator)
         location = dependencyProvider.makeLocationManager(
             locationProducer: locationProducer,
             interpolatedLocationProducer: interpolatedLocationProducer,
             style: mapboxMap.style,
             mapboxMap: mapboxMap,
-            displayLinkCoordinator: self)
+            displayLinkCoordinator: displayLinkCoordinator)
 
         // Initialize/Configure annotations orchestrator
         annotations = AnnotationOrchestrator(
             gestureRecognizer: gestures.singleTapGestureRecognizer,
             mapFeatureQueryable: mapboxMap,
             style: mapboxMap.style,
-            displayLinkCoordinator: self)
+            displayLinkCoordinator: displayLinkCoordinator)
 
         // Initialize/Configure view annotations manager
         viewAnnotations = ViewAnnotationManager(
@@ -566,9 +589,7 @@ open class MapView: UIView {
 
         updateHeadingOrientationIfNeeded()
 
-        for participant in displayLinkParticipants.allObjects {
-            participant.participate()
-        }
+        displayLinkCoordinator.notify(with: displayLink.targetTimestamp)
 
         cameraAnimatorsRunner.update()
 
@@ -700,15 +721,5 @@ extension MapView: DelegatingMapClientDelegate {
         self.metalView = metalView
 
         return metalView
-    }
-}
-
-extension MapView: DisplayLinkCoordinator {
-    func add(_ participant: DisplayLinkParticipant) {
-        displayLinkParticipants.add(participant)
-    }
-
-    func remove(_ participant: DisplayLinkParticipant) {
-        displayLinkParticipants.remove(participant)
     }
 }

@@ -141,7 +141,7 @@ extension InterpolatedLocationProducer: LocationConsumer {
 }
 
 extension InterpolatedLocationProducer: DisplayLinkParticipant {
-    internal func participate() {
+    internal func participate(targetTimestamp: CFTimeInterval) {
         if let location = interpolatedLocation(with: dateProvider.now) {
             observableInterpolatedLocation.notify(with: location)
         }

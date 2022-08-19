@@ -1,8 +1,8 @@
 @testable import MapboxMaps
 
 final class MockDisplayLinkParticipant: NSObject, DisplayLinkParticipant {
-    let participateStub = Stub<Void, Void>()
-    func participate() {
-        participateStub.call()
+    let participateStub = Stub<CFTimeInterval, Void>()
+    func participate(targetTimestamp: CFTimeInterval) {
+        participateStub.call(with: targetTimestamp)
     }
 }

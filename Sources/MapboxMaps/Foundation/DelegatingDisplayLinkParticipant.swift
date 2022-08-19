@@ -8,7 +8,7 @@ final internal class DelegatingDisplayLinkParticipant: NSObject, DisplayLinkPart
 
     weak var delegate: DelegatingDisplayLinkParticipantDelegate?
 
-    func participate() {
+    func participate(targetTimestamp: CFTimeInterval) {
         delegate?.participate(for: self)
     }
 }

@@ -21,10 +21,10 @@ internal final class Puck2D: Puck {
                     }
                     .add(to: cancelables)
                 if configuration.pulsing?.isEnabled == true {
-                    displayLinkCoordinator?.add(self)
+//                    displayLinkCoordinator?.add(self)
                 }
             } else {
-                displayLinkCoordinator?.remove(self)
+//                displayLinkCoordinator?.remove(self)
                 cancelables.cancelAll()
                 try? style.removeLayer(withId: Self.layerID)
                 try? style.removeImage(withId: Self.topImageId)
@@ -101,20 +101,18 @@ internal final class Puck2D: Puck {
 
         if let pulsing = configuration.pulsing {
             pulsingAnimator.addAnimations { [weak self] progress in
-                guard let self = self else { return }
-                let baseRadius: Double
-                switch pulsing.radius {
-                case .constant(let value):
-                    baseRadius = value
-                case .accuracy:
-                    baseRadius = self.latestLocation?.horizontalAccuracy ?? 30
+                guard let self = self, let location = self.latestLocation else {
+                    return
                 }
-                let radius = baseRadius * progress
-                let alpha = 1 - progress
-                let color = pulsing.color.withAlphaComponent(progress <= 0.1 ? 0 : alpha)
+
+                let curvedProgress = progress
+                let baseRadius = pulsing.radius.value(for: location, zoom: mapboxMap.cameraState.zoom)
+                let radius = baseRadius * curvedProgress
+                let alpha = 1.0 - curvedProgress
+                let color = pulsing.color.withAlphaComponent(curvedProgress <= 0.1 ? 0 : alpha)
                 let properties: [LocationIndicatorLayer.PaintCodingKeys: Any] = [
-                    .accuracyRadiusColor: StyleColor(color).rgbaString,
-                    .accuracyRadius: radius
+                    .emphasisCircleRadius: radius,
+                    .emphasisCircleColor: StyleColor(color).rgbaString,
                 ]
 
                 try! style.setLayerProperties(for: Self.layerID, properties: properties.mapKeys(\.rawValue))
@@ -287,7 +285,7 @@ internal final class Puck2D: Puck {
 }
 
 extension Puck2D: DisplayLinkParticipant {
-    func participate() {
+    func participate(targetTimestamp: CFTimeInterval) {
         guard style.layerExists(withId: Self.layerID),
               let location = latestLocation,
               let pulsing = configuration.pulsing else {

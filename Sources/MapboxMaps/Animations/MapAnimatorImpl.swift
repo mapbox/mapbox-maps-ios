@@ -2,7 +2,7 @@ import Foundation
 import QuartzCore
 
 internal final class MapAnimatorImpl {
-    private enum InternalState: Equatable {
+    internal enum InternalState: Equatable {
         case initial
         case running(CFTimeInterval)
         case paused(CFTimeInterval)
@@ -18,15 +18,8 @@ internal final class MapAnimatorImpl {
     private var animations: [(Double) -> Void] = []
 
     private var completions = [AnimationCompletion]()
-    private lazy var displayLink: CADisplayLink = {
-        let link = CADisplayLink(
-            target: ForwardingDisplayLinkTarget { [weak self] in
-                self?.updateFromDisplayLink($0)
-            },
-            selector: #selector(ForwardingDisplayLinkTarget.update(with:)))
-        return link
-    }()
-    private var internalState = InternalState.initial {
+    
+    internal private(set) var internalState = InternalState.initial {
         didSet {
             switch (oldValue, internalState) {
             case (.initial, .running), (.paused, .running):
@@ -50,13 +43,24 @@ internal final class MapAnimatorImpl {
     }
 
     private var unitBezier: UnitBezier
+
     internal var timingCurve: TimingCurve = .linear {
         didSet { unitBezier = UnitBezier(p1: timingCurve.p1, p2: timingCurve.p1) }
     }
 
-    public var duration: TimeInterval
+    internal var duration: TimeInterval
+
     /// Boolean that represents if the animation is running or not.
-    internal private(set) var isRunning: Bool = false
+    internal var isRunning: Bool {
+        switch internalState {
+        case .initial:
+            return false
+        case .running:
+            return true
+        case .final, .paused:
+            return false
+        }
+    }
 
     /// Boolean that represents if the animation is running normally or in reverse.
     internal var isReversed: Bool = false
@@ -64,24 +68,41 @@ internal final class MapAnimatorImpl {
     /// A Boolean value that indicates whether a completed animation remains in the active state.
     internal var pausesOnCompletion: Bool = false
 
+    private var internalFractionComplete: Double {
+        get { fractionComplete }
+        set {
+            switch internalState {
+            case .initial:
+                internalState = .running(CACurrentMediaTime())
+                fallthrough
+            case .running, .paused:
+                if scrubsLinearly {
+                    updateLinearly(for: newValue)
+                } else {
+                    update(for: newValue)
+                }
+            case .final:
+                break
+            }
+        }
+    }
+
+    internal var scrubsLinearly: Bool = true
+
     /// Value that represents what percentage of the animation has been completed.
     internal var fractionComplete: Double = 0
 
     internal var repeatCount: Int = 0
     internal var autoreverses: Bool = false
+    private var displayLinkCoordinator: DisplayLinkCoordinator
 
     // MARK: Initializer
-    internal init(duration: TimeInterval, curve: TimingCurve, owner: AnimationOwner = .unspecified, mainQueue: MainQueueProtocol = MainQueue()) {
+    internal init(duration: TimeInterval, curve: TimingCurve, owner: AnimationOwner = .unspecified, mainQueue: MainQueueProtocol = MainQueue(), displayLinkCoordinator: DisplayLinkCoordinator) {
         self.duration = duration
         self.owner = owner
         self.mainQueue = mainQueue
+        self.displayLinkCoordinator = displayLinkCoordinator
         self.unitBezier = UnitBezier(p1: curve.p1, p2: curve.p1)
-    }
-
-    deinit {
-        if internalState != .initial {
-            displayLink.remove(from: .main, forMode: .default)
-        }
     }
 
     /// See ``BasicCameraAnimator/startAnimation()``
@@ -89,13 +110,13 @@ internal final class MapAnimatorImpl {
         switch internalState {
         case .initial:
             internalState = .running(CACurrentMediaTime())
-            displayLink.add(to: .main, forMode: .default)
+            displayLinkCoordinator.add(self)
         case .running:
             // already running; do nothing
             break
         case let .paused(startTime):
             internalState = .running(startTime)
-            displayLink.isPaused = false
+            displayLinkCoordinator.add(self)
         case .final:
             // animators cannot be restarted
             break
@@ -107,12 +128,14 @@ internal final class MapAnimatorImpl {
         switch internalState {
         case .initial:
             internalState = .running(CACurrentMediaTime() + delay)
-            displayLink.add(to: .main, forMode: .default)
+            displayLinkCoordinator.add(self)
         case .running:
             // already running; do nothing
             break
-        case .paused:
-            fatalError("A paused animator cannot be started with a delay.")
+        case let .paused(startTime):
+            Log.error(forMessage: "A paused animator cannot be started with a delay. It will be started immediately.")
+            internalState = .running(startTime)
+            displayLinkCoordinator.add(self)
         case .final:
             // animators cannot be restarted
             break
@@ -126,7 +149,7 @@ internal final class MapAnimatorImpl {
             internalState = .paused(CACurrentMediaTime())
         case let .running(startTime):
             internalState = .paused(startTime)
-            displayLink.isPaused = true
+            displayLinkCoordinator.remove(self)
         case .paused:
             // already paused; do nothing
             break
@@ -148,7 +171,7 @@ internal final class MapAnimatorImpl {
             completions.removeAll()
         case .running, .paused:
             internalState = .final(.current)
-            displayLink.remove(from: .main, forMode: .default)
+            displayLinkCoordinator.remove(self)
             completions.forEach { $0(.current) }
         case .final:
             // Already stopped, so do nothing
@@ -194,12 +217,11 @@ internal final class MapAnimatorImpl {
         }
     }
 
-    internal func updateFromDisplayLink(_ displayLink: CADisplayLink) {
+    internal func updateWith(targetTime: CFTimeInterval) {
         switch internalState {
         case .initial, .paused, .final:
             return
         case let .running(startTimestamp):
-            let targetTime = displayLink.targetTimestamp
             guard targetTime > startTimestamp else {
                 return
             }
@@ -227,8 +249,18 @@ internal final class MapAnimatorImpl {
     private func update(for fractionComplete: Double) {
         let curvedProgress = unitBezier.solve(fractionComplete, 1e-6)
 
+        updateLinearly(for: curvedProgress)
+    }
+
+    private func updateLinearly(for fractionComplete: Double) {
         for animation in animations {
-            animation(curvedProgress)
+            animation(fractionComplete)
         }
+    }
+}
+
+extension MapAnimatorImpl: DisplayLinkParticipant {
+    func participate(targetTimestamp: CFTimeInterval) {
+        updateWith(targetTime: targetTimestamp)
     }
 }

@@ -1,8 +1,15 @@
 import Foundation
 
 @_spi(Experimental) final public class MapAnimator {
+    public enum State {
+        case initial
+        case active
+        case stopped
+    }
 
     private let impl: MapAnimatorImpl
+
+    public var state: State { State(impl.internalState) }
 
     public var owner: AnimationOwner {
         return impl.owner
@@ -47,12 +54,23 @@ import Foundation
         set { impl.autoreverses = newValue }
     }
 
+    public var scrubsLinearly: Bool {
+        get { impl.scrubsLinearly }
+        set { impl.scrubsLinearly = newValue }
+    }
+
     internal init(impl: MapAnimatorImpl) {
         self.impl = impl
     }
 
     public init(duration: TimeInterval, curve: TimingCurve, owner: AnimationOwner = .unspecified) {
-        self.impl = MapAnimatorImpl(duration: duration, curve: curve, owner: owner, mainQueue: MainQueue())
+        self.impl = MapAnimatorImpl(
+            duration: duration,
+            curve: curve,
+            owner: owner,
+            mainQueue: MainQueue(),
+            displayLinkCoordinator: StandaloneDisplayLinkCoordinator()
+        )
     }
 
     public func startAnimation() {
@@ -77,5 +95,18 @@ import Foundation
 
     public func addCompletion(_ completion: @escaping AnimationCompletion) {
         impl.addCompletion(completion)
+    }
+}
+
+fileprivate extension MapAnimator.State {
+    init(_ internalState: MapAnimatorImpl.InternalState) {
+        switch internalState {
+        case .initial:
+            self = .initial
+        case .running, .paused:
+            self = .active
+        case .final:
+            self = .stopped
+        }
     }
 }

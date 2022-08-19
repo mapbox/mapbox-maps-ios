@@ -30,7 +30,7 @@ class SpecsBenchmark: XCTestCase {
     }
 
     func testNavDayMunichZoom() throws {
-        try runScenarioBenchmark(name: "nav-day-munich-zoom", extraMetrics: [], timeout: 120)
+        try runScenarioBenchmark(name: "nav-day-munich-zoom", extraMetrics: [FPSMetric()], timeout: 120)
     }
 
     func testNavDayMunichZoomTilepack() throws {
@@ -41,7 +41,7 @@ class SpecsBenchmark: XCTestCase {
         try runScenarioBenchmark(name: "nav-day-munich-drive-tilepack",
                                  shouldSkipWarmupRun: true,
                                  iterationCount: 1,
-                                 extraMetrics: [],
+                                 extraMetrics: [FPSMetric()],
                                  timeout: 1800)
     }
 }
@@ -74,7 +74,8 @@ extension SpecsBenchmark {
             XCTCPUMetric(),
             XCTMemoryMetric(),
             XCTStorageMetric(),
-            XCTClockMetric()
+            XCTClockMetric(),
+            ThermalStateMetric()
         ]
 
         let options = XCTMeasureOptions()

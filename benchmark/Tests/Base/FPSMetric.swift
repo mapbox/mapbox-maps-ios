@@ -3,8 +3,11 @@ import XCTest
 class FPSMetric: NSObject, XCTMetric {
     private var displayLink: CADisplayLink!
 
-    override init() {
+    let testCase: XCTestCase?
+    init(testCase: XCTestCase?) {
+        self.testCase = testCase
         super.init()
+
         displayLink = UIScreen.main.displayLink(withTarget: self, selector: #selector(displayLinkUpdate(_:)))!
         displayLink.isPaused = true
         displayLink.add(to: .main, forMode: .common)
@@ -15,7 +18,7 @@ class FPSMetric: NSObject, XCTMetric {
     private var previousFrameTimestamp: Double!
     private var frameExpectedTimestamp: Double!
 
-    struct MetricRecord {
+    struct MetricRecord: Codable {
         let timestamp: UInt64
         let frameExpectedTimestamp: CFTimeInterval
         let frameActualTimestamp: CFTimeInterval
@@ -66,10 +69,25 @@ class FPSMetric: NSObject, XCTMetric {
         frameIndex += 1
     }
 
-    var measuringIndex = 0
+    func addAttachment(_ metrics: ArraySlice<MetricRecord>) {
+        guard let testCase = testCase else {
+            return
+        }
+
+        let encoder = JSONEncoder()
+        guard let data = try? encoder.encode(Array(metrics)) else { return }
+        let attachment = XCTAttachment(uniformTypeIdentifier: "public.json",
+                                       name: "metric_records.json",
+                                       payload: data)
+        attachment.lifetime = .keepAlways
+        testCase.add(attachment)
+    }
+
     func reportMeasurements(from startTime: XCTPerformanceMeasurementTimestamp, to endTime: XCTPerformanceMeasurementTimestamp) throws -> [XCTPerformanceMeasurement] {
 
         let metrics = filteredRecords(from: startTime, till: endTime)
+
+        addAttachment(metrics)
 
         let framesCount = metrics.count
 

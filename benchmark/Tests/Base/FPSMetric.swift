@@ -82,7 +82,7 @@ class FPSMetric: NSObject, XCTMetric {
         let p99FPS = percentileFPS(metrics: metrics, value: 0.99)
         let p99_9FPS = percentileFPS(metrics: metrics, value: 0.999)
         let numberOfBadFrames = junkFrames(metrics)
-        
+        let stdev = standardDeviationFrameDuration(metrics)
 
         return [
             XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.fps.average", displayName: "FPS (avg)", value: averageFPSValue, polarity: .prefersLarger),
@@ -90,6 +90,7 @@ class FPSMetric: NSObject, XCTMetric {
             XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.fps.p95", displayName: "FPS (p95)", value: p95FPS),
             XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.fps.p99", displayName: "FPS (p99)", value: p99FPS),
             XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.fps.p99_9", displayName: "FPS (p99.9)", value: p99_9FPS),
+            XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.fps.stdev", displayName: "FPS (stdev)", value: stdev),
             XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.framescount", displayName: "Frames (count)", doubleValue: Double(framesCount ), unitSymbol: ""),
             XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.fps.junkframes", displayName: "Junk frames", doubleValue: Double(numberOfBadFrames), unitSymbol: ""),
             XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.fps.junkframes_ratio", displayName: "Junk frames (ratio)", doubleValue: Double(numberOfBadFrames) / Double(framesCount) * 100, unitSymbol: "%"),
@@ -141,10 +142,20 @@ class FPSMetric: NSObject, XCTMetric {
     }
 
     func junkFrames(_ metrics: ArraySlice<MetricRecord>, screen: UIScreen = .main) -> Int {
-        // Acceptable error margin is half (or less) of a frame duration
-        let epsilon = 1.0 / Double(screen.maximumFramesPerSecond) / 2
+        let epsilon = 0.0001
         let junkFrames = metrics.filter({ $0.frameDuration - $0.expectedFrameDuration >= epsilon })
         return junkFrames.count
+    }
+
+    func standardDeviationFrameDuration(_ data: ArraySlice<MetricRecord>, screen: UIScreen = .main) -> Measurement<Unit> {
+        let maxFPS = Double(screen.maximumFramesPerSecond)
+        let data = data.map({ min( round(1.0 / $0.frameDuration), maxFPS) })
+        let count = Double(data.count)
+        let mean = data.reduce(0, +) / count
+        let sumOfPowDiffs = data.map({ pow($0 - mean, 2) }).reduce(0, +)
+
+        let value = sqrt(sumOfPowDiffs / count)
+        return Measurement(value: value, unit: UnitFrequency.framesPerSecond)
     }
 
     func copy(with zone: NSZone? = nil) -> Any {

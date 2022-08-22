@@ -34,13 +34,11 @@ class FPSMetric: NSObject, XCTMetric {
     var metricRecords: [MetricRecord] = []
 
     func willBeginMeasuring() {
-        print("Beginning measuring with framesCount = \(frameIndex)")
         displayLink.isPaused = false
     }
 
     func didStopMeasuring() {
         displayLink.isPaused = true
-        print("Did stop measuring with framesCount = \(frameIndex)")
         frameIndex = 0
         previousFrameTimestamp = nil
         frameExpectedTimestamp = nil
@@ -70,7 +68,6 @@ class FPSMetric: NSObject, XCTMetric {
 
     var measuringIndex = 0
     func reportMeasurements(from startTime: XCTPerformanceMeasurementTimestamp, to endTime: XCTPerformanceMeasurementTimestamp) throws -> [XCTPerformanceMeasurement] {
-        print("Request start time: \(startTime.date) till \(endTime.date)")
 
         let metrics = filteredRecords(from: startTime, till: endTime)
 
@@ -92,7 +89,7 @@ class FPSMetric: NSObject, XCTMetric {
             XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.fps.p99_9", displayName: "FPS (p99.9)", value: p99_9FPS),
             XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.fps.stdev", displayName: "FPS (stdev)", value: stdev),
             XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.framescount", displayName: "Frames (count)", doubleValue: Double(framesCount ), unitSymbol: ""),
-            XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.fps.junkframes", displayName: "Junk frames", doubleValue: Double(numberOfBadFrames), unitSymbol: ""),
+            XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.framescount.junkframes", displayName: "Junk frames", doubleValue: Double(numberOfBadFrames), unitSymbol: ""),
             XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.fps.junkframes_ratio", displayName: "Junk frames (ratio)", doubleValue: Double(numberOfBadFrames) / Double(framesCount) * 100, unitSymbol: "%"),
         ]
     }

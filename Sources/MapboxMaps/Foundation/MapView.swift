@@ -559,7 +559,15 @@ open class MapView: UIView {
         mapboxMap.size = bounds.size
     }
 
+    @_spi(Metrics) public var beforeDrawCallback: ((CADisplayLink) -> Void)? = nil
+    @_spi(Metrics) public var afterDrawCallback: ((CADisplayLink) -> Void)? = nil
+
+    @_spi(Metrics) public var beforeDisplayLinkCallback: ((CADisplayLink) -> Void)? = nil
+    @_spi(Metrics) public var afterDisplayLinkCallback: ((CADisplayLink) -> Void)? = nil
+
     private func updateFromDisplayLink(displayLink: CADisplayLink) {
+        beforeDisplayLinkCallback?(displayLink)
+        defer { afterDisplayLinkCallback?(displayLink) }
         if window == nil {
             return
         }
@@ -574,7 +582,9 @@ open class MapView: UIView {
 
         if needsDisplayRefresh {
             needsDisplayRefresh = false
+            beforeDrawCallback?(displayLink)
             metalView?.draw()
+            afterDrawCallback?(displayLink)
         }
     }
 

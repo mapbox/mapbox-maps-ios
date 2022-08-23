@@ -190,6 +190,13 @@ workflows:
             branches:
               only: main
 
+      # Notify internal CI about main and release branch updates
+      - trigger-internal-ci-sync:
+          filters:
+            branches:
+              only:
+                - main
+                - /^release/v10.*/
   release:
     jobs:
       - release-precheck:
@@ -915,6 +922,24 @@ jobs:
           turf-revision: << parameters.turf-revision >>
       - turf-report-failure:
           turf-revision: << parameters.turf-revision >>
+
+  trigger-internal-ci-sync:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - run:
+          name: Notify maps internal CI about $CIRCLE_BRANCH branch update
+          command: |
+            curl -X POST "https://circleci.com/api/v2/project/github/mapbox/mapbox-maps-ios-private/pipeline" \
+                -H 'Content-Type: application/json' \
+                -H "Circle-Token: $CIRCLECI_API_TOKEN_MAPBOX_MAPS_IOS_INTERNAL" \
+                -d $'{
+                        "branch": "main",
+                        "parameters": {
+                          "mapbox_sync_branch": "$CIRCLE_BRANCH"
+                        }
+                      }'
 
 # ==============================================================================
 # Reusable commands

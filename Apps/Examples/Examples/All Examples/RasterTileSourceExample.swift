@@ -49,7 +49,7 @@ class RasterTileSourceExample: UIViewController, ExampleProtocol {
         let style = mapView.mapboxMap.style
 
         // This URL points to raster tiles designed by Stamen Design.
-        let sourceUrl = "https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg"
+        let sourceUrl = "https://api.mapbox.com/v4/mapbox.mapbox-weather-alerts/{z}/{x}/{y}.vector.pbf"
 
         // Create a `RasterSource` and set the source's `tiles` to the Stamen watercolor raster tiles.
         var rasterSource = RasterSource()

@@ -52,7 +52,8 @@ final public class WeatherService: WeatherServiceProtocol {
     }
 
     private func endpointURL(for coordinates: CLLocationCoordinate2D) -> URL {
-        let endpoint = "https://api-weatherdata-staging.tilestream.net/weatherdata/v1/forecast/temperature,wind_speed,precipitation_probability/current/\(coordinates.longitude)/\(coordinates.latitude).geojson?access_token=pk.eyJ1IjoiamFrZSIsImEiOiJjaWdzNW5nZGEwMDVwc3JrdXpwamd0NzBuIn0.IN13jNYSxZdCnk0QtnIbVg"
+        let endpoint =
+        "https://api.mapbox.com/weatherdata/v1/conditions/\(coordinates.longitude)/\(coordinates.latitude).geojson?access_token=pk.eyJ1IjoicHJhdGlreWFkYXYiLCJhIjoiY2sxd3FlMTdvMDFiNjNtbzNkMXRmbjFmaiJ9.LmtWDsU0_LuuZfWnlBe4gA&units=imperial&interval=current&variables=temperature&_provider=tomorrow"
         return URL(string: endpoint)!
     }
 
@@ -109,25 +110,12 @@ final public class WeatherService: WeatherServiceProtocol {
 
             let json = try? JSONSerialization.jsonObject(with: data)
             let properties = ((json as? [String: Any])?["features"] as? [[String: Any]])?.first?["properties"]
-            let fields = (((properties as? [String: Any])?["forecast"] as? [[String: Any]])?.first?["fields"] as? [Any])?.first
-            let dicts = ((fields as? [[String: Any]] ?? [])) as [[String: Any]]
+            let fields = (((properties as? [String: Any])?["conditions"] as? [[String: Any]])?.first?["fields"] as? [Any])?.first
+            let dict = fields as? [String: Any] ?? [:]
+
 
             var forecast = WeatherForecast()
-            for object in dicts {
-                let name = object["name"] as? String
-                let value = object["value"] as? Double
-
-                switch name {
-                case "precipitation_probability":
-                    forecast.precipitationProbability = value
-                case "temperature":
-                    forecast.temperature = value
-                case "wind_speed":
-                    forecast.windSpeed = value
-                default:
-                    break
-                }
-            }
+            forecast.temperature = dict["value"] as? Double
 
             DispatchQueue.main.async {
                 self.delegate?.weatherService(self, didUpdateForecast: forecast)

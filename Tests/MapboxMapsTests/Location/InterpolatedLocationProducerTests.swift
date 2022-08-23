@@ -112,7 +112,7 @@ final class InterpolatedLocationProducerTests: XCTestCase {
     }
 
     func testParticipateBeforeInitialLocationDelivery() {
-        interpolatedLocationProducer.participate()
+        interpolatedLocationProducer.participate(targetTimestamp: .random(in: 0...10))
 
         XCTAssertEqual(observableInterpolatedLocation.notifyStub.invocations.count, 0)
     }
@@ -125,7 +125,7 @@ final class InterpolatedLocationProducerTests: XCTestCase {
 
         for timeInterval: TimeInterval in [0, 0.5, 1, 2] {
             dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: timeInterval)
-            interpolatedLocationProducer.participate()
+            interpolatedLocationProducer.participate(targetTimestamp: .random(in: 0...10))
             XCTAssertEqual(locationInterpolator.interpolateStub.invocations.count, 0)
             XCTAssertEqual(observableInterpolatedLocation.notifyStub.invocations.map(\.parameters), [interpolatedLocation])
             observableInterpolatedLocation.notifyStub.reset()
@@ -145,7 +145,7 @@ final class InterpolatedLocationProducerTests: XCTestCase {
         func verifyParticipate(withTimeInterval timeInterval: TimeInterval, expectedFraction: Double) throws {
             dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: timeInterval)
             locationInterpolator.interpolateStub.defaultReturnValue = .random()
-            interpolatedLocationProducer.participate()
+            interpolatedLocationProducer.participate(targetTimestamp: .random(in: 0...10))
             XCTAssertEqual(locationInterpolator.interpolateStub.invocations.count, 1)
             let interpolateInvocation = try XCTUnwrap(locationInterpolator.interpolateStub.invocations.first)
             XCTAssertEqual(interpolateInvocation.parameters.fromLocation, interpolatedLocation0)
@@ -161,13 +161,13 @@ final class InterpolatedLocationProducerTests: XCTestCase {
         try verifyParticipate(withTimeInterval: 1.99, expectedFraction: 0.9)
 
         dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: 2.1)
-        interpolatedLocationProducer.participate()
+        interpolatedLocationProducer.participate(targetTimestamp: .random(in: 0...10))
         XCTAssertEqual(locationInterpolator.interpolateStub.invocations.count, 0)
         XCTAssertEqual(observableInterpolatedLocation.notifyStub.invocations.map(\.parameters), [interpolatedLocation1])
         observableInterpolatedLocation.notifyStub.reset()
 
         dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: 3)
-        interpolatedLocationProducer.participate()
+        interpolatedLocationProducer.participate(targetTimestamp: .random(in: 0...10))
         XCTAssertEqual(locationInterpolator.interpolateStub.invocations.count, 0)
         XCTAssertEqual(observableInterpolatedLocation.notifyStub.invocations.map(\.parameters), [interpolatedLocation1])
     }
@@ -202,7 +202,7 @@ final class InterpolatedLocationProducerTests: XCTestCase {
         func verifyParticipate(withTimeInterval timeInterval: TimeInterval, expectedFraction: Double) throws {
             dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: timeInterval)
             locationInterpolator.interpolateStub.defaultReturnValue = .random()
-            interpolatedLocationProducer.participate()
+            interpolatedLocationProducer.participate(targetTimestamp: .random(in: 0...10))
             XCTAssertEqual(locationInterpolator.interpolateStub.invocations.count, 1)
             let interpolateInvocation = try XCTUnwrap(locationInterpolator.interpolateStub.invocations.first)
             XCTAssertEqual(interpolateInvocation.parameters.fromLocation, newStartLocation)
@@ -218,13 +218,13 @@ final class InterpolatedLocationProducerTests: XCTestCase {
         try verifyParticipate(withTimeInterval: 2.54, expectedFraction: 0.9)
 
         dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: 2.66)
-        interpolatedLocationProducer.participate()
+        interpolatedLocationProducer.participate(targetTimestamp: .random(in: 0...10))
         XCTAssertEqual(locationInterpolator.interpolateStub.invocations.count, 0)
         XCTAssertEqual(observableInterpolatedLocation.notifyStub.invocations.map(\.parameters), [interpolatedLocation2])
         observableInterpolatedLocation.notifyStub.reset()
 
         dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: 3.5)
-        interpolatedLocationProducer.participate()
+        interpolatedLocationProducer.participate(targetTimestamp: .random(in: 0...10))
         XCTAssertEqual(locationInterpolator.interpolateStub.invocations.count, 0)
         XCTAssertEqual(observableInterpolatedLocation.notifyStub.invocations.map(\.parameters), [interpolatedLocation2])
     }

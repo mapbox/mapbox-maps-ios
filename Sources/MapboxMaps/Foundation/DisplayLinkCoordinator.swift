@@ -1,4 +1,5 @@
 import Foundation
+import QuartzCore
 
 internal protocol DisplayLinkCoordinator: AnyObject {
     // The coordinator must only keep weak references to participants
@@ -7,22 +8,25 @@ internal protocol DisplayLinkCoordinator: AnyObject {
     func remove(_ participant: DisplayLinkParticipant)
 }
 
-internal final class StandaloneDisplayLinkCoordinator: DisplayLinkCoordinator {
+internal final class StandaloneDisplayLinkCoordinator: DisplayLinkCoordinator, DelegatingDisplayLinkTargetDelegate {
     private let displayLinkParticipants = WeakSet<DisplayLinkParticipant>()
-    private lazy var displayLink: CADisplayLink = {
-        let link = CADisplayLink(
-            target: ForwardingDisplayLinkTarget { [weak self] in
-                self?.updateFromDisplayLink($0)
-            },
-            selector: #selector(ForwardingDisplayLinkTarget.update(with:)))
-        return link
-    }()
+    private let displayLink: DisplayLinkProtocol
 
     deinit {
-        displayLink.remove(from: .main, forMode: .default)
+        displayLink.invalidate()
     }
 
-    init() {
+    internal convenience init() {
+        let displayLinkTarget = DelegatingDisplayLinkTarget()
+        let link = CADisplayLink(
+            target: displayLinkTarget,
+            selector: #selector(DelegatingDisplayLinkTarget.update(with:)))
+        self.init(displayLink: link, target: displayLinkTarget)
+    }
+
+    internal init(displayLink: DisplayLinkProtocol, target: DelegatingDisplayLinkTarget) {
+        self.displayLink = displayLink
+        target.delegate = self
         displayLink.isPaused = true
         displayLink.add(to: .main, forMode: .default)
     }
@@ -41,7 +45,7 @@ internal final class StandaloneDisplayLinkCoordinator: DisplayLinkCoordinator {
         }
     }
 
-    private func updateFromDisplayLink(_ displayLink: CADisplayLink) {
+    internal func delegatingTargetDisplayLinkDidUpdate(_ displayLink: DisplayLinkProtocol) {
         for participant in displayLinkParticipants.allObjects {
             participant.participate(targetTimestamp: displayLink.targetTimestamp)
         }

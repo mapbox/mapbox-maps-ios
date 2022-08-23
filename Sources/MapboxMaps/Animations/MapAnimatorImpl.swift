@@ -5,7 +5,7 @@ internal final class MapAnimatorImpl {
     internal enum InternalState: Equatable {
         case initial
         case running(CFTimeInterval)
-        case paused(CFTimeInterval)
+        case paused(Double)
         case final(UIViewAnimatingPosition)
     }
 
@@ -18,7 +18,7 @@ internal final class MapAnimatorImpl {
     private var animations: [(Double) -> Void] = []
 
     private var completions = [AnimationCompletion]()
-    
+
     internal private(set) var internalState = InternalState.initial {
         didSet {
             switch (oldValue, internalState) {
@@ -68,73 +68,76 @@ internal final class MapAnimatorImpl {
     /// A Boolean value that indicates whether a completed animation remains in the active state.
     internal var pausesOnCompletion: Bool = false
 
-    private var internalFractionComplete: Double {
-        get { fractionComplete }
+    internal var scrubsLinearly: Bool = true
+
+    private var internalFractionComplete: Double = 0
+
+    /// Value that represents what percentage of the animation has been completed.
+    internal var fractionComplete: Double {
+        get { internalFractionComplete }
         set {
             switch internalState {
             case .initial:
-                internalState = .running(CACurrentMediaTime())
+                internalState = .running(timeProvider.current)
                 fallthrough
-            case .running, .paused:
+            case .paused:
+                internalFractionComplete = newValue
                 if scrubsLinearly {
                     updateLinearly(for: newValue)
                 } else {
                     update(for: newValue)
                 }
-            case .final:
+            case .running, .final:
+                // do nothing
                 break
             }
         }
     }
 
-    internal var scrubsLinearly: Bool = true
-
-    /// Value that represents what percentage of the animation has been completed.
-    internal var fractionComplete: Double = 0
-
     internal var repeatCount: Int = 0
     internal var autoreverses: Bool = false
     private var displayLinkCoordinator: DisplayLinkCoordinator
+    private var timeProvider: TimeProvider
 
     // MARK: Initializer
-    internal init(duration: TimeInterval, curve: TimingCurve, owner: AnimationOwner = .unspecified, mainQueue: MainQueueProtocol = MainQueue(), displayLinkCoordinator: DisplayLinkCoordinator) {
+    internal init(
+        duration: TimeInterval,
+        curve: TimingCurve,
+        owner: AnimationOwner = .unspecified,
+        mainQueue: MainQueueProtocol = MainQueue(),
+        timeProvider: TimeProvider = DefaultTimeProvider(),
+        displayLinkCoordinator: DisplayLinkCoordinator
+    ) {
         self.duration = duration
+        self.timingCurve = curve
         self.owner = owner
         self.mainQueue = mainQueue
+        self.timeProvider = timeProvider
         self.displayLinkCoordinator = displayLinkCoordinator
         self.unitBezier = UnitBezier(p1: curve.p1, p2: curve.p1)
     }
 
     /// See ``BasicCameraAnimator/startAnimation()``
     internal func startAnimation() {
-        switch internalState {
-        case .initial:
-            internalState = .running(CACurrentMediaTime())
-            displayLinkCoordinator.add(self)
-        case .running:
-            // already running; do nothing
-            break
-        case let .paused(startTime):
-            internalState = .running(startTime)
-            displayLinkCoordinator.add(self)
-        case .final:
-            // animators cannot be restarted
-            break
-        }
+        startAnimation(afterDelay: 0)
     }
 
     /// See ``BasicCameraAnimator/startAnimation(afterDelay:)``
     internal func startAnimation(afterDelay delay: TimeInterval) {
         switch internalState {
         case .initial:
-            internalState = .running(CACurrentMediaTime() + delay)
+            internalState = .running(timeProvider.current + delay)
             displayLinkCoordinator.add(self)
         case .running:
             // already running; do nothing
             break
-        case let .paused(startTime):
-            Log.error(forMessage: "A paused animator cannot be started with a delay. It will be started immediately.")
-            internalState = .running(startTime)
+        case let .paused(progress):
+            let timePassed = duration * progress
+            let retrojectedStartTime = timeProvider.current - timePassed
+            if delay > 0 {
+                Log.error(forMessage: "A paused animator cannot be started with a delay. It will be started immediately.")
+            }
+            internalState = .running(retrojectedStartTime)
             displayLinkCoordinator.add(self)
         case .final:
             // animators cannot be restarted
@@ -146,15 +149,12 @@ internal final class MapAnimatorImpl {
     internal func pauseAnimation() {
         switch internalState {
         case .initial:
-            internalState = .paused(CACurrentMediaTime())
-        case let .running(startTime):
-            internalState = .paused(startTime)
+            internalState = .paused(0)
+        case .running:
+            internalState = .paused(internalFractionComplete)
             displayLinkCoordinator.remove(self)
-        case .paused:
-            // already paused; do nothing
-            break
-        case .final:
-            // already completed; do nothing
+        case .paused, .final:
+            // do nothing
             break
         }
     }
@@ -164,15 +164,13 @@ internal final class MapAnimatorImpl {
         switch internalState {
         case .initial:
             internalState = .final(.current)
-            for completion in completions {
-                completion(.current)
-            }
-
+            completions.forEach { $0(.current) }
             completions.removeAll()
         case .running, .paused:
             internalState = .final(.current)
             displayLinkCoordinator.remove(self)
             completions.forEach { $0(.current) }
+            completions.removeAll()
         case .final:
             // Already stopped, so do nothing
             break
@@ -200,9 +198,9 @@ internal final class MapAnimatorImpl {
         switch internalState {
         case .initial:
             break
-        case .running(let startTime):
+        case .running:
             if pausesOnCompletion {
-                internalState = .paused(startTime)
+                internalState = .paused(internalFractionComplete)
             } else {
                 internalState = .final(.end)
                 completions.forEach { $0(.end) }

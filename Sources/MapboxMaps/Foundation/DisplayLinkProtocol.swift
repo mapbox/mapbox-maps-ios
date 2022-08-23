@@ -2,6 +2,7 @@ import QuartzCore
 
 internal protocol DisplayLinkProtocol: AnyObject {
     var timestamp: CFTimeInterval { get }
+    var targetTimestamp: CFTimeInterval { get }
     var duration: CFTimeInterval { get }
     var preferredFramesPerSecond: Int { get set }
     // Checking Swift version as a proxy for iOS SDK version to enable
@@ -12,7 +13,10 @@ internal protocol DisplayLinkProtocol: AnyObject {
     #endif
     var isPaused: Bool { get set }
     func add(to runloop: RunLoop, forMode mode: RunLoop.Mode)
+    func remove(from runloop: RunLoop, forMode mode: RunLoop.Mode)
     func invalidate()
+
+    init(target: Any, selector sel: Selector)
 }
 
 extension CADisplayLink: DisplayLinkProtocol {}

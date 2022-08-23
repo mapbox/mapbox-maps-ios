@@ -8,7 +8,7 @@ final class DelegatingDisplayLinkParticipantTests: XCTestCase {
         let delegatingParticipant = DelegatingDisplayLinkParticipant()
         delegatingParticipant.delegate = delegate
 
-        delegatingParticipant.participate()
+        delegatingParticipant.participate(targetTimestamp: .random(in: 0...10))
 
         XCTAssertEqual(delegate.participateStub.invocations.count, 1)
         XCTAssertTrue(delegate.participateStub.invocations.first?.parameters === delegatingParticipant)

@@ -649,7 +649,7 @@ final class Puck2DTests: XCTestCase {
         updateLocation()
         style.setLayerPropertiesStub.reset()
 
-        puck2D.participate()
+        puck2D.participate(targetTimestamp: .random(in: 0...10))
 
         XCTAssertTrue(style.setLayerPropertiesStub.invocations.isEmpty)
     }
@@ -663,11 +663,11 @@ final class Puck2DTests: XCTestCase {
         recreatePuck()
         puck2D.isActive = true
         updateLocation()
-        puck2D.participate()
+        puck2D.participate(targetTimestamp: .random(in: 0...10))
         style.setLayerPropertiesStub.reset()
 
         timeProvider.currentStub.defaultReturnValue = 3
-        puck2D.participate()
+        puck2D.participate(targetTimestamp: .random(in: 0...10))
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         let radius = try XCTUnwrap(
@@ -693,11 +693,11 @@ final class Puck2DTests: XCTestCase {
         recreatePuck()
         puck2D.isActive = true
         updateLocation()
-        puck2D.participate()
+        puck2D.participate(targetTimestamp: .random(in: 0...10))
         style.setLayerPropertiesStub.reset()
 
         timeProvider.currentStub.defaultReturnValue = 1.5
-        puck2D.participate()
+        puck2D.participate(targetTimestamp: .random(in: 0...10))
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         let radius = try XCTUnwrap(
@@ -723,14 +723,14 @@ final class Puck2DTests: XCTestCase {
         recreatePuck()
         puck2D.isActive = true
         updateLocation()
-        puck2D.participate()
+        puck2D.participate(targetTimestamp: .random(in: 0...10))
         style.setLayerPropertiesStub.reset()
 
         timeProvider.currentStub.defaultReturnValue = 3
-        puck2D.participate()
+        puck2D.participate(targetTimestamp: .random(in: 0...10))
 
         timeProvider.currentStub.defaultReturnValue = 4.5
-        puck2D.participate()
+        puck2D.participate(targetTimestamp: .random(in: 0...10))
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
         let radius = try XCTUnwrap(
@@ -756,11 +756,11 @@ final class Puck2DTests: XCTestCase {
         recreatePuck()
         puck2D.isActive = true
         updateLocation(coordinate: coordinate, horizontalAccuracy: horizontalAccuracy)
-        puck2D.participate()
+        puck2D.participate(targetTimestamp: .random(in: 0...10))
         style.setLayerPropertiesStub.reset()
 
         timeProvider.currentStub.defaultReturnValue = 3
-        puck2D.participate()
+        puck2D.participate(targetTimestamp: .random(in: 0...10))
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         let radius = try XCTUnwrap(

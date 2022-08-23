@@ -2,6 +2,7 @@ import Foundation
 @testable import MapboxMaps
 
 final class MockDisplayLink: DisplayLinkProtocol {
+    var targetTimestamp: CFTimeInterval = 0
 
     var timestamp: CFTimeInterval = 0
 
@@ -26,6 +27,20 @@ final class MockDisplayLink: DisplayLinkProtocol {
     private var _untypedPreferredFrameRateRange: Any?
     #endif
 
+    struct InitParams {
+        var target: Any
+        var selector: Selector
+    }
+
+    init() {
+        
+    }
+
+    let initStub = Stub<InitParams, Void>()
+    init(target: Any, selector sel: Selector) {
+        initStub.call(with: InitParams(target: target, selector: sel))
+    }
+
     struct AddParams {
         var runloop: RunLoop
         var mode: RunLoop.Mode
@@ -33,6 +48,16 @@ final class MockDisplayLink: DisplayLinkProtocol {
     let addStub = Stub<AddParams, Void>()
     func add(to runloop: RunLoop, forMode mode: RunLoop.Mode) {
         addStub.call(with: AddParams(runloop: runloop, mode: mode))
+    }
+
+    struct RemoveParams {
+        var runloop: RunLoop
+        var mode: RunLoop.Mode
+    }
+
+    let removeStub = Stub<RemoveParams, Void>()
+    func remove(from runloop: RunLoop, forMode mode: RunLoop.Mode) {
+        removeStub.call(with: RemoveParams(runloop: runloop, mode: mode))
     }
 
     let invalidateStub = Stub<Void, Void>()

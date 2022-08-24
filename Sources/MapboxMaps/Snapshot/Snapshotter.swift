@@ -2,7 +2,7 @@
 import UIKit
 import CoreLocation
 import CoreImage.CIFilterBuiltins
-import MapboxCoreMaps
+//import MapboxCoreMaps
 
 @_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
@@ -20,7 +20,7 @@ internal protocol MapSnapshotterProtocol: StyleManagerProtocol, ObservableProtoc
 
     func setCameraFor(_ cameraOptions: MapboxCoreMaps.CameraOptions)
 
-    func start(forCallback: @escaping (Expected<MapSnapshot, NSString>) -> ())
+    func start(forCallback: @escaping (Expected<MapSnapshot, NSString>) -> Void)
 
     func cancel()
 
@@ -33,15 +33,29 @@ internal protocol MapSnapshotterProtocol: StyleManagerProtocol, ObservableProtoc
     func coordinateBoundsForCamera(forCamera camera: MapboxCoreMaps.CameraOptions) -> CoordinateBounds
 }
 
+internal protocol MapSnapshotProtocol {
+
+    func screenCoordinate(for coordinate: CLLocationCoordinate2D) -> MapboxCoreMaps.ScreenCoordinate
+
+    func coordinate(for screenCoordinate: MapboxCoreMaps.ScreenCoordinate) -> CLLocationCoordinate2D
+
+    func attributions() -> [String]
+
+    func image() -> MapboxCoreMaps.Image
+
+    func asMapSnapshot() -> MapSnapshot
+}
 
 extension MapSnapshotter: MapSnapshotterProtocol {}
+
+extension MapSnapshot: MapSnapshotProtocol {}
 
 // MARK: - Snapshotter
 public class Snapshotter {
 
     /// Internal `MapboxCoreMaps.MBXMapSnapshotter` object that takes care of
     /// rendering a snapshot.
-    var mapSnapshotter: MapSnapshotterProtocol
+    let mapSnapshotter: MapSnapshotterProtocol
 
     /// A `style` object that can be manipulated to set different styles for a snapshot
     public let style: Style

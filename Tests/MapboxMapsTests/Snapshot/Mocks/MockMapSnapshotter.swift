@@ -1,18 +1,17 @@
 @testable import MapboxMaps
-import MapboxCoreMaps
-@_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
 
 final class MockMapSnapshotter: MockStyleManager, MapSnapshotterProtocol {
 
     @Stubbed var style: Style?
-    @Stubbed var options: MapboxCoreMaps.MapSnapshotOptions?
+    @Stubbed var options: MapSnapshotOptions?
     @Stubbed var size: Size?
     @Stubbed var image: UIImage?
     @Stubbed var coordinateBoundsForCamera: CoordinateBounds?
-    @Stubbed var cameraForCoordinates: MapboxCoreMaps.CameraOptions?
+    @Stubbed var cameraForCoordinates: CameraOptions?
+    @Stubbed var cameraOptions: CameraOptions = .random()
 
-    public typealias SnapshotCompletion = (Expected<MapboxCoreMaps.MapSnapshot, NSString>) -> ()
+    public typealias SnapshotCompletion = (Expected<MapSnapshot, NSString>) -> Void
 
     var setSizeStub = Stub<Size, Void>()
     func setSizeFor(_ size: Size) {

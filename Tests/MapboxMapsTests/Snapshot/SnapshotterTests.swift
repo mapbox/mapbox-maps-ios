@@ -1,11 +1,14 @@
 import XCTest
 @testable import MapboxMaps
+@_implementationOnly import MapboxCoreMaps_Private
+@_implementationOnly import MapboxCommon_Private
 
 final class SnapshotterTests: XCTestCase {
 
     var mapboxObservableProviderStub: Stub<ObservableProtocol, MapboxObservableProtocol>!
     var snapshotter: Snapshotter!
     var mockMapSnapshotter: MockMapSnapshotter!
+    var mockMapSnapshot: MockMapSnapshot!
 
     override func setUp() {
         super.setUp()
@@ -14,6 +17,7 @@ final class SnapshotterTests: XCTestCase {
             pixelRatio: .random(in: 1...3))
         mapboxObservableProviderStub = Stub(defaultReturnValue: MockMapboxObservable())
         mockMapSnapshotter = MockMapSnapshotter()
+        mockMapSnapshot = MockMapSnapshot()
         snapshotter = Snapshotter(
             options: options,
             mapboxObservableProvider: mapboxObservableProviderStub.call(with:),
@@ -29,29 +33,135 @@ final class SnapshotterTests: XCTestCase {
 
     // Test snapshot start invokes mockMapSnapshotter startStub
     func testSnapshotterStartInvocation() {
-        // asserts that the mock and snapshotter reach start
+        snapshotter.start(overlayHandler: nil) { (_) in
+            XCTAssertNotNil(self.mockMapSnapshotter.startStub.defaultReturnValue)
+        }
+
+        XCTAssertEqual(mockMapSnapshotter.startStub.invocations.count, 1)
+    }
+
+    func testSnapshotterCompletionInvocationFailed() {
+        //given
+        let options = MapSnapshotOptions(size: CGSize.init(width: 300, height: 300), pixelRatio: 2)
+        snapshotter = Snapshotter(options: options, mapboxObservableProvider: mapboxObservableProviderStub.call(with:), mapSnapshotter: mockMapSnapshotter)
+
+        //grabbed the start stub for mockmapsnapshotter in comparison to snapshotter and verified that 
+        let resultString = "FAILED"
+        mockMapSnapshotter.startStub.defaultSideEffect = { invocation in
+            invocation.parameters(Expected(error: resultString as NSString))
+        }
+
+        // given, when, then
         snapshotter.start(overlayHandler: nil) { (result) in
-            XCTAssertEqual(self.mockMapSnapshotter.startStub.invocations.count, 1)
-        }
-    }
-
-    // asserting that the snapshotter image and mock snapshotter image are the same
-    func testSnapshotterImage() {
-        let snapshotView = UIImageView()
-        var snapshotting: Bool?
-        snapshotter.start(overlayHandler: nil) { ( result ) in
             switch result {
-            case .success(let image):
-                snapshotView.image = image
-                XCTAssertEqual(image, self.mockMapSnapshotter.image)
-            case .failure(let error):
-                print("Error generating snapshot: \(error)")
+            case .failure:
+                print("Successful test")
+
+                break
+            case .success:
+                XCTFail()
             }
-            snapshotting = false
         }
     }
 
-    // Test snapshot cancellation invokes mockMapSnapshotter cancelStub
+    func testSnapshotterOverlayHandler() {
+        //given
+        let options = MapSnapshotOptions(size: CGSize.init(width: 300.0, height: 300.0), pixelRatio: 2)
+        snapshotter = Snapshotter(options: options, mapboxObservableProvider: mapboxObservableProviderStub.call(with:), mapSnapshotter: mockMapSnapshotter)
+
+        //when
+        let format = UIGraphicsImageRendererFormat()
+        let scale = CGFloat(options.pixelRatio)
+        format.scale = scale
+
+        let mbxImage = mockMapSnapshot.image()
+        guard let uiImage = UIImage(mbxImage: mbxImage, scale: scale) else {
+            XCTFail("Could not convert internal Image type to UIImage.")
+            return
+        }
+
+        let renderer = UIGraphicsImageRenderer(size: uiImage.size, format: format)
+
+        let compositeImage = renderer.image { rendererContext in
+
+            // First draw the snaphot image into the context
+            let context = rendererContext.cgContext
+
+            let mockPointForCoordinate = { (coordinate: CLLocationCoordinate2D) -> CGPoint in
+                let screenCoordinate = self.mockMapSnapshot.screenCoordinate(for: coordinate)
+                return CGPoint(x: screenCoordinate.x, y: screenCoordinate.y)
+            }
+
+            let mockCoordinateForPoint = { (point: CGPoint) -> CLLocationCoordinate2D in
+                return self.mockMapSnapshot.coordinate(for: point.screenCoordinate)
+            }
+
+            let mockMapSnapshotOverlay = SnapshotOverlay(context: context,
+                                                         scale: scale,
+                                                         pointForCoordinate: mockPointForCoordinate,
+                                                         coordinateForPoint: mockCoordinateForPoint)
+
+            //        let resultString = "FAILED"
+            mockMapSnapshotter.startStub.defaultSideEffect = { _ in
+//                invocation.parameters(Expected(value: _))
+            }
+
+            snapshotter.start { overlay in
+                print("UGH")
+                XCTAssertEqual(mockMapSnapshotOverlay.context, overlay.context)
+                XCTAssertNotNil(mockMapSnapshotOverlay)
+            } completion: { (_) in
+                // do nothing
+            }
+        }
+
+//        if let overlayHandler = overlayHandler {
+//            context.saveGState()
+//            overlayHandler(overlay)
+//            context.restoreGState()
+//        }
+
+    }
+
+    func testSnapshotterCompletionStyleInvocation() {
+
+        //given
+        let options = MapSnapshotOptions(size: CGSize.init(width: 300, height: 300), pixelRatio: 2)
+        snapshotter = Snapshotter(options: options, mapboxObservableProvider: mapboxObservableProviderStub.call(with:), mapSnapshotter: mockMapSnapshotter)
+//
+//        //grabbed the start stub for mockmapsnapshotter in comparison to snapshotter and verified that
+//        let resultString = "FAILED"
+        mockMapSnapshotter.startStub.defaultSideEffect = { _ in
+//            invocation.parameters(Expected(value: _))
+        }
+
+        // when
+        snapshotter.start { _ in
+            XCTAssertNotNil(self.mockMapSnapshotter.style)
+        } completion: { (_) in
+            // do nothing
+        }
+    }
+
+    func testSnapshotterCompletionStyleAttributionInvocation() {
+
+        //given
+        let options = MapSnapshotOptions(size: CGSize.init(width: 300, height: 300), pixelRatio: 2)
+        snapshotter = Snapshotter(options: options, mapboxObservableProvider: mapboxObservableProviderStub.call(with:), mapSnapshotter: mockMapSnapshotter)
+
+        mockMapSnapshotter.startStub.defaultSideEffect = { _ in
+//            invocation.parameters(Expected(value: <#T##_#>))
+        }
+
+        // when
+        snapshotter.start { _ in
+            print("UGH")
+            XCTAssertTrue(self.mockMapSnapshot.attributionStub.invocations.count > 0)
+        } completion: { (_) in
+            // do nothing
+        }
+    }
+
     func testSnapshotterCancel() {
         // given snapshot is cancelled
         snapshotter.cancel()
@@ -59,30 +169,34 @@ final class SnapshotterTests: XCTestCase {
         XCTAssertEqual(mockMapSnapshotter.cancelSnapshotterStub.invocations.count, 1)
     }
 
-    // TestSnapshot size is the same size as the mock snapshot
     func testSnapshotterSize() {
         let size = CGSize(width: 200, height: 200)
 
         snapshotter.mapSnapshotter.setSizeFor(.init(size))
 
-        XCTAssertEqual(snapshotter.snapshotSize, CGSize(mockMapSnapshotter.getSize()))
+        mockMapSnapshotter.getSizeStub.defaultReturnValue = Size(size)
+        XCTAssertEqual(snapshotter.snapshotSize, size)
+
+        snapshotter.snapshotSize = size
+        XCTAssertEqual(mockMapSnapshotter.setSizeStub.invocations[0].parameters, Size(size))
     }
 
-    // TestSnapshot size shares same tile mode as the mock snapshot
     func testSnapshotterTileMode() {
 
         snapshotter.mapSnapshotter.setTileModeForSet(true)
 
-        XCTAssertEqual(mockMapSnapshotter.isInTileModeStub.invocations.count, 1)
+        XCTAssertEqual(mockMapSnapshotter.setTileModeStub.invocations.count, 1)
         XCTAssertEqual(snapshotter.tileMode, mockMapSnapshotter.isInTileMode())
     }
 
     func testSnapshotterSetCamera() {
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38, longitude: -76), padding: .zero, anchor: .zero, zoom: 15, bearing: .zero, pitch: 90)
+        let coreCameraOptions = MapboxCoreMaps.CameraOptions(cameraOptions)
 
-        snapshotter.setCamera(to: cameraOptions)
+        snapshotter.mapSnapshotter.setCameraFor(coreCameraOptions)
 
         XCTAssertEqual(mockMapSnapshotter.setCameraStub.invocations.count, 1)
+        XCTAssertEqual(cameraOptions, mockMapSnapshotter.cameraOptions)
     }
 
     //Test snapshot coordinate bounds for camera match those of mock
@@ -92,7 +206,7 @@ final class SnapshotterTests: XCTestCase {
         let coordinateBounds = snapshotter.mapSnapshotter.coordinateBoundsForCamera(forCamera: MapboxCoreMaps.CameraOptions(cameraOptions))
 
         XCTAssertEqual(mockMapSnapshotter.coordinateBoundsStub.invocations.count, 1)
-        XCTAssertIdentical(coordinateBounds, mockMapSnapshotter.coordinateBoundsStub.defaultReturnValue)
+        XCTAssertEqual(coordinateBounds, mockMapSnapshotter.coordinateBoundsStub.defaultReturnValue)
     }
 
     func testSnapshotterCameraforCoordinateBounds() {
@@ -104,7 +218,7 @@ final class SnapshotterTests: XCTestCase {
             CLLocation(latitude: 44.9753911881, longitude: -124.3348229758)
         ]
 
-        let snapshotterCameraForCoordinates = snapshotter.mapSnapshotter.cameraForCoordinates(forCoordinates: coordinates, padding: EdgeInsets.init(top: 10, left: 10, bottom: 10, right: 10), bearing: 0, pitch: 0)
+        let snapshotterCameraForCoordinates = snapshotter.mapSnapshotter.cameraForCoordinates(forCoordinates: coordinates, padding: EdgeInsets(top: 10, left: 10, bottom: 10, right: 10), bearing: 0, pitch: 0)
 
         XCTAssertEqual(mockMapSnapshotter.cameraForCoordinatesStub.invocations.count, 1)
         XCTAssertIdentical(snapshotterCameraForCoordinates, mockMapSnapshotter.cameraForCoordinatesStub.defaultReturnValue)
@@ -141,7 +255,7 @@ final class SnapshotterTests: XCTestCase {
 
     @available(*, deprecated)
     func testOnNext() throws {
-        let handlerStub = Stub<Event, Void>()
+        let handlerStub = Stub<MapboxCoreMaps.Event, Void>()
         let eventType = MapEvents.EventKind.allCases.randomElement()!
         let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
 
@@ -204,7 +318,7 @@ final class SnapshotterTests: XCTestCase {
 
     @available(*, deprecated)
     func testOnEvery() throws {
-        let handlerStub = Stub<Event, Void>()
+        let handlerStub = Stub<MapboxCoreMaps.Event, Void>()
         let eventType = MapEvents.EventKind.allCases.randomElement()!
         let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
 

@@ -1,9 +1,13 @@
 import Foundation
 import MapboxCoreMaps
 
+/// Describes an error that has occurred while loading the map.
 public struct MapLoadingErrorPayload {
+    /// The error message and type of resource that could not be loaded.
     public let error: MapLoadingError
+    /// The id of the failing source.
     public let sourceId: String?
+    /// The id of the failing tile.
     public var tileId: CanonicalTileID? {
         return decodedTileId?.tileID
     }

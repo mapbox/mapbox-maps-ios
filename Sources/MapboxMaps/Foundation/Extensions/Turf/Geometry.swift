@@ -1,3 +1,4 @@
+/// An object representing points, curves, and surfaces in coordinate space. Use an instance of this enumeration whenever a value could be any kind of Geometry object.
 public typealias Geometry = Turf.Geometry
 
 extension Geometry {

@@ -38,7 +38,9 @@ public struct OrnamentOptions: Equatable {
 /// :nodoc:
 /// Deprecated. This protocol will be removed in a future major version.
 public protocol OrnamentOptionsProtocol {
+    /// :nodoc:
     var position: OrnamentPosition { get set }
+    /// :nodoc:
     var margins: CGPoint { get set }
 }
 

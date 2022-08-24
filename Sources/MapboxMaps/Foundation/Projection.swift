@@ -1,7 +1,10 @@
 import CoreLocation
 
+/// A collection of [Spherical Mercator](http://docs.openlayers.org/library/spherical_mercator.html) projection methods.
 public final class Projection {
+    /// Maximum supported latitude value.
     public static let latitudeMax: CLLocationDegrees = +85.051128779806604
+    /// Minimum supported latitude value.
     public static let latitudeMin: CLLocationDegrees = -85.051128779806604
 
     internal init() {}

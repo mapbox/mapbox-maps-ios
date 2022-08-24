@@ -75,6 +75,9 @@ public class ResourceOptionsManager {
         self.init(resourceOptions: resourceOptions)
     }
 
+    /// Initializes a `ResourceOptionsManager` with the specified `resourceOptions`.
+    ///
+    /// - Parameter resourceOptions: Resource options to initialize the manager with.
     public convenience init(resourceOptions: ResourceOptions) {
         self.init(resourceOptions: resourceOptions, for: .main)
     }

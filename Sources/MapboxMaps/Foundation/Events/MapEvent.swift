@@ -1,5 +1,6 @@
 import Foundation
 
+/// A generic Event type.
 public typealias Event = MapboxCoreMaps.Event
 
 /// A container for information broadcast about an event.

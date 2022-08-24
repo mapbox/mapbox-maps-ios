@@ -22,6 +22,7 @@
 		7467314A282EA6FA00B7D044 /* streets-munich-ttrc-warm.json in Resources */ = {isa = PBXBuildFile; fileRef = 74673146282EA6FA00B7D044 /* streets-munich-ttrc-warm.json */; };
 		7467314B282EA6FA00B7D044 /* nav-day-munich-ttrc-warm.json in Resources */ = {isa = PBXBuildFile; fileRef = 74673147282EA6FA00B7D044 /* nav-day-munich-ttrc-warm.json */; };
 		7467314C282EA6FA00B7D044 /* nav-day-munich-ttrc-cold.json in Resources */ = {isa = PBXBuildFile; fileRef = 74673148282EA6FA00B7D044 /* nav-day-munich-ttrc-cold.json */; };
+		747025A428B642AD00732A76 /* TakeSnapshotCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 747025A328B642AD00732A76 /* TakeSnapshotCommand.swift */; };
 		7499661827C64ECD00DA186A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499661727C64ECD00DA186A /* AppDelegate.swift */; };
 		7499661C27C64ECD00DA186A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499661B27C64ECD00DA186A /* ViewController.swift */; };
 		7499661F27C64ECD00DA186A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7499661D27C64ECD00DA186A /* Main.storyboard */; };
@@ -83,6 +84,7 @@
 		74673146282EA6FA00B7D044 /* streets-munich-ttrc-warm.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "streets-munich-ttrc-warm.json"; sourceTree = "<group>"; };
 		74673147282EA6FA00B7D044 /* nav-day-munich-ttrc-warm.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "nav-day-munich-ttrc-warm.json"; sourceTree = "<group>"; };
 		74673148282EA6FA00B7D044 /* nav-day-munich-ttrc-cold.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "nav-day-munich-ttrc-cold.json"; sourceTree = "<group>"; };
+		747025A328B642AD00732A76 /* TakeSnapshotCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TakeSnapshotCommand.swift; sourceTree = "<group>"; };
 		7499661427C64ECD00DA186A /* MobileMetrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileMetrics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7499661727C64ECD00DA186A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7499661B27C64ECD00DA186A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 				74673135282E963000B7D044 /* CreateMapCommand.swift */,
 				74673136282E963000B7D044 /* CreateOfflinePacksCommand.swift */,
 				FE555B7D283774EF002751C7 /* SetOnlineStateCommand.swift */,
+				747025A328B642AD00732A76 /* TakeSnapshotCommand.swift */,
 				FE18AEE928411426001B9E6F /* PlaySequenceCommand.swift */,
 				3A011CB628631D6A004713DA /* AddRouteCommand.swift */,
 				3A56266B286436C400107E56 /* ExecutionError.swift */,
@@ -431,6 +434,7 @@
 				74F2381327E3730C009F304C /* WarmCacheBenchmark.swift in Sources */,
 				FE555B80283775F3002751C7 /* CameraOptions+Decodable.swift in Sources */,
 				74F237F127E3326E009F304C /* InitSDKBenchmark.swift in Sources */,
+				747025A428B642AD00732A76 /* TakeSnapshotCommand.swift in Sources */,
 				FEB2802B2837C1BE00E903D2 /* ClearOfflineDataCommand.swift in Sources */,
 				FE18AEEB2841148F001B9E6F /* PlaySequenceCommand.swift in Sources */,
 				FEA8FDA62835110400CDDA97 /* CreateOfflinePacksCommand.swift in Sources */,

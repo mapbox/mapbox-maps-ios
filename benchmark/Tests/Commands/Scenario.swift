@@ -51,6 +51,7 @@ class Scenario {
         case setMemoryBudget = "SetMemoryBudget"
         case setRenderCache = "SetRenderCache"
         case enableTerrain = "EnableTerrain"
+        case takeSnapshot = "TakeSnapshot"
     }
 
     struct ScenarioData: Decodable {
@@ -90,6 +91,8 @@ class Scenario {
                     command = try commandContainer.decode(SetRenderCacheCommand.self)
                 case .enableTerrain:
                     command = try commandContainer.decode(EnableTerrainCommand.self)
+                case .takeSnapshot:
+                    command = try commandContainer.decode(TakeSnapshotCommand.self)
                 }
                 commands.append(command)
             }

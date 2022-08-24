@@ -37,9 +37,14 @@ def main():
         with open(f"{project}/scripts/release/packager/versions.json") as f:
             versions = json.load(f)
 
-        args.gl_native_commit = "maps-v" + versions["MapboxCoreMaps"]
-        args.turf_commit = versions["Turf"]
-        args.mme_commit = versions["MapboxMobileEvents"]
+        if args.gl_native_commit is None:
+            args.gl_native_commit = "maps-v" + versions["MapboxCoreMaps"]
+
+        if args.turf_commit is None:
+            args.turf_commit = versions["Turf"]
+
+        if args.mme_commit is None:
+            args.mme_commit = versions["MapboxMobileEvents"]
 
     print("Using args: " + str(args))
 

@@ -44,6 +44,22 @@ class SpecsBenchmark: XCTestCase {
                                  extraMetrics: [FPSMetric(testCase: self)],
                                  timeout: 1800)
     }
+
+    func testPerformanceAfterSnapshot() throws {
+        let createMap = CreateMapCommand(
+            style: .streets,
+            camera: CameraOptions(center: CLLocationCoordinate2D(latitude: 48.1386, longitude: 11.5736), zoom: 12)
+        )
+        let takeSnapshot = TakeSnapshotCommand()
+        let playSequence = PlaySequenceCommand(filename: "munich-zoom-in-out-z10-z20.json", playbackCount: 1)
+        let scenario = Scenario(
+            name: "Performance after taking a map view snapshot",
+            commands: [createMap, takeSnapshot, playSequence]
+        )
+
+        // TODO: Add the FPSMetric here
+        try measureScenario(scenario, iterationCount: 1)
+    }
 }
 
 extension SpecsBenchmark {

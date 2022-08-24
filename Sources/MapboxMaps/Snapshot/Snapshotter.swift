@@ -2,7 +2,6 @@
 import UIKit
 import CoreLocation
 import CoreImage.CIFilterBuiltins
-//import MapboxCoreMaps
 
 @_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private

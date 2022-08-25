@@ -5,7 +5,7 @@ import UIKit
 #endif
 
 /// A view that represents a camera view port.
-internal class CameraView: UIView {
+internal class CameraView: View {
 
     /// returns nil if the presentation layer is nil
     internal var presentationCameraOptions: CameraOptions? {

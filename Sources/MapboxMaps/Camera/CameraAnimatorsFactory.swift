@@ -13,7 +13,7 @@ internal protocol CameraAnimatorsFactoryProtocol: AnyObject {
                                  animationOwner: AnimationOwner,
                                  animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimatorProtocol
     func makeBasicCameraAnimator(duration: TimeInterval,
-                                 curve: UIView.AnimationCurve,
+                                 curve: View.AnimationCurve,
                                  animationOwner: AnimationOwner,
                                  animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimatorProtocol
     func makeBasicCameraAnimator(duration: TimeInterval,
@@ -39,13 +39,13 @@ internal protocol CameraAnimatorsFactoryProtocol: AnyObject {
 
 internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
 
-    private let cameraViewContainerView: UIView
+    private let cameraViewContainerView: View
     private let mapboxMap: MapboxMapProtocol
     private let mainQueue: MainQueueProtocol
     private let dateProvider: DateProvider
     private let cameraOptionsInterpolator: CameraOptionsInterpolatorProtocol
 
-    internal init(cameraViewContainerView: UIView,
+    internal init(cameraViewContainerView: View,
                   mapboxMap: MapboxMapProtocol,
                   mainQueue: MainQueueProtocol,
                   dateProvider: DateProvider,
@@ -83,7 +83,7 @@ internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
     }
 
     internal func makeBasicCameraAnimator(duration: TimeInterval,
-                                          curve: UIView.AnimationCurve,
+                                          curve: View.AnimationCurve,
                                           animationOwner: AnimationOwner,
                                           animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimatorProtocol {
         let propertyAnimator = UIViewPropertyAnimator(

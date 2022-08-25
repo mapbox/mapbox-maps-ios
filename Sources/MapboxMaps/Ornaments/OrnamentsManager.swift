@@ -50,21 +50,21 @@ public class OrnamentsManager: NSObject {
     /// The view for the logo ornament. This view can be used to position other views relative to the logo
     /// ornament, but it should not be manipulated. Use ``OrnamentOptions/logo`` to configure the
     /// logo presentation if customization is needed.
-    public var logoView: UIView {
+    public var logoView: View {
         return _logoView
     }
 
     /// The view for the scale bar ornament. This view can be used to position other views relative to the
     /// scale bar ornament, but it should not be manipulated. Use ``OrnamentOptions/scaleBar``
     /// to configure the scale bar presentation if customization is needed.
-    public var scaleBarView: UIView {
+    public var scaleBarView: View {
         return _scaleBarView
     }
 
     /// The view for the compass ornament. This view can be used to position other views relative to the
     /// compass ornament, but it should not be manipulated. Use ``OrnamentOptions/compass`` to
     /// configure the compass presentation if customization is needed.
-    public var compassView: UIView {
+    public var compassView: View {
         return _compassView
     }
 
@@ -72,7 +72,7 @@ public class OrnamentsManager: NSObject {
     /// to the attribution button ornament, but it should not be manipulated. Use
     /// ``OrnamentOptions/attributionButton`` to configure the attribution button presentation
     /// if customization is needed.
-    public var attributionButton: UIView {
+    public var attributionButton: View {
         return _attributionButton
     }
 
@@ -84,7 +84,7 @@ public class OrnamentsManager: NSObject {
     private var constraints = [NSLayoutConstraint]()
 
     internal init(options: OrnamentOptions,
-                  view: UIView,
+                  view: View,
                   mapboxMap: MapboxMapProtocol,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol,
                   infoButtonOrnamentDelegate: InfoButtonOrnamentDelegate,
@@ -195,7 +195,7 @@ public class OrnamentsManager: NSObject {
         _scaleBarView.useMetricUnits = options.scaleBar.useMetricUnits
     }
 
-    private func constraints(with view: UIView, position: OrnamentPosition, margins: CGPoint) -> [NSLayoutConstraint] {
+    private func constraints(with view: View, position: OrnamentPosition, margins: CGPoint) -> [NSLayoutConstraint] {
         let layoutGuide = view.superview!.safeAreaLayoutGuide
         switch position {
         case .topLeft:

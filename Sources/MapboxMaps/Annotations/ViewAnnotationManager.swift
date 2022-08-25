@@ -27,19 +27,19 @@ public protocol ViewAnnotationUpdateObserver: AnyObject {
     /// - Parameters:
     ///   - annotationViews: The annotation views whose frames changed.
     ///
-    func framesDidChange(for annotationViews: [UIView])
+    func framesDidChange(for annotationViews: [View])
 
     /// Tells the observer that the visibility of the annotation views changed.
     ///
     /// Use `isHidden` property to determine whether a view is visible or not.
     /// - Parameters:
     ///   - annotationsViews: The annotation vies whose visibility changed.
-    func visibilityDidChange(for annotationViews: [UIView])
+    func visibilityDidChange(for annotationViews: [View])
 }
 
 /// Manager API to control View Annotations.
 ///
-/// View annotations are `UIView` instances that are drawn on top of the ``MapView`` and bound to some `Geometry` (only `Point` is supported for now).
+/// View annotations are `View` instances that are drawn on top of the ``MapView`` and bound to some `Geometry` (only `Point` is supported for now).
 /// In case some view annotations intersect on the screen Z-index is based on addition order.
 ///
 /// View annotations are invariant to map camera transformations however such properties as size, visibility etc
@@ -50,21 +50,21 @@ public protocol ViewAnnotationUpdateObserver: AnyObject {
 /// by visibility of given feature.
 public final class ViewAnnotationManager {
 
-    private let containerView: UIView
+    private let containerView: View
     private let mapboxMap: MapboxMapProtocol
-    private var viewsById: [String: UIView] = [:]
-    private var idsByView: [UIView: String] = [:]
-    private var expectedHiddenByView: [UIView: Bool] = [:]
-    private var viewsByFeatureIds: [String: UIView] = [:]
+    private var viewsById: [String: View] = [:]
+    private var idsByView: [View: String] = [:]
+    private var expectedHiddenByView: [View: Bool] = [:]
+    private var viewsByFeatureIds: [String: View] = [:]
 
     private var observers = [ObjectIdentifier: ViewAnnotationUpdateObserver]()
 
-    /// If the superview or the `UIView.isHidden` property of a custom view annotation is changed manually by the users
+    /// If the superview or the `View.isHidden` property of a custom view annotation is changed manually by the users
     /// the SDK prints a warning and reverts the changes, as the view is still considered for layout calculation.
     /// The default value is true, and setting this value to false will disable the validation.
     public var validatesViews = true
 
-    internal init(containerView: UIView, mapboxMap: MapboxMapProtocol) {
+    internal init(containerView: View, mapboxMap: MapboxMapProtocol) {
         self.containerView = containerView
         self.mapboxMap = mapboxMap
         let delegatingPositionsListener = DelegatingViewAnnotationPositionsUpdateListener()
@@ -78,7 +78,7 @@ public final class ViewAnnotationManager {
 
     // MARK: - Public APIs
 
-    /// Add a `UIView` instance which will be displayed as an annotation.
+    /// Add a `View` instance which will be displayed as an annotation.
     /// View dimensions will be taken as width / height from the bounds of the view
     /// unless they are not specified explicitly with ``ViewAnnotationOptions/width`` and ``ViewAnnotationOptions/height``.
     ///
@@ -87,14 +87,14 @@ public final class ViewAnnotationManager {
     /// Width and height could be specified explicitly but better idea will be not specifying them
     /// as they will be calculated automatically based on view layout.
     ///
-    /// > Important: The annotation view to be added should have `UIView.transform` property set to `.identity`.
+    /// > Important: The annotation view to be added should have `View.transform` property set to `.identity`.
     /// Providing a transformed view can result in annotation views being misplaced, overlapped and other layout artifacts.
     ///
     /// - Note: Use ``ViewAnnotationManager/update(_:options:)`` for changing the visibilty of the view, instead
-    /// of `UIView.isHidden` so that it is removed from the layout calculation.
+    /// of `View.isHidden` so that it is removed from the layout calculation.
     ///
     /// - Parameters:
-    ///   - view: `UIView` to be added to the map
+    ///   - view: `View` to be added to the map
     ///   - options: ``ViewAnnotationOptions`` to control the layout and visibility of the annotation
     ///
     /// - Throws:
@@ -103,11 +103,11 @@ public final class ViewAnnotationManager {
     ///   -  ``ViewAnnotationManagerError/associatedFeatureIdIsAlreadyInUse`` if the
     ///   supplied ``ViewAnnotationOptions/associatedFeatureId`` is already used by another annotation view
     ///   - ``MapError``: errors during insertion
-    public func add(_ view: UIView, options: ViewAnnotationOptions) throws {
+    public func add(_ view: View, options: ViewAnnotationOptions) throws {
         try add(view, id: nil, options: options)
     }
 
-    /// Add a `UIView` instance which will be displayed as an annotation.
+    /// Add a `View` instance which will be displayed as an annotation.
     /// View dimensions will be taken as width / height from the bounds of the view
     /// unless they are not specified explicitly with ``ViewAnnotationOptions/width`` and ``ViewAnnotationOptions/height``.
     ///
@@ -116,14 +116,14 @@ public final class ViewAnnotationManager {
     /// Width and height could be specified explicitly but better idea will be not specifying them
     /// as they will be calculated automatically based on view layout.
     ///
-    /// > Important: The annotation view to be added should have `UIView.transform` property set to `.identity`.
+    /// > Important: The annotation view to be added should have `View.transform` property set to `.identity`.
     /// Providing a transformed view can result in annotation views being misplaced, overlapped and other layout artifacts.
     ///
     /// - Note: Use ``ViewAnnotationManager/update(_:options:)`` for changing the visibilty of the view, instead
-    /// of `UIView.isHidden` so that it is removed from the layout calculation.
+    /// of `View.isHidden` so that it is removed from the layout calculation.
     ///
     /// - Parameters:
-    ///   - view: `UIView` to be added to the map
+    ///   - view: `View` to be added to the map
     ///   - id: The unique string for the `view`.
     ///   - options: ``ViewAnnotationOptions`` to control the layout and visibility of the annotation
     ///
@@ -133,7 +133,7 @@ public final class ViewAnnotationManager {
     ///   -  ``ViewAnnotationManagerError/associatedFeatureIdIsAlreadyInUse`` if the
     ///   supplied ``ViewAnnotationOptions/associatedFeatureId`` is already used by another annotation view
     ///   - ``MapError``: errors during insertion
-    public func add(_ view: UIView, id: String?, options: ViewAnnotationOptions) throws {
+    public func add(_ view: View, id: String?, options: ViewAnnotationOptions) throws {
         guard idsByView[view] == nil && id.flatMap(view(forId:)) == nil else {
             throw ViewAnnotationManagerError.viewIsAlreadyAdded
         }
@@ -165,11 +165,11 @@ public final class ViewAnnotationManager {
         containerView.addSubview(view)
     }
 
-    /// Remove given `UIView` from the map if it was present.
+    /// Remove given `View` from the map if it was present.
     ///
     /// - Parameters:
-    ///   - view: `UIView` to be removed
-    public func remove(_ view: UIView) {
+    ///   - view: `View` to be removed
+    public func remove(_ view: View) {
         guard let id = idsByView[view], let annotatonView = viewsById[id] else {
             return
         }
@@ -197,15 +197,15 @@ public final class ViewAnnotationManager {
         viewsByFeatureIds.removeAll()
     }
 
-    /// Update given `UIView` with ``ViewAnnotationOptions``.
+    /// Update given `View` with ``ViewAnnotationOptions``.
     /// Important thing to keep in mind that only properties present in `options` will be updated,
     /// all other will remain the same as specified before.
     ///
     /// - Parameters:
-    ///   - view: `UIView` to be updated
+    ///   - view: `View` to be updated
     ///   - options: view annotation options with optional fields used for the update
     ///
-    /// > Important: The annotation view to be updated should have `UIView.frame` property set to `identify`.
+    /// > Important: The annotation view to be updated should have `View.frame` property set to `identify`.
     /// Providing a transformed view can result in annotation views being misplaced, overlapped and other layout artifacts.
     ///
     /// - Throws:
@@ -213,7 +213,7 @@ public final class ViewAnnotationManager {
     ///   -  ``ViewAnnotationManagerError/associatedFeatureIdIsAlreadyInUse`` if the
     ///   supplied ``ViewAnnotationOptions/associatedFeatureId`` is already used by another annotation view
     ///   - ``MapError``: errors during the update of the view (eg. incorrect parameters)
-    public func update(_ view: UIView, options: ViewAnnotationOptions) throws {
+    public func update(_ view: View, options: ViewAnnotationOptions) throws {
         guard let id = idsByView[view] else {
             throw ViewAnnotationManagerError.annotationNotFound
         }
@@ -236,18 +236,18 @@ public final class ViewAnnotationManager {
     /// Find view annotation by the given `id`.
     ///
     /// - Parameter id: The identifier of the view set in ``ViewAnnotationManager/add(_:id:options:)``.
-    /// - Returns: `UIView` if view was found, otherwise `nil`.
-    public func view(forId id: String) -> UIView? {
+    /// - Returns: `View` if view was found, otherwise `nil`.
+    public func view(forId id: String) -> View? {
         viewsById[id]
     }
 
-    /// Find `UIView` by feature id if it was specified as part of ``ViewAnnotationOptions/associatedFeatureId``.
+    /// Find `View` by feature id if it was specified as part of ``ViewAnnotationOptions/associatedFeatureId``.
     ///
     /// - Parameters:
-    ///   - identifier: the identifier of the feature which will be used for finding the associated `UIView`
+    ///   - identifier: the identifier of the feature which will be used for finding the associated `View`
     ///
-    /// - Returns: `UIView` if view was found and `nil` otherwise.
-    public func view(forFeatureId identifier: String) -> UIView? {
+    /// - Returns: `View` if view was found and `nil` otherwise.
+    public func view(forFeatureId identifier: String) -> View? {
         return viewsByFeatureIds[identifier]
     }
 
@@ -261,13 +261,13 @@ public final class ViewAnnotationManager {
         return viewsByFeatureIds[identifier].flatMap { idsByView[$0] }.flatMap { try? mapboxMap.options(forViewAnnotationWithId: $0) }
     }
 
-    /// Get current ``ViewAnnotationOptions`` for given `UIView`.
+    /// Get current ``ViewAnnotationOptions`` for given `View`.
     ///
     /// - Parameters:
-    ///   - view: an `UIView` for which the associated ``ViewAnnotationOptions`` is looked up
+    ///   - view: an `View` for which the associated ``ViewAnnotationOptions`` is looked up
     ///
     /// - Returns: ``ViewAnnotationOptions`` if view was found and `nil` otherwise.
-    public func options(for view: UIView) -> ViewAnnotationOptions? {
+    public func options(for view: View) -> ViewAnnotationOptions? {
         return idsByView[view].flatMap { try? mapboxMap.options(forViewAnnotationWithId: $0) }
     }
 
@@ -294,8 +294,8 @@ public final class ViewAnnotationManager {
         // First update the position of the views based on the placement info from GL-Native
         // Then hide the views which are off screen
         var visibleAnnotationIds: Set<String> = []
-        var viewsWithUpdatedFrame: Set<UIView> = []
-        var viewsWithUpdatedVisibility: Set<UIView> = []
+        var viewsWithUpdatedFrame: Set<View> = []
+        var viewsWithUpdatedVisibility: Set<View> = []
 
         for position in positions {
             guard let view = viewsById[position.identifier] else {
@@ -336,22 +336,22 @@ public final class ViewAnnotationManager {
         notifyViewAnnotationObserversVisibilityDidChange(for: Array(viewsWithUpdatedVisibility))
     }
 
-    private func validate(_ view: UIView) {
+    private func validate(_ view: View) {
         guard validatesViews else { return }
         // Re-add the view if the superview of the annotation view is different than the container
         if view.superview != containerView {
-            Log.warning(forMessage: "Superview changed for annotation view. Use `ViewAnnotationManager.remove(_ view: UIView)` instead to remove it from the layout calculation.", category: "Annotations")
+            Log.warning(forMessage: "Superview changed for annotation view. Use `ViewAnnotationManager.remove(_ view: View)` instead to remove it from the layout calculation.", category: "Annotations")
             view.removeFromSuperview()
             containerView.addSubview(view)
         }
         // View is still considered for layout calculation, users should not modify the visibility of view directly
         if let expectedHidden = expectedHiddenByView[view], view.isHidden != expectedHidden {
-            Log.warning(forMessage: "Visibility changed for annotation view. Use `ViewAnnotationManager.update(view: UIView, options: ViewAnnotationOptions)` instead to update visibility and remove the view from layout calculation.", category: "Annotations")
+            Log.warning(forMessage: "Visibility changed for annotation view. Use `ViewAnnotationManager.update(view: View, options: ViewAnnotationOptions)` instead to update visibility and remove the view from layout calculation.", category: "Annotations")
             view.isHidden = expectedHidden
         }
     }
 
-    private func notifyViewAnnotationObserversFrameDidChange(for annotationViews: [UIView]) {
+    private func notifyViewAnnotationObserversFrameDidChange(for annotationViews: [View]) {
         guard !annotationViews.isEmpty else { return }
 
         observers.values.forEach { observer in
@@ -359,7 +359,7 @@ public final class ViewAnnotationManager {
         }
     }
 
-    private func notifyViewAnnotationObserversVisibilityDidChange(for annotationViews: [UIView]) {
+    private func notifyViewAnnotationObserversVisibilityDidChange(for annotationViews: [View]) {
         guard !annotationViews.isEmpty else { return }
 
         observers.values.forEach { observer in

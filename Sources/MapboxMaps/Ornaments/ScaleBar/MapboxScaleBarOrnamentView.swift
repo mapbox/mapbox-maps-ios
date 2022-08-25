@@ -6,7 +6,7 @@ import UIKit
 import CoreLocation
 
 //swiftlint:disable type_body_length
-internal class MapboxScaleBarOrnamentView: UIView {
+internal class MapboxScaleBarOrnamentView: View {
 
     internal typealias Row = (distance: CLLocationDistance, numberOfBars: UInt)
 
@@ -15,7 +15,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
     // This view should have size and positioning that matches the root scale bar.
     // It contains the `dynamicContainerView` in order to avoid triggering `layoutSubviews`
     // on the map view.
-    internal var staticContainerView = UIView()
+    internal var staticContainerView = View()
 
     internal var metersPerPoint: CLLocationDistance = 1 {
         didSet {
@@ -29,10 +29,10 @@ internal class MapboxScaleBarOrnamentView: UIView {
         }
     }
 
-    lazy internal var labelViews: [UIView] = {
-        var labels: [UIView] = []
+    lazy internal var labelViews: [View] = {
+        var labels: [View] = []
         for _ in 0..<4 {
-            let view = UIView()
+            let view = View()
             view.clipsToBounds = false
             view.contentMode = .center
             view.isHidden = true
@@ -43,12 +43,12 @@ internal class MapboxScaleBarOrnamentView: UIView {
         return labels
     }()
 
-    private var _bars: [UIView]?
-    internal var bars: [UIView] {
+    private var _bars: [View]?
+    internal var bars: [View] {
         if _bars == nil {
-            var bars: [UIView] = []
+            var bars: [View] = []
             for _ in 0..<row.numberOfBars {
-                let bar = UIView()
+                let bar = View()
                 self.dynamicContainerView.addSubview(bar)
                 bars.append(bar)
             }
@@ -61,8 +61,8 @@ internal class MapboxScaleBarOrnamentView: UIView {
     var size = CGSize()
     // This container view's size and position can change based on the size
     // of its contents. It is contained within the `staticContainerView`.
-    lazy internal var dynamicContainerView: UIView = {
-        let view = UIView()
+    lazy internal var dynamicContainerView: View = {
+        let view = View()
         view.backgroundColor = Constants.primaryColor
         view.layer.borderColor = Constants.primaryColor.cgColor
         view.layer.borderWidth = Constants.borderWidth / UIScreen.main.scale
@@ -380,7 +380,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
         let alpha: CGFloat = maximumDistance >= allowedDistance ? 0 : 1
 
         if alpha != staticContainerView.alpha {
-            UIView.animate(withDuration: 0.2,
+            View.animate(withDuration: 0.2,
                            delay: 0,
                            options: .beginFromCurrentState,
                            animations: {

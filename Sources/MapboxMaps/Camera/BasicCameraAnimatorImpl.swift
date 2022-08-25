@@ -314,7 +314,7 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
             self.completions.removeAll()
         }
 
-        UIView.performWithoutAnimation {
+        View.performWithoutAnimation {
             cameraView.syncLayer(to: transition.fromCameraOptions) // Set up the "from" values for the interpoloation
         }
         return transition

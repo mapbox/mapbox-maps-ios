@@ -60,7 +60,7 @@ public final class CameraAnimationsManager {
     @discardableResult
     public func ease(to: CameraOptions,
                      duration: TimeInterval,
-                     curve: UIView.AnimationCurve = .easeOut,
+                     curve: View.AnimationCurve = .easeOut,
                      completion: AnimationCompletion? = nil) -> Cancelable? {
         return impl.ease(
             to: to,
@@ -110,7 +110,7 @@ public final class CameraAnimationsManager {
     ///                 ``CameraTransition``.
     /// - Returns: A new ``BasicCameraAnimator``.
     public func makeAnimator(duration: TimeInterval,
-                             curve: UIView.AnimationCurve,
+                             curve: View.AnimationCurve,
                              animationOwner: AnimationOwner = .unspecified,
                              animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimator {
         return impl.makeAnimator(

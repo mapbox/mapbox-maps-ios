@@ -96,7 +96,7 @@ internal class MapboxCompassOrnamentView: UIButton {
     }
 
     private func animate(toHidden isHidden: Bool) {
-        UIView.animate(withDuration: Constants.animationDuration) {
+        View.animate(withDuration: Constants.animationDuration) {
             self.containerView.isHidden = isHidden
         }
     }

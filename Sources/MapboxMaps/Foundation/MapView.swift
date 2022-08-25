@@ -12,7 +12,7 @@ import UIKit
 #endif
 
 // swiftlint:disable type_body_length
-open class MapView: UIView {
+open class MapView: View {
 
     // `mapboxMap` depends on `MapInitOptions`, which is not available until
     // awakeFromNib() when instantiating MapView from a xib or storyboard.
@@ -77,7 +77,7 @@ open class MapView: UIView {
     /// The underlying metal view that is used to render the map
     internal private(set) var metalView: MTKView?
 
-    private let cameraViewContainerView = UIView()
+    private let cameraViewContainerView = View()
 
     /// Holds ViewAnnotation views
     private let viewAnnotationContainerView = SubviewInteractionOnlyView()

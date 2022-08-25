@@ -1,4 +1,4 @@
-internal extension UIView {
+internal extension View {
     var parentViewController: UIViewController? {
         var parentResponder: UIResponder? = self
         while parentResponder != nil {

@@ -9,7 +9,7 @@ internal protocol InfoButtonOrnamentDelegate: AnyObject {
     func didTap(_ infoButtonOrnament: InfoButtonOrnament)
 }
 
-internal class InfoButtonOrnament: UIView {
+internal class InfoButtonOrnament: View {
 
     public override var isHidden: Bool {
         didSet {

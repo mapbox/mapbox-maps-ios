@@ -18,11 +18,11 @@ public protocol InterfaceOrientationProvider {
     /// - Parameters:
     ///   - view: The view to get interface orientation from.
     /// - Returns: The interface orientation for the provided view.
-    func interfaceOrientation(for view: UIView) -> UIInterfaceOrientation?
+    func interfaceOrientation(for view: View) -> UIInterfaceOrientation?
 }
 
 extension InterfaceOrientationProvider {
-    internal func headingOrientation(for view: UIView) -> CLDeviceOrientation? {
+    internal func headingOrientation(for view: View) -> CLDeviceOrientation? {
         // locationProvider.headingOrientation should be adjusted based on the
         // current UIInterfaceOrientation of the containing window, not the
         // device orientation
@@ -43,14 +43,14 @@ internal final class UIApplicationInterfaceOrientationProvider: InterfaceOrienta
         self.application = application
     }
 
-    func interfaceOrientation(for view: UIView) -> UIInterfaceOrientation? {
+    func interfaceOrientation(for view: View) -> UIInterfaceOrientation? {
         return application.statusBarOrientation
     }
 }
 
 @available(iOS 13.0, *)
 internal final class DefaultInterfaceOrientationProvider: InterfaceOrientationProvider {
-    func interfaceOrientation(for view: UIView) -> UIInterfaceOrientation? {
+    func interfaceOrientation(for view: View) -> UIInterfaceOrientation? {
         return view.window?.windowScene?.interfaceOrientation
     }
 }

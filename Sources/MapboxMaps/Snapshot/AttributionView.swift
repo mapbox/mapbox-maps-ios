@@ -3,7 +3,7 @@
 // rendered when used with the current Snapshotter implementation.
 //
 // Attribution view has a subview label with attributed text
-internal final class AttributionView: UIView {
+internal final class AttributionView: View {
 
     // Padding around the label. This is also used by `AttributionMeasure` when
     // determining what style of attribution fits within a certain space.

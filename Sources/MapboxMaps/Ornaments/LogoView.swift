@@ -80,8 +80,8 @@ internal class LogoView: View {
     }
 
     // Color declarations
-    private let fillColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 0.900)
-    private let fillColor2 = UIColor(red: 0.000, green: 0.000, blue: 0.000, alpha: 0.350)
+    private let fillColor = Color(red: 1.000, green: 1.000, blue: 1.000, alpha: 0.900)
+    private let fillColor2 = Color(red: 0.000, green: 0.000, blue: 0.000, alpha: 0.350)
 
     // Drawing methods generated from PaintCode
     internal func drawMapboxLogoOrnamentViewFullCanvas(frame targetFrame: CGRect,

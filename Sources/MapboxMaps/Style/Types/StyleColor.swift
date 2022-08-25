@@ -39,16 +39,22 @@ public struct StyleColor: Codable, Equatable {
         self.alpha = alpha
     }
 
-    // MARK: - UIColor
+    // MARK: - Color
 
-    /// Creates a `StyleColor` from a `UIColor`
-    /// - Parameter color: A `UIColor` in the sRGB color space
-    public init(_ color: UIColor) {
+    /// Creates a `StyleColor` from a `Color`
+    /// - Parameter color: A `Color` in the sRGB color space
+    public init(_ color: Color) {
         var red: CGFloat = 0.0
         var green: CGFloat = 0.0
         var blue: CGFloat = 0.0
         var alpha: CGFloat = 0.0
-        guard color.getRed(&red, green: &green, blue: &blue, alpha: &alpha),
+        #if os(OSX)
+        color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        let getColorResult = true
+        #else
+        let getColorResult = color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        #endif
+        guard getColorResult,
               [red, green, blue, alpha].allSatisfy((0.0...1.0).contains) else {
             fatalError("Please use a color in the sRGB color space")
         }

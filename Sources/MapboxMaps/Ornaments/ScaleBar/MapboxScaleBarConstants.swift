@@ -7,8 +7,8 @@ import UIKit
 
 extension MapboxScaleBarOrnamentView {
     struct Constants {
-        internal static let primaryColor: UIColor = #colorLiteral(red: 0.07058823529, green: 0.1764705882, blue: 0.06666666667, alpha: 1)
-        internal static let secondaryColor: UIColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
+        internal static let primaryColor: Color = #colorLiteral(red: 0.07058823529, green: 0.1764705882, blue: 0.06666666667, alpha: 1)
+        internal static let secondaryColor: Color = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
         internal static let borderWidth: CGFloat = 1
 
         internal static let feetPerMile: Double = 5280

@@ -22,9 +22,9 @@ internal class MapboxCompassOrnamentView: UIButton {
 
     internal var tapAction: (() -> Void)?
 
-    private var compassBackgroundColor: UIColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-    private var needleColor: UIColor = #colorLiteral(red: 0.9971256852, green: 0.2427211106, blue: 0.196741581, alpha: 1)
-    private var lineColor: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+    private var compassBackgroundColor: Color = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+    private var needleColor: Color = #colorLiteral(red: 0.9971256852, green: 0.2427211106, blue: 0.196741581, alpha: 1)
+    private var lineColor: Color = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
     private let directionFormatter: CompassDirectionFormatter = {
         let formatter = CompassDirectionFormatter()
         formatter.style = .short
@@ -106,9 +106,9 @@ internal class MapboxCompassOrnamentView: UIButton {
         UIGraphicsBeginImageContextWithOptions(Constants.compassSize, false, UIScreen.main.scale)
 
         //// Color Declarations
-        let fillColor = UIColor(red: 0.000, green: 0.000, blue: 0.000, alpha: 1.000)
-        let fillColor2 = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000)
-        let fillColor3 = UIColor(red: 1.000, green: 0.235, blue: 0.196, alpha: 1.000)
+        let fillColor = Color(red: 0.000, green: 0.000, blue: 0.000, alpha: 1.000)
+        let fillColor2 = Color(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000)
+        let fillColor3 = Color(red: 1.000, green: 0.235, blue: 0.196, alpha: 1.000)
 
         //// Oval Drawing
         let ovalPath = UIBezierPath(ovalIn: CGRect(x: 1, y: 1, width: 38, height: 38))
@@ -233,7 +233,7 @@ internal class MapboxCompassOrnamentView: UIButton {
         let north = NSAttributedString(string: northLocalized, attributes:
             [
                 NSAttributedString.Key.font: northFont,
-                NSAttributedString.Key.foregroundColor: UIColor.white
+                NSAttributedString.Key.foregroundColor: Color.white
             ])
         let stringRect = CGRect(x: (Constants.compassSize.width - north.size().width) / 2,
                                 y: Constants.compassSize.height * 0.435,

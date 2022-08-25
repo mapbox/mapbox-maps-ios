@@ -1,8 +1,9 @@
-//
-//  Color.swift
-//  MapboxMaps
-//
-//  Created by odnairy on 25.08.22.
-//
-
 import Foundation
+
+#if os(OSX)
+import AppKit
+public typealias Color = NSColor
+#else
+import UIKit
+public typealias Color = UIColor
+#endif

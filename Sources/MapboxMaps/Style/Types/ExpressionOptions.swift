@@ -68,7 +68,7 @@ public struct FormatOptions: Codable, Equatable, ExpressionArgumentConvertible {
         return [.option(.format(self))]
     }
 
-    public init(fontScale: Double? = nil, textFont: [String]? = nil, textColor: UIColor? = nil) {
+    public init(fontScale: Double? = nil, textFont: [String]? = nil, textColor: Color? = nil) {
         self.fontScale = fontScale
         self.textFont = textFont
 

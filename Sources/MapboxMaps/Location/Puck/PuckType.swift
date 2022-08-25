@@ -33,7 +33,7 @@ public struct Puck2DConfiguration: Equatable {
         public var isEnabled: Bool
 
         /// The color of the pulsing circle.
-        public var color: UIColor
+        public var color: Color
 
         /// The radius of the pulsing circle.
         public var radius: Radius
@@ -42,7 +42,7 @@ public struct Puck2DConfiguration: Equatable {
         /// - Parameters:
         ///   - color: The color of the pulsing circle.
         ///   - radius: The radius of the pulsing circle.
-        public init(color: UIColor = UIColor(red: 0.29, green: 0.565, blue: 0.886, alpha: 1),
+        public init(color: Color = Color(red: 0.29, green: 0.565, blue: 0.886, alpha: 1),
                     radius: Radius = .constant(30)) {
             self.color = color
             self.radius = radius
@@ -69,10 +69,10 @@ public struct Puck2DConfiguration: Equatable {
     public var showsAccuracyRing: Bool
 
     /// The color of the accuracy ring.
-    public var accuracyRingColor: UIColor
+    public var accuracyRingColor: Color
 
     /// The color of the accuracy ring border.
-    public var accuracyRingBorderColor: UIColor
+    public var accuracyRingBorderColor: Color
 
     /// Initialize a `Puck2D` object with a top image, bearing image, shadow image, scale, and accuracy ring visibility.
     /// - Parameters:
@@ -93,8 +93,8 @@ public struct Puck2DConfiguration: Equatable {
         self.scale = scale
         self.pulsing = pulsing
         self.showsAccuracyRing = showsAccuracyRing
-        self.accuracyRingColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)
-        self.accuracyRingBorderColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)
+        self.accuracyRingColor = Color(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)
+        self.accuracyRingBorderColor = Color(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)
     }
 
     /// Initialize a `Puck2D` object with a top image, bearing image, shadow image, scale, and accuracy ring visibility.
@@ -111,8 +111,8 @@ public struct Puck2DConfiguration: Equatable {
                 shadowImage: UIImage? = nil,
                 scale: Value<Double>? = nil,
                 showsAccuracyRing: Bool = false,
-                accuracyRingColor: UIColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3),
-                accuracyRingBorderColor: UIColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)) {
+                accuracyRingColor: Color = Color(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3),
+                accuracyRingBorderColor: Color = Color(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)) {
         self.topImage = topImage
         self.bearingImage = bearingImage
         self.shadowImage = shadowImage
@@ -211,9 +211,9 @@ private func makeBearingImage(size: CGSize) -> UIImage {
 
     // render the image
     return UIGraphicsImageRenderer(bounds: imageBounds).image { _ in
-        UIColor.systemBlue.setFill()
+        Color.systemBlue.setFill()
         path.fill()
-        UIColor.white.setStroke()
+        Color.white.setStroke()
         path.stroke()
     }
 }

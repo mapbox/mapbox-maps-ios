@@ -77,7 +77,7 @@ internal struct Attribution: Hashable {
 
         let attributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: UIFont.smallSystemFontSize),
-            .foregroundColor: UIColor(white: 0.2, alpha: 1.0),
+            .foregroundColor: Color(white: 0.2, alpha: 1.0),
         ]
 
         return NSAttributedString(string: attributionText, attributes: attributes)

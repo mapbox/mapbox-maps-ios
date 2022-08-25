@@ -768,7 +768,7 @@ public final class Style: StyleProtocol {
     ///
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
-    public func addImage(_ image: UIImage, id: String, sdf: Bool = false, contentInsets: UIEdgeInsets = .zero) throws {
+    public func addImage(_ image: UIImage, id: String, sdf: Bool = false, contentInsets: SharedEdgeInsets = .zero) throws {
         let scale = Float(image.scale)
         let stretchXFirst = Float(image.capInsets.left) * scale
         let stretchXSecond = Float(image.size.width - image.capInsets.right) * scale

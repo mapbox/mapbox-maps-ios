@@ -16,7 +16,7 @@ public struct CameraTransition: Equatable {
     public var zoom: Change<CGFloat>
 
     /// Represents a change to the padding of the map.
-    public var padding: Change<UIEdgeInsets>
+    public var padding: Change<SharedEdgeInsets>
 
     /// Represents a change to the anchor of the map
     /// NOTE: Incompatible with concurrent center animations

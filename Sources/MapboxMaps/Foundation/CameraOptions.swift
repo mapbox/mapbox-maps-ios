@@ -10,7 +10,7 @@ public struct CameraOptions: Hashable {
     /// The geographic coordinate that will be rendered at the midpoint of the area defined by `padding`. Defaults to (0, 0).
     public var center: CLLocationCoordinate2D?
     /// Insets from each edge of the map. Impacts the "principal point" of the graphical projection and the location at which `center` is rendered. Defaults to 0. 
-    public var padding: UIEdgeInsets?
+    public var padding: SharedEdgeInsets?
     /// Point in the map's coordinate system about which `zoom` and `bearing` should be applied. Mutually exclusive with `center`. Defaults to (0, 0).
     public var anchor: CGPoint?
     /// The zoom level of the map. Defaults to 0.
@@ -32,7 +32,7 @@ public struct CameraOptions: Hashable {
     - Returns: A `CameraOptions` that contains all configuration information the map will use to determine which part of the map to render.
     */
     public init(center: CLLocationCoordinate2D? = nil,
-                padding: UIEdgeInsets? = nil,
+                padding: SharedEdgeInsets? = nil,
                 anchor: CGPoint? = nil,
                 zoom: CGFloat? = nil,
                 bearing: CLLocationDirection? = nil,

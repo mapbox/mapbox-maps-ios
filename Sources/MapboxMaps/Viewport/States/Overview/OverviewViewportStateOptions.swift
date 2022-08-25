@@ -8,7 +8,7 @@ public struct OverviewViewportStateOptions: Equatable {
     public var geometry: Geometry
 
     /// The padding that ``OverviewViewportState`` should use when calculating its camera.
-    public var padding: UIEdgeInsets
+    public var padding: SharedEdgeInsets
 
     /// The bearing that ``OverviewViewportState`` should use when calcualting its camera.
     public var bearing: CLLocationDirection?
@@ -32,7 +32,7 @@ public struct OverviewViewportStateOptions: Equatable {
     ///   - pitch: Defaults to 0.
     ///   - animationDuration: Defaults to 1.
     public init(geometry: GeometryConvertible,
-                padding: UIEdgeInsets = .zero,
+                padding: SharedEdgeInsets = .zero,
                 bearing: CLLocationDirection? = 0,
                 pitch: CGFloat? = 0,
                 animationDuration: TimeInterval = 1) {

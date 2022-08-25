@@ -27,8 +27,8 @@ internal struct FlyToInterpolator {
     internal let sourcePitch: CGFloat
     internal let destPitch: CGFloat
 
-    internal let sourcePadding: UIEdgeInsets
-    internal let destPadding: UIEdgeInsets
+    internal let sourcePadding: SharedEdgeInsets
+    internal let destPadding: SharedEdgeInsets
 
     // Default values
     fileprivate let defaultVelocity = 1.2
@@ -247,7 +247,7 @@ internal struct FlyToInterpolator {
     ///
     /// - Parameter fraction: Parameter between 0 and 1. 0 represents the start position, 1 the end position.
     /// - Returns: padding
-    internal func padding(at fraction: Double) -> UIEdgeInsets {
+    internal func padding(at fraction: Double) -> SharedEdgeInsets {
         let t = CGFloat(fraction)
 
         // TODO: Consider working on with the __padding (EdgeInsets) parameter.
@@ -256,7 +256,7 @@ internal struct FlyToInterpolator {
         let left   = ((1.0 - t) * sourcePadding.left)   + (t * destPadding.left)
         let right  = ((1.0 - t) * sourcePadding.right)  + (t * destPadding.right)
 
-        return UIEdgeInsets(top: top, left: left, bottom: bottom, right: right)
+        return SharedEdgeInsets(top: top, left: left, bottom: bottom, right: right)
     }
 
     // MARK: - Animation properties

@@ -31,7 +31,7 @@ internal protocol MapboxMapProtocol: AnyObject {
     func removeViewAnnotation(withId id: String) throws
     func options(forViewAnnotationWithId id: String) throws -> ViewAnnotationOptions
     func pointIsAboveHorizon(_ point: CGPoint) -> Bool
-    func camera(for geometry: Geometry, padding: UIEdgeInsets, bearing: CGFloat?, pitch: CGFloat?) -> CameraOptions
+    func camera(for geometry: Geometry, padding: SharedEdgeInsets, bearing: CGFloat?, pitch: CGFloat?) -> CameraOptions
     func point(for coordinate: CLLocationCoordinate2D) -> CGPoint
     func performWithoutNotifying(_ block: () -> Void)
 }
@@ -327,7 +327,7 @@ public final class MapboxMap: MapboxMapProtocol {
     ///   - pitch: The new pitch to be used by the camera.
     /// - Returns: A `CameraOptions` that fits the provided constraints
     public func camera(for coordinateBounds: CoordinateBounds,
-                       padding: UIEdgeInsets,
+                       padding: SharedEdgeInsets,
                        bearing: Double?,
                        pitch: Double?) -> CameraOptions {
         return CameraOptions(
@@ -349,7 +349,7 @@ public final class MapboxMap: MapboxMapProtocol {
     ///   - pitch: The new pitch to be used by the camera.
     /// - Returns: A `CameraOptions` that fits the provided constraints
     public func camera(for coordinates: [CLLocationCoordinate2D],
-                       padding: UIEdgeInsets,
+                       padding: SharedEdgeInsets,
                        bearing: Double?,
                        pitch: Double?) -> CameraOptions {
         return CameraOptions(
@@ -402,7 +402,7 @@ public final class MapboxMap: MapboxMapProtocol {
     ///   - pitch: The new pitch to be used by the camera.
     /// - Returns: A `CameraOptions` that fits the provided constraints
     public func camera(for geometry: Geometry,
-                       padding: UIEdgeInsets,
+                       padding: SharedEdgeInsets,
                        bearing: CGFloat?,
                        pitch: CGFloat?) -> CameraOptions {
         return CameraOptions(

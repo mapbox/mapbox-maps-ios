@@ -9,7 +9,7 @@ public struct FollowPuckViewportStateOptions: Hashable {
 
     /// The value to use for ``CameraOptions/padding`` when setting the camera. If `nil`, padding
     /// will not be modified.
-    public var padding: UIEdgeInsets?
+    public var padding: SharedEdgeInsets?
 
     /// The value to use for ``CameraOptions/zoom`` when setting the camera. If `nil`, zoom will
     /// not be modified.
@@ -32,7 +32,7 @@ public struct FollowPuckViewportStateOptions: Hashable {
     ///   - zoom: Defaults to 16.35.
     ///   - bearing: Defaults to ``FollowPuckViewportStateBearing/heading``.
     ///   - pitch: Defaults to 45.
-    public init(padding: UIEdgeInsets? = .zero,
+    public init(padding: SharedEdgeInsets? = .zero,
                 zoom: CGFloat? = 16.35,
                 bearing: FollowPuckViewportStateBearing? = .heading,
                 pitch: CGFloat? = 45) {

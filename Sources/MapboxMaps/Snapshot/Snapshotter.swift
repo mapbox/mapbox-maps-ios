@@ -250,7 +250,7 @@ public class Snapshotter {
     ///   - pitch: The new pitch to be used by the camera.
     /// - Returns: A `CameraOptions` that fits the provided constraints
     public func camera(for coordinates: [CLLocationCoordinate2D],
-                       padding: UIEdgeInsets,
+                       padding: SharedEdgeInsets,
                        bearing: Double?,
                        pitch: Double?) -> CameraOptions {
         return CameraOptions(mapSnapshotter.cameraForCoordinates(

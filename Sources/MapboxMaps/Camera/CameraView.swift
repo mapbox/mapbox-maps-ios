@@ -29,7 +29,7 @@ internal class CameraView: UIView {
     private func cameraOptions(with layer: CALayer) -> CameraOptions {
         let center = CLLocationCoordinate2D(latitude: CLLocationDegrees(layer.position.y),
                                             longitude: CLLocationDegrees(layer.position.x))
-        let padding = UIEdgeInsets(top: layer.contentsRect.origin.x,
+        let padding = SharedEdgeInsets(top: layer.contentsRect.origin.x,
                                    left: layer.bounds.origin.x,
                                    bottom: layer.contentsRect.origin.y,
                                    right: layer.bounds.origin.y)

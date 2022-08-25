@@ -1,5 +1,9 @@
 @_implementationOnly import MapboxCommon_Private
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 extension MapView: AttributionDialogManagerDelegate {
     func viewControllerForPresenting(_ attributionDialogManager: AttributionDialogManager) -> UIViewController {

@@ -1,4 +1,8 @@
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimatorProtocol {
     private enum InternalState: Equatable {

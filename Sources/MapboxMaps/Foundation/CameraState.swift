@@ -1,6 +1,10 @@
 import Foundation
 import CoreLocation
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 public struct CameraState: Hashable {
     /// The geographic coordinate that will be rendered at the midpoint of the area defined by `padding`.

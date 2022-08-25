@@ -1,4 +1,8 @@
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 import CoreLocation
 
 //swiftlint:disable type_body_length

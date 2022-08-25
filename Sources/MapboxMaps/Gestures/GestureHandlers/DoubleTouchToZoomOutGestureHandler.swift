@@ -1,4 +1,8 @@
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 /// `DoubleTouchToZoomOutGestureHandler` updates the map camera in response
 /// to single tap gestures with 2 touches

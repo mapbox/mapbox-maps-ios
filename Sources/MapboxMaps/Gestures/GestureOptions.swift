@@ -1,4 +1,8 @@
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 /// Options used to configure the direction in which the map is allowed to move
 /// during a pan gesture. Called `ScrollMode` in the Android SDK for

@@ -1,4 +1,8 @@
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 /// A view that represents a camera view port.
 internal class CameraView: UIView {

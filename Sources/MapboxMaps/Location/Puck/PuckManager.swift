@@ -1,6 +1,10 @@
 import CoreLocation
 import MapboxCoreMaps
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 internal protocol PuckManagerProtocol: AnyObject {
     var puckType: PuckType? { get set }

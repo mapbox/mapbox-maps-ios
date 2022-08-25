@@ -1,4 +1,8 @@
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 /// Represents the different types of pucks
 public enum PuckType: Equatable {

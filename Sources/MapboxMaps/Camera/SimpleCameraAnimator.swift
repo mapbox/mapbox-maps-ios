@@ -1,5 +1,9 @@
 @_implementationOnly import MapboxCommon_Private
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 internal protocol SimpleCameraAnimatorProtocol: CameraAnimatorProtocol {
     var to: CameraOptions { get set }

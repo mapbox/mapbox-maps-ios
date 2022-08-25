@@ -1,4 +1,8 @@
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 private let defaultOrnamentsMargin = CGPoint(x: 8.0, y: 8.0)
 

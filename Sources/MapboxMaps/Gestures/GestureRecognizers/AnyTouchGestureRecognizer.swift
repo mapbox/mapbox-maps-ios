@@ -1,4 +1,8 @@
-import UIKit.UIGestureRecognizerSubclass
+#if os(OSX)
+import AppKit
+#else
+import UIKit
+#endif
 
 internal final class AnyTouchGestureRecognizer: UIGestureRecognizer {
 

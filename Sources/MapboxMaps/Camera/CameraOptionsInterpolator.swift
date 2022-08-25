@@ -1,5 +1,9 @@
 import CoreLocation
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 internal protocol CameraOptionsInterpolatorProtocol: AnyObject {
     func interpolate(from: CameraOptions,

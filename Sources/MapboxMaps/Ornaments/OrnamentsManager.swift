@@ -1,4 +1,8 @@
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 /// Options used to configure the corner position of an ornament
 public enum OrnamentPosition: String, Equatable {

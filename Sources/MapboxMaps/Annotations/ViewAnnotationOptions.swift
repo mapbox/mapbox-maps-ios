@@ -1,5 +1,9 @@
 import Foundation
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 /// Stores layout and visibilty settings for a `ViewAnnotation`
 public struct ViewAnnotationOptions: Hashable {

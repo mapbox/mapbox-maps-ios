@@ -1,4 +1,8 @@
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 /// Represents a color as defined by the Mapbox Style Spec
 public struct StyleColor: Codable, Equatable {

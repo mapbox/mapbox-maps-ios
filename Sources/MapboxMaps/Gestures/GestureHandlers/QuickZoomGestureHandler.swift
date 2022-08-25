@@ -1,4 +1,8 @@
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 /// `QuickZoomGestureHandler` updates the map camera in response to double tap and drag gestures
 internal final class QuickZoomGestureHandler: GestureHandler, FocusableGestureHandlerProtocol {

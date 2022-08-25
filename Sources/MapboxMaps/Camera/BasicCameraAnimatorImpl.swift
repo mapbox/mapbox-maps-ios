@@ -1,4 +1,8 @@
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 internal protocol BasicCameraAnimatorDelegate: AnyObject {
     func basicCameraAnimatorDidStartRunning(_ animator: BasicCameraAnimatorProtocol)

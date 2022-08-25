@@ -1,4 +1,8 @@
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 @_implementationOnly import MapboxCommon_Private
 
 internal protocol LocationProducerProtocol: AnyObject {

@@ -1,4 +1,8 @@
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 internal protocol DefaultViewportTransitionAnimationHelperProtocol: AnyObject {
     func makeAnimation(cameraOptions: CameraOptions,

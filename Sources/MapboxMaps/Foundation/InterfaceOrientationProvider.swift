@@ -1,5 +1,9 @@
 import Foundation
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 import CoreLocation
 
 /// A protocol that supplies current interface orientation for the specified view.

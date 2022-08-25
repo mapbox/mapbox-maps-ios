@@ -1,5 +1,9 @@
 import CoreLocation
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 internal class MapboxCompassOrnamentView: UIButton {
     private enum Constants {

@@ -1,6 +1,10 @@
 @_implementationOnly import MapboxCommon_Private
 import CoreGraphics
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 internal final class Puck2D: Puck {
     private static let layerID = "puck"

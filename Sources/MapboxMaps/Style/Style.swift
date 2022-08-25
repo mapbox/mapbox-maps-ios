@@ -1,7 +1,11 @@
 // swiftlint:disable file_length
 @_implementationOnly import MapboxCommon_Private
 @_implementationOnly import MapboxCoreMaps_Private
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 internal protocol StyleProtocol: AnyObject {
     func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition?) throws

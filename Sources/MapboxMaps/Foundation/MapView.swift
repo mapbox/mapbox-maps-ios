@@ -5,7 +5,11 @@
 @_exported import Turf
 @_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 // swiftlint:disable type_body_length
 open class MapView: UIView {

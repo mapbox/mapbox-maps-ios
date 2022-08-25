@@ -1,5 +1,9 @@
 // swiftlint:disable file_length
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 import CoreLocation
 import CoreImage.CIFilterBuiltins
 

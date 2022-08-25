@@ -1,4 +1,8 @@
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 import CoreLocation
 
 /// Structure used to represent a desired change to the map's camera

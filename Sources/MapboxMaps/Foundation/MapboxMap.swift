@@ -1,6 +1,10 @@
 // swiftlint:disable file_length
 import MapboxCoreMaps
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 @_implementationOnly import MapboxCommon_Private
 @_implementationOnly import MapboxCoreMaps_Private
 import Turf

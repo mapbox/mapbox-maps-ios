@@ -1,4 +1,8 @@
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 /// APIs for animating the camera.
 public final class CameraAnimationsManager {

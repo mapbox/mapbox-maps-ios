@@ -1,4 +1,8 @@
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 internal protocol CameraAnimatorsRunnerProtocol: AnyObject {
     var cameraAnimators: [CameraAnimator] { get }

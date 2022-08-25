@@ -63,11 +63,14 @@ internal class MapboxScaleBarOrnamentView: View {
     // of its contents. It is contained within the `staticContainerView`.
     lazy internal var dynamicContainerView: View = {
         let view = View()
+        #if !os(OSX)
+
         view.backgroundColor = Constants.primaryColor
         view.layer.borderColor = Constants.primaryColor.cgColor
         view.layer.borderWidth = Constants.borderWidth / UIScreen.main.scale
         view.layer.cornerRadius = Constants.barHeight / 2.0
         view.layer.masksToBounds = true
+        #endif
 
         return view
     }()

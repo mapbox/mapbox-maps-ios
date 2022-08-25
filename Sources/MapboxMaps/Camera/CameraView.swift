@@ -9,17 +9,18 @@ internal class CameraView: View {
 
     /// returns nil if the presentation layer is nil
     internal var presentationCameraOptions: CameraOptions? {
-        return layer.presentation().map(cameraOptions(with:))
+        return layer!.presentation().map(cameraOptions(with:))
     }
 
     internal var cameraOptions: CameraOptions {
-        return cameraOptions(with: layer)
+        return cameraOptions(with: layer!)
     }
 
     init() {
         super.init(frame: .zero)
         self.isHidden = true
-        self.isUserInteractionEnabled = false
+        layer = CALayer()
+//        self.isUserInteractionEnabled = false
     }
 
     internal required init?(coder: NSCoder) {
@@ -45,28 +46,28 @@ internal class CameraView: View {
 
     internal func syncLayer(to cameraOptions: CameraOptions) {
         if let zoom = cameraOptions.zoom {
-            layer.opacity = Float(zoom)
+            layer!.opacity = Float(zoom)
         }
 
         if let bearing = cameraOptions.bearing {
-            layer.cornerRadius = CGFloat(bearing)
+            layer!.cornerRadius = CGFloat(bearing)
         }
 
         if let centerCoordinate = cameraOptions.center {
-            layer.position = CGPoint(x: centerCoordinate.longitude, y: centerCoordinate.latitude)
+            layer!.position = CGPoint(x: centerCoordinate.longitude, y: centerCoordinate.latitude)
         }
 
         if let padding = cameraOptions.padding {
-            layer.bounds.origin = CGPoint(x: padding.left, y: padding.right)
-            layer.contentsRect.origin = CGPoint(x: padding.top, y: padding.bottom)
+            layer!.bounds.origin = CGPoint(x: padding.left, y: padding.right)
+            layer!.contentsRect.origin = CGPoint(x: padding.top, y: padding.bottom)
         }
 
         if let pitch = cameraOptions.pitch {
-            layer.borderWidth = pitch
+            layer!.borderWidth = pitch
         }
 
         if let anchor = cameraOptions.anchor {
-            layer.anchorPoint = anchor
+            layer!.anchorPoint = anchor
         }
     }
 }

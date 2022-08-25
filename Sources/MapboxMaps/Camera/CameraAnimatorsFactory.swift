@@ -37,6 +37,7 @@ internal protocol CameraAnimatorsFactoryProtocol: AnyObject {
                                   owner: AnimationOwner) -> SimpleCameraAnimatorProtocol
 }
 
+#if os(iOS)
 internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
 
     private let cameraViewContainerView: View
@@ -170,3 +171,5 @@ internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
             dateProvider: dateProvider)
     }
 }
+
+#endif

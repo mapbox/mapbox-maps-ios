@@ -1,11 +1,17 @@
 import CoreLocation
+import MapboxCommon
 
 extension NSValue {
 
     /// Converts the `CGPoint` value of an `NSValue` to a `CLLocationCoordinate2D`.
     func coordinateValue() -> CLLocationCoordinate2D {
+        #if os(iOS)
         let point = cgPointValue
         return CLLocationCoordinate2D(latitude: CLLocationDegrees(point.x), longitude: CLLocationDegrees(point.y))
+        #else
+        let point = pointValue
+        return CLLocationCoordinate2D(latitude: point.x, longitude: point.y)
+        #endif
     }
 
     /// Converts an array of `CGPoint` values wrapped in an `NSValue`

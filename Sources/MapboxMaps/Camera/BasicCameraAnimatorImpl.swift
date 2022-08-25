@@ -28,6 +28,7 @@ internal protocol BasicCameraAnimatorProtocol: AnyObject {
     func update()
 }
 
+#if os(iOS)
 internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
     private enum InternalState: Equatable {
         case initial
@@ -320,3 +321,4 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
         return transition
     }
 }
+#endif

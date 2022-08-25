@@ -5,6 +5,7 @@ import AppKit
 import UIKit
 #endif
 
+#if os(iOS)
 extension MapView: AttributionDialogManagerDelegate {
     func viewControllerForPresenting(_ attributionDialogManager: AttributionDialogManager) -> UIViewController {
         return parentViewController!
@@ -68,3 +69,4 @@ extension MapView: AttributionDialogManagerDelegate {
         return components.url!
     }
 }
+#endif

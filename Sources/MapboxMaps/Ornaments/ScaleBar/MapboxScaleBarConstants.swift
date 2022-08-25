@@ -5,6 +5,7 @@ import AppKit
 import UIKit
 #endif
 
+#if os(iOS)
 extension MapboxScaleBarOrnamentView {
     struct Constants {
         internal static let primaryColor: Color = #colorLiteral(red: 0.07058823529, green: 0.1764705882, blue: 0.06666666667, alpha: 1)
@@ -105,3 +106,4 @@ extension MapboxScaleBarOrnamentView {
         private init() {}
     }
 }
+#endif

@@ -82,7 +82,9 @@ extension AppleLocationProvider: LocationProvider {
     }
 
     public func stopUpdatingHeading() {
+#if os(iOS)
         locationProvider.stopUpdatingHeading()
+#endif
     }
 
     public func dismissHeadingCalibrationDisplay() {

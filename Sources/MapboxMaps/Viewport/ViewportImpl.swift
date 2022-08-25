@@ -39,22 +39,24 @@ internal final class ViewportImpl: ViewportImplProtocol {
 
     private let mainQueue: MainQueueProtocol
 
-    private let anyTouchGestureRecognizer: UIGestureRecognizer
+    private let anyTouchGestureRecognizer: GestureRecognizer
 
     // viewport requires a default transition at all times
     internal init(options: ViewportOptions,
                   mainQueue: MainQueueProtocol,
                   defaultTransition: ViewportTransition,
-                  anyTouchGestureRecognizer: UIGestureRecognizer,
-                  doubleTapGestureRecognizer: UIGestureRecognizer,
-                  doubleTouchGestureRecognizer: UIGestureRecognizer) {
+                  anyTouchGestureRecognizer: GestureRecognizer,
+                  doubleTapGestureRecognizer: GestureRecognizer,
+                  doubleTouchGestureRecognizer: GestureRecognizer) {
         self.mainQueue = mainQueue
         self.defaultTransition = defaultTransition
         self.status = .idle
         self.anyTouchGestureRecognizer = anyTouchGestureRecognizer
+#if os(iOS)
         anyTouchGestureRecognizer.addTarget(self, action: #selector(handleAnyTouchGesture(_:)))
         doubleTapGestureRecognizer.addTarget(self, action: #selector(handleDoubleTapAndTouchGestures(_:)))
         doubleTouchGestureRecognizer.addTarget(self, action: #selector(handleDoubleTapAndTouchGestures(_:)))
+#endif
         // sync with provided options
         self.options = options
     }
@@ -220,6 +222,7 @@ internal final class ViewportImpl: ViewportImplProtocol {
 
     // MARK: - Gestures
 
+#if os(iOS)
     @objc private func handleAnyTouchGesture(_ gestureRecognizer: UIGestureRecognizer) {
         guard options.transitionsToIdleUponUserInteraction else {
             return
@@ -243,4 +246,5 @@ internal final class ViewportImpl: ViewportImplProtocol {
             break
         }
     }
+#endif
 }

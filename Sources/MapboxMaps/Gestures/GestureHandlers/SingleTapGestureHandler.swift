@@ -4,6 +4,7 @@ import AppKit
 import UIKit
 #endif
 
+#if os(iOS)
 /// `SingleTapGestureHandler` manages a gesture recognizer looking for single tap touch events
 internal final class SingleTapGestureHandler: GestureHandler {
 
@@ -29,3 +30,4 @@ internal final class SingleTapGestureHandler: GestureHandler {
         }
     }
 }
+#endif

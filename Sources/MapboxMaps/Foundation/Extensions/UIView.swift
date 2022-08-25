@@ -1,3 +1,4 @@
+#if os(iOS)
 internal extension View {
     var parentViewController: UIViewController? {
         var parentResponder: UIResponder? = self
@@ -10,3 +11,5 @@ internal extension View {
         return nil
     }
 }
+
+#endif

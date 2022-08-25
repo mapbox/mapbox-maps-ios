@@ -10,8 +10,27 @@ internal protocol PanGestureHandlerProtocol: GestureHandler {
     var panMode: PanMode { get set }
 }
 
+
+#if os(OSX)
+final class PanGestureHandler: GestureHandler, PanGestureHandlerProtocol {
+    internal init(decelerationFactor: CGFloat = 0.998, panMode: PanMode = .horizontalAndVertical) {
+        self.decelerationFactor = decelerationFactor
+        self.panMode = panMode
+
+        super.init(gestureRecognizer: NSClickGestureRecognizer())
+    }
+
+    var decelerationFactor: CGFloat = 0.998
+
+    var panMode: PanMode = .horizontalAndVertical
+
+}
+#endif
+
+#if os(iOS)
 /// `PanGestureHandler` updates the map camera in response to a single-touch pan gesture
 internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtocol {
+
 
     /// A constant factor that influences how long a pan gesture takes to decelerate
     internal var decelerationFactor: CGFloat = UIScrollView.DecelerationRate.normal.rawValue
@@ -156,6 +175,7 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
                 to: toPoint))
     }
 }
+#endif
 
 private extension CGPoint {
     func clamped(to point: CGPoint, panMode: PanMode) -> CGPoint {

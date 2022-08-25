@@ -52,8 +52,10 @@ open class MapView: View {
     /// transitions.
     public private(set) var viewport: Viewport!
 
+#if os(iOS)
     /// Controls the display of attribution dialogs
     private var attributionDialogManager: AttributionDialogManager!
+#endif
 
     /// A Boolean value that indicates whether the underlying `CAMetalLayer` of the `MapView`
     /// presents its content using a CoreAnimation transaction
@@ -179,7 +181,9 @@ open class MapView: View {
         return mapboxMap.anchor
     }
 
+#if os(iOS)
     private let interfaceOrientationProvider: InterfaceOrientationProvider
+#endif
     internal let attributionUrlOpener: AttributionURLOpener
 
     /// Initialize a MapView
@@ -189,16 +193,20 @@ open class MapView: View {
     ///    `ResourceOptionsManager.default` to retrieve a shared default resource option, including the access token.
     @available(iOSApplicationExtension, unavailable)
     public init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions()) {
+#if os(iOS)
         let orientationProvider: InterfaceOrientationProvider
         if #available(iOS 13, *) {
             orientationProvider = DefaultInterfaceOrientationProvider()
         } else {
             orientationProvider = UIApplicationInterfaceOrientationProvider()
         }
+#endif
 
         self.dependencyProvider = MapViewDependencyProvider()
+#if os(iOS)
         self.interfaceOrientationProvider = orientationProvider
         self.attributionUrlOpener = DefaultAttributionURLOpener()
+#endif
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
@@ -206,6 +214,7 @@ open class MapView: View {
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
 
+#if os(iOS)
     /// Initialize a MapView
     /// - Parameters:
     ///   - frame: frame for the MapView.
@@ -227,6 +236,7 @@ open class MapView: View {
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
+#endif
 
     /// Initialize a MapView
     /// - Parameters:
@@ -239,7 +249,9 @@ open class MapView: View {
                 mapInitOptions: MapInitOptions = MapInitOptions(),
                 urlOpener: AttributionURLOpener) {
         self.dependencyProvider = MapViewDependencyProvider()
+#if os(iOS)
         self.interfaceOrientationProvider = DefaultInterfaceOrientationProvider()
+#endif
         self.attributionUrlOpener = urlOpener
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
@@ -250,19 +262,23 @@ open class MapView: View {
 
     @available(iOSApplicationExtension, unavailable)
     required public init?(coder: NSCoder) {
+#if os(iOS)
         let orientationProvider: InterfaceOrientationProvider
         if #available(iOS 13, *) {
             orientationProvider = DefaultInterfaceOrientationProvider()
         } else {
             orientationProvider = UIApplicationInterfaceOrientationProvider()
         }
+        #endif
 
         dependencyProvider = MapViewDependencyProvider()
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
+#if os(iOS)
         self.interfaceOrientationProvider = orientationProvider
         self.attributionUrlOpener = DefaultAttributionURLOpener()
+#endif
         super.init(coder: coder)
     }
 
@@ -272,7 +288,9 @@ open class MapView: View {
                   orientationProvider: InterfaceOrientationProvider,
                   urlOpener: AttributionURLOpener) {
         self.dependencyProvider = dependencyProvider
+        #if os(iOS)
         self.interfaceOrientationProvider = orientationProvider
+        #endif
         self.attributionUrlOpener = urlOpener
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
@@ -326,10 +344,12 @@ open class MapView: View {
             mapboxObservableProvider: dependencyProvider.mapboxObservableProvider)
 
         subscribeToLifecycleNotifications()
+#if os(iOS)
         notificationCenter.addObserver(self,
                                        selector: #selector(didReceiveMemoryWarning),
                                        name: UIApplication.didReceiveMemoryWarningNotification,
                                        object: nil)
+        #endif
 
         // Use the overriding style URI if provided (currently from IB)
         if let initialStyleURI = overridingStyleURI,
@@ -344,7 +364,11 @@ open class MapView: View {
         }
 
         if let metalView = metalView {
+#if os(iOS)
             insertSubview(viewAnnotationContainerView, aboveSubview: metalView)
+            #else
+            addSubview(viewAnnotationContainerView, positioned: .above, relativeTo: metalView)
+            #endif
         }
 
         viewAnnotationContainerView.translatesAutoresizingMaskIntoConstraints = false
@@ -389,6 +413,7 @@ open class MapView: View {
             mapboxMap: mapboxMap,
             cameraAnimationsManager: internalCamera)
 
+#if os(iOS)
         // Initialize the attribution manager
         attributionDialogManager = AttributionDialogManager(
             dataSource: mapboxMap,
@@ -405,6 +430,7 @@ open class MapView: View {
             scaleBarView: MapboxScaleBarOrnamentView(),
             compassView: MapboxCompassOrnamentView(),
             attributionButton: InfoButtonOrnament())
+#endif
 
         // Initialize/Configure location source and location manager
         locationProducer = dependencyProvider.makeLocationProducer(
@@ -448,7 +474,9 @@ open class MapView: View {
         cameraAnimatorsRunnerEnablable.isEnabled = false
     }
 
+
     private func subscribeToLifecycleNotifications() {
+#if os(iOS)
         if #available(iOS 13.0, *), bundle.infoDictionary?["UIApplicationSceneManifest"] != nil {
             notificationCenter.addObserver(self,
                                            selector: #selector(sceneDidEnterBackground(_:)),
@@ -476,6 +504,7 @@ open class MapView: View {
                                            name: UIApplication.willResignActiveNotification,
                                            object: nil)
         }
+#endif
     }
 
     @objc private func appDidEnterBackground() {
@@ -490,6 +519,7 @@ open class MapView: View {
         displayLink?.isPaused = true
     }
 
+#if os(iOS)
     @available(iOS 13.0, *)
     @objc private func sceneDidActivate(_ notification: Notification) {
         guard notification.object as? UIScene == window?.parentScene else { return }
@@ -510,6 +540,7 @@ open class MapView: View {
 
         reduceMemoryUse()
     }
+#endif
 
     @objc private func didReceiveMemoryWarning() {
         reduceMemoryUse()
@@ -558,11 +589,14 @@ open class MapView: View {
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: ibStyleURI)
     }
 
+#if os(iOS)
     open override func layoutSubviews() {
         super.layoutSubviews()
         mapboxMap.size = bounds.size
     }
+    #endif
 
+#if os(iOS)
     private func updateFromDisplayLink(displayLink: CADisplayLink) {
         if window == nil {
             return
@@ -581,6 +615,7 @@ open class MapView: View {
             metalView?.draw()
         }
     }
+    #endif
 
     private func updateDisplayLinkPreferredFramesPerSecond() {
         if let displayLink = displayLink {
@@ -599,9 +634,19 @@ open class MapView: View {
         }
     }
 
+#if os(iOS)
     open override func didMoveToWindow() {
         super.didMoveToWindow()
+        didMoveWindowFuncContent()
+    }
+    #else
+    open override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        didMoveWindowFuncContent()
+    }
+    #endif
 
+    func didMoveWindowFuncContent() {
         displayLink?.invalidate()
         displayLink = nil
 
@@ -611,12 +656,14 @@ open class MapView: View {
             return
         }
 
+#if os(iOS)
         displayLink = dependencyProvider.makeDisplayLink(
             window: window,
             target: ForwardingDisplayLinkTarget { [weak self] in
                 self?.updateFromDisplayLink(displayLink: $0)
             },
             selector: #selector(ForwardingDisplayLinkTarget.update(with:)))
+#endif
 
         guard let displayLink = displayLink else {
             cameraAnimatorsRunner.cancelAnimations()
@@ -628,11 +675,13 @@ open class MapView: View {
 
         updateDisplayLinkPreferredFramesPerSecond()
         displayLink.add(to: .current, forMode: .common)
+
     }
 
     // MARK: Location
 
     private func updateHeadingOrientationIfNeeded() {
+#if os(iOS)
         guard let headingOrientation = interfaceOrientationProvider.headingOrientation(for: self) else {
             return
         }
@@ -648,6 +697,7 @@ open class MapView: View {
         if locationProducer.headingOrientation != headingOrientation {
             locationProducer.headingOrientation = headingOrientation
         }
+#endif
     }
 }
 
@@ -670,15 +720,22 @@ extension MapView: DelegatingMapClientDelegate {
 
         metalView.translatesAutoresizingMaskIntoConstraints = false
         metalView.autoResizeDrawable = true
+#if os(iOS)
         metalView.contentScaleFactor = pixelRatio
         metalView.contentMode = .center
         metalView.isOpaque = isOpaque
         metalView.layer.isOpaque = isOpaque
+#endif
         metalView.isPaused = true
         metalView.enableSetNeedsDisplay = false
         metalView.presentsWithTransaction = false
 
+#if os(iOS)
         insertSubview(metalView, at: 0)
+        #else
+        addSubview(metalView, positioned: .below, relativeTo: nil)
+#endif
+
 
         let sameHeightConstraint = metalView.heightAnchor.constraint(equalTo: heightAnchor)
         sameHeightConstraint.priority = .defaultHigh

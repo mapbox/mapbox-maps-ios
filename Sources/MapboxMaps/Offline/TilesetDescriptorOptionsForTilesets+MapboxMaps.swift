@@ -28,7 +28,7 @@ extension TilesetDescriptorOptionsForTilesets {
     /// in accordance with the tile batches zoom ranges (see the list above).
     public convenience init(tilesets: [String],
                             zoomRange: ClosedRange<UInt8>,
-                            pixelRatio: Float = Float(Screen.main.scale)) {
+                            pixelRatio: Float = Float(Screen.mainScale)) {
         self.init(tilesets: tilesets,
                   minZoom: zoomRange.lowerBound,
                   maxZoom: zoomRange.upperBound,

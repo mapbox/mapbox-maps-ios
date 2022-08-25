@@ -16,6 +16,7 @@ public protocol AttributionURLOpener {
     func openAttributionURL(_ url: URL)
 }
 
+#if os(iOS)
 @available(iOSApplicationExtension, unavailable)
 internal final class DefaultAttributionURLOpener: AttributionURLOpener {
     private let application: UIApplicationProtocol
@@ -28,3 +29,4 @@ internal final class DefaultAttributionURLOpener: AttributionURLOpener {
         application.open(url)
     }
 }
+#endif

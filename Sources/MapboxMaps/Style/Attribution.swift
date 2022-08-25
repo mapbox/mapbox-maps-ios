@@ -1,5 +1,6 @@
 import Foundation
 
+#if os(iOS)
 internal struct Attribution: Hashable {
 
     enum Style: CaseIterable {
@@ -134,3 +135,5 @@ internal struct Attribution: Hashable {
         return attributions
     }
 }
+
+#endif

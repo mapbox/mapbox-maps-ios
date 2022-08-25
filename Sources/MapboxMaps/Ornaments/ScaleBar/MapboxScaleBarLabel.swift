@@ -4,6 +4,7 @@ import AppKit
 import UIKit
 #endif
 
+#if os(iOS)
 internal class MapboxScaleBarLabel: UILabel {
 
     override internal func drawText(in rect: CGRect) {
@@ -25,3 +26,5 @@ internal class MapboxScaleBarLabel: UILabel {
         shadowOffset = originalShadowOffset
     }
 }
+
+#endif

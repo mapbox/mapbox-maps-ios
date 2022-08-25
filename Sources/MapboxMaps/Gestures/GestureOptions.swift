@@ -71,10 +71,14 @@ public struct GestureOptions: Equatable {
     /// the Android SDK for consistency with platform conventions.
     public var panMode: PanMode = .horizontalAndVertical
 
+    #if os(iOS)
     /// A constant factor that determines how quickly pan deceleration animations happen.
     /// Multiplied with the velocity vector once per millisecond during deceleration animations.
     /// Defaults to `UIScrollView.DecelerationRate.normal.rawValue`
     public var panDecelerationFactor: CGFloat = UIScrollView.DecelerationRate.normal.rawValue
+    #else
+    public var panDecelerationFactor: CGFloat = 0.998000
+    #endif
 
     /// By default, gestures rotate and zoom around the center of the gesture. Set this property to rotate and zoom around a fixed point instead.
     ///

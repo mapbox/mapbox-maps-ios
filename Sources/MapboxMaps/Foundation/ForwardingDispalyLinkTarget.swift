@@ -1,5 +1,6 @@
 import QuartzCore
 
+#if os(iOS)
 internal class ForwardingDisplayLinkTarget: NSObject {
     private let handler: (CADisplayLink) -> Void
 
@@ -12,3 +13,5 @@ internal class ForwardingDisplayLinkTarget: NSObject {
         handler(displayLink)
     }
 }
+
+#endif

@@ -40,7 +40,7 @@ extension TilesetDescriptorOptions {
     ///     resources will be stored in the disk cache.
     public convenience init(styleURI: StyleURI,
                             zoomRange: ClosedRange<UInt8>,
-                            pixelRatio: Float = Float(Screen.main.scale),
+                            pixelRatio: Float = Float(Screen.mainScale),
                             stylePackOptions: StylePackLoadOptions? = nil) {
         self.init(styleURI: styleURI.rawValue,
                   minZoom: zoomRange.lowerBound,

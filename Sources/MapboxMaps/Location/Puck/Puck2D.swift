@@ -290,11 +290,19 @@ extension Puck2D: DisplayLinkParticipant {
 
 private extension Puck2DConfiguration {
     var resolvedTopImage: UIImage {
+#if os(iOS)
         topImage ?? UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!
+#else
+        topImage ?? Bundle.mapboxMaps.image(forResource: "location-dot-inner")!
+#endif
     }
 
     var resolvedShadowImage: UIImage {
+#if os(iOS)
         shadowImage ?? UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!
+#else
+        shadowImage ?? Bundle.mapboxMaps.image(forResource: "location-dot-outer")!
+#endif
     }
 
     var resolvedScale: Value<Double> {

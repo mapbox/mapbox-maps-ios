@@ -541,7 +541,15 @@ public final class MapboxMap: MapboxMapProtocol {
 
     /// The map's current anchor, calculated after applying padding (if it exists)
     internal var anchor: CGPoint {
+//        CGRect(origin: .zero, size: size)
+#if os(iOS)
         let rect = CGRect(origin: .zero, size: size).inset(by: cameraState.padding)
+        #else
+        let padding = cameraState.padding
+        let rect = CGRect(origin: .zero, size: size).insetBy(dx: (padding.left + padding.right)/2,
+                                                             dy: (padding.top + padding.bottom)/2)
+        
+        #endif
         return CGPoint(x: rect.midX, y: rect.midY)
     }
 
@@ -1014,12 +1022,14 @@ extension MapboxMap {
 
 // MARK: - Attribution
 
+#if os(iOS)
 extension MapboxMap: AttributionDataSource {
     internal func attributions() -> [Attribution] {
         let attributions = Attribution.parse(style.sourceAttributions())
         return attributions
     }
 }
+#endif
 
 // MARK: - Feature State
 

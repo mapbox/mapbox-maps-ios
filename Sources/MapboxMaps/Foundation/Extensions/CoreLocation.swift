@@ -50,7 +50,11 @@ extension CLLocationCoordinate2D {
 
     /// Convert a `CLLocationCoordinate` to a `NSValue` which wraps a `CGPoint`.
     internal func toValue() -> NSValue {
+#if os(iOS)
         return NSValue(cgPoint: CGPoint(x: latitude, y: longitude))
+#else
+        return NSValue(point: NSPoint(x: latitude, y: longitude))
+#endif
     }
 }
 

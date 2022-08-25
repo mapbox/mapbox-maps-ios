@@ -5,6 +5,7 @@ import UIKit
 #endif
 import CoreLocation
 
+#if os(iOS)
 //swiftlint:disable type_body_length
 internal class MapboxScaleBarOrnamentView: View {
 
@@ -86,13 +87,16 @@ internal class MapboxScaleBarOrnamentView: View {
         }
     }
 
+#if os(iOS)
     private var prototypeLabel: MapboxScaleBarLabel = {
         let label = MapboxScaleBarLabel()
+        
         label.font = UIFont.systemFont(ofSize: 8, weight: .medium)
         label.clipsToBounds = false
 
         return label
     }()
+#endif
 
     private var labelImageCache: [CLLocationDistance: UIImage] = [:]
     private var lastLabelWidth: CGFloat = Constants.scaleBarLabelWidthHint
@@ -393,3 +397,5 @@ internal class MapboxScaleBarOrnamentView: View {
         }
     }
 }
+
+#endif

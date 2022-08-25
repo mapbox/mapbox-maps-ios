@@ -6,6 +6,7 @@ import UIKit
 
 // MARK: - UIImage
 
+#if os(iOS)
 extension UIImage {
 
     /// Initialize a `UIImage` with an internal `Image` type, using a givens scale.
@@ -36,3 +37,5 @@ extension UIImage {
         self.init(cgImage: generatedImage, scale: scale, orientation: .downMirrored)
     }
 }
+
+#endif

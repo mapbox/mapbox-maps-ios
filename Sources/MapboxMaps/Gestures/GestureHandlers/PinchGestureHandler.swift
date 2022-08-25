@@ -16,6 +16,29 @@ internal protocol PinchGestureHandlerProtocol: FocusableGestureHandlerProtocol {
     var focalPoint: CGPoint? { get set }
 }
 
+#if os(OSX)
+final class PinchGestureHandler: GestureHandler, PinchGestureHandlerProtocol {
+    internal init(zoomEnabled: Bool = true, panEnabled: Bool = true, simultaneousRotateAndPinchZoomEnabled: Bool = true, focalPoint: CGPoint? = nil) {
+        self.zoomEnabled = zoomEnabled
+        self.panEnabled = panEnabled
+        self.simultaneousRotateAndPinchZoomEnabled = simultaneousRotateAndPinchZoomEnabled
+        self.focalPoint = focalPoint
+
+
+        super.init(gestureRecognizer: NSClickGestureRecognizer())
+    }
+
+    var zoomEnabled: Bool
+
+    var panEnabled: Bool
+
+    var simultaneousRotateAndPinchZoomEnabled: Bool
+
+    var focalPoint: CGPoint?
+}
+#endif
+
+#if os(iOS)
 /// `PinchGestureHandler` updates the map camera in response to a 2-touch
 /// gesture that may consist of translation, scaling, and rotation
 internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerProtocol {
@@ -132,3 +155,4 @@ extension PinchGestureHandler: UIGestureRecognizerDelegate {
         simultaneousRotateAndPinchZoomEnabled
     }
 }
+#endif

@@ -4,6 +4,7 @@ import AppKit
 import UIKit
 #endif
 
+#if os(iOS)
 /// `DoubleTouchToZoomOutGestureHandler` updates the map camera in response
 /// to single tap gestures with 2 touches
 internal final class DoubleTouchToZoomOutGestureHandler: GestureHandler, FocusableGestureHandlerProtocol {
@@ -42,3 +43,4 @@ internal final class DoubleTouchToZoomOutGestureHandler: GestureHandler, Focusab
         }
     }
 }
+#endif

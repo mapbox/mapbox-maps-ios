@@ -51,7 +51,7 @@ public protocol AnnotationInteractionDelegate: AnyObject {
 
 public class AnnotationOrchestrator {
 
-    private let gestureRecognizer: UIGestureRecognizer
+    private let gestureRecognizer: GestureRecognizer
 
     private let style: Style
 
@@ -59,7 +59,7 @@ public class AnnotationOrchestrator {
 
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
 
-    internal init(gestureRecognizer: UIGestureRecognizer,
+    internal init(gestureRecognizer: GestureRecognizer,
                   mapFeatureQueryable: MapFeatureQueryable,
                   style: Style,
                   displayLinkCoordinator: DisplayLinkCoordinator) {
@@ -68,7 +68,9 @@ public class AnnotationOrchestrator {
         self.style = style
         self.displayLinkCoordinator = displayLinkCoordinator
 
+#if os(iOS)
         gestureRecognizer.addTarget(self, action: #selector(handleTap(_:)))
+#endif
     }
 
     /// Dictionary of annotation managers keyed by their identifiers.
@@ -193,6 +195,7 @@ public class AnnotationOrchestrator {
         }
     }
 
+#if os(iOS)
     @objc private func handleTap(_ tap: UITapGestureRecognizer) {
         let managers = annotationManagersByIdInternal.values.filter { $0.delegate != nil }
         guard !managers.isEmpty else { return }
@@ -224,4 +227,5 @@ public class AnnotationOrchestrator {
             }
         }
     }
+#endif
 }

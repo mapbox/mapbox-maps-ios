@@ -1,3 +1,4 @@
+#if os(iOS)
 internal struct AttributionMeasure {
 
     private init() {}
@@ -48,3 +49,5 @@ internal struct AttributionMeasure {
         return (.none, nil)
     }
 }
+
+#endif

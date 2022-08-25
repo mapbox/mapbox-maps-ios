@@ -5,6 +5,7 @@ import AppKit
 import UIKit
 #endif
 
+#if os(iOS)
 extension MapView {
 
     /// Errors related to rendered snapshots
@@ -35,3 +36,4 @@ extension MapView {
         return image
     }
 }
+#endif

@@ -4,6 +4,7 @@ import AppKit
 import UIKit
 #endif
 
+#if os(iOS)
 /// `PitchGestureHandler` updates the map camera in response to a vertical,
 /// 2-touch pan gesture in which the angle between the touch points is less than 45°.
 internal final class PitchGestureHandler: GestureHandler, UIGestureRecognizerDelegate {
@@ -78,3 +79,4 @@ internal final class PitchGestureHandler: GestureHandler, UIGestureRecognizerDel
         return angleInRadians * 180 / .pi
     }
 }
+#endif

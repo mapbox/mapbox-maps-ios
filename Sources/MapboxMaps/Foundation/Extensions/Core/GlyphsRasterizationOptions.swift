@@ -52,8 +52,13 @@ extension GlyphsRasterizationOptions {
         }
     }
 
+#if os(iOS)
     internal static let fallbackFontFamilyName =
         UIFont.systemFont(ofSize: 0, weight: .regular).familyName
+    #else
+    internal static let fallbackFontFamilyName =
+        NSFont.systemFont(ofSize: 0, weight: .regular).familyName!
+#endif
 
     public override func isEqual(_ object: Any?) -> Bool {
         guard let other = object as? GlyphsRasterizationOptions else {

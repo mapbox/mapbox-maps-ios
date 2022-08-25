@@ -8,7 +8,7 @@ import CoreLocation
 import CoreImage.CIFilterBuiltins
 
 @_implementationOnly import MapboxCommon_Private
-
+#if os(iOS)
 // MARK: - Snapshotter
 public class Snapshotter {
 
@@ -457,3 +457,4 @@ extension Snapshotter {
         attributionView.layer.render(in: context)
     }
 }
+#endif

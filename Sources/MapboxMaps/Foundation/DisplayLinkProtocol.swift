@@ -15,4 +15,10 @@ internal protocol DisplayLinkProtocol: AnyObject {
     func invalidate()
 }
 
+#if os(iOS)
 extension CADisplayLink: DisplayLinkProtocol {}
+#endif
+
+//#if os(OSX)
+//extension CVDisplayLink: DisplayLinkProtocol {}
+//#endif

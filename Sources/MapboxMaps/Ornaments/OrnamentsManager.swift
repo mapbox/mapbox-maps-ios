@@ -37,6 +37,7 @@ internal struct Ornaments {
     static let telemetryURL = "https://www.mapbox.com/telemetry/"
 }
 
+#if os(iOS)
 /// APIs for managing map ornaments
 public class OrnamentsManager: NSObject {
 
@@ -233,3 +234,5 @@ public class OrnamentsManager: NSObject {
         }
     }
 }
+
+#endif

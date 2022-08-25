@@ -4,6 +4,7 @@ import AppKit
 import UIKit
 #endif
 
+#if os(iOS)
 internal final class AnyTouchGestureRecognizer: UIGestureRecognizer {
 
     private let minimumPressDuration: TimeInterval
@@ -75,3 +76,4 @@ internal final class AnyTouchGestureRecognizer: UIGestureRecognizer {
         return false
     }
 }
+#endif

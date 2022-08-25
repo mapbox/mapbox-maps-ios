@@ -10,6 +10,27 @@ internal protocol RotateGestureHandlerProtocol: FocusableGestureHandlerProtocol 
     func scheduleRotationUpdateIfNeeded()
 }
 
+#if os(OSX)
+final class RotateGestureHandler: GestureHandler, RotateGestureHandlerProtocol {
+    internal init(simultaneousRotateAndPinchZoomEnabled: Bool = true, focalPoint: CGPoint? = nil) {
+        self.simultaneousRotateAndPinchZoomEnabled = simultaneousRotateAndPinchZoomEnabled
+        self.focalPoint = focalPoint
+    }
+
+    var simultaneousRotateAndPinchZoomEnabled: Bool = true
+
+    func scheduleRotationUpdateIfNeeded() {
+
+    }
+
+    var focalPoint: CGPoint?
+
+
+}
+#endif
+
+
+#if os(iOS)
  /// `RotateGestureHandler` updates the map camera in response to 2-touch rotate gestures
  internal final class RotateGestureHandler: GestureHandler, RotateGestureHandlerProtocol {
      internal var simultaneousRotateAndPinchZoomEnabled: Bool = true
@@ -118,3 +139,5 @@ extension RotateGestureHandler: UIGestureRecognizerDelegate {
         simultaneousRotateAndPinchZoomEnabled
     }
 }
+
+#endif

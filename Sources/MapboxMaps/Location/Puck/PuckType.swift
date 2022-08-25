@@ -124,11 +124,18 @@ public struct Puck2DConfiguration: Equatable {
 
     /// Create a Puck2DConfiguration instance with or without an arrow bearing image. Default without the arrow bearing image.
     public static func makeDefault(showBearing: Bool = false) -> Puck2DConfiguration {
+#if os(iOS)
         let shadowImage = UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!
         return Puck2DConfiguration(
             topImage: UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!,
             bearingImage: showBearing ? makeBearingImage(size: shadowImage.size) : nil,
             shadowImage: shadowImage)
+        #else
+        let shadowImage = Bundle.mapboxMaps.image(forResource: "location-dot-outer")!
+        return Puck2DConfiguration(topImage: Bundle.mapboxMaps.image(forResource: "location-dot-inner"),
+                                   bearingImage: nil,
+                                   shadowImage: shadowImage)
+        #endif
     }
 }
 
@@ -155,6 +162,7 @@ public struct Puck3DConfiguration: Equatable {
     }
 }
 
+#if os(iOS)
 private func makeBearingImage(size: CGSize) -> UIImage {
     let gap: CGFloat = 1
     let arcLength: CGFloat = .pi / 4
@@ -217,3 +225,4 @@ private func makeBearingImage(size: CGSize) -> UIImage {
         path.stroke()
     }
 }
+#endif

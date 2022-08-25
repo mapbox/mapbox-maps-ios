@@ -4,6 +4,7 @@ import AppKit
 import UIKit
 #endif
 
+#if os(iOS)
 /// `QuickZoomGestureHandler` updates the map camera in response to double tap and drag gestures
 internal final class QuickZoomGestureHandler: GestureHandler, FocusableGestureHandlerProtocol {
     private var initialLocation: CGPoint?
@@ -52,3 +53,4 @@ internal final class QuickZoomGestureHandler: GestureHandler, FocusableGestureHa
         }
     }
 }
+#endif

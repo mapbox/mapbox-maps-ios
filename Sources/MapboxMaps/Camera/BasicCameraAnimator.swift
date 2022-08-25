@@ -85,6 +85,7 @@ public final class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimator
         impl.addCompletion(completion)
     }
 
+#if os(iOS)
     /// Continue the animation with a timing parameter (`UITimingCurveProvider`) and duration factor (`CGFloat`).
     public func continueAnimation(withTimingParameters timingParameters: UITimingCurveProvider?,
                                   durationFactor: Double) {
@@ -92,6 +93,7 @@ public final class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimator
             withTimingParameters: timingParameters,
             durationFactor: durationFactor)
     }
+#endif
 
     public func cancel() {
         impl.stopAnimation()

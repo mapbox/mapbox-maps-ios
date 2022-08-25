@@ -56,11 +56,13 @@ internal final class EventsManager {
             }
         }
 
+#if os(iOS)
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(didReceiveMemoryWarning),
             name: UIApplication.didReceiveMemoryWarningNotification,
             object: nil)
+#endif
     }
 
     @objc private func didReceiveMemoryWarning() {

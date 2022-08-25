@@ -61,37 +61,37 @@ public final class GestureManager: GestureHandlerDelegate {
     }
 
     /// The gesture recognizer for the pan gesture
-    public var panGestureRecognizer: UIGestureRecognizer {
+    public var panGestureRecognizer: GestureRecognizer {
         return panGestureHandler.gestureRecognizer
     }
 
     /// The gesture recognizer for the "pinch to zoom" gesture
-    public var pinchGestureRecognizer: UIGestureRecognizer {
+    public var pinchGestureRecognizer: GestureRecognizer {
         return pinchGestureHandler.gestureRecognizer
     }
 
     /// The gesture recognizer for the rotate gesture
-    public var rotateGestureRecognizer: UIGestureRecognizer {
+    public var rotateGestureRecognizer: GestureRecognizer {
         return rotateGestureHandler.gestureRecognizer
     }
 
     /// The gesture recognizer for the pitch gesture
-    public var pitchGestureRecognizer: UIGestureRecognizer {
+    public var pitchGestureRecognizer: GestureRecognizer {
         return pitchGestureHandler.gestureRecognizer
     }
 
     /// The gesture recognizer for the "double tap to zoom in" gesture
-    public var doubleTapToZoomInGestureRecognizer: UIGestureRecognizer {
+    public var doubleTapToZoomInGestureRecognizer: GestureRecognizer {
         return doubleTapToZoomInGestureHandler.gestureRecognizer
     }
 
     /// The gesture recognizer for the "double touch to zoom out" gesture
-    public var doubleTouchToZoomOutGestureRecognizer: UIGestureRecognizer {
+    public var doubleTouchToZoomOutGestureRecognizer: GestureRecognizer {
         return doubleTouchToZoomOutGestureHandler.gestureRecognizer
     }
 
     /// The gesture recognizer for the quickZoom gesture
-    public var quickZoomGestureRecognizer: UIGestureRecognizer {
+    public var quickZoomGestureRecognizer: GestureRecognizer {
         return quickZoomGestureHandler.gestureRecognizer
     }
 
@@ -99,11 +99,11 @@ public final class GestureManager: GestureHandlerDelegate {
     /// - NOTE: The single tap gesture recognizer is primarily used to route tap events to the
     ///         `*AnnotationManager`s. You can add a target-action pair to this gesture recognizer
     ///         to be notified when a single tap occurs on the map.
-    public var singleTapGestureRecognizer: UIGestureRecognizer {
+    public var singleTapGestureRecognizer: GestureRecognizer {
         return singleTapGestureHandler.gestureRecognizer
     }
 
-    internal var anyTouchGestureRecognizer: UIGestureRecognizer {
+    internal var anyTouchGestureRecognizer: GestureRecognizer {
         return anyTouchGestureHandler.gestureRecognizer
     }
 
@@ -151,11 +151,12 @@ public final class GestureManager: GestureHandlerDelegate {
         quickZoomGestureHandler.delegate = self
         singleTapGestureHandler.delegate = self
 
+#if os(iOS)
         pinchGestureHandler.gestureRecognizer.require(toFail: panGestureHandler.gestureRecognizer)
         pitchGestureHandler.gestureRecognizer.require(toFail: panGestureHandler.gestureRecognizer)
         quickZoomGestureHandler.gestureRecognizer.require(toFail: doubleTapToZoomInGestureHandler.gestureRecognizer)
         singleTapGestureHandler.gestureRecognizer.require(toFail: doubleTapToZoomInGestureHandler.gestureRecognizer)
-
+        #endif
         // Invoke the setter to ensure the defaults are synchronized
         self.options = GestureOptions()
     }

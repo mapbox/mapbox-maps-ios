@@ -13,11 +13,11 @@ internal protocol GestureHandlerDelegate: AnyObject {
 }
 
 internal class GestureHandler: NSObject {
-    internal let gestureRecognizer: UIGestureRecognizer
+    internal let gestureRecognizer: GestureRecognizer
 
     internal weak var delegate: GestureHandlerDelegate?
 
-    init(gestureRecognizer: UIGestureRecognizer) {
+    init(gestureRecognizer: GestureRecognizer) {
         self.gestureRecognizer = gestureRecognizer
     }
 

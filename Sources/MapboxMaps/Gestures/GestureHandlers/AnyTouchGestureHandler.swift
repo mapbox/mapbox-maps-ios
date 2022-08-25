@@ -4,6 +4,7 @@ import AppKit
 import UIKit
 #endif
 
+#if os(iOS)
 internal final class AnyTouchGestureHandler: GestureHandler {
 
     private let cameraAnimatorsRunnerEnablable: MutableEnablableProtocol
@@ -26,3 +27,5 @@ internal final class AnyTouchGestureHandler: GestureHandler {
         }
     }
 }
+
+#endif

@@ -6,6 +6,11 @@ import UIKit
 #endif
 import CoreLocation
 
+#if os(OSX)
+public protocol InterfaceOrientationProvider {
+
+}
+#elseif os(iOS)
 /// A protocol that supplies current interface orientation for the specified view.
 ///
 /// Use this protocol when the map view is used in non-application target (e.g. application extension target).
@@ -33,7 +38,9 @@ extension InterfaceOrientationProvider {
         return CLDeviceOrientation(interfaceOrientation: interfaceOrientation)
     }
 }
+#endif
 
+#if os(iOS)
 @available(iOS, deprecated: 13)
 @available(iOSApplicationExtension, unavailable)
 internal final class UIApplicationInterfaceOrientationProvider: InterfaceOrientationProvider {
@@ -47,14 +54,18 @@ internal final class UIApplicationInterfaceOrientationProvider: InterfaceOrienta
         return application.statusBarOrientation
     }
 }
+#endif
 
+#if os(iOS)
 @available(iOS 13.0, *)
 internal final class DefaultInterfaceOrientationProvider: InterfaceOrientationProvider {
     func interfaceOrientation(for view: View) -> UIInterfaceOrientation? {
         return view.window?.windowScene?.interfaceOrientation
     }
 }
+#endif
 
+#if os(iOS)
 internal extension CLDeviceOrientation {
     init(interfaceOrientation: UIInterfaceOrientation) {
         // UIInterfaceOrientation.landscape{Right,Left} correspond to
@@ -75,3 +86,4 @@ internal extension CLDeviceOrientation {
         }
     }
 }
+#endif

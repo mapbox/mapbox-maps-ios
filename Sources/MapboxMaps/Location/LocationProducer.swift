@@ -188,6 +188,7 @@ extension LocationProducer: LocationProviderDelegate {
     internal func locationProviderDidChangeAuthorization(_ provider: LocationProvider) {
         syncIsUpdating()
         let accuracyAuthorization = provider.accuracyAuthorization
+#if os(iOS)
         if #available(iOS 14.0, *),
            isUpdating,
            [.authorizedAlways, .authorizedWhenInUse].contains(provider.authorizationStatus),
@@ -195,6 +196,7 @@ extension LocationProducer: LocationProviderDelegate {
             provider.requestTemporaryFullAccuracyAuthorization(
                 withPurposeKey: "LocationAccuracyAuthorizationDescription")
         }
+#endif
         latestAccuracyAuthorization = accuracyAuthorization
     }
 }

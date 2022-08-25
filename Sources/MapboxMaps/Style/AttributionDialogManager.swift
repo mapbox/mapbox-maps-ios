@@ -3,6 +3,8 @@ import AppKit
 #else
 import UIKit
 #endif
+
+#if os(iOS)
 internal protocol AttributionDataSource: AnyObject {
     func attributions() -> [Attribution]
 }
@@ -170,3 +172,5 @@ extension AttributionDialogManager: InfoButtonOrnamentDelegate {
         viewController.present(alert, animated: true, completion: nil)
     }
 }
+
+#endif

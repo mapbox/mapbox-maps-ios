@@ -5,6 +5,7 @@ import AppKit
 import UIKit
 #endif
 
+#if os(iOS)
 internal protocol UIApplicationProtocol: AnyObject {
     var statusBarOrientation: UIInterfaceOrientation { get set }
 
@@ -17,3 +18,4 @@ extension UIApplication: UIApplicationProtocol {
         open(url, options: [:], completionHandler: nil)
     }
 }
+#endif

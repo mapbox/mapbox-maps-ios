@@ -12,7 +12,7 @@ extension UIImage {
     /// - Parameters:
     ///   - mbxImage: The internal `Image` type to use for the `UIImage`.
     ///   - scale: The scale of the new `UIImage`.
-    internal convenience init?(mbxImage: Image, scale: CGFloat = UIScreen.main.scale) {
+    internal convenience init?(mbxImage: Image, scale: CGFloat = Screen.main.scale) {
         let cgImage = mbxImage.cgImage().takeRetainedValue()
 
         let size = CGSize(width: CGFloat(CGFloat(mbxImage.width) / scale),

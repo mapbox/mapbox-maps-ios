@@ -67,7 +67,7 @@ internal class MapboxScaleBarOrnamentView: View {
 
         view.backgroundColor = Constants.primaryColor
         view.layer.borderColor = Constants.primaryColor.cgColor
-        view.layer.borderWidth = Constants.borderWidth / UIScreen.main.scale
+        view.layer.borderWidth = Constants.borderWidth / Screen.main.scale
         view.layer.cornerRadius = Constants.barHeight / 2.0
         view.layer.masksToBounds = true
         #endif

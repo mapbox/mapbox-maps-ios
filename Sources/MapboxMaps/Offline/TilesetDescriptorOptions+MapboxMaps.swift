@@ -9,7 +9,7 @@ extension TilesetDescriptorOptions {
     ///   - zoomRange: Closed range zoom level for the tile package.
     ///   - pixelRatio: Pixel ratio to be accounted for when downloading raster
     ///         tiles. Typically this should match the scale used by the `MapView`,
-    ///         most likely `UIScreen.main.scale`, which is the default value.
+    ///         most likely `Screen.main.scale`, which is the default value.
     ///   - stylePackOptions: Style package load options, associated with the
     ///         tileset descriptor.
     ///
@@ -40,7 +40,7 @@ extension TilesetDescriptorOptions {
     ///     resources will be stored in the disk cache.
     public convenience init(styleURI: StyleURI,
                             zoomRange: ClosedRange<UInt8>,
-                            pixelRatio: Float = Float(UIScreen.main.scale),
+                            pixelRatio: Float = Float(Screen.main.scale),
                             stylePackOptions: StylePackLoadOptions? = nil) {
         self.init(styleURI: styleURI.rawValue,
                   minZoom: zoomRange.lowerBound,

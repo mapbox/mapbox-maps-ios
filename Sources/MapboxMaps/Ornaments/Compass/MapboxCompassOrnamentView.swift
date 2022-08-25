@@ -103,7 +103,7 @@ internal class MapboxCompassOrnamentView: UIButton {
 
     // swiftlint:disable function_body_length
     private func createCompassImage() -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(Constants.compassSize, false, UIScreen.main.scale)
+        UIGraphicsBeginImageContextWithOptions(Constants.compassSize, false, Screen.main.scale)
 
         //// Color Declarations
         let fillColor = Color(red: 0.000, green: 0.000, blue: 0.000, alpha: 1.000)

@@ -19,7 +19,7 @@ extension MapOptions {
                             crossSourceCollisions: Bool = true,
                             optimizeForTerrain: Bool = true,
                             size: CGSize? = nil,
-                            pixelRatio: CGFloat = UIScreen.main.nativeScale,
+                            pixelRatio: CGFloat = Screen.main.nativeScale,
                             glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions(fontFamilies: [])) {
 
         let mbmSize: Size?

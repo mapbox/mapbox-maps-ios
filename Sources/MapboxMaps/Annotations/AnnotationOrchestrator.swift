@@ -51,7 +51,7 @@ public protocol AnnotationInteractionDelegate: AnyObject {
 
 public class AnnotationOrchestrator {
 
-    private let gestureRecognizer: GestureRecognizer
+    private let gestureRecognizer: GestureRecognizer?
 
     private let style: Style
 
@@ -59,7 +59,7 @@ public class AnnotationOrchestrator {
 
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
 
-    internal init(gestureRecognizer: GestureRecognizer,
+    internal init(gestureRecognizer: GestureRecognizer?,
                   mapFeatureQueryable: MapFeatureQueryable,
                   style: Style,
                   displayLinkCoordinator: DisplayLinkCoordinator) {

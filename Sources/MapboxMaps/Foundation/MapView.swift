@@ -27,8 +27,10 @@ open class MapView: View {
     /// The `gestures` object will be responsible for all gestures on the map.
     public private(set) var gestures: GestureManager!
 
+    #if os(iOS)
     /// The `ornaments`object will be responsible for all ornaments on the map.
     public private(set) var ornaments: OrnamentsManager!
+    #endif
 
     /// The `camera` object manages a camera's view lifecycle.
     public private(set) var camera: CameraAnimationsManager!
@@ -89,6 +91,7 @@ open class MapView: View {
 
     private var needsDisplayRefresh: Bool = false
     private var displayLink: DisplayLinkProtocol?
+    private var cvDisplayLink: CVDisplayLink?
 
     /// Holding onto this value that comes from `MapOptions` since there is a race condition between
     /// getting a `MetalView`, and intializing a `MapView`
@@ -205,8 +208,8 @@ open class MapView: View {
         self.dependencyProvider = MapViewDependencyProvider()
 #if os(iOS)
         self.interfaceOrientationProvider = orientationProvider
-        self.attributionUrlOpener = DefaultAttributionURLOpener()
 #endif
+        self.attributionUrlOpener = DefaultAttributionURLOpener()
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
@@ -269,7 +272,7 @@ open class MapView: View {
         } else {
             orientationProvider = UIApplicationInterfaceOrientationProvider()
         }
-        #endif
+#endif
 
         dependencyProvider = MapViewDependencyProvider()
         notificationCenter = dependencyProvider.notificationCenter
@@ -277,8 +280,8 @@ open class MapView: View {
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
 #if os(iOS)
         self.interfaceOrientationProvider = orientationProvider
-        self.attributionUrlOpener = DefaultAttributionURLOpener()
 #endif
+        self.attributionUrlOpener = DefaultAttributionURLOpener()
         super.init(coder: coder)
     }
 
@@ -349,7 +352,7 @@ open class MapView: View {
                                        selector: #selector(didReceiveMemoryWarning),
                                        name: UIApplication.didReceiveMemoryWarningNotification,
                                        object: nil)
-        #endif
+#endif
 
         // Use the overriding style URI if provided (currently from IB)
         if let initialStyleURI = overridingStyleURI,
@@ -596,6 +599,114 @@ open class MapView: View {
     }
     #endif
 
+
+    open override func layout() {
+        super.layout()
+        mapboxMap.size = bounds.size
+    }
+
+
+
+    func update(displayLink: CVDisplayLink, tm: UnsafePointer<CVTimeStamp>, tm2: UnsafePointer<CVTimeStamp>, options: CVOptionFlags, options2: UnsafeMutablePointer<CVOptionFlags>) -> CVReturn {
+        DispatchQueue.main.async {
+            self.redraw(displayLink: displayLink)
+        }
+        return kCVReturnSuccess
+    }
+
+    func redraw(displayLink: CVDisplayLink) {
+//        print(CVDisplayLinkGetActualOutputVideoRefreshPeriod(displayLink))
+        updateHeadingOrientationIfNeeded()
+
+        for participant in displayLinkParticipants.allObjects {
+            participant.participate()
+        }
+
+        cameraAnimatorsRunner.update()
+
+        if needsDisplayRefresh {
+            needsDisplayRefresh = false
+            metalView?.draw()
+        }
+    }
+
+
+    open override func scrollWheel(with event: NSEvent) {
+//        guard event.type == .scrollWheel, event.subtype == .tabletPoint else { return }
+        switch (event.type, event.subtype) {
+        case (.scrollWheel, _) where event.modifierFlags.contains(.shift):
+            startZooming(with: event)
+        case (.scrollWheel, .tabletPoint):
+            startPanning(with: event)
+        case (.scrollWheel, .mouseEvent):
+            startZoomingByMouse(with: event)
+        default: break
+        }
+    }
+
+
+    var initialZoom: CGFloat?
+    func startZooming(with event: NSEvent) {
+        switch (event.phase, event.momentumPhase) {
+        case (.mayBegin, _), (_, .began):
+            initialZoom = mapboxMap.cameraState.zoom
+        case (.began, _), (.changed, _), (_, .changed):
+            guard let initialZoom = initialZoom else {
+                return
+            }
+
+            let newZoomLevel = initialZoom - event.scrollingDeltaY / 75
+
+            mapboxMap.setCamera(to: CameraOptions(anchor: event.locationInWindow.flippedVerticalValue(height: mapboxMap.size.height),
+                                                  zoom: newZoomLevel))
+            self.initialZoom = newZoomLevel
+        case (.ended, _), (.cancelled, _):
+            initialZoom = nil
+        default:
+            break
+        }
+    }
+
+    func startZoomingByMouse(with event: NSEvent) {
+        let precision = event.hasPreciseScrollingDeltas ? 100.0 : 10.0
+        let delta = event.scrollingDeltaY / precision
+        guard delta != 0 else { return }
+
+        var scale = 2.0 / (1.0 + exp(-abs(delta)))
+        if delta < 0 {
+            scale = 1.0 / scale
+        }
+
+        let newZoomLevel = mapboxMap.cameraState.zoom + log2(scale)
+        mapboxMap.setCamera(to: CameraOptions(anchor: event.locationInWindow.flippedVerticalValue(height: mapboxMap.size.height),
+                                              zoom: newZoomLevel))
+    }
+
+    var previousDragPointLocation: CGPoint?
+    func startPanning(with event: NSEvent) {
+        switch (event.phase, event.momentumPhase) {
+        case (.mayBegin, _), (_, .began):
+
+            previousDragPointLocation = .zero
+
+            mapboxMap.dragStart(for: previousDragPointLocation!)
+        case (.began, _), (.changed, _), (_, .changed):
+            guard let previousDragPointLocation = previousDragPointLocation else {
+                return
+            }
+            let newPoint = CGPoint(x: previousDragPointLocation.x + event.scrollingDeltaX,
+                                   y: previousDragPointLocation.y - event.scrollingDeltaY)
+            let camera = mapboxMap.dragCameraOptions(from: previousDragPointLocation, to: newPoint)
+            mapboxMap.setCamera(to: camera)
+            self.previousDragPointLocation = newPoint
+        case (.ended, _), (.cancelled, _):
+            mapboxMap.dragEnd()
+            previousDragPointLocation = nil
+        default:
+            break
+        }
+    }
+
 #if os(iOS)
     private func updateFromDisplayLink(displayLink: CADisplayLink) {
         if window == nil {
@@ -663,6 +774,14 @@ open class MapView: View {
                 self?.updateFromDisplayLink(displayLink: $0)
             },
             selector: #selector(ForwardingDisplayLinkTarget.update(with:)))
+#elseif os(OSX)
+        let error = CVDisplayLinkCreateWithActiveCGDisplays(&cvDisplayLink)
+        if error != kCVReturnSuccess {
+            fatalError("Cannot create CVDisplayLink")
+        }
+
+        CVDisplayLinkSetOutputHandler(cvDisplayLink!, self.update)
+        CVDisplayLinkStart(cvDisplayLink!)
 #endif
 
         guard let displayLink = displayLink else {
@@ -723,8 +842,8 @@ extension MapView: DelegatingMapClientDelegate {
 #if os(iOS)
         metalView.contentScaleFactor = pixelRatio
         metalView.contentMode = .center
-        metalView.isOpaque = isOpaque
         metalView.layer.isOpaque = isOpaque
+        metalView.isOpaque = isOpaque
 #endif
         metalView.isPaused = true
         metalView.enableSetNeedsDisplay = false

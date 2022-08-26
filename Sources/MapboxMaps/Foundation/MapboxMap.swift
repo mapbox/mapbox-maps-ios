@@ -611,9 +611,17 @@ public final class MapboxMap: MapboxMapProtocol {
     /// - Returns:
     ///     The camera options object showing end point.
     public func dragCameraOptions(from: CGPoint, to: CGPoint) -> CameraOptions {
+#if os(OSX)
+        let from = from.screenCoordinate
+        let to = to.screenCoordinate
+        let options = __map.getDragCameraOptionsFor(fromPoint: ScreenCoordinate(x: from.x, y: size.height - from.y),
+                                                    toPoint: ScreenCoordinate(x: to.x, y: size.height - to.y))
+        return CameraOptions(options)
+#else
         let options = __map.getDragCameraOptionsFor(fromPoint: from.screenCoordinate,
                                                     toPoint: to.screenCoordinate)
         return CameraOptions(options)
+#endif
     }
 
     /// Ends the ongoing drag gesture. This function should be called always after

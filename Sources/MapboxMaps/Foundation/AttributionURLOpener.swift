@@ -16,6 +16,14 @@ public protocol AttributionURLOpener {
     func openAttributionURL(_ url: URL)
 }
 
+#if os(OSX)
+final class DefaultAttributionURLOpener: AttributionURLOpener {
+    func openAttributionURL(_ url: URL) {
+        NSWorkspace.shared.open(url)
+    }
+}
+#endif
+
 #if os(iOS)
 @available(iOSApplicationExtension, unavailable)
 internal final class DefaultAttributionURLOpener: AttributionURLOpener {

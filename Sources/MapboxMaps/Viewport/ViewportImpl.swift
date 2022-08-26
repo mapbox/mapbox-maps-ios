@@ -30,24 +30,24 @@ internal final class ViewportImpl: ViewportImplProtocol {
     internal var options: ViewportOptions {
         get {
             ViewportOptions(
-                transitionsToIdleUponUserInteraction: anyTouchGestureRecognizer.isEnabled)
+                transitionsToIdleUponUserInteraction: anyTouchGestureRecognizer?.isEnabled ?? false)
         }
         set {
-            anyTouchGestureRecognizer.isEnabled = newValue.transitionsToIdleUponUserInteraction
+            anyTouchGestureRecognizer?.isEnabled = newValue.transitionsToIdleUponUserInteraction
         }
     }
 
     private let mainQueue: MainQueueProtocol
 
-    private let anyTouchGestureRecognizer: GestureRecognizer
+    private let anyTouchGestureRecognizer: GestureRecognizer?
 
     // viewport requires a default transition at all times
     internal init(options: ViewportOptions,
                   mainQueue: MainQueueProtocol,
                   defaultTransition: ViewportTransition,
-                  anyTouchGestureRecognizer: GestureRecognizer,
-                  doubleTapGestureRecognizer: GestureRecognizer,
-                  doubleTouchGestureRecognizer: GestureRecognizer) {
+                  anyTouchGestureRecognizer: GestureRecognizer?,
+                  doubleTapGestureRecognizer: GestureRecognizer?,
+                  doubleTouchGestureRecognizer: GestureRecognizer?) {
         self.mainQueue = mainQueue
         self.defaultTransition = defaultTransition
         self.status = .idle

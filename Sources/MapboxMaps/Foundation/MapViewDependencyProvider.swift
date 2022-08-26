@@ -28,13 +28,13 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
                              style: StyleProtocol,
                              mapboxMap: MapboxMapProtocol,
                              displayLinkCoordinator: DisplayLinkCoordinator) -> LocationManager
-    #if os(iOS)
+
     func makeViewportImpl(mapboxMap: MapboxMapProtocol,
                           cameraAnimationsManager: CameraAnimationsManagerProtocol,
-                          anyTouchGestureRecognizer: UIGestureRecognizer,
-                          doubleTapGestureRecognizer: UIGestureRecognizer,
-                          doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol
-    #endif
+                          anyTouchGestureRecognizer: GestureRecognizer?,
+                          doubleTapGestureRecognizer: GestureRecognizer?,
+                          doubleTouchGestureRecognizer: GestureRecognizer?) -> ViewportImplProtocol
+
 }
 
 // swiftlint:disable:next type_body_length
@@ -109,7 +109,12 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             cameraAnimationsManager: cameraAnimationsManager,
             dateProvider: DefaultDateProvider())
         #else
-        return PanGestureHandler()
+        let gestureRecognizer = NSPanGestureRecognizer()
+        view.addGestureRecognizer(gestureRecognizer)
+        return PanGestureHandler(panGestureRecognizer: gestureRecognizer,
+                                 mapboxMap: mapboxMap,
+                                 cameraAnimationsManager: cameraAnimationsManager,
+                                 dateProvider: DefaultDateProvider())
         #endif
     }
 
@@ -124,7 +129,11 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             pinchBehaviorProvider: PinchBehaviorProvider(
                 mapboxMap: mapboxMap))
 #else
-        return PinchGestureHandler()
+        let gestureRecognizer = NSMagnificationGestureRecognizer()
+        view.addGestureRecognizer(gestureRecognizer)
+        return PinchGestureHandler(gestureRecognizer: gestureRecognizer,
+                                   mapboxMap: mapboxMap,
+                                   pinchBehaviorProvider: PinchBehaviorProvider(mapboxMap: mapboxMap))
 #endif
     }
 
@@ -134,8 +143,11 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
         view.addGestureRecognizer(gestureRecognizer)
         return RotateGestureHandler(gestureRecognizer: gestureRecognizer, mapboxMap: mapboxMap)
 #else
-        return RotateGestureHandler()
-        #endif
+        let gestureRecognizer = NSRotationGestureRecognizer()
+        view.addGestureRecognizer(gestureRecognizer)
+        return RotateGestureHandler(gestureRecognizer: gestureRecognizer,
+                                    mapboxMap: mapboxMap)
+#endif
     }
 
     private func makePitchGestureHandler(view: View,
@@ -147,13 +159,13 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             gestureRecognizer: gestureRecognizer,
             mapboxMap: mapboxMap)
 #else
-        return PanGestureHandler()
+        return GestureHandler(gestureRecognizer: NSClickGestureRecognizer())
 #endif
     }
 
     private func makeDoubleTapToZoomInGestureHandler(view: View,
                                                      mapboxMap: MapboxMapProtocol,
-                                                     cameraAnimationsManager: CameraAnimationsManagerProtocol) -> FocusableGestureHandlerProtocol {
+                                                     cameraAnimationsManager: CameraAnimationsManagerProtocol) -> FocusableGestureHandlerProtocol? {
 #if os(iOS)
         let gestureRecognizer = UITapGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
@@ -162,13 +174,13 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
 #else
-        return PanGestureHandler()
+        return nil
 #endif
     }
 
     private func makeDoubleTouchToZoomOutGestureHandler(view: View,
                                                         mapboxMap: MapboxMapProtocol,
-                                                        cameraAnimationsManager: CameraAnimationsManagerProtocol) -> FocusableGestureHandlerProtocol {
+                                                        cameraAnimationsManager: CameraAnimationsManagerProtocol) -> FocusableGestureHandlerProtocol? {
 #if os(iOS)
         let gestureRecognizer = UITapGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
@@ -177,12 +189,12 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
 #else
-        return PanGestureHandler()
+        return nil
 #endif
     }
 
     private func makeQuickZoomGestureHandler(view: View,
-                                             mapboxMap: MapboxMapProtocol) -> FocusableGestureHandlerProtocol {
+                                             mapboxMap: MapboxMapProtocol) -> FocusableGestureHandlerProtocol? {
 #if os(iOS)
         let gestureRecognizer = UILongPressGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
@@ -190,7 +202,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             gestureRecognizer: gestureRecognizer,
             mapboxMap: mapboxMap)
 #else
-        return PanGestureHandler()
+        return nil
 #endif
     }
 
@@ -203,7 +215,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             gestureRecognizer: gestureRecognizer,
             cameraAnimationsManager: cameraAnimationsManager)
 #else
-        return PanGestureHandler()
+        return GestureHandler(gestureRecognizer: NSClickGestureRecognizer())
 #endif
     }
 
@@ -225,7 +237,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             gestureRecognizer: gestureRecognizer,
             cameraAnimatorsRunnerEnablable: gesturesCameraAnimatorsRunnerEnablable)
 #else
-        return PanGestureHandler()
+        return GestureHandler(gestureRecognizer: NSClickGestureRecognizer())
 #endif
     }
 
@@ -324,9 +336,9 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
 
     internal func makeViewportImpl(mapboxMap: MapboxMapProtocol,
                                    cameraAnimationsManager: CameraAnimationsManagerProtocol,
-                                   anyTouchGestureRecognizer: UIGestureRecognizer,
-                                   doubleTapGestureRecognizer: UIGestureRecognizer,
-                                   doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol {
+                                   anyTouchGestureRecognizer: GestureRecognizer?,
+                                   doubleTapGestureRecognizer: GestureRecognizer?,
+                                   doubleTouchGestureRecognizer: GestureRecognizer?) -> ViewportImplProtocol {
         let lowZoomToHighZoomAnimationSpecProvider = LowZoomToHighZoomAnimationSpecProvider(
             mapboxMap: mapboxMap)
         let highZoomToLowZoomAnimationSpecProvider = HighZoomToLowZoomAnimationSpecProvider()

@@ -13,16 +13,63 @@ internal protocol PanGestureHandlerProtocol: GestureHandler {
 
 #if os(OSX)
 final class PanGestureHandler: GestureHandler, PanGestureHandlerProtocol {
-    internal init(decelerationFactor: CGFloat = 0.998, panMode: PanMode = .horizontalAndVertical) {
-        self.decelerationFactor = decelerationFactor
-        self.panMode = panMode
-
-        super.init(gestureRecognizer: NSClickGestureRecognizer())
-    }
+//    internal init(decelerationFactor: CGFloat = 0.998, panMode: PanMode = .horizontalAndVertical) {
+//        self.decelerationFactor = decelerationFactor
+//        self.panMode = panMode
+//
+//        super.init(gestureRecognizer: NSClickGestureRecognizer())
+//    }
 
     var decelerationFactor: CGFloat = 0.998
 
     var panMode: PanMode = .horizontalAndVertical
+
+    private let mapboxMap: MapboxMapProtocol
+
+    private let cameraAnimationsManager: CameraAnimationsManagerProtocol
+
+    private let dateProvider: DateProvider
+
+    internal init(panGestureRecognizer: NSPanGestureRecognizer,
+                  mapboxMap: MapboxMapProtocol,
+                  cameraAnimationsManager: CameraAnimationsManagerProtocol,
+                  dateProvider: DateProvider) {
+
+        self.mapboxMap = mapboxMap
+        self.cameraAnimationsManager = cameraAnimationsManager
+        self.dateProvider = dateProvider
+        super.init(gestureRecognizer: panGestureRecognizer)
+
+        panGestureRecognizer.target = self
+        panGestureRecognizer.action = #selector(handlePanGesture(_:))
+    }
+
+    private var previousTouchLocation: NSPoint?
+
+    @objc func handlePanGesture(_ recognizer: NSPanGestureRecognizer) {
+        let clickLocation = recognizer.location(in: recognizer.view)
+        defer { previousTouchLocation = clickLocation }
+
+        switch recognizer.state {
+        case .began:
+            mapboxMap.dragStart(for: clickLocation)
+        case .changed:
+            guard let previousTouchLocation = previousTouchLocation else {
+                return
+            }
+
+            let camera = mapboxMap.dragCameraOptions(from: previousTouchLocation, to: clickLocation)
+            mapboxMap.setCamera(to: camera)
+        case .ended:
+            print("Pan ended state: \(mapboxMap.cameraState)")
+            fallthrough
+        case .cancelled, .failed:
+            mapboxMap.dragEnd()
+        case .possible: break
+        @unknown default:
+            break
+        }
+    }
 
 }
 #endif

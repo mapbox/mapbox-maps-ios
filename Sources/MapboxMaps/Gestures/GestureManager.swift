@@ -22,114 +22,114 @@ public final class GestureManager: GestureHandlerDelegate {
     /// Configuration options for the built-in gestures
     public var options: GestureOptions {
         set {
-            panGestureRecognizer.isEnabled = newValue.panEnabled
-            pinchGestureRecognizer.isEnabled = newValue.pinchEnabled
-            rotateGestureRecognizer.isEnabled = newValue.rotateEnabled
-            pinchGestureHandler.zoomEnabled = newValue.pinchZoomEnabled
-            pinchGestureHandler.panEnabled = newValue.pinchPanEnabled
-            pinchGestureHandler.simultaneousRotateAndPinchZoomEnabled = newValue.simultaneousRotateAndPinchZoomEnabled
-            rotateGestureHandler.simultaneousRotateAndPinchZoomEnabled = newValue.simultaneousRotateAndPinchZoomEnabled
-            pitchGestureRecognizer.isEnabled = newValue.pitchEnabled
-            doubleTapToZoomInGestureRecognizer.isEnabled = newValue.doubleTapToZoomInEnabled
-            doubleTouchToZoomOutGestureRecognizer.isEnabled = newValue.doubleTouchToZoomOutEnabled
-            quickZoomGestureRecognizer.isEnabled = newValue.quickZoomEnabled
-            panGestureHandler.panMode = newValue.panMode
-            panGestureHandler.decelerationFactor = newValue.panDecelerationFactor
-            doubleTapToZoomInGestureHandler.focalPoint = newValue.focalPoint
-            doubleTouchToZoomOutGestureHandler.focalPoint = newValue.focalPoint
-            quickZoomGestureHandler.focalPoint = newValue.focalPoint
-            pinchGestureHandler.focalPoint = newValue.focalPoint
-            rotateGestureHandler.focalPoint = newValue.focalPoint
+            panGestureRecognizer?.isEnabled = newValue.panEnabled
+            pinchGestureRecognizer?.isEnabled = newValue.pinchEnabled
+            rotateGestureRecognizer?.isEnabled = newValue.rotateEnabled
+            pinchGestureHandler?.zoomEnabled = newValue.pinchZoomEnabled
+            pinchGestureHandler?.panEnabled = newValue.pinchPanEnabled
+            pinchGestureHandler?.simultaneousRotateAndPinchZoomEnabled = newValue.simultaneousRotateAndPinchZoomEnabled
+            rotateGestureHandler?.simultaneousRotateAndPinchZoomEnabled = newValue.simultaneousRotateAndPinchZoomEnabled
+            pitchGestureRecognizer?.isEnabled = newValue.pitchEnabled
+            doubleTapToZoomInGestureRecognizer?.isEnabled = newValue.doubleTapToZoomInEnabled
+            doubleTouchToZoomOutGestureRecognizer?.isEnabled = newValue.doubleTouchToZoomOutEnabled
+            quickZoomGestureRecognizer?.isEnabled = newValue.quickZoomEnabled
+            panGestureHandler?.panMode = newValue.panMode
+            panGestureHandler?.decelerationFactor = newValue.panDecelerationFactor
+            doubleTapToZoomInGestureHandler?.focalPoint = newValue.focalPoint
+            doubleTouchToZoomOutGestureHandler?.focalPoint = newValue.focalPoint
+            quickZoomGestureHandler?.focalPoint = newValue.focalPoint
+            pinchGestureHandler?.focalPoint = newValue.focalPoint
+            rotateGestureHandler?.focalPoint = newValue.focalPoint
         }
         get {
             var gestureOptions = GestureOptions()
-            gestureOptions.panEnabled = panGestureRecognizer.isEnabled
-            gestureOptions.pinchEnabled = pinchGestureRecognizer.isEnabled
-            gestureOptions.rotateEnabled = rotateGestureRecognizer.isEnabled
-            gestureOptions.pinchZoomEnabled = pinchGestureHandler.zoomEnabled
-            gestureOptions.pinchPanEnabled = pinchGestureHandler.panEnabled
-            gestureOptions.simultaneousRotateAndPinchZoomEnabled = pinchGestureHandler.simultaneousRotateAndPinchZoomEnabled
-            gestureOptions.pitchEnabled = pitchGestureRecognizer.isEnabled
-            gestureOptions.doubleTapToZoomInEnabled = doubleTapToZoomInGestureRecognizer.isEnabled
-            gestureOptions.doubleTouchToZoomOutEnabled = doubleTouchToZoomOutGestureRecognizer.isEnabled
-            gestureOptions.quickZoomEnabled = quickZoomGestureRecognizer.isEnabled
-            gestureOptions.panMode = panGestureHandler.panMode
-            gestureOptions.panDecelerationFactor = panGestureHandler.decelerationFactor
-            gestureOptions.focalPoint = doubleTapToZoomInGestureHandler.focalPoint
+            gestureOptions.panEnabled = panGestureRecognizer?.isEnabled ?? false
+            gestureOptions.pinchEnabled = pinchGestureRecognizer?.isEnabled ?? false
+            gestureOptions.rotateEnabled = rotateGestureRecognizer?.isEnabled ?? false
+            gestureOptions.pinchZoomEnabled = pinchGestureHandler?.zoomEnabled ?? false
+            gestureOptions.pinchPanEnabled = pinchGestureHandler?.panEnabled ?? false
+            gestureOptions.simultaneousRotateAndPinchZoomEnabled = pinchGestureHandler?.simultaneousRotateAndPinchZoomEnabled ?? false
+            gestureOptions.pitchEnabled = pitchGestureRecognizer?.isEnabled ?? false
+            gestureOptions.doubleTapToZoomInEnabled = doubleTapToZoomInGestureRecognizer?.isEnabled ?? false
+            gestureOptions.doubleTouchToZoomOutEnabled = doubleTouchToZoomOutGestureRecognizer?.isEnabled ?? false
+            gestureOptions.quickZoomEnabled = quickZoomGestureRecognizer?.isEnabled ?? false
+            gestureOptions.panMode = panGestureHandler?.panMode ?? .horizontalAndVertical
+            gestureOptions.panDecelerationFactor = panGestureHandler?.decelerationFactor ?? 0.998
+            gestureOptions.focalPoint = doubleTapToZoomInGestureHandler?.focalPoint
             return gestureOptions
         }
     }
 
     /// The gesture recognizer for the pan gesture
-    public var panGestureRecognizer: GestureRecognizer {
-        return panGestureHandler.gestureRecognizer
+    public var panGestureRecognizer: GestureRecognizer? {
+        return panGestureHandler?.gestureRecognizer
     }
 
     /// The gesture recognizer for the "pinch to zoom" gesture
-    public var pinchGestureRecognizer: GestureRecognizer {
-        return pinchGestureHandler.gestureRecognizer
+    public var pinchGestureRecognizer: GestureRecognizer? {
+        return pinchGestureHandler?.gestureRecognizer
     }
 
     /// The gesture recognizer for the rotate gesture
-    public var rotateGestureRecognizer: GestureRecognizer {
-        return rotateGestureHandler.gestureRecognizer
+    public var rotateGestureRecognizer: GestureRecognizer? {
+        return rotateGestureHandler?.gestureRecognizer
     }
 
     /// The gesture recognizer for the pitch gesture
-    public var pitchGestureRecognizer: GestureRecognizer {
-        return pitchGestureHandler.gestureRecognizer
+    public var pitchGestureRecognizer: GestureRecognizer? {
+        return pitchGestureHandler?.gestureRecognizer
     }
 
     /// The gesture recognizer for the "double tap to zoom in" gesture
-    public var doubleTapToZoomInGestureRecognizer: GestureRecognizer {
-        return doubleTapToZoomInGestureHandler.gestureRecognizer
+    public var doubleTapToZoomInGestureRecognizer: GestureRecognizer? {
+        return doubleTapToZoomInGestureHandler?.gestureRecognizer
     }
 
     /// The gesture recognizer for the "double touch to zoom out" gesture
-    public var doubleTouchToZoomOutGestureRecognizer: GestureRecognizer {
-        return doubleTouchToZoomOutGestureHandler.gestureRecognizer
+    public var doubleTouchToZoomOutGestureRecognizer: GestureRecognizer? {
+        return doubleTouchToZoomOutGestureHandler?.gestureRecognizer
     }
 
     /// The gesture recognizer for the quickZoom gesture
-    public var quickZoomGestureRecognizer: GestureRecognizer {
-        return quickZoomGestureHandler.gestureRecognizer
+    public var quickZoomGestureRecognizer: GestureRecognizer? {
+        return quickZoomGestureHandler?.gestureRecognizer
     }
 
     /// The gesture recognizer for the single tap gesture
     /// - NOTE: The single tap gesture recognizer is primarily used to route tap events to the
     ///         `*AnnotationManager`s. You can add a target-action pair to this gesture recognizer
     ///         to be notified when a single tap occurs on the map.
-    public var singleTapGestureRecognizer: GestureRecognizer {
-        return singleTapGestureHandler.gestureRecognizer
+    public var singleTapGestureRecognizer: GestureRecognizer? {
+        return singleTapGestureHandler?.gestureRecognizer
     }
 
-    internal var anyTouchGestureRecognizer: GestureRecognizer {
-        return anyTouchGestureHandler.gestureRecognizer
+    internal var anyTouchGestureRecognizer: GestureRecognizer? {
+        return anyTouchGestureHandler?.gestureRecognizer
     }
 
     /// Set this delegate to be called back if a gesture begins
     public weak var delegate: GestureManagerDelegate?
 
-    private let panGestureHandler: PanGestureHandlerProtocol
-    private let pinchGestureHandler: PinchGestureHandlerProtocol
-    private let rotateGestureHandler: RotateGestureHandlerProtocol
-    private let pitchGestureHandler: GestureHandler
-    private let doubleTapToZoomInGestureHandler: FocusableGestureHandlerProtocol
-    private let doubleTouchToZoomOutGestureHandler: FocusableGestureHandlerProtocol
-    private let quickZoomGestureHandler: FocusableGestureHandlerProtocol
-    private let singleTapGestureHandler: GestureHandler
-    private let anyTouchGestureHandler: GestureHandler
+    private let panGestureHandler: PanGestureHandlerProtocol?
+    private let pinchGestureHandler: PinchGestureHandlerProtocol?
+    private let rotateGestureHandler: RotateGestureHandlerProtocol?
+    private let pitchGestureHandler: GestureHandler?
+    private let doubleTapToZoomInGestureHandler: FocusableGestureHandlerProtocol?
+    private let doubleTouchToZoomOutGestureHandler: FocusableGestureHandlerProtocol?
+    private let quickZoomGestureHandler: FocusableGestureHandlerProtocol?
+    private let singleTapGestureHandler: GestureHandler?
+    private let anyTouchGestureHandler: GestureHandler?
     private let mapboxMap: MapboxMapProtocol
 
-    internal init(panGestureHandler: PanGestureHandlerProtocol,
-                  pinchGestureHandler: PinchGestureHandlerProtocol,
-                  rotateGestureHandler: RotateGestureHandlerProtocol,
-                  pitchGestureHandler: GestureHandler,
-                  doubleTapToZoomInGestureHandler: FocusableGestureHandlerProtocol,
-                  doubleTouchToZoomOutGestureHandler: FocusableGestureHandlerProtocol,
-                  quickZoomGestureHandler: FocusableGestureHandlerProtocol,
-                  singleTapGestureHandler: GestureHandler,
-                  anyTouchGestureHandler: GestureHandler,
+    internal init(panGestureHandler: PanGestureHandlerProtocol?,
+                  pinchGestureHandler: PinchGestureHandlerProtocol?,
+                  rotateGestureHandler: RotateGestureHandlerProtocol?,
+                  pitchGestureHandler: GestureHandler?,
+                  doubleTapToZoomInGestureHandler: FocusableGestureHandlerProtocol?,
+                  doubleTouchToZoomOutGestureHandler: FocusableGestureHandlerProtocol?,
+                  quickZoomGestureHandler: FocusableGestureHandlerProtocol?,
+                  singleTapGestureHandler: GestureHandler?,
+                  anyTouchGestureHandler: GestureHandler?,
                   mapboxMap: MapboxMapProtocol) {
         self.panGestureHandler = panGestureHandler
         self.pinchGestureHandler = pinchGestureHandler
@@ -142,14 +142,14 @@ public final class GestureManager: GestureHandlerDelegate {
         self.rotateGestureHandler = rotateGestureHandler
         self.mapboxMap = mapboxMap
 
-        panGestureHandler.delegate = self
-        pinchGestureHandler.delegate = self
-        rotateGestureHandler.delegate = self
-        pitchGestureHandler.delegate = self
-        doubleTapToZoomInGestureHandler.delegate = self
-        doubleTouchToZoomOutGestureHandler.delegate = self
-        quickZoomGestureHandler.delegate = self
-        singleTapGestureHandler.delegate = self
+        panGestureHandler?.delegate = self
+        pinchGestureHandler?.delegate = self
+        rotateGestureHandler?.delegate = self
+        pitchGestureHandler?.delegate = self
+        doubleTapToZoomInGestureHandler?.delegate = self
+        doubleTouchToZoomOutGestureHandler?.delegate = self
+        quickZoomGestureHandler?.delegate = self
+        singleTapGestureHandler?.delegate = self
 
 #if os(iOS)
         pinchGestureHandler.gestureRecognizer.require(toFail: panGestureHandler.gestureRecognizer)
@@ -202,6 +202,6 @@ extension GestureManager: PinchGestureHandlerDelegate {
     func pinchGestureHandlerDidUpdateGesture(_ handler: PinchGestureHandlerProtocol) {
         // Because of a bug in core maps camera state has to be reset before updating pinch drag.
         // This call will make sure that bearing is set to correct value after pinch dragging.
-        rotateGestureHandler.scheduleRotationUpdateIfNeeded()
+        rotateGestureHandler?.scheduleRotationUpdateIfNeeded()
     }
 }

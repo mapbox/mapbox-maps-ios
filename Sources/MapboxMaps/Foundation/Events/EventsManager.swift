@@ -52,7 +52,9 @@ internal final class EventsManager {
             DispatchQueue.main.async {
                 guard let metricsEnabled = change.newValue else { return }
                 UserDefaults.mme_configuration().mme_isCollectionEnabled = metricsEnabled
+#if os(iOS)
                 mmeEventsManager.pauseOrResumeMetricsCollectionIfRequired()
+#endif
             }
         }
 

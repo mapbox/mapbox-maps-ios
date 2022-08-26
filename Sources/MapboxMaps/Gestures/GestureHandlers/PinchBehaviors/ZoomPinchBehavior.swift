@@ -15,7 +15,8 @@ internal final class ZoomPinchBehavior: PinchBehavior {
     }
 
     internal func update(pinchMidpoint: CGPoint, pinchScale: CGFloat) {
-        let zoomIncrement = log2(pinchScale)
+        guard pinchScale > -1 else { return }
+        let zoomIncrement = log2(1 + pinchScale)
         mapboxMap.setCamera(to: CameraOptions(
             anchor: focalPoint ?? pinchMidpoint,
             zoom: initialCameraState.zoom + zoomIncrement))

@@ -12,11 +12,6 @@ internal protocol RotateGestureHandlerProtocol: FocusableGestureHandlerProtocol 
 
 #if os(OSX)
 final class RotateGestureHandler: GestureHandler, RotateGestureHandlerProtocol {
-    internal init(simultaneousRotateAndPinchZoomEnabled: Bool = true, focalPoint: CGPoint? = nil) {
-        self.simultaneousRotateAndPinchZoomEnabled = simultaneousRotateAndPinchZoomEnabled
-        self.focalPoint = focalPoint
-    }
-
     var simultaneousRotateAndPinchZoomEnabled: Bool = true
 
     func scheduleRotationUpdateIfNeeded() {
@@ -25,10 +20,49 @@ final class RotateGestureHandler: GestureHandler, RotateGestureHandlerProtocol {
 
     var focalPoint: CGPoint?
 
+    private let mapboxMap: MapboxMapProtocol
+    private var initialBearing: CLLocationDirection
+
+    init(gestureRecognizer: NSRotationGestureRecognizer,
+         mapboxMap: MapboxMapProtocol) {
+        self.mapboxMap = mapboxMap
+        initialBearing = mapboxMap.cameraState.bearing
+        super.init(gestureRecognizer: gestureRecognizer)
+
+        gestureRecognizer.target = self
+        gestureRecognizer.action = #selector(handleRotation(gesture:))
+    }
+
+    @objc func handleRotation(gesture: NSRotationGestureRecognizer) {
+        let midpoint = gesture.location(in: gesture.view)
+
+        switch gesture.state {
+        case .began:
+            initialBearing = mapboxMap.cameraState.bearing
+        case .changed:
+            let rotationInDegrees = CLLocationDirection(gesture.rotationInDegrees)
+            let bearing = (initialBearing + rotationInDegrees).wrapped(to: 0..<360)
+
+            mapboxMap.setCamera(to: CameraOptions(anchor: focalPoint ?? midpoint.flippedVerticalValue(height: mapboxMap.size.height),
+                                                  bearing: bearing))
+        case .ended:
+            fallthrough
+        case .cancelled, .failed:
+            break
+        case .possible: break
+        @unknown default:
+            break
+        }
+    }
 
 }
 #endif
 
+extension CGPoint {
+    func flippedVerticalValue(height: CGFloat) -> CGPoint {
+        return CGPoint(x: x, y: height - y)
+    }
+}
 
 #if os(iOS)
  /// `RotateGestureHandler` updates the map camera in response to 2-touch rotate gestures

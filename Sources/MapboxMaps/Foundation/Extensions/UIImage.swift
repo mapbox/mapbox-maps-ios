@@ -6,14 +6,15 @@ import UIKit
 
 // MARK: - UIImage
 
-#if os(iOS)
+//#if os(iOS)
 extension UIImage {
 
+    #if os(iOS)
     /// Initialize a `UIImage` with an internal `Image` type, using a givens scale.
     /// - Parameters:
     ///   - mbxImage: The internal `Image` type to use for the `UIImage`.
     ///   - scale: The scale of the new `UIImage`.
-    internal convenience init?(mbxImage: Image, scale: CGFloat = Screen.main.scale) {
+    internal convenience init?(mbxImage: Image, scale: CGFloat = Screen.mainScale) {
         let cgImage = mbxImage.cgImage().takeRetainedValue()
 
         let size = CGSize(width: CGFloat(CGFloat(mbxImage.width) / scale),
@@ -36,6 +37,19 @@ extension UIImage {
 
         self.init(cgImage: generatedImage, scale: scale, orientation: .downMirrored)
     }
+    #else
+
+    /// Initialize a `UIImage` with an internal `Image` type, using a givens scale.
+    /// - Parameters:
+    ///   - mbxImage: The internal `Image` type to use for the `UIImage`.
+    ///   - scale: The scale of the new `UIImage`.
+    internal convenience init?(mbxImage: Image, scale: CGFloat = Screen.mainScale) {
+        let cgImage = mbxImage.cgImage().takeRetainedValue()
+        self.init(cgImage: cgImage, size: NSMakeSize(CGFloat(mbxImage.width), CGFloat(mbxImage.height)))
+    }
+
+
+    #endif
 }
 
-#endif
+//#endif

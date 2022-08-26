@@ -37,7 +37,6 @@ internal protocol CameraAnimatorsFactoryProtocol: AnyObject {
                                   owner: AnimationOwner) -> SimpleCameraAnimatorProtocol
 }
 
-#if os(iOS)
 internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
 
     private let cameraViewContainerView: View
@@ -74,6 +73,7 @@ internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
                                           timingParameters: UITimingCurveProvider,
                                           animationOwner: AnimationOwner,
                                           animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimatorProtocol {
+#if os(iOS)
         let propertyAnimator = UIViewPropertyAnimator(
             duration: duration,
             timingParameters: timingParameters)
@@ -81,12 +81,17 @@ internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
             propertyAnimator: propertyAnimator,
             animationOwner: animationOwner,
             animations: animations)
+        
+#else
+        return BasicCameraAnimatorImpl()
+#endif
     }
 
     internal func makeBasicCameraAnimator(duration: TimeInterval,
                                           curve: View.AnimationCurve,
                                           animationOwner: AnimationOwner,
                                           animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimatorProtocol {
+#if os(iOS)
         let propertyAnimator = UIViewPropertyAnimator(
             duration: duration,
             curve: curve)
@@ -94,6 +99,10 @@ internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
             propertyAnimator: propertyAnimator,
             animationOwner: animationOwner,
             animations: animations)
+
+#else
+        return BasicCameraAnimatorImpl()
+#endif
     }
 
     internal func makeBasicCameraAnimator(duration: TimeInterval,
@@ -101,6 +110,7 @@ internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
                                           controlPoint2: CGPoint,
                                           animationOwner: AnimationOwner,
                                           animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimatorProtocol {
+#if os(iOS)
         let propertyAnimator = UIViewPropertyAnimator(
             duration: duration,
             controlPoint1: controlPoint1,
@@ -109,12 +119,17 @@ internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
             propertyAnimator: propertyAnimator,
             animationOwner: animationOwner,
             animations: animations)
+
+#else
+        return BasicCameraAnimatorImpl()
+#endif
     }
 
     internal func makeBasicCameraAnimator(duration: TimeInterval,
                                           dampingRatio: CGFloat,
                                           animationOwner: AnimationOwner,
                                           animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimatorProtocol {
+        #if os(iOS)
         let propertyAnimator = UIViewPropertyAnimator(
             duration: duration,
             dampingRatio: dampingRatio)
@@ -122,8 +137,12 @@ internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
             propertyAnimator: propertyAnimator,
             animationOwner: animationOwner,
             animations: animations)
+        #else
+        return BasicCameraAnimatorImpl()
+        #endif
     }
 
+    #if os(iOS)
     private func makeBasicCameraAnimator(propertyAnimator: UIViewPropertyAnimator,
                                          animationOwner: AnimationOwner,
                                          animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimatorProtocol {
@@ -138,6 +157,7 @@ internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
         cameraAnimator.addAnimations(animations)
         return cameraAnimator
     }
+    #endif
 
     internal func makeGestureDecelerationCameraAnimator(location: CGPoint,
                                                         velocity: CGPoint,
@@ -171,5 +191,3 @@ internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
             dateProvider: dateProvider)
     }
 }
-
-#endif

@@ -28,6 +28,66 @@ internal protocol BasicCameraAnimatorProtocol: AnyObject {
     func update()
 }
 
+#if os(OSX)
+class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
+    internal init(delegate: BasicCameraAnimatorDelegate? = nil, owner: AnimationOwner = .unspecified, transition: CameraTransition? = nil, state: UIViewAnimatingState = .inactive, isRunning: Bool = false, isReversed: Bool = false, pausesOnCompletion: Bool = false, fractionComplete: Double = 0.0) {
+        self.delegate = delegate
+        self.owner = owner
+        self.transition = transition
+        self.state = state
+        self.isRunning = isRunning
+        self.isReversed = isReversed
+        self.pausesOnCompletion = pausesOnCompletion
+        self.fractionComplete = fractionComplete
+    }
+    
+
+    var delegate: BasicCameraAnimatorDelegate?
+
+    var owner: AnimationOwner = .unspecified
+
+    var transition: CameraTransition?
+
+    var state: UIViewAnimatingState = .inactive
+
+    var isRunning: Bool = false
+
+    var isReversed: Bool = false
+
+    var pausesOnCompletion: Bool = false
+
+    var fractionComplete: Double = 0.0
+
+    func startAnimation() {
+
+    }
+
+    func startAnimation(afterDelay delay: TimeInterval) {
+
+    }
+
+    func pauseAnimation() {
+
+    }
+
+    func stopAnimation() {
+
+    }
+
+    func addCompletion(_ completion: @escaping AnimationCompletion) {
+
+    }
+
+    func continueAnimation(withTimingParameters timingParameters: UITimingCurveProvider?, durationFactor: Double) {
+
+    }
+
+    func update() {
+
+    }
+}
+#endif
+
 #if os(iOS)
 internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
     private enum InternalState: Equatable {

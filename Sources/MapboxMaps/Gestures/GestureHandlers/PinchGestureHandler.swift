@@ -18,23 +18,66 @@ internal protocol PinchGestureHandlerProtocol: FocusableGestureHandlerProtocol {
 
 #if os(OSX)
 final class PinchGestureHandler: GestureHandler, PinchGestureHandlerProtocol {
-    internal init(zoomEnabled: Bool = true, panEnabled: Bool = true, simultaneousRotateAndPinchZoomEnabled: Bool = true, focalPoint: CGPoint? = nil) {
-        self.zoomEnabled = zoomEnabled
-        self.panEnabled = panEnabled
-        self.simultaneousRotateAndPinchZoomEnabled = simultaneousRotateAndPinchZoomEnabled
-        self.focalPoint = focalPoint
+    var zoomEnabled: Bool = true
 
+    var panEnabled: Bool = true
 
-        super.init(gestureRecognizer: NSClickGestureRecognizer())
-    }
-
-    var zoomEnabled: Bool
-
-    var panEnabled: Bool
-
-    var simultaneousRotateAndPinchZoomEnabled: Bool
+    var simultaneousRotateAndPinchZoomEnabled: Bool = true
 
     var focalPoint: CGPoint?
+
+    private let mapboxMap: MapboxMapProtocol
+    private var pinchBehaviorProvider: PinchBehaviorProviderProtocol
+
+    /// The behavior for the current gesture, based on the initial state of the \*Enabled flags.
+    private var pinchBehavior: PinchBehavior?
+
+    private var initialZoomLevel: CGFloat
+
+    init(gestureRecognizer: NSMagnificationGestureRecognizer,
+         mapboxMap: MapboxMapProtocol,
+         pinchBehaviorProvider: PinchBehaviorProviderProtocol) {
+        self.mapboxMap = mapboxMap
+        self.pinchBehaviorProvider = pinchBehaviorProvider
+        initialZoomLevel = mapboxMap.cameraState.zoom
+        super.init(gestureRecognizer: gestureRecognizer)
+
+        gestureRecognizer.target = self
+        gestureRecognizer.action = #selector(handleRotation(gestureRecognizer:))
+    }
+
+    @objc func handleRotation(gestureRecognizer: NSMagnificationGestureRecognizer) {
+        let location = gestureRecognizer.location(in: gestureRecognizer.view).flippedVerticalValue(height: mapboxMap.size.height)
+
+        switch gestureRecognizer.state {
+        case .began:
+            initialZoomLevel = mapboxMap.cameraState.zoom
+            start(gestureRecognizer: gestureRecognizer)
+        case .changed:
+            guard gestureRecognizer.magnification > -1 else { return }
+            let zoomChange = log2(1 + gestureRecognizer.magnification)
+            mapboxMap.setCamera(to: CameraOptions(
+                anchor: focalPoint ?? location,
+                zoom: initialZoomLevel + zoomChange))
+        case .ended:
+            print("Zoom changed from \(initialZoomLevel) to \(mapboxMap.cameraState.zoom)")
+            fallthrough
+        case .cancelled, .failed:
+            pinchBehavior = nil
+        case .possible: break
+        @unknown default:
+            break
+        }
+    }
+
+    func start(gestureRecognizer: NSMagnificationGestureRecognizer) {
+        pinchBehavior = pinchBehaviorProvider.makePinchBehavior(
+            panEnabled: panEnabled,
+            zoomEnabled: zoomEnabled,
+            initialCameraState: mapboxMap.cameraState,
+            initialPinchMidpoint: gestureRecognizer.location(in: gestureRecognizer.view).flippedVerticalValue(height: mapboxMap.size.height),
+            focalPoint: focalPoint)
+    }
 }
 #endif
 

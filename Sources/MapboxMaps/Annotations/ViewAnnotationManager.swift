@@ -306,6 +306,7 @@ public final class ViewAnnotationManager {
             view.translatesAutoresizingMaskIntoConstraints = true
             if view.frame != position.frame {
                 view.frame = position.frame
+                view.frame.origin.y = view.superview!.bounds.size.height - view.frame.origin.y
                 viewsWithUpdatedFrame.insert(view)
             }
             if view.isHidden {

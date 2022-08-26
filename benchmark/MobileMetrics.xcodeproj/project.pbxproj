@@ -13,6 +13,7 @@
 		3A011CBD286343E9004713DA /* munich-animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 3A011CBA286343E9004713DA /* munich-animation.json */; };
 		3A56266C286436C400107E56 /* ExecutionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A56266B286436C400107E56 /* ExecutionError.swift */; };
 		3A56266E28645AE200107E56 /* OnDemandLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A56266D28645AE200107E56 /* OnDemandLocationProvider.swift */; };
+		3A75F06D28AF792000D26448 /* SetMemoryBudgetCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A75F06C28AF792000D26448 /* SetMemoryBudgetCommand.swift */; };
 		7412CF5E27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF5D27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift */; };
 		745D052527C8D185004E7B53 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 745D052427C8D185004E7B53 /* MapboxMaps */; };
 		74673149282EA6FA00B7D044 /* streets-munich-ttrc-cold.json in Resources */ = {isa = PBXBuildFile; fileRef = 74673145282EA6FA00B7D044 /* streets-munich-ttrc-cold.json */; };
@@ -67,6 +68,7 @@
 		3A011CBA286343E9004713DA /* munich-animation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "munich-animation.json"; sourceTree = "<group>"; };
 		3A56266B286436C400107E56 /* ExecutionError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecutionError.swift; sourceTree = "<group>"; };
 		3A56266D28645AE200107E56 /* OnDemandLocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDemandLocationProvider.swift; sourceTree = "<group>"; };
+		3A75F06C28AF792000D26448 /* SetMemoryBudgetCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetMemoryBudgetCommand.swift; sourceTree = "<group>"; };
 		7412CF5D27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationEaseToBenchmark.swift; sourceTree = "<group>"; };
 		745D052327C8D15F004E7B53 /* mapbox-maps-ios */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "mapbox-maps-ios"; path = "../mapbox-maps-ios"; sourceTree = "<group>"; };
 		7467312B282E949100B7D044 /* Scenario.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scenario.swift; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 				FE18AEE928411426001B9E6F /* PlaySequenceCommand.swift */,
 				3A011CB628631D6A004713DA /* AddRouteCommand.swift */,
 				3A56266B286436C400107E56 /* ExecutionError.swift */,
+				3A75F06C28AF792000D26448 /* SetMemoryBudgetCommand.swift */,
 			);
 			path = Commands;
 			sourceTree = "<group>";
@@ -407,6 +410,7 @@
 				FEA8FDA4283510DD00CDDA97 /* UIViewController+Extensions.swift in Sources */,
 				FEA8FD9E2834F6D100CDDA97 /* Scenario.swift in Sources */,
 				FED7F06F283BA59800AD2313 /* MapboxMap+Async.swift in Sources */,
+				3A75F06D28AF792000D26448 /* SetMemoryBudgetCommand.swift in Sources */,
 				74F237EF27E32FFA009F304C /* BaseBenchmark.swift in Sources */,
 				FE555B7C2836939B002751C7 /* AsyncCommand.swift in Sources */,
 				FED7F071283BA5AB00AD2313 /* TileStore+Async.swift in Sources */,

@@ -1,7 +1,7 @@
 import UIKit
 @_implementationOnly import MapboxCommon_Private
 
-/// An top-level interface for annotations.
+/// A top-level interface for annotations.
 public protocol Annotation {
 
     /// The unique identifier of the annotation.

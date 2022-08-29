@@ -1,6 +1,6 @@
 import CoreLocation
 
-/// A collection of [Spherical Mercator](http://docs.openlayers.org/library/spherical_mercator.html) projection methods.
+/// A collection of [Spherical Mercator](https://en.wikipedia.org/wiki/Web_Mercator_projection) projection methods.
 public final class Projection {
     /// Maximum supported latitude value.
     public static let latitudeMax: CLLocationDegrees = +85.051128779806604

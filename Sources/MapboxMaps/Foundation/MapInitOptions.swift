@@ -1,10 +1,10 @@
 import Foundation
 
-/// A protocol used to provide ``MapInitOptions`` when initializing a MapView with a Storyboard or
+/// A protocol used to provide ``MapInitOptions`` when initializing a ``MapView`` with a Storyboard or
 /// a nib.
 @objc public protocol MapInitOptionsProvider {
-    /// A method to be called when map view needs initialization options
-    /// - Returns: Initializations options for the map view.
+    /// A method to be called when ``MapView`` needs initialization options
+    /// - Returns: Initializations options for the ``MapView``.
     func mapInitOptions() -> MapInitOptions
 }
 

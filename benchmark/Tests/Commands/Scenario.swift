@@ -1,7 +1,20 @@
 import Foundation
 import MapboxMaps
 
-struct Scenario {
+class Scenario {
+    init(name: String?, commands: [AsyncCommand]) {
+        self.name = name
+        self.commands = commands
+    }
+
+    init(filePath: URL, name: String? = nil) throws {
+        self.name = name ?? (filePath.lastPathComponent as NSString).deletingPathExtension
+
+        let data = try Data(contentsOf: filePath)
+        let scenarioData = try JSONDecoder().decode(ScenarioData.self, from: data)
+        self.commands = scenarioData.commands
+    }
+
     let name: String?
     let commands: [AsyncCommand]
 
@@ -9,6 +22,9 @@ struct Scenario {
         for command in commands {
             print(">> Start command: \(type(of: command))")
             try await command.execute()
+            if let command = command as? CreateMapCommand, let mapView = command.mapView {
+                onMapCreate?(mapView)
+            }
             print("<< Finish command: \(type(of: command))\n")
         }
 
@@ -22,6 +38,8 @@ struct Scenario {
             }
         }
     }
+
+    var onMapCreate: ((MapView) -> Void)? = nil
 
     enum SupportedCommands: String {
         case createMap = "CreateMap"
@@ -75,15 +93,5 @@ struct Scenario {
 
             self.commands = commands
         }
-    }
-}
-
-extension Scenario {
-    init(filePath: URL, name: String? = nil) throws {
-        self.name = name ?? (filePath.lastPathComponent as NSString).deletingPathExtension
-
-        let data = try Data(contentsOf: filePath)
-        let scenarioData = try JSONDecoder().decode(ScenarioData.self, from: data)
-        self.commands = scenarioData.commands
     }
 }

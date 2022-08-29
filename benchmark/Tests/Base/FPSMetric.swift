@@ -1,16 +1,13 @@
 import XCTest
+@_spi(Metrics) import MapboxMaps
 
 class FPSMetric: NSObject, XCTMetric {
-    private var displayLink: CADisplayLink!
 
     let testCase: XCTestCase?
     init(testCase: XCTestCase?) {
         self.testCase = testCase
         super.init()
 
-        displayLink = UIScreen.main.displayLink(withTarget: self, selector: #selector(displayLinkUpdate(_:)))!
-        displayLink.isPaused = true
-        displayLink.add(to: .main, forMode: .common)
     }
 
     private var frameIndex = 0
@@ -24,6 +21,7 @@ class FPSMetric: NSObject, XCTMetric {
         let frameActualTimestamp: CFTimeInterval
         let previousFrameActualTimestamp: CFTimeInterval
         let frameIndex: Int
+        let drawingDuration: CFTimeInterval?
 
         var frameDuration: CFTimeInterval {
             frameActualTimestamp - previousFrameActualTimestamp
@@ -36,19 +34,48 @@ class FPSMetric: NSObject, XCTMetric {
 
     var metricRecords: [MetricRecord] = []
 
+    func attach(mapView: MapView) {
+        mapView.beforeDrawCallback = { [weak self] _ in
+            self?.drawingStartTime = CACurrentMediaTime()
+        }
+        mapView.afterDrawCallback = { [weak self] _ in
+            guard let self = self else { return }
+
+            if let startTime = self.drawingStartTime {
+                self.previousFrameDrawingDuration = CACurrentMediaTime() - startTime
+            }
+        }
+
+        mapView.beforeDisplayLinkCallback = { [weak self] _ in
+            guard let self = self else { return }
+
+            self.drawingStartTime = nil
+            self.previousFrameDrawingDuration = nil
+        }
+        mapView.afterDisplayLinkCallback = { [weak self] displayLink in
+            self?.displayLinkUpdate(displayLink)
+        }
+    }
+
+    private var shouldRecordFrames = false
+
     func willBeginMeasuring() {
-        displayLink.isPaused = false
+        shouldRecordFrames = true
     }
 
     func didStopMeasuring() {
-        displayLink.isPaused = true
+        shouldRecordFrames = false
         frameIndex = 0
         previousFrameTimestamp = nil
         frameExpectedTimestamp = nil
     }
 
-    @objc
+    var drawingStartTime: CFTimeInterval?
+    var previousFrameDrawingDuration: CFTimeInterval?
+
     func displayLinkUpdate(_ displayLink: CADisplayLink) {
+        guard shouldRecordFrames else { return }
+
         defer {
             self.frameExpectedTimestamp = displayLink.targetTimestamp
             self.previousFrameTimestamp = displayLink.timestamp
@@ -63,7 +90,8 @@ class FPSMetric: NSObject, XCTMetric {
                                   frameExpectedTimestamp: frameExpectedTimestamp,
                                   frameActualTimestamp: displayLink.timestamp,
                                   previousFrameActualTimestamp: previousFrameTimestamp,
-                                  frameIndex: frameIndex)
+                                  frameIndex: frameIndex,
+                                  drawingDuration: previousFrameDrawingDuration)
         metricRecords.append(record)
 
         frameIndex += 1
@@ -109,6 +137,7 @@ class FPSMetric: NSObject, XCTMetric {
             XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.framescount", displayName: "Frames (count)", doubleValue: Double(framesCount ), unitSymbol: ""),
             XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.framescount.junkframes", displayName: "Junk frames", doubleValue: Double(numberOfBadFrames), unitSymbol: ""),
             XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.fps.junkframes_ratio", displayName: "Junk frames (ratio)", doubleValue: Double(numberOfBadFrames) / Double(framesCount) * 100, unitSymbol: "%"),
+            XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.drawing.avg", displayName: "Draw (avg)", value: averageDrawingDuration(metrics: metrics))
         ]
     }
 
@@ -124,6 +153,12 @@ class FPSMetric: NSObject, XCTMetric {
         let rightIndex = rightResultIndex ?? metricRecords.endIndex
 
         return metricRecords[leftIndex..<rightIndex]
+    }
+
+    func averageDrawingDuration(metrics: ArraySlice<MetricRecord>) -> Measurement<Unit> {
+        let drawingValues = metrics.compactMap(\.drawingDuration)
+        let value = drawingValues.reduce(0, +) / Double(drawingValues.count)
+        return Measurement(value: value, unit: UnitDuration.seconds)
     }
 
     func averageFPS(metrics: ArraySlice<MetricRecord>, screen: UIScreen = .main) -> Measurement<Unit> {

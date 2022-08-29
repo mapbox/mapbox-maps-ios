@@ -85,6 +85,8 @@ extension SpecsBenchmark {
             options.iterationCount = iterationCount
         }
 
+        scenario.onMapCreate = metrics.compactMap({ $0 as? FPSMetric }).first?.attach(mapView:)
+
         var runIndex = 0
         measure(metrics: metrics, options: options) {
             defer { runIndex += 1 }

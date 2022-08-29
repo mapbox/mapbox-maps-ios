@@ -1,7 +1,15 @@
 import Foundation
 
+/// An ``Expression`` defines a formula for computing the value of any layout property, paint property,
+/// or filter within a map style. Expressions allow you to style data with multiple feature
+/// properties at once, apply conditional logic, and manipulate data with mathematical, logical, and
+/// string operators. This allows for sophisticated runtime styling.
 public typealias Exp = Expression
 
+/// An ``Expression`` defines a formula for computing the value of any layout property, paint property,
+/// or filter within a map style. Expressions allow you to style data with multiple feature
+/// properties at once, apply conditional logic, and manipulate data with mathematical, logical, and
+/// string operators. This allows for sophisticated runtime styling.
 public struct Expression: Codable, CustomStringConvertible, Equatable {
 
     /// The individual elements of the expression in an array

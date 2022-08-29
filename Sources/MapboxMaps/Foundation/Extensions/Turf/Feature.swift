@@ -1,3 +1,4 @@
+/// An object representing a spatially bounded geometry.
 public typealias Feature = Turf.Feature
 
 extension Feature {

@@ -1,3 +1,4 @@
+/// Instance that allows connecting or disconnecting the Mapbox stack to the network.
 public class OfflineSwitch {
     internal var internalOfflineSwitch: MapboxCommon.OfflineSwitch
 

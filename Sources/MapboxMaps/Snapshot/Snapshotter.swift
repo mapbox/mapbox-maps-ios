@@ -6,6 +6,7 @@ import CoreImage.CIFilterBuiltins
 @_implementationOnly import MapboxCommon_Private
 
 // MARK: - Snapshotter
+///  A high-level component responsible for taking map snapshots with given ``MapSnapshotOptions``.
 public class Snapshotter {
 
     /// Internal `MapboxCoreMaps.MBXMapSnapshotter` object that takes care of

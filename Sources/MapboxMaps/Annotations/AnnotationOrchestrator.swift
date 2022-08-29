@@ -1,6 +1,7 @@
 import UIKit
 @_implementationOnly import MapboxCommon_Private
 
+/// A top-level interface for annotations.
 public protocol Annotation {
 
     /// The unique identifier of the annotation.
@@ -45,6 +46,7 @@ public protocol AnnotationInteractionDelegate: AnyObject {
 
 }
 
+/// `AnnotationOrchestrator` provides a way to create annotation managers of different types.
 public class AnnotationOrchestrator {
 
     private let gestureRecognizer: UIGestureRecognizer

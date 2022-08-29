@@ -1,9 +1,16 @@
 import Foundation
+
+/// A protocol describing a style-related entity that can be encoded.
 public protocol StyleEncodable {
+    /// Converts this object to a dictionary representation
+    /// - Returns: The dictionary represtantion of `self`.
     func jsonObject() throws -> [String: Any]
 }
 
+/// A protocol describing a style-related entity that can be decoded.
 public protocol StyleDecodable {
+    /// Initializes this object from a dictionary representation.
+    /// - Parameter jsonObject: The dictionary representation.
     init(jsonObject: [String: Any]) throws
 }
 

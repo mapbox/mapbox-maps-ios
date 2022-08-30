@@ -1,8 +1,7 @@
 import XCTest
 @_spi(Metrics) import MapboxMaps
 
-class FPSMetric: NSObject, XCTMetric {
-
+class FPSMetric: NSObject, XCTMetric, MapViewMetricsReporter {
     let testCase: XCTestCase?
     init(testCase: XCTestCase?) {
         self.testCase = testCase
@@ -35,25 +34,25 @@ class FPSMetric: NSObject, XCTMetric {
     var metricRecords: [MetricRecord] = []
 
     func attach(mapView: MapView) {
-        mapView.beforeDrawCallback = { [weak self] _ in
-            self?.drawingStartTime = CACurrentMediaTime()
-        }
-        mapView.afterDrawCallback = { [weak self] _ in
-            guard let self = self else { return }
+        mapView.metricsReporter = self
+    }
 
-            if let startTime = self.drawingStartTime {
-                self.previousFrameDrawingDuration = CACurrentMediaTime() - startTime
-            }
-        }
+    func beforeDisplayLinkCallback(displayLink: CADisplayLink) {
+        drawingStartTime = nil
+        previousFrameDrawingDuration = nil
+    }
 
-        mapView.beforeDisplayLinkCallback = { [weak self] _ in
-            guard let self = self else { return }
+    func afterDisplayLinkCallback(displayLink: CADisplayLink) {
+        self.displayLinkUpdate(displayLink)
+    }
 
-            self.drawingStartTime = nil
-            self.previousFrameDrawingDuration = nil
-        }
-        mapView.afterDisplayLinkCallback = { [weak self] displayLink in
-            self?.displayLinkUpdate(displayLink)
+    func beforeMetalViewDrawCallback(metalView: MTKView?) {
+        drawingStartTime = CACurrentMediaTime()
+    }
+
+    func afterMetalViewDrawCallback(metalView: MTKView?) {
+        if let drawingStartTime = self.drawingStartTime {
+            self.previousFrameDrawingDuration = CACurrentMediaTime() - drawingStartTime
         }
     }
 

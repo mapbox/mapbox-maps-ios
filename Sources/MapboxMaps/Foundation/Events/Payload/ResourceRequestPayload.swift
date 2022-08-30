@@ -34,10 +34,10 @@ public struct ResourceRequest: Decodable {
         case network
     }
 
-    let url: String
-    let kind: Kind
-    let priority: Priority
-    let loadingMethod: [LoadingMethod]
+    public let url: String
+    public let kind: Kind
+    public let priority: Priority
+    public let loadingMethod: [LoadingMethod]
 }
 
 public struct ResourceResponse: Decodable {

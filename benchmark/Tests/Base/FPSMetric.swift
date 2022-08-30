@@ -21,6 +21,7 @@ class FPSMetric: NSObject, XCTMetric, MapViewMetricsReporter {
         let previousFrameActualTimestamp: CFTimeInterval
         let frameIndex: Int
         let drawingDuration: CFTimeInterval?
+        let displayLinkProcessDuration: CFTimeInterval?
 
         var frameDuration: CFTimeInterval {
             frameActualTimestamp - previousFrameActualTimestamp
@@ -37,12 +38,22 @@ class FPSMetric: NSObject, XCTMetric, MapViewMetricsReporter {
         mapView.metricsReporter = self
     }
 
+    var displayLinkCallbackStarted: CFTimeInterval?
+    var previousDisplayLinkProcessDuration: CFTimeInterval?
+
+    var drawingStartTime: CFTimeInterval?
+    var previousFrameDrawingDuration: CFTimeInterval?
+
     func beforeDisplayLinkCallback(displayLink: CADisplayLink) {
+        displayLinkCallbackStarted = CACurrentMediaTime()
         drawingStartTime = nil
         previousFrameDrawingDuration = nil
     }
 
     func afterDisplayLinkCallback(displayLink: CADisplayLink) {
+        if let displayLinkCallbackStarted = displayLinkCallbackStarted {
+            previousDisplayLinkProcessDuration = CACurrentMediaTime() - displayLinkCallbackStarted
+        }
         self.displayLinkUpdate(displayLink)
     }
 
@@ -69,8 +80,6 @@ class FPSMetric: NSObject, XCTMetric, MapViewMetricsReporter {
         frameExpectedTimestamp = nil
     }
 
-    var drawingStartTime: CFTimeInterval?
-    var previousFrameDrawingDuration: CFTimeInterval?
 
     func displayLinkUpdate(_ displayLink: CADisplayLink) {
         guard shouldRecordFrames else { return }
@@ -90,7 +99,8 @@ class FPSMetric: NSObject, XCTMetric, MapViewMetricsReporter {
                                   frameActualTimestamp: displayLink.timestamp,
                                   previousFrameActualTimestamp: previousFrameTimestamp,
                                   frameIndex: frameIndex,
-                                  drawingDuration: previousFrameDrawingDuration)
+                                  drawingDuration: previousFrameDrawingDuration,
+                                  displayLinkProcessDuration: previousDisplayLinkProcessDuration)
         metricRecords.append(record)
 
         frameIndex += 1
@@ -136,7 +146,8 @@ class FPSMetric: NSObject, XCTMetric, MapViewMetricsReporter {
             XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.framescount", displayName: "Frames (count)", doubleValue: Double(framesCount ), unitSymbol: ""),
             XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.framescount.junkframes", displayName: "Junk frames", doubleValue: Double(numberOfBadFrames), unitSymbol: ""),
             XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.fps.junkframes_ratio", displayName: "Junk frames (ratio)", doubleValue: Double(numberOfBadFrames) / Double(framesCount) * 100, unitSymbol: "%"),
-            XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.drawing.avg", displayName: "Draw (avg)", value: averageDrawingDuration(metrics: metrics))
+            XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.drawing.avg", displayName: "Draw (avg)", value: averageDrawingDuration(metrics: metrics)),
+            XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.displaylink.avg", displayName: "DisplayLink (avg)", value: averageDrawingDuration(metrics: metrics))
         ]
     }
 
@@ -157,6 +168,12 @@ class FPSMetric: NSObject, XCTMetric, MapViewMetricsReporter {
     func averageDrawingDuration(metrics: ArraySlice<MetricRecord>) -> Measurement<Unit> {
         let drawingValues = metrics.compactMap(\.drawingDuration)
         let value = drawingValues.reduce(0, +) / Double(drawingValues.count)
+        return Measurement(value: value, unit: UnitDuration.seconds)
+    }
+
+    func averageDisplayLinkProcessingDuration(metrics: ArraySlice<MetricRecord>) -> Measurement<Unit> {
+        let collection = metrics.compactMap(\.displayLinkProcessDuration)
+        let value = collection.reduce(0, +) / Double(collection.count)
         return Measurement(value: value, unit: UnitDuration.seconds)
     }
 

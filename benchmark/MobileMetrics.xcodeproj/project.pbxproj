@@ -11,6 +11,7 @@
 		3A011CBB286343E9004713DA /* nav-day-munich-drive-tilepack.json in Resources */ = {isa = PBXBuildFile; fileRef = 3A011CB8286343E9004713DA /* nav-day-munich-drive-tilepack.json */; };
 		3A011CBC286343E9004713DA /* munich-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 3A011CB9286343E9004713DA /* munich-route.json */; };
 		3A011CBD286343E9004713DA /* munich-animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 3A011CBA286343E9004713DA /* munich-animation.json */; };
+		3A33396928B8C0480095E8D0 /* SetRenderCacheCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A33396828B8C0480095E8D0 /* SetRenderCacheCommand.swift */; };
 		3A56266C286436C400107E56 /* ExecutionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A56266B286436C400107E56 /* ExecutionError.swift */; };
 		3A56266E28645AE200107E56 /* OnDemandLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A56266D28645AE200107E56 /* OnDemandLocationProvider.swift */; };
 		3A75F06D28AF792000D26448 /* SetMemoryBudgetCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A75F06C28AF792000D26448 /* SetMemoryBudgetCommand.swift */; };
@@ -66,6 +67,7 @@
 		3A011CB8286343E9004713DA /* nav-day-munich-drive-tilepack.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "nav-day-munich-drive-tilepack.json"; sourceTree = "<group>"; };
 		3A011CB9286343E9004713DA /* munich-route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "munich-route.json"; sourceTree = "<group>"; };
 		3A011CBA286343E9004713DA /* munich-animation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "munich-animation.json"; sourceTree = "<group>"; };
+		3A33396828B8C0480095E8D0 /* SetRenderCacheCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetRenderCacheCommand.swift; sourceTree = "<group>"; };
 		3A56266B286436C400107E56 /* ExecutionError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecutionError.swift; sourceTree = "<group>"; };
 		3A56266D28645AE200107E56 /* OnDemandLocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDemandLocationProvider.swift; sourceTree = "<group>"; };
 		3A75F06C28AF792000D26448 /* SetMemoryBudgetCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetMemoryBudgetCommand.swift; sourceTree = "<group>"; };
@@ -149,6 +151,7 @@
 				3A011CB628631D6A004713DA /* AddRouteCommand.swift */,
 				3A56266B286436C400107E56 /* ExecutionError.swift */,
 				3A75F06C28AF792000D26448 /* SetMemoryBudgetCommand.swift */,
+				3A33396828B8C0480095E8D0 /* SetRenderCacheCommand.swift */,
 			);
 			path = Commands;
 			sourceTree = "<group>";
@@ -417,6 +420,7 @@
 				3A011CB728631D6A004713DA /* AddRouteCommand.swift in Sources */,
 				7412CF5E27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift in Sources */,
 				FE555B7E283774EF002751C7 /* SetOnlineStateCommand.swift in Sources */,
+				3A33396928B8C0480095E8D0 /* SetRenderCacheCommand.swift in Sources */,
 				FE18AEE22840ED4D001B9E6F /* StyleURI+Decodable.swift in Sources */,
 				74F2381327E3730C009F304C /* WarmCacheBenchmark.swift in Sources */,
 				FE555B80283775F3002751C7 /* CameraOptions+Decodable.swift in Sources */,

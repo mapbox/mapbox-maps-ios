@@ -31,6 +31,7 @@ struct Scenario {
         case playSequence = "PlaySequence"
         case addRoute = "AddRoute"
         case setMemoryBudget = "SetMemoryBudget"
+        case setRenderCache = "SetRenderCache"
     }
 
     struct ScenarioData: Decodable {
@@ -66,6 +67,8 @@ struct Scenario {
                     command = try commandContainer.decode(AddRouteCommand.self)
                 case .setMemoryBudget:
                     command = try commandContainer.decode(SetMemoryBudgetCommand.self)
+                case .setRenderCache:
+                    command = try commandContainer.decode(SetRenderCacheCommand.self)
                 }
                 commands.append(command)
             }

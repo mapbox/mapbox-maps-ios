@@ -2,14 +2,13 @@
 @_implementationOnly import MapboxCommon_Private
 
 final class MockMapSnapshotter: MockStyleManager, MapSnapshotterProtocol {
-
     @Stubbed var style: Style?
     @Stubbed var options: MapSnapshotOptions?
     @Stubbed var size: Size?
     @Stubbed var image: UIImage?
     @Stubbed var coordinateBoundsForCamera: CoordinateBounds?
     @Stubbed var cameraForCoordinates: CameraOptions?
-    @Stubbed var cameraOptions: CameraOptions = .random()
+    @Stubbed var cameraOptions: CameraOptions?
 
     public typealias SnapshotCompletion = (Expected<MapSnapshot, NSString>) -> Void
 
@@ -33,7 +32,7 @@ final class MockMapSnapshotter: MockStyleManager, MapSnapshotterProtocol {
         setTileModeStub.call(with: set)
     }
 
-    var getCameraStateStub = Stub<Void, MapboxCoreMaps.CameraState>(defaultReturnValue: .init(center: .random(), padding: MapboxCoreMaps.EdgeInsets.init(top: .zero, left: .zero, bottom: .zero, right: .zero), zoom: .random(in: 0...22), bearing: .random(in: 0...360), pitch: .random(in: 0...90)))
+    var getCameraStateStub = Stub<Void, MapboxCoreMaps.CameraState>(defaultReturnValue: .init(center: CLLocationCoordinate2D.random(), padding: MapboxCoreMaps.EdgeInsets.init(top: Double.random(in: 0..<100), left: Double.random(in: 0..<100), bottom: Double.random(in: 0..<100), right: Double.random(in: 0..<100)), zoom: .random(in: 0...22), bearing: .random(in: 0...360), pitch: .random(in: 0...90)))
     func getCameraState() -> MapboxCoreMaps.CameraState {
         getCameraStateStub.call()
     }

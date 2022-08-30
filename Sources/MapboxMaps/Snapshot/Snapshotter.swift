@@ -41,13 +41,11 @@ internal protocol MapSnapshotProtocol {
     func attributions() -> [String]
 
     func image() -> MapboxCoreMaps.Image
-
-    func asMapSnapshot() -> MapSnapshot
 }
 
-extension MapSnapshotter: MapSnapshotterProtocol {}
-
 extension MapSnapshot: MapSnapshotProtocol {}
+
+extension MapSnapshotter: MapSnapshotterProtocol {}
 
 // MARK: - Snapshotter
 public class Snapshotter {

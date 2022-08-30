@@ -248,7 +248,11 @@ class FPSMetric: NSObject, XCTMetric, MapViewMetricsReporter {
     func junkFrames(_ metrics: ArraySlice<MetricRecord>, screen: UIScreen = .main) -> Int {
         let epsilon = 0.0001
         let junkFrames = metrics.filter({ $0.frameDuration - $0.expectedFrameDuration >= epsilon })
-        return junkFrames.count
+        return junkFrames.map({ record in
+            let numberOfSkippedFrames = record.frameDuration / record.expectedFrameDuration
+            return Int(ceil(numberOfSkippedFrames))
+
+        }).reduce(0, +)
     }
 
     func copy(with zone: NSZone? = nil) -> Any {

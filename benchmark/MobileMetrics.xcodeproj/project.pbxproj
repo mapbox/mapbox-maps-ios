@@ -40,6 +40,7 @@
 		FE555B7C2836939B002751C7 /* AsyncCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE555B7B2836939B002751C7 /* AsyncCommand.swift */; };
 		FE555B7E283774EF002751C7 /* SetOnlineStateCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE555B7D283774EF002751C7 /* SetOnlineStateCommand.swift */; };
 		FE555B80283775F3002751C7 /* CameraOptions+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE555B7F283775F3002751C7 /* CameraOptions+Decodable.swift */; };
+		FE920F2728AE884400B73B64 /* ThermalStateMetric.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE920F2628AE884400B73B64 /* ThermalStateMetric.swift */; };
 		FEA8FD9D2834F69F00CDDA97 /* SpecsBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA8FD9B2834F5E400CDDA97 /* SpecsBenchmark.swift */; };
 		FEA8FD9E2834F6D100CDDA97 /* Scenario.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7467312B282E949100B7D044 /* Scenario.swift */; };
 		FEA8FDA4283510DD00CDDA97 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA8FDA3283510DD00CDDA97 /* UIViewController+Extensions.swift */; };
@@ -49,7 +50,7 @@
 		FED7F06D283BA56900AD2313 /* OfflineManager+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED7F06C283BA56900AD2313 /* OfflineManager+Async.swift */; };
 		FED7F06F283BA59800AD2313 /* MapboxMap+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED7F06E283BA59800AD2313 /* MapboxMap+Async.swift */; };
 		FED7F071283BA5AB00AD2313 /* TileStore+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED7F070283BA5AB00AD2313 /* TileStore+Async.swift */; };
-		FEFAF5F4282A7A990002CF6E /* PrivatePerformanceMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEFAF5F3282A7A990002CF6E /* PrivatePerformanceMetrics.swift */; };
+		FEF088D028AE7EB9001B8E38 /* FPSMetric.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF088CF28AE7EB9001B8E38 /* FPSMetric.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,6 +103,7 @@
 		FE555B7B2836939B002751C7 /* AsyncCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncCommand.swift; sourceTree = "<group>"; };
 		FE555B7D283774EF002751C7 /* SetOnlineStateCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetOnlineStateCommand.swift; sourceTree = "<group>"; };
 		FE555B7F283775F3002751C7 /* CameraOptions+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CameraOptions+Decodable.swift"; sourceTree = "<group>"; };
+		FE920F2628AE884400B73B64 /* ThermalStateMetric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThermalStateMetric.swift; sourceTree = "<group>"; };
 		FEA8FD9B2834F5E400CDDA97 /* SpecsBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecsBenchmark.swift; sourceTree = "<group>"; };
 		FEA8FDA3283510DD00CDDA97 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		FEB2802A2837C1BE00E903D2 /* ClearOfflineDataCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearOfflineDataCommand.swift; sourceTree = "<group>"; };
@@ -109,7 +111,7 @@
 		FED7F06C283BA56900AD2313 /* OfflineManager+Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OfflineManager+Async.swift"; sourceTree = "<group>"; };
 		FED7F06E283BA59800AD2313 /* MapboxMap+Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MapboxMap+Async.swift"; sourceTree = "<group>"; };
 		FED7F070283BA5AB00AD2313 /* TileStore+Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TileStore+Async.swift"; sourceTree = "<group>"; };
-		FEFAF5F3282A7A990002CF6E /* PrivatePerformanceMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivatePerformanceMetrics.swift; sourceTree = "<group>"; };
+		FEF088CF28AE7EB9001B8E38 /* FPSMetric.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FPSMetric.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -237,9 +239,10 @@
 		74F237EA27E32DE8009F304C /* Base */ = {
 			isa = PBXGroup;
 			children = (
+				FEF088CF28AE7EB9001B8E38 /* FPSMetric.swift */,
 				74F237EE27E32FFA009F304C /* BaseBenchmark.swift */,
 				74F237F227E3338A009F304C /* NotifyingViewController.swift */,
-				FEFAF5F3282A7A990002CF6E /* PrivatePerformanceMetrics.swift */,
+				FE920F2628AE884400B73B64 /* ThermalStateMetric.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -409,7 +412,6 @@
 			files = (
 				FEA8FD9D2834F69F00CDDA97 /* SpecsBenchmark.swift in Sources */,
 				FE18AEEE2844F47D001B9E6F /* MapRecorder+Async.swift in Sources */,
-				FEFAF5F4282A7A990002CF6E /* PrivatePerformanceMetrics.swift in Sources */,
 				FEA8FDA4283510DD00CDDA97 /* UIViewController+Extensions.swift in Sources */,
 				FEA8FD9E2834F6D100CDDA97 /* Scenario.swift in Sources */,
 				FED7F06F283BA59800AD2313 /* MapboxMap+Async.swift in Sources */,
@@ -417,6 +419,7 @@
 				74F237EF27E32FFA009F304C /* BaseBenchmark.swift in Sources */,
 				FE555B7C2836939B002751C7 /* AsyncCommand.swift in Sources */,
 				FED7F071283BA5AB00AD2313 /* TileStore+Async.swift in Sources */,
+				FE920F2728AE884400B73B64 /* ThermalStateMetric.swift in Sources */,
 				3A011CB728631D6A004713DA /* AddRouteCommand.swift in Sources */,
 				7412CF5E27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift in Sources */,
 				FE555B7E283774EF002751C7 /* SetOnlineStateCommand.swift in Sources */,
@@ -428,6 +431,7 @@
 				FEB2802B2837C1BE00E903D2 /* ClearOfflineDataCommand.swift in Sources */,
 				FE18AEEB2841148F001B9E6F /* PlaySequenceCommand.swift in Sources */,
 				FEA8FDA62835110400CDDA97 /* CreateOfflinePacksCommand.swift in Sources */,
+				FEF088D028AE7EB9001B8E38 /* FPSMetric.swift in Sources */,
 				3A56266E28645AE200107E56 /* OnDemandLocationProvider.swift in Sources */,
 				74F237F327E3338A009F304C /* NotifyingViewController.swift in Sources */,
 				FED7F06D283BA56900AD2313 /* OfflineManager+Async.swift in Sources */,

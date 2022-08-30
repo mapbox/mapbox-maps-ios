@@ -9,6 +9,13 @@ public struct CreateMapCommand: AsyncCommand, Decodable {
         case cannotLoadMap
     }
 
+    var mapView: MapView? {
+        let rootView = UIViewController.rootController?.view
+        let mapViews = rootView?.subviews.compactMap({ $0 as? MapView })
+        assert(mapViews?.count == 1 )
+        return mapViews?.first
+    }
+
     @MainActor
     func execute() async throws {
         let viewController = UIViewController.rootController!

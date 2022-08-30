@@ -3,11 +3,6 @@ import MapboxMobileEvents
 @testable import MapboxMaps
 
 class BaseBenchmark: XCTestCase {
-
-    override class var defaultPerformanceMetrics: [XCTPerformanceMetric] {
-        return XCTPerformanceMetric.all
-    }
-
     enum Error: Swift.Error {
         case rootViewControllerNotFound
     }
@@ -51,7 +46,16 @@ class BaseBenchmark: XCTestCase {
     /// Records the performance, for a block of code. `stopBenchmark` should be called once before the end of the block.
     /// - Parameter block: A block whose performance is measured.
     func benchmark(timeout: TimeInterval = 10, block: () -> Void) {
-        measureMetrics(Self.defaultPerformanceMetrics, automaticallyStartMeasuring: true) {
+        let metrics: [XCTMetric] = [
+            XCTCPUMetric(),
+            XCTMemoryMetric(),
+            XCTStorageMetric(),
+            XCTClockMetric(),
+            ThermalStateMetric()
+        ]
+        let options = XCTMeasureOptions()
+        options.invocationOptions = [.manuallyStop]
+        measure(metrics: metrics, options: options) {
             measurementExpectation = self.expectation(description: "Measure expectation")
             block()
             waitForExpectations(timeout: timeout)

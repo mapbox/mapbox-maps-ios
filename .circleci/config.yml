@@ -935,7 +935,7 @@ jobs:
                 -H 'Content-Type: application/json' \
                 -H "Circle-Token: $CIRCLECI_API_TOKEN_MAPBOX_MAPS_IOS_INTERNAL" \
                 -d $'{
-                        "branch": "main",
+                        "branch": "internal",
                         "parameters": {
                           "mapbox_sync_branch": "$CIRCLE_BRANCH"
                         }

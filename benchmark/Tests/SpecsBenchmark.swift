@@ -51,6 +51,7 @@ class SpecsBenchmark: XCTestCase {
             camera: CameraOptions(center: CLLocationCoordinate2D(latitude: 48.1386, longitude: 11.5736), zoom: 12)
         )
         let takeSnapshot = TakeSnapshotCommand()
+        // record a shorter mixed use(pan, zoom, pitch) sequence with ``MapRecorder``
         let playSequence = PlaySequenceCommand(filename: "munich-zoom-in-out-z10-z20.json", playbackCount: 1)
         let scenario = Scenario(
             name: "Performance after taking a map view snapshot",
@@ -58,6 +59,9 @@ class SpecsBenchmark: XCTestCase {
         )
 
         // TODO: Add the FPSMetric here
+
+        // create a way to start measuring up from a particular command(not the whole scenario)
+        // ref. - https://github.com/mapbox/mapbox-maps-ios-internal/pull/1260/files#diff-5afb2d8af478c4462a7b6ad3f0607e36aacf53443442984fdc39f55fa5834693R25-R27
         try measureScenario(scenario, iterationCount: 1)
     }
 }

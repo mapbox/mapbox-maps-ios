@@ -126,28 +126,29 @@ class FPSMetric: NSObject, XCTMetric, MapViewMetricsReporter {
 
         addAttachment(metrics)
 
-        let framesCount = metrics.count
+        return fpsStatsData(for: metrics) + junkFramesMeasurements(metrics) +
+        statsData(for: metrics.compactMap(\.drawingDuration), measurementId: "com.mapbox.metrics.drawing", displayName: "Draw", unit: UnitDuration.seconds, polarity: .prefersSmaller) +
+        statsData(for: metrics.compactMap(\.displayLinkProcessDuration), measurementId: "com.mapbox.metrics.displaylink", displayName: "DisplayLink", unit: UnitDuration.seconds, polarity: .prefersSmaller)
+    }
 
-        let averageFPSValue = averageFPS(metrics: metrics)
-        let p50FPS = percentileFPS(metrics: metrics, value: 0.50)
-        let p95FPS = percentileFPS(metrics: metrics, value: 0.95)
-        let p99FPS = percentileFPS(metrics: metrics, value: 0.99)
-        let p99_9FPS = percentileFPS(metrics: metrics, value: 0.999)
+    func fpsStatsData(for metrics: ArraySlice<MetricRecord>, screen: UIScreen = .main) -> [XCTPerformanceMeasurement] {
+        return statsData(for: metrics.map(\.frameDuration),
+                         measurementId: "com.mapbox.metrics.fps",
+                         displayName: "FPS",
+                         unit: UnitFrequency.framesPerSecond,
+                         polarity: .prefersLarger) { frameDurationValue in
+            return frameDurationValue.map({ min(1.0 / $0, Double(screen.maximumFramesPerSecond)) })
+        }
+    }
+
+    func junkFramesMeasurements(_ metrics: ArraySlice<MetricRecord>) -> [XCTPerformanceMeasurement] {
+        let framesCount = metrics.count
         let numberOfBadFrames = junkFrames(metrics)
-        let stdev = standardDeviationFrameDuration(metrics)
 
         return [
-            XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.fps.average", displayName: "FPS (avg)", value: averageFPSValue, polarity: .prefersLarger),
-            XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.fps.p50", displayName: "FPS (p50)", value: p50FPS),
-            XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.fps.p95", displayName: "FPS (p95)", value: p95FPS),
-            XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.fps.p99", displayName: "FPS (p99)", value: p99FPS),
-            XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.fps.p99_9", displayName: "FPS (p99.9)", value: p99_9FPS),
-            XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.fps.stdev", displayName: "FPS (stdev)", value: stdev),
             XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.framescount", displayName: "Frames (count)", doubleValue: Double(framesCount ), unitSymbol: ""),
             XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.framescount.junkframes", displayName: "Junk frames", doubleValue: Double(numberOfBadFrames), unitSymbol: ""),
             XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.fps.junkframes_ratio", displayName: "Junk frames (ratio)", doubleValue: Double(numberOfBadFrames) / Double(framesCount) * 100, unitSymbol: "%"),
-            XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.drawing.avg", displayName: "Draw (avg)", value: averageDrawingDuration(metrics: metrics)),
-            XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.displaylink.avg", displayName: "DisplayLink (avg)", value: averageDrawingDuration(metrics: metrics))
         ]
     }
 
@@ -165,23 +166,53 @@ class FPSMetric: NSObject, XCTMetric, MapViewMetricsReporter {
         return metricRecords[leftIndex..<rightIndex]
     }
 
-    func averageDrawingDuration(metrics: ArraySlice<MetricRecord>) -> Measurement<Unit> {
-        let drawingValues = metrics.compactMap(\.drawingDuration)
-        let value = drawingValues.reduce(0, +) / Double(drawingValues.count)
-        return Measurement(value: value, unit: UnitDuration.seconds)
-    }
+    func statsData(for data: [Double], measurementId: String, displayName: String, unit: Unit, polarity: XCTPerformanceMeasurement.Polarity, convertMeasurementValue: ((Double?) -> Double?)? = nil) -> [XCTPerformanceMeasurement] {
+        func convert(_ input: Double) -> Double? {
+            if let convertMeasurementValue = convertMeasurementValue {
+                return convertMeasurementValue(input)
+            } else {
+                return input
+            }
+        }
 
-    func averageDisplayLinkProcessingDuration(metrics: ArraySlice<MetricRecord>) -> Measurement<Unit> {
-        let collection = metrics.compactMap(\.displayLinkProcessDuration)
-        let value = collection.reduce(0, +) / Double(collection.count)
-        return Measurement(value: value, unit: UnitDuration.seconds)
-    }
+        let sortedData = data.sorted()
 
-    func averageFPS(metrics: ArraySlice<MetricRecord>, screen: UIScreen = .main) -> Measurement<Unit> {
-        let totalTime = metrics.map(\.frameDuration).reduce(0, +)
-        let averageFrameTime = totalTime / Double(metrics.count)
-        let fpsValue = 1.0 / averageFrameTime
-        return Measurement(value: min(fpsValue, Double(screen.maximumFramesPerSecond)), unit: UnitFrequency.framesPerSecond)
+        // Calculate default percentiles
+        var measurements = [0.5, 0.95, 0.99, 0.999].compactMap { percentile -> XCTPerformanceMeasurement? in
+            guard let value = self.percentile(sortedData, percentile: percentile, presorted: true),
+                  let measurementValue = convert(value) else { return nil }
+
+            let percentileString = String(format: "%g", locale: Locale(identifier: "en_us_posix"), percentile*100)
+                .replacingOccurrences(of: ".", with: "_")
+
+            let identifier = "\(measurementId).p\(percentileString)"
+            let displayName = "\(displayName) (p\(percentileString))"
+            let measurement = Measurement(value: measurementValue, unit: unit)
+            return XCTPerformanceMeasurement(identifier: identifier, displayName: displayName, value: measurement, polarity: polarity)
+        }
+
+        // Calculate AVERAGE value
+        let average = data.reduce(0, +) / Double(data.count)
+        if let convertedAverageValue = convert(average) {
+            let averageMeasurement = XCTPerformanceMeasurement(identifier: "\(measurementId).average",
+                                                               displayName: "\(displayName) (AVG)",
+                                                               value: Measurement(value: convertedAverageValue, unit: unit),
+                                                               polarity: polarity)
+            measurements.append(averageMeasurement)
+
+        }
+
+
+        // Calculate STDEV
+        let deviationValue = stdev(data)
+        if let convertedSTDEV = convert(deviationValue) {
+            measurements.append(XCTPerformanceMeasurement(identifier: "\(measurementId).stdev",
+                                                          displayName: "\(displayName) (STDEV)",
+                                                          value: Measurement(value: convertedSTDEV, unit: unit),
+                                                          polarity: polarity))
+        }
+
+        return measurements
     }
 
     func percentileFPS(metrics: ArraySlice<MetricRecord>, value: Double, screen: UIScreen = .main) -> Measurement<Unit> {
@@ -191,7 +222,7 @@ class FPSMetric: NSObject, XCTMetric, MapViewMetricsReporter {
         return Measurement(value: min(fpsValue, maximumFPSValue), unit: UnitFrequency.framesPerSecond)
     }
 
-    func percentile(_ data: [Double], percentile probability: Double) -> Double? {
+    func percentile(_ data: [Double], percentile probability: Double, presorted: Bool = false) -> Double? {
         func qDef(_ data: [Double], k: Int, probability: Double) -> Double? {
           if data.isEmpty { return nil }
           if k < 1 { return data[0] }
@@ -199,7 +230,7 @@ class FPSMetric: NSObject, XCTMetric, MapViewMetricsReporter {
           return ((1.0 - probability) * data[k - 1]) + (probability * data[k])
         }
 
-        let data = data.sorted(by: <)
+        let data = presorted ? data : data.sorted(by: <)
         let count = Double(data.count)
         let m = 1.0 - probability
         let k = Int((probability * count) + m)
@@ -207,21 +238,17 @@ class FPSMetric: NSObject, XCTMetric, MapViewMetricsReporter {
         return qDef(data, k: k, probability: probability)
     }
 
+    func stdev(_ data: [Double]) -> Double {
+        let mean = data.reduce(0, +) / Double(data.count)
+        let sumOfPowDiffs = data.map({ pow($0 - mean, 2) }).reduce(0, +)
+
+        return sqrt(sumOfPowDiffs / Double(data.count))
+    }
+
     func junkFrames(_ metrics: ArraySlice<MetricRecord>, screen: UIScreen = .main) -> Int {
         let epsilon = 0.0001
         let junkFrames = metrics.filter({ $0.frameDuration - $0.expectedFrameDuration >= epsilon })
         return junkFrames.count
-    }
-
-    func standardDeviationFrameDuration(_ data: ArraySlice<MetricRecord>, screen: UIScreen = .main) -> Measurement<Unit> {
-        let maxFPS = Double(screen.maximumFramesPerSecond)
-        let data = data.map({ min( round(1.0 / $0.frameDuration), maxFPS) })
-        let count = Double(data.count)
-        let mean = data.reduce(0, +) / count
-        let sumOfPowDiffs = data.map({ pow($0 - mean, 2) }).reduce(0, +)
-
-        let value = sqrt(sumOfPowDiffs / count)
-        return Measurement(value: value, unit: UnitFrequency.framesPerSecond)
     }
 
     func copy(with zone: NSZone? = nil) -> Any {

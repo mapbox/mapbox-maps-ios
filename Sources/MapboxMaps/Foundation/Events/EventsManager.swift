@@ -105,6 +105,23 @@ internal final class EventsManager {
         return scToScale[sc] ?? defalutScale
     }
 
+    fileprivate func getOrientation() -> String {
+        let orientation = UIDevice.current.orientation
+
+        let defalutOrientation = "Default - Unknown"
+        let orientationToString = [
+            UIDeviceOrientation.unknown: "Unknown",
+            .portrait: "Portrait",
+            .portraitUpsideDown: "PortraitUpsideDown",
+            .landscapeLeft: "LandscapeLeft",
+            .landscapeRight: "LandscapeRight",
+            .faceUp: "FaceUp",
+            .faceDown: "FaceDown",
+        ]
+
+        return orientationToString[orientation] ?? defalutOrientation
+    }
+
     fileprivate func getModel() -> String {
         var size = 0
         sysctlbyname("hw.machine", nil, &size, nil, 0)
@@ -123,7 +140,7 @@ internal final class EventsManager {
         let operatingSystem = String(format: "%@ %@", UIDevice.current.systemName, UIDevice.current.systemVersion)
         let resolution = UIScreen.main.nativeScale
         let accessibilityFontScale = self.getContentScale()
-        let orientation = UIDevice.current.orientation
+        let orientation = self.getOrientation()
         let wifi = ReachabilityFactory.reachability(forHostname: nil).currentNetworkStatus() == .reachableViaWiFi
 
         let eventAttributes = [

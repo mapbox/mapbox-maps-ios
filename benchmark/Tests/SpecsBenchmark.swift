@@ -46,13 +46,9 @@ class SpecsBenchmark: XCTestCase {
     }
 
     func testPerformanceAfterSnapshot() throws {
-        let createMap = CreateMapCommand(
-            style: .streets,
-            camera: CameraOptions(center: CLLocationCoordinate2D(latitude: 48.1386, longitude: 11.5736), zoom: 12)
-        )
+        let createMap = CreateMapCommand(style: .streets, camera: CameraOptions())
         let takeSnapshot = TakeSnapshotCommand()
-        // record a shorter mixed use(pan, zoom, pitch) sequence with ``MapRecorder``
-        let playSequence = PlaySequenceCommand(filename: "munich-zoom-in-out-z10-z20.json", playbackCount: 1)
+        let playSequence = PlaySequenceCommand(filename: "pan-zoom-rotate-pitch.json", playbackCount: 1)
         let scenario = Scenario(
             name: "Performance after taking a map view snapshot",
             commands: [createMap, takeSnapshot, playSequence]

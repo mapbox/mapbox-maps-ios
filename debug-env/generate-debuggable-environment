@@ -103,8 +103,9 @@ def checkout_repo(repo_name: str, repo_branch: str, checkout_submodules=False):
     else:
         print("Fetching latest changes for " + repo_name + "...")
         os.chdir(repo_name)
+        os.system("git reset --hard && git clean -dffx")
         os.system("git fetch")
-        os.system("git checkout " + repo_branch)
+        os.system("git checkout " + repo_branch + " --")
         os.system("git pull origin " + repo_branch)
         os.chdir("..")
 

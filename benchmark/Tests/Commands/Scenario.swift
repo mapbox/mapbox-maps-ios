@@ -50,6 +50,7 @@ class Scenario {
         case addRoute = "AddRoute"
         case setMemoryBudget = "SetMemoryBudget"
         case setRenderCache = "SetRenderCache"
+        case enableTerrain = "EnableTerrain"
     }
 
     struct ScenarioData: Decodable {
@@ -87,6 +88,8 @@ class Scenario {
                     command = try commandContainer.decode(SetMemoryBudgetCommand.self)
                 case .setRenderCache:
                     command = try commandContainer.decode(SetRenderCacheCommand.self)
+                case .enableTerrain:
+                    command = try commandContainer.decode(EnableTerrainCommand.self)
                 }
                 commands.append(command)
             }

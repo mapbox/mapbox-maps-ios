@@ -14,6 +14,7 @@
 		3A33396928B8C0480095E8D0 /* SetRenderCacheCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A33396828B8C0480095E8D0 /* SetRenderCacheCommand.swift */; };
 		3A56266C286436C400107E56 /* ExecutionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A56266B286436C400107E56 /* ExecutionError.swift */; };
 		3A56266E28645AE200107E56 /* OnDemandLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A56266D28645AE200107E56 /* OnDemandLocationProvider.swift */; };
+		3A60782F28BE1EA80000BF7A /* EnableTerrainCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A60782E28BE1EA80000BF7A /* EnableTerrainCommand.swift */; };
 		3A75F06D28AF792000D26448 /* SetMemoryBudgetCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A75F06C28AF792000D26448 /* SetMemoryBudgetCommand.swift */; };
 		7412CF5E27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF5D27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift */; };
 		745D052527C8D185004E7B53 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 745D052427C8D185004E7B53 /* MapboxMaps */; };
@@ -71,6 +72,7 @@
 		3A33396828B8C0480095E8D0 /* SetRenderCacheCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetRenderCacheCommand.swift; sourceTree = "<group>"; };
 		3A56266B286436C400107E56 /* ExecutionError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecutionError.swift; sourceTree = "<group>"; };
 		3A56266D28645AE200107E56 /* OnDemandLocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDemandLocationProvider.swift; sourceTree = "<group>"; };
+		3A60782E28BE1EA80000BF7A /* EnableTerrainCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnableTerrainCommand.swift; sourceTree = "<group>"; };
 		3A75F06C28AF792000D26448 /* SetMemoryBudgetCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetMemoryBudgetCommand.swift; sourceTree = "<group>"; };
 		7412CF5D27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationEaseToBenchmark.swift; sourceTree = "<group>"; };
 		745D052327C8D15F004E7B53 /* mapbox-maps-ios */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "mapbox-maps-ios"; path = "../mapbox-maps-ios"; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 				3A56266B286436C400107E56 /* ExecutionError.swift */,
 				3A75F06C28AF792000D26448 /* SetMemoryBudgetCommand.swift */,
 				3A33396828B8C0480095E8D0 /* SetRenderCacheCommand.swift */,
+				3A60782E28BE1EA80000BF7A /* EnableTerrainCommand.swift */,
 			);
 			path = Commands;
 			sourceTree = "<group>";
@@ -435,6 +438,7 @@
 				3A56266E28645AE200107E56 /* OnDemandLocationProvider.swift in Sources */,
 				74F237F327E3338A009F304C /* NotifyingViewController.swift in Sources */,
 				FED7F06D283BA56900AD2313 /* OfflineManager+Async.swift in Sources */,
+				3A60782F28BE1EA80000BF7A /* EnableTerrainCommand.swift in Sources */,
 				3A56266C286436C400107E56 /* ExecutionError.swift in Sources */,
 				FEA8FDA52835110000CDDA97 /* CreateMapCommand.swift in Sources */,
 				74F2381527E39A33009F304C /* AnimationFlyToBenchmark.swift in Sources */,

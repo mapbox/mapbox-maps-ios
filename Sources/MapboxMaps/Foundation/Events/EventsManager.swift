@@ -83,10 +83,69 @@ internal final class EventsManager {
         coreTelemetry.sendTurnstileEvent(for: turnstileEvent)
     }
 
+    fileprivate func getContentScale() -> Int {
+        let sc = UIApplication.shared.preferredContentSizeCategory
+
+        let defalutScale = -9999
+        let scToScale = [
+            UIContentSizeCategory.extraSmall: -3,
+            .small: -2,
+            .medium: -1,
+            .large: 0,
+            .extraLarge: 1,
+            .extraExtraLarge: 2,
+            .extraExtraExtraLarge: 3,
+            .accessibilityMedium: -11,
+            .accessibilityLarge: 10,
+            .accessibilityExtraLarge: 11,
+            .accessibilityExtraExtraLarge: 12,
+            .accessibilityExtraExtraExtraLarge: 13
+        ]
+
+        return scToScale[sc] ?? defalutScale
+    }
+
+    fileprivate func getModel() -> String {
+        var size = 0
+        sysctlbyname("hw.machine", nil, &size, nil, 0)
+
+        var model = [CChar](repeating: 0, count: size)
+        sysctlbyname("hw.machine", &model, &size, nil, 0)
+
+        return String(cString: model)
+    }
+
+    fileprivate func getMapLoadEventAttributes() -> [String: Any] {
+        let event = "map.load"
+        let created = ISO8601DateFormatter().string(from: Date())
+        let userId = UIDevice.current.identifierForVendor?.uuidString ?? ""
+        let model = self.getModel()
+        let operatingSystem = String(format: "%@ %@", UIDevice.current.systemName, UIDevice.current.systemVersion)
+        let resolution = UIScreen.main.nativeScale
+        let accessibilityFontScale = self.getContentScale()
+        let orientation = UIDevice.current.orientation
+        let wifi = ReachabilityFactory.reachability(forHostname: nil).currentNetworkStatus() == .reachableViaWiFi
+
+        let eventAttributes = [
+            "event": event,
+            "created": created,
+            "userId": userId,
+            "model": model,
+            "operatingSystem": operatingSystem,
+            "resolution": resolution,
+            "accessibilityFontScale": accessibilityFontScale,
+            "orientation": orientation,
+            "wifi": wifi
+        ] as [String: Any]
+
+        return eventAttributes
+    }
+
     internal func sendMapLoadEvent() {
         mmeEventsManager.enqueueEvent(withName: MMEEventTypeMapLoad)
 
-        let ctEvent = MapboxCommon_Private.Event(priority: .immediate, attributes: ["event": MMEEventTypeMapLoad], deferredOptions: nil)
+        let attributes = self.getMapLoadEventAttributes()
+        let ctEvent = MapboxCommon_Private.Event(priority: .immediate, attributes: attributes, deferredOptions: nil)
         coreTelemetry.sendEvent(for: ctEvent)
     }
 }

@@ -126,7 +126,7 @@ class FPSMetric: NSObject, XCTMetric, MapViewMetricsReporter {
 
         addAttachment(metrics)
 
-        return fpsStatsData(for: metrics) + junkFramesMeasurements(metrics) +
+        return fpsStatsData(for: metrics) + jankFramesMeasurements(metrics) +
         statsData(for: metrics.compactMap(\.drawingDuration), measurementId: "com.mapbox.metrics.drawing", displayName: "Draw", unit: UnitDuration.seconds, polarity: .prefersSmaller) +
         statsData(for: metrics.compactMap(\.displayLinkProcessDuration), measurementId: "com.mapbox.metrics.displaylink", displayName: "DisplayLink", unit: UnitDuration.seconds, polarity: .prefersSmaller)
     }
@@ -141,14 +141,14 @@ class FPSMetric: NSObject, XCTMetric, MapViewMetricsReporter {
         }
     }
 
-    func junkFramesMeasurements(_ metrics: ArraySlice<MetricRecord>) -> [XCTPerformanceMeasurement] {
+    func jankFramesMeasurements(_ metrics: ArraySlice<MetricRecord>) -> [XCTPerformanceMeasurement] {
         let framesCount = metrics.count
-        let numberOfBadFrames = junkFrames(metrics)
+        let numberOfBadFrames = jankFrames(metrics)
 
         return [
             XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.framescount", displayName: "Frames (count)", doubleValue: Double(framesCount ), unitSymbol: ""),
-            XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.framescount.junkframes", displayName: "Junk frames", doubleValue: Double(numberOfBadFrames), unitSymbol: ""),
-            XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.fps.junkframes_ratio", displayName: "Junk frames (ratio)", doubleValue: Double(numberOfBadFrames) / Double(framesCount) * 100, unitSymbol: "%"),
+            XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.framescount.jankframes", displayName: "Jank frames", doubleValue: Double(numberOfBadFrames), unitSymbol: ""),
+            XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.fps.jankframes_ratio", displayName: "Jank frames (ratio)", doubleValue: Double(numberOfBadFrames) / Double(framesCount) * 100, unitSymbol: "%"),
         ]
     }
 
@@ -245,10 +245,14 @@ class FPSMetric: NSObject, XCTMetric, MapViewMetricsReporter {
         return sqrt(sumOfPowDiffs / Double(data.count))
     }
 
-    func junkFrames(_ metrics: ArraySlice<MetricRecord>, screen: UIScreen = .main) -> Int {
+    func jankFrames(_ metrics: ArraySlice<MetricRecord>, screen: UIScreen = .main) -> Int {
         let epsilon = 0.0001
-        let junkFrames = metrics.filter({ $0.frameDuration - $0.expectedFrameDuration >= epsilon })
-        return junkFrames.count
+        let jankFrames = metrics.filter({ $0.frameDuration - $0.expectedFrameDuration >= epsilon })
+        return jankFrames.map({ record in
+            let numberOfSkippedFrames = record.frameDuration / record.expectedFrameDuration
+            return Int(ceil(numberOfSkippedFrames))
+
+        }).reduce(0, +)
     }
 
     func copy(with zone: NSZone? = nil) -> Any {

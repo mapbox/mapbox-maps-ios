@@ -146,8 +146,8 @@ class FPSMetric: NSObject, XCTMetric, MapViewMetricsReporter {
         let numberOfBadFrames = jankFrames(metrics)
 
         return [
-            XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.framescount", displayName: "Frames (count)", doubleValue: Double(framesCount ), unitSymbol: ""),
-            XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.framescount.jankframes", displayName: "Jank frames", doubleValue: Double(numberOfBadFrames), unitSymbol: ""),
+            XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.framescount", displayName: "Frames (count)", doubleValue: Double(framesCount ), unitSymbol: "frames"),
+            XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.framescount.jankframes", displayName: "Jank frames", doubleValue: Double(numberOfBadFrames), unitSymbol: "frames"),
             XCTPerformanceMeasurement(identifier: "com.mapbox.metrics.fps.jankframes_ratio", displayName: "Jank frames (ratio)", doubleValue: Double(numberOfBadFrames) / Double(framesCount) * 100, unitSymbol: "%"),
         ]
     }

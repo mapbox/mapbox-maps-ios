@@ -13,10 +13,15 @@ struct TakeSnapshotCommand: AsyncCommand, Decodable {
         let renderer = UIGraphicsImageRenderer(size: size)
 
         // Wait for the map to draw everything before taking a snapshot
-        try await Task.sleep(nanoseconds: 1_000_000_000)
+        try await withCheckedThrowingContinuation { continuation in
+            mapView.mapboxMap.onNext(event: .mapIdle) { event in
+                let _ = renderer.image { context in
+                    mapView.drawHierarchy(in: CGRect(origin: .zero, size: size), afterScreenUpdates: true)
+                }
 
-        let _ = renderer.image { context in
-            mapView.drawHierarchy(in: CGRect(origin: .zero, size: size), afterScreenUpdates: true)
+                return continuation.resume(returning: ())
+            }
         }
+        as Void // This cast is nessesary to help type checker find <T> for …Continuation func
     }
 }

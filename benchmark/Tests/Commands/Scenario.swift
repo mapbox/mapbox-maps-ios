@@ -3,6 +3,9 @@ import MapboxMaps
 
 struct Scenario {
     let name: String?
+    var commands: [AsyncCommand] {
+        setupCommands + benchmarkCommands
+    }
     let setupCommands: [AsyncCommand]
     let benchmarkCommands: [AsyncCommand]
 
@@ -12,13 +15,21 @@ struct Scenario {
         self.benchmarkCommands = commands
     }
 
-    init(filePath: URL, name: String? = nil) throws {
+    init(filePath: URL, name: String? = nil, splitAt condition: ((AsyncCommand) -> Bool)? = nil) throws {
         self.name = name ?? (filePath.lastPathComponent as NSString).deletingPathExtension
 
         let data = try Data(contentsOf: filePath)
         let scenarioData = try JSONDecoder().decode(ScenarioData.self, from: data)
-        self.setupCommands = []
-        self.benchmarkCommands = scenarioData.commands
+
+        if let condition = condition,
+            let splitIndex = scenarioData.commands.firstIndex(where: condition),
+            splitIndex < scenarioData.commands.count {
+            self.setupCommands = Array(scenarioData.commands.prefix(upTo: splitIndex))
+            self.benchmarkCommands = Array(scenarioData.commands.suffix(from: splitIndex))
+        } else {
+            self.setupCommands = []
+            self.benchmarkCommands = scenarioData.commands
+        }
     }
 
     init(name: String?, setupCommands: [AsyncCommand], benchmarkCommands: [AsyncCommand]) {

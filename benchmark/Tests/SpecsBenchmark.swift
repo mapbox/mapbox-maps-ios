@@ -26,7 +26,7 @@ class SpecsBenchmark: XCTestCase {
     }
 
     func testStreetsMunichTtrcWarm() throws {
-        try runScenarioBenchmark(name: "streets-munich-ttrc-warm")
+        try runScenarioBenchmark(name: "streets-munich-ttrc-warm", measureFrom: { $0 is CreateMapCommand })
     }
 
     func testNavDayMunichZoom() throws {
@@ -64,10 +64,11 @@ extension SpecsBenchmark {
                               shouldSkipWarmupRun: Bool = false,
                               iterationCount: Int? = nil,
                               extraMetrics: [Metric] = [],
+                              measureFrom: ((AsyncCommand) -> Bool)? = nil,
                               timeout: TimeInterval = 60,
                               functionName: String = #function) throws {
         let url = try XCTUnwrap(Bundle.main.url(forResource: name, withExtension: "json"))
-        let scenario = try Scenario(filePath: url)
+        let scenario = try Scenario(filePath: url, splitAt: measureFrom)
 
         try measureScenario(scenario,
                             shouldSkipWarmupRun: shouldSkipWarmupRun,

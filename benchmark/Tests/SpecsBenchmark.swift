@@ -67,7 +67,7 @@ extension SpecsBenchmark {
                               timeout: TimeInterval = 60,
                               functionName: String = #function) throws {
         let url = try XCTUnwrap(Bundle.main.url(forResource: name, withExtension: "json"))
-        let scenario = try Scenario(filePath: url, splitAt: measureFrom)
+        let scenario = try Scenario(filePath: url, name: name, splitAt: measureFrom)
 
         try measureScenario(scenario,
                             shouldSkipWarmupRun: shouldSkipWarmupRun,
@@ -92,39 +92,37 @@ extension SpecsBenchmark {
         ]
 
         let options = XCTMeasureOptions()
-        options.invocationOptions = [.manuallyStop]
+        options.invocationOptions = [.manuallyStop, .manuallyStart]
 
         if let iterationCount = iterationCount {
             options.iterationCount = iterationCount
         }
 
-        let setupExpectation = expectation(description: "Setup for '\(name)' finished")
-        Task {
-            try await scenario.runSetup(for: metrics)
-            setupExpectation.fulfill()
-        }
-
-        wait(for: [setupExpectation], timeout: timeout)
-
         var runIndex = 0
         measure(metrics: metrics, options: options) {
             defer { runIndex += 1 }
-            if shouldSkipWarmupRun && runIndex == 0 { return self.stopMeasuring() }
+            if shouldSkipWarmupRun && runIndex == 0 {
+                startMeasuring()
+                stopMeasuring()
+                return
+            }
+
 
             let scenarioExpectation = expectation(description: "Scenario '\(name)' finished")
+
             Task {
+                try await scenario.runSetup(for: metrics)
+
+                self.startMeasuring()
                 try await scenario.runBenchmark(for: metrics)
-                scenarioExpectation.fulfill()
                 self.stopMeasuring()
-                scenario.cleanupBenchmark()
+
+                scenarioExpectation.fulfill()
+                scenario.cleanup()
             }
 
             waitForExpectations(timeout: timeout) { error in
                 XCTAssertNil(error)
-            }
-
-            if runIndex == options.iterationCount {
-                scenario.cleanupSetup()
             }
         }
     }

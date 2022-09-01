@@ -2,12 +2,12 @@ import Foundation
 import MapboxMaps
 
 struct Scenario {
-    let name: String?
+    let name: String
     let setupCommands: [AsyncCommand]
     let benchmarkCommands: [AsyncCommand]
 
-    init(filePath: URL, name: String? = nil, splitAt condition: ((AsyncCommand) -> Bool)? = nil) throws {
-        self.name = name ?? (filePath.lastPathComponent as NSString).deletingPathExtension
+    init(filePath: URL, name: String, splitAt condition: ((AsyncCommand) -> Bool)? = nil) throws {
+        self.name = name
 
         let data = try Data(contentsOf: filePath)
         let scenarioData = try JSONDecoder().decode(ScenarioData.self, from: data)
@@ -23,39 +23,38 @@ struct Scenario {
         }
     }
 
-    init(name: String?, setupCommands: [AsyncCommand] = [], benchmarkCommands: [AsyncCommand] = []) {
+    init(name: String, setupCommands: [AsyncCommand] = [], benchmarkCommands: [AsyncCommand] = []) {
         self.name = name
         self.setupCommands = setupCommands
         self.benchmarkCommands = benchmarkCommands
     }
 
     func runSetup(for metrics: [Metric]) async throws {
-        for command in setupCommands {
-            metrics.forEach { $0.commandWillStartExecuting(command) }
-            print(">> Start setup command: \(type(of: command))")
-            try await command.execute()
-            print("<< Finish setup command: \(type(of: command))\n")
-            metrics.forEach { $0.commandDidFinishExecuting(command) }
-        }
+        print(">> Start setup for: \(name))")
+        try await runCommands(setupCommands, for: metrics)
+        print(">> Finish setup for: \(name))")
     }
 
     func runBenchmark(for metrics: [Metric]) async throws {
-        for command in benchmarkCommands {
+        print(">> Start benchmark for: \(name))")
+        try await runCommands(benchmarkCommands, for: metrics)
+        print(">> Finish benchmark for: \(name))")
+    }
+
+    private func runCommands(_ commands: [AsyncCommand], for metrics: [Metric]) async throws {
+        for command in commands {
             metrics.forEach { $0.commandWillStartExecuting(command) }
-            print(">> Start benchmark command: \(type(of: command))")
+            print(">> Start command: \(type(of: command))")
             try await command.execute()
-            print("<< Finish benchmark command: \(type(of: command))\n")
+            print("<< Finish command: \(type(of: command))\n")
             metrics.forEach { $0.commandDidFinishExecuting(command) }
         }
     }
 
-    func cleanupSetup() {
+    func cleanup() {
         for setupCommand in setupCommands {
             setupCommand.cleanup()
         }
-    }
-
-    func cleanupBenchmark() {
         for benchmarkCommand in benchmarkCommands {
             benchmarkCommand.cleanup()
         }

@@ -6,9 +6,6 @@ final class MockMapSnapshotter: MockStyleManager, MapSnapshotterProtocol {
     @Stubbed var options: MapSnapshotOptions?
     @Stubbed var size: Size?
     @Stubbed var image: UIImage?
-    @Stubbed var coordinateBoundsForCamera: CoordinateBounds?
-    @Stubbed var cameraForCoordinates: CameraOptions?
-    @Stubbed var cameraOptions: CameraOptions?
 
     public typealias SnapshotCompletion = (Expected<MapSnapshot, NSString>) -> Void
 
@@ -52,21 +49,21 @@ final class MockMapSnapshotter: MockStyleManager, MapSnapshotterProtocol {
         setCameraStub.call(with: cameraOptions)
     }
 
-    struct CameraForCoordinatesParams {
+    struct CameraForCoordinatesParams: Equatable {
         var coordinates: [CLLocation]
-        var padding: MapboxCoreMaps.EdgeInsets
+        var padding: EdgeInsets
         var bearing: NSNumber?
         var pitch: NSNumber?
     }
 
     var cameraForCoordinatesStub = Stub<CameraForCoordinatesParams, MapboxCoreMaps.CameraOptions>(defaultReturnValue: .init(.random()))
-    func cameraForCoordinates(forCoordinates coordinates: [CLLocation], padding: MapboxCoreMaps.EdgeInsets, bearing: NSNumber?, pitch: NSNumber?) -> MapboxCoreMaps.CameraOptions {
-        cameraForCoordinatesStub.call(with: .init(coordinates: coordinates, padding: padding, bearing: bearing, pitch: pitch))
+    func cameraForCoordinates(forCoordinates coordinates: [CLLocation], padding: EdgeInsets, bearing: NSNumber?, pitch: NSNumber?) -> MapboxCoreMaps.CameraOptions {
+        cameraForCoordinatesStub.call(with: CameraForCoordinatesParams(coordinates: coordinates, padding: padding, bearing: bearing, pitch: pitch))
     }
 
-    var coordinateBoundsStub = Stub<MapboxCoreMaps.CameraOptions, CoordinateBounds>(defaultReturnValue: .init(southwest: .random(), northeast: .random()))
+    var coordinateBoundsForCameraStub = Stub<MapboxCoreMaps.CameraOptions, CoordinateBounds>(defaultReturnValue: .init(southwest: .random(), northeast: .random()))
     func coordinateBoundsForCamera(forCamera camera: MapboxCoreMaps.CameraOptions) -> CoordinateBounds {
-        coordinateBoundsStub.call(with: camera)
+        coordinateBoundsForCameraStub.call(with: camera)
     }
 
     struct SubscribeParams {

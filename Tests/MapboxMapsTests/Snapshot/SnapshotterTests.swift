@@ -2,13 +2,13 @@ import XCTest
 @testable import MapboxMaps
 @_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
+import CoreLocation
 
 final class SnapshotterTests: XCTestCase {
 
     var mapboxObservableProviderStub: Stub<ObservableProtocol, MapboxObservableProtocol>!
     var snapshotter: Snapshotter!
     var mockMapSnapshotter: MockMapSnapshotter!
-    var mockMapSnapshot: MockMapSnapshot!
 
     override func setUp() {
         super.setUp()
@@ -17,7 +17,6 @@ final class SnapshotterTests: XCTestCase {
             pixelRatio: .random(in: 1...3))
         mapboxObservableProviderStub = Stub(defaultReturnValue: MockMapboxObservable())
         mockMapSnapshotter = MockMapSnapshotter()
-        mockMapSnapshot = MockMapSnapshot()
         snapshotter = Snapshotter(
             options: options,
             mapboxObservableProvider: mapboxObservableProviderStub.call(with:),
@@ -70,44 +69,63 @@ final class SnapshotterTests: XCTestCase {
     func testSnapshotterSize() {
         let size = CGSize(width: 200, height: 200)
 
-        snapshotter.mapSnapshotter.setSizeFor(.init(size))
-
-        mockMapSnapshotter.getSizeStub.defaultReturnValue = Size(size)
-        XCTAssertEqual(snapshotter.snapshotSize, size)
-
         snapshotter.snapshotSize = size
+        mockMapSnapshotter.getSizeStub.defaultReturnValue = Size(size)
+
+        XCTAssertEqual(snapshotter.snapshotSize, size)
+        XCTAssertEqual(mockMapSnapshotter.getSizeStub.invocations.count, 1)
         XCTAssertEqual(mockMapSnapshotter.setSizeStub.invocations[0].parameters, Size(size))
     }
 
     func testSnapshotterTileMode() {
 
-        snapshotter.mapSnapshotter.setTileModeForSet(true)
+        snapshotter.tileMode = true
 
         XCTAssertEqual(mockMapSnapshotter.setTileModeStub.invocations.count, 1)
-        XCTAssertEqual(snapshotter.mapSnapshotter.isInTileMode(), mockMapSnapshotter.isInTileMode())
+        XCTAssertEqual(snapshotter.tileMode, mockMapSnapshotter.isInTileMode())
     }
 
     func testSnapshotterSetCamera() {
-        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38, longitude: -76), padding: .zero, anchor: .zero, zoom: 15, bearing: .zero, pitch: 90)
-        let coreCameraOptions = MapboxCoreMaps.CameraOptions(cameraOptions)
+        let center = CLLocationCoordinate2D(latitude: 38, longitude: -76)
+        let padding = UIEdgeInsets.zero
+        let anchor = CGPoint.zero
+        let zoom = 15.0
+        let bearing = CLLocationDirection.zero
+        let pitch = 90.0
+        let cameraOptions = CameraOptions(
+            center: center,
+            padding: padding,
+            anchor: anchor,
+            zoom: zoom,
+            bearing: bearing,
+            pitch: pitch)
 
         snapshotter.setCamera(to: cameraOptions)
 
         XCTAssertEqual(mockMapSnapshotter.setCameraStub.invocations.count, 1)
-        XCTAssertEqual(snapshotter.mapSnapshotter.getStyleDefaultCamera(), mockMapSnapshotter.getStyleDefaultCameraStub.defaultReturnValue)
+        XCTAssertEqual(mockMapSnapshotter.setCameraStub.invocations[0].parameters, MapboxCoreMaps.CameraOptions(cameraOptions))
     }
 
     //Test snapshot coordinate bounds for camera match those of mock
     func testSnapshotterCoordinateBoundsForCamera() {
-        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38, longitude: -76), padding: .zero, anchor: .zero, zoom: 15, bearing: .zero, pitch: 90)
+        let center = CLLocationCoordinate2D(latitude: 38, longitude: -76)
+        let padding = UIEdgeInsets.zero
+        let anchor = CGPoint.zero
+        let zoom = 15.0
+        let bearing = 45.0
+        let pitch = 90.0
+        let cameraOptions = MapboxMaps.CameraOptions(center: center, padding: padding, anchor: anchor, zoom: zoom, bearing: bearing, pitch: pitch)
+        let coordinateBounds = snapshotter.coordinateBounds(for: cameraOptions)
 
-        let coordinateBounds = snapshotter.mapSnapshotter.coordinateBoundsForCamera(forCamera: MapboxCoreMaps.CameraOptions(cameraOptions))
+        mockMapSnapshotter.coordinateBoundsForCameraStub.defaultReturnValue = coordinateBounds
 
-        XCTAssertEqual(mockMapSnapshotter.coordinateBoundsStub.invocations.count, 1)
-        XCTAssertEqual(coordinateBounds, mockMapSnapshotter.coordinateBoundsStub.defaultReturnValue)
+        XCTAssertEqual(mockMapSnapshotter.coordinateBoundsForCameraStub.invocations.count, 1)
+        XCTAssertEqual(mockMapSnapshotter.coordinateBoundsForCameraStub.invocations[0].parameters, MapboxCoreMaps.CameraOptions(cameraOptions))
     }
 
+
     func testSnapshotterCameraforCoordinateBounds() {
+        // verify that return value for snapshotter matches return value for mock: coordinateBounds
         let coordinates = [
             CLLocation(latitude: 44.9753911881, longitude: -124.3348229758),
             CLLocation(latitude: 48.9862916537, longitude: -124.3635392111),
@@ -115,11 +133,22 @@ final class SnapshotterTests: XCTestCase {
             CLLocation(latitude: 45.0077739132, longitude: -114.9541796666),
             CLLocation(latitude: 44.9753911881, longitude: -124.3348229758)
         ]
+        let center = CLLocationCoordinate2D(latitude: 38, longitude: -76)
+        let padding = EdgeInsets(top: 10.0, left: 20.0, bottom: 10.0, right: 20.0)
+        let anchor = CGPoint.zero
+        let zoom = 15.0
+        let bearing = 45.0
+        let pitch = 90.0
 
-        let snapshotterCameraForCoordinates = snapshotter.mapSnapshotter.cameraForCoordinates(forCoordinates: coordinates, padding: EdgeInsets(top: 10, left: 10, bottom: 10, right: 10), bearing: 0, pitch: 0)
+
+        let cameraOptions = MapboxMaps.CameraOptions(center: center, padding: padding.toUIEdgeInsetsValue(), anchor: anchor, zoom: zoom, bearing: CLLocationDirection(bearing), pitch: CGFloat(pitch))
+
+        let coordinateBounds = snapshotter.camera(for: coordinates.map(\.coordinate), padding: padding.toUIEdgeInsetsValue(), bearing: bearing, pitch: pitch)
+        mockMapSnapshotter.cameraForCoordinatesStub.defaultReturnValue = MapboxCoreMaps.CameraOptions(cameraOptions)
 
         XCTAssertEqual(mockMapSnapshotter.cameraForCoordinatesStub.invocations.count, 1)
-        XCTAssertIdentical(snapshotterCameraForCoordinates, mockMapSnapshotter.cameraForCoordinatesStub.defaultReturnValue)
+        // all values are correct except for the padding parameter
+        XCTAssertEqual(mockMapSnapshotter.cameraForCoordinatesStub.invocations[0].parameters, MockMapSnapshotter.CameraForCoordinatesParams.init(coordinates: coordinates, padding: padding, bearing: bearing.NSNumber, pitch: pitch.NSNumber))
     }
 
     func testInitializationMapboxObservable() {
@@ -210,7 +239,6 @@ final class SnapshotterTests: XCTestCase {
             { try verifyInvocation(eventType: .resourceRequest) }
         ]
         // swiftlint:enable opening_brace
-
         try eventInvocations.randomElement()!()
     }
 
@@ -273,7 +301,6 @@ final class SnapshotterTests: XCTestCase {
             { try verifyInvocation(eventType: .resourceRequest) }
         ]
         // swiftlint:enable opening_brace
-
         try eventInvocations.randomElement()!()
     }
 }

@@ -32,19 +32,6 @@ internal protocol MapSnapshotterProtocol: StyleManagerProtocol, ObservableProtoc
     func coordinateBoundsForCamera(forCamera camera: MapboxCoreMaps.CameraOptions) -> CoordinateBounds
 }
 
-internal protocol MapSnapshotProtocol {
-
-    func screenCoordinate(for coordinate: CLLocationCoordinate2D) -> MapboxCoreMaps.ScreenCoordinate
-
-    func coordinate(for screenCoordinate: MapboxCoreMaps.ScreenCoordinate) -> CLLocationCoordinate2D
-
-    func attributions() -> [String]
-
-    func image() -> MapboxCoreMaps.Image
-}
-
-extension MapSnapshot: MapSnapshotProtocol {}
-
 extension MapSnapshotter: MapSnapshotterProtocol {}
 
 // MARK: - Snapshotter
@@ -52,7 +39,7 @@ public class Snapshotter {
 
     /// Internal `MapboxCoreMaps.MBXMapSnapshotter` object that takes care of
     /// rendering a snapshot.
-    let mapSnapshotter: MapSnapshotterProtocol
+    internal let mapSnapshotter: MapSnapshotterProtocol
 
     /// A `style` object that can be manipulated to set different styles for a snapshot
     public let style: Style

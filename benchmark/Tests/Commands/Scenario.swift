@@ -1,10 +1,15 @@
 import Foundation
 import MapboxMaps
 
-class Scenario {
+struct Scenario {
+    let name: String?
+    let setupCommands: [AsyncCommand]
+    let benchmarkCommands: [AsyncCommand]
+
     init(name: String?, commands: [AsyncCommand]) {
         self.name = name
-        self.commands = commands
+        self.setupCommands = []
+        self.benchmarkCommands = commands
     }
 
     init(filePath: URL, name: String? = nil) throws {
@@ -12,34 +17,46 @@ class Scenario {
 
         let data = try Data(contentsOf: filePath)
         let scenarioData = try JSONDecoder().decode(ScenarioData.self, from: data)
-        self.commands = scenarioData.commands
+        self.setupCommands = []
+        self.benchmarkCommands = scenarioData.commands
     }
 
-    let name: String?
-    let commands: [AsyncCommand]
+    init(name: String?, setupCommands: [AsyncCommand], benchmarkCommands: [AsyncCommand]) {
+        self.name = name
+        self.setupCommands = setupCommands
+        self.benchmarkCommands = benchmarkCommands
+    }
 
-    func run() async throws {
-        for command in commands {
-            print(">> Start command: \(type(of: command))")
+    func runSetup(for metrics: [Metric]) async throws {
+        for command in setupCommands {
+            metrics.forEach { $0.commandWillStartExecuting(command) }
+            print(">> Start setup command: \(type(of: command))")
             try await command.execute()
-            if let command = command as? CreateMapCommand, let mapView = command.mapView {
-                onMapCreate?(mapView)
-            }
-            print("<< Finish command: \(type(of: command))\n")
-        }
-
-        await MainActor.run {
-            // Cleanup views from rootController.
-            // Mostly for 'CreateMap' command.
-            // We cannot make this cleanup inside the command as MapView might be needed
-            // by following commands like 'PlaySequence'
-            UIViewController.rootController?.view.subviews.forEach {
-                $0.removeFromSuperview()
-            }
+            print("<< Finish setup command: \(type(of: command))\n")
+            metrics.forEach { $0.commandDidFinishExecuting(command) }
         }
     }
 
-    var onMapCreate: ((MapView) -> Void)? = nil
+    func runBenchmark(for metrics: [Metric]) async throws {
+        for command in benchmarkCommands {
+            metrics.forEach { $0.commandWillStartExecuting(command) }
+            print(">> Start benchmark command: \(type(of: command))")
+            try await command.execute()
+            print("<< Finish benchmark command: \(type(of: command))\n")
+            metrics.forEach { $0.commandDidFinishExecuting(command) }
+        }
+    }
+
+    func cleanup() {
+        print(">> Clean up benchmark: \(name ?? benchmarkCommands.description)")
+        // Cleanup views from rootController.
+        // Mostly for 'CreateMap' command.
+        // We cannot make this cleanup inside the command as MapView might be needed
+        // by following commands like 'PlaySequence'
+        UIViewController.rootController?.view.subviews.forEach {
+            $0.removeFromSuperview()
+        }
+    }
 
     enum SupportedCommands: String {
         case createMap = "CreateMap"

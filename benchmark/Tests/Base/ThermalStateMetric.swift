@@ -1,7 +1,7 @@
 import Foundation
 import XCTest
 
-class ThermalStateMetric: NSObject, XCTMetric {
+class ThermalStateMetric: NSObject, XCTMetric, Metric {
     var peakThermalState = ProcessInfo.processInfo.thermalState
 
     func willBeginMeasuring() {

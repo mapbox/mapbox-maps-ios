@@ -51,14 +51,11 @@ class SpecsBenchmark: XCTestCase {
         let playSequence = PlaySequenceCommand(filename: "pan-zoom-rotate-pitch.json", playbackCount: 1)
         let scenario = Scenario(
             name: "Performance after taking a map view snapshot",
-            commands: [createMap, takeSnapshot, playSequence]
+            setupCommands: [createMap, takeSnapshot],
+            benchmarkCommands: [playSequence]
         )
 
-        // TODO: Add the FPSMetric here
-
-        // create a way to start measuring up from a particular command(not the whole scenario)
-        // ref. - https://github.com/mapbox/mapbox-maps-ios-internal/pull/1260/files#diff-5afb2d8af478c4462a7b6ad3f0607e36aacf53443442984fdc39f55fa5834693R25-R27
-        try measureScenario(scenario, iterationCount: 1)
+        try measureScenario(scenario, extraMetrics: [FPSMetric(testCase: self)])
     }
 }
 
@@ -66,7 +63,7 @@ extension SpecsBenchmark {
     func runScenarioBenchmark(name: String,
                               shouldSkipWarmupRun: Bool = false,
                               iterationCount: Int? = nil,
-                              extraMetrics: [XCTMetric] = [],
+                              extraMetrics: [Metric] = [],
                               timeout: TimeInterval = 60,
                               functionName: String = #function) throws {
         let url = try XCTUnwrap(Bundle.main.url(forResource: name, withExtension: "json"))
@@ -83,7 +80,7 @@ extension SpecsBenchmark {
     func measureScenario(_ scenario: Scenario,
                          shouldSkipWarmupRun: Bool = false,
                          iterationCount: Int? = nil,
-                         extraMetrics: [XCTMetric] = [],
+                         extraMetrics: [Metric] = [],
                          timeout: TimeInterval = 60,
                          functionName: String = #function) throws {
         let metrics = extraMetrics + [
@@ -101,7 +98,13 @@ extension SpecsBenchmark {
             options.iterationCount = iterationCount
         }
 
-        scenario.onMapCreate = metrics.compactMap({ $0 as? FPSMetric }).first?.attach(mapView:)
+        let setupExpectation = expectation(description: "Setup for '\(name)' finished")
+        Task {
+            try await scenario.runSetup(for: metrics)
+            setupExpectation.fulfill()
+        }
+
+        wait(for: [setupExpectation], timeout: timeout)
 
         var runIndex = 0
         measure(metrics: metrics, options: options) {
@@ -110,13 +113,17 @@ extension SpecsBenchmark {
 
             let scenarioExpectation = expectation(description: "Scenario '\(name)' finished")
             Task {
-                try await scenario.run()
+                try await scenario.runBenchmark(for: metrics)
                 scenarioExpectation.fulfill()
                 self.stopMeasuring()
             }
 
             waitForExpectations(timeout: timeout) { error in
                 XCTAssertNil(error)
+            }
+
+            if runIndex == options.iterationCount {
+                scenario.cleanup()
             }
         }
     }

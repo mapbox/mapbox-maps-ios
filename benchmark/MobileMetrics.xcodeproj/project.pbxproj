@@ -17,6 +17,7 @@
 		3A60782F28BE1EA80000BF7A /* EnableTerrainCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A60782E28BE1EA80000BF7A /* EnableTerrainCommand.swift */; };
 		3A75F06D28AF792000D26448 /* SetMemoryBudgetCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A75F06C28AF792000D26448 /* SetMemoryBudgetCommand.swift */; };
 		7412CF5E27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF5D27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift */; };
+		7450D6AC28C09C2E0005E07A /* Metric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7450D6AB28C09C2E0005E07A /* Metric.swift */; };
 		745D052527C8D185004E7B53 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 745D052427C8D185004E7B53 /* MapboxMaps */; };
 		74673149282EA6FA00B7D044 /* streets-munich-ttrc-cold.json in Resources */ = {isa = PBXBuildFile; fileRef = 74673145282EA6FA00B7D044 /* streets-munich-ttrc-cold.json */; };
 		7467314A282EA6FA00B7D044 /* streets-munich-ttrc-warm.json in Resources */ = {isa = PBXBuildFile; fileRef = 74673146282EA6FA00B7D044 /* streets-munich-ttrc-warm.json */; };
@@ -77,6 +78,7 @@
 		3A60782E28BE1EA80000BF7A /* EnableTerrainCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnableTerrainCommand.swift; sourceTree = "<group>"; };
 		3A75F06C28AF792000D26448 /* SetMemoryBudgetCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetMemoryBudgetCommand.swift; sourceTree = "<group>"; };
 		7412CF5D27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationEaseToBenchmark.swift; sourceTree = "<group>"; };
+		7450D6AB28C09C2E0005E07A /* Metric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metric.swift; sourceTree = "<group>"; };
 		745D052327C8D15F004E7B53 /* mapbox-maps-ios */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "mapbox-maps-ios"; path = "../mapbox-maps-ios"; sourceTree = "<group>"; };
 		7467312B282E949100B7D044 /* Scenario.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scenario.swift; sourceTree = "<group>"; };
 		74673135282E963000B7D044 /* CreateMapCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateMapCommand.swift; sourceTree = "<group>"; };
@@ -252,6 +254,7 @@
 				74F237EE27E32FFA009F304C /* BaseBenchmark.swift */,
 				74F237F227E3338A009F304C /* NotifyingViewController.swift */,
 				FE920F2628AE884400B73B64 /* ThermalStateMetric.swift */,
+				7450D6AB28C09C2E0005E07A /* Metric.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -427,6 +430,7 @@
 				FED7F06F283BA59800AD2313 /* MapboxMap+Async.swift in Sources */,
 				3A75F06D28AF792000D26448 /* SetMemoryBudgetCommand.swift in Sources */,
 				74F237EF27E32FFA009F304C /* BaseBenchmark.swift in Sources */,
+				7450D6AC28C09C2E0005E07A /* Metric.swift in Sources */,
 				FE555B7C2836939B002751C7 /* AsyncCommand.swift in Sources */,
 				FED7F071283BA5AB00AD2313 /* TileStore+Async.swift in Sources */,
 				FE920F2728AE884400B73B64 /* ThermalStateMetric.swift in Sources */,

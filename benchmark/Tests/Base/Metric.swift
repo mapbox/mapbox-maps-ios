@@ -4,7 +4,6 @@ import Foundation
 protocol Metric: XCTMetric {
     func commandWillStartExecuting(_ command: AsyncCommand)
     func commandDidFinishExecuting(_ command: AsyncCommand)
-
 }
 
 extension Metric {

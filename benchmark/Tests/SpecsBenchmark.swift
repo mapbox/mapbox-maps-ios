@@ -5,8 +5,7 @@ import MapboxMaps
 @MainActor
 class SpecsBenchmark: XCTestCase {
     func testBaselineMeasure() throws {
-        let scenario = Scenario(name: "manual", commands: [
-        ])
+        let scenario = Scenario(name: "manual")
 
         // Assign actual number of repeats
         // to support changes over Xcode versions

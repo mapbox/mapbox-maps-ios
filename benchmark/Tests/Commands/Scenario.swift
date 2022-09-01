@@ -3,17 +3,8 @@ import MapboxMaps
 
 struct Scenario {
     let name: String?
-    var commands: [AsyncCommand] {
-        setupCommands + benchmarkCommands
-    }
     let setupCommands: [AsyncCommand]
     let benchmarkCommands: [AsyncCommand]
-
-    init(name: String?, commands: [AsyncCommand]) {
-        self.name = name
-        self.setupCommands = []
-        self.benchmarkCommands = commands
-    }
 
     init(filePath: URL, name: String? = nil, splitAt condition: ((AsyncCommand) -> Bool)? = nil) throws {
         self.name = name ?? (filePath.lastPathComponent as NSString).deletingPathExtension
@@ -32,7 +23,7 @@ struct Scenario {
         }
     }
 
-    init(name: String?, setupCommands: [AsyncCommand], benchmarkCommands: [AsyncCommand]) {
+    init(name: String?, setupCommands: [AsyncCommand] = [], benchmarkCommands: [AsyncCommand] = []) {
         self.name = name
         self.setupCommands = setupCommands
         self.benchmarkCommands = benchmarkCommands

@@ -47,14 +47,15 @@ struct Scenario {
         }
     }
 
-    func cleanup() {
-        print(">> Clean up benchmark: \(name ?? benchmarkCommands.description)")
-        // Cleanup views from rootController.
-        // Mostly for 'CreateMap' command.
-        // We cannot make this cleanup inside the command as MapView might be needed
-        // by following commands like 'PlaySequence'
-        UIViewController.rootController?.view.subviews.forEach {
-            $0.removeFromSuperview()
+    func cleanupSetup() {
+        for setupCommand in setupCommands {
+            setupCommand.cleanup()
+        }
+    }
+
+    func cleanupBenchmark() {
+        for benchmarkCommand in benchmarkCommands {
+            benchmarkCommand.cleanup()
         }
     }
 

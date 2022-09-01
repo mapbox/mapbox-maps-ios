@@ -116,6 +116,7 @@ extension SpecsBenchmark {
                 try await scenario.runBenchmark(for: metrics)
                 scenarioExpectation.fulfill()
                 self.stopMeasuring()
+                scenario.cleanupBenchmark()
             }
 
             waitForExpectations(timeout: timeout) { error in
@@ -123,7 +124,7 @@ extension SpecsBenchmark {
             }
 
             if runIndex == options.iterationCount {
-                scenario.cleanup()
+                scenario.cleanupSetup()
             }
         }
     }

@@ -32,7 +32,7 @@ struct Scenario {
     func runSetup(for metrics: [Metric]) async throws {
         print(">> Start setup for: \(name))")
         try await runCommands(setupCommands, for: metrics)
-        print(">> Finish setup for: \(name))")
+        print("<< Finish setup for: \(name))")
     }
 
     func runBenchmark(for metrics: [Metric]) async throws {

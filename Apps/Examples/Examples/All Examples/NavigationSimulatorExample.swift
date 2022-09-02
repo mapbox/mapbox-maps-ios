@@ -41,7 +41,7 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
     private func configureMap() {
         navigationSimulator = NavigationSimulator(viewport: mapView.viewport, route: sampleRouteLine)
 
-        let configuration = Puck2DConfiguration(topImage: UIImage(named: "user_puck_icon"))
+        let configuration = Puck2DConfiguration(topImage: UIImage(named: "user_puck_icon")!)
         mapView.location.options.puckType = .puck2D(configuration)
         mapView.location.options.puckBearingSource = .course
         mapView.location.overrideLocationProvider(with: navigationSimulator)

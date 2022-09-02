@@ -11,6 +11,7 @@ source "$UTILS_PATH"
 
 VERSION_RULE=0
 BRANCH_RULE=0
+PRIVATE_REPO_RULE=0
 ENABLE_DIRECT_DOWNLOADS_VALIDATION=1
 EXCLUSIVE_DIRECT_DOWNLOADS_VALIDATION=0
 
@@ -37,7 +38,12 @@ main() {
 
     if [[ $BRANCH_RULE == 1 ]]; then
         # Escape '/' and '\' to make Bash and Sed happy
-        sed -i '' -E "s/(pod 'MapboxMaps',).*/\1 :git => 'https:\/\/github.com\/mapbox\/mapbox-maps-ios.git', :branch => '${MAPS_VERSION//\//\\/}'/" Podfile
+        if [[ $PRIVATE_REPO_RULE == 1 ]]; then
+            REPO_URL="https:\/\/github.com\/mapbox\/mapbox-maps-ios-private.git"
+        else
+            REPO_URL="https:\/\/github.com\/mapbox\/mapbox-maps-ios.git"
+        fi
+        sed -i '' -E "s/(pod 'MapboxMaps',).*/\1 :git => '${REPO_URL}', :branch => '${MAPS_VERSION//\//\\/}'/" Podfile
     elif [[ $VERSION_RULE == 1 ]]; then
         sed -i '' -E "s/(pod 'MapboxMaps',).*/\1 '= $MAPS_VERSION'/" Podfile
     fi
@@ -73,10 +79,11 @@ Usage:
     -d  Disable downloads validation. Suitable for running validation before binaries would be available
     -o  Enable exclusive validation for direct downloads. It makes sense to run after the first run with -d option
     -b  MapboxMaps branch name to be used
+    -p  Use private repo for MapboxMaps
 HELP_USAGE
 }
 
-while getopts 'b:v:do' flag; do
+while getopts 'b:v:dop' flag; do
 case "${flag}" in
     v)  VERSION_RULE=1
         export MAPS_VERSION="$OPTARG"
@@ -92,6 +99,9 @@ case "${flag}" in
         ;;
     o)
         EXCLUSIVE_DIRECT_DOWNLOADS_VALIDATION=1
+        ;;
+    p)
+        PRIVATE_REPO_RULE=1
         ;;
     *) print_usage
     exit 1 ;;

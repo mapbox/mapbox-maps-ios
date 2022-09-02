@@ -12,7 +12,7 @@ public struct CreateMapCommand: AsyncCommand, Decodable {
     var mapView: MapView? {
         let rootView = UIViewController.rootController?.view
         let mapViews = rootView?.subviews.compactMap({ $0 as? MapView })
-        assert(mapViews?.count == 1 )
+        assert(mapViews?.count == 1)
         return mapViews?.first
     }
 
@@ -37,5 +37,11 @@ public struct CreateMapCommand: AsyncCommand, Decodable {
             }
         }
         as Void // This cast is nessesary to help type checker find <T> for …Continuation func
+    }
+
+    func cleanup() {
+        UIViewController.rootController?.view.subviews.forEach {
+            $0.removeFromSuperview()
+        }
     }
 }

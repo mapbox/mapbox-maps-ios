@@ -34,10 +34,6 @@ class FPSMetric: NSObject, XCTMetric, MapViewMetricsReporter {
 
     var metricRecords: [MetricRecord] = []
 
-    func attach(mapView: MapView) {
-        mapView.metricsReporter = self
-    }
-
     var displayLinkCallbackStarted: CFTimeInterval?
     var previousDisplayLinkProcessDuration: CFTimeInterval?
 
@@ -257,5 +253,13 @@ class FPSMetric: NSObject, XCTMetric, MapViewMetricsReporter {
 
     func copy(with zone: NSZone? = nil) -> Any {
         return self
+    }
+}
+
+extension FPSMetric: Metric {
+    func commandDidFinishExecuting(_ command: AsyncCommand) {
+        if let command = command as? CreateMapCommand, let mapView = command.mapView {
+            mapView.metricsReporter = self
+        }
     }
 }

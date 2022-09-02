@@ -1,45 +1,59 @@
 import Foundation
 import MapboxMaps
 
-class Scenario {
-    init(name: String?, commands: [AsyncCommand]) {
-        self.name = name
-        self.commands = commands
-    }
+struct Scenario {
+    let name: String
+    let setupCommands: [AsyncCommand]
+    let benchmarkCommands: [AsyncCommand]
 
-    init(filePath: URL, name: String? = nil) throws {
-        self.name = name ?? (filePath.lastPathComponent as NSString).deletingPathExtension
+    init(filePath: URL, name: String, splitAt condition: ((AsyncCommand) -> Bool)? = nil) throws {
+        self.name = name
 
         let data = try Data(contentsOf: filePath)
         let scenarioData = try JSONDecoder().decode(ScenarioData.self, from: data)
-        self.commands = scenarioData.commands
+
+        if let condition = condition,
+            let splitIndex = scenarioData.commands.firstIndex(where: condition),
+            splitIndex < scenarioData.commands.count {
+            self.setupCommands = Array(scenarioData.commands.prefix(upTo: splitIndex))
+            self.benchmarkCommands = Array(scenarioData.commands.suffix(from: splitIndex))
+        } else {
+            self.setupCommands = []
+            self.benchmarkCommands = scenarioData.commands
+        }
     }
 
-    let name: String?
-    let commands: [AsyncCommand]
+    init(name: String, setupCommands: [AsyncCommand] = [], benchmarkCommands: [AsyncCommand] = []) {
+        self.name = name
+        self.setupCommands = setupCommands
+        self.benchmarkCommands = benchmarkCommands
+    }
 
-    func run() async throws {
+    func runSetup(for metrics: [Metric]) async throws {
+        print(">> Start setup for: \(name))")
+        try await runCommands(setupCommands, for: metrics)
+        print("<< Finish setup for: \(name))")
+    }
+
+    func runBenchmark(for metrics: [Metric]) async throws {
+        print(">> Start benchmark for: \(name))")
+        try await runCommands(benchmarkCommands, for: metrics)
+        print(">> Finish benchmark for: \(name))")
+    }
+
+    private func runCommands(_ commands: [AsyncCommand], for metrics: [Metric]) async throws {
         for command in commands {
+            metrics.forEach { $0.commandWillStartExecuting(command) }
             print(">> Start command: \(type(of: command))")
             try await command.execute()
-            if let command = command as? CreateMapCommand, let mapView = command.mapView {
-                onMapCreate?(mapView)
-            }
             print("<< Finish command: \(type(of: command))\n")
-        }
-
-        await MainActor.run {
-            // Cleanup views from rootController.
-            // Mostly for 'CreateMap' command.
-            // We cannot make this cleanup inside the command as MapView might be needed
-            // by following commands like 'PlaySequence'
-            UIViewController.rootController?.view.subviews.forEach {
-                $0.removeFromSuperview()
-            }
+            metrics.forEach { $0.commandDidFinishExecuting(command) }
         }
     }
 
-    var onMapCreate: ((MapView) -> Void)? = nil
+    func cleanup() {
+       (setupCommands + benchmarkCommands).forEach { $0.cleanup() }
+    }
 
     enum SupportedCommands: String {
         case createMap = "CreateMap"
@@ -51,6 +65,7 @@ class Scenario {
         case setMemoryBudget = "SetMemoryBudget"
         case setRenderCache = "SetRenderCache"
         case enableTerrain = "EnableTerrain"
+        case takeSnapshot = "TakeSnapshot"
     }
 
     struct ScenarioData: Decodable {
@@ -90,6 +105,8 @@ class Scenario {
                     command = try commandContainer.decode(SetRenderCacheCommand.self)
                 case .enableTerrain:
                     command = try commandContainer.decode(EnableTerrainCommand.self)
+                case .takeSnapshot:
+                    command = try commandContainer.decode(TakeSnapshotCommand.self)
                 }
                 commands.append(command)
             }

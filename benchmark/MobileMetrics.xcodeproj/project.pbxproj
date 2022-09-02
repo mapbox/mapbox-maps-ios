@@ -17,11 +17,14 @@
 		3A60782F28BE1EA80000BF7A /* EnableTerrainCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A60782E28BE1EA80000BF7A /* EnableTerrainCommand.swift */; };
 		3A75F06D28AF792000D26448 /* SetMemoryBudgetCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A75F06C28AF792000D26448 /* SetMemoryBudgetCommand.swift */; };
 		7412CF5E27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF5D27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift */; };
+		7450D6AC28C09C2E0005E07A /* Metric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7450D6AB28C09C2E0005E07A /* Metric.swift */; };
 		745D052527C8D185004E7B53 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 745D052427C8D185004E7B53 /* MapboxMaps */; };
 		74673149282EA6FA00B7D044 /* streets-munich-ttrc-cold.json in Resources */ = {isa = PBXBuildFile; fileRef = 74673145282EA6FA00B7D044 /* streets-munich-ttrc-cold.json */; };
 		7467314A282EA6FA00B7D044 /* streets-munich-ttrc-warm.json in Resources */ = {isa = PBXBuildFile; fileRef = 74673146282EA6FA00B7D044 /* streets-munich-ttrc-warm.json */; };
 		7467314B282EA6FA00B7D044 /* nav-day-munich-ttrc-warm.json in Resources */ = {isa = PBXBuildFile; fileRef = 74673147282EA6FA00B7D044 /* nav-day-munich-ttrc-warm.json */; };
 		7467314C282EA6FA00B7D044 /* nav-day-munich-ttrc-cold.json in Resources */ = {isa = PBXBuildFile; fileRef = 74673148282EA6FA00B7D044 /* nav-day-munich-ttrc-cold.json */; };
+		747025A428B642AD00732A76 /* TakeSnapshotCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 747025A328B642AD00732A76 /* TakeSnapshotCommand.swift */; };
+		7479AD4828BE347F00538A88 /* pan-zoom-rotate-pitch.json in Resources */ = {isa = PBXBuildFile; fileRef = 7479AD4728BE347F00538A88 /* pan-zoom-rotate-pitch.json */; };
 		7499661827C64ECD00DA186A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499661727C64ECD00DA186A /* AppDelegate.swift */; };
 		7499661C27C64ECD00DA186A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499661B27C64ECD00DA186A /* ViewController.swift */; };
 		7499661F27C64ECD00DA186A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7499661D27C64ECD00DA186A /* Main.storyboard */; };
@@ -75,6 +78,7 @@
 		3A60782E28BE1EA80000BF7A /* EnableTerrainCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnableTerrainCommand.swift; sourceTree = "<group>"; };
 		3A75F06C28AF792000D26448 /* SetMemoryBudgetCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetMemoryBudgetCommand.swift; sourceTree = "<group>"; };
 		7412CF5D27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationEaseToBenchmark.swift; sourceTree = "<group>"; };
+		7450D6AB28C09C2E0005E07A /* Metric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metric.swift; sourceTree = "<group>"; };
 		745D052327C8D15F004E7B53 /* mapbox-maps-ios */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "mapbox-maps-ios"; path = "../mapbox-maps-ios"; sourceTree = "<group>"; };
 		7467312B282E949100B7D044 /* Scenario.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scenario.swift; sourceTree = "<group>"; };
 		74673135282E963000B7D044 /* CreateMapCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateMapCommand.swift; sourceTree = "<group>"; };
@@ -83,6 +87,8 @@
 		74673146282EA6FA00B7D044 /* streets-munich-ttrc-warm.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "streets-munich-ttrc-warm.json"; sourceTree = "<group>"; };
 		74673147282EA6FA00B7D044 /* nav-day-munich-ttrc-warm.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "nav-day-munich-ttrc-warm.json"; sourceTree = "<group>"; };
 		74673148282EA6FA00B7D044 /* nav-day-munich-ttrc-cold.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "nav-day-munich-ttrc-cold.json"; sourceTree = "<group>"; };
+		747025A328B642AD00732A76 /* TakeSnapshotCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TakeSnapshotCommand.swift; sourceTree = "<group>"; };
+		7479AD4728BE347F00538A88 /* pan-zoom-rotate-pitch.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "pan-zoom-rotate-pitch.json"; sourceTree = "<group>"; };
 		7499661427C64ECD00DA186A /* MobileMetrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileMetrics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7499661727C64ECD00DA186A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7499661B27C64ECD00DA186A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -151,6 +157,7 @@
 				74673135282E963000B7D044 /* CreateMapCommand.swift */,
 				74673136282E963000B7D044 /* CreateOfflinePacksCommand.swift */,
 				FE555B7D283774EF002751C7 /* SetOnlineStateCommand.swift */,
+				747025A328B642AD00732A76 /* TakeSnapshotCommand.swift */,
 				FE18AEE928411426001B9E6F /* PlaySequenceCommand.swift */,
 				3A011CB628631D6A004713DA /* AddRouteCommand.swift */,
 				3A56266B286436C400107E56 /* ExecutionError.swift */,
@@ -172,6 +179,7 @@
 				74673145282EA6FA00B7D044 /* streets-munich-ttrc-cold.json */,
 				74673146282EA6FA00B7D044 /* streets-munich-ttrc-warm.json */,
 				FE18AEE4284113F2001B9E6F /* munich-zoom-in-out-z10-z20.json */,
+				7479AD4728BE347F00538A88 /* pan-zoom-rotate-pitch.json */,
 				FE18AEE5284113F3001B9E6F /* nav-day-munich-zoom-tilepack.json */,
 				FE18AEE3284113F2001B9E6F /* nav-day-munich-zoom.json */,
 			);
@@ -246,6 +254,7 @@
 				74F237EE27E32FFA009F304C /* BaseBenchmark.swift */,
 				74F237F227E3338A009F304C /* NotifyingViewController.swift */,
 				FE920F2628AE884400B73B64 /* ThermalStateMetric.swift */,
+				7450D6AB28C09C2E0005E07A /* Metric.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -364,6 +373,7 @@
 				74673149282EA6FA00B7D044 /* streets-munich-ttrc-cold.json in Resources */,
 				7499662127C64ECE00DA186A /* Assets.xcassets in Resources */,
 				7467314C282EA6FA00B7D044 /* nav-day-munich-ttrc-cold.json in Resources */,
+				7479AD4828BE347F00538A88 /* pan-zoom-rotate-pitch.json in Resources */,
 				7499661F27C64ECD00DA186A /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -420,6 +430,7 @@
 				FED7F06F283BA59800AD2313 /* MapboxMap+Async.swift in Sources */,
 				3A75F06D28AF792000D26448 /* SetMemoryBudgetCommand.swift in Sources */,
 				74F237EF27E32FFA009F304C /* BaseBenchmark.swift in Sources */,
+				7450D6AC28C09C2E0005E07A /* Metric.swift in Sources */,
 				FE555B7C2836939B002751C7 /* AsyncCommand.swift in Sources */,
 				FED7F071283BA5AB00AD2313 /* TileStore+Async.swift in Sources */,
 				FE920F2728AE884400B73B64 /* ThermalStateMetric.swift in Sources */,
@@ -431,6 +442,7 @@
 				74F2381327E3730C009F304C /* WarmCacheBenchmark.swift in Sources */,
 				FE555B80283775F3002751C7 /* CameraOptions+Decodable.swift in Sources */,
 				74F237F127E3326E009F304C /* InitSDKBenchmark.swift in Sources */,
+				747025A428B642AD00732A76 /* TakeSnapshotCommand.swift in Sources */,
 				FEB2802B2837C1BE00E903D2 /* ClearOfflineDataCommand.swift in Sources */,
 				FE18AEEB2841148F001B9E6F /* PlaySequenceCommand.swift in Sources */,
 				FEA8FDA62835110400CDDA97 /* CreateOfflinePacksCommand.swift in Sources */,

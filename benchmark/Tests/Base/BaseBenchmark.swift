@@ -140,7 +140,7 @@ class BaseBenchmark: XCTestCase {
                      filePath: String = #file,
                      lineNumber: Int = #line) {
         onStyleLoaded(cameraOptions: cameraOptions, filePath: filePath, lineNumber: lineNumber) { mapView, style in
-            mapView.mapboxMap.onNext(.mapLoaded) { event in
+            mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
                 handler(mapView)
             }
         }

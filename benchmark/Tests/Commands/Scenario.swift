@@ -52,11 +52,7 @@ struct Scenario {
     }
 
     func cleanup() {
-        for setupCommand in setupCommands {
-            setupCommand.cleanup()
-        }
-        for benchmarkCommand in benchmarkCommands {
-            benchmarkCommand.cleanup()
+       (setupCommands + benchmarkCommands).forEach { $0.cleanup() }
         }
     }
 

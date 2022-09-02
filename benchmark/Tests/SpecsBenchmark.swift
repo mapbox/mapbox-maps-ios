@@ -92,7 +92,7 @@ extension SpecsBenchmark {
         ]
 
         let options = XCTMeasureOptions()
-        options.invocationOptions = [.manuallyStop, .manuallyStart]
+        options.invocationOptions = [.manuallyStart, .manuallyStop]
 
         if let iterationCount = iterationCount {
             options.iterationCount = iterationCount

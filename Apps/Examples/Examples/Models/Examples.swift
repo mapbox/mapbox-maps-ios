@@ -174,7 +174,7 @@ struct Examples {
                 type: BasicLocationPulsingExample.self),
         Example(title: "Customize the location puck",
                 description: "Customized the location puck on the map",
-                type: CustomPuckExample.self),
+                type: Custom2DPuckExample.self),
         Example(title: "Use a 3D model to show the user's location",
                 description: "A 3D model is used to represent the user's location.",
                 type: Custom3DPuckExample.self),

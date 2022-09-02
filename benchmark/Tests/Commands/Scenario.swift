@@ -53,7 +53,6 @@ struct Scenario {
 
     func cleanup() {
        (setupCommands + benchmarkCommands).forEach { $0.cleanup() }
-        }
     }
 
     enum SupportedCommands: String {

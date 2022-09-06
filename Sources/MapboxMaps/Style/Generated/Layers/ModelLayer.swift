@@ -1,18 +1,8 @@
 // This file is generated.
 import Foundation
 
-/// Defines rendering behavior of model in respect to other 3D scene objects.
-internal enum ModelType: String, Codable, CaseIterable {
-
-    /// Integrated to 3D scene, using depth testing, along with terrain, fill-extrusions and custom layer.
-    case common3d = "common-3d"
-
-    /// Displayed over other 3D content, occluded by terrain.
-    case locationIndicator = "location-indicator"
-}
-
 /// A layer to render 3D Models.
-internal struct ModelLayer: Layer {
+@_spi(Experimental) public struct ModelLayer: Layer {
 
     // MARK: - Conformance to `Layer` protocol
     public var id: String
@@ -29,7 +19,13 @@ internal struct ModelLayer: Layer {
     /// Model to render.
     public var modelId: Value<String>?
 
-    /// 
+    /// Intensity of the ambient occlusion if present in the 3D model.
+    public var modelAmbientOcclusionIntensity: Value<Double>?
+
+    /// Transition options for `modelAmbientOcclusionIntensity`.
+    public var modelAmbientOcclusionIntensityTransition: StyleTransition?
+
+    /// Enable/Disable shadow casting for this layer
     public var modelCastShadows: Value<Bool>?
 
     /// The tint color of the model layer. model-color-mix-intensity (defaults to 0) defines tint(mix) intensity - this means that, this color is not used unless model-color-mix-intensity gets value greater than 0.
@@ -50,7 +46,7 @@ internal struct ModelLayer: Layer {
     /// Transition options for `modelOpacity`.
     public var modelOpacityTransition: StyleTransition?
 
-    /// 
+    /// Enable/Disable shadow receiving for this layer
     public var modelReceiveShadows: Value<Bool>?
 
     /// The rotation of the model in euler angles [lon, lat, z].
@@ -91,6 +87,8 @@ internal struct ModelLayer: Layer {
         try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
+        try paintContainer.encodeIfPresent(modelAmbientOcclusionIntensity, forKey: .modelAmbientOcclusionIntensity)
+        try paintContainer.encodeIfPresent(modelAmbientOcclusionIntensityTransition, forKey: .modelAmbientOcclusionIntensityTransition)
         try paintContainer.encodeIfPresent(modelCastShadows, forKey: .modelCastShadows)
         try paintContainer.encodeIfPresent(modelColor, forKey: .modelColor)
         try paintContainer.encodeIfPresent(modelColorTransition, forKey: .modelColorTransition)
@@ -115,7 +113,7 @@ internal struct ModelLayer: Layer {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: RootCodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
-        type = .model
+        type = try container.decode(LayerType.self, forKey: .type)
         filter = try container.decodeIfPresent(Expression.self, forKey: .filter)
         source = try container.decodeIfPresent(String.self, forKey: .source)
         sourceLayer = try container.decodeIfPresent(String.self, forKey: .sourceLayer)
@@ -123,6 +121,8 @@ internal struct ModelLayer: Layer {
         maxZoom = try container.decodeIfPresent(Double.self, forKey: .maxZoom)
 
         if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
+            modelAmbientOcclusionIntensity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .modelAmbientOcclusionIntensity)
+            modelAmbientOcclusionIntensityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelAmbientOcclusionIntensityTransition)
             modelCastShadows = try paintContainer.decodeIfPresent(Value<Bool>.self, forKey: .modelCastShadows)
             modelColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .modelColor)
             modelColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelColorTransition)
@@ -164,6 +164,8 @@ internal struct ModelLayer: Layer {
     }
 
     enum PaintCodingKeys: String, CodingKey {
+        case modelAmbientOcclusionIntensity = "model-ambient-occlusion-intensity"
+        case modelAmbientOcclusionIntensityTransition = "model-ambient-occlusion-intensity-transition"
         case modelCastShadows = "model-cast-shadows"
         case modelColor = "model-color"
         case modelColorTransition = "model-color-transition"

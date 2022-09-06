@@ -57,6 +57,7 @@ final class FillExtrusionLayerTests: XCTestCase {
     func testEncodingAndDecodingOfLayoutProperties() {
         var layer = FillExtrusionLayer(id: "test-id")
         layer.visibility = .constant(.visible)
+        layer.fillExtrusionEdgeRadius = Value<Double>.testConstantValue()
 
         var data: Data?
         do {
@@ -73,6 +74,7 @@ final class FillExtrusionLayerTests: XCTestCase {
         do {
             let decodedLayer = try JSONDecoder().decode(FillExtrusionLayer.self, from: validData)
             XCTAssert(decodedLayer.visibility == .constant(.visible))
+            XCTAssert(layer.fillExtrusionEdgeRadius == Value<Double>.testConstantValue())
         } catch {
             XCTFail("Failed to decode FillExtrusionLayer")
         }

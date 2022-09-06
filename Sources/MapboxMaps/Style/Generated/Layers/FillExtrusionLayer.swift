@@ -18,6 +18,9 @@ public struct FillExtrusionLayer: Layer {
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>?
 
+    /// Radius of a fill extrusion edge in meters. If not zero, rounds extrusion edges for a smoother appearance.
+    public var fillExtrusionEdgeRadius: Value<Double>?
+
     /// Controls the intensity of ambient occlusion (AO) shading. Current AO implementation is a low-cost best-effort approach that shades area near ground and concave angles between walls. Default value 0.0 disables ambient occlusion and values around 0.3 provide the most plausible results for buildings.
     public var fillExtrusionAmbientOcclusionIntensity: Value<Double>?
 
@@ -110,6 +113,7 @@ public struct FillExtrusionLayer: Layer {
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
         try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
+        try layoutContainer.encodeIfPresent(fillExtrusionEdgeRadius, forKey: .fillExtrusionEdgeRadius)
     }
 
     public init(from decoder: Decoder) throws {
@@ -145,6 +149,7 @@ public struct FillExtrusionLayer: Layer {
 
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
             visibility = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
+            fillExtrusionEdgeRadius = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionEdgeRadius)
         }
     }
 
@@ -161,6 +166,7 @@ public struct FillExtrusionLayer: Layer {
     }
 
     enum LayoutCodingKeys: String, CodingKey {
+        case fillExtrusionEdgeRadius = "fill-extrusion-edge-radius"
         case visibility = "visibility"
     }
 

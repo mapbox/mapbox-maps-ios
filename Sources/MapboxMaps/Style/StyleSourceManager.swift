@@ -130,6 +130,11 @@ internal final class StyleSourceManager {
             return
         }
 
+        if case GeoJSONSourceData.empty = data {
+            try addSourceInternal(source, id: id)
+            return
+        }
+
         var emptySource = source
         emptySource.data = .empty
 

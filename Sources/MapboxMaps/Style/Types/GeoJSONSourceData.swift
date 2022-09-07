@@ -1,4 +1,5 @@
 import Foundation
+import Turf
 
 /// Captures potential values of the `data` property of a GeoJSONSource
 public enum GeoJSONSourceData: Codable {
@@ -55,6 +56,19 @@ public enum GeoJSONSourceData: Codable {
             try container.encode(geometry)
         case .empty:
             try container.encode("")
+        }
+    }
+}
+
+extension GeoJSONObject {
+    internal var sourceData: GeoJSONSourceData {
+        switch self {
+        case .geometry(let geometry):
+            return .geometry(geometry)
+        case .feature(let feature):
+            return .feature(feature)
+        case .featureCollection(let collection):
+            return .featureCollection(collection)
         }
     }
 }

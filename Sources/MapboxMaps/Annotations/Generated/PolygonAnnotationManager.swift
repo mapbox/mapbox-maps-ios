@@ -154,9 +154,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         // build and update the source data
         let featureCollection = FeatureCollection(features: annotations.map(\.feature))
         do {
-            let data = try JSONEncoder().encode(featureCollection)
-            let jsonObject = try JSONSerialization.jsonObject(with: data) as! [String: Any]
-            try style.setSourceProperty(for: sourceId, property: "data", value: jsonObject)
+            try style.updateGeoJSONSource(withId: sourceId, geoJSON: featureCollection.geoJSONObject)
         } catch {
             Log.error(
                 forMessage: "Could not update annotations in PolygonAnnotationManager due to error: \(error)",

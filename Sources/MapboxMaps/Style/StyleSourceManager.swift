@@ -146,9 +146,9 @@ internal final class StyleSourceManager {
             guard !isCancelled else { return }
 
             do {
-                Tracer.beginInterval("GeoJSON->JSON")
-                let json = try data.toJSON()
-                Tracer.endInterval("GeoJSON->JSON")
+                Tracer.beginInterval("GeoJSON->String")
+                let json = try data.toString()
+                Tracer.endInterval("GeoJSON->String")
 
                 guard !isCancelled else { return }
 
@@ -156,9 +156,9 @@ internal final class StyleSourceManager {
                     guard let self = self else { return }
 
                     do {
-                        Tracer.beginInterval("Apply JSON to core")
+                        Tracer.beginInterval("Apply String to core")
                         try self.setSourceProperty(for: id, property: "data", value: json)
-                        Tracer.endInterval("Apply JSON to core")
+                        Tracer.endInterval("Apply String to core")
                     } catch {
                         Log.error(forMessage: "Failed to set data for source with id: \(id), error: \(error)")
                     }

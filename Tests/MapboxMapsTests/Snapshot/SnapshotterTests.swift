@@ -152,8 +152,13 @@ final class SnapshotterTests: XCTestCase {
         let returnedOptions = snapshotter.camera(for: coordinates, padding: padding.toUIEdgeInsetsValue(), bearing: bearing, pitch: pitch)
 
         XCTAssertEqual(mockMapSnapshotter.cameraForCoordinatesStub.invocations.count, 1)
-        // all values are correct except for the padding parameter
-        XCTAssertEqual(mockMapSnapshotter.cameraForCoordinatesStub.invocations[0].parameters, MockMapSnapshotter.CameraForCoordinatesParams(coordinates: coordinates.map(\.location), padding: padding, bearing: bearing.NSNumber, pitch: pitch.NSNumber))
+
+        let mockParameters = mockMapSnapshotter.cameraForCoordinatesStub.invocations[0].parameters
+
+        XCTAssertEqual(mockParameters.coordinates.map(\.coordinate), coordinates)
+        XCTAssertEqual(mockParameters.padding.toUIEdgeInsetsValue(), padding.toUIEdgeInsetsValue())
+        XCTAssertEqual(mockParametersbearing, bearing.NSNumber)
+        XCTAssertEqual(mockParameters.pitch, pitch.NSNumber)
         XCTAssertEqual(returnedOptions, cameraOptions)
     }
 

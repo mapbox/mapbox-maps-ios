@@ -14,10 +14,14 @@ struct PlaySequenceCommand: AsyncCommand, Decodable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        playbackCount = try container.decode(Int.self, forKey: .playbackCount)
+        try self.init(
+            filename: try container.decode(String.self, forKey: .filename),
+            playbackCount: try container.decode(Int.self, forKey: .playbackCount))
+    }
 
-        let fileName = try container.decode(String.self, forKey: .filename)
-        let fileURL = Bundle.main.bundleURL.appendingPathComponent(fileName, isDirectory: false)
+    init(filename: String, playbackCount: Int) throws {
+        self.playbackCount = playbackCount
+        let fileURL = Bundle.main.bundleURL.appendingPathComponent(filename, isDirectory: false)
         do {
             playbackContent = try PlaybackContent(contentsOf: fileURL)
         } catch ExecutionError.resourceFileNotFound {

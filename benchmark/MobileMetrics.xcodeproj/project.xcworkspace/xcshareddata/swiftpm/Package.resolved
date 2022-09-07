@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "DataCompression",
+        "repositoryURL": "https://github.com/mw99/DataCompression.git",
+        "state": {
+          "branch": null,
+          "revision": "4ac2c9c108d80b690a74252a4ec48f47e9995e00",
+          "version": "3.7.0"
+        }
+      },
+      {
         "package": "MapboxCommon",
         "repositoryURL": "https://github.com/mapbox/mapbox-common-ios.git",
         "state": {

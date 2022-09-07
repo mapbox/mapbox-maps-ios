@@ -16,6 +16,7 @@
 		3A56266E28645AE200107E56 /* OnDemandLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A56266D28645AE200107E56 /* OnDemandLocationProvider.swift */; };
 		3A60782F28BE1EA80000BF7A /* EnableTerrainCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A60782E28BE1EA80000BF7A /* EnableTerrainCommand.swift */; };
 		3A75F06D28AF792000D26448 /* SetMemoryBudgetCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A75F06C28AF792000D26448 /* SetMemoryBudgetCommand.swift */; };
+		3AEF7D4528C716350021A25C /* DataCompression in Frameworks */ = {isa = PBXBuildFile; productRef = 3AEF7D4428C716350021A25C /* DataCompression */; };
 		7412CF5E27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF5D27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift */; };
 		7450D6AC28C09C2E0005E07A /* Metric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7450D6AB28C09C2E0005E07A /* Metric.swift */; };
 		745D052527C8D185004E7B53 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 745D052427C8D185004E7B53 /* MapboxMaps */; };
@@ -135,6 +136,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AEF7D4528C716350021A25C /* DataCompression in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -311,6 +313,7 @@
 			);
 			name = MobileMetricsTests;
 			packageProductDependencies = (
+				3AEF7D4428C716350021A25C /* DataCompression */,
 			);
 			productName = BenchmarkTests;
 			productReference = 7499663227C7AD2900DA186A /* MobileMetricsTests.xctest */;
@@ -345,6 +348,7 @@
 			);
 			mainGroup = 7499660B27C64ECD00DA186A;
 			packageReferences = (
+				3AEF7D4328C716350021A25C /* XCRemoteSwiftPackageReference "DataCompression" */,
 			);
 			productRefGroup = 7499661527C64ECD00DA186A /* Products */;
 			projectDirPath = "";
@@ -735,7 +739,23 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		3AEF7D4328C716350021A25C /* XCRemoteSwiftPackageReference "DataCompression" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mw99/DataCompression.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
+		3AEF7D4428C716350021A25C /* DataCompression */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3AEF7D4328C716350021A25C /* XCRemoteSwiftPackageReference "DataCompression" */;
+			productName = DataCompression;
+		};
 		745D052427C8D185004E7B53 /* MapboxMaps */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MapboxMaps;

@@ -142,7 +142,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         finish()
     }
 
-    private func customizePuckButton() {
+    private func addCustomizePuckButton() {
         // Set up button to change the puck options
         let button = UIButton(type: .system)
         button.setTitle("Customize puck", for: .normal)
@@ -154,11 +154,12 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         view.addSubview(button)
 
         // Set button location
-        let horizontalConstraint = button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -24)
-        let verticalConstraint = button.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        let widthConstraint = button.widthAnchor.constraint(equalToConstant: 200)
-        let heightConstraint = button.heightAnchor.constraint(equalToConstant: 40)
-        NSLayoutConstraint.activate([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
+        NSLayoutConstraint.activate([
+            button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -24),
+            button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            button.widthAnchor.constraint(equalToConstant: 200),
+            button.heightAnchor.constraint(equalToConstant: 40)
+        ])
     }
 
     @objc public func changePuckOptions(sender: UIButton) {

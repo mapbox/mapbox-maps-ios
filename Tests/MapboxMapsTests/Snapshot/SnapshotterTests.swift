@@ -129,7 +129,6 @@ final class SnapshotterTests: XCTestCase {
         XCTAssertEqual(coordinateBounds, returnedCoordinateBounds)
     }
 
-
     func testSnapshotterCameraforCoordinateBounds() {
         // verify that return value for snapshotter matches return value for mock: coordinateBounds
         let coordinates = [

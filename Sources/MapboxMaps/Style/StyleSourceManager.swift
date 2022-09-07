@@ -1,13 +1,16 @@
 import Foundation
 
 internal final class StyleSourceManager {
+    private typealias SourceId = String
+
     internal static func sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue {
         return StyleManager.getStyleSourcePropertyDefaultValue(forSourceType: sourceType, property: property)
     }
 
     private let styleManager: StyleManagerProtocol
-    private let backgroundQueue = DispatchQueue(label: "GeoJSON parsing queue", qos: .userInitiated)
-    private var workItemBySourceId = [String: DispatchWorkItem]()
+    private let mainQueue: DispatchQueueProtocol
+    private let backgroundQueue: DispatchQueueProtocol
+    private var workItems = [SourceId: DispatchWorkItem]()
 
     internal var allSourceIdentifiers: [SourceInfo] {
         return styleManager.getStyleSources().compactMap { info in
@@ -19,8 +22,14 @@ internal final class StyleSourceManager {
         }
     }
 
-    init(styleManager: StyleManagerProtocol) {
+    internal init(
+        styleManager: StyleManagerProtocol,
+        mainQueue: DispatchQueueProtocol = DispatchQueue.main,
+        backgroundQueue: DispatchQueueProtocol = DispatchQueue(label: "GeoJSON parsing queue", qos: .userInitiated)
+    ) {
         self.styleManager = styleManager
+        self.mainQueue = mainQueue
+        self.backgroundQueue = backgroundQueue
     }
 
     // MARK: - Typed API
@@ -60,7 +69,7 @@ internal final class StyleSourceManager {
     }
 
     internal func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject) throws {
-        workItemBySourceId.removeValue(forKey: id)?
+        workItems.removeValue(forKey: id)?
             .cancel()
 
         guard let sourceInfo = allSourceIdentifiers.first(where: { $0.id == id }),
@@ -79,7 +88,7 @@ internal final class StyleSourceManager {
     }
 
     internal func removeSource(withId id: String) throws {
-        workItemBySourceId.removeValue(forKey: id)?
+        workItems.removeValue(forKey: id)?
             .cancel()
 
         try handleExpected {
@@ -130,20 +139,20 @@ internal final class StyleSourceManager {
     }
 
     private func applyGeoJSONData(data: GeoJSONSourceData, sourceId id: String) {
-        var item: DispatchWorkItem!
-        item = DispatchWorkItem { [weak self, item] in
-            guard let self = self, let item = item else { return }
+        let item = DispatchWorkItem { [weak self] in
+            guard let self = self else { return }
+            var isCancelled: Bool { self.workItems[id]?.isCancelled ?? true }
 
-            guard !item.isCancelled else { return }
+            guard !isCancelled else { return }
 
             do {
                 Tracer.beginInterval("GeoJSON->JSON")
                 let json = try data.toJSON()
                 Tracer.endInterval("GeoJSON->JSON")
 
-                guard !item.isCancelled else { return }
+                guard !isCancelled else { return }
 
-                DispatchQueue.main.async { [weak self] in
+                self.mainQueue.async { [weak self] in
                     guard let self = self else { return }
 
                     do {
@@ -159,7 +168,7 @@ internal final class StyleSourceManager {
             }
         }
 
-        workItemBySourceId[id] = item
+        workItems[id] = item
         backgroundQueue.async(execute: item)
     }
 }

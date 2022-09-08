@@ -96,6 +96,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
     private enum PuckBearingVisibility {
         case isVisible
         case isHidden
+        
         var isVisible: Bool {
             switch self {
             case .isVisible:
@@ -113,6 +114,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
     private enum PuckAccuracyRingVisibility {
         case isVisible
         case isHidden
+        
         var isVisible: Bool {
             switch self {
             case .isVisible:
@@ -200,9 +202,9 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
                                       message: "Select an options to toggle.",
                                       preferredStyle: .actionSheet)
 
-        alert.addAction(UIAlertAction(title: "Toggle Puck visibility", style: .default, handler: { _ in
+        alert.addAction(UIAlertAction(title: "Toggle Puck visibility", style: .default) { _ in
             self.showsPuck.toggle()
-        }))
+        })
 
         alert.addAction(UIAlertAction(title: "Toggle Puck image", style: .default, handler: { _ in
             self.puckImage.toggle()

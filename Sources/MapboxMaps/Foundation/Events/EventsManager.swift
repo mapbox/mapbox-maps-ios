@@ -41,8 +41,9 @@ internal final class EventsManager {
 
     private init(accessToken: String) {
         mmeEventsManager = .shared()
+        let accessTokenMME = Bundle.main.infoDictionary?["MBXAccessToken"]  as? String ?? accessToken
         mmeEventsManager.initialize(
-            withAccessToken: accessToken,
+            withAccessToken: accessTokenMME,
             userAgentBase: Constants.userAgentBase,
             hostSDKVersion: Constants.sdkVersion)
         mmeEventsManager.skuId = "00"

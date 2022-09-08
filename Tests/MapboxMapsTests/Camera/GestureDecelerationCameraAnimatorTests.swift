@@ -8,7 +8,7 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
     var decelerationFactor: CGFloat!
     var owner: AnimationOwner!
     var locationChangeHandler: MockLocationChangeHandler!
-    var mainQueue: MockMainQueue!
+    var mainQueue: MockDispatchQueue!
     var dateProvider: MockDateProvider!
     var animator: GestureDecelerationCameraAnimator!
     // swiftlint:disable:next weak_delegate
@@ -22,7 +22,7 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
         decelerationFactor = 0.7
         owner = .random()
         locationChangeHandler = MockLocationChangeHandler()
-        mainQueue = MockMainQueue()
+        mainQueue = MockDispatchQueue()
         dateProvider = MockDateProvider()
         animator = GestureDecelerationCameraAnimator(
             location: location,

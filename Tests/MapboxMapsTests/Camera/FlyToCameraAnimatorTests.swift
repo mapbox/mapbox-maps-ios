@@ -29,7 +29,7 @@ final class FlyToCameraAnimatorTests: XCTestCase {
     let duration: TimeInterval = 10
     var owner: AnimationOwner!
     var mapboxMap: MockMapboxMap!
-    var mainQueue: MockMainQueue!
+    var mainQueue: MockDispatchQueue!
     var dateProvider: MockDateProvider!
     var flyToCameraAnimator: FlyToCameraAnimator!
     // swiftlint:disable:next weak_delegate
@@ -42,7 +42,7 @@ final class FlyToCameraAnimatorTests: XCTestCase {
         mapboxMap.cameraState = initialCameraState
         mapboxMap.cameraBounds = .default
         mapboxMap.size = CGSize(width: 500, height: 500)
-        mainQueue = MockMainQueue()
+        mainQueue = MockDispatchQueue()
         dateProvider = MockDateProvider()
         flyToCameraAnimator = FlyToCameraAnimator(
             toCamera: finalCameraOptions,

@@ -1,6 +1,6 @@
 @testable import MapboxMaps
 
-final class MockMainQueue: DispatchQueueProtocol {
+final class MockDispatchQueue: DispatchQueueProtocol {
     struct AsyncParams {
         let group: DispatchGroup?
         let qos: DispatchQoS

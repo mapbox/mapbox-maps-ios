@@ -4,7 +4,7 @@ import XCTest
 final class ViewportImplTests: XCTestCase {
 
     var options: ViewportOptions!
-    var mainQueue: MockMainQueue!
+    var mainQueue: MockDispatchQueue!
     var defaultTransition: MockViewportTransition!
     var anyTouchGestureRecognizer: MockGestureRecognizer!
     var doubleTapGestureRecognizer: MockGestureRecognizer!
@@ -15,7 +15,7 @@ final class ViewportImplTests: XCTestCase {
     override func setUp() {
         super.setUp()
         options = .random()
-        mainQueue = MockMainQueue()
+        mainQueue = MockDispatchQueue()
         defaultTransition = MockViewportTransition()
         anyTouchGestureRecognizer = MockGestureRecognizer()
         doubleTapGestureRecognizer = MockGestureRecognizer()

@@ -9,7 +9,7 @@ final class SimpleCameraAnimatorTests: XCTestCase {
     var curve: TimingCurve!
     var owner: AnimationOwner!
     var mapboxMap: MockMapboxMap!
-    var mainQueue: MockMainQueue!
+    var mainQueue: MockDispatchQueue!
     var cameraOptionsInterpolator: MockCameraOptionsInterpolator!
     var dateProvider: MockDateProvider!
     var animator: SimpleCameraAnimator!
@@ -23,7 +23,7 @@ final class SimpleCameraAnimatorTests: XCTestCase {
         curve = .random()
         owner = .random()
         mapboxMap = MockMapboxMap()
-        mainQueue = MockMainQueue()
+        mainQueue = MockDispatchQueue()
         cameraOptionsInterpolator = MockCameraOptionsInterpolator()
         dateProvider = MockDateProvider()
         animator = SimpleCameraAnimator(

@@ -7,9 +7,9 @@ public enum OrnamentPosition: String, Equatable {
     case topLeft
     @available(*, deprecated, renamed: "topTrailing")
     case topRight
-    @available(*, deprecated, renamed: "bottomLeading")
-    case bottomRight
     @available(*, deprecated, renamed: "bottomTrailing")
+    case bottomRight
+    @available(*, deprecated, renamed: "bottomLeading")
     case bottomLeft
 
     case topLeading

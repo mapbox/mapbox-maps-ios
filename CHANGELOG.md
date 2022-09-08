@@ -4,6 +4,10 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 10.8.0 - September 8, 2022
+
+* Update to MapboxCoreMaps 10.8.0 and MapboxCommon 23.0.0. ([#1564](https://github.com/mapbox/mapbox-maps-ios/pull/1564))
+
 ## 10.8.0-rc.1 - August 24, 2022
 
 * Apply mercator scale to 3D puck also when its `modelScale` is not specified. ([#1523](https://github.com/mapbox/mapbox-maps-ios/pull/1523))

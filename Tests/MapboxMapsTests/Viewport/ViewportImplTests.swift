@@ -50,13 +50,13 @@ final class ViewportImplTests: XCTestCase {
         runInvocation.parameters.completion(true)
         defaultTransition.runStub.reset()
         statusObserver.viewportStatusDidChangeStub.reset()
-        mainQueue.asyncStub.reset()
+        mainQueue.asyncClosureStub.reset()
     }
 
     func drainMainQueue() {
-        while !mainQueue.asyncStub.invocations.isEmpty {
-            let blocks = mainQueue.asyncStub.invocations.map(\.parameters)
-            mainQueue.asyncStub.reset()
+        while !mainQueue.asyncClosureStub.invocations.isEmpty {
+            let blocks = mainQueue.asyncClosureStub.invocations.map(\.parameters.work)
+            mainQueue.asyncClosureStub.reset()
             for block in blocks {
                 block()
             }

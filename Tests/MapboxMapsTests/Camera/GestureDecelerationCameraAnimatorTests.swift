@@ -171,8 +171,8 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
         let completion = Stub<UIViewAnimatingPosition, Void>()
         animator.addCompletion(completion.call(with:))
 
-        XCTAssertEqual(mainQueue.asyncStub.invocations.count, 1)
-        let closure = try XCTUnwrap(mainQueue.asyncStub.invocations.first?.parameters)
+        XCTAssertEqual(mainQueue.asyncClosureStub.invocations.count, 1)
+        let closure = try XCTUnwrap(mainQueue.asyncClosureStub.invocations.first?.parameters.work)
 
         closure()
 
@@ -187,8 +187,8 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
         let completion = Stub<UIViewAnimatingPosition, Void>()
         animator.addCompletion(completion.call(with:))
 
-        XCTAssertEqual(mainQueue.asyncStub.invocations.count, 1)
-        let closure = try XCTUnwrap(mainQueue.asyncStub.invocations.first?.parameters)
+        XCTAssertEqual(mainQueue.asyncClosureStub.invocations.count, 1)
+        let closure = try XCTUnwrap(mainQueue.asyncClosureStub.invocations.first?.parameters.work)
 
         closure()
 

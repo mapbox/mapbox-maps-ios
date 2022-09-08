@@ -1,6 +1,23 @@
 import Foundation
 
-internal final class StyleSourceManager {
+internal protocol StyleSourceManagerProtocol: AnyObject {
+    static func sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue
+
+    var allSourceIdentifiers: [SourceInfo] { get }
+    func source<T>(withId id: String, type: T.Type) throws -> T where T: Source
+    func source(withId id: String) throws -> Source
+    func addSource(_ source: Source, id: String) throws
+    func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject) throws
+    func addSource(withId id: String, properties: [String: Any]) throws
+    func removeSource(withId id: String) throws
+    func sourceExists(withId id: String) -> Bool
+    func sourceProperty(for sourceId: String, property: String) -> StylePropertyValue
+    func sourceProperties(for sourceId: String) throws -> [String: Any]
+    func setSourceProperty(for sourceId: String, property: String, value: Any) throws
+    func setSourceProperties(for sourceId: String, properties: [String: Any]) throws
+}
+
+internal final class StyleSourceManager: StyleSourceManagerProtocol {
     private typealias SourceId = String
 
     internal static func sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue {

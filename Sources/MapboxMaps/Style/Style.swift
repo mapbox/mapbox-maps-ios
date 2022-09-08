@@ -35,15 +35,19 @@ internal protocol StyleProtocol: AnyObject {
 /// - Important: Style should only be used from the main thread.
 public final class Style: StyleProtocol {
 
-    private let sourceManager: StyleSourceManager
+    private let sourceManager: StyleSourceManagerProtocol
     private let _styleManager: StyleManagerProtocol
     public weak var styleManager: StyleManager! {
         _styleManager.asStyleManager()
     }
 
-    internal init(with styleManager: StyleManagerProtocol) {
+    internal convenience init(with styleManager: StyleManagerProtocol) {
+        self.init(with: styleManager, sourceManager: StyleSourceManager(styleManager: styleManager))
+    }
+
+    internal init(with styleManager: StyleManagerProtocol, sourceManager: StyleSourceManagerProtocol) {
         self._styleManager = styleManager
-        self.sourceManager = StyleSourceManager(styleManager: styleManager)
+        self.sourceManager = sourceManager
 
         if let uri = StyleURI(rawValue: styleManager.getStyleURI()) {
             self.uri = uri
@@ -1092,7 +1096,7 @@ extension Style {
     /// - Parameter projection: The ``StyleProjection`` to apply to the style.
     /// - Throws: ``StyleError`` if the projection could not be applied.
     public func setProjection(_ projection: StyleProjection) throws {
-        let expected = styleManager.setStyleProjectionPropertyForProperty(
+        let expected = _styleManager.setStyleProjectionPropertyForProperty(
             StyleProjection.CodingKeys.name.rawValue,
             value: projection.name.rawValue)
         if expected.isError() {
@@ -1102,7 +1106,7 @@ extension Style {
 
     /// The current projection.
     public var projection: StyleProjection {
-        let projectionName = styleManager.getStyleProjectionProperty(
+        let projectionName = _styleManager.getStyleProjectionProperty(
             forProperty: StyleProjection.CodingKeys.name.rawValue)
         if projectionName.kind == .undefined {
             return StyleProjection(name: .mercator)

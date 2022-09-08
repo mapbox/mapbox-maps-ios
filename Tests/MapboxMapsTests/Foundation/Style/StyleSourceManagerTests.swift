@@ -12,7 +12,11 @@ final class StyleSourceManagerTests: XCTestCase {
         styleManager = MockStyleManager()
         mainQueue = MockDispatchQueue()
         backgroundQueue = MockDispatchQueue()
-        sourceManager = StyleSourceManager(styleManager: Style, mainQueue: mainQueue, backgroundQueue: backgroundQueue)
+        sourceManager = StyleSourceManager(
+            styleManager: styleManager,
+            mainQueue: mainQueue,
+            backgroundQueue: backgroundQueue
+        )
     }
 
     override func tearDown() {
@@ -21,4 +25,15 @@ final class StyleSourceManagerTests: XCTestCase {
         backgroundQueue = nil
         sourceManager = nil
     }
+
+    func testGetAllSourceIdentifiers() {
+        let stubbedStyleSources: [StyleObjectInfo] = .random(withLength: 3) {
+            StyleObjectInfo(id: .randomAlphanumeric(withLength: 12), type: LayerType.random().rawValue)
+        }
+        styleManager.getStyleSourcesStub.defaultReturnValue = stubbedStyleSources
+        XCTAssertTrue(sourceManager.allSourceIdentifiers.allSatisfy { sourceInfo in
+            stubbedStyleSources.contains(where: { $0.id == sourceInfo.id && $0.type == sourceInfo.type.rawValue })
+        })
+    }
+
 }

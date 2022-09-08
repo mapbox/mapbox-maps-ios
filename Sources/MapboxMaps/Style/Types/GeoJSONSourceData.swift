@@ -37,6 +37,11 @@ public enum GeoJSONSourceData: Codable {
             return
         }
 
+        if let decodedString = try? container.decode(String.self), decodedString.isEmpty {
+            self = .empty
+            return
+        }
+
         let context = DecodingError.Context(codingPath: decoder.codingPath,
                                             debugDescription: "Failed to decode GeoJSONSource `data` property")
         throw DecodingError.dataCorrupted(context)

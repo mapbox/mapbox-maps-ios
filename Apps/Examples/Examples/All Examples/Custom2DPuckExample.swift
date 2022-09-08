@@ -8,31 +8,24 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
     internal var puckConfiguration = Puck2DConfiguration.makeDefault(showBearing: true)
     private var showsPuck: PuckVisibility = .isVisible {
         didSet {
-            mapView.location.options.puckType = showsPuck.isVisible ? .puck2D(puckConfiguration) : .none
+            updatePuckUI()
         }
     }
 
     private var puckImage: PuckImage = .blueDot {
         didSet {
-            puckConfiguration.topImage = puckImage.image
             updatePuckUI()
         }
     }
 
     private var showsBearing: PuckBearingVisibility = .isVisible {
         didSet {
-            // It's necessary to create a new default when switching bearing visibility
-            var newPuck = Puck2DConfiguration.makeDefault(showBearing: showsBearing.isVisible)
-            newPuck.topImage = puckConfiguration.topImage
-            newPuck.showsAccuracyRing = puckConfiguration.showsAccuracyRing
-            puckConfiguration = newPuck
             updatePuckUI()
         }
     }
 
     private var showsAccuracyRing: PuckAccuracyRingVisibility = .isHidden {
         didSet {
-            puckConfiguration.showsAccuracyRing = showsAccuracyRing.isVisible
             updatePuckUI()
         }
     }
@@ -51,17 +44,14 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
 
     private var projection: StyleProjectionName = .mercator {
         didSet {
-            do {
-                try mapView.mapboxMap.style.setProjection(StyleProjection(name: projection))
-            } catch {
-                print(error)
-            }
+            updateProjection()
         }
     }
 
     private enum PuckVisibility {
         case isVisible
         case isHidden
+
         var isVisible: Bool {
             switch self {
             case .isVisible:
@@ -79,6 +69,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
     private enum PuckImage {
         case star
         case blueDot
+
         var image: UIImage? {
             switch self {
             case .star:
@@ -96,7 +87,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
     private enum PuckBearingVisibility {
         case isVisible
         case isHidden
-        
+
         var isVisible: Bool {
             switch self {
             case .isVisible:
@@ -114,7 +105,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
     private enum PuckAccuracyRingVisibility {
         case isVisible
         case isHidden
-        
+
         var isVisible: Bool {
             switch self {
             case .isVisible:
@@ -132,6 +123,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
     private enum Style {
         case light
         case dark
+
         var styleURL: StyleURI {
             switch self {
             case .light:
@@ -206,29 +198,29 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
             self.showsPuck.toggle()
         })
 
-        alert.addAction(UIAlertAction(title: "Toggle Puck image", style: .default, handler: { _ in
+        alert.addAction(UIAlertAction(title: "Toggle Puck image", style: .default) { _ in
             self.puckImage.toggle()
-        }))
+        })
 
-        alert.addAction(UIAlertAction(title: "Toggle bearing visibility", style: .default, handler: { _ in
+        alert.addAction(UIAlertAction(title: "Toggle bearing visibility", style: .default) { _ in
             self.showsBearing.toggle()
-        }))
+        })
 
-        alert.addAction(UIAlertAction(title: "Toggle accuracy ring", style: .default, handler: { _ in
+        alert.addAction(UIAlertAction(title: "Toggle accuracy ring", style: .default) { _ in
             self.showsAccuracyRing.toggle()
-        }))
+        })
 
-        alert.addAction(UIAlertAction(title: "Toggle bearing source", style: .default, handler: { _ in
+        alert.addAction(UIAlertAction(title: "Toggle bearing source", style: .default) { _ in
             self.bearingSource.toggle()
-        }))
+        })
 
-        alert.addAction(UIAlertAction(title: "Toggle Map Style", style: .default, handler: { _ in
+        alert.addAction(UIAlertAction(title: "Toggle Map Style", style: .default) { _ in
             self.style.toggle()
-        }))
+        })
 
-        alert.addAction(UIAlertAction(title: "Toggle Projection", style: .default, handler: { _ in
+        alert.addAction(UIAlertAction(title: "Toggle Projection", style: .default) { _ in
             self.projection.toggle()
-        }))
+        })
 
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
 
@@ -236,8 +228,22 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
     }
 
     func updatePuckUI() {
-        if showsPuck == .isVisible {
+        puckConfiguration = Puck2DConfiguration.makeDefault(showBearing: showsBearing.isVisible)
+        puckConfiguration.showsAccuracyRing = showsAccuracyRing.isVisible
+        puckConfiguration.topImage = puckImage.image
+        switch showsPuck {
+        case .isVisible:
             mapView.location.options.puckType = .puck2D(puckConfiguration)
+        default:
+            mapView.location.options.puckType = .none
+        }
+    }
+
+    func updateProjection() {
+        do {
+            try mapView.mapboxMap.style.setProjection(StyleProjection(name: projection))
+        } catch {
+            print(error)
         }
     }
 }

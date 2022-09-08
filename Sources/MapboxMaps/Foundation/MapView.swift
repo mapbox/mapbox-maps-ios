@@ -559,7 +559,11 @@ open class MapView: UIView {
         mapboxMap.size = bounds.size
     }
 
+    @_spi(Metrics) public var metricsReporter: MapViewMetricsReporter?
+
     private func updateFromDisplayLink(displayLink: CADisplayLink) {
+        metricsReporter?.beforeDisplayLinkCallback(displayLink: displayLink)
+        defer { metricsReporter?.afterDisplayLinkCallback(displayLink: displayLink) }
         if window == nil {
             return
         }
@@ -574,7 +578,9 @@ open class MapView: UIView {
 
         if needsDisplayRefresh {
             needsDisplayRefresh = false
+            metricsReporter?.beforeMetalViewDrawCallback(metalView: metalView)
             metalView?.draw()
+            metricsReporter?.afterMetalViewDrawCallback(metalView: metalView)
         }
     }
 

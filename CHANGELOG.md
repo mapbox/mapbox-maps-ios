@@ -6,6 +6,13 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Expose `ResourceRequest` properties publicly. ([#1548](https://github.com/mapbox/mapbox-maps-ios/pull/1548))
 * Fix block retain cycle in `MapboxMap/observeStyleLoad(_:)`, from now on `loadStyleURI` and `loadStyleJSON` completion block will not be invoked when MapboxMap is deallocated. ([#1575](https://github.com/mapbox/mapbox-maps-ios/pull/1575))
+## 10.8.1 - September 8, 2022
+
+* Downgrade MME to 1.0.8. ([#1572](https://github.com/mapbox/mapbox-maps-ios/pull/1572))
+
+## 10.8.0 - September 8, 2022
+
+* Update to MapboxCoreMaps 10.8.0 and MapboxCommon 23.0.0. ([#1564](https://github.com/mapbox/mapbox-maps-ios/pull/1564))
 
 ## 10.8.0-rc.1 - August 24, 2022
 

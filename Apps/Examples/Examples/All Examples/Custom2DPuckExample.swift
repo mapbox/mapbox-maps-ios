@@ -231,6 +231,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         puckConfiguration = Puck2DConfiguration.makeDefault(showBearing: showsBearing.isVisible)
         puckConfiguration.showsAccuracyRing = showsAccuracyRing.isVisible
         puckConfiguration.topImage = puckImage.image
+        
         switch showsPuck {
         case .isVisible:
             mapView.location.options.puckType = .puck2D(puckConfiguration)

@@ -58,28 +58,54 @@ final class MockStyleSourceManager: StyleSourceManagerProtocol {
         addSourceUntypedStub.call(with: AddSourceUntypedParams(id: id, properties: properties))
     }
 
+    let removeSourceStub = Stub<String, Void>()
     func removeSource(withId id: String) throws {
-        <#code#>
+        removeSourceStub.call(with: id)
     }
 
+    let sourceExistsStub = Stub<String, Bool>(defaultReturnValue: false)
     func sourceExists(withId id: String) -> Bool {
-        <#code#>
+        return sourceExistsStub.call(with: id)
     }
 
+    struct SourcePropertyForParams {
+        let sourceId: String
+        let property: String
+    }
+    let sourcePropertyForStub = Stub<SourcePropertyForParams, StylePropertyValue>(
+        defaultReturnValue: StylePropertyValue(value: "foo", kind: .undefined)
+    )
     func sourceProperty(for sourceId: String, property: String) -> StylePropertyValue {
-        <#code#>
+        return sourcePropertyForStub.call(with: SourcePropertyForParams(sourceId: sourceId, property: property))
     }
 
-    func sourceProperties(for sourceId: String) throws -> [String : Any] {
-        <#code#>
+    let sourcePropertiesForStub = Stub<String, [String: Any]>(defaultReturnValue: [:])
+    func sourceProperties(for sourceId: String) throws -> [String: Any] {
+        return sourcePropertiesForStub.call(with: sourceId)
     }
 
+    struct SetSourcePropertyForParams {
+        let sourceId: String
+        let property: String
+        let value: Any
+    }
+
+    let setSourcePropertyForParamsStub = Stub<SetSourcePropertyForParams, Void>()
     func setSourceProperty(for sourceId: String, property: String, value: Any) throws {
-        <#code#>
+        setSourcePropertyForParamsStub.call(
+            with: SetSourcePropertyForParams(sourceId: sourceId, property: property, value: value)
+        )
     }
 
-    func setSourceProperties(for sourceId: String, properties: [String : Any]) throws {
-        <#code#>
+    struct SetSourcePropertiesForParams {
+        let sourceId: String
+        let properties: [String: Any]
     }
 
+    let setSourcePropertiesForParamsStub = Stub<SetSourcePropertiesForParams, Void>()
+    func setSourceProperties(for sourceId: String, properties: [String: Any]) throws {
+        setSourcePropertiesForParamsStub.call(
+            with: SetSourcePropertiesForParams(sourceId: sourceId, properties: properties)
+        )
+    }
 }

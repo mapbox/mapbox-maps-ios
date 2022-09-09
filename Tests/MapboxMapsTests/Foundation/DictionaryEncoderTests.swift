@@ -113,6 +113,29 @@ final class DictionaryEncoderTests: XCTestCase {
         let encoded = try sut.encode(value)
         XCTAssertTrue(encoded.isEmpty)
     }
+
+    func testEncodeNilNestedLevel() throws {
+        struct TopLevel: Encodable {
+            let everything: Everything?
+        }
+
+        let sut = DictionaryEncoder()
+        sut.shouldEncodeNilValues = true
+
+        let everything = Everything(
+            string: nil,
+            int: nil, int8: nil, int16: nil, int32: nil, int64: nil,
+            uint: nil, uint8: nil, uint16: nil, uint32: nil, uint64: nil,
+            float: nil, double: nil,
+            bool: nil,
+            date: nil,
+            data: nil,
+            url: nil
+        )
+
+        let encoded = try sut.encode(TopLevel(everything: everything))
+        XCTAssertTrue(try XCTUnwrap(encoded["everything"] as? [String: Any]).isEmpty)
+    }
 }
 
 // MARK: Supported Types.
@@ -153,27 +176,5 @@ private struct Everything: Encodable {
         case date
         case data
         case url
-    }
-
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: Keys.self)
-
-        try container.encodeIfPresent(string, forKey: .string)
-        try container.encodeIfPresent(int, forKey: .int)
-        try container.encodeIfPresent(int8, forKey: .int8)
-        try container.encodeIfPresent(int16, forKey: .int16)
-        try container.encodeIfPresent(int32, forKey: .int32)
-        try container.encodeIfPresent(int64, forKey: .int64)
-        try container.encodeIfPresent(uint, forKey: .uint)
-        try container.encodeIfPresent(uint8, forKey: .uint8)
-        try container.encodeIfPresent(uint16, forKey: .uint16)
-        try container.encodeIfPresent(uint32, forKey: .uint32)
-        try container.encodeIfPresent(uint64, forKey: .uint64)
-        try container.encodeIfPresent(float, forKey: .float)
-        try container.encodeIfPresent(double, forKey: .double)
-        try container.encodeIfPresent(bool, forKey: .bool)
-        try container.encodeIfPresent(date, forKey: .date)
-        try container.encodeIfPresent(data, forKey: .data)
-        try container.encodeIfPresent(url, forKey: .url)
     }
 }

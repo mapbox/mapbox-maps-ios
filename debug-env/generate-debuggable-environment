@@ -12,6 +12,8 @@ def main():
                         help='commit to use for Mapbox Maps iOS')
     parser.add_argument('--gl-native-commit', default="internal",
                         type=str, help='commit to use for GL Native Internal')
+    parser.add_argument('--common-commit', default=None,
+                        type=str, help='commit to use for Common SDK')
     parser.add_argument('--turf-commit', default="main",
                         type=str, help='commit to use for Turf')
     parser.add_argument('--mme-commit', default="main",
@@ -52,6 +54,10 @@ def main():
                   args.gl_native_commit, checkout_submodules=True, submodules_path="vendor")
     # configure project
     os.chdir("mapbox-gl-native-internal")
+    if args.common_commit is not None:
+        print_phase(f"Checkout custom Common SDK (@{args.common_commit})")
+        os.system(f"git -C vendor/common checkout {args.common_commit}")
+
     os.system("pwd")
     configure_command = """cmake -B build/ios
                             -DBUILD_SHARED_LIBS=OFF

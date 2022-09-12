@@ -5,6 +5,8 @@ import sys
 import argparse
 import json
 
+def print_phase(phase: str):
+    print('\033[93m' + f"{phase}" + '\033[0m')
 
 def main():
     parser = argparse.ArgumentParser(description='Generate project to build Maps SDK dependencies from sources.')
@@ -12,6 +14,8 @@ def main():
                         help='commit to use for Mapbox Maps iOS')
     parser.add_argument('--gl-native-commit', default="internal",
                         type=str, help='commit to use for GL Native Internal')
+    parser.add_argument('--common-commit', default=None,
+                        type=str, help='commit to use for Common SDK')
     parser.add_argument('--turf-commit', default="main",
                         type=str, help='commit to use for Turf')
     parser.add_argument('--mme-commit', default="main",
@@ -31,6 +35,8 @@ def main():
     os.chdir("build")
 
 
+    print_phase(f"Checkout Mapbox Maps iOS ({project}@{project_commit})")
+
     checkout_repo(project, project_commit)
 
     if args.stable:
@@ -46,13 +52,19 @@ def main():
         if args.mme_commit is None:
             args.mme_commit = versions["MapboxMobileEvents"]
 
-    print("Using args: " + str(args))
+    print_phase("Finalized args: " + str(args))
 
+    print_phase(f"Checkout GL Native (@{args.gl_native_commit})")
     checkout_repo("mapbox-gl-native-internal",
-                  args.gl_native_commit, checkout_submodules=True)
+                  args.gl_native_commit, checkout_submodules=True, submodules_path="vendor")
     # configure project
     os.chdir("mapbox-gl-native-internal")
+    if args.common_commit is not None:
+        print_phase(f"Checkout custom Common SDK (@{args.common_commit})")
+        os.system(f"git -C vendor/common checkout {args.common_commit}")
+
     os.system("pwd")
+    print_phase("Configure GL Native")
     configure_command = """cmake -B build/ios
                             -DBUILD_SHARED_LIBS=OFF
                             -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY="./lib"
@@ -76,28 +88,32 @@ def main():
     os.system("sed -i '' '/Begin PBXBuildStyle section/,/End PBXBuildStyle section/d' 'build/ios/Mapbox GL Native.xcodeproj/project.pbxproj'")
     os.chdir("..")
 
+    print_phase(f"Checkout Turf (@{args.turf_commit})")
     checkout_repo("turf-swift", args.turf_commit)
+
+    print_phase(f"Checkout Mapbox Mobile Events (@{args.mme_commit})")
     checkout_repo("mapbox-events-ios", args.mme_commit)
 
     # leave build directory
     os.chdir("..")
 
     # Generate Xcode projects
+    print_phase("Generate Xcode projects")
     os.system(f"PROJECT={project} xcodegen -s MapboxMaps.yml")
     os.system(f"PROJECT={project} xcodegen -s Examples.yml")
     os.system(f"PROJECT={project} xcodegen -s DebugApp.yml")
 
 #   # Open the resulting project
+    print_phase("Open Xcode workspace")
     os.system("xed Umbrella.xcworkspace")
 
 
-def checkout_repo(repo_name: str, repo_branch: str, checkout_submodules=False):
+def checkout_repo(repo_name: str, repo_branch: str, checkout_submodules=False, submodules_path=None):
     # checkout the repo if folder doesn't exist. Otherwise, fetch the latest changes
     os.system("pwd")
     if not os.path.exists(repo_name):
         print("Cloning " + repo_name + "...")
-        command = "git clone --branch " + repo_branch + " --recursive " + \
-            f"git@github.com:mapbox/{repo_name}.git " + repo_name
+        command = f"git clone --branch {repo_branch} git@github.com:mapbox/{repo_name}.git {repo_name}"
         print(command)
         os.system(command)
     else:
@@ -105,12 +121,19 @@ def checkout_repo(repo_name: str, repo_branch: str, checkout_submodules=False):
         os.chdir(repo_name)
         os.system("git reset --hard && git clean -dffx")
         os.system("git fetch")
-        os.system("git checkout " + repo_branch + " --")
+        os.system("git checkout -f " + repo_branch + " --")
         os.system("git pull origin " + repo_branch)
         os.chdir("..")
 
     if checkout_submodules:
-        os.system("git submodule update --init --recursive")
+        print("Checkout submodules for " + repo_name + "...")
+        os.chdir(repo_name)
+        os.system("git submodule foreach --recursive 'git reset --hard && git clean -dffx'")
+        if submodules_path is None:
+            os.system("git submodule update --init --recursive")
+        else:
+            os.system("git submodule update --init --recursive " + submodules_path)
+        os.chdir("..")
 
 
 main()

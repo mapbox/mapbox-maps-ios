@@ -49,7 +49,7 @@ def main():
     print("Using args: " + str(args))
 
     checkout_repo("mapbox-gl-native-internal",
-                  args.gl_native_commit, checkout_submodules=True)
+                  args.gl_native_commit, checkout_submodules=True, submodules_path="vendor")
     # configure project
     os.chdir("mapbox-gl-native-internal")
     os.system("pwd")
@@ -91,13 +91,12 @@ def main():
     os.system("xed Umbrella.xcworkspace")
 
 
-def checkout_repo(repo_name: str, repo_branch: str, checkout_submodules=False):
+def checkout_repo(repo_name: str, repo_branch: str, checkout_submodules=False, submodules_path=None):
     # checkout the repo if folder doesn't exist. Otherwise, fetch the latest changes
     os.system("pwd")
     if not os.path.exists(repo_name):
         print("Cloning " + repo_name + "...")
-        command = "git clone --branch " + repo_branch + " --recursive " + \
-            f"git@github.com:mapbox/{repo_name}.git " + repo_name
+        command = f"git clone --branch {repo_branch} git@github.com:mapbox/{repo_name}.git {repo_name}"
         print(command)
         os.system(command)
     else:
@@ -110,7 +109,12 @@ def checkout_repo(repo_name: str, repo_branch: str, checkout_submodules=False):
         os.chdir("..")
 
     if checkout_submodules:
-        os.system("git submodule update --init --recursive")
+        os.chdir(repo_name)
+        if submodules_path is None:
+            os.system("git submodule update --init --recursive")
+        else:
+            os.system("git submodule update --init --recursive " + submodules_path)
+        os.chdir("..")
 
 
 main()

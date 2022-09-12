@@ -99,13 +99,13 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
     }
 
     internal func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject) throws {
-        workItems.removeValue(forKey: id)?
-            .cancel()
-
         guard let sourceInfo = allSourceIdentifiers.first(where: { $0.id == id }),
               sourceInfo.type == .geoJson else {
             throw StyleError(message: "Source with id '\(id)' is not found or not a GeoJSONSource.")
         }
+
+        workItems.removeValue(forKey: id)?.cancel()
+
         applyGeoJSONData(data: geoJSON.sourceData, sourceId: id)
     }
 
@@ -118,12 +118,11 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
     }
 
     internal func removeSource(withId id: String) throws {
-        workItems.removeValue(forKey: id)?
-            .cancel()
-
         try handleExpected {
             return styleManager.removeStyleSource(forSourceId: id)
         }
+
+        workItems.removeValue(forKey: id)?.cancel()
     }
 
     internal func sourceExists(withId id: String) -> Bool {

@@ -116,6 +116,7 @@ def checkout_repo(repo_name: str, repo_branch: str, checkout_submodules=False, s
 
     if checkout_submodules:
         os.chdir(repo_name)
+        os.system("git submodule foreach --recursive 'git reset --hard && git clean -dffx'")
         if submodules_path is None:
             os.system("git submodule update --init --recursive")
         else:

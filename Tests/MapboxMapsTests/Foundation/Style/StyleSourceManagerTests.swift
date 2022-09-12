@@ -252,6 +252,24 @@ final class StyleSourceManagerTests: XCTestCase {
         XCTAssertFalse(replacingWorkItem.isCancelled)
     }
 
+    func testRemoveGeoJSONSourceCancelsAsyncParsing() throws {
+        // given
+        let id = String.randomASCII(withLength: 10)
+        var source = GeoJSONSource()
+        source.data = .featureCollection(FeatureCollection(features: []))
+
+        try sourceManager.addSource(source, id: id)
+
+        XCTAssertEqual(backgroundQueue.asyncWorkItemStub.invocations.count, 1)
+        let workItem = try XCTUnwrap(backgroundQueue.asyncWorkItemStub.invocations.first?.parameters)
+
+        // when
+        try sourceManager.removeSource(withId: id)
+
+        // then
+        XCTAssertTrue(workItem.isCancelled)
+    }
+
     func testAsyncGeoJSONUpdateCancelsAdd() throws {
         // given
         let id = String.randomASCII(withLength: 10)

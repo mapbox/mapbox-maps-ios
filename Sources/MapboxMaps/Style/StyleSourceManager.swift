@@ -91,7 +91,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
 
         guard let sourceInfo = allSourceIdentifiers.first(where: { $0.id == id }),
               sourceInfo.type == .geoJson else {
-            fatalError("updateGeoJSONSource: Source with id '\(id)' is not a GeoJSONSource.")
+            throw StyleError(message: "Source with id '\(id)' is not found or not a GeoJSONSource.")
         }
         applyGeoJSONData(data: geoJSON.sourceData, sourceId: id)
     }

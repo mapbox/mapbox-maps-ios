@@ -10,11 +10,13 @@ final class StyleTests: XCTestCase {
     
     override func setUp() {
         styleManager = MockStyleManager()
-        style = Style(with: styleManager)
+        sourceManager = MockStyleSourceManager()
+        style = Style(with: styleManager, sourceManager: sourceManager)
     }
 
     override func tearDown() {
         styleManager = nil
+        sourceManager = nil
         style = nil
     }
 
@@ -157,44 +159,154 @@ final class StyleTests: XCTestCase {
     // MARK: Source
 
     func testGetAllSourceIdentifiers() {
-        let stubbedStyleSources: [StyleObjectInfo] = .random(withLength: 3) {
-            StyleObjectInfo(id: .randomAlphanumeric(withLength: 12), type: LayerType.random().rawValue)
+        let stubbedStyleSources: [SourceInfo] = .random(withLength: 3) {
+            SourceInfo(id: .randomAlphanumeric(withLength: 12), type: .random())
         }
-        styleManager.getStyleSourcesStub.defaultReturnValue = stubbedStyleSources
-        XCTAssertTrue(style.allSourceIdentifiers.allSatisfy { sourceInfo in
-            stubbedStyleSources.contains(where: { $0.id == sourceInfo.id && $0.type == sourceInfo.type.rawValue })
+        sourceManager.$allSourceIdentifiers.getStub.defaultReturnValue = stubbedStyleSources
+
+        let identifiers = style.allSourceIdentifiers
+
+        XCTAssertEqual(sourceManager.$allSourceIdentifiers.getStub.invocations.count, 1)
+        XCTAssertTrue(identifiers.allSatisfy { sourceInfo in
+            stubbedStyleSources.contains(where: { $0.id == sourceInfo.id && $0.type == sourceInfo.type })
         })
     }
 
-    func testStyleGetSourceCanFail() {
-        styleManager.getStyleSourcePropertiesStub.defaultReturnValue = Expected(error: "Cannot get source properties")
-        XCTAssertThrowsError(try style.source(withId: "dummy-source-id"))
+    func testStyleGetSource() throws {
+        let id = "foo"
+        let source = GeoJSONSource()
+        sourceManager.sourceStub.defaultReturnValue = source
 
-        styleManager.getStyleSourcePropertiesStub.defaultReturnValue = Expected(value: NSDictionary(dictionary: ["type": "Not a valid type"]))
-        XCTAssertThrowsError(try style.source(withId: "dummy-source-id"))
+        let returnedSource = try style.source(withId: id)
+
+        XCTAssertEqual(sourceManager.sourceStub.invocations.count, 1)
+        XCTAssertEqual(sourceManager.sourceStub.invocations.first?.parameters, id)
+        XCTAssertEqual(source.type, returnedSource.type)
     }
 
-    func testStyleCanAddStyleSource() {
-        styleManager.addStyleSourceStub.defaultReturnValue = Expected(value: NSNull())
-        XCTAssertNoThrow(try style.addSource(withId: "dummy-source-id", properties: ["foo": "bar"]))
+    func testStyleTypedGetSource() throws {
+        let id = "foo"
+        sourceManager.typedSourceStub.defaultReturnValue = GeoJSONSource()
 
-        styleManager.addStyleSourceStub.defaultReturnValue = Expected(error: "Cannot add style source")
-        XCTAssertThrowsError(try style.addSource(withId: "dummy-source-id", properties: ["foo": "bar"]))
+        let source = try style.source(withId: id, type: GeoJSONSource.self)
+
+        XCTAssertEqual(sourceManager.typedSourceStub.invocations.count, 1)
+        let params = try XCTUnwrap(sourceManager.typedSourceStub.invocations.first?.parameters)
+        XCTAssertEqual(params.id, id)
+        XCTAssertTrue(params.type is GeoJSONSource.Type)
+        XCTAssertEqual(source.type, .geoJson)
     }
 
-    func testStyleCanRemoveSource() {
-        styleManager.removeStyleSourceStub.defaultReturnValue = Expected(error: "Cannot remove source")
-        XCTAssertThrowsError(try style.removeSource(withId: "dummy-source-id"))
+    func testStyleCanAddStyleSource() throws {
+        let id = "dummy-source-id"
+        let properties = ["foo": "bar"]
 
-        styleManager.removeStyleSourceStub.defaultReturnValue = Expected(value: NSNull())
-        XCTAssertNoThrow(try style.removeSource(withId: "dummy-source-id"))
+        try style.addSource(withId: id, properties: properties)
+
+        XCTAssertEqual(sourceManager.addSourceUntypedStub.invocations.count, 1)
+        let params = try XCTUnwrap(sourceManager.addSourceUntypedStub.invocations.first?.parameters)
+        XCTAssertEqual(params.id, id)
+        XCTAssertEqual(params.properties as? [String: String], properties)
+    }
+
+    func testStyleCanAddTypedStyleSource() throws {
+        let id = "dummy-source-id"
+        let type = SourceType.random()
+        let source = try type.sourceType.init(jsonObject: ["type": type.rawValue])
+
+        try style.addSource(source, id: id)
+
+        XCTAssertEqual(sourceManager.addSourceStub.invocations.count, 1)
+        let params = try XCTUnwrap(sourceManager.addSourceStub.invocations.first?.parameters)
+        XCTAssertEqual(params.id, id)
+        XCTAssertEqual(params.source.type, type)
+    }
+
+    func testStyleCanRemoveSource() throws {
+        let id = "dummy-source-id"
+
+        try style.removeSource(withId: id)
+
+        XCTAssertEqual(sourceManager.removeSourceStub.invocations.count, 1)
+        XCTAssertEqual(sourceManager.removeSourceStub.invocations.first?.parameters, id)
     }
 
     func testStyleCanCheckIfSourceExist() {
-        styleManager.styleSourceExistsStub.defaultReturnValue = true
-        XCTAssertTrue(style.sourceExists(withId: "dummy-source-id"))
-            styleManager.styleSourceExistsStub.defaultReturnValue = false
-        XCTAssertFalse(style.sourceExists(withId: "non-exist-source-id"))
+        let sourceExists = Bool.random()
+        let id = String.randomASCII(withLength: 10)
+        sourceManager.sourceExistsStub.defaultReturnValue = sourceExists
+
+        let returnedSourceExists = style.sourceExists(withId: id)
+
+        XCTAssertEqual(sourceManager.sourceExistsStub.invocations.count, 1)
+        XCTAssertEqual(sourceManager.sourceExistsStub.invocations.first?.parameters, id)
+        XCTAssertEqual(returnedSourceExists, sourceExists)
+    }
+
+    func testUpdateGeoJSONSource() throws {
+        let id = String.randomASCII(withLength: 10)
+        let geoJSONObject = GeoJSONObject.featureCollection(FeatureCollection(features: []))
+
+        try style.updateGeoJSONSource(withId: id, geoJSON: geoJSONObject)
+
+        XCTAssertEqual(sourceManager.updateGeoJSONSourceStub.invocations.count, 1)
+        let params = try XCTUnwrap(sourceManager.updateGeoJSONSourceStub.invocations.first?.parameters)
+        XCTAssertEqual(params.id, id)
+        XCTAssertEqual(params.geoJSON, geoJSONObject)
+    }
+
+    func testGetSourceProperty() throws {
+        let id = String.randomASCII(withLength: 10)
+        let property = String.randomASCII(withLength: 10)
+        let value = StylePropertyValue(value: "foo", kind: .constant)
+        sourceManager.sourcePropertyForStub.defaultReturnValue = value
+
+        let returnedValue = style.sourceProperty(for: id, property: property)
+
+        XCTAssertEqual(sourceManager.sourcePropertyForStub.invocations.count, 1)
+        let params = try XCTUnwrap(sourceManager.sourcePropertyForStub.invocations.first?.parameters)
+        XCTAssertEqual(params.sourceId, id)
+        XCTAssertEqual(params.property, property)
+        XCTAssertEqual(value, returnedValue)
+    }
+
+    func testGetSourceProperties() throws {
+        let id = String.randomASCII(withLength: 10)
+        let value = ["foo": "bar"]
+        sourceManager.sourcePropertiesForStub.defaultReturnValue = value
+
+        let returnedValue = try style.sourceProperties(for: id)
+
+        XCTAssertEqual(sourceManager.sourcePropertiesForStub.invocations.count, 1)
+        let returnedId = try XCTUnwrap(sourceManager.sourcePropertiesForStub.invocations.first?.parameters)
+        XCTAssertEqual(returnedId, id)
+        XCTAssertEqual(value, returnedValue as? [String: String])
+    }
+
+    func testSetSourceProperty() throws {
+        let id = String.randomASCII(withLength: 19)
+        let property = String.randomASCII(withLength: 19)
+        let value = String.randomASCII(withLength: 19)
+
+        try style.setSourceProperty(for: id, property: property, value: value)
+
+        XCTAssertEqual(sourceManager.setSourcePropertyForParamsStub.invocations.count, 1)
+        let params = try XCTUnwrap(sourceManager.setSourcePropertyForParamsStub.invocations.first?.parameters)
+        XCTAssertEqual(params.sourceId, id)
+        XCTAssertEqual(params.property, property)
+        XCTAssertEqual(params.value as? String, value)
+    }
+
+    func testSetSourceProperties() throws {
+        let id = String.randomASCII(withLength: 19)
+        let properties = [String.randomASCII(withLength: 19): String.randomASCII(withLength: 19)]
+
+        try style.setSourceProperties(for: id, properties: properties)
+
+        XCTAssertEqual(sourceManager.setSourcePropertiesForParamsStub.invocations.count, 1)
+        let params = try XCTUnwrap(sourceManager.setSourcePropertiesForParamsStub.invocations.first?.parameters)
+        XCTAssertEqual(params.sourceId, id)
+        XCTAssertEqual(params.properties as? [String: String], properties)
     }
 
     // MARK: Light

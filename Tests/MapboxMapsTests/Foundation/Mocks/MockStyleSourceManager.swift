@@ -20,7 +20,8 @@ final class MockStyleSourceManager: StyleSourceManagerProtocol {
         let type: Source.Type
     }
     let typedSourceStub = Stub<SourceParams, Source>(defaultReturnValue: GeoJSONSource())
-    func source<T>(withId id: String, type: T.Type) throws -> T where T : Source {
+    func source<T>(withId id: String, type: T.Type) throws -> T where T: Source {
+        // swiftlint:disable:next force_cast
         return typedSourceStub.call(with: SourceParams(id: id, type: type)) as! T
     }
 

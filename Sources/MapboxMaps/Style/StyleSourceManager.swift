@@ -17,12 +17,25 @@ internal protocol StyleSourceManagerProtocol: AnyObject {
     func setSourceProperties(for sourceId: String, properties: [String: Any]) throws
 }
 
+internal protocol StyleSourceManagerDelegate: AnyObject {
+    func styleSourceManager(_ manager: StyleSourceManagerProtocol, willStartParsingData: GeoJSONSourceData, for sourceId: String)
+    func styleSourceManager(
+        _ manager: StyleSourceManagerProtocol,
+        didFinishParsingData: GeoJSONSourceData,
+        for sourceId: String,
+        parsedData: String
+    )
+    func styleSourceManager(_ manager: StyleSourceManagerProtocol, willApplyParsedData: String, for sourceId: String)
+}
+
 internal final class StyleSourceManager: StyleSourceManagerProtocol {
     private typealias SourceId = String
 
     internal static func sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue {
         return StyleManager.getStyleSourcePropertyDefaultValue(forSourceType: sourceType, property: property)
     }
+
+    internal weak var delegate: StyleSourceManagerDelegate?
 
     private let styleManager: StyleManagerProtocol
     private let mainQueue: DispatchQueueProtocol
@@ -165,6 +178,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
             guard let self = self else { return }
             var isCancelled: Bool { self.workItems[id]?.isCancelled ?? true }
 
+            self.delegate?.styleSourceManager(self, willStartParsingData: data, for: id)
             guard !isCancelled else { return }
 
             do {
@@ -172,10 +186,14 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
                 let json = try data.toString()
                 Tracer.endInterval("GeoJSON->String")
 
+                self.delegate?.styleSourceManager(self, didFinishParsingData: data, for: id, parsedData: json)
                 guard !isCancelled else { return }
 
+                self.delegate?.styleSourceManager(self, willApplyParsedData: json, for: id)
                 self.mainQueue.async { [weak self] in
                     guard let self = self else { return }
+
+                    guard !isCancelled else { return }
 
                     do {
                         Tracer.beginInterval("Apply String to core")

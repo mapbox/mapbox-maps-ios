@@ -7,7 +7,7 @@ final class StyleTests: XCTestCase {
     var style: Style!
     var styleManager: MockStyleManager!
     var sourceManager: MockStyleSourceManager!
-    
+
     override func setUp() {
         styleManager = MockStyleManager()
         sourceManager = MockStyleSourceManager()

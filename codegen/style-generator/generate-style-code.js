@@ -3,13 +3,13 @@
 
 const fs = require('fs');
 const ejs = require('ejs');
-const style = require('./../vendor/mapbox-maps-stylegen/style-parser');
 const _ = require('lodash');
 require('./../vendor/mapbox-maps-stylegen/style-code');
 require('./../vendor/mapbox-maps-stylegen/type-utils');
 
-const generatePrivateAPI = process.argv.slice(2).includes("--private-api")
-const baseDirectory = generatePrivateAPI ? '../mapbox-maps-ios-private' : '../mapbox-maps-ios'
+const generatePremiumApis = process.argv.slice(2).includes("--private-api");
+const style = require('./../vendor/mapbox-maps-stylegen/style-parser')(generatePremiumApis);
+const baseDirectory = generatePremiumApis ? '../mapbox-maps-ios-private' : '../mapbox-maps-ios'
 
 // Template processing //
 

@@ -17,3 +17,11 @@ generate-style-code-private:
 .PHONY: generate-annotation-code-private
 generate-annotation-code-private:
 	cd codegen && npm install && node annotation-generator/generate-annotations.js --private-api
+
+.PHONY: generate-private-code
+generate-private-code:
+	make generate-style-code-private && make generate-annotation-code-private
+
+.PHONY: generate-public-code
+generate-public-code:
+	make generate-style-code && make generate-annotation-code

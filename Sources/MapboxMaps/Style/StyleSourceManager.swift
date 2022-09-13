@@ -17,25 +17,12 @@ internal protocol StyleSourceManagerProtocol: AnyObject {
     func setSourceProperties(for sourceId: String, properties: [String: Any]) throws
 }
 
-internal protocol StyleSourceManagerDelegate: AnyObject {
-    func styleSourceManager(_ manager: StyleSourceManagerProtocol, willStartParsingData: GeoJSONSourceData, for sourceId: String)
-    func styleSourceManager(
-        _ manager: StyleSourceManagerProtocol,
-        didFinishParsingData: GeoJSONSourceData,
-        for sourceId: String,
-        parsedData: String
-    )
-    func styleSourceManager(_ manager: StyleSourceManagerProtocol, willApplyParsedData: String, for sourceId: String)
-}
-
 internal final class StyleSourceManager: StyleSourceManagerProtocol {
     private typealias SourceId = String
 
     internal static func sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue {
         return StyleManager.getStyleSourcePropertyDefaultValue(forSourceType: sourceType, property: property)
     }
-
-    internal weak var delegate: StyleSourceManagerDelegate?
 
     private let styleManager: StyleManagerProtocol
     private let mainQueue: DispatchQueueProtocol
@@ -104,8 +91,6 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
             throw StyleError(message: "Source with id '\(id)' is not found or not a GeoJSONSource.")
         }
 
-        workItems.removeValue(forKey: id)?.cancel()
-
         applyGeoJSONData(data: geoJSON.sourceData, sourceId: id)
     }
 
@@ -173,33 +158,19 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
     }
 
     private func applyGeoJSONData(data: GeoJSONSourceData, sourceId id: String) {
+        workItems.removeValue(forKey: id)?.cancel()
+
         let item = DispatchWorkItem { [weak self] in
-            guard let self = self else { return }
-            var isCancelled: Bool { self.workItems[id]?.isCancelled ?? true }
+            if self == nil { return }
 
-            self.delegate?.styleSourceManager(self, willStartParsingData: data, for: id)
-            guard !isCancelled else { return }
+            let json = try! data.toString()
 
-            do {
-                let json = try data.toString()
-
-                self.delegate?.styleSourceManager(self, didFinishParsingData: data, for: id, parsedData: json)
-                guard !isCancelled else { return }
-
-                self.delegate?.styleSourceManager(self, willApplyParsedData: json, for: id)
-                self.mainQueue.async { [weak self] in
-                    guard let self = self else { return }
-
-                    guard !isCancelled else { return }
-
-                    do {
-                        try self.setSourceProperty(for: id, property: "data", value: json)
-                    } catch {
-                        Log.error(forMessage: "Failed to set data for source with id: \(id), error: \(error)")
-                    }
+            self?.mainQueue.async { [weak self] in
+                do {
+                    try self?.setSourceProperty(for: id, property: "data", value: json)
+                } catch {
+                    Log.error(forMessage: "Failed to set data for source with id: \(id), error: \(error)")
                 }
-            } catch {
-                Log.error(forMessage: "\(error) error when converting GeoJSON data for \(id)")
             }
         }
 

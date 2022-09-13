@@ -55,7 +55,7 @@ final class MockStyleSourceManager: StyleSourceManagerProtocol {
     }
 
     let addSourceUntypedStub = Stub<AddSourceUntypedParams, Void>()
-    func addSource(withId id: String, properties: [String : Any]) throws {
+    func addSource(withId id: String, properties: [String: Any]) throws {
         addSourceUntypedStub.call(with: AddSourceUntypedParams(id: id, properties: properties))
     }
 

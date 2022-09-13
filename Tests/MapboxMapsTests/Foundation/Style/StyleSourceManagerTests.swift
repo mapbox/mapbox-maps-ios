@@ -296,12 +296,13 @@ final class StyleSourceManagerTests: XCTestCase {
     func testGeoJSONWithNilDataAddedImmediately() throws {
         let source = GeoJSONSource()
         let id = String.randomASCII(withLength: 10)
+
         try sourceManager.addSource(source, id: id)
 
         XCTAssertEqual(styleManager.addStyleSourceStub.invocations.count, 1)
         let params = try XCTUnwrap(styleManager.addStyleSourceStub.invocations.first?.parameters)
         XCTAssertEqual(params.sourceId, id)
-        XCTAssertEqual(params.properties as? NSDictionary, ["type":"geojson"] as? NSDictionary)
+        XCTAssertEqual(params.properties as? NSDictionary, ["type": "geojson"] as? NSDictionary)
         XCTAssertEqual(backgroundQueue.asyncWorkItemStub.invocations.count, 0)
     }
 
@@ -309,12 +310,13 @@ final class StyleSourceManagerTests: XCTestCase {
         var source = GeoJSONSource()
         source.data = .empty
         let id = String.randomASCII(withLength: 10)
+
         try sourceManager.addSource(source, id: id)
 
         XCTAssertEqual(styleManager.addStyleSourceStub.invocations.count, 1)
         let params = try XCTUnwrap(styleManager.addStyleSourceStub.invocations.first?.parameters)
         XCTAssertEqual(params.sourceId, id)
-        XCTAssertEqual(params.properties as? NSDictionary, ["type":"geojson", "data": ""] as? NSDictionary)
+        XCTAssertEqual(params.properties as? NSDictionary, ["type": "geojson", "data": ""] as? NSDictionary)
         XCTAssertEqual(backgroundQueue.asyncWorkItemStub.invocations.count, 0)
     }
 
@@ -328,7 +330,7 @@ final class StyleSourceManagerTests: XCTestCase {
         XCTAssertEqual(styleManager.addStyleSourceStub.invocations.count, 1)
         let params = try XCTUnwrap(styleManager.addStyleSourceStub.invocations.first?.parameters)
         XCTAssertEqual(params.sourceId, id)
-        XCTAssertEqual(params.properties as? NSDictionary, ["type":"geojson", "data": ""] as? NSDictionary)
+        XCTAssertEqual(params.properties as? NSDictionary, ["type": "geojson", "data": ""] as? NSDictionary)
         XCTAssertEqual(backgroundQueue.asyncWorkItemStub.invocations.count, 1)
     }
 }

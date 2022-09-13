@@ -4,27 +4,152 @@ import MapboxMaps
 @objc(Custom2DPuckExample)
 public class Custom2DPuckExample: UIViewController, ExampleProtocol {
 
-    internal let toggleAccuracyRadiusButton: UIButton = UIButton(frame: .zero)
-    internal var mapView: MapView!
-    internal var showsAccuracyRing: Bool = false {
+    private var mapView: MapView!
+    internal var puckConfiguration = Puck2DConfiguration.makeDefault(showBearing: true)
+    private var showsPuck: PuckVisibility = .isVisible {
         didSet {
-            syncPuckAndButton()
+            updatePuckUI()
+        }
+    }
+
+    private var puckImage: PuckImage = .blueDot {
+        didSet {
+            updatePuckUI()
+        }
+    }
+
+    private var showsBearing: PuckBearingVisibility = .isVisible {
+        didSet {
+            updatePuckUI()
+        }
+    }
+
+    private var showsAccuracyRing: PuckAccuracyRingVisibility = .isHidden {
+        didSet {
+            updatePuckUI()
+        }
+    }
+
+    private var bearingSource: PuckBearingSource = .course {
+        didSet {
+            mapView.location.options.puckBearingSource = bearingSource
+        }
+    }
+
+    private var style: Style = .dark {
+        didSet {
+            mapView.mapboxMap.style.uri = style.styleURL
+        }
+    }
+
+    private var projection: StyleProjectionName = .mercator {
+        didSet {
+            updateProjection()
+        }
+    }
+
+    private enum PuckVisibility {
+        case isVisible
+        case isHidden
+
+        var isVisible: Bool {
+            switch self {
+            case .isVisible:
+                return true
+            case .isHidden:
+                return false
+            }
+        }
+
+        mutating func toggle() {
+            self = self == .isVisible ? .isHidden : .isVisible
+        }
+    }
+
+    private enum PuckImage {
+        case star
+        case blueDot
+
+        var image: UIImage? {
+            switch self {
+            case .star:
+                return UIImage(named: "star")
+            case .blueDot:
+                return .none
+            }
+        }
+
+        mutating func toggle() {
+            self = self == .blueDot ? .star : .blueDot
+        }
+    }
+
+    private enum PuckBearingVisibility {
+        case isVisible
+        case isHidden
+
+        var isVisible: Bool {
+            switch self {
+            case .isVisible:
+                return true
+            case .isHidden:
+                return false
+            }
+        }
+
+        mutating func toggle() {
+            self = self == .isVisible ? .isHidden : .isVisible
+        }
+    }
+
+    private enum PuckAccuracyRingVisibility {
+        case isVisible
+        case isHidden
+
+        var isVisible: Bool {
+            switch self {
+            case .isVisible:
+                return true
+            case .isHidden:
+                return false
+            }
+        }
+
+        mutating func toggle() {
+            self = self == .isVisible ? .isHidden : .isVisible
+        }
+    }
+
+    private enum Style {
+        case light
+        case dark
+
+        var styleURL: StyleURI {
+            switch self {
+            case .light:
+                return StyleURI.light
+            case .dark:
+                return StyleURI.dark
+            }
+        }
+
+        mutating func toggle() {
+            self = self == .light ? .dark : .light
         }
     }
 
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds)
+        let mapInitOptions = MapInitOptions(styleURI: .dark)
+        mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        // Setup and create button for toggling accuracy ring
-        setupToggleShowAccuracyButton()
+        addCustomizePuckButton()
 
         // Granularly configure the location puck with a `Puck2DConfiguration`
-        let configuration = Puck2DConfiguration(topImage: UIImage(named: "star"))
-        mapView.location.options.puckType = .puck2D(configuration)
+        mapView.location.options.puckType = .puck2D(puckConfiguration)
         mapView.location.options.puckBearingSource = .course
 
         // Center map over the user's current location
@@ -36,12 +161,6 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
                 self.mapView.camera.ease(to: cameraOptions, duration: 2.0)
             }
         })
-
-        // Accuracy ring is only shown when zoom is greater than or equal to 18
-        mapView.mapboxMap.onEvery(event: .cameraChanged, handler: { [weak self] _ in
-            guard let self = self else { return }
-            self.toggleAccuracyRadiusButton.isHidden = self.mapView.cameraState.zoom < 18.0
-        })
     }
 
     override public func viewDidAppear(_ animated: Bool) {
@@ -50,37 +169,94 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         finish()
     }
 
-    @objc func showHideAccuracyRadius() {
-        showsAccuracyRing.toggle()
+    private func addCustomizePuckButton() {
+        // Set up button to change the puck options
+        let button = UIButton(type: .system)
+        button.setTitle("Customize puck", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = #colorLiteral(red: 0, green: 0.4784313725, blue: 0.9882352941, alpha: 1)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 20
+        button.addTarget(self, action: #selector(changePuckOptions(sender:)), for: .touchUpInside)
+        view.addSubview(button)
+
+        // Set button location
+        NSLayoutConstraint.activate([
+            button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -24),
+            button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            button.widthAnchor.constraint(equalToConstant: 200),
+            button.heightAnchor.constraint(equalToConstant: 40)
+        ])
     }
 
-    func syncPuckAndButton() {
-        // Update puck config
-        var configuration = Puck2DConfiguration(topImage: UIImage(named: "star"))
-        configuration.showsAccuracyRing = showsAccuracyRing
-        configuration.accuracyRingColor = UIColor.skyBlue
-        configuration.accuracyRingBorderColor = UIColor.lightGray
+    @objc public func changePuckOptions(sender: UIButton) {
+        let alert = UIAlertController(title: "Toggle Puck Options",
+                                      message: "Select an options to toggle.",
+                                      preferredStyle: .actionSheet)
 
-        mapView.location.options.puckType = .puck2D(configuration)
+        alert.addAction(UIAlertAction(title: "Toggle Puck visibility", style: .default) { _ in
+            self.showsPuck.toggle()
+        })
 
-        // Update button title
-        let title: String = showsAccuracyRing ? "Disable Accuracy Radius" : "Enable Accuracy Radius"
-        toggleAccuracyRadiusButton.setTitle(title, for: .normal)
+        alert.addAction(UIAlertAction(title: "Toggle Puck image", style: .default) { _ in
+            self.puckImage.toggle()
+        })
+
+        alert.addAction(UIAlertAction(title: "Toggle bearing visibility", style: .default) { _ in
+            self.showsBearing.toggle()
+        })
+
+        alert.addAction(UIAlertAction(title: "Toggle accuracy ring", style: .default) { _ in
+            self.showsAccuracyRing.toggle()
+        })
+
+        alert.addAction(UIAlertAction(title: "Toggle bearing source", style: .default) { _ in
+            self.bearingSource.toggle()
+        })
+
+        alert.addAction(UIAlertAction(title: "Toggle Map Style", style: .default) { _ in
+            self.style.toggle()
+        })
+
+        alert.addAction(UIAlertAction(title: "Toggle Projection", style: .default) { _ in
+            self.projection.toggle()
+        })
+
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+
+        present(alert, animated: true)
     }
 
-    private func setupToggleShowAccuracyButton() {
-        // Styling
-        toggleAccuracyRadiusButton.backgroundColor = .systemBlue
-        toggleAccuracyRadiusButton.addTarget(self, action: #selector(showHideAccuracyRadius), for: .touchUpInside)
-        toggleAccuracyRadiusButton.setTitleColor(.white, for: .normal)
-        toggleAccuracyRadiusButton.isHidden = true
-        syncPuckAndButton()
-        toggleAccuracyRadiusButton.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(toggleAccuracyRadiusButton)
+    func updatePuckUI() {
+        puckConfiguration = Puck2DConfiguration.makeDefault(showBearing: showsBearing.isVisible)
+        puckConfiguration.showsAccuracyRing = showsAccuracyRing.isVisible
+        puckConfiguration.topImage = puckImage.image
 
-        // Constraints
-        toggleAccuracyRadiusButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20.0).isActive = true
-        toggleAccuracyRadiusButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20.0).isActive = true
-        toggleAccuracyRadiusButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -100.0).isActive = true
+        switch showsPuck {
+        case .isVisible:
+            mapView.location.options.puckType = .puck2D(puckConfiguration)
+        default:
+            mapView.location.options.puckType = .none
+        }
+    }
+
+    func updateProjection() {
+        do {
+            try mapView.mapboxMap.style.setProjection(StyleProjection(name: projection))
+        } catch {
+            print(error)
+        }
+    }
+}
+
+extension PuckBearingSource {
+    mutating func toggle() {
+        self = self == .heading ? .course : .heading
+    }
+}
+
+extension StyleProjectionName {
+    mutating func toggle() {
+        self = self == .mercator ? .globe : .mercator
     }
 }

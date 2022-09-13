@@ -173,7 +173,7 @@ struct Examples {
                 description: "Display sonar-like animation radiating from the location puck.",
                 type: BasicLocationPulsingExample.self),
         Example(title: "Customize the location puck",
-                description: "Use a different asset to represent the puck.",
+                description: "Customized the location puck on the map",
                 type: Custom2DPuckExample.self),
         Example(title: "Use a 3D model to show the user's location",
                 description: "A 3D model is used to represent the user's location.",

@@ -165,70 +165,68 @@ final class StyleSourceManagerTests: XCTestCase {
         XCTAssertEqual(styleManager.setStyleSourcePropertyStub.invocations.count, 0)
     }
 
-    func testAsyncGeoJSONUpdateRespectsCancellationAfterStart() throws {
+    func testAsyncGeoJSONUpdateIgnoresCancellationAfterStart() throws {
         // given
         let id = String.randomASCII(withLength: 10)
         let geoJSONObject = GeoJSONObject.featureCollection(FeatureCollection(features: []))
-        let delegate = DummyStyleSourceManagerDelegate()
         styleManager.getStyleSourcesStub.defaultReturnValue = [StyleObjectInfo(id: id, type: SourceType.geoJson.rawValue)]
-        sourceManager.delegate = delegate
 
         try sourceManager.updateGeoJSONSource(withId: id, geoJSON: geoJSONObject)
 
         let workItem = try XCTUnwrap(backgroundQueue.asyncWorkItemStub.invocations.first?.parameters)
-        delegate.willStartParsing = { workItem.cancel() }
 
         // when
         workItem.perform()
-
-        // then
-        XCTAssertEqual(backgroundQueue.asyncWorkItemStub.invocations.count, 1)
-        XCTAssertEqual(mainQueue.asyncClosureStub.invocations.count, 0)
-        XCTAssertEqual(styleManager.setStyleSourcePropertyStub.invocations.count, 0)
-    }
-
-    func testAsyncGeoJSONUpdateRespectsCancellationAfterParsing() throws {
-        // given
-        let id = String.randomASCII(withLength: 10)
-        let geoJSONObject = GeoJSONObject.featureCollection(FeatureCollection(features: []))
-        let delegate = DummyStyleSourceManagerDelegate()
-        styleManager.getStyleSourcesStub.defaultReturnValue = [StyleObjectInfo(id: id, type: SourceType.geoJson.rawValue)]
-        sourceManager.delegate = delegate
-
-        try sourceManager.updateGeoJSONSource(withId: id, geoJSON: geoJSONObject)
-
-        let workItem = try XCTUnwrap(backgroundQueue.asyncWorkItemStub.invocations.first?.parameters)
-        delegate.didFinishParsing = { workItem.cancel() }
-
-        // when
-        workItem.perform()
-
-        // then
-        XCTAssertEqual(backgroundQueue.asyncWorkItemStub.invocations.count, 1)
-        XCTAssertEqual(mainQueue.asyncClosureStub.invocations.count, 0)
-        XCTAssertEqual(styleManager.setStyleSourcePropertyStub.invocations.count, 0)
-    }
-
-    func testAsyncGeoJSONUpdateRespectsCancellationBeforeApplying() throws {
-        // given
-        let id = String.randomASCII(withLength: 10)
-        let geoJSONObject = GeoJSONObject.featureCollection(FeatureCollection(features: []))
-        let delegate = DummyStyleSourceManagerDelegate()
-        styleManager.getStyleSourcesStub.defaultReturnValue = [StyleObjectInfo(id: id, type: SourceType.geoJson.rawValue)]
-        sourceManager.delegate = delegate
-
-        try sourceManager.updateGeoJSONSource(withId: id, geoJSON: geoJSONObject)
-
-        let workItem = try XCTUnwrap(backgroundQueue.asyncWorkItemStub.invocations.first?.parameters)
-        delegate.willApplyData = { workItem.cancel() }
-
-        // when
-        workItem.perform()
+        workItem.cancel()
+        mainQueue.asyncClosureStub.invocations.first?.parameters.work()
 
         // then
         XCTAssertEqual(backgroundQueue.asyncWorkItemStub.invocations.count, 1)
         XCTAssertEqual(mainQueue.asyncClosureStub.invocations.count, 1)
-        XCTAssertEqual(styleManager.setStyleSourcePropertyStub.invocations.count, 0)
+        XCTAssertEqual(styleManager.setStyleSourcePropertyStub.invocations.count, 1)
+    }
+
+    func testMutltipleAsyncGeoJSONUpdateCancelPreviousWork() throws {
+        // given
+        let iterations = 100
+        let id = String.randomASCII(withLength: 10)
+        let geoJSONObject = GeoJSONObject.featureCollection(FeatureCollection(features: []))
+        styleManager.getStyleSourcesStub.defaultReturnValue = [StyleObjectInfo(id: id, type: SourceType.geoJson.rawValue)]
+
+        // when
+        for _ in 0..<iterations {
+            try sourceManager.updateGeoJSONSource(withId: id, geoJSON: geoJSONObject)
+        }
+
+        backgroundQueue.asyncWorkItemStub.invocations.forEach { $0.parameters.perform() }
+        mainQueue.asyncClosureStub.invocations.forEach { $0.parameters.work() }
+
+        // then
+        XCTAssertEqual(backgroundQueue.asyncWorkItemStub.invocations.count, iterations)
+        XCTAssertEqual(mainQueue.asyncClosureStub.invocations.count, 1)
+        XCTAssertEqual(styleManager.setStyleSourcePropertyStub.invocations.count, 1)
+    }
+
+    func testMultipleDistrinctAsyncGeoJSONUpdateDoNotCancelEachOtherOut() throws {
+        // given
+        let sourceCount = 100
+        let ids = (0..<sourceCount).map { _ in UUID().uuidString }
+        let geoJSONObject = GeoJSONObject.featureCollection(FeatureCollection(features: []))
+        styleManager.getStyleSourcesStub.defaultReturnValue = ids.map { StyleObjectInfo(id: $0, type: SourceType.geoJson.rawValue) }
+
+        // when
+        for id in ids {
+            try sourceManager.updateGeoJSONSource(withId: id, geoJSON: geoJSONObject)
+        }
+
+        backgroundQueue.asyncWorkItemStub.invocations.forEach { $0.parameters.perform() }
+        mainQueue.asyncClosureStub.invocations.forEach { $0.parameters.work() }
+
+        // then
+        XCTAssertEqual(backgroundQueue.asyncWorkItemStub.invocations.count, sourceCount)
+        XCTAssert(backgroundQueue.asyncWorkItemStub.invocations.allSatisfy { !$0.parameters.isCancelled })
+        XCTAssertEqual(mainQueue.asyncClosureStub.invocations.count, sourceCount)
+        XCTAssertEqual(styleManager.setStyleSourcePropertyStub.invocations.count, sourceCount)
     }
 
     func testSubsequentAsyncGeoJSONUpdateCancelsExisting() throws {
@@ -332,27 +330,5 @@ final class StyleSourceManagerTests: XCTestCase {
         XCTAssertEqual(params.sourceId, id)
         XCTAssertEqual(params.properties as? NSDictionary, ["type": "geojson", "data": ""] as? NSDictionary)
         XCTAssertEqual(backgroundQueue.asyncWorkItemStub.invocations.count, 1)
-    }
-}
-
-private final class DummyStyleSourceManagerDelegate: StyleSourceManagerDelegate {
-    typealias Closure = () -> Void
-    var willStartParsing: Closure?
-    var didFinishParsing: Closure?
-    var willApplyData: Closure?
-
-    func styleSourceManager(_ manager: StyleSourceManagerProtocol, willStartParsingData: GeoJSONSourceData, for sourceId: String) {
-        willStartParsing?()
-    }
-    func styleSourceManager(
-        _ manager: StyleSourceManagerProtocol,
-        didFinishParsingData: GeoJSONSourceData,
-        for sourceId: String,
-        parsedData: String
-    ) {
-        didFinishParsing?()
-    }
-    func styleSourceManager(_ manager: StyleSourceManagerProtocol, willApplyParsedData: String, for sourceId: String) {
-        willApplyData?()
     }
 }

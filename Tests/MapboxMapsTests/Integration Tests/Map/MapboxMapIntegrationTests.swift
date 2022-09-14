@@ -80,34 +80,6 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
         removeMapView()
     }
 
-    func testLoadStyleURICompletionIsCalledWhenMapViewIsDeallocated() throws {
-        weak var weakMapView: MapView?
-        weak var weakMapboxMap: MapboxMap?
-
-        var completionCalled: XCTestExpectation!
-
-        autoreleasepool {
-            setupMapView()
-
-            weakMapView = mapView
-            weakMapboxMap = mapView.mapboxMap
-
-            completionCalled = expectation(description: "Completion closure is called")
-            mapView.mapboxMap.loadStyleURI(.streets) { _ in
-                completionCalled.fulfill()
-            }
-
-            // Now remove the MapView
-            removeMapView()
-        }
-
-        XCTAssertNil(weakMapView)
-        XCTAssertNotNil(weakMapboxMap)
-        wait(for: [completionCalled], timeout: 5.0)
-        XCTAssertNil(weakMapView)
-        XCTAssertNil(weakMapboxMap)
-    }
-
     // MARK: - Helpers
 
     private func setupMapView() {

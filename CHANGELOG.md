@@ -9,10 +9,11 @@ Mapbox welcomes participation and contributions from everyone.
 ## 10.8.1 - September 8, 2022
 
 * Downgrade MME to 1.0.8. ([#1572](https://github.com/mapbox/mapbox-maps-ios/pull/1572))
+* Update to MapboxCoreMaps 10.8.0 and MapboxCommon 23.0.0. ([#1564](https://github.com/mapbox/mapbox-maps-ios/pull/1564))
 
 ## 10.8.0 - September 8, 2022
 
-* Update to MapboxCoreMaps 10.8.0 and MapboxCommon 23.0.0. ([#1564](https://github.com/mapbox/mapbox-maps-ios/pull/1564))
+ ⚠️ MapboxMaps SDK iOS v10.8.0 contained a defect. Although this bug had no known end-user impact, 10.8.0 should not be used in production and has been removed from availability. v10.8.1 resolves the issue and is a drop-in replacement.
 
 ## 10.8.0-rc.1 - August 24, 2022
 

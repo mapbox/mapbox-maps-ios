@@ -39,6 +39,10 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
         }
     }
 
+    deinit {
+        workItems.values.forEach { $0.cancel() }
+    }
+
     internal init(
         styleManager: StyleManagerProtocol,
         mainQueue: DispatchQueueProtocol = DispatchQueue.main,

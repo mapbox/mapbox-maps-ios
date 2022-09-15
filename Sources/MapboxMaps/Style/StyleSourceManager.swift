@@ -27,7 +27,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
     private let styleManager: StyleManagerProtocol
     private let mainQueue: DispatchQueueProtocol
     private let backgroundQueue: DispatchQueueProtocol
-    private var workItems = [SourceId: DispatchWorkItem]()
+    private var workItems = [SourceId: Cancelable]()
 
     internal var allSourceIdentifiers: [SourceInfo] {
         return styleManager.getStyleSources().compactMap { info in

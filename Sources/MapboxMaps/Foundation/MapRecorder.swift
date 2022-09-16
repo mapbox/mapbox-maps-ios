@@ -1,6 +1,7 @@
 import Foundation
 @_implementationOnly import MapboxCoreMaps_Private
 
+// swiftlint:disable missing_docs
 @_spi(Internal) public final class MapRecorder {
     let recorder: MapboxCoreMaps_Private.MapRecorder
 
@@ -40,3 +41,4 @@ import Foundation
         recorder.getPlaybackState()
     }
 }
+// swiftlint:enable missing_docs

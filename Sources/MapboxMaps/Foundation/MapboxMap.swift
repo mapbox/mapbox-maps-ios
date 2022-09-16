@@ -1125,7 +1125,10 @@ extension MapboxMap {
 }
 
 // MARK: - Map Recorder
+
 extension MapboxMap {
+
+    // swiftlint:disable:next missing_docs
     @_spi(Internal) public final func makeRecorder() -> MapRecorder {
         MapRecorder(mapView: __map)
     }

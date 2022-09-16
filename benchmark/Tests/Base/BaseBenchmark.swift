@@ -1,6 +1,6 @@
 import XCTest
 import MapboxMobileEvents
-@testable import MapboxMaps
+import MapboxMaps
 
 class BaseBenchmark: XCTestCase {
     enum Error: Swift.Error {

@@ -1,5 +1,5 @@
 import Foundation
-@_spi(Experimental) @testable import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 
 struct SetRenderCacheCommand: AsyncCommand {
     private let cacheSize: UInt64

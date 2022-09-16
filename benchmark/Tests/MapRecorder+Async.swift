@@ -1,4 +1,4 @@
-@testable import MapboxMaps
+@_spi(Internal) import MapboxMaps
 
 extension MapRecorder {
     func replay(content: String, playbackCount: Int = 1, playbackSpeedMultiplier: Double = 1.0) async {

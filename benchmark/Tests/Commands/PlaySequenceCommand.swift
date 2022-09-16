@@ -1,5 +1,5 @@
 import Foundation
-@testable import MapboxMaps
+@_spi(Internal) import MapboxMaps
 import XCTest
 import DataCompression
 

@@ -1,5 +1,5 @@
 import Foundation
-@testable import MapboxMaps
+import MapboxMaps
 
 struct EnableTerrainCommand: AsyncCommand {
     private let terrain: Terrain

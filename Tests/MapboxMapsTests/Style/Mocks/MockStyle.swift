@@ -123,7 +123,6 @@ final class MockStyle: StyleProtocol {
         removeImageStub.call(with: id)
     }
 
-
     struct AddImageWithInsetsParams {
         let image: UIImage
         let id: String

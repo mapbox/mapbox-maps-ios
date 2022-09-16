@@ -464,6 +464,17 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
     }
 
+    /// Text leading value for multi-line text.
+    @available(*, deprecated, message: "text-line-height property is now data driven, use `PointAnnotation.textLineHeight` instead.")
+    public var textLineHeight: Double? {
+        get {
+            return layerProperties["text-line-height"] as? Double
+        }
+        set {
+            layerProperties["text-line-height"] = newValue
+        }
+    }
+
     internal func handleQueriedFeatureIds(_ queriedFeatureIds: [String]) {
         // Find if any `queriedFeatureIds` match an annotation's `id`
         let tappedAnnotations = annotations.filter { queriedFeatureIds.contains($0.id) }

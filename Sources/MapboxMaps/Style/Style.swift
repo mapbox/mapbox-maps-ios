@@ -35,7 +35,6 @@ internal extension StyleProtocol {
     }
 }
 
-
 // swiftlint:disable type_body_length
 
 /// Style provides access to the APIs used to dynamically modify the map's style. Use it

@@ -1126,7 +1126,7 @@ extension MapboxMap {
 
 // MARK: - Map Recorder
 extension MapboxMap {
-    internal func makeRecorder() -> MapRecorder {
+    @_spi(Internal) public final func makeRecorder() -> MapRecorder {
         MapRecorder(mapView: __map)
     }
 }

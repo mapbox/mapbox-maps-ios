@@ -23,6 +23,11 @@ internal extension Encodable {
     func toString() throws -> String {
         let data = try JSONEncoder().encode(self)
 
-        return String(decoding: data, as: UTF8.self)
+
+        guard let result = String(data: data, encoding: .utf8) else {
+            throw TypeConversionError.unsuccessfulConversion
+        }
+
+        return result
     }
 }

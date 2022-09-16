@@ -55,7 +55,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
 
     // MARK: - Typed API
 
-    internal func source<T>(withId id: String, type: T.Type) throws -> T where T: Source {
+    internal func source<T: Source>(withId id: String, type: T.Type) throws -> T {
         let sourceProps = try sourceProperties(for: id)
         return try type.init(jsonObject: sourceProps)
     }
@@ -143,29 +143,25 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
     // MARK: - Async GeoJSON source data parsing
 
     private func addGeoJSONSource(_ source: GeoJSONSource, id: String) throws {
-        guard let data = source.data else {
-            try addSourceInternal(source, id: id)
-            return
-        }
-
-        if case GeoJSONSourceData.empty = data {
-            try addSourceInternal(source, id: id)
-            return
-        }
-
+        let data = source.data
+        
         var emptySource = source
-        emptySource.data = .empty
+        if emptySource.data != nil {
+            emptySource.data = .empty
+        }
 
         try addSourceInternal(emptySource, id: id)
 
-        applyGeoJSONData(data: data, sourceId: id)
+        if let data = data {
+            applyGeoJSONData(data: data, sourceId: id)
+        }
     }
 
     private func applyGeoJSONData(data: GeoJSONSourceData, sourceId id: String) {
         workItems.removeValue(forKey: id)?.cancel()
 
         let item = DispatchWorkItem { [weak self] in
-            if self == nil { return }
+            if self == nil { return } // not capturing self here as toString conversion below can take time
 
             let json = try! data.toString()
 

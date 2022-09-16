@@ -79,7 +79,7 @@ final class PointAnnotationManagerTests: XCTestCase {
         )
     }
 
-    func testAllImagesRemovedFromStyle() {
+    func testAllImagesRemovedFromStyleOnUpdate() {
         // given
         let annotations = (0..<10)
             .map { _ in PointAnnotation.Image(image: UIImage(), name: UUID().uuidString) }
@@ -106,6 +106,26 @@ final class PointAnnotationManagerTests: XCTestCase {
             Set(style.removeImageStub.invocations.map(\.parameters)),
             Set(annotations.compactMap(\.image?.name))
         )
+    }
+
+    func testAllImagesRemovedFromStyleOnDestroy() {
+        // given
+        let annotations = (0..<10)
+            .map { _ in PointAnnotation.Image(image: UIImage(), name: UUID().uuidString) }
+            .map(PointAnnotation.init)
+        manager.annotations = annotations
+        manager.syncSourceAndLayerIfNeeded()
+
+        // when
+        manager.destroy()
+
+        // then
+        XCTAssertEqual(style.removeImageStub.invocations.count, annotations.count)
+        XCTAssertEqual(
+            Set(style.removeImageStub.invocations.map(\.parameters)),
+            Set(annotations.compactMap(\.image?.name))
+        )
+
     }
 }
 

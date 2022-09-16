@@ -111,6 +111,8 @@ public class PointAnnotationManager: AnnotationManagerInternal {
                 forMessage: "Failed to remove source for PointAnnotationManager with id \(id) due to error: \(error)",
                 category: "Annotations")
         }
+        removeImages(from: style, images: addedImages)
+
         displayLinkCoordinator?.remove(displayLinkParticipant)
     }
 

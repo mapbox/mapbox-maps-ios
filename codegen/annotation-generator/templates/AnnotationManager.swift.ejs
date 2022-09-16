@@ -23,6 +23,9 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
     }
 
     private var needsSyncSourceAndLayer = false
+    <%_ if (type === symbol) { _%>
+    private var addedImages = Set<String>()
+    <%_ } _%>
 
     // MARK: - Interaction
 
@@ -41,7 +44,7 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
     // MARK: - Setup / Lifecycle
 
     /// Dependency required to add sources/layers to the map
-    private let style: Style
+    private let style: StyleProtocol
 
     /// Storage for common layer properties
     private var layerProperties: [String: Any] = [:] {
@@ -62,7 +65,7 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
     private var isDestroyed = false
 
     internal init(id: String,
-                  style: Style,
+                  style: StyleProtocol,
                   layerPosition: LayerPosition?,
                   displayLinkCoordinator: DisplayLinkCoordinator) {
         self.id = id
@@ -120,6 +123,10 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
                 forMessage: "Failed to remove source for <%- camelize(type) %>AnnotationManager with id \(id) due to error: \(error)",
                 category: "Annotations")
         }
+        <%_ if (type === symbol) { _%>
+        removeImages(from: style, images: addedImages)
+
+        <%_ } _%>
         displayLinkCoordinator?.remove(displayLinkParticipant)
     }
 
@@ -136,7 +143,14 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
         needsSyncSourceAndLayer = false
 
         <%_ if (type === symbol) { _%>
-        addImageToStyleIfNeeded(style: style)
+        let newImages = Set(annotations.compactMap(\.image))
+        let newImageNames = Set(newImages.map(\.name))
+        let unusedImages = addedImages.subtracting(newImageNames)
+
+        addImagesToStyleIfNeeded(style: style, images: newImages)
+        removeImages(from: style, images: unusedImages)
+
+        addedImages = newImageNames
 
         <%_ } _%>
         // Construct the properties dictionary from the annotations

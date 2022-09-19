@@ -49,7 +49,7 @@ internal final class SimpleCameraAnimator: NSObject, SimpleCameraAnimatorProtoco
     private let duration: TimeInterval
     private let unitBezier: UnitBezier
     private let mapboxMap: MapboxMapProtocol
-    private let mainQueue: DispatchQueueProtocol
+    private let mainQueue: MainQueueProtocol
     private let cameraOptionsInterpolator: CameraOptionsInterpolatorProtocol
     private let dateProvider: DateProvider
     internal weak var delegate: CameraAnimatorDelegate?
@@ -103,7 +103,7 @@ internal final class SimpleCameraAnimator: NSObject, SimpleCameraAnimatorProtoco
                   curve: TimingCurve,
                   owner: AnimationOwner,
                   mapboxMap: MapboxMapProtocol,
-                  mainQueue: DispatchQueueProtocol,
+                  mainQueue: MainQueueProtocol,
                   cameraOptionsInterpolator: CameraOptionsInterpolatorProtocol,
                   dateProvider: DateProvider) {
         self.from = from

@@ -14,7 +14,7 @@ public final class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimator
 
     private let mapboxMap: MapboxMapProtocol
 
-    private let mainQueue: DispatchQueueProtocol
+    private let mainQueue: MainQueueProtocol
 
     /// The animator's owner
     public let owner: AnimationOwner
@@ -65,7 +65,7 @@ public final class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimator
                   owner: AnimationOwner,
                   duration: TimeInterval? = nil,
                   mapboxMap: MapboxMapProtocol,
-                  mainQueue: DispatchQueueProtocol,
+                  mainQueue: MainQueueProtocol,
                   dateProvider: DateProvider) {
         let flyToInterpolator = FlyToInterpolator(
             from: mapboxMap.cameraState,

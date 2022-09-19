@@ -161,6 +161,9 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
     private func applyGeoJSONData(data: GeoJSONSourceData, sourceId id: String) {
         workItems.removeValue(forKey: id)?.cancel()
 
+        // This implementation favors the first submitted task and the last, in case of many work items queuing up -
+        // the item that started execution will disregard cancellation, queued up items in the middle will get cancelled,
+        // and the last item will be left waiting in the queue.
         let item = DispatchWorkItem { [weak self] in
             if self == nil { return } // not capturing self here as toString conversion below can take time
 

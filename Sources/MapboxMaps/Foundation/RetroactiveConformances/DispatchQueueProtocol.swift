@@ -13,13 +13,15 @@ internal protocol DispatchQueueProtocol: AnyObject {
 }
 
 extension DispatchQueueProtocol {
+    func async(execute work: @escaping @convention(block) () -> Void) {
+        async(group: nil, qos: .unspecified, flags: [], execute: work)
+    }
+
     func async(
-        group: DispatchGroup? = nil,
-        qos: DispatchQoS = .unspecified,
-        flags: DispatchWorkItemFlags = [],
+        qos: DispatchQoS,
         execute work: @escaping @convention(block) () -> Void
     ) {
-        async(group: group, qos: qos, flags: flags, execute: work)
+        async(group: nil, qos: qos, flags: [], execute: work)
     }
 }
 

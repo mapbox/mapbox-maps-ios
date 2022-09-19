@@ -6,7 +6,7 @@ final class BasicCameraAnimatorImplIntegrationTests: XCTestCase {
     var window: UIWindow!
     var cameraView: CameraView!
     var mapboxMap: MockMapboxMap!
-    var mainQueue: MockDispatchQueue!
+    var mainQueue: MockMainQueue!
     var animator: BasicCameraAnimatorImpl!
     // swiftlint:disable:next weak_delegate
     var delegate: MockBasicCameraAnimatorDelegate!
@@ -18,7 +18,7 @@ final class BasicCameraAnimatorImplIntegrationTests: XCTestCase {
         window.addSubview(cameraView)
         window.makeKeyAndVisible()
         mapboxMap = MockMapboxMap()
-        mainQueue = MockDispatchQueue()
+        mainQueue = MockMainQueue()
         animator = BasicCameraAnimatorImpl(
             propertyAnimator: UIViewPropertyAnimator(),
             owner: .unspecified,

@@ -37,13 +37,13 @@ internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
 
     private let cameraViewContainerView: UIView
     private let mapboxMap: MapboxMapProtocol
-    private let mainQueue: DispatchQueueProtocol
+    private let mainQueue: MainQueueProtocol
     private let dateProvider: DateProvider
     private let cameraOptionsInterpolator: CameraOptionsInterpolatorProtocol
 
     internal init(cameraViewContainerView: UIView,
                   mapboxMap: MapboxMapProtocol,
-                  mainQueue: DispatchQueueProtocol,
+                  mainQueue: MainQueueProtocol,
                   dateProvider: DateProvider,
                   cameraOptionsInterpolator: CameraOptionsInterpolatorProtocol) {
         self.cameraViewContainerView = cameraViewContainerView

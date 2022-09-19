@@ -43,7 +43,7 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
 
     private let mapboxMap: MapboxMapProtocol
 
-    private let mainQueue: DispatchQueueProtocol
+    private let mainQueue: MainQueueProtocol
 
     internal weak var delegate: BasicCameraAnimatorDelegate?
 
@@ -111,7 +111,7 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
     internal init(propertyAnimator: UIViewPropertyAnimator,
                   owner: AnimationOwner,
                   mapboxMap: MapboxMapProtocol,
-                  mainQueue: DispatchQueueProtocol,
+                  mainQueue: MainQueueProtocol,
                   cameraView: CameraView) {
         self.propertyAnimator = propertyAnimator
         self.owner = owner

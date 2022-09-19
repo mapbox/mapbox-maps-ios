@@ -29,7 +29,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     var owner: AnimationOwner!
     var cameraView: MockCameraView!
     var mapboxMap: MockMapboxMap!
-    var mainQueue: MockDispatchQueue!
+    var mainQueue: MockMainQueue!
     var animator: BasicCameraAnimatorImpl!
     // swiftlint:disable:next weak_delegate
     var delegate: MockBasicCameraAnimatorDelegate!
@@ -40,7 +40,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
         owner = .random()
         cameraView = MockCameraView()
         mapboxMap = MockMapboxMap()
-        mainQueue = MockDispatchQueue()
+        mainQueue = MockMainQueue()
         animator = BasicCameraAnimatorImpl(
             propertyAnimator: propertyAnimator,
             owner: owner,

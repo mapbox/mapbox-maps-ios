@@ -12,7 +12,7 @@ internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimator
     private let decelerationFactor: CGFloat
     private var previousDate: Date?
     private let locationChangeHandler: (_ fromLocation: CGPoint, _ toLocation: CGPoint) -> Void
-    private let mainQueue: DispatchQueueProtocol
+    private let mainQueue: MainQueueProtocol
     private let dateProvider: DateProvider
     private var completionBlocks = [AnimationCompletion]()
 
@@ -52,7 +52,7 @@ internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimator
                   decelerationFactor: CGFloat,
                   owner: AnimationOwner,
                   locationChangeHandler: @escaping (_ fromLocation: CGPoint, _ toLocation: CGPoint) -> Void,
-                  mainQueue: DispatchQueueProtocol,
+                  mainQueue: MainQueueProtocol,
                   dateProvider: DateProvider) {
         self.location = location
         self.velocity = velocity

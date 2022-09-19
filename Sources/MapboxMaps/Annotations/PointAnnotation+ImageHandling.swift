@@ -16,16 +16,14 @@ extension PointAnnotation {
 internal extension PointAnnotationManager {
 
     func addImagesToStyleIfNeeded(style: StyleProtocol, images: Set<PointAnnotation.Image>) {
-        for pointAnnotationImage in images {
-            // If the image is not found, add it to the style
-            if !style.imageExists(withId: pointAnnotationImage.name) {
-                do {
-                    try style.addImage(pointAnnotationImage.image, id: pointAnnotationImage.name)
-                } catch {
-                    Log.warning(
-                        forMessage: "Could not add image to style in PointAnnotationManager due to error: \(error)",
-                        category: "Annnotations")
-                }
+        // If the image is not found, add it to the style
+        for pointAnnotationImage in images where !style.imageExists(withId: pointAnnotationImage.name) {
+            do {
+                try style.addImage(pointAnnotationImage.image, id: pointAnnotationImage.name)
+            } catch {
+                Log.warning(
+                    forMessage: "Could not add image to style in PointAnnotationManager due to error: \(error)",
+                    category: "Annnotations")
             }
         }
     }

@@ -144,7 +144,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
 
     private func addGeoJSONSource(_ source: GeoJSONSource, id: String) throws {
         let data = source.data
-        
+
         var emptySource = source
         if emptySource.data != nil {
             emptySource.data = .empty
@@ -152,9 +152,10 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
 
         try addSourceInternal(emptySource, id: id)
 
-        if let data = data {
-            applyGeoJSONData(data: data, sourceId: id)
-        }
+        guard let data = data else { return }
+        if case GeoJSONSourceData.empty = data { return }
+
+        applyGeoJSONData(data: data, sourceId: id)
     }
 
     private func applyGeoJSONData(data: GeoJSONSourceData, sourceId id: String) {

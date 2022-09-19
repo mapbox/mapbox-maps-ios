@@ -39,7 +39,7 @@ final class LineAnnotationExample: UIViewController, ExampleProtocol {
 
         // random add lines across the globe
         var randomCoordinates = [CLLocationCoordinate2D]()
-        for _ in 0...400 {
+        for _ in 0..<400 {
             randomCoordinates.append(.random)
         }
 

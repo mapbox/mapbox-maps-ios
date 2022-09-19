@@ -4,7 +4,7 @@ import XCTest
 final class ViewportImplTests: XCTestCase {
 
     var options: ViewportOptions!
-    var mainQueue: MockMainQueue!
+    var mainQueue: MockDispatchQueue!
     var defaultTransition: MockViewportTransition!
     var anyTouchGestureRecognizer: MockGestureRecognizer!
     var doubleTapGestureRecognizer: MockGestureRecognizer!
@@ -15,7 +15,7 @@ final class ViewportImplTests: XCTestCase {
     override func setUp() {
         super.setUp()
         options = .random()
-        mainQueue = MockMainQueue()
+        mainQueue = MockDispatchQueue()
         defaultTransition = MockViewportTransition()
         anyTouchGestureRecognizer = MockGestureRecognizer()
         doubleTapGestureRecognizer = MockGestureRecognizer()
@@ -50,13 +50,13 @@ final class ViewportImplTests: XCTestCase {
         runInvocation.parameters.completion(true)
         defaultTransition.runStub.reset()
         statusObserver.viewportStatusDidChangeStub.reset()
-        mainQueue.asyncStub.reset()
+        mainQueue.asyncClosureStub.reset()
     }
 
     func drainMainQueue() {
-        while !mainQueue.asyncStub.invocations.isEmpty {
-            let blocks = mainQueue.asyncStub.invocations.map(\.parameters)
-            mainQueue.asyncStub.reset()
+        while !mainQueue.asyncClosureStub.invocations.isEmpty {
+            let blocks = mainQueue.asyncClosureStub.invocations.map(\.parameters.work)
+            mainQueue.asyncClosureStub.reset()
             for block in blocks {
                 block()
             }

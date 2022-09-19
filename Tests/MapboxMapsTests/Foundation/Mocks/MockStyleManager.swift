@@ -117,7 +117,7 @@ final class MockStyleManager: StyleManagerProtocol {
         defaultReturnValue: .init(value: "stub", kind: .undefined)
     )
     func getStyleProjectionProperty(forProperty property: String) -> MapboxCoreMaps.StylePropertyValue {
-        getStyleTerrainPropertyStub.call(with: property)
+        getStyleProjectionPropertyStub.call(with: property)
     }
 
     let getStyleImageStub = Stub<String, MapboxCoreMaps.Image?>(defaultReturnValue: nil)

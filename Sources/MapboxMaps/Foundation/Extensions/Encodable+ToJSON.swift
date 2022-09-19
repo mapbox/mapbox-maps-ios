@@ -16,4 +16,17 @@ internal extension Encodable {
         // on `first` being non-nil
         return array.first!
     }
+
+    /// Given an Encodable object return the JSON representation as a string
+    /// - Throws: Errors occurring during conversion.
+    /// - Returns: A string with JSON representing the object.
+    func toString(encoding: String.Encoding = .utf8) throws -> String {
+        let data = try JSONEncoder().encode(self)
+
+        guard let result = String(data: data, encoding: encoding) else {
+            throw TypeConversionError.unsuccessfulConversion
+        }
+
+        return result
+    }
 }

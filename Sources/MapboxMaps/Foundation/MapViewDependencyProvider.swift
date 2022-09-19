@@ -39,7 +39,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
 
     internal let cameraAnimatorsRunnerEnablable: MutableEnablableProtocol = Enablable()
     private let gesturesCameraAnimatorsRunnerEnablable = Enablable()
-    private let mainQueue = MainQueue()
+    private let mainQueue: MainQueueProtocol = MainQueueWrapper()
 
     internal func makeMetalView(frame: CGRect, device: MTLDevice?) -> MTKView {
         MTKView(frame: frame, device: device)

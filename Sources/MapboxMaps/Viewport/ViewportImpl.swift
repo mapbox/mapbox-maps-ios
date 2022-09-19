@@ -33,13 +33,13 @@ internal final class ViewportImpl: ViewportImplProtocol {
         }
     }
 
-    private let mainQueue: MainQueueProtocol
+    private let mainQueue: DispatchQueueProtocol
 
     private let anyTouchGestureRecognizer: UIGestureRecognizer
 
     // viewport requires a default transition at all times
     internal init(options: ViewportOptions,
-                  mainQueue: MainQueueProtocol,
+                  mainQueue: DispatchQueueProtocol,
                   defaultTransition: ViewportTransition,
                   anyTouchGestureRecognizer: UIGestureRecognizer,
                   doubleTapGestureRecognizer: UIGestureRecognizer,

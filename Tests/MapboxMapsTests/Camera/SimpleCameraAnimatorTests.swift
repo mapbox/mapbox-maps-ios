@@ -382,8 +382,8 @@ final class SimpleCameraAnimatorTests: XCTestCase {
         let completionStub = Stub<UIViewAnimatingPosition, Void>()
         animator.addCompletion(completionStub.call(with:))
 
-        XCTAssertEqual(mainQueue.asyncStub.invocations.count, 1)
-        let closure = try XCTUnwrap(mainQueue.asyncStub.invocations.first?.parameters)
+        XCTAssertEqual(mainQueue.asyncClosureStub.invocations.count, 1)
+        let closure = try XCTUnwrap(mainQueue.asyncClosureStub.invocations.first?.parameters.work)
 
         closure()
 
@@ -398,8 +398,8 @@ final class SimpleCameraAnimatorTests: XCTestCase {
         let completionStub = Stub<UIViewAnimatingPosition, Void>()
         animator.addCompletion(completionStub.call(with:))
 
-        XCTAssertEqual(mainQueue.asyncStub.invocations.count, 1)
-        let closure = try XCTUnwrap(mainQueue.asyncStub.invocations.first?.parameters)
+        XCTAssertEqual(mainQueue.asyncClosureStub.invocations.count, 1)
+        let closure = try XCTUnwrap(mainQueue.asyncClosureStub.invocations.first?.parameters.work)
 
         closure()
 
@@ -418,8 +418,8 @@ final class SimpleCameraAnimatorTests: XCTestCase {
 
         XCTAssertEqual(completionStub1.invocations.count, 1)
         XCTAssertEqual(completionStub2.invocations.count, 0)
-        XCTAssertEqual(mainQueue.asyncStub.invocations.count, 1)
-        let closure = try XCTUnwrap(mainQueue.asyncStub.invocations.first?.parameters)
+        XCTAssertEqual(mainQueue.asyncClosureStub.invocations.count, 1)
+        let closure = try XCTUnwrap(mainQueue.asyncClosureStub.invocations.first?.parameters.work)
         closure()
         XCTAssertEqual(completionStub2.invocations.count, 1)
     }

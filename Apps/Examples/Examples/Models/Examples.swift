@@ -161,7 +161,10 @@ struct Examples {
     public static let labExamples = [
         Example(title: "Resizable image",
                 description: "Add a resizable image with cap insets to a style.",
-                type: ResizableImageExample.self)
+                type: ResizableImageExample.self),
+        Example(title: "Geojson performance",
+                description: "Display long route as large geojson",
+                type: LargeGeoJSONPerformanceExample.self)
     ]
 
     // Examples that focus on displaying the user's location.

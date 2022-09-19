@@ -1,6 +1,23 @@
 @testable import MapboxMaps
 
 final class MockStyle: StyleProtocol {
+
+    struct SetSourcePropertyParams {
+        let sourceId: String
+        let property: String
+        let value: Any
+    }
+
+    let setSourcePropertyStub = Stub<SetSourcePropertyParams, Void>()
+    func setSourceProperty(for sourceId: String, property: String, value: Any) throws {
+        setSourcePropertyStub.call(with: .init(sourceId: sourceId, property: property, value: value))
+    }
+
+    let imageExistsStub = Stub<String, Bool>(defaultReturnValue: false)
+    func imageExists(withId id: String) -> Bool {
+        return imageExistsStub.call(with: id)
+    }
+
     struct AddPersistentLayerParams {
         var layer: Layer
         var layerPosition: LayerPosition?
@@ -104,5 +121,16 @@ final class MockStyle: StyleProtocol {
     let removeImageStub = Stub<String, Void>()
     func removeImage(withId id: String) throws {
         removeImageStub.call(with: id)
+    }
+
+    struct AddImageWithInsetsParams {
+        let image: UIImage
+        let id: String
+        let sdf: Bool
+        let contentInsets: UIEdgeInsets
+    }
+    let addImageWithInsetsStub = Stub<AddImageWithInsetsParams, Void>()
+    func addImage(_ image: UIImage, id: String, sdf: Bool, contentInsets: UIEdgeInsets) throws {
+        addImageWithInsetsStub.call(with: .init(image: image, id: id, sdf: sdf, contentInsets: contentInsets))
     }
 }

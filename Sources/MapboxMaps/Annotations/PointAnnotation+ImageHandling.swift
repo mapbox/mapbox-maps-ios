@@ -13,20 +13,29 @@ extension PointAnnotation {
     }
 }
 
-extension PointAnnotationManager {
+internal extension PointAnnotationManager {
 
-    func addImageToStyleIfNeeded(style: Style) {
-        let pointAnnotationImages = Set(annotations.compactMap(\.image))
-        for pointAnnotationImage in pointAnnotationImages {
-            // If the image is not found, add it to the style
-            if !style.imageExists(withId: pointAnnotationImage.name) {
-                do {
-                    try style.addImage(pointAnnotationImage.image, id: pointAnnotationImage.name)
-                } catch {
-                    Log.warning(
-                        forMessage: "Could not add image to style in PointAnnotationManager due to error: \(error)",
-                        category: "Annnotations")
-                }
+    func addImagesToStyleIfNeeded(style: StyleProtocol, images: Set<PointAnnotation.Image>) {
+        // If the image is not found, add it to the style
+        for pointAnnotationImage in images where !style.imageExists(withId: pointAnnotationImage.name) {
+            do {
+                try style.addImage(pointAnnotationImage.image, id: pointAnnotationImage.name)
+            } catch {
+                Log.warning(
+                    forMessage: "Could not add image to style in PointAnnotationManager due to error: \(error)",
+                    category: "Annnotations")
+            }
+        }
+    }
+
+    func removeImages(from style: StyleProtocol, images: Set<String>) {
+        for image in images {
+            do {
+                try style.removeImage(withId: image)
+            } catch {
+                Log.warning(
+                    forMessage: "Could not remove image from style in PointAnnotationManager due to error: \(error)",
+                    category: "Annnotations")
             }
         }
     }

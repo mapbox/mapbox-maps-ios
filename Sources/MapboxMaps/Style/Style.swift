@@ -14,6 +14,7 @@ internal protocol StyleProtocol: AnyObject {
     func addSource(_ source: Source, id: String) throws
     func removeSource(withId id: String) throws
     func sourceExists(withId id: String) -> Bool
+    func setSourceProperty(for sourceId: String, property: String, value: Any) throws
     func setSourceProperties(for sourceId: String, properties: [String: Any]) throws
 
     //swiftlint:disable function_parameter_count
@@ -23,7 +24,15 @@ internal protocol StyleProtocol: AnyObject {
                   stretchX: [ImageStretches],
                   stretchY: [ImageStretches],
                   content: ImageContent?) throws
+    func addImage(_ image: UIImage, id: String, sdf: Bool, contentInsets: UIEdgeInsets) throws
     func removeImage(withId id: String) throws
+    func imageExists(withId id: String) -> Bool
+}
+
+internal extension StyleProtocol {
+    func addImage(_ image: UIImage, id: String, sdf: Bool = false, contentInsets: UIEdgeInsets = .zero) throws {
+        try addImage(image, id: id, sdf: sdf, contentInsets: contentInsets)
+    }
 }
 
 // swiftlint:disable type_body_length

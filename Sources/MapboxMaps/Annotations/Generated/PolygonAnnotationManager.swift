@@ -33,7 +33,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
     // MARK: - Setup / Lifecycle
 
     /// Dependency required to add sources/layers to the map
-    private let style: Style
+    private let style: StyleProtocol
 
     /// Storage for common layer properties
     private var layerProperties: [String: Any] = [:] {
@@ -54,7 +54,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
     private var isDestroyed = false
 
     internal init(id: String,
-                  style: Style,
+                  style: StyleProtocol,
                   layerPosition: LayerPosition?,
                   displayLinkCoordinator: DisplayLinkCoordinator) {
         self.id = id

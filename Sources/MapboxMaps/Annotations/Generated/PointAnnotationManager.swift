@@ -15,6 +15,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     }
 
     private var needsSyncSourceAndLayer = false
+    private var addedImages = Set<String>()
 
     // MARK: - Interaction
 
@@ -33,7 +34,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     // MARK: - Setup / Lifecycle
 
     /// Dependency required to add sources/layers to the map
-    private let style: Style
+    private let style: StyleProtocol
 
     /// Storage for common layer properties
     private var layerProperties: [String: Any] = [:] {
@@ -54,7 +55,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     private var isDestroyed = false
 
     internal init(id: String,
-                  style: Style,
+                  style: StyleProtocol,
                   layerPosition: LayerPosition?,
                   displayLinkCoordinator: DisplayLinkCoordinator) {
         self.id = id
@@ -110,6 +111,8 @@ public class PointAnnotationManager: AnnotationManagerInternal {
                 forMessage: "Failed to remove source for PointAnnotationManager with id \(id) due to error: \(error)",
                 category: "Annotations")
         }
+        removeImages(from: style, images: addedImages)
+
         displayLinkCoordinator?.remove(displayLinkParticipant)
     }
 
@@ -125,7 +128,14 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
         needsSyncSourceAndLayer = false
 
-        addImageToStyleIfNeeded(style: style)
+        let newImages = Set(annotations.compactMap(\.image))
+        let newImageNames = Set(newImages.map(\.name))
+        let unusedImages = addedImages.subtracting(newImageNames)
+
+        addImagesToStyleIfNeeded(style: style, images: newImages)
+        removeImages(from: style, images: unusedImages)
+
+        addedImages = newImageNames
 
         // Construct the properties dictionary from the annotations
         let dataDrivenLayerPropertyKeys = Set(annotations.flatMap { $0.layerProperties.keys })

@@ -7,6 +7,7 @@ internal final class Puck2D: Puck {
     private static let topImageId = "locationIndicatorLayerTopImage"
     private static let bearingImageId = "locationIndicatorLayerBearingImage"
     private static let shadowImageId = "locationIndicatorLayerShadowImage"
+    private static let opacity = "locationIndicatorLayerOpacity"
 
     internal var isActive = false {
         didSet {
@@ -135,6 +136,9 @@ internal final class Puck2D: Puck {
             if configuration.bearingImage != nil {
                 newLayerLayoutProperties[.bearingImage] = Self.bearingImageId
             }
+            if configuration.opacity != nil {
+                newLayerPaintProperties[.locationIndicatorOpacity] = Self.opacity
+            }
             newLayerLayoutProperties[.shadowImage] = Self.shadowImageId
             newLayerPaintProperties[.locationTransition] = immediateTransition
             newLayerPaintProperties[.topImageSize] = encodedScale
@@ -142,6 +146,7 @@ internal final class Puck2D: Puck {
             newLayerPaintProperties[.shadowImageSize] = encodedScale
             newLayerPaintProperties[.emphasisCircleRadiusTransition] = immediateTransition
             newLayerPaintProperties[.bearingTransition] = immediateTransition
+            newLayerPaintProperties[.locationIndicatorOpacityTransition] = immediateTransition
             if configuration.showsAccuracyRing {
                 newLayerPaintProperties[.accuracyRadius] = location.horizontalAccuracy
                 newLayerPaintProperties[.accuracyRadiusColor] = StyleColor(configuration.accuracyRingColor).rgbaString

@@ -25,7 +25,7 @@ internal extension Encodable {
         if #available(iOS 13.0, *) {
             data = try JSONEncoder().encode(self)
         } else {
-            // JSONEncoder doesn't support fragments on older iOS versions
+            // JSONEncoder doesn't support fragments on older iOS versions https://github.com/apple/swift-corelibs-foundation/issues/4402
             data = try JSONSerialization.data(withJSONObject: self.toJSON(), options: .fragmentsAllowed)
         }
 

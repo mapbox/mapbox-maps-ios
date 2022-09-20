@@ -154,7 +154,9 @@ struct Examples {
         Example(title: "Advanced Viewport Gestures",
                 description: "Viewport configured to allow gestures",
                 type: AdvancedViewportGesturesExample.self),
-
+        Example(title: "Filter symbols based on pitch and distance",
+                description: "Use pitch and distance-from-center expressions in the filter field of a symbol layer to remove large size POI labels in the far distance at high pitch",
+                type: PitchAndDistanceExample.self),
     ]
 
     // Miscellaneous examples

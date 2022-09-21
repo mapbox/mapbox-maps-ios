@@ -30,19 +30,9 @@ final class SnapshotterTests: XCTestCase {
         super.tearDown()
     }
 
-    // Test snapshot start invokes mockMapSnapshotter startStub
-    func testSnapshotterStartInvocation() {
-        snapshotter.start(overlayHandler: nil) { (_) in
-            XCTAssertNotNil(self.mockMapSnapshotter.startStub.defaultReturnValue)
-        }
-
-        XCTAssertEqual(mockMapSnapshotter.startStub.invocations.count, 1)
-    }
-
     func testSnapshotterCompletionInvocationFailed() {
 
         let options = MapSnapshotOptions(size: CGSize.init(width: 300, height: 300), pixelRatio: 2)
-        snapshotter = Snapshotter(options: options, mapboxObservableProvider: mapboxObservableProviderStub.call(with:), mapSnapshotter: mockMapSnapshotter)
 
         let resultString = "FAILED"
         mockMapSnapshotter.startStub.defaultSideEffect = { invocation in
@@ -50,14 +40,12 @@ final class SnapshotterTests: XCTestCase {
         }
 
         snapshotter.start(overlayHandler: nil) { (result) in
-            switch result {
-            case .failure:
-                print("Successful test")
+            XCTAssertNotNil(self.mockMapSnapshotter.startStub.defaultReturnValue)
 
-                break
-            case .success:
-                XCTFail()
+            if case .success = result {
+              XCTFail("Expect a failure")
             }
+            XCTAssertEqual(self.mockMapSnapshotter.startStub.invocations.count, 1)
         }
     }
 

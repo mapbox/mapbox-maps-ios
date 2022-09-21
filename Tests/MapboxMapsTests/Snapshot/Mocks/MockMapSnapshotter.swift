@@ -2,10 +2,6 @@
 @_implementationOnly import MapboxCommon_Private
 
 final class MockMapSnapshotter: MockStyleManager, MapSnapshotterProtocol {
-    @Stubbed var style: Style?
-    @Stubbed var options: MapSnapshotOptions?
-    @Stubbed var size: Size?
-    @Stubbed var image: UIImage?
 
     public typealias SnapshotCompletion = (Expected<MapSnapshot, NSString>) -> Void
 

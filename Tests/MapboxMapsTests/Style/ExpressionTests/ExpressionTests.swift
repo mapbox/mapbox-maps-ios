@@ -132,4 +132,21 @@ final class ExpressionTests: XCTestCase {
         XCTAssertEqual(coloradoJSON["properties"] as? [String: Int],
                        ["population": 5_773_714])
     }
+
+    func testDistanceFromCenterExpression() {
+        let expression = Expression(.distanceFromCenter) {
+            Expression(.literal) { 1.0 }
+        }
+
+        XCTAssertEqual(expression.description, "[distance-from-center, [literal, 1.0]]")
+    }
+
+    func testPitchExpression() {
+        let expression = Expression(.pitch) {
+            Expression(.literal) { 20.0 }
+        }
+
+        XCTAssertEqual(expression.description, "[pitch, [literal, 20.0]]")
+    }
+
 }

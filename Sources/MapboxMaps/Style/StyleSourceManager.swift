@@ -167,7 +167,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
         let item = DispatchWorkItem { [weak self] in
             if self == nil { return } // not capturing self here as toString conversion below can take time
 
-            let json = try! data.toString()
+            let json = try! data.stringValue()
 
             self?.mainQueue.async { [weak self] in
                 do {

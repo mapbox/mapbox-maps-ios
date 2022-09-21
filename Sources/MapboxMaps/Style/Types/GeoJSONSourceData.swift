@@ -63,6 +63,15 @@ public enum GeoJSONSourceData: Codable {
             try container.encode("")
         }
     }
+
+    internal func stringValue() throws -> String {
+        switch self {
+        case .url(let uRL):
+            return uRL.absoluteString
+        default:
+            return try self.toString()
+        }
+    }
 }
 
 extension GeoJSONObject {

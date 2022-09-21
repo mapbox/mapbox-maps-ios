@@ -156,7 +156,7 @@ final class SnapshotterTests: XCTestCase {
 
         XCTAssertEqual(mockParameters.coordinates.map(\.coordinate), coordinates)
         XCTAssertEqual(mockParameters.padding.toUIEdgeInsetsValue(), padding.toUIEdgeInsetsValue())
-        XCTAssertEqual(mockParametersbearing, bearing.NSNumber)
+        XCTAssertEqual(mockParameters.bearing, bearing.NSNumber)
         XCTAssertEqual(mockParameters.pitch, pitch.NSNumber)
         XCTAssertEqual(returnedOptions, cameraOptions)
     }

@@ -47,7 +47,7 @@ public struct Puck2DConfiguration: Equatable {
     }
 
     /// The opacity of the entire location indicator.
-    public var opacity: CGFloat?
+    public var opacity: CGFloat
 
     /// Image to use as the top of the location indicator.
     public var topImage: UIImage?
@@ -87,7 +87,7 @@ public struct Puck2DConfiguration: Equatable {
                 scale: Value<Double>? = nil,
                 pulsing: Pulsing? = nil,
                 showsAccuracyRing: Bool = false,
-                opacity: CGFloat? = nil) {
+                opacity: CGFloat = 1) {
         self.topImage = topImage
         self.bearingImage = bearingImage
         self.shadowImage = shadowImage
@@ -116,7 +116,7 @@ public struct Puck2DConfiguration: Equatable {
                 showsAccuracyRing: Bool = false,
                 accuracyRingColor: UIColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3),
                 accuracyRingBorderColor: UIColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3),
-                opacity: CGFloat? = nil) {
+                opacity: CGFloat = 1) {
         self.topImage = topImage
         self.bearingImage = bearingImage
         self.shadowImage = shadowImage
@@ -148,7 +148,7 @@ public struct Puck3DConfiguration: Equatable {
     /// The rotation of the model in euler angles [lon, lat, z].
     public var modelRotation: Value<[Double]>?
 
-    ///The opacity of the model used as the location puck
+    /// The opacity of the model used as the location puck
     public var modelOpacity: Value<Double>?
 
     /// Initialize a `Puck3DConfiguration` with a model, scale and rotation.
@@ -156,6 +156,7 @@ public struct Puck3DConfiguration: Equatable {
     ///   - model: The `gltf` model to use for the puck.
     ///   - modelScale: The amount to scale the model by.
     ///   - modelRotation: The rotation of the model in euler angles `[lon, lat, z]`.
+    ///   - modelOpacity: The opacity of the model used as the location puck
     public init(model: Model, modelScale: Value<[Double]>? = nil, modelRotation: Value<[Double]>? = nil, modelOpacity: Value<Double>? = nil) {
         self.model = model
         self.modelScale = modelScale

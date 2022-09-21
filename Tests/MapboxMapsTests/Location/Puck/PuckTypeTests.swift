@@ -73,7 +73,7 @@ internal class PuckTypeTests: XCTestCase {
         XCTAssertFalse(config.showsAccuracyRing)
         XCTAssertEqual(config.accuracyRingColor, UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3))
         XCTAssertEqual(config.accuracyRingBorderColor, UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3))
-        XCTAssertNil(config.opacity)
+        XCTAssertEqual(config.opacity, 1)
     }
 
     func testPuck2DConfigurationInitializerWithNonDefaultValues() {
@@ -82,7 +82,7 @@ internal class PuckTypeTests: XCTestCase {
         let shadowImage: UIImage? = .random(UIImage())
         let scale: Value<Double>? = .random(.constant(.random(in: 0...10)))
         let showsAccuracyRing: Bool = .random()
-        let opacity: CGFloat? = .random(in: 0.0...1.0)
+        let opacity: CGFloat = .random(in: 0.0...1.0)
 
         let config = Puck2DConfiguration(
             topImage: topImage,
@@ -115,7 +115,7 @@ internal class PuckTypeTests: XCTestCase {
         XCTAssertFalse(config.showsAccuracyRing)
         XCTAssertEqual(config.accuracyRingColor, .black)
         XCTAssertEqual(config.accuracyRingBorderColor, UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3))
-        XCTAssertNil(config.opacity)
+        XCTAssertEqual(config.opacity, 1)
 
         let config2 = Puck2DConfiguration(
             accuracyRingBorderColor: .black)
@@ -127,7 +127,7 @@ internal class PuckTypeTests: XCTestCase {
         XCTAssertFalse(config2.showsAccuracyRing)
         XCTAssertEqual(config2.accuracyRingColor, UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3))
         XCTAssertEqual(config2.accuracyRingBorderColor, .black)
-        XCTAssertNil(config.opacity)
+        XCTAssertEqual(config.opacity, 1)
     }
 
     func testPuck2DConfigurationExtendedInitializerWithNonDefaultValues() {

@@ -320,19 +320,6 @@ final class Puck2DTests: XCTestCase {
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
 
-    func testActivatingPuckWithNilOpacity() throws {
-        configuration.opacity = nil
-        recreatePuck()
-        let location = updateLocation(with: .fullAccuracy, heading: nil)
-        style.layerExistsStub.defaultReturnValue = false
-
-        puck2D.isActive = true
-
-        let expectedProperties = makeExpectedLayerProperties(with: location)
-        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
-        XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
-    }
-
     func testActivatingPuckWithShowsAccuracyRingTrue() throws {
         configuration.showsAccuracyRing = true
         recreatePuck()

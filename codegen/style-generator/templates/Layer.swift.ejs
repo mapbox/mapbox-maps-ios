@@ -31,21 +31,21 @@ import Foundation
     <%_ for (const property of layoutProperties) { -%>
 
     /// <%- markdownFriendlyDoc(property) %>
-    public var <%- camelizeWithLeadingLowercase(property.name) %>: <%- propertySwiftValueType(property) %>?
+    <%if (!isExperimental && property.experimental) { -%>@_spi(Experimental) <% } -%>public var <%- camelizeWithLeadingLowercase(property.name) %>: <%- propertySwiftValueType(property) %>?
     <%_ if (property.transition) { -%>
 
     /// Transition options for `<%- camelize(property.name) %>`.
-    public var <%- camelizeWithLeadingLowercase(property.name) %>Transition: StyleTransition?
+    <%if (!isExperimental && property.experimental) { -%>@_spi(Experimental) <% } -%>public var <%- camelizeWithLeadingLowercase(property.name) %>Transition: StyleTransition?
     <%_ } -%>
     <%_ } -%>
     <%_ for (const property of paintProperties) { -%>
 
     /// <%- markdownFriendlyDoc(property) %>
-    public var <%- camelizeWithLeadingLowercase(property.name) %>: <%- propertySwiftValueType(property) %>?
+    <%if (!isExperimental && property.experimental) { -%>@_spi(Experimental) <% } -%>public var <%- camelizeWithLeadingLowercase(property.name) %>: <%- propertySwiftValueType(property) %>?
     <%_ if (property.transition) { -%>
 
     /// Transition options for `<%- camelizeWithLeadingLowercase(property.name) _%>`.
-    public var <%- camelizeWithLeadingLowercase(property.name) _%>Transition: StyleTransition?
+    <%if (!isExperimental && property.experimental) { -%>@_spi(Experimental) <% } -%>public var <%- camelizeWithLeadingLowercase(property.name) _%>Transition: StyleTransition?
     <%_ } -%>
     <%_ } -%>
 

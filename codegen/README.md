@@ -15,6 +15,16 @@ make generate-style-code
 make generate-annotation-code
 ```
 
+### Private (Premium) API
+
+```
+// generate Style APIs and tests for Private API
+make generate-style-code-private
+
+// generate Annotation APIs and tests for Private API
+make generate-annotation-code-private
+```
+
 ## FAQ
 
 #### Style-specification has entries that are only supported by gl-js, how do we handle this?

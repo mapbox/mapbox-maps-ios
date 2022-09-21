@@ -5,9 +5,12 @@ const fs = require('fs');
 const ejs = require('ejs');
 const _ = require('lodash');
 const path = require('path');
-const style = require('./../vendor/mapbox-maps-stylegen/style-parser');
 require('./../vendor/mapbox-maps-stylegen/style-code');
 require('./../vendor/mapbox-maps-stylegen/type-utils');
+
+const generatePremiumApis = process.argv.slice(2).includes("--private-api");
+const style = require('./../vendor/mapbox-maps-stylegen/style-parser')(generatePremiumApis);
+const baseDirectory = generatePremiumApis ? '../mapbox-maps-ios-private' : '../mapbox-maps-ios'
 
 // Template processing //
 
@@ -30,18 +33,18 @@ for (const layer of style.layers) {
   }
 }
 
-const render = function render(filename, layer, basePath) {
+const render = function render(filename, layer, filePath) {
   ejs.renderFile(`annotation-generator/templates/${filename}.swift.ejs`, layer, {strict: true}, function(err, str){
     if (err) console.log(err);
-    writeIfModified(`${basePath}${camelize(layer.type)}${filename}.swift`, str);
+    writeIfModified(`${baseDirectory}/${filePath}${camelize(layer.type)}${filename}.swift`, str);
   });
 };
 
 for (const layer of style.layers) {
   if(layer.orignalType === "symbol" || layer.orignalType === "circle" || layer.orignalType === "fill" || layer.orignalType === "line"){
-    render('AnnotationManager', layer, "../mapbox-maps-ios/Sources/MapboxMaps/Annotations/Generated/");
-    render('Annotation', layer, "../mapbox-maps-ios/Sources/MapboxMaps/Annotations/Generated/");
-    render('AnnotationIntegrationTests', layer, "../mapbox-maps-ios/Tests/MapboxMapsTests/Annotations/Generated/");
-    render('AnnotationTests', layer, "../mapbox-maps-ios/Tests/MapboxMapsTests/Annotations/Generated/");
+    render('AnnotationManager', layer, "Sources/MapboxMaps/Annotations/Generated/");
+    render('Annotation', layer, "Sources/MapboxMaps/Annotations/Generated/");
+    render('AnnotationIntegrationTests', layer, "Tests/MapboxMapsTests/Annotations/Generated/");
+    render('AnnotationTests', layer, "Tests/MapboxMapsTests/Annotations/Generated/");
   }
 }

@@ -138,7 +138,7 @@ internal class PuckTypeTests: XCTestCase {
         let showsAccuracyRing: Bool = .random()
         let accuracyRingColor: UIColor = .random()
         let accuracyRingBorderColor: UIColor = .random()
-        let opacity: CGFloat? = .random(in: 0.0...1.0)
+        let opacity: CGFloat = .random(in: 0.0...1.0)
 
         let config = Puck2DConfiguration(
             topImage: topImage,

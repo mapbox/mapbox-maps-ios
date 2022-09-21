@@ -47,7 +47,7 @@ public struct Puck2DConfiguration: Equatable {
     }
 
     /// The opacity of the entire location indicator.
-    public var opacity: Value<Double>?
+    public var opacity: CGFloat?
 
     /// Image to use as the top of the location indicator.
     public var topImage: UIImage?
@@ -87,7 +87,7 @@ public struct Puck2DConfiguration: Equatable {
                 scale: Value<Double>? = nil,
                 pulsing: Pulsing? = nil,
                 showsAccuracyRing: Bool = false,
-                opacity: Value<Double>? = nil) {
+                opacity: CGFloat? = nil) {
         self.topImage = topImage
         self.bearingImage = bearingImage
         self.shadowImage = shadowImage
@@ -116,7 +116,7 @@ public struct Puck2DConfiguration: Equatable {
                 showsAccuracyRing: Bool = false,
                 accuracyRingColor: UIColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3),
                 accuracyRingBorderColor: UIColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3),
-                opacity: Value<Double>? = nil) {
+                opacity: CGFloat? = nil) {
         self.topImage = topImage
         self.bearingImage = bearingImage
         self.shadowImage = shadowImage

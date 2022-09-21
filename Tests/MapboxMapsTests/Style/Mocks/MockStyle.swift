@@ -133,4 +133,13 @@ final class MockStyle: StyleProtocol {
     func addImage(_ image: UIImage, id: String, sdf: Bool, contentInsets: UIEdgeInsets) throws {
         addImageWithInsetsStub.call(with: .init(image: image, id: id, sdf: sdf, contentInsets: contentInsets))
     }
+
+    struct UpdateGeoJSONSourceParams {
+        let id: String
+        let geojson: GeoJSONObject
+    }
+    let updateGeoJSONSourceStub = Stub<UpdateGeoJSONSourceParams, Void>()
+    func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject) throws {
+        updateGeoJSONSourceStub.call(with: UpdateGeoJSONSourceParams(id: id, geojson: geoJSON))
+    }
 }

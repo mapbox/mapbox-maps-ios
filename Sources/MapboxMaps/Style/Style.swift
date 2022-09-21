@@ -16,6 +16,7 @@ internal protocol StyleProtocol: AnyObject {
     func sourceExists(withId id: String) -> Bool
     func setSourceProperty(for sourceId: String, property: String, value: Any) throws
     func setSourceProperties(for sourceId: String, properties: [String: Any]) throws
+    func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject) throws
 
     //swiftlint:disable function_parameter_count
     func addImage(_ image: UIImage,

@@ -12,7 +12,14 @@ final class PitchAndDistanceExample: UIViewController, ExampleProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let mapInitOptions = MapInitOptions(cameraOptions: CameraOptions(center: CLLocationCoordinate2D(latitude: 38.888, longitude: -77.01866), zoom: 15, pitch: 75), styleURI: StyleURI.streets)
+        let mapInitOptions = MapInitOptions(
+            cameraOptions: CameraOptions(
+                center: CLLocationCoordinate2D(
+                    latitude: 38.888,
+                    longitude: -77.01866),
+                zoom: 15,
+                pitch: 75),
+            styleURI: StyleURI.streets)
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.ornaments.options.scaleBar.visibility = .visible
@@ -27,7 +34,39 @@ final class PitchAndDistanceExample: UIViewController, ExampleProtocol {
         }
     }
 
-    func setPitchDistanceFilter () {
+    func updateFilter(currentFilter: Expression) -> Expression {
+        // Add an additional condition to the current filter
+        // to filter based on ["pitch"] and ["distance-from-center"]
+        let updatedFilter = Exp(.all) {
+            currentFilter
+            Exp(.switchCase) {
+                // Always show the symbol when pitch <= 60
+                Exp(.lte) {
+                    Exp(.pitch)
+                    60
+                }
+                true
+                // When pitch > 60, show the symbol only
+                // when it is close to the camera ( distance <= 2 )
+                Exp(.all) {
+                    Exp(.lte) {
+                        Exp(.distanceFromCenter)
+                        2
+                    }
+                    Exp(.gt) {
+                        Exp(.pitch)
+                        60
+                    }
+                }
+                true
+                // Hide in the remaining case, far and high pitch
+                false
+            }
+        }
+        return updatedFilter
+    }
+
+    func setPitchDistanceFilter() {
         let poiLayers = ["poi-label", "transit-label"]
 
         for layerID in poiLayers {
@@ -36,33 +75,7 @@ final class PitchAndDistanceExample: UIViewController, ExampleProtocol {
                     guard let currentFilter = layer.filter else {
                         return
                     }
-                    // Add in an additional condition for filtering based on ["pitch"] and ["distance-from-center"]
-                    let updatedFilter = Exp(.all) {
-                        currentFilter
-                        Exp(.switchCase) {
-                            // Always show the symbol when pitch <= 60
-                            Exp(.lte) {
-                                Exp(.pitch)
-                                60
-                            }
-                            true
-                            // When pitch > 60, show the symbol only when it is close to the camera ( distance <= 2 )
-                            Exp(.all) {
-                                Exp(.lte) {
-                                    Exp(.distanceFromCenter)
-                                    2
-                                }
-                                Exp(.gt) {
-                                    Exp(.pitch)
-                                    60
-                                }
-                            }
-                            true
-                            // Hide in the remaining case, far and high pitch
-                            false
-                        }
-                    }
-                    layer.filter = updatedFilter
+                    layer.filter = updateFilter(currentFilter: currentFilter)
                 })
             } catch {
                 print("Updating the layer failed: \(error.localizedDescription)")

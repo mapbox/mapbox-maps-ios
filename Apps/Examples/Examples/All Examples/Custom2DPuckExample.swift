@@ -48,6 +48,21 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         }
     }
 
+    private var puckOpacity: PuckOpaticy = .opaque {
+        didSet {
+            updatePuckUI()
+        }
+    }
+
+    private enum PuckOpaticy: Double {
+        case opaque = 1
+        case semiTransparent = 0.5
+
+        mutating func toggle() {
+            self = self == .opaque ? .semiTransparent : .opaque
+        }
+    }
+
     private enum PuckVisibility {
         case isVisible
         case isHidden
@@ -198,6 +213,10 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
             self.showsPuck.toggle()
         })
 
+        alert.addAction(UIAlertAction(title: "Toggle Puck opacity", style: .default) { _ in
+            self.puckOpacity.toggle()
+        })
+
         alert.addAction(UIAlertAction(title: "Toggle Puck image", style: .default) { _ in
             self.puckImage.toggle()
         })
@@ -231,7 +250,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         puckConfiguration = Puck2DConfiguration.makeDefault(showBearing: showsBearing.isVisible)
         puckConfiguration.showsAccuracyRing = showsAccuracyRing.isVisible
         puckConfiguration.topImage = puckImage.image
-
+        puckConfiguration.opacity = puckOpacity.rawValue
         switch showsPuck {
         case .isVisible:
             mapView.location.options.puckType = .puck2D(puckConfiguration)

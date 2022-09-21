@@ -16,7 +16,8 @@ final class Puck2DTests: XCTestCase {
             topImage: UIImage(),
             bearingImage: UIImage(),
             shadowImage: UIImage(),
-            scale: .constant(.random(in: 1..<10)))
+            scale: .constant(.random(in: 1..<10)),
+            opacity: .random(in: 0.0...1.0))
         style = MockStyle()
         interpolatedLocationProducer = MockInterpolatedLocationProducer()
         mapboxMap = MockMapboxMap()
@@ -242,6 +243,8 @@ final class Puck2DTests: XCTestCase {
         expectedPaintLayerProperties[.emphasisCircleRadiusTransition] = ["duration": 0, "delay": 0]
         expectedPaintLayerProperties[.bearingTransition] = ["duration": 0, "delay": 0]
         expectedPaintLayerProperties[.bearing] = 0
+        expectedPaintLayerProperties[.locationIndicatorOpacity] = configuration.opacity
+        expectedPaintLayerProperties[.locationIndicatorOpacityTransition] = ["duration": 0, "delay": 0]
 
         var expectedProperties = expectedLayoutLayerProperties
             .mapKeys(\.rawValue)

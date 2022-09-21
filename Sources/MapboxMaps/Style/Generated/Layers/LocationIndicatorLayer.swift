@@ -78,6 +78,12 @@ public struct LocationIndicatorLayer: Layer {
     /// Transition options for `location`.
     public var locationTransition: StyleTransition?
 
+    /// The opacity of the entire location indicator layer.
+    public var locationIndicatorOpacity: Value<Double>?
+
+    /// Transition options for `locationIndicatorOpacity`.
+    public var locationIndicatorOpacityTransition: StyleTransition?
+
     /// The amount of the perspective compensation, between 0 and 1. A value of 1 produces a location indicator of constant width across the screen. A value of 0 makes it scale naturally according to the viewing projection.
     public var perspectiveCompensation: Value<Double>?
 
@@ -127,6 +133,8 @@ public struct LocationIndicatorLayer: Layer {
         try paintContainer.encodeIfPresent(imagePitchDisplacement, forKey: .imagePitchDisplacement)
         try paintContainer.encodeIfPresent(location, forKey: .location)
         try paintContainer.encodeIfPresent(locationTransition, forKey: .locationTransition)
+        try paintContainer.encodeIfPresent(locationIndicatorOpacity, forKey: .locationIndicatorOpacity)
+        try paintContainer.encodeIfPresent(locationIndicatorOpacityTransition, forKey: .locationIndicatorOpacityTransition)
         try paintContainer.encodeIfPresent(perspectiveCompensation, forKey: .perspectiveCompensation)
         try paintContainer.encodeIfPresent(shadowImageSize, forKey: .shadowImageSize)
         try paintContainer.encodeIfPresent(shadowImageSizeTransition, forKey: .shadowImageSizeTransition)
@@ -168,6 +176,8 @@ public struct LocationIndicatorLayer: Layer {
             imagePitchDisplacement = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .imagePitchDisplacement)
             location = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .location)
             locationTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .locationTransition)
+            locationIndicatorOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .locationIndicatorOpacity)
+            locationIndicatorOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .locationIndicatorOpacityTransition)
             perspectiveCompensation = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .perspectiveCompensation)
             shadowImageSize = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .shadowImageSize)
             shadowImageSizeTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .shadowImageSizeTransition)
@@ -220,6 +230,8 @@ public struct LocationIndicatorLayer: Layer {
         case imagePitchDisplacement = "image-pitch-displacement"
         case location = "location"
         case locationTransition = "location-transition"
+        case locationIndicatorOpacity = "location-indicator-opacity"
+        case locationIndicatorOpacityTransition = "location-indicator-opacity-transition"
         case perspectiveCompensation = "perspective-compensation"
         case shadowImageSize = "shadow-image-size"
         case shadowImageSizeTransition = "shadow-image-size-transition"

@@ -27,3 +27,7 @@ Var FollowPuckViewportStateOptions.animationDuration has been removed
 
 // Added a new parameter with a default value to Puck2DConfiguration constructor(non-source breaking change)
 Constructor Puck2DConfiguration.init(topImage:bearingImage:shadowImage:scale:showsAccuracyRing:) has been removed
+
+// Added a new parameter with a default value to Puck2DConfiguration and Puck3DConfiguration constructor(non-source breaking change)
+Constructor Puck2DConfiguration.init(topImage:bearingImage:shadowImage:scale:showsAccuracyRing:accuracyRingColor:accuracyRingBorderColor:) has been removed
+Constructor Puck3DConfiguration.init(model:modelScale:modelRotation:) has been removed

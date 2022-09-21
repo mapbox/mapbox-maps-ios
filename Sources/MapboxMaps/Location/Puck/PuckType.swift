@@ -46,6 +46,9 @@ public struct Puck2DConfiguration: Equatable {
         }
     }
 
+    /// The opacity of the entire location indicator.
+    public var opacity: Double
+
     /// Image to use as the top of the location indicator.
     public var topImage: UIImage?
 
@@ -70,30 +73,33 @@ public struct Puck2DConfiguration: Equatable {
     /// The color of the accuracy ring border.
     public var accuracyRingBorderColor: UIColor
 
-    /// Initialize a `Puck2D` object with a top image, bearing image, shadow image, scale, and accuracy ring visibility.
+    /// Initialize a `Puck2D` object with a top image, bearing image, shadow image, scale, opacity and accuracy ring visibility.
     /// - Parameters:
     ///   - topImage: The image to use as the top layer for the location indicator.
     ///   - bearingImage: The image used as the middle of the location indicator.
     ///   - shadowImage: The image that acts as a background of the location indicator.
-    ///   - scale: The size of the images, as a scale factor applied to the size of the specified image..
+    ///   - scale: The size of the images, as a scale factor applied to the size of the specified image.
     ///   - showsAccuracyRing: Indicates whether the location accurary ring should be shown.
+    ///   - opacity: The opacity of the entire location indicator.
     public init(topImage: UIImage? = nil,
                 bearingImage: UIImage? = nil,
                 shadowImage: UIImage? = nil,
                 scale: Value<Double>? = nil,
                 pulsing: Pulsing? = nil,
-                showsAccuracyRing: Bool = false) {
+                showsAccuracyRing: Bool = false,
+                opacity: Double = 1) {
         self.topImage = topImage
         self.bearingImage = bearingImage
         self.shadowImage = shadowImage
         self.scale = scale
         self.pulsing = pulsing
         self.showsAccuracyRing = showsAccuracyRing
+        self.opacity = opacity
         self.accuracyRingColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)
         self.accuracyRingBorderColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)
     }
 
-    /// Initialize a `Puck2D` object with a top image, bearing image, shadow image, scale, and accuracy ring visibility.
+    /// Initialize a `Puck2D` object with a top image, bearing image, shadow image, scale, opacity and accuracy ring visibility.
     /// - Parameters:
     ///   - topImage: The image to use as the top layer for the location indicator.
     ///   - bearingImage: The image used as the middle of the location indicator.
@@ -102,13 +108,15 @@ public struct Puck2DConfiguration: Equatable {
     ///   - showsAccuracyRing: Indicates whether the location accurary ring should be shown.
     ///   - accuracyRingColor:The color of the accuracy ring.
     ///   - accuracyRingBorderColor: The color of the accuracy ring border.
+    ///   - opacity: The opacity of the entire location indicator.
     public init(topImage: UIImage? = nil,
                 bearingImage: UIImage? = nil,
                 shadowImage: UIImage? = nil,
                 scale: Value<Double>? = nil,
                 showsAccuracyRing: Bool = false,
                 accuracyRingColor: UIColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3),
-                accuracyRingBorderColor: UIColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)) {
+                accuracyRingBorderColor: UIColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3),
+                opacity: Double = 1) {
         self.topImage = topImage
         self.bearingImage = bearingImage
         self.shadowImage = shadowImage
@@ -116,6 +124,7 @@ public struct Puck2DConfiguration: Equatable {
         self.showsAccuracyRing = showsAccuracyRing
         self.accuracyRingColor = accuracyRingColor
         self.accuracyRingBorderColor = accuracyRingBorderColor
+        self.opacity = opacity
     }
 
     /// Create a Puck2DConfiguration instance with or without an arrow bearing image. Default without the arrow bearing image.
@@ -139,15 +148,20 @@ public struct Puck3DConfiguration: Equatable {
     /// The rotation of the model in euler angles [lon, lat, z].
     public var modelRotation: Value<[Double]>?
 
+    /// The opacity of the model used as the location puck
+    public var modelOpacity: Value<Double>?
+
     /// Initialize a `Puck3DConfiguration` with a model, scale and rotation.
     /// - Parameters:
     ///   - model: The `gltf` model to use for the puck.
     ///   - modelScale: The amount to scale the model by.
     ///   - modelRotation: The rotation of the model in euler angles `[lon, lat, z]`.
-    public init(model: Model, modelScale: Value<[Double]>? = nil, modelRotation: Value<[Double]>? = nil) {
+    ///   - modelOpacity: The opacity of the model used as the location puck
+    public init(model: Model, modelScale: Value<[Double]>? = nil, modelRotation: Value<[Double]>? = nil, modelOpacity: Value<Double>? = nil) {
         self.model = model
         self.modelScale = modelScale
         self.modelRotation = modelRotation
+        self.modelOpacity = modelOpacity
     }
 }
 

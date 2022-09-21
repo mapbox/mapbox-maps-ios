@@ -135,6 +135,7 @@ internal final class Puck2D: Puck {
             if configuration.bearingImage != nil {
                 newLayerLayoutProperties[.bearingImage] = Self.bearingImageId
             }
+
             newLayerLayoutProperties[.shadowImage] = Self.shadowImageId
             newLayerPaintProperties[.locationTransition] = immediateTransition
             newLayerPaintProperties[.topImageSize] = encodedScale
@@ -142,6 +143,8 @@ internal final class Puck2D: Puck {
             newLayerPaintProperties[.shadowImageSize] = encodedScale
             newLayerPaintProperties[.emphasisCircleRadiusTransition] = immediateTransition
             newLayerPaintProperties[.bearingTransition] = immediateTransition
+            newLayerPaintProperties[.locationIndicatorOpacity] = configuration.opacity
+            newLayerPaintProperties[.locationIndicatorOpacityTransition] = immediateTransition
             if configuration.showsAccuracyRing {
                 newLayerPaintProperties[.accuracyRadius] = location.horizontalAccuracy
                 newLayerPaintProperties[.accuracyRadiusColor] = StyleColor(configuration.accuracyRingColor).rgbaString

@@ -331,4 +331,44 @@ final class StyleSourceManagerTests: XCTestCase {
         XCTAssertEqual(params.properties as? NSDictionary, ["type": "geojson", "data": ""] as? NSDictionary)
         XCTAssertEqual(backgroundQueue.asyncWorkItemStub.invocations.count, 1)
     }
+
+    func testAddGeoJSONSourceWithURL() throws {
+        let id = String.randomASCII(withLength: 10)
+        var source = GeoJSONSource()
+        let url = URL(string: "https://www.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson")!
+        source.data = .url(url)
+        backgroundQueue.asyncWorkItemStub.defaultSideEffect = { $0.parameters.perform() }
+        mainQueue.asyncClosureStub.defaultSideEffect = { $0.parameters.work() }
+
+        try sourceManager.addSource(source, id: id)
+
+        XCTAssertEqual(styleManager.addStyleSourceStub.invocations.count, 1)
+        let params = try XCTUnwrap(styleManager.addStyleSourceStub.invocations.first?.parameters)
+        XCTAssertEqual(params.sourceId, id)
+        XCTAssertEqual(params.properties as? NSDictionary, ["type": "geojson", "data": ""] as? NSDictionary)
+        XCTAssertEqual(backgroundQueue.asyncWorkItemStub.invocations.count, 1)
+        XCTAssertEqual(mainQueue.asyncClosureStub.invocations.count, 1)
+        XCTAssertEqual(styleManager.setStyleSourcePropertyStub.invocations.count, 1)
+        let setSourcePropertyParams = try XCTUnwrap(styleManager.setStyleSourcePropertyStub.invocations.first?.parameters)
+        XCTAssertEqual(setSourcePropertyParams.sourceId, id)
+        XCTAssertEqual(setSourcePropertyParams.property, "data")
+        XCTAssertEqual(setSourcePropertyParams.value as? String, url.absoluteString)
+    }
+
+    func testAddGeoJSONSourceWithEmptyData() throws {
+        let id = String.randomASCII(withLength: 10)
+        var source = GeoJSONSource()
+        source.data = .empty
+        backgroundQueue.asyncWorkItemStub.defaultSideEffect = { $0.parameters.perform() }
+        mainQueue.asyncClosureStub.defaultSideEffect = { $0.parameters.work() }
+
+        try sourceManager.addSource(source, id: id)
+
+        XCTAssertEqual(styleManager.addStyleSourceStub.invocations.count, 1)
+        let params = try XCTUnwrap(styleManager.addStyleSourceStub.invocations.first?.parameters)
+        XCTAssertEqual(params.sourceId, id)
+        XCTAssertEqual(params.properties as? NSDictionary, ["type": "geojson", "data": ""] as? NSDictionary)
+        XCTAssertEqual(backgroundQueue.asyncWorkItemStub.invocations.count, 0)
+        XCTAssertEqual(mainQueue.asyncClosureStub.invocations.count, 0)
+    }
 }

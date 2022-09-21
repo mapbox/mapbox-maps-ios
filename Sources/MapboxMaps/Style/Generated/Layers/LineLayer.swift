@@ -87,7 +87,7 @@ public struct LineLayer: Layer {
     /// Controls the frame of reference for `line-translate`.
     public var lineTranslateAnchor: Value<LineTranslateAnchor>?
 
-    /// The line trim-off percentage range based on the whole line gradinet range [0.0, 1.0]. The line part between [trim-start, trim-end] will be marked as transparent to make a route vanishing effect. If either 'trim-start' or 'trim-end' offset is out of valid range, the default range will be set.
+    /// The line part between [trim-start, trim-end] will be marked as transparent to make a route vanishing effect. The line trim-off offset is based on the whole line range [0.0, 1.0].
     public var lineTrimOffset: Value<[Double]>?
 
     /// Stroke thickness.

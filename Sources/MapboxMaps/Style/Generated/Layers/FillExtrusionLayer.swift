@@ -18,13 +18,13 @@ public struct FillExtrusionLayer: Layer {
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>?
 
-    /// Controls the intensity of ambient occlusion (AO) shading. Current AO implementation is a low-cost best-effort approach that shades area near ground and concave angles between walls. Default value 0.0 disables ambient occlusion and values around 0.3 provide the most plausible results for buildings.
+    /// Controls the intensity of shading near ground and concave angles between walls. Default value 0.0 disables ambient occlusion and values around 0.3 provide the most plausible results for buildings.
     public var fillExtrusionAmbientOcclusionIntensity: Value<Double>?
 
     /// Transition options for `fillExtrusionAmbientOcclusionIntensity`.
     public var fillExtrusionAmbientOcclusionIntensityTransition: StyleTransition?
 
-    /// The radius of ambient occlusion (AO) shading, in meters. Current AO implementation is a low-cost best-effort approach that shades area near ground and concave angles between walls where the radius defines only vertical impact. Default value 3.0 corresponds to hight of one floor and brings the most plausible results for buildings.
+    /// Shades area near ground and concave angles between walls where the radius defines only vertical impact. Default value 3.0 corresponds to height of one floor and brings the most plausible results for buildings.
     public var fillExtrusionAmbientOcclusionRadius: Value<Double>?
 
     /// Transition options for `fillExtrusionAmbientOcclusionRadius`.

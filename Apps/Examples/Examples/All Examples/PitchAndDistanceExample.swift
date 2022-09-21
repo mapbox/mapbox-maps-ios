@@ -20,7 +20,6 @@ final class PitchAndDistanceExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
         // Wait for the map to load its style before setting the filter.
         mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
-
             self.setPitchDistanceFilter()
 
             // The below line is used for internal testing purposes only.
@@ -33,7 +32,7 @@ final class PitchAndDistanceExample: UIViewController, ExampleProtocol {
 
         for layerID in poiLayers {
             do {
-                try mapView.mapboxMap.style.updateLayer(withId: layerID, type: SymbolLayer.self, update: { (layer: inout SymbolLayer) throws in
+                try mapView.mapboxMap.style.updateLayer(withId: layerID, type: SymbolLayer.self, update: { (layer: inout SymbolLayer) in
                     guard let currentFilter = layer.filter else {
                         return
                     }

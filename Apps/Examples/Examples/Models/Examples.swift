@@ -258,6 +258,11 @@ struct Examples {
         Example(title: "Add a line with a color gradient",
                 description: "Load a polyline to a style using GeoJSONSource, display it on a map using LineLayer, and style it with a rainbow color gradient.",
                 type: LineGradientExample.self),
+        
+        Example(title: "Add a border around a line",
+                description: "Load a line to a style using GeoJSONSource, display it on a map using LineLayer, and add a border with adjustable width",
+                type: LineBorderExample.self),
+        
         Example(title: "Change the map's style",
                 description: "Switch between local and default Mapbox styles for the same map view.",
                 type: SwitchStylesExample.self),

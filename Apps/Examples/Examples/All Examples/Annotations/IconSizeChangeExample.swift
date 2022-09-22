@@ -86,7 +86,7 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
 
         let options = RenderedQueryOptions(layerIds: [Constants.selectedMarkerLayerId], filter: nil)
         // check if the selected marker was tapped
-        mapView.mapboxMap.queryRenderedFeatures(at: point, options: options) { [weak self] result in
+        mapView.mapboxMap.queryRenderedFeatures(with: point, options: options) { [weak self] result in
             guard let self = self else { return }
 
             switch result {
@@ -104,7 +104,7 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
 
     private func updateSelectedMarker(atPoint point: CGPoint) {
         let options = RenderedQueryOptions(layerIds: [Constants.markerLayerId], filter: nil)
-        mapView.mapboxMap.queryRenderedFeatures(at: point, options: options) { [weak self] result in
+        mapView.mapboxMap.queryRenderedFeatures(with: point, options: options) { [weak self] result in
             guard let self = self else { return }
 
             switch result {

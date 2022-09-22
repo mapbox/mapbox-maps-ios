@@ -79,7 +79,7 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
     @objc private func onMapClick(_ sender: UITapGestureRecognizer) {
         let screenPoint = sender.location(in: mapView)
         let queryOptions = RenderedQueryOptions(layerIds: [Constants.LAYER_ID], filter: nil)
-        mapView.mapboxMap.queryRenderedFeatures(at: screenPoint, options: queryOptions) { [weak self] result in
+        mapView.mapboxMap.queryRenderedFeatures(with: screenPoint, options: queryOptions) { [weak self] result in
             if case let .success(queriedFeatures) = result,
                let self = self,
                let feature = queriedFeatures.first?.feature,

@@ -148,7 +148,7 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
             layerIds: [pointAnnotationManager.layerId],
             filter: nil)
         mapView.mapboxMap.queryRenderedFeatures(
-            in: mapView.safeAreaLayoutGuide.layoutFrame,
+            with: mapView.safeAreaLayoutGuide.layoutFrame,
             options: pointAnnotationsQueryOptions) { [weak self] result in
                 guard let self = self, let mapView = self.mapView else { return }
                 switch result {
@@ -185,7 +185,7 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
                 "us-interstate"
             })
         mapView.mapboxMap.queryRenderedFeatures(
-            in: mapView.safeAreaLayoutGuide.layoutFrame,
+            with: mapView.safeAreaLayoutGuide.layoutFrame,
             options: routeShieldsQueryOptions) { [weak self] result in
                 guard let self = self, let mapView = self.mapView else { return }
                 switch result {

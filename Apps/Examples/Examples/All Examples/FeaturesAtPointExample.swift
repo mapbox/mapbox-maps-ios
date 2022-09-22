@@ -72,7 +72,7 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
         let tapPoint = sender.location(in: mapView)
 
         mapView.mapboxMap.queryRenderedFeatures(
-            at: tapPoint,
+            with: tapPoint,
             options: RenderedQueryOptions(layerIds: ["US-states"], filter: nil)) { [weak self] result in
             switch result {
             case .success(let queriedfeatures):

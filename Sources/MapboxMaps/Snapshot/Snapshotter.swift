@@ -3,7 +3,36 @@ import UIKit
 import CoreLocation
 import CoreImage.CIFilterBuiltins
 
+@_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
+
+internal protocol MapSnapshotterProtocol: StyleManagerProtocol, ObservableProtocol {
+    func setSizeFor(_ size: Size)
+
+    func getSize() -> Size
+
+    func isInTileMode() -> Bool
+
+    func setTileModeForSet(_ set: Bool)
+
+    func getCameraState() -> MapboxCoreMaps.CameraState
+
+    func setCameraFor(_ cameraOptions: MapboxCoreMaps.CameraOptions)
+
+    func start(forCallback: @escaping (Expected<MapSnapshot, NSString>) -> Void)
+
+    func cancel()
+
+    func cameraForCoordinates(forCoordinates
+                              coordinates: [CLLocation],
+                              padding: EdgeInsets,
+                              bearing: NSNumber?,
+                              pitch: NSNumber?) -> MapboxCoreMaps.CameraOptions
+
+    func coordinateBoundsForCamera(forCamera camera: MapboxCoreMaps.CameraOptions) -> CoordinateBounds
+}
+
+extension MapSnapshotter: MapSnapshotterProtocol {}
 
 // MARK: - Snapshotter
 ///  A high-level component responsible for taking map snapshots with given ``MapSnapshotOptions``.
@@ -11,7 +40,7 @@ public class Snapshotter {
 
     /// Internal `MapboxCoreMaps.MBXMapSnapshotter` object that takes care of
     /// rendering a snapshot.
-    internal var mapSnapshotter: MapSnapshotter
+    internal let mapSnapshotter: MapSnapshotterProtocol
 
     /// A `style` object that can be manipulated to set different styles for a snapshot
     public let style: Style
@@ -33,9 +62,10 @@ public class Snapshotter {
 
     /// Enables injecting mocks when unit testing
     internal init(options: MapSnapshotOptions,
-                  mapboxObservableProvider: (ObservableProtocol) -> MapboxObservableProtocol) {
+                  mapboxObservableProvider: (ObservableProtocol) -> MapboxObservableProtocol,
+                  mapSnapshotter: MapSnapshotterProtocol) {
         self.options = options
-        mapSnapshotter = MapSnapshotter(options: MapboxCoreMaps.MapSnapshotOptions(options))
+        self.mapSnapshotter = mapSnapshotter
         style = Style(with: mapSnapshotter)
         observable = mapboxObservableProvider(mapSnapshotter)
         EventsManager.shared(withAccessToken: options.resourceOptions.accessToken).sendTurnstile()
@@ -251,10 +281,10 @@ public class Snapshotter {
                        bearing: Double?,
                        pitch: Double?) -> CameraOptions {
         return CameraOptions(mapSnapshotter.cameraForCoordinates(
-                                forCoordinates: coordinates.map(\.location),
-                                padding: padding.toMBXEdgeInsetsValue(),
-                                bearing: bearing?.NSNumber,
-                                pitch: pitch?.NSNumber))
+            forCoordinates: coordinates.map(\.location),
+            padding: padding.toMBXEdgeInsetsValue(),
+            bearing: bearing?.NSNumber,
+            pitch: pitch?.NSNumber))
     }
 }
 

@@ -2,7 +2,7 @@ import Foundation
 @testable import MapboxMaps
 @_implementationOnly import MapboxCommon_Private
 
-final class MockStyleManager: StyleManagerProtocol {
+class MockStyleManager: StyleManagerProtocol {
 
     func asStyleManager() -> StyleManager {
         fatalError()

@@ -34,9 +34,9 @@ final class PitchAndDistanceExample: UIViewController, ExampleProtocol {
         }
     }
 
+    // Add an additional condition to the current filter
+    // to filter based on ["pitch"] and ["distance-from-center"]
     func updateFilter(currentFilter: Expression) -> Expression {
-        // Add an additional condition to the current filter
-        // to filter based on ["pitch"] and ["distance-from-center"]
         let updatedFilter = Exp(.all) {
             currentFilter
             Exp(.switchCase) {
@@ -48,15 +48,9 @@ final class PitchAndDistanceExample: UIViewController, ExampleProtocol {
                 true
                 // When pitch > 60, show the symbol only
                 // when it is close to the camera ( distance <= 2 )
-                Exp(.all) {
-                    Exp(.lte) {
-                        Exp(.distanceFromCenter)
-                        2
-                    }
-                    Exp(.gt) {
-                        Exp(.pitch)
-                        60
-                    }
+                Exp(.lte) {
+                    Exp(.distanceFromCenter)
+                    2
                 }
                 true
                 // Hide in the remaining case, far and high pitch
@@ -72,13 +66,10 @@ final class PitchAndDistanceExample: UIViewController, ExampleProtocol {
         for layerID in poiLayers {
             do {
                 try mapView.mapboxMap.style.updateLayer(withId: layerID, type: SymbolLayer.self, update: { (layer: inout SymbolLayer) in
-                    guard let currentFilter = layer.filter else {
-                        return
-                    }
-                    layer.filter = updateFilter(currentFilter: currentFilter)
+                    layer.filter = layer.filter.map(updateFilter(currentFilter: ))
                 })
             } catch {
-                print("Updating the layer failed: \(error.localizedDescription)")
+                print("Updating the layer '\(layerID)' failed: \(error.localizedDescription)")
             }
         }
     }

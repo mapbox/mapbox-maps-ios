@@ -158,7 +158,6 @@ public final class ViewAnnotationManager {
         if let featureId = creationOptions.associatedFeatureId {
             viewsByFeatureIds[featureId] = view
         }
-        containerView.addSubview(view)
     }
 
     /// Remove given `UIView` from the map if it was present.

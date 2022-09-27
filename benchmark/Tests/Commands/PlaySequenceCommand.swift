@@ -22,10 +22,14 @@ struct PlaySequenceCommand: AsyncCommand, Decodable {
     init(filename: String, playbackCount: Int) throws {
         self.playbackCount = playbackCount
         let fileURL = Bundle.main.bundleURL.appendingPathComponent(filename, isDirectory: false)
+        let platformFileURL = fileURL.appendingSuffixToLastPathComponent("-ios")
         do {
-            playbackContent = try PlaybackContent(contentsOf: fileURL)
-        } catch ExecutionError.resourceFileNotFound {
-            playbackContent = try PlaybackContent(contentsOf: fileURL.appendingPathExtension("gz"))
+            playbackContent = try PlaybackContent(variants: [
+                fileURL,
+                platformFileURL,
+                fileURL.appendingPathExtension("gz"),
+                platformFileURL.appendingPathExtension("gz")
+            ])
         } catch {
             throw error
         }
@@ -71,5 +75,16 @@ private struct PlaybackContent {
         case .none:
             throw ExecutionError.unsupportedResourceFile
         }
+    }
+
+    init(variants urls: [URL]) throws {
+        let content = urls.lazy
+                          .compactMap({ try? PlaybackContent(contentsOf: $0) })
+                          .first
+
+        guard let content = content else {
+            throw ExecutionError.resourceFileNotFound
+        }
+        self = content
     }
 }

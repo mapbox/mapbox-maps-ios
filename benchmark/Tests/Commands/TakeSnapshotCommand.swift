@@ -16,7 +16,7 @@ struct TakeSnapshotCommand: AsyncCommand, Decodable {
         try await withCheckedThrowingContinuation { continuation in
             mapView.mapboxMap.onNext(event: .mapIdle) { event in
                 let _ = renderer.image { context in
-                    mapView.drawHierarchy(in: CGRect(origin: .zero, size: size), afterScreenUpdates: true)
+                    _ = mapView.drawHierarchy(in: CGRect(origin: .zero, size: size), afterScreenUpdates: true)
                 }
 
                 return continuation.resume(returning: ())

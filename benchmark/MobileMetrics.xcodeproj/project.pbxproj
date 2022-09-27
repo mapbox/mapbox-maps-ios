@@ -45,6 +45,7 @@
 		FE555B7C2836939B002751C7 /* AsyncCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE555B7B2836939B002751C7 /* AsyncCommand.swift */; };
 		FE555B7E283774EF002751C7 /* SetOnlineStateCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE555B7D283774EF002751C7 /* SetOnlineStateCommand.swift */; };
 		FE555B80283775F3002751C7 /* CameraOptions+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE555B7F283775F3002751C7 /* CameraOptions+Decodable.swift */; };
+		FE79318528E2F6F800C08371 /* URL+Suffix.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE79318428E2F6F800C08371 /* URL+Suffix.swift */; };
 		FE920F2728AE884400B73B64 /* ThermalStateMetric.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE920F2628AE884400B73B64 /* ThermalStateMetric.swift */; };
 		FEA8FD9D2834F69F00CDDA97 /* SpecsBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA8FD9B2834F5E400CDDA97 /* SpecsBenchmark.swift */; };
 		FEA8FD9E2834F6D100CDDA97 /* Scenario.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7467312B282E949100B7D044 /* Scenario.swift */; };
@@ -112,6 +113,7 @@
 		FE555B7B2836939B002751C7 /* AsyncCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncCommand.swift; sourceTree = "<group>"; };
 		FE555B7D283774EF002751C7 /* SetOnlineStateCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetOnlineStateCommand.swift; sourceTree = "<group>"; };
 		FE555B7F283775F3002751C7 /* CameraOptions+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CameraOptions+Decodable.swift"; sourceTree = "<group>"; };
+		FE79318428E2F6F800C08371 /* URL+Suffix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Suffix.swift"; sourceTree = "<group>"; };
 		FE920F2628AE884400B73B64 /* ThermalStateMetric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThermalStateMetric.swift; sourceTree = "<group>"; };
 		FEA8FD9B2834F5E400CDDA97 /* SpecsBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecsBenchmark.swift; sourceTree = "<group>"; };
 		FEA8FDA3283510DD00CDDA97 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
@@ -270,6 +272,7 @@
 				FED7F070283BA5AB00AD2313 /* TileStore+Async.swift */,
 				FE18AEE12840ED4D001B9E6F /* StyleURI+Decodable.swift */,
 				FE18AEEC2844F47B001B9E6F /* MapRecorder+Async.swift */,
+				FE79318428E2F6F800C08371 /* URL+Suffix.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -394,6 +397,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		7499663B27C7AD4100DA186A /* Insert access token */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -457,6 +461,7 @@
 				3A60782F28BE1EA80000BF7A /* EnableTerrainCommand.swift in Sources */,
 				3A56266C286436C400107E56 /* ExecutionError.swift in Sources */,
 				FEA8FDA52835110000CDDA97 /* CreateMapCommand.swift in Sources */,
+				FE79318528E2F6F800C08371 /* URL+Suffix.swift in Sources */,
 				74F2381527E39A33009F304C /* AnimationFlyToBenchmark.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -440,6 +440,8 @@ open class MapView: UIView {
     }
 
     deinit {
+        displayLink?.invalidate()
+        headingOrientationUpdateTimer?.invalidate()
         cameraAnimatorsRunner.cancelAnimations()
         cameraAnimatorsRunnerEnablable.isEnabled = false
     }
@@ -568,8 +570,6 @@ open class MapView: UIView {
             return
         }
 
-        updateHeadingOrientationIfNeeded()
-
         for participant in displayLinkParticipants.allObjects {
             participant.participate()
         }
@@ -630,7 +630,16 @@ open class MapView: UIView {
 
         updateDisplayLinkPreferredFramesPerSecond()
         displayLink.add(to: .current, forMode: .common)
+
+        headingOrientationUpdateTimer?.invalidate()
+        headingOrientationUpdateTimer = nil
+
+        headingOrientationUpdateTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
+            self?.updateHeadingOrientationIfNeeded()
+        }
     }
+
+    private var headingOrientationUpdateTimer: Timer?
 
     // MARK: Location
 

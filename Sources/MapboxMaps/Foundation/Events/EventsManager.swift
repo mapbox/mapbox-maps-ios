@@ -57,7 +57,7 @@ internal final class EventsManager {
         }
     }
 
-    fileprivate func getContentScale() -> Int {
+    private func getContentScale() -> Int {
         let sc = UIApplication.shared.preferredContentSizeCategory
 
         let defaultScale = -9999
@@ -79,7 +79,7 @@ internal final class EventsManager {
         return scToScale[sc] ?? defaultScale
     }
 
-    fileprivate func getOrientation() -> String {
+    private func getOrientation() -> String {
         let orientation = UIDevice.current.orientation
 
         let defaultOrientation = "Default - Unknown"
@@ -96,7 +96,7 @@ internal final class EventsManager {
         return orientationToString[orientation] ?? defaultOrientation
     }
 
-    fileprivate func lookupDeviceModel() -> String {
+    private func lookupDeviceModel() -> String {
         var size = 0
         sysctlbyname("hw.machine", nil, &size, nil, 0)
 
@@ -106,7 +106,7 @@ internal final class EventsManager {
         return String(cString: model)
     }
 
-    fileprivate func getMapLoadEventAttributes() -> [String: Any] {
+    private func getMapLoadEventAttributes() -> [String: Any] {
         let event = "map.load"
         let created = ISO8601DateFormatter().string(from: Date())
         let userId = UIDevice.current.identifierForVendor?.uuidString ?? ""

@@ -175,7 +175,6 @@ open class MapView: UIView {
         return mapboxMap.anchor
     }
 
-    private let interfaceOrientationProvider: InterfaceOrientationProvider
     internal let attributionUrlOpener: AttributionURLOpener
 
     /// Initialize a MapView
@@ -192,8 +191,7 @@ open class MapView: UIView {
             orientationProvider = UIApplicationInterfaceOrientationProvider()
         }
 
-        self.dependencyProvider = MapViewDependencyProvider()
-        self.interfaceOrientationProvider = orientationProvider
+        self.dependencyProvider = MapViewDependencyProvider(interfaceOrientationProvider: orientationProvider)
         self.attributionUrlOpener = DefaultAttributionURLOpener()
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
@@ -214,8 +212,7 @@ open class MapView: UIView {
                 mapInitOptions: MapInitOptions = MapInitOptions(),
                 orientationProvider: InterfaceOrientationProvider,
                 urlOpener: AttributionURLOpener) {
-        self.dependencyProvider = MapViewDependencyProvider()
-        self.interfaceOrientationProvider = orientationProvider
+        self.dependencyProvider = MapViewDependencyProvider(interfaceOrientationProvider: orientationProvider)
         self.attributionUrlOpener = urlOpener
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
@@ -234,8 +231,9 @@ open class MapView: UIView {
     public init(frame: CGRect,
                 mapInitOptions: MapInitOptions = MapInitOptions(),
                 urlOpener: AttributionURLOpener) {
-        self.dependencyProvider = MapViewDependencyProvider()
-        self.interfaceOrientationProvider = DefaultInterfaceOrientationProvider()
+        self.dependencyProvider = MapViewDependencyProvider(
+            interfaceOrientationProvider: DefaultInterfaceOrientationProvider()
+        )
         self.attributionUrlOpener = urlOpener
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
@@ -253,11 +251,10 @@ open class MapView: UIView {
             orientationProvider = UIApplicationInterfaceOrientationProvider()
         }
 
-        dependencyProvider = MapViewDependencyProvider()
+        dependencyProvider = MapViewDependencyProvider(interfaceOrientationProvider: orientationProvider)
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
-        self.interfaceOrientationProvider = orientationProvider
         self.attributionUrlOpener = DefaultAttributionURLOpener()
         super.init(coder: coder)
     }
@@ -265,10 +262,8 @@ open class MapView: UIView {
     internal init(frame: CGRect,
                   mapInitOptions: MapInitOptions,
                   dependencyProvider: MapViewDependencyProviderProtocol,
-                  orientationProvider: InterfaceOrientationProvider,
                   urlOpener: AttributionURLOpener) {
         self.dependencyProvider = dependencyProvider
-        self.interfaceOrientationProvider = orientationProvider
         self.attributionUrlOpener = urlOpener
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
@@ -404,7 +399,7 @@ open class MapView: UIView {
 
         // Initialize/Configure location source and location manager
         locationProducer = dependencyProvider.makeLocationProducer(
-            mayRequestWhenInUseAuthorization: bundle.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil)
+            mayRequestWhenInUseAuthorization: bundle.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil, userInterfaceOrientationView: self)
         let interpolatedLocationProducer = dependencyProvider.makeInterpolatedLocationProducer(
             locationProducer: locationProducer,
             displayLinkCoordinator: self)
@@ -441,7 +436,6 @@ open class MapView: UIView {
 
     deinit {
         displayLink?.invalidate()
-        headingOrientationUpdateTimer?.invalidate()
         cameraAnimatorsRunner.cancelAnimations()
         cameraAnimatorsRunnerEnablable.isEnabled = false
     }
@@ -628,37 +622,9 @@ open class MapView: UIView {
 
         cameraAnimatorsRunnerEnablable.isEnabled = true
 
+        locationProducer.updateHeadingOrientationIfNeeded()
         updateDisplayLinkPreferredFramesPerSecond()
         displayLink.add(to: .current, forMode: .common)
-
-        headingOrientationUpdateTimer?.invalidate()
-        headingOrientationUpdateTimer = nil
-
-        headingOrientationUpdateTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
-            self?.updateHeadingOrientationIfNeeded()
-        }
-    }
-
-    private var headingOrientationUpdateTimer: Timer?
-
-    // MARK: Location
-
-    private func updateHeadingOrientationIfNeeded() {
-        guard let headingOrientation = interfaceOrientationProvider.headingOrientation(for: self) else {
-            return
-        }
-
-        // We check for heading changes during the display link, but setting it
-        // causes a heading update, so we only set it when it changes to avoid
-        // unnecessary work.
-        //
-        // It would be more efficient to update this value by observing
-        // interface orientation changes, but you need a view controller to do
-        // that (via `willTransition(to:with:)`), which is something we don't
-        // have, so we poll instead.
-        if locationProducer.headingOrientation != headingOrientation {
-            locationProducer.headingOrientation = headingOrientation
-        }
     }
 }
 

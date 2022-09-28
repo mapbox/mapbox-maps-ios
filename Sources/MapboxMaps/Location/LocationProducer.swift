@@ -4,11 +4,11 @@ import UIKit
 internal protocol LocationProducerProtocol: AnyObject {
     var delegate: LocationProducerDelegate? { get set }
     var latestLocation: Location? { get }
-    var headingOrientation: CLDeviceOrientation { get set }
     var consumers: NSHashTable<LocationConsumer> { get }
     var locationProvider: LocationProvider { get set }
     func add(_ consumer: LocationConsumer)
     func remove(_ consumer: LocationConsumer)
+    func updateHeadingOrientationIfNeeded()
 }
 
 internal protocol LocationProducerDelegate: AnyObject {
@@ -32,15 +32,6 @@ internal final class LocationProducer: LocationProducerProtocol {
                 location: $0,
                 heading: latestHeading,
                 accuracyAuthorization: latestAccuracyAuthorization)
-        }
-    }
-
-    internal var headingOrientation: CLDeviceOrientation {
-        get {
-            return locationProvider.headingOrientation
-        }
-        set {
-            locationProvider.headingOrientation = newValue
         }
     }
 
@@ -84,9 +75,11 @@ internal final class LocationProducer: LocationProducerProtocol {
                 }
                 locationProvider.startUpdatingLocation()
                 locationProvider.startUpdatingHeading()
+                startUpdatingInterfaceOrientation()
             } else {
                 locationProvider.stopUpdatingLocation()
                 locationProvider.stopUpdatingHeading()
+                stopUpdatingInterfaceOrientation()
             }
         }
     }
@@ -112,17 +105,29 @@ internal final class LocationProducer: LocationProducerProtocol {
         }
     }
 
+    private let interfaceOrientationProvider: InterfaceOrientationProvider
+    private let notificationCenter: NotificationCenterProtocol
     private var mayRequestWhenInUseAuthorization: Bool
+    private var headingOrientationUpdateBackupTimer: Timer?
+    private weak var userInterfaceOrientationView: UIView?
 
     internal init(locationProvider: LocationProvider,
+                  interfaceOrientationProvider: InterfaceOrientationProvider,
+                  notificationCenter: NotificationCenterProtocol,
+                  userInterfaceOrientationView: UIView,
                   mayRequestWhenInUseAuthorization: Bool) {
         self.locationProvider = locationProvider
+        self.notificationCenter = notificationCenter
         self.mayRequestWhenInUseAuthorization = mayRequestWhenInUseAuthorization
         self.latestAccuracyAuthorization = locationProvider.accuracyAuthorization
+        self.interfaceOrientationProvider = interfaceOrientationProvider
+        self.userInterfaceOrientationView = userInterfaceOrientationView
         self.locationProvider.setDelegate(self)
     }
 
     deinit {
+        headingOrientationUpdateBackupTimer?.invalidate()
+
         // note that property observers (didSet) don't run during deinit
         if isUpdating {
             locationProvider.stopUpdatingLocation()
@@ -140,6 +145,50 @@ internal final class LocationProducer: LocationProducerProtocol {
     internal func remove(_ consumer: LocationConsumer) {
         _consumers.remove(consumer)
         syncIsUpdating()
+    }
+
+    // MARK: - Location
+
+    private func startUpdatingInterfaceOrientation() {
+        // backup timer if there are some cases when `UIDevice.orientationDidChangeNotification` is not fired
+        // on user interface orientation change
+        let backupTimerInterval: TimeInterval = 3
+        headingOrientationUpdateBackupTimer = Timer.scheduledTimer(withTimeInterval: backupTimerInterval, repeats: true)
+        { [weak self] _ in
+            self?.updateHeadingOrientationIfNeeded()
+        }
+        headingOrientationUpdateBackupTimer?.tolerance = 0.5
+
+        UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+        notificationCenter.addObserver(self,
+                                       selector: #selector(deviceOrientationDidChange),
+                                       name: UIDevice.orientationDidChangeNotification,
+                                       object: nil)
+    }
+
+    private func stopUpdatingInterfaceOrientation() {
+        headingOrientationUpdateBackupTimer?.invalidate()
+        headingOrientationUpdateBackupTimer = nil
+
+        UIDevice.current.endGeneratingDeviceOrientationNotifications()
+        notificationCenter.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
+    }
+
+    @objc private func deviceOrientationDidChange() {
+        updateHeadingOrientationIfNeeded()
+    }
+
+    internal func updateHeadingOrientationIfNeeded() {
+        guard let view = userInterfaceOrientationView,
+              let headingOrientation = interfaceOrientationProvider.headingOrientation(for: view) else {
+            return
+        }
+
+        // Setting this property causes a heading update,
+        // so we only set it when it changes to avoid unnecessary work.
+        if locationProvider.headingOrientation != headingOrientation {
+            locationProvider.headingOrientation = headingOrientation
+        }
     }
 
     private func notifyConsumers() {

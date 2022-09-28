@@ -149,15 +149,17 @@ public final class ViewAnnotationManager {
         }
 
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true 
 
         let id = id ?? UUID().uuidString
         try mapboxMap.addViewAnnotation(withId: id, options: creationOptions)
         viewsById[id] = view
         idsByView[view] = id
-        expectedHiddenByView[view] = !(creationOptions.visible ?? true)
+        expectedHiddenByView[view] = true
         if let featureId = creationOptions.associatedFeatureId {
             viewsByFeatureIds[featureId] = view
         }
+        containerView.addSubview(view)
     }
 
     /// Remove given `UIView` from the map if it was present.

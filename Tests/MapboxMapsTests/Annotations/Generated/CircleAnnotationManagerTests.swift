@@ -3,13 +3,15 @@ import XCTest
 @testable import MapboxMaps
 import Turf
 
-final class CircleAnnotationManagerTests: XCTestCase {
+final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDelegate {
 
     var manager: CircleAnnotationManager!
     var style: MockStyle!
     var displayLinkCoordinator: MockDisplayLinkCoordinator!
     var id = UUID().uuidString
     var annotations = [CircleAnnotation]()
+    var expectation: XCTestExpectation?
+    var delegateAnnotations: [Annotation]?
 
     override func setUp() {
         super.setUp()
@@ -38,6 +40,9 @@ final class CircleAnnotationManagerTests: XCTestCase {
     }
 
     func testAddSource() {
+        // given
+        style.addSourceStub.reset()
+
         // when
         _ = CircleAnnotationManager(id: id,
                                  style: style,
@@ -45,7 +50,7 @@ final class CircleAnnotationManagerTests: XCTestCase {
                                  displayLinkCoordinator: displayLinkCoordinator)
 
         // then
-        XCTAssertEqual(style.addSourceStub.invocations.count, 2) // once for init in setUp and once here
+        XCTAssertEqual(style.addSourceStub.invocations.count, 1) // once for init in setUp and once here
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.type, SourceType.geoJson)
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.id, manager.id)
     }
@@ -320,5 +325,59 @@ final class CircleAnnotationManagerTests: XCTestCase {
         XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.last?.parameters.id, manager.id)
         XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.last?.parameters.geojson, .featureCollection(featureCollection))
+    }
+
+    func testHandleQueriedFeatureIdsPassesNotificationToDelegate() throws {
+        // given
+        var annotations = [CircleAnnotation]()
+        for _ in 0...5 {
+            var annotation = CircleAnnotation(centerCoordinate: CLLocationCoordinate2D(latitude: 38.9, longitude: -77.1))
+            annotation.circleColor = StyleColor(UIColor(red: 0.0, green: 0.0, blue: 1.0, alpha: 1.0))
+            annotation.circleRadius = 12
+            annotations.append(annotation)
+        }
+        let queriedFeatureIds = [annotations[0].id]
+        manager.delegate = self
+
+        // when
+        expectation = expectation(description: "Tapped Annotation Delegate called")
+        manager.annotations = annotations
+        manager.handleQueriedFeatureIds(queriedFeatureIds)
+
+        // then
+        waitForExpectations(timeout: 1)
+        let result = try XCTUnwrap(delegateAnnotations)
+        print(annotations[0])
+        print(result)
+        XCTAssertEqual(result[0].id, annotations[0].id)
+    }
+
+    func testHandleQueriedFeatureIdsDoesNotPassNotificationToDelegateWhenNoMatch() throws {
+        // given
+        var annotations = [CircleAnnotation]()
+        for _ in 0...5 {
+            var annotation = CircleAnnotation(centerCoordinate: CLLocationCoordinate2D(latitude: 38.9, longitude: -77.1))
+            annotation.circleColor = StyleColor(UIColor(red: 0.0, green: 0.0, blue: 1.0, alpha: 1.0))
+            annotation.circleRadius = 12
+            annotations.append(annotation)
+        }
+        let queriedFeatureIds = ["NotAnAnnotationID"]
+        manager.delegate = self
+
+        // when
+        expectation = expectation(description: "Tapped Annotation Delegate called")
+        expectation?.isInverted = true
+        manager.annotations = annotations
+        manager.handleQueriedFeatureIds(queriedFeatureIds)
+
+        // then
+        waitForExpectations(timeout: 1)
+        XCTAssertNil(delegateAnnotations)
+    }
+
+    func annotationManager(_ manager: AnnotationManager, didDetectTappedAnnotations annotations: [Annotation]) {
+        self.delegateAnnotations = annotations
+        expectation?.fulfill()
+        expectation = nil
     }
 }

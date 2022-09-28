@@ -310,6 +310,7 @@ public final class ViewAnnotationManager {
             view.isHidden = false
             expectedHiddenByView[view] = false
             visibleAnnotationIds.insert(position.identifier)
+            containerView.bringSubviewToFront(view)
         }
 
         defer {

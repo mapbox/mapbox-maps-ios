@@ -44,6 +44,14 @@ class SpecsBenchmark: XCTestCase {
                                  timeout: 1800)
     }
 
+    func test1TapMunichRecording() throws {
+        try runScenarioBenchmark(name: "1tap-munich",
+                                 shouldSkipWarmupRun: true,
+                                 iterationCount: 1,
+                                 extraMetrics: [FPSMetric(testCase: self)],
+                                 timeout: 1800)
+    }
+
     func testPerformanceAfterSnapshot() throws {
         let createMap = CreateMapCommand(style: .streets, camera: CameraOptions())
         let takeSnapshot = TakeSnapshotCommand()

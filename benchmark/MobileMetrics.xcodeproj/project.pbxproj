@@ -11,6 +11,8 @@
 		3A011CBB286343E9004713DA /* nav-day-munich-drive-tilepack.json in Resources */ = {isa = PBXBuildFile; fileRef = 3A011CB8286343E9004713DA /* nav-day-munich-drive-tilepack.json */; };
 		3A011CBC286343E9004713DA /* munich-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 3A011CB9286343E9004713DA /* munich-route.json */; };
 		3A011CBD286343E9004713DA /* munich-animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 3A011CBA286343E9004713DA /* munich-animation.json */; };
+		3A23E3ED28E42B3A00ADC2AD /* 1tap-munich-recording-ios.json.gz in Resources */ = {isa = PBXBuildFile; fileRef = 3A23E3EC28E42B3900ADC2AD /* 1tap-munich-recording-ios.json.gz */; };
+		3A23E3EF28E42D8800ADC2AD /* 1tap-munich.json in Resources */ = {isa = PBXBuildFile; fileRef = 3A23E3EE28E42D8800ADC2AD /* 1tap-munich.json */; };
 		3A33396928B8C0480095E8D0 /* SetRenderCacheCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A33396828B8C0480095E8D0 /* SetRenderCacheCommand.swift */; };
 		3A56266C286436C400107E56 /* ExecutionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A56266B286436C400107E56 /* ExecutionError.swift */; };
 		3A56266E28645AE200107E56 /* OnDemandLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A56266D28645AE200107E56 /* OnDemandLocationProvider.swift */; };
@@ -74,6 +76,8 @@
 		3A011CB8286343E9004713DA /* nav-day-munich-drive-tilepack.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "nav-day-munich-drive-tilepack.json"; sourceTree = "<group>"; };
 		3A011CB9286343E9004713DA /* munich-route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "munich-route.json"; sourceTree = "<group>"; };
 		3A011CBA286343E9004713DA /* munich-animation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "munich-animation.json"; sourceTree = "<group>"; };
+		3A23E3EC28E42B3900ADC2AD /* 1tap-munich-recording-ios.json.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = "1tap-munich-recording-ios.json.gz"; sourceTree = "<group>"; };
+		3A23E3EE28E42D8800ADC2AD /* 1tap-munich.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "1tap-munich.json"; sourceTree = "<group>"; };
 		3A33396828B8C0480095E8D0 /* SetRenderCacheCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetRenderCacheCommand.swift; sourceTree = "<group>"; };
 		3A56266B286436C400107E56 /* ExecutionError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecutionError.swift; sourceTree = "<group>"; };
 		3A56266D28645AE200107E56 /* OnDemandLocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDemandLocationProvider.swift; sourceTree = "<group>"; };
@@ -175,6 +179,8 @@
 		74673144282EA6F100B7D044 /* Specs */ = {
 			isa = PBXGroup;
 			children = (
+				3A23E3EE28E42D8800ADC2AD /* 1tap-munich.json */,
+				3A23E3EC28E42B3900ADC2AD /* 1tap-munich-recording-ios.json.gz */,
 				3A011CBA286343E9004713DA /* munich-animation.json */,
 				3A011CB9286343E9004713DA /* munich-route.json */,
 				3A011CB8286343E9004713DA /* nav-day-munich-drive-tilepack.json */,
@@ -371,6 +377,7 @@
 				FE18AEE8284113F3001B9E6F /* nav-day-munich-zoom-tilepack.json in Resources */,
 				3A011CBD286343E9004713DA /* munich-animation.json in Resources */,
 				FE18AEE7284113F3001B9E6F /* munich-zoom-in-out-z10-z20.json in Resources */,
+				3A23E3ED28E42B3A00ADC2AD /* 1tap-munich-recording-ios.json.gz in Resources */,
 				FE18AEE6284113F3001B9E6F /* nav-day-munich-zoom.json in Resources */,
 				3A011CBB286343E9004713DA /* nav-day-munich-drive-tilepack.json in Resources */,
 				7467314B282EA6FA00B7D044 /* nav-day-munich-ttrc-warm.json in Resources */,
@@ -382,6 +389,7 @@
 				7467314C282EA6FA00B7D044 /* nav-day-munich-ttrc-cold.json in Resources */,
 				7479AD4828BE347F00538A88 /* pan-zoom-rotate-pitch.json in Resources */,
 				7499661F27C64ECD00DA186A /* Main.storyboard in Resources */,
+				3A23E3EF28E42D8800ADC2AD /* 1tap-munich.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

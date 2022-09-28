@@ -152,10 +152,11 @@ internal final class LocationProducer: LocationProducerProtocol {
     private func startUpdatingInterfaceOrientation() {
         // backup timer if there are some cases when `UIDevice.orientationDidChangeNotification` is not fired
         // on user interface orientation change
+        // not sure if this is needed at all
         let backupTimerInterval: TimeInterval = 3
         headingOrientationUpdateBackupTimer = Timer.scheduledTimer(withTimeInterval: backupTimerInterval, repeats: true)
         { [weak self] _ in
-            self?.updateHeadingOrientationIfNeeded()
+            self?.updateHeadingOrientationIfNeeded(showWarning: true)
         }
         headingOrientationUpdateBackupTimer?.tolerance = 0.5
 
@@ -179,6 +180,10 @@ internal final class LocationProducer: LocationProducerProtocol {
     }
 
     internal func updateHeadingOrientationIfNeeded() {
+        updateHeadingOrientationIfNeeded(showWarning: false)
+    }
+
+    private func updateHeadingOrientationIfNeeded(showWarning: Bool) {
         guard let view = userInterfaceOrientationView,
               let headingOrientation = interfaceOrientationProvider.headingOrientation(for: view) else {
             return
@@ -188,6 +193,10 @@ internal final class LocationProducer: LocationProducerProtocol {
         // so we only set it when it changes to avoid unnecessary work.
         if locationProvider.headingOrientation != headingOrientation {
             locationProvider.headingOrientation = headingOrientation
+            if showWarning {
+                assertionFailure("User interface should be updated by the `UIDevice.orientationDidChangeNotification` notification")
+                Log.warning(forMessage: "Unexpected user interface orientation change was detected. Please file an issue at https://github.com/mapbox/mapbox-maps-ios/issues")
+            }
         }
     }
 

@@ -53,7 +53,6 @@ main() {
         -I "$product_artifacts_dir"/MapboxMaps.xcframework/ios-arm64/MapboxMaps.framework/\
         -I "$product_artifacts_dir"/MapboxCommon.xcframework/ios-arm64_armv7/MapboxCommon.framework/\
         -I "$product_artifacts_dir"/MapboxCoreMaps.xcframework/ios-arm64/MapboxCoreMaps.framework/\
-        -I "$product_artifacts_dir"/MapboxMobileEvents.xcframework/ios-arm64/MapboxMobileEvents.framework/\
         -I "$product_artifacts_dir"/Turf.xcframework/ios-arm64/Turf.framework/\
         -target arm64-apple-ios11.0\
         --iframework "$product_artifacts_dir"/MapboxCommon.xcframework/ios-arm64_armv7/ \

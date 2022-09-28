@@ -222,6 +222,9 @@ final class ViewAnnotationManagerTests: XCTestCase {
         let annotationView = addTestAnnotationView()
         let id = mapboxMap.addViewAnnotationStub.invocations.last!.parameters.id
 
+        // Annotation is correctly hidden when first added to map
+        XCTAssertTrue(annotationView.isHidden)
+
         // Position update should also call validation
         triggerPositionUpdate(forId: id)
         XCTAssertEqual(mapboxMap.removeViewAnnotationStub.invocations.count, 0)

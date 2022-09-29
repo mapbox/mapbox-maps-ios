@@ -149,7 +149,7 @@ public final class ViewAnnotationManager {
         }
 
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.isHidden = true 
+        view.isHidden = true
 
         let id = id ?? UUID().uuidString
         try mapboxMap.addViewAnnotation(withId: id, options: creationOptions)

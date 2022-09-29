@@ -23,6 +23,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.Examples
         PRODUCT_NAME: $(TARGET_NAME)
         TARGETED_DEVICE_FAMILY: 1,2
+        SKIP_INSTALL: NO
     sources:
       - path: build/${PROJECT}/Apps/Examples/Examples/
     dependencies:

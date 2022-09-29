@@ -9,7 +9,6 @@ targets:
         INFOPLIST_FILE: "build/${PROJECT}/Sources/MapboxMaps/Info.plist"
         PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.MapboxMaps
         INSTALL_PATH: $(LOCAL_LIBRARY_DIR)/Frameworks
-        SKIP_INSTALL: "NO"
         TARGETED_DEVICE_FAMILY: 1,2
         LD_RUNPATH_SEARCH_PATHS: $(inherited) @executable_path/Frameworks @loader_path/Frameworks
         MACH_O_TYPE: mh_dylib

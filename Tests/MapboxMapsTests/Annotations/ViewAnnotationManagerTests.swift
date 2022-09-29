@@ -295,7 +295,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         // Item closest to map should be the last in the annotation array
         XCTAssertEqual(mapboxMap.addViewAnnotationStub.invocations.last?.parameters.id, "test-id2")
 
-        // After updating, the item clostst to the map is now furthest from the map
+        // After updating, the item closest to the map is now furthest from the map
         try? manager.update(annotationViewA, options: ViewAnnotationOptions(selected: true))
         XCTAssertEqual(mapboxMap.addViewAnnotationStub.invocations.first?.parameters.id, "test-id")
 

@@ -41,7 +41,7 @@ if [ -d "config/$PROJECT_ROOT-static" ]; then
 	api-downloads: v2
 
 	bundles:
-	  ios: MapboxMaps
+	  ios: MapboxMaps-static
 	EOF
 fi
 

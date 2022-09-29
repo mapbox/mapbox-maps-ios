@@ -138,7 +138,7 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
 
         // Look for features at the tap location within the clustered and
         // unclustered layers.
-        mapView.mapboxMap.queryRenderedFeatures(at: point,
+        mapView.mapboxMap.queryRenderedFeatures(with: point,
                                                 options: RenderedQueryOptions(layerIds: ["unclustered-point-layer", "clustered-circle-layer"],
                                                 filter: nil)) { [weak self] result in
             switch result {

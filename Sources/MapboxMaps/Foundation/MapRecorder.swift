@@ -11,11 +11,11 @@ import Foundation
 
     // MARK: Recording
 
-    internal func start() {
+    public func start() {
         recorder.startRecording()
     }
 
-    internal func stop() -> String {
+    public func stop() -> String {
         recorder.stopRecording()
     }
 
@@ -33,11 +33,11 @@ import Foundation
                         callback: completion)
     }
 
-    internal func togglePauseReplay() {
+    public func togglePauseReplay() {
         recorder.togglePauseReplay()
     }
 
-    internal func playbackState() -> String {
+    public func playbackState() -> String {
         recorder.getPlaybackState()
     }
 }

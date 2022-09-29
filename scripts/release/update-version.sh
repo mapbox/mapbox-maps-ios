@@ -20,7 +20,7 @@ fi
 
 SEM_VERSION=$1
 SEM_VERSION=${SEM_VERSION/#v}
-SHORT_VERSION=${SEM_VERSION%-*}
+SHORT_VERSION=${SEM_VERSION%%-*}
 
 brew_install_if_needed jq
 

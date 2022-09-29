@@ -33,7 +33,6 @@ targets:
       - framework: ${DYNAMIC_ARTIFACTS_PATH}/MapboxMaps.xcframework
       - framework: ${DYNAMIC_ARTIFACTS_PATH}/MapboxCoreMaps.xcframework
       - framework: ${DYNAMIC_ARTIFACTS_PATH}/MapboxCommon.xcframework
-      - framework: ${DYNAMIC_ARTIFACTS_PATH}/MapboxMobileEvents.xcframework
       - framework: ${DYNAMIC_ARTIFACTS_PATH}/Turf.xcframework
   DirectDynamicDownloadUITest:
     templates:

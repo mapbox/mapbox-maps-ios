@@ -21,9 +21,10 @@ main() {
     export GITHUB_TOKEN
 
     VERSION_JSON_PATH="$SCRIPT_DIR/packager/versions.json"
+    GL_NATIVE_VERSION="maps-v$(jq -r .MapboxCoreMaps "$VERSION_JSON_PATH")"
 
-    GL_NATIVE_RELEASE_URL=$(gh release view --repo mapbox/mapbox-gl-native-internal "maps-v$(jq -r .MapboxCoreMaps "$VERSION_JSON_PATH")" --json url -q .url)
-    COMMON_RELEASE_URL=$(gh release view --repo mapbox/mapbox-sdk-common "v$(jq -r .MapboxCommon "$VERSION_JSON_PATH")" --json url -q .url)
+    GL_NATIVE_PUBLIC_CHANGELOG=$(gh -R mapbox/mapbox-gl-native-internal release view "$GL_NATIVE_VERSION" --json body -q ".body" | awk 'BEGIN{ found=0} /Public changelog entries/{found=1}  {if (found) print }' | tail -n +2)
+    GL_NATIVE_PUBLIC_MARKDOWN_CHANGELOG=$(prepare_glnative_release_notes "$GL_NATIVE_PUBLIC_CHANGELOG")
 
     MAPBOX_COMMON_VERSION=$(jq -r .MapboxCommon "$VERSION_JSON_PATH")
     MAPBOX_COREMAPS_VERSION=$(jq -r .MapboxCoreMaps "$VERSION_JSON_PATH")
@@ -34,27 +35,19 @@ main() {
     CHANGELOG=$( ([[ $(command -v parse-changelog) ]] && parse-changelog CHANGELOG.md) || echo "<Compose changelog here>" )
 
     cat << EOF > notes.txt
-### Dependency requirements:
-
-* Compatible version of MapboxCoreMaps: \`$MAPBOX_COREMAPS_VERSION\`
-* Compatible version of MapboxCommon: \`$MAPBOX_COMMON_VERSION\`
-* Compatible version of Xcode: \`$XCODE_MIN_VERSION\`
-
 ### Changes
 
 $CHANGELOG
 
 ### Dependencies
-- [GL Native]($GL_NATIVE_RELEASE_URL)
-- [Common]($COMMON_RELEASE_URL)
+* Update to MapboxCommon to \`$MAPBOX_COMMON_VERSION\` (PR link).
+* Update to MapboxCoreMaps to \`$MAPBOX_COREMAPS_VERSION\` (RP link):
+  * <details> <summary>Changelog </summary>
+    $GL_NATIVE_PUBLIC_MARKDOWN_CHANGELOG
+</details>
 
-### Direct download
-
-Link to download binaries (append your own Mapbox access token [scoped with \`DOWNLOADS:READ\`](https://account.mapbox.com/)):
-
-\`\`\`
-https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/$VERSION/MapboxMaps.zip?access_token=<access-token>
-\`\`\`
+### Dependency requirements:
+* Compatible version of Xcode: \`$XCODE_MIN_VERSION\`
 EOF
 
     PRODUCTION_DOCS_PR_URL=$(GITHUB_TOKEN=$(mbx-ci github writer public token) \
@@ -65,6 +58,10 @@ EOF
             --notes-file notes.txt)
 
     info "New Release: $PRODUCTION_DOCS_PR_URL"
+}
+
+prepare_glnative_release_notes() {
+    echo "$1" | sed 's/^/      /' | sed 's/^      ## /    * /'
 }
 
 main

@@ -32,8 +32,8 @@ zipped archive of XCFrameworks.
   ```
   ./download-dependency.sh <SDK_REGISTRY_NAME> <SDK_REGISTRY_ARTIFACT> <VERSION>
   ```
-- This script downloads `MapboxCoreMaps.xcframework`, `MapboxCommon.xcframework`
-  and `MapboxMobileEvents.xcframework` from SDK Registry
+- This script downloads `MapboxCoreMaps.xcframework` and `MapboxCommon.xcframework`
+  from SDK Registry
 - NOTE: You **MUST** have a valid `.netrc` token
 
 ### `build-dependency.sh`

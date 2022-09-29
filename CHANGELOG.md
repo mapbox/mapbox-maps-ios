@@ -4,11 +4,14 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 10.9.0-beta.2 - September 29, 2022
+
+* Replace MapboxMobileEvents dependency with CoreTelemetry (part of MapboxCommon). ([#1379](https://github.com/mapbox/mapbox-maps-ios/pull/1379))
+
 ## 10.9.0-beta.1 - September 21, 2022
 
 * Expose `ResourceRequest` properties publicly. ([#1548](https://github.com/mapbox/mapbox-maps-ios/pull/1548))
 * Parse GeoJSON data on a background queue. ([#1576](https://github.com/mapbox/mapbox-maps-ios/pull/1576))
-* Fix block retain cycle in `MapboxMap/observeStyleLoad(_:)`. ([#1575](https://github.com/mapbox/mapbox-maps-ios/pull/1575))
 * Fix block retain cycle in `MapboxMap/observeStyleLoad(_:)`, from now on `loadStyleURI` and `loadStyleJSON` completion block will not be invoked when MapboxMap is deallocated. ([#1575](https://github.com/mapbox/mapbox-maps-ios/pull/1575))
 * Remove `DictionaryEncoder` enforce nil encoding for nested level of the dictionary. ([#1565](https://github.com/mapbox/mapbox-maps-ios/pull/1565))
 * Expose `distance-from-center` and `pitch` expressions. ([#1559](https://github.com/mapbox/mapbox-maps-ios/pull/1559))

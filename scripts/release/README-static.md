@@ -8,7 +8,6 @@
     - `MapboxCommon.xcframework`
     - `MapboxCoreMaps.xcframework`
     - `MapboxMaps.xcframework`
-    - `MapboxMobileEvents.xcframework`
     - `Turf.xcframework`
 
 2. On the General tab for the target, scroll to the section labeled "Frameworks,

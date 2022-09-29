@@ -46,7 +46,6 @@ xcrun --sdk iphoneos "$API_DIGESTER_PATH"\
     -I "$PRODUCT_ARTIFACTS_DIR"/MapboxMaps.xcframework/ios-arm64/MapboxMaps.framework/\
     -I "$PRODUCT_ARTIFACTS_DIR"/MapboxCommon.xcframework/ios-arm64_armv7/MapboxCommon.framework/\
     -I "$PRODUCT_ARTIFACTS_DIR"/MapboxCoreMaps.xcframework/ios-arm64/MapboxCoreMaps.framework/\
-    -I "$PRODUCT_ARTIFACTS_DIR"/MapboxMobileEvents.xcframework/ios-arm64/MapboxMobileEvents.framework/\
     -I "$PRODUCT_ARTIFACTS_DIR"/Turf.xcframework/ios-arm64/Turf.framework/\
     -target arm64-apple-ios11.0\
     -iframework "$PRODUCT_ARTIFACTS_DIR"/MapboxCommon.xcframework/ios-arm64_armv7/ \

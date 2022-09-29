@@ -1,5 +1,6 @@
 import XCTest
 @testable import MapboxMaps
+@_implementationOnly import MapboxCommon_Private
 
 final class EventsManagerTests: XCTestCase {
 
@@ -31,17 +32,41 @@ final class EventsManagerTests: XCTestCase {
         XCTAssertEqual(UserDefaults.standard.MGLMapboxMetricsEnabled, false)
     }
 
+    func testCoreTelemetryMetricsEnabledToggle() {
+        let initialValue = UserDefaults.standard.MGLMapboxMetricsEnabled
+
+        UserDefaults.standard.MGLMapboxMetricsEnabled.toggle()
+
+        let exp = expectation(description: "Wait for one runloop run")
+        DispatchQueue.main.async {
+            XCTAssertEqual(UserDefaults.standard.MGLMapboxMetricsEnabled, !initialValue)
+            XCTAssertEqual(TelemetryUtils.getEventsCollectionState(), !initialValue)
+            exp.fulfill()
+        }
+        waitForExpectations(timeout: 1)
+    }
+
     func testMGLMapboxMetricsModifiesMMECollectionDisabled() {
         UserDefaults.standard.MGLMapboxMetricsEnabled = false
 
-        // When 'MGLMapboxMetricsEnabled' assigned to 'true' 'MMECollectionDisabled' should became 'false'
-        let falseExpectation = keyValueObservingExpectation(for: UserDefaults.mme_configuration(), keyPath: "MMECollectionDisabled", expectedValue: false)
-        UserDefaults.standard.MGLMapboxMetricsEnabled = true
-        wait(for: [falseExpectation], timeout: 1)
+        DispatchQueue.main.async {
+            XCTAssertFalse(TelemetryUtils.getEventsCollectionState())
+        }
 
-        // When 'MGLMapboxMetricsEnabled' assigned to 'false' 'MMECollectionDisabled' should became 'true'
-        let trueExpectation = keyValueObservingExpectation(for: UserDefaults.mme_configuration(), keyPath: "MMECollectionDisabled", expectedValue: true)
+        UserDefaults.standard.MGLMapboxMetricsEnabled = true
+        DispatchQueue.main.async {
+            XCTAssertTrue(TelemetryUtils.getEventsCollectionState())
+        }
+
+        // Wait for a one run in RunLoop to process inner DispatchQueue.main.async closures
+        // There is no reason to wait for previous async's since MainQueue is serial
+        let exp = expectation(description: "Wait for one runloop run")
         UserDefaults.standard.MGLMapboxMetricsEnabled = false
-        wait(for: [trueExpectation], timeout: 1)
+        DispatchQueue.main.async {
+            XCTAssertFalse(TelemetryUtils.getEventsCollectionState())
+            exp.fulfill()
+        }
+
+        waitForExpectations(timeout: 1)
     }
 }

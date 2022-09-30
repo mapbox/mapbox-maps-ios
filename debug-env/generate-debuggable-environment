@@ -100,6 +100,10 @@ def main():
     print_phase("Patch GL Native project")
     os.system("swift run --package-path tools/PatchGLNativeXCProject patch-cmake-xcproject build/mapbox-gl-native-internal/build/ios/Mapbox\ GL\ Native.xcodeproj")
 
+    print_phase(f"Create {project}/developer.xcconfig")
+    with open(f"build/{project}/developer.xcconfig", "w") as f:
+        f.write("SWIFT_TREAT_WARNINGS_AS_ERRORS[config=Release] = NO")
+
     # Generate Xcode projects
     print_phase("Generate Xcode projects")
     os.system(f"PROJECT={project} xcodegen -s MapboxMaps.yml")

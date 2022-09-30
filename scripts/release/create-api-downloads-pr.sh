@@ -36,12 +36,14 @@ EOF
 # Add config file for static
 #
 
-cat << EOF > config/"$PROJECT_ROOT-static/$VERSION.yaml"
-api-downloads: v2
+if [ -d "config/$PROJECT_ROOT-static" ]; then
+	cat <<- EOF > config/"$PROJECT_ROOT-static/$VERSION.yaml"
+	api-downloads: v2
 
-bundles:
-  ios: MapboxMaps-static
-EOF
+	bundles:
+	  ios: MapboxMaps-static
+	EOF
+fi
 
 #
 # Commit to branch

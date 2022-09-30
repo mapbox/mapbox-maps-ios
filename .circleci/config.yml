@@ -536,6 +536,8 @@ jobs:
           when: always
       - store_artifacts:
           path: MapboxMapsTests.xcresult.zip
+      - store_artifacts:
+          path: ~/Library/Logs/DiagnosticReports
       - locate-derived-data-directory:
           base_name: $(basename $(pwd))
       - run:

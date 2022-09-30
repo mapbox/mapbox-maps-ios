@@ -21,14 +21,14 @@ targets:
     sources:
       - path: "build/${PROJECT}/Sources/MapboxMaps/"
     dependencies:
-      - framework: "build/mapbox-gl-native-internal/build/ios/lib/Debug/MapboxCommon.framework"
-      - target: "MapboxCoreMaps/MapboxCoreMaps"
+      - target: MapboxCoreMaps/MapboxCommon
+      - target: MapboxCoreMaps/MapboxCoreMaps
       - target: "Turf/Turf"
       - target: "MME/MapboxMobileEvents"
 projectReferences:
   Turf:
-    path: "./build/turf-swift/Turf.xcodeproj"
+    path: "build/turf-swift/Turf.xcodeproj"
   MME:
-    path: "./build/mapbox-events-ios/MapboxMobileEvents.xcodeproj"
+    path: "build/mapbox-events-ios/MapboxMobileEvents.xcodeproj"
   MapboxCoreMaps:
-    path: "./build/mapbox-gl-native-internal/build/ios/Mapbox GL Native.xcodeproj"
+    path: "build/mapbox-gl-native-internal/build/ios/Mapbox GL Native.xcodeproj"

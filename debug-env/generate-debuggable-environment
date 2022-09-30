@@ -97,6 +97,9 @@ def main():
     # leave build directory
     os.chdir("..")
 
+    print_phase("Patch GL Native project")
+    os.system("swift run --package-path tools/PatchGLNativeXCProject patch-cmake-xcproject build/mapbox-gl-native-internal/build/ios/Mapbox\ GL\ Native.xcodeproj")
+
     # Generate Xcode projects
     print_phase("Generate Xcode projects")
     os.system(f"PROJECT={project} xcodegen -s MapboxMaps.yml")

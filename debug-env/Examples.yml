@@ -23,10 +23,11 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.Examples
         PRODUCT_NAME: $(TARGET_NAME)
         TARGETED_DEVICE_FAMILY: 1,2
+        SKIP_INSTALL: NO
     sources:
       - path: build/${PROJECT}/Apps/Examples/Examples/
     dependencies:
-      - framework: build/mapbox-gl-native-internal/build/ios/lib/Debug/MapboxCommon.framework
+      - target: MapboxCoreMaps/MapboxCommon
       - target: MapboxCoreMaps/MapboxCoreMaps
       - target: Turf/Turf
       - target: MME/MapboxMobileEvents

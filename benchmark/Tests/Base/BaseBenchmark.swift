@@ -1,5 +1,4 @@
 import XCTest
-import MapboxMobileEvents
 import MapboxMaps
 
 class BaseBenchmark: XCTestCase {
@@ -15,11 +14,6 @@ class BaseBenchmark: XCTestCase {
     private(set) var viewController: UIViewController!
     private var measurementExpectation: XCTestExpectation?
     private var adHocWaitExpectation: XCTestExpectation?
-
-    override class func setUp() {
-        super.setUp()
-        MMEEventsManager.shared().disableLocationMetrics()
-    }
 
     override func setUpWithError() throws {
         try super.setUpWithError()

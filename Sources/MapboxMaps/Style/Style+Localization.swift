@@ -60,6 +60,8 @@ extension Style {
                     // Return traditional chinese if the Locale is Taiwan
                     if locale.identifier == "zh-Hant-TW" {
                         return "zh-Hant"
+                    } else {
+                        return "zh-Hans"
                     }
                 }
             }

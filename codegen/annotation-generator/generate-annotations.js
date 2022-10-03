@@ -46,5 +46,6 @@ for (const layer of style.layers) {
     render('Annotation', layer, "Sources/MapboxMaps/Annotations/Generated/");
     render('AnnotationIntegrationTests', layer, "Tests/MapboxMapsTests/Annotations/Generated/");
     render('AnnotationTests', layer, "Tests/MapboxMapsTests/Annotations/Generated/");
+    render('AnnotationManagerTests', layer, "Tests/MapboxMapsTests/Annotations/Generated/");
   }
 }

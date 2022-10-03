@@ -1,0 +1,517 @@
+<%_
+  const type = locals.type
+  const originalType = locals.orignalType
+  const properties = locals.properties
+
+  const annotationLocal = function annotationLocal() {
+    return indent(12)(include('AnnotationLocal.swift.ejs', { "annotationType": type, "declarationKeyword": "var" })).trim();
+  }
+
+  const testLayerForType = function testLayerForType(type) {
+    switch (type) {
+      case 'point':
+        return { name: "symbol" };
+      case 'circle':
+        return { name: "circle" };
+      case 'polygon':
+        return { name: "fill" };
+      case 'polyline':
+        return { name: "line" };
+      default:
+        throw new Error(`unknown type ${type}`);
+    }
+  }
+
+  const elementPropertyForArray = function elementPropertyForArray(property, i) {
+    let elementProperty;
+    if (property.value === "string") {
+      elementProperty = {type: property.value};
+    } else if (property.value === "number") {
+      elementProperty = {type: property.value};
+      if (typeof property.minimum !== 'undefined') {
+        elementProperty["minimum"] = property.minimum[i]
+      }
+      if (typeof property.maximum !== 'undefined') {
+        elementProperty["maximum"] = property.maximum[i]
+      }
+    } else if (property.value === "enum") {
+      elementProperty = {type: property.value, name: property.name};
+    } else {
+      elementProperty = property.value;
+    }
+    return elementProperty;
+  }
+
+  const randomElement = function randomElement(property) {
+    switch (property.type) {
+      case 'boolean':
+        return `Bool.random()`;
+      case 'string':
+      case 'formatted':
+      case 'resolvedImage':
+        return `String.randomASCII(withLength: .random(in: 0...100))`;
+      case 'number':
+        const minimum = (typeof property.minimum !== 'undefined') ? property.minimum : -100000;
+        const maximum = (typeof property.maximum !== 'undefined') ? property.maximum : 100000;
+        return `Double.random(in: ${minimum}...${maximum})`;
+      case 'array':
+        let elements = [];
+        if (typeof property.length !== 'undefined') {
+          for (var i=0; i<property.length; i++) {
+            let elementProperty = elementPropertyForArray(property, i);
+            elements.push(randomElement(elementProperty));
+          }
+          return `[${elements.join(", ")}]${property.name == 'line-trim-offset' ? '.sorted()' : ''}`;
+        } else {
+          let elementProperty = elementPropertyForArray(property);
+          return `Array.random(withLength: .random(in: 0...10), generator: { ${randomElement(elementProperty)} })`;
+        }
+      case 'enum':
+        if (property.name === "text-variable-anchor") {
+          return `TextAnchor.allCases.randomElement()!`;
+        } else {
+          return `${propertySwiftType(property)}.allCases.randomElement()!`;
+        }
+      case 'color':
+        return `StyleColor.random()`;
+      default:
+        throw new Error(`unknown type for ${property.name}. Property type = ${property.type}`);
+    }
+  }
+
+  const defaultValue = function defaultValue(property) {
+    if (property.name === "text-field") {
+      return `.expression(Exp(.format) {
+            ""
+            FormatOptions()
+        })`;
+    }
+
+    const layerPropertyDefaultValue = `Style.layerPropertyDefaultValue(for: .${originalType}, property: "${property.name}").value`
+    switch (property.type) {
+      case 'boolean':
+        return `${layerPropertyDefaultValue} as! Bool`;
+      case 'string':
+        return `${layerPropertyDefaultValue} as! String`;
+      case 'formatted':
+        return `${layerPropertyDefaultValue} as! [Any]).enumerated().compactMap { (idx, element) in (idx % 2) == 1 ? element as? String : nil }.joined()`;
+      case 'resolvedImage':
+        return `.name(${layerPropertyDefaultValue} as! String)`
+      case 'number':
+        return `${layerPropertyDefaultValue} as! Double`;
+      case 'array':
+        return `${layerPropertyDefaultValue} as! ${propertySwiftType(property)}`;
+      case 'enum':
+        return `${layerPropertyDefaultValue} as! String`;
+      case 'color':
+        return `try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: ${layerPropertyDefaultValue} as! [Any], options: []))`;
+      default:
+        throw new Error(`unknown type for ${property.name}. Property type = ${property.type}`);
+    }
+  }
+_%>
+// This file is generated
+import XCTest
+@testable import MapboxMaps
+
+final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationInteractionDelegate {
+    var manager: <%- camelize(type) %>AnnotationManager!
+    var style: MockStyle!
+    var displayLinkCoordinator: MockDisplayLinkCoordinator!
+    var id = UUID().uuidString
+    var annotations = [<%- camelize(type) %>Annotation]()
+    var expectation: XCTestExpectation?
+    var delegateAnnotations: [Annotation]?
+
+    override func setUp() {
+        super.setUp()
+
+        style = MockStyle()
+        displayLinkCoordinator = MockDisplayLinkCoordinator()
+        manager = <%- camelize(type) %>AnnotationManager(id: id,
+                                          style: style,
+                                          layerPosition: nil,
+                                          displayLinkCoordinator: displayLinkCoordinator)
+
+        for _ in 0...10 {
+            <%- annotationLocal() %>
+            annotations.append(annotation)
+        }
+    }
+
+    override func tearDown() {
+        style = nil
+        displayLinkCoordinator = nil
+        manager = nil
+        expectation = nil
+        delegateAnnotations = nil
+
+        super.tearDown()
+    }
+
+    func testSourceSetup() {
+        style.addSourceStub.reset()
+
+        _ = <%- camelize(type) %>AnnotationManager(id: id,
+                                 style: style,
+                                 layerPosition: nil,
+                                 displayLinkCoordinator: displayLinkCoordinator)
+
+        XCTAssertEqual(style.addSourceStub.invocations.count, 1)
+        XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.type, SourceType.geoJson)
+        XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.id, manager.id)
+    }
+
+    func testAddLayer() {
+        style.addSourceStub.reset()
+        let initializedManager = <%- camelize(type) %>AnnotationManager(id: id,
+                                                         style: style,
+                                                         layerPosition: nil,
+                                                         displayLinkCoordinator: displayLinkCoordinator)
+
+        XCTAssertEqual(style.addSourceStub.invocations.count, 1)
+        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
+        XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layer.type, LayerType.<%- camelizeWithLeadingLowercase(testLayerForType(type).name) %>)
+        XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layer.id, initializedManager.id)
+        XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layer.source, initializedManager.sourceId)
+        XCTAssertNil(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition)
+    }
+
+    func testAddManagerWithDuplicateId() {
+        var annotations2 = [<%- camelize(type) %>Annotation]()
+        for _ in 0...50 {
+            <%- annotationLocal() %>
+            annotations2.append(annotation)
+        }
+
+        manager.annotations = annotations
+        let manager2 = <%- camelize(type) %>AnnotationManager(id: manager.id,
+                                               style: style,
+                                               layerPosition: nil,
+                                               displayLinkCoordinator: displayLinkCoordinator)
+        manager2.annotations = annotations2
+
+        XCTAssertEqual(manager.annotations.count, 11)
+        XCTAssertEqual(manager2.annotations.count, 51)
+    }
+
+    func testLayerPositionPassedCorrectly() {
+        let manager3 = <%- camelize(type) %>AnnotationManager(id: id,
+                                               style: style,
+                                               layerPosition: LayerPosition.at(4),
+                                               displayLinkCoordinator: displayLinkCoordinator)
+        manager3.annotations = annotations
+
+        XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition, LayerPosition.at(4))
+    }
+
+    func testDestroyManager() {
+        manager.destroy()
+
+        XCTAssertEqual(style.removeLayerStub.invocations.count, 1)
+        XCTAssertEqual(style.removeLayerStub.invocations.last?.parameters, manager.id)
+        XCTAssertEqual(style.removeSourceStub.invocations.count, 1)
+        XCTAssertEqual(style.removeSourceStub.invocations.last?.parameters, manager.id)
+    }
+
+    func testDestroyManagerTwice() {
+        manager.destroy()
+        manager.destroy()
+
+        XCTAssertEqual(style.removeLayerStub.invocations.count, 1)
+        XCTAssertEqual(style.removeSourceStub.invocations.count, 1)
+    }
+
+    func testSyncSourceAndLayer() {
+        manager.annotations = annotations
+        manager.syncSourceAndLayerIfNeeded()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
+    }
+
+    func testDoNotSyncSourceAndLayerWhenNotNeeded() {
+        manager.syncSourceAndLayerIfNeeded()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 0)
+        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 0)
+    }
+
+    func testManagerSubscribestoDisplayLinkCoordinator() {
+        XCTAssertEqual(displayLinkCoordinator.addStub.invocations.count, 1)
+        XCTAssertEqual(displayLinkCoordinator.removeStub.invocations.count, 0)
+    }
+
+    func testDestroyManagerRemovesDisplayLinkParticipant() {
+        manager.destroy()
+
+        XCTAssertEqual(displayLinkCoordinator.removeStub.invocations.count, 1)
+    }
+
+    func testfeatureCollectionPassedtoGeoJSON() {
+        var annotations = [<%- camelize(type) %>Annotation]()
+        for _ in 0...5 {
+            <%- annotationLocal() %>
+            annotations.append(annotation)
+        }
+        let featureCollection = FeatureCollection(features: annotations.map(\.feature))
+
+        manager.annotations = annotations
+        manager.syncSourceAndLayerIfNeeded()
+
+        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
+        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.last?.parameters.id, manager.id)
+        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.last?.parameters.geojson, .featureCollection(featureCollection))
+    }
+
+    func testHandleQueriedFeatureIdsPassesNotificationToDelegate() throws {
+        var annotations = [<%- camelize(type) %>Annotation]()
+        for _ in 0...5 {
+            <%- annotationLocal() %>
+            annotations.append(annotation)
+        }
+        let queriedFeatureIds = [annotations[0].id]
+        manager.delegate = self
+
+        manager.annotations = annotations
+        manager.handleQueriedFeatureIds(queriedFeatureIds)
+
+        let result = try XCTUnwrap(delegateAnnotations)
+        XCTAssertEqual(result[0].id, annotations[0].id)
+    }
+
+    func testHandleQueriedFeatureIdsDoesNotPassNotificationToDelegateWhenNoMatch() throws {
+        var annotations = [<%- camelize(type) %>Annotation]()
+        for _ in 0...5 {
+            <%- annotationLocal() %>
+            annotations.append(annotation)
+        }
+        let queriedFeatureIds = ["NotAnAnnotationID"]
+        manager.delegate = self
+
+        expectation?.isInverted = true
+        manager.annotations = annotations
+        manager.handleQueriedFeatureIds(queriedFeatureIds)
+
+        XCTAssertNil(delegateAnnotations)
+    }
+
+    <%_ for (const property of properties) { _%>
+    <%_ if (!supportsPropertyFunction(property) && !shouldSkipAnnotationProperty(type, property)) { _%>
+    func testInitial<%- camelize(property.name) %>() {
+        let initialValue = manager.<%- camelizeWithLeadingLowercase(property.name) %>
+        XCTAssertNil(initialValue)
+    }
+
+    func testSet<%- camelize(property.name) %>() {
+        let value = <%- randomElement(property) %>
+        manager.<%- camelizeWithLeadingLowercase(property.name) -%> = value
+        XCTAssertEqual(manager.<%- camelizeWithLeadingLowercase(property.name) -%>, value)
+
+        // test layer and source synced and properties added
+        manager.syncSourceAndLayerIfNeeded()
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        <%_ if (property.type === "enum") { _%>
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["<%- property.name %>"] as! String, value.rawValue)
+        <%_ } else if (property.name === "text-font") { _%>
+        XCTAssertEqual((style.setLayerPropertiesStub.invocations.last?.parameters.properties["<%- property.name %>"] as! [Any])[1] as! [String], value)
+        <%_ } else if (property.name === "text-variable-anchor" || property.name === "text-writing-mode") { _%>
+        let valueAsString = value.map { $0.rawValue }
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["<%- property.name %>"] as! [String], valueAsString)
+        <%_ } else { _%>
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["<%- property.name %>"] as! <%- propertySwiftType(property) %>, value)
+        <%_ } _%>
+    }
+
+    func test<%- camelize(property.name) %>AnnotationPropertiesAddedWithoutDuplicate() {
+        let new<%- camelize(property.name) %>Property = <%- randomElement(property) %>
+        let second<%- camelize(property.name) %>Property = <%- randomElement(property) %>
+
+        manager.<%- camelizeWithLeadingLowercase(property.name) %> = new<%- camelize(property.name) %>Property
+        manager.syncSourceAndLayerIfNeeded()
+        manager.<%- camelizeWithLeadingLowercase(property.name) %> = second<%- camelize(property.name) %>Property
+        manager.syncSourceAndLayerIfNeeded()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
+        <%_ if (property.type === "enum") { _%>
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["<%- property.name %>"] as! String, second<%- camelize(property.name) %>Property.rawValue)
+        <%_ } else if (property.name === "text-font") { _%>
+        XCTAssertEqual((style.setLayerPropertiesStub.invocations.last?.parameters.properties["<%- property.name %>"] as! [Any])[1] as! [String], second<%- camelize(property.name) %>Property)
+        <%_ } else if (property.name === "text-variable-anchor" || property.name === "text-writing-mode") { _%>
+        let valueAsString = second<%- camelize(property.name) %>Property.map { $0.rawValue }
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["<%- property.name %>"] as! [String], valueAsString)
+        <%_ } else { _%>
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["<%- property.name %>"] as! <%- propertySwiftType(property) %>, second<%- camelize(property.name) %>Property)
+        <%_ } _%>
+    }
+
+    func testNew<%- camelize(property.name) %>PropertyMergedWithAnnotationProperties() {
+        var annotations = [<%- camelize(type) %>Annotation]()
+        for _ in 0...5 {
+            <%- annotationLocal() %>
+            <%_ for (const property of properties) { _%>
+            <%_ if (supportsPropertyFunction(property) && !shouldSkipAnnotationProperty(type, property)) { _%>
+            annotation.<%- camelizeWithLeadingLowercase(property.name) -%> = <%- randomElement(property) %>
+            <%_ } _%>
+            <%_ } _%>
+            annotations.append(annotation)
+        }
+        let new<%- camelize(property.name) %>Property = <%- randomElement(property) %>
+
+        manager.annotations = annotations
+        manager.<%- camelizeWithLeadingLowercase(property.name) %> = new<%- camelize(property.name) %>Property
+        manager.syncSourceAndLayerIfNeeded()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["<%- property.name %>"])
+    }
+
+    func testSetToNil<%- camelize(property.name) %>() {
+        let new<%- camelize(property.name) %>Property = <%- randomElement(property) %>
+        let defaultValue = <%- defaultValue(property) -%>
+
+        manager.<%- camelizeWithLeadingLowercase(property.name) %> = new<%- camelize(property.name) %>Property
+        manager.syncSourceAndLayerIfNeeded()
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["<%- property.name %>"])
+
+        manager.<%- camelizeWithLeadingLowercase(property.name) -%> = nil
+        manager.syncSourceAndLayerIfNeeded()
+        XCTAssertNil(manager.<%- camelizeWithLeadingLowercase(property.name) -%>)
+
+        <%_ if (property.type === "enum") { _%>
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["<%- property.name %>"] as! String, defaultValue)
+        <%_ } else { _%>
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["<%- property.name %>"] as! <%- propertySwiftType(property) %>, defaultValue)
+        <%_ } _%>
+    }
+
+    <%_ } _%>
+    <%_ } _%>
+
+    func annotationManager(_ manager: AnnotationManager, didDetectTappedAnnotations annotations: [Annotation]) {
+        self.delegateAnnotations = annotations
+        expectation?.fulfill()
+        expectation = nil
+    }
+
+    <%_ if (type === "point") { _%>
+    // Add tests specific to PointAnnotationManager
+    func testNewImagesAddedToStyle() {
+        // given
+        let annotations = (0..<10)
+            .map { _ in PointAnnotation.Image(image: UIImage(), name: UUID().uuidString) }
+            .map(PointAnnotation.init)
+
+        // when
+        manager.annotations = annotations
+        manager.syncSourceAndLayerIfNeeded()
+
+        // then
+        XCTAssertEqual(style.addImageWithInsetsStub.invocations.count, annotations.count)
+        XCTAssertEqual(
+            Set(style.addImageWithInsetsStub.invocations.map(\.parameters.id)),
+            Set(annotations.compactMap(\.image?.name))
+        )
+        XCTAssertEqual(
+            Set(style.addImageWithInsetsStub.invocations.map(\.parameters.image)),
+            Set(annotations.compactMap(\.image?.image))
+        )
+        XCTAssertEqual(style.removeImageStub.invocations.count, 0)
+    }
+
+    func testUnusedImagesRemovedFromStyle() {
+        // given
+        let unusedAnnotations = 3
+        let annotations = (0..<10)
+            .map { _ in PointAnnotation.Image(image: UIImage(), name: UUID().uuidString) }
+            .map(PointAnnotation.init)
+        manager.annotations = annotations
+        manager.syncSourceAndLayerIfNeeded()
+
+        // when
+        manager.annotations = annotations.suffix(annotations.count - unusedAnnotations)
+        manager.syncSourceAndLayerIfNeeded()
+
+        // then
+        XCTAssertEqual(style.addImageWithInsetsStub.invocations.count, annotations.count + annotations.count - unusedAnnotations)
+        XCTAssertEqual(
+            Set(style.addImageWithInsetsStub.invocations.map(\.parameters.id)),
+            Set(annotations.compactMap(\.image?.name))
+        )
+        XCTAssertEqual(
+            Set(style.addImageWithInsetsStub.invocations.map(\.parameters.image)),
+            Set(annotations.compactMap(\.image?.image))
+        )
+        XCTAssertEqual(style.removeImageStub.invocations.count, unusedAnnotations)
+        XCTAssertEqual(
+            Set(style.removeImageStub.invocations.map(\.parameters)),
+            Set(annotations.prefix(unusedAnnotations).compactMap(\.image?.name))
+        )
+    }
+
+    func testAllImagesRemovedFromStyleOnUpdate() {
+        // given
+        let annotations = (0..<10)
+            .map { _ in PointAnnotation.Image(image: UIImage(), name: UUID().uuidString) }
+            .map(PointAnnotation.init)
+        manager.annotations = annotations
+        manager.syncSourceAndLayerIfNeeded()
+
+        // when
+        manager.annotations = []
+        manager.syncSourceAndLayerIfNeeded()
+
+        // then
+        XCTAssertEqual(style.addImageWithInsetsStub.invocations.count, annotations.count)
+        XCTAssertEqual(
+            Set(style.addImageWithInsetsStub.invocations.map(\.parameters.id)),
+            Set(annotations.compactMap(\.image?.name))
+        )
+        XCTAssertEqual(
+            Set(style.addImageWithInsetsStub.invocations.map(\.parameters.image)),
+            Set(annotations.compactMap(\.image?.image))
+        )
+        XCTAssertEqual(style.removeImageStub.invocations.count, annotations.count)
+        XCTAssertEqual(
+            Set(style.removeImageStub.invocations.map(\.parameters)),
+            Set(annotations.compactMap(\.image?.name))
+        )
+    }
+
+    func testAllImagesRemovedFromStyleOnDestroy() {
+        // given
+        let annotations = (0..<10)
+            .map { _ in PointAnnotation.Image(image: UIImage(), name: UUID().uuidString) }
+            .map(PointAnnotation.init)
+        manager.annotations = annotations
+        manager.syncSourceAndLayerIfNeeded()
+
+        // when
+        manager.destroy()
+
+        // then
+        XCTAssertEqual(style.removeImageStub.invocations.count, annotations.count)
+        XCTAssertEqual(
+            Set(style.removeImageStub.invocations.map(\.parameters)),
+            Set(annotations.compactMap(\.image?.name))
+        )
+
+    }
+
+    <%_ } _%>
+}
+
+<%_ if (type === "point") { _%>
+private extension PointAnnotation {
+    init(image: Image) {
+        self.init(coordinate: .random())
+        self.image = image
+    }
+}
+<%_ } _%>
+
+// End of generated file

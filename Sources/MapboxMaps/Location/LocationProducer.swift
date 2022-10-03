@@ -107,6 +107,7 @@ internal final class LocationProducer: LocationProducerProtocol {
 
     private let interfaceOrientationProvider: InterfaceOrientationProvider
     private let notificationCenter: NotificationCenterProtocol
+    private let device: UIDevice
     private var mayRequestWhenInUseAuthorization: Bool
     private var headingOrientationUpdateBackupTimer: Timer?
     private weak var userInterfaceOrientationView: UIView?
@@ -115,6 +116,7 @@ internal final class LocationProducer: LocationProducerProtocol {
                   interfaceOrientationProvider: InterfaceOrientationProvider,
                   notificationCenter: NotificationCenterProtocol,
                   userInterfaceOrientationView: UIView,
+                  device: UIDevice,
                   mayRequestWhenInUseAuthorization: Bool) {
         self.locationProvider = locationProvider
         self.notificationCenter = notificationCenter
@@ -122,6 +124,7 @@ internal final class LocationProducer: LocationProducerProtocol {
         self.latestAccuracyAuthorization = locationProvider.accuracyAuthorization
         self.interfaceOrientationProvider = interfaceOrientationProvider
         self.userInterfaceOrientationView = userInterfaceOrientationView
+        self.device = device
         self.locationProvider.setDelegate(self)
     }
 
@@ -160,7 +163,7 @@ internal final class LocationProducer: LocationProducerProtocol {
         }
         headingOrientationUpdateBackupTimer?.tolerance = 0.5
 
-        UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+        device.beginGeneratingDeviceOrientationNotifications()
         notificationCenter.addObserver(self,
                                        selector: #selector(deviceOrientationDidChange),
                                        name: UIDevice.orientationDidChangeNotification,
@@ -171,7 +174,7 @@ internal final class LocationProducer: LocationProducerProtocol {
         headingOrientationUpdateBackupTimer?.invalidate()
         headingOrientationUpdateBackupTimer = nil
 
-        UIDevice.current.endGeneratingDeviceOrientationNotifications()
+        device.endGeneratingDeviceOrientationNotifications()
         notificationCenter.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
     }
 
@@ -194,7 +197,6 @@ internal final class LocationProducer: LocationProducerProtocol {
         if locationProvider.headingOrientation != headingOrientation {
             locationProvider.headingOrientation = headingOrientation
             if showWarning {
-                assertionFailure("User interface should be updated by the `UIDevice.orientationDidChangeNotification` notification")
                 Log.warning(forMessage: "Unexpected user interface orientation change was detected. Please file an issue at https://github.com/mapbox/mapbox-maps-ios/issues")
             }
         }

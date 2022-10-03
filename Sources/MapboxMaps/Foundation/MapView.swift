@@ -399,7 +399,8 @@ open class MapView: UIView {
 
         // Initialize/Configure location source and location manager
         locationProducer = dependencyProvider.makeLocationProducer(
-            mayRequestWhenInUseAuthorization: bundle.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil, userInterfaceOrientationView: self)
+            mayRequestWhenInUseAuthorization: bundle.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil,
+            userInterfaceOrientationView: self)
         let interpolatedLocationProducer = dependencyProvider.makeInterpolatedLocationProducer(
             locationProducer: locationProducer,
             displayLinkCoordinator: self)
@@ -622,7 +623,6 @@ open class MapView: UIView {
 
         cameraAnimatorsRunnerEnablable.isEnabled = true
 
-        locationProducer.updateHeadingOrientationIfNeeded()
         updateDisplayLinkPreferredFramesPerSecond()
         displayLink.add(to: .current, forMode: .common)
     }

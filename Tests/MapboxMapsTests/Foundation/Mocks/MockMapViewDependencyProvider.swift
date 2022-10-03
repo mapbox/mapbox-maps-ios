@@ -73,9 +73,18 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
         return GestureHandler(gestureRecognizer: UIGestureRecognizer())
     }
 
-    let makeLocationProducerStub = Stub<Bool, MockLocationProducer>(defaultReturnValue: MockLocationProducer())
-    func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool) -> LocationProducerProtocol {
-        return makeLocationProducerStub.call(with: mayRequestWhenInUseAuthorization)
+    struct MakeLocationProducerParameteres {
+        let mayRequestWhenInUseAuthorization: Bool
+        let userInterfaceOrientationView: UIView
+    }
+    let makeLocationProducerStub = Stub<MakeLocationProducerParameteres, MockLocationProducer>(defaultReturnValue: MockLocationProducer())
+    func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool, userInterfaceOrientationView: UIView) -> MapboxMaps.LocationProducerProtocol {
+        return makeLocationProducerStub.call(with:
+                .init(
+                    mayRequestWhenInUseAuthorization: mayRequestWhenInUseAuthorization,
+                    userInterfaceOrientationView: userInterfaceOrientationView
+                )
+        )
     }
 
     func makeInterpolatedLocationProducer(locationProducer: LocationProducerProtocol,

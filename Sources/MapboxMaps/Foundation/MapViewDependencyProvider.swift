@@ -228,6 +228,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             interfaceOrientationProvider: interfaceOrientationProvider,
             notificationCenter: notificationCenter,
             userInterfaceOrientationView: userInterfaceOrientationView,
+            device: .current,
             mayRequestWhenInUseAuthorization: mayRequestWhenInUseAuthorization)
     }
 

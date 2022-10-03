@@ -9,7 +9,6 @@ final class MapViewTests: XCTestCase {
     var displayLink: MockDisplayLink!
     var locationProducer: MockLocationProducer!
     var dependencyProvider: MockMapViewDependencyProvider!
-    var orientationProvider: MockInterfaceOrientationProvider!
     var attributionURLOpener: MockAttributionURLOpener!
     var mapView: MapView!
     var window: UIWindow!
@@ -28,13 +27,11 @@ final class MapViewTests: XCTestCase {
         dependencyProvider.cameraAnimatorsRunnerEnablable = cameraAnimatorsRunnerEnablable
         dependencyProvider.makeDisplayLinkStub.defaultReturnValue = displayLink
         dependencyProvider.makeLocationProducerStub.defaultReturnValue = locationProducer
-        orientationProvider = MockInterfaceOrientationProvider()
         attributionURLOpener = MockAttributionURLOpener()
         mapView = MapView(
             frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
             mapInitOptions: MapInitOptions(),
             dependencyProvider: dependencyProvider,
-            orientationProvider: orientationProvider,
             urlOpener: attributionURLOpener)
         window = UIWindow()
         window.addSubview(mapView)
@@ -49,7 +46,6 @@ final class MapViewTests: XCTestCase {
         window = nil
         mapView = nil
         attributionURLOpener = nil
-        orientationProvider = nil
         dependencyProvider = nil
         locationProducer = nil
         displayLink = nil
@@ -99,7 +95,6 @@ final class MapViewTests: XCTestCase {
             frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
             mapInitOptions: MapInitOptions(),
             dependencyProvider: dependencyProvider,
-            orientationProvider: orientationProvider,
             urlOpener: attributionURLOpener)
 
         XCTAssertEqual(cameraAnimatorsRunnerEnablable.$isEnabled.setStub.invocations.map(\.parameters), [false])
@@ -125,7 +120,6 @@ final class MapViewTests: XCTestCase {
             frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
             mapInitOptions: MapInitOptions(),
             dependencyProvider: dependencyProvider,
-            orientationProvider: orientationProvider,
             urlOpener: attributionURLOpener)
         let runner = try XCTUnwrap(dependencyProvider.makeCameraAnimatorsRunnerStub.invocations.first?.returnValue as? MockCameraAnimatorsRunner)
         runner.cancelAnimationsStub.reset()
@@ -279,23 +273,6 @@ final class MapViewTests: XCTestCase {
         XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [false])
     }
 
-    func testOrientationProviderIsUsed() throws {
-        try invokeDisplayLinkCallback()
-
-        XCTAssertEqual(orientationProvider.interfaceOrientationStub.invocations.count, 1)
-    }
-
-    func testOrientationChangeIsPropagated() throws {
-        let orientations: [UIInterfaceOrientation] = [.portrait, .landscapeLeft, .landscapeRight, .portraitUpsideDown]
-        for orientation in orientations {
-            orientationProvider.interfaceOrientationStub.defaultReturnValue = orientation
-
-            try invokeDisplayLinkCallback()
-
-            XCTAssertEqual(locationProducer.headingOrientation, CLDeviceOrientation(interfaceOrientation: orientation))
-        }
-    }
-
     func testURLOpener() {
         let manager = AttributionDialogManager(dataSource: MockAttributionDataSource(), delegate: MockAttributionDialogManagerDelegate())
         let url = URL(string: "http://example.com")!
@@ -342,7 +319,6 @@ final class MapViewTestsWithScene: XCTestCase {
             frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
             mapInitOptions: MapInitOptions(),
             dependencyProvider: dependencyProvider,
-            orientationProvider: orientationProvider,
             urlOpener: attributionURLOpener)
         window = UIWindow()
         window.addSubview(mapView)
@@ -403,7 +379,6 @@ final class MapViewTestsWithScene: XCTestCase {
             frame: CGRect(origin: .zero, size: mapViewSize),
             mapInitOptions: MapInitOptions(),
             dependencyProvider: dependencyProvider,
-            orientationProvider: orientationProvider,
             urlOpener: attributionURLOpener)
 
         let metalView = mapView.getMetalView(for: nil)
@@ -427,7 +402,6 @@ final class MapViewTestsWithScene: XCTestCase {
             frame: CGRect(origin: .zero, size: mapViewSize),
             mapInitOptions: MapInitOptions(),
             dependencyProvider: dependencyProvider,
-            orientationProvider: orientationProvider,
             urlOpener: attributionURLOpener)
 
         let metalView = mapView.getMetalView(for: nil)

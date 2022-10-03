@@ -25,4 +25,10 @@ final class MockLocationProducer: LocationProducerProtocol {
     func remove(_ consumer: LocationConsumer) {
         removeStub.call(with: consumer)
     }
+
+    let updateHeadingOrientationIfNeededStub = Stub<Void, Void>()
+    func updateHeadingOrientationIfNeeded() {
+        updateHeadingOrientationIfNeededStub.call()
+    }
+
 }

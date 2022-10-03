@@ -1,0 +1,156 @@
+# Customise this file, documentation can be found here:
+# https://github.com/fastlane/fastlane/tree/master/fastlane/docs
+# All available actions: https://docs.fastlane.tools/actions
+# can also be listed using the `fastlane actions` command
+# Change the syntax highlighting to Ruby
+# All lines starting with a # are ignored when running `fastlane`
+# If you want to automatically update fastlane if a new version is available:
+# update_fastlane
+# This is the minimum version number required.
+# Update this, if you use features of a newer version
+fastlane_version "2.120.0"
+default_platform :ios
+# Set default target for get_version_number()
+ENV["FL_VERSION_NUMBER_TARGET"] = "Examples"
+platform :ios do
+  before_all do
+    # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
+  end
+
+  desc "Runs all the tests"
+  lane :test do
+    cocoapods()
+    scan
+  end
+
+  desc "Update dependencies, then stage any changes."
+  lane :update_dependencies do
+    puts `bundle update`
+    update_fastlane()
+    git_add(path: ["./Gemfile.lock"])
+  end
+
+  desc "Increment build number based on current TestFlight build number"
+  desc "Commits the changes, but does not push them to any remote."
+  lane :bump_build_number do
+    increment_build_number(build_number: latest_testflight_build_number + 1)
+    version = get_version_number()
+    build = get_build_number()
+    commit_version_bump(message: "#{version} (#{build})", xcodeproj: "./Examples.xcodeproj", force: true)
+  end
+
+  desc "Increment marketing version and build number for releases."
+  desc "Versioning scheme is: YYYY-N, where N is the number of releases that YYYY."
+  desc "Commits the changes, but does not push them to any remote."
+  lane :bump_versions_for_release do
+    increment_version_number(bump_type: "minor")
+    increment_build_number
+    version = get_version_number()
+    build = get_build_number()
+    commit_version_bump(message: "#{version} (#{build})", xcodeproj: "./Examples.xcodeproj", force: true)
+  end
+
+  desc "Submit a new Beta Build to Apple TestFlight"
+  desc "This will also make sure that the signing certificate and provisioning profiles are up to date."
+  lane :build_and_submit do
+    cocoapods(use_bundle_exec: true)
+    match(readonly: true)
+    gym(scheme: "App Store", include_bitcode: true)
+    pilot(changelog: release_notes, distribute_external: true, groups: "Mapbox Testers")
+  end
+
+  # desc "Push current branch and create a GitHub pull request."
+  # lane :github_pull_request do
+  #   push_to_git_remote(tags: false)
+  #   create_pull_request(
+  #     repo: "mapbox/studio-preview-ios",
+  #     title: "Release #{get_version_number()} (#{get_build_number()}) with Maps SDK #{mapbox_sdk_version}",
+  #     api_token: ENV["GITHUB_TOKEN"],
+  #     base: "main"
+  #   )
+  # end
+
+  desc "Get current Mapbox Maps SDK for iOS version number from framework."
+  private_lane :mapbox_sdk_version do
+    mapbox_version_path = Dir.glob("#{ENV['PWD']}/**/MapboxMaps.json").first
+    `jq .version #{mapbox_version_path}`
+  end
+
+  desc "Generate release notes."
+  lane :release_notes do
+    "Mapbox Maps SDK for iOS #{mapbox_sdk_version}."
+  end
+
+  desc "Build and submit a new beta build to Apple TestFlight."
+  lane :beta do
+    build_and_submit
+  end
+
+  desc "Build and submit a new beta build to Apple TestFlight, after bumping minor version and build numbers."
+  desc "Also push to GitHub and create a pull request and release."
+  lane :minor_release do
+    update_dependencies
+    bump_versions_for_release
+    build_and_submit
+    github_pull_request
+  end
+
+  desc "Build and submit a new beta build to Apple TestFlight, after bumping major version and build numbers."
+  desc "Also push to GitHub and create a pull request and release."
+  lane :major_release do
+    update_dependencies
+    bump_versions_for_major_release
+    build_and_submit
+  end
+
+  desc "Build and submit a new beta build to Apple TestFlight, after bumping just the build number."
+  desc "Also push to GitHub and create a pull request and release."
+  lane :beta_release do
+    update_dependencies
+    bump_build_number
+    build_and_submit
+  end
+
+  desc "Bump to latest maps SDK version before releasing."
+  lane :release_bump do
+    beta_release
+  end
+
+  desc "Bump to latest maps SDK version before releasing a brand new major version."
+  lane :major_release_bump do
+    major_release
+  # end
+  end
+
+  desc "Bump to latest maps SDK version before releasing a brand new minor version."
+  lane :minor_release_bump do
+    minor_release
+  end
+
+  desc "Download dSYMs from iTunesConnect and upload them to Crashlytics"
+  lane :refresh_dsyms do
+    download_dsyms
+    crashlytics_api_key = get_info_plist_value(path: "Examples/Info.plist", key: "CrashlyticsAPIKey")
+    upload_symbols_to_crashlytics(api_token: crashlytics_api_key)
+    clean_build_artifacts # Delete the local dSYM files
+  end
+
+  after_all do |lane|
+    # This block is called, only if the executed lane was successful
+    # slack(
+    #   message: "Successfully deployed new App Update."
+    # )
+  end
+
+  error do |lane, exception|
+    # slack(
+    #   message: exception.message,
+    #   success: false
+    # )
+  end
+end
+# More information about multiple platforms in fastlane: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Platforms.md
+# All available actions: https://docs.fastlane.tools/actions
+# fastlane reports which actions are used
+# No personal data is recorded. Learn more at https://github.com/fastlane/enhancer
+opt_out_usage

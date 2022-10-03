@@ -14,15 +14,15 @@ fi
 
 export GITHUB_TOKEN=$(mbx-ci github reader token)
 
+if [ -z "$CIRCLE_PULL_REQUEST" ]; then
+    echo "No pull request created yet. Please create pull request in order to finish CI."
+    exit 1
+fi
+
 IS_BRANCH_PROTECTED=$(gh api repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/branches/$CIRCLE_BRANCH --jq .protected)
 if [ $IS_BRANCH_PROTECTED != "false" ]; then
     echo "We are on protected branch, trigger all the bots."
     exit 0
-fi
-
-if [ -z "$CIRCLE_PULL_REQUEST" ]; then
-    echo "No pull request created yet. Please create pull request in order to finish CI."
-    exit 1
 fi
 
 echo "Checking PR $CIRCLE_PULL_REQUEST"

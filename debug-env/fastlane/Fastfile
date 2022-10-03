@@ -76,7 +76,6 @@ platform :ios do
       build_from_source_script = "./generate-debuggable-environment --commit #{iOS_branch} --gl-native-commit #{native_branch} --turf-commit #{turf_branch} --mme-commit #{mme_branch}"
       puts "Generating project using requested dependencies using: #{build_from_source_script}"
       sh("#{build_from_source_script}")
-      # sh "touch where_am_i.txt"
     end
       update_fastlane()
       release_bump

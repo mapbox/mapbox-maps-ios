@@ -1,4 +1,4 @@
-app_identifier("com.mapbox.Examples") # The bundle identifier of your app
+app_identifier("com.mapbox.examples") # The bundle identifier of your app
 apple_id("zizi.miles@mapbox.com") # Your Apple Developer Portal username
 
 itc_team_id("34158803") # App Store Connect Team ID

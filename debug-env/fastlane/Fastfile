@@ -8,8 +8,11 @@
 # update_fastlane
 # This is the minimum version number required.
 # Update this, if you use features of a newer version
-fastlane_version "2.120.0"
+fastlane_version "2.204.1"
 default_platform :ios
+
+ENV["FASTLANE_SKIP_UPDATE_CHECK"] = "1"
+ENV["SPACESHIP_SKIP_2FA_UPGRADE"] = "1"
 # Set default target for get_version_number()
 ENV["FL_VERSION_NUMBER_TARGET"] = "Examples"
 platform :ios do
@@ -17,58 +20,30 @@ platform :ios do
     # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
   end
 
-  desc "Runs all the tests"
-  lane :test do
-    cocoapods()
-    scan
-  end
-
-  desc "Update dependencies, then stage any changes."
-  lane :update_dependencies do
-    puts `bundle update`
-    update_fastlane()
-    git_add(path: ["./Gemfile.lock"])
-  end
-
   desc "Increment build number based on current TestFlight build number"
   desc "Commits the changes, but does not push them to any remote."
   lane :bump_build_number do
-    increment_build_number(build_number: latest_testflight_build_number + 1)
-    version = get_version_number()
-    build = get_build_number()
-    commit_version_bump(message: "#{version} (#{build})", xcodeproj: "./Examples.xcodeproj", force: true)
-  end
-
-  desc "Increment marketing version and build number for releases."
-  desc "Versioning scheme is: YYYY-N, where N is the number of releases that YYYY."
-  desc "Commits the changes, but does not push them to any remote."
-  lane :bump_versions_for_release do
-    increment_version_number(bump_type: "minor")
-    increment_build_number
-    version = get_version_number()
-    build = get_build_number()
-    commit_version_bump(message: "#{version} (#{build})", xcodeproj: "./Examples.xcodeproj", force: true)
+    increment_build_number_in_plist(
+      	build_number: (latest_testflight_build_number + 1).to_s,
+    )
   end
 
   desc "Submit a new Beta Build to Apple TestFlight"
   desc "This will also make sure that the signing certificate and provisioning profiles are up to date."
   lane :build_and_submit do
-    cocoapods(use_bundle_exec: true)
-    match(readonly: true)
-    gym(scheme: "App Store", include_bitcode: true)
-    pilot(changelog: release_notes, distribute_external: true, groups: "Mapbox Testers")
+    sync_code_signing(type: "appstore")
+    build_app(
+      scheme: "Examples",
+      workspace: "Umbrella.xcworkspace",
+      xcargs: "SWIFT_TREAT_WARNINGS_AS_ERRORS=NO" # Disable to bypass Deprecated error on OfflineManager example
+    )
+    upload_to_testflight(
+      beta_app_feedback_email: "applemachine@mapbox.com",
+      beta_app_description: "Examples app pre-release test build.",
+      demo_account_required: false,
+      skip_waiting_for_build_processing: false
+    )
   end
-
-  # desc "Push current branch and create a GitHub pull request."
-  # lane :github_pull_request do
-  #   push_to_git_remote(tags: false)
-  #   create_pull_request(
-  #     repo: "mapbox/studio-preview-ios",
-  #     title: "Release #{get_version_number()} (#{get_build_number()}) with Maps SDK #{mapbox_sdk_version}",
-  #     api_token: ENV["GITHUB_TOKEN"],
-  #     base: "main"
-  #   )
-  # end
 
   desc "Get current Mapbox Maps SDK for iOS version number from framework."
   private_lane :mapbox_sdk_version do
@@ -81,32 +56,40 @@ platform :ios do
     "Mapbox Maps SDK for iOS #{mapbox_sdk_version}."
   end
 
+  desc "Generate build from source Umbrella.xcworkspace."
+  desc "Then build and submit a new beta build to Apple TestFlight, after bumping just the build number."
+  lane :update_and_release do
+    Dir.chdir("..") do
+      # code here runs in the parent directory
+      iOS_branch = prompt(
+        text: "iOS SDK branch: ",
+      )
+      native_branch = prompt(
+        text: "GL-Native branch: ",
+      )
+      turf_branch = prompt(
+        text: "Turf branch: ",
+      )
+      mme_branch = prompt(
+        text: "MME branch: ",
+      )
+      build_from_source_script = "./generate-debuggable-environment --commit #{iOS_branch} --gl-native-commit #{native_branch} --turf-commit #{turf_branch} --mme-commit #{mme_branch}"
+      puts "Generating project using requested dependencies using: #{build_from_source_script}"
+      sh("#{build_from_source_script}")
+      # sh "touch where_am_i.txt"
+    end
+      update_fastlane()
+      release_bump
+  end
+
   desc "Build and submit a new beta build to Apple TestFlight."
   lane :beta do
     build_and_submit
   end
 
-  desc "Build and submit a new beta build to Apple TestFlight, after bumping minor version and build numbers."
-  desc "Also push to GitHub and create a pull request and release."
-  lane :minor_release do
-    update_dependencies
-    bump_versions_for_release
-    build_and_submit
-    github_pull_request
-  end
-
-  desc "Build and submit a new beta build to Apple TestFlight, after bumping major version and build numbers."
-  desc "Also push to GitHub and create a pull request and release."
-  lane :major_release do
-    update_dependencies
-    bump_versions_for_major_release
-    build_and_submit
-  end
-
   desc "Build and submit a new beta build to Apple TestFlight, after bumping just the build number."
-  desc "Also push to GitHub and create a pull request and release."
   lane :beta_release do
-    update_dependencies
+    # update_dependencies
     bump_build_number
     build_and_submit
   end
@@ -115,25 +98,14 @@ platform :ios do
   lane :release_bump do
     beta_release
   end
-
-  desc "Bump to latest maps SDK version before releasing a brand new major version."
-  lane :major_release_bump do
-    major_release
+  #
+  # desc "Download dSYMs from iTunesConnect and upload them to Crashlytics"
+  # lane :refresh_dsyms do
+  #   download_dsyms
+  #   crashlytics_api_key = get_info_plist_value(path: "Examples/Info.plist", key: "CrashlyticsAPIKey")
+  #   upload_symbols_to_crashlytics(api_token: crashlytics_api_key)
+  #   clean_build_artifacts # Delete the local dSYM files
   # end
-  end
-
-  desc "Bump to latest maps SDK version before releasing a brand new minor version."
-  lane :minor_release_bump do
-    minor_release
-  end
-
-  desc "Download dSYMs from iTunesConnect and upload them to Crashlytics"
-  lane :refresh_dsyms do
-    download_dsyms
-    crashlytics_api_key = get_info_plist_value(path: "Examples/Info.plist", key: "CrashlyticsAPIKey")
-    upload_symbols_to_crashlytics(api_token: crashlytics_api_key)
-    clean_build_artifacts # Delete the local dSYM files
-  end
 
   after_all do |lane|
     # This block is called, only if the executed lane was successful

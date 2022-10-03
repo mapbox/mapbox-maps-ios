@@ -486,6 +486,10 @@ jobs:
                               echo "E2E tests not requested, skipping."
                               exit 0
                           fi
+                          if [[ -z "$CIRCLE_PULL_REQUEST" ]]; then
+                              echo "Not a pull request, skipping."
+                              exit 0
+                          fi
                           export GITHUB_TOKEN=$(mbx-ci github reader token)
                           LABELS=$(gh pr view --repo $CIRCLE_REPOSITORY_URL $CIRCLE_PULL_REQUEST --json labels)
                           if [[ $LABELS == *"e2e_trunk"* ]]; then

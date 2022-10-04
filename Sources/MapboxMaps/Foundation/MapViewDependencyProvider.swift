@@ -15,7 +15,7 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
                             mapboxMap: MapboxMapProtocol,
                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager
     func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool,
-                                       userInterfaceOrientationView: UIView) -> LocationProducerProtocol
+                              userInterfaceOrientationView: UIView) -> LocationProducerProtocol
     func makeInterpolatedLocationProducer(locationProducer: LocationProducerProtocol,
                                           displayLinkCoordinator: DisplayLinkCoordinator) -> InterpolatedLocationProducerProtocol
     func makeLocationManager(locationProducer: LocationProducerProtocol,

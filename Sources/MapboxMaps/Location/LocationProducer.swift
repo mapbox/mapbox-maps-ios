@@ -157,8 +157,10 @@ internal final class LocationProducer: LocationProducerProtocol {
         // on user interface orientation change
         // not sure if this is needed at all
         let backupTimerInterval: TimeInterval = 3
-        headingOrientationUpdateBackupTimer = Timer.scheduledTimer(withTimeInterval: backupTimerInterval, repeats: true)
-        { [weak self] _ in
+        headingOrientationUpdateBackupTimer = Timer.scheduledTimer(
+            withTimeInterval: backupTimerInterval,
+            repeats: true
+        ) { [weak self] _ in
             self?.updateHeadingOrientationIfNeeded(showWarning: true)
         }
         headingOrientationUpdateBackupTimer?.tolerance = 0.5

@@ -19,6 +19,7 @@ final class LocationProducerTests: XCTestCase {
         interfaceOrientationProvider = MockInterfaceOrientationProvider()
         notificationCenter = MockNotificationCenter()
         userInterfaceOrientationView = UIView()
+        // swiftlint:disable:next discouraged_direct_init
         device = UIDevice()
         locationProducer = LocationProducer(
             locationProvider: locationProvider,

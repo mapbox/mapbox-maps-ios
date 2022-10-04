@@ -391,7 +391,6 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
 
     <%_ } _%>
     <%_ } _%>
-
     func annotationManager(_ manager: AnnotationManager, didDetectTappedAnnotations annotations: [Annotation]) {
         self.delegateAnnotations = annotations
         expectation?.fulfill()
@@ -501,7 +500,6 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         )
 
     }
-
     <%_ } _%>
 }
 
@@ -513,5 +511,4 @@ private extension PointAnnotation {
     }
 }
 <%_ } _%>
-
 // End of generated file

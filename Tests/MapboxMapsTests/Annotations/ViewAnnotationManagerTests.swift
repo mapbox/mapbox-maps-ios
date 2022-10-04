@@ -31,6 +31,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         XCTAssertEqual(mapboxMap.addViewAnnotationStub.invocations.last?.parameters, .init(id: "test-id", options: options))
         XCTAssertEqual(testView.superview, container)
         XCTAssertEqual(container.subviews.count, 1)
+        XCTAssertTrue(manager.annotations.contains(testView))
 
         XCTAssertNoThrow(try manager.add(UIView(), options: options))
         XCTAssertNotNil(UUID(uuidString: mapboxMap.addViewAnnotationStub.invocations.last!.parameters.id), "Generated annotation view ID must be a valid UUID")
@@ -71,12 +72,14 @@ final class ViewAnnotationManagerTests: XCTestCase {
         let annotationView = addTestAnnotationView()
         let expectedId = mapboxMap.addViewAnnotationStub.invocations.last!.parameters.id
         XCTAssertEqual(container.subviews.count, 1)
+        XCTAssertTrue(manager.annotations.contains(annotationView))
 
         manager.remove(annotationView)
 
         XCTAssertEqual(mapboxMap.removeViewAnnotationStub.invocations.count, 1)
         XCTAssertEqual(mapboxMap.removeViewAnnotationStub.invocations.first?.parameters, expectedId)
         XCTAssertEqual(container.subviews.count, 0)
+        XCTAssertFalse(manager.annotations.contains(annotationView))
     }
 
     func testRemoveNoAnnotationViews() {
@@ -98,6 +101,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
 
         XCTAssertEqual(Set(mapboxMap.removeViewAnnotationStub.invocations.map(\.parameters)), Set(viewIds))
         XCTAssertTrue(container.subviews.isEmpty)
+        XCTAssertTrue(manager.annotations.isEmpty)
     }
 
     func testRemoveAllNoAnnotationViews() {

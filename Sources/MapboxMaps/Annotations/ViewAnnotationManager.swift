@@ -60,6 +60,9 @@ public final class ViewAnnotationManager {
     /// The default value is true, and setting this value to false will disable the validation.
     public var validatesViews = true
 
+    /// The complete list of annotations associated with the receiver.
+    public var annotations: [UIView] { Array(viewsById.values) }
+
     internal init(containerView: UIView, mapboxMap: MapboxMapProtocol) {
         self.containerView = containerView
         self.mapboxMap = mapboxMap

@@ -468,7 +468,6 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-translate-anchor"] as! String, defaultValue)
     }
 
-
     func annotationManager(_ manager: AnnotationManager, didDetectTappedAnnotations annotations: [Annotation]) {
         self.delegateAnnotations = annotations
         expectation?.fulfill()
@@ -476,6 +475,5 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
 }
-
 
 // End of generated file

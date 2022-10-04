@@ -2708,7 +2708,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-translate-anchor"] as! String, defaultValue)
     }
 
-
     func annotationManager(_ manager: AnnotationManager, didDetectTappedAnnotations annotations: [Annotation]) {
         self.delegateAnnotations = annotations
         expectation?.fulfill()
@@ -2817,7 +2816,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         )
 
     }
-
 }
 
 private extension PointAnnotation {
@@ -2826,5 +2824,4 @@ private extension PointAnnotation {
         self.image = image
     }
 }
-
 // End of generated file

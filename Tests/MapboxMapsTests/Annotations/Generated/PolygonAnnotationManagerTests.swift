@@ -444,7 +444,6 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-translate-anchor"] as! String, defaultValue)
     }
 
-
     func annotationManager(_ manager: AnnotationManager, didDetectTappedAnnotations annotations: [Annotation]) {
         self.delegateAnnotations = annotations
         expectation?.fulfill()
@@ -452,6 +451,5 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     }
 
 }
-
 
 // End of generated file

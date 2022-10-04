@@ -700,7 +700,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-trim-offset"] as! [Double], defaultValue)
     }
 
-
     func annotationManager(_ manager: AnnotationManager, didDetectTappedAnnotations annotations: [Annotation]) {
         self.delegateAnnotations = annotations
         expectation?.fulfill()
@@ -708,6 +707,5 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     }
 
 }
-
 
 // End of generated file

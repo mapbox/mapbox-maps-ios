@@ -245,7 +245,8 @@ final class Puck2DTests: XCTestCase {
         expectedPaintLayerProperties[.bearing] = 0
         expectedPaintLayerProperties[.locationIndicatorOpacity] = configuration.opacity
         expectedPaintLayerProperties[.locationIndicatorOpacityTransition] = ["duration": 0, "delay": 0]
-
+        expectedPaintLayerProperties[.imagePitchDisplacement] = 4
+        expectedPaintLayerProperties[.perspectiveCompensation] = 0.9
         var expectedProperties = expectedLayoutLayerProperties
             .mapKeys(\.rawValue)
             .merging(
@@ -452,6 +453,17 @@ final class Puck2DTests: XCTestCase {
             5000]
         expectedProperties["accuracy-radius-color"] = StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
         expectedProperties["accuracy-radius-border-color"] = StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
+        expectedProperties["bearing-image-size"] = try configuration.scale?.toJSON()
+        expectedProperties["bearing-transition"] = ["duration": 0, "delay": 0]
+        expectedProperties["emphasis-circle-radius-transition"] = ["duration": 0, "delay": 0]
+        expectedProperties["image-pitch-displacement"] = 4
+        expectedProperties["location-indicator-opacity"] = configuration.opacity
+        expectedProperties["location-indicator-opacity-transition"] = ["duration": 0, "delay": 0]
+        expectedProperties["location-transition"] = ["duration": 0, "delay": 0]
+        expectedProperties["perspective-compensation"] = 0.9
+        expectedProperties["shadow-image-size"] = try configuration.scale?.toJSON()
+        expectedProperties["top-image-size"] = try configuration.scale?.toJSON()
+
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
@@ -463,7 +475,16 @@ final class Puck2DTests: XCTestCase {
         var originalKeys = Set(makeExpectedLayerProperties(with: originalLocation).keys)
         originalKeys.remove("id")
         originalKeys.remove("type")
-
+        originalKeys.remove("bearing-image-size")
+        originalKeys.remove("bearing-transition")
+        originalKeys.remove("emphasis-circle-radius-transition")
+        originalKeys.remove("image-pitch-displacement")
+        originalKeys.remove("location-indicator-opacity")
+        originalKeys.remove("location-indicator-opacity-transition")
+        originalKeys.remove("location-transition")
+        originalKeys.remove("perspective-compensation")
+        originalKeys.remove("top-image-size")
+        originalKeys.remove("shadow-image-size")
         // there are a bunch of properties that aren't used in "reduced" mode
         // and they should be reset to their default values if the layer already
         // existed

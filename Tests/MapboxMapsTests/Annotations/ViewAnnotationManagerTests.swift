@@ -292,16 +292,21 @@ final class ViewAnnotationManagerTests: XCTestCase {
         let annotationViewA = addTestAnnotationView(id: "test-id")
         let annotationViewB = addTestAnnotationView(id: "test-id2")
 
-        // Item closest to map should be the last in the annotation array
-        XCTAssertEqual(mapboxMap.addViewAnnotationStub.invocations.last?.parameters.id, "test-id2")
+        XCTAssertEqual(container.subviews, [annotationViewA, annotationViewB])
 
-        // After updating, the item closest to the map is now furthest from the map
-        try? manager.update(annotationViewA, options: ViewAnnotationOptions(selected: true))
-        XCTAssertEqual(mapboxMap.addViewAnnotationStub.invocations.first?.parameters.id, "test-id")
+        manager.onViewAnnotationPositionsUpdate(forPositions: [ViewAnnotationPositionDescriptor(
+            identifier: "test-id2",
+            width: 100,
+            height: 50,
+            leftTopCoordinate: CGPoint(x: 150.0, y: 200.0)
+        ), ViewAnnotationPositionDescriptor(
+            identifier: "test-id",
+            width: 100,
+            height: 50,
+            leftTopCoordinate: CGPoint(x: 150.0, y: 200.0)
+        )])
 
-        // After adding a new annotation, the item clostst to the map is now furthest from the map
-        let annotationViewC = addTestAnnotationView(id: "test-id3")
-        XCTAssertEqual(mapboxMap.addViewAnnotationStub.invocations.last?.parameters.id, "test-id3")
+        XCTAssertEqual(container.subviews, [annotationViewB, annotationViewA])
     }
 
     func testPlacementHideMissingAnnotations() {

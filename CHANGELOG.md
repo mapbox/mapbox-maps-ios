@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Reduce location provider heading orientation update frequency. ([#1618](https://github.com/mapbox/mapbox-maps-ios/pull/1618))
+
 ## 10.9.0-beta.2 - September 29, 2022
 
 * Replace MapboxMobileEvents dependency with CoreTelemetry (part of MapboxCommon). ([#1379](https://github.com/mapbox/mapbox-maps-ios/pull/1379))

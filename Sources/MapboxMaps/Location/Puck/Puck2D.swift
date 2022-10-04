@@ -7,10 +7,6 @@ internal final class Puck2D: Puck {
     private static let topImageId = "locationIndicatorLayerTopImage"
     private static let bearingImageId = "locationIndicatorLayerBearingImage"
     private static let shadowImageId = "locationIndicatorLayerShadowImage"
-    private static let immediateTransition: [String: Any] = [
-        StyleTransition.CodingKeys.duration.rawValue: 0,
-        StyleTransition.CodingKeys.delay.rawValue: 0
-    ]
 
     internal var isActive = false {
         didSet {
@@ -138,14 +134,6 @@ internal final class Puck2D: Puck {
             }
 
             newLayerLayoutProperties[.shadowImage] = Self.shadowImageId
-            newLayerPaintProperties[.locationTransition] = Puck2D.immediateTransition
-            newLayerPaintProperties[.topImageSize] = encodedScale
-            newLayerPaintProperties[.bearingImageSize] = encodedScale
-            newLayerPaintProperties[.shadowImageSize] = encodedScale
-            newLayerPaintProperties[.emphasisCircleRadiusTransition] = Puck2D.immediateTransition
-            newLayerPaintProperties[.bearingTransition] = Puck2D.immediateTransition
-            newLayerPaintProperties[.locationIndicatorOpacity] = configuration.opacity
-            newLayerPaintProperties[.locationIndicatorOpacityTransition] = Puck2D.immediateTransition
             if configuration.showsAccuracyRing {
                 newLayerPaintProperties[.accuracyRadius] = location.horizontalAccuracy
                 newLayerPaintProperties[.accuracyRadiusColor] = StyleColor(configuration.accuracyRingColor).rgbaString
@@ -215,12 +203,24 @@ internal final class Puck2D: Puck {
             // layer causes MapboxCoreMaps to skip clearing images when the style reloads.
             // https://github.com/mapbox/mapbox-maps-ios/issues/860
             addImages()
+
+            let immediateTransition: [String: Any] = [
+                StyleTransition.CodingKeys.duration.rawValue: 0,
+                StyleTransition.CodingKeys.delay.rawValue: 0
+            ]
             allLayerProperties[LocationIndicatorLayer.RootCodingKeys.id.rawValue] = Puck2D.layerID
             allLayerProperties[LocationIndicatorLayer.RootCodingKeys.type.rawValue] = LayerType.locationIndicator.rawValue
-            allLayerProperties[LocationIndicatorLayer.PaintCodingKeys.locationTransition.rawValue] = Puck2D.immediateTransition
-            allLayerProperties[LocationIndicatorLayer.PaintCodingKeys.bearingTransition.rawValue] = Puck2D.immediateTransition
+            allLayerProperties[LocationIndicatorLayer.PaintCodingKeys.locationTransition.rawValue] = immediateTransition
+            allLayerProperties[LocationIndicatorLayer.PaintCodingKeys.bearingTransition.rawValue] = immediateTransition
+            allLayerProperties[LocationIndicatorLayer.PaintCodingKeys.emphasisCircleRadiusTransition.rawValue] = immediateTransition
+            allLayerProperties[LocationIndicatorLayer.PaintCodingKeys.locationIndicatorOpacityTransition.rawValue] = immediateTransition
             allLayerProperties[LocationIndicatorLayer.PaintCodingKeys.imagePitchDisplacement.rawValue] = 4
             allLayerProperties[LocationIndicatorLayer.PaintCodingKeys.perspectiveCompensation.rawValue] = 0.9
+            allLayerProperties[LocationIndicatorLayer.PaintCodingKeys.topImageSize.rawValue] = encodedScale
+            allLayerProperties[LocationIndicatorLayer.PaintCodingKeys.bearingImageSize.rawValue] = encodedScale
+            allLayerProperties[LocationIndicatorLayer.PaintCodingKeys.shadowImageSize.rawValue] = encodedScale
+            allLayerProperties[LocationIndicatorLayer.PaintCodingKeys.locationIndicatorOpacity.rawValue] = configuration.opacity
+
             try! style.addPersistentLayer(with: allLayerProperties, layerPosition: nil)
         }
     }

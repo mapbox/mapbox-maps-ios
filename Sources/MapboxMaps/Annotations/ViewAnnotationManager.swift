@@ -9,8 +9,11 @@ public enum ViewAnnotationManagerError: Error {
     case geometryFieldMissing
 }
 
+/// Represents an annotation view.
 public struct ViewAnnotation {
+    /// The view associated with this annotation.
     public let view: UIView
+    /// The ``ViewAnnotationOptions`` associated with this annotation.
     public let options: ViewAnnotationOptions
 
     fileprivate init(view: UIView, options: ViewAnnotationOptions) {
@@ -393,7 +396,6 @@ extension ViewAnnotationManager: DelegatingViewAnnotationPositionsUpdateListener
     internal func onViewAnnotationPositionsUpdate(forPositions positions: [ViewAnnotationPositionDescriptor]) {
         placeAnnotations(positions: positions)
     }
-
 }
 
 private extension ViewAnnotationPositionDescriptor {

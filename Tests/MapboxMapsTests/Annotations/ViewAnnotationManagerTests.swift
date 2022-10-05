@@ -288,6 +288,27 @@ final class ViewAnnotationManagerTests: XCTestCase {
         XCTAssertEqual(annotationView.frame, CGRect(x: 150.0, y: 200.0, width: 100.0, height: 50.0))
     }
 
+    func testAnnotationPlacementZOrder() {
+        let annotationViewA = addTestAnnotationView(id: "test-id")
+        let annotationViewB = addTestAnnotationView(id: "test-id2")
+
+        XCTAssertEqual(container.subviews, [annotationViewA, annotationViewB])
+
+        manager.onViewAnnotationPositionsUpdate(forPositions: [ViewAnnotationPositionDescriptor(
+            identifier: "test-id2",
+            width: 100,
+            height: 50,
+            leftTopCoordinate: CGPoint(x: 150.0, y: 200.0)
+        ), ViewAnnotationPositionDescriptor(
+            identifier: "test-id",
+            width: 100,
+            height: 50,
+            leftTopCoordinate: CGPoint(x: 150.0, y: 200.0)
+        )])
+
+        XCTAssertEqual(container.subviews, [annotationViewB, annotationViewA])
+    }
+
     func testPlacementHideMissingAnnotations() {
         let annotationViewA = addTestAnnotationView(id: "test-id")
         let annotationViewB = addTestAnnotationView()

@@ -296,9 +296,9 @@ final class ViewAnnotationManagerTests: XCTestCase {
         let annotationViewB = addTestAnnotationView()
         let annotationViewC = addTestAnnotationView()
 
-        XCTAssertFalse(annotationViewA.isHidden)
-        XCTAssertFalse(annotationViewB.isHidden)
-        XCTAssertFalse(annotationViewC.isHidden)
+        XCTAssertTrue(annotationViewA.isHidden)
+        XCTAssertTrue(annotationViewB.isHidden)
+        XCTAssertTrue(annotationViewC.isHidden)
 
         manager.onViewAnnotationPositionsUpdate(forPositions: [ViewAnnotationPositionDescriptor(
             identifier: "test-id",
@@ -344,7 +344,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         manager.onViewAnnotationPositionsUpdate(forPositions: [])
 
         XCTAssertTrue(annotationView.isHidden)
-        XCTAssertEqual(observer.visibilityDidChangeStub.invocations.first?.parameters, [annotationView])
+        XCTAssertTrue(observer.visibilityDidChangeStub.invocations.isEmpty)
     }
 
     func testViewAnnotationUpdateObserverNotifiedAboutNewlyVisibleViews() {

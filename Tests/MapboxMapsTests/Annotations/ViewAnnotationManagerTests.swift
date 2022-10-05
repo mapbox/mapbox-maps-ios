@@ -433,3 +433,10 @@ final class ViewAnnotationManagerTests: XCTestCase {
     }
 
 }
+
+extension Array where Element == ViewAnnotation {
+
+    func contains(_ view: UIView) -> Bool {
+        contains(where: { $0.view === view })
+    }
+}

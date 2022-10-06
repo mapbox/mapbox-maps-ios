@@ -336,7 +336,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         XCTAssertTrue(observer.framesDidChangeStub.invocations.isEmpty)
     }
 
-    func testViewAnnotationUpdateObserverNotifiedAboutNewlyHiddenViews() {
+    func testViewAnnotationUpdateObserverConfirmsNewlyAddedViewsAreHidden() {
         let annotationView = addTestAnnotationView()
         let observer = MockViewAnnotationUpdateObserver()
         manager.addViewAnnotationUpdateObserver(observer)

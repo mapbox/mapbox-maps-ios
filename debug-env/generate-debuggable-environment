@@ -30,6 +30,9 @@ def main():
     project = "mapbox-maps-ios-private" if args.private_commit else "mapbox-maps-ios"
     project_commit = args.private_commit if args.private_commit else args.commit
 
+    # Enter script folder
+    os.chdir(os.path.dirname(os.path.realpath(__file__)))
+
     if not os.path.exists("build"):
         os.mkdir("build")
     os.chdir("build")
@@ -52,7 +55,13 @@ def main():
         if args.mme_commit is None:
             args.mme_commit = versions["MapboxMobileEvents"]
 
-    print_phase("Finalized args: " + str(args))
+    # Convert args to human-readable string
+    args_str = ""
+    for arg in vars(args):
+        if getattr(args, arg) is not None:
+            args_str += f"\t--{arg} {getattr(args, arg)}\n"
+
+    print_phase("Finalized args: \n" + args_str)
 
     print_phase(f"Checkout GL Native (@{args.gl_native_commit})")
     checkout_repo("mapbox-gl-native-internal",
@@ -135,7 +144,8 @@ def checkout_repo(repo_name: str, repo_branch: str, checkout_submodules=False, s
     if checkout_submodules:
         print("Checkout submodules for " + repo_name + "...")
         os.chdir(repo_name)
-        os.system("git submodule foreach --recursive 'git reset --hard && git clean -dffx'")
+        print("Cleaning submodules...")
+        os.system("git submodule foreach --recursive 'git reset --hard && git clean -dffx' > /dev/null")
         if submodules_path is None:
             os.system("git submodule update --init --recursive")
         else:

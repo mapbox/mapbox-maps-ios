@@ -1,0 +1,8 @@
+app_identifier("com.mapbox.examples") # The bundle identifier of your app
+apple_id("zizi.miles@mapbox.com") # Your Apple Developer Portal username
+
+itc_team_id("34158803") # App Store Connect Team ID
+team_id("GJZR2MEM28") # Developer Portal Team ID
+
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile

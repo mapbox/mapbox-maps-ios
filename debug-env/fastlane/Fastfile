@@ -1,0 +1,127 @@
+# Customise this file, documentation can be found here:
+# https://github.com/fastlane/fastlane/tree/master/fastlane/docs
+# All available actions: https://docs.fastlane.tools/actions
+# can also be listed using the `fastlane actions` command
+# Change the syntax highlighting to Ruby
+# All lines starting with a # are ignored when running `fastlane`
+# If you want to automatically update fastlane if a new version is available:
+# update_fastlane
+# This is the minimum version number required.
+# Update this, if you use features of a newer version
+fastlane_version "2.204.1"
+default_platform :ios
+
+ENV["FASTLANE_SKIP_UPDATE_CHECK"] = "1"
+ENV["SPACESHIP_SKIP_2FA_UPGRADE"] = "1"
+# Set default target for get_version_number()
+ENV["FL_VERSION_NUMBER_TARGET"] = "Examples"
+platform :ios do
+  before_all do
+    # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
+  end
+
+  desc "Increment build number based on current TestFlight build number"
+  desc "Commits the changes, but does not push them to any remote."
+  lane :bump_build_number do
+    increment_build_number_in_plist(
+      	build_number: (latest_testflight_build_number + 1).to_s,
+    )
+  end
+
+  desc "Submit a new Beta Build to Apple TestFlight"
+  desc "This will also make sure that the signing certificate and provisioning profiles are up to date."
+  lane :build_and_submit do
+    sync_code_signing(type: "appstore")
+    build_app(
+      scheme: "Examples",
+      workspace: "Umbrella.xcworkspace",
+      xcargs: "SWIFT_TREAT_WARNINGS_AS_ERRORS=NO" # Disable to bypass Deprecated error on OfflineManager example
+    )
+    upload_to_testflight(
+      beta_app_feedback_email: "applemachine@mapbox.com",
+      beta_app_description: "Examples app pre-release test build.",
+      demo_account_required: false,
+      skip_waiting_for_build_processing: false
+    )
+  end
+
+  desc "Get current Mapbox Maps SDK for iOS version number from framework."
+  private_lane :mapbox_sdk_version do
+    mapbox_version_path = Dir.glob("#{ENV['PWD']}/**/MapboxMaps.json").first
+    `jq .version #{mapbox_version_path}`
+  end
+
+  desc "Generate release notes."
+  lane :release_notes do
+    "Mapbox Maps SDK for iOS #{mapbox_sdk_version}."
+  end
+
+  desc "Generate build from source Umbrella.xcworkspace."
+  desc "Then build and submit a new beta build to Apple TestFlight, after bumping just the build number."
+  lane :update_and_release do
+    Dir.chdir("..") do
+      # code here runs in the parent directory
+      iOS_branch = prompt(
+        text: "iOS SDK branch: ",
+      )
+      native_branch = prompt(
+        text: "GL-Native branch: ",
+      )
+      turf_branch = prompt(
+        text: "Turf branch: ",
+      )
+      mme_branch = prompt(
+        text: "MME branch: ",
+      )
+      build_from_source_script = "./generate-debuggable-environment --commit #{iOS_branch} --gl-native-commit #{native_branch} --turf-commit #{turf_branch} --mme-commit #{mme_branch}"
+      puts "Generating project using requested dependencies using: #{build_from_source_script}"
+      sh("#{build_from_source_script}")
+    end
+      update_fastlane()
+      release_bump
+  end
+
+  desc "Build and submit a new beta build to Apple TestFlight."
+  lane :beta do
+    build_and_submit
+  end
+
+  desc "Build and submit a new beta build to Apple TestFlight, after bumping just the build number."
+  lane :beta_release do
+    # update_dependencies
+    bump_build_number
+    build_and_submit
+  end
+
+  desc "Bump to latest maps SDK version before releasing."
+  lane :release_bump do
+    beta_release
+  end
+  #
+  # desc "Download dSYMs from iTunesConnect and upload them to Crashlytics"
+  # lane :refresh_dsyms do
+  #   download_dsyms
+  #   crashlytics_api_key = get_info_plist_value(path: "Examples/Info.plist", key: "CrashlyticsAPIKey")
+  #   upload_symbols_to_crashlytics(api_token: crashlytics_api_key)
+  #   clean_build_artifacts # Delete the local dSYM files
+  # end
+
+  after_all do |lane|
+    # This block is called, only if the executed lane was successful
+    # slack(
+    #   message: "Successfully deployed new App Update."
+    # )
+  end
+
+  error do |lane, exception|
+    # slack(
+    #   message: exception.message,
+    #   success: false
+    # )
+  end
+end
+# More information about multiple platforms in fastlane: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Platforms.md
+# All available actions: https://docs.fastlane.tools/actions
+# fastlane reports which actions are used
+# No personal data is recorded. Learn more at https://github.com/fastlane/enhancer
+opt_out_usage

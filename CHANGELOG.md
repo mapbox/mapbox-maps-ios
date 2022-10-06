@@ -6,6 +6,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Fix behavior with initial view annotation placement.([#1604](https://github.com/mapbox/mapbox-maps-ios/pull/1604)
 * Fix behavior where selected view annotation is not moved to correct z-order.([#1607](https://github.com/mapbox/mapbox-maps-ios/pull/1607)
+* Prevent view annotation being shown erroneously after options update.([#1627](https://github.com/mapbox/mapbox-maps-ios/pull/1627))
 
 ## 10.9.0-beta.2 - September 29, 2022
 

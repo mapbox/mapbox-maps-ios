@@ -427,7 +427,12 @@ final class Puck2DTests: XCTestCase {
     }
 
     func testActivatingPuckWithReducedAccuracy() throws {
-        let location = updateLocation(with: .reducedAccuracy, heading: .random(in: 0..<360))
+        let accuracy: CLLocationAccuracy = .random(in: 1_000..<20_000)
+        let location = updateLocation(
+            with: .reducedAccuracy,
+            heading: .random(in: 0..<360),
+            horizontalAccuracy: accuracy
+        )
         style.layerExistsStub.defaultReturnValue = false
 
         puck2D.isActive = true
@@ -445,11 +450,13 @@ final class Puck2DTests: XCTestCase {
             ["linear"],
             ["zoom"],
             0,
-            400000,
+            200_000,
             4,
-            200000,
+            50_000,
+            6,
+            20_000,
             8,
-            5000]
+            accuracy]
         expectedProperties["accuracy-radius-color"] = StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
         expectedProperties["accuracy-radius-border-color"] = StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
@@ -467,7 +474,8 @@ final class Puck2DTests: XCTestCase {
         // there are a bunch of properties that aren't used in "reduced" mode
         // and they should be reset to their default values if the layer already
         // existed
-        let location = updateLocation(with: .reducedAccuracy, heading: nil)
+        let accuracy: CLLocationAccuracy = .random(in: 1_000..<20_000)
+        let location = updateLocation(with: .reducedAccuracy, heading: nil, horizontalAccuracy: accuracy)
 
         var expectedProperties = [String: Any]()
         expectedProperties["location"] = [
@@ -480,11 +488,13 @@ final class Puck2DTests: XCTestCase {
             ["linear"],
             ["zoom"],
             0,
-            400000,
+            200_000,
             4,
-            200000,
+            50_000,
+            6,
+            20_000,
             8,
-            5000]
+            accuracy]
         expectedProperties["accuracy-radius-color"] = StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
         expectedProperties["accuracy-radius-border-color"] = StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
         for key in originalKeys where expectedProperties[key] == nil {

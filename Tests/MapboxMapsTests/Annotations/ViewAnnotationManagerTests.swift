@@ -222,6 +222,9 @@ final class ViewAnnotationManagerTests: XCTestCase {
         let annotationView = addTestAnnotationView()
         let id = mapboxMap.addViewAnnotationStub.invocations.last!.parameters.id
 
+        // Annotation is correctly hidden when first added to map
+        XCTAssertTrue(annotationView.isHidden)
+
         // Position update should also call validation
         triggerPositionUpdate(forId: id)
         XCTAssertEqual(mapboxMap.removeViewAnnotationStub.invocations.count, 0)
@@ -314,9 +317,9 @@ final class ViewAnnotationManagerTests: XCTestCase {
         let annotationViewB = addTestAnnotationView()
         let annotationViewC = addTestAnnotationView()
 
-        XCTAssertFalse(annotationViewA.isHidden)
-        XCTAssertFalse(annotationViewB.isHidden)
-        XCTAssertFalse(annotationViewC.isHidden)
+        XCTAssertTrue(annotationViewA.isHidden)
+        XCTAssertTrue(annotationViewB.isHidden)
+        XCTAssertTrue(annotationViewC.isHidden)
 
         manager.onViewAnnotationPositionsUpdate(forPositions: [ViewAnnotationPositionDescriptor(
             identifier: "test-id",
@@ -354,7 +357,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         XCTAssertTrue(observer.framesDidChangeStub.invocations.isEmpty)
     }
 
-    func testViewAnnotationUpdateObserverNotifiedAboutNewlyHiddenViews() {
+    func testViewAnnotationUpdateObserverConfirmsNewlyAddedViewsAreHidden() {
         let annotationView = addTestAnnotationView()
         let observer = MockViewAnnotationUpdateObserver()
         manager.addViewAnnotationUpdateObserver(observer)
@@ -362,7 +365,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         manager.onViewAnnotationPositionsUpdate(forPositions: [])
 
         XCTAssertTrue(annotationView.isHidden)
-        XCTAssertEqual(observer.visibilityDidChangeStub.invocations.first?.parameters, [annotationView])
+        XCTAssertTrue(observer.visibilityDidChangeStub.invocations.isEmpty)
     }
 
     func testViewAnnotationUpdateObserverNotifiedAboutNewlyVisibleViews() {

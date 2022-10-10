@@ -305,9 +305,9 @@ public final class ViewAnnotationManager {
         pitch: CGFloat = 0,
         animtationDuration: TimeInterval = 1
     ) {
-        guard !annotations.isEmpty else { return }
-
         let coordinateBounds = annotations.compactMap(options(for:)).coordinateBounds(zoom: mapboxMap.cameraState.zoom)
+        guard !coordinateBounds.isEmpty else { return }
+
         coordinateBoundsAnimator.show(
             coordinateBounds: coordinateBounds,
             padding: padding,

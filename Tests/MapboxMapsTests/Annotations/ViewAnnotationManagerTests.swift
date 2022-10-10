@@ -5,13 +5,18 @@ final class ViewAnnotationManagerTests: XCTestCase {
 
     var container: UIView!
     var mapboxMap: MockMapboxMap!
+    var coordinateBoundsAnimator: MockCoordinateBoundsAnimator!
     var manager: ViewAnnotationManager!
 
     override func setUp() {
         super.setUp()
         container = UIView()
         mapboxMap = MockMapboxMap()
-        manager = ViewAnnotationManager(containerView: container, mapboxMap: mapboxMap)
+        coordinateBoundsAnimator = MockCoordinateBoundsAnimator()
+        manager = ViewAnnotationManager(
+            containerView: container,
+            coordinateBoundsAnimator: coordinateBoundsAnimator,
+            mapboxMap: mapboxMap)
     }
 
     override func tearDown() {
@@ -395,6 +400,22 @@ final class ViewAnnotationManagerTests: XCTestCase {
 
         XCTAssertTrue(observer.framesDidChangeStub.invocations.isEmpty)
         XCTAssertTrue(observer.visibilityDidChangeStub.invocations.isEmpty)
+    }
+
+    func testShowAnnotations() throws {
+        manager.showAnnotations([])
+        XCTAssertTrue(coordinateBoundsAnimator.showCoordinateBoundsStub.invocations.isEmpty)
+
+        let notAnnotationView = UIView()
+        manager.showAnnotations([notAnnotationView])
+        XCTAssertTrue(coordinateBoundsAnimator.showCoordinateBoundsStub.invocations.isEmpty)
+
+        let view1 = addTestAnnotationView(id: "view1")
+        let view2 = addTestAnnotationView()
+
+        manager.showAnnotations([view1, view2])
+        let invocation = try XCTUnwrap(coordinateBoundsAnimator.showCoordinateBoundsStub.invocations.last)
+        XCTAssertFalse(invocation.parameters.coordinateBounds.isEmpty)
     }
 
     // MARK: - Helper functions

@@ -13,7 +13,7 @@ public protocol AnnotationFrameable {
 extension Array: AnnotationFrameable where Element: AnnotationFrameable {
 
     public func coordinateBounds(zoom: CGFloat) -> CoordinateBounds {
-        reduce(.zero) { bounds, frame in
+        reduce(.empty) { bounds, frame in
             bounds.extend(forArea: frame.coordinateBounds(zoom: zoom))
         }
     }
@@ -64,10 +64,10 @@ extension ViewAnnotationOptions: AnnotationFrameable {
 
 private extension CoordinateBounds {
 
-    static var zero: CoordinateBounds {
+    static var empty: CoordinateBounds {
         CoordinateBounds(
-            southwest: CLLocationCoordinate2D(latitude: 0, longitude: 0),
-            northeast: CLLocationCoordinate2D(latitude: 0, longitude: 0)
+            southwest: CLLocationCoordinate2D(latitude: .infinity, longitude: .infinity),
+            northeast: CLLocationCoordinate2D(latitude: .infinity, longitude: .infinity)
         )
     }
 }

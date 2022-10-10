@@ -57,18 +57,24 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     internal init(id: String,
                   style: StyleProtocol,
                   layerPosition: LayerPosition?,
-                  displayLinkCoordinator: DisplayLinkCoordinator) {
+                  displayLinkCoordinator: DisplayLinkCoordinator,
+                  clusterOptions: ClusterOptions?) {
+
         self.id = id
-        self.sourceId = id
+        self.sourceId = clusterOptions?.sourceID ?? id
         self.layerId = id
         self.style = style
         self.displayLinkCoordinator = displayLinkCoordinator
 
         do {
-            // Add the source with empty `data` property
-            var source = GeoJSONSource()
-            source.data = .empty
-            try style.addSource(source, id: sourceId)
+            // If clustering, use the GeoJSON Source, else add a source with empty `data` property
+            if let clusterOptions = clusterOptions {
+                createClustersLayers(clusterOptions: clusterOptions)
+            } else {
+                var source = GeoJSONSource()
+                source.data = .empty
+                try style.addSource(source, id: sourceId)
+            }
 
             // Add the correct backing layer for this annotation type
             var layer = SymbolLayer(id: layerId)
@@ -89,6 +95,84 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         self.displayLinkParticipant.delegate = self
 
         displayLinkCoordinator.add(displayLinkParticipant)
+    }
+
+    internal func createClustersLayers(clusterOptions: ClusterOptions) {
+        for index in 0..<clusterOptions.colorLevels.count {
+            let clusterLevelLayer = createClusterLevelLayer(level: index, clusterOptions: clusterOptions)
+            if !style.layerExists(withId: clusterLevelLayer.id) {
+                do {
+                    try style.addPersistentLayer(clusterLevelLayer, layerPosition: .default)
+                } catch {
+                    Log.error(
+                        forMessage: "Failed to add cluster layers in PointAnnotationManager",
+                        category: "Annotations")
+                }
+            }
+        }
+        let clusterTextLayer = createClusterTextLayer(clusterOptions: clusterOptions)
+        if !style.layerExists(withId: clusterTextLayer.id) {
+            do {
+                try style.addPersistentLayer(clusterTextLayer, layerPosition: .default)
+            } catch {
+                Log.error(
+                    forMessage: "Failed to add cluster text layer in PointAnnotationManager",
+                    category: "Annotations")
+            }
+        }
+    }
+
+    internal func createClusterLevelLayer(level: Int, clusterOptions: ClusterOptions) -> CircleLayer {
+        let layedID = "mapbox-iOS-cluster-circle-layer-" + String(level)
+        var circleLayer = CircleLayer(id: layedID)
+        circleLayer.source = sourceId
+        circleLayer.circleColor = .constant(clusterOptions.colorLevels[level].1)
+        circleLayer.circleRadius = clusterOptions.circleRadius
+        circleLayer.filter = createFilterExpression(level: level, colorLevels: clusterOptions.colorLevels)
+        return circleLayer
+    }
+
+    internal func createFilterExpression(level: Int, colorLevels: [(Int, StyleColor)]) -> Expression {
+        let pointCount = Exp(.get) { "point_count" }
+        var expression: Expression
+        if level == 0 {
+            expression = Exp(.all) {
+                Exp(.has) { "point_count" }
+                Exp(.gte) {
+                    pointCount
+                    Exp(.toNumber) {
+                        colorLevels[level].0
+                    }
+                }
+            }
+        } else {
+            expression = Exp(.all) {
+                Exp(.has) { "point_count" }
+                Exp(.gte) {
+                    pointCount
+                    Exp(.toNumber) {
+                        colorLevels[level].0
+                    }
+                }
+                Exp(.lt) {
+                    pointCount
+                    Exp(.toNumber) {
+                        colorLevels[level-1].0
+                    }
+                }
+            }
+        }
+        return expression
+    }
+
+    internal func createClusterTextLayer(clusterOptions: ClusterOptions) -> SymbolLayer {
+        let layerID = "mapbox-iOS-cluster-text-layer"
+        var symbolLayer = SymbolLayer(id: layerID)
+        symbolLayer.source = sourceId
+        symbolLayer.textField = clusterOptions.textField
+        symbolLayer.textSize = clusterOptions.textSize
+        symbolLayer.textColor = clusterOptions.textColor
+        return symbolLayer
     }
 
     internal func destroy() {

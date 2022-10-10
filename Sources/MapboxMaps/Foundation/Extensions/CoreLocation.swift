@@ -52,6 +52,19 @@ extension CLLocationCoordinate2D {
     internal func toValue() -> NSValue {
         return NSValue(cgPoint: CGPoint(x: latitude, y: longitude))
     }
+
+    /// Calculates the coordinate at the given point in relation to the receiver.
+    /// This would assume that the receiver will be the anchor (0, 0) and calculate the distance in meters'
+    /// and angle in degrees in order to find out the coordinate at the given point.
+    internal func coordinate(at point: CGPoint, zoom: CGFloat) -> CLLocationCoordinate2D {
+        let metersPerPoint = Projection.metersPerPoint(for: latitude, zoom: zoom)
+        let distance = point.distance(to: .zero) * metersPerPoint
+
+        let angle: CGFloat = atan2(-point.y, -point.x).toDegrees() // (-180, 180)
+        let directionToNorth = angle - 90
+
+        return coordinate(at: distance, facing: Measurement<UnitAngle>(value: directionToNorth, unit: .degrees))
+    }
 }
 
 // MARK: - CLLocationDirection

@@ -1,5 +1,5 @@
-import Foundation
 import UIKit
+import MapboxCoreMaps
 
 /// Stores layout and visibilty settings for a `ViewAnnotation`
 public struct ViewAnnotationOptions: Hashable {

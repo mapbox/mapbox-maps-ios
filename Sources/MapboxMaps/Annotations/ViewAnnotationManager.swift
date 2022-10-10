@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import UIKit
 @_implementationOnly import MapboxCommon_Private
 @_implementationOnly import MapboxCoreMaps_Private
@@ -48,6 +49,7 @@ public final class ViewAnnotationManager {
 
     private let containerView: UIView
     private let mapboxMap: MapboxMapProtocol
+    private let coordinateBoundsAnimator: CoordinateBoundsAnimator
     private var viewsById: [String: UIView] = [:]
     private var idsByView: [UIView: String] = [:]
     private var expectedHiddenByView: [UIView: Bool] = [:]
@@ -60,8 +62,13 @@ public final class ViewAnnotationManager {
     /// The default value is true, and setting this value to false will disable the validation.
     public var validatesViews = true
 
-    internal init(containerView: UIView, mapboxMap: MapboxMapProtocol) {
+    internal init(
+        containerView: UIView,
+        coordinateBoundsAnimator: CoordinateBoundsAnimator,
+        mapboxMap: MapboxMapProtocol
+    ) {
         self.containerView = containerView
+        self.coordinateBoundsAnimator = coordinateBoundsAnimator
         self.mapboxMap = mapboxMap
         let delegatingPositionsListener = DelegatingViewAnnotationPositionsUpdateListener()
         delegatingPositionsListener.delegate = self
@@ -284,6 +291,30 @@ public final class ViewAnnotationManager {
         observers.removeValue(forKey: ObjectIdentifier(observer))
     }
 
+    // MARK: Framing
+
+    /// Sets the visible region so that the map displays the specified annotations.
+    ///
+    /// - Parameter annotations: The list of annotations view to be framed.
+    /// - Parameter padding: The padding to be set around the edges of the map view, default is `UIEdgeInsets.zero`.
+    /// - Parameter pitch: Default is 0.
+    /// - Parameter animationDuration: Default is 1.
+    public func showAnnotations(
+        _ annotations: [UIView],
+        padding: UIEdgeInsets = .zero,
+        pitch: CGFloat = 0,
+        animtationDuration: TimeInterval = 1
+    ) {
+        guard !annotations.isEmpty else { return }
+
+        let coordinateBounds = annotations.compactMap(options(for:)).coordinateBounds(zoom: mapboxMap.cameraState.zoom)
+        coordinateBoundsAnimator.show(
+            coordinateBounds: coordinateBounds,
+            padding: padding,
+            pitch: pitch,
+            animationDuration: animtationDuration)
+    }
+
     // MARK: - Private functions
 
     private func placeAnnotations(positions: [ViewAnnotationPositionDescriptor]) {
@@ -371,7 +402,6 @@ extension ViewAnnotationManager: DelegatingViewAnnotationPositionsUpdateListener
     internal func onViewAnnotationPositionsUpdate(forPositions positions: [ViewAnnotationPositionDescriptor]) {
         placeAnnotations(positions: positions)
     }
-
 }
 
 private extension ViewAnnotationPositionDescriptor {

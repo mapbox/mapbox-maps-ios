@@ -32,7 +32,7 @@ extension ViewAnnotationOptions: AnnotationFrameable {
     }
 
     private var frame: CGRect {
-        guard let width, let height else { return .zero }
+        guard let width = width, let height = height else { return .zero }
 
         let offset: (x: CGFloat, y: CGFloat) = (width * 0.5, height * 0.5)
         var frame = CGRect(x: -offset.x, y: -offset.y, width: width, height: height)

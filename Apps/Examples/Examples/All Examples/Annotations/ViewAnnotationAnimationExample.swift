@@ -36,6 +36,7 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
             guard let self = self else { return }
 
             self.setupExample()
+            self.startAnimation()
         }
     }
 
@@ -60,12 +61,6 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
             offsetY: -5
         )
         try! mapView.viewAnnotations.add(annotationView, options: options)
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-        startAnimation()
     }
 
     override func viewDidDisappear(_ animated: Bool) {

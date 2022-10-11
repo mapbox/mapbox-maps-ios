@@ -8,7 +8,6 @@ internal protocol LocationProducerProtocol: AnyObject {
     var locationProvider: LocationProvider { get set }
     func add(_ consumer: LocationConsumer)
     func remove(_ consumer: LocationConsumer)
-    func updateHeadingOrientationIfNeeded()
 }
 
 internal protocol LocationProducerDelegate: AnyObject {
@@ -75,6 +74,7 @@ internal final class LocationProducer: LocationProducerProtocol {
                 }
                 locationProvider.startUpdatingLocation()
                 locationProvider.startUpdatingHeading()
+                updateHeadingOrientationIfNeeded()
                 startUpdatingInterfaceOrientation()
             } else {
                 locationProvider.stopUpdatingLocation()
@@ -135,6 +135,7 @@ internal final class LocationProducer: LocationProducerProtocol {
         if isUpdating {
             locationProvider.stopUpdatingLocation()
             locationProvider.stopUpdatingHeading()
+            stopUpdatingInterfaceOrientation()
         }
     }
 
@@ -180,7 +181,7 @@ internal final class LocationProducer: LocationProducerProtocol {
         notificationCenter.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
     }
 
-    @objc private func deviceOrientationDidChange() {
+    @objc private func deviceOrientationDidChange(_ notification: Notification) {
         updateHeadingOrientationIfNeeded()
     }
 

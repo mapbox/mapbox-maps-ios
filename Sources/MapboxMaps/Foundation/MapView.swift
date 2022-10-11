@@ -33,7 +33,6 @@ open class MapView: UIView {
 
     /// The `location`object handles location events of the map.
     public private(set) var location: LocationManager!
-    private var locationProducer: LocationProducerProtocol!
 
     /// Controls the addition/removal of annotations to the map.
     public private(set) var annotations: AnnotationOrchestrator!
@@ -398,7 +397,7 @@ open class MapView: UIView {
             attributionButton: InfoButtonOrnament())
 
         // Initialize/Configure location source and location manager
-        locationProducer = dependencyProvider.makeLocationProducer(
+        let locationProducer = dependencyProvider.makeLocationProducer(
             mayRequestWhenInUseAuthorization: bundle.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil,
             userInterfaceOrientationView: self)
         let interpolatedLocationProducer = dependencyProvider.makeInterpolatedLocationProducer(

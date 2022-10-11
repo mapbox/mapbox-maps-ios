@@ -24,7 +24,8 @@ struct MetricsCommand: ParsableCommand {
     })
     var outputPath: String?
 
-    @Option(name: [.customLong("single-run-test-ids")], help: "Pass test id in format 'TestSuite/testExample()' to ignore all but last run measurements")
+    /// Deprecated
+    @Option(name: [.customLong("single-run-test-ids")], help: "DERPECATED. Pass test id in format 'TestSuite/testExample()' to ignore all but last run measurements")
     var listOfSingleRunTests: [String] = []
 
     struct BaselineList: Decodable {
@@ -134,43 +135,49 @@ struct MetricsCommand: ParsableCommand {
 
     func generateOutputContent(tests: [PerformanceTest]) throws -> String {
         return try tests
-            .map(generateTestReport)
+            .flatMap(generateTestReport)
             .map(convertToString)
             .joined(separator: "\n")
     }
 
-    func generateTestReport(test: PerformanceTest) -> [String: Any] {
+    func generateTestReport(test: PerformanceTest) -> [[String: Any]] {
         let testName = refineTestFunctionName(test.testName)
         let baseline = baseline.record(forTestName: testName)
+        let createdDate = ISO8601DateFormatter.string(from: Date(), timeZone: .current, formatOptions: [.withInternetDateTime])
+        let testUUID = UUID()
 
-        let counters = test.metrics.reduce(into: [:]) { partialResult, metric in
-            let value: Double
-            if test.shouldProcessOnlyLastRun {
-                value = metric.measurements.last ?? 0
-            } else {
-                value = metric.measurements.reduce(0, +) / Double(metric.measurements.count)
+        let numberOfRuns = test.metrics.map({ $0.measurements.count }).max() ?? 0
+
+        return (0..<numberOfRuns).map { runIndex in
+            let counters = test.metrics.reduce(into: [:]) { partialResult, metric in
+                guard metric.measurements.indices.contains(runIndex) else { return }
+
+                let value = metric.measurements[runIndex]
+                let metricName = metric.displayName.replacingOccurrences(of: " ", with: "")
+
+                partialResult[metricName] = MetricsCommand.decimalValueFormatter.string(from: value as NSNumber)
+                partialResult[metricName+"_units"] = metric.unitOfMeasurement
+
+                if let baselineMetric = baseline?.metrics[metricName] {
+                    partialResult[metricName + "_baseline"] = baselineMetric
+                }
             }
-            let metricName = metric.displayName.replacingOccurrences(of: " ", with: "")
 
-            partialResult[metricName] = MetricsCommand.decimalValueFormatter.string(from: value as NSNumber)
-            partialResult[metricName+"_units"] = metric.unitOfMeasurement
-
-            if let baselineMetric = baseline?.metrics[metricName] {
-                partialResult[metricName + "_baseline"] = baselineMetric
-            }
+            let report: [String: Any] = [
+                "name": "ios-maps-v2",
+                "version": 3,
+                "created": createdDate,
+                "counters": counters,
+                "attributes": [
+                    "test_name": testName,
+                    "run_index": runIndex,
+                    "test_id": testUUID.uuidString
+                ],
+                "metadata": deviceMetadata(actionRecord: test.actionRecord),
+                "build": buildMetadata()
+            ]
+            return report
         }
-
-        return [
-            "name": "ios-maps-v2",
-            "version": 3,
-            "created": ISO8601DateFormatter.string(from: Date(), timeZone: .current, formatOptions: [.withInternetDateTime]),
-            "counters": counters,
-            "attributes": [
-                "test_name": testName
-            ],
-            "metadata": deviceMetadata(actionRecord: test.actionRecord),
-            "build": buildMetadata()
-        ]
     }
 
     func deviceMetadata(actionRecord: ActionRecord) -> [String: Any] {

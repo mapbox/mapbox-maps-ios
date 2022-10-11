@@ -84,8 +84,10 @@ internal final class LocationProducer: LocationProducerProtocol {
         }
     }
 
+    private var _ignoreLocationProviderUpdate = false
     internal var locationProvider: LocationProvider {
         willSet {
+            if _ignoreLocationProviderUpdate { return }
             isUpdating = false
             // setDelegate doesn't accept nil, so provide
             // an empty delegate implementation to clear
@@ -96,6 +98,7 @@ internal final class LocationProducer: LocationProducerProtocol {
             locationProvider.setDelegate(EmptyLocationProviderDelegate())
         }
         didSet {
+            if _ignoreLocationProviderUpdate { return }
             // reinitialize latest values to mimic setup in init
             latestCLLocation = nil
             latestHeading = nil
@@ -135,7 +138,7 @@ internal final class LocationProducer: LocationProducerProtocol {
         if isUpdating {
             locationProvider.stopUpdatingLocation()
             locationProvider.stopUpdatingHeading()
-            stopUpdatingInterfaceOrientation()
+            device.endGeneratingDeviceOrientationNotifications()
         }
     }
 
@@ -198,7 +201,9 @@ internal final class LocationProducer: LocationProducerProtocol {
         // Setting this property causes a heading update,
         // so we only set it when it changes to avoid unnecessary work.
         if locationProvider.headingOrientation != headingOrientation {
+            _ignoreLocationProviderUpdate = true
             locationProvider.headingOrientation = headingOrientation
+            _ignoreLocationProviderUpdate = false
             if showWarning {
                 Log.warning(forMessage: "Unexpected user interface orientation change was detected. Please file an issue at https://github.com/mapbox/mapbox-maps-ios/issues")
             }

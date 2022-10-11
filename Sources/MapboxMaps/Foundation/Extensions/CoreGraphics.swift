@@ -30,8 +30,8 @@ extension CGPoint {
         let offsetY = point.y - y
 
         switch (offsetX, offsetY) {
-        case (0, _): return offsetY
-        case (_, 0): return offsetX
+        case (0, _): return abs(offsetY)
+        case (_, 0): return abs(offsetX)
         default:
             return sqrt(pow(abs(offsetX), 2) + pow(abs(offsetY), 2))
         }

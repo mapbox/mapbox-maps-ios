@@ -40,21 +40,21 @@ extension ViewAnnotationOptions: AnnotationFrameable {
 
         switch anchor {
         case .top:
-            frame = frame.offsetBy(dx: 0, dy: -offset.y)
-        case .topLeft:
-            frame = frame.offsetBy(dx: -offset.x, dy: -offset.y)
-        case .topRight:
-            frame = frame.offsetBy(dx: offset.x, dy: -offset.y)
-        case .bottom:
             frame = frame.offsetBy(dx: 0, dy: offset.y)
-        case .bottomLeft:
-            frame = frame.offsetBy(dx: -offset.x, dy: -offset.y)
-        case .bottomRight:
+        case .topLeft:
+            frame = frame.offsetBy(dx: offset.x, dy: offset.y)
+        case .topRight:
             frame = frame.offsetBy(dx: -offset.x, dy: offset.y)
+        case .bottom:
+            frame = frame.offsetBy(dx: 0, dy: -offset.y)
+        case .bottomLeft:
+            frame = frame.offsetBy(dx: offset.x, dy: -offset.y)
+        case .bottomRight:
+            frame = frame.offsetBy(dx: -offset.x, dy: -offset.y)
         case .left:
-            frame = frame.offsetBy(dx: -offset.x, dy: 0)
-        case .right:
             frame = frame.offsetBy(dx: offset.x, dy: 0)
+        case .right:
+            frame = frame.offsetBy(dx: -offset.x, dy: 0)
         default: break
         }
 

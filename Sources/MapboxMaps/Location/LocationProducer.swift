@@ -84,6 +84,7 @@ internal final class LocationProducer: LocationProducerProtocol {
         }
     }
 
+    // TODO: remove this when `LocationProvider` gets constrained to AnyObject
     private var _ignoreLocationProviderUpdate = false
     internal var locationProvider: LocationProvider {
         willSet {

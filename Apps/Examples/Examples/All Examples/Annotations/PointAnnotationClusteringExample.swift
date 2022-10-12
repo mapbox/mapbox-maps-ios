@@ -22,52 +22,48 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
         mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
             self.addSymbolClusteringLayers()
         }
-
-//        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(gestureRecognizer:)))
-//        mapView.addGestureRecognizer(tapGestureRecognizer)
     }
 
     func addSymbolClusteringLayers() {
-        let style = mapView.mapboxMap.style
         // The image named `fire-station-11` is included in the app's Assets.xcassets bundle.
-        // In order to recolor an image, you need to add a template image to the map's style.
-        // The image's rendering mode can be set programmatically or in the asset catalogue.
-        let image = UIImage(named: "fire-station-11")!.withRenderingMode(.alwaysTemplate)
-
-        // Add the image tp the map's style. Set `sdf` to `true`. This allows the icon images to be recolored.
-        // For more information about `SDF`, or Signed Distance Fields, see
-        // https://docs.mapbox.com/help/troubleshooting/using-recolorable-images-in-mapbox-maps/#what-are-signed-distance-fields-sdf
-        try! style.addImage(image, id: "fire-station-icon", sdf: true)
-
+        let image = UIImage(named: "fire-station-11")!
         // Fire_Hydrants.geojson contains information about fire hydrants in the District of Columbia.
         // It was downloaded on 6/10/21 from https://opendata.dc.gov/datasets/DCGIS::fire-hydrants/about
-        let url = Bundle.main.url(forResource: "Fire_Hydrants", withExtension: "geojson")!
+        _ = Bundle.main.url(forResource: "Fire_Hydrants", withExtension: "geojson")!
+        guard let featureCollection = try? decodeGeoJSON(from: "Fire_Hydrants") else {
+            return
+        }
 
-        // Create a GeoJSONSource using the previously specified URL.
-        var source = GeoJSONSource()
-        source.data = .url(url)
+        var annotations = [PointAnnotation]()
+        for feature in featureCollection.features {
+            guard let geometry = feature.geometry, case let Geometry.point(point) = geometry else {
+                return
+            }
+            var pointAnnotation = PointAnnotation(coordinate: point.coordinates)
+            pointAnnotation.image = .init(image: image, name: "fire-station-11")
+            annotations.append(pointAnnotation)
+        }
 
-        // Enable clustering for this source.
-        source.cluster = true
-        source.clusterRadius = 75
-        let sourceID = "fire-hydrant-source"
-
-        let clusterOptions = ClusterOptions(sourceID: sourceID, clusterRadius: .constant(75), circleRadius: .constant(18), colorLevels: [(100, StyleColor(.red)), (50, StyleColor(.blue)), (0, StyleColor(.green))])
-
-        try! style.addSource(source, id: sourceID)
+        let clusterOptions = ClusterOptions(clusterRadius: 75, circleRadius: .constant(18), colorLevels: [(100, StyleColor(.red)), (50, StyleColor(.cyan)), (0, StyleColor(.green))])
         let pointAnnotationManager = mapView.annotations.makePointAnnotationManager(clusterOptions: clusterOptions)
+        pointAnnotationManager.annotations = annotations
 
         finish()
     }
 
-    // Present an alert with a given title and message.
-    func showAlert(withTitle title: String, and message: String) {
-        let alertController = UIAlertController(title: title,
-                                                message: message,
-                                                preferredStyle: .alert)
-
-        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-
-        present(alertController, animated: true, completion: nil)
+    // Load GeoJSON file from local bundle and decode into a `FeatureCollection`.
+    func decodeGeoJSON(from fileName: String) throws -> FeatureCollection? {
+        guard let path = Bundle.main.path(forResource: fileName, ofType: "geojson") else {
+            preconditionFailure("File '\(fileName)' not found.")
+        }
+        let filePath = URL(fileURLWithPath: path)
+        var featureCollection: FeatureCollection?
+        do {
+            let data = try Data(contentsOf: filePath)
+            featureCollection = try JSONDecoder().decode(FeatureCollection.self, from: data)
+        } catch {
+            print("Error parsing data: \(error)")
+        }
+        return featureCollection
     }
 }

@@ -5,18 +5,14 @@
 
 public struct ClusterOptions {
 
-    public init(sourceID: String,
-                cluster: Bool = true,
-                clusterRadius: Value<Double> = .constant(50),
+    public init(clusterRadius: Double = 50,
                 circleRadius: Value<Double> = .constant(18),
-                textColor: Value<StyleColor> = .constant(StyleColor(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1))),
+                textColor: Value<StyleColor> = .constant(StyleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))),
                 textSize: Value<Double> = .constant(12),
                 textField: Value<String> = .expression(Exp(.get) { "point_count" }),
                 clusterMaxZoom: Double = 14,
                 colorLevels: [(Int, StyleColor)] = [(0, StyleColor(.blue))],
                 clusterProperties: [String: Expression]? = nil) {
-        self.sourceID = sourceID
-        self.cluster = cluster
         self.clusterRadius = clusterRadius
         self.circleRadius = circleRadius
         self.textColor = textColor
@@ -27,21 +23,9 @@ public struct ClusterOptions {
         self.clusterProperties = clusterProperties
     }
 
-    /// The source ID of the GeoJSON layer being clustered
-    var sourceID: String
-
-    /// If the data is a collection of point features, setting this to true clusters the points
-    /// by radius into groups. Cluster groups become new `Point` features in the source with additional properties:
-    /// - `cluster` Is `true` if the point is a cluster
-    /// - `cluster_id` A unqiue id for the cluster to be used in conjunction with the
-    /// [cluster inspection methods](https:www.mapbox.com/mapbox-gl-js/api/#geojsonsource#getclusterexpansionzoom)
-    /// - `point_count` Number of original points grouped into this cluster
-    /// - `point_count_abbreviated` An abbreviated point count
-    var cluster: Bool
-
     /// Radius of each cluster if clustering is enabled. A value of 512 indicates a radius equal
     /// to the width of a tile, 50 by default.
-    var clusterRadius: Value<Double>
+    var clusterRadius: Double
 
     /// The circle radius of the cluster items, 18 by default
     var circleRadius: Value<Double>

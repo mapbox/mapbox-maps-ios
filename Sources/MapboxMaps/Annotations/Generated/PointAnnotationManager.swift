@@ -61,19 +61,24 @@ public class PointAnnotationManager: AnnotationManagerInternal {
                   clusterOptions: ClusterOptions?) {
 
         self.id = id
-        self.sourceId = clusterOptions?.sourceID ?? id
+        self.sourceId = id
         self.layerId = id
         self.style = style
         self.displayLinkCoordinator = displayLinkCoordinator
 
         do {
-            // If clustering, use the GeoJSON Source, else add a source with empty `data` property
+            var source = GeoJSONSource()
+            source.data = .empty
+            if clusterOptions != nil {
+                source.cluster = true
+                source.clusterRadius = clusterOptions?.clusterRadius
+                source.clusterProperties = clusterOptions?.clusterProperties
+                source.clusterMaxZoom = clusterOptions?.clusterMaxZoom
+            }
+            try style.addSource(source, id: sourceId)
+
             if let clusterOptions = clusterOptions {
                 createClustersLayers(clusterOptions: clusterOptions)
-            } else {
-                var source = GeoJSONSource()
-                source.data = .empty
-                try style.addSource(source, id: sourceId)
             }
 
             // Add the correct backing layer for this annotation type
@@ -100,26 +105,10 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     internal func createClustersLayers(clusterOptions: ClusterOptions) {
         for index in 0..<clusterOptions.colorLevels.count {
             let clusterLevelLayer = createClusterLevelLayer(level: index, clusterOptions: clusterOptions)
-            if !style.layerExists(withId: clusterLevelLayer.id) {
-                do {
-                    try style.addPersistentLayer(clusterLevelLayer, layerPosition: .default)
-                } catch {
-                    Log.error(
-                        forMessage: "Failed to add cluster layers in PointAnnotationManager",
-                        category: "Annotations")
-                }
-            }
+            addClusterLayer(clusterLayer: clusterLevelLayer)
         }
         let clusterTextLayer = createClusterTextLayer(clusterOptions: clusterOptions)
-        if !style.layerExists(withId: clusterTextLayer.id) {
-            do {
-                try style.addPersistentLayer(clusterTextLayer, layerPosition: .default)
-            } catch {
-                Log.error(
-                    forMessage: "Failed to add cluster text layer in PointAnnotationManager",
-                    category: "Annotations")
-            }
-        }
+        addClusterLayer(clusterLayer: clusterTextLayer)
     }
 
     internal func createClusterLevelLayer(level: Int, clusterOptions: ClusterOptions) -> CircleLayer {
@@ -132,36 +121,45 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         return circleLayer
     }
 
+    internal func addClusterLayer(clusterLayer: Layer) {
+        if !style.layerExists(withId: clusterLayer.id) {
+            do {
+                try style.addPersistentLayer(clusterLayer, layerPosition: .default)
+            } catch {
+                Log.error(
+                    forMessage: "Failed to add cluster text layer in PointAnnotationManager",
+                    category: "Annotations")
+            }
+        }
+    }
+
     internal func createFilterExpression(level: Int, colorLevels: [(Int, StyleColor)]) -> Expression {
-        let pointCount = Exp(.get) { "point_count" }
-        var expression: Expression
-        if level == 0 {
-            expression = Exp(.all) {
-                Exp(.has) { "point_count" }
+        let pointCount = "point_count"
+        let expression = level == 0 ?
+            Exp(.all) {
+                Exp(.has) { pointCount }
                 Exp(.gte) {
-                    pointCount
+                    Exp(.get) { pointCount }
                     Exp(.toNumber) {
                         colorLevels[level].0
                     }
                 }
-            }
-        } else {
-            expression = Exp(.all) {
-                Exp(.has) { "point_count" }
+            } :
+            Exp(.all) {
+                Exp(.has) { pointCount }
                 Exp(.gte) {
-                    pointCount
+                    Exp(.get) { pointCount }
                     Exp(.toNumber) {
                         colorLevels[level].0
                     }
                 }
                 Exp(.lt) {
-                    pointCount
+                    Exp(.get) { pointCount }
                     Exp(.toNumber) {
                         colorLevels[level-1].0
                     }
                 }
             }
-        }
         return expression
     }
 

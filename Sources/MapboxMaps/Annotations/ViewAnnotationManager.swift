@@ -296,17 +296,17 @@ public final class ViewAnnotationManager {
 
     /// Sets the visible region so that the map displays the specified annotations.
     ///
-    /// - Parameter annotations: The list of annotations view to be framed.
+    /// - Parameter ids: The list of annotations ids to be framed.
     /// - Parameter padding: The padding to be set around the edges of the map view, default is `UIEdgeInsets.zero`.
     /// - Parameter pitch: Default is 0.
     /// - Parameter animationDuration: Default is 1.
     public func showAnnotations(
-        _ annotations: [UIView],
+        _ ids: [String],
         padding: UIEdgeInsets = .zero,
-        pitch: CGFloat = 0,
-        animtationDuration: TimeInterval = 1
+        pitch: CGFloat? = nil,
+        animationDuration: TimeInterval = 1
     ) {
-        let options = annotations.compactMap(options(for:))
+        let options = ids.compactMap { try? mapboxMap.options(forViewAnnotationWithId: $0) }
         guard !options.isEmpty else { return }
 
         let (top, left, bottom, right) = (
@@ -333,7 +333,23 @@ public final class ViewAnnotationManager {
                 bottom: padding.bottom + bottom.frame.maxY,
                 right: padding.right + right.frame.maxX),
             pitch: pitch,
-            animationDuration: animtationDuration)
+            animationDuration: animationDuration)
+    }
+
+    /// Sets the visible region so that the map displays the specified annotations.
+    ///
+    /// - Parameter annotations: The list of annotations view to be framed.
+    /// - Parameter padding: The padding to be set around the edges of the map view, default is `UIEdgeInsets.zero`.
+    /// - Parameter pitch: Default is 0.
+    /// - Parameter animationDuration: Default is 1.
+    public func showAnnotations(
+        _ annotations: [UIView],
+        padding: UIEdgeInsets = .zero,
+        pitch: CGFloat? = nil,
+        animationDuration: TimeInterval = 1
+    ) {
+        let ids = annotations.compactMap { idsByView[$0] }
+        showAnnotations(ids, padding: padding, pitch: pitch, animationDuration: animationDuration)
     }
 
     // MARK: - Private functions

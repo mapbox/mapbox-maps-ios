@@ -135,7 +135,10 @@ struct Examples {
                 type: ViewAnnotationBasicExample.self),
         Example(title: "View annotations: advanced example",
                 description: "Add view annotations anchored to a symbol layer feature.",
-                type: ViewAnnotationMarkerExample.self)
+                type: ViewAnnotationMarkerExample.self),
+        Example(title: "View annotations: Frame list of annotations",
+                description: "Animates to camera framing the list of selected view annotations.",
+                type: FrameViewAnnotationsExample.self),
     ]
 
     // Examples that focus on setting, animating, or otherwise changing the map's camera and viewport.

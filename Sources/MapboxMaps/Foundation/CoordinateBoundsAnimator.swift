@@ -3,12 +3,12 @@ import MapboxCoreMaps.CoordinateBounds
 import Turf
 
 internal protocol CoordinateBoundsAnimator {
-    func show(coordinateBounds: CoordinateBounds, padding: UIEdgeInsets, pitch: CGFloat, animationDuration: TimeInterval)
+    func show(coordinateBounds: CoordinateBounds, padding: UIEdgeInsets, pitch: CGFloat?, animationDuration: TimeInterval)
 }
 
 extension Viewport: CoordinateBoundsAnimator {
 
-    func show(coordinateBounds: CoordinateBounds, padding: UIEdgeInsets, pitch: CGFloat, animationDuration: TimeInterval) {
+    func show(coordinateBounds: CoordinateBounds, padding: UIEdgeInsets, pitch: CGFloat?, animationDuration: TimeInterval) {
         let geometry = MultiPoint([
             coordinateBounds.southwest,
             coordinateBounds.northwest,

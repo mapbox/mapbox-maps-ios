@@ -333,6 +333,17 @@ final class ViewAnnotationManagerTests: XCTestCase {
         XCTAssertTrue(annotationViewC.isHidden)
     }
 
+    func testViewAnnotationUpdateDoesNotUnhideHiddenViews() throws {
+        let annotationView = addTestAnnotationView()
+        let id = try XCTUnwrap(mapboxMap.addViewAnnotationStub.invocations.last?.parameters.id)
+
+        manager.onViewAnnotationPositionsUpdate(forPositions: [])
+
+        try manager.update(annotationView, options: ViewAnnotationOptions())
+
+        XCTAssertTrue(annotationView.isHidden)
+    }
+
     func testViewAnnotationUpdateObserverNotifiedAboutUpdatedFrames() throws {
         let annotationView = addTestAnnotationView()
         let id = try XCTUnwrap(mapboxMap.addViewAnnotationStub.invocations.last?.parameters.id)

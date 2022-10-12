@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Prevent view annotation being shown erroneously after options update.([#1627](https://github.com/mapbox/mapbox-maps-ios/pull/1627))
+
 ## 10.9.0-rc.1 - October 7, 2022
 
 * Fix accuracy ring radius jumping when zooming the map in/out with `.reducedAccuracy` location authorization.([#1625](https://github.com/mapbox/mapbox-maps-ios/pull/1625))

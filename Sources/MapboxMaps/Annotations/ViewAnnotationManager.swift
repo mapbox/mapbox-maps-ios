@@ -219,9 +219,12 @@ public final class ViewAnnotationManager {
         }
         let currentFeatureId = try? mapboxMap.options(forViewAnnotationWithId: id).associatedFeatureId
         try mapboxMap.updateViewAnnotation(withId: id, options: options)
-        let isHidden = !(options.visible ?? true)
-        expectedHiddenByView[view] = isHidden
-        viewsById[id]?.isHidden = isHidden
+
+        if options.visible == false {
+            expectedHiddenByView[view] = true
+            view.isHidden = true
+        }
+
         if let id = currentFeatureId, let updatedId = options.associatedFeatureId, id != updatedId {
             viewsByFeatureIds[id] = nil
         }

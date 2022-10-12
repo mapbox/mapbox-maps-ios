@@ -103,6 +103,8 @@ def main():
     print_phase(f"Checkout Mapbox Mobile Events (@{args.mme_commit})")
     checkout_repo("mapbox-events-ios", args.mme_commit)
 
+    checkout_repo("cocoaimagehashing", "master", org="ameingast")
+
     # leave build directory
     os.chdir("..")
 
@@ -124,12 +126,12 @@ def main():
     os.system("xed Umbrella.xcworkspace")
 
 
-def checkout_repo(repo_name: str, repo_branch: str, checkout_submodules=False, submodules_path=None):
+def checkout_repo(repo_name: str, repo_branch: str, org: str = "mapbox", checkout_submodules=False, submodules_path=None):
     # checkout the repo if folder doesn't exist. Otherwise, fetch the latest changes
     os.system("pwd")
     if not os.path.exists(repo_name):
         print("Cloning " + repo_name + "...")
-        command = f"git clone --branch {repo_branch} git@github.com:mapbox/{repo_name}.git {repo_name}"
+        command = f"git clone --branch {repo_branch} git@github.com:{org}/{repo_name}.git {repo_name}"
         print(command)
         os.system(command)
     else:

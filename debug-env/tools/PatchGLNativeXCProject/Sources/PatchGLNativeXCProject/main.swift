@@ -68,7 +68,7 @@ class GLNativeProject {
                 if let linkerFlags = buildConfiguration.buildSettings["OTHER_LDFLAGS"] as? [String] {
                     let pathPrefix = path.parent().absolute().string
 
-                    let newLinkerOptions = linkerFlags.compactMap { (linkerFlag: String) in
+                    let newLinkerOptions = linkerFlags.compactMap { (linkerFlag: String) -> String in
                         guard linkerFlag.starts(with: pathPrefix) else { return linkerFlag }
                         let libraryFullName = Path(linkerFlag).lastComponentWithoutExtension
 

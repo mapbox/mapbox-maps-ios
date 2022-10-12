@@ -118,12 +118,10 @@ def main():
     # Generate Xcode projects
     print_phase("Generate Xcode projects")
     os.system(f"PROJECT={project} xcodegen -s MapboxMaps.yml")
-    os.system(f"PROJECT={project} xcodegen -s Examples.yml")
-    os.system(f"PROJECT={project} xcodegen -s DebugApp.yml")
 
 #   # Open the resulting project
-    print_phase("Open Xcode workspace")
-    os.system("xed Umbrella.xcworkspace")
+    print_phase("Open Xcode project")
+    os.system("xed MapboxMaps.xcodeproj")
 
 
 def checkout_repo(repo_name: str, repo_branch: str, org: str = "mapbox", checkout_submodules=False, submodules_path=None):

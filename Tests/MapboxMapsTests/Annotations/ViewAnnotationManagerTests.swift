@@ -403,19 +403,35 @@ final class ViewAnnotationManagerTests: XCTestCase {
     }
 
     func testShowAnnotations() throws {
+        let view = addTestAnnotationView(id: "view1")
+        manager.showAnnotations([view])
+
+        let invocation = try XCTUnwrap(coordinateBoundsAnimator.showCoordinateBoundsStub.invocations.last)
+        XCTAssertFalse(invocation.parameters.coordinateBounds.isEmpty)
+    }
+
+    func testShowAnnotationsEmptyBounds() {
+        let view = addTestAnnotationView(id: "view1")
+
+        mapboxMap.coordinateBoundsForCameraStub.defaultReturnValue = CoordinateBounds(
+            southwest: CLLocationCoordinate2D(latitude: .infinity, longitude: .infinity),
+            northeast: CLLocationCoordinate2D(latitude: .infinity, longitude: .infinity))
+
+        manager.showAnnotations([view])
+        XCTAssertTrue(coordinateBoundsAnimator.showCoordinateBoundsStub.invocations.isEmpty)
+    }
+
+    func testShowAnnotationsEmptyList() {
         manager.showAnnotations([])
         XCTAssertTrue(coordinateBoundsAnimator.showCoordinateBoundsStub.invocations.isEmpty)
+        XCTAssertTrue(mapboxMap.cameraForGeometryStub.invocations.isEmpty)
+        XCTAssertTrue(mapboxMap.coordinateBoundsForCameraStub.invocations.isEmpty)
 
         let notAnnotationView = UIView()
         manager.showAnnotations([notAnnotationView])
         XCTAssertTrue(coordinateBoundsAnimator.showCoordinateBoundsStub.invocations.isEmpty)
-
-        let view1 = addTestAnnotationView(id: "view1")
-        let view2 = addTestAnnotationView()
-
-        manager.showAnnotations([view1, view2])
-        let invocation = try XCTUnwrap(coordinateBoundsAnimator.showCoordinateBoundsStub.invocations.last)
-        XCTAssertFalse(invocation.parameters.coordinateBounds.isEmpty)
+        XCTAssertTrue(mapboxMap.cameraForGeometryStub.invocations.isEmpty)
+        XCTAssertTrue(mapboxMap.coordinateBoundsForCameraStub.invocations.isEmpty)
     }
 
     // MARK: - Helper functions

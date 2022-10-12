@@ -2,6 +2,7 @@
 import UIKit
 @_implementationOnly import MapboxCommon_Private
 @_implementationOnly import MapboxCoreMaps_Private
+import Turf
 
 public enum ViewAnnotationManagerError: Error {
     case viewIsAlreadyAdded
@@ -305,12 +306,32 @@ public final class ViewAnnotationManager {
         pitch: CGFloat = 0,
         animtationDuration: TimeInterval = 1
     ) {
-        let coordinateBounds = annotations.compactMap(options(for:)).coordinateBounds(zoom: mapboxMap.cameraState.zoom)
+        let options = annotations.compactMap(options(for:))
+        guard !options.isEmpty else { return }
+
+        let (top, left, bottom, right) = (
+            options.topmost!,
+            options.leftmost!,
+            options.rightmost!,
+            options.bottommost!
+        )
+
+        let camera = mapboxMap.camera(
+            for: GeometryCollection(geometries: [top, left, bottom, right].compactMap(\.geometry)).geometry,
+            padding: .zero,
+            bearing: nil,
+            pitch: nil)
+
+        let coordinateBounds = mapboxMap.coordinateBounds(for: camera)
         guard !coordinateBounds.isEmpty else { return }
 
         coordinateBoundsAnimator.show(
             coordinateBounds: coordinateBounds,
-            padding: padding,
+            padding: UIEdgeInsets(
+                top: padding.top + abs(top.frame.minY),
+                left: padding.left + abs(left.frame.minX),
+                bottom: padding.bottom + bottom.frame.maxY,
+                right: padding.right + right.frame.maxX),
             pitch: pitch,
             animationDuration: animtationDuration)
     }
@@ -407,5 +428,44 @@ extension ViewAnnotationManager: DelegatingViewAnnotationPositionsUpdateListener
 private extension ViewAnnotationPositionDescriptor {
     var frame: CGRect {
         CGRect(origin: leftTopCoordinate.point, size: CGSize(width: CGFloat(width), height: CGFloat(height)))
+    }
+}
+
+private extension Array where Element == ViewAnnotationOptions {
+
+    var leftmost: ViewAnnotationOptions? {
+        self.max { lhs, rhs in
+            guard case .point(let p1) = lhs.geometry else { return false }
+            guard case .point(let p2) = rhs.geometry else { return true }
+
+            return p1.coordinates.longitude > p2.coordinates.longitude
+        }
+    }
+
+    var topmost: ViewAnnotationOptions? {
+        self.max { lhs, rhs in
+            guard case .point(let p1) = lhs.geometry else { return false }
+            guard case .point(let p2) = rhs.geometry else { return true }
+
+            return p1.coordinates.latitude > p2.coordinates.latitude
+        }
+    }
+
+    var rightmost: ViewAnnotationOptions? {
+        self.max { lhs, rhs in
+            guard case .point(let p1) = lhs.geometry else { return false }
+            guard case .point(let p2) = rhs.geometry else { return true }
+
+            return p1.coordinates.longitude < p2.coordinates.longitude
+        }
+    }
+
+    var bottommost: ViewAnnotationOptions? {
+        self.max { lhs, rhs in
+            guard case .point(let p1) = lhs.geometry else { return false }
+            guard case .point(let p2) = rhs.geometry else { return true }
+
+            return p1.coordinates.latitude < p2.coordinates.latitude
+        }
     }
 }

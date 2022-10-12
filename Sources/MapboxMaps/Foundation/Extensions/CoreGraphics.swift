@@ -24,18 +24,6 @@ extension CGPoint {
         return CGPoint(x: origin.x + fraction * (destination.x - origin.x),
                        y: origin.y + fraction * (destination.y - origin.y))
     }
-
-    internal func distance(to point: CGPoint) -> CGFloat {
-        let offsetX = point.x - x
-        let offsetY = point.y - y
-
-        switch (offsetX, offsetY) {
-        case (0, _): return abs(offsetY)
-        case (_, 0): return abs(offsetX)
-        default:
-            return sqrt(pow(abs(offsetX), 2) + pow(abs(offsetY), 2))
-        }
-    }
 }
 
 // MARK: - CGFloat
@@ -73,13 +61,5 @@ extension CGRect {
         }
 
         return rect
-    }
-
-    internal var topRight: CGPoint {
-        CGPoint(x: maxX, y: minY)
-    }
-
-    internal var bottomLeft: CGPoint {
-        CGPoint(x: minX, y: maxY)
     }
 }

@@ -6,7 +6,7 @@ final class MockCoordinateBoundsAnimator: CoordinateBoundsAnimator {
     struct ShowCoordinateBoundsParameters {
         let coordinateBounds: CoordinateBounds
         let padding: UIEdgeInsets
-        let pitch: CGFloat
+        let pitch: CGFloat?
         let animationDuration: TimeInterval
     }
 
@@ -14,7 +14,7 @@ final class MockCoordinateBoundsAnimator: CoordinateBoundsAnimator {
     func show(
         coordinateBounds: CoordinateBounds,
         padding: UIEdgeInsets,
-        pitch: CGFloat,
+        pitch: CGFloat?,
         animationDuration: TimeInterval
     ) {
         let parameters = ShowCoordinateBoundsParameters(

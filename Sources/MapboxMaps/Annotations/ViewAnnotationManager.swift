@@ -301,7 +301,7 @@ public final class ViewAnnotationManager {
     /// - Parameter pitch: Default is 0.
     /// - Parameter animationDuration: Default is 1.
     public func showAnnotations(
-        _ ids: [String],
+        ids: [String],
         padding: UIEdgeInsets = .zero,
         pitch: CGFloat? = nil,
         animationDuration: TimeInterval = 1
@@ -349,7 +349,7 @@ public final class ViewAnnotationManager {
         animationDuration: TimeInterval = 1
     ) {
         let ids = annotations.compactMap { idsByView[$0] }
-        showAnnotations(ids, padding: padding, pitch: pitch, animationDuration: animationDuration)
+        showAnnotations(ids: ids, padding: padding, pitch: pitch, animationDuration: animationDuration)
     }
 
     // MARK: - Private functions

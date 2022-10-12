@@ -41,7 +41,7 @@ final class FrameViewAnnotationsExample: UIViewController, ExampleProtocol {
 
     @objc private func tap(_ sender: UIButton) {
         mapView.viewAnnotations.showAnnotations(
-            Array(coordinates.keys),
+            ids: Array(coordinates.keys),
             padding: .zero,
             pitch: nil,
             animationDuration: 1)

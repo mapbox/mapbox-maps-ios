@@ -1,0 +1,17 @@
+{
+"version": 8,
+  "sources": {
+      "tiles": [
+        "https://www.globalterramaps.com/GetMyPBF.php?z={z}&x={x}&y={y}"
+      ],
+      "type": "raster",
+      "minzoom": 0,
+      "maxzoom": 5,
+      "bounds": [
+        -180,
+        -90,
+        180,
+        90
+      ]
+   }
+}

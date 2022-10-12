@@ -215,6 +215,50 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
                 didDetectTappedAnnotations: tappedAnnotations)
         }
     }
+
+    /**
+     * Toggles the annotation's selection state.
+     * If the annotation is deselected, it becomes selected.
+     * If the annotation is selected, it becomes deselected.
+     * @param annotation: The annotation to select.
+     */
+//    public func selectAnnotation(_ sender: UITapGestureRecognizer, annotation: CircleAnnotation?) {
+//        var mapView: MapView?
+//        guard var annotation = annotation else { return }
+//        // Find if any `queriedFeatureIds` match an annotation's `id`
+//        //        let selectedAnnotation = annotations.filter { $0.id == annotation.id }
+//        //        guard var annotation = annotation else { return }
+//        //
+//        //        if annotations.contains(where: { $0.id == annotation.id }) {
+//        //            annotation.isSelected = !annotation.isSelected
+//        ////            annotations[annotation.id] = annotation
+//        //            if annotation.isSelected {
+//        //                print("selected")
+//        //            } else {
+//        //                print("deselect")
+//        //            }
+//        //        }
+//        // query the feature at the point that you tapped.
+//        // if the id of the feature you just tapped matches a feature in the annotation array then highlight that annotation
+//
+//        let tapPoint = sender.location(in: mapView)
+//        let layerIds = annotations.map {$0.id}
+//
+//        mapView?.mapboxMap.queryRenderedFeatures(
+//            with: tapPoint,
+//            options: RenderedQueryOptions(layerIds: layerIds, filter: nil)) { [weak self] result in
+//                switch result {
+//                case .success(let queriedfeatures):
+//                    if let firstFeature = queriedfeatures.first?.feature.properties,
+//                       case let .string(stateName) = firstFeature["id"] {
+//                        print("You selected \(stateName)")
+//                        annotation.circleColor = StyleColor.init(UIColor.black)
+//                    }
+//                case .failure(let error):
+//                    print("An error occurred: \(error.localizedDescription)")
+//                }
+//            }
+//    }
 }
 
 extension CircleAnnotationManager: DelegatingDisplayLinkParticipantDelegate {

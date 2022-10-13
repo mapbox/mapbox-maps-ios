@@ -9,19 +9,6 @@ public enum ViewAnnotationManagerError: Error {
     case geometryFieldMissing
 }
 
-/// Represents an annotation view.
-public struct ViewAnnotation {
-    /// The view associated with this annotation.
-    public let view: UIView
-    /// The ``ViewAnnotationOptions`` associated with this annotation.
-    public let options: ViewAnnotationOptions
-
-    fileprivate init(view: UIView, options: ViewAnnotationOptions) {
-        self.view = view
-        self.options = options
-    }
-}
-
 /// An interface you use to detect when the map view lays out or updates visibility of annotation views.
 ///
 /// When visible portion of a map changes, e.g. responding to the user interaction, the map view adjusts the positions and visibility of its annotation views.
@@ -74,11 +61,9 @@ public final class ViewAnnotationManager {
     public var validatesViews = true
 
     /// The complete list of annotations associated with the receiver.
-    public var annotations: [ViewAnnotation] {
-        viewsById.lazy.compactMap { [mapboxMap] (id, view) in
-            guard let options = try? mapboxMap.options(forViewAnnotationWithId: id) else { return nil }
-
-            return ViewAnnotation(view: view, options: options)
+    public var annotations: [UIView: ViewAnnotationOptions] {
+        idsByView.compactMapValues { [mapboxMap] id in
+            try? mapboxMap.options(forViewAnnotationWithId: id)
         }
     }
 

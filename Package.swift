@@ -13,7 +13,7 @@ let package = Package(
             targets: ["MapboxMaps"]),
     ],
     dependencies: [
-        .package(name: "MapboxCoreMaps", url: "https://github.com/mapbox/mapbox-core-maps-ios.git", .exact("10.9.0-rc.1")),
+        //.package(name: "MapboxCoreMaps", url: "https://github.com/mapbox/mapbox-core-maps-ios.git", .exact("10.9.0-rc.1")),
         // We keep MME dependency for compatibility reasons
         .package(name: "MapboxMobileEvents", url: "https://github.com/mapbox/mapbox-events-ios.git", .exact("1.0.8")),
         .package(name: "MapboxCommon", url: "https://github.com/mapbox/mapbox-common-ios.git", .exact("23.1.0-rc.2")),
@@ -21,6 +21,9 @@ let package = Package(
         .package(name: "CocoaImageHashing", url: "https://github.com/ameingast/cocoaimagehashing", .exact("1.9.0"))
     ],
     targets: [
+        .binaryTarget(name: "MapboxCoreMaps",
+                url: "https://api.mapbox.com/downloads/v2/mobile-maps-core/snapshots/ios/packages/10.9.0-rc.1-94996e128c-SNAPSHOT/MapboxCoreMaps.xcframework-dynamic.zip",
+                checksum: "7ff0fe801aa96104ffe53a191c6f0af40e0dc068b3aaca5facd75bb1dacc5db4"),
         .target(
             name: "MapboxMaps",
             dependencies: ["MapboxCoreMaps", "Turf", "MapboxCommon"],

@@ -7,6 +7,7 @@ const _ = require('lodash');
 const path = require('path');
 require('./../vendor/mapbox-maps-stylegen/style-code');
 require('./../vendor/mapbox-maps-stylegen/type-utils');
+require('./../annotation-generator/annotation-utils');
 
 const generatePremiumApis = process.argv.slice(2).includes("--private-api");
 const style = require('./../vendor/mapbox-maps-stylegen/style-parser')(generatePremiumApis);
@@ -46,5 +47,6 @@ for (const layer of style.layers) {
     render('Annotation', layer, "Sources/MapboxMaps/Annotations/Generated/");
     render('AnnotationIntegrationTests', layer, "Tests/MapboxMapsTests/Annotations/Generated/");
     render('AnnotationTests', layer, "Tests/MapboxMapsTests/Annotations/Generated/");
+    render('AnnotationManagerTests', layer, "Tests/MapboxMapsTests/Annotations/Generated/");
   }
 }

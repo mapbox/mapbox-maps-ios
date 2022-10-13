@@ -125,7 +125,10 @@ public struct ViewAnnotationOptions: Hashable {
             frame = frame.offsetBy(dx: offset.x, dy: 0)
         case .right:
             frame = frame.offsetBy(dx: -offset.x, dy: 0)
-        default: break
+        case .center:
+            fallthrough
+        @unknown default:
+            break
         }
 
         return frame.offsetBy(dx: offsetX ?? 0, dy: offsetY ?? 0)

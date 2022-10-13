@@ -8,6 +8,8 @@ final class FrameViewAnnotationsExample: UIViewController, ExampleProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        view.backgroundColor = .white
+
         mapView = MapView(frame: view.bounds)
 
         let showAnnotationsButton = UIButton()

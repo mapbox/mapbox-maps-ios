@@ -9,7 +9,7 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        // Create a `MapView` centered over Washington, DC.
+        // Center the map over Washington, DC.
         let center = CLLocationCoordinate2D(latitude: 38.889215, longitude: -77.039354)
         let cameraOptions = CameraOptions(center: center, zoom: 11)
         let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .light)
@@ -20,20 +20,22 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
 
         // Add the source and style layers once the map has loaded.
         mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
-            self.addSymbolClusteringLayers()
+            self.addPointAnnotations()
         }
     }
 
-    func addSymbolClusteringLayers() {
+    func addPointAnnotations() {
         // The image named `fire-station-11` is included in the app's Assets.xcassets bundle.
         let image = UIImage(named: "fire-station-11")!
         // Fire_Hydrants.geojson contains information about fire hydrants in the District of Columbia.
         // It was downloaded on 6/10/21 from https://opendata.dc.gov/datasets/DCGIS::fire-hydrants/about
+        // Decode the GeoJSON into a feature collection
         _ = Bundle.main.url(forResource: "Fire_Hydrants", withExtension: "geojson")!
         guard let featureCollection = try? decodeGeoJSON(from: "Fire_Hydrants") else {
             return
         }
 
+        // Create an array of annotations for each fire hydrant
         var annotations = [PointAnnotation]()
         for feature in featureCollection.features {
             guard let geometry = feature.geometry, case let Geometry.point(point) = geometry else {
@@ -44,7 +46,26 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
             annotations.append(pointAnnotation)
         }
 
-        let clusterOptions = ClusterOptions(clusterRadius: 75, circleRadius: .constant(18), colorLevels: [(100, StyleColor(.red)), (50, StyleColor(.cyan)), (0, StyleColor(.green))])
+        createClusters(annotations: annotations)
+    }
+
+    func createClusters(annotations: [PointAnnotation]) {
+        // Use a step expressions (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
+        // with three steps to implement three sizes of circles:
+        //   * 15 when point count is less than 50
+        //   * 20 when point count is between 50 and 100
+        //   * 25 when point count is greater than or equal to 100
+        let circleRadiusExpression = Exp(.step) {
+            Exp(.get) {"point_count"}
+            15
+            50
+            20
+            100
+            25
+        }
+
+        // Select the options for clustering and pass them to the PointAnnotationManager to display
+        let clusterOptions = ClusterOptions(clusterRadius: 75, circleRadius: .expression(circleRadiusExpression), textColor: .constant(StyleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))), colorLevels: [(100, StyleColor(.red)), (50, StyleColor(.cyan)), (0, StyleColor(.green))])
         let pointAnnotationManager = mapView.annotations.makePointAnnotationManager(clusterOptions: clusterOptions)
         pointAnnotationManager.annotations = annotations
 

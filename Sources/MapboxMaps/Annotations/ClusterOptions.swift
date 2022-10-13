@@ -5,9 +5,10 @@
 
 public struct ClusterOptions {
 
+    /// Define a set of cluster options to determine how to cluster annotations. Providing clusterOptions when initializing an AnnotationManager will turn on clustering for that AnnotationManager.
     public init(clusterRadius: Double = 50,
                 circleRadius: Value<Double> = .constant(18),
-                textColor: Value<StyleColor> = .constant(StyleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))),
+                textColor: Value<StyleColor> = .constant(StyleColor(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1))),
                 textSize: Value<Double> = .constant(12),
                 textField: Value<String> = .expression(Exp(.get) { "point_count" }),
                 clusterMaxZoom: Double = 14,

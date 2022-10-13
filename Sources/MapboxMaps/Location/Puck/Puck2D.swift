@@ -167,11 +167,13 @@ internal final class Puck2D: Puck {
                 [Expression.Operator.linear.rawValue],
                 [Expression.Operator.zoom.rawValue],
                 0,
-                400000,
+                200_000,
                 4,
-                200000,
+                50_000,
+                6,
+                20_000,
                 8,
-                5000]
+                location.horizontalAccuracy]
             newLayerPaintProperties[.accuracyRadiusColor] = StyleColor(configuration.accuracyRingColor).rgbaString
             newLayerPaintProperties[.accuracyRadiusBorderColor] = StyleColor(configuration.accuracyRingBorderColor).rgbaString
         }

@@ -149,12 +149,13 @@ public final class ViewAnnotationManager {
         }
 
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
 
         let id = id ?? UUID().uuidString
         try mapboxMap.addViewAnnotation(withId: id, options: creationOptions)
         viewsById[id] = view
         idsByView[view] = id
-        expectedHiddenByView[view] = !(creationOptions.visible ?? true)
+        expectedHiddenByView[view] = true
         if let featureId = creationOptions.associatedFeatureId {
             viewsByFeatureIds[featureId] = view
         }
@@ -218,9 +219,12 @@ public final class ViewAnnotationManager {
         }
         let currentFeatureId = try? mapboxMap.options(forViewAnnotationWithId: id).associatedFeatureId
         try mapboxMap.updateViewAnnotation(withId: id, options: options)
-        let isHidden = !(options.visible ?? true)
-        expectedHiddenByView[view] = isHidden
-        viewsById[id]?.isHidden = isHidden
+
+        if options.visible == false {
+            expectedHiddenByView[view] = true
+            view.isHidden = true
+        }
+
         if let id = currentFeatureId, let updatedId = options.associatedFeatureId, id != updatedId {
             viewsByFeatureIds[id] = nil
         }
@@ -310,6 +314,7 @@ public final class ViewAnnotationManager {
             view.isHidden = false
             expectedHiddenByView[view] = false
             visibleAnnotationIds.insert(position.identifier)
+            containerView.bringSubviewToFront(view)
         }
 
         defer {

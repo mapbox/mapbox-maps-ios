@@ -8,12 +8,25 @@ final class LocationProducerTests: XCTestCase {
     // swiftlint:disable:next weak_delegate
     var delegate: MockLocationProducerDelegate!
     var consumer: MockLocationConsumer!
+    var interfaceOrientationProvider: MockInterfaceOrientationProvider!
+    var notificationCenter: MockNotificationCenter!
+    var userInterfaceOrientationView: UIView!
+    var device: UIDevice!
 
     override func setUp() {
         super.setUp()
         locationProvider = MockLocationProvider()
+        interfaceOrientationProvider = MockInterfaceOrientationProvider()
+        notificationCenter = MockNotificationCenter()
+        userInterfaceOrientationView = UIView()
+        // swiftlint:disable:next discouraged_direct_init
+        device = UIDevice()
         locationProducer = LocationProducer(
             locationProvider: locationProvider,
+            interfaceOrientationProvider: interfaceOrientationProvider,
+            notificationCenter: notificationCenter,
+            userInterfaceOrientationView: userInterfaceOrientationView,
+            device: device,
             mayRequestWhenInUseAuthorization: true)
         delegate = MockLocationProducerDelegate()
         locationProducer.delegate = delegate
@@ -21,6 +34,10 @@ final class LocationProducerTests: XCTestCase {
     }
 
     override func tearDown() {
+        interfaceOrientationProvider = nil
+        notificationCenter = nil
+        userInterfaceOrientationView = nil
+        device = nil
         consumer = nil
         delegate = nil
         locationProducer = nil
@@ -103,6 +120,10 @@ final class LocationProducerTests: XCTestCase {
     func testAddingAConsumerDoesNotRequestWhenInUseAuthorizationIfDisallowed() {
         locationProducer = LocationProducer(
             locationProvider: locationProvider,
+            interfaceOrientationProvider: interfaceOrientationProvider,
+            notificationCenter: notificationCenter,
+            userInterfaceOrientationView: userInterfaceOrientationView,
+            device: .current,
             mayRequestWhenInUseAuthorization: false)
         locationProvider.authorizationStatus = .notDetermined
 
@@ -296,12 +317,20 @@ final class LocationProducerTests: XCTestCase {
         do {
             let locationProducer = LocationProducer(
                 locationProvider: locationProvider,
+                interfaceOrientationProvider: interfaceOrientationProvider,
+                notificationCenter: notificationCenter,
+                userInterfaceOrientationView: userInterfaceOrientationView,
+                device: .current,
                 mayRequestWhenInUseAuthorization: true)
             locationProducer.add(consumer)
             // reset to break a strong reference cycle from
             // locationProducer -> locationProvider -> setDelegateStub
             // -> locationProducer
             locationProvider.setDelegateStub.reset()
+            // reset to break a strong reference cycle from
+            // locationProducer -> notificationCenter -> addObserverStub
+            // -> locationProducer
+            notificationCenter.addObserverStub.reset()
         }
         XCTAssertEqual(locationProvider.stopUpdatingLocationStub.invocations.count, 1)
         XCTAssertEqual(locationProvider.stopUpdatingHeadingStub.invocations.count, 1)
@@ -428,6 +457,10 @@ final class LocationProducerTests: XCTestCase {
         locationProvider.accuracyAuthorization = accuracyAuthorizationValues[initialIndex]
         locationProducer = LocationProducer(
             locationProvider: locationProvider,
+            interfaceOrientationProvider: interfaceOrientationProvider,
+            notificationCenter: notificationCenter,
+            userInterfaceOrientationView: userInterfaceOrientationView,
+            device: .current,
             mayRequestWhenInUseAuthorization: true)
         delegate = MockLocationProducerDelegate()
         locationProducer.delegate = delegate
@@ -445,6 +478,10 @@ final class LocationProducerTests: XCTestCase {
         locationProvider.accuracyAuthorization = [.fullAccuracy, .reducedAccuracy].randomElement()!
         locationProducer = LocationProducer(
             locationProvider: locationProvider,
+            interfaceOrientationProvider: interfaceOrientationProvider,
+            notificationCenter: notificationCenter,
+            userInterfaceOrientationView: userInterfaceOrientationView,
+            device: .current,
             mayRequestWhenInUseAuthorization: true)
         delegate = MockLocationProducerDelegate()
         locationProducer.delegate = delegate
@@ -500,27 +537,142 @@ final class LocationProducerTests: XCTestCase {
         XCTAssertTrue(locationProvider.requestTemporaryFullAccuracyAuthorizationStub.invocations.isEmpty)
     }
 
-    func testHeadingOrientation() {
-        locationProvider.headingOrientation = [
-            .portrait,
-            .portraitUpsideDown,
-            .faceUp,
-            .faceDown,
-            .landscapeLeft,
-            .landscapeRight,
-            .unknown].randomElement()!
+    func testInterfaceOrientationUpdatedRegularlyWhenActive() {
+        // given
+        let timeout: TimeInterval = 4
+        let newOrientation: UIInterfaceOrientation = .landscapeLeft
+        locationProvider.headingOrientation = .unknown
+        locationProvider.$headingOrientation.setStub.reset()
+        locationProducer.add(consumer)
+        interfaceOrientationProvider.interfaceOrientationStub.reset()
+        locationProvider.$headingOrientation.getStub.reset()
+        locationProvider.$headingOrientation.setStub.reset()
 
-        XCTAssertEqual(locationProducer.headingOrientation, locationProvider.headingOrientation)
+        // when
+        interfaceOrientationProvider.interfaceOrientationStub.defaultReturnValue = newOrientation
+        let expectation = expectation(description: "Regular interface orientation update")
+        _ = XCTWaiter.wait(for: [expectation], timeout: timeout)
 
-        locationProducer.headingOrientation = [
-            .portrait,
-            .portraitUpsideDown,
-            .faceUp,
-            .faceDown,
-            .landscapeLeft,
-            .landscapeRight,
-            .unknown].randomElement()!
-
-        XCTAssertEqual(locationProvider.headingOrientation, locationProducer.headingOrientation)
+        XCTAssertEqual(interfaceOrientationProvider.interfaceOrientationStub.invocations.count, 1)
+        XCTAssertEqual(interfaceOrientationProvider.interfaceOrientationStub.invocations.first?.parameters, userInterfaceOrientationView)
+        XCTAssertEqual(locationProvider.$headingOrientation.getStub.invocations.count, 1)
+        XCTAssertEqual(locationProvider.$headingOrientation.setStub.invocations.count, 1)
+        XCTAssertEqual(locationProvider.$headingOrientation.setStub.invocations.first?.parameters, CLDeviceOrientation(interfaceOrientation: newOrientation))
     }
+
+    func testGeneratingDeviceOrientationNotificationsIsEnabledWhenUpdating() {
+        // when
+        locationProducer.add(consumer)
+
+        XCTAssertTrue(device.isGeneratingDeviceOrientationNotifications)
+    }
+
+    func testDeviceOrientationDidChangeSubscribedWhenUpdating() {
+        // when
+        locationProducer.add(consumer)
+
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations.count, 1)
+        XCTAssertIdentical(notificationCenter.addObserverStub.invocations.first?.parameters.observer as? AnyObject, locationProducer)
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations.first?.parameters.name, UIDevice.orientationDidChangeNotification)
+    }
+
+    func testInterfaceOrientationUpdatedNotRegularlyWhenInactive() {
+        // given
+        let timeout: TimeInterval = 4
+        let newOrientation: UIInterfaceOrientation = .landscapeLeft
+        locationProvider.headingOrientation = .unknown
+        locationProvider.$headingOrientation.setStub.reset()
+        locationProducer.add(consumer)
+        interfaceOrientationProvider.interfaceOrientationStub.defaultReturnValue = newOrientation
+        interfaceOrientationProvider.interfaceOrientationStub.reset()
+        locationProvider.$headingOrientation.getStub.reset()
+        locationProvider.$headingOrientation.setStub.reset()
+
+        // when
+        locationProducer.remove(consumer)
+
+        let expectation = expectation(description: "Regular interface orientation update")
+        _ = XCTWaiter.wait(for: [expectation], timeout: timeout)
+
+        XCTAssertEqual(interfaceOrientationProvider.interfaceOrientationStub.invocations.count, 0)
+        XCTAssertEqual(locationProvider.$headingOrientation.getStub.invocations.count, 0)
+        XCTAssertEqual(locationProvider.$headingOrientation.setStub.invocations.count, 0)
+    }
+
+    func testGeneratingDeviceOrientationNotificationsIsDisabledWhenInactive() {
+        // when
+        locationProducer.add(consumer)
+        locationProducer.remove(consumer)
+
+        XCTAssertFalse(device.isGeneratingDeviceOrientationNotifications)
+    }
+
+    func testDeviceOrientationDidChangeUnsubscribedWhenInactive() {
+        // when
+        locationProducer.add(consumer)
+        locationProducer.remove(consumer)
+
+        XCTAssertEqual(notificationCenter.removeObserverStub.invocations.count, 1)
+        XCTAssertIdentical(notificationCenter.removeObserverStub.invocations.first?.parameters.observer as? AnyObject, locationProducer)
+        XCTAssertEqual(notificationCenter.removeObserverStub.invocations.first?.parameters.name, UIDevice.orientationDidChangeNotification)
+    }
+
+    func testHeadingOrientationIsUpdatedWhenActivating() {
+        // given
+        let newOrientation: UIInterfaceOrientation = .landscapeLeft
+        locationProvider.headingOrientation = .unknown
+        locationProvider.$headingOrientation.setStub.reset()
+        interfaceOrientationProvider.interfaceOrientationStub.defaultReturnValue = newOrientation
+
+        // when
+        locationProducer.add(consumer)
+
+        XCTAssertEqual(interfaceOrientationProvider.interfaceOrientationStub.invocations.count, 1)
+        XCTAssertEqual(interfaceOrientationProvider.interfaceOrientationStub.invocations.first?.parameters, userInterfaceOrientationView)
+        XCTAssertEqual(locationProvider.$headingOrientation.getStub.invocations.count, 1)
+        XCTAssertEqual(locationProvider.$headingOrientation.setStub.invocations.count, 1)
+        XCTAssertEqual(locationProvider.$headingOrientation.setStub.invocations.first?.parameters, CLDeviceOrientation(interfaceOrientation: newOrientation))
+    }
+
+    func testHeadingOrientationIsUpdatedWhenDeviceOrientationDidChange() {
+        // given
+        let newOrientation: UIInterfaceOrientation = .landscapeLeft
+        locationProvider.headingOrientation = .unknown
+        locationProvider.$headingOrientation.setStub.reset()
+        locationProducer.add(consumer)
+        interfaceOrientationProvider.interfaceOrientationStub.defaultReturnValue = newOrientation
+        interfaceOrientationProvider.interfaceOrientationStub.reset()
+        locationProvider.$headingOrientation.getStub.reset()
+        locationProvider.$headingOrientation.setStub.reset()
+
+        // when
+        notificationCenter.post(name: UIDevice.orientationDidChangeNotification, object: nil)
+
+        XCTAssertEqual(interfaceOrientationProvider.interfaceOrientationStub.invocations.count, 1)
+        XCTAssertEqual(interfaceOrientationProvider.interfaceOrientationStub.invocations.first?.parameters, userInterfaceOrientationView)
+        XCTAssertEqual(locationProvider.$headingOrientation.getStub.invocations.count, 1)
+        XCTAssertEqual(locationProvider.$headingOrientation.setStub.invocations.count, 1)
+        XCTAssertEqual(locationProvider.$headingOrientation.setStub.invocations.first?.parameters, CLDeviceOrientation(interfaceOrientation: newOrientation))
+    }
+
+    func testHeadingOrientationSameValueIsIgnored() {
+        // given
+        let orientation: UIInterfaceOrientation = .landscapeLeft
+        locationProvider.headingOrientation = CLDeviceOrientation(interfaceOrientation: orientation)
+        locationProvider.$headingOrientation.setStub.reset()
+        interfaceOrientationProvider.interfaceOrientationStub.defaultReturnValue = orientation
+        locationProducer.add(consumer)
+        interfaceOrientationProvider.interfaceOrientationStub.reset()
+        locationProvider.$headingOrientation.getStub.reset()
+        locationProvider.$headingOrientation.setStub.reset()
+
+        // when
+        notificationCenter.post(name: UIDevice.orientationDidChangeNotification, object: nil)
+
+        XCTAssertEqual(interfaceOrientationProvider.interfaceOrientationStub.invocations.count, 1)
+        XCTAssertEqual(interfaceOrientationProvider.interfaceOrientationStub.invocations.first?.parameters, userInterfaceOrientationView)
+        XCTAssertEqual(locationProvider.$headingOrientation.getStub.invocations.count, 1)
+        XCTAssertEqual(locationProvider.$headingOrientation.setStub.invocations.count, 0)
+    }
+
 }

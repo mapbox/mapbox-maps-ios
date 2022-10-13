@@ -11,7 +11,7 @@ final class MockLocationProvider: LocationProvider {
 
     var heading: CLHeading?
 
-    var headingOrientation: CLDeviceOrientation = .unknown
+    @Stubbed var headingOrientation: CLDeviceOrientation = .unknown
 
     let setDelegateStub = Stub<LocationProviderDelegate, Void>()
     func setDelegate(_ delegate: LocationProviderDelegate) {

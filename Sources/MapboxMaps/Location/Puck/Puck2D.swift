@@ -162,20 +162,39 @@ internal final class Puck2D: Puck {
         case .reducedAccuracy:
             fallthrough
         @unknown default:
+            let zoomCutoffRange: ClosedRange<Double> = 4.0...7.5
+            let accuracyRange: ClosedRange<CLLocationDistance> = 1000...20_000
+            let cutoffZoomLevel = zoomCutoffRange.upperBound - (zoomCutoffRange.magnitude * (location.horizontalAccuracy - accuracyRange.lowerBound) / accuracyRange.magnitude)
+            let minPuckRadiusInPoints = 11.0
+            let minPuckRadiusInMeters = minPuckRadiusInPoints * Projection.metersPerPoint(for: location.coordinate.latitude, zoom: cutoffZoomLevel)
             newLayerPaintProperties[.accuracyRadius] = [
                 Expression.Operator.interpolate.rawValue,
                 [Expression.Operator.linear.rawValue],
                 [Expression.Operator.zoom.rawValue],
-                0,
-                200_000,
-                4,
-                50_000,
-                6,
-                20_000,
-                8,
-                location.horizontalAccuracy]
-            newLayerPaintProperties[.accuracyRadiusColor] = StyleColor(configuration.accuracyRingColor).rgbaString
-            newLayerPaintProperties[.accuracyRadiusBorderColor] = StyleColor(configuration.accuracyRingBorderColor).rgbaString
+                cutoffZoomLevel,
+                minPuckRadiusInMeters,
+                cutoffZoomLevel + 1,
+                location.horizontalAccuracy
+            ]
+            newLayerPaintProperties[.accuracyRadiusColor] = [
+                Expression.Operator.step.rawValue,
+                [Expression.Operator.zoom.rawValue],
+                StyleColor(UIColor.clear).rgbaString,
+                cutoffZoomLevel,
+                StyleColor(configuration.accuracyRingColor).rgbaString]
+            newLayerPaintProperties[.accuracyRadiusBorderColor] = [
+                Expression.Operator.step.rawValue,
+                [Expression.Operator.zoom.rawValue],
+                StyleColor(UIColor.clear).rgbaString,
+                cutoffZoomLevel,
+                StyleColor(configuration.accuracyRingBorderColor).rgbaString]
+            newLayerPaintProperties[.emphasisCircleColor] = [
+                Expression.Operator.step.rawValue,
+                [Expression.Operator.zoom.rawValue],
+                StyleColor(configuration.accuracyRingColor).rgbaString,
+                cutoffZoomLevel,
+                StyleColor(UIColor.clear).rgbaString]
+            newLayerPaintProperties[.emphasisCircleRadius] = minPuckRadiusInPoints
         }
 
         // LocationIndicatorLayer is a struct, and by default, most of its properties are nil. When it gets
@@ -311,5 +330,11 @@ private extension Puck2DConfiguration.Pulsing.Radius {
         case .accuracy:
             return location.horizontalAccuracy / Projection.metersPerPoint(for: location.coordinate.latitude, zoom: zoom)
         }
+    }
+}
+
+private extension ClosedRange where Bound == Double {
+    var magnitude: Double {
+        return upperBound - lowerBound
     }
 }

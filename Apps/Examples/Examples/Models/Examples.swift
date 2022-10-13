@@ -138,7 +138,7 @@ struct Examples {
                 type: ViewAnnotationMarkerExample.self),
         Example(title: "View annotations: animation",
                 description: "Animate a view annotation along a route",
-                testTimeout: 120,
+                testTimeout: 60,
                 type: ViewAnnotationAnimationExample.self)
     ]
 

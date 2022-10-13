@@ -117,7 +117,7 @@ def main():
 
     # Generate Xcode projects
     print_phase("Generate Xcode projects")
-    os.system(f"PROJECT={project} xcodegen -s MapboxMaps.yml")
+    os.system(f"PROJECT={project} xcodegen")
 
 #   # Open the resulting project
     print_phase("Open Xcode project")

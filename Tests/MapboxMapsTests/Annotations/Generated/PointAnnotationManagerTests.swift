@@ -2818,6 +2818,34 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     // Tests for clustering
+    func testInitWithDefaultClusterOptions() {
+        style.addSourceStub.reset()
+        style.addPersistentLayerStub.reset()
+        // given
+        let clusterOptions = ClusterOptions()
+
+        // when
+        let clusterManager = PointAnnotationManager(id: id,
+                                                    style: style,
+                                                    layerPosition: nil,
+                                                    displayLinkCoordinator: displayLinkCoordinator,
+                                                    clusterOptions: clusterOptions)
+
+        // then
+        XCTAssertEqual(clusterOptions.clusterRadius, 50)
+        XCTAssertEqual(clusterOptions.circleRadius, .constant(18))
+        XCTAssertEqual(clusterOptions.textColor, .constant(StyleColor(.white)))
+        XCTAssertEqual(clusterOptions.textSize, .constant(12))
+        XCTAssertEqual(clusterOptions.textField, .expression(Exp(.get) { "point_count" }))
+        XCTAssertEqual(clusterOptions.clusterMaxZoom, 14)
+        XCTAssertEqual(clusterOptions.colorLevels.description, [(0, StyleColor(.blue))].description)
+        XCTAssertNil(clusterOptions.clusterProperties)
+        XCTAssertEqual(style.addSourceStub.invocations.count, 1)
+        XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.type, SourceType.geoJson)
+        XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.id, manager.id)
+        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 3) // symbol layer, one cluster layer, one text layer
+        XCTAssertNil(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition)
+    }
 }
 
 private extension PointAnnotation {

@@ -12,13 +12,13 @@ def main():
     parser = argparse.ArgumentParser(description='Generate project to build Maps SDK dependencies from sources.')
     parser.add_argument('--commit', default="main", type=str,
                         help='commit to use for Mapbox Maps iOS')
-    parser.add_argument('--gl-native-commit', default="internal",
+    parser.add_argument('--gl-native-commit', default=None,
                         type=str, help='commit to use for GL Native Internal')
     parser.add_argument('--common-commit', default=None,
                         type=str, help='commit to use for Common SDK')
-    parser.add_argument('--turf-commit', default="main",
+    parser.add_argument('--turf-commit', default=None,
                         type=str, help='commit to use for Turf')
-    parser.add_argument('--mme-commit', default="main",
+    parser.add_argument('--mme-commit', default=None,
                         type=str, help='commit to use for Mapbox Mobile Events')
 
     parser.add_argument('--stable', action='store_true',
@@ -54,6 +54,16 @@ def main():
 
         if args.mme_commit is None:
             args.mme_commit = versions["MapboxMobileEvents"]
+
+    # Apply default branches of nothing was set
+    if args.gl_native_commit is None:
+        args.gl_native_commit = "internal"
+
+    if args.turf_commit is None:
+        args.turf_commit = "main"
+
+    if args.mme_commit is None:
+        args.mme_commit = "main"
 
     # Convert args to human-readable string
     args_str = ""

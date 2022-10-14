@@ -22,7 +22,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
                                           displayLinkCoordinator: displayLinkCoordinator)
 
         for _ in 0...10 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
             annotations.append(annotation)
         }
     }
@@ -68,7 +68,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testAddManagerWithDuplicateId() {
         var annotations2 = [PointAnnotation]()
         for _ in 0...50 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
             annotations2.append(annotation)
         }
 
@@ -139,7 +139,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testfeatureCollectionPassedtoGeoJSON() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
             annotations.append(annotation)
         }
         let featureCollection = FeatureCollection(features: annotations.map(\.feature))
@@ -155,7 +155,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testHandleQueriedFeatureIdsPassesNotificationToDelegate() throws {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
             annotations.append(annotation)
         }
         let queriedFeatureIds = [annotations[0].id]
@@ -171,7 +171,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testHandleQueriedFeatureIdsDoesNotPassNotificationToDelegateWhenNoMatch() throws {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
             annotations.append(annotation)
         }
         let queriedFeatureIds = ["NotAnAnnotationID"]
@@ -2816,6 +2816,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         )
 
     }
+
+    // Tests for clustering
 }
 
 private extension PointAnnotation {

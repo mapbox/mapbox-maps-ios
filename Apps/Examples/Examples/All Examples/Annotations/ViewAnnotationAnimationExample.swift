@@ -68,7 +68,7 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
         if mapView.mapboxMap.style.isLoaded {
             startAnimation()
         } else {
-            mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
+            mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
                 self.startAnimation()
             }
         }
@@ -81,10 +81,12 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
     }
 
     private func startAnimation() {
-        let link = CADisplayLink(target: self, selector: #selector(animateNextStep))
-        link.add(to: .main, forMode: .common)
+        DispatchQueue.main.async {
+            let link = CADisplayLink(target: self, selector: #selector(animateNextStep))
+            link.add(to: .main, forMode: .common)
 
-        animationStartTime = CACurrentMediaTime()
+            self.animationStartTime = CACurrentMediaTime()
+        }
     }
 
     @objc private func animateNextStep(_ displayLink: CADisplayLink) {

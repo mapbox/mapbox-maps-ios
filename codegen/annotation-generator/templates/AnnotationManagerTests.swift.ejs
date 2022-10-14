@@ -3,8 +3,8 @@
   const originalType = locals.orignalType
   const properties = locals.properties
 
-  const annotationLocal = function annotationLocal() {
-    return indent(12)(include('AnnotationLocal.swift.ejs', { "annotationType": type, "declarationKeyword": "var" })).trim();
+  const annotationLocal = function annotationLocal(declaration) {
+    return indent(12)(include('AnnotationLocal.swift.ejs', { "annotationType": type, "declarationKeyword": declaration })).trim();
   }
 _%>
 // This file is generated
@@ -31,7 +31,7 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
                                           displayLinkCoordinator: displayLinkCoordinator)
 
         for _ in 0...10 {
-            <%- annotationLocal() %>
+            <%- annotationLocal("let") %>
             annotations.append(annotation)
         }
     }
@@ -77,7 +77,7 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
     func testAddManagerWithDuplicateId() {
         var annotations2 = [<%- camelize(type) %>Annotation]()
         for _ in 0...50 {
-            <%- annotationLocal() %>
+            <%- annotationLocal("let") %>
             annotations2.append(annotation)
         }
 
@@ -148,7 +148,7 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
     func testfeatureCollectionPassedtoGeoJSON() {
         var annotations = [<%- camelize(type) %>Annotation]()
         for _ in 0...5 {
-            <%- annotationLocal() %>
+            <%- annotationLocal("let") %>
             annotations.append(annotation)
         }
         let featureCollection = FeatureCollection(features: annotations.map(\.feature))
@@ -164,7 +164,7 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
     func testHandleQueriedFeatureIdsPassesNotificationToDelegate() throws {
         var annotations = [<%- camelize(type) %>Annotation]()
         for _ in 0...5 {
-            <%- annotationLocal() %>
+            <%- annotationLocal("let") %>
             annotations.append(annotation)
         }
         let queriedFeatureIds = [annotations[0].id]
@@ -180,7 +180,7 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
     func testHandleQueriedFeatureIdsDoesNotPassNotificationToDelegateWhenNoMatch() throws {
         var annotations = [<%- camelize(type) %>Annotation]()
         for _ in 0...5 {
-            <%- annotationLocal() %>
+            <%- annotationLocal("let") %>
             annotations.append(annotation)
         }
         let queriedFeatureIds = ["NotAnAnnotationID"]
@@ -248,7 +248,7 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
     func testNew<%- camelize(property.name) %>PropertyMergedWithAnnotationProperties() {
         var annotations = [<%- camelize(type) %>Annotation]()
         for _ in 0...5 {
-            <%- annotationLocal() %>
+            <%- annotationLocal("var") %>
             <%_ for (const property of properties) { _%>
             <%_ if (supportsPropertyFunction(property) && !shouldSkipAnnotationProperty(type, property)) { _%>
             annotation.<%- camelizeWithLeadingLowercase(property.name) -%> = <%- randomElement(property) %>
@@ -397,6 +397,8 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         )
 
     }
+
+    // Tests for clustering
     <%_ } _%>
 }
 

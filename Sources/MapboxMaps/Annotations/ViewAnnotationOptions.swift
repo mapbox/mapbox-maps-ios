@@ -1,5 +1,6 @@
 import UIKit
 import MapboxCoreMaps
+import Turf
 
 /// Stores layout and visibilty settings for a `ViewAnnotation`
 public struct ViewAnnotationOptions: Hashable {
@@ -132,6 +133,11 @@ public struct ViewAnnotationOptions: Hashable {
         }
 
         return frame.offsetBy(dx: offsetX ?? 0, dy: offsetY ?? 0)
+    }
+
+    internal var point: Point! {
+        guard case .point(let point) = geometry else { return nil }
+        return point
     }
 }
 

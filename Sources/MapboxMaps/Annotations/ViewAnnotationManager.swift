@@ -309,12 +309,21 @@ public final class ViewAnnotationManager {
         let options = ids.compactMap { try? mapboxMap.options(forViewAnnotationWithId: $0) }
         guard !options.isEmpty else { return }
 
-        let (top, left, bottom, right) = (
-            options.topmost!,
-            options.leftmost!,
-            options.rightmost!,
-            options.bottommost!
-        )
+        var top, left, bottom, right: ViewAnnotationOptions!
+        for annotationOption in options where annotationOption.point != nil {
+            if top == nil || top.point.coordinates.latitude < annotationOption.point.coordinates.latitude {
+                top = annotationOption
+            }
+            if left == nil || left.point.coordinates.longitude > annotationOption.point.coordinates.longitude {
+                left = annotationOption
+            }
+            if bottom == nil || bottom.point.coordinates.latitude > annotationOption.point.coordinates.latitude {
+                bottom = annotationOption
+            }
+            if right == nil || right.point.coordinates.longitude < annotationOption.point.coordinates.latitude {
+                right = annotationOption
+            }
+        }
 
         let camera = mapboxMap.camera(
             for: GeometryCollection(geometries: [top, left, bottom, right].compactMap(\.geometry)).geometry,
@@ -444,44 +453,5 @@ extension ViewAnnotationManager: DelegatingViewAnnotationPositionsUpdateListener
 private extension ViewAnnotationPositionDescriptor {
     var frame: CGRect {
         CGRect(origin: leftTopCoordinate.point, size: CGSize(width: CGFloat(width), height: CGFloat(height)))
-    }
-}
-
-private extension Array where Element == ViewAnnotationOptions {
-
-    var leftmost: ViewAnnotationOptions? {
-        self.max { lhs, rhs in
-            guard case .point(let p1) = lhs.geometry else { return false }
-            guard case .point(let p2) = rhs.geometry else { return true }
-
-            return p1.coordinates.longitude > p2.coordinates.longitude
-        }
-    }
-
-    var topmost: ViewAnnotationOptions? {
-        self.max { lhs, rhs in
-            guard case .point(let p1) = lhs.geometry else { return false }
-            guard case .point(let p2) = rhs.geometry else { return true }
-
-            return p1.coordinates.latitude > p2.coordinates.latitude
-        }
-    }
-
-    var rightmost: ViewAnnotationOptions? {
-        self.max { lhs, rhs in
-            guard case .point(let p1) = lhs.geometry else { return false }
-            guard case .point(let p2) = rhs.geometry else { return true }
-
-            return p1.coordinates.longitude < p2.coordinates.longitude
-        }
-    }
-
-    var bottommost: ViewAnnotationOptions? {
-        self.max { lhs, rhs in
-            guard case .point(let p1) = lhs.geometry else { return false }
-            guard case .point(let p2) = rhs.geometry else { return true }
-
-            return p1.coordinates.latitude < p2.coordinates.latitude
-        }
     }
 }

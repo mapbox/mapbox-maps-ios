@@ -320,7 +320,7 @@ public final class ViewAnnotationManager {
             if bottom == nil || bottom.point.coordinates.latitude > annotationOption.point.coordinates.latitude {
                 bottom = annotationOption
             }
-            if right == nil || right.point.coordinates.longitude < annotationOption.point.coordinates.latitude {
+            if right == nil || right.point.coordinates.longitude < annotationOption.point.coordinates.longitude {
                 right = annotationOption
             }
         }

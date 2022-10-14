@@ -17,6 +17,11 @@ final class DebugMapExample: UIViewController, ExampleProtocol, DebugOptionSetti
         super.viewDidLoad()
 
         mapView = MapView(frame: view.bounds)
+        if #available(iOS 15.0, *) {
+            let maxFPS = Float(UIScreen.main.maximumFramesPerSecond)
+            mapView.preferredFrameRateRange = CAFrameRateRange(minimum: 1, maximum: maxFPS, preferred: maxFPS)
+        }
+
         view.addSubview(mapView)
         view.backgroundColor = .skyBlue
         mapView.translatesAutoresizingMaskIntoConstraints = false

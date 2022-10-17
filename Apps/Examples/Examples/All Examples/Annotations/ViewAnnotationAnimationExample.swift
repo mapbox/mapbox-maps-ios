@@ -40,10 +40,10 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
     }
 
     private func setupExample() {
-//        var source = GeoJSONSource()
-//        source.data = .geometry(route.geometry)
-//
-//        try! mapView.mapboxMap.style.addSource(source, id: "route-source")
+        var source = GeoJSONSource()
+        source.data = .geometry(route.geometry)
+
+        try! mapView.mapboxMap.style.addSource(source, id: "route-source")
 //
 //        var layer = LineLayer(id: "route-layer")
 //        layer.source = "route-source"

@@ -44,13 +44,13 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
         source.data = .geometry(route.geometry)
 
         try! mapView.mapboxMap.style.addSource(source, id: "route-source")
-//
-//        var layer = LineLayer(id: "route-layer")
-//        layer.source = "route-source"
-//        layer.lineColor = .constant(StyleColor(UIColor.systemPink))
-//        layer.lineWidth = .constant(4)
-//
-//        try! mapView.mapboxMap.style.addLayer(layer)
+
+        var layer = LineLayer(id: "route-layer")
+        layer.source = "route-source"
+        layer.lineColor = .constant(StyleColor(UIColor.systemPink))
+        layer.lineWidth = .constant(4)
+
+        try! mapView.mapboxMap.style.addLayer(layer)
 //
 //        let options = ViewAnnotationOptions(
 //            geometry: Point(route.coordinates.first!),

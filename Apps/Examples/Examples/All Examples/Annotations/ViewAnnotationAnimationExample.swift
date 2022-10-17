@@ -65,16 +65,13 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.finish()
+        if mapView.mapboxMap.style.isLoaded {
+            startAnimation()
+        } else {
+            mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+                self.startAnimation()
+            }
         }
-//        if mapView.mapboxMap.style.isLoaded {
-//            startAnimation()
-//        } else {
-//            mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
-//                self.startAnimation()
-//            }
-//        }
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -83,15 +80,13 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
         animationStartTime = 0 // stops the animation
     }
 
-//    private func startAnimation() {
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [self] in
-//            if #available(iOS 13.0, *) {
-//                view.window?.windowScene?.screen.displayLink(withTarget: self, selector: #selector(animateNextStep))?
-//                    .add(to: .main, forMode: .default)
-//            }
-//            animationStartTime = CACurrentMediaTime()
-//        }
-//    }
+    private func startAnimation() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [self] in
+            CADisplayLink(target: self, selector: #selector(animateNextStep))
+                .add(to: .main, forMode: .default)
+            animationStartTime = CACurrentMediaTime()
+        }
+    }
 
     @objc private func animateNextStep(_ displayLink: CADisplayLink) {
         let animationDuration: TimeInterval = 30

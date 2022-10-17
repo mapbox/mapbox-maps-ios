@@ -65,7 +65,7 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 21) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             self.finish()
         }
 //        if mapView.mapboxMap.style.isLoaded {

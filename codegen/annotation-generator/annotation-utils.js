@@ -131,6 +131,43 @@ global.randomElement = function randomElement(property) {
   }
 }
 
+global.randomElementForType = function randomElementForType(type) {
+  switch (type) {
+    case 'boolean':
+      return `Bool.random()`;
+    case 'string':
+    case 'formatted':
+    case 'resolvedImage':
+      return `String.randomASCII(withLength: .random(in: 0...100))`;
+    case 'double':
+      const minimum = 0;
+      const maximum = 100000;
+      return `Double.random(in: ${minimum}...${maximum})`;
+    // case 'array':
+    //   let elements = [];
+    //   if (typeof property.length !== 'undefined') {
+    //     for (var i=0; i<property.length; i++) {
+    //       let elementProperty = elementPropertyForArray(property, i);
+    //       elements.push(randomElement(elementProperty));
+    //     }
+    //     return `[${elements.join(", ")}]${property.name == 'line-trim-offset' ? '.sorted()' : ''}`;
+    //   } else {
+    //     let elementProperty = elementPropertyForArray(property);
+    //     return `Array.random(withLength: .random(in: 0...10), generator: { ${randomElement(elementProperty)} })`;
+    //   }
+    // case 'enum':
+    //   if (property.name === "text-variable-anchor") {
+    //     return `TextAnchor.allCases.randomElement()!`;
+    //   } else {
+    //     return `${propertySwiftType(property)}.allCases.randomElement()!`;
+    //   }
+    case 'color':
+      return `StyleColor.random()`;
+    default:
+      throw new Error(`unknown type for ${type}. Property type = ${type}`);
+  }
+}
+
 global.defaultValueConstant = function defaultValueConstant(property, originalType) {
   if (property.name === "text-field") {
     return `.expression(Exp(.format) {

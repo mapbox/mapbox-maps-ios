@@ -60,14 +60,14 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
             offsetY: -5
         )
         try! mapView.viewAnnotations.add(annotationView, options: options)
+        self.finish()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
-            self.finish()
-        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//        }
 //        if mapView.mapboxMap.style.isLoaded {
 //            startAnimation()
 //        } else {

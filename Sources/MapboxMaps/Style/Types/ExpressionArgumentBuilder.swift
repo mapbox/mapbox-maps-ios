@@ -12,7 +12,6 @@ public struct ExpressionArgumentBuilder {
     }
 }
 
-
 /// :nodoc:
 /// This API enables the Expressions DSL syntax and is not designed to be called directly.
 public protocol ExpressionArgumentConvertible {

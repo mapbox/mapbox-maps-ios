@@ -134,11 +134,6 @@ public struct ViewAnnotationOptions: Hashable {
 
         return frame.offsetBy(dx: offsetX ?? 0, dy: offsetY ?? 0)
     }
-
-    internal var point: Point! {
-        guard case .point(let point) = geometry else { return nil }
-        return point
-    }
 }
 
 extension MapboxCoreMaps.ViewAnnotationOptions {

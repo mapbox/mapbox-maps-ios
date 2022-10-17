@@ -294,6 +294,48 @@ public final class ViewAnnotationManager {
 
     // MARK: Framing
 
+    /// Calculates ``CameraOptions`` to fit the list of view annotations.
+    ///
+    /// - Parameter ids: The list of annotations ids to be framed.
+    /// - Parameter padding: See ``CameraOptions/padding``.
+    /// - Parameter bearing: See ``CameraOptions/bearing``.
+    /// - Parameter pitch: See ``CameraOptions/pitch``.
+    public func camera(for ids: [String], padding: UIEdgeInsets = .zero, bearing: CGFloat? = nil, pitch: CGFloat? = nil) -> CameraOptions? {
+        let options = ids.compactMap { try? mapboxMap.options(forViewAnnotationWithId: $0) }
+        guard !options.isEmpty else { return nil }
+
+        var north, east, south, west: CLLocationDegrees!
+        var accumulatedPadding = UIEdgeInsets.zero
+
+        for annotationOption in options where annotationOption.visible != false {
+            guard case .point(let point) = annotationOption.geometry else { continue }
+
+            let annotationFrame = annotationOption.frame
+            if north == nil || north > point.coordinates.latitude {
+                north = point.coordinates.latitude
+                accumulatedPadding.top =  padding.top + abs(annotationFrame.minY)
+            }
+            if east == nil || east < point.coordinates.longitude {
+                east = point.coordinates.longitude
+                accumulatedPadding.right = padding.right + annotationFrame.maxX
+            }
+            if south == nil || south < point.coordinates.latitude {
+                south = point.coordinates.latitude
+                accumulatedPadding.bottom = padding.bottom + annotationFrame.maxY
+            }
+            if west == nil || west > point.coordinates.longitude {
+                west = point.coordinates.longitude
+                accumulatedPadding.left = padding.left + abs(annotationFrame.minX)
+            }
+        }
+
+        let points = MultiPoint([
+            CLLocationCoordinate2D(latitude: north, longitude: east),
+            CLLocationCoordinate2D(latitude: south, longitude: west),
+        ])
+        return mapboxMap.camera(for: .multiPoint(points), padding: accumulatedPadding, bearing: bearing, pitch: pitch)
+    }
+
     /// Sets the visible region so that the map displays the specified annotations.
     ///
     /// - Parameter ids: The list of annotations ids to be framed.
@@ -306,43 +348,10 @@ public final class ViewAnnotationManager {
         pitch: CGFloat? = nil,
         animationDuration: TimeInterval = 1
     ) {
-        let options = ids.compactMap { try? mapboxMap.options(forViewAnnotationWithId: $0) }
-        guard !options.isEmpty else { return }
+        let coordinateBounds = camera(for: ids).map(mapboxMap.coordinateBounds(for:))
+        guard let coordinateBounds = coordinateBounds, !coordinateBounds.isEmpty else { return }
 
-        var top, left, bottom, right: ViewAnnotationOptions!
-        for annotationOption in options where annotationOption.point != nil {
-            if top == nil || top.point.coordinates.latitude < annotationOption.point.coordinates.latitude {
-                top = annotationOption
-            }
-            if left == nil || left.point.coordinates.longitude > annotationOption.point.coordinates.longitude {
-                left = annotationOption
-            }
-            if bottom == nil || bottom.point.coordinates.latitude > annotationOption.point.coordinates.latitude {
-                bottom = annotationOption
-            }
-            if right == nil || right.point.coordinates.longitude < annotationOption.point.coordinates.longitude {
-                right = annotationOption
-            }
-        }
-
-        let camera = mapboxMap.camera(
-            for: GeometryCollection(geometries: [top, left, bottom, right].compactMap(\.geometry)).geometry,
-            padding: .zero,
-            bearing: nil,
-            pitch: nil)
-
-        let coordinateBounds = mapboxMap.coordinateBounds(for: camera)
-        guard !coordinateBounds.isEmpty else { return }
-
-        coordinateBoundsAnimator.show(
-            coordinateBounds: coordinateBounds,
-            padding: UIEdgeInsets(
-                top: padding.top + abs(top.frame.minY),
-                left: padding.left + abs(left.frame.minX),
-                bottom: padding.bottom + bottom.frame.maxY,
-                right: padding.right + right.frame.maxX),
-            pitch: pitch,
-            animationDuration: animationDuration)
+        coordinateBoundsAnimator.show(coordinateBounds: coordinateBounds, padding: padding, pitch: pitch, animationDuration: animationDuration)
     }
 
     /// Sets the visible region so that the map displays the specified annotations.

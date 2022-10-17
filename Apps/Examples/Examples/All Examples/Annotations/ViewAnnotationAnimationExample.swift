@@ -51,15 +51,15 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
         layer.lineWidth = .constant(4)
 
         try! mapView.mapboxMap.style.addLayer(layer)
-//
-//        let options = ViewAnnotationOptions(
-//            geometry: Point(route.coordinates.first!),
-//            width: 50,
-//            height: 50,
-//            anchor: .bottom,
-//            offsetY: -5
-//        )
-//        try! mapView.viewAnnotations.add(annotationView, options: options)
+
+        let options = ViewAnnotationOptions(
+            geometry: Point(route.coordinates.first!),
+            width: 50,
+            height: 50,
+            anchor: .bottom,
+            offsetY: -5
+        )
+        try! mapView.viewAnnotations.add(annotationView, options: options)
         self.finish()
     }
 

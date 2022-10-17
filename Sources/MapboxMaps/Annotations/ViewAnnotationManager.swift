@@ -296,6 +296,8 @@ public final class ViewAnnotationManager {
 
     /// Calculates ``CameraOptions`` to fit the list of view annotations.
     ///
+    /// - Important: This API isn't supported by Globe projection.
+    ///
     /// - Parameter ids: The list of annotations ids to be framed.
     /// - Parameter padding: See ``CameraOptions/padding``.
     /// - Parameter bearing: See ``CameraOptions/bearing``.
@@ -338,6 +340,8 @@ public final class ViewAnnotationManager {
 
     /// Sets the visible region so that the map displays the specified annotations.
     ///
+    /// - Important: This API isn't supported by Globe projection.
+    ///
     /// - Parameter ids: The list of annotations ids to be framed.
     /// - Parameter padding: The padding to be set around the edges of the map view, default is `UIEdgeInsets.zero`.
     /// - Parameter pitch: Default is 0.
@@ -355,6 +359,8 @@ public final class ViewAnnotationManager {
     }
 
     /// Sets the visible region so that the map displays the specified annotations.
+    ///
+    /// - Important: This API isn't supported by Globe projection.
     ///
     /// - Parameter annotations: The list of annotations view to be framed.
     /// - Parameter padding: The padding to be set around the edges of the map view, default is `UIEdgeInsets.zero`.

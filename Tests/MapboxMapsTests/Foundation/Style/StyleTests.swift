@@ -120,6 +120,13 @@ final class StyleTests: XCTestCase {
         })
     }
 
+    func testGetAllLayerIdentifiersDoesNotTriggerAssertFor3DPuckLayer() {
+        styleManager.getStyleLayersStub.defaultReturnValue = [StyleObjectInfo(id: Puck3D.layerID, type: "model")]
+
+        // test fails if there is an assertion triggered here
+        _ = style.allLayerIdentifiers
+    }
+
     func testStyleCanAddLayer() {
         XCTAssertThrowsError(try style.addLayer(NonEncodableLayer()))
 

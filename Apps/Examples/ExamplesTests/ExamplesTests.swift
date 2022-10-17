@@ -6,8 +6,12 @@ class ExamplesTests: XCTestCase {
 
     func testExampleClassExists() throws {
 
-        for category in Examples.all {
-            for example in category["examples"] as! [Example] {
+        let example = Example(title: "View annotations: animation",
+                              description: "Animate a view annotation along a route",
+                              testTimeout: 60,
+                              type: ViewAnnotationAnimationExample.self)
+//        for category in Examples.all {
+//            for example in category["examples"] as! [Example] {
                 // Check view controller can be extrapolated from the example file name.
                 XCTAssert(example.type is UIViewController.Type)
 
@@ -28,7 +32,7 @@ class ExamplesTests: XCTestCase {
                                   "Title for example '\(example.type)' should not end with punctuation.")
                 }
             }
-        }
-    }
+//        }
+//    }
 
 }

@@ -162,6 +162,20 @@ internal final class Puck2D: Puck {
         case .reducedAccuracy:
             fallthrough
         @unknown default:
+            // in order to:
+            // 1) ensure that user location indicator is always(at any zoom level) is shown even for reduced accuracy authorization
+            // 2) ensure that there are no unexpected sudden changes in location indicator radius when zoomin in/out
+            // here we calculate a suitable zoom level to transition from `accuracyRadius` to `emphasisCircle`
+            // and setup the transition using expressions.
+            // The zoom level is not hardcoded to enable a seamless and smooth transition between two circles.
+            //
+            // When the current zoom level is below the "cutoff" point - user location indicator is shown as a circle
+            // covering the area of possible user location.
+            // When the current zoom level is from "cutoff" point to "cutoff" point + 1 - user location indicator radius
+            // transitions from the actual accuracy radius to the minimum circle raduis, while crossfading with the emphasis
+            // circle with set radius.
+            // When the current zoom level is above the "cutoff" point - user location indicator is shown as a circle
+            // with static radius.
             let zoomCutoffRange: ClosedRange<Double> = 4.0...7.5
             let accuracyRange: ClosedRange<CLLocationDistance> = 1000...20_000
             let cutoffZoomLevel = zoomCutoffRange.upperBound - (zoomCutoffRange.magnitude * (location.horizontalAccuracy - accuracyRange.lowerBound) / accuracyRange.magnitude)

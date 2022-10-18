@@ -1,4 +1,4 @@
-/// Options to show and configure symbol clustering with using SymbolManager.
+/// Options to show and configure point annotation clustering with using PointAnnotationManager.
 ///
 /// It exposes a minimal of configuration options, a more advanced setup can be created manually with
 /// using CircleLayer and SymbolLayers directly.

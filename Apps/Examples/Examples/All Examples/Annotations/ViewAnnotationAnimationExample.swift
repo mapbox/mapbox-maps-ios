@@ -18,6 +18,11 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
         return view
     }()
     private var animationStartTime: TimeInterval = 0
+    private lazy var displayLink: CADisplayLink = CADisplayLink(target: self, selector: #selector(animateNextStep))
+
+    deinit {
+        displayLink.invalidate()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,12 +37,15 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .styleLoaded) { [weak self] _ in
+        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
             guard let self = self else { return }
 
             self.setupExample()
+            self.isMapLoaded = true
         }
     }
+
+    private var isMapLoaded: Bool = false
 
     private func setupExample() {
         var source = GeoJSONSource()
@@ -65,26 +73,31 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        if mapView.mapboxMap.style.isLoaded {
+        if isMapLoaded {
             startAnimation()
         } else {
             mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
                 self.startAnimation()
             }
         }
+
+        displayLink.isPaused = false
     }
 
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
 
-        animationStartTime = 0 // stops the animation
+        if isMapLoaded {
+            displayLink.isPaused = true
+        }
     }
 
     private func startAnimation() {
-        let link = CADisplayLink(target: self, selector: #selector(animateNextStep))
-        link.add(to: .main, forMode: .default)
+        displayLink.add(to: .main, forMode: .common)
 
-        animationStartTime = CACurrentMediaTime()
+        if animationStartTime == 0 {
+            animationStartTime = CACurrentMediaTime()
+        }
     }
 
     @objc private func animateNextStep(_ displayLink: CADisplayLink) {

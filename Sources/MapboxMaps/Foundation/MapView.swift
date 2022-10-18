@@ -441,7 +441,13 @@ open class MapView: UIView {
     }
 
     private func subscribeToLifecycleNotifications() {
-        if #available(iOS 13.0, *), bundle.infoDictionary?["UIApplicationSceneManifest"] != nil {
+        if #available(iOS 13.0, *) {
+            print("metal: scene \(UIApplication.shared.delegate?.responds(to: #selector(UIApplicationDelegate.application(_:configurationForConnecting:options:))))")
+        } else {
+            // Fallback on earlier versions
+        }
+        if #available(iOS 13.0, *) {
+            print("metal: ✨ Setting up as a scene-based app")
             notificationCenter.addObserver(self,
                                            selector: #selector(sceneDidEnterBackground(_:)),
                                            name: UIScene.didEnterBackgroundNotification,
@@ -454,7 +460,8 @@ open class MapView: UIView {
                                            selector: #selector(sceneDidActivate(_:)),
                                            name: UIScene.didActivateNotification,
                                            object: window?.parentScene)
-        } else {
+        }
+            print("metal: 📱 UIApplication-based app is all we know")
             notificationCenter.addObserver(self,
                                            selector: #selector(appDidEnterBackground),
                                            name: UIApplication.didEnterBackgroundNotification,
@@ -467,43 +474,55 @@ open class MapView: UIView {
                                            selector: #selector(appWillResignActive),
                                            name: UIApplication.willResignActiveNotification,
                                            object: nil)
-        }
+//        }
     }
 
     @objc private func appDidEnterBackground() {
+        print("metal: 🥶 appDidEnterBackground")
         reduceMemoryUse()
     }
 
     @objc private func appDidBecomeActive() {
+        print("metal: ⬆️ appDidBecomeActive")
         displayLink?.isPaused = false
     }
 
     @objc private func appWillResignActive() {
+        print("metal: 🔻 appWillResignActive")
         displayLink?.isPaused = true
     }
 
     @available(iOS 13.0, *)
     @objc private func sceneDidActivate(_ notification: Notification) {
-        guard notification.object as? UIScene == window?.parentScene else { return }
-
+        guard notification.object as? UIScene == window?.parentScene else {
+            fatalError("sceneDidActivate")
+        }
+        print("metal: ⬆️ sceneDidActivate")
         displayLink?.isPaused = false
     }
 
     @available(iOS 13, *)
     @objc private func sceneWillDeactivate(_ notification: Notification) {
-        guard notification.object as? UIScene == window?.parentScene else { return }
+        guard notification.object as? UIScene == window?.parentScene else {
+            fatalError("sceneWillDeactivate")
+        }
 
+        print("metal: 🔻 sceneWillDeactivate")
         displayLink?.isPaused = true
     }
 
     @available(iOS 13, *)
     @objc private func sceneDidEnterBackground(_ notification: Notification) {
-        guard notification.object as? UIScene == window?.parentScene else { return }
+        guard notification.object as? UIScene == window?.parentScene else {
+            fatalError("sceneDidEnterBackground")
+        }
 
+        print("metal: 🥶 sceneDidEnterBackground")
         reduceMemoryUse()
     }
 
     @objc private func didReceiveMemoryWarning() {
+        print("metal: 📝 didReceiveMemoryWarning")
         reduceMemoryUse()
     }
 
@@ -556,8 +575,10 @@ open class MapView: UIView {
     }
 
     @_spi(Metrics) public var metricsReporter: MapViewMetricsReporter?
-
+    var timestamp: CFTimeInterval = 0
     private func updateFromDisplayLink(displayLink: CADisplayLink) {
+        print("update from displaylink: \(displayLink.timestamp - timestamp)")
+        timestamp = displayLink.timestamp
         metricsReporter?.beforeDisplayLinkCallback(displayLink: displayLink)
         defer { metricsReporter?.afterDisplayLinkCallback(displayLink: displayLink) }
         if window == nil {
@@ -623,6 +644,16 @@ open class MapView: UIView {
         cameraAnimatorsRunnerEnablable.isEnabled = true
 
         updateDisplayLinkPreferredFramesPerSecond()
+        // this will make sure that display link is only running on an active scene in foreground,
+        // preventing metal view drawing on background
+        // TODO: check if this works for unattached scheme(if unattached scene sends `UIScene.didActivateNotification` notifications
+        if #available(iOS 13, *), let scene = window.windowScene, scene.activationState != .foregroundActive {
+            displayLink.isPaused = true
+        }
+        if UIApplication.shared.applicationState != .active {
+            displayLink.isPaused = true
+        }
+        
         displayLink.add(to: .current, forMode: .common)
     }
 }

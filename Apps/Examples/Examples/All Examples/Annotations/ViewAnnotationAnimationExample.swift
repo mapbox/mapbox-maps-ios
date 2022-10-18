@@ -32,11 +32,10 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onNext(event: .styleLoaded) { [weak self] _ in
             guard let self = self else { return }
 
             self.setupExample()
-            self.startAnimation()
         }
     }
 
@@ -63,6 +62,18 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
         try! mapView.viewAnnotations.add(annotationView, options: options)
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        if mapView.mapboxMap.style.isLoaded {
+            startAnimation()
+        } else {
+            mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+                self.startAnimation()
+            }
+        }
+    }
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
 
@@ -71,7 +82,7 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
 
     private func startAnimation() {
         let link = CADisplayLink(target: self, selector: #selector(animateNextStep))
-        link.add(to: .main, forMode: .common)
+        link.add(to: .main, forMode: .default)
 
         animationStartTime = CACurrentMediaTime()
     }

@@ -144,9 +144,6 @@ final class MapViewTests: XCTestCase {
         XCTAssertEqual(mapView.preferredFramesPerSecond, 23)
     }
 
-    // Checking Swift version as a proxy for iOS SDK version to enable
-    // building with iOS SDKs < 15
-    #if swift(>=5.5)
     func testPreferredFrameRateRangeIsDefault() throws {
         guard #available(iOS 15.0, *) else {
             throw XCTSkip("Test requires iOS 15 or higher.")
@@ -166,7 +163,6 @@ final class MapViewTests: XCTestCase {
         XCTAssertEqual(displayLink.preferredFrameRateRange, frameRateRange)
         XCTAssertEqual(mapView.preferredFrameRateRange, frameRateRange)
     }
-    #endif
 
     func testDisplayLinkTimestampIsNilWhenDisplayLinkIsNil() {
         mapView.removeFromSuperview()

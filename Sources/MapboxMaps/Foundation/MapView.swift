@@ -119,9 +119,6 @@ open class MapView: UIView {
         }
     }
 
-    // Checking Swift version as a proxy for iOS SDK version to enable
-    // building with iOS SDKs < 15
-    #if swift(>=5.5)
     /// The preferred range of frame refresh rates.
     @available(iOS 15.0, *)
     public var preferredFrameRateRange: CAFrameRateRange {
@@ -148,7 +145,6 @@ open class MapView: UIView {
     }
 
     private var _untypedPreferredFrameRateRange: Any?
-    #endif
 
     /// The `timestamp` from the underlying `CADisplayLink` if it exists, otherwise `nil`.
     /// :nodoc:
@@ -579,19 +575,18 @@ open class MapView: UIView {
     }
 
     private func updateDisplayLinkPreferredFramesPerSecond() {
-        if let displayLink = displayLink {
-            if let _preferredFramesPerSecond = _preferredFramesPerSecond {
-                displayLink.preferredFramesPerSecond = _preferredFramesPerSecond
+        guard let displayLink = displayLink else {
+            return
+        }
+
+        if let _preferredFramesPerSecond = _preferredFramesPerSecond {
+            displayLink.preferredFramesPerSecond = _preferredFramesPerSecond
+        }
+
+        if #available(iOS 15.0, *) {
+            if let _preferredFrameRateRange = _preferredFrameRateRange {
+                displayLink.preferredFrameRateRange = _preferredFrameRateRange
             }
-            // Checking Swift version as a proxy for iOS SDK version to enable
-            // building with iOS SDKs < 15
-            #if swift(>=5.5)
-            if #available(iOS 15.0, *) {
-                if let _preferredFrameRateRange = _preferredFrameRateRange {
-                    displayLink.preferredFrameRateRange = _preferredFrameRateRange
-                }
-            }
-            #endif
         }
     }
 

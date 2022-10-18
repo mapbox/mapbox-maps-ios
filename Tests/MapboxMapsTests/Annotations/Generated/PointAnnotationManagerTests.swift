@@ -2823,13 +2823,19 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         style.addPersistentLayerStub.reset()
         // given
         let clusterOptions = ClusterOptions()
+        var annotations = [PointAnnotation]()
+        for _ in 0...500 {
+            let annotation = PointAnnotation(coordinate: .random())
+            annotations.append(annotation)
+        }
 
         // when
-        _ = PointAnnotationManager(id: id,
-                                                    style: style,
-                                                    layerPosition: nil,
-                                                    displayLinkCoordinator: displayLinkCoordinator,
-                                                    clusterOptions: clusterOptions)
+        let pointAnnotationManager = PointAnnotationManager(id: id,
+                                  style: style,
+                                  layerPosition: nil,
+                                  displayLinkCoordinator: displayLinkCoordinator,
+                                  clusterOptions: clusterOptions)
+        pointAnnotationManager.annotations = annotations
 
         // then
         XCTAssertEqual(clusterOptions.clusterRadius, 50)
@@ -2838,7 +2844,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(clusterOptions.textSize, .constant(12))
         XCTAssertEqual(clusterOptions.textField, .expression(Exp(.get) { "point_count" }))
         XCTAssertEqual(clusterOptions.clusterMaxZoom, 14)
-        XCTAssertEqual(clusterOptions.colorLevels.description, [(0, StyleColor(.blue))].description)
+        XCTAssertEqual(clusterOptions.colorLevels.description, [(pointCount: 0, clusterColor: StyleColor(.blue))].description)
         XCTAssertNil(clusterOptions.clusterProperties)
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.type, SourceType.geoJson)
@@ -2857,17 +2863,24 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let clusterOptions = ClusterOptions(clusterRadius: testClusterRadius,
                                             clusterMaxZoom: testClusterMaxZoom,
                                             clusterProperties: testClusterProperties)
+        var annotations = [PointAnnotation]()
+        for _ in 0...500 {
+            let annotation = PointAnnotation(coordinate: .random())
+            annotations.append(annotation)
+        }
 
         // when
-        _ = PointAnnotationManager(id: id,
+        let pointAnnotationManager = PointAnnotationManager(id: id,
                                   style: style,
                                   layerPosition: nil,
                                   displayLinkCoordinator: displayLinkCoordinator,
                                   clusterOptions: clusterOptions)
 
+        pointAnnotationManager.annotations = annotations
         let geoJSONSource = style.addSourceStub.invocations.last?.parameters.source as! GeoJSONSource
 
         // then
+        XCTAssertTrue(geoJSONSource.cluster!)
         XCTAssertEqual(clusterOptions.clusterRadius, testClusterRadius)
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(geoJSONSource.clusterRadius, testClusterRadius)
@@ -2881,13 +2894,19 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // given
         let testCircleRadius = Value<Double>.testConstantValue()
         let clusterOptions = ClusterOptions(circleRadius: testCircleRadius)
+        var annotations = [PointAnnotation]()
+        for _ in 0...500 {
+            let annotation = PointAnnotation(coordinate: .random())
+            annotations.append(annotation)
+        }
 
         // when
-        _ = PointAnnotationManager(id: id,
+        let pointAnnotationManager = PointAnnotationManager(id: id,
                                   style: style,
                                   layerPosition: nil,
                                   displayLinkCoordinator: displayLinkCoordinator,
                                   clusterOptions: clusterOptions)
+        pointAnnotationManager.annotations = annotations
 
         // then
         let circleLayerInvocations = style.addPersistentLayerStub.invocations.filter { circleLayer in
@@ -2908,16 +2927,23 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         style.addPersistentLayerStub.reset()
         // given
         let testColorLevels = Array.random(withLength: UInt.random(in: 0..<100)) {
-            return (Int.random(in: 0..<10000), StyleColor.testConstantValue())
+            return (pointCount: Int.random(in: 0..<10000), clusterColor: StyleColor.testConstantValue())
         }
         let clusterOptions = ClusterOptions(colorLevels: testColorLevels)
+        var annotations = [PointAnnotation]()
+        for _ in 0...500 {
+            let annotation = PointAnnotation(coordinate: .random())
+            annotations.append(annotation)
+        }
 
         // when
-        _ = PointAnnotationManager(id: id,
+        let pointAnnotationManager = PointAnnotationManager(id: id,
                                     style: style,
                                     layerPosition: nil,
                                     displayLinkCoordinator: displayLinkCoordinator,
                                     clusterOptions: clusterOptions)
+        pointAnnotationManager.annotations = annotations
+
         // then
         let circleLayerInvocations = style.addPersistentLayerStub.invocations.filter { circleLayer in
             return circleLayer.parameters.layer.type == .circle
@@ -2932,7 +2958,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
                     Exp(.gte) {
                         Exp(.get) { "point_count" }
                         Exp(.toNumber) {
-                            testColorLevels[index].0
+                            testColorLevels[index].pointCount
                         }
                     }
                 }
@@ -2942,13 +2968,13 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
                     Exp(.gte) {
                         Exp(.get) { "point_count" }
                         Exp(.toNumber) {
-                            testColorLevels[index].0
+                            testColorLevels[index].pointCount
                         }
                     }
                     Exp(.lt) {
                         Exp(.get) { "point_count" }
                         Exp(.toNumber) {
-                            testColorLevels[index-1].0
+                            testColorLevels[index-1].pointCount
                         }
                     }
                 }
@@ -2972,13 +2998,19 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let clusterOptions = ClusterOptions(textColor: testTextColor,
                                   textSize: testTextSize,
                                   textField: testTextField)
+        var annotations = [PointAnnotation]()
+        for _ in 0...500 {
+            let annotation = PointAnnotation(coordinate: .random())
+            annotations.append(annotation)
+        }
 
         // when
-        _ = PointAnnotationManager(id: id,
+        let pointAnnotationManager = PointAnnotationManager(id: id,
                                   style: style,
                                   layerPosition: nil,
                                   displayLinkCoordinator: displayLinkCoordinator,
                                   clusterOptions: clusterOptions)
+        pointAnnotationManager.annotations = annotations
 
         // then
         let textLayerInvocations = style.addPersistentLayerStub.invocations.filter { symbolLayer in
@@ -2997,13 +3029,19 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         style.addPersistentLayerStub.reset()
         // given
         let clusterOptions = ClusterOptions()
+        var annotations = [PointAnnotation]()
+        for _ in 0...500 {
+            let annotation = PointAnnotation(coordinate: .random())
+            annotations.append(annotation)
+        }
 
         // when
-        _ = PointAnnotationManager(id: id,
+        let pointAnnotationManager = PointAnnotationManager(id: id,
                                   style: style,
                                   layerPosition: nil,
                                   displayLinkCoordinator: displayLinkCoordinator,
                                   clusterOptions: clusterOptions)
+        pointAnnotationManager.annotations = annotations
 
         // then
         let symbolLayerInvocations = style.addPersistentLayerStub.invocations.filter { symbolLayer in
@@ -3016,6 +3054,53 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertTrue(symbolLayer.iconIgnorePlacement == .constant(true))
         XCTAssertTrue(symbolLayer.textIgnorePlacement == .constant(true))
         XCTAssertEqual(symbolLayer.source, id)
+        XCTAssertEqual(style.addSourceStub.invocations.count, 1)
+    }
+
+    func testChangeAnnotations() {
+        style.addSourceStub.reset()
+        style.addPersistentLayerStub.reset()
+        // given
+        let clusterOptions = ClusterOptions()
+        var annotations = [PointAnnotation]()
+        for _ in 0...500 {
+            let annotation = PointAnnotation(coordinate: .random())
+            annotations.append(annotation)
+        }
+        var newAnnotations = [PointAnnotation]()
+        for _ in 0...100 {
+            let annotation = PointAnnotation(coordinate: .random())
+            newAnnotations.append(annotation)
+        }
+
+        // when
+        let pointAnnotationManager = PointAnnotationManager(id: id,
+                                  style: style,
+                                  layerPosition: nil,
+                                  displayLinkCoordinator: displayLinkCoordinator,
+                                  clusterOptions: clusterOptions)
+        pointAnnotationManager.annotations = annotations
+        pointAnnotationManager.syncSourceAndLayerIfNeeded()
+        var sourceGeoJSON = style.updateGeoJSONSourceStub.invocations.last?.parameters.geojson
+        switch sourceGeoJSON {
+          case .featureCollection(let data):
+            print(data)
+            XCTAssertEqual(data.features.count, 501)
+          default:
+            XCTFail("GeoJSON did not update correctly")
+        }
+
+        // then
+        pointAnnotationManager.annotations = newAnnotations
+        pointAnnotationManager.syncSourceAndLayerIfNeeded()
+        sourceGeoJSON = style.updateGeoJSONSourceStub.invocations.last?.parameters.geojson
+        switch sourceGeoJSON {
+          case .featureCollection(let data):
+            print(data)
+            XCTAssertEqual(data.features.count, 101)
+          default:
+            XCTFail("GeoJSON did not update correctly")
+        }
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
     }
 }

@@ -4,6 +4,12 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Prevent view annotation being shown erroneously after options update.([#1627](https://github.com/mapbox/mapbox-maps-ios/pull/1627))
+* Add an example animating a view annotation along a route line. ([#1639](https://github.com/mapbox/mapbox-maps-ios/pull/1639))
+* Reduce location provider heading orientation update frequency. ([#1618](https://github.com/mapbox/mapbox-maps-ios/pull/1618))
+* Expose the list of added view annotations. ([#1621](https://github.com/mapbox/mapbox-maps-ios/pull/1621)
+* Update to MapboxCoreMaps 10.9.0 and MapboxCommon 23.1.0. ([#1652](https://github.com/mapbox/mapbox-maps-ios/pull/1652))
+
 ## 10.9.0-rc.1 - October 7, 2022
 
 * Support `zh` localization for streets v8 style. ([#1602](https://github.com/mapbox/mapbox-maps-ios/pull/1602))

@@ -29,12 +29,8 @@ class TestableExampleTests: XCTestCase {
 
         let existingImpl = method_getImplementation(method)
 
-        let example = Example(title: "View annotations: animation",
-                              description: "Animate a view annotation along a route",
-                              testTimeout: 60,
-                              type: ViewAnnotationAnimationExample.self)
-//        for category in Examples.all {
-//            for example in category["examples"] as! [Example] {
+        for category in Examples.all {
+            for example in category["examples"] as! [Example] {
                 // Add a method for this test, but using the same implementation
                 let selectorName = "test\(example.type)"
                 let testSelector = Selector((selectorName))
@@ -43,8 +39,8 @@ class TestableExampleTests: XCTestCase {
                 let test = TestableExampleTests(selector: testSelector)
                 test.example = example
                 newTestSuite.addTest(test)
-//            }
-//        }
+            }
+        }
         return newTestSuite
     }
 

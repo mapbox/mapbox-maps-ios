@@ -118,7 +118,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         let layedID = "mapbox-iOS-cluster-circle-layer-" + String(level)
         var circleLayer = CircleLayer(id: layedID)
         circleLayer.source = sourceId
-        circleLayer.circleColor = .constant(clusterOptions.colorLevels[level].1)
+        circleLayer.circleColor = .constant(clusterOptions.colorLevels[level].clusterColor)
         circleLayer.circleRadius = clusterOptions.circleRadius
         circleLayer.filter = createFilterExpression(level: level, colorLevels: clusterOptions.colorLevels)
         return circleLayer
@@ -136,7 +136,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    internal func createFilterExpression(level: Int, colorLevels: [(Int, StyleColor)]) -> Expression {
+    internal func createFilterExpression(level: Int, colorLevels: [(pointCount: Int, clusterColor: StyleColor)]) -> Expression {
       let pointCount = "point_count"
       let expression = level == 0 ?
           Exp(.all) {
@@ -144,7 +144,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
               Exp(.gte) {
                   Exp(.get) { pointCount }
                   Exp(.toNumber) {
-                      colorLevels[level].0
+                      colorLevels[level].pointCount
                   }
               }
           } :
@@ -153,13 +153,13 @@ public class PointAnnotationManager: AnnotationManagerInternal {
               Exp(.gte) {
                   Exp(.get) { pointCount }
                   Exp(.toNumber) {
-                      colorLevels[level].0
+                      colorLevels[level].pointCount
                   }
               }
               Exp(.lt) {
                   Exp(.get) { pointCount }
                   Exp(.toNumber) {
-                      colorLevels[level-1].0
+                      colorLevels[level-1].pointCount
                   }
               }
           }

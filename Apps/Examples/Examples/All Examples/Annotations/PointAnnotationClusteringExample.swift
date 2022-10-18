@@ -29,24 +29,27 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
         let image = UIImage(named: "fire-station-11")!
         // Fire_Hydrants.geojson contains information about fire hydrants in the District of Columbia.
         // It was downloaded on 6/10/21 from https://opendata.dc.gov/datasets/DCGIS::fire-hydrants/about
-        // Decode the GeoJSON into a feature collection
+        // Decode the GeoJSON into a feature collection on a background thread
         _ = Bundle.main.url(forResource: "Fire_Hydrants", withExtension: "geojson")!
-        guard let featureCollection = try? decodeGeoJSON(from: "Fire_Hydrants") else {
-            return
-        }
-
-        // Create an array of annotations for each fire hydrant
-        var annotations = [PointAnnotation]()
-        for feature in featureCollection.features {
-            guard let geometry = feature.geometry, case let Geometry.point(point) = geometry else {
+        DispatchQueue.global(qos: .userInitiated).async {
+            guard let featureCollection = try? self.decodeGeoJSON(from: "Fire_Hydrants") else {
                 return
             }
-            var pointAnnotation = PointAnnotation(coordinate: point.coordinates)
-            pointAnnotation.image = .init(image: image, name: "fire-station-11")
-            annotations.append(pointAnnotation)
-        }
 
-        createClusters(annotations: annotations)
+            // Create an array of annotations for each fire hydrant
+            var annotations = [PointAnnotation]()
+            for feature in featureCollection.features {
+                guard let geometry = feature.geometry, case let Geometry.point(point) = geometry else {
+                    return
+                }
+                var pointAnnotation = PointAnnotation(coordinate: point.coordinates)
+                pointAnnotation.image = .init(image: image, name: "fire-station-11")
+                annotations.append(pointAnnotation)
+            }
+            DispatchQueue.main.async {
+                self.createClusters(annotations: annotations)
+            }
+        }
     }
 
     func createClusters(annotations: [PointAnnotation]) {
@@ -64,8 +67,17 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
             25
         }
 
+        // Use color levels to implement three colors of circles:
+        //   * green when point count is less than 50
+        //   * cyan when point count is between 50 and 100
+        //   * red when point count is greater than or equal to 100
+        let colorLevels = [
+            (pointCount: 100, clusterColor: StyleColor(.red)),
+            (pointCount: 50, clusterColor: StyleColor(.cyan)),
+            (pointCount: 0, clusterColor: StyleColor(.green))]
+
         // Select the options for clustering and pass them to the PointAnnotationManager to display
-        let clusterOptions = ClusterOptions(clusterRadius: 75, circleRadius: .expression(circleRadiusExpression), textColor: .constant(StyleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))), colorLevels: [(100, StyleColor(.red)), (50, StyleColor(.cyan)), (0, StyleColor(.green))])
+        let clusterOptions = ClusterOptions(clusterRadius: 75, circleRadius: .expression(circleRadiusExpression), textColor: .constant(StyleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))), colorLevels: colorLevels)
         let pointAnnotationManager = mapView.annotations.makePointAnnotationManager(clusterOptions: clusterOptions)
         pointAnnotationManager.annotations = annotations
 

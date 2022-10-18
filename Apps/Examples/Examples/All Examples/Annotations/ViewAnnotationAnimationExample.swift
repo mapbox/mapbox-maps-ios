@@ -83,7 +83,7 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
     private func startAnimation() {
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [self] in
             CADisplayLink(target: self, selector: #selector(animateNextStep))
-                .add(to: .main, forMode: .default)
+                .add(to: .main, forMode: .common)
             animationStartTime = CACurrentMediaTime()
 //        }
     }

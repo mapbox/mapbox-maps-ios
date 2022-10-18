@@ -135,7 +135,7 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
         let layedID = "mapbox-iOS-cluster-circle-layer-" + String(level)
         var circleLayer = CircleLayer(id: layedID)
         circleLayer.source = sourceId
-        circleLayer.circleColor = .constant(clusterOptions.colorLevels[level].1)
+        circleLayer.circleColor = .constant(clusterOptions.colorLevels[level].clusterColor)
         circleLayer.circleRadius = clusterOptions.circleRadius
         circleLayer.filter = createFilterExpression(level: level, colorLevels: clusterOptions.colorLevels)
         return circleLayer
@@ -153,7 +153,7 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    internal func createFilterExpression(level: Int, colorLevels: [(Int, StyleColor)]) -> Expression {
+    internal func createFilterExpression(level: Int, colorLevels: [(pointCount: Int, clusterColor: StyleColor)]) -> Expression {
       let pointCount = "point_count"
       let expression = level == 0 ?
           Exp(.all) {
@@ -161,7 +161,7 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
               Exp(.gte) {
                   Exp(.get) { pointCount }
                   Exp(.toNumber) {
-                      colorLevels[level].0
+                      colorLevels[level].pointCount
                   }
               }
           } :
@@ -170,13 +170,13 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
               Exp(.gte) {
                   Exp(.get) { pointCount }
                   Exp(.toNumber) {
-                      colorLevels[level].0
+                      colorLevels[level].pointCount
                   }
               }
               Exp(.lt) {
                   Exp(.get) { pointCount }
                   Exp(.toNumber) {
-                      colorLevels[level-1].0
+                      colorLevels[level-1].pointCount
                   }
               }
           }

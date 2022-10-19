@@ -29,6 +29,7 @@ class TestableExampleTests: XCTestCase {
         let existingImpl = method_getImplementation(method)
 
         for category in Examples.all {
+            // swiftlint:disable force_cast
             for example in category["examples"] as! [Example] {
                 // Add a method for this test, but using the same implementation
                 let selectorName = "test\(example.type)"

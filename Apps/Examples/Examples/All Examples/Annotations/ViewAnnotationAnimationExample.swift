@@ -77,7 +77,7 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
     }
 
     @objc private func animateNextStep(_ displayLink: CADisplayLink) {
-        let animationDuration: TimeInterval = 30
+        let animationDuration: TimeInterval = 5
         let progress = (CACurrentMediaTime() - animationStartTime) / animationDuration
         let currentDistanceOffset = totalDistance * min(progress, 1)
 

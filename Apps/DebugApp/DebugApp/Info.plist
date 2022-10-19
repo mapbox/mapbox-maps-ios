@@ -23,7 +23,7 @@
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>MBXAccessToken</key>
-	<string>pk.eyJ1Ijoieml6aW0iLCJhIjoiY2syNTJ6NnhnMDBocDNtbWdmZXFscGQ2ayJ9.0Z462gvZJsJ2gz312Qgb2A</string>
+	<string></string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

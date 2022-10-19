@@ -312,7 +312,7 @@ public final class ViewAnnotationManager {
     /// - Parameter padding: See ``CameraOptions/padding``.
     /// - Parameter bearing: See ``CameraOptions/bearing``.
     /// - Parameter pitch: See ``CameraOptions/pitch``.
-    public func camera(for ids: [String], padding: UIEdgeInsets = .zero, bearing: CGFloat? = nil, pitch: CGFloat? = nil) -> CameraOptions? {
+    public func camera(forAnnotations ids: [String], padding: UIEdgeInsets = .zero, bearing: CGFloat? = nil, pitch: CGFloat? = nil) -> CameraOptions? {
         let options = ids.compactMap { try? mapboxMap.options(forViewAnnotationWithId: $0) }
         guard !options.isEmpty else { return nil }
 
@@ -362,7 +362,7 @@ public final class ViewAnnotationManager {
         pitch: CGFloat? = nil,
         animationDuration: TimeInterval = 1
     ) {
-        let coordinateBounds = camera(for: ids).map(mapboxMap.coordinateBounds(for:))
+        let coordinateBounds = camera(forAnnotations: ids).map(mapboxMap.coordinateBounds(for:))
         guard let coordinateBounds = coordinateBounds, !coordinateBounds.isEmpty else { return }
 
         coordinateBoundsAnimator.show(coordinateBounds: coordinateBounds, padding: padding, pitch: pitch, animationDuration: animationDuration)

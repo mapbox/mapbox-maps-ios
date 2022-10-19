@@ -460,7 +460,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         let padding = UIEdgeInsets.random()
         let bearing = CGFloat.random(in: -180...180)
         let pitch = CGFloat.random(in: 0...90)
-        _ = manager.camera(for: ["0", "1", "2", "3"], padding: padding, bearing: bearing, pitch: pitch)
+        _ = manager.camera(forAnnotations: ["0", "1", "2", "3"], padding: padding, bearing: bearing, pitch: pitch)
 
         let parameters = try XCTUnwrap(mapboxMap.cameraForGeometryStub.invocations.last).parameters
         XCTAssertEqual(parameters.bearing, bearing)

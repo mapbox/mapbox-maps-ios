@@ -16,6 +16,8 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
 
     private var needsSyncSourceAndLayer = false
 
+    private var annotationBeingDragged: PolygonAnnotation?
+
     // MARK: - Interaction
 
     /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
@@ -51,17 +53,22 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
 
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
 
+    private var moveDistancesObject = MoveDistancesObject()
+
     private var isDestroyed = false
 
     internal init(id: String,
                   style: StyleProtocol,
                   layerPosition: LayerPosition?,
-                  displayLinkCoordinator: DisplayLinkCoordinator) {
+                  displayLinkCoordinator: DisplayLinkCoordinator,
+                  longPressGestureRecognizer: UIGestureRecognizer) {
         self.id = id
         self.sourceId = id
         self.layerId = id
         self.style = style
         self.displayLinkCoordinator = displayLinkCoordinator
+
+        longPressGestureRecognizer.addTarget(self, action: #selector(handleDrag(_:)))
 
         do {
             // Add the source with empty `data` property
@@ -197,12 +204,127 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
     internal func handleQueriedFeatureIds(_ queriedFeatureIds: [String]) {
         // Find if any `queriedFeatureIds` match an annotation's `id`
         let tappedAnnotations = annotations.filter { queriedFeatureIds.contains($0.id) }
-
-        // If `tappedAnnotations` is not empty, call delegate
         if !tappedAnnotations.isEmpty {
+
             delegate?.annotationManager(
                 self,
                 didDetectTappedAnnotations: tappedAnnotations)
+            var selectedAnnotationIds = tappedAnnotations.map(\.id)
+            var allAnnotations = self.annotations.map { annotation in
+                var mutableAnnotation = annotation
+                if selectedAnnotationIds.contains(annotation.id) {
+                    if mutableAnnotation.isSelected == false {
+                        mutableAnnotation.isSelected = true
+                        mutableAnnotation.fillOutlineColor = nil
+                    } else {
+                        mutableAnnotation.isSelected = false
+                    }
+                }
+                selectedAnnotationIds.append(mutableAnnotation.id)
+                return mutableAnnotation
+            }
+            self.annotations = allAnnotations
+        }
+    }
+
+    func createDragSourceAndLayer(view: MapView) {
+        var dragSource = GeoJSONSource()
+        dragSource.data = .empty
+        try? view.mapboxMap.style.addSource(dragSource, id: "dragSource")
+
+        let dragLayerId = "drag-layer"
+        var dragLayer = FillLayer(id: "drag-layer")
+        dragLayer = FillLayer(id: dragLayerId)
+        dragLayer.source = "dragSource"
+        try? view.mapboxMap.style.addLayer(dragLayer)
+    }
+
+    func handleDragBegin(_ view: MapView, annotation: Annotation, position: CGPoint) {
+
+        createDragSourceAndLayer(view: view)
+
+        guard var annotation = annotation as? PolygonAnnotation else { return }
+        try? view.mapboxMap.style.updateLayer(withId: "drag-layer", type: FillLayer.self, update: { layer in
+            layer.fillColor = annotation.fillColor.map(Value.constant)
+            layer.fillOutlineColor = annotation.fillOutlineColor.map(Value.constant)
+        })
+
+        self.annotationBeingDragged = annotation
+        self.annotations.removeAll(where: { $0.id == annotation.id })
+
+        let previousPosition = position
+        let moveObject = moveDistancesObject
+        moveObject.currentX = previousPosition.x
+        moveObject.currentY = previousPosition.y
+
+        guard let polygon =  self.annotationBeingDragged?.getOffsetGeometry(view: view, moveDistancesObject: moveObject) else { return }
+        self.annotationBeingDragged?.polygon = polygon
+        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: polygon.geometry.geoJSONObject)
+    }
+
+    func handleDragChanged(view: MapView, position: CGPoint) {
+        guard var annotationBeingDragged = annotationBeingDragged else { return }
+
+        let moveObject = moveDistancesObject
+        moveObject.currentX = position.x
+        moveObject.currentY = position.y
+
+        if position.x < 0 || position.y < 0 || position.x > view.bounds.width || position.y > view.bounds.height {
+          handleDragEnded()
+        }
+
+        guard let polygon =  annotationBeingDragged.getOffsetGeometry(view: view, moveDistancesObject: moveObject) else { return }
+        self.annotationBeingDragged?.polygon = polygon
+        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: polygon.geometry.geoJSONObject)
+    }
+
+    func handleDragEnded() {
+        guard let annotationBeingDragged = annotationBeingDragged else { return }
+        self.annotations.append(annotationBeingDragged)
+        self.annotationBeingDragged = nil
+        // avoid blinking annotation by waiting
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            try? self.style.removeLayer(withId: "drag-layer")
+        }
+
+    }
+
+    @objc func handleDrag(_ drag: UILongPressGestureRecognizer) {
+        var annotationBeingDragged: PolygonAnnotation?
+        guard let mapView = drag.view as? MapView else { return }
+        let position = drag.location(in: mapView)
+        let options = RenderedQueryOptions(layerIds: [self.layerId], filter: nil)
+
+        switch drag.state {
+        case .began:
+            mapView.mapboxMap.queryRenderedFeatures(
+                at: drag.location(in: mapView),
+                options: options) { (result) in
+
+                    switch result {
+
+                    case .success(let queriedFeatures):
+                        if let firstFeature = queriedFeatures.first?.feature,
+                           case let .string(annotationId) = firstFeature.identifier {
+                            guard let annotation = self.annotations.filter({$0.id == annotationId}).first,
+                                  annotation.isDraggable else {
+                                return
+                            }
+
+                            self.handleDragBegin(mapView, annotation: annotation, position: position)
+
+                        }
+                    case .failure(let error):
+                        print("failure")
+                        break
+                    }
+                }
+        case .changed:
+            self.handleDragChanged(view: mapView, position: position)
+        case .ended, .cancelled:
+            self.handleDragEnded()
+        default:
+            break
         }
     }
 }

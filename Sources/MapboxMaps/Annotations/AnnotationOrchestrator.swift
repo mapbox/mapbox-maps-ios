@@ -32,6 +32,12 @@ internal protocol AnnotationManagerInternal: AnnotationManager {
     func destroy()
 
     func handleQueriedFeatureIds(_ queriedFeatureIds: [String])
+
+    func handleDragBegin(_ view: MapView, annotation: Annotation, position: CGPoint)
+
+    func handleDragChanged(view: MapView, position: CGPoint)
+
+    func handleDragEnded()
 }
 
 /// A delegate that is called when a tap is detected on an annotation (or on several of them).
@@ -49,7 +55,9 @@ public protocol AnnotationInteractionDelegate: AnyObject {
 /// `AnnotationOrchestrator` provides a way to create annotation managers of different types.
 public class AnnotationOrchestrator {
 
-    private let gestureRecognizer: UIGestureRecognizer
+    private let tapGestureRecognizer: UIGestureRecognizer
+
+    private let longPressGestureRecognizer: UIGestureRecognizer
 
     private let style: Style
 
@@ -57,16 +65,18 @@ public class AnnotationOrchestrator {
 
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
 
-    internal init(gestureRecognizer: UIGestureRecognizer,
+    internal init(tapGestureRecognizer: UIGestureRecognizer,
+                  longPressGestureRecognizer: UIGestureRecognizer,
                   mapFeatureQueryable: MapFeatureQueryable,
                   style: Style,
                   displayLinkCoordinator: DisplayLinkCoordinator) {
-        self.gestureRecognizer = gestureRecognizer
+        self.tapGestureRecognizer = tapGestureRecognizer
+        self.longPressGestureRecognizer = longPressGestureRecognizer
         self.mapFeatureQueryable = mapFeatureQueryable
         self.style = style
         self.displayLinkCoordinator = displayLinkCoordinator
 
-        gestureRecognizer.addTarget(self, action: #selector(handleTap(_:)))
+        tapGestureRecognizer.addTarget(self, action: #selector(handleTap(_:)))
     }
 
     /// Dictionary of annotation managers keyed by their identifiers.
@@ -95,7 +105,8 @@ public class AnnotationOrchestrator {
             id: id,
             style: style,
             layerPosition: layerPosition,
-            displayLinkCoordinator: displayLinkCoordinator)
+            displayLinkCoordinator: displayLinkCoordinator,
+            longPressGestureRecognizer: longPressGestureRecognizer)
         annotationManagersByIdInternal[id] = annotationManager
         return annotationManager
     }
@@ -119,7 +130,8 @@ public class AnnotationOrchestrator {
             id: id,
             style: style,
             layerPosition: layerPosition,
-            displayLinkCoordinator: displayLinkCoordinator)
+            displayLinkCoordinator: displayLinkCoordinator,
+            longPressGestureRecognizer: longPressGestureRecognizer)
         annotationManagersByIdInternal[id] = annotationManager
         return annotationManager
     }
@@ -143,7 +155,8 @@ public class AnnotationOrchestrator {
             id: id,
             style: style,
             layerPosition: layerPosition,
-            displayLinkCoordinator: displayLinkCoordinator)
+            displayLinkCoordinator: displayLinkCoordinator,
+            longPressGestureRecognizer: longPressGestureRecognizer)
         annotationManagersByIdInternal[id] = annotationManager
         return annotationManager
     }
@@ -167,7 +180,8 @@ public class AnnotationOrchestrator {
             id: id,
             style: style,
             layerPosition: layerPosition,
-            displayLinkCoordinator: displayLinkCoordinator)
+            displayLinkCoordinator: displayLinkCoordinator,
+            longPressGestureRecognizer: longPressGestureRecognizer)
         annotationManagersByIdInternal[id] = annotationManager
         return annotationManager
     }
@@ -204,7 +218,6 @@ public class AnnotationOrchestrator {
             switch result {
 
             case .success(let queriedFeatures):
-
                 // Get the identifiers of all the queried features
                 let queriedFeatureIds: [String] = queriedFeatures.compactMap {
                     guard case let .string(featureId) = $0.feature.identifier else {
@@ -216,6 +229,7 @@ public class AnnotationOrchestrator {
                 for manager in managers {
                     manager.handleQueriedFeatureIds(queriedFeatureIds)
                 }
+
             case .failure(let error):
                 Log.warning(forMessage: "Failed to query map for annotations due to error: \(error)",
                             category: "Annotations")

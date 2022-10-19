@@ -415,9 +415,14 @@ open class MapView: UIView {
             mapboxMap: mapboxMap,
             displayLinkCoordinator: self)
 
+        let tapGetureRecognizer = UITapGestureRecognizer()
+        let longPressGestureRecognizer = UILongPressGestureRecognizer()
+        self.addGestureRecognizer(tapGetureRecognizer)
+        self.addGestureRecognizer(longPressGestureRecognizer)
         // Initialize/Configure annotations orchestrator
         annotations = AnnotationOrchestrator(
-            gestureRecognizer: gestures.singleTapGestureRecognizer,
+            tapGestureRecognizer: tapGetureRecognizer,
+            longPressGestureRecognizer: longPressGestureRecognizer,
             mapFeatureQueryable: mapboxMap,
             style: mapboxMap.style,
             displayLinkCoordinator: self)

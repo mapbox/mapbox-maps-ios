@@ -21,7 +21,10 @@ final class ObservableValueTests: XCTestCase {
     @discardableResult
     func update() -> Int {
         let value = nextValue!
-        nextValue += Bool.random() ? Int.random(in: 1...10) : Int.random(in: (-10)...(-1))
+
+        let sign = Bool.random() ? 1 : -1
+        let increment = Int.random(in: 1...10) * sign
+        nextValue += increment
         observableValue.notify(with: value)
         return value
     }

@@ -205,17 +205,17 @@ public class AnnotationOrchestrator {
         }
     }
 
-    @objc private func handleTap(_ sender: UIGestureRecognizer) {
+    @objc private func handleTap(_ tap: UITapGestureRecognizer) {
         let managers = annotationManagersByIdInternal.values.filter { $0.delegate != nil }
         guard !managers.isEmpty else { return }
 
-        guard let mapView = sender.view as? MapView else { return }
-        let position = sender.location(in: mapView)
+        guard let mapView = tap.view as? MapView else { return }
+        let position = tap.location(in: mapView)
 
         let layerIds = managers.map { $0.layerId }
         let options = RenderedQueryOptions(layerIds: layerIds, filter: nil)
         mapFeatureQueryable.queryRenderedFeatures(
-            at: sender.location(in: mapView),
+            at: tap.location(in: mapView),
             options: options) { (result) in
 
                 switch result {

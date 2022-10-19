@@ -31,10 +31,7 @@ class TestableExampleTests: XCTestCase {
 
 //        for category in Examples.all {
 //        for example in category["examples"] as! [Example] {
-        for (idx, example) in [
-            Examples.annotationExamples.last!,
-            Examples.annotationExamples.last!
-        ].enumerated() {
+        for (idx, example) in Examples.annotationExamples.enumerated() {
             // Add a method for this test, but using the same implementation
             let selectorName = "test\(example.type)-\(idx)"
             let testSelector = Selector((selectorName))

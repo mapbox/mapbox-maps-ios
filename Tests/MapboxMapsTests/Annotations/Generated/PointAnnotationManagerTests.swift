@@ -3083,11 +3083,10 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         pointAnnotationManager.syncSourceAndLayerIfNeeded()
         var sourceGeoJSON = style.updateGeoJSONSourceStub.invocations.last?.parameters.geojson
         switch sourceGeoJSON {
-          case .featureCollection(let data):
-            print(data)
-            XCTAssertEqual(data.features.count, 501)
-          default:
-            XCTFail("GeoJSON did not update correctly")
+        case .featureCollection(let data):
+          XCTAssertEqual(data.features.count, 501)
+        default:
+          XCTFail("GeoJSON did not update correctly")
         }
 
         // then
@@ -3095,11 +3094,10 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         pointAnnotationManager.syncSourceAndLayerIfNeeded()
         sourceGeoJSON = style.updateGeoJSONSourceStub.invocations.last?.parameters.geojson
         switch sourceGeoJSON {
-          case .featureCollection(let data):
-            print(data)
-            XCTAssertEqual(data.features.count, 101)
-          default:
-            XCTFail("GeoJSON did not update correctly")
+        case .featureCollection(let data):
+          XCTAssertEqual(data.features.count, 101)
+        default:
+          XCTFail("GeoJSON did not update correctly")
         }
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
     }

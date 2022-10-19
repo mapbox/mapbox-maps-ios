@@ -105,7 +105,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         displayLinkCoordinator.add(displayLinkParticipant)
     }
 
-    internal func createClustersLayers(clusterOptions: ClusterOptions) {
+    private func createClustersLayers(clusterOptions: ClusterOptions) {
         for index in 0..<clusterOptions.colorLevels.count {
             let clusterLevelLayer = createClusterLevelLayer(level: index, clusterOptions: clusterOptions)
             addClusterLayer(clusterLayer: clusterLevelLayer)
@@ -114,7 +114,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         addClusterLayer(clusterLayer: clusterTextLayer)
     }
 
-    internal func createClusterLevelLayer(level: Int, clusterOptions: ClusterOptions) -> CircleLayer {
+    private func createClusterLevelLayer(level: Int, clusterOptions: ClusterOptions) -> CircleLayer {
         let layedID = "mapbox-iOS-cluster-circle-layer-" + String(level)
         var circleLayer = CircleLayer(id: layedID)
         circleLayer.source = sourceId
@@ -124,7 +124,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         return circleLayer
     }
 
-    internal func addClusterLayer(clusterLayer: Layer) {
+    private func addClusterLayer(clusterLayer: Layer) {
         if !style.layerExists(withId: clusterLayer.id) {
             do {
                 try style.addPersistentLayer(clusterLayer, layerPosition: .default)
@@ -136,7 +136,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    internal func createFilterExpression(level: Int, colorLevels: [(pointCount: Int, clusterColor: StyleColor)]) -> Expression {
+    private func createFilterExpression(level: Int, colorLevels: [(pointCount: Int, clusterColor: StyleColor)]) -> Expression {
       let pointCount = "point_count"
       let expression = level == 0 ?
           Exp(.all) {

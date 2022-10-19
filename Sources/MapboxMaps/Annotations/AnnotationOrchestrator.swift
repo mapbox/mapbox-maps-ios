@@ -87,7 +87,8 @@ public class AnnotationOrchestrator {
     ///   - clusterOptions: Optionally set the `ClusterOptions` to cluster the Point Annotations
     /// - Returns: An instance of `PointAnnotationManager`
     public func makePointAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
-                                           layerPosition: LayerPosition? = nil, clusterOptions: ClusterOptions? = nil) -> PointAnnotationManager {
+                                           layerPosition: LayerPosition? = nil,
+                                           clusterOptions: ClusterOptions? = nil) -> PointAnnotationManager {
         guard let displayLinkCoordinator = displayLinkCoordinator else {
             fatalError("DisplayLinkCoordinator must be present when creating an annotation manager")
         }

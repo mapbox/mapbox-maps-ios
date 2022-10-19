@@ -105,8 +105,6 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
     private var annotationBeingDragged: PolylineAnnotation?
 
-    private var formerPosition = CGPoint()
-
     private var moveDistancesObject = MoveDistancesObject()
 
     private var isDestroyed = false
@@ -300,7 +298,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         // Find if any `queriedFeatureIds` match an annotation's `id`
         let tappedAnnotations = annotations.filter { queriedFeatureIds.contains($0.id) }
         if !tappedAnnotations.isEmpty {
-            // do the stuff
+
             delegate?.annotationManager(
                 self,
                 didDetectTappedAnnotations: tappedAnnotations)
@@ -310,14 +308,10 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
                 if selectedAnnotationIds.contains(annotation.id) {
                     if mutableAnnotation.isSelected == false {
                         mutableAnnotation.isSelected = true
-                        mutableAnnotation.lineWidth = 10
                     } else {
                         mutableAnnotation.isSelected = false
-                        mutableAnnotation.lineWidth = nil
                     }
 
-                } else {
-                    mutableAnnotation.lineWidth = nil
                 }
                 selectedAnnotationIds.append(mutableAnnotation.id)
                 return mutableAnnotation
@@ -325,37 +319,40 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
             self.annotations = allAnnotations
 
-        } else if tappedAnnotations.isEmpty {
-            var allAnnotations = self.annotations.map { annotation in
-                var mutableAnnotation = annotation
-                //                mutableAnnotation.lineColor = nil
-                mutableAnnotation.lineWidth = nil
-                return mutableAnnotation
-            }
-            self.annotations = allAnnotations
         }
+    }
+
+    func createDragSourceAndLayer(view: MapView) {
+        var dragSource = GeoJSONSource()
+        dragSource.data = .empty
+        try? view.mapboxMap.style.addSource(dragSource, id: "dragSource")
+
+        let dragLayerId = "drag-layer"
+        var dragLayer = LineLayer(id: "drag-layer")
+        dragLayer = LineLayer(id: dragLayerId)
+        dragLayer.source = "dragSource"
+        try? view.mapboxMap.style.addLayer(dragLayer)
     }
 
     func handleDragBegin(_ view: MapView, annotation: Annotation, position: CGPoint) {
 
-        //        print("original position:," )
+        createDragSourceAndLayer(view: view)
+
         guard var annotation = annotation as? PolylineAnnotation else { return }
         try? view.mapboxMap.style.updateLayer(withId: "drag-layer", type: LineLayer.self, update: { layer in
             layer.lineColor = annotation.lineColor.map(Value.constant)
             layer.lineWidth = annotation.lineWidth.map(Value.constant)
-            layer.lineCap = .constant(.round)
-            layer.lineJoin = .constant(.round)
 
         })
         self.annotationBeingDragged = annotation
         self.annotations.removeAll(where: { $0.id == annotation.id })
 
-        formerPosition = position
+        let previousPosition = position
         let moveObject = moveDistancesObject
-        moveObject.distanceXSinceLast = 0
-        moveObject.distanceYSinceLast = 0
+        moveObject.currentX = previousPosition.x
+        moveObject.currentY = previousPosition.y
 
-        guard let lineString =  annotationBeingDragged?.getOffsetGeometry(view: view, moveDistancesObject: moveDistancesObject) else { return }
+        guard let lineString =  self.annotationBeingDragged?.getOffsetGeometry(view: view, moveDistancesObject: moveObject) else { return }
         self.annotationBeingDragged?.lineString = lineString
         try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: lineString.geometry.geoJSONObject)
     }
@@ -364,13 +361,12 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
         guard var annotationBeingDragged = annotationBeingDragged else { return }
 
-        // current coordinate neex to equal target coordinate
-        print("current coordinate:", view.mapboxMap.coordinate(for: position))
         let moveObject = moveDistancesObject
         moveObject.currentX = position.x
         moveObject.currentY = position.y
+
         if (position.x < 0 || position.y < 0 || position.x > view.bounds.width || position.y > view.bounds.height) {
-          handleDragEnded(position: position)
+          handleDragEnded()
         }
 
         guard let lineString =  self.annotationBeingDragged?.getOffsetGeometry(view: view, moveDistancesObject: moveObject) else { return }
@@ -378,14 +374,14 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: lineString.geometry.geoJSONObject)
     }
 
-    func handleDragEnded(position: CGPoint) {
-        formerPosition = position
+    func handleDragEnded() {
         guard let annotationBeingDragged = annotationBeingDragged else { return }
-        print("drag end:  \(annotationBeingDragged.id), geometry: \(annotationBeingDragged.lineString)")
-
         self.annotations.append(annotationBeingDragged)
-
         self.annotationBeingDragged = nil
+        // avoid blinking annotation by waiting
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            try? self.style.removeLayer(withId: "drag-layer")
+        }
     }
 
     @objc func handleDrag(_ drag: UILongPressGestureRecognizer) {
@@ -421,7 +417,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         case .changed:
             self.handleDragChanged(view: mapView, position: position)
         case .ended, .cancelled:
-            self.handleDragEnded(position: position)
+            self.handleDragEnded()
         default:
             break
         }

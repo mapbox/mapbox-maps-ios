@@ -37,7 +37,7 @@ internal protocol AnnotationManagerInternal: AnnotationManager {
 
     func handleDragChanged(view: MapView, position: CGPoint)
 
-    func handleDragEnded(position: CGPoint)
+    func handleDragEnded()
 }
 
 /// A delegate that is called when a tap is detected on an annotation (or on several of them).

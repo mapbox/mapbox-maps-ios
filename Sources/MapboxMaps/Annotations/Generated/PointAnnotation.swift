@@ -23,7 +23,7 @@ public struct PointAnnotation: Annotation {
     /// Property to determine annotation state
     public var isSelected: Bool = false
 
-    /// Property to determine whether annotation is selected
+    /// Property to determine whether annotation can be selected
     public var isSelectable: Bool = false
 
     /// Property to determine whether annotation can be manually moved around map
@@ -335,6 +335,35 @@ public struct PointAnnotation: Annotation {
             self.iconImage = image?.name
         }
     }
+
+    func getOffsetGeometry(view: MapView, moveDistancesObject: MoveDistancesObject?) -> Point? {
+        let maxMercatorLatitude = 85.05112877980659
+        let minMercatorLatitude = -85.05112877980659
+
+        guard let moveDistancesObject = moveDistancesObject else { return nil}
+
+        let point = self.point.coordinates
+
+        let centerPoint = Point(point)
+
+        let centerScreenCoordinate = view.mapboxMap.point(for: centerPoint.coordinates)
+
+        let targetCoordinates = view.mapboxMap.coordinate(for: CGPoint(x: moveDistancesObject.currentX, y: moveDistancesObject.currentY)
+        )
+
+        let targetPoint = Point(targetCoordinates)
+
+        let shiftMercatorCoordinate = ConvertUtils.calculateMercatorCoordinateShift(startPoint: centerPoint, endPoint: targetPoint, zoomLevel: view.mapboxMap.cameraState.zoom)
+
+        let targetPoints = ConvertUtils.shiftPointWithMercatorCoordinate(point: Point(point), shiftMercatorCoordinate: shiftMercatorCoordinate, zoomLevel: view.mapboxMap.cameraState.zoom)
+
+        if targetPoints.coordinates.latitude > maxMercatorLatitude || targetPoints.coordinates.latitude < minMercatorLatitude {
+            return nil
+        }
+
+        return .init(targetPoints.coordinates)
+    }
+
 }
 
 // End of generated file.

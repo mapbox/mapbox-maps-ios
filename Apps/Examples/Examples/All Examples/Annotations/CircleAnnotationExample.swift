@@ -25,6 +25,7 @@ final class CircleAnnotationExample: UIViewController, ExampleProtocol {
             annotation = CircleAnnotation(centerCoordinate: .random)
             annotation.circleColor = StyleColor(.random)
             annotation.circleRadius = 12
+            annotation.isDraggable = true
             annotations.append(annotation)
         }
 

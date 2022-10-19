@@ -155,7 +155,7 @@ public struct PolylineAnnotation: Annotation {
         if points.isEmpty {
             return nil
         }
-        
+
         let latitudeSum = points.map { $0.latitude }.reduce(0, +)
         let longitudeSum = points.map { $0.longitude }.reduce(0, +)
 
@@ -167,22 +167,16 @@ public struct PolylineAnnotation: Annotation {
 
         let centerPoint = Point(averageCoordinates)
 
-        // convert coordinate to point
         let centerScreenCoordinate = view.mapboxMap.point(for: centerPoint.coordinates)
-
 
         let targetCoordinates = view.mapboxMap.coordinate(for: CGPoint(x: moveDistancesObject.currentX, y: moveDistancesObject.currentY)
         )
-
-        print("target coordinate: ", targetCoordinates)
-
 
         let targetPoint = Point(targetCoordinates)
 
         let shiftMercatorCoordinate = ConvertUtils.calculateMercatorCoordinateShift(startPoint: centerPoint, endPoint: targetPoint, zoomLevel: view.mapboxMap.cameraState.zoom)
 
         let targetPoints = points.map {ConvertUtils.shiftPointWithMercatorCoordinate(point: Point($0), shiftMercatorCoordinate: shiftMercatorCoordinate, zoomLevel: view.mapboxMap.cameraState.zoom)}
-
 
         if targetPoints.contains(where: {$0.coordinates.latitude > maxMercatorLatitude || $0.coordinates.latitude < minMercatorLatitude }) {
             return nil

@@ -16,8 +16,6 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
 
     private var needsSyncSourceAndLayer = false
 
-    private var annotationBeingDragged: CircleAnnotation?
-
     // MARK: - Interaction
 
     /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
@@ -52,6 +50,10 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
     private let displayLinkParticipant = DelegatingDisplayLinkParticipant()
 
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
+
+    private var annotationBeingDragged: CircleAnnotation?
+
+    private var moveDistancesObject = MoveDistancesObject()
 
     private var isDestroyed = false
 
@@ -223,17 +225,10 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
                 if selectedAnnotationIds.contains(annotation.id) {
                     if mutableAnnotation.isSelected == false {
                         mutableAnnotation.isSelected = true
-                        mutableAnnotation.circleStrokeColor = .init(UIColor.black)
-                        mutableAnnotation.circleStrokeWidth = 4
                     } else {
                         mutableAnnotation.isSelected = false
-                        mutableAnnotation.circleStrokeColor = nil
-                        mutableAnnotation.circleStrokeWidth = nil
                     }
 
-                } else {
-                    mutableAnnotation.circleStrokeColor = nil
-                    mutableAnnotation.circleStrokeWidth = nil
                 }
                 selectedAnnotationIds.append(mutableAnnotation.id)
                 return mutableAnnotation
@@ -241,18 +236,25 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
 
             self.annotations = allAnnotations
 
-        } else if tappedAnnotations.isEmpty {
-            var allAnnotations = self.annotations.map { annotation in
-                var mutableAnnotation = annotation
-                mutableAnnotation.circleStrokeWidth = nil
-                mutableAnnotation.circleStrokeColor = nil
-                return mutableAnnotation
-            }
-            self.annotations = allAnnotations
         }
     }
 
+    func createDragSourceAndLayer(view: MapView) {
+        var dragSource = GeoJSONSource()
+        dragSource.data = .empty
+        try? view.mapboxMap.style.addSource(dragSource, id: "dragSource")
+
+        let dragLayerId = "drag-layer"
+        var dragLayer = CircleLayer(id: "drag-layer")
+        dragLayer = CircleLayer(id: dragLayerId)
+        dragLayer.source = "dragSource"
+        try? view.mapboxMap.style.addLayer(dragLayer)
+    }
+
     func handleDragBegin(_ view: MapView, annotation: Annotation, position: CGPoint) {
+
+        createDragSourceAndLayer(view: view)
+
         guard var annotation = annotation as? CircleAnnotation else { return }
         try? view.mapboxMap.style.updateLayer(withId: "drag-layer", type: CircleLayer.self, update: { layer in
             layer.circleColor = annotation.circleColor.map(Value.constant)
@@ -272,17 +274,27 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
     func handleDragChanged(view: MapView, position: CGPoint) {
         guard var annotationBeingDragged = annotationBeingDragged else { return }
 
-        let updatedPoint = Point(view.mapboxMap.coordinate(for: position))
-        self.annotationBeingDragged?.point = updatedPoint
-        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: updatedPoint.geometry.geoJSONObject)
+        let moveObject = moveDistancesObject
+        moveObject.currentX = position.x
+        moveObject.currentY = position.y
+
+        if (position.x < 0 || position.y < 0 || position.x > view.bounds.width || position.y > view.bounds.height) {
+          handleDragEnded()
+        }
+
+        guard let circle =  self.annotationBeingDragged?.getOffsetGeometry(view: view, moveDistancesObject: moveObject) else { return }
+        self.annotationBeingDragged?.point = circle
+        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: circle.geometry.geoJSONObject)
     }
 
-    func handleDragEnded(position: CGPoint) {
+    func handleDragEnded() {
         guard let annotationBeingDragged = annotationBeingDragged else { return }
-        print("drag end:  \(annotationBeingDragged.id)")
         self.annotations.append(annotationBeingDragged)
-
         self.annotationBeingDragged = nil
+        // avoid blinking annotation by waiting
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            try? self.style.removeLayer(withId: "drag-layer")
+        }
     }
 
     @objc func handleDrag(_ drag: UILongPressGestureRecognizer) {
@@ -318,7 +330,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
         case .changed:
             self.handleDragChanged(view: mapView, position: position)
         case .ended, .cancelled:
-            self.handleDragEnded(position: position)
+            self.handleDragEnded()
         default:
             break
         }

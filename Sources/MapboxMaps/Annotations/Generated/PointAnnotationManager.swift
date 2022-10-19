@@ -23,8 +23,6 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     /// - NOTE: This annotation manager listens to tap events via the `GestureManager.singleTapGestureRecognizer`.
     public weak var delegate: AnnotationInteractionDelegate?
 
-    private var annotationBeingDragged: PointAnnotation?
-
     // MARK: - AnnotationManager protocol conformance
 
     public let sourceId: String
@@ -51,6 +49,10 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     private var previouslySetLayerPropertyKeys: Set<String> = []
 
     private let displayLinkParticipant = DelegatingDisplayLinkParticipant()
+
+    private var annotationBeingDragged: PointAnnotation?
+
+    private var moveDistancesObject = MoveDistancesObject()
 
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
 
@@ -517,7 +519,22 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
     }
 
+    func createDragSourceAndLayer(view: MapView) {
+        var dragSource = GeoJSONSource()
+        dragSource.data = .empty
+        try? view.mapboxMap.style.addSource(dragSource, id: "dragSource")
+
+        let dragLayerId = "drag-layer"
+        var dragLayer = SymbolLayer(id: "drag-layer")
+        dragLayer = SymbolLayer(id: dragLayerId)
+        dragLayer.source = "dragSource"
+        try? view.mapboxMap.style.addLayer(dragLayer)
+    }
+
     func handleDragBegin(_ view: MapView, annotation: Annotation, position: CGPoint) {
+
+        createDragSourceAndLayer(view: view)
+
         guard var annotation = annotation as? PointAnnotation else { return }
         try? view.mapboxMap.style.updateLayer(withId: "drag-layer", type: SymbolLayer.self, update: { layer in
             layer.iconColor = annotation.iconColor.map(Value.constant)
@@ -535,16 +552,27 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     func handleDragChanged(view: MapView, position: CGPoint) {
         guard var annotationBeingDragged = annotationBeingDragged else { return }
 
-        let updatedPoint = Point(view.mapboxMap.coordinate(for: position))
-        self.annotationBeingDragged?.point = updatedPoint
-        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: updatedPoint.geometry.geoJSONObject)
+        let moveObject = moveDistancesObject
+        moveObject.currentX = position.x
+        moveObject.currentY = position.y
+
+        if (position.x < 0 || position.y < 0 || position.x > view.bounds.width || position.y > view.bounds.height) {
+          handleDragEnded()
+        }
+
+        guard let point =  self.annotationBeingDragged?.getOffsetGeometry(view: view, moveDistancesObject: moveObject) else { return }
+        self.annotationBeingDragged?.point = point
+        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: point.geometry.geoJSONObject)
     }
 
-    func handleDragEnded(position: CGPoint) {
+    func handleDragEnded() {
         guard let annotationBeingDragged = annotationBeingDragged else { return }
-        print("drag end:  \(annotationBeingDragged.id)")
         self.annotations.append(annotationBeingDragged)
         self.annotationBeingDragged = nil
+        // avoid blinking annotation by waiting
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            try? self.style.removeLayer(withId: "drag-layer")
+        }
     }
 
     @objc func handleDrag(_ drag: UILongPressGestureRecognizer) {
@@ -580,7 +608,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         case .changed:
             self.handleDragChanged(view: mapView, position: position)
         case .ended, .cancelled:
-            self.handleDragEnded(position: position)
+            self.handleDragEnded()
         default:
             break
         }

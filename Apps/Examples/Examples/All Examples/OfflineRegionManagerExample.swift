@@ -2,6 +2,8 @@ import Foundation
 import UIKit
 import MapboxMaps
 
+#if DEBUG
+
 @available(*, deprecated)
 @objc(OfflineRegionManagerExample)
 final class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
@@ -134,3 +136,5 @@ final class OfflineRegionExampleObserver: OfflineRegionObserver {
         print("Mapbox tile count max (\(limit)) has been exceeded!")
     }
 }
+
+#endif

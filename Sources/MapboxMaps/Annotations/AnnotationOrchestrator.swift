@@ -43,12 +43,12 @@ internal protocol AnnotationManagerInternal: AnnotationManager {
 /// A delegate that is called when a tap is detected on an annotation (or on several of them).
 public protocol AnnotationInteractionDelegate: AnyObject {
 
-        /// This method is invoked when a tap gesture is detected on an annotation
-        /// - Parameters:
-        ///   - manager: The `AnnotationManager` that detected this tap gesture
-        ///   - annotations: A list of `Annotations` that were tapped
-        func annotationManager(_ manager: AnnotationManager,
-                               didDetectTappedAnnotations annotations: [Annotation])
+    /// This method is invoked when a tap gesture is detected on an annotation
+    /// - Parameters:
+    ///   - manager: The `AnnotationManager` that detected this tap gesture
+    ///   - annotations: A list of `Annotations` that were tapped
+    func annotationManager(_ manager: AnnotationManager,
+                           didDetectTappedAnnotations annotations: [Annotation])
 
 }
 

@@ -278,7 +278,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
         moveObject.currentX = position.x
         moveObject.currentY = position.y
 
-        if (position.x < 0 || position.y < 0 || position.x > view.bounds.width || position.y > view.bounds.height) {
+        if position.x < 0 || position.y < 0 || position.x > view.bounds.width || position.y > view.bounds.height {
           handleDragEnded()
         }
 

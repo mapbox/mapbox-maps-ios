@@ -70,7 +70,6 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
 
         longPressGestureRecognizer.addTarget(self, action: #selector(handleDrag(_:)))
 
-
         do {
             // Add the source with empty `data` property
             var source = GeoJSONSource()
@@ -241,9 +240,9 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
     }
 
     func handleDragBegin(_ view: MapView, annotation: Annotation, position: CGPoint) {
-        
+
         createDragSourceAndLayer(view: view)
-        
+
         guard var annotation = annotation as? PolygonAnnotation else { return }
         try? view.mapboxMap.style.updateLayer(withId: "drag-layer", type: FillLayer.self, update: { layer in
             layer.fillColor = annotation.fillColor.map(Value.constant)
@@ -270,7 +269,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         moveObject.currentX = position.x
         moveObject.currentY = position.y
 
-        if (position.x < 0 || position.y < 0 || position.x > view.bounds.width || position.y > view.bounds.height) {
+        if position.x < 0 || position.y < 0 || position.x > view.bounds.width || position.y > view.bounds.height {
           handleDragEnded()
         }
 

@@ -427,7 +427,6 @@ open class MapView: UIView {
             style: mapboxMap.style,
             displayLinkCoordinator: self)
 
-
         // Initialize/Configure view annotations manager
         viewAnnotations = ViewAnnotationManager(
             containerView: viewAnnotationContainerView,

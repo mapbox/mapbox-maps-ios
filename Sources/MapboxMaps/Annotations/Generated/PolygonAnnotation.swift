@@ -131,7 +131,6 @@ public struct PolygonAnnotation: Annotation {
 
         let targetPoints = points.map {ConvertUtils.shiftPointWithMercatorCoordinate(point: Point($0), shiftMercatorCoordinate: shiftMercatorCoordinate, zoomLevel: view.mapboxMap.cameraState.zoom)}
 
-
         if targetPoints.contains(where: {$0.coordinates.latitude > maxMercatorLatitude || $0.coordinates.latitude < minMercatorLatitude }) {
             return nil
         }

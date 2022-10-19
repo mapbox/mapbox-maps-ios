@@ -122,7 +122,6 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
         longPressGestureRecognizer.addTarget(self, action: #selector(handleDrag(_:)))
 
-
         do {
             // Add the source with empty `data` property
             var source = GeoJSONSource()
@@ -365,7 +364,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         moveObject.currentX = position.x
         moveObject.currentY = position.y
 
-        if (position.x < 0 || position.y < 0 || position.x > view.bounds.width || position.y > view.bounds.height) {
+        if position.x < 0 || position.y < 0 || position.x > view.bounds.width || position.y > view.bounds.height {
           handleDragEnded()
         }
 

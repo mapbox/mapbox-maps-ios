@@ -46,23 +46,21 @@ extension Style {
             return source.type == .vector
         }
 
-        for sourceInfo in vectorSources {
-            if locale.identifier.starts(with: "zh") {
-                // Force unwrapping since `allSourceIdentifiers` is getting a fresh list of valid sources
-                let vectorSource = try! source(withId: sourceInfo.id, type: VectorSource.self)
+        for sourceInfo in vectorSources where locale.identifier.starts(with: "zh") {
+            // Force unwrapping since `allSourceIdentifiers` is getting a fresh list of valid sources
+            let vectorSource = try! source(withId: sourceInfo.id, type: VectorSource.self)
 
-                if vectorSource.url?.contains("mapbox.mapbox-streets-v7") == true {
-                    // v7 styles does not support value of "name_zh-Hant"
-                    if locale.identifier == "zh-Hant" {
-                        return "zh"
-                    }
-                } else if vectorSource.url?.contains("mapbox.mapbox-streets-v8") == true {
-                    // Return traditional chinese if the Locale is Taiwan
-                    if locale.identifier == "zh-Hant-TW" {
-                        return "zh-Hant"
-                    } else {
-                        return "zh-Hans"
-                    }
+            if vectorSource.url?.contains("mapbox.mapbox-streets-v7") == true {
+                // v7 styles does not support value of "name_zh-Hant"
+                if locale.identifier == "zh-Hant" {
+                    return "zh"
+                }
+            } else if vectorSource.url?.contains("mapbox.mapbox-streets-v8") == true {
+                // Return traditional chinese if the Locale is Taiwan
+                if locale.identifier == "zh-Hant-TW" {
+                    return "zh-Hant"
+                } else {
+                    return "zh-Hans"
                 }
             }
         }

@@ -23,7 +23,7 @@ extension TileRegionLoadOptions {
     public convenience init?(geometry: Geometry?,
                              descriptors: [TilesetDescriptor],
                              metadata: Any? = nil,
-                             acceptExpired: Bool = false ,
+                             acceptExpired: Bool = false,
                              networkRestriction: NetworkRestriction = .none,
                              averageBytesPerSecond: Int? = nil) {
         if let metadata = metadata {

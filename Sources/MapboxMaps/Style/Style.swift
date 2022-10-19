@@ -167,6 +167,7 @@ public final class Style: StyleProtocol {
             switch value {
             case Optional<Any>.none where result.keys.contains(key):
                 result[key] = Style.layerPropertyDefaultValue(for: layer.type, property: key).value
+            // swiftlint:disable syntactic_sugar
             case Optional<Any>.some:
                 result[key] = value
             default: break

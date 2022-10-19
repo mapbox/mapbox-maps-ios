@@ -2,7 +2,6 @@ import XCTest
 import ObjectiveC.runtime
 @testable import Examples
 
-//swiftlint:disable force_cast
 extension UINavigationController {
     func popToRootViewController(animated: Bool, completion: @escaping () -> Void) {
         popToRootViewController(animated: animated)
@@ -29,19 +28,18 @@ class TestableExampleTests: XCTestCase {
 
         let existingImpl = method_getImplementation(method)
 
-//        for category in Examples.all {
-//        for example in category["examples"] as! [Example] {
-        for (idx, example) in Examples.annotationExamples.enumerated() {
-            // Add a method for this test, but using the same implementation
-            let selectorName = "test\(example.type)-\(idx)"
-            let testSelector = Selector((selectorName))
-            class_addMethod(Self.self, testSelector, existingImpl, "v@:f")
+        for category in Examples.all {
+            for example in category["examples"] as! [Example] {
+                // Add a method for this test, but using the same implementation
+                let selectorName = "test\(example.type)"
+                let testSelector = Selector((selectorName))
+                class_addMethod(Self.self, testSelector, existingImpl, "v@:f")
 
-            let test = TestableExampleTests(selector: testSelector)
-            test.example = example
-            newTestSuite.addTest(test)
+                let test = TestableExampleTests(selector: testSelector)
+                test.example = example
+                newTestSuite.addTest(test)
+            }
         }
-//        }
         return newTestSuite
     }
 

@@ -30,26 +30,27 @@ class TestableExampleTests: XCTestCase {
         let existingImpl = method_getImplementation(method)
 
 //        for category in Examples.all {
-        //            for example in category["examples"] as! [Example] {
-        // Add a method for this test, but using the same implementation
-        let example = Examples.annotationExamples.last!
-        let selectorName = "test\(example.type)"
-        let testSelector = Selector((selectorName))
-        class_addMethod(Self.self, testSelector, existingImpl, "v@:f")
+//        for example in category["examples"] as! [Example] {
+        for (idx, example) in [
+            Examples.annotationExamples.last!,
+            Examples.annotationExamples.last!
+        ].enumerated() {
+            // Add a method for this test, but using the same implementation
+            let selectorName = "test\(example.type)-\(idx)"
+            let testSelector = Selector((selectorName))
+            class_addMethod(Self.self, testSelector, existingImpl, "v@:f")
 
-        let test = TestableExampleTests(selector: testSelector)
-        test.example = example
-        newTestSuite.addTest(test)
-//            }
+            let test = TestableExampleTests(selector: testSelector)
+            test.example = example
+            newTestSuite.addTest(test)
+        }
 //        }
         return newTestSuite
     }
 
-    @objc private func runExample() {
-        guard let navigationController = UIApplication.shared.windows.first?.rootViewController as? UINavigationController else {
-            XCTFail("Root controller is not a UINavigationController")
-            return
-        }
+    @objc private func runExample() throws {
+        let rootViewController = UIApplication.shared.windows.first?.rootViewController
+        let navigationController = try XCTUnwrap(rootViewController as? UINavigationController, "Root controller is not a UINavigationController")
 
         let exampleViewController = example.makeViewController()
 

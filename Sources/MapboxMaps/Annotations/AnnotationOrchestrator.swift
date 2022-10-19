@@ -209,34 +209,31 @@ public class AnnotationOrchestrator {
         let managers = annotationManagersByIdInternal.values.filter { $0.delegate != nil }
         guard !managers.isEmpty else { return }
 
-        guard let mapView = tap.view as? MapView else { return }
-        let position = tap.location(in: mapView)
-
         let layerIds = managers.map { $0.layerId }
         let options = RenderedQueryOptions(layerIds: layerIds, filter: nil)
         mapFeatureQueryable.queryRenderedFeatures(
-            at: tap.location(in: mapView),
+            at: tap.location(in: tap.view),
             options: options) { (result) in
 
-                switch result {
+            switch result {
 
-                case .success(let queriedFeatures):
-                        // Get the identifiers of all the queried features
-                        let queriedFeatureIds: [String] = queriedFeatures.compactMap {
-                            guard case let .string(featureId) = $0.feature.identifier else {
-                                return nil
-                            }
-                            return featureId
-                        }
-
-                        for manager in managers {
-                            manager.handleQueriedFeatureIds(queriedFeatureIds)
-                        }
-
-                case .failure(let error):
-                    Log.warning(forMessage: "Failed to query map for annotations due to error: \(error)",
-                                category: "Annotations")
+            case .success(let queriedFeatures):
+                // Get the identifiers of all the queried features
+                let queriedFeatureIds: [String] = queriedFeatures.compactMap {
+                    guard case let .string(featureId) = $0.feature.identifier else {
+                        return nil
+                    }
+                    return featureId
                 }
+
+                for manager in managers {
+                    manager.handleQueriedFeatureIds(queriedFeatureIds)
+                }
+
+            case .failure(let error):
+                Log.warning(forMessage: "Failed to query map for annotations due to error: \(error)",
+                            category: "Annotations")
             }
+        }
     }
 }

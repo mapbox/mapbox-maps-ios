@@ -116,20 +116,14 @@ public struct PolygonAnnotation: Annotation {
         let latitudeAverage = latitudeSum / CGFloat(points.count)
         let longitudeAverage = longitudeSum / CGFloat(points.count)
 
-        // calculate center point from existing shape
         let averageCoordinates = CLLocationCoordinate2D(latitude: latitudeAverage, longitude: longitudeAverage)
 
         let centerPoint = Point(averageCoordinates)
 
-        // convert coordinate to point
         let centerScreenCoordinate = view.mapboxMap.point(for: centerPoint.coordinates)
-
 
         let targetCoordinates = view.mapboxMap.coordinate(for: CGPoint(x: moveDistancesObject.currentX, y: moveDistancesObject.currentY)
         )
-
-        print("target coordinate: ", targetCoordinates)
-
 
         let targetPoint = Point(targetCoordinates)
 

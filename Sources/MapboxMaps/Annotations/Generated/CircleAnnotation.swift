@@ -148,8 +148,6 @@ public struct CircleAnnotation: Annotation {
 
         let centerPoint = Point(point)
 
-        let centerScreenCoordinate = view.mapboxMap.point(for: centerPoint.coordinates)
-
         let targetCoordinates = view.mapboxMap.coordinate(for: CGPoint(x: moveDistancesObject.currentX, y: moveDistancesObject.currentY)
         )
 

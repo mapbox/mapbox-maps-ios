@@ -5,10 +5,12 @@
 
 public struct ClusterOptions {
 
-    /// Define a set of cluster options to determine how to cluster annotations. Providing clusterOptions when initializing a ``PointAnnotationManager`` will turn on clustering for that ``PointAnnotationManager``.
+    /// Define a set of cluster options to determine how to cluster annotations.
+    /// Providing clusterOptions when initializing a ``PointAnnotationManager``
+    /// will turn on clustering for that ``PointAnnotationManager``.
     public init(clusterRadius: Double = 50,
                 circleRadius: Value<Double> = .constant(18),
-                textColor: Value<StyleColor> = .constant(StyleColor(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1))),
+                textColor: Value<StyleColor> = .constant(StyleColor(.white)),
                 textSize: Value<Double> = .constant(12),
                 textField: Value<String> = .expression(Exp(.get) { "point_count" }),
                 clusterMaxZoom: Double = 14,
@@ -37,7 +39,8 @@ public struct ClusterOptions {
     /// The text size of cluster item, 12 by default. Units in pixels.
     var textSize: Value<Double>
 
-    /// Value to use for a text label of the cluster. `get("point_count")` by default which will show the count of points in the cluster
+    /// Value to use for a text label of the cluster. `get("point_count")` by default which
+    /// will show the count of points in the cluster
     var textField: Value<String>
 
     /// Max zoom on which to cluster points if clustering is enabled. Defaults to one zoom less
@@ -46,14 +49,18 @@ public struct ClusterOptions {
     var clusterMaxZoom: Double
 
     /// An array of tuples each representing a colorLevel
-    /// Each colorLevel creates a new ``CircleLayer`` which groups individual points into clusters based on pointCount and styles them according to clusterColor.
+    /// Each colorLevel creates a new ``CircleLayer`` which groups individual points into clusters based on
+    /// pointCount and styles them according to clusterColor.
     /// For example, a colorLevels array like this:
     /// `[(pointCount: 100, clusterColor: StyleColor(.red)), (pointCount: 50, clusterColor: StyleColor(.blue)), (pointCount: 0, clusterColor: StyleColor(.green))]`
-    /// would create three CircleLayers: one with red circles for clusters with greater than 100 points; one with blue circles for clusters with 50-100 points; and one with green circles for clusters with fewer than 50 points.
+    /// would create three CircleLayers: one with red circles for clusters with greater than 100 points;
+    /// one with blue circles for clusters with 50-100 points;
+    /// and one with green circles for clusters with fewer than 50 points.
     var colorLevels: [(pointCount: Int, clusterColor: StyleColor)]
 
     /// An object defining custom properties on the generated clusters if clustering is enabled, aggregating values from
-    /// clustered points. Has the form `{"property_name": [operator, map_expression]}`. `operator` is any expression function that accepts at
+    /// clustered points. Has the form `{"property_name": [operator, map_expression]}`.
+    /// `operator` is any expression function that accepts at
     /// least 2 operands (e.g. `"+"` or `"max"`) — it accumulates the property value from clusters/points the
     /// cluster contains; `map_expression` produces the value of a single point.
     ///

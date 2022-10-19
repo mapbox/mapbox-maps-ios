@@ -71,11 +71,11 @@ public class PointAnnotationManager: AnnotationManagerInternal {
             source.data = .empty
 
             // Set cluster options and create clusters if clustering is enabled
-            if clusterOptions != nil {
+            if let clusterOptions = clusterOptions {
                 source.cluster = true
-                source.clusterRadius = clusterOptions?.clusterRadius
-                source.clusterProperties = clusterOptions?.clusterProperties
-                source.clusterMaxZoom = clusterOptions?.clusterMaxZoom
+                source.clusterRadius = clusterOptions.clusterRadius
+                source.clusterProperties = clusterOptions.clusterProperties
+                source.clusterMaxZoom = clusterOptions.clusterMaxZoom
             }
 
             try style.addSource(source, id: sourceId)
@@ -96,7 +96,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
             try style.addPersistentLayer(layer, layerPosition: layerPosition)
         } catch {
             Log.error(
-                forMessage: "Failed to create source / layer in PointAnnotationManager",
+                forMessage: "Failed to create source / layer in PointAnnotationManager. Error: \(error)",
                 category: "Annotations")
         }
 
@@ -108,10 +108,22 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     private func createClustersLayers(clusterOptions: ClusterOptions) {
         for index in 0..<clusterOptions.colorLevels.count {
             let clusterLevelLayer = createClusterLevelLayer(level: index, clusterOptions: clusterOptions)
-            addClusterLayer(clusterLayer: clusterLevelLayer)
+            do {
+                try addClusterLayer(clusterLayer: clusterLevelLayer)
+            } catch {
+                Log.error(
+                    forMessage: "Failed to add cluster circle layer in PointAnnotationManager. Error: \(error)",
+                    category: "Annotations")
+            }
         }
         let clusterTextLayer = createClusterTextLayer(clusterOptions: clusterOptions)
-        addClusterLayer(clusterLayer: clusterTextLayer)
+        do {
+            try addClusterLayer(clusterLayer: clusterTextLayer)
+        } catch {
+            Log.error(
+                forMessage: "Failed to add cluster text layer in PointAnnotationManager. Error: \(error)",
+                category: "Annotations")
+        }
     }
 
     private func createClusterLevelLayer(level: Int, clusterOptions: ClusterOptions) -> CircleLayer {
@@ -124,46 +136,34 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         return circleLayer
     }
 
-    private func addClusterLayer(clusterLayer: Layer) {
-        if !style.layerExists(withId: clusterLayer.id) {
-            do {
-                try style.addPersistentLayer(clusterLayer, layerPosition: .default)
-            } catch {
-                Log.error(
-                    forMessage: "Failed to add cluster text layer in PointAnnotationManager",
-                    category: "Annotations")
-            }
+    private func addClusterLayer(clusterLayer: Layer) throws {
+        guard style.layerExists(withId: clusterLayer.id) else {
+            try style.addPersistentLayer(clusterLayer, layerPosition: .default)
+            return
         }
     }
 
     private func createFilterExpression(level: Int, colorLevels: [(pointCount: Int, clusterColor: StyleColor)]) -> Expression {
-      let pointCount = "point_count"
-      let expression = level == 0 ?
-          Exp(.all) {
-              Exp(.has) { pointCount }
-              Exp(.gte) {
-                  Exp(.get) { pointCount }
-                  Exp(.toNumber) {
-                      colorLevels[level].pointCount
-                  }
-              }
-          } :
-          Exp(.all) {
-              Exp(.has) { pointCount }
-              Exp(.gte) {
-                  Exp(.get) { pointCount }
-                  Exp(.toNumber) {
-                      colorLevels[level].pointCount
-                  }
-              }
-              Exp(.lt) {
-                  Exp(.get) { pointCount }
-                  Exp(.toNumber) {
-                      colorLevels[level-1].pointCount
-                  }
-              }
-          }
-      return expression
+        let pointCount = "point_count"
+        var expressions: [Expression.Argument] = [
+            .expression(Exp(.has) { pointCount }),
+            .expression(Exp(.gte) {
+                Exp(.get) { pointCount }
+                Exp(.toNumber) {
+                    colorLevels[level].0
+                }
+            })
+        ]
+        if level != 0 {
+            expressions.append(.expression(Exp(.lt) {
+                Exp(.get) { pointCount }
+                Exp(.toNumber) {
+                    colorLevels[level-1].0
+                }
+            }))
+        }
+        return Exp(operator: .all,
+                   arguments: expressions)
     }
 
     internal func createClusterTextLayer(clusterOptions: ClusterOptions) -> SymbolLayer {

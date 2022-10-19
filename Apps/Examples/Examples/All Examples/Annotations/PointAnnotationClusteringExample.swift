@@ -77,7 +77,10 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
             (pointCount: 0, clusterColor: StyleColor(.green))]
 
         // Select the options for clustering and pass them to the PointAnnotationManager to display
-        let clusterOptions = ClusterOptions(clusterRadius: 75, circleRadius: .expression(circleRadiusExpression), textColor: .constant(StyleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))), colorLevels: colorLevels)
+        let clusterOptions = ClusterOptions(clusterRadius: 75,
+                                            circleRadius: .expression(circleRadiusExpression),
+                                            textColor: .constant(StyleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))),
+                                            colorLevels: colorLevels)
         let pointAnnotationManager = mapView.annotations.makePointAnnotationManager(clusterOptions: clusterOptions)
         pointAnnotationManager.annotations = annotations
 

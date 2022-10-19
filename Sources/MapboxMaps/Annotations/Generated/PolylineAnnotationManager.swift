@@ -75,7 +75,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
             try style.addPersistentLayer(layer, layerPosition: layerPosition)
         } catch {
             Log.error(
-                forMessage: "Failed to create source / layer in PolylineAnnotationManager",
+                forMessage: "Failed to create source / layer in PolylineAnnotationManager. Error: \(error)",
                 category: "Annotations")
         }
 

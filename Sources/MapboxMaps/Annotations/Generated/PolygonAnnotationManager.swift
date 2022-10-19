@@ -75,7 +75,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
             try style.addPersistentLayer(layer, layerPosition: layerPosition)
         } catch {
             Log.error(
-                forMessage: "Failed to create source / layer in PolygonAnnotationManager",
+                forMessage: "Failed to create source / layer in PolygonAnnotationManager. Error: \(error)",
                 category: "Annotations")
         }
 

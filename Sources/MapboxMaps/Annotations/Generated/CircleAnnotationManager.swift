@@ -75,7 +75,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
             try style.addPersistentLayer(layer, layerPosition: layerPosition)
         } catch {
             Log.error(
-                forMessage: "Failed to create source / layer in CircleAnnotationManager",
+                forMessage: "Failed to create source / layer in CircleAnnotationManager. Error: \(error)",
                 category: "Annotations")
         }
 

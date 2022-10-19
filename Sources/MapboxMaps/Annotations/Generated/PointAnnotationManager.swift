@@ -23,6 +23,8 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     /// - NOTE: This annotation manager listens to tap events via the `GestureManager.singleTapGestureRecognizer`.
     public weak var delegate: AnnotationInteractionDelegate?
 
+    private var annotationBeingDragged: PointAnnotation?
+
     // MARK: - AnnotationManager protocol conformance
 
     public let sourceId: String
@@ -57,12 +59,15 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     internal init(id: String,
                   style: StyleProtocol,
                   layerPosition: LayerPosition?,
-                  displayLinkCoordinator: DisplayLinkCoordinator) {
+                  displayLinkCoordinator: DisplayLinkCoordinator,
+                  longPressGestureRecognizer: UIGestureRecognizer) {
         self.id = id
         self.sourceId = id
         self.layerId = id
         self.style = style
         self.displayLinkCoordinator = displayLinkCoordinator
+
+        longPressGestureRecognizer.addTarget(self, action: #selector(handleDrag(_:)))
 
         do {
             // Add the source with empty `data` property
@@ -476,12 +481,108 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     internal func handleQueriedFeatureIds(_ queriedFeatureIds: [String]) {
         // Find if any `queriedFeatureIds` match an annotation's `id`
         let tappedAnnotations = annotations.filter { queriedFeatureIds.contains($0.id) }
-
-        // If `tappedAnnotations` is not empty, call delegate
         if !tappedAnnotations.isEmpty {
+            // do the stuff
             delegate?.annotationManager(
                 self,
                 didDetectTappedAnnotations: tappedAnnotations)
+            var selectedAnnotationIds = tappedAnnotations.map(\.id)
+            var allAnnotations = self.annotations.map { annotation in
+                var mutableAnnotation = annotation
+                if selectedAnnotationIds.contains(annotation.id) {
+                    if mutableAnnotation.isSelected == false {
+                        mutableAnnotation.isSelected = true
+                        mutableAnnotation.iconColor = .init(UIColor.black)
+                    } else {
+                        mutableAnnotation.isSelected = false
+                        mutableAnnotation.iconColor = nil
+                    }
+
+                } else {
+                    mutableAnnotation.iconColor = nil
+                }
+                selectedAnnotationIds.append(mutableAnnotation.id)
+                return mutableAnnotation
+            }
+
+            self.annotations = allAnnotations
+
+        } else if tappedAnnotations.isEmpty {
+            var allAnnotations = self.annotations.map { annotation in
+                var mutableAnnotation = annotation
+                mutableAnnotation.iconColor = nil
+                return mutableAnnotation
+            }
+            self.annotations = allAnnotations
+        }
+    }
+
+    func handleDragBegin(_ view: MapView, annotation: Annotation, position: CGPoint) {
+        guard var annotation = annotation as? PointAnnotation else { return }
+        try? view.mapboxMap.style.updateLayer(withId: "drag-layer", type: SymbolLayer.self, update: { layer in
+            layer.iconColor = annotation.iconColor.map(Value.constant)
+            layer.iconSize = annotation.iconSize.map(Value.constant)
+
+        })
+        self.annotationBeingDragged = annotation
+        self.annotations.removeAll(where: { $0.id == annotation.id })
+
+        let updatedPoint = Point(view.mapboxMap.coordinate(for: position))
+        self.annotationBeingDragged?.point = updatedPoint
+        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: updatedPoint.geometry.geoJSONObject)
+    }
+
+    func handleDragChanged(view: MapView, position: CGPoint) {
+        guard var annotationBeingDragged = annotationBeingDragged else { return }
+
+        let updatedPoint = Point(view.mapboxMap.coordinate(for: position))
+        self.annotationBeingDragged?.point = updatedPoint
+        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: updatedPoint.geometry.geoJSONObject)
+    }
+
+    func handleDragEnded(position: CGPoint) {
+        guard let annotationBeingDragged = annotationBeingDragged else { return }
+        print("drag end:  \(annotationBeingDragged.id)")
+        self.annotations.append(annotationBeingDragged)
+        self.annotationBeingDragged = nil
+    }
+
+    @objc func handleDrag(_ drag: UILongPressGestureRecognizer) {
+        var annotationBeingDragged: PointAnnotation?
+        guard let mapView = drag.view as? MapView else { return }
+        let position = drag.location(in: mapView)
+        let options = RenderedQueryOptions(layerIds: [self.layerId], filter: nil)
+
+        switch drag.state {
+        case .began:
+            mapView.mapboxMap.queryRenderedFeatures(
+                at: drag.location(in: mapView),
+                options: options) { (result) in
+
+                    switch result {
+
+                    case .success(let queriedFeatures):
+                        if let firstFeature = queriedFeatures.first?.feature,
+                           case let .string(annotationId) = firstFeature.identifier {
+                            guard let annotation = self.annotations.filter({$0.id == annotationId}).first,
+                                  annotation.isDraggable else {
+                                return
+                            }
+
+                            self.handleDragBegin(mapView, annotation: annotation, position: position)
+
+                        }
+                    case .failure(let error):
+                        print("failure")
+                        break
+                    }
+                }
+        case .changed:
+            self.handleDragChanged(view: mapView, position: position)
+        case .ended, .cancelled:
+            self.handleDragEnded(position: position)
+        default:
+            break
         }
     }
 }

@@ -16,6 +16,8 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
 
     private var needsSyncSourceAndLayer = false
 
+    private var annotationBeingDragged: CircleAnnotation?
+
     // MARK: - Interaction
 
     /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
@@ -56,12 +58,15 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
     internal init(id: String,
                   style: StyleProtocol,
                   layerPosition: LayerPosition?,
-                  displayLinkCoordinator: DisplayLinkCoordinator) {
+                  displayLinkCoordinator: DisplayLinkCoordinator,
+                  longPressGestureRecognizer: UIGestureRecognizer) {
         self.id = id
         self.sourceId = id
         self.layerId = id
         self.style = style
         self.displayLinkCoordinator = displayLinkCoordinator
+
+        longPressGestureRecognizer.addTarget(self, action: #selector(handleDrag(_:)))
 
         do {
             // Add the source with empty `data` property
@@ -207,58 +212,117 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
     internal func handleQueriedFeatureIds(_ queriedFeatureIds: [String]) {
         // Find if any `queriedFeatureIds` match an annotation's `id`
         let tappedAnnotations = annotations.filter { queriedFeatureIds.contains($0.id) }
-
-        // If `tappedAnnotations` is not empty, call delegate
         if !tappedAnnotations.isEmpty {
+            // do the stuff
             delegate?.annotationManager(
                 self,
                 didDetectTappedAnnotations: tappedAnnotations)
+            var selectedAnnotationIds = tappedAnnotations.map(\.id)
+            var allAnnotations = self.annotations.map { annotation in
+                var mutableAnnotation = annotation
+                if selectedAnnotationIds.contains(annotation.id) {
+                    if mutableAnnotation.isSelected == false {
+                        mutableAnnotation.isSelected = true
+                        mutableAnnotation.circleStrokeColor = .init(UIColor.black)
+                        mutableAnnotation.circleStrokeWidth = 4
+                    } else {
+                        mutableAnnotation.isSelected = false
+                        mutableAnnotation.circleStrokeColor = nil
+                        mutableAnnotation.circleStrokeWidth = nil
+                    }
+
+                } else {
+                    mutableAnnotation.circleStrokeColor = nil
+                    mutableAnnotation.circleStrokeWidth = nil
+                }
+                selectedAnnotationIds.append(mutableAnnotation.id)
+                return mutableAnnotation
+            }
+
+            self.annotations = allAnnotations
+
+        } else if tappedAnnotations.isEmpty {
+            var allAnnotations = self.annotations.map { annotation in
+                var mutableAnnotation = annotation
+                mutableAnnotation.circleStrokeWidth = nil
+                mutableAnnotation.circleStrokeColor = nil
+                return mutableAnnotation
+            }
+            self.annotations = allAnnotations
         }
     }
 
-    /**
-     * Toggles the annotation's selection state.
-     * If the annotation is deselected, it becomes selected.
-     * If the annotation is selected, it becomes deselected.
-     * @param annotation: The annotation to select.
-     */
-//    public func selectAnnotation(_ sender: UITapGestureRecognizer, annotation: CircleAnnotation?) {
-//        var mapView: MapView?
-//        guard var annotation = annotation else { return }
-//        // Find if any `queriedFeatureIds` match an annotation's `id`
-//        //        let selectedAnnotation = annotations.filter { $0.id == annotation.id }
-//        //        guard var annotation = annotation else { return }
-//        //
-//        //        if annotations.contains(where: { $0.id == annotation.id }) {
-//        //            annotation.isSelected = !annotation.isSelected
-//        ////            annotations[annotation.id] = annotation
-//        //            if annotation.isSelected {
-//        //                print("selected")
-//        //            } else {
-//        //                print("deselect")
-//        //            }
-//        //        }
-//        // query the feature at the point that you tapped.
-//        // if the id of the feature you just tapped matches a feature in the annotation array then highlight that annotation
-//
-//        let tapPoint = sender.location(in: mapView)
-//        let layerIds = annotations.map {$0.id}
-//
-//        mapView?.mapboxMap.queryRenderedFeatures(
-//            with: tapPoint,
-//            options: RenderedQueryOptions(layerIds: layerIds, filter: nil)) { [weak self] result in
-//                switch result {
-//                case .success(let queriedfeatures):
-//                    if let firstFeature = queriedfeatures.first?.feature.properties,
-//                       case let .string(stateName) = firstFeature["id"] {
-//                        print("You selected \(stateName)")
-//                        annotation.circleColor = StyleColor.init(UIColor.black)
-//                    }
-//                case .failure(let error):
-//                    print("An error occurred: \(error.localizedDescription)")
-//                }
-//            }
-//    }
+    func handleDragBegin(_ view: MapView, annotation: Annotation, position: CGPoint) {
+        guard var annotation = annotation as? CircleAnnotation else { return }
+        try? view.mapboxMap.style.updateLayer(withId: "drag-layer", type: CircleLayer.self, update: { layer in
+            layer.circleColor = annotation.circleColor.map(Value.constant)
+            layer.circleRadius = annotation.circleRadius.map(Value.constant)
+            layer.circleStrokeWidth = annotation.circleStrokeWidth.map(Value.constant)
+            layer.circleStrokeColor = annotation.circleStrokeColor.map(Value.constant)
+
+        })
+        self.annotationBeingDragged = annotation
+        self.annotations.removeAll(where: { $0.id == annotation.id })
+
+        let updatedPoint = Point(view.mapboxMap.coordinate(for: position))
+        self.annotationBeingDragged?.point = updatedPoint
+        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: updatedPoint.geometry.geoJSONObject)
+    }
+
+    func handleDragChanged(view: MapView, position: CGPoint) {
+        guard var annotationBeingDragged = annotationBeingDragged else { return }
+
+        let updatedPoint = Point(view.mapboxMap.coordinate(for: position))
+        self.annotationBeingDragged?.point = updatedPoint
+        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: updatedPoint.geometry.geoJSONObject)
+    }
+
+    func handleDragEnded(position: CGPoint) {
+        guard let annotationBeingDragged = annotationBeingDragged else { return }
+        print("drag end:  \(annotationBeingDragged.id)")
+        self.annotations.append(annotationBeingDragged)
+
+        self.annotationBeingDragged = nil
+    }
+
+    @objc func handleDrag(_ drag: UILongPressGestureRecognizer) {
+        var annotationBeingDragged: CircleAnnotation?
+        guard let mapView = drag.view as? MapView else { return }
+        let position = drag.location(in: mapView)
+        let options = RenderedQueryOptions(layerIds: [self.layerId], filter: nil)
+
+        switch drag.state {
+        case .began:
+            mapView.mapboxMap.queryRenderedFeatures(
+                at: drag.location(in: mapView),
+                options: options) { (result) in
+
+                    switch result {
+
+                    case .success(let queriedFeatures):
+                        if let firstFeature = queriedFeatures.first?.feature,
+                           case let .string(annotationId) = firstFeature.identifier {
+                            guard let annotation = self.annotations.filter({$0.id == annotationId}).first,
+                                  annotation.isDraggable else {
+                                return
+                            }
+
+                            self.handleDragBegin(mapView, annotation: annotation, position: position)
+
+                        }
+                    case .failure(let error):
+                        print("failure")
+                        break
+                    }
+                }
+        case .changed:
+            self.handleDragChanged(view: mapView, position: position)
+        case .ended, .cancelled:
+            self.handleDragEnded(position: position)
+        default:
+            break
+        }
+    }
 }
 
 extension CircleAnnotationManager: DelegatingDisplayLinkParticipantDelegate {

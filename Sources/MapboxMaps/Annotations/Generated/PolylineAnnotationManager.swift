@@ -2,6 +2,58 @@
 import Foundation
 @_implementationOnly import MapboxCommon_Private
 
+class MoveDistancesObject {
+    var distanceXSinceLast = CGFloat()
+    var distanceYSinceLast = CGFloat()
+    var currentX = CGFloat()
+    var currentY = CGFloat()
+}
+
+class ConvertUtils {
+    /**
+     * Calculate the shift between two [Point]s in Mercator coordinate.
+     *
+     * @param startPoint the start point for the calculation.
+     * @param endPoint the end point for the calculation.
+     * @param zoomLevel the zoom level that apply the calculation.
+     *
+     * @return A [MercatorCoordinate] represent the shift between startPoint and endPoint.
+     */
+    static func calculateMercatorCoordinateShift(startPoint: Point, endPoint: Point, zoomLevel: Double) -> MercatorCoordinate {
+        var centerMercatorCoordinate = Projection.project(startPoint.coordinates, zoomScale: zoomLevel)
+        var targetMercatorCoordinate = Projection.project(endPoint.coordinates, zoomScale: zoomLevel)
+
+        // Get the shift in Mercator coordinates
+        return MercatorCoordinate(
+            x: targetMercatorCoordinate.x - centerMercatorCoordinate.x,
+            y: targetMercatorCoordinate.y - centerMercatorCoordinate.y
+        )
+    }
+
+    /**
+     * Apply a [MercatorCoordinate] to the original point.
+     *
+     * @param point the point needs to shift.
+     * @param shiftMercatorCoordinate the shift that applied to the original point.
+     * @param zoomLevel the zoom level that apply the calculation.
+     *
+     * @return a shift point that applied the shift MercatorCoordinate.
+     */
+    static func shiftPointWithMercatorCoordinate(point: Point, shiftMercatorCoordinate: MercatorCoordinate,
+                                                 zoomLevel: Double) -> Point {
+        // transform point to Mercator coordinate
+
+        let mercatorCoordinate = Projection.project(point.coordinates, zoomScale: zoomLevel)
+        // calculate the shifted Mercator coordinate
+        let shiftedMercatorCoordinate = MercatorCoordinate(
+            x: mercatorCoordinate.x + shiftMercatorCoordinate.x,
+            y: mercatorCoordinate.y + shiftMercatorCoordinate.y
+        )
+        // transform Mercator coordinate to point
+        return Point(Projection.unproject(shiftedMercatorCoordinate, zoomScale: zoomLevel))
+    }
+}
+
 /// An instance of `PolylineAnnotationManager` is responsible for a collection of `PolylineAnnotation`s.
 public class PolylineAnnotationManager: AnnotationManagerInternal {
 
@@ -51,17 +103,27 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
 
+    private var annotationBeingDragged: PolylineAnnotation?
+
+    private var formerPosition = CGPoint()
+
+    private var moveDistancesObject = MoveDistancesObject()
+
     private var isDestroyed = false
 
     internal init(id: String,
                   style: StyleProtocol,
                   layerPosition: LayerPosition?,
-                  displayLinkCoordinator: DisplayLinkCoordinator) {
+                  displayLinkCoordinator: DisplayLinkCoordinator,
+                  longPressGestureRecognizer: UIGestureRecognizer) {
         self.id = id
         self.sourceId = id
         self.layerId = id
         self.style = style
         self.displayLinkCoordinator = displayLinkCoordinator
+
+        longPressGestureRecognizer.addTarget(self, action: #selector(handleDrag(_:)))
+
 
         do {
             // Add the source with empty `data` property
@@ -237,12 +299,131 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     internal func handleQueriedFeatureIds(_ queriedFeatureIds: [String]) {
         // Find if any `queriedFeatureIds` match an annotation's `id`
         let tappedAnnotations = annotations.filter { queriedFeatureIds.contains($0.id) }
-
-        // If `tappedAnnotations` is not empty, call delegate
         if !tappedAnnotations.isEmpty {
+            // do the stuff
             delegate?.annotationManager(
                 self,
                 didDetectTappedAnnotations: tappedAnnotations)
+            var selectedAnnotationIds = tappedAnnotations.map(\.id)
+            var allAnnotations = self.annotations.map { annotation in
+                var mutableAnnotation = annotation
+                if selectedAnnotationIds.contains(annotation.id) {
+                    if mutableAnnotation.isSelected == false {
+                        mutableAnnotation.isSelected = true
+                        mutableAnnotation.lineWidth = 10
+                    } else {
+                        mutableAnnotation.isSelected = false
+                        mutableAnnotation.lineWidth = nil
+                    }
+
+                } else {
+                    mutableAnnotation.lineWidth = nil
+                }
+                selectedAnnotationIds.append(mutableAnnotation.id)
+                return mutableAnnotation
+            }
+
+            self.annotations = allAnnotations
+
+        } else if tappedAnnotations.isEmpty {
+            var allAnnotations = self.annotations.map { annotation in
+                var mutableAnnotation = annotation
+                //                mutableAnnotation.lineColor = nil
+                mutableAnnotation.lineWidth = nil
+                return mutableAnnotation
+            }
+            self.annotations = allAnnotations
+        }
+    }
+
+    func handleDragBegin(_ view: MapView, annotation: Annotation, position: CGPoint) {
+
+        //        print("original position:," )
+        guard var annotation = annotation as? PolylineAnnotation else { return }
+        try? view.mapboxMap.style.updateLayer(withId: "drag-layer", type: LineLayer.self, update: { layer in
+            layer.lineColor = annotation.lineColor.map(Value.constant)
+            layer.lineWidth = annotation.lineWidth.map(Value.constant)
+            layer.lineCap = .constant(.round)
+            layer.lineJoin = .constant(.round)
+
+        })
+        self.annotationBeingDragged = annotation
+        self.annotations.removeAll(where: { $0.id == annotation.id })
+
+        formerPosition = position
+        let moveObject = moveDistancesObject
+        moveObject.distanceXSinceLast = 0
+        moveObject.distanceYSinceLast = 0
+
+        guard let lineString =  annotationBeingDragged?.getOffsetGeometry(view: view, moveDistancesObject: moveDistancesObject) else { return }
+        self.annotationBeingDragged?.lineString = lineString
+        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: lineString.geometry.geoJSONObject)
+    }
+
+    func handleDragChanged(view: MapView, position: CGPoint) {
+
+        guard var annotationBeingDragged = annotationBeingDragged else { return }
+
+        // current coordinate neex to equal target coordinate
+        print("current coordinate:", view.mapboxMap.coordinate(for: position))
+        let moveObject = moveDistancesObject
+        moveObject.currentX = position.x
+        moveObject.currentY = position.y
+        if (position.x < 0 || position.y < 0 || position.x > view.bounds.width || position.y > view.bounds.height) {
+          handleDragEnded(position: position)
+        }
+
+        guard let lineString =  self.annotationBeingDragged?.getOffsetGeometry(view: view, moveDistancesObject: moveObject) else { return }
+        self.annotationBeingDragged?.lineString = lineString
+        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: lineString.geometry.geoJSONObject)
+    }
+
+    func handleDragEnded(position: CGPoint) {
+        formerPosition = position
+        guard let annotationBeingDragged = annotationBeingDragged else { return }
+        print("drag end:  \(annotationBeingDragged.id), geometry: \(annotationBeingDragged.lineString)")
+
+        self.annotations.append(annotationBeingDragged)
+
+        self.annotationBeingDragged = nil
+    }
+
+    @objc func handleDrag(_ drag: UILongPressGestureRecognizer) {
+        var annotationBeingDragged: PolylineAnnotation?
+        guard let mapView = drag.view as? MapView else { return }
+        let position = drag.location(in: mapView)
+        let options = RenderedQueryOptions(layerIds: [self.layerId], filter: nil)
+
+        switch drag.state {
+        case .began:
+            mapView.mapboxMap.queryRenderedFeatures(
+                at: drag.location(in: mapView),
+                options: options) { (result) in
+
+                    switch result {
+
+                    case .success(let queriedFeatures):
+                        if let firstFeature = queriedFeatures.first?.feature,
+                           case let .string(annotationId) = firstFeature.identifier {
+                            guard let annotation = self.annotations.filter({$0.id == annotationId}).first,
+                                  annotation.isDraggable else {
+                                return
+                            }
+
+                            self.handleDragBegin(mapView, annotation: annotation, position: position)
+
+                        }
+                    case .failure(let error):
+                        print("failure")
+                        break
+                    }
+                }
+        case .changed:
+            self.handleDragChanged(view: mapView, position: position)
+        case .ended, .cancelled:
+            self.handleDragEnded(position: position)
+        default:
+            break
         }
     }
 }

@@ -20,6 +20,15 @@ public struct PolylineAnnotation: Annotation {
     /// Storage for layer properties
     internal var layerProperties: [String: Any] = [:]
 
+    /// Property to determine annotation state
+    public var isSelected: Bool = false
+
+    /// Property to determine whether annotation is selected
+    public var isSelectable: Bool = false
+
+    /// Property to determine whether annotation can be manually moved around map
+    public var isDraggable: Bool = false
+
     internal var feature: Feature {
         var feature = Feature(geometry: geometry)
         feature.identifier = .string(id)
@@ -134,6 +143,52 @@ public struct PolylineAnnotation: Annotation {
         set {
             layerProperties["line-width"] = newValue
         }
+    }
+
+    func getOffsetGeometry(view: MapView, moveDistancesObject: MoveDistancesObject?) -> LineString? {
+        let maxMercatorLatitude = 85.05112877980659
+        let minMercatorLatitude = -85.05112877980659
+
+        guard let moveDistancesObject = moveDistancesObject else { return nil}
+
+        let points = self.lineString.coordinates
+        if points.isEmpty {
+            return nil
+        }
+        
+        let latitudeSum = points.map { $0.latitude }.reduce(0, +)
+        let longitudeSum = points.map { $0.longitude }.reduce(0, +)
+
+        let latitudeAverage = latitudeSum / CGFloat(points.count)
+        let longitudeAverage = longitudeSum / CGFloat(points.count)
+
+        // calculate center point from existing shape
+        let averageCoordinates = CLLocationCoordinate2D(latitude: latitudeAverage, longitude: longitudeAverage)
+
+        let centerPoint = Point(averageCoordinates)
+
+        // convert coordinate to point
+        let centerScreenCoordinate = view.mapboxMap.point(for: centerPoint.coordinates)
+
+
+        let targetCoordinates = view.mapboxMap.coordinate(for: CGPoint(x: moveDistancesObject.currentX, y: moveDistancesObject.currentY)
+        )
+
+        print("target coordinate: ", targetCoordinates)
+
+
+        let targetPoint = Point(targetCoordinates)
+
+        let shiftMercatorCoordinate = ConvertUtils.calculateMercatorCoordinateShift(startPoint: centerPoint, endPoint: targetPoint, zoomLevel: view.mapboxMap.cameraState.zoom)
+
+        let targetPoints = points.map {ConvertUtils.shiftPointWithMercatorCoordinate(point: Point($0), shiftMercatorCoordinate: shiftMercatorCoordinate, zoomLevel: view.mapboxMap.cameraState.zoom)}
+
+
+        if targetPoints.contains(where: {$0.coordinates.latitude > maxMercatorLatitude || $0.coordinates.latitude < minMercatorLatitude }) {
+            return nil
+        }
+
+        return .init(targetPoints.map {$0.coordinates})
     }
 
 }

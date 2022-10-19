@@ -20,6 +20,15 @@ public struct PointAnnotation: Annotation {
     /// Storage for layer properties
     internal var layerProperties: [String: Any] = [:]
 
+    /// Property to determine annotation state
+    public var isSelected: Bool = false
+
+    /// Property to determine whether annotation is selected
+    public var isSelectable: Bool = false
+
+    /// Property to determine whether annotation can be manually moved around map
+    public var isDraggable: Bool = false
+
     internal var feature: Feature {
         var feature = Feature(geometry: geometry)
         feature.identifier = .string(id)

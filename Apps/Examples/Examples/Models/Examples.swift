@@ -139,6 +139,10 @@ struct Examples {
         Example(title: "View annotations: Frame list of annotations",
                 description: "Animates to camera framing the list of selected view annotations.",
                 type: FrameViewAnnotationsExample.self),
+        Example(title: "View annotations: animation",
+                description: "Animate a view annotation along a route",
+                testTimeout: 60,
+                type: ViewAnnotationAnimationExample.self)
     ]
 
     // Examples that focus on setting, animating, or otherwise changing the map's camera and viewport.

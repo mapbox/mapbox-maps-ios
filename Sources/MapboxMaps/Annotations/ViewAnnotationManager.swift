@@ -63,6 +63,13 @@ public final class ViewAnnotationManager {
     /// The default value is true, and setting this value to false will disable the validation.
     public var validatesViews = true
 
+    /// The complete list of annotations associated with the receiver.
+    public var annotations: [UIView: ViewAnnotationOptions] {
+        idsByView.compactMapValues { [mapboxMap] id in
+            try? mapboxMap.options(forViewAnnotationWithId: id)
+        }
+    }
+
     internal init(
         containerView: UIView,
         coordinateBoundsAnimator: CoordinateBoundsAnimator,
@@ -227,9 +234,12 @@ public final class ViewAnnotationManager {
         }
         let currentFeatureId = try? mapboxMap.options(forViewAnnotationWithId: id).associatedFeatureId
         try mapboxMap.updateViewAnnotation(withId: id, options: options)
-        let isHidden = !(options.visible ?? true)
-        expectedHiddenByView[view] = isHidden
-        viewsById[id]?.isHidden = isHidden
+
+        if options.visible == false {
+            expectedHiddenByView[view] = true
+            view.isHidden = true
+        }
+
         if let id = currentFeatureId, let updatedId = options.associatedFeatureId, id != updatedId {
             viewsByFeatureIds[id] = nil
         }

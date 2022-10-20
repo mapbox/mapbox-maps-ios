@@ -362,7 +362,6 @@
 				587429BF27BBFDA100104CCA /* VoiceOverAccessibilityExample.swift */,
 				7471A4E028D0CEA400C7DFE5 /* LargeGeoJSONExample.swift */,
 				732A54FF28DA470E00CDBFB7 /* PitchAndDistanceExample.swift */,
-				3A44669D28F6EA1600664AF5 /* FrameViewAnnotationsExample.swift */,
 			);
 			path = "All Examples";
 			sourceTree = "<group>";
@@ -494,6 +493,7 @@
 				07A2E03C25CB64E20082BC31 /* SwiftUIExample.swift */,
 				17E28C5B2672A1160033DF0F /* SymbolClusteringExample.swift */,
 				30517C69274BD4D300B706E5 /* ViewAnnotationBasicExample.swift */,
+				3A44669D28F6EA1600664AF5 /* FrameViewAnnotationsExample.swift */,
 				74797C1928F5B72F0008BBB9 /* ViewAnnotationAnimationExample.swift */,
 				304AB3B427439287005B6D09 /* ViewAnnotationMarkerExample.swift */,
 				74A2313D27EE1C630065FB7D /* ViewAnnotationWithPointAnnotationExample.swift */,

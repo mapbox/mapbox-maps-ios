@@ -112,7 +112,12 @@ workflows:
           scheme: Examples
           requires:
             - Build Examples tests [non-main]
-          devices: --device model=iphone8,version=14.7
+          devices: |
+            --device model=iphone8,version=14.7 \
+            --device model=iphone8,version=13.6 \
+            --device model=iphone11pro,version=13.6 \
+            --device model=iphonexr,version=13.2 \
+
 
   steve:
     unless: << pipeline.parameters.turf-revision >>

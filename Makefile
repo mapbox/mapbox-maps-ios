@@ -184,7 +184,7 @@ symbolicate:
 	do \
 		if [ ! -f $${CRASH}.symbolicated.txt ]; then \
 			echo "Symbolicating $${CRASH}" ; \
-			$${DEVELOPER_DIR}/Platforms/MacOSX.platform/Developer/iOSSupport/Library/PrivateFrameworks/DVTFoundation.framework/Versions/A/Resources/symbolicatecrash \
+			$${DEVELOPER_DIR}/Platforms/MacOSX.platform/Developer/iOSSupport/Library/PrivateFrameworks/DVTFoundation.framework/Versions/A/Resources/symbolicatecrash -v \
 				$${CRASH} \
 				$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/ \
 				$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/Frameworks/ \

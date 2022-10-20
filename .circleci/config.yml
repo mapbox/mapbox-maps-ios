@@ -655,7 +655,7 @@ jobs:
             bundle install
             bundle exec fastlane build_examples_tests
       - store_artifacts:
-          path: output/Examples.zip
+          path: output/build_products.zip
       - persist_to_workspace:
           root: output/
           paths:

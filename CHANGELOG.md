@@ -5,6 +5,23 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 * Support `isDraggable` and `isSelected` properties for annotations. ([#1659](https://github.com/mapbox/mapbox-maps-ios/pull/1659))
 
+* Prevent view annotation being shown erroneously after options update.([#1627](https://github.com/mapbox/mapbox-maps-ios/pull/1627))
+* Add an example animating a view annotation along a route line. ([#1639](https://github.com/mapbox/mapbox-maps-ios/pull/1639))
+* Reduce location provider heading orientation update frequency. ([#1618](https://github.com/mapbox/mapbox-maps-ios/pull/1618))
+* Expose the list of added view annotations. ([#1621](https://github.com/mapbox/mapbox-maps-ios/pull/1621)
+
+## 10.9.0 - October 19, 2022
+
+* Update to MapboxCoreMaps 10.9.0 and MapboxCommon 23.1.0. ([#1652](https://github.com/mapbox/mapbox-maps-ios/pull/1652))
+
+## 10.9.0-rc.1 - October 7, 2022
+
+* Fix accuracy ring radius jumping when zooming the map in/out with `.reducedAccuracy` location authorization.([#1625](https://github.com/mapbox/mapbox-maps-ios/pull/1625))
+* Fix behavior with initial view annotation placement.([#1604](https://github.com/mapbox/mapbox-maps-ios/pull/1604))
+* Fix behavior where selected view annotation is not moved to correct z-order.([#1607](https://github.com/mapbox/mapbox-maps-ios/pull/1607))
+* Update MapboxCoreMaps to `v10.9.0-rc.1`. ([#1630](https://github.com/mapbox/mapbox-maps-ios/pull/1630))
+* Update MapboxCommon to `v21.1.0-rc.2`. ([#1630](https://github.com/mapbox/mapbox-maps-ios/pull/1630))
+
 ## 10.9.0-beta.2 - September 29, 2022
 
 * Replace MapboxMobileEvents dependency with CoreTelemetry (part of MapboxCommon). ([#1379](https://github.com/mapbox/mapbox-maps-ios/pull/1379))

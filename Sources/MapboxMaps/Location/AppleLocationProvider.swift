@@ -12,9 +12,14 @@ public final class AppleLocationProvider: NSObject {
     }
     private weak var delegate: LocationProviderDelegate?
 
+    public var headingOrientation: CLDeviceOrientation {
+        didSet { locationProvider.headingOrientation = headingOrientation }
+    }
+
     public override init() {
         locationProvider = CLLocationManager()
         privateLocationProviderOptions = LocationOptions()
+        headingOrientation = locationProvider.headingOrientation
         super.init()
         locationProvider.delegate = self
     }
@@ -70,11 +75,6 @@ extension AppleLocationProvider: LocationProvider {
 
     public func stopUpdatingLocation() {
         locationProvider.stopUpdatingLocation()
-    }
-
-    public var headingOrientation: CLDeviceOrientation {
-        get { locationProvider.headingOrientation }
-        set { locationProvider.headingOrientation = newValue }
     }
 
     public func startUpdatingHeading() {

@@ -14,7 +14,8 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
     func makeGestureManager(view: UIView,
                             mapboxMap: MapboxMapProtocol,
                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager
-    func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool) -> LocationProducerProtocol
+    func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool,
+                              userInterfaceOrientationView: UIView) -> LocationProducerProtocol
     func makeInterpolatedLocationProducer(locationProducer: LocationProducerProtocol,
                                           displayLinkCoordinator: DisplayLinkCoordinator) -> InterpolatedLocationProducerProtocol
     func makeLocationManager(locationProducer: LocationProducerProtocol,
@@ -40,6 +41,11 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     internal let cameraAnimatorsRunnerEnablable: MutableEnablableProtocol = Enablable()
     private let gesturesCameraAnimatorsRunnerEnablable = Enablable()
     private let mainQueue: MainQueueProtocol = MainQueueWrapper()
+    private let interfaceOrientationProvider: InterfaceOrientationProvider
+
+    internal init(interfaceOrientationProvider: InterfaceOrientationProvider) {
+        self.interfaceOrientationProvider = interfaceOrientationProvider
+    }
 
     internal func makeMetalView(frame: CGRect, device: MTLDevice?) -> MTKView {
         MTKView(frame: frame, device: device)
@@ -214,10 +220,15 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             mapboxMap: mapboxMap)
     }
 
-    internal func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool) -> LocationProducerProtocol {
+    internal func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool,
+                                       userInterfaceOrientationView: UIView) -> LocationProducerProtocol {
         let locationProvider = AppleLocationProvider()
         return LocationProducer(
             locationProvider: locationProvider,
+            interfaceOrientationProvider: interfaceOrientationProvider,
+            notificationCenter: notificationCenter,
+            userInterfaceOrientationView: userInterfaceOrientationView,
+            device: .current,
             mayRequestWhenInUseAuthorization: mayRequestWhenInUseAuthorization)
     }
 

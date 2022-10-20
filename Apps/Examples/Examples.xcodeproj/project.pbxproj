@@ -59,6 +59,8 @@
 		7412CF6827E9A8D600F03B1C /* UIColor+Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF6727E9A8D600F03B1C /* UIColor+Random.swift */; };
 		7412CF6C27E9D48700F03B1C /* AddMarkersSymbolExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF6B27E9D48700F03B1C /* AddMarkersSymbolExample.swift */; };
 		7471A4E128D0CEA400C7DFE5 /* LargeGeoJSONExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7471A4E028D0CEA400C7DFE5 /* LargeGeoJSONExample.swift */; };
+		74797C1A28F5B72F0008BBB9 /* ViewAnnotationAnimationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74797C1928F5B72F0008BBB9 /* ViewAnnotationAnimationExample.swift */; };
+		74797C1C28F5BA760008BBB9 /* sf_airport_route.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 74797C1B28F5B7F90008BBB9 /* sf_airport_route.geojson */; };
 		74A2313127EB306F0065FB7D /* Array+Split.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A2313027EB306F0065FB7D /* Array+Split.swift */; };
 		74A2313627EB37EE0065FB7D /* AnimatedMarkerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A2313527EB37EE0065FB7D /* AnimatedMarkerExample.swift */; };
 		74A2313827EC6B360065FB7D /* IconSizeChangeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A2313727EC6B360065FB7D /* IconSizeChangeExample.swift */; };
@@ -211,6 +213,8 @@
 		7412CF6727E9A8D600F03B1C /* UIColor+Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Random.swift"; sourceTree = "<group>"; };
 		7412CF6B27E9D48700F03B1C /* AddMarkersSymbolExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMarkersSymbolExample.swift; sourceTree = "<group>"; };
 		7471A4E028D0CEA400C7DFE5 /* LargeGeoJSONExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeGeoJSONExample.swift; sourceTree = "<group>"; };
+		74797C1928F5B72F0008BBB9 /* ViewAnnotationAnimationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAnnotationAnimationExample.swift; sourceTree = "<group>"; };
+		74797C1B28F5B7F90008BBB9 /* sf_airport_route.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = sf_airport_route.geojson; sourceTree = "<group>"; };
 		74A2313027EB306F0065FB7D /* Array+Split.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Split.swift"; sourceTree = "<group>"; };
 		74A2313527EB37EE0065FB7D /* AnimatedMarkerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedMarkerExample.swift; sourceTree = "<group>"; };
 		74A2313727EC6B360065FB7D /* IconSizeChangeExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconSizeChangeExample.swift; sourceTree = "<group>"; };
@@ -437,6 +441,7 @@
 				07B071D22547CFC3007F2865 /* GeoJSONSourceExample.geojson */,
 				0C78AC2C25BF71E40057F570 /* GradientLine.geojson */,
 				5830FDB6270B5AF7005549EE /* sportcar.glb */,
+				74797C1B28F5B7F90008BBB9 /* sf_airport_route.geojson */,
 			);
 			path = "Sample Data";
 			sourceTree = "<group>";
@@ -486,6 +491,7 @@
 				07A2E03C25CB64E20082BC31 /* SwiftUIExample.swift */,
 				17E28C5B2672A1160033DF0F /* SymbolClusteringExample.swift */,
 				30517C69274BD4D300B706E5 /* ViewAnnotationBasicExample.swift */,
+				74797C1928F5B72F0008BBB9 /* ViewAnnotationAnimationExample.swift */,
 				304AB3B427439287005B6D09 /* ViewAnnotationMarkerExample.swift */,
 				74A2313D27EE1C630065FB7D /* ViewAnnotationWithPointAnnotationExample.swift */,
 			);
@@ -616,6 +622,7 @@
 				5830FDB7270B5AF7005549EE /* sportcar.glb in Resources */,
 				17B4806226851C6E00CF0D5E /* radar2.gif in Resources */,
 				077C4EFA252F7E89007636F1 /* LaunchScreen.storyboard in Resources */,
+				74797C1C28F5BA760008BBB9 /* sf_airport_route.geojson in Resources */,
 				3A3AF0032836499F0036F483 /* route.geojson in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -712,6 +719,7 @@
 				58A28B5C2869F69C006F7D93 /* GlobeFlyToExample.swift in Sources */,
 				177C9D47269CA61100D13A2D /* ShowHideLayerExample.swift in Sources */,
 				0C784D1126D002DC004AE7D0 /* FeatureStateExample.swift in Sources */,
+				74797C1A28F5B72F0008BBB9 /* ViewAnnotationAnimationExample.swift in Sources */,
 				CADCF7222584990E0065C51B /* ColorExpressionExample.swift in Sources */,
 				58A28B5B2869F69C006F7D93 /* HeatmapLayerGlobeExample.swift in Sources */,
 				74A2313C27EDCE7F0065FB7D /* AnnotationView.swift in Sources */,

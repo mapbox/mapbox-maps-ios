@@ -115,8 +115,8 @@ workflows:
           devices: |
             --device model=iphone8,version=14.7 \
             --device model=iphone8,version=13.6 \
-            --device model=iphone11pro,version=13.6 \
-            --device model=iphonexr,version=13.2 \
+            --device model=iphone11pro,version=14.7 \
+            --device model=iphone13pro,version=15.2 \
 
 
   steve:

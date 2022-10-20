@@ -218,6 +218,7 @@ public class AnnotationOrchestrator {
             switch result {
 
             case .success(let queriedFeatures):
+
                 // Get the identifiers of all the queried features
                 let queriedFeatureIds: [String] = queriedFeatures.compactMap {
                     guard case let .string(featureId) = $0.feature.identifier else {
@@ -229,7 +230,6 @@ public class AnnotationOrchestrator {
                 for manager in managers {
                     manager.handleQueriedFeatureIds(queriedFeatureIds)
                 }
-
             case .failure(let error):
                 Log.warning(forMessage: "Failed to query map for annotations due to error: \(error)",
                             category: "Annotations")

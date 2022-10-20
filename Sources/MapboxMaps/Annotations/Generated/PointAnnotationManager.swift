@@ -483,8 +483,9 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     internal func handleQueriedFeatureIds(_ queriedFeatureIds: [String]) {
         // Find if any `queriedFeatureIds` match an annotation's `id`
         let tappedAnnotations = annotations.filter { queriedFeatureIds.contains($0.id) }
+
+        // If `tappedAnnotations` is not empty, call delegate
         if !tappedAnnotations.isEmpty {
-            // do the stuff
             delegate?.annotationManager(
                 self,
                 didDetectTappedAnnotations: tappedAnnotations)
@@ -494,14 +495,10 @@ public class PointAnnotationManager: AnnotationManagerInternal {
                 if selectedAnnotationIds.contains(annotation.id) {
                     if mutableAnnotation.isSelected == false {
                         mutableAnnotation.isSelected = true
-                        mutableAnnotation.iconColor = .init(UIColor.black)
                     } else {
                         mutableAnnotation.isSelected = false
-                        mutableAnnotation.iconColor = nil
                     }
 
-                } else {
-                    mutableAnnotation.iconColor = nil
                 }
                 selectedAnnotationIds.append(mutableAnnotation.id)
                 return mutableAnnotation
@@ -509,13 +506,6 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
             self.annotations = allAnnotations
 
-        } else if tappedAnnotations.isEmpty {
-            var allAnnotations = self.annotations.map { annotation in
-                var mutableAnnotation = annotation
-                mutableAnnotation.iconColor = nil
-                return mutableAnnotation
-            }
-            self.annotations = allAnnotations
         }
     }
 
@@ -532,7 +522,6 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     }
 
     func handleDragBegin(_ view: MapView, annotation: Annotation, position: CGPoint) {
-
         createDragSourceAndLayer(view: view)
 
         guard var annotation = annotation as? PointAnnotation else { return }
@@ -541,17 +530,21 @@ public class PointAnnotationManager: AnnotationManagerInternal {
             layer.iconSize = annotation.iconSize.map(Value.constant)
 
         })
+
         self.annotationBeingDragged = annotation
         self.annotations.removeAll(where: { $0.id == annotation.id })
 
-        let updatedPoint = Point(view.mapboxMap.coordinate(for: position))
-        self.annotationBeingDragged?.point = updatedPoint
-        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: updatedPoint.geometry.geoJSONObject)
+        let previousPosition = position
+        let moveObject = moveDistancesObject
+        moveObject.currentX = previousPosition.x
+        moveObject.currentY = previousPosition.y
+
+        guard let circle =  self.annotationBeingDragged?.getOffsetGeometry(view: view, moveDistancesObject: moveObject) else { return }
+        self.annotationBeingDragged?.point = circle
+        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: circle.geometry.geoJSONObject)
     }
 
     func handleDragChanged(view: MapView, position: CGPoint) {
-        guard var annotationBeingDragged = annotationBeingDragged else { return }
-
         let moveObject = moveDistancesObject
         moveObject.currentX = position.x
         moveObject.currentY = position.y
@@ -569,6 +562,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         guard let annotationBeingDragged = annotationBeingDragged else { return }
         self.annotations.append(annotationBeingDragged)
         self.annotationBeingDragged = nil
+        
         // avoid blinking annotation by waiting
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             try? self.style.removeLayer(withId: "drag-layer")
@@ -576,7 +570,6 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     }
 
     @objc func handleDrag(_ drag: UILongPressGestureRecognizer) {
-        var annotationBeingDragged: PointAnnotation?
         guard let mapView = drag.view as? MapView else { return }
         let position = drag.location(in: mapView)
         let options = RenderedQueryOptions(layerIds: [self.layerId], filter: nil)
@@ -584,7 +577,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         switch drag.state {
         case .began:
             mapView.mapboxMap.queryRenderedFeatures(
-                at: drag.location(in: mapView),
+                with: drag.location(in: mapView),
                 options: options) { (result) in
 
                     switch result {

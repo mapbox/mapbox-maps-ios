@@ -296,8 +296,9 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     internal func handleQueriedFeatureIds(_ queriedFeatureIds: [String]) {
         // Find if any `queriedFeatureIds` match an annotation's `id`
         let tappedAnnotations = annotations.filter { queriedFeatureIds.contains($0.id) }
-        if !tappedAnnotations.isEmpty {
 
+        // If `tappedAnnotations` is not empty, call delegate
+        if !tappedAnnotations.isEmpty {
             delegate?.annotationManager(
                 self,
                 didDetectTappedAnnotations: tappedAnnotations)
@@ -334,10 +335,9 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     }
 
     func handleDragBegin(_ view: MapView, annotation: Annotation, position: CGPoint) {
-
         createDragSourceAndLayer(view: view)
 
-        guard var annotation = annotation as? PolylineAnnotation else { return }
+        guard let annotation = annotation as? PolylineAnnotation else { return }
         try? view.mapboxMap.style.updateLayer(withId: "drag-layer", type: LineLayer.self, update: { layer in
             layer.lineColor = annotation.lineColor.map(Value.constant)
             layer.lineWidth = annotation.lineWidth.map(Value.constant)
@@ -357,9 +357,6 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     }
 
     func handleDragChanged(view: MapView, position: CGPoint) {
-
-        guard var annotationBeingDragged = annotationBeingDragged else { return }
-
         let moveObject = moveDistancesObject
         moveObject.currentX = position.x
         moveObject.currentY = position.y
@@ -377,6 +374,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         guard let annotationBeingDragged = annotationBeingDragged else { return }
         self.annotations.append(annotationBeingDragged)
         self.annotationBeingDragged = nil
+        
         // avoid blinking annotation by waiting
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             try? self.style.removeLayer(withId: "drag-layer")
@@ -384,7 +382,6 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     }
 
     @objc func handleDrag(_ drag: UILongPressGestureRecognizer) {
-        var annotationBeingDragged: PolylineAnnotation?
         guard let mapView = drag.view as? MapView else { return }
         let position = drag.location(in: mapView)
         let options = RenderedQueryOptions(layerIds: [self.layerId], filter: nil)
@@ -409,7 +406,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
                         }
                     case .failure(let error):
-                        print("failure")
+                        print("failure:", error.localizedDescription)
                         break
                     }
                 }

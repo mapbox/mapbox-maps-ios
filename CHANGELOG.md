@@ -3,6 +3,7 @@
 Mapbox welcomes participation and contributions from everyone.
 
 ## main
+* Support `isDraggable` and `isSelected` properties for annotations. ([#1659](https://github.com/mapbox/mapbox-maps-ios/pull/1659))
 
 ## 10.9.0-beta.2 - September 29, 2022
 

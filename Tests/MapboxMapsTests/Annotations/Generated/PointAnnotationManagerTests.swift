@@ -6,6 +6,7 @@ final class PointAnnotationManagerTests: XCTestCase {
     var manager: PointAnnotationManager!
     var style: MockStyle!
     var displayLinkCoordinator: DisplayLinkCoordinator!
+    var longPressGestureRecognizer: UILongPressGestureRecognizer!
 
     override func setUp() {
         super.setUp()
@@ -15,7 +16,7 @@ final class PointAnnotationManagerTests: XCTestCase {
         manager = PointAnnotationManager(id: UUID().uuidString,
                                          style: style,
                                          layerPosition: nil,
-                                         displayLinkCoordinator: displayLinkCoordinator)
+                                         displayLinkCoordinator: displayLinkCoordinator, longPressGestureRecognizer: longPressGestureRecognizer)
     }
 
     override func tearDown() {

@@ -362,6 +362,36 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         layer = try style.layer(withId: self.manager.layerId, type: FillLayer.self)
         XCTAssertEqual(layer.fillPattern, .constant(.name(Style.layerPropertyDefaultValue(for: .fill, property: "fill-pattern").value as! String)))
     }
+
+    func testPolygoonIsSelected() throws {
+        let polygonCoords = [
+            CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+            CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+            CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+            CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+            CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+        ]
+        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+        // Test that the setter and getter work
+        let value = Bool.random()
+        annotation.isSelected = value
+        XCTAssertEqual(annotation.isSelected, value)
+    }
+
+    func testPolygonIsDraggable() throws {
+        let polygonCoords = [
+            CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+            CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+            CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+            CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+            CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+        ]
+        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+        // Test that the setter and getter work
+        let value = Bool.random()
+        annotation.isDraggable = value
+        XCTAssertEqual(annotation.isDraggable, value)
+    }
 }
 
 // End of generated file

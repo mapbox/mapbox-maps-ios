@@ -1774,6 +1774,22 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
         XCTAssertEqual(layer.textOpacity, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-opacity").value as! NSNumber).doubleValue))
     }
+
+    func testPointIsSelected() throws {
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        // Test that the setter and getter work
+        let value = Bool.random()
+        annotation.isSelected = value
+        XCTAssertEqual(annotation.isSelected, value)
+    }
+
+    func testPointIsDraggable() throws {
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        // Test that the setter and getter work
+        let value = Bool.random()
+        annotation.isDraggable = value
+        XCTAssertEqual(annotation.isDraggable, value)
+    }
 }
 
 // End of generated file

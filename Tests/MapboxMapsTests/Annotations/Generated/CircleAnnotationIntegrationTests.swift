@@ -454,6 +454,22 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         layer = try style.layer(withId: self.manager.layerId, type: CircleLayer.self)
         XCTAssertEqual(layer.circleStrokeWidth, .constant((Style.layerPropertyDefaultValue(for: .circle, property: "circle-stroke-width").value as! NSNumber).doubleValue))
     }
+
+    func testCircleIsSelected() throws {
+        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        // Test that the setter and getter work
+        let value = Bool.random()
+        annotation.isSelected = value
+        XCTAssertEqual(annotation.isSelected, value)
+    }
+
+    func testCircleIsDraggable() throws {
+        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        // Test that the setter and getter work
+        let value = Bool.random()
+        annotation.isDraggable = value
+        XCTAssertEqual(annotation.isDraggable, value)
+    }
 }
 
 // End of generated file

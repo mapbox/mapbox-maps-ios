@@ -78,9 +78,9 @@ struct Examples {
 
     // Examples that show how to use 3D terrain or fill extrusions.
     static let threeDExamples = [
-        Example(title: "Show 3D terrain",
-                description: "Show realistic elevation by enabling terrain.",
-                type: TerrainExample.self),
+//        Example(title: "Show 3D terrain",
+//                description: "Show realistic elevation by enabling terrain.",
+//                type: TerrainExample.self),
         Example(title: "SceneKit rendering on map",
                 description: "Use custom layer to render SceneKit model over terrain.",
                 type: SceneKitExample.self),

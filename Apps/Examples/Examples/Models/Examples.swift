@@ -87,9 +87,9 @@ struct Examples {
         Example(title: "Display 3D buildings",
                 description: "Extrude the building layer in the Mapbox Light style using FillExtrusionLayer and set up the light position.",
                 type: BuildingExtrusionsExample.self),
-//        Example(title: "Add a sky layer",
-//                description: "Add a customizable sky layer to simulate natural lighting with a Terrain layer.",
-//                type: SkyLayerExample.self)
+        Example(title: "Add a sky layer",
+                description: "Add a customizable sky layer to simulate natural lighting with a Terrain layer.",
+                type: SkyLayerExample.self)
     ]
 
     // Examples that focus on annotations.

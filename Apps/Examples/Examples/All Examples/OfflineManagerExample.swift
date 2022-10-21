@@ -55,7 +55,6 @@ final class OfflineManagerExample: UIViewController, ExampleProtocol {
     deinit {
         OfflineSwitch.shared.isMapboxStackConnected = true
         removeTileRegionAndStylePack()
-        tileStore = nil
     }
 
     override func viewDidLoad() {

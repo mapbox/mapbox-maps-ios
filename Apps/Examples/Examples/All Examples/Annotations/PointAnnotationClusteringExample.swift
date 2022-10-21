@@ -67,20 +67,24 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
             25
         }
 
-        // Use color levels to implement three colors of circles:
+        // Use a similar expression to get three colors of circles:
         //   * green when point count is less than 50
         //   * cyan when point count is between 50 and 100
         //   * red when point count is greater than or equal to 100
-        let colorLevels = [
-            (pointCount: 100, clusterColor: StyleColor(.red)),
-            (pointCount: 50, clusterColor: StyleColor(.cyan)),
-            (pointCount: 0, clusterColor: StyleColor(.green))]
+        let circleColorExpression = Exp(.step) {
+            Exp(.get) {"point_count"}
+            UIColor.green
+            50
+            UIColor.cyan
+            100
+            UIColor.red
+        }
 
         // Select the options for clustering and pass them to the PointAnnotationManager to display
         let clusterOptions = ClusterOptions(clusterRadius: 75,
                                             circleRadius: .expression(circleRadiusExpression),
-                                            textColor: .constant(StyleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))),
-                                            colorLevels: colorLevels)
+                                            circleColor: .expression(circleColorExpression),
+                                            textColor: .constant(StyleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))))
         let pointAnnotationManager = mapView.annotations.makePointAnnotationManager(clusterOptions: clusterOptions)
         pointAnnotationManager.annotations = annotations
 

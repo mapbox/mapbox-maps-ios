@@ -6,8 +6,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Prevent view annotation being shown erroneously after options update.([#1627](https://github.com/mapbox/mapbox-maps-ios/pull/1627))
 * Add an example animating a view annotation along a route line. ([#1639](https://github.com/mapbox/mapbox-maps-ios/pull/1639))
-* Reduce location provider heading orientation update frequency. ([#1618](https://github.com/mapbox/mapbox-maps-ios/pull/1618))
 * Enable clustering of point annotations, add example of feature. ([#1475](https://github.com/mapbox/mapbox-maps-ios/issues/1475))
+* Reduce location provider heading orientation update frequency. ([#1618](https://github.com/mapbox/mapbox-maps-ios/pull/1618))
 
 ## 10.9.0-rc.1 - October 7, 2022
 

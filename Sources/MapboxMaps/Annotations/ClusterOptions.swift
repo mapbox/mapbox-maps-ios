@@ -4,34 +4,15 @@
 /// using CircleLayer and SymbolLayers directly.
 
 public struct ClusterOptions {
-
-    /// Define a set of cluster options to determine how to cluster annotations.
-    /// Providing clusterOptions when initializing a ``PointAnnotationManager``
-    /// will turn on clustering for that ``PointAnnotationManager``.
-    public init(clusterRadius: Double = 50,
-                circleRadius: Value<Double> = .constant(18),
-                textColor: Value<StyleColor> = .constant(StyleColor(.white)),
-                textSize: Value<Double> = .constant(12),
-                textField: Value<String> = .expression(Exp(.get) { "point_count" }),
-                clusterMaxZoom: Double = 14,
-                colorLevels: [(Int, StyleColor)] = [(0, StyleColor(.blue))],
-                clusterProperties: [String: Expression]? = nil) {
-        self.clusterRadius = clusterRadius
-        self.circleRadius = circleRadius
-        self.textColor = textColor
-        self.textSize = textSize
-        self.textField = textField
-        self.clusterMaxZoom = clusterMaxZoom
-        self.colorLevels = colorLevels
-        self.clusterProperties = clusterProperties
-    }
-
     /// Radius of each cluster if clustering is enabled. A value of 512 indicates a radius equal
     /// to the width of a tile, 50 by default. Value must be greater than or equal to 0.
     var clusterRadius: Double
 
     /// The circle radius of the cluster items, 18 by default. Units in pixels.
     var circleRadius: Value<Double>
+
+    /// The circle color, black by default.
+    var circleColor: Value<StyleColor>
 
     /// The text color of cluster item, white by default
     var textColor: Value<StyleColor>
@@ -48,16 +29,6 @@ public struct ClusterOptions {
     /// levels so setting clusterMaxZoom to 14 means the clusters will be displayed until z15.
     var clusterMaxZoom: Double
 
-    /// An array of tuples each representing a colorLevel
-    /// Each colorLevel creates a new ``CircleLayer`` which groups individual points into clusters based on
-    /// pointCount and styles them according to clusterColor.
-    /// For example, a colorLevels array like this:
-    /// `[(pointCount: 100, clusterColor: StyleColor(.red)), (pointCount: 50, clusterColor: StyleColor(.blue)), (pointCount: 0, clusterColor: StyleColor(.green))]`
-    /// would create three CircleLayers: one with red circles for clusters with greater than 100 points;
-    /// one with blue circles for clusters with 50-100 points;
-    /// and one with green circles for clusters with fewer than 50 points.
-    var colorLevels: [(pointCount: Int, clusterColor: StyleColor)]
-
     /// An object defining custom properties on the generated clusters if clustering is enabled, aggregating values from
     /// clustered points. Has the form `{"property_name": [operator, map_expression]}`.
     /// `operator` is any expression function that accepts at
@@ -70,4 +41,26 @@ public struct ClusterOptions {
     /// that references a special `["accumulated"]` value, e.g.:
     /// `{"sum": [["+", ["accumulated"], ["get", "sum"]], ["get", "scalerank"]]}`
     var clusterProperties: [String: Expression]?
+
+    /// Define a set of cluster options to determine how to cluster annotations.
+    /// Providing clusterOptions when initializing a ``PointAnnotationManager``
+    /// will turn on clustering for that ``PointAnnotationManager``.
+    public init(clusterRadius: Double = 50,
+                circleRadius: Value<Double> = .constant(18),
+                circleColor: Value<StyleColor> = .constant(StyleColor(.black)),
+                textColor: Value<StyleColor> = .constant(StyleColor(.white)),
+                textSize: Value<Double> = .constant(12),
+                textField: Value<String> = .expression(Exp(.get) { "point_count" }),
+                clusterMaxZoom: Double = 14,
+                colorLevels: [(Int, StyleColor)] = [(0, StyleColor(.blue))],
+                clusterProperties: [String: Expression]? = nil) {
+        self.clusterRadius = clusterRadius
+        self.circleRadius = circleRadius
+        self.textColor = textColor
+        self.textSize = textSize
+        self.textField = textField
+        self.clusterMaxZoom = clusterMaxZoom
+        self.circleColor = circleColor
+        self.clusterProperties = clusterProperties
+    }
 }

@@ -106,34 +106,16 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     }
 
     private func createClustersLayers(clusterOptions: ClusterOptions) {
-        for index in 0..<clusterOptions.colorLevels.count {
-            let clusterLevelLayer = createClusterLevelLayer(level: index, clusterOptions: clusterOptions)
-            do {
-                try addClusterLayer(clusterLayer: clusterLevelLayer)
-            } catch {
-                Log.error(
-                    forMessage: "Failed to add cluster circle layer in PointAnnotationManager. Error: \(error)",
-                    category: "Annotations")
-            }
-        }
+        let clusterLevelLayer = createClusterLevelLayer(clusterOptions: clusterOptions)
         let clusterTextLayer = createClusterTextLayer(clusterOptions: clusterOptions)
         do {
+            try addClusterLayer(clusterLayer: clusterLevelLayer)
             try addClusterLayer(clusterLayer: clusterTextLayer)
         } catch {
             Log.error(
-                forMessage: "Failed to add cluster text layer in PointAnnotationManager. Error: \(error)",
+                forMessage: "Failed to add cluster layer in PointAnnotationManager. Error: \(error)",
                 category: "Annotations")
         }
-    }
-
-    private func createClusterLevelLayer(level: Int, clusterOptions: ClusterOptions) -> CircleLayer {
-        let layedID = "mapbox-iOS-cluster-circle-layer-" + String(level)
-        var circleLayer = CircleLayer(id: layedID)
-        circleLayer.source = sourceId
-        circleLayer.circleColor = .constant(clusterOptions.colorLevels[level].clusterColor)
-        circleLayer.circleRadius = clusterOptions.circleRadius
-        circleLayer.filter = createFilterExpression(level: level, colorLevels: clusterOptions.colorLevels)
-        return circleLayer
     }
 
     private func addClusterLayer(clusterLayer: Layer) throws {
@@ -143,31 +125,18 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    private func createFilterExpression(level: Int, colorLevels: [(pointCount: Int, clusterColor: StyleColor)]) -> Expression {
-        let pointCount = "point_count"
-        var expressions: [Expression.Argument] = [
-            .expression(Exp(.has) { pointCount }),
-            .expression(Exp(.gte) {
-                Exp(.get) { pointCount }
-                Exp(.toNumber) {
-                    colorLevels[level].0
-                }
-            })
-        ]
-        if level != 0 {
-            expressions.append(.expression(Exp(.lt) {
-                Exp(.get) { pointCount }
-                Exp(.toNumber) {
-                    colorLevels[level-1].0
-                }
-            }))
-        }
-        return Exp(operator: .all,
-                   arguments: expressions)
+    private func createClusterLevelLayer(clusterOptions: ClusterOptions) -> CircleLayer {
+        let layedID = "mapbox-iOS-cluster-circle-layer-manager-" + id
+        var circleLayer = CircleLayer(id: layedID)
+        circleLayer.source = sourceId
+        circleLayer.circleColor = clusterOptions.circleColor
+        circleLayer.circleRadius = clusterOptions.circleRadius
+        circleLayer.filter = Exp(.has) { "point_count" }
+        return circleLayer
     }
 
     internal func createClusterTextLayer(clusterOptions: ClusterOptions) -> SymbolLayer {
-        let layerID = "mapbox-iOS-cluster-text-layer"
+        let layerID = "mapbox-iOS-cluster-text-layer-manager-" + id
         var symbolLayer = SymbolLayer(id: layerID)
         symbolLayer.source = sourceId
         symbolLayer.textField = clusterOptions.textField

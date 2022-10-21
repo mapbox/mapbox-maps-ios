@@ -68,16 +68,25 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
         }
 
         // Use a similar expression to get three colors of circles:
-        //   * green when point count is less than 50
+        //   * yellow when point count is less than 10
+        //   * green when point count is between 10 and 50
         //   * cyan when point count is between 50 and 100
-        //   * red when point count is greater than or equal to 100
+        //   * red when point count is between 100 and 150
+        //   * orange when point count is between 150 and 250
+        //   * light pink when point count is greater than or equal to 250
         let circleColorExpression = Exp(.step) {
             Exp(.get) {"point_count"}
+            UIColor.yellow
+            10
             UIColor.green
             50
             UIColor.cyan
             100
             UIColor.red
+            150
+            UIColor.orange
+            250
+            UIColor.lightPink
         }
 
         // Select the options for clustering and pass them to the PointAnnotationManager to display

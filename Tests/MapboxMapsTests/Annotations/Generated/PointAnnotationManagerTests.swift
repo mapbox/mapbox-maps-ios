@@ -3038,6 +3038,28 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         }
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
     }
+
+    func testDestroyAnnotationManager() {
+        // given
+        let clusterOptions = ClusterOptions()
+
+        // when
+        let pointAnnotationManager = PointAnnotationManager(id: id,
+                                  style: style,
+                                  layerPosition: nil,
+                                  displayLinkCoordinator: displayLinkCoordinator,
+                                  clusterOptions: clusterOptions)
+        pointAnnotationManager.annotations = annotations
+        pointAnnotationManager.destroy()
+
+        let removeLayerInvocations = style.removeLayerStub.invocations
+
+        // then
+        XCTAssertEqual(style.removeLayerStub.invocations.count, 3)
+        XCTAssertEqual(removeLayerInvocations[0].parameters, "mapbox-iOS-cluster-circle-layer-manager-" + id)
+        XCTAssertEqual(removeLayerInvocations[1].parameters, "mapbox-iOS-cluster-text-layer-manager-" + id)
+        XCTAssertEqual(removeLayerInvocations[2].parameters, id)
+    }
 }
 
 private extension PointAnnotation {

@@ -16,6 +16,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
     private var needsSyncSourceAndLayer = false
     private var addedImages = Set<String>()
+    private var clusterOptions: ClusterOptions?
 
     // MARK: - Interaction
 
@@ -63,6 +64,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         self.sourceId = id
         self.layerId = id
         self.style = style
+        self.clusterOptions = clusterOptions
         self.displayLinkCoordinator = displayLinkCoordinator
 
         do {
@@ -81,7 +83,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
             try style.addSource(source, id: sourceId)
 
             if let clusterOptions = clusterOptions {
-                createClustersLayers(clusterOptions: clusterOptions)
+                createClusterLayers(clusterOptions: clusterOptions)
             }
 
             // Add the correct backing layer for this annotation type
@@ -105,7 +107,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         displayLinkCoordinator.add(displayLinkParticipant)
     }
 
-    private func createClustersLayers(clusterOptions: ClusterOptions) {
+    private func createClusterLayers(clusterOptions: ClusterOptions) {
         let clusterLevelLayer = createClusterLevelLayer(clusterOptions: clusterOptions)
         let clusterTextLayer = createClusterTextLayer(clusterOptions: clusterOptions)
         do {
@@ -135,7 +137,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         return circleLayer
     }
 
-    internal func createClusterTextLayer(clusterOptions: ClusterOptions) -> SymbolLayer {
+    private func createClusterTextLayer(clusterOptions: ClusterOptions) -> SymbolLayer {
         let layerID = "mapbox-iOS-cluster-text-layer-manager-" + id
         var symbolLayer = SymbolLayer(id: layerID)
         symbolLayer.source = sourceId
@@ -145,11 +147,26 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         return symbolLayer
     }
 
+    private func destroyClusterLayers() {
+        do {
+            try style.removeLayer(withId: "mapbox-iOS-cluster-circle-layer-manager-" + id)
+            try style.removeLayer(withId: "mapbox-iOS-cluster-text-layer-manager-" + id)
+        } catch {
+            Log.error(
+                forMessage: "Failed to remove cluster layer in PointAnnotationManager. Error: \(error)",
+                category: "Annotations")
+        }
+    }
+
     internal func destroy() {
         guard !isDestroyed else {
             return
         }
         isDestroyed = true
+
+        if clusterOptions != nil {
+            destroyClusterLayers()
+        }
 
         do {
             try style.removeLayer(withId: layerId)
@@ -166,7 +183,6 @@ public class PointAnnotationManager: AnnotationManagerInternal {
                 category: "Annotations")
         }
         removeImages(from: style, images: addedImages)
-
         displayLinkCoordinator?.remove(displayLinkParticipant)
     }
 

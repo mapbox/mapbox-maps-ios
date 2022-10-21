@@ -16,8 +16,6 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
 
     private var needsSyncSourceAndLayer = false
 
-    private var annotationBeingDragged: PolygonAnnotation?
-
     // MARK: - Interaction
 
     /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
@@ -52,6 +50,8 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
     private let displayLinkParticipant = DelegatingDisplayLinkParticipant()
 
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
+
+    private var annotationBeingDragged: PolygonAnnotation?
 
     private var moveDistancesObject = MoveDistancesObject()
 
@@ -216,7 +216,6 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
                 if selectedAnnotationIds.contains(annotation.id) {
                     if mutableAnnotation.isSelected == false {
                         mutableAnnotation.isSelected = true
-                        mutableAnnotation.fillOutlineColor = nil
                     } else {
                         mutableAnnotation.isSelected = false
                     }
@@ -224,11 +223,13 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
                 selectedAnnotationIds.append(mutableAnnotation.id)
                 return mutableAnnotation
             }
+
             self.annotations = allAnnotations
+
         }
     }
 
-    func createDragSourceAndLayer(view: MapView) {
+    internal func createDragSourceAndLayer(view: MapView) {
         var dragSource = GeoJSONSource()
         dragSource.data = .empty
         try? view.mapboxMap.style.addSource(dragSource, id: "dragSource")
@@ -238,53 +239,68 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         dragLayer = FillLayer(id: dragLayerId)
         dragLayer.source = "dragSource"
         try? view.mapboxMap.style.addLayer(dragLayer)
+      }
+
+    internal func handleDragBegin(_ view: MapView, annotation: Annotation, position: CGPoint) {
+      createDragSourceAndLayer(view: view)
+
+      guard let annotation = annotation as? PolygonAnnotation else { return }
+      try? view.mapboxMap.style.updateLayer(withId: "drag-layer", type: FillLayer.self, update: { layer in
+        layer.fillColor = annotation.fillColor.map(Value.constant)
+        layer.fillOutlineColor = annotation.fillOutlineColor.map(Value.constant)
+      })
+
+      self.annotationBeingDragged = annotation
+      self.annotations.removeAll(where: { $0.id == annotation.id })
+
+      let previousPosition = position
+      let moveObject = moveDistancesObject
+      moveObject.prevX = previousPosition.x
+      moveObject.prevY = previousPosition.y
+      moveObject.distanceXSinceLast = 0
+      moveObject.distanceYSinceLast = 0
+
+      guard let offsetGeometry =  self.annotationBeingDragged?.getOffsetGeometry(mapboxMap: view.mapboxMap, moveDistancesObject: moveObject) else { return }
+      switch offsetGeometry {
+      case .polygon(let polygon):
+          self.annotationBeingDragged?.polygon = polygon
+          try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: polygon.geometry.geoJSONObject)
+      default:
+          break
+      }
     }
 
-    func handleDragBegin(_ view: MapView, annotation: Annotation, position: CGPoint) {
-        createDragSourceAndLayer(view: view)
+    internal func handleDragChanged(view: MapView, position: CGPoint) {
+      let moveObject = moveDistancesObject
 
-        guard let annotation = annotation as? PolygonAnnotation else { return }
-        try? view.mapboxMap.style.updateLayer(withId: "drag-layer", type: FillLayer.self, update: { layer in
-            layer.fillColor = annotation.fillColor.map(Value.constant)
-            layer.fillOutlineColor = annotation.fillOutlineColor.map(Value.constant)
-        })
+      moveObject.distanceXSinceLast = moveObject.prevX - position.x
+      moveObject.distanceYSinceLast = moveObject.prevY - position.y
+      moveObject.prevX = position.x
+      moveObject.prevY = position.y
 
-        self.annotationBeingDragged = annotation
-        self.annotations.removeAll(where: { $0.id == annotation.id })
+      if position.x < 0 || position.y < 0 || position.x > view.bounds.width || position.y > view.bounds.height {
+        handleDragEnded()
+      }
 
-        let previousPosition = position
-        let moveObject = moveDistancesObject
-        moveObject.currentX = previousPosition.x
-        moveObject.currentY = previousPosition.y
-
-        guard let polygon =  self.annotationBeingDragged?.getOffsetGeometry(view: view, moveDistancesObject: moveObject) else { return }
-        self.annotationBeingDragged?.polygon = polygon
-        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: polygon.geometry.geoJSONObject)
+      guard let offsetGeometry =  self.annotationBeingDragged?.getOffsetGeometry(mapboxMap: view.mapboxMap, moveDistancesObject: moveObject) else { return }
+      switch offsetGeometry {
+      case .polygon(let polygon):
+          self.annotationBeingDragged?.polygon = polygon
+          try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: polygon.geometry.geoJSONObject)
+      default:
+          break
+      }
     }
 
-    func handleDragChanged(view: MapView, position: CGPoint) {
-        let moveObject = moveDistancesObject
-        moveObject.currentX = position.x
-        moveObject.currentY = position.y
+    internal func handleDragEnded() {
+      guard let annotationBeingDragged = annotationBeingDragged else { return }
+      self.annotations.append(annotationBeingDragged)
+      self.annotationBeingDragged = nil
 
-        if position.x < 0 || position.y < 0 || position.x > view.bounds.width || position.y > view.bounds.height {
-          handleDragEnded()
-        }
-
-        guard let polygon =  self.annotationBeingDragged?.getOffsetGeometry(view: view, moveDistancesObject: moveObject) else { return }
-        self.annotationBeingDragged?.polygon = polygon
-        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: polygon.geometry.geoJSONObject)
-    }
-
-    func handleDragEnded() {
-        guard let annotationBeingDragged = annotationBeingDragged else { return }
-        self.annotations.append(annotationBeingDragged)
-        self.annotationBeingDragged = nil
-        
-        // avoid blinking annotation by waiting
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            try? self.style.removeLayer(withId: "drag-layer")
-        }
+      // avoid blinking annotation by waiting
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+          try? self.style.removeLayer(withId: "drag-layer")
+      }
     }
 
     @objc func handleDrag(_ drag: UILongPressGestureRecognizer) {
@@ -312,7 +328,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
 
                         }
                     case .failure(let error):
-                        print("failure:", error.localizedDescription)
+                        print("failure")
                         break
                     }
                 }

@@ -20,11 +20,8 @@ public struct PointAnnotation: Annotation {
     /// Storage for layer properties
     internal var layerProperties: [String: Any] = [:]
 
-    /// Property to determine annotation state
+    /// Property to determine whether annotation is selected
     public var isSelected: Bool = false
-
-    /// Property to determine whether annotation can be selected
-    public var isSelectable: Bool = false
 
     /// Property to determine whether annotation can be manually moved around map
     public var isDraggable: Bool = false
@@ -336,32 +333,30 @@ public struct PointAnnotation: Annotation {
         }
     }
 
-    func getOffsetGeometry(view: MapView, moveDistancesObject: MoveDistancesObject?) -> Point? {
+    /// Get the offset geometry for the touch point
+    func getOffsetGeometry(mapboxMap: MapboxMap, moveDistancesObject: MoveDistancesObject?) -> Geometry? {
         let maxMercatorLatitude = 85.05112877980659
         let minMercatorLatitude = -85.05112877980659
 
         guard let moveDistancesObject = moveDistancesObject else { return nil}
 
-        let point = self.point.coordinates
+           let point = point.coordinates
 
-        let centerPoint = Point(point)
+        let centerScreenCoordinate = mapboxMap.point(for: point)
 
-        let targetCoordinates = view.mapboxMap.coordinate(for: CGPoint(x: moveDistancesObject.currentX, y: moveDistancesObject.currentY)
-        )
+        let targetCoordinates =  mapboxMap.coordinate(for: CGPoint(x: centerScreenCoordinate.x - moveDistancesObject.distanceXSinceLast, y: centerScreenCoordinate.y - moveDistancesObject.distanceYSinceLast))
 
         let targetPoint = Point(targetCoordinates)
 
-        let shiftMercatorCoordinate = ConvertUtils.calculateMercatorCoordinateShift(startPoint: centerPoint, endPoint: targetPoint, zoomLevel: view.mapboxMap.cameraState.zoom)
+        let shiftMercatorCoordinate = Projection.calculateMercatorCoordinateShift(startPoint: Point(point), endPoint: targetPoint, zoomLevel: mapboxMap.cameraState.zoom)
 
-        let targetPoints = ConvertUtils.shiftPointWithMercatorCoordinate(point: Point(point), shiftMercatorCoordinate: shiftMercatorCoordinate, zoomLevel: view.mapboxMap.cameraState.zoom)
+        let targetPoints = Projection.shiftPointWithMercatorCoordinate(point: Point(point), shiftMercatorCoordinate: shiftMercatorCoordinate, zoomLevel: mapboxMap.cameraState.zoom)
 
         if targetPoints.coordinates.latitude > maxMercatorLatitude || targetPoints.coordinates.latitude < minMercatorLatitude {
-            return nil
+           return nil
         }
-
-        return .init(targetPoints.coordinates)
+        return Geometry(Point(targetPoints.coordinates))
     }
-
 }
 
 // End of generated file.

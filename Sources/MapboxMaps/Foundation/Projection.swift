@@ -70,3 +70,42 @@ public final class Projection {
         return MapboxCoreMaps.Projection.unproject(for: mercatorCoordinate, zoomScale: Double(zoomScale))
     }
 }
+
+internal extension Projection  {
+
+    /// Calculate the shift between two points in Mercator coordinate.
+    ///
+    /// - Parameters:
+    ///   - startPoint: The start point for the calculation.
+    ///   - endPoint: The start point for the calculation.
+    ///   - zoomLevel:The zoom level that applies to the calculation.
+    ///
+    /// - Returns: The mercator coordinate representing the shift between startPoint and endPoint.
+    internal static func calculateMercatorCoordinateShift(startPoint: Point, endPoint: Point, zoomLevel: Double) -> MercatorCoordinate {
+        var centerMercatorCoordinate = Projection.project(startPoint.coordinates, zoomScale: zoomLevel)
+        var targetMercatorCoordinate = Projection.project(endPoint.coordinates, zoomScale: zoomLevel)
+        return MercatorCoordinate(
+            x: targetMercatorCoordinate.x - centerMercatorCoordinate.x,
+            y: targetMercatorCoordinate.y - centerMercatorCoordinate.y
+        )
+    }
+
+    /// Apply a MercatorCoordinate to the original point.
+    ///
+    /// - Parameters:
+    ///   - point: The point to be shifted..
+    ///   - shiftMercatorCoordinate: The shift that applied to the original point.
+    ///   - zoomLevel:The zoom level that applies to the calculation.
+    ///
+    /// - Returns: A shifted point with the applied shiftMercatorCoordinate.
+    internal static func shiftPointWithMercatorCoordinate(point: Point, shiftMercatorCoordinate: MercatorCoordinate, zoomLevel: Double) -> Point {
+        let mercatorCoordinate = Projection.project(point.coordinates, zoomScale: zoomLevel)
+        let shiftedMercatorCoordinate = MercatorCoordinate(
+            x: mercatorCoordinate.x + shiftMercatorCoordinate.x,
+            y: mercatorCoordinate.y + shiftMercatorCoordinate.y
+        )
+        return Point(Projection.unproject(shiftedMercatorCoordinate, zoomScale: zoomLevel))
+    }
+}
+
+

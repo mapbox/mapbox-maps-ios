@@ -10,6 +10,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     var annotations = [PolylineAnnotation]()
     var expectation: XCTestExpectation?
     var delegateAnnotations: [Annotation]?
+    var longPressGestureRecognizer: UIGestureRecognizer!
 
     override func setUp() {
         super.setUp()
@@ -19,7 +20,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         manager = PolylineAnnotationManager(id: id,
                                           style: style,
                                           layerPosition: nil,
-                                          displayLinkCoordinator: displayLinkCoordinator)
+                                          displayLinkCoordinator: displayLinkCoordinator,
+                                          longPressGestureRecognizer: longPressGestureRecognizer)
 
         for _ in 0...10 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
@@ -44,7 +46,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         _ = PolylineAnnotationManager(id: id,
                                  style: style,
                                  layerPosition: nil,
-                                 displayLinkCoordinator: displayLinkCoordinator)
+                                 displayLinkCoordinator: displayLinkCoordinator,
+                                 longPressGestureRecognizer: longPressGestureRecognizer)
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.type, SourceType.geoJson)
@@ -56,7 +59,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         let initializedManager = PolylineAnnotationManager(id: id,
                                                          style: style,
                                                          layerPosition: nil,
-                                                         displayLinkCoordinator: displayLinkCoordinator)
+                                                         displayLinkCoordinator: displayLinkCoordinator,
+                                                         longPressGestureRecognizer: longPressGestureRecognizer)
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
@@ -78,7 +82,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         let manager2 = PolylineAnnotationManager(id: manager.id,
                                                style: style,
                                                layerPosition: nil,
-                                               displayLinkCoordinator: displayLinkCoordinator)
+                                               displayLinkCoordinator: displayLinkCoordinator,
+                                               longPressGestureRecognizer: longPressGestureRecognizer)
         manager2.annotations = annotations2
 
         XCTAssertEqual(manager.annotations.count, 11)
@@ -89,7 +94,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         let manager3 = PolylineAnnotationManager(id: id,
                                                style: style,
                                                layerPosition: LayerPosition.at(4),
-                                               displayLinkCoordinator: displayLinkCoordinator)
+                                               displayLinkCoordinator: displayLinkCoordinator,
+                                               longPressGestureRecognizer: longPressGestureRecognizer)
         manager3.annotations = annotations
 
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition, LayerPosition.at(4))

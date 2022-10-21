@@ -10,6 +10,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     var annotations = [PointAnnotation]()
     var expectation: XCTestExpectation?
     var delegateAnnotations: [Annotation]?
+    var longPressGestureRecognizer: UIGestureRecognizer!
 
     override func setUp() {
         super.setUp()
@@ -19,7 +20,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         manager = PointAnnotationManager(id: id,
                                           style: style,
                                           layerPosition: nil,
-                                          displayLinkCoordinator: displayLinkCoordinator)
+                                          displayLinkCoordinator: displayLinkCoordinator,
+                                          longPressGestureRecognizer: longPressGestureRecognizer)
 
         for _ in 0...10 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
@@ -43,7 +45,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         _ = PointAnnotationManager(id: id,
                                  style: style,
                                  layerPosition: nil,
-                                 displayLinkCoordinator: displayLinkCoordinator)
+                                 displayLinkCoordinator: displayLinkCoordinator,
+                                 longPressGestureRecognizer: longPressGestureRecognizer)
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.type, SourceType.geoJson)
@@ -55,7 +58,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let initializedManager = PointAnnotationManager(id: id,
                                                          style: style,
                                                          layerPosition: nil,
-                                                         displayLinkCoordinator: displayLinkCoordinator)
+                                                         displayLinkCoordinator: displayLinkCoordinator,
+                                                         longPressGestureRecognizer: longPressGestureRecognizer)
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
@@ -76,7 +80,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let manager2 = PointAnnotationManager(id: manager.id,
                                                style: style,
                                                layerPosition: nil,
-                                               displayLinkCoordinator: displayLinkCoordinator)
+                                               displayLinkCoordinator: displayLinkCoordinator,
+                                               longPressGestureRecognizer: longPressGestureRecognizer)
         manager2.annotations = annotations2
 
         XCTAssertEqual(manager.annotations.count, 11)
@@ -87,7 +92,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let manager3 = PointAnnotationManager(id: id,
                                                style: style,
                                                layerPosition: LayerPosition.at(4),
-                                               displayLinkCoordinator: displayLinkCoordinator)
+                                               displayLinkCoordinator: displayLinkCoordinator,
+                                               longPressGestureRecognizer: longPressGestureRecognizer)
         manager3.annotations = annotations
 
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition, LayerPosition.at(4))

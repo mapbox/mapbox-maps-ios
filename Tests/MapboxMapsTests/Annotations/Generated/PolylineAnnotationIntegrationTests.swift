@@ -582,24 +582,6 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         layer = try style.layer(withId: self.manager.layerId, type: LineLayer.self)
         XCTAssertEqual(layer.lineWidth, .constant((Style.layerPropertyDefaultValue(for: .line, property: "line-width").value as! NSNumber).doubleValue))
     }
-
-    func testLineIsSelected() throws {
-        let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
-        // Test that the setter and getter work
-        let value = Bool.random()
-        annotation.isSelected = value
-        XCTAssertEqual(annotation.isSelected, value)
-    }
-
-    func testLineIsDraggable() throws {
-        let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
-        // Test that the setter and getter work
-        let value = Bool.random()
-        annotation.isDraggable = value
-        XCTAssertEqual(annotation.isDraggable, value)
-    }
 }
 
 // End of generated file

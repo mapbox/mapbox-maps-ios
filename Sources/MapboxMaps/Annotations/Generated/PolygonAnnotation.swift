@@ -20,11 +20,8 @@ public struct PolygonAnnotation: Annotation {
     /// Storage for layer properties
     internal var layerProperties: [String: Any] = [:]
 
-    /// Property to determine annotation state
-    public var isSelected: Bool = false
-
     /// Property to determine whether annotation is selected
-    public var isSelectable: Bool = false
+    public var isSelected: Bool = false
 
     /// Property to determine whether annotation can be manually moved around map
     public var isDraggable: Bool = false
@@ -99,14 +96,16 @@ public struct PolygonAnnotation: Annotation {
         }
     }
 
-    func getOffsetGeometry(view: MapView, moveDistancesObject: MoveDistancesObject?) -> Polygon? {
+
+    /// Get the offset geometry for the touch point
+    func getOffsetGeometry(mapboxMap: MapboxMap, moveDistancesObject: MoveDistancesObject?) -> Geometry? {
         let maxMercatorLatitude = 85.05112877980659
         let minMercatorLatitude = -85.05112877980659
 
         guard let moveDistancesObject = moveDistancesObject else { return nil}
 
-        let points = self.polygon.outerRing.coordinates
-        if points.isEmpty {
+           let points = polygon.outerRing.coordinates
+        if points == nil || points.isEmpty {
             return nil
         }
 
@@ -120,24 +119,21 @@ public struct PolygonAnnotation: Annotation {
 
         let centerPoint = Point(averageCoordinates)
 
-        let centerScreenCoordinate = view.mapboxMap.point(for: centerPoint.coordinates)
+        let centerScreenCoordinate = mapboxMap.point(for: centerPoint.coordinates)
 
-        let targetCoordinates = view.mapboxMap.coordinate(for: CGPoint(x: moveDistancesObject.currentX, y: moveDistancesObject.currentY)
-        )
+        let targetCoordinates =  mapboxMap.coordinate(for: CGPoint(x: centerScreenCoordinate.x - moveDistancesObject.distanceXSinceLast, y: centerScreenCoordinate.y - moveDistancesObject.distanceYSinceLast))
 
         let targetPoint = Point(targetCoordinates)
 
-        let shiftMercatorCoordinate = ConvertUtils.calculateMercatorCoordinateShift(startPoint: centerPoint, endPoint: targetPoint, zoomLevel: view.mapboxMap.cameraState.zoom)
+        let shiftMercatorCoordinate = Projection.calculateMercatorCoordinateShift(startPoint: centerPoint, endPoint: targetPoint, zoomLevel: mapboxMap.cameraState.zoom)
 
-        let targetPoints = points.map {ConvertUtils.shiftPointWithMercatorCoordinate(point: Point($0), shiftMercatorCoordinate: shiftMercatorCoordinate, zoomLevel: view.mapboxMap.cameraState.zoom)}
+        let targetPoints = points.map {Projection.shiftPointWithMercatorCoordinate(point: Point($0), shiftMercatorCoordinate: shiftMercatorCoordinate, zoomLevel: mapboxMap.cameraState.zoom)}
 
         if targetPoints.contains(where: {$0.coordinates.latitude > maxMercatorLatitude || $0.coordinates.latitude < minMercatorLatitude }) {
             return nil
         }
-
-        return Polygon([targetPoints.map {$0.coordinates}])
-    }
-
+        return Geometry(Polygon([targetPoints.map {$0.coordinates}]))
+  }
 }
 
 // End of generated file.

@@ -2,58 +2,6 @@
 import Foundation
 @_implementationOnly import MapboxCommon_Private
 
-class MoveDistancesObject {
-    var distanceXSinceLast = CGFloat()
-    var distanceYSinceLast = CGFloat()
-    var currentX = CGFloat()
-    var currentY = CGFloat()
-}
-
-class ConvertUtils {
-    /**
-     * Calculate the shift between two [Point]s in Mercator coordinate.
-     *
-     * @param startPoint the start point for the calculation.
-     * @param endPoint the end point for the calculation.
-     * @param zoomLevel the zoom level that apply the calculation.
-     *
-     * @return A [MercatorCoordinate] represent the shift between startPoint and endPoint.
-     */
-    static func calculateMercatorCoordinateShift(startPoint: Point, endPoint: Point, zoomLevel: Double) -> MercatorCoordinate {
-        var centerMercatorCoordinate = Projection.project(startPoint.coordinates, zoomScale: zoomLevel)
-        var targetMercatorCoordinate = Projection.project(endPoint.coordinates, zoomScale: zoomLevel)
-
-        // Get the shift in Mercator coordinates
-        return MercatorCoordinate(
-            x: targetMercatorCoordinate.x - centerMercatorCoordinate.x,
-            y: targetMercatorCoordinate.y - centerMercatorCoordinate.y
-        )
-    }
-
-    /**
-     * Apply a [MercatorCoordinate] to the original point.
-     *
-     * @param point the point needs to shift.
-     * @param shiftMercatorCoordinate the shift that applied to the original point.
-     * @param zoomLevel the zoom level that apply the calculation.
-     *
-     * @return a shift point that applied the shift MercatorCoordinate.
-     */
-    static func shiftPointWithMercatorCoordinate(point: Point, shiftMercatorCoordinate: MercatorCoordinate,
-                                                 zoomLevel: Double) -> Point {
-        // transform point to Mercator coordinate
-
-        let mercatorCoordinate = Projection.project(point.coordinates, zoomScale: zoomLevel)
-        // calculate the shifted Mercator coordinate
-        let shiftedMercatorCoordinate = MercatorCoordinate(
-            x: mercatorCoordinate.x + shiftMercatorCoordinate.x,
-            y: mercatorCoordinate.y + shiftMercatorCoordinate.y
-        )
-        // transform Mercator coordinate to point
-        return Point(Projection.unproject(shiftedMercatorCoordinate, zoomScale: zoomLevel))
-    }
-}
-
 /// An instance of `PolylineAnnotationManager` is responsible for a collection of `PolylineAnnotation`s.
 public class PolylineAnnotationManager: AnnotationManagerInternal {
 
@@ -311,7 +259,6 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
                     } else {
                         mutableAnnotation.isSelected = false
                     }
-
                 }
                 selectedAnnotationIds.append(mutableAnnotation.id)
                 return mutableAnnotation
@@ -321,8 +268,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
         }
     }
-
-    func createDragSourceAndLayer(view: MapView) {
+    internal func createDragSourceAndLayer(view: MapView) {
         var dragSource = GeoJSONSource()
         dragSource.data = .empty
         try? view.mapboxMap.style.addSource(dragSource, id: "dragSource")
@@ -334,7 +280,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         try? view.mapboxMap.style.addLayer(dragLayer)
     }
 
-    func handleDragBegin(_ view: MapView, annotation: Annotation, position: CGPoint) {
+    internal func handleDragBegin(_ view: MapView, annotation: Annotation, position: CGPoint) {
         createDragSourceAndLayer(view: view)
 
         guard let annotation = annotation as? PolylineAnnotation else { return }
@@ -348,37 +294,52 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
         let previousPosition = position
         let moveObject = moveDistancesObject
-        moveObject.currentX = previousPosition.x
-        moveObject.currentY = previousPosition.y
+        moveObject.prevX = previousPosition.x
+        moveObject.prevY = previousPosition.y
+        moveObject.distanceXSinceLast = 0
+        moveObject.distanceYSinceLast = 0
 
-        guard let lineString =  self.annotationBeingDragged?.getOffsetGeometry(view: view, moveDistancesObject: moveObject) else { return }
-        self.annotationBeingDragged?.lineString = lineString
-        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: lineString.geometry.geoJSONObject)
+        guard let offsetGeometry =  self.annotationBeingDragged?.getOffsetGeometry(mapboxMap: view.mapboxMap, moveDistancesObject: moveObject) else { return }
+        switch offsetGeometry {
+        case .lineString(let lineString):
+            self.annotationBeingDragged?.lineString = lineString
+            try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: lineString.geometry.geoJSONObject)
+        default:
+            break
+        }
     }
 
-    func handleDragChanged(view: MapView, position: CGPoint) {
+    internal func handleDragChanged(view: MapView, position: CGPoint) {
         let moveObject = moveDistancesObject
-        moveObject.currentX = position.x
-        moveObject.currentY = position.y
+
+        moveObject.distanceXSinceLast = moveObject.prevX - position.x
+        moveObject.distanceYSinceLast = moveObject.prevY - position.y
+        moveObject.prevX = position.x
+        moveObject.prevY = position.y
 
         if position.x < 0 || position.y < 0 || position.x > view.bounds.width || position.y > view.bounds.height {
           handleDragEnded()
         }
 
-        guard let lineString =  self.annotationBeingDragged?.getOffsetGeometry(view: view, moveDistancesObject: moveObject) else { return }
-        self.annotationBeingDragged?.lineString = lineString
-        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: lineString.geometry.geoJSONObject)
+        guard let offsetGeometry =  self.annotationBeingDragged?.getOffsetGeometry(mapboxMap: view.mapboxMap, moveDistancesObject: moveObject) else { return }
+        switch offsetGeometry {
+        case .lineString(let lineString):
+            self.annotationBeingDragged?.lineString = lineString
+            try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: lineString.geometry.geoJSONObject)
+        default:
+            break
+        }
     }
 
-    func handleDragEnded() {
-        guard let annotationBeingDragged = annotationBeingDragged else { return }
-        self.annotations.append(annotationBeingDragged)
-        self.annotationBeingDragged = nil
-        
-        // avoid blinking annotation by waiting
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            try? self.style.removeLayer(withId: "drag-layer")
-        }
+    internal func handleDragEnded() {
+      guard let annotationBeingDragged = annotationBeingDragged else { return }
+      self.annotations.append(annotationBeingDragged)
+      self.annotationBeingDragged = nil
+
+      // avoid blinking annotation by waiting
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+          try? self.style.removeLayer(withId: "drag-layer")
+      }
     }
 
     @objc func handleDrag(_ drag: UILongPressGestureRecognizer) {
@@ -389,7 +350,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         switch drag.state {
         case .began:
             mapView.mapboxMap.queryRenderedFeatures(
-                at: drag.location(in: mapView),
+                with: drag.location(in: mapView),
                 options: options) { (result) in
 
                     switch result {
@@ -406,7 +367,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
                         }
                     case .failure(let error):
-                        print("failure:", error.localizedDescription)
+                        print("failure")
                         break
                     }
                 }

@@ -98,15 +98,15 @@ workflows:
             - Build MapboxTestHost tests [non-main]
           devices: --device model=iphone8,version=14.7
 
-      - run-examples-tests?:
-          type: approval
-          filters:
-            branches:
-              ignore: main
+      # - run-examples-tests?:
+      #     type: approval
+      #     filters:
+      #       branches:
+      #         ignore: main
       - build-examples-tests:
           name: Build Examples tests [non-main]
-          requires:
-            - run-examples-tests?
+          # requires:
+          #   - run-examples-tests?
       - run-tests:
           name: Run Examples tests [non-main]
           scheme: Examples
@@ -120,7 +120,7 @@ workflows:
 
 
   steve:
-    unless: << pipeline.parameters.turf-revision >>
+    when: << pipeline.parameters.turf-revision >>
     jobs:
       - swiftlint
       - depsvalidator:

@@ -421,11 +421,11 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         // then
         XCTAssertEqual(clusterOptions.clusterRadius, 50)
         XCTAssertEqual(clusterOptions.circleRadius, .constant(18))
+        XCTAssertEqual(clusterOptions.circleColor, .constant(StyleColor(.black)))
         XCTAssertEqual(clusterOptions.textColor, .constant(StyleColor(.white)))
         XCTAssertEqual(clusterOptions.textSize, .constant(12))
         XCTAssertEqual(clusterOptions.textField, .expression(Exp(.get) { "point_count" }))
         XCTAssertEqual(clusterOptions.clusterMaxZoom, 14)
-        XCTAssertEqual(clusterOptions.colorLevels.description, [(pointCount: 0, clusterColor: StyleColor(.blue))].description)
         XCTAssertNil(clusterOptions.clusterProperties)
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.type, SourceType.geoJson)
@@ -469,12 +469,14 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         XCTAssertEqual(geoJSONSource.clusterProperties, testClusterProperties)
     }
 
-    func testCircleLayers() {
+    func testCircleLayer() {
         style.addSourceStub.reset()
         style.addPersistentLayerStub.reset()
         // given
         let testCircleRadius = Value<Double>.testConstantValue()
-        let clusterOptions = ClusterOptions(circleRadius: testCircleRadius)
+        let testCircleColor = Value<StyleColor>.testConstantValue()
+        let clusterOptions = ClusterOptions(circleRadius: testCircleRadius,
+                                            circleColor: testCircleColor)
         var annotations = [PointAnnotation]()
         for _ in 0...500 {
             let annotation = PointAnnotation(coordinate: .random())
@@ -491,85 +493,20 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
 
         // then
         let circleLayerInvocations = style.addPersistentLayerStub.invocations.filter { circleLayer in
-            return circleLayer.parameters.layer.type == .circle
+            return circleLayer.parameters.layer.id == "mapbox-iOS-cluster-circle-layer-manager-" + id
         }
-        for (index, invocation) in circleLayerInvocations.enumerated() {
-            let circleLayer = invocation.parameters.layer as! CircleLayer
-            XCTAssertEqual(circleLayer.circleRadius, testCircleRadius)
-            XCTAssertEqual(circleLayer.id, "mapbox-iOS-cluster-circle-layer-\(index)")
-        }
-        XCTAssertEqual(circleLayerInvocations.count, clusterOptions.colorLevels.count)
+        let circleLayer = circleLayerInvocations[0].parameters.layer as! CircleLayer
+
         XCTAssertEqual(clusterOptions.circleRadius, testCircleRadius)
+        XCTAssertEqual(circleLayer.circleRadius, testCircleRadius)
+        XCTAssertEqual(clusterOptions.circleColor, testCircleColor)
+        XCTAssertEqual(circleLayer.circleColor, testCircleColor)
+        XCTAssertEqual(circleLayer.filter, Exp(.has) { "point_count" })
+        XCTAssertEqual(circleLayer.id, "mapbox-iOS-cluster-circle-layer-manager-" + id)
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
     }
 
-    func testColorLevels() {
-        style.addSourceStub.reset()
-        style.addPersistentLayerStub.reset()
-        // given
-        let testColorLevels = Array.random(withLength: UInt.random(in: 0..<100)) {
-            return (pointCount: Int.random(in: 0..<10000), clusterColor: StyleColor.testConstantValue())
-        }
-        let clusterOptions = ClusterOptions(colorLevels: testColorLevels)
-        var annotations = [PointAnnotation]()
-        for _ in 0...500 {
-            let annotation = PointAnnotation(coordinate: .random())
-            annotations.append(annotation)
-        }
-
-        // when
-        let pointAnnotationManager = PointAnnotationManager(id: id,
-                                    style: style,
-                                    layerPosition: nil,
-                                    displayLinkCoordinator: displayLinkCoordinator,
-                                    clusterOptions: clusterOptions)
-        pointAnnotationManager.annotations = annotations
-
-        // then
-        let circleLayerInvocations = style.addPersistentLayerStub.invocations.filter { circleLayer in
-            return circleLayer.parameters.layer.type == .circle
-        }
-
-        var expectedExpression: Expression
-        for (index, invocation) in circleLayerInvocations.enumerated() {
-            let circleLayer = invocation.parameters.layer as! CircleLayer
-            if index == 0 {
-                expectedExpression = Exp(.all) {
-                    Exp(.has) { "point_count" }
-                    Exp(.gte) {
-                        Exp(.get) { "point_count" }
-                        Exp(.toNumber) {
-                            testColorLevels[index].pointCount
-                        }
-                    }
-                }
-            } else {
-                expectedExpression = Exp(.all) {
-                    Exp(.has) { "point_count" }
-                    Exp(.gte) {
-                        Exp(.get) { "point_count" }
-                        Exp(.toNumber) {
-                            testColorLevels[index].pointCount
-                        }
-                    }
-                    Exp(.lt) {
-                        Exp(.get) { "point_count" }
-                        Exp(.toNumber) {
-                            testColorLevels[index-1].pointCount
-                        }
-                    }
-                }
-            }
-            XCTAssertEqual(circleLayer.circleColor, .constant(testColorLevels[index].1))
-            XCTAssertEqual(circleLayer.filter, expectedExpression)
-            XCTAssertEqual(circleLayer.id, "mapbox-iOS-cluster-circle-layer-\(index)")
-        }
-        XCTAssertEqual(circleLayerInvocations.count, clusterOptions.colorLevels.count)
-        XCTAssertEqual(clusterOptions.colorLevels.description, testColorLevels.description)
-        XCTAssertEqual(style.addSourceStub.invocations.count, 1)
-    }
-
-    func testTextLayers() {
+    func testTextLayer() {
         style.addSourceStub.reset()
         style.addPersistentLayerStub.reset()
         // given
@@ -595,7 +532,7 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
 
         // then
         let textLayerInvocations = style.addPersistentLayerStub.invocations.filter { symbolLayer in
-            return symbolLayer.parameters.layer.id == "mapbox-iOS-cluster-text-layer"
+            return symbolLayer.parameters.layer.id == "mapbox-iOS-cluster-text-layer-manager-" + id
         }
         let textLayer = textLayerInvocations[0].parameters.layer as! SymbolLayer
 
@@ -681,6 +618,28 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
           XCTFail("GeoJSON did not update correctly")
         }
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
+    }
+
+    func testDestroyAnnotationManager() {
+        // given
+        let clusterOptions = ClusterOptions()
+
+        // when
+        let pointAnnotationManager = PointAnnotationManager(id: id,
+                                  style: style,
+                                  layerPosition: nil,
+                                  displayLinkCoordinator: displayLinkCoordinator,
+                                  clusterOptions: clusterOptions)
+        pointAnnotationManager.annotations = annotations
+        pointAnnotationManager.destroy()
+
+        let removeLayerInvocations = style.removeLayerStub.invocations
+
+        // then
+        XCTAssertEqual(style.removeLayerStub.invocations.count, 3)
+        XCTAssertEqual(removeLayerInvocations[0].parameters, "mapbox-iOS-cluster-circle-layer-manager-" + id)
+        XCTAssertEqual(removeLayerInvocations[1].parameters, "mapbox-iOS-cluster-text-layer-manager-" + id)
+        XCTAssertEqual(removeLayerInvocations[2].parameters, id)
     }
     <%_ } _%>
 }

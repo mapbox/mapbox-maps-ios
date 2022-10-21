@@ -158,6 +158,7 @@ custom_categories:
       - PolygonAnnotationManager
       - PolylineAnnotation
       - PolylineAnnotationManager
+      - ClusterOptions
 
   - name: View Annotations
     children:

@@ -362,7 +362,7 @@ public final class ViewAnnotationManager {
         pitch: CGFloat? = nil,
         animationDuration: TimeInterval = 1
     ) {
-        let coordinateBounds = camera(forAnnotations: ids).map(mapboxMap.coordinateBounds(for:))
+        let coordinateBounds = camera(forAnnotations: ids, pitch: pitch).map(mapboxMap.coordinateBounds(for:))
         guard let coordinateBounds = coordinateBounds, !coordinateBounds.isEmpty else { return }
 
         coordinateBoundsAnimator.show(coordinateBounds: coordinateBounds, padding: padding, pitch: pitch, animationDuration: animationDuration)

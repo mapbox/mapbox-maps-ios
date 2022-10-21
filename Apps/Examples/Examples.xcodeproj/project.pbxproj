@@ -661,7 +661,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/../../scripts/insert_access_token.sh\n";
+			shellScript = "$SRCROOT/../../scripts/insert_access_token.sh\n# Update application version fields\nNEW_VERSION=$(date +%Y%m%d%H%M%S)\nplutil -replace CFBundleVersion -string \"$NEW_VERSION\" \"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\nVERSION=$(cat $SRCROOT/../../Sources/MapboxMaps/MapboxMaps.json | grep -Eo \"\\d+\\.\\d+\\.\\d+\")\n\nplutil -replace CFBundleShortVersionString -string \"$VERSION\" \"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FE9223362881673C006A7B2A /* Run swiftlint */ = {

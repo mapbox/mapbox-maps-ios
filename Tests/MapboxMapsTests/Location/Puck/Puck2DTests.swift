@@ -852,9 +852,3 @@ final class Puck2DTests: XCTestCase {
         XCTAssertEqual(expectedRadius, radius)
     }
 }
-
-private extension ClosedRange where Bound == Double {
-    var magnitude: Double {
-        return upperBound - lowerBound
-    }
-}

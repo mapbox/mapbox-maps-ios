@@ -347,8 +347,8 @@ private extension Puck2DConfiguration.Pulsing.Radius {
     }
 }
 
-private extension ClosedRange where Bound == Double {
-    var magnitude: Double {
+internal extension ClosedRange where Bound: AdditiveArithmetic {
+    var magnitude: Bound {
         return upperBound - lowerBound
     }
 }

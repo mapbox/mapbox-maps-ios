@@ -443,6 +443,8 @@ public final class Style: StyleProtocol {
     /// The ordered list of the current style layers' identifiers and types
     public var allLayerIdentifiers: [LayerInfo] {
         return _styleManager.getStyleLayers().compactMap { info in
+            if info.is3DPuckLayer { return nil }
+
             guard let layerType = LayerType(rawValue: info.type) else {
                 assertionFailure("Failed to create LayerType from \(info.type)")
                 return nil

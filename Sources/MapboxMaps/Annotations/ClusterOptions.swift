@@ -4,10 +4,6 @@
 /// using CircleLayer and SymbolLayers directly.
 
 public struct ClusterOptions {
-    /// Radius of each cluster if clustering is enabled. A value of 512 indicates a radius equal
-    /// to the width of a tile, 50 by default. Value must be greater than or equal to 0.
-    var clusterRadius: Double
-
     /// The circle radius of the cluster items, 18 by default. Units in pixels.
     var circleRadius: Value<Double>
 
@@ -23,6 +19,10 @@ public struct ClusterOptions {
     /// Value to use for a text label of the cluster. `get("point_count")` by default which
     /// will show the count of points in the cluster
     var textField: Value<String>
+
+    /// Radius of each cluster if clustering is enabled. A value of 512 indicates a radius equal
+    /// to the width of a tile, 50 by default. Value must be greater than or equal to 0.
+    var clusterRadius: Double
 
     /// Max zoom on which to cluster points if clustering is enabled. Defaults to one zoom less
     /// than maxzoom (so that last zoom features are not clustered). Clusters are re-evaluated at integer zoom
@@ -45,22 +45,21 @@ public struct ClusterOptions {
     /// Define a set of cluster options to determine how to cluster annotations.
     /// Providing clusterOptions when initializing a ``PointAnnotationManager``
     /// will turn on clustering for that ``PointAnnotationManager``.
-    public init(clusterRadius: Double = 50,
-                circleRadius: Value<Double> = .constant(18),
+    public init(circleRadius: Value<Double> = .constant(18),
                 circleColor: Value<StyleColor> = .constant(StyleColor(.black)),
                 textColor: Value<StyleColor> = .constant(StyleColor(.white)),
                 textSize: Value<Double> = .constant(12),
                 textField: Value<String> = .expression(Exp(.get) { "point_count" }),
+                clusterRadius: Double = 50,
                 clusterMaxZoom: Double = 14,
-                colorLevels: [(Int, StyleColor)] = [(0, StyleColor(.blue))],
                 clusterProperties: [String: Expression]? = nil) {
-        self.clusterRadius = clusterRadius
         self.circleRadius = circleRadius
+        self.circleColor = circleColor
         self.textColor = textColor
         self.textSize = textSize
         self.textField = textField
+        self.clusterRadius = clusterRadius
         self.clusterMaxZoom = clusterMaxZoom
-        self.circleColor = circleColor
         self.clusterProperties = clusterProperties
     }
 }

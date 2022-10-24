@@ -55,16 +55,16 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
     func createClusters(annotations: [PointAnnotation]) {
         // Use a step expressions (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
         // with three steps to implement three sizes of circles:
-        //   * 15 when point count is less than 50
-        //   * 20 when point count is between 50 and 100
-        //   * 25 when point count is greater than or equal to 100
+        //   * 25 when point count is less than 50
+        //   * 30 when point count is between 50 and 100
+        //   * 35 when point count is greater than or equal to 100
         let circleRadiusExpression = Exp(.step) {
             Exp(.get) {"point_count"}
-            15
-            50
-            20
-            100
             25
+            50
+            30
+            100
+            35
         }
 
         // Use a similar expression to get three colors of circles:
@@ -89,11 +89,20 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
             UIColor.lightPink
         }
 
+        // Create a cluster property to add to each cluster feature
+        // This will be added to the cluster textField below
+        let clusterProperty: [String: Expression] = ["pointString": Exp(.string) { "Count:\n" }]
+
         // Select the options for clustering and pass them to the PointAnnotationManager to display
-        let clusterOptions = ClusterOptions(clusterRadius: 75,
-                                            circleRadius: .expression(circleRadiusExpression),
+        let clusterOptions = ClusterOptions(circleRadius: .expression(circleRadiusExpression),
                                             circleColor: .expression(circleColorExpression),
-                                            textColor: .constant(StyleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))))
+                                            textColor: .constant(StyleColor(.black)),
+                                            textField: .expression(Exp(.concat) {
+                                                Exp(.get) {"pointString"}
+                                                Exp(.get) {"point_count"}
+                                            }),
+                                            clusterRadius: 75,
+                                            clusterProperties: clusterProperty)
         let pointAnnotationManager = mapView.annotations.makePointAnnotationManager(clusterOptions: clusterOptions)
         pointAnnotationManager.annotations = annotations
 

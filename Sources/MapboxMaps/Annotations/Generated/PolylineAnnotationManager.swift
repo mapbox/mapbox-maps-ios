@@ -318,7 +318,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         moveObject.prevY = position.y
 
         if position.x < 0 || position.y < 0 || position.x > view.bounds.width || position.y > view.bounds.height {
-          handleDragEnded()
+            handleDragEnded()
         }
 
         guard let offsetGeometry =  self.annotationBeingDragged?.getOffsetGeometry(mapboxMap: view.mapboxMap, moveDistancesObject: moveObject) else { return }
@@ -332,14 +332,14 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     }
 
     internal func handleDragEnded() {
-      guard let annotationBeingDragged = annotationBeingDragged else { return }
-      self.annotations.append(annotationBeingDragged)
-      self.annotationBeingDragged = nil
+        guard let annotationBeingDragged = annotationBeingDragged else { return }
+        self.annotations.append(annotationBeingDragged)
+        self.annotationBeingDragged = nil
 
-      // avoid blinking annotation by waiting
-      DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-          try? self.style.removeLayer(withId: "drag-layer")
-      }
+        // avoid blinking annotation by waiting
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            try? self.style.removeLayer(withId: "drag-layer")
+        }
     }
 
     @objc func handleDrag(_ drag: UILongPressGestureRecognizer) {
@@ -362,13 +362,10 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
                                   annotation.isDraggable else {
                                 return
                             }
-
                             self.handleDragBegin(mapView, annotation: annotation, position: position)
-
                         }
                     case .failure(let error):
-                        print("failure")
-                        break
+                        print("failure:", error.localizedDescription)
                     }
                 }
         case .changed:

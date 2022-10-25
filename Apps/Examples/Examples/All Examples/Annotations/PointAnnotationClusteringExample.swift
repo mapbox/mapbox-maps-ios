@@ -9,7 +9,7 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        // Center the map over Washington, DC.
+        // Center the map over Washington, D.C.
         let center = CLLocationCoordinate2D(latitude: 38.889215, longitude: -77.039354)
         let cameraOptions = CameraOptions(center: center, zoom: 11)
         let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .light)
@@ -27,7 +27,7 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
     func addPointAnnotations() {
         // The image named `fire-station-11` is included in the app's Assets.xcassets bundle.
         let image = UIImage(named: "fire-station-11")!
-        // Fire_Hydrants.geojson contains information about fire hydrants in the District of Columbia.
+        // Fire_Hydrants.geojson contains information about fire hydrants in Washington, D.C.
         // It was downloaded on 6/10/21 from https://opendata.dc.gov/datasets/DCGIS::fire-hydrants/about
         // Decode the GeoJSON into a feature collection on a background thread
         _ = Bundle.main.url(forResource: "Fire_Hydrants", withExtension: "geojson")!
@@ -67,7 +67,7 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
             35
         }
 
-        // Use a similar expression to get three colors of circles:
+        // Use a similar expression to get different colors of circles:
         //   * yellow when point count is less than 10
         //   * green when point count is between 10 and 50
         //   * cyan when point count is between 50 and 100

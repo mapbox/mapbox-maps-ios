@@ -1,6 +1,6 @@
-/// Options to show and configure point annotation clustering with using PointAnnotationManager.
+/// Options to configure point annotation clustering with PointAnnotationManager.
 ///
-/// It exposes a minimal of configuration options, a more advanced setup can be created manually with
+/// ClusterOptions exposes a minimal of configuration options, a more advanced setup can be created manually with
 /// using CircleLayer and SymbolLayers directly.
 
 public struct ClusterOptions {

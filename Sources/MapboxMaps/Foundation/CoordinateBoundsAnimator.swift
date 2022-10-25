@@ -7,14 +7,15 @@ internal protocol CoordinateBoundsAnimator {
     ///
     /// - Parameter coordinateBounds: The area to be framed and animate to.
     /// - Parameter padding: The inset from the edges of the map.
+    /// - Parameter bearing: The bearing of the map.
     /// - Parameter pitch: Pitch toward the horizon measured in degrees.
     /// - Parameter animationDuration: Duration to perform the animation.
-    func show(coordinateBounds: CoordinateBounds, padding: UIEdgeInsets, pitch: CGFloat?, animationDuration: TimeInterval)
+    func show(coordinateBounds: CoordinateBounds, padding: UIEdgeInsets, bearing: CGFloat?, pitch: CGFloat?, animationDuration: TimeInterval)
 }
 
 extension Viewport: CoordinateBoundsAnimator {
 
-    func show(coordinateBounds: CoordinateBounds, padding: UIEdgeInsets, pitch: CGFloat?, animationDuration: TimeInterval) {
+    func show(coordinateBounds: CoordinateBounds, padding: UIEdgeInsets, bearing: CGFloat?, pitch: CGFloat?, animationDuration: TimeInterval) {
         let geometry = MultiPoint([
             coordinateBounds.southwest,
             coordinateBounds.northwest,

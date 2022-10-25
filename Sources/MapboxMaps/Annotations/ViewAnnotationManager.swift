@@ -354,18 +354,21 @@ public final class ViewAnnotationManager {
     ///
     /// - Parameter ids: The list of annotations ids to be framed.
     /// - Parameter padding: The padding to be set around the edges of the map view, default is `UIEdgeInsets.zero`.
+    /// - Parameter bearing: The bearing of the map.
     /// - Parameter pitch: Default is 0.
     /// - Parameter animationDuration: Default is 1.
     public func showAnnotations(
         ids: [String],
         padding: UIEdgeInsets = .zero,
+        bearing: CGFloat? = nil,
         pitch: CGFloat? = nil,
         animationDuration: TimeInterval = 1
     ) {
-        let coordinateBounds = camera(forAnnotations: ids, pitch: pitch).map(mapboxMap.coordinateBounds(for:))
+        let coordinateBounds = camera(forAnnotations: ids, bearing: bearing, pitch: pitch)
+            .map(mapboxMap.coordinateBounds(for:))
         guard let coordinateBounds = coordinateBounds, !coordinateBounds.isEmpty else { return }
 
-        coordinateBoundsAnimator.show(coordinateBounds: coordinateBounds, padding: padding, pitch: pitch, animationDuration: animationDuration)
+        coordinateBoundsAnimator.show(coordinateBounds: coordinateBounds, padding: padding, bearing: bearing, pitch: pitch, animationDuration: animationDuration)
     }
 
     /// Sets the visible region so that the map displays the specified annotations.

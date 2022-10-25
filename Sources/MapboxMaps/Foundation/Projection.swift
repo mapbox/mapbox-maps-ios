@@ -71,8 +71,7 @@ public final class Projection {
     }
 }
 
-internal extension Projection  {
-
+internal extension Projection {
     /// Calculate the shift between two points in Mercator coordinate.
     ///
     /// - Parameters:

@@ -115,6 +115,30 @@ final class CircleAnnotationTests: XCTestCase {
         }
         XCTAssertEqual(circleStrokeWidth, annotation.circleStrokeWidth)
     }
-}
+
+    func testOffsetGeometry() {
+        let mapInitOptions = MapInitOptions()
+        let mapView = MapView(frame: UIScreen.main.bounds, mapInitOptions: mapInitOptions)
+        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        let point = CGPoint(x: annotation.point.coordinates.longitude, y: annotation.point.coordinates.latitude)
+
+         // offsetGeometry return value is nil
+         let offsetGeometryNilDistance = annotation.getOffsetGeometry(mapboxMap: mapView.mapboxMap, moveDistancesObject: nil)
+         XCTAssertNil(offsetGeometryNilDistance)
+
+         // offsetGeometry return value is not nil
+         let moveObject = MoveDistancesObject()
+         moveObject.currentX = CGFloat.random(in: 0...100)
+         moveObject.currentY = CGFloat.random(in: 0...100)
+         moveObject.prevX = point.x
+         moveObject.prevY = point.y
+         moveObject.distanceXSinceLast = moveObject.prevX - moveObject.currentX
+         moveObject.distanceYSinceLast = moveObject.prevY - moveObject.currentY
+         XCTAssertNotNil(moveObject)
+
+         let offsetGeometry = annotation.getOffsetGeometry(mapboxMap: mapView.mapboxMap, moveDistancesObject: moveObject)
+         XCTAssertNotNil(offsetGeometry)
+     }
+  }
 
 // End of generated file

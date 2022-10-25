@@ -338,7 +338,9 @@ public struct PointAnnotation: Annotation {
         let maxMercatorLatitude = 85.05112877980659
         let minMercatorLatitude = -85.05112877980659
 
-        guard let moveDistancesObject = moveDistancesObject else { return nil}
+        guard let moveDistancesObject = moveDistancesObject else {
+          return nil
+        }
 
            let point = point.coordinates
 

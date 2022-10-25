@@ -29,7 +29,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
                 CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
             ]
-            var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+            let annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
             annotations.append(annotation)
         }
     }
@@ -82,7 +82,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
                 CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
             ]
-            var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+            let annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
             annotations2.append(annotation)
         }
 
@@ -160,7 +160,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
                 CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
             ]
-            var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+            let annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
             annotations.append(annotation)
         }
         let featureCollection = FeatureCollection(features: annotations.map(\.feature))
@@ -183,7 +183,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
                 CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
             ]
-            var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+            let annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
             annotations.append(annotation)
         }
         let queriedFeatureIds = [annotations[0].id]
@@ -206,7 +206,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
                 CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
             ]
-            var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+            let annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
             annotations.append(annotation)
         }
         let queriedFeatureIds = ["NotAnAnnotationID"]

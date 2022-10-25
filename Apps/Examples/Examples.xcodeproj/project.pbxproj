@@ -51,6 +51,7 @@
 		58A3C0C925C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */; };
 		732A550028DA470E00CDBFB7 /* PitchAndDistanceExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732A54FF28DA470E00CDBFB7 /* PitchAndDistanceExample.swift */; };
 		73694BD325D4B2CE0064F636 /* TrackingModeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73694BD225D4B2CE0064F636 /* TrackingModeExample.swift */; };
+		7395C38828FEDFCF00071A33 /* PointAnnotationClusteringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7395C38728FEDFCF00071A33 /* PointAnnotationClusteringExample.swift */; };
 		73E27C2627AF024C0067F277 /* DataJoinExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73E27C2527AF024C0067F277 /* DataJoinExample.swift */; };
 		7406E3702806B66F002CC41F /* ResizableImageExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7406E36F2806B66F002CC41F /* ResizableImageExample.swift */; };
 		7412CF6227E8DD1E00F03B1C /* AddOneMarkerSymbolExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF6127E8DD1E00F03B1C /* AddOneMarkerSymbolExample.swift */; };
@@ -205,6 +206,7 @@
 		666E0D4925664EE7000B8AF5 /* LayerPositionExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayerPositionExample.swift; sourceTree = "<group>"; };
 		732A54FF28DA470E00CDBFB7 /* PitchAndDistanceExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchAndDistanceExample.swift; sourceTree = "<group>"; };
 		73694BD225D4B2CE0064F636 /* TrackingModeExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingModeExample.swift; sourceTree = "<group>"; };
+		7395C38728FEDFCF00071A33 /* PointAnnotationClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointAnnotationClusteringExample.swift; sourceTree = "<group>"; };
 		73E27C2527AF024C0067F277 /* DataJoinExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataJoinExample.swift; sourceTree = "<group>"; };
 		7406E36F2806B66F002CC41F /* ResizableImageExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizableImageExample.swift; sourceTree = "<group>"; };
 		7412CF6127E8DD1E00F03B1C /* AddOneMarkerSymbolExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOneMarkerSymbolExample.swift; sourceTree = "<group>"; };
@@ -494,6 +496,7 @@
 				74797C1928F5B72F0008BBB9 /* ViewAnnotationAnimationExample.swift */,
 				304AB3B427439287005B6D09 /* ViewAnnotationMarkerExample.swift */,
 				74A2313D27EE1C630065FB7D /* ViewAnnotationWithPointAnnotationExample.swift */,
+				7395C38728FEDFCF00071A33 /* PointAnnotationClusteringExample.swift */,
 			);
 			path = Annotations;
 			sourceTree = "<group>";
@@ -736,6 +739,7 @@
 				CADCF71F2584990E0065C51B /* DataDrivenSymbolsExample.swift in Sources */,
 				CADCF7302584990E0065C51B /* LayerPositionExample.swift in Sources */,
 				CA86E81825BE7C2300E5A1D9 /* BuildingExtrusionsExample.swift in Sources */,
+				7395C38828FEDFCF00071A33 /* PointAnnotationClusteringExample.swift in Sources */,
 				C608C107267BC5B1003C86C3 /* LocalizationExample.swift in Sources */,
 				0706C4A625B1181A008733C0 /* TerrainExample.swift in Sources */,
 				CADCF7282584990E0065C51B /* LineAnnotationExample.swift in Sources */,

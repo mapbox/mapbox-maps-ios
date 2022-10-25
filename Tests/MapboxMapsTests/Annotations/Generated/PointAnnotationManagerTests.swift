@@ -22,7 +22,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
                                           displayLinkCoordinator: displayLinkCoordinator)
 
         for _ in 0...10 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
             annotations.append(annotation)
         }
     }
@@ -68,7 +68,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testAddManagerWithDuplicateId() {
         var annotations2 = [PointAnnotation]()
         for _ in 0...50 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
             annotations2.append(annotation)
         }
 
@@ -139,7 +139,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testfeatureCollectionPassedtoGeoJSON() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
             annotations.append(annotation)
         }
         let featureCollection = FeatureCollection(features: annotations.map(\.feature))
@@ -155,7 +155,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testHandleQueriedFeatureIdsPassesNotificationToDelegate() throws {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
             annotations.append(annotation)
         }
         let queriedFeatureIds = [annotations[0].id]
@@ -171,7 +171,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testHandleQueriedFeatureIdsDoesNotPassNotificationToDelegateWhenNoMatch() throws {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
             annotations.append(annotation)
         }
         let queriedFeatureIds = ["NotAnAnnotationID"]
@@ -2815,6 +2815,250 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             Set(annotations.compactMap(\.image?.name))
         )
 
+    }
+
+    // Tests for clustering
+    func testInitWithDefaultClusterOptions() {
+        style.addSourceStub.reset()
+        style.addPersistentLayerStub.reset()
+        // given
+        let clusterOptions = ClusterOptions()
+        var annotations = [PointAnnotation]()
+        for _ in 0...500 {
+            let annotation = PointAnnotation(coordinate: .random())
+            annotations.append(annotation)
+        }
+
+        // when
+        let pointAnnotationManager = PointAnnotationManager(id: id,
+                                  style: style,
+                                  layerPosition: nil,
+                                  displayLinkCoordinator: displayLinkCoordinator,
+                                  clusterOptions: clusterOptions)
+        pointAnnotationManager.annotations = annotations
+
+        // then
+        XCTAssertEqual(clusterOptions.clusterRadius, 50)
+        XCTAssertEqual(clusterOptions.circleRadius, .constant(18))
+        XCTAssertEqual(clusterOptions.circleColor, .constant(StyleColor(.black)))
+        XCTAssertEqual(clusterOptions.textColor, .constant(StyleColor(.white)))
+        XCTAssertEqual(clusterOptions.textSize, .constant(12))
+        XCTAssertEqual(clusterOptions.textField, .expression(Exp(.get) { "point_count" }))
+        XCTAssertEqual(clusterOptions.clusterMaxZoom, 14)
+        XCTAssertNil(clusterOptions.clusterProperties)
+        XCTAssertEqual(style.addSourceStub.invocations.count, 1)
+        XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.type, SourceType.geoJson)
+        XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.id, manager.id)
+        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 3) // symbol layer, one cluster layer, one text layer
+        XCTAssertNil(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition)
+    }
+
+    func testSourceClusterOptions() {
+        style.addSourceStub.reset()
+        style.addPersistentLayerStub.reset()
+        // given
+        let testClusterRadius = Double.testSourceValue()
+        let testClusterMaxZoom = Double.testSourceValue()
+        let testClusterProperties = [String: Expression].testSourceValue()
+        let clusterOptions = ClusterOptions(clusterRadius: testClusterRadius,
+                                            clusterMaxZoom: testClusterMaxZoom,
+                                            clusterProperties: testClusterProperties)
+        var annotations = [PointAnnotation]()
+        for _ in 0...500 {
+            let annotation = PointAnnotation(coordinate: .random())
+            annotations.append(annotation)
+        }
+
+        // when
+        let pointAnnotationManager = PointAnnotationManager(id: id,
+                                  style: style,
+                                  layerPosition: nil,
+                                  displayLinkCoordinator: displayLinkCoordinator,
+                                  clusterOptions: clusterOptions)
+
+        pointAnnotationManager.annotations = annotations
+        let geoJSONSource = style.addSourceStub.invocations.last?.parameters.source as! GeoJSONSource
+
+        // then
+        XCTAssertTrue(geoJSONSource.cluster!)
+        XCTAssertEqual(clusterOptions.clusterRadius, testClusterRadius)
+        XCTAssertEqual(style.addSourceStub.invocations.count, 1)
+        XCTAssertEqual(geoJSONSource.clusterRadius, testClusterRadius)
+        XCTAssertEqual(geoJSONSource.clusterMaxZoom, testClusterMaxZoom)
+        XCTAssertEqual(geoJSONSource.clusterProperties, testClusterProperties)
+    }
+
+    func testCircleLayer() {
+        style.addSourceStub.reset()
+        style.addPersistentLayerStub.reset()
+        // given
+        let testCircleRadius = Value<Double>.testConstantValue()
+        let testCircleColor = Value<StyleColor>.testConstantValue()
+        let clusterOptions = ClusterOptions(circleRadius: testCircleRadius,
+                                            circleColor: testCircleColor)
+        var annotations = [PointAnnotation]()
+        for _ in 0...500 {
+            let annotation = PointAnnotation(coordinate: .random())
+            annotations.append(annotation)
+        }
+
+        // when
+        let pointAnnotationManager = PointAnnotationManager(id: id,
+                                  style: style,
+                                  layerPosition: nil,
+                                  displayLinkCoordinator: displayLinkCoordinator,
+                                  clusterOptions: clusterOptions)
+        pointAnnotationManager.annotations = annotations
+
+        // then
+        let circleLayerInvocations = style.addPersistentLayerStub.invocations.filter { circleLayer in
+            return circleLayer.parameters.layer.id == "mapbox-iOS-cluster-circle-layer-manager-" + id
+        }
+        let circleLayer = circleLayerInvocations[0].parameters.layer as! CircleLayer
+
+        XCTAssertEqual(clusterOptions.circleRadius, testCircleRadius)
+        XCTAssertEqual(circleLayer.circleRadius, testCircleRadius)
+        XCTAssertEqual(clusterOptions.circleColor, testCircleColor)
+        XCTAssertEqual(circleLayer.circleColor, testCircleColor)
+        XCTAssertEqual(circleLayer.filter, Exp(.has) { "point_count" })
+        XCTAssertEqual(circleLayer.id, "mapbox-iOS-cluster-circle-layer-manager-" + id)
+        XCTAssertEqual(style.addSourceStub.invocations.count, 1)
+    }
+
+    func testTextLayer() {
+        style.addSourceStub.reset()
+        style.addPersistentLayerStub.reset()
+        // given
+        let testTextColor = Value<StyleColor>.testConstantValue()
+        let testTextSize = Value<Double>.testConstantValue()
+        let testTextField = Value<String>.testConstantValue()
+        let clusterOptions = ClusterOptions(textColor: testTextColor,
+                                  textSize: testTextSize,
+                                  textField: testTextField)
+        var annotations = [PointAnnotation]()
+        for _ in 0...500 {
+            let annotation = PointAnnotation(coordinate: .random())
+            annotations.append(annotation)
+        }
+
+        // when
+        let pointAnnotationManager = PointAnnotationManager(id: id,
+                                  style: style,
+                                  layerPosition: nil,
+                                  displayLinkCoordinator: displayLinkCoordinator,
+                                  clusterOptions: clusterOptions)
+        pointAnnotationManager.annotations = annotations
+
+        // then
+        let textLayerInvocations = style.addPersistentLayerStub.invocations.filter { symbolLayer in
+            return symbolLayer.parameters.layer.id == "mapbox-iOS-cluster-text-layer-manager-" + id
+        }
+        let textLayer = textLayerInvocations[0].parameters.layer as! SymbolLayer
+
+        XCTAssertEqual(textLayer.textColor, testTextColor)
+        XCTAssertEqual(textLayer.textSize, testTextSize)
+        XCTAssertEqual(textLayer.textField, testTextField)
+        XCTAssertEqual(style.addSourceStub.invocations.count, 1)
+    }
+
+    func testSymbolLayers() {
+        style.addSourceStub.reset()
+        style.addPersistentLayerStub.reset()
+        // given
+        let clusterOptions = ClusterOptions()
+        var annotations = [PointAnnotation]()
+        for _ in 0...500 {
+            let annotation = PointAnnotation(coordinate: .random())
+            annotations.append(annotation)
+        }
+
+        // when
+        let pointAnnotationManager = PointAnnotationManager(id: id,
+                                  style: style,
+                                  layerPosition: nil,
+                                  displayLinkCoordinator: displayLinkCoordinator,
+                                  clusterOptions: clusterOptions)
+        pointAnnotationManager.annotations = annotations
+
+        // then
+        let symbolLayerInvocations = style.addPersistentLayerStub.invocations.filter { symbolLayer in
+            return symbolLayer.parameters.layer.id == id
+        }
+        let symbolLayer = symbolLayerInvocations[0].parameters.layer as! SymbolLayer
+
+        XCTAssertTrue(symbolLayer.iconAllowOverlap == .constant(true))
+        XCTAssertTrue(symbolLayer.textAllowOverlap == .constant(true))
+        XCTAssertTrue(symbolLayer.iconIgnorePlacement == .constant(true))
+        XCTAssertTrue(symbolLayer.textIgnorePlacement == .constant(true))
+        XCTAssertEqual(symbolLayer.source, id)
+        XCTAssertEqual(style.addSourceStub.invocations.count, 1)
+    }
+
+    func testChangeAnnotations() {
+        style.addSourceStub.reset()
+        style.addPersistentLayerStub.reset()
+        // given
+        let clusterOptions = ClusterOptions()
+        var annotations = [PointAnnotation]()
+        for _ in 0...500 {
+            let annotation = PointAnnotation(coordinate: .random())
+            annotations.append(annotation)
+        }
+        var newAnnotations = [PointAnnotation]()
+        for _ in 0...100 {
+            let annotation = PointAnnotation(coordinate: .random())
+            newAnnotations.append(annotation)
+        }
+
+        // when
+        let pointAnnotationManager = PointAnnotationManager(id: id,
+                                  style: style,
+                                  layerPosition: nil,
+                                  displayLinkCoordinator: displayLinkCoordinator,
+                                  clusterOptions: clusterOptions)
+        pointAnnotationManager.annotations = annotations
+        pointAnnotationManager.syncSourceAndLayerIfNeeded()
+        var sourceGeoJSON = style.updateGeoJSONSourceStub.invocations.last?.parameters.geojson
+        switch sourceGeoJSON {
+        case .featureCollection(let data):
+          XCTAssertEqual(data.features.count, 501)
+        default:
+          XCTFail("GeoJSON did not update correctly")
+        }
+
+        // then
+        pointAnnotationManager.annotations = newAnnotations
+        pointAnnotationManager.syncSourceAndLayerIfNeeded()
+        sourceGeoJSON = style.updateGeoJSONSourceStub.invocations.last?.parameters.geojson
+        switch sourceGeoJSON {
+        case .featureCollection(let data):
+          XCTAssertEqual(data.features.count, 101)
+        default:
+          XCTFail("GeoJSON did not update correctly")
+        }
+        XCTAssertEqual(style.addSourceStub.invocations.count, 1)
+    }
+
+    func testDestroyAnnotationManager() {
+        // given
+        let clusterOptions = ClusterOptions()
+
+        // when
+        let pointAnnotationManager = PointAnnotationManager(id: id,
+                                  style: style,
+                                  layerPosition: nil,
+                                  displayLinkCoordinator: displayLinkCoordinator,
+                                  clusterOptions: clusterOptions)
+        pointAnnotationManager.annotations = annotations
+        pointAnnotationManager.destroy()
+
+        let removeLayerInvocations = style.removeLayerStub.invocations
+
+        // then
+        XCTAssertEqual(style.removeLayerStub.invocations.count, 3)
+        XCTAssertEqual(removeLayerInvocations[0].parameters, "mapbox-iOS-cluster-circle-layer-manager-" + id)
+        XCTAssertEqual(removeLayerInvocations[1].parameters, "mapbox-iOS-cluster-text-layer-manager-" + id)
+        XCTAssertEqual(removeLayerInvocations[2].parameters, id)
     }
 }
 

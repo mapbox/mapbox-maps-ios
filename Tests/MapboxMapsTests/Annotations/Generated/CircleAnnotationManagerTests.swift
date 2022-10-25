@@ -22,7 +22,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
                                           displayLinkCoordinator: displayLinkCoordinator)
 
         for _ in 0...10 {
-            var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
             annotations.append(annotation)
         }
     }
@@ -68,7 +68,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     func testAddManagerWithDuplicateId() {
         var annotations2 = [CircleAnnotation]()
         for _ in 0...50 {
-            var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
             annotations2.append(annotation)
         }
 
@@ -139,7 +139,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     func testfeatureCollectionPassedtoGeoJSON() {
         var annotations = [CircleAnnotation]()
         for _ in 0...5 {
-            var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
             annotations.append(annotation)
         }
         let featureCollection = FeatureCollection(features: annotations.map(\.feature))
@@ -155,7 +155,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     func testHandleQueriedFeatureIdsPassesNotificationToDelegate() throws {
         var annotations = [CircleAnnotation]()
         for _ in 0...5 {
-            var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
             annotations.append(annotation)
         }
         let queriedFeatureIds = [annotations[0].id]
@@ -171,7 +171,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     func testHandleQueriedFeatureIdsDoesNotPassNotificationToDelegateWhenNoMatch() throws {
         var annotations = [CircleAnnotation]()
         for _ in 0...5 {
-            var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
             annotations.append(annotation)
         }
         let queriedFeatureIds = ["NotAnAnnotationID"]

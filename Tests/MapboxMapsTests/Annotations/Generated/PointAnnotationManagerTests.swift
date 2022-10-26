@@ -2822,6 +2822,56 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         )
 
     }
+    func testHandleDragBegin() {
+        let mapInitOptions = MapInitOptions()
+        let mapView = MapView(frame: UIScreen.main.bounds, mapInitOptions: mapInitOptions)
+          var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        annotation.isDraggable = true
+        manager.annotations.append(annotation)
+
+        // should be testing the function from SDK
+        manager.handleDragBegin(mapView, annotation: annotation, position: originPoint)
+
+        longPressGestureRecognizer.getStateStub.defaultReturnValue = .began
+        XCTAssertEqual(longPressGestureRecognizer.state, .began)
+        XCTAssertEqual(longPressGestureRecognizer.getStateStub.invocations.count, 1)
+        XCTAssertNotNil(style.layerExists(withId: "drag-layer"))
+        XCTAssertNotNil(style.sourceExists(withId: "dragSource"))
+    }
+
+    func testHandleDragChange() {
+        let mapInitOptions = MapInitOptions()
+        let mapView = MapView(frame: UIScreen.main.bounds, mapInitOptions: mapInitOptions)
+          var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        annotation.isDraggable = true
+        manager.annotations.append(annotation)
+        // original touch point for gesture
+        let initialLocation = CGPoint(x: annotation.point.coordinates.longitude, y: annotation.point.coordinates.latitude)
+        // original touch point for gesture
+        let newLocation = CGPoint(x: .random(in: -90...90), y: .random(in: -180...180))
+
+        // should be testing the function from SDK
+        manager.handleDragChanged(view: mapView, position: newLocation)
+
+        XCTAssertEqual(longPressGestureRecognizer.locationStub.invocations.count, 1)
+        XCTAssertEqual(longPressGestureRecognizer.getStateStub.defaultReturnValue, .changed)
+    }
+
+    func testHandleDragEnded() throws {
+        let mapInitOptions = MapInitOptions()
+        let mapView = MapView(frame: UIScreen.main.bounds, mapInitOptions: mapInitOptions)
+          var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        annotation.isDraggable = true
+        manager.annotations.append(annotation)
+
+        manager.handleDragEnded()
+
+        longPressGestureRecognizer.getStateStub.defaultReturnValue = .ended
+        XCTAssertEqual(longPressGestureRecognizer.state, .ended)
+        XCTAssertEqual(longPressGestureRecognizer.getStateStub.invocations.count, 1)
+    //        XCTAssertEqual(longPressGestureRecognizer.locationStub.invocations.count, 1)
+    }
+
 }
 
 private extension PointAnnotation {
@@ -2830,4 +2880,5 @@ private extension PointAnnotation {
         self.image = image
     }
 }
+
 // End of generated file

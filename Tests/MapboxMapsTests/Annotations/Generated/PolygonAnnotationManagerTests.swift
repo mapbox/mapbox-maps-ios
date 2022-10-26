@@ -456,6 +456,84 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         expectation = nil
     }
 
+    func testHandleDragBegin() {
+        let mapInitOptions = MapInitOptions()
+        let mapView = MapView(frame: UIScreen.main.bounds, mapInitOptions: mapInitOptions)
+          let polygonCoords = [
+             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+             CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+             CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+             CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+          ]
+          var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+          guard let polygonCoordinates = annotation.polygon.outerRing.coordinates.first else { return }
+          let point = CGPoint(x: annotation.polygon.outerRing.coordinates.first?.longitude, y: annotation.polygon.outerRing.coordinates.first?.latitude)
+        annotation.isDraggable = true
+        manager.annotations.append(annotation)
+
+        // should be testing the function from SDK
+        manager.handleDragBegin(mapView, annotation: annotation, position: originPoint)
+
+        longPressGestureRecognizer.getStateStub.defaultReturnValue = .began
+        XCTAssertEqual(longPressGestureRecognizer.state, .began)
+        XCTAssertEqual(longPressGestureRecognizer.getStateStub.invocations.count, 1)
+        XCTAssertNotNil(style.layerExists(withId: "drag-layer"))
+        XCTAssertNotNil(style.sourceExists(withId: "dragSource"))
+    }
+
+    func testHandleDragChange() {
+        let mapInitOptions = MapInitOptions()
+        let mapView = MapView(frame: UIScreen.main.bounds, mapInitOptions: mapInitOptions)
+          let polygonCoords = [
+             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+             CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+             CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+             CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+          ]
+          var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+          guard let polygonCoordinates = annotation.polygon.outerRing.coordinates.first else { return }
+          let point = CGPoint(x: annotation.polygon.outerRing.coordinates.first?.longitude, y: annotation.polygon.outerRing.coordinates.first?.latitude)
+        annotation.isDraggable = true
+        manager.annotations.append(annotation)
+        // original touch point for gesture
+        let initialLocation = CGPoint(x: annotation.point.coordinates.longitude, y: annotation.point.coordinates.latitude)
+        // original touch point for gesture
+        let newLocation = CGPoint(x: .random(in: -90...90), y: .random(in: -180...180))
+
+        // should be testing the function from SDK
+        manager.handleDragChanged(view: mapView, position: newLocation)
+
+        XCTAssertEqual(longPressGestureRecognizer.locationStub.invocations.count, 1)
+        XCTAssertEqual(longPressGestureRecognizer.getStateStub.defaultReturnValue, .changed)
+    }
+
+    func testHandleDragEnded() throws {
+        let mapInitOptions = MapInitOptions()
+        let mapView = MapView(frame: UIScreen.main.bounds, mapInitOptions: mapInitOptions)
+          let polygonCoords = [
+             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+             CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+             CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+             CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+          ]
+          var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+          guard let polygonCoordinates = annotation.polygon.outerRing.coordinates.first else { return }
+          let point = CGPoint(x: annotation.polygon.outerRing.coordinates.first?.longitude, y: annotation.polygon.outerRing.coordinates.first?.latitude)
+        annotation.isDraggable = true
+        manager.annotations.append(annotation)
+
+        manager.handleDragEnded()
+
+        longPressGestureRecognizer.getStateStub.defaultReturnValue = .ended
+        XCTAssertEqual(longPressGestureRecognizer.state, .ended)
+        XCTAssertEqual(longPressGestureRecognizer.getStateStub.invocations.count, 1)
+    //        XCTAssertEqual(longPressGestureRecognizer.locationStub.invocations.count, 1)
+    }
+
 }
+
 
 // End of generated file

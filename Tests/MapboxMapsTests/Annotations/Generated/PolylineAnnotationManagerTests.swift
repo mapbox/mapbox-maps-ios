@@ -10,7 +10,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     var annotations = [PolylineAnnotation]()
     var expectation: XCTestExpectation?
     var delegateAnnotations: [Annotation]?
-    var longPressGestureRecognizer: UIGestureRecognizer!
+    var longPressGestureRecognizer: MockLongPressGestureRecognizer!
 
     override func setUp() {
         super.setUp()

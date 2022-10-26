@@ -10,7 +10,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     var annotations = [PointAnnotation]()
     var expectation: XCTestExpectation?
     var delegateAnnotations: [Annotation]?
-    var longPressGestureRecognizer: UIGestureRecognizer!
+    var longPressGestureRecognizer: MockLongPressGestureRecognizer!
 
     override func setUp() {
         super.setUp()

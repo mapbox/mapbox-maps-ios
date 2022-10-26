@@ -10,7 +10,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     var annotations = [PolygonAnnotation]()
     var expectation: XCTestExpectation?
     var delegateAnnotations: [Annotation]?
-    var longPressGestureRecognizer: UIGestureRecognizer!
+    var longPressGestureRecognizer: MockLongPressGestureRecognizer!
 
     override func setUp() {
         super.setUp()

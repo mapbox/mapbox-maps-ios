@@ -246,26 +246,27 @@ final class MapboxMapTests: XCTestCase {
 
         let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
         mapboxObservable.onTypedNextStub.defaultSideEffect = { invocation in
-            switch invocation.parameters.eventName {
-            case "style-loaded":
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    let event = MapboxCoreMaps.Event(type: "style-loaded", data: NSNull())
-                    invocation.parameters.handler(MapEvent<NoPayload>(event: event))
-                    styleLoadEventOccurred.fulfill()
-                }
-            case "map-loading-error":
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    let event = MapboxCoreMaps.Event(
-                        type: "source",
-                        data: ["type": "source", "message": "Cannot load source", "source-id": "dummy-source-id"])
-                    invocation.parameters.handler(MapEvent<MapLoadingErrorPayload>(event: event))
-                    mapLoadingErrorEventOccurred.fulfill()
-                }
-            default: break
+            guard invocation.parameters.eventName == "style-loaded" else { return }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                let event = MapboxCoreMaps.Event(type: "style-loaded", data: NSNull())
+                invocation.parameters.handler(MapEvent<NoPayload>(event: event))
+                styleLoadEventOccurred.fulfill()
+            }
+        }
+        mapboxObservable.onTypedEveryStub.defaultSideEffect = { invocation in
+            guard invocation.parameters.eventName == "map-loading-error" else { return }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                let event = MapboxCoreMaps.Event(
+                    type: "source",
+                    data: ["type": "source", "message": "Cannot load source", "source-id": "dummy-source-id"])
+                invocation.parameters.handler(MapEvent<MapLoadingErrorPayload>(event: event))
+                mapLoadingErrorEventOccurred.fulfill()
             }
         }
 
-        mapboxMap.loadStyleURI(.dark) { result in
+        mapboxMap.loadStyleURI(.dark) { _ in
             completionIsCalledOnce.fulfill()
         }
 

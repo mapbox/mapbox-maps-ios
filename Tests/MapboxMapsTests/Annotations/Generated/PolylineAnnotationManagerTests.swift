@@ -10,7 +10,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     var annotations = [PolylineAnnotation]()
     var expectation: XCTestExpectation?
     var delegateAnnotations: [Annotation]?
-    var longPressGestureRecognizer: MockLongPressGestureRecognizer!
+    var longPressGestureRecognizer = MockLongPressGestureRecognizer()
 
     override func setUp() {
         super.setUp()
@@ -712,63 +712,63 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         expectation = nil
     }
 
-    func testHandleDragBegin() {
-        let mapInitOptions = MapInitOptions()
-        let mapView = MapView(frame: UIScreen.main.bounds, mapInitOptions: mapInitOptions)
-          let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-          var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
-          guard let lineStringCoordinates = annotation.lineString.coordinates.first else { return }
-          let point = CGPoint(x: lineStringCoordinates.longitude, y: lineStringCoordinates.latitude)
-        annotation.isDraggable = true
-        manager.annotations.append(annotation)
+    func testHandleDrag() {
+        //If
+        let mapView = MapView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        mapView.addGestureRecognizer(longPressGestureRecognizer)
+        var annotations: [PolylineAnnotation] = []
+        let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
+        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+        annotations.append(annotation)
+        guard let lineStringCoordinates = annotation.lineString.coordinates.first else { return }
+        let point = CGPoint(x: lineStringCoordinates.longitude, y: lineStringCoordinates.latitude)
+        manager.delegate = self
+        manager.annotations = annotations
 
-        // should be testing the function from SDK
-        manager.handleDragBegin(mapView, annotation: annotation, position: originPoint)
+        let featureQueryExpectation = XCTestExpectation(description: "Wait for features to be queried.")
+        manager.handleDrag(longPressGestureRecognizer)
 
+        //When
         longPressGestureRecognizer.getStateStub.defaultReturnValue = .began
+        longPressGestureRecognizer.locationStub.defaultReturnValue = point
+        longPressGestureRecognizer.sendActions()
+
+        //Then
         XCTAssertEqual(longPressGestureRecognizer.state, .began)
-        XCTAssertEqual(longPressGestureRecognizer.getStateStub.invocations.count, 1)
+        XCTAssertEqual(longPressGestureRecognizer.locationStub.invocations.count, 1)
         XCTAssertNotNil(style.layerExists(withId: "drag-layer"))
         XCTAssertNotNil(style.sourceExists(withId: "dragSource"))
-    }
 
-    func testHandleDragChange() {
-        let mapInitOptions = MapInitOptions()
-        let mapView = MapView(frame: UIScreen.main.bounds, mapInitOptions: mapInitOptions)
-          let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-          var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
-          guard let lineStringCoordinates = annotation.lineString.coordinates.first else { return }
-          let point = CGPoint(x: lineStringCoordinates.longitude, y: lineStringCoordinates.latitude)
-        annotation.isDraggable = true
-        manager.annotations.append(annotation)
-        // original touch point for gesture
-        let initialLocation = CGPoint(x: annotation.point.coordinates.longitude, y: annotation.point.coordinates.latitude)
-        // original touch point for gesture
-        let newLocation = CGPoint(x: .random(in: -90...90), y: .random(in: -180...180))
+        // When
+        mapView.mapboxMap.queryRenderedFeatures(with: point) { result in
+            switch result {
+            case .success(let features):
+                if features.count > 0 {
+                    featureQueryExpectation.fulfill()
+                    // When
+                    let updatedPoint = CGPoint(x: .random(in: -180...180), y: .random(in: -90...90))
+                    self.longPressGestureRecognizer.getStateStub.defaultReturnValue = .changed
+                    self.longPressGestureRecognizer.locationStub.defaultReturnValue = updatedPoint
+                    self.longPressGestureRecognizer.sendActions()
 
-        // should be testing the function from SDK
-        manager.handleDragChanged(view: mapView, position: newLocation)
+                    // Then
+                    XCTAssertEqual(self.longPressGestureRecognizer.locationStub.invocations.map(\.returnValue), [updatedPoint])
 
-        XCTAssertEqual(longPressGestureRecognizer.locationStub.invocations.count, 1)
-        XCTAssertEqual(longPressGestureRecognizer.getStateStub.defaultReturnValue, .changed)
-    }
+                    // When
+                    self.longPressGestureRecognizer.getStateStub.defaultReturnValue = .ended
+                    self.longPressGestureRecognizer.sendActions()
 
-    func testHandleDragEnded() throws {
-        let mapInitOptions = MapInitOptions()
-        let mapView = MapView(frame: UIScreen.main.bounds, mapInitOptions: mapInitOptions)
-          let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-          var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
-          guard let lineStringCoordinates = annotation.lineString.coordinates.first else { return }
-          let point = CGPoint(x: lineStringCoordinates.longitude, y: lineStringCoordinates.latitude)
-        annotation.isDraggable = true
-        manager.annotations.append(annotation)
+                    // Then
+                    XCTAssertEqual(self.longPressGestureRecognizer.locationStub.invocations.map(\.returnValue), [updatedPoint])
+                    XCTAssertFalse(self.style.layerExists(withId: "drag-layer"))
 
-        manager.handleDragEnded()
-
-        longPressGestureRecognizer.getStateStub.defaultReturnValue = .ended
-        XCTAssertEqual(longPressGestureRecognizer.state, .ended)
-        XCTAssertEqual(longPressGestureRecognizer.getStateStub.invocations.count, 1)
-    //        XCTAssertEqual(longPressGestureRecognizer.locationStub.invocations.count, 1)
+                } else {
+                    XCTFail("No features found")
+                }
+            case .failure:
+                XCTFail("Feature querying failed")
+            }
+        }
     }
 
 }

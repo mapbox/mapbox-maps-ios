@@ -4,6 +4,7 @@
 import UIKit
 
 internal protocol StyleProtocol: AnyObject {
+    func addLayer(_ layer: Layer, layerPosition: LayerPosition?) throws
     func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition?) throws
     func addPersistentLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws
     func removeLayer(withId id: String) throws

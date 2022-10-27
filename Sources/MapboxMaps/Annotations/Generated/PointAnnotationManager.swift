@@ -16,7 +16,6 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
     private var needsSyncSourceAndLayer = false
     private var addedImages = Set<String>()
-    private var clusterOptions: ClusterOptions?
 
     // MARK: - Interaction
 
@@ -63,14 +62,11 @@ public class PointAnnotationManager: AnnotationManagerInternal {
                   style: StyleProtocol,
                   layerPosition: LayerPosition?,
                   displayLinkCoordinator: DisplayLinkCoordinator,
-                  longPressGestureRecognizer: UIGestureRecognizer,
-                  clusterOptions: ClusterOptions? = nil) {
-
+                  longPressGestureRecognizer: UIGestureRecognizer) {
         self.id = id
         self.sourceId = id
         self.layerId = id
         self.style = style
-        self.clusterOptions = clusterOptions
         self.displayLinkCoordinator = displayLinkCoordinator
 
         longPressGestureRecognizer.addTarget(self, action: #selector(handleDrag(_:)))
@@ -79,20 +75,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
             // Add the source with empty `data` property
             var source = GeoJSONSource()
             source.data = .empty
-
-            // Set cluster options and create clusters if clustering is enabled
-            if let clusterOptions = clusterOptions {
-                source.cluster = true
-                source.clusterRadius = clusterOptions.clusterRadius
-                source.clusterProperties = clusterOptions.clusterProperties
-                source.clusterMaxZoom = clusterOptions.clusterMaxZoom
-            }
-
             try style.addSource(source, id: sourceId)
-
-            if let clusterOptions = clusterOptions {
-                createClusterLayers(clusterOptions: clusterOptions)
-            }
 
             // Add the correct backing layer for this annotation type
             var layer = SymbolLayer(id: layerId)
@@ -106,7 +89,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
             try style.addPersistentLayer(layer, layerPosition: layerPosition)
         } catch {
             Log.error(
-                forMessage: "Failed to create source / layer in PointAnnotationManager. Error: \(error)",
+                forMessage: "Failed to create source / layer in PointAnnotationManager",
                 category: "Annotations")
         }
 
@@ -115,66 +98,11 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         displayLinkCoordinator.add(displayLinkParticipant)
     }
 
-    private func createClusterLayers(clusterOptions: ClusterOptions) {
-        let clusterLevelLayer = createClusterLevelLayer(clusterOptions: clusterOptions)
-        let clusterTextLayer = createClusterTextLayer(clusterOptions: clusterOptions)
-        do {
-            try addClusterLayer(clusterLayer: clusterLevelLayer)
-            try addClusterLayer(clusterLayer: clusterTextLayer)
-        } catch {
-            Log.error(
-                forMessage: "Failed to add cluster layer in PointAnnotationManager. Error: \(error)",
-                category: "Annotations")
-        }
-    }
-
-    private func addClusterLayer(clusterLayer: Layer) throws {
-        guard style.layerExists(withId: clusterLayer.id) else {
-            try style.addPersistentLayer(clusterLayer, layerPosition: .default)
-            return
-        }
-    }
-
-    private func createClusterLevelLayer(clusterOptions: ClusterOptions) -> CircleLayer {
-        let layedID = "mapbox-iOS-cluster-circle-layer-manager-" + id
-        var circleLayer = CircleLayer(id: layedID)
-        circleLayer.source = sourceId
-        circleLayer.circleColor = clusterOptions.circleColor
-        circleLayer.circleRadius = clusterOptions.circleRadius
-        circleLayer.filter = Exp(.has) { "point_count" }
-        return circleLayer
-    }
-
-    private func createClusterTextLayer(clusterOptions: ClusterOptions) -> SymbolLayer {
-        let layerID = "mapbox-iOS-cluster-text-layer-manager-" + id
-        var symbolLayer = SymbolLayer(id: layerID)
-        symbolLayer.source = sourceId
-        symbolLayer.textField = clusterOptions.textField
-        symbolLayer.textSize = clusterOptions.textSize
-        symbolLayer.textColor = clusterOptions.textColor
-        return symbolLayer
-    }
-
-    private func destroyClusterLayers() {
-        do {
-            try style.removeLayer(withId: "mapbox-iOS-cluster-circle-layer-manager-" + id)
-            try style.removeLayer(withId: "mapbox-iOS-cluster-text-layer-manager-" + id)
-        } catch {
-            Log.error(
-                forMessage: "Failed to remove cluster layer in PointAnnotationManager. Error: \(error)",
-                category: "Annotations")
-        }
-    }
-
     internal func destroy() {
         guard !isDestroyed else {
             return
         }
         isDestroyed = true
-
-        if clusterOptions != nil {
-            destroyClusterLayers()
-        }
 
         do {
             try style.removeLayer(withId: layerId)
@@ -191,6 +119,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
                 category: "Annotations")
         }
         removeImages(from: style, images: addedImages)
+
         displayLinkCoordinator?.remove(displayLinkParticipant)
     }
 
@@ -561,8 +490,8 @@ public class PointAnnotationManager: AnnotationManagerInternal {
                 self,
                 didDetectTappedAnnotations: tappedAnnotations)
             var selectedAnnotationIds = tappedAnnotations.map(\.id)
-            var allAnnotations = self.annotations.map { annotation in
-                var mutableAnnotation = annotation
+              let allAnnotations: [PointAnnotation] = self.annotations.map { annotation in
+              var mutableAnnotation = annotation
                 if selectedAnnotationIds.contains(annotation.id) {
                     if mutableAnnotation.isSelected == false {
                         mutableAnnotation.isSelected = true
@@ -579,29 +508,28 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    internal func createDragSourceAndLayer(view: MapView) {
+    internal func createDragSourceAndLayer() {
         var dragSource = GeoJSONSource()
         dragSource.data = .empty
-        try? view.mapboxMap.style.addSource(dragSource, id: "dragSource")
+        try? style.addSource(dragSource, id: "dragSource")
 
         let dragLayerId = "drag-layer"
-        var dragLayer = SymbolLayer(id: "drag-layer")
-        dragLayer = SymbolLayer(id: dragLayerId)
+        var dragLayer = SymbolLayer(id: dragLayerId)
         dragLayer.source = "dragSource"
-        try? view.mapboxMap.style.addLayer(dragLayer)
+        try? style.addLayer(dragLayer, layerPosition: .default)
     }
 
-    internal func handleDragBegin(_ view: MapView, annotation: Annotation, position: CGPoint) {
-        createDragSourceAndLayer(view: view)
+    internal func handleDragBegin(_ mapboxMap: MapboxMap, annotation: Annotation, position: CGPoint) {
+        createDragSourceAndLayer()
 
-        guard var annotation = annotation as? PointAnnotation else { return }
-        try? view.mapboxMap.style.updateLayer(withId: "drag-layer", type: SymbolLayer.self, update: { layer in
+        guard let annotation = annotation as? PointAnnotation else { return }
 
+        try? mapboxMap.style.updateLayer(withId: "drag-layer", type: SymbolLayer.self, update: { layer in
             layer.iconColor = annotation.iconColor.map(Value.constant)
             layer.iconImage = Value.constant(ResolvedImage.name(annotation.iconImage!))
+            layer.iconOpacity = annotation.iconOpacity.map(Value.constant)
             layer.textField = annotation.textField.map(Value.constant)
             layer.textColor = annotation.textColor.map(Value.constant)
-
         })
 
         self.annotationBeingDragged = annotation
@@ -611,37 +539,33 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         let moveObject = moveDistancesObject
         moveObject.prevX = previousPosition.x
         moveObject.prevY = previousPosition.y
-        moveObject.currentX = previousPosition.x
-        moveObject.currentY = previousPosition.y
         moveObject.distanceXSinceLast = 0
         moveObject.distanceYSinceLast = 0
 
-        guard let offsetGeometry =  self.annotationBeingDragged?.getOffsetGeometry(mapboxMap: view.mapboxMap, moveDistancesObject: moveObject) else { return }
+        guard let offsetGeometry =  self.annotationBeingDragged?.getOffsetGeometry(mapboxMap, moveDistancesObject: moveObject) else { return }
         switch offsetGeometry {
-        case .point(let circle):
-            self.annotationBeingDragged?.point = circle
-            try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: circle.geometry.geoJSONObject)
+        case .point(let point):
+            self.annotationBeingDragged?.point = point
+        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: offsetGeometry.geoJSONObject)
         default:
             break
         }
     }
 
-    internal func handleDragChanged(view: MapView, position: CGPoint) {
+    internal func handleDragChanged(_ mapboxMap: MapboxMap, position: CGPoint) {
         let moveObject = moveDistancesObject
+
         moveObject.distanceXSinceLast = moveObject.prevX - position.x
         moveObject.distanceYSinceLast = moveObject.prevY - position.y
         moveObject.prevX = position.x
         moveObject.prevY = position.y
 
-        if position.x < 0 || position.y < 0 || position.x > view.bounds.width || position.y > view.bounds.height {
-            handleDragEnded()
-        }
+        guard let offsetGeometry =  self.annotationBeingDragged?.getOffsetGeometry(mapboxMap, moveDistancesObject: moveObject) else { return }
 
-        guard let offsetGeometry =  self.annotationBeingDragged?.getOffsetGeometry(mapboxMap: view.mapboxMap, moveDistancesObject: moveObject) else { return }
         switch offsetGeometry {
         case .point(let point):
             self.annotationBeingDragged?.point = point
-            try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: point.geometry.geoJSONObject)
+        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: offsetGeometry.geoJSONObject)
         default:
             break
         }
@@ -678,14 +602,14 @@ public class PointAnnotationManager: AnnotationManagerInternal {
                                   annotation.isDraggable else {
                                 return
                             }
-                            self.handleDragBegin(mapView, annotation: annotation, position: position)
+                            self.handleDragBegin(mapView.mapboxMap, annotation: annotation, position: position)
                         }
                     case .failure(let error):
                         print("failure:", error.localizedDescription)
                     }
                 }
         case .changed:
-            self.handleDragChanged(view: mapView, position: position)
+            self.handleDragChanged(mapView.mapboxMap, position: position)
         case .ended, .cancelled:
             self.handleDragEnded()
         default:

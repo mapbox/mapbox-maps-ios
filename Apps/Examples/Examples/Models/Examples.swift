@@ -104,8 +104,11 @@ struct Examples {
                 description: "Show circle annotations on a map",
                 type: CircleAnnotationExample.self),
         Example(title: "Add Cluster Symbol Annotations",
-                description: "Show fire hydrants in Washington DC area in a cluster.",
+                description: "Show fire hydrants in Washington DC area in a cluster using a symbol layer.",
                 type: SymbolClusteringExample.self),
+        Example(title: "Add Cluster Point Annotations",
+                description: "Show fire hydrants in Washington DC area in a cluster using point annotations.",
+                type: PointAnnotationClusteringExample.self),
         Example(title: "Add markers to a map",
                 description: "Add markers that use different icons.",
                 type: AddMarkersSymbolExample.self),
@@ -196,6 +199,7 @@ struct Examples {
     ]
 
     // Examples that highlight using the Offline APIs.
+
     static let offlineExamples = [
         Example(title: "Use OfflineManager and TileStore to download a region",
                 description: """
@@ -208,12 +212,21 @@ struct Examples {
                     to change. Please contact Mapbox if you require a higher limit.
                     Additional charges may apply.
                 """,
-                type: OfflineManagerExample.self),
-        Example(title: "Use OfflineRegionManager to download a region",
-                description: "Use the deprecated OfflineRegionManager to download regions for offline use.",
-                testTimeout: 120,
-                type: OfflineRegionManagerExample.self),
-    ]
+                type: OfflineManagerExample.self)
+    ] + deprecatedOfflineExamples
+
+    private static var deprecatedOfflineExamples: [Example] {
+        #if DEBUG
+            return [
+                Example(title: "Use OfflineRegionManager to download a region",
+                        description: "Use the deprecated OfflineRegionManager to download regions for offline use.",
+                        testTimeout: 120,
+                        type: OfflineRegionManagerExample.self)
+            ]
+        #else
+            return []
+        #endif
+    }
 
     // Examples that show how to use the map's snapshotter.
     static let snapshotExamples = [

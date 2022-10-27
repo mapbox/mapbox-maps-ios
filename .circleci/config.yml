@@ -24,7 +24,7 @@ release-precheck: &release-anchor
 executors:
   xcode-latest:
     macos:
-      xcode: 13.3.0
+      xcode: 13.4.1
   # Note that `create-github-draft-release.sh` depends on this structure to parse the minimum supported Xcode version.
   # Please keep them in sync if this structure changes.
   xcode-sdk-min:
@@ -112,7 +112,7 @@ workflows:
           scheme: Examples
           requires:
             - Build Examples tests [non-main]
-          devices: --device model=iphone8,version=14.7
+          devices: --device model=iphone13pro,version=15.7
 
   steve:
     unless: << pipeline.parameters.turf-revision >>
@@ -580,9 +580,9 @@ jobs:
     parameters:
       devices:
         default: |
-          --device model=iphone11,version=13.6 \
+          --device model=iphone13pro,version=15.2 \
           --device model=iphone11pro,version=14.7 \
-          --device model=iphone8,version=12.4 \
+          --device model=iphone8,version=13.6 \
         type: string
       scheme:
         type: string
@@ -655,7 +655,7 @@ jobs:
             bundle install
             bundle exec fastlane build_examples_tests
       - store_artifacts:
-          path: output/Examples.zip
+          path: output/build_products.zip
       - persist_to_workspace:
           root: output/
           paths:

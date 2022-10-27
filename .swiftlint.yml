@@ -1,12 +1,10 @@
 ---
 allow_zero_lintable_files: true
+included:
+  - Sources
+  - Tests
 excluded:
-  - Carthage
-  - Pods
-  - Sources/MapboxMaps/Style/Generated
-  - Tests/MapboxMapsTests/Style/Generated
-  - "**/.build"
-  - ".build"
+  - "**/Generated"
 disabled_rules:
   - comment_spacing
   - computed_accessors_order

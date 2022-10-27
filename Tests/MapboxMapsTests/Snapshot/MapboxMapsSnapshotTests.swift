@@ -124,7 +124,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
             expectation.fulfill()
         } completion: { (result) in
             switch result {
-            case let .success(image) :
+            case let .success(image):
                 let imageEqual = self.compare(observedImage: image,
                                               expectedImageNamed: "testSnapshotOverlay",
                                               expectedImageScale: MapboxMapsSnapshotTests.snapshotScale,
@@ -134,7 +134,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
                 XCTAssertEqual(image.size, options.size)
                 XCTAssertEqual(image.scale, CGFloat(options.pixelRatio))
 
-            case.failure :
+            case.failure:
                 XCTFail("Failed to render snapshot")
             }
             expectation.fulfill()
@@ -151,14 +151,14 @@ class MapboxMapsSnapshotTests: XCTestCase {
         let expectation2 = self.expectation(description: "snapshot logo")
         snapshotterNew.start(overlayHandler: nil) { [self] (result) in
             switch result {
-            case let .success(image) :
+            case let .success(image):
                 let imageEqual = self.compare(observedImage: image,
                                               expectedImageNamed: "testSnapshotLogoVisibility",
                                               expectedImageScale: MapboxMapsSnapshotTests.snapshotScale,
                                               attachmentName: self.name)
                 XCTAssert(imageEqual, "Snapshot does not match expected image")
 
-            case.failure :
+            case.failure:
                 XCTFail("snapshot asset and snapshot image do not match")
             }
             expectation2.fulfill()
@@ -204,14 +204,14 @@ class MapboxMapsSnapshotTests: XCTestCase {
 
             snapshotter.start(overlayHandler: nil) { result in
                 switch result {
-                case let .success(image) :
+                case let .success(image):
                     let imageEqual = self.compare(observedImage: image,
                                                   expectedImageNamed: "testSnapshotAttribution-\(imageWidth)",
                                                   expectedImageScale: 2,
                                                   attachmentName: "testSnapshotAttribution-\(imageWidth)")
                     XCTAssert(imageEqual, "Snapshot does not match expected image")
 
-                case.failure :
+                case.failure:
                     XCTFail("snapshot asset and snapshot image do not match")
                 }
                 expectation.fulfill()
@@ -258,14 +258,14 @@ class MapboxMapsSnapshotTests: XCTestCase {
             guard let self = self else { return }
 
             switch result {
-            case let .success(image) :
+            case let .success(image):
                 let result = self.compare(observedImage: image,
                                           expectedImageNamed: fileName,
                                           expectedImageScale: MapboxMapsSnapshotTests.snapshotScale,
                                           attachmentName: fileName)
                 XCTAssert(result)
 
-            case.failure :
+            case.failure:
                 XCTFail("Failure: snapshot asset and snapshot image do not match")
             }
             expectation.fulfill()

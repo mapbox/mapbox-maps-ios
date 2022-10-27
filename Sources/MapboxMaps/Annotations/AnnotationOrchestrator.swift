@@ -103,9 +103,11 @@ public class AnnotationOrchestrator {
     /// - Parameters:
     ///   - id: Optional string identifier for this manager.
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
+    ///   - clusterOptions: Optionally set the `ClusterOptions` to cluster the Point Annotations
     /// - Returns: An instance of `PointAnnotationManager`
     public func makePointAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
-                                           layerPosition: LayerPosition? = nil) -> PointAnnotationManager {
+                                           layerPosition: LayerPosition? = nil,
+                                           clusterOptions: ClusterOptions? = nil) -> PointAnnotationManager {
         guard let displayLinkCoordinator = displayLinkCoordinator else {
             fatalError("DisplayLinkCoordinator must be present when creating an annotation manager")
         }
@@ -115,7 +117,8 @@ public class AnnotationOrchestrator {
             style: style,
             layerPosition: layerPosition,
             displayLinkCoordinator: displayLinkCoordinator,
-            longPressGestureRecognizer: longPressGestureRecognizer)
+            longPressGestureRecognizer: longPressGestureRecognizer,
+            clusterOptions: clusterOptions)
         annotationManagersByIdInternal[id] = annotationManager
         return annotationManager
     }

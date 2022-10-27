@@ -162,20 +162,53 @@ internal final class Puck2D: Puck {
         case .reducedAccuracy:
             fallthrough
         @unknown default:
+            // in order to:
+            // 1) ensure that user location indicator is always(at any zoom level) is shown even for reduced accuracy authorization
+            // 2) ensure that there are no unexpected sudden changes in location indicator radius when zoomin in/out
+            // here we calculate a suitable zoom level to transition from `accuracyRadius` to `emphasisCircle`
+            // and setup the transition using expressions.
+            // The zoom level is not hardcoded to enable a seamless and smooth transition between two circles.
+            //
+            // When the current zoom level is below the "cutoff" point - user location indicator is shown as a circle
+            // covering the area of possible user location.
+            // When the current zoom level is from "cutoff" point to "cutoff" point + 1 - user location indicator radius
+            // transitions from the actual accuracy radius to the minimum circle raduis, while crossfading with the emphasis
+            // circle with set radius.
+            // When the current zoom level is above the "cutoff" point - user location indicator is shown as a circle
+            // with static radius.
+            let zoomCutoffRange: ClosedRange<Double> = 4.0...7.5
+            let accuracyRange: ClosedRange<CLLocationDistance> = 1000...20_000
+            let cutoffZoomLevel = zoomCutoffRange.upperBound - (zoomCutoffRange.magnitude * (location.horizontalAccuracy - accuracyRange.lowerBound) / accuracyRange.magnitude)
+            let minPuckRadiusInPoints = 11.0
+            let minPuckRadiusInMeters = minPuckRadiusInPoints * Projection.metersPerPoint(for: location.coordinate.latitude, zoom: cutoffZoomLevel)
             newLayerPaintProperties[.accuracyRadius] = [
                 Expression.Operator.interpolate.rawValue,
                 [Expression.Operator.linear.rawValue],
                 [Expression.Operator.zoom.rawValue],
-                0,
-                200_000,
-                4,
-                50_000,
-                6,
-                20_000,
-                8,
-                location.horizontalAccuracy]
-            newLayerPaintProperties[.accuracyRadiusColor] = StyleColor(configuration.accuracyRingColor).rgbaString
-            newLayerPaintProperties[.accuracyRadiusBorderColor] = StyleColor(configuration.accuracyRingBorderColor).rgbaString
+                cutoffZoomLevel,
+                minPuckRadiusInMeters,
+                cutoffZoomLevel + 1,
+                location.horizontalAccuracy
+            ]
+            newLayerPaintProperties[.accuracyRadiusColor] = [
+                Expression.Operator.step.rawValue,
+                [Expression.Operator.zoom.rawValue],
+                StyleColor(UIColor.clear).rgbaString,
+                cutoffZoomLevel,
+                StyleColor(configuration.accuracyRingColor).rgbaString]
+            newLayerPaintProperties[.accuracyRadiusBorderColor] = [
+                Expression.Operator.step.rawValue,
+                [Expression.Operator.zoom.rawValue],
+                StyleColor(UIColor.clear).rgbaString,
+                cutoffZoomLevel,
+                StyleColor(configuration.accuracyRingBorderColor).rgbaString]
+            newLayerPaintProperties[.emphasisCircleColor] = [
+                Expression.Operator.step.rawValue,
+                [Expression.Operator.zoom.rawValue],
+                StyleColor(configuration.accuracyRingColor).rgbaString,
+                cutoffZoomLevel,
+                StyleColor(UIColor.clear).rgbaString]
+            newLayerPaintProperties[.emphasisCircleRadius] = minPuckRadiusInPoints
         }
 
         // LocationIndicatorLayer is a struct, and by default, most of its properties are nil. When it gets
@@ -311,5 +344,11 @@ private extension Puck2DConfiguration.Pulsing.Radius {
         case .accuracy:
             return location.horizontalAccuracy / Projection.metersPerPoint(for: location.coordinate.latitude, zoom: zoom)
         }
+    }
+}
+
+internal extension ClosedRange where Bound: AdditiveArithmetic {
+    var magnitude: Bound {
+        return upperBound - lowerBound
     }
 }

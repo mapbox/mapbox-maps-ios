@@ -108,38 +108,6 @@ final class PolygonAnnotationTests: XCTestCase {
         }
         XCTAssertEqual(fillPattern, annotation.fillPattern)
     }
-
-    func testOffsetGeometry() {
-        let mapInitOptions = MapInitOptions()
-        let mapView = MapView(frame: UIScreen.main.bounds, mapInitOptions: mapInitOptions)
-         let polygonCoords = [
-            CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
-            CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
-            CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
-            CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
-            CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
-         ]
-         var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
-         guard let polygonCoordinates = annotation.polygon.outerRing.coordinates.first else { return }
-         let point = CGPoint(x: polygonCoordinates.longitude, y: polygonCoordinates.latitude)
-
-         // offsetGeometry return value is nil
-         let offsetGeometryNilDistance = annotation.getOffsetGeometry(mapView.mapboxMap, moveDistancesObject: nil)
-         XCTAssertNil(offsetGeometryNilDistance)
-
-         // offsetGeometry return value is not nil
-         let moveObject = MoveDistancesObject()
-         moveObject.currentX = CGFloat.random(in: 0...100)
-         moveObject.currentY = CGFloat.random(in: 0...100)
-         moveObject.prevX = point.x
-         moveObject.prevY = point.y
-         moveObject.distanceXSinceLast = moveObject.prevX - moveObject.currentX
-         moveObject.distanceYSinceLast = moveObject.prevY - moveObject.currentY
-         XCTAssertNotNil(moveObject)
-
-         let offsetGeometry = annotation.getOffsetGeometry(mapView.mapboxMap, moveDistancesObject: moveObject)
-         XCTAssertNotNil(offsetGeometry)
-     }
   }
 
 // End of generated file

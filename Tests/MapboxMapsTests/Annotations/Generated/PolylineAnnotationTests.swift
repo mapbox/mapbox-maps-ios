@@ -138,32 +138,6 @@ final class PolylineAnnotationTests: XCTestCase {
         }
         XCTAssertEqual(lineWidth, annotation.lineWidth)
     }
-
-    func testOffsetGeometry() {
-        let mapInitOptions = MapInitOptions()
-        let mapView = MapView(frame: UIScreen.main.bounds, mapInitOptions: mapInitOptions)
-        let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
-        guard let lineStringCoordinates = annotation.lineString.coordinates.first else { return }
-        let point = CGPoint(x: lineStringCoordinates.longitude, y: lineStringCoordinates.latitude)
-
-         // offsetGeometry return value is nil
-         let offsetGeometryNilDistance = annotation.getOffsetGeometry(mapView.mapboxMap, moveDistancesObject: nil)
-         XCTAssertNil(offsetGeometryNilDistance)
-
-         // offsetGeometry return value is not nil
-         let moveObject = MoveDistancesObject()
-         moveObject.currentX = CGFloat.random(in: 0...100)
-         moveObject.currentY = CGFloat.random(in: 0...100)
-         moveObject.prevX = point.x
-         moveObject.prevY = point.y
-         moveObject.distanceXSinceLast = moveObject.prevX - moveObject.currentX
-         moveObject.distanceYSinceLast = moveObject.prevY - moveObject.currentY
-         XCTAssertNotNil(moveObject)
-
-         let offsetGeometry = annotation.getOffsetGeometry(mapView.mapboxMap, moveDistancesObject: moveObject)
-         XCTAssertNotNil(offsetGeometry)
-     }
   }
 
 // End of generated file

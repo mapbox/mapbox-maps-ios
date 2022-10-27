@@ -523,4 +523,5 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
 }
 
+
 // End of generated file

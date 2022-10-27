@@ -121,10 +121,10 @@ final class PolygonAnnotationTests: XCTestCase {
          ]
          var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
          guard let polygonCoordinates = annotation.polygon.outerRing.coordinates.first else { return }
-         let point = CGPoint(x: annotation.polygon.outerRing.coordinates.first?.longitude, y: annotation.polygon.outerRing.coordinates.first?.latitude)
+         let point = CGPoint(x: polygonCoordinates.longitude, y: polygonCoordinates.latitude)
 
          // offsetGeometry return value is nil
-         let offsetGeometryNilDistance = annotation.getOffsetGeometry(mapboxMap: mapView.mapboxMap, moveDistancesObject: nil)
+         let offsetGeometryNilDistance = annotation.getOffsetGeometry(mapView.mapboxMap, moveDistancesObject: nil)
          XCTAssertNil(offsetGeometryNilDistance)
 
          // offsetGeometry return value is not nil
@@ -137,7 +137,7 @@ final class PolygonAnnotationTests: XCTestCase {
          moveObject.distanceYSinceLast = moveObject.prevY - moveObject.currentY
          XCTAssertNotNil(moveObject)
 
-         let offsetGeometry = annotation.getOffsetGeometry(mapboxMap: mapView.mapboxMap, moveDistancesObject: moveObject)
+         let offsetGeometry = annotation.getOffsetGeometry(mapView.mapboxMap, moveDistancesObject: moveObject)
          XCTAssertNotNil(offsetGeometry)
      }
   }

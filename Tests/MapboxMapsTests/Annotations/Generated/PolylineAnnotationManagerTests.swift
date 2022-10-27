@@ -773,4 +773,5 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
 }
 
+
 // End of generated file

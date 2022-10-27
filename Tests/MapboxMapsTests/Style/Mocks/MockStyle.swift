@@ -2,6 +2,16 @@
 
 final class MockStyle: StyleProtocol {
 
+    struct AddLayerParams {
+        var layer: Layer
+        var layerPosition: LayerPosition?
+    }
+
+    let addLayerStub = Stub<AddLayerParams, Void>()
+    func addLayer(_ layer: MapboxMaps.Layer, layerPosition: MapboxMaps.LayerPosition?) throws {
+        addLayerStub.call(with: .init(layer: layer, layerPosition: layerPosition))
+    }
+
     struct SetSourcePropertyParams {
         let sourceId: String
         let property: String

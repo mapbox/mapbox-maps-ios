@@ -539,4 +539,5 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
 }
 
+
 // End of generated file

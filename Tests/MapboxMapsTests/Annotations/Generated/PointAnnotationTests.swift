@@ -389,7 +389,7 @@ final class PointAnnotationTests: XCTestCase {
         let point = CGPoint(x: annotation.point.coordinates.longitude, y: annotation.point.coordinates.latitude)
 
          // offsetGeometry return value is nil
-         let offsetGeometryNilDistance = annotation.getOffsetGeometry(mapboxMap: mapView.mapboxMap, moveDistancesObject: nil)
+         let offsetGeometryNilDistance = annotation.getOffsetGeometry(mapView.mapboxMap, moveDistancesObject: nil)
          XCTAssertNil(offsetGeometryNilDistance)
 
          // offsetGeometry return value is not nil
@@ -402,7 +402,7 @@ final class PointAnnotationTests: XCTestCase {
          moveObject.distanceYSinceLast = moveObject.prevY - moveObject.currentY
          XCTAssertNotNil(moveObject)
 
-         let offsetGeometry = annotation.getOffsetGeometry(mapboxMap: mapView.mapboxMap, moveDistancesObject: moveObject)
+         let offsetGeometry = annotation.getOffsetGeometry(mapView.mapboxMap, moveDistancesObject: moveObject)
          XCTAssertNotNil(offsetGeometry)
      }
   }

@@ -148,7 +148,7 @@ final class PolylineAnnotationTests: XCTestCase {
         let point = CGPoint(x: lineStringCoordinates.longitude, y: lineStringCoordinates.latitude)
 
          // offsetGeometry return value is nil
-         let offsetGeometryNilDistance = annotation.getOffsetGeometry(mapboxMap: mapView.mapboxMap, moveDistancesObject: nil)
+         let offsetGeometryNilDistance = annotation.getOffsetGeometry(mapView.mapboxMap, moveDistancesObject: nil)
          XCTAssertNil(offsetGeometryNilDistance)
 
          // offsetGeometry return value is not nil
@@ -161,7 +161,7 @@ final class PolylineAnnotationTests: XCTestCase {
          moveObject.distanceYSinceLast = moveObject.prevY - moveObject.currentY
          XCTAssertNotNil(moveObject)
 
-         let offsetGeometry = annotation.getOffsetGeometry(mapboxMap: mapView.mapboxMap, moveDistancesObject: moveObject)
+         let offsetGeometry = annotation.getOffsetGeometry(mapView.mapboxMap, moveDistancesObject: moveObject)
          XCTAssertNotNil(offsetGeometry)
      }
   }

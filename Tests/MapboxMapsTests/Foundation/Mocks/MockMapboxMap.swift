@@ -142,11 +142,6 @@ final class MockMapboxMap: MapboxMapProtocol {
             pitch: pitch))
     }
 
-    let coordinateBoundsForCameraStub = Stub<MapboxMaps.CameraOptions, CoordinateBounds>(defaultReturnValue: CoordinateBounds(southwest: .random(), northeast: .random()))
-    func coordinateBounds(for camera: MapboxMaps.CameraOptions) -> CoordinateBounds {
-        coordinateBoundsForCameraStub.call(with: camera)
-    }
-
     let pointStub = Stub<CLLocationCoordinate2D, CGPoint>(defaultReturnValue: .random())
     func point(for coordinate: CLLocationCoordinate2D) -> CGPoint {
         pointStub.call(with: coordinate)

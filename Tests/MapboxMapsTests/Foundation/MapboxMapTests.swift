@@ -248,29 +248,25 @@ final class MapboxMapTests: XCTestCase {
         mapboxObservable.onTypedNextStub.defaultSideEffect = { invocation in
             guard invocation.parameters.eventName == "style-loaded" else { return }
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                let event = MapboxCoreMaps.Event(type: "style-loaded", data: NSNull())
-                invocation.parameters.handler(MapEvent<NoPayload>(event: event))
-                styleLoadEventOccurred.fulfill()
-            }
+            let event = MapboxCoreMaps.Event(type: "style-loaded", data: NSNull())
+            invocation.parameters.handler(MapEvent<NoPayload>(event: event))
+            styleLoadEventOccurred.fulfill()
         }
         mapboxObservable.onTypedEveryStub.defaultSideEffect = { invocation in
             guard invocation.parameters.eventName == "map-loading-error" else { return }
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                let event = MapboxCoreMaps.Event(
-                    type: "source",
-                    data: ["type": "source", "message": "Cannot load source", "source-id": "dummy-source-id"])
-                invocation.parameters.handler(MapEvent<MapLoadingErrorPayload>(event: event))
-                mapLoadingErrorEventOccurred.fulfill()
-            }
+            let event = MapboxCoreMaps.Event(
+                type: "source",
+                data: ["type": "source", "message": "Cannot load source", "source-id": "dummy-source-id"])
+            invocation.parameters.handler(MapEvent<MapLoadingErrorPayload>(event: event))
+            mapLoadingErrorEventOccurred.fulfill()
         }
 
         mapboxMap.loadStyleURI(.dark) { _ in
             completionIsCalledOnce.fulfill()
         }
 
-        waitForExpectations(timeout: 2)
+        waitForExpectations(timeout: 0.3)
     }
 
     @available(*, deprecated)

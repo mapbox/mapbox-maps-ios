@@ -3,34 +3,45 @@ import MapboxMaps
 
 final class FrameViewAnnotationsExample: UIViewController, ExampleProtocol {
 
+    private enum Animator {
+        case flyTo, easeTo, viewport
+    }
+
+    private var flyToButton: UIButton!
+    private var easeToButton: UIButton!
+    private var viewportButton: UIButton!
+    private var resetButton: UIButton!
+
     private var mapView: MapView!
+    private let initialCamera = CameraOptions(
+        center: .random,
+        padding: UIEdgeInsets(top: .random(in: 0...20), left: .random(in: 0...20), bottom: .random(in: 0...20), right: .random(in: 0...20)),
+        zoom: 0,
+        bearing: 0,
+        pitch: 0
+    )
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = .white
 
-        mapView = MapView(frame: view.bounds)
-
-        let showAnnotationsButton = UIButton()
-        showAnnotationsButton.setTitle("Frame Annotations", for: .normal)
-        showAnnotationsButton.contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
-        showAnnotationsButton.backgroundColor = .black
-        showAnnotationsButton.addTarget(self, action: #selector(tap(_:)), for: .touchUpInside)
+        mapView = MapView(frame: view.bounds, mapInitOptions: MapInitOptions(cameraOptions: initialCamera))
+        let buttonsView = makeButtonsView()
 
         view.addSubview(mapView)
-        view.addSubview(showAnnotationsButton)
+        view.addSubview(buttonsView)
 
         mapView.translatesAutoresizingMaskIntoConstraints = false
-        showAnnotationsButton.translatesAutoresizingMaskIntoConstraints = false
+        buttonsView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             mapView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            showAnnotationsButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            showAnnotationsButton.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor),
-            showAnnotationsButton.bottomAnchor.constraint(equalTo: mapView.ornaments.logoView.topAnchor, constant: -10),
+            buttonsView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            buttonsView.leadingAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.leadingAnchor),
+            buttonsView.bottomAnchor.constraint(equalTo: mapView.ornaments.logoView.topAnchor, constant: -10),
         ])
 
         addAnnotations()
@@ -41,12 +52,85 @@ final class FrameViewAnnotationsExample: UIViewController, ExampleProtocol {
         }
     }
 
-    @objc private func tap(_ sender: UIButton) {
-        mapView.viewAnnotations.showAnnotations(
-            ids: Array(coordinates.keys),
+    private func makeButtonsView() -> UIView {
+        func makeButton(title: String, selector: Selector) -> UIButton {
+            let button = UIButton()
+            button.setTitle(title, for: .normal)
+            button.contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
+            button.backgroundColor = .black
+            button.addTarget(self, action: selector, for: .touchUpInside)
+            return button
+        }
+
+        flyToButton = makeButton(title: "FlyTo", selector: #selector(flyToButtonTapped(_:)))
+        easeToButton = makeButton(title: "EaseTo", selector: #selector(easeToButtonTapped(_:)))
+        viewportButton = makeButton(title: "Viewport", selector: #selector(viewportButtonTapped(_:)))
+        resetButton = makeButton(title: "Reset camera", selector: #selector(resetButtonTapped(_:)))
+
+        let buttonsView = UIStackView(arrangedSubviews: [flyToButton, easeToButton, viewportButton, resetButton])
+        buttonsView.axis = .horizontal
+        buttonsView.spacing = 10
+        buttonsView.distribution = .fillEqually
+
+        resetButton.isHidden = true
+
+        return buttonsView
+    }
+
+    @objc private func flyToButtonTapped(_ sender: UIButton) {
+        frameViewAnnotation(with: .flyTo, sender: sender)
+    }
+
+    @objc private func easeToButtonTapped(_ sender: UIButton) {
+        frameViewAnnotation(with: .easeTo, sender: sender)
+    }
+
+    @objc private func viewportButtonTapped(_ sender: UIButton) {
+        frameViewAnnotation(with: .viewport, sender: sender)
+    }
+
+    @objc private func resetButtonTapped(_ sender: UIButton) {
+        mapView.mapboxMap.setCamera(to: initialCamera)
+        resetButton.isHidden = true
+        flyToButton.isHidden = false
+        easeToButton.isHidden = false
+        viewportButton.isHidden = false
+    }
+
+    private func frameViewAnnotation(with animator: Animator, sender: UIButton) {
+        flyToButton.isHidden = true
+        easeToButton.isHidden = true
+        viewportButton.isHidden = true
+        resetButton.isHidden = false
+
+        let camera = self.mapView.viewAnnotations.camera(
+            forAnnotations: Array(self.coordinates.keys),
             padding: .zero,
-            pitch: nil,
-            animationDuration: 1)
+            bearing: nil,
+            pitch: nil
+        )!
+
+        switch animator {
+        case .flyTo:
+            mapView.camera.fly(to: initialCamera) { _ in
+                self.mapView.camera.fly(to: camera, duration: 1)
+            }
+        case .easeTo:
+            mapView.camera.ease(to: initialCamera, duration: 1) { _ in
+                self.mapView.camera.ease(to: camera, duration: 1)
+            }
+        case .viewport:
+            let bounds = mapView.mapboxMap.coordinateBounds(for: camera)
+            let overviewViewportStateOptions = OverviewViewportStateOptions(
+                geometry: MultiPoint([bounds.northeast, bounds.southeast, bounds.southwest, bounds.northwest]),
+                padding: .zero,
+                bearing: camera.bearing,
+                pitch: camera.pitch,
+                animationDuration: 1
+            )
+            let overviewViewportState = mapView.viewport.makeOverviewViewportState(options: overviewViewportStateOptions)
+            mapView.viewport.transition(to: overviewViewportState)
+        }
     }
 
     private func addAnnotations() {

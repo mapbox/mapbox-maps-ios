@@ -50,7 +50,6 @@ public final class ViewAnnotationManager {
 
     private let containerView: UIView
     private let mapboxMap: MapboxMapProtocol
-    private let coordinateBoundsAnimator: CoordinateBoundsAnimator
     private var viewsById: [String: UIView] = [:]
     private var idsByView: [UIView: String] = [:]
     private var expectedHiddenByView: [UIView: Bool] = [:]
@@ -70,13 +69,8 @@ public final class ViewAnnotationManager {
         }
     }
 
-    internal init(
-        containerView: UIView,
-        coordinateBoundsAnimator: CoordinateBoundsAnimator,
-        mapboxMap: MapboxMapProtocol
-    ) {
+    internal init(containerView: UIView, mapboxMap: MapboxMapProtocol) {
         self.containerView = containerView
-        self.coordinateBoundsAnimator = coordinateBoundsAnimator
         self.mapboxMap = mapboxMap
         let delegatingPositionsListener = DelegatingViewAnnotationPositionsUpdateListener()
         delegatingPositionsListener.delegate = self
@@ -346,47 +340,6 @@ public final class ViewAnnotationManager {
             CLLocationCoordinate2D(latitude: south, longitude: west),
         ])
         return mapboxMap.camera(for: .multiPoint(points), padding: accumulatedPadding, bearing: bearing, pitch: pitch)
-    }
-
-    /// Sets the visible region so that the map displays the specified annotations.
-    ///
-    /// - Important: This API isn't supported by Globe projection.
-    ///
-    /// - Parameter ids: The list of annotations ids to be framed.
-    /// - Parameter padding: The padding to be set around the edges of the map view, default is `UIEdgeInsets.zero`.
-    /// - Parameter bearing: The bearing of the map.
-    /// - Parameter pitch: Default is 0.
-    /// - Parameter animationDuration: Default is 1.
-    public func showAnnotations(
-        ids: [String],
-        padding: UIEdgeInsets = .zero,
-        bearing: CGFloat? = nil,
-        pitch: CGFloat? = nil,
-        animationDuration: TimeInterval = 1
-    ) {
-        let coordinateBounds = camera(forAnnotations: ids, bearing: bearing, pitch: pitch)
-            .map(mapboxMap.coordinateBounds(for:))
-        guard let coordinateBounds = coordinateBounds, !coordinateBounds.isEmpty else { return }
-
-        coordinateBoundsAnimator.show(coordinateBounds: coordinateBounds, padding: padding, bearing: bearing, pitch: pitch, animationDuration: animationDuration)
-    }
-
-    /// Sets the visible region so that the map displays the specified annotations.
-    ///
-    /// - Important: This API isn't supported by Globe projection.
-    ///
-    /// - Parameter annotations: The list of annotations view to be framed.
-    /// - Parameter padding: The padding to be set around the edges of the map view, default is `UIEdgeInsets.zero`.
-    /// - Parameter pitch: Default is 0.
-    /// - Parameter animationDuration: Default is 1.
-    public func showAnnotations(
-        _ annotations: [UIView],
-        padding: UIEdgeInsets = .zero,
-        pitch: CGFloat? = nil,
-        animationDuration: TimeInterval = 1
-    ) {
-        let ids = annotations.compactMap { idsByView[$0] }
-        showAnnotations(ids: ids, padding: padding, pitch: pitch, animationDuration: animationDuration)
     }
 
     // MARK: - Private functions

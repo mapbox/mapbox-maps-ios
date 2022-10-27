@@ -413,6 +413,11 @@ open class MapView: UIView {
             style: mapboxMap.style,
             displayLinkCoordinator: self)
 
+        // Initialize/Configure view annotations manager
+        viewAnnotations = ViewAnnotationManager(
+            containerView: viewAnnotationContainerView,
+            mapboxMap: mapboxMap)
+
         viewport = Viewport(
             impl: dependencyProvider.makeViewportImpl(
                 mapboxMap: mapboxMap,
@@ -422,12 +427,6 @@ open class MapView: UIView {
                 doubleTouchGestureRecognizer: gestures.doubleTouchToZoomOutGestureRecognizer),
             interpolatedLocationProducer: interpolatedLocationProducer,
             cameraAnimationsManager: internalCamera,
-            mapboxMap: mapboxMap)
-
-        // Initialize/Configure view annotations manager
-        viewAnnotations = ViewAnnotationManager(
-            containerView: viewAnnotationContainerView,
-            coordinateBoundsAnimator: viewport,
             mapboxMap: mapboxMap)
     }
 

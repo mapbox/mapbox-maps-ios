@@ -222,7 +222,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
                 didDetectTappedAnnotations: tappedAnnotations)
             var selectedAnnotationIds = tappedAnnotations.map(\.id)
             var allAnnotations = self.annotations.map { annotation in
-                var mutableAnnotation = annotation
+                var mutableAnnotation: CircleAnnotation = annotation
                 if selectedAnnotationIds.contains(annotation.id) {
                     if mutableAnnotation.isSelected == false {
                         mutableAnnotation.isSelected = true
@@ -254,7 +254,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
     internal func handleDragBegin(_ view: MapView, annotation: Annotation, position: CGPoint) {
         createDragSourceAndLayer(view: view)
 
-        guard var annotation = annotation as? CircleAnnotation else { return }
+        guard let annotation = annotation as? CircleAnnotation else { return }
         try? view.mapboxMap.style.updateLayer(withId: "drag-layer", type: CircleLayer.self, update: { layer in
             layer.circleColor = annotation.circleColor.map(Value.constant)
             layer.circleRadius = annotation.circleRadius.map(Value.constant)

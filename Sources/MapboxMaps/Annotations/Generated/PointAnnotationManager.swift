@@ -491,7 +491,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
                 didDetectTappedAnnotations: tappedAnnotations)
             var selectedAnnotationIds = tappedAnnotations.map(\.id)
             var allAnnotations = self.annotations.map { annotation in
-                var mutableAnnotation = annotation
+                var mutableAnnotation: PointAnnotation = annotation
                 if selectedAnnotationIds.contains(annotation.id) {
                     if mutableAnnotation.isSelected == false {
                         mutableAnnotation.isSelected = true
@@ -523,7 +523,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     internal func handleDragBegin(_ view: MapView, annotation: Annotation, position: CGPoint) {
         createDragSourceAndLayer(view: view)
 
-        guard var annotation = annotation as? PointAnnotation else { return }
+        guard let annotation = annotation as? PointAnnotation else { return }
         try? view.mapboxMap.style.updateLayer(withId: "drag-layer", type: SymbolLayer.self, update: { layer in
 
             layer.iconColor = annotation.iconColor.map(Value.constant)

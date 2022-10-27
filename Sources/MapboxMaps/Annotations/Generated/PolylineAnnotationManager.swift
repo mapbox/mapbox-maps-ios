@@ -252,7 +252,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
                 didDetectTappedAnnotations: tappedAnnotations)
             var selectedAnnotationIds = tappedAnnotations.map(\.id)
             var allAnnotations = self.annotations.map { annotation in
-                var mutableAnnotation = annotation
+                var mutableAnnotation: PolylineAnnotation = annotation
                 if selectedAnnotationIds.contains(annotation.id) {
                     if mutableAnnotation.isSelected == false {
                         mutableAnnotation.isSelected = true

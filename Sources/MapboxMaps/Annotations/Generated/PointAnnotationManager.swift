@@ -490,7 +490,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
                 self,
                 didDetectTappedAnnotations: tappedAnnotations)
             var selectedAnnotationIds = tappedAnnotations.map(\.id)
-            var allAnnotations = self.annotations.map { annotation in
+            let allAnnotations = self.annotations.map { annotation in
                 var mutableAnnotation: PointAnnotation = annotation
                 if selectedAnnotationIds.contains(annotation.id) {
                     if mutableAnnotation.isSelected == false {
@@ -508,29 +508,28 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    internal func createDragSourceAndLayer(view: MapView) {
+    internal func createDragSourceAndLayer() {
         var dragSource = GeoJSONSource()
         dragSource.data = .empty
-        try? view.mapboxMap.style.addSource(dragSource, id: "dragSource")
+        try? style.addSource(dragSource, id: "dragSource")
 
         let dragLayerId = "drag-layer"
-        var dragLayer = SymbolLayer(id: "drag-layer")
-        dragLayer = SymbolLayer(id: dragLayerId)
+        var dragLayer = SymbolLayer(id: dragLayerId)
         dragLayer.source = "dragSource"
-        try? view.mapboxMap.style.addLayer(dragLayer)
+        try? style.addLayer(dragLayer, layerPosition: .default)
     }
 
-    internal func handleDragBegin(_ view: MapView, annotation: Annotation, position: CGPoint) {
-        createDragSourceAndLayer(view: view)
+    internal func handleDragBegin(_ mapboxMap: MapboxMap, annotation: Annotation, position: CGPoint) {
+        createDragSourceAndLayer()
 
         guard let annotation = annotation as? PointAnnotation else { return }
-        try? view.mapboxMap.style.updateLayer(withId: "drag-layer", type: SymbolLayer.self, update: { layer in
 
+        try? mapboxMap.style.updateLayer(withId: "drag-layer", type: SymbolLayer.self, update: { layer in
             layer.iconColor = annotation.iconColor.map(Value.constant)
             layer.iconImage = Value.constant(ResolvedImage.name(annotation.iconImage!))
+            layer.iconOpacity = annotation.iconOpacity.map(Value.constant)
             layer.textField = annotation.textField.map(Value.constant)
             layer.textColor = annotation.textColor.map(Value.constant)
-
         })
 
         self.annotationBeingDragged = annotation
@@ -540,37 +539,33 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         let moveObject = moveDistancesObject
         moveObject.prevX = previousPosition.x
         moveObject.prevY = previousPosition.y
-        moveObject.currentX = previousPosition.x
-        moveObject.currentY = previousPosition.y
         moveObject.distanceXSinceLast = 0
         moveObject.distanceYSinceLast = 0
 
-        guard let offsetGeometry =  self.annotationBeingDragged?.getOffsetGeometry(mapboxMap: view.mapboxMap, moveDistancesObject: moveObject) else { return }
+        guard let offsetGeometry =  self.annotationBeingDragged?.getOffsetGeometry(mapboxMap, moveDistancesObject: moveObject) else { return }
         switch offsetGeometry {
-        case .point(let circle):
-            self.annotationBeingDragged?.point = circle
-            try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: circle.geometry.geoJSONObject)
+        case .point(let point):
+            self.annotationBeingDragged?.point = point
+        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: offsetGeometry.geoJSONObject)
         default:
             break
         }
     }
 
-    internal func handleDragChanged(view: MapView, position: CGPoint) {
+    internal func handleDragChanged(_ mapboxMap: MapboxMap, position: CGPoint) {
         let moveObject = moveDistancesObject
+
         moveObject.distanceXSinceLast = moveObject.prevX - position.x
         moveObject.distanceYSinceLast = moveObject.prevY - position.y
         moveObject.prevX = position.x
         moveObject.prevY = position.y
 
-        if position.x < 0 || position.y < 0 || position.x > view.bounds.width || position.y > view.bounds.height {
-            handleDragEnded()
-        }
+        guard let offsetGeometry =  self.annotationBeingDragged?.getOffsetGeometry(mapboxMap, moveDistancesObject: moveObject) else { return }
 
-        guard let offsetGeometry =  self.annotationBeingDragged?.getOffsetGeometry(mapboxMap: view.mapboxMap, moveDistancesObject: moveObject) else { return }
         switch offsetGeometry {
         case .point(let point):
             self.annotationBeingDragged?.point = point
-            try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: point.geometry.geoJSONObject)
+        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: offsetGeometry.geoJSONObject)
         default:
             break
         }
@@ -607,14 +602,14 @@ public class PointAnnotationManager: AnnotationManagerInternal {
                                   annotation.isDraggable else {
                                 return
                             }
-                            self.handleDragBegin(mapView, annotation: annotation, position: position)
+                            self.handleDragBegin(mapView.mapboxMap, annotation: annotation, position: position)
                         }
                     case .failure(let error):
                         print("failure:", error.localizedDescription)
                     }
                 }
         case .changed:
-            self.handleDragChanged(view: mapView, position: position)
+            self.handleDragChanged(mapView.mapboxMap, position: position)
         case .ended, .cancelled:
             self.handleDragEnded()
         default:

@@ -251,7 +251,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
                 self,
                 didDetectTappedAnnotations: tappedAnnotations)
             var selectedAnnotationIds = tappedAnnotations.map(\.id)
-            var allAnnotations = self.annotations.map { annotation in
+            let allAnnotations = self.annotations.map { annotation in
                 var mutableAnnotation: PolylineAnnotation = annotation
                 if selectedAnnotationIds.contains(annotation.id) {
                     if mutableAnnotation.isSelected == false {
@@ -268,27 +268,31 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
         }
     }
-    internal func createDragSourceAndLayer(view: MapView) {
+
+    internal func createDragSourceAndLayer() {
         var dragSource = GeoJSONSource()
         dragSource.data = .empty
-        try? view.mapboxMap.style.addSource(dragSource, id: "dragSource")
+        try? style.addSource(dragSource, id: "dragSource")
 
         let dragLayerId = "drag-layer"
-        var dragLayer = LineLayer(id: "drag-layer")
-        dragLayer = LineLayer(id: dragLayerId)
+        var dragLayer = LineLayer(id: dragLayerId)
         dragLayer.source = "dragSource"
-        try? view.mapboxMap.style.addLayer(dragLayer)
+        try? style.addLayer(dragLayer, layerPosition: .default)
     }
 
-    internal func handleDragBegin(_ view: MapView, annotation: Annotation, position: CGPoint) {
-        createDragSourceAndLayer(view: view)
+    internal func handleDragBegin(_ mapboxMap: MapboxMap, annotation: Annotation, position: CGPoint) {
+        createDragSourceAndLayer()
 
         guard let annotation = annotation as? PolylineAnnotation else { return }
-        try? view.mapboxMap.style.updateLayer(withId: "drag-layer", type: LineLayer.self, update: { layer in
-            layer.lineColor = annotation.lineColor.map(Value.constant)
-            layer.lineWidth = annotation.lineWidth.map(Value.constant)
 
+        try? mapboxMap.style.updateLayer(withId: "drag-layer", type: LineLayer.self, update: { layer in
+            layer.lineColor = annotation.lineColor.map(Value.constant)
+            layer.lineOpacity = annotation.lineOpacity.map(Value.constant)
+            layer.lineWidth = annotation.lineWidth.map(Value.constant)
+            guard let linePattern = annotation.linePattern else { return }
+            layer.linePattern = Value.constant(ResolvedImage.name(linePattern))
         })
+
         self.annotationBeingDragged = annotation
         self.annotations.removeAll(where: { $0.id == annotation.id })
 
@@ -299,17 +303,17 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         moveObject.distanceXSinceLast = 0
         moveObject.distanceYSinceLast = 0
 
-        guard let offsetGeometry =  self.annotationBeingDragged?.getOffsetGeometry(mapboxMap: view.mapboxMap, moveDistancesObject: moveObject) else { return }
+        guard let offsetGeometry =  self.annotationBeingDragged?.getOffsetGeometry(mapboxMap, moveDistancesObject: moveObject) else { return }
         switch offsetGeometry {
         case .lineString(let lineString):
             self.annotationBeingDragged?.lineString = lineString
-            try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: lineString.geometry.geoJSONObject)
+        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: offsetGeometry.geoJSONObject)
         default:
             break
         }
     }
 
-    internal func handleDragChanged(view: MapView, position: CGPoint) {
+    internal func handleDragChanged(_ mapboxMap: MapboxMap, position: CGPoint) {
         let moveObject = moveDistancesObject
 
         moveObject.distanceXSinceLast = moveObject.prevX - position.x
@@ -317,15 +321,12 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         moveObject.prevX = position.x
         moveObject.prevY = position.y
 
-        if position.x < 0 || position.y < 0 || position.x > view.bounds.width || position.y > view.bounds.height {
-            handleDragEnded()
-        }
+        guard let offsetGeometry =  self.annotationBeingDragged?.getOffsetGeometry(mapboxMap, moveDistancesObject: moveObject) else { return }
 
-        guard let offsetGeometry =  self.annotationBeingDragged?.getOffsetGeometry(mapboxMap: view.mapboxMap, moveDistancesObject: moveObject) else { return }
         switch offsetGeometry {
         case .lineString(let lineString):
             self.annotationBeingDragged?.lineString = lineString
-            try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: lineString.geometry.geoJSONObject)
+        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: offsetGeometry.geoJSONObject)
         default:
             break
         }
@@ -362,14 +363,14 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
                                   annotation.isDraggable else {
                                 return
                             }
-                            self.handleDragBegin(mapView, annotation: annotation, position: position)
+                            self.handleDragBegin(mapView.mapboxMap, annotation: annotation, position: position)
                         }
                     case .failure(let error):
                         print("failure:", error.localizedDescription)
                     }
                 }
         case .changed:
-            self.handleDragChanged(view: mapView, position: position)
+            self.handleDragChanged(mapView.mapboxMap, position: position)
         case .ended, .cancelled:
             self.handleDragEnded()
         default:

@@ -42,9 +42,9 @@ internal protocol AnnotationManagerInternal: AnnotationManager {
 
     func handleQueriedFeatureIds(_ queriedFeatureIds: [String])
 
-    func handleDragBegin(_ view: MapView, annotation: Annotation, position: CGPoint)
+    func handleDragBegin(_ mapboxMap: MapboxMap, annotation: Annotation, position: CGPoint)
 
-    func handleDragChanged(view: MapView, position: CGPoint)
+    func handleDragChanged(_ mapboxMap: MapboxMap, position: CGPoint)
 
     func handleDragEnded()
 }

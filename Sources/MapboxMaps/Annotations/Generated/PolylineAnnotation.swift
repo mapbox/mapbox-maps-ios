@@ -144,7 +144,7 @@ public struct PolylineAnnotation: Annotation {
 
 
     /// Get the offset geometry for the touch point
-    func getOffsetGeometry(mapboxMap: MapboxMap, moveDistancesObject: MoveDistancesObject?) -> Geometry? {
+    func getOffsetGeometry(_ mapboxMap: MapboxMap, moveDistancesObject: MoveDistancesObject?) -> Geometry? {
         let maxMercatorLatitude = 85.05112877980659
         let minMercatorLatitude = -85.05112877980659
 

@@ -105,20 +105,16 @@ final class FrameViewAnnotationsExample: UIViewController, ExampleProtocol {
 
         let camera = self.mapView.viewAnnotations.camera(
             forAnnotations: Array(self.coordinates.keys),
-            padding: .zero,
+            padding: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10),
             bearing: nil,
             pitch: nil
         )!
 
         switch animator {
         case .flyTo:
-            mapView.camera.fly(to: initialCamera) { _ in
-                self.mapView.camera.fly(to: camera, duration: 1)
-            }
+            mapView.camera.fly(to: camera, duration: 1)
         case .easeTo:
-            mapView.camera.ease(to: initialCamera, duration: 1) { _ in
-                self.mapView.camera.ease(to: camera, duration: 1)
-            }
+            mapView.camera.ease(to: camera, duration: 1)
         case .viewport:
             let bounds = mapView.mapboxMap.coordinateBounds(for: camera)
             let overviewViewportStateOptions = OverviewViewportStateOptions(

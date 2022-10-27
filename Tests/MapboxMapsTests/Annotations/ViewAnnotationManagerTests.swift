@@ -5,17 +5,14 @@ final class ViewAnnotationManagerTests: XCTestCase {
 
     var container: UIView!
     var mapboxMap: MockMapboxMap!
-    var coordinateBoundsAnimator: MockCoordinateBoundsAnimator!
     var manager: ViewAnnotationManager!
 
     override func setUp() {
         super.setUp()
         container = UIView()
         mapboxMap = MockMapboxMap()
-        coordinateBoundsAnimator = MockCoordinateBoundsAnimator()
         manager = ViewAnnotationManager(
             containerView: container,
-            coordinateBoundsAnimator: coordinateBoundsAnimator,
             mapboxMap: mapboxMap)
     }
 

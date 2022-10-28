@@ -115,6 +115,6 @@ final class CircleAnnotationTests: XCTestCase {
         }
         XCTAssertEqual(circleStrokeWidth, annotation.circleStrokeWidth)
     }
-  }
+}
 
 // End of generated file

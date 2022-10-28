@@ -1,13 +1,11 @@
 import UIKit
 @_implementationOnly import MapboxCommon_Private
 
-class MoveDistancesObject {
-    var distanceXSinceLast = CGFloat()
-    var distanceYSinceLast = CGFloat()
-    var currentX = CGFloat()
-    var currentY = CGFloat()
-    var prevX = CGFloat()
-    var prevY = CGFloat()
+internal class MoveDistancesObject {
+    var distanceXSinceLast = 0.0
+    var distanceYSinceLast = 0.0
+    var prevX = Double()
+    var prevY = Double()
 }
 
 /// A top-level interface for annotations.

@@ -212,7 +212,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
                 didDetectTappedAnnotations: tappedAnnotations)
             var selectedAnnotationIds = tappedAnnotations.map(\.id)
               let allAnnotations: [PolygonAnnotation] = self.annotations.map { annotation in
-              var mutableAnnotation = annotation
+                var mutableAnnotation = annotation
                 if selectedAnnotationIds.contains(annotation.id) {
                     if mutableAnnotation.isSelected == false {
                         mutableAnnotation.isSelected = true
@@ -257,7 +257,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         self.annotations.removeAll(where: { $0.id == annotation.id })
 
         let previousPosition = position
-        let moveObject = moveDistancesObject
+        var moveObject = moveDistancesObject
         moveObject.prevX = previousPosition.x
         moveObject.prevY = previousPosition.y
         moveObject.distanceXSinceLast = 0
@@ -267,15 +267,14 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         switch offsetGeometry {
         case .polygon(let polygon):
             self.annotationBeingDragged?.polygon = polygon
-        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: offsetGeometry.geoJSONObject)
+        try? mapboxMap.style.updateGeoJSONSource(withId: "dragSource", geoJSON: offsetGeometry.geoJSONObject)
         default:
             break
         }
     }
 
     internal func handleDragChanged(_ mapboxMap: MapboxMap, position: CGPoint) {
-        let moveObject = moveDistancesObject
-
+        var moveObject = moveDistancesObject
         moveObject.distanceXSinceLast = moveObject.prevX - position.x
         moveObject.distanceYSinceLast = moveObject.prevY - position.y
         moveObject.prevX = position.x
@@ -286,7 +285,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         switch offsetGeometry {
         case .polygon(let polygon):
             self.annotationBeingDragged?.polygon = polygon
-        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: offsetGeometry.geoJSONObject)
+        try? mapboxMap.style.updateGeoJSONSource(withId: "dragSource", geoJSON: offsetGeometry.geoJSONObject)
         default:
             break
         }

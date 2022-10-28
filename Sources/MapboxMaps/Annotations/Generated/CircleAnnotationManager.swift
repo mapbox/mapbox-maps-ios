@@ -222,7 +222,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
                 didDetectTappedAnnotations: tappedAnnotations)
             var selectedAnnotationIds = tappedAnnotations.map(\.id)
               let allAnnotations: [CircleAnnotation] = self.annotations.map { annotation in
-              var mutableAnnotation = annotation
+                var mutableAnnotation = annotation
                 if selectedAnnotationIds.contains(annotation.id) {
                     if mutableAnnotation.isSelected == false {
                         mutableAnnotation.isSelected = true
@@ -261,14 +261,13 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
             layer.circleRadius = annotation.circleRadius.map(Value.constant)
             layer.circleStrokeWidth = annotation.circleStrokeWidth.map(Value.constant)
             layer.circleStrokeColor = annotation.circleStrokeColor.map(Value.constant)
-
         })
 
         self.annotationBeingDragged = annotation
         self.annotations.removeAll(where: { $0.id == annotation.id })
 
         let previousPosition = position
-        let moveObject = moveDistancesObject
+        var moveObject = moveDistancesObject
         moveObject.prevX = previousPosition.x
         moveObject.prevY = previousPosition.y
         moveObject.distanceXSinceLast = 0
@@ -278,15 +277,14 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
         switch offsetGeometry {
         case .point(let circle):
             self.annotationBeingDragged?.point = circle
-        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: offsetGeometry.geoJSONObject)
+        try? mapboxMap.style.updateGeoJSONSource(withId: "dragSource", geoJSON: offsetGeometry.geoJSONObject)
         default:
             break
         }
     }
 
     internal func handleDragChanged(_ mapboxMap: MapboxMap, position: CGPoint) {
-        let moveObject = moveDistancesObject
-
+        var moveObject = moveDistancesObject
         moveObject.distanceXSinceLast = moveObject.prevX - position.x
         moveObject.distanceYSinceLast = moveObject.prevY - position.y
         moveObject.prevX = position.x
@@ -297,7 +295,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
         switch offsetGeometry {
         case .point(let circle):
             self.annotationBeingDragged?.point = circle
-        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: offsetGeometry.geoJSONObject)
+        try? mapboxMap.style.updateGeoJSONSource(withId: "dragSource", geoJSON: offsetGeometry.geoJSONObject)
         default:
             break
         }

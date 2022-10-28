@@ -10,7 +10,6 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     var annotations = [CircleAnnotation]()
     var expectation: XCTestExpectation?
     var delegateAnnotations: [Annotation]?
-    var longPressGestureRecognizer = MockLongPressGestureRecognizer()
 
     override func setUp() {
         super.setUp()
@@ -20,8 +19,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         manager = CircleAnnotationManager(id: id,
                                           style: style,
                                           layerPosition: nil,
-                                          displayLinkCoordinator: displayLinkCoordinator,
-                                          longPressGestureRecognizer: longPressGestureRecognizer)
+                                          displayLinkCoordinator: displayLinkCoordinator)
 
         for _ in 0...10 {
             var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
@@ -45,8 +43,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         _ = CircleAnnotationManager(id: id,
                                  style: style,
                                  layerPosition: nil,
-                                 displayLinkCoordinator: displayLinkCoordinator,
-                                 longPressGestureRecognizer: longPressGestureRecognizer)
+                                 displayLinkCoordinator: displayLinkCoordinator)
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.type, SourceType.geoJson)
@@ -58,8 +55,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         let initializedManager = CircleAnnotationManager(id: id,
                                                          style: style,
                                                          layerPosition: nil,
-                                                         displayLinkCoordinator: displayLinkCoordinator,
-                                                         longPressGestureRecognizer: longPressGestureRecognizer)
+                                                         displayLinkCoordinator: displayLinkCoordinator)
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
@@ -80,8 +76,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         let manager2 = CircleAnnotationManager(id: manager.id,
                                                style: style,
                                                layerPosition: nil,
-                                               displayLinkCoordinator: displayLinkCoordinator,
-                                               longPressGestureRecognizer: longPressGestureRecognizer)
+                                               displayLinkCoordinator: displayLinkCoordinator)
         manager2.annotations = annotations2
 
         XCTAssertEqual(manager.annotations.count, 11)
@@ -92,8 +87,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         let manager3 = CircleAnnotationManager(id: id,
                                                style: style,
                                                layerPosition: LayerPosition.at(4),
-                                               displayLinkCoordinator: displayLinkCoordinator,
-                                               longPressGestureRecognizer: longPressGestureRecognizer)
+                                               displayLinkCoordinator: displayLinkCoordinator)
         manager3.annotations = annotations
 
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition, LayerPosition.at(4))
@@ -480,8 +474,6 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         expectation = nil
     }
 
-
 }
-
 
 // End of generated file

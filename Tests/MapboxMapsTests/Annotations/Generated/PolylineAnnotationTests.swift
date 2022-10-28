@@ -138,6 +138,6 @@ final class PolylineAnnotationTests: XCTestCase {
         }
         XCTAssertEqual(lineWidth, annotation.lineWidth)
     }
-  }
+}
 
 // End of generated file

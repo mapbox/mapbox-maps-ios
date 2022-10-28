@@ -108,6 +108,6 @@ final class PolygonAnnotationTests: XCTestCase {
         }
         XCTAssertEqual(fillPattern, annotation.fillPattern)
     }
-  }
+}
 
 // End of generated file

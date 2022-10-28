@@ -52,7 +52,8 @@ final class LineAnnotationExample: UIViewController, ExampleProtocol {
                                                     green: .random(in: 0...255),
                                                     blue: .random(in: 0...255),
                                                     alpha: 1)
-
+            randomAnnotation.isDraggable = true
+            randomAnnotation.lineWidth = 10
             annotations.append(randomAnnotation)
         }
 

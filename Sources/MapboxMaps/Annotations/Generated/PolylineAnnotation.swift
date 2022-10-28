@@ -145,40 +145,44 @@ public struct PolylineAnnotation: Annotation {
 
     /// Get the offset geometry for the touch point
     func getOffsetGeometry(_ mapboxMap: MapboxMap, moveDistancesObject: MoveDistancesObject?) -> Geometry? {
-        let maxMercatorLatitude = 85.05112877980659
-        let minMercatorLatitude = -85.05112877980659
+        ///Valid mercator latitude.
+        let validMercatorLatitude = (-85.05112877980659...85.05112877980659)
 
-        guard let moveDistancesObject = moveDistancesObject else {
+        guard let moveDistancesObject = moveDistancesObject else { return nil }
+
+                          let startPoints = self.lineString.coordinates
+                if startPoints.isEmpty {
           return nil
         }
+        let latitudeSum = startPoints.map { $0.latitude }.reduce(0, +)
+        let longitudeSum = startPoints.map { $0.longitude }.reduce(0, +)
 
-           let points = self.lineString.coordinates
-
-        if points.isEmpty {
-            return nil
-        }
-
-        let latitudeSum = points.map { $0.latitude }.reduce(0, +)
-        let longitudeSum = points.map { $0.longitude }.reduce(0, +)
-
-        let latitudeAverage = latitudeSum / CGFloat(points.count)
-        let longitudeAverage = longitudeSum / CGFloat(points.count)
+        let latitudeAverage = latitudeSum / CGFloat(startPoints.count)
+        let longitudeAverage = longitudeSum / CGFloat(startPoints.count)
 
         let averageCoordinates = CLLocationCoordinate2D(latitude: latitudeAverage, longitude: longitudeAverage)
 
         let centerPoint = Point(averageCoordinates)
+                let centerScreenCoordinate = mapboxMap.point(for: centerPoint.coordinates)
 
-        let centerScreenCoordinate = mapboxMap.point(for: centerPoint.coordinates)
-
-        let targetCoordinates =  mapboxMap.coordinate(for: CGPoint(x: centerScreenCoordinate.x - moveDistancesObject.distanceXSinceLast, y: centerScreenCoordinate.y - moveDistancesObject.distanceYSinceLast))
+        let targetCoordinates =  mapboxMap.coordinate(for: CGPoint(
+            x: centerScreenCoordinate.x - moveDistancesObject.distanceXSinceLast,
+            y: centerScreenCoordinate.y - moveDistancesObject.distanceYSinceLast))
 
         let targetPoint = Point(targetCoordinates)
 
-        let shiftMercatorCoordinate = Projection.calculateMercatorCoordinateShift(startPoint: centerPoint, endPoint: targetPoint, zoomLevel: mapboxMap.cameraState.zoom)
+        let shiftMercatorCoordinate = Projection.calculateMercatorCoordinateShift(
+                  startPoint: centerPoint,
+            endPoint: targetPoint,
+            zoomLevel: mapboxMap.cameraState.zoom)
 
-        let targetPoints = points.map {Projection.shiftPointWithMercatorCoordinate(point: Point($0), shiftMercatorCoordinate: shiftMercatorCoordinate, zoomLevel: mapboxMap.cameraState.zoom)}
+            let targetPoints = startPoints.map {Projection.shiftPointWithMercatorCoordinate(
+          point: Point($0),
+          shiftMercatorCoordinate: shiftMercatorCoordinate,
+          zoomLevel: mapboxMap.cameraState.zoom)}
 
-        if targetPoints.contains(where: {$0.coordinates.latitude > maxMercatorLatitude || $0.coordinates.latitude < minMercatorLatitude }) {
+                guard let targetPointLatitude = targetPoints.first?.coordinates.latitude else { return nil }
+        guard validMercatorLatitude.contains(targetPointLatitude) else {
             return nil
         }
         return Geometry(LineString(.init(coordinates: targetPoints.map {$0.coordinates})))

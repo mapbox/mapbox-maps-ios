@@ -381,6 +381,6 @@ final class PointAnnotationTests: XCTestCase {
         }
         XCTAssertEqual(textOpacity, annotation.textOpacity)
     }
-  }
+}
 
 // End of generated file

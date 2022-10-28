@@ -335,30 +335,35 @@ public struct PointAnnotation: Annotation {
 
     /// Get the offset geometry for the touch point
     func getOffsetGeometry(_ mapboxMap: MapboxMap, moveDistancesObject: MoveDistancesObject?) -> Geometry? {
-        let maxMercatorLatitude = 85.05112877980659
-        let minMercatorLatitude = -85.05112877980659
+        ///Valid mercator latitude.
+        let validMercatorLatitude = (-85.05112877980659...85.05112877980659)
 
-        guard let moveDistancesObject = moveDistancesObject else {
-          return nil
-        }
+        guard let moveDistancesObject = moveDistancesObject else { return nil }
 
-           let point = point.coordinates
-
-        let centerScreenCoordinate = mapboxMap.point(for: point)
-
-        let targetCoordinates =  mapboxMap.coordinate(for: CGPoint(x: centerScreenCoordinate.x - moveDistancesObject.distanceXSinceLast, y: centerScreenCoordinate.y - moveDistancesObject.distanceYSinceLast))
+                let startPoint = point.coordinates
+                        let centerScreenCoordinate = mapboxMap.point(for: startPoint)
+        
+        let targetCoordinates =  mapboxMap.coordinate(for: CGPoint(
+            x: centerScreenCoordinate.x - moveDistancesObject.distanceXSinceLast,
+            y: centerScreenCoordinate.y - moveDistancesObject.distanceYSinceLast))
 
         let targetPoint = Point(targetCoordinates)
 
-        let shiftMercatorCoordinate = Projection.calculateMercatorCoordinateShift(startPoint: Point(point), endPoint: targetPoint, zoomLevel: mapboxMap.cameraState.zoom)
+        let shiftMercatorCoordinate = Projection.calculateMercatorCoordinateShift(
+            startPoint: Point(startPoint),
+                        endPoint: targetPoint,
+            zoomLevel: mapboxMap.cameraState.zoom)
 
-        let targetPoints = Projection.shiftPointWithMercatorCoordinate(point: Point(point), shiftMercatorCoordinate: shiftMercatorCoordinate, zoomLevel: mapboxMap.cameraState.zoom)
-
-        if targetPoints.coordinates.latitude > maxMercatorLatitude || targetPoints.coordinates.latitude < minMercatorLatitude {
-           return nil
+            let targetPoints = Projection.shiftPointWithMercatorCoordinate(
+          point: Point(startPoint),
+          shiftMercatorCoordinate: shiftMercatorCoordinate,
+          zoomLevel: mapboxMap.cameraState.zoom)
+      
+                guard validMercatorLatitude.contains(targetPoints.coordinates.latitude) else {
+            return nil
         }
         return Geometry(Point(targetPoints.coordinates))
-    }
+            }
 }
 
 // End of generated file.

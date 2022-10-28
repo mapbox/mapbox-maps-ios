@@ -85,7 +85,8 @@ XCODE_BUILD_SIM_SDK = set -o pipefail && xcodebuild \
 	-scheme MapboxMaps \
 	-sdk iphonesimulator \
 	-configuration $(CONFIGURATION) \
-	-jobs $(JOBS)
+	-jobs $(JOBS) \
+	COMPILER_INDEX_STORE_ENABLE=NO
 
 .PHONY: build-sdk-for-simulator
 build-sdk-for-simulator:
@@ -125,7 +126,8 @@ build-app-for-simulator:
 		-configuration $(CONFIGURATION) \
 		-jobs $(JOBS) \
 		build \
-		ONLY_ACTIVE_ARCH=NO
+		ONLY_ACTIVE_ARCH=NO \
+		COMPILER_INDEX_STORE_ENABLE=NO
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Devices - SDK
@@ -138,7 +140,8 @@ XCODE_BUILD_DEVICE = xcodebuild \
 	-configuration $(CONFIGURATION) \
 	-derivedDataPath $(BUILD_DIR) \
 	-jobs $(JOBS) \
-	$(CODE_SIGNING)
+	$(CODE_SIGNING) \
+	COMPILER_INDEX_STORE_ENABLE=NO
 
 .PHONY: build-sdk-for-device
 build-sdk-for-device:
@@ -150,6 +153,7 @@ build-sdk-for-device:
 		-jobs $(JOBS) \
 		build \
 		ONLY_ACTIVE_ARCH=NO \
+		COMPILER_INDEX_STORE_ENABLE=NO \
 		$(CODE_SIGNING)
 
 $(XCODE_PROJECT_FILE): project.yml
@@ -164,11 +168,15 @@ XCODE_BUILD_DEVICE_APPS = xcodebuild \
 	-sdk iphoneos \
 	-configuration $(CONFIGURATION) \
 	-jobs $(JOBS) \
-	$(CODE_SIGNING)
+	$(CODE_SIGNING) \
+	COMPILER_INDEX_STORE_ENABLE=NO
 
 .PHONY: build-app-for-device
 build-app-for-device:
-	set -o pipefail && $(XCODE_BUILD_DEVICE_APPS) -scheme '$(SCHEME)' build
+	set -o pipefail && $(XCODE_BUILD_DEVICE_APPS) \
+	-scheme '$(SCHEME)' \
+	COMPILER_INDEX_STORE_ENABLE=NO \
+	build
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Symbolication

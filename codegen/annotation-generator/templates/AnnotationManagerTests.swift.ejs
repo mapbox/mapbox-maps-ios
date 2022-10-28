@@ -2,6 +2,7 @@
   const type = locals.type
   const originalType = locals.orignalType
   const properties = locals.properties
+  const isPointAnnotationManager = type === "point" // check for behaviors/properties which only apply to PointAnnotationManagers
 
   const annotationLocal = function annotationLocal(declaration) {
     return indent(12)(include('AnnotationLocal.swift.ejs', { "annotationType": type, "declarationKeyword": declaration })).trim();
@@ -294,7 +295,7 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         expectation = nil
     }
 
-    <%_ if (type === "point") { _%>
+    <%_ if (isPointAnnotationManager) { _%>
     // Add tests specific to PointAnnotationManager
     func testNewImagesAddedToStyle() {
         // given
@@ -644,7 +645,7 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
     <%_ } _%>
 }
 
-<%_ if (type === "point") { _%>
+<%_ if (isPointAnnotationManager) { _%>
 private extension PointAnnotation {
     init(image: Image) {
         self.init(coordinate: .random())

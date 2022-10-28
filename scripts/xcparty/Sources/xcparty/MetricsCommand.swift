@@ -66,11 +66,12 @@ struct MetricsCommand: ParsableCommand {
                             for actionRecord: ActionRecord,
                             shouldProcessOnlyLastRun: Bool) -> PerformanceTest? {
             guard
+                let testName = test.name,
                 let testSummaryRef = test.summaryRef,
                 let actionTestSummary = resultFile.getActionTestSummary(id: testSummaryRef.id)
             else { return nil }
 
-            return PerformanceTest(testName: refineTestFunctionName(test.name),
+            return PerformanceTest(testName: refineTestFunctionName(testName),
                                    metrics: actionTestSummary.performanceMetrics,
                                    actionRecord: actionRecord,
                                    shouldProcessOnlyLastRun: shouldProcessOnlyLastRun)
@@ -91,11 +92,13 @@ struct MetricsCommand: ParsableCommand {
                 .subtestGroups[0]
 
             return testTargetResults.subtestGroups.flatMap { testSuit in
-                testSuit.subtests.compactMap({
-                    PerformanceTest.metrics(from: $0,
-                                            in: resultFile,
-                                            for: actionOnConcreteDevice,
-                                            shouldProcessOnlyLastRun: listOfSingleRunTests.contains($0.identifier))
+                testSuit.subtests.compactMap({ subtest in
+                    guard let identifier = subtest.identifier else { return nil }
+
+                    return PerformanceTest.metrics(from: subtest,
+                                                   in: resultFile,
+                                                   for: actionOnConcreteDevice,
+                                                   shouldProcessOnlyLastRun: listOfSingleRunTests.contains(identifier))
                 })
             }
         }

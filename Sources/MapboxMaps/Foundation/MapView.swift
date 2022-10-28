@@ -450,6 +450,10 @@ open class MapView: UIView {
                                            selector: #selector(sceneDidActivate(_:)),
                                            name: UIScene.didActivateNotification,
                                            object: window?.parentScene)
+            notificationCenter.addObserver(self,
+                                           selector: #selector(sceneWillEnterForeground(_:)),
+                                           name: UIScene.willEnterForegroundNotification,
+                                           object: window?.parentScene)
         } else {
             notificationCenter.addObserver(self,
                                            selector: #selector(appDidEnterBackground),
@@ -496,7 +500,15 @@ open class MapView: UIView {
     @objc private func sceneDidEnterBackground(_ notification: Notification) {
         guard notification.object as? UIScene == window?.parentScene else { return }
 
+        displayLink?.isPaused = true
         reduceMemoryUse()
+    }
+
+    @available(iOS 13, *)
+    @objc private func sceneWillEnterForeground(_ notification: Notification) {
+        guard notification.object as? UIScene == window?.parentScene else { return }
+
+        displayLink?.isPaused = false
     }
 
     @objc private func didReceiveMemoryWarning() {

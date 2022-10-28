@@ -274,25 +274,39 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     internal func createDragSourceAndLayer() {
         var dragSource = GeoJSONSource()
         dragSource.data = .empty
-        try? style.addSource(dragSource, id: "dragSource")
+        do {
+            try style.addSource(dragSource, id: "dragSource")
+        } catch {
+            print("Failed to add the source to style. Error: \(error)")
+        }
+
 
         let dragLayerId = "drag-layer"
         var dragLayer = LineLayer(id: dragLayerId)
         dragLayer.source = "dragSource"
-        try? style.addLayer(dragLayer, layerPosition: .default)
+
+        do {
+            try style.addLayer(dragLayer, layerPosition: .default)
+        } catch {
+            print("Failed to add the layer to style. Error: \(error)")
+        }
     }
 
     internal func handleDragBegin(at position: CGPoint, querriedFeatureIdentifiers: [String]) {
         guard let annotation = annotations.first(where: { querriedFeatureIdentifiers.contains($0.id) }) else { return }
         createDragSourceAndLayer()
 
-        try? style.updateLayer(withId: "drag-layer", type: LineLayer.self, update: { layer in
-            layer.lineColor = annotation.lineColor.map(Value.constant)
-            layer.lineOpacity = annotation.lineOpacity.map(Value.constant)
-            layer.lineWidth = annotation.lineWidth.map(Value.constant)
-            guard let linePattern = annotation.linePattern else { return }
-            layer.linePattern = Value.constant(ResolvedImage.name(linePattern))
-        })
+        do {
+            try style.updateLayer(withId: "drag-layer", type: LineLayer.self, update: { layer in
+                layer.lineColor = annotation.lineColor.map(Value.constant)
+                layer.lineOpacity = annotation.lineOpacity.map(Value.constant)
+                layer.lineWidth = annotation.lineWidth.map(Value.constant)
+                guard let linePattern = annotation.linePattern else { return }
+                layer.linePattern = Value.constant(ResolvedImage.name(linePattern))
+            })
+        } catch {
+            print("Failed to update drag layer. Error: \(error)")
+        }
 
         self.annotationBeingDragged = annotation
         self.annotations.removeAll(where: { $0.id == annotation.id })
@@ -307,7 +321,11 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         guard let annotationBeingDragged = annotationBeingDragged else { return }
         guard let offsetPoint = offsetLineStringCalculator.geometry(at: moveObject, from: annotationBeingDragged.lineString) else { return }
         self.annotationBeingDragged?.lineString = offsetPoint
-        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: offsetPoint.geometry.geoJSONObject)
+        do {
+            try style.updateGeoJSONSource(withId: "dragSource", geoJSON: offsetPoint.geometry.geoJSONObject)
+        } catch {
+            print("Failed to update drag source. Error: \(error)")
+        }
     }
 
     internal func handleDragChanged(to position: CGPoint) {
@@ -320,7 +338,11 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         guard let annotationBeingDragged = annotationBeingDragged else { return }
         guard let offsetPoint = offsetLineStringCalculator.geometry(at: moveObject, from: annotationBeingDragged.lineString) else { return }
         self.annotationBeingDragged?.lineString = offsetPoint
-        try? style.updateGeoJSONSource(withId: "dragSource", geoJSON: offsetPoint.geometry.geoJSONObject)
+        do {
+            try style.updateGeoJSONSource(withId: "dragSource", geoJSON: offsetPoint.geometry.geoJSONObject)
+        } catch {
+            print("Failed to update drag source. Error: \(error)")
+        }
     }
 
     internal func handleDragEnded() {
@@ -330,7 +352,11 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
         // avoid blinking annotation by waiting
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            try? self.style.removeLayer(withId: "drag-layer")
+            do {
+                try self.style.removeLayer(withId: "drag-layer")
+            } catch {
+                print("Failed to remove drag layer. Error: \(error)")
+            }
         }
     }
 }

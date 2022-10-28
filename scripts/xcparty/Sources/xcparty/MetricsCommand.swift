@@ -28,29 +28,6 @@ struct MetricsCommand: ParsableCommand {
     @Option(name: [.customLong("single-run-test-ids")], help: "DERPECATED. Pass test id in format 'TestSuite/testExample()' to ignore all but last run measurements")
     var listOfSingleRunTests: [String] = []
 
-    struct BaselineList: Decodable {
-        // swiftlint:disable nesting
-        struct Record: Decodable {
-            let testName: String
-            let metrics: [String: String]
-        }
-
-        let records: [Record]
-
-        func record(forTestName testName: String) -> BaselineList.Record? {
-            records.first(where: { $0.testName == testName })
-        }
-    }
-
-    @Option(name: [.short, .long], help: "Path to baselines JSON file", transform: { path in
-        let path = (path as NSString).expandingTildeInPath
-        let baselineData = try Data(contentsOf: URL(fileURLWithPath: path))
-        let decoder = JSONDecoder()
-        let baselines = try decoder.decode(Array<BaselineList.Record>.self, from: baselineData)
-        return BaselineList(records: baselines)
-    })
-    var baseline: BaselineList
-
     func run() throws {
         let resultFile = XCResultFile(url: pathToXCResult)
         let metricTests = try parseMetrics(resultFile: resultFile)
@@ -142,7 +119,6 @@ struct MetricsCommand: ParsableCommand {
 
     func generateTestReport(test: PerformanceTest) -> [[String: Any]] {
         let testName = refineTestFunctionName(test.testName)
-        let baseline = baseline.record(forTestName: testName)
         let createdDate = ISO8601DateFormatter.string(from: Date(), timeZone: .current, formatOptions: [.withInternetDateTime])
         let testUUID = UUID()
 
@@ -157,10 +133,6 @@ struct MetricsCommand: ParsableCommand {
 
                 partialResult[metricName] = MetricsCommand.decimalValueFormatter.string(from: value as NSNumber)
                 partialResult[metricName+"_units"] = metric.unitOfMeasurement
-
-                if let baselineMetric = baseline?.metrics[metricName] {
-                    partialResult[metricName + "_baseline"] = baselineMetric
-                }
             }
 
             let report: [String: Any] = [

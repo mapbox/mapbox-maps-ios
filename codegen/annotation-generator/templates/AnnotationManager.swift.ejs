@@ -2,8 +2,7 @@
   const type = locals.type
   const originalType = locals.orignalType
   const properties = locals.properties
-  const symbol = "point"
-
+  const isPointAnnotationManager = type === "point" // check for behaviors/properties which only apply to PointAnnotationManagers
   const specialSymbolLayerProperties = ["icon-allow-overlap", "text-allow-overlap", "icon-ignore-placement", "text-ignore-placement"]
 _%>
 // This file is generated.
@@ -23,8 +22,9 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
     }
 
     private var needsSyncSourceAndLayer = false
-    <%_ if (type === symbol) { _%>
+    <%_ if (isPointAnnotationManager) { _%>
     private var addedImages = Set<String>()
+    private var clusterOptions: ClusterOptions?
     <%_ } _%>
 
     // MARK: - Interaction
@@ -67,23 +67,42 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
     internal init(id: String,
                   style: StyleProtocol,
                   layerPosition: LayerPosition?,
-                  displayLinkCoordinator: DisplayLinkCoordinator) {
+                  displayLinkCoordinator: DisplayLinkCoordinator<%_ if (isPointAnnotationManager) { _%>,
+                  clusterOptions: ClusterOptions? = nil<%_ } _%>) {
         self.id = id
         self.sourceId = id
         self.layerId = id
-        self.style = style
+        self.style = style<% if (isPointAnnotationManager) { %>
+        self.clusterOptions = clusterOptions<% } %>
         self.displayLinkCoordinator = displayLinkCoordinator
 
         do {
             // Add the source with empty `data` property
             var source = GeoJSONSource()
             source.data = .empty
+            <%_ if (isPointAnnotationManager) { _%>
+
+            // Set cluster options and create clusters if clustering is enabled
+            if let clusterOptions = clusterOptions {
+                source.cluster = true
+                source.clusterRadius = clusterOptions.clusterRadius
+                source.clusterProperties = clusterOptions.clusterProperties
+                source.clusterMaxZoom = clusterOptions.clusterMaxZoom
+            }
+
+            <%_ } _%>
             try style.addSource(source, id: sourceId)
+            <%_ if (isPointAnnotationManager) { _%>
+
+            if let clusterOptions = clusterOptions {
+                createClusterLayers(clusterOptions: clusterOptions)
+            }
+            <%_ } _%>
 
             // Add the correct backing layer for this annotation type
             var layer = <%- camelize(originalType) %>Layer(id: layerId)
             layer.source = sourceId
-            <%_ if (type === symbol) { _%>
+            <%_ if (isPointAnnotationManager) { _%>
 
             // Show all icons and texts by default in point annotations.
             layer.iconAllowOverlap = .constant(true)
@@ -94,7 +113,7 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
             try style.addPersistentLayer(layer, layerPosition: layerPosition)
         } catch {
             Log.error(
-                forMessage: "Failed to create source / layer in <%- camelize(type) %>AnnotationManager",
+                forMessage: "Failed to create source / layer in <%- camelize(type) %>AnnotationManager. Error: \(error)",
                 category: "Annotations")
         }
 
@@ -103,11 +122,70 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
         displayLinkCoordinator.add(displayLinkParticipant)
     }
 
+    <%_ if (isPointAnnotationManager) { _%>
+    private func createClusterLayers(clusterOptions: ClusterOptions) {
+        let clusterLevelLayer = createClusterLevelLayer(clusterOptions: clusterOptions)
+        let clusterTextLayer = createClusterTextLayer(clusterOptions: clusterOptions)
+        do {
+            try addClusterLayer(clusterLayer: clusterLevelLayer)
+            try addClusterLayer(clusterLayer: clusterTextLayer)
+        } catch {
+            Log.error(
+                forMessage: "Failed to add cluster layer in PointAnnotationManager. Error: \(error)",
+                category: "Annotations")
+        }
+    }
+
+    private func addClusterLayer(clusterLayer: Layer) throws {
+        guard style.layerExists(withId: clusterLayer.id) else {
+            try style.addPersistentLayer(clusterLayer, layerPosition: .default)
+            return
+        }
+    }
+
+    private func createClusterLevelLayer(clusterOptions: ClusterOptions) -> CircleLayer {
+        let layedID = "mapbox-iOS-cluster-circle-layer-manager-" + id
+        var circleLayer = CircleLayer(id: layedID)
+        circleLayer.source = sourceId
+        circleLayer.circleColor = clusterOptions.circleColor
+        circleLayer.circleRadius = clusterOptions.circleRadius
+        circleLayer.filter = Exp(.has) { "point_count" }
+        return circleLayer
+    }
+
+    private func createClusterTextLayer(clusterOptions: ClusterOptions) -> SymbolLayer {
+        let layerID = "mapbox-iOS-cluster-text-layer-manager-" + id
+        var symbolLayer = SymbolLayer(id: layerID)
+        symbolLayer.source = sourceId
+        symbolLayer.textField = clusterOptions.textField
+        symbolLayer.textSize = clusterOptions.textSize
+        symbolLayer.textColor = clusterOptions.textColor
+        return symbolLayer
+    }
+
+    private func destroyClusterLayers() {
+        do {
+            try style.removeLayer(withId: "mapbox-iOS-cluster-circle-layer-manager-" + id)
+            try style.removeLayer(withId: "mapbox-iOS-cluster-text-layer-manager-" + id)
+        } catch {
+            Log.error(
+                forMessage: "Failed to remove cluster layer in PointAnnotationManager. Error: \(error)",
+                category: "Annotations")
+        }
+    }
+
+    <%_ } _%>
     internal func destroy() {
         guard !isDestroyed else {
             return
         }
         isDestroyed = true
+        <%_ if (isPointAnnotationManager) { _%>
+
+        if clusterOptions != nil {
+            destroyClusterLayers()
+        }
+        <%_ } _%>
 
         do {
             try style.removeLayer(withId: layerId)
@@ -123,9 +201,8 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
                 forMessage: "Failed to remove source for <%- camelize(type) %>AnnotationManager with id \(id) due to error: \(error)",
                 category: "Annotations")
         }
-        <%_ if (type === symbol) { _%>
+        <%_ if (isPointAnnotationManager) { _%>
         removeImages(from: style, images: addedImages)
-
         <%_ } _%>
         displayLinkCoordinator?.remove(displayLinkParticipant)
     }
@@ -142,7 +219,7 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
         }
         needsSyncSourceAndLayer = false
 
-        <%_ if (type === symbol) { _%>
+        <%_ if (isPointAnnotationManager) { _%>
         let newImages = Set(annotations.compactMap(\.image))
         let newImageNames = Set(newImages.map(\.name))
         let unusedImages = addedImages.subtracting(newImageNames)

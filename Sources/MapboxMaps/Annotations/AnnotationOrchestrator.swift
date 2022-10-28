@@ -40,9 +40,9 @@ internal protocol AnnotationManagerInternal: AnnotationManager {
 
     func handleQueriedFeatureIds(_ queriedFeatureIds: [String])
 
-    func handleDragBegin(_ mapboxMap: MapboxMap, annotation: Annotation, position: CGPoint)
+    func handleDragBegin(at position: CGPoint, querriedFeatureIdentifiers: [String])
 
-    func handleDragChanged(_ mapboxMap: MapboxMap, position: CGPoint)
+    func handleDragChanged(to position: CGPoint)
 
     func handleDragEnded()
 }
@@ -70,20 +70,33 @@ public class AnnotationOrchestrator {
 
     private let mapFeatureQueryable: MapFeatureQueryable
 
+    private let offsetPointCalculator: OffsetPointCalculator
+
+    private let offsetLineStringCalculator: OffsetLineStringCalculator
+
+    private let offsetPolygonCalculator: OffsetPolygonCalculator
+
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
 
     internal init(tapGestureRecognizer: UIGestureRecognizer,
                   longPressGestureRecognizer: UIGestureRecognizer,
                   mapFeatureQueryable: MapFeatureQueryable,
                   style: Style,
-                  displayLinkCoordinator: DisplayLinkCoordinator) {
+                  displayLinkCoordinator: DisplayLinkCoordinator,
+                  offsetPointCalculator: OffsetPointCalculator,
+                  offsetLineStringCalculator: OffsetLineStringCalculator,
+                  offsetPolygonCalculator: OffsetPolygonCalculator) {
         self.tapGestureRecognizer = tapGestureRecognizer
         self.longPressGestureRecognizer = longPressGestureRecognizer
         self.mapFeatureQueryable = mapFeatureQueryable
         self.style = style
         self.displayLinkCoordinator = displayLinkCoordinator
+        self.offsetPointCalculator = offsetPointCalculator
+        self.offsetLineStringCalculator = offsetLineStringCalculator
+        self.offsetPolygonCalculator = offsetPolygonCalculator
 
         tapGestureRecognizer.addTarget(self, action: #selector(handleTap(_:)))
+        longPressGestureRecognizer.addTarget(self, action: #selector(handleDrag(_:)))
     }
 
     /// Dictionary of annotation managers keyed by their identifiers.
@@ -115,7 +128,7 @@ public class AnnotationOrchestrator {
             style: style,
             layerPosition: layerPosition,
             displayLinkCoordinator: displayLinkCoordinator,
-            longPressGestureRecognizer: longPressGestureRecognizer)
+            offsetPointCalculator: offsetPointCalculator)
         annotationManagersByIdInternal[id] = annotationManager
         return annotationManager
     }
@@ -140,7 +153,7 @@ public class AnnotationOrchestrator {
             style: style,
             layerPosition: layerPosition,
             displayLinkCoordinator: displayLinkCoordinator,
-            longPressGestureRecognizer: longPressGestureRecognizer)
+            offsetPolygonCalculator: offsetPolygonCalculator)
         annotationManagersByIdInternal[id] = annotationManager
         return annotationManager
     }
@@ -165,7 +178,7 @@ public class AnnotationOrchestrator {
             style: style,
             layerPosition: layerPosition,
             displayLinkCoordinator: displayLinkCoordinator,
-            longPressGestureRecognizer: longPressGestureRecognizer)
+            offsetLineStringCalculator: offsetLineStringCalculator)
         annotationManagersByIdInternal[id] = annotationManager
         return annotationManager
     }
@@ -190,7 +203,7 @@ public class AnnotationOrchestrator {
             style: style,
             layerPosition: layerPosition,
             displayLinkCoordinator: displayLinkCoordinator,
-            longPressGestureRecognizer: longPressGestureRecognizer)
+            offsetPointCalculator: offsetPointCalculator)
         annotationManagersByIdInternal[id] = annotationManager
         return annotationManager
     }
@@ -224,25 +237,256 @@ public class AnnotationOrchestrator {
             at: tap.location(in: tap.view),
             options: options) { (result) in
 
-            switch result {
+                switch result {
 
-            case .success(let queriedFeatures):
+                case .success(let queriedFeatures):
 
-                // Get the identifiers of all the queried features
-                let queriedFeatureIds: [String] = queriedFeatures.compactMap {
-                    guard case let .string(featureId) = $0.feature.identifier else {
-                        return nil
+                    // Get the identifiers of all the queried features
+                    let queriedFeatureIds: [String] = queriedFeatures.compactMap {
+                        guard case let .string(featureId) = $0.feature.identifier else {
+                            return nil
+                        }
+                        return featureId
                     }
-                    return featureId
+
+                    for manager in managers {
+                        manager.handleQueriedFeatureIds(queriedFeatureIds)
+                    }
+                case .failure(let error):
+                    Log.warning(forMessage: "Failed to query map for annotations due to error: \(error)",
+                                category: "Annotations")
+                }
+            }
+    }
+
+    @objc private func handleDrag(_ drag: UILongPressGestureRecognizer) {
+        let managers = annotationManagersByIdInternal.values.filter { $0.delegate != nil }
+        guard !managers.isEmpty else { return }
+
+        let layerIdentifiers = managers.map(\.layerId)
+        let options = RenderedQueryOptions(layerIds: layerIdentifiers, filter: nil)
+        let gestureLocation = drag.location(in: drag.view)
+
+        switch drag.state {
+        case .began:
+            mapFeatureQueryable.queryRenderedFeatures(at: gestureLocation, options: options) { result in
+
+                switch result {
+                case .success(let queriedFeatures):
+                    let queriedFeatureIds: [String] = queriedFeatures.compactMap {
+                        guard case let .string(featureId) = $0.feature.identifier else {
+                            return nil
+                        }
+                        return featureId
+                    }
+
+                    for manager in managers {
+                        manager.handleDragBegin(at: gestureLocation, querriedFeatureIdentifiers: queriedFeatureIds)
+                    }
+
+                case .failure(let error):
+                    Log.error(forMessage: error.localizedDescription, category: "Gestures")
+                }
+            }
+
+        case .changed:
+            for manager in managers {
+                manager.handleDragChanged(to: gestureLocation)
+            }
+
+        case .ended, .cancelled:
+            for manager in managers {
+                manager.handleDragEnded()
+            }
+
+        case .possible: fallthrough
+        case .failed: fallthrough
+        @unknown default: break
+        }
+    }
+}
+
+internal protocol OffsetGeometryCalculator {
+    associatedtype GeometryType: GeometryConvertible
+    func geometry(at distance: MoveDistancesObject, from geometry: GeometryType) -> GeometryType?
+}
+
+internal struct OffsetPointCalculator: OffsetGeometryCalculator {
+    private let mapboxMap: MapboxMapProtocol
+
+    internal init(mapboxMap: MapboxMapProtocol) {
+        self.mapboxMap = mapboxMap
+    }
+
+    func geometry(at distance: MoveDistancesObject, from geometry: Point) -> Point? {
+        let validMercatorLatitude = (-85.05112877980659...85.05112877980659)
+        let point = geometry.coordinates
+
+        let centerScreenCoordinate = mapboxMap.point(for: point)
+
+        let targetCoordinates =  mapboxMap.coordinate(for: CGPoint(
+            x: centerScreenCoordinate.x - distance.distanceXSinceLast,
+            y: centerScreenCoordinate.y - distance.distanceYSinceLast))
+
+        let targetPoint = Point(targetCoordinates)
+
+        let shiftMercatorCoordinate = Projection.calculateMercatorCoordinateShift(startPoint: Point(point), endPoint: targetPoint, zoomLevel: mapboxMap.cameraState.zoom)
+
+        let targetPoints = Projection.shiftPointWithMercatorCoordinate(point: Point(point), shiftMercatorCoordinate: shiftMercatorCoordinate, zoomLevel: mapboxMap.cameraState.zoom)
+
+        if targetPoints.coordinates.latitude > Projection.latitudeMax || targetPoints.coordinates.latitude < Projection.latitudeMin {
+            return nil
+        }
+        return Point(targetPoints.coordinates)
+    }
+}
+
+internal struct OffsetLineStringCalculator: OffsetGeometryCalculator {
+    private let mapboxMap: MapboxMapProtocol
+
+    internal init(mapboxMap: MapboxMapProtocol) {
+        self.mapboxMap = mapboxMap
+    }
+
+    func geometry(at distance: MoveDistancesObject, from geometry: LineString) -> LineString? {
+        let validMercatorLatitude = (-85.05112877980659...85.05112877980659)
+        let startPoints = geometry.coordinates
+
+        if startPoints.isEmpty {
+            return nil
+        }
+        let latitudeSum = startPoints.map { $0.latitude }.reduce(0, +)
+        let longitudeSum = startPoints.map { $0.longitude }.reduce(0, +)
+        let latitudeAverage = latitudeSum / CGFloat(startPoints.count)
+        let longitudeAverage = longitudeSum / CGFloat(startPoints.count)
+
+        let averageCoordinates = CLLocationCoordinate2D(latitude: latitudeAverage, longitude: longitudeAverage)
+
+        let centerPoint = Point(averageCoordinates)
+
+        let centerScreenCoordinate = mapboxMap.point(for: centerPoint.coordinates)
+
+        let targetCoordinates =  mapboxMap.coordinate(for: CGPoint(
+            x: centerScreenCoordinate.x - distance.distanceXSinceLast,
+            y: centerScreenCoordinate.y - distance.distanceYSinceLast))
+
+        let targetPoint = Point(targetCoordinates)
+
+        let shiftMercatorCoordinate = Projection.calculateMercatorCoordinateShift(startPoint: centerPoint, endPoint: targetPoint, zoomLevel: mapboxMap.cameraState.zoom)
+
+        let targetPoints = startPoints.map {Projection.shiftPointWithMercatorCoordinate(point: Point($0), shiftMercatorCoordinate: shiftMercatorCoordinate, zoomLevel: mapboxMap.cameraState.zoom)}
+
+        guard let targetPointLatitude = targetPoints.first?.coordinates.latitude else {
+            return nil
+        }
+
+        guard validMercatorLatitude.contains(targetPointLatitude) else {
+            return nil
+        }
+        return LineString(.init(coordinates: targetPoints.map {$0.coordinates}))
+    }
+}
+
+internal struct OffsetPolygonCalculator: OffsetGeometryCalculator {
+    private let mapboxMap: MapboxMapProtocol
+
+    internal init(mapboxMap: MapboxMapProtocol) {
+        self.mapboxMap = mapboxMap
+    }
+
+    func geometry(at distance: MoveDistancesObject, from geometry: Polygon) -> Polygon? {
+        let validMercatorLatitude = (-85.05112877980659...85.05112877980659)
+        var outerRing = [CLLocationCoordinate2D]()
+        var innerRing: [CLLocationCoordinate2D]?
+        let startPoints = geometry.outerRing.coordinates
+        if startPoints.isEmpty {
+            return nil
+        }
+
+        let latitudeSum = startPoints.map { $0.latitude }.reduce(0, +)
+        let longitudeSum = startPoints.map { $0.longitude }.reduce(0, +)
+        let latitudeAverage = latitudeSum / CGFloat(startPoints.count)
+        let longitudeAverage = longitudeSum / CGFloat(startPoints.count)
+
+        let averageCoordinates = CLLocationCoordinate2D(latitude: latitudeAverage, longitude: longitudeAverage)
+
+        let centerPoint = Point(averageCoordinates)
+
+        let centerScreenCoordinate = mapboxMap.point(for: centerPoint.coordinates)
+
+        let targetCoordinates =  mapboxMap.coordinate(for: CGPoint(x: centerScreenCoordinate.x - distance.distanceXSinceLast, y: centerScreenCoordinate.y - distance.distanceYSinceLast))
+
+        let targetPoint = Point(targetCoordinates)
+
+        let shiftMercatorCoordinate = Projection.calculateMercatorCoordinateShift(
+            startPoint: centerPoint,
+            endPoint: targetPoint,
+            zoomLevel: mapboxMap.cameraState.zoom)
+
+        let targetPoints = startPoints.map {Projection.shiftPointWithMercatorCoordinate(
+            point: Point($0),
+            shiftMercatorCoordinate: shiftMercatorCoordinate,
+            zoomLevel: mapboxMap.cameraState.zoom)}
+
+        guard let targetPointLatitude = targetPoints.first?.coordinates.latitude else {
+            return nil
+        }
+
+        guard validMercatorLatitude.contains(targetPointLatitude) else {
+            return nil
+        }
+
+        outerRing = targetPoints.map {$0.coordinates}
+
+        if !geometry.innerRings.isEmpty {
+
+            var innerRings = [Ring]()
+            for ring in geometry.innerRings {
+                let startPoints = ring.coordinates
+                if startPoints.isEmpty {
+                    return nil
                 }
 
-                for manager in managers {
-                    manager.handleQueriedFeatureIds(queriedFeatureIds)
+                let latitudeSum = startPoints.map { $0.latitude }.reduce(0, +)
+                let longitudeSum = startPoints.map { $0.longitude }.reduce(0, +)
+                let latitudeAverage = latitudeSum / CGFloat(startPoints.count)
+                let longitudeAverage = longitudeSum / CGFloat(startPoints.count)
+
+                let averageCoordinates = CLLocationCoordinate2D(latitude: latitudeAverage, longitude: longitudeAverage)
+
+                let centerPoint = Point(averageCoordinates)
+
+                let centerScreenCoordinate = mapboxMap.point(for: centerPoint.coordinates)
+
+                let targetCoordinates =  mapboxMap.coordinate(for: CGPoint(x: centerScreenCoordinate.x - distance.distanceXSinceLast, y: centerScreenCoordinate.y - distance.distanceYSinceLast))
+
+                let targetPoint = Point(targetCoordinates)
+
+                let shiftMercatorCoordinate = Projection.calculateMercatorCoordinateShift(
+                    startPoint: centerPoint,
+                    endPoint: targetPoint,
+                    zoomLevel: mapboxMap.cameraState.zoom)
+
+                let targetPoints = startPoints.map {Projection.shiftPointWithMercatorCoordinate(
+                    point: Point($0),
+                    shiftMercatorCoordinate: shiftMercatorCoordinate,
+                    zoomLevel: mapboxMap.cameraState.zoom)}
+
+                guard let targetPointLatitude = targetPoints.first?.coordinates.latitude else {
+                    return nil
                 }
-            case .failure(let error):
-                Log.warning(forMessage: "Failed to query map for annotations due to error: \(error)",
-                            category: "Annotations")
+
+                guard validMercatorLatitude.contains(targetPointLatitude) else {
+                    return nil
+                }
+
+                innerRing = targetPoints.map {$0.coordinates}
+                guard let innerRing = innerRing else { return nil }
+                innerRings.append(.init(coordinates: innerRing))
+
             }
+            return Polygon(outerRing: .init(coordinates: outerRing), innerRings: innerRings)
         }
+        return Polygon(outerRing: .init(coordinates: outerRing))
     }
 }

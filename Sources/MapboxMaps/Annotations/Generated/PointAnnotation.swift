@@ -20,7 +20,9 @@ public struct PointAnnotation: Annotation {
     /// Storage for layer properties
     internal var layerProperties: [String: Any] = [:]
 
-    /// Property to determine whether annotation is selected
+    /// Toggles the annotation's selection state.
+    /// If the annotation is deselected, it becomes selected.
+    /// If the annotation is selected, it becomes deselected.
     public var isSelected: Bool = false
 
     /// Property to determine whether annotation can be manually moved around map
@@ -333,37 +335,6 @@ public struct PointAnnotation: Annotation {
         }
     }
 
-    /// Get the offset geometry for the touch point
-    func getOffsetGeometry(_ mapboxMap: MapboxMap, moveDistancesObject: MoveDistancesObject?) -> Geometry? {
-        ///Valid mercator latitude.
-        let validMercatorLatitude = (-85.05112877980659...85.05112877980659)
-
-        guard let moveDistancesObject = moveDistancesObject else { return nil }
-
-                let startPoint = point.coordinates
-                        let centerScreenCoordinate = mapboxMap.point(for: startPoint)
-        
-        let targetCoordinates =  mapboxMap.coordinate(for: CGPoint(
-            x: centerScreenCoordinate.x - moveDistancesObject.distanceXSinceLast,
-            y: centerScreenCoordinate.y - moveDistancesObject.distanceYSinceLast))
-
-        let targetPoint = Point(targetCoordinates)
-
-        let shiftMercatorCoordinate = Projection.calculateMercatorCoordinateShift(
-            startPoint: Point(startPoint),
-                        endPoint: targetPoint,
-            zoomLevel: mapboxMap.cameraState.zoom)
-
-            let targetPoints = Projection.shiftPointWithMercatorCoordinate(
-          point: Point(startPoint),
-          shiftMercatorCoordinate: shiftMercatorCoordinate,
-          zoomLevel: mapboxMap.cameraState.zoom)
-      
-                guard validMercatorLatitude.contains(targetPoints.coordinates.latitude) else {
-            return nil
-        }
-        return Geometry(Point(targetPoints.coordinates))
-            }
 }
 
 // End of generated file.

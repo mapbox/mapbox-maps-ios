@@ -23,7 +23,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
         for _ in 0...10 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+            let annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
             annotations.append(annotation)
         }
     }
@@ -70,7 +70,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         var annotations2 = [PolylineAnnotation]()
         for _ in 0...50 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+            let annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
             annotations2.append(annotation)
         }
 
@@ -142,7 +142,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         var annotations = [PolylineAnnotation]()
         for _ in 0...5 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+            let annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
             annotations.append(annotation)
         }
         let featureCollection = FeatureCollection(features: annotations.map(\.feature))
@@ -159,7 +159,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         var annotations = [PolylineAnnotation]()
         for _ in 0...5 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+            let annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
             annotations.append(annotation)
         }
         let queriedFeatureIds = [annotations[0].id]
@@ -176,7 +176,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         var annotations = [PolylineAnnotation]()
         for _ in 0...5 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+            let annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
             annotations.append(annotation)
         }
         let queriedFeatureIds = ["NotAnAnnotationID"]

@@ -2,3 +2,9 @@
 opt_in_rules:
   - explicit_top_level_acl
   - missing_docs
+  - line_length
+
+
+line_length:
+  error: 140
+  warning: 120

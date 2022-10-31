@@ -437,7 +437,7 @@ open class MapView: UIView {
     }
 
     private func subscribeToLifecycleNotifications() {
-        if #available(iOS 13.0, *), bundle.infoDictionary?["UIApplicationSceneManifest"] != nil {
+        if #available(iOS 13.0, *) {
             notificationCenter.addObserver(self,
                                            selector: #selector(sceneDidEnterBackground(_:)),
                                            name: UIScene.didEnterBackgroundNotification,
@@ -454,20 +454,19 @@ open class MapView: UIView {
                                            selector: #selector(sceneWillEnterForeground(_:)),
                                            name: UIScene.willEnterForegroundNotification,
                                            object: window?.parentScene)
-        } else {
-            notificationCenter.addObserver(self,
-                                           selector: #selector(appDidEnterBackground),
-                                           name: UIApplication.didEnterBackgroundNotification,
-                                           object: nil)
-            notificationCenter.addObserver(self,
-                                           selector: #selector(appDidBecomeActive),
-                                           name: UIApplication.didBecomeActiveNotification,
-                                           object: nil)
-            notificationCenter.addObserver(self,
-                                           selector: #selector(appWillResignActive),
-                                           name: UIApplication.willResignActiveNotification,
-                                           object: nil)
         }
+        notificationCenter.addObserver(self,
+                                       selector: #selector(appDidEnterBackground),
+                                       name: UIApplication.didEnterBackgroundNotification,
+                                       object: nil)
+        notificationCenter.addObserver(self,
+                                       selector: #selector(appDidBecomeActive),
+                                       name: UIApplication.didBecomeActiveNotification,
+                                       object: nil)
+        notificationCenter.addObserver(self,
+                                       selector: #selector(appWillResignActive),
+                                       name: UIApplication.willResignActiveNotification,
+                                       object: nil)
     }
 
     @objc private func appDidEnterBackground() {

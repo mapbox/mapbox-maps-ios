@@ -442,11 +442,6 @@ open class MapView: UIView {
 
     private func subscribeToLifecycleNotifications() {
         if #available(iOS 13.0, *) {
-            print("metal: scene \(UIApplication.shared.delegate?.responds(to: #selector(UIApplicationDelegate.application(_:configurationForConnecting:options:))))")
-        } else {
-            // Fallback on earlier versions
-        }
-        if #available(iOS 13.0, *) {
             print("metal: ✨ Setting up as a scene-based app")
             notificationCenter.addObserver(self,
                                            selector: #selector(sceneDidEnterBackground(_:)),
@@ -460,25 +455,27 @@ open class MapView: UIView {
                                            selector: #selector(sceneDidActivate(_:)),
                                            name: UIScene.didActivateNotification,
                                            object: window?.parentScene)
-        }
+        } else {
             print("metal: 📱 UIApplication-based app is all we know")
-            notificationCenter.addObserver(self,
-                                           selector: #selector(appDidEnterBackground),
-                                           name: UIApplication.didEnterBackgroundNotification,
-                                           object: nil)
             notificationCenter.addObserver(self,
                                            selector: #selector(appDidBecomeActive),
                                            name: UIApplication.didBecomeActiveNotification,
                                            object: nil)
-            notificationCenter.addObserver(self,
-                                           selector: #selector(appWillResignActive),
-                                           name: UIApplication.willResignActiveNotification,
-                                           object: nil)
-//        }
+        }
+
+        notificationCenter.addObserver(self,
+                                       selector: #selector(appDidEnterBackground),
+                                       name: UIApplication.didEnterBackgroundNotification,
+                                       object: nil)
+        notificationCenter.addObserver(self,
+                                       selector: #selector(appWillResignActive),
+                                       name: UIApplication.willResignActiveNotification,
+                                       object: nil)
     }
 
     @objc private func appDidEnterBackground() {
         print("metal: 🥶 appDidEnterBackground")
+        displayLink?.isPaused = true
         reduceMemoryUse()
     }
 
@@ -518,6 +515,7 @@ open class MapView: UIView {
         }
 
         print("metal: 🥶 sceneDidEnterBackground")
+        displayLink?.isPaused = true
         reduceMemoryUse()
     }
 

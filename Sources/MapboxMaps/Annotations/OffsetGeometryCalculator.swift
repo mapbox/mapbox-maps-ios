@@ -1,0 +1,191 @@
+import UIKit
+@_implementationOnly import MapboxCommon_Private
+
+internal protocol OffsetGeometryCalculator {
+    associatedtype GeometryType: GeometryConvertible
+    func geometry(at distance: MoveDistancesObject, from geometry: GeometryType) -> GeometryType?
+}
+
+internal struct OffsetPointCalculator: OffsetGeometryCalculator {
+    private let mapboxMap: MapboxMapProtocol
+
+    internal init(mapboxMap: MapboxMapProtocol) {
+        self.mapboxMap = mapboxMap
+    }
+
+    func geometry(at distance: MoveDistancesObject, from geometry: Point) -> Point? {
+        // Valid mercator latitude minimum and maximum values
+        let validMercatorLatitude = (Projection.latitudeMin...Projection.latitudeMax)
+        let point = geometry.coordinates
+
+        let centerScreenCoordinate = mapboxMap.point(for: point)
+
+        let targetCoordinates =  mapboxMap.coordinate(for: CGPoint(
+            x: centerScreenCoordinate.x - distance.distanceXSinceLast,
+            y: centerScreenCoordinate.y - distance.distanceYSinceLast))
+
+        let targetPoint = Point(targetCoordinates)
+
+        let shiftMercatorCoordinate = Projection.calculateMercatorCoordinateShift(startPoint: Point(point), endPoint: targetPoint, zoomLevel: mapboxMap.cameraState.zoom)
+
+        let targetPoints = Projection.shiftPointWithMercatorCoordinate(point: Point(point), shiftMercatorCoordinate: shiftMercatorCoordinate, zoomLevel: mapboxMap.cameraState.zoom)
+
+        if targetPoints.coordinates.latitude > Projection.latitudeMax || targetPoints.coordinates.latitude < Projection.latitudeMin {
+            return nil
+        }
+        return Point(targetPoints.coordinates)
+    }
+}
+
+
+internal struct OffsetLineStringCalculator: OffsetGeometryCalculator {
+    private let mapboxMap: MapboxMapProtocol
+
+    internal init(mapboxMap: MapboxMapProtocol) {
+        self.mapboxMap = mapboxMap
+    }
+
+    func geometry(at distance: MoveDistancesObject, from geometry: LineString) -> LineString? {
+        // Valid mercator latitude minimum and maximum values
+        let validMercatorLatitude = (Projection.latitudeMin...Projection.latitudeMax)
+        let startPoints = geometry.coordinates
+
+        if startPoints.isEmpty {
+            return nil
+        }
+        let latitudeSum = startPoints.map { $0.latitude }.reduce(0, +)
+        let longitudeSum = startPoints.map { $0.longitude }.reduce(0, +)
+        let latitudeAverage = latitudeSum / CGFloat(startPoints.count)
+        let longitudeAverage = longitudeSum / CGFloat(startPoints.count)
+
+        let averageCoordinates = CLLocationCoordinate2D(latitude: latitudeAverage, longitude: longitudeAverage)
+
+        let centerPoint = Point(averageCoordinates)
+
+        let centerScreenCoordinate = mapboxMap.point(for: centerPoint.coordinates)
+
+        let targetCoordinates =  mapboxMap.coordinate(for: CGPoint(
+            x: centerScreenCoordinate.x - distance.distanceXSinceLast,
+            y: centerScreenCoordinate.y - distance.distanceYSinceLast))
+
+        let targetPoint = Point(targetCoordinates)
+
+        let shiftMercatorCoordinate = Projection.calculateMercatorCoordinateShift(startPoint: centerPoint, endPoint: targetPoint, zoomLevel: mapboxMap.cameraState.zoom)
+
+        let targetPoints = startPoints.map {Projection.shiftPointWithMercatorCoordinate(point: Point($0), shiftMercatorCoordinate: shiftMercatorCoordinate, zoomLevel: mapboxMap.cameraState.zoom)}
+
+        guard let targetPointLatitude = targetPoints.first?.coordinates.latitude else {
+            return nil
+        }
+
+        guard validMercatorLatitude.contains(targetPointLatitude) else {
+            return nil
+        }
+        return LineString(.init(coordinates: targetPoints.map {$0.coordinates}))
+    }
+}
+
+internal struct OffsetPolygonCalculator: OffsetGeometryCalculator {
+    private let mapboxMap: MapboxMapProtocol
+
+    internal init(mapboxMap: MapboxMapProtocol) {
+        self.mapboxMap = mapboxMap
+    }
+
+    func geometry(at distance: MoveDistancesObject, from geometry: Polygon) -> Polygon? {
+        // Valid mercator latitude minimum and maximum values
+        let validMercatorLatitude = (Projection.latitudeMin...Projection.latitudeMax)
+        var outerRing = [CLLocationCoordinate2D]()
+        var innerRing: [CLLocationCoordinate2D]?
+        let startPoints = geometry.outerRing.coordinates
+        if startPoints.isEmpty {
+            return nil
+        }
+
+        let latitudeSum = startPoints.map { $0.latitude }.reduce(0, +)
+        let longitudeSum = startPoints.map { $0.longitude }.reduce(0, +)
+        let latitudeAverage = latitudeSum / CGFloat(startPoints.count)
+        let longitudeAverage = longitudeSum / CGFloat(startPoints.count)
+
+        let averageCoordinates = CLLocationCoordinate2D(latitude: latitudeAverage, longitude: longitudeAverage)
+
+        let centerPoint = Point(averageCoordinates)
+
+        let centerScreenCoordinate = mapboxMap.point(for: centerPoint.coordinates)
+
+        let targetCoordinates =  mapboxMap.coordinate(for: CGPoint(x: centerScreenCoordinate.x - distance.distanceXSinceLast, y: centerScreenCoordinate.y - distance.distanceYSinceLast))
+
+        let targetPoint = Point(targetCoordinates)
+
+        let shiftMercatorCoordinate = Projection.calculateMercatorCoordinateShift(
+            startPoint: centerPoint,
+            endPoint: targetPoint,
+            zoomLevel: mapboxMap.cameraState.zoom)
+
+        let targetPoints = startPoints.map {Projection.shiftPointWithMercatorCoordinate(
+            point: Point($0),
+            shiftMercatorCoordinate: shiftMercatorCoordinate,
+            zoomLevel: mapboxMap.cameraState.zoom)}
+
+        guard let targetPointLatitude = targetPoints.first?.coordinates.latitude else {
+            return nil
+        }
+
+        guard validMercatorLatitude.contains(targetPointLatitude) else {
+            return nil
+        }
+
+        outerRing = targetPoints.map {$0.coordinates}
+
+        if !geometry.innerRings.isEmpty {
+
+            var innerRings = [Ring]()
+            for ring in geometry.innerRings {
+                let startPoints = ring.coordinates
+                if startPoints.isEmpty {
+                    return nil
+                }
+
+                let latitudeSum = startPoints.map { $0.latitude }.reduce(0, +)
+                let longitudeSum = startPoints.map { $0.longitude }.reduce(0, +)
+                let latitudeAverage = latitudeSum / CGFloat(startPoints.count)
+                let longitudeAverage = longitudeSum / CGFloat(startPoints.count)
+
+                let averageCoordinates = CLLocationCoordinate2D(latitude: latitudeAverage, longitude: longitudeAverage)
+
+                let centerPoint = Point(averageCoordinates)
+
+                let centerScreenCoordinate = mapboxMap.point(for: centerPoint.coordinates)
+
+                let targetCoordinates =  mapboxMap.coordinate(for: CGPoint(x: centerScreenCoordinate.x - distance.distanceXSinceLast, y: centerScreenCoordinate.y - distance.distanceYSinceLast))
+
+                let targetPoint = Point(targetCoordinates)
+
+                let shiftMercatorCoordinate = Projection.calculateMercatorCoordinateShift(
+                    startPoint: centerPoint,
+                    endPoint: targetPoint,
+                    zoomLevel: mapboxMap.cameraState.zoom)
+
+                let targetPoints = startPoints.map {Projection.shiftPointWithMercatorCoordinate(
+                    point: Point($0),
+                    shiftMercatorCoordinate: shiftMercatorCoordinate,
+                    zoomLevel: mapboxMap.cameraState.zoom)}
+
+                guard let targetPointLatitude = targetPoints.first?.coordinates.latitude else {
+                    return nil
+                }
+
+                guard validMercatorLatitude.contains(targetPointLatitude) else {
+                    return nil
+                }
+
+                innerRing = targetPoints.map {$0.coordinates}
+                guard let innerRing = innerRing else { return nil }
+                innerRings.append(.init(coordinates: innerRing))
+
+            }
+            return Polygon(outerRing: .init(coordinates: outerRing), innerRings: innerRings)
+        }
+        return Polygon(outerRing: .init(coordinates: outerRing))
+    }
+}

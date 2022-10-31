@@ -244,6 +244,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
     internal func createDragSourceAndLayer() {
         var dragSource = GeoJSONSource()
         dragSource.data = .empty
+        if style
         do {
             try style.addSource(dragSource, id: "dragSource")
         } catch {
@@ -266,7 +267,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
         createDragSourceAndLayer()
 
         do {
-            try style.updateLayer(withId: "drag-layer", type: CircleLayer.self, update: { layer in
+            try style.updateLayer(withId: "drag-layer", type: CircleLayer.self) { layer in
                 layer.circleColor = annotation.circleColor.map(Value.constant)
                 layer.circleOpacity = annotation.circleOpacity.map(Value.constant)
                 layer.circleRadius = annotation.circleRadius.map(Value.constant)
@@ -284,8 +285,8 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
         let moveObject = moveDistancesObject
         moveObject.prevX = previousPosition.x
         moveObject.prevY = previousPosition.y
-        moveObject.distanceXSinceLast = 0
-        moveObject.distanceYSinceLast = 0
+        moveObject.distanceXSinceLast = 0.0
+        moveObject.distanceYSinceLast = 0.0
 
         guard let annotationBeingDragged = annotationBeingDragged else { return }
         guard let offsetPoint = offsetPointCalculator.geometry(at: moveObject, from: annotationBeingDragged.point) else { return }

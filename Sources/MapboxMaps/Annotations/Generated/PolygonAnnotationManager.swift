@@ -234,6 +234,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
     internal func createDragSourceAndLayer() {
         var dragSource = GeoJSONSource()
         dragSource.data = .empty
+        if style
         do {
             try style.addSource(dragSource, id: "dragSource")
         } catch {
@@ -256,7 +257,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         createDragSourceAndLayer()
 
         do {
-            try style.updateLayer(withId: "drag-layer", type: FillLayer.self, update: { layer in
+            try style.updateLayer(withId: "drag-layer", type: FillLayer.self) { layer in
                 layer.fillColor = annotation.fillColor.map(Value.constant)
                 layer.fillOutlineColor = annotation.fillOutlineColor.map(Value.constant)
                 layer.fillOpacity = annotation.fillOpacity.map(Value.constant)
@@ -274,8 +275,8 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         let moveObject = moveDistancesObject
         moveObject.prevX = previousPosition.x
         moveObject.prevY = previousPosition.y
-        moveObject.distanceXSinceLast = 0
-        moveObject.distanceYSinceLast = 0
+        moveObject.distanceXSinceLast = 0.0
+        moveObject.distanceYSinceLast = 0.0
 
         guard let annotationBeingDragged = annotationBeingDragged else { return }
         guard let offsetPoint = offsetPolygonCalculator.geometry(at: moveObject, from: annotationBeingDragged.polygon) else { return }

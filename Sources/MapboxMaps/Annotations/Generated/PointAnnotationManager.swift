@@ -583,6 +583,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     internal func createDragSourceAndLayer() {
         var dragSource = GeoJSONSource()
         dragSource.data = .empty
+        if style
         do {
             try style.addSource(dragSource, id: "dragSource")
         } catch {
@@ -605,7 +606,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         createDragSourceAndLayer()
 
         do {
-            try style.updateLayer(withId: "drag-layer", type: SymbolLayer.self, update: { layer in
+            try style.updateLayer(withId: "drag-layer", type: SymbolLayer.self) { layer in
                 layer.iconColor = annotation.iconColor.map(Value.constant)
                 layer.iconImage = Value.constant(ResolvedImage.name(annotation.iconImage!))
                 layer.iconOpacity = annotation.iconOpacity.map(Value.constant)
@@ -623,8 +624,8 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         let moveObject = moveDistancesObject
         moveObject.prevX = previousPosition.x
         moveObject.prevY = previousPosition.y
-        moveObject.distanceXSinceLast = 0
-        moveObject.distanceYSinceLast = 0
+        moveObject.distanceXSinceLast = 0.0
+        moveObject.distanceYSinceLast = 0.0
 
         guard let annotationBeingDragged = annotationBeingDragged else { return }
         guard let offsetPoint = offsetPointCalculator.geometry(at: moveObject, from: annotationBeingDragged.point) else { return }

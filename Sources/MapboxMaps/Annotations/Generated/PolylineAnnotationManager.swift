@@ -274,6 +274,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     internal func createDragSourceAndLayer() {
         var dragSource = GeoJSONSource()
         dragSource.data = .empty
+        if style
         do {
             try style.addSource(dragSource, id: "dragSource")
         } catch {
@@ -296,7 +297,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         createDragSourceAndLayer()
 
         do {
-            try style.updateLayer(withId: "drag-layer", type: LineLayer.self, update: { layer in
+            try style.updateLayer(withId: "drag-layer", type: LineLayer.self) { layer in
                 layer.lineColor = annotation.lineColor.map(Value.constant)
                 layer.lineOpacity = annotation.lineOpacity.map(Value.constant)
                 layer.lineWidth = annotation.lineWidth.map(Value.constant)
@@ -314,8 +315,8 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         let moveObject = moveDistancesObject
         moveObject.prevX = previousPosition.x
         moveObject.prevY = previousPosition.y
-        moveObject.distanceXSinceLast = 0
-        moveObject.distanceYSinceLast = 0
+        moveObject.distanceXSinceLast = 0.0
+        moveObject.distanceYSinceLast = 0.0
 
         guard let annotationBeingDragged = annotationBeingDragged else { return }
         guard let offsetPoint = offsetLineStringCalculator.geometry(at: moveObject, from: annotationBeingDragged.lineString) else { return }

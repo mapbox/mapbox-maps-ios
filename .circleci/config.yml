@@ -412,28 +412,22 @@ jobs:
       - run:
           name: Run Workflow
           command: |
-            if [[ $CIRCLE_BRANCH == main ]]; then
-              curl -X POST "https://circleci.com/api/v2/project/github/mapbox/mapbox-maps-ios-internal/pipeline" \
+            RUN_TESTS=false
+
+            if [[ $CIRCLE_BRANCH == "main" || -n $CIRCLE_TAG ]]; then
+              RUN_TESTS=true
+            fi
+
+            curl -X POST "https://circleci.com/api/v2/project/github/mapbox/mapbox-maps-ios-internal/pipeline" \
                   -H 'Content-Type: application/json' \
                   -H "Circle-Token: $CIRCLECI_API_TOKEN_MAPBOX_MAPS_IOS_INTERNAL" \
                   -d $'{
                 "branch": "main",
                 "parameters": {
                   "maps-ios-checkout-reference": "<< pipeline.git.revision >>",
-                  "run-tests": true
+                  "run-tests": '$RUN_TESTS'
                 }
               }'
-            else
-              curl -X POST "https://circleci.com/api/v2/project/github/mapbox/mapbox-maps-ios-internal/pipeline" \
-                -H 'Content-Type: application/json' \
-                -H "Circle-Token: $CIRCLECI_API_TOKEN_MAPBOX_MAPS_IOS_INTERNAL" \
-                -d $'{
-              "branch": "main",
-              "parameters": {
-                "maps-ios-checkout-reference": "<< pipeline.git.revision >>"
-              }
-            }'
-            fi
 
   trigger-metrics-collection:
     <<: *base-job

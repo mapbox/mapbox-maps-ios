@@ -12,6 +12,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Expose the list of added view annotations. ([#1621](https://github.com/mapbox/mapbox-maps-ios/pull/1621))
 * Fix `loadStyleURI/loadStyleJSON` completion being invoked more than once. ([#1665](https://github.com/mapbox/mapbox-maps-ios/pull/1665))
 * Remove ornament position deprecation. ([#1676](https://github.com/mapbox/mapbox-maps-ios/pull/1676))
+* Prevent map from being rendered on background. ([#1675])(https://github.com/mapbox/mapbox-maps-ios/pull/1675))
 
 ## 10.9.0 - October 19, 2022
 

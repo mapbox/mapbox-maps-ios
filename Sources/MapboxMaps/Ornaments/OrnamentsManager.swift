@@ -3,13 +3,9 @@ import UIKit
 /// Options used to configure the corner position of an ornament
 public enum OrnamentPosition: String, Equatable {
     // Clockwise from top left
-    @available(*, deprecated, renamed: "topLeading")
     case topLeft
-    @available(*, deprecated, renamed: "topTrailing")
     case topRight
-    @available(*, deprecated, renamed: "bottomTrailing")
     case bottomRight
-    @available(*, deprecated, renamed: "bottomLeading")
     case bottomLeft
 
     case topLeading
@@ -98,7 +94,7 @@ public class OrnamentsManager: NSObject {
         // Scalebar View
         // Check whether the scale bar is position on the right side of the map view.
         let scaleBarPosition = options.scaleBar.position
-        scaleBarView.isOnRight = scaleBarPosition == .bottomRight || scaleBarPosition == .topRight
+        scaleBarView.isOnRight = scaleBarPosition == .bottomRight || scaleBarPosition == .bottomTrailing || scaleBarPosition == .topRight
         scaleBarView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scaleBarView)
         self._scaleBarView = scaleBarView
@@ -169,7 +165,7 @@ public class OrnamentsManager: NSObject {
                                                   position: options.scaleBar.position,
                                                   margins: options.scaleBar.margins)
         let scaleBarPosition = options.scaleBar.position
-        _scaleBarView.isOnRight = scaleBarPosition == .bottomRight || scaleBarPosition == .topRight
+        _scaleBarView.isOnRight = scaleBarPosition == .bottomRight || scaleBarPosition == .bottomLeading || scaleBarPosition == .topRight
         constraints.append(contentsOf: scaleBarViewConstraints)
 
         let attributionButtonConstraints = constraints(with: _attributionButton,

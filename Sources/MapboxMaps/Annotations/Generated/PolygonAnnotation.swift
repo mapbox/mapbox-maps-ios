@@ -98,7 +98,6 @@ public struct PolygonAnnotation: Annotation {
         }
     }
 
-
 }
 
 // End of generated file.

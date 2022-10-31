@@ -334,7 +334,6 @@ public struct PointAnnotation: Annotation {
             self.iconImage = image?.name
         }
     }
-
 }
 
 // End of generated file.

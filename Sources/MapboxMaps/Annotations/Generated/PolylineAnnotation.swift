@@ -144,7 +144,6 @@ public struct PolylineAnnotation: Annotation {
         }
     }
 
-
 }
 
 // End of generated file.

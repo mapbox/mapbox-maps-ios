@@ -17,10 +17,19 @@ final class StyleLocalizationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "pt")), "pt")
         XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "ru")), "ru")
         XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "vi")), "vi")
-        XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "zh")), "zh")
+        XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "zh")), "zh-Hans")
         XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "zh-Hans")), "zh-Hans")
         XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "zh-Hant")), "zh-Hant")
-        XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "zh-Hant-TW")), "zh-Hant-TW")
+        XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "zh-Hans-CN")), "zh-Hans")
+        XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "zh-Hant-TW")), "zh-Hant")
+        // XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "zh-Hant-HK")), "zh-Hant")
+        if #available(iOS 16, *) {
+            let HongKongLocale = Locale(languageCode: "zh", script: "Hant", languageRegion: "HK")
+            XCTAssertEqual(style.getLocaleValue(locale: HongKongLocale), "zh-Hant")
+        } else {
+            let HongKongLocale = Locale(identifier: "zh-Hant-HK")
+            XCTAssertEqual(style.getLocaleValue(locale: HongKongLocale), "zh-Hant")
+        }
     }
 
     func testGetLocaleValueDoesNotExist() {

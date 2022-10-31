@@ -47,6 +47,10 @@ public class LocalizationExample: UIViewController, ExampleProtocol {
                                       message: "Please select a language to localize to.",
                                       preferredStyle: .actionSheet)
 
+        alert.addAction(UIAlertAction(title: "Device Settings", style: .default, handler: { [weak self] _ in
+            try! self?.mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: Locale.preferredLanguages[0]))
+        }))
+        
         alert.addAction(UIAlertAction(title: "Spanish", style: .default, handler: { [weak self] _ in
             try! self?.mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "es"))
         }))

@@ -34,8 +34,11 @@ extension Style {
     /// Filters through source to determine supported locale styles.
     /// This is needed for v7 support
     internal func getLocaleValue(locale: Locale) -> String? {
+        var localeValue: String
+
         // Docs for language, region, and script codes  https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPInternational/LanguageandLocaleIDs/LanguageandLocaleIDs.html
-        let supportedLocaleIdentifiers = ["ar", "de", "en", "es", "fr", "it", "ja", "ko", "pt", "ru", "vi", "zh", "zh-Hans", "zh-Hant", "zh-Hant-TW"]
+        // List of supported language identifiers: https://docs.mapbox.com/data/tilesets/reference/mapbox-streets-v8/#common-fields
+        let supportedLocaleIdentifiers = ["ar", "en", "es", "fr", "de", "it", "pt", "ru", "zh-Hans", "zh-Hant", "ja", "ko", "vi", "zh"]
 
         // Do nothing if we do not support the locale
         if !supportedLocaleIdentifiers.contains(locale.languageCode!) {
@@ -51,21 +54,23 @@ extension Style {
             let vectorSource = try! source(withId: sourceInfo.id, type: VectorSource.self)
 
             if vectorSource.url?.contains("mapbox.mapbox-streets-v7") == true {
-                // v7 styles does not support value of "name_zh-Hant"
+                // v7 styles do not support value of "name_zh-Hant"
                 if locale.identifier == "zh-Hant" {
-                    return "zh"
-                }
-            } else if vectorSource.url?.contains("mapbox.mapbox-streets-v8") == true {
-                // Return traditional chinese if the Locale is Taiwan
-                if locale.identifier == "zh-Hant-TW" {
-                    return "zh-Hant"
-                } else {
-                    return "zh-Hans"
+                    localeValue = "zh"
                 }
             }
         }
 
-        return supportedLocaleIdentifiers.contains(locale.identifier) ? locale.identifier : locale.languageCode!
+        // Return Traditional Chinese when specified (including Locales for Taiwan and Hong Kong)
+        if locale.identifier.starts(with: "zh-Hant") {
+            localeValue = "zh-Hant"
+        } else if locale.identifier.starts(with: "zh") {
+            localeValue = "zh-Hans"
+        } else {
+            localeValue = supportedLocaleIdentifiers.contains(locale.identifier) ? locale.identifier : locale.languageCode!
+        }
+
+        return localeValue
     }
 
     /// Converts the `SymbolLayer.textField` into the new locale

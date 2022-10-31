@@ -274,11 +274,12 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     internal func createDragSourceAndLayer() {
         var dragSource = GeoJSONSource()
         dragSource.data = .empty
-        if style
-        do {
-            try style.addSource(dragSource, id: "dragSource")
-        } catch {
-            print("Failed to add the source to style. Error: \(error)")
+        if !style.sourceExists(withId: "dragSource") {
+            do {
+                try style.addSource(dragSource, id: "dragSource")
+            } catch {
+                print("Failed to add the source to style. Error: \(error)")
+            }
         }
 
         let dragLayerId = "drag-layer"
@@ -303,7 +304,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
                 layer.lineWidth = annotation.lineWidth.map(Value.constant)
                 guard let linePattern = annotation.linePattern else { return }
                 layer.linePattern = Value.constant(ResolvedImage.name(linePattern))
-            })
+            }
         } catch {
             print("Failed to update drag layer. Error: \(error)")
         }

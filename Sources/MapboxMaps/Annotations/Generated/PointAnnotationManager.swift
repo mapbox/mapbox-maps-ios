@@ -583,11 +583,12 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     internal func createDragSourceAndLayer() {
         var dragSource = GeoJSONSource()
         dragSource.data = .empty
-        if style
-        do {
-            try style.addSource(dragSource, id: "dragSource")
-        } catch {
-            print("Failed to add the source to style. Error: \(error)")
+        if !style.sourceExists(withId: "dragSource") {
+            do {
+                try style.addSource(dragSource, id: "dragSource")
+            } catch {
+                print("Failed to add the source to style. Error: \(error)")
+            }
         }
 
         let dragLayerId = "drag-layer"
@@ -612,7 +613,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
                 layer.iconOpacity = annotation.iconOpacity.map(Value.constant)
                 layer.textField = annotation.textField.map(Value.constant)
                 layer.textColor = annotation.textColor.map(Value.constant)
-            })
+            }
         } catch {
             print("Failed to update drag layer. Error: \(error)")
         }

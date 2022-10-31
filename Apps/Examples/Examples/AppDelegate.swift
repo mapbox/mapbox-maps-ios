@@ -11,9 +11,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
 
-        let examplesTableViewController = ExampleTableViewController()
-        let navigationController = UINavigationController(rootViewController: examplesTableViewController)
-
         let appearance = UINavigationBar.appearance()
         appearance.prefersLargeTitles = true
 
@@ -21,8 +18,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             appearance.scrollEdgeAppearance = UINavigationBarAppearance()
         }
 
-        window?.rootViewController = navigationController
-        window?.makeKeyAndVisible()
+        if #unavailable(iOS 13.0) {
+            let examplesTableViewController = ExampleTableViewController()
+            let navigationController = UINavigationController(rootViewController: examplesTableViewController)
+            window?.rootViewController = navigationController
+            window?.makeKeyAndVisible()
+        }
 
         return true
     }

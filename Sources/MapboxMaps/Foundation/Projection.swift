@@ -6,6 +6,8 @@ public final class Projection {
     public static let latitudeMax: CLLocationDegrees = +85.051128779806604
     /// Minimum supported latitude value.
     public static let latitudeMin: CLLocationDegrees = -85.051128779806604
+    /// Valid mercator latitude range.
+    public static let latitudeRange = (latitudeMin...latitudeMax)
 
     internal init() {}
 

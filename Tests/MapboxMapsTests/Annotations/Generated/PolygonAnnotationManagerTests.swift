@@ -10,6 +10,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     var annotations = [PolygonAnnotation]()
     var expectation: XCTestExpectation?
     var delegateAnnotations: [Annotation]?
+    let offsetPolygonCalculator: OffsetPolygonCalculator
 
     override func setUp() {
         super.setUp()
@@ -19,7 +20,9 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         manager = PolygonAnnotationManager(id: id,
                                           style: style,
                                           layerPosition: nil,
-                                          displayLinkCoordinator: displayLinkCoordinator)
+                                          displayLinkCoordinator: displayLinkCoordinator,
+                                          offsetPolygonCalculator: OffsetPolygonCalculator) {
+)
 
         for _ in 0...10 {
             let polygonCoords = [
@@ -62,7 +65,9 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         let initializedManager = PolygonAnnotationManager(id: id,
                                                          style: style,
                                                          layerPosition: nil,
-                                                         displayLinkCoordinator: displayLinkCoordinator)
+                                                         displayLinkCoordinator: displayLinkCoordinator,
+                                                         offsetPolygonCalculator: OffsetPolygonCalculator) {
+)
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
@@ -90,7 +95,9 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         let manager2 = PolygonAnnotationManager(id: manager.id,
                                                style: style,
                                                layerPosition: nil,
-                                               displayLinkCoordinator: displayLinkCoordinator)
+                                               displayLinkCoordinator: displayLinkCoordinator,
+                                               offsetPolygonCalculator: OffsetPolygonCalculator) {
+)
         manager2.annotations = annotations2
 
         XCTAssertEqual(manager.annotations.count, 11)
@@ -101,7 +108,9 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         let manager3 = PolygonAnnotationManager(id: id,
                                                style: style,
                                                layerPosition: LayerPosition.at(4),
-                                               displayLinkCoordinator: displayLinkCoordinator)
+                                               displayLinkCoordinator: displayLinkCoordinator,
+                                               offsetPolygonCalculator: OffsetPolygonCalculator) {
+)
         manager3.annotations = annotations
 
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition, LayerPosition.at(4))

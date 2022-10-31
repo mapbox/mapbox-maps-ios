@@ -35,6 +35,7 @@ final class LineAnnotationExample: UIViewController, ExampleProtocol {
         var lineAnnotation = PolylineAnnotation(lineCoordinates: coordinates)
         lineAnnotation.lineColor = StyleColor(.red)
         lineAnnotation.lineWidth = 5.0
+        lineAnnotation.isDraggable = true
         annotations.append(lineAnnotation)
 
         // random add lines across the globe
@@ -66,8 +67,15 @@ final class LineAnnotationExample: UIViewController, ExampleProtocol {
             // position line annotations layer in a way that line annotations clipped at land borders
             layerPosition: .below("pitch-outline")
         )
-
+        // Set the delegate to receive callback if annotation is tapped or dragged
+        lineAnnnotationManager.delegate = self
         // Sync the annotation to the manager.
         lineAnnnotationManager.annotations = annotations
+    }
+}
+
+extension LineAnnotationExample: AnnotationInteractionDelegate {
+    func annotationManager(_ manager: MapboxMaps.AnnotationManager, didDetectTappedAnnotations annotations: [MapboxMaps.Annotation]) {
+        print("AnnotationManager did detect tapped annotations: \(annotations)")
     }
 }

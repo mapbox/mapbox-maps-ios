@@ -280,13 +280,12 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
             print("Failed to add the source to style. Error: \(error)")
         }
 
-
         let dragLayerId = "drag-layer"
         var dragLayer = LineLayer(id: dragLayerId)
         dragLayer.source = "dragSource"
 
         do {
-            try style.addLayer(dragLayer, layerPosition: .default)
+            try style.addPersistentLayer(dragLayer, layerPosition: .default)
         } catch {
             print("Failed to add the layer to style. Error: \(error)")
         }
@@ -312,7 +311,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         self.annotations.removeAll(where: { $0.id == annotation.id })
 
         let previousPosition = position
-        var moveObject = moveDistancesObject
+        let moveObject = moveDistancesObject
         moveObject.prevX = previousPosition.x
         moveObject.prevY = previousPosition.y
         moveObject.distanceXSinceLast = 0
@@ -329,7 +328,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     }
 
     internal func handleDragChanged(to position: CGPoint) {
-        var moveObject = moveDistancesObject
+        let moveObject = moveDistancesObject
         moveObject.distanceXSinceLast = moveObject.prevX - position.x
         moveObject.distanceYSinceLast = moveObject.prevY - position.y
         moveObject.prevX = position.x

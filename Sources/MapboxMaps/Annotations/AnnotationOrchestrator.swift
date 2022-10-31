@@ -4,6 +4,8 @@ import UIKit
 internal class MoveDistancesObject {
     var distanceXSinceLast = 0.0
     var distanceYSinceLast = 0.0
+    var currentX = 0.0
+    var currentY = 0.0
     var prevX = Double()
     var prevY = Double()
 }
@@ -259,7 +261,7 @@ public class AnnotationOrchestrator {
             }
     }
 
-    @objc private func handleDrag(_ drag: UILongPressGestureRecognizer) {
+    @objc func handleDrag(_ drag: UILongPressGestureRecognizer) {
         let managers = annotationManagersByIdInternal.values.filter { $0.delegate != nil }
         guard !managers.isEmpty else { return }
 
@@ -319,7 +321,8 @@ internal struct OffsetPointCalculator: OffsetGeometryCalculator {
     }
 
     func geometry(at distance: MoveDistancesObject, from geometry: Point) -> Point? {
-        let validMercatorLatitude = (-85.05112877980659...85.05112877980659)
+        // Valid mercator latitude minimum and maximum values
+        let validMercatorLatitude = (Projection.latitudeMin...Projection.latitudeMax)
         let point = geometry.coordinates
 
         let centerScreenCoordinate = mapboxMap.point(for: point)
@@ -349,7 +352,8 @@ internal struct OffsetLineStringCalculator: OffsetGeometryCalculator {
     }
 
     func geometry(at distance: MoveDistancesObject, from geometry: LineString) -> LineString? {
-        let validMercatorLatitude = (-85.05112877980659...85.05112877980659)
+        // Valid mercator latitude minimum and maximum values
+        let validMercatorLatitude = (Projection.latitudeMin...Projection.latitudeMax)
         let startPoints = geometry.coordinates
 
         if startPoints.isEmpty {
@@ -395,7 +399,8 @@ internal struct OffsetPolygonCalculator: OffsetGeometryCalculator {
     }
 
     func geometry(at distance: MoveDistancesObject, from geometry: Polygon) -> Polygon? {
-        let validMercatorLatitude = (-85.05112877980659...85.05112877980659)
+        // Valid mercator latitude minimum and maximum values
+        let validMercatorLatitude = (Projection.latitudeMin...Projection.latitudeMax)
         var outerRing = [CLLocationCoordinate2D]()
         var innerRing: [CLLocationCoordinate2D]?
         let startPoints = geometry.outerRing.coordinates

@@ -270,7 +270,7 @@ final class MapViewTests: XCTestCase {
     }
 
     func testDisplayLinkResumedWhenAppDidBecomeActiveOnIOS12() throws {
-        guard #unavailable(iOS 13.0) else {
+        if #available(iOS 13.0, *) {
             throw XCTSkip("Test applies only on iOS 12")
         }
 

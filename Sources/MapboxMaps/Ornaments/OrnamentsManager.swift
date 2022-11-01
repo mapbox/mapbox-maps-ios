@@ -3,13 +3,9 @@ import UIKit
 /// Options used to configure the corner position of an ornament
 public enum OrnamentPosition: String, Equatable {
     // Clockwise from top left
-    @available(*, deprecated, renamed: "topLeading")
     case topLeft
-    @available(*, deprecated, renamed: "topTrailing")
     case topRight
-    @available(*, deprecated, renamed: "bottomTrailing")
     case bottomRight
-    @available(*, deprecated, renamed: "bottomLeading")
     case bottomLeft
 
     case topLeading

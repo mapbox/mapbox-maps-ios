@@ -10,7 +10,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     var annotations = [PolylineAnnotation]()
     var expectation: XCTestExpectation?
     var delegateAnnotations: [Annotation]?
-    let offsetLineStringCalculator: OffsetLineStringCalculator
+    let offsetLineStringCalculator = OffsetLineStringCalculator(mapboxMap: MockMapboxMap())
 
     override func setUp() {
         super.setUp()
@@ -18,11 +18,10 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         style = MockStyle()
         displayLinkCoordinator = MockDisplayLinkCoordinator()
         manager = PolylineAnnotationManager(id: id,
-                                          style: style,
-                                          layerPosition: nil,
-                                          displayLinkCoordinator: displayLinkCoordinator,
-                                          offsetLineStringCalculator: OffsetLineStringCalculator) {
-)
+                                            style: style,
+                                            layerPosition: nil,
+                                            displayLinkCoordinator: displayLinkCoordinator,
+                                            offsetLineStringCalculator: offsetLineStringCalculator)
 
         for _ in 0...10 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
@@ -45,9 +44,10 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         style.addSourceStub.reset()
 
         _ = PolylineAnnotationManager(id: id,
-                                 style: style,
-                                 layerPosition: nil,
-                                 displayLinkCoordinator: displayLinkCoordinator)
+                                      style: style,
+                                      layerPosition: nil,
+                                      displayLinkCoordinator: displayLinkCoordinator,
+                                      offsetLineStringCalculator: offsetLineStringCalculator)
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.type, SourceType.geoJson)
@@ -57,11 +57,10 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     func testAddLayer() {
         style.addSourceStub.reset()
         let initializedManager = PolylineAnnotationManager(id: id,
-                                                         style: style,
-                                                         layerPosition: nil,
-                                                         displayLinkCoordinator: displayLinkCoordinator,
-                                                         offsetLineStringCalculator: OffsetLineStringCalculator) {
-)
+                                                           style: style,
+                                                           layerPosition: nil,
+                                                           displayLinkCoordinator: displayLinkCoordinator,
+                                                           offsetLineStringCalculator: offsetLineStringCalculator)
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
@@ -81,11 +80,10 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
         manager.annotations = annotations
         let manager2 = PolylineAnnotationManager(id: manager.id,
-                                               style: style,
-                                               layerPosition: nil,
-                                               displayLinkCoordinator: displayLinkCoordinator,
-                                               offsetLineStringCalculator: OffsetLineStringCalculator) {
-)
+                                                 style: style,
+                                                 layerPosition: nil,
+                                                 displayLinkCoordinator: displayLinkCoordinator,
+                                                 offsetLineStringCalculator: offsetLineStringCalculator)
         manager2.annotations = annotations2
 
         XCTAssertEqual(manager.annotations.count, 11)
@@ -94,11 +92,10 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
     func testLayerPositionPassedCorrectly() {
         let manager3 = PolylineAnnotationManager(id: id,
-                                               style: style,
-                                               layerPosition: LayerPosition.at(4),
-                                               displayLinkCoordinator: displayLinkCoordinator,
-                                               offsetLineStringCalculator: OffsetLineStringCalculator) {
-)
+                                                 style: style,
+                                                 layerPosition: LayerPosition.at(4),
+                                                 displayLinkCoordinator: displayLinkCoordinator,
+                                                 offsetLineStringCalculator: offsetLineStringCalculator)
         manager3.annotations = annotations
 
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition, LayerPosition.at(4))

@@ -10,7 +10,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     var annotations = [PointAnnotation]()
     var expectation: XCTestExpectation?
     var delegateAnnotations: [Annotation]?
-    let offsetPointCalculator: OffsetPointCalculator
+    let offsetPointCalculator = OffsetPointCalculator(mapboxMap: MockMapboxMap())
 
     override func setUp() {
         super.setUp()
@@ -18,11 +18,10 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         style = MockStyle()
         displayLinkCoordinator = MockDisplayLinkCoordinator()
         manager = PointAnnotationManager(id: id,
-                                          style: style,
-                                          layerPosition: nil,
-                                          displayLinkCoordinator: displayLinkCoordinator,
-                                          offsetPointCalculator: OffsetPointCalculator) {
-)
+                                         style: style,
+                                         layerPosition: nil,
+                                         displayLinkCoordinator: displayLinkCoordinator,
+                                         offsetPointCalculator: offsetPointCalculator)
 
         for _ in 0...10 {
             let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
@@ -44,9 +43,10 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         style.addSourceStub.reset()
 
         _ = PointAnnotationManager(id: id,
-                                 style: style,
-                                 layerPosition: nil,
-                                 displayLinkCoordinator: displayLinkCoordinator)
+                                   style: style,
+                                   layerPosition: nil,
+                                   displayLinkCoordinator: displayLinkCoordinator,
+                                   offsetPointCalculator: offsetPointCalculator)
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.type, SourceType.geoJson)
@@ -56,11 +56,10 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testAddLayer() {
         style.addSourceStub.reset()
         let initializedManager = PointAnnotationManager(id: id,
-                                                         style: style,
-                                                         layerPosition: nil,
-                                                         displayLinkCoordinator: displayLinkCoordinator,
-                                                         offsetPointCalculator: OffsetPointCalculator) {
-)
+                                                        style: style,
+                                                        layerPosition: nil,
+                                                        displayLinkCoordinator: displayLinkCoordinator,
+                                                        offsetPointCalculator: offsetPointCalculator)
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
@@ -79,11 +78,10 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         let manager2 = PointAnnotationManager(id: manager.id,
-                                               style: style,
-                                               layerPosition: nil,
-                                               displayLinkCoordinator: displayLinkCoordinator,
-                                               offsetPointCalculator: OffsetPointCalculator) {
-)
+                                              style: style,
+                                              layerPosition: nil,
+                                              displayLinkCoordinator: displayLinkCoordinator,
+                                              offsetPointCalculator: offsetPointCalculator)
         manager2.annotations = annotations2
 
         XCTAssertEqual(manager.annotations.count, 11)
@@ -92,11 +90,10 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testLayerPositionPassedCorrectly() {
         let manager3 = PointAnnotationManager(id: id,
-                                               style: style,
-                                               layerPosition: LayerPosition.at(4),
-                                               displayLinkCoordinator: displayLinkCoordinator,
-                                               offsetPointCalculator: OffsetPointCalculator) {
-)
+                                              style: style,
+                                              layerPosition: LayerPosition.at(4),
+                                              displayLinkCoordinator: displayLinkCoordinator,
+                                              offsetPointCalculator: offsetPointCalculator)
         manager3.annotations = annotations
 
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition, LayerPosition.at(4))
@@ -2840,10 +2837,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         // when
         let pointAnnotationManager = PointAnnotationManager(id: id,
-                                  style: style,
-                                  layerPosition: nil,
-                                  displayLinkCoordinator: displayLinkCoordinator,
-                                  clusterOptions: clusterOptions)
+                                                            style: style,
+                                                            layerPosition: nil,
+                                                            displayLinkCoordinator: displayLinkCoordinator,
+                                                            clusterOptions: clusterOptions,
+                                                            offsetPointCalculator: offsetPointCalculator)
         pointAnnotationManager.annotations = annotations
 
         // then
@@ -2880,10 +2878,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         // when
         let pointAnnotationManager = PointAnnotationManager(id: id,
-                                  style: style,
-                                  layerPosition: nil,
-                                  displayLinkCoordinator: displayLinkCoordinator,
-                                  clusterOptions: clusterOptions)
+                                                            style: style,
+                                                            layerPosition: nil,
+                                                            displayLinkCoordinator: displayLinkCoordinator,
+                                                            clusterOptions: clusterOptions,
+                                                            offsetPointCalculator: offsetPointCalculator)
 
         pointAnnotationManager.annotations = annotations
         let geoJSONSource = style.addSourceStub.invocations.last?.parameters.source as! GeoJSONSource
@@ -2913,10 +2912,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         // when
         let pointAnnotationManager = PointAnnotationManager(id: id,
-                                  style: style,
-                                  layerPosition: nil,
-                                  displayLinkCoordinator: displayLinkCoordinator,
-                                  clusterOptions: clusterOptions)
+                                                            style: style,
+                                                            layerPosition: nil,
+                                                            displayLinkCoordinator: displayLinkCoordinator,
+                                                            clusterOptions: clusterOptions,
+                                                            offsetPointCalculator: offsetPointCalculator)
         pointAnnotationManager.annotations = annotations
 
         // then
@@ -2942,8 +2942,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let testTextSize = Value<Double>.testConstantValue()
         let testTextField = Value<String>.testConstantValue()
         let clusterOptions = ClusterOptions(textColor: testTextColor,
-                                  textSize: testTextSize,
-                                  textField: testTextField)
+                                            textSize: testTextSize,
+                                            textField: testTextField)
         var annotations = [PointAnnotation]()
         for _ in 0...500 {
             let annotation = PointAnnotation(coordinate: .random())
@@ -2952,10 +2952,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         // when
         let pointAnnotationManager = PointAnnotationManager(id: id,
-                                  style: style,
-                                  layerPosition: nil,
-                                  displayLinkCoordinator: displayLinkCoordinator,
-                                  clusterOptions: clusterOptions)
+                                                            style: style,
+                                                            layerPosition: nil,
+                                                            displayLinkCoordinator: displayLinkCoordinator,
+                                                            clusterOptions: clusterOptions,
+                                                            offsetPointCalculator: offsetPointCalculator)
         pointAnnotationManager.annotations = annotations
 
         // then
@@ -2983,10 +2984,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         // when
         let pointAnnotationManager = PointAnnotationManager(id: id,
-                                  style: style,
-                                  layerPosition: nil,
-                                  displayLinkCoordinator: displayLinkCoordinator,
-                                  clusterOptions: clusterOptions)
+                                                            style: style,
+                                                            layerPosition: nil,
+                                                            displayLinkCoordinator: displayLinkCoordinator,
+                                                            clusterOptions: clusterOptions,
+                                                            offsetPointCalculator: offsetPointCalculator)
         pointAnnotationManager.annotations = annotations
 
         // then
@@ -3021,18 +3023,19 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         // when
         let pointAnnotationManager = PointAnnotationManager(id: id,
-                                  style: style,
-                                  layerPosition: nil,
-                                  displayLinkCoordinator: displayLinkCoordinator,
-                                  clusterOptions: clusterOptions)
+                                                            style: style,
+                                                            layerPosition: nil,
+                                                            displayLinkCoordinator: displayLinkCoordinator,
+                                                            clusterOptions: clusterOptions,
+                                                            offsetPointCalculator: offsetPointCalculator)
         pointAnnotationManager.annotations = annotations
         pointAnnotationManager.syncSourceAndLayerIfNeeded()
         var sourceGeoJSON = style.updateGeoJSONSourceStub.invocations.last?.parameters.geojson
         switch sourceGeoJSON {
         case .featureCollection(let data):
-          XCTAssertEqual(data.features.count, 501)
+            XCTAssertEqual(data.features.count, 501)
         default:
-          XCTFail("GeoJSON did not update correctly")
+            XCTFail("GeoJSON did not update correctly")
         }
 
         // then
@@ -3041,9 +3044,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         sourceGeoJSON = style.updateGeoJSONSourceStub.invocations.last?.parameters.geojson
         switch sourceGeoJSON {
         case .featureCollection(let data):
-          XCTAssertEqual(data.features.count, 101)
+            XCTAssertEqual(data.features.count, 101)
         default:
-          XCTFail("GeoJSON did not update correctly")
+            XCTFail("GeoJSON did not update correctly")
         }
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
     }
@@ -3054,10 +3057,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         // when
         let pointAnnotationManager = PointAnnotationManager(id: id,
-                                  style: style,
-                                  layerPosition: nil,
-                                  displayLinkCoordinator: displayLinkCoordinator,
-                                  clusterOptions: clusterOptions)
+                                                            style: style,
+                                                            layerPosition: nil,
+                                                            displayLinkCoordinator: displayLinkCoordinator,
+                                                            clusterOptions: clusterOptions,
+                                                            offsetPointCalculator: offsetPointCalculator)
         pointAnnotationManager.annotations = annotations
         pointAnnotationManager.destroy()
 
@@ -3077,4 +3081,5 @@ private extension PointAnnotation {
         self.image = image
     }
 }
+
 // End of generated file

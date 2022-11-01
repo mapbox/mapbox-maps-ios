@@ -56,6 +56,11 @@ final class MockStyle: StyleProtocol {
         layerExistsStub.call(with: id)
     }
 
+    let layerPropertiesStub = Stub<String, [String: Any]>(defaultReturnValue: [:])
+    func layerProperties(for layerId: String) throws -> [String: Any] {
+        layerPropertiesStub.call(with: layerId)
+    }
+
     struct SetLayerPropertiesParams {
         var layerId: String
         var properties: [String: Any]
@@ -152,15 +157,4 @@ final class MockStyle: StyleProtocol {
     func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject) throws {
         updateGeoJSONSourceStub.call(with: UpdateGeoJSONSourceParams(id: id, geojson: geoJSON))
     }
-
-    // swiftlint:disable force_cast
-    struct UpdateLayerParams<Layer> {
-        let id: String
-        let type: Layer
-    }
-    let updateLayerStub = Stub<UpdateLayerParams<Layer>, Void>()
-    func updateLayer<T>(withId id: String, type: T.Type, update: (inout T) throws -> Void) throws where T: Layer {
-        updateLayerStub.call(with: UpdateLayerParams(id: id, type: type as! Layer))
-    }
-    // swiftlint:disable force_cast
 }

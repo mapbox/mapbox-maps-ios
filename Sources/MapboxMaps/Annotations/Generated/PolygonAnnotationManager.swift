@@ -209,28 +209,23 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         // Find if any `queriedFeatureIds` match an annotation's `id`
         let tappedAnnotations = annotations.filter { queriedFeatureIds.contains($0.id) }
 
-        // If `tappedAnnotations` is not empty, call delegate
-        if !tappedAnnotations.isEmpty {
-            delegate?.annotationManager(
-                self,
-                didDetectTappedAnnotations: tappedAnnotations)
-            var selectedAnnotationIds = tappedAnnotations.map(\.id)
-              let allAnnotations: [PolygonAnnotation] = self.annotations.map { annotation in
+        if tappedAnnotations.isEmpty {
+            return
+        }
+
+        let selectedAnnotationIds = tappedAnnotations.map(\.id)
+        let allAnnotations: [PolygonAnnotation] = annotations.map { annotation in
+            if selectedAnnotationIds.contains(annotation.id) {
                 var mutableAnnotation = annotation
-                if selectedAnnotationIds.contains(annotation.id) {
-                    if mutableAnnotation.isSelected == false {
-                        mutableAnnotation.isSelected = true
-                    } else {
-                        mutableAnnotation.isSelected = false
-                    }
-                }
-                selectedAnnotationIds.append(mutableAnnotation.id)
+                mutableAnnotation.isSelected.toggle()
                 return mutableAnnotation
             }
-
-            self.annotations = allAnnotations
-
+            return annotation
         }
+
+        self.annotations = allAnnotations
+
+        delegate?.annotationManager(self, didDetectTappedAnnotations: tappedAnnotations)
     }
 
     internal func createDragSourceAndLayer() {
@@ -242,40 +237,36 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
             print("Failed to add the source to style. Error: \(error)")
         }
 
-        var dragLayer = FillLayer(id: dragLayerId)
-        dragLayer.source = dragSourceId
-
         do {
-            try style.addPersistentLayer(dragLayer, layerPosition: .below(layerId))
+            // copy the existing layer as the drag layer
+            var properties = try style.layerProperties(for: layerId)
+            properties[SymbolLayer.RootCodingKeys.id.rawValue] = dragLayerId
+            properties[SymbolLayer.RootCodingKeys.source.rawValue] = dragSourceId
+
+            try style.addPersistentLayer(with: properties, layerPosition: .above(layerId))
         } catch {
             print("Failed to add the layer to style. Error: \(error)")
         }
     }
 
-    internal func handleDragBegin(with querriedFeatureIdentifiers: [String]) {
-        guard let annotation = annotations.first(where: { querriedFeatureIdentifiers.contains($0.id) }) else { return }
-        createDragSourceAndLayer()
-
+    internal func removeDragSourceAndLayer() {
         do {
-            try style.updateLayer(withId: dragLayerId, type: FillLayer.self) { layer in
-                layer.fillColor = annotation.fillColor.map(Value.constant)
-                layer.fillOutlineColor = annotation.fillOutlineColor.map(Value.constant)
-                layer.fillOpacity = annotation.fillOpacity.map(Value.constant)
-                guard let fillPattern = annotation.fillPattern else { return }
-                layer.fillPattern = Value.constant(ResolvedImage.name(fillPattern))
-            }
+            try self.style.removeLayer(withId: self.dragLayerId)
+            try self.style.removeSource(withId: self.dragSourceId)
         } catch {
-            print("Failed to update drag layer. Error: \(error)")
+            print("Failed to remove drag layer. Error: \(error)")
         }
+    }
+
+    internal func handleDragBegin(with featureIdentifiers: [String]) {
+        guard let annotation = annotations.first(where: { featureIdentifiers.contains($0.id) }) else { return }
+        createDragSourceAndLayer()
 
         self.annotationBeingDragged = annotation
         self.annotations.removeAll(where: { $0.id == annotation.id })
 
-        guard let annotationBeingDragged = annotationBeingDragged else { return }
-        guard let offsetPoint = offsetPolygonCalculator.geometry(for: .zero, from: annotationBeingDragged.polygon) else { return }
-        self.annotationBeingDragged?.polygon = offsetPoint
         do {
-            try style.updateGeoJSONSource(withId: dragSourceId, geoJSON: offsetPoint.geometry.geoJSONObject)
+            try style.updateGeoJSONSource(withId: dragSourceId, geoJSON: .feature(annotation.feature))
         } catch {
             print("Failed to update drag source. Error: \(error)")
         }
@@ -286,7 +277,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         guard let offsetPoint = offsetPolygonCalculator.geometry(for: translation, from: annotationBeingDragged.polygon) else { return }
         self.annotationBeingDragged?.polygon = offsetPoint
         do {
-            try style.updateGeoJSONSource(withId: dragSourceId, geoJSON: offsetPoint.geometry.geoJSONObject)
+            try style.updateGeoJSONSource(withId: dragSourceId, geoJSON: .feature(annotationBeingDragged.feature))
         } catch {
             print("Failed to update drag source. Error: \(error)")
         }
@@ -299,12 +290,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
 
         // avoid blinking annotation by waiting
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            do {
-                try self.style.removeLayer(withId: self.dragLayerId)
-                try self.style.removeSource(withId: self.dragSourceId)
-            } catch {
-                print("Failed to remove drag layer. Error: \(error)")
-            }
+            self.removeDragSourceAndLayer()
         }
     }
 }

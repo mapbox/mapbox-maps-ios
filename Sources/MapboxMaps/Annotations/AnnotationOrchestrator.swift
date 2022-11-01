@@ -33,7 +33,7 @@ internal protocol AnnotationManagerInternal: AnnotationManager {
 
     func handleQueriedFeatureIds(_ queriedFeatureIds: [String])
 
-    func handleDragBegin(with querriedFeatureIdentifiers: [String])
+    func handleDragBegin(with featureIdentifiers: [String])
 
     func handleDragChanged(with translation: CGPoint)
 

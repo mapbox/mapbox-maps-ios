@@ -17,18 +17,27 @@ final class StyleLocalizationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "pt")), "pt")
         XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "ru")), "ru")
         XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "vi")), "vi")
+        XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "en-US")), "en", "Extraneous region codes should be removed.")
+        XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "en-Latn")), "en", "Extraneous script codes should be removed.")
         XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "zh")), "zh-Hans")
         XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "zh-Hans")), "zh-Hans")
         XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "zh-Hant")), "zh-Hant")
-        XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "zh-Hans-CN")), "zh-Hans")
+        XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "zh-Hans-CN")), "zh-Hans", "Extraneous region codes should be removed.")
         XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "zh-Hant-TW")), "zh-Hant")
-        // XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "zh-Hant-HK")), "zh-Hant")
+        XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "zh-Hant-HK")), "zh-Hant", "Extraneous region codes should be removed.")
+    }
+    
+    // Test iOS 16 Locale Components
+    func testLocaleComponents() {
         if #available(iOS 16, *) {
-            let HongKongLocale = Locale(languageCode: "zh", script: "Hant", languageRegion: "HK")
-            XCTAssertEqual(style.getLocaleValue(locale: HongKongLocale), "zh-Hant")
-        } else {
-            let HongKongLocale = Locale(identifier: "zh-Hant-HK")
-            XCTAssertEqual(style.getLocaleValue(locale: HongKongLocale), "zh-Hant")
+            let fullLocaleHK = Locale(languageCode: "zh", script: "Hant", languageRegion: "HK")
+            XCTAssertEqual(style.getLocaleValue(locale: fullLocaleHK), "zh-Hant")
+            let partialLocaleHK = Locale(languageCode: "zh", script: "Hant")
+            XCTAssertEqual(style.getLocaleValue(locale: partialLocaleHK), "zh-Hant")
+            let partialLocaleHK2 = Locale(languageCode: "zh", languageRegion: "HK")
+            XCTAssertEqual(style.getLocaleValue(locale: partialLocaleHK2), "zh-Hant")
+            let onlyZHLanguage = Locale(languageCode: "zh")
+            XCTAssertEqual(style.getLocaleValue(locale: onlyZHLanguage), "zh-Hans")
         }
     }
 
@@ -41,6 +50,7 @@ final class StyleLocalizationTests: MapViewIntegrationTestCase {
         let style = mapView.mapboxMap.style
 
         XCTAssertThrowsError(try style.localizeLabels(into: Locale(identifier: "tlh")))
+        XCTAssertThrowsError(try style.localizeLabels(into: Locale(identifier: "frm")), "Exact string needs to match, not just prefix")
     }
 
     func testOnlyLocalizesFirstLocalization() throws {

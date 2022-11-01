@@ -5,7 +5,7 @@ final class MockSimpleCameraAnimator: SimpleCameraAnimatorProtocol {
 
     @Stubbed var owner: AnimationOwner = .random()
 
-    @Stubbed var delegate: CameraAnimatorDelegate?
+    @Stubbed weak var delegate: CameraAnimatorDelegate?
 
     @Stubbed var to: CameraOptions = .random()
 

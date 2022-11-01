@@ -1,7 +1,7 @@
 @testable import MapboxMaps
 
 final class MockBasicCameraAnimator: BasicCameraAnimatorProtocol {
-    @Stubbed var delegate: BasicCameraAnimatorDelegate?
+    @Stubbed weak var delegate: BasicCameraAnimatorDelegate?
     @Stubbed var owner: AnimationOwner = .unspecified
     @Stubbed var transition: CameraTransition?
     @Stubbed var state: UIViewAnimatingState = .inactive

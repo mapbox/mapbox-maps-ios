@@ -1,4 +1,3 @@
-
 // This file is generated.
 import Foundation
 @_implementationOnly import MapboxCommon_Private

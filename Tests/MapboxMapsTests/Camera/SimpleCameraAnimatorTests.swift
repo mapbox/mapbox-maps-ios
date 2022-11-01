@@ -13,7 +13,7 @@ final class SimpleCameraAnimatorTests: XCTestCase {
     var cameraOptionsInterpolator: MockCameraOptionsInterpolator!
     var dateProvider: MockDateProvider!
     var animator: SimpleCameraAnimator!
-    var delegate: MockCameraAnimatorDelegate!
+    weak var delegate: MockCameraAnimatorDelegate!
 
     override func setUp() {
         super.setUp()

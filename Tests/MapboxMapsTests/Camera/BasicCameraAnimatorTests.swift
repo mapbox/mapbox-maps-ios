@@ -5,7 +5,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
 
     var impl: MockBasicCameraAnimator!
     var animator: BasicCameraAnimator!
-    var delegate: MockCameraAnimatorDelegate!
+    weak var delegate: MockCameraAnimatorDelegate!
 
     override func setUp() {
         super.setUp()

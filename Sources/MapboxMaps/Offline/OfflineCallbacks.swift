@@ -63,7 +63,7 @@ internal func coreAPIClosureAdapter<SwiftError, ObjCType>(
 
         if expected.isError(), let expectedError = expected.error {
             error = SwiftError(coreError: expectedError)
-        } else if !expected.isValue() {
+        } else if !expected.isValue {
             assertionFailure("Encountered invalid object: \(expected)")
             error = TypeConversionError.invalidObject
         }

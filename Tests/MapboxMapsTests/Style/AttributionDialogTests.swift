@@ -7,7 +7,7 @@ class AttributionDialogTests: XCTestCase {
 
     var attributionDialogManager: AttributionDialogManager!
     var mockDataSource: MockAttributionDataSource!
-    var mockDelegate: MockAttributionDialogManagerDelegate!
+    weak var mockDelegate: MockAttributionDialogManagerDelegate!
 
     override func setUp() {
         super.setUp()

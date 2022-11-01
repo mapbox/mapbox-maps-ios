@@ -1,11 +1,10 @@
 // This file is generated.
 import Foundation
 
-
 /// A style's fog property is a global effect that improves depth perception by fading out distant objects.
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://docs.mapbox.com/mapbox-gl-js/style-spec/fog/)
-public struct Atmosphere: Codable  {
+public struct Atmosphere: Codable {
 
     /// The color of the atmosphere region immediately below the horizon and within the `range` and above the horizon and within `horizon-blend`. Using opacity is recommended only for smoothly transitioning fog on/off as anything less than 100% opacity results in more tiles loaded and drawn.
     public var color: Value<StyleColor>?

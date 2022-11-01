@@ -252,7 +252,7 @@ public class AnnotationOrchestrator {
                 }
             }
     }
-    
+
     // swiftlint:disable:next cyclomatic_complexity
     @objc func handleDrag(_ recognizer: MapboxLongPressGestureRecognizer) {
         let managers = annotationManagersByIdInternal.values.filter { $0.delegate != nil }

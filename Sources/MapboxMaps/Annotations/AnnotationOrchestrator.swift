@@ -1,13 +1,6 @@
 import UIKit
 @_implementationOnly import MapboxCommon_Private
 
-internal class MoveDistancesObject {
-    var distanceXSinceLast = 0.0
-    var distanceYSinceLast = 0.0
-    var prevX = Double()
-    var prevY = Double()
-}
-
 /// A top-level interface for annotations.
 public protocol Annotation {
 
@@ -40,9 +33,9 @@ internal protocol AnnotationManagerInternal: AnnotationManager {
 
     func handleQueriedFeatureIds(_ queriedFeatureIds: [String])
 
-    func handleDragBegin(at position: CGPoint, querriedFeatureIdentifiers: [String])
+    func handleDragBegin(with featureIdentifiers: [String])
 
-    func handleDragChanged(to position: CGPoint)
+    func handleDragChanged(with translation: CGPoint)
 
     func handleDragEnded()
 }
@@ -64,7 +57,7 @@ public class AnnotationOrchestrator {
 
     private let tapGestureRecognizer: UIGestureRecognizer
 
-    private let longPressGestureRecognizer: UIGestureRecognizer
+    private let longPressGestureRecognizer: MapboxLongPressGestureRecognizer
 
     private let style: Style
 
@@ -79,7 +72,7 @@ public class AnnotationOrchestrator {
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
 
     internal init(tapGestureRecognizer: UIGestureRecognizer,
-                  longPressGestureRecognizer: UIGestureRecognizer,
+                  longPressGestureRecognizer: MapboxLongPressGestureRecognizer,
                   mapFeatureQueryable: MapFeatureQueryable,
                   style: Style,
                   displayLinkCoordinator: DisplayLinkCoordinator,
@@ -260,16 +253,15 @@ public class AnnotationOrchestrator {
             }
     }
 
-    @objc func handleDrag(_ drag: UILongPressGestureRecognizer) {
+    @objc func handleDrag(_ recognizer: MapboxLongPressGestureRecognizer) {
         let managers = annotationManagersByIdInternal.values.filter { $0.delegate != nil }
         guard !managers.isEmpty else { return }
 
-        let layerIdentifiers = managers.map(\.layerId)
-        let options = RenderedQueryOptions(layerIds: layerIdentifiers, filter: nil)
-        let gestureLocation = drag.location(in: drag.view)
-
-        switch drag.state {
+        switch recognizer.state {
         case .began:
+            let layerIdentifiers = managers.map(\.layerId)
+            let options = RenderedQueryOptions(layerIds: layerIdentifiers, filter: nil)
+            let gestureLocation = recognizer.location(in: recognizer.view)
             mapFeatureQueryable.queryRenderedFeatures(at: gestureLocation, options: options) { result in
 
                 switch result {
@@ -282,7 +274,7 @@ public class AnnotationOrchestrator {
                     }
 
                     for manager in managers {
-                        manager.handleDragBegin(at: gestureLocation, querriedFeatureIdentifiers: queriedFeatureIds)
+                        manager.handleDragBegin(with: queriedFeatureIds)
                     }
 
                 case .failure(let error):
@@ -291,18 +283,22 @@ public class AnnotationOrchestrator {
             }
 
         case .changed:
+            let translation = recognizer.translation(in: recognizer.view)
+
             for manager in managers {
-                manager.handleDragChanged(to: gestureLocation)
+                manager.handleDragChanged(with: translation)
             }
+            recognizer.setTranslation(.zero, in: recognizer.view)
 
         case .ended, .cancelled:
             for manager in managers {
                 manager.handleDragEnded()
             }
 
-        case .possible: fallthrough
-        case .failed: fallthrough
-        @unknown default: break
+        case .possible, .failed:
+            break
+        @unknown default:
+            break
         }
     }
 }

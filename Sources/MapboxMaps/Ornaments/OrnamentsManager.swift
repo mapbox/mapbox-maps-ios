@@ -94,7 +94,7 @@ public class OrnamentsManager: NSObject {
         // Scalebar View
         // Check whether the scale bar is position on the right side of the map view.
         let scaleBarPosition = options.scaleBar.position
-        scaleBarView.isOnRight = scaleBarPosition == .bottomRight || scaleBarPosition == .bottomTrailing || scaleBarPosition == .topRight
+        scaleBarView.isOnRight = scaleBarPosition == .bottomRight || scaleBarPosition == .bottomTrailing || scaleBarPosition == .topRight || scaleBarPosition == .topTrailing
         scaleBarView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scaleBarView)
         self._scaleBarView = scaleBarView
@@ -165,7 +165,7 @@ public class OrnamentsManager: NSObject {
                                                   position: options.scaleBar.position,
                                                   margins: options.scaleBar.margins)
         let scaleBarPosition = options.scaleBar.position
-        _scaleBarView.isOnRight = scaleBarPosition == .bottomRight || scaleBarPosition == .bottomLeading || scaleBarPosition == .topRight
+        _scaleBarView.isOnRight = scaleBarPosition == .bottomRight || scaleBarPosition == .bottomLeading || scaleBarPosition == .topRight || scaleBarPosition == .topTrailing
         constraints.append(contentsOf: scaleBarViewConstraints)
 
         let attributionButtonConstraints = constraints(with: _attributionButton,

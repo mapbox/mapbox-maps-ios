@@ -407,7 +407,7 @@ open class MapView: UIView {
             displayLinkCoordinator: self)
 
         let tapGetureRecognizer = UITapGestureRecognizer()
-        let longPressGestureRecognizer = UILongPressGestureRecognizer()
+        let longPressGestureRecognizer = MapboxLongPressGestureRecognizer()
         let offsetPointCalculator = OffsetPointCalculator(mapboxMap: mapboxMap)
         let offsetLineStringCalculator = OffsetLineStringCalculator(mapboxMap: mapboxMap)
         let offsetPolygonCalculator = OffsetPolygonCalculator(mapboxMap: mapboxMap)

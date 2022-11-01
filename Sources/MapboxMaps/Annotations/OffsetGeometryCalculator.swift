@@ -3,7 +3,7 @@ import UIKit
 
 internal protocol OffsetGeometryCalculator {
     associatedtype GeometryType: GeometryConvertible
-    func geometry(at distance: MoveDistancesObject, from geometry: GeometryType) -> GeometryType?
+    func geometry(for translation: CGPoint, from geometry: GeometryType) -> GeometryType?
 }
 
 internal struct OffsetPointCalculator: OffsetGeometryCalculator {
@@ -13,22 +13,25 @@ internal struct OffsetPointCalculator: OffsetGeometryCalculator {
         self.mapboxMap = mapboxMap
     }
 
-    func geometry(at distance: MoveDistancesObject, from geometry: Point) -> Point? {
-        // Valid mercator latitude minimum and maximum values
-        let validMercatorLatitude = (Projection.latitudeMin...Projection.latitudeMax)
+    func geometry(for translation: CGPoint, from geometry: Point) -> Point? {
         let point = geometry.coordinates
 
-        let centerScreenCoordinate = mapboxMap.point(for: point)
+        let pointScreenCoordinate = mapboxMap.point(for: point)
 
-        let targetCoordinates =  mapboxMap.coordinate(for: CGPoint(
-            x: centerScreenCoordinate.x - distance.distanceXSinceLast,
-            y: centerScreenCoordinate.y - distance.distanceYSinceLast))
+        let targetCoordinates = mapboxMap.coordinate(for: CGPoint(
+            x: pointScreenCoordinate.x - translation.x,
+            y: pointScreenCoordinate.y - translation.y
+        ))
 
-        let targetPoint = Point(targetCoordinates)
+        let shiftMercatorCoordinate = Projection.calculateMercatorCoordinateShift(
+            startPoint: Point(point),
+            endPoint: Point(targetCoordinates),
+            zoomLevel: mapboxMap.cameraState.zoom)
 
-        let shiftMercatorCoordinate = Projection.calculateMercatorCoordinateShift(startPoint: Point(point), endPoint: targetPoint, zoomLevel: mapboxMap.cameraState.zoom)
-
-        let targetPoints = Projection.shiftPointWithMercatorCoordinate(point: Point(point), shiftMercatorCoordinate: shiftMercatorCoordinate, zoomLevel: mapboxMap.cameraState.zoom)
+        let targetPoints = Projection.shiftPointWithMercatorCoordinate(
+            point: Point(point),
+            shiftMercatorCoordinate: shiftMercatorCoordinate,
+            zoomLevel: mapboxMap.cameraState.zoom)
 
         if targetPoints.coordinates.latitude > Projection.latitudeMax || targetPoints.coordinates.latitude < Projection.latitudeMin {
             return nil
@@ -37,7 +40,6 @@ internal struct OffsetPointCalculator: OffsetGeometryCalculator {
     }
 }
 
-
 internal struct OffsetLineStringCalculator: OffsetGeometryCalculator {
     private let mapboxMap: MapboxMapProtocol
 
@@ -45,7 +47,7 @@ internal struct OffsetLineStringCalculator: OffsetGeometryCalculator {
         self.mapboxMap = mapboxMap
     }
 
-    func geometry(at distance: MoveDistancesObject, from geometry: LineString) -> LineString? {
+    func geometry(for translation: CGPoint, from geometry: LineString) -> LineString? {
         // Valid mercator latitude minimum and maximum values
         let validMercatorLatitude = (Projection.latitudeMin...Projection.latitudeMax)
         let startPoints = geometry.coordinates
@@ -65,8 +67,9 @@ internal struct OffsetLineStringCalculator: OffsetGeometryCalculator {
         let centerScreenCoordinate = mapboxMap.point(for: centerPoint.coordinates)
 
         let targetCoordinates =  mapboxMap.coordinate(for: CGPoint(
-            x: centerScreenCoordinate.x - distance.distanceXSinceLast,
-            y: centerScreenCoordinate.y - distance.distanceYSinceLast))
+            x: centerScreenCoordinate.x - translation.x,
+            y: centerScreenCoordinate.y - translation.y
+        ))
 
         let targetPoint = Point(targetCoordinates)
 
@@ -92,7 +95,7 @@ internal struct OffsetPolygonCalculator: OffsetGeometryCalculator {
         self.mapboxMap = mapboxMap
     }
 
-    func geometry(at distance: MoveDistancesObject, from geometry: Polygon) -> Polygon? {
+    func geometry(for translation: CGPoint, from geometry: Polygon) -> Polygon? {
         // Valid mercator latitude minimum and maximum values
         let validMercatorLatitude = (Projection.latitudeMin...Projection.latitudeMax)
         var outerRing = [CLLocationCoordinate2D]()
@@ -113,7 +116,10 @@ internal struct OffsetPolygonCalculator: OffsetGeometryCalculator {
 
         let centerScreenCoordinate = mapboxMap.point(for: centerPoint.coordinates)
 
-        let targetCoordinates =  mapboxMap.coordinate(for: CGPoint(x: centerScreenCoordinate.x - distance.distanceXSinceLast, y: centerScreenCoordinate.y - distance.distanceYSinceLast))
+        let targetCoordinates =  mapboxMap.coordinate(for: CGPoint(
+            x: centerScreenCoordinate.x - translation.x,
+            y: centerScreenCoordinate.y - translation.y
+        ))
 
         let targetPoint = Point(targetCoordinates)
 
@@ -157,7 +163,10 @@ internal struct OffsetPolygonCalculator: OffsetGeometryCalculator {
 
                 let centerScreenCoordinate = mapboxMap.point(for: centerPoint.coordinates)
 
-                let targetCoordinates =  mapboxMap.coordinate(for: CGPoint(x: centerScreenCoordinate.x - distance.distanceXSinceLast, y: centerScreenCoordinate.y - distance.distanceYSinceLast))
+                let targetCoordinates =  mapboxMap.coordinate(for: CGPoint(
+                    x: centerScreenCoordinate.x - translation.x,
+                    y: centerScreenCoordinate.y - translation.y
+                ))
 
                 let targetPoint = Point(targetCoordinates)
 

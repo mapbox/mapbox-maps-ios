@@ -56,8 +56,6 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
 
     private var annotationBeingDragged: PolygonAnnotation?
 
-    private var moveDistancesObject = MoveDistancesObject()
-
     private var isDestroyed = false
 
     internal init(id: String,
@@ -253,7 +251,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    internal func handleDragBegin(at position: CGPoint, querriedFeatureIdentifiers: [String]) {
+    internal func handleDragBegin(with querriedFeatureIdentifiers: [String]) {
         guard let annotation = annotations.first(where: { querriedFeatureIdentifiers.contains($0.id) }) else { return }
         createDragSourceAndLayer()
 
@@ -272,15 +270,8 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         self.annotationBeingDragged = annotation
         self.annotations.removeAll(where: { $0.id == annotation.id })
 
-        let previousPosition = position
-        let moveObject = moveDistancesObject
-        moveObject.prevX = previousPosition.x
-        moveObject.prevY = previousPosition.y
-        moveObject.distanceXSinceLast = 0.0
-        moveObject.distanceYSinceLast = 0.0
-
         guard let annotationBeingDragged = annotationBeingDragged else { return }
-        guard let offsetPoint = offsetPolygonCalculator.geometry(at: moveObject, from: annotationBeingDragged.polygon) else { return }
+        guard let offsetPoint = offsetPolygonCalculator.geometry(for: .zero, from: annotationBeingDragged.polygon) else { return }
         self.annotationBeingDragged?.polygon = offsetPoint
         do {
             try style.updateGeoJSONSource(withId: "dragSource", geoJSON: offsetPoint.geometry.geoJSONObject)
@@ -289,15 +280,9 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    internal func handleDragChanged(to position: CGPoint) {
-        let moveObject = moveDistancesObject
-        moveObject.distanceXSinceLast = moveObject.prevX - position.x
-        moveObject.distanceYSinceLast = moveObject.prevY - position.y
-        moveObject.prevX = position.x
-        moveObject.prevY = position.y
-
+    internal func handleDragChanged(with translation: CGPoint) {
         guard let annotationBeingDragged = annotationBeingDragged else { return }
-        guard let offsetPoint = offsetPolygonCalculator.geometry(at: moveObject, from: annotationBeingDragged.polygon) else { return }
+        guard let offsetPoint = offsetPolygonCalculator.geometry(for: translation, from: annotationBeingDragged.polygon) else { return }
         self.annotationBeingDragged?.polygon = offsetPoint
         do {
             try style.updateGeoJSONSource(withId: "dragSource", geoJSON: offsetPoint.geometry.geoJSONObject)

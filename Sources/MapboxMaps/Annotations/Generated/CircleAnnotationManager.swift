@@ -57,6 +57,8 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
     private var annotationBeingDragged: CircleAnnotation?
 
     private var isDestroyed = false
+    private let dragLayerId: String
+    private let dragSourceId: String
 
     internal init(id: String,
                   style: StyleProtocol,
@@ -69,7 +71,8 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
         self.style = style
         self.displayLinkCoordinator = displayLinkCoordinator
         self.offsetPointCalculator = offsetPointCalculator
-
+        self.dragLayerId = id + "_drag-layer"
+        self.dragSourceId = id + "_drag-source"
         do {
             // Add the source with empty `data` property
             var source = GeoJSONSource()
@@ -242,20 +245,17 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
     internal func createDragSourceAndLayer() {
         var dragSource = GeoJSONSource()
         dragSource.data = .empty
-        if !style.sourceExists(withId: "dragSource") {
-            do {
-                try style.addSource(dragSource, id: "dragSource")
-            } catch {
-                print("Failed to add the source to style. Error: \(error)")
-            }
+        do {
+            try style.addSource(dragSource, id: dragSourceId)
+        } catch {
+            print("Failed to add the source to style. Error: \(error)")
         }
 
-        let dragLayerId = "drag-layer"
         var dragLayer = CircleLayer(id: dragLayerId)
-        dragLayer.source = "dragSource"
+        dragLayer.source = dragSourceId
 
         do {
-            try style.addPersistentLayer(dragLayer, layerPosition: .default)
+            try style.addPersistentLayer(dragLayer, layerPosition: .below(layerId))
         } catch {
             print("Failed to add the layer to style. Error: \(error)")
         }
@@ -266,7 +266,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
         createDragSourceAndLayer()
 
         do {
-            try style.updateLayer(withId: "drag-layer", type: CircleLayer.self) { layer in
+            try style.updateLayer(withId: dragLayerId, type: CircleLayer.self) { layer in
                 layer.circleColor = annotation.circleColor.map(Value.constant)
                 layer.circleOpacity = annotation.circleOpacity.map(Value.constant)
                 layer.circleRadius = annotation.circleRadius.map(Value.constant)
@@ -284,7 +284,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
         guard let offsetPoint = offsetPointCalculator.geometry(for: .zero, from: annotationBeingDragged.point) else { return }
         self.annotationBeingDragged?.point = offsetPoint
         do {
-            try style.updateGeoJSONSource(withId: "dragSource", geoJSON: offsetPoint.geometry.geoJSONObject)
+            try style.updateGeoJSONSource(withId: dragSourceId, geoJSON: offsetPoint.geometry.geoJSONObject)
         } catch {
             print("Failed to update drag source. Error: \(error)")
         }
@@ -295,7 +295,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
         guard let offsetPoint = offsetPointCalculator.geometry(for: translation, from: annotationBeingDragged.point) else { return }
         self.annotationBeingDragged?.point = offsetPoint
         do {
-            try style.updateGeoJSONSource(withId: "dragSource", geoJSON: offsetPoint.geometry.geoJSONObject)
+            try style.updateGeoJSONSource(withId: dragSourceId, geoJSON: offsetPoint.geometry.geoJSONObject)
         } catch {
             print("Failed to update drag source. Error: \(error)")
         }
@@ -309,7 +309,8 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
         // avoid blinking annotation by waiting
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             do {
-                try self.style.removeLayer(withId: "drag-layer")
+                try self.style.removeLayer(withId: self.dragLayerId)
+                try self.style.removeSource(withId: self.dragSourceId)
             } catch {
                 print("Failed to remove drag layer. Error: \(error)")
             }

@@ -57,6 +57,8 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
     private var annotationBeingDragged: PolygonAnnotation?
 
     private var isDestroyed = false
+    private let dragLayerId: String
+    private let dragSourceId: String
 
     internal init(id: String,
                   style: StyleProtocol,
@@ -69,6 +71,8 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         self.style = style
         self.displayLinkCoordinator = displayLinkCoordinator
         self.offsetPolygonCalculator = offsetPolygonCalculator
+        self.dragLayerId = id + "_drag-layer"
+        self.dragSourceId = id + "_drag-source"
 
         do {
             // Add the source with empty `data` property
@@ -232,20 +236,17 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
     internal func createDragSourceAndLayer() {
         var dragSource = GeoJSONSource()
         dragSource.data = .empty
-        if !style.sourceExists(withId: "dragSource") {
-            do {
-                try style.addSource(dragSource, id: "dragSource")
-            } catch {
-                print("Failed to add the source to style. Error: \(error)")
-            }
+        do {
+            try style.addSource(dragSource, id: dragSourceId)
+        } catch {
+            print("Failed to add the source to style. Error: \(error)")
         }
 
-        let dragLayerId = "drag-layer"
         var dragLayer = FillLayer(id: dragLayerId)
-        dragLayer.source = "dragSource"
+        dragLayer.source = dragSourceId
 
         do {
-            try style.addPersistentLayer(dragLayer, layerPosition: .default)
+            try style.addPersistentLayer(dragLayer, layerPosition: .below(layerId))
         } catch {
             print("Failed to add the layer to style. Error: \(error)")
         }
@@ -256,7 +257,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         createDragSourceAndLayer()
 
         do {
-            try style.updateLayer(withId: "drag-layer", type: FillLayer.self) { layer in
+            try style.updateLayer(withId: dragLayerId, type: FillLayer.self) { layer in
                 layer.fillColor = annotation.fillColor.map(Value.constant)
                 layer.fillOutlineColor = annotation.fillOutlineColor.map(Value.constant)
                 layer.fillOpacity = annotation.fillOpacity.map(Value.constant)
@@ -274,7 +275,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         guard let offsetPoint = offsetPolygonCalculator.geometry(for: .zero, from: annotationBeingDragged.polygon) else { return }
         self.annotationBeingDragged?.polygon = offsetPoint
         do {
-            try style.updateGeoJSONSource(withId: "dragSource", geoJSON: offsetPoint.geometry.geoJSONObject)
+            try style.updateGeoJSONSource(withId: dragSourceId, geoJSON: offsetPoint.geometry.geoJSONObject)
         } catch {
             print("Failed to update drag source. Error: \(error)")
         }
@@ -285,7 +286,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         guard let offsetPoint = offsetPolygonCalculator.geometry(for: translation, from: annotationBeingDragged.polygon) else { return }
         self.annotationBeingDragged?.polygon = offsetPoint
         do {
-            try style.updateGeoJSONSource(withId: "dragSource", geoJSON: offsetPoint.geometry.geoJSONObject)
+            try style.updateGeoJSONSource(withId: dragSourceId, geoJSON: offsetPoint.geometry.geoJSONObject)
         } catch {
             print("Failed to update drag source. Error: \(error)")
         }
@@ -299,7 +300,8 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         // avoid blinking annotation by waiting
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             do {
-                try self.style.removeLayer(withId: "drag-layer")
+                try self.style.removeLayer(withId: self.dragLayerId)
+                try self.style.removeSource(withId: self.dragSourceId)
             } catch {
                 print("Failed to remove drag layer. Error: \(error)")
             }

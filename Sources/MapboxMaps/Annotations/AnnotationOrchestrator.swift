@@ -60,7 +60,7 @@ public final class AnnotationOrchestrator {
     }
 
     /// Dictionary of annotation managers keyed by their identifiers.
-    public var annotationManagersById: [String : AnnotationManager] { impl.annotationManagersById }
+    public var annotationManagersById: [String: AnnotationManager] { impl.annotationManagersById }
 
     /// Creates a `PointAnnotationManager` which is used to manage a collection of
     /// `PointAnnotation`s. Annotations persist across style changes. If an annotation manager with

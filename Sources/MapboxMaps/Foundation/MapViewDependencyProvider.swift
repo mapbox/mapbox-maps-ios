@@ -29,10 +29,10 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
                           doubleTapGestureRecognizer: UIGestureRecognizer,
                           doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol
     func makeAnnotationOrchestratorImpl(in view: UIView,
-                                    mapboxMap: MapboxMapProtocol,
-                                    mapFeatureQueryable: MapFeatureQueryable,
-                                    style: StyleProtocol,
-                                    displayLinkCoordinator: DisplayLinkCoordinator) -> AnnotationOrchestratorImplProtocol
+                                        mapboxMap: MapboxMapProtocol,
+                                        mapFeatureQueryable: MapFeatureQueryable,
+                                        style: StyleProtocol,
+                                        displayLinkCoordinator: DisplayLinkCoordinator) -> AnnotationOrchestratorImplProtocol
 }
 
 // swiftlint:disable:next type_body_length
@@ -226,10 +226,10 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     }
 
     internal func makeAnnotationOrchestratorImpl(in view: UIView,
-                                             mapboxMap: MapboxMapProtocol,
-                                             mapFeatureQueryable: MapFeatureQueryable,
-                                             style: StyleProtocol,
-                                             displayLinkCoordinator: DisplayLinkCoordinator) -> AnnotationOrchestratorImplProtocol {
+                                                 mapboxMap: MapboxMapProtocol,
+                                                 mapFeatureQueryable: MapFeatureQueryable,
+                                                 style: StyleProtocol,
+                                                 displayLinkCoordinator: DisplayLinkCoordinator) -> AnnotationOrchestratorImplProtocol {
         let tapGetureRecognizer = UITapGestureRecognizer()
         let longPressGestureRecognizer = MapboxLongPressGestureRecognizer()
         view.addGestureRecognizer(tapGetureRecognizer)

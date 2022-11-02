@@ -59,8 +59,7 @@ main() {
         --iframework "$product_artifacts_dir"/MapboxCoreMaps.xcframework/ios-arm64/ \
         --breakage-allowlist-path "$SCRIPT_DIR/breakage_allowlist.txt" \
         --baseline-dir "$SCRIPT_DIR"\
-        -module MapboxMaps \
-        2>&1 > "$report" 2>&1
+        -module MapboxMaps >  "$report" 2>&1 || true
 
     # the shasum here is for an empty report, i.e. no changes
     # if the shasum of the new report is different, then there's

@@ -283,27 +283,38 @@ final class MapViewTests: XCTestCase {
         XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [false])
     }
 
-    func testSubscribesToCorrectNotifications() {
+    func testSubscribesToCorrectNotificationsOniOS12() throws {
+        if #available(iOS 13, *) {
+            throw XCTSkip()
+        }
+
         let observers = notificationCenter.addObserverStub.invocations.map(\.parameters.observer)
 
         XCTAssertTrue(observers.allSatisfy { ($0 as AnyObject) === mapView })
 
-        if #available(iOS 13.0, *) {
-            XCTAssertEqual(notificationCenter.addObserverStub.invocations.count, 6)
-            XCTAssertEqual(notificationCenter.addObserverStub.invocations[0].parameters.name, UIScene.didEnterBackgroundNotification)
-            XCTAssertEqual(notificationCenter.addObserverStub.invocations[1].parameters.name, UIScene.willDeactivateNotification)
-            XCTAssertEqual(notificationCenter.addObserverStub.invocations[2].parameters.name, UIScene.didActivateNotification)
-            XCTAssertEqual(notificationCenter.addObserverStub.invocations[3].parameters.name, UIApplication.didEnterBackgroundNotification)
-            XCTAssertEqual(notificationCenter.addObserverStub.invocations[4].parameters.name, UIApplication.willResignActiveNotification)
-            XCTAssertEqual(notificationCenter.addObserverStub.invocations[5].parameters.name, UIApplication.didReceiveMemoryWarningNotification)
-        } else {
-            XCTAssertEqual(notificationCenter.addObserverStub.invocations.count, 4)
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations.count, 4)
 
-            XCTAssertEqual(notificationCenter.addObserverStub.invocations[0].parameters.name, UIApplication.didBecomeActiveNotification)
-            XCTAssertEqual(notificationCenter.addObserverStub.invocations[1].parameters.name, UIApplication.didEnterBackgroundNotification)
-            XCTAssertEqual(notificationCenter.addObserverStub.invocations[2].parameters.name, UIApplication.willResignActiveNotification)
-            XCTAssertEqual(notificationCenter.addObserverStub.invocations[3].parameters.name, UIApplication.didReceiveMemoryWarningNotification)
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations[0].parameters.name, UIApplication.didBecomeActiveNotification)
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations[1].parameters.name, UIApplication.didEnterBackgroundNotification)
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations[2].parameters.name, UIApplication.willResignActiveNotification)
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations[3].parameters.name, UIApplication.didReceiveMemoryWarningNotification)
+
+    }
+    func testSubscribesToCorrectNotifications() throws {
+        guard #available(iOS 13, *) else {
+            throw XCTSkip()
         }
+        let observers = notificationCenter.addObserverStub.invocations.map(\.parameters.observer)
+
+        XCTAssertTrue(observers.allSatisfy { ($0 as AnyObject) === mapView })
+
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations.count, 6)
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations[0].parameters.name, UIScene.didEnterBackgroundNotification)
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations[1].parameters.name, UIScene.willDeactivateNotification)
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations[2].parameters.name, UIScene.didActivateNotification)
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations[3].parameters.name, UIApplication.didEnterBackgroundNotification)
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations[4].parameters.name, UIApplication.willResignActiveNotification)
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations[5].parameters.name, UIApplication.didReceiveMemoryWarningNotification)
     }
 
     func testURLOpener() {

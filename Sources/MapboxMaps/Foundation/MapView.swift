@@ -623,19 +623,19 @@ open class MapView: UIView {
 
         // this will make sure that display link is only running on an active scene in foreground,
         // preventing metal view drawing on background if the view is added to window not on foreground
-        displayLink.isPaused = window.prefersDisplayLinkPaused || UIApplication.shared.prefersDisplayLinkPaused
+        if shouldDisplayLinkBePaused(window: window) {
+            displayLink.isPaused = true
+        }
 
         displayLink.add(to: .current, forMode: .common)
     }
-}
 
-private extension UIApplication {
-    var prefersDisplayLinkPaused: Bool { UIApplication.shared.applicationState != .active }
-}
+    private func shouldDisplayLinkBePaused(window: UIWindow) -> Bool {
+        if UIApplication.shared.applicationState != .active {
+            return true
+        }
 
-private extension UIWindow {
-    var prefersDisplayLinkPaused: Bool {
-        if #available(iOS 13, *), windowScene?.activationState != .foregroundActive {
+        if #available(iOS 13, *), window.windowScene?.activationState != .foregroundActive {
             return true
         }
 

@@ -73,7 +73,12 @@ internal struct OffsetLineStringCalculator: OffsetGeometryCalculator {
 
         let shiftMercatorCoordinate = Projection.calculateMercatorCoordinateShift(startPoint: centerPoint, endPoint: targetPoint, zoomLevel: mapboxMap.cameraState.zoom)
 
-        let targetPoints = startPoints.map {Projection.shiftPointWithMercatorCoordinate(point: Point($0), shiftMercatorCoordinate: shiftMercatorCoordinate, zoomLevel: mapboxMap.cameraState.zoom)}
+        let targetPoints = startPoints.map {
+            Projection.shiftPointWithMercatorCoordinate(
+                point: Point($0),
+                shiftMercatorCoordinate: shiftMercatorCoordinate,
+                zoomLevel: mapboxMap.cameraState.zoom)
+        }
 
         guard let targetPointLatitude = targetPoints.first?.coordinates.latitude else {
             return nil
@@ -124,10 +129,12 @@ internal struct OffsetPolygonCalculator: OffsetGeometryCalculator {
             endPoint: targetPoint,
             zoomLevel: mapboxMap.cameraState.zoom)
 
-        let targetPoints = startPoints.map {Projection.shiftPointWithMercatorCoordinate(
+        let targetPoints = startPoints.map {
+            Projection.shiftPointWithMercatorCoordinate(
             point: Point($0),
             shiftMercatorCoordinate: shiftMercatorCoordinate,
-            zoomLevel: mapboxMap.cameraState.zoom)}
+            zoomLevel: mapboxMap.cameraState.zoom)
+        }
 
         guard let targetPointLatitude = targetPoints.first?.coordinates.latitude else {
             return nil

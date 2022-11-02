@@ -209,7 +209,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
         needsSyncSourceAndLayer = false
 
-        let newImages = Set(annotations.compactMap(\.image) + [annotationBeingDragged?.image].compactMap { $0 })
+        let newImages = Set(annotations.compactMap(\.image) + [annotationBeingDragged].compactMap(\.?.image))
         let newImageNames = Set(newImages.map(\.name))
         let unusedImages = addedImages.subtracting(newImageNames)
 

@@ -8,6 +8,11 @@ Mapbox welcomes participation and contributions from everyone.
 * Add an example animating a view annotation along a route line. ([#1639](https://github.com/mapbox/mapbox-maps-ios/pull/1639))
 * Reduce location provider heading orientation update frequency. ([#1618](https://github.com/mapbox/mapbox-maps-ios/pull/1618))
 * Expose the list of added view annotations. ([#1621](https://github.com/mapbox/mapbox-maps-ios/pull/1621)
+* Expose the list of added view annotations. ([#1621](https://github.com/mapbox/mapbox-maps-ios/pull/1621))
+* Fix `loadStyleURI/loadStyleJSON` completion being invoked more than once. ([#1665](https://github.com/mapbox/mapbox-maps-ios/pull/1665))
+* Remove ornament position deprecation. ([#1676](https://github.com/mapbox/mapbox-maps-ios/pull/1676))
+* Prevent map from being rendered on background. ([#1675])(https://github.com/mapbox/mapbox-maps-ios/pull/1675))
+* Prevent map from being rendered on background. By aligning better with Scene lifecycle API, as well as, respecting scene/application activation status, rendering artifacts should no longer be an issue after app is coming from background.  ([#1675])(https://github.com/mapbox/mapbox-maps-ios/pull/1675))
 
 ## 10.9.1 - November 9, 2022
 

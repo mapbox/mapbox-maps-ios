@@ -166,7 +166,7 @@ internal final class AnnotationOrchestratorImpl: AnnotationOrchestratorImplProto
         removeAnnotationManager(withId: id, warnIfRemoved: false, function: #function)
     }
 
-    private func removeAnnotationManager(withId id: String, warnIfRemoved: Bool, function: StaticString) {
+    private func removeAnnotationManager(withId id: String, warnIfRemoved: Bool, function: StaticString = #function) {
         guard let annotationManager = annotationManagersByIdInternal.removeValue(forKey: id) else {
             return
         }

@@ -182,7 +182,7 @@ internal final class AnnotationOrchestratorImpl: AnnotationOrchestratorImplProto
         let managers = annotationManagersByIdInternal.values.filter { $0.delegate != nil }
         guard !managers.isEmpty else { return }
 
-        let layerIds = managers.map { $0.layerId }
+        let layerIds = managers.map(\.layerId)
         let options = RenderedQueryOptions(layerIds: layerIds, filter: nil)
         mapFeatureQueryable.queryRenderedFeatures(
             at: tap.location(in: tap.view),

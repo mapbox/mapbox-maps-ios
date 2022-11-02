@@ -12,6 +12,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     var delegateAnnotations: [Annotation]?
     let offsetLineStringCalculator = OffsetLineStringCalculator(mapboxMap: MockMapboxMap())
 
+    var mapboxMap = MockMapboxMap()
+
     override func setUp() {
         super.setUp()
 
@@ -710,6 +712,98 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         self.delegateAnnotations = annotations
         expectation?.fulfill()
         expectation = nil
+    }
+
+    func testHandleDragBeginNoFeatureId() {
+        style.addSourceStub.reset()
+        style.addPersistentLayerWithPropertiesStub.reset()
+
+        manager.handleDragBegin(with: [])
+
+        XCTAssertTrue(style.addSourceStub.invocations.isEmpty)
+        XCTAssertTrue(style.addLayerStub.invocations.isEmpty)
+        XCTAssertTrue(style.updateGeoJSONSourceStub.invocations.isEmpty)
+    }
+
+    func testHandleDragBeginInvalidFeatureId() {
+        style.addSourceStub.reset()
+        style.addPersistentLayerWithPropertiesStub.reset()
+
+        manager.handleDragBegin(with: ["not-a-feature"])
+
+        XCTAssertTrue(style.addSourceStub.invocations.isEmpty)
+        XCTAssertTrue(style.addPersistentLayerWithPropertiesStub.invocations.isEmpty)
+        XCTAssertTrue(style.updateGeoJSONSourceStub.invocations.isEmpty)
+    }
+
+    func testHandleDragBegin() throws {
+        manager.annotations = [
+            PolylineAnnotation(id: "line1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)])
+        ]
+
+        style.addSourceStub.reset()
+        style.addPersistentLayerWithPropertiesStub.reset()
+
+        manager.handleDragBegin(with: ["line1"])
+
+        let addSourceParameters = try XCTUnwrap(style.addSourceStub.invocations.last).parameters
+        let addLayerParameters = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.last).parameters
+        let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
+
+        XCTAssertEqual(addLayerParameters.properties["source"] as? String, addSourceParameters.id)
+        XCTAssertNotEqual(addLayerParameters.properties["id"] as? String, manager.layerId)
+
+        XCTAssertFalse(manager.annotations.contains(where: { $0.id == "line1" }))
+        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.id)
+    }
+
+
+    func testHandleDragChanged() throws {
+        mapboxMap.pointStub.defaultReturnValue = CGPoint(x: 0, y: 0)
+        mapboxMap.coordinateForPointStub.defaultReturnValue = .random()
+        mapboxMap.cameraState.zoom = 1
+
+        manager.annotations = [
+            PolylineAnnotation(id: "line1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)])
+        ]
+
+        manager.handleDragChanged(with: .random())
+        XCTAssertTrue(style.updateGeoJSONSourceStub.invocations.isEmpty)
+
+        manager.handleDragBegin(with: ["line1"])
+        let addSourceParameters = try XCTUnwrap(style.addSourceStub.invocations.last).parameters
+
+        manager.handleDragChanged(with: .random())
+        let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
+        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.id)
+        guard case .feature = updateSourceParameters.geojson.geoJSONObject else {
+            XCTFail("GeoJSONObject should be a feature")
+            return
+        }
+    }
+
+    func testHandleDragEnded() throws {
+        manager.annotations = [
+            PolylineAnnotation(id: "line1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)])
+        ]
+
+        manager.handleDragEnded()
+        eventually(timeout: 0.2) {
+            XCTAssertTrue(self.style.removeLayerStub.invocations.isEmpty)
+            XCTAssertTrue(self.style.removeSourceStub.invocations.isEmpty)
+        }
+
+        manager.handleDragBegin(with: ["line1"])
+        manager.handleDragEnded()
+
+        XCTAssertTrue(manager.annotations.contains(where: { $0.id == "line1" }))
+        eventually(timeout: 0.2) {
+            let removeSourceParameters = self.style.removeSourceStub.invocations.last!.parameters
+            let removeLayerParameters = self.style.removeLayerStub.invocations.last!.parameters
+
+            XCTAssertNotEqual(removeLayerParameters, self.manager.layerId)
+            XCTAssertNotEqual(removeSourceParameters, self.manager.sourceId)
+        }
     }
 
 }

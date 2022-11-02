@@ -261,7 +261,7 @@ final class MapViewTests: XCTestCase {
 
     func testDisplayLinkPausedWhenAppDidEnterBackground() {
         displayLink.$isPaused.setStub.reset()
-        
+
         notificationCenter.post(name: UIApplication.didEnterBackgroundNotification, object: nil)
 
         XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])

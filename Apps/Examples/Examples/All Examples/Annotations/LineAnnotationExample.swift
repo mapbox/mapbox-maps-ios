@@ -52,7 +52,7 @@ final class LineAnnotationExample: UIViewController, ExampleProtocol {
                                                     green: .random(in: 0...255),
                                                     blue: .random(in: 0...255),
                                                     alpha: 1)
-            randomAnnotation.lineWidth = 10
+
             annotations.append(randomAnnotation)
         }
 
@@ -65,6 +65,7 @@ final class LineAnnotationExample: UIViewController, ExampleProtocol {
             // position line annotations layer in a way that line annotations clipped at land borders
             layerPosition: .below("pitch-outline")
         )
+
         // Sync the annotation to the manager.
         lineAnnnotationManager.annotations = annotations
     }

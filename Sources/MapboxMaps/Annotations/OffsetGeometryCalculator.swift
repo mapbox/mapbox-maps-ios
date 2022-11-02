@@ -28,15 +28,15 @@ internal struct OffsetPointCalculator: OffsetGeometryCalculator {
             endPoint: Point(targetCoordinates),
             zoomLevel: mapboxMap.cameraState.zoom)
 
-        let targetPoints = Projection.shiftPointWithMercatorCoordinate(
+        let targetPoint = Projection.shiftPointWithMercatorCoordinate(
             point: Point(point),
             shiftMercatorCoordinate: shiftMercatorCoordinate,
             zoomLevel: mapboxMap.cameraState.zoom)
 
-        if targetPoints.coordinates.latitude > Projection.latitudeMax || targetPoints.coordinates.latitude < Projection.latitudeMin {
+        guard Projection.latitudeRange.contains(targetPoint.coordinates.latitude) else {
             return nil
         }
-        return Point(targetPoints.coordinates)
+        return Point(targetPoint.coordinates)
     }
 }
 
@@ -48,8 +48,6 @@ internal struct OffsetLineStringCalculator: OffsetGeometryCalculator {
     }
 
     func geometry(for translation: CGPoint, from geometry: LineString) -> LineString? {
-        // Valid mercator latitude minimum and maximum values
-        let validMercatorLatitude = (Projection.latitudeMin...Projection.latitudeMax)
         let startPoints = geometry.coordinates
 
         if startPoints.isEmpty {
@@ -81,7 +79,7 @@ internal struct OffsetLineStringCalculator: OffsetGeometryCalculator {
             return nil
         }
 
-        guard validMercatorLatitude.contains(targetPointLatitude) else {
+        guard Projection.latitudeRange.contains(targetPointLatitude) else {
             return nil
         }
         return LineString(.init(coordinates: targetPoints.map {$0.coordinates}))
@@ -96,8 +94,6 @@ internal struct OffsetPolygonCalculator: OffsetGeometryCalculator {
     }
 
     func geometry(for translation: CGPoint, from geometry: Polygon) -> Polygon? {
-        // Valid mercator latitude minimum and maximum values
-        let validMercatorLatitude = (Projection.latitudeMin...Projection.latitudeMax)
         var outerRing = [CLLocationCoordinate2D]()
         var innerRing: [CLLocationCoordinate2D]?
         let startPoints = geometry.outerRing.coordinates
@@ -137,7 +133,7 @@ internal struct OffsetPolygonCalculator: OffsetGeometryCalculator {
             return nil
         }
 
-        guard validMercatorLatitude.contains(targetPointLatitude) else {
+        guard Projection.latitudeRange.contains(targetPointLatitude) else {
             return nil
         }
 
@@ -184,7 +180,7 @@ internal struct OffsetPolygonCalculator: OffsetGeometryCalculator {
                     return nil
                 }
 
-                guard validMercatorLatitude.contains(targetPointLatitude) else {
+                guard Projection.latitudeRange.contains(targetPointLatitude) else {
                     return nil
                 }
 

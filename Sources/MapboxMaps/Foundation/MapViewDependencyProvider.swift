@@ -28,6 +28,11 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
                           anyTouchGestureRecognizer: UIGestureRecognizer,
                           doubleTapGestureRecognizer: UIGestureRecognizer,
                           doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol
+    func makeAnnotationOrchestrator(in view: UIView,
+                                    mapboxMap: MapboxMapProtocol,
+                                    mapFeatureQueryable: MapFeatureQueryable,
+                                    style: StyleProtocol,
+                                    displayLinkCoordinator: DisplayLinkCoordinator) -> AnnotationOrchestrator
 }
 
 // swiftlint:disable:next type_body_length
@@ -218,6 +223,31 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                 cameraAnimationsManager: cameraAnimationsManager),
             anyTouchGestureHandler: makeAnyTouchGestureHandler(view: view),
             mapboxMap: mapboxMap)
+    }
+
+    internal func makeAnnotationOrchestrator(in view: UIView,
+                                             mapboxMap: MapboxMapProtocol,
+                                             mapFeatureQueryable: MapFeatureQueryable,
+                                             style: StyleProtocol,
+                                             displayLinkCoordinator: DisplayLinkCoordinator) -> AnnotationOrchestrator {
+        let tapGetureRecognizer = UITapGestureRecognizer()
+        let longPressGestureRecognizer = MapboxLongPressGestureRecognizer()
+        view.addGestureRecognizer(tapGetureRecognizer)
+        view.addGestureRecognizer(longPressGestureRecognizer)
+
+        let offsetPointCalculator = OffsetPointCalculator(mapboxMap: mapboxMap)
+        let offsetLineStringCalculator = OffsetLineStringCalculator(mapboxMap: mapboxMap)
+        let offsetPolygonCalculator = OffsetPolygonCalculator(mapboxMap: mapboxMap)
+
+        return AnnotationOrchestrator(
+            tapGestureRecognizer: tapGetureRecognizer,
+            longPressGestureRecognizer: longPressGestureRecognizer,
+            mapFeatureQueryable: mapFeatureQueryable,
+            style: style,
+            displayLinkCoordinator: displayLinkCoordinator,
+            offsetPointCalculator: offsetPointCalculator,
+            offsetLineStringCalculator: offsetLineStringCalculator,
+            offsetPolygonCalculator: offsetPolygonCalculator)
     }
 
     internal func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool,

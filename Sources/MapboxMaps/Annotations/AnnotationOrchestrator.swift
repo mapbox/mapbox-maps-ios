@@ -59,7 +59,7 @@ public class AnnotationOrchestrator {
 
     private let longPressGestureRecognizer: MapboxLongPressGestureRecognizer
 
-    private let style: Style
+    private let style: StyleProtocol
 
     private let mapFeatureQueryable: MapFeatureQueryable
 
@@ -74,7 +74,7 @@ public class AnnotationOrchestrator {
     internal init(tapGestureRecognizer: UIGestureRecognizer,
                   longPressGestureRecognizer: MapboxLongPressGestureRecognizer,
                   mapFeatureQueryable: MapFeatureQueryable,
-                  style: Style,
+                  style: StyleProtocol,
                   displayLinkCoordinator: DisplayLinkCoordinator,
                   offsetPointCalculator: OffsetPointCalculator,
                   offsetLineStringCalculator: OffsetLineStringCalculator,

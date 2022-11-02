@@ -406,23 +406,12 @@ open class MapView: UIView {
             mapboxMap: mapboxMap,
             displayLinkCoordinator: self)
 
-        let tapGetureRecognizer = UITapGestureRecognizer()
-        let longPressGestureRecognizer = MapboxLongPressGestureRecognizer()
-        let offsetPointCalculator = OffsetPointCalculator(mapboxMap: mapboxMap)
-        let offsetLineStringCalculator = OffsetLineStringCalculator(mapboxMap: mapboxMap)
-        let offsetPolygonCalculator = OffsetPolygonCalculator(mapboxMap: mapboxMap)
-        self.addGestureRecognizer(tapGetureRecognizer)
-        self.addGestureRecognizer(longPressGestureRecognizer)
-        // Initialize/Configure annotations orchestrator
-        annotations = AnnotationOrchestrator(
-            tapGestureRecognizer: tapGetureRecognizer,
-            longPressGestureRecognizer: longPressGestureRecognizer,
+        annotations = dependencyProvider.makeAnnotationOrchestrator(
+            in: self,
+            mapboxMap: mapboxMap,
             mapFeatureQueryable: mapboxMap,
             style: mapboxMap.style,
-            displayLinkCoordinator: self,
-            offsetPointCalculator: offsetPointCalculator,
-            offsetLineStringCalculator: offsetLineStringCalculator,
-            offsetPolygonCalculator: offsetPolygonCalculator)
+            displayLinkCoordinator: self)
 
         // Initialize/Configure view annotations manager
         viewAnnotations = ViewAnnotationManager(

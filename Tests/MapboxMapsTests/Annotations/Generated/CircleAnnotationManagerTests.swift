@@ -10,7 +10,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     var annotations = [CircleAnnotation]()
     var expectation: XCTestExpectation?
     var delegateAnnotations: [Annotation]?
-    let offsetPointCalculator = OffsetPointCalculator(mapboxMap: MockMapboxMap())
+    var offsetPointCalculator: OffsetPointCalculator!
 
     var mapboxMap = MockMapboxMap()
 

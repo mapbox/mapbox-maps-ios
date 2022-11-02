@@ -437,7 +437,7 @@ open class MapView: UIView {
     }
 
     private func subscribeToLifecycleNotifications() {
-        if #available(iOS 13.0, *), bundle.infoDictionary?["UIApplicationSceneManifest"] != nil {
+        if #available(iOS 13.0, *) {
             notificationCenter.addObserver(self,
                                            selector: #selector(sceneDidEnterBackground(_:)),
                                            name: UIScene.didEnterBackgroundNotification,
@@ -452,21 +452,23 @@ open class MapView: UIView {
                                            object: window?.parentScene)
         } else {
             notificationCenter.addObserver(self,
-                                           selector: #selector(appDidEnterBackground),
-                                           name: UIApplication.didEnterBackgroundNotification,
-                                           object: nil)
-            notificationCenter.addObserver(self,
                                            selector: #selector(appDidBecomeActive),
                                            name: UIApplication.didBecomeActiveNotification,
                                            object: nil)
-            notificationCenter.addObserver(self,
-                                           selector: #selector(appWillResignActive),
-                                           name: UIApplication.willResignActiveNotification,
-                                           object: nil)
         }
+
+        notificationCenter.addObserver(self,
+                                       selector: #selector(appDidEnterBackground),
+                                       name: UIApplication.didEnterBackgroundNotification,
+                                       object: nil)
+        notificationCenter.addObserver(self,
+                                       selector: #selector(appWillResignActive),
+                                       name: UIApplication.willResignActiveNotification,
+                                       object: nil)
     }
 
     @objc private func appDidEnterBackground() {
+        displayLink?.isPaused = true
         reduceMemoryUse()
     }
 
@@ -496,6 +498,7 @@ open class MapView: UIView {
     @objc private func sceneDidEnterBackground(_ notification: Notification) {
         guard notification.object as? UIScene == window?.parentScene else { return }
 
+        displayLink?.isPaused = true
         reduceMemoryUse()
     }
 
@@ -552,7 +555,6 @@ open class MapView: UIView {
     }
 
     @_spi(Metrics) public var metricsReporter: MapViewMetricsReporter?
-
     private func updateFromDisplayLink(displayLink: CADisplayLink) {
         metricsReporter?.beforeDisplayLinkCallback(displayLink: displayLink)
         defer { metricsReporter?.afterDisplayLinkCallback(displayLink: displayLink) }
@@ -618,7 +620,26 @@ open class MapView: UIView {
         cameraAnimatorsRunnerEnablable.isEnabled = true
 
         updateDisplayLinkPreferredFramesPerSecond()
+
+        // this will make sure that display link is only running on an active scene in foreground,
+        // preventing metal view drawing on background if the view is added to window not on foreground
+        if shouldDisplayLinkBePaused(window: window) {
+            displayLink.isPaused = true
+        }
+
         displayLink.add(to: .current, forMode: .common)
+    }
+
+    private func shouldDisplayLinkBePaused(window: UIWindow) -> Bool {
+        if UIApplication.shared.applicationState != .active {
+            return true
+        }
+
+        if #available(iOS 13, *), window.windowScene?.activationState != .foregroundActive {
+            return true
+        }
+
+        return false
     }
 }
 

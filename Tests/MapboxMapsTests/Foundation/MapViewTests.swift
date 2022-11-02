@@ -252,7 +252,17 @@ final class MapViewTests: XCTestCase {
     }
 
     func testDisplayLinkPausedWhenAppWillResignActive() {
+        displayLink.$isPaused.setStub.reset()
+
         notificationCenter.post(name: UIApplication.willResignActiveNotification, object: nil)
+
+        XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
+    }
+
+    func testDisplayLinkPausedWhenAppDidEnterBackground() {
+        displayLink.$isPaused.setStub.reset()
+
+        notificationCenter.post(name: UIApplication.didEnterBackgroundNotification, object: nil)
 
         XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
     }
@@ -263,10 +273,48 @@ final class MapViewTests: XCTestCase {
         XCTAssertEqual(metalView.releaseDrawablesStub.invocations.count, 1)
     }
 
-    func testDisplayLinkResumedWhenAppDidBecomeActive() {
+    func testDisplayLinkResumedWhenAppDidBecomeActiveOnIOS12() throws {
+        if #available(iOS 13.0, *) {
+            throw XCTSkip("Test applies only on iOS 12")
+        }
+
         notificationCenter.post(name: UIApplication.didBecomeActiveNotification, object: nil)
 
         XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [false])
+    }
+
+    func testSubscribesToCorrectNotificationsOniOS12() throws {
+        if #available(iOS 13, *) {
+            throw XCTSkip()
+        }
+
+        let observers = notificationCenter.addObserverStub.invocations.map(\.parameters.observer)
+
+        XCTAssertTrue(observers.allSatisfy { ($0 as AnyObject) === mapView })
+
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations.count, 4)
+
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations[0].parameters.name, UIApplication.didBecomeActiveNotification)
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations[1].parameters.name, UIApplication.didEnterBackgroundNotification)
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations[2].parameters.name, UIApplication.willResignActiveNotification)
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations[3].parameters.name, UIApplication.didReceiveMemoryWarningNotification)
+
+    }
+    func testSubscribesToCorrectNotifications() throws {
+        guard #available(iOS 13, *) else {
+            throw XCTSkip()
+        }
+        let observers = notificationCenter.addObserverStub.invocations.map(\.parameters.observer)
+
+        XCTAssertTrue(observers.allSatisfy { ($0 as AnyObject) === mapView })
+
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations.count, 6)
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations[0].parameters.name, UIScene.didEnterBackgroundNotification)
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations[1].parameters.name, UIScene.willDeactivateNotification)
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations[2].parameters.name, UIScene.didActivateNotification)
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations[3].parameters.name, UIApplication.didEnterBackgroundNotification)
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations[4].parameters.name, UIApplication.willResignActiveNotification)
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations[5].parameters.name, UIApplication.didReceiveMemoryWarningNotification)
     }
 
     func testURLOpener() {
@@ -343,6 +391,7 @@ final class MapViewTestsWithScene: XCTestCase {
         guard #available(iOS 13.0, *) else {
             throw XCTSkip("Test requires iOS 13 or higher.")
         }
+        displayLink.$isPaused.setStub.reset()
 
         notificationCenter.post(name: UIScene.didActivateNotification, object: window.parentScene)
 
@@ -353,8 +402,20 @@ final class MapViewTestsWithScene: XCTestCase {
         guard #available(iOS 13.0, *) else {
             throw XCTSkip("Test requires iOS 13 or higher.")
         }
+        displayLink.$isPaused.setStub.reset()
 
         notificationCenter.post(name: UIScene.willDeactivateNotification, object: window.parentScene)
+
+        XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
+    }
+
+    func testDisplayLinkPausedWhenSceneDidEnterBackground() throws {
+        guard #available(iOS 13.0, *) else {
+            throw XCTSkip("Test requires iOS 13 or higher.")
+        }
+        displayLink.$isPaused.setStub.reset()
+
+        notificationCenter.post(name: UIScene.didEnterBackgroundNotification, object: window.parentScene)
 
         XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
     }

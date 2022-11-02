@@ -254,7 +254,7 @@ internal final class AnnotationOrchestratorImpl: AnnotationOrchestratorImplProto
             }
 
         case .possible, .failed:
-            break
+            fallthrough
         @unknown default:
             break
         }

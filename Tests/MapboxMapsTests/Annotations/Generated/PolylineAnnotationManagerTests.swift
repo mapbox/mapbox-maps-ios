@@ -10,7 +10,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
     var annotations = [PolylineAnnotation]()
     var expectation: XCTestExpectation?
     var delegateAnnotations: [Annotation]?
-    let offsetLineStringCalculator = OffsetLineStringCalculator(mapboxMap: MockMapboxMap())
+    var offsetLineStringCalculator: OffsetLineStringCalculator!
 
     var mapboxMap = MockMapboxMap()
 
@@ -19,6 +19,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
         style = MockStyle()
         displayLinkCoordinator = MockDisplayLinkCoordinator()
+        offsetLineStringCalculator = OffsetLineStringCalculator(mapboxMap: mapboxMap)
         manager = PolylineAnnotationManager(id: id,
                                             style: style,
                                             layerPosition: nil,

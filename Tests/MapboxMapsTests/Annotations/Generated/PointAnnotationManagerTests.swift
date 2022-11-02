@@ -10,7 +10,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     var annotations = [PointAnnotation]()
     var expectation: XCTestExpectation?
     var delegateAnnotations: [Annotation]?
-    let offsetPointCalculator = OffsetPointCalculator(mapboxMap: MockMapboxMap())
+    var offsetPointCalculator: OffsetPointCalculator!
 
     var mapboxMap = MockMapboxMap()
 
@@ -19,6 +19,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         style = MockStyle()
         displayLinkCoordinator = MockDisplayLinkCoordinator()
+        offsetPointCalculator = OffsetPointCalculator(mapboxMap: mapboxMap)
         manager = PointAnnotationManager(id: id,
                                          style: style,
                                          layerPosition: nil,

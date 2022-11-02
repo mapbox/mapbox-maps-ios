@@ -10,7 +10,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     var annotations = [PolygonAnnotation]()
     var expectation: XCTestExpectation?
     var delegateAnnotations: [Annotation]?
-    let offsetPolygonCalculator = OffsetPolygonCalculator(mapboxMap: MockMapboxMap())
+    var offsetPolygonCalculator: OffsetPolygonCalculator!
 
     var mapboxMap = MockMapboxMap()
 
@@ -19,6 +19,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
         style = MockStyle()
         displayLinkCoordinator = MockDisplayLinkCoordinator()
+        offsetPolygonCalculator = OffsetPolygonCalculator(mapboxMap: mapboxMap)
         manager = PolygonAnnotationManager(id: id,
                                            style: style,
                                            layerPosition: nil,

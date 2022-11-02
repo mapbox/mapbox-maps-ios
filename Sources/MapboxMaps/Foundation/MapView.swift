@@ -406,12 +406,15 @@ open class MapView: UIView {
             mapboxMap: mapboxMap,
             displayLinkCoordinator: self)
 
-        annotations = dependencyProvider.makeAnnotationOrchestrator(
-            in: self,
-            mapboxMap: mapboxMap,
-            mapFeatureQueryable: mapboxMap,
-            style: mapboxMap.style,
-            displayLinkCoordinator: self)
+        annotations = AnnotationOrchestrator(
+            impl: dependencyProvider.makeAnnotationOrchestratorImpl(
+                in: self,
+                mapboxMap: mapboxMap,
+                mapFeatureQueryable: mapboxMap,
+                style: mapboxMap.style,
+                displayLinkCoordinator: self
+            )
+        )
 
         // Initialize/Configure view annotations manager
         viewAnnotations = ViewAnnotationManager(

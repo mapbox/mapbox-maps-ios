@@ -28,11 +28,11 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
                           anyTouchGestureRecognizer: UIGestureRecognizer,
                           doubleTapGestureRecognizer: UIGestureRecognizer,
                           doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol
-    func makeAnnotationOrchestrator(in view: UIView,
+    func makeAnnotationOrchestratorImpl(in view: UIView,
                                     mapboxMap: MapboxMapProtocol,
                                     mapFeatureQueryable: MapFeatureQueryable,
                                     style: StyleProtocol,
-                                    displayLinkCoordinator: DisplayLinkCoordinator) -> AnnotationOrchestrator
+                                    displayLinkCoordinator: DisplayLinkCoordinator) -> AnnotationOrchestratorImplProtocol
 }
 
 // swiftlint:disable:next type_body_length
@@ -225,11 +225,11 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             mapboxMap: mapboxMap)
     }
 
-    internal func makeAnnotationOrchestrator(in view: UIView,
+    internal func makeAnnotationOrchestratorImpl(in view: UIView,
                                              mapboxMap: MapboxMapProtocol,
                                              mapFeatureQueryable: MapFeatureQueryable,
                                              style: StyleProtocol,
-                                             displayLinkCoordinator: DisplayLinkCoordinator) -> AnnotationOrchestrator {
+                                             displayLinkCoordinator: DisplayLinkCoordinator) -> AnnotationOrchestratorImplProtocol {
         let tapGetureRecognizer = UITapGestureRecognizer()
         let longPressGestureRecognizer = MapboxLongPressGestureRecognizer()
         view.addGestureRecognizer(tapGetureRecognizer)
@@ -239,7 +239,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
         let offsetLineStringCalculator = OffsetLineStringCalculator(mapboxMap: mapboxMap)
         let offsetPolygonCalculator = OffsetPolygonCalculator(mapboxMap: mapboxMap)
 
-        return AnnotationOrchestrator(
+        return AnnotationOrchestratorImpl(
             tapGestureRecognizer: tapGetureRecognizer,
             longPressGestureRecognizer: longPressGestureRecognizer,
             mapFeatureQueryable: mapFeatureQueryable,

@@ -252,12 +252,16 @@ final class MapViewTests: XCTestCase {
     }
 
     func testDisplayLinkPausedWhenAppWillResignActive() {
+        displayLink.$isPaused.setStub.reset()
+
         notificationCenter.post(name: UIApplication.willResignActiveNotification, object: nil)
 
         XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
     }
 
     func testDisplayLinkPausedWhenAppDidEnterBackground() {
+        displayLink.$isPaused.setStub.reset()
+        
         notificationCenter.post(name: UIApplication.didEnterBackgroundNotification, object: nil)
 
         XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
@@ -376,6 +380,7 @@ final class MapViewTestsWithScene: XCTestCase {
         guard #available(iOS 13.0, *) else {
             throw XCTSkip("Test requires iOS 13 or higher.")
         }
+        displayLink.$isPaused.setStub.reset()
 
         notificationCenter.post(name: UIScene.didActivateNotification, object: window.parentScene)
 
@@ -386,6 +391,7 @@ final class MapViewTestsWithScene: XCTestCase {
         guard #available(iOS 13.0, *) else {
             throw XCTSkip("Test requires iOS 13 or higher.")
         }
+        displayLink.$isPaused.setStub.reset()
 
         notificationCenter.post(name: UIScene.willDeactivateNotification, object: window.parentScene)
 
@@ -396,6 +402,7 @@ final class MapViewTestsWithScene: XCTestCase {
         guard #available(iOS 13.0, *) else {
             throw XCTSkip("Test requires iOS 13 or higher.")
         }
+        displayLink.$isPaused.setStub.reset()
 
         notificationCenter.post(name: UIScene.didEnterBackgroundNotification, object: window.parentScene)
 

@@ -4,7 +4,6 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 * Support `isDraggable` and `isSelected` properties for annotations. ([#1659](https://github.com/mapbox/mapbox-maps-ios/pull/1659))
-
 * Prevent view annotation being shown erroneously after options update.([#1627](https://github.com/mapbox/mapbox-maps-ios/pull/1627))
 * Add an example animating a view annotation along a route line. ([#1639](https://github.com/mapbox/mapbox-maps-ios/pull/1639))
 * Enable clustering of point annotations, add example of feature. ([#1475](https://github.com/mapbox/mapbox-maps-ios/issues/1475))

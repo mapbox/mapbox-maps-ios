@@ -80,16 +80,22 @@ public final class MapboxMap: MapboxMapProtocol {
     // MARK: - Style loading
 
     private func observeStyleLoad(_ completion: @escaping (Result<Style, Error>) -> Void) {
-        onNext(event: .styleLoaded) { [style] _ in
+        let cancellable = CompositeCancelable()
+
+        cancellable.add(onNext(event: .styleLoaded) { [style] _ in
             if !style.isLoaded {
                 Log.warning(forMessage: "style.isLoaded == false, was this an empty style?", category: "Style")
             }
             completion(.success(style))
-        }
+            cancellable.cancel()
+        })
 
-        onNext(event: .mapLoadingError) { event in
+        cancellable.add(onEvery(event: .mapLoadingError) { event in
+            guard case .style = event.payload.error else { return }
+
             completion(.failure(event.payload.error))
-        }
+            cancellable.cancel()
+        })
     }
 
     /// Loads a `style` from a StyleURI, calling a completion closure when the

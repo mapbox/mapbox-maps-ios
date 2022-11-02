@@ -33,7 +33,7 @@ platform :ios do
       scheme: 'Examples',                  # XCTest scheme
       clean: true,                        # Recommended: This would ensure the build would not include unnecessary files
       configuration: "Release",
-      xcargs: "ENABLE_TESTABILITY=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO",
+      xcargs: "ENABLE_TESTABILITY=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO COMPILER_INDEX_STORE_ENABLE=NO",
       skip_detect_devices: true,          # Required
       build_for_testing: true,            # Required
       sdk: 'iphoneos',                    # Required
@@ -89,7 +89,7 @@ platform :ios do
     build_app(
       scheme: "Examples",
       workspace: "Apps/Apps.xcworkspace",
-      xcargs: "SWIFT_TREAT_WARNINGS_AS_ERRORS=NO" # Disable to bypass Deprecated error on OfflineManager example
+      xcargs: "SWIFT_TREAT_WARNINGS_AS_ERRORS=NO COMPILER_INDEX_STORE_ENABLE=NO" # Disable to bypass Deprecated error on OfflineManager example
     )
     upload_to_testflight(
       beta_app_feedback_email: "applemachine@mapbox.com",
@@ -117,7 +117,7 @@ platform :ios do
       scheme: 'MapboxTestHost',
       clean: true,
       configuration: "Release",
-      xcargs: "ENABLE_TESTABILITY=YES",
+      xcargs: "ENABLE_TESTABILITY=YES COMPILER_INDEX_STORE_ENABLE=NO",
       build_for_testing: true,
       destination: 'generic/platform=iOS',
       should_zip_build_products: true,

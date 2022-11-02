@@ -1,5 +1,6 @@
-import Foundation
 import UIKit
+import MapboxCoreMaps
+import Turf
 
 /// Stores layout and visibilty settings for a `ViewAnnotation`
 public struct ViewAnnotationOptions: Hashable {
@@ -99,6 +100,39 @@ public struct ViewAnnotationOptions: Hashable {
         hasher.combine(offsetX)
         hasher.combine(offsetY)
         hasher.combine(selected)
+    }
+
+    internal var frame: CGRect {
+        guard let width = width, let height = height else { return .zero }
+
+        let offset: (x: CGFloat, y: CGFloat) = (width * 0.5, height * 0.5)
+        var frame = CGRect(x: -offset.x, y: -offset.y, width: width, height: height)
+        let anchor = anchor ?? .center
+
+        switch anchor {
+        case .top:
+            frame = frame.offsetBy(dx: 0, dy: offset.y)
+        case .topLeft:
+            frame = frame.offsetBy(dx: offset.x, dy: offset.y)
+        case .topRight:
+            frame = frame.offsetBy(dx: -offset.x, dy: offset.y)
+        case .bottom:
+            frame = frame.offsetBy(dx: 0, dy: -offset.y)
+        case .bottomLeft:
+            frame = frame.offsetBy(dx: offset.x, dy: -offset.y)
+        case .bottomRight:
+            frame = frame.offsetBy(dx: -offset.x, dy: -offset.y)
+        case .left:
+            frame = frame.offsetBy(dx: offset.x, dy: 0)
+        case .right:
+            frame = frame.offsetBy(dx: -offset.x, dy: 0)
+        case .center:
+            fallthrough
+        @unknown default:
+            break
+        }
+
+        return frame.offsetBy(dx: offsetX ?? 0, dy: offsetY ?? 0)
     }
 }
 

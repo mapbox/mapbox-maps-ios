@@ -100,4 +100,65 @@ final class ViewAnnotationOptionsTests: XCTestCase {
         XCTAssertEqual(convertedOptions.__selected, selected as NSNumber)
     }
 
+    func testFrame() {
+        func verifyFrame(_ frame: CGRect, expectedOrigin: CGPoint) {
+            XCTAssertEqual(frame.width, width)
+            XCTAssertEqual(frame.height, height)
+            XCTAssertEqual(frame.origin.x, expectedOrigin.x)
+            XCTAssertEqual(frame.origin.y, expectedOrigin.y)
+        }
+
+        let width = CGFloat.random(in: 20...100)
+        let height = CGFloat.random(in: 20...100)
+        let offsetX = CGFloat.random(in: -100...100)
+        let offsetY = CGFloat.random(in: -100...100)
+
+        var sut = ViewAnnotationOptions(
+            width: width,
+            height: height,
+            offsetX: offsetX,
+            offsetY: offsetY
+        )
+
+        // center
+        sut.anchor = .center
+        verifyFrame(sut.frame, expectedOrigin: CGPoint(x: offsetX - width * 0.5, y: offsetY - height * 0.5))
+
+        // top
+        sut.anchor = .top
+        verifyFrame(sut.frame, expectedOrigin: CGPoint(x: offsetX - width * 0.5, y: offsetY))
+
+        // top-left
+        sut.anchor = .topLeft
+        verifyFrame(sut.frame, expectedOrigin: CGPoint(x: offsetX, y: offsetY))
+
+        // top-right
+        sut.anchor = .topRight
+        verifyFrame(sut.frame, expectedOrigin: CGPoint(x: offsetX - width, y: offsetY))
+
+        // bottom
+        sut.anchor = .bottom
+        verifyFrame(sut.frame, expectedOrigin: CGPoint(x: offsetX - width * 0.5, y: offsetY - height))
+
+        // bottom-left
+        sut.anchor = .bottomLeft
+        verifyFrame(sut.frame, expectedOrigin: CGPoint(x: offsetX, y: offsetY - height))
+
+        // bottom-right
+        sut.anchor = .bottomRight
+        verifyFrame(sut.frame, expectedOrigin: CGPoint(x: offsetX - width, y: offsetY - height))
+
+        // left
+        sut.anchor = .left
+        verifyFrame(sut.frame, expectedOrigin: CGPoint(x: offsetX, y: offsetY - height * 0.5))
+
+        // right
+        sut.anchor = .right
+        verifyFrame(sut.frame, expectedOrigin: CGPoint(x: offsetX - width, y: offsetY - height * 0.5))
+
+        // Empty frame if width and height are missing
+        sut.width = nil
+        sut.height = nil
+        XCTAssertEqual(sut.frame, .zero)
+    }
 }

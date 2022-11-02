@@ -556,26 +556,26 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     // MARK: - User interaction handling
 
     internal func handleQueriedFeatureIds(_ queriedFeatureIds: [String]) {
-        // Find if any `queriedFeatureIds` match an annotation's `id`
-        let tappedAnnotations = annotations.filter { queriedFeatureIds.contains($0.id) }
-
-        if tappedAnnotations.isEmpty {
+        guard annotations.map(\.id).contains(where: queriedFeatureIds.contains(_:)) else {
             return
         }
 
-        let selectedAnnotationIds = tappedAnnotations.map(\.id)
-        let allAnnotations: [PointAnnotation] = annotations.map { annotation in
-            if selectedAnnotationIds.contains(annotation.id) {
-                var mutableAnnotation = annotation
-                mutableAnnotation.isSelected.toggle()
-                return mutableAnnotation
+        var tappedAnnotations: [PointAnnotation] = []
+        var annotations: [PointAnnotation] = []
+
+        for var annotation in self.annotations {
+            if queriedFeatureIds.contains(annotation.id) {
+                annotation.isSelected.toggle()
+                tappedAnnotations.append(annotation)
             }
-            return annotation
+            annotations.append(annotation)
         }
 
-        self.annotations = allAnnotations
+        self.annotations = annotations
 
-        delegate?.annotationManager(self, didDetectTappedAnnotations: tappedAnnotations)
+        delegate?.annotationManager(
+            self,
+            didDetectTappedAnnotations: tappedAnnotations)
     }
 
     private func createDragSourceAndLayer() {
@@ -627,7 +627,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
               let offsetPoint = offsetPointCalculator.geometry(for: translation, from: annotationBeingDragged.point) else {
             return
         }
-        
+
         self.annotationBeingDragged?.point = offsetPoint
         do {
             try style.updateGeoJSONSource(withId: dragSourceId, geoJSON: .feature(annotationBeingDragged.feature))
@@ -642,7 +642,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         self.annotationBeingDragged = nil
 
         // avoid blinking annotation by waiting
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.removeDragSourceAndLayer()
         }
     }

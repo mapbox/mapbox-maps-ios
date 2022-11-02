@@ -53,8 +53,8 @@ internal struct OffsetLineStringCalculator: OffsetGeometryCalculator {
         if startPoints.isEmpty {
             return nil
         }
-        let latitudeSum = startPoints.map { $0.latitude }.reduce(0, +)
-        let longitudeSum = startPoints.map { $0.longitude }.reduce(0, +)
+        let latitudeSum = startPoints.map(\.latitude).reduce(0, +)
+        let longitudeSum = startPoints.map(\.longitude).reduce(0, +)
         let latitudeAverage = latitudeSum / CGFloat(startPoints.count)
         let longitudeAverage = longitudeSum / CGFloat(startPoints.count)
 

@@ -16,7 +16,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
     override func setUp() {
         super.setUp()
-
+offsetPointCalculator = OffsetPointCalculator(mapboxMap: mapboxMap)
         style = MockStyle()
         displayLinkCoordinator = MockDisplayLinkCoordinator()
         manager = CircleAnnotationManager(id: id,

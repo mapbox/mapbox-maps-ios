@@ -179,6 +179,19 @@ public final class MapboxMap: MapboxMapProtocol {
         __map.setRenderCacheOptionsFor(cacheOptions)
     }
 
+    /// Defines whether multiple copies of the world will be rendered side by side beyond -180 and 180 degrees longitude.
+    ///
+    /// If disabled, when the map is zoomed out far enough that a single representation of the world does not fill the map's entire container,
+    /// there will be blank space beyond 180 and -180 degrees longitude.
+    /// In this case, features that cross 180 and -180 degrees longitude will be cut in two (with one portion on the right edge of the map
+    /// and the other on the left edge of the map) at every zoom level.
+    ///
+    /// By default, `shouldRenderWorldCopies` is set to `true`.
+    public var shouldRenderWorldCopies: Bool {
+        get { __map.getRenderWorldCopies() }
+        set { __map.setRenderWorldCopiesForRenderWorldCopies(newValue) }
+    }
+
     /// Gets the resource options for the map.
     ///
     /// All optional fields of the returned object are initialized with the

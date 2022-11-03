@@ -23,6 +23,9 @@ public final class MapInitOptions: NSObject {
     /// Style URI for initializing the map. Defaults to Mapbox Streets.
     public let styleURI: StyleURI?
 
+    /// String representation of JSON style spec. Has precedence over ``styleURI``.
+    public let styleJSON: String?
+
     /// Camera options for initializing the map. CameraOptions default to 0.0 for each value.
     public let cameraOptions: CameraOptions?
 
@@ -38,14 +41,17 @@ public final class MapInitOptions: NSObject {
     ///         the default camera that has been specified in the style.
     ///   - styleURI: Style URI for the map to load. Defaults to `.streets`, but
     ///         can be `nil`.
+    ///   - styleJSON: Style JSON in String representation. Has precedence over ``styleURI``.
     public init(resourceOptions: ResourceOptions = ResourceOptionsManager.default.resourceOptions,
                 mapOptions: MapOptions = MapOptions(),
                 cameraOptions: CameraOptions? = nil,
-                styleURI: StyleURI? = .streets) {
+                styleURI: StyleURI? = .streets,
+                styleJSON: String? = nil) {
         self.resourceOptions = resourceOptions
         self.mapOptions      = mapOptions
         self.cameraOptions   = cameraOptions
         self.styleURI        = styleURI
+        self.styleJSON       = styleJSON
     }
 
     /// :nodoc:

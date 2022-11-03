@@ -51,16 +51,15 @@ main() {
         --diagnose-sdk\
         --abort-on-module-fail\
         -I "$product_artifacts_dir"/MapboxMaps.xcframework/ios-arm64/MapboxMaps.framework/\
-        -I "$product_artifacts_dir"/MapboxCommon.xcframework/ios-arm64_armv7/MapboxCommon.framework/\
+        -I "$product_artifacts_dir"/MapboxCommon.xcframework/ios-arm64/MapboxCommon.framework/\
         -I "$product_artifacts_dir"/MapboxCoreMaps.xcframework/ios-arm64/MapboxCoreMaps.framework/\
         -I "$product_artifacts_dir"/Turf.xcframework/ios-arm64/Turf.framework/\
         -target arm64-apple-ios11.0\
-        --iframework "$product_artifacts_dir"/MapboxCommon.xcframework/ios-arm64_armv7/ \
+        --iframework "$product_artifacts_dir"/MapboxCommon.xcframework/ios-arm64/ \
         --iframework "$product_artifacts_dir"/MapboxCoreMaps.xcframework/ios-arm64/ \
         --breakage-allowlist-path "$SCRIPT_DIR/breakage_allowlist.txt" \
         --baseline-dir "$SCRIPT_DIR"\
-        -module MapboxMaps \
-        2>&1 > "$report" 2>&1
+        -module MapboxMaps >  "$report" 2>&1 || true
 
     # the shasum here is for an empty report, i.e. no changes
     # if the shasum of the new report is different, then there's

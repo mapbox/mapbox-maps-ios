@@ -12,9 +12,9 @@ Mapbox welcomes participation and contributions from everyone.
 * Expose the list of added view annotations. ([#1621](https://github.com/mapbox/mapbox-maps-ios/pull/1621))
 * Fix `loadStyleURI/loadStyleJSON` completion being invoked more than once. ([#1665](https://github.com/mapbox/mapbox-maps-ios/pull/1665))
 * Remove ornament position deprecation. ([#1676](https://github.com/mapbox/mapbox-maps-ios/pull/1676))
-* Prevent map from being rendered on background. ([#1675])(https://github.com/mapbox/mapbox-maps-ios/pull/1675))
 * Prevent map from being rendered on background. By aligning better with Scene lifecycle API, as well as, respecting scene/application activation status, rendering artifacts should no longer be an issue after app is coming from background.  ([#1675])(https://github.com/mapbox/mapbox-maps-ios/pull/1675))
 * Support `isDraggable` and `isSelected` properties for annotations. ([#1659](https://github.com/mapbox/mapbox-maps-ios/pull/1659))
+* Update MapboxCoreMaps to `v10.10.0-beta.1` and MapboxCommon to `v23.2.0-beta.1`. ([#1680](https://github.com/mapbox/mapbox-maps-ios/pull/1680))
 
 ## 10.9.0 - October 19, 2022
 

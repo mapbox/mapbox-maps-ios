@@ -10,16 +10,21 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     var annotations = [CircleAnnotation]()
     var expectation: XCTestExpectation?
     var delegateAnnotations: [Annotation]?
+    var offsetPointCalculator: OffsetPointCalculator!
+
+    var mapboxMap = MockMapboxMap()
 
     override func setUp() {
         super.setUp()
 
         style = MockStyle()
         displayLinkCoordinator = MockDisplayLinkCoordinator()
+        offsetPointCalculator = OffsetPointCalculator(mapboxMap: mapboxMap)
         manager = CircleAnnotationManager(id: id,
                                           style: style,
                                           layerPosition: nil,
-                                          displayLinkCoordinator: displayLinkCoordinator)
+                                          displayLinkCoordinator: displayLinkCoordinator,
+                                          offsetPointCalculator: offsetPointCalculator)
 
         for _ in 0...10 {
             let annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
@@ -41,9 +46,10 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         style.addSourceStub.reset()
 
         _ = CircleAnnotationManager(id: id,
-                                 style: style,
-                                 layerPosition: nil,
-                                 displayLinkCoordinator: displayLinkCoordinator)
+                                    style: style,
+                                    layerPosition: nil,
+                                    displayLinkCoordinator: displayLinkCoordinator,
+                                    offsetPointCalculator: offsetPointCalculator)
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.type, SourceType.geoJson)
@@ -55,7 +61,8 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         let initializedManager = CircleAnnotationManager(id: id,
                                                          style: style,
                                                          layerPosition: nil,
-                                                         displayLinkCoordinator: displayLinkCoordinator)
+                                                         displayLinkCoordinator: displayLinkCoordinator,
+                                                         offsetPointCalculator: offsetPointCalculator)
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
@@ -76,7 +83,8 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         let manager2 = CircleAnnotationManager(id: manager.id,
                                                style: style,
                                                layerPosition: nil,
-                                               displayLinkCoordinator: displayLinkCoordinator)
+                                               displayLinkCoordinator: displayLinkCoordinator,
+                                               offsetPointCalculator: offsetPointCalculator)
         manager2.annotations = annotations2
 
         XCTAssertEqual(manager.annotations.count, 11)
@@ -87,7 +95,8 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         let manager3 = CircleAnnotationManager(id: id,
                                                style: style,
                                                layerPosition: LayerPosition.at(4),
-                                               displayLinkCoordinator: displayLinkCoordinator)
+                                               displayLinkCoordinator: displayLinkCoordinator,
+                                               offsetPointCalculator: offsetPointCalculator)
         manager3.annotations = annotations
 
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition, LayerPosition.at(4))
@@ -474,6 +483,98 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         expectation = nil
     }
 
+    func testHandleDragBeginNoFeatureId() {
+        style.addSourceStub.reset()
+        style.addPersistentLayerWithPropertiesStub.reset()
+
+        manager.handleDragBegin(with: [])
+
+        XCTAssertTrue(style.addSourceStub.invocations.isEmpty)
+        XCTAssertTrue(style.addLayerStub.invocations.isEmpty)
+        XCTAssertTrue(style.updateGeoJSONSourceStub.invocations.isEmpty)
+    }
+
+    func testHandleDragBeginInvalidFeatureId() {
+        style.addSourceStub.reset()
+        style.addPersistentLayerWithPropertiesStub.reset()
+
+        manager.handleDragBegin(with: ["not-a-feature"])
+
+        XCTAssertTrue(style.addSourceStub.invocations.isEmpty)
+        XCTAssertTrue(style.addPersistentLayerWithPropertiesStub.invocations.isEmpty)
+        XCTAssertTrue(style.updateGeoJSONSourceStub.invocations.isEmpty)
+    }
+
+    func testHandleDragBegin() throws {
+        manager.annotations = [
+            CircleAnnotation(id: "circle1", centerCoordinate: .random())
+        ]
+
+        style.addSourceStub.reset()
+        style.addPersistentLayerWithPropertiesStub.reset()
+
+        manager.handleDragBegin(with: ["circle1"])
+
+        let addSourceParameters = try XCTUnwrap(style.addSourceStub.invocations.last).parameters
+        let addLayerParameters = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.last).parameters
+        let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
+
+        XCTAssertEqual(addLayerParameters.properties["source"] as? String, addSourceParameters.id)
+        XCTAssertNotEqual(addLayerParameters.properties["id"] as? String, manager.layerId)
+
+        XCTAssertFalse(manager.annotations.contains(where: { $0.id == "circle1" }))
+        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.id)
+    }
+
+
+    func testHandleDragChanged() throws {
+        mapboxMap.pointStub.defaultReturnValue = CGPoint(x: 0, y: 0)
+        mapboxMap.coordinateForPointStub.defaultReturnValue = .random()
+        mapboxMap.cameraState.zoom = 1
+
+        manager.annotations = [
+            CircleAnnotation(id: "circle1", centerCoordinate: .init(latitude: 0, longitude: 0))
+        ]
+
+        manager.handleDragChanged(with: .random())
+        XCTAssertTrue(style.updateGeoJSONSourceStub.invocations.isEmpty)
+
+        manager.handleDragBegin(with: ["circle1"])
+        let addSourceParameters = try XCTUnwrap(style.addSourceStub.invocations.last).parameters
+
+        manager.handleDragChanged(with: .random())
+        let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
+        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.id)
+        guard case .feature = updateSourceParameters.geojson.geoJSONObject else {
+            XCTFail("GeoJSONObject should be a feature")
+            return
+        }
+    }
+
+    func testHandleDragEnded() throws {
+        manager.annotations = [
+            CircleAnnotation(id: "circle1", centerCoordinate: .init(latitude: 0, longitude: 0))
+        ]
+
+        manager.handleDragEnded()
+        eventually(timeout: 0.2) {
+            XCTAssertTrue(self.style.removeLayerStub.invocations.isEmpty)
+            XCTAssertTrue(self.style.removeSourceStub.invocations.isEmpty)
+        }
+
+        manager.handleDragBegin(with: ["circle1"])
+        manager.handleDragEnded()
+
+        XCTAssertTrue(manager.annotations.contains(where: { $0.id == "circle1" }))
+        eventually(timeout: 0.2) {
+            let removeSourceParameters = self.style.removeSourceStub.invocations.last!.parameters
+            let removeLayerParameters = self.style.removeLayerStub.invocations.last!.parameters
+
+            XCTAssertNotEqual(removeLayerParameters, self.manager.layerId)
+            XCTAssertNotEqual(removeSourceParameters, self.manager.sourceId)
+        }
+    }
+    
 }
 
 // End of generated file

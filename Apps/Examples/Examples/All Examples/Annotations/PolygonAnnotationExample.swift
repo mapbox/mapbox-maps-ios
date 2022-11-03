@@ -31,6 +31,8 @@ final class PolygonAnnotationExample: UIViewController, ExampleProtocol {
         // (`mapView.annotations`) until you explicitly destroy them
         // by calling `mapView.annotations.removeAnnotationManager(withId:)`
         let polygonAnnotationManager = mapView.annotations.makePolygonAnnotationManager()
+
+        // Set the delegate to receive callback if annotation is tapped or dragged
         polygonAnnotationManager.delegate = self
 
         // Create the polygon annotation

@@ -123,4 +123,25 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
             doubleTapGestureRecognizer: doubleTapGestureRecognizer,
             doubleTouchGestureRecognizer: doubleTouchGestureRecognizer))
     }
+
+    struct MakeAnnotationOrchestratorImplParams {
+        let view: UIView
+        let mapboxMap: MapboxMapProtocol
+        let mapFeatureQueryable: MapFeatureQueryable
+        let style: StyleProtocol
+        let displayLinkCoordinator: DisplayLinkCoordinator
+    }
+    let makeAnnotationOrchestratorStub = Stub<MakeAnnotationOrchestratorImplParams, AnnotationOrchestratorImplProtocol>(defaultReturnValue: MockAnnotationOrchestatorImpl())
+    func makeAnnotationOrchestratorImpl(in view: UIView,
+                                        mapboxMap: MapboxMapProtocol,
+                                        mapFeatureQueryable: MapFeatureQueryable,
+                                        style: StyleProtocol,
+                                        displayLinkCoordinator: DisplayLinkCoordinator) -> AnnotationOrchestratorImplProtocol {
+        makeAnnotationOrchestratorStub.call(with: .init(
+            view: view,
+            mapboxMap: mapboxMap,
+            mapFeatureQueryable: mapFeatureQueryable,
+            style: style,
+            displayLinkCoordinator: displayLinkCoordinator))
+    }
 }

@@ -406,12 +406,15 @@ open class MapView: UIView {
             mapboxMap: mapboxMap,
             displayLinkCoordinator: self)
 
-        // Initialize/Configure annotations orchestrator
         annotations = AnnotationOrchestrator(
-            gestureRecognizer: gestures.singleTapGestureRecognizer,
-            mapFeatureQueryable: mapboxMap,
-            style: mapboxMap.style,
-            displayLinkCoordinator: self)
+            impl: dependencyProvider.makeAnnotationOrchestratorImpl(
+                in: self,
+                mapboxMap: mapboxMap,
+                mapFeatureQueryable: mapboxMap,
+                style: mapboxMap.style,
+                displayLinkCoordinator: self
+            )
+        )
 
         // Initialize/Configure view annotations manager
         viewAnnotations = ViewAnnotationManager(

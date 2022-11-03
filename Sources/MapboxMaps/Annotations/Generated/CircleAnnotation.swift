@@ -20,6 +20,14 @@ public struct CircleAnnotation: Annotation {
     /// Storage for layer properties
     internal var layerProperties: [String: Any] = [:]
 
+    /// Toggles the annotation's selection state.
+    /// If the annotation is deselected, it becomes selected.
+    /// If the annotation is selected, it becomes deselected.
+    public var isSelected: Bool = false
+
+    /// Property to determine whether annotation can be manually moved around map
+    public var isDraggable: Bool = false
+
     internal var feature: Feature {
         var feature = Feature(geometry: geometry)
         feature.identifier = .string(id)
@@ -128,7 +136,6 @@ public struct CircleAnnotation: Annotation {
             layerProperties["circle-stroke-width"] = newValue
         }
     }
-
 }
 
 // End of generated file.

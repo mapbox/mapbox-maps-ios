@@ -28,6 +28,7 @@ internal protocol MapboxMapProtocol: AnyObject {
     func options(forViewAnnotationWithId id: String) throws -> ViewAnnotationOptions
     func pointIsAboveHorizon(_ point: CGPoint) -> Bool
     func camera(for geometry: Geometry, padding: UIEdgeInsets, bearing: CGFloat?, pitch: CGFloat?) -> CameraOptions
+    func coordinate(for point: CGPoint) -> CLLocationCoordinate2D
     func point(for coordinate: CLLocationCoordinate2D) -> CGPoint
     func performWithoutNotifying(_ block: () -> Void)
 }

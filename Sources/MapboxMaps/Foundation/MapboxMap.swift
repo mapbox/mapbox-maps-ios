@@ -185,8 +185,8 @@ public final class MapboxMap: MapboxMapProtocol {
     /// In this case, features that cross 180 and -180 degrees longitude will be cut in two (with one portion on the right edge of the map
     /// and the other on the left edge of the map) at every zoom level.
     ///
-    /// By default, `isRenderWorldCopiesEnabled` is set to `true`.
-    public var isRenderWorldCopiesEnabled: Bool {
+    /// By default, `shouldRenderWorldCopies` is set to `true`.
+    public var shouldRenderWorldCopies: Bool {
         get { __map.getRenderWorldCopies() }
         set { __map.setRenderWorldCopiesForRenderWorldCopies(newValue) }
     }

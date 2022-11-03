@@ -85,12 +85,12 @@ final class MapboxMapTests: XCTestCase {
     func testGetRenderWorldCopies() {
         let renderWorldCopies = Bool.random()
         mapboxMap.__testingMap.setRenderWorldCopiesForRenderWorldCopies(renderWorldCopies)
-        XCTAssertEqual(mapboxMap.isRenderWorldCopiesEnabled, renderWorldCopies)
+        XCTAssertEqual(mapboxMap.shouldRenderWorldCopies, renderWorldCopies)
     }
 
     func testSetRenderWorldCopies() {
         let renderWorldCopies = Bool.random()
-        mapboxMap.isRenderWorldCopiesEnabled = renderWorldCopies
+        mapboxMap.shouldRenderWorldCopies = renderWorldCopies
         XCTAssertEqual(mapboxMap.__testingMap.getRenderWorldCopies(), renderWorldCopies)
     }
 

@@ -34,3 +34,6 @@ Constructor Puck3DConfiguration.init(model:modelScale:modelRotation:) has been r
 
 // Added clusterOptions to enable clustering on Point Annotation Managers
 Func AnnotationOrchestrator.makePointAnnotationManager(id:layerPosition:) has been renamed to Func makePointAnnotationManager(id:layerPosition:clusterOptions:)
+
+// The new constructor with styleJSON argument (and default argument) was provided
+Constructor MapInitOptions.init(resourceOptions:mapOptions:cameraOptions:styleURI:) has been removed

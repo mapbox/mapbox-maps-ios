@@ -20,14 +20,14 @@ platform :ios do
   lane :build_examples_tests do
     setup_circle_ci
     sync_code_signing
-    update_code_signing_settings(
-      use_automatic_signing: false,
-      path: "Apps/Examples/Examples.xcodeproj",
-      team_id: "GJZR2MEM28", # Developer Portal Team ID,
-      profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["com.mapbox.examples"],
-      targets: ["Examples"],
-      code_sign_identity: "Apple Development: Machiney McMachineface",
-    )
+    # update_code_signing_settings(
+    #   use_automatic_signing: false,
+    #   path: "Apps/Examples/Examples.xcodeproj",
+    #   team_id: "GJZR2MEM28", # Developer Portal Team ID,
+    #   profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["com.mapbox.examples"],
+    #   targets: ["Examples"],
+    #   code_sign_identity: "Apple Development: Machiney McMachineface",
+    # )
     run_tests(
       workspace: 'Apps/Apps.xcworkspace',
       scheme: 'Examples',                  # XCTest scheme

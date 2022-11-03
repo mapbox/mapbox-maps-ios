@@ -178,23 +178,17 @@ public final class MapboxMap: MapboxMapProtocol {
         __map.setRenderCacheOptionsFor(cacheOptions)
     }
 
-    /// Sets whether multiple copies of the world will be rendered side by side beyond -180 and 180 degrees longitude.
+    /// Defines whether multiple copies of the world will be rendered side by side beyond -180 and 180 degrees longitude.
     ///
     /// If disabled, when the map is zoomed out far enough that a single representation of the world does not fill the map's entire container,
     /// there will be blank space beyond 180 and -180 degrees longitude.
     /// In this case, features that cross 180 and -180 degrees longitude will be cut in two (with one portion on the right edge of the map
     /// and the other on the left edge of the map) at every zoom level.
     ///
-    /// By default, renderWorldCopies is set to `true`.
-    ///
-    /// - Parameter isEnabled: The boolean value defining whether rendering world copies is going to be enabled or not.
-    public func setRenderWorldCopies(_ isEnabled: Bool) {
-        __map.setRenderWorldCopiesForRenderWorldCopies(isEnabled)
-    }
-
-    /// Returns whether multiple copies of the world are being rendered side by side beyond -180 and 180 degrees longitude.
-    public func getRenderWorldCopies() -> Bool {
-        __map.getRenderWorldCopies()
+    /// By default, `isRenderWorldCopiesEnabled` is set to `true`.
+    public var isRenderWorldCopiesEnabled: Bool {
+        get { __map.getRenderWorldCopies() }
+        set { __map.setRenderWorldCopiesForRenderWorldCopies(newValue) }
     }
 
     /// Gets the resource options for the map.

@@ -32,31 +32,6 @@ final class StyleLocalizationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(style.getLocaleValue(locale: Locale(identifier: "zh-HK")), "zh-Hant")
     }
 
-    // Test iOS 16 Locale Components
-    func testLocaleComponents() {
-        let style = mapView.mapboxMap.style
-        if #available(iOS 16, *) {
-            let fullLocaleHK = Locale(languageCode: "zh", script: "Hant", languageRegion: "HK")
-            XCTAssertEqual(style.getLocaleValue(locale: fullLocaleHK), "zh-Hant")
-            let partialLocaleHK = Locale(languageCode: "zh", script: "Hant")
-            XCTAssertEqual(style.getLocaleValue(locale: partialLocaleHK), "zh-Hant")
-            let partialLocaleHK2 = Locale(languageCode: "zh", languageRegion: "HK")
-            XCTAssertEqual(style.getLocaleValue(locale: partialLocaleHK2), "zh-Hant")
-            let onlyZHLanguage = Locale(languageCode: "zh")
-            XCTAssertEqual(style.getLocaleValue(locale: onlyZHLanguage), "zh-Hans")
-            let fullLocaleTW = Locale(languageCode: "zh", script: "Hant", languageRegion: "TW")
-            XCTAssertEqual(style.getLocaleValue(locale: fullLocaleTW), "zh-Hant")
-            let partialLocaleTW2 = Locale(languageCode: "zh", languageRegion: "TW")
-            XCTAssertEqual(style.getLocaleValue(locale: partialLocaleTW2), "zh-Hant")
-            let fullLocaleCN = Locale(languageCode: "zh", script: "Hans", languageRegion: "CN")
-            XCTAssertEqual(style.getLocaleValue(locale: fullLocaleCN), "zh-Hans")
-            let partialLocaleCN = Locale(languageCode: "zh", script: "Hans")
-            XCTAssertEqual(style.getLocaleValue(locale: partialLocaleCN), "zh-Hans")
-            let partialLocaleCN2 = Locale(languageCode: "zh", languageRegion: "CN")
-            XCTAssertEqual(style.getLocaleValue(locale: partialLocaleCN2), "zh-Hans")
-        }
-    }
-
     func testGetLocaleValueDoesNotExist() {
         let style = mapView.mapboxMap.style
         XCTAssertNil(style.getLocaleValue(locale: Locale(identifier: "FAKE")))

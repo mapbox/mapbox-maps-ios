@@ -71,12 +71,13 @@ extension Style {
             let vectorSource = try! source(withId: sourceInfo.id, type: VectorSource.self)
 
             if vectorSource.url?.contains("mapbox.mapbox-streets-v7") == true {
-                // v7 styles do not support value of "name_zh-Hant"
-                if locale.identifier == "zh-Hant" {
+                // Streets v7 only supports "zh" and "zh-Hans"
+                if locale.identifier.contains("zh-Hant") {
                     return "zh"
-                }
-                // v7 styles do not support Italian or Vietnamese
-                if locale.identifier == "it" || locale.identifier == "vi" {
+                } else if locale.identifier.contains("zh-Hans") {
+                    return "zh-Hans"
+                // Streets v7 does not support Italian or Vietnamese
+                } else if locale.identifier.contains("it") || locale.identifier.contains("vi") {
                     return nil
                 } else {
                     localeValue = supportedLocaleIdentifiers.contains(locale.identifier) ? locale.identifier : locale.languageCode!

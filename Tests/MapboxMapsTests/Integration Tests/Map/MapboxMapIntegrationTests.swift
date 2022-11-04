@@ -35,6 +35,17 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
 
     // MARK: - Tests
 
+    let styleJSONObject: [String: Any] = [
+        "version": 8,
+        "center": [
+        -87.6298,
+        41.8781
+        ],
+        "zoom": 12,
+        "sources": [],
+        "layers": []
+    ]
+
     func testLoadStyleURICompletionIsCalled() {
         setupMapView()
 
@@ -49,18 +60,6 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
     }
 
     func testLoadStyleJSONCompletionIsCalled() throws {
-
-        let styleJSONObject: [String: Any] = [
-            "version": 8,
-            "center": [
-            -87.6298,
-            41.8781
-            ],
-            "zoom": 12,
-            "sources": [],
-            "layers": []
-        ]
-
         let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
         XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string")
 
@@ -68,14 +67,38 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
 
         let completionCalled = expectation(description: "Completion closure is called")
         mapView.mapboxMap.loadStyleJSON(styleJSON) { result in
-            guard case .success = result else {
+            guard case let .success(style) = result else {
                 XCTFail("loadStyleJSON failed")
                 return
             }
+            XCTAssertEqual(styleJSON, style.JSON)
             completionCalled.fulfill()
         }
         wait(for: [completionCalled], timeout: 5.0)
         waitForNextIdle()
+
+        removeMapView()
+    }
+
+    func testMapInitLoadsCustomStyleJSONOverURI() throws {
+        let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
+        XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string")
+
+        let resourceOptions = ResourceOptions(accessToken: ";afjnjlgns",
+                                              dataPathURL: dataPathURL)
+        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions,
+                                            styleURI: .dark,
+                                            styleJSON: styleJSON)
+        mapView = MapView(frame: rootView.bounds, mapInitOptions: mapInitOptions)
+        rootView.addSubview(mapView)
+
+        let completionCalled = expectation(description: "Map is loaded")
+        mapView.mapboxMap.onNext(event: .mapLoaded) { [mapView] _ in
+            XCTAssertEqual(styleJSON, mapView?.mapboxMap.style.JSON)
+            completionCalled.fulfill()
+        }
+
+        wait(for: [completionCalled], timeout: 2.0)
 
         removeMapView()
     }

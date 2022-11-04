@@ -297,7 +297,8 @@ open class MapView: UIView {
                 resourceOptions: mapInitOptions.resourceOptions,
                 mapOptions: resolvedMapOptions,
                 cameraOptions: mapInitOptions.cameraOptions,
-                styleURI: mapInitOptions.styleURI)
+                styleURI: mapInitOptions.styleURI,
+                styleJSON: mapInitOptions.styleJSON)
         } else {
             resolvedMapInitOptions = mapInitOptions
         }
@@ -321,6 +322,8 @@ open class MapView: UIView {
         if let initialStyleURI = overridingStyleURI,
            let styleURI = StyleURI(url: initialStyleURI) {
             mapboxMap.loadStyleURI(styleURI)
+        } else if let initialStyleJSON = resolvedMapInitOptions.styleJSON {
+            mapboxMap.loadStyleJSON(initialStyleJSON)
         } else if let initialStyleURI = resolvedMapInitOptions.styleURI {
             mapboxMap.loadStyleURI(initialStyleURI)
         }

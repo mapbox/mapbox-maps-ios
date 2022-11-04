@@ -63,6 +63,28 @@ final class ViewportImplTests: XCTestCase {
         }
     }
 
+    func testViewportAndStateIsReleasedAfterTransition() {
+        weak var weakState: ViewportState?
+        weak var weakImpl: ViewportImpl? = viewportImpl
+
+        autoreleasepool {
+            let state = MockViewportState()
+            weakState = state
+            viewportImpl.transition(to: state, transition: nil, completion: nil)
+            viewportImpl = nil
+
+            // reset stubs to break their references to the viewport impl
+            mainQueue.asyncClosureStub.reset()
+            defaultTransition.runStub.reset()
+            anyTouchGestureRecognizer.addTargetStub.reset()
+            doubleTapGestureRecognizer.addTargetStub.reset()
+            doubleTouchGestureRecognizer.addTargetStub.reset()
+        }
+
+        XCTAssertNil(weakState)
+        XCTAssertNil(weakImpl)
+    }
+
     func transitionAndNotify(withToState toState: ViewportState, transition: ViewportTransition? = nil, completion: ((Bool) -> Void)?) {
         viewportImpl.transition(to: toState, transition: transition, completion: completion)
         drainMainQueue()

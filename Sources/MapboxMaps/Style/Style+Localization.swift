@@ -38,13 +38,7 @@ extension Style {
 
         let preferredLocales = preferences.map(Locale.init(identifier:))
 
-        let acceptsEnglish = preferredLocales.contains { $0.languageCode == "en" }
-        var availableLocales = supportedLocaleIdentifiersv8
-        if !acceptsEnglish {
-            availableLocales.removeAll { $0.languageCode == "en" }
-        }
-
-        let mostSpecificLanguage = Bundle.preferredLocalizations(from: availableLocales.map { $0.identifier },
+        let mostSpecificLanguage = Bundle.preferredLocalizations(from: supportedLocaleIdentifiersv8.map { $0.identifier },
                                                                  forPreferences: preferences)
             .max { $0.count > $1.count }
 
@@ -58,14 +52,13 @@ extension Style {
     /// Returns the shortened language identifier string representing a supported Mapbox Streets Localization
     /// List of supported language identifiers: https://docs.mapbox.com/data/tilesets/reference/mapbox-streets-v8/#common-fields
     internal func getLocaleValue(locale: Locale) -> String? {
-        let preferences = [locale.identifier]
         var localeValue: String?
 
         // Lists those supported by either v7 or v8
         let supportedLocaleIdentifiers = ["ar", "en", "es", "fr", "de", "it", "pt", "ru", "zh-Hans", "zh-Hant", "ja", "ko", "vi", "zh"]
 
         // Do nothing if we do not support the locale
-        if !supportedLocaleIdentifiers.contains(locale.languageCode!) {
+        guard supportedLocaleIdentifiers.contains(locale.languageCode!) else {
             return nil
         }
 
@@ -92,7 +85,7 @@ extension Style {
             }
         }
 
-        localeValue = preferredMapboxStreetsLocalization(among: preferences) ?? nil
+        localeValue = preferredMapboxStreetsLocalization(among: [locale.identifier]) ?? nil
 
         return localeValue
     }

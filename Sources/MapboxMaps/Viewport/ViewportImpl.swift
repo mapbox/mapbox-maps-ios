@@ -37,6 +37,12 @@ internal final class ViewportImpl: ViewportImplProtocol {
 
     private let anyTouchGestureRecognizer: UIGestureRecognizer
 
+    deinit {
+        currentCancelable?.cancel()
+        currentCancelable = nil
+        status = .idle
+    }
+
     // viewport requires a default transition at all times
     internal init(options: ViewportOptions,
                   mainQueue: DispatchQueueProtocol,

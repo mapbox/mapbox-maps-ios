@@ -44,6 +44,22 @@ final class StyleLocalizationTests: MapViewIntegrationTestCase {
         XCTAssertThrowsError(try style.localizeLabels(into: Locale(identifier: "frm")), "Exact string needs to match, not just prefix")
     }
 
+    func testpreferredMapboxStreetsLocalization() {
+        let style = mapView.mapboxMap.style
+
+        XCTAssertEqual(style.preferredMapboxStreetsLocalization(among: ["de"]), "de")
+        XCTAssertEqual(style.preferredMapboxStreetsLocalization(among: ["en", "de"]), "en")
+        XCTAssertEqual(style.preferredMapboxStreetsLocalization(among: ["rett", "de", "en"]), "de")
+        XCTAssertEqual(style.preferredMapboxStreetsLocalization(among: ["rett", "de", "zh-Hans"]), "de")
+        XCTAssertEqual(style.preferredMapboxStreetsLocalization(among: ["rett", "der", "zh-Hans"]), "zh-Hans")
+        XCTAssertEqual(style.preferredMapboxStreetsLocalization(among: ["rett", "der", "zh"]), "zh-Hans")
+        XCTAssertEqual(style.preferredMapboxStreetsLocalization(among: ["rett", "der", "zh", "zh-Hant"]), "zh-Hans")
+        XCTAssertEqual(style.preferredMapboxStreetsLocalization(among: ["vi", "ko"]), "vi")
+        XCTAssertEqual(style.preferredMapboxStreetsLocalization(among: ["ar", "en", "es", "fr", "de", "it", "pt", "ru", "zh-Hans", "zh-Hant", "ja", "ko", "vi"]), "ar")
+        XCTAssertNil(style.preferredMapboxStreetsLocalization(among: ["rett", "der", "ffzh"]))
+        XCTAssertNil(style.preferredMapboxStreetsLocalization(among: [""]))
+    }
+
     func testOnlyLocalizesFirstLocalization() throws {
         var source = GeoJSONSource()
         source.data = .feature(Feature(geometry: Point(CLLocationCoordinate2D(latitude: 0, longitude: 0))))

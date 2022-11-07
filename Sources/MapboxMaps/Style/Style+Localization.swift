@@ -73,7 +73,7 @@ extension Style {
                 guard supportedLanguageCodesv7.contains(locale.languageCode!) else {
                     return nil
                 }
-                
+
                 // Streets v7 only supports "zh" and "zh-Hans"
                 if locale.identifier.contains("zh-Hant") {
                     return "zh"

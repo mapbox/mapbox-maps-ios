@@ -32,7 +32,7 @@ internal final class Throttle<Value> where Value: Equatable {
         cancelToken?.cancel()
     }
 
-    init(value: ObservableValue<Value>, windowDuration: TimeInterval) {
+    init(value: ObservableValue<Value> = .init(), windowDuration: TimeInterval) {
         self.observableValue = value
         self.windowDuration = windowDuration
     }
@@ -42,6 +42,8 @@ internal final class Throttle<Value> where Value: Equatable {
     }
 
     internal func notifyImmediately(with newValue: Value) {
+        guard value != newValue else { return }
+
         item?.cancel()
         item = nil
 

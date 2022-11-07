@@ -25,9 +25,9 @@ internal final class LocationProducer: LocationProducerProtocol {
     internal weak var delegate: LocationProducerDelegate?
 
     /// Represents the latest location received from the location provider.
-    internal var latestLocation: Location? { throttledLocation.value }
+    internal var latestLocation: Location? { locationThrottle.value }
 
-    private let throttledLocation: Throttle<Location>
+    private var locationThrottle: Throttle<Location>
 
     private var latestCLLocation: CLLocation? {
         didSet {
@@ -96,6 +96,7 @@ internal final class LocationProducer: LocationProducerProtocol {
             // reinitialize latest values to mimic setup in init
             latestCLLocation = nil
             latestHeading = nil
+            locationThrottle.flush()
             latestAccuracyAuthorization = locationProvider.accuracyAuthorization
             locationProvider.setDelegate(self)
             syncIsUpdating()
@@ -115,7 +116,8 @@ internal final class LocationProducer: LocationProducerProtocol {
                   notificationCenter: NotificationCenterProtocol,
                   userInterfaceOrientationView: UIView,
                   device: UIDevice,
-                  mayRequestWhenInUseAuthorization: Bool) {
+                  mayRequestWhenInUseAuthorization: Bool,
+                  locationThrottle: Throttle<Location> = .init(windowDuration: 1)) {
         self.locationProvider = locationProvider
         self.notificationCenter = notificationCenter
         self.mayRequestWhenInUseAuthorization = mayRequestWhenInUseAuthorization
@@ -123,8 +125,8 @@ internal final class LocationProducer: LocationProducerProtocol {
         self.interfaceOrientationProvider = interfaceOrientationProvider
         self.userInterfaceOrientationView = userInterfaceOrientationView
         self.device = device
-        self.throttledLocation = Throttle(value: ObservableValue<Location>(), windowDuration: 1)
-        locationCancelToken = self.throttledLocation.observe { [weak self] _ in
+        self.locationThrottle = locationThrottle
+        locationCancelToken = self.locationThrottle.observe { [weak self] _ in
             self?.notifyConsumers()
         }
         self.locationProvider.setDelegate(self)
@@ -222,9 +224,9 @@ internal final class LocationProducer: LocationProducerProtocol {
             accuracyAuthorization: latestAccuracyAuthorization
         )
         if immediately {
-            throttledLocation.notifyImmediately(with: location)
+            locationThrottle.notifyImmediately(with: location)
         } else {
-            throttledLocation.notify(with: location)
+            locationThrottle.notify(with: location)
         }
     }
 

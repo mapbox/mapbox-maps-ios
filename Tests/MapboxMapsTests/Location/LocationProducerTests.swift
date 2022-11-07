@@ -12,6 +12,7 @@ final class LocationProducerTests: XCTestCase {
     var notificationCenter: MockNotificationCenter!
     var userInterfaceOrientationView: UIView!
     var device: UIDevice!
+    var locationThrottle: Throttle<Location>!
 
     override func setUp() {
         super.setUp()
@@ -21,13 +22,16 @@ final class LocationProducerTests: XCTestCase {
         userInterfaceOrientationView = UIView()
         // swiftlint:disable:next discouraged_direct_init
         device = UIDevice()
+        locationThrottle = .init(windowDuration: 1)
         locationProducer = LocationProducer(
             locationProvider: locationProvider,
             interfaceOrientationProvider: interfaceOrientationProvider,
             notificationCenter: notificationCenter,
             userInterfaceOrientationView: userInterfaceOrientationView,
             device: device,
-            mayRequestWhenInUseAuthorization: true)
+            mayRequestWhenInUseAuthorization: true,
+            locationThrottle: locationThrottle
+        )
         delegate = MockLocationProducerDelegate()
         locationProducer.delegate = delegate
         consumer = MockLocationConsumer()
@@ -42,6 +46,7 @@ final class LocationProducerTests: XCTestCase {
         delegate = nil
         locationProducer = nil
         locationProvider = nil
+        locationThrottle = nil
         super.tearDown()
     }
 
@@ -276,13 +281,15 @@ final class LocationProducerTests: XCTestCase {
         // location
         let newHeading = MockHeading()
         locationProducer.locationProvider(locationProvider, didUpdateHeading: newHeading)
-
+        locationThrottle.flush()
+        
         XCTAssertTrue(consumer.locationUpdateStub.invocations.isEmpty)
 
         // send a location update and verify that the observers are notified
         // with the correct value
         let newLocation = CLLocation.random()
         locationProducer.locationProvider(locationProvider, didUpdateLocations: [newLocation])
+        locationThrottle.flush()
 
         XCTAssertEqual(consumer.locationUpdateStub.invocations.count, 1)
         let location = consumer.locationUpdateStub.invocations.first?.parameters
@@ -348,14 +355,17 @@ final class LocationProducerTests: XCTestCase {
         let heading1 = CLHeading()
         let heading2 = CLHeading()
         locationProducer.locationProvider(locationProvider, didUpdateHeading: heading1)
+        locationThrottle.flush()
 
         XCTAssertNil(locationProducer.latestLocation)
 
         locationProducer.locationProvider(locationProvider, didUpdateLocations: [CLLocation()])
+        locationThrottle.flush()
 
         XCTAssertTrue(locationProducer.latestLocation?.heading === heading1)
 
         locationProducer.locationProvider(locationProvider, didUpdateHeading: heading2)
+        locationThrottle.flush()
 
         XCTAssertTrue(locationProducer.latestLocation?.heading === heading2)
     }

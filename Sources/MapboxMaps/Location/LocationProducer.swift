@@ -25,25 +25,18 @@ internal final class LocationProducer: LocationProducerProtocol {
     internal weak var delegate: LocationProducerDelegate?
 
     /// Represents the latest location received from the location provider.
-    internal var latestLocation: Location? {
-        return latestCLLocation.map {
-            Location(
-                location: $0,
-                heading: latestHeading,
-                accuracyAuthorization: latestAccuracyAuthorization)
-        }
-    }
+    internal var latestLocation: Location? { throttledLocation.value }
+
+    private let throttledLocation: Throttle<Location>
 
     private var latestCLLocation: CLLocation? {
         didSet {
-            notifyConsumers()
+            updateLocation()
         }
     }
 
     private var latestHeading: CLHeading? {
-        didSet {
-            notifyConsumers()
-        }
+        didSet { updateLocation() }
     }
 
     private var latestAccuracyAuthorization: CLAccuracyAuthorization {
@@ -51,7 +44,7 @@ internal final class LocationProducer: LocationProducerProtocol {
             if latestAccuracyAuthorization != oldValue {
                 delegate?.locationProducer(self, didChangeAccuracyAuthorization: latestAccuracyAuthorization)
             }
-            notifyConsumers()
+            updateLocation(immediately: true)
         }
     }
 
@@ -115,6 +108,7 @@ internal final class LocationProducer: LocationProducerProtocol {
     private var mayRequestWhenInUseAuthorization: Bool
     private var headingOrientationUpdateBackupTimer: Timer?
     private weak var userInterfaceOrientationView: UIView?
+    private var locationCancelToken: Cancelable?
 
     internal init(locationProvider: LocationProvider,
                   interfaceOrientationProvider: InterfaceOrientationProvider,
@@ -129,6 +123,10 @@ internal final class LocationProducer: LocationProducerProtocol {
         self.interfaceOrientationProvider = interfaceOrientationProvider
         self.userInterfaceOrientationView = userInterfaceOrientationView
         self.device = device
+        self.throttledLocation = Throttle(value: ObservableValue<Location>(), windowDuration: 1)
+        locationCancelToken = self.throttledLocation.observe { [weak self] _ in
+            self?.notifyConsumers()
+        }
         self.locationProvider.setDelegate(self)
     }
 
@@ -141,6 +139,8 @@ internal final class LocationProducer: LocationProducerProtocol {
             locationProvider.stopUpdatingHeading()
             device.endGeneratingDeviceOrientationNotifications()
         }
+
+        locationCancelToken?.cancel()
     }
 
     /// The location manager holds weak references to consumers, client code should retain these references.
@@ -208,6 +208,23 @@ internal final class LocationProducer: LocationProducerProtocol {
             if showWarning {
                 Log.warning(forMessage: "Unexpected user interface orientation change was detected. Please file an issue at https://github.com/mapbox/mapbox-maps-ios/issues")
             }
+        }
+    }
+
+    private func updateLocation(immediately: Bool = false) {
+        guard let latestCLLocation = latestCLLocation else {
+            return
+        }
+
+        let location = Location(
+            location: latestCLLocation,
+            heading: latestHeading,
+            accuracyAuthorization: latestAccuracyAuthorization
+        )
+        if immediately {
+            throttledLocation.notifyImmediately(with: location)
+        } else {
+            throttledLocation.notify(with: location)
         }
     }
 

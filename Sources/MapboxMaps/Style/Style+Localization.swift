@@ -34,16 +34,17 @@ extension Style {
     /// Returns the BCP 47 language tag supported by Mapbox Streets source v8 that is most preferred according to the given preferences.
     /// Docs for language, region, and script codes: https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPInternational/LanguageandLocaleIDs/LanguageandLocaleIDs.html
     internal func preferredMapboxStreetsLocalization(among preferences: [String]) -> String? {
-        let supportedLocaleIdentifiersv8 = ["ar", "en", "es", "fr", "de", "it", "pt", "ru", "zh-Hans", "zh-Hant", "ja", "ko", "vi"].map(Locale.init(identifier:))
+        let supportedLanguageCodesv8 = ["ar", "en", "es", "fr", "de", "it", "pt", "ru", "zh-Hans", "zh-Hant", "ja", "ko", "vi"].map(Locale.init(identifier:))
 
         let preferredLocales = preferences.map(Locale.init(identifier:))
 
-        let mostSpecificLanguage = Bundle.preferredLocalizations(from: supportedLocaleIdentifiersv8.map { $0.identifier },
-                                                                 forPreferences: preferences)
-            .max { $0.count > $1.count }
+        let mostSpecificLanguage = Bundle.preferredLocalizations(from: supportedLanguageCodesv8.map(\.identifier),
+            forPreferences: preferences)
+            .first
 
         // `Bundle.preferredLocalizations(from:forPreferences:)` is just returning the first localization it could find.
-        if let mostSpecificLanguage = mostSpecificLanguage, !preferredLocales.contains(where: { $0.languageCode == Locale(identifier: mostSpecificLanguage).languageCode }) {
+        if let mostSpecificLanguage = mostSpecificLanguage,
+            !preferredLocales.contains(where: { $0.languageCode == Locale(identifier: mostSpecificLanguage).languageCode }) {
             return nil
         }
         return mostSpecificLanguage
@@ -52,43 +53,39 @@ extension Style {
     /// Returns the shortened language identifier string representing a supported Mapbox Streets Localization
     /// List of supported language identifiers: https://docs.mapbox.com/data/tilesets/reference/mapbox-streets-v8/#common-fields
     internal func getLocaleValue(locale: Locale) -> String? {
-        var localeValue: String?
-
-        // Lists those supported by either v7 or v8
-        let supportedLocaleIdentifiers = ["ar", "en", "es", "fr", "de", "it", "pt", "ru", "zh-Hans", "zh-Hant", "ja", "ko", "vi", "zh"]
-
-        // Do nothing if we do not support the locale
-        guard supportedLocaleIdentifiers.contains(locale.languageCode!) else {
-            return nil
+        let preferences: [String]
+        // Check if the passed Locale is the system or a created Locale
+        if locale == Locale.autoupdatingCurrent || locale == Locale.current {
+            preferences = Locale.preferredLanguages
+        } else {
+            preferences = [locale.identifier]
         }
 
-        // Check for streets v7
-        let vectorSources = allSourceIdentifiers.filter { source in
-            return source.type == .vector
-        }
-        for sourceInfo in vectorSources {
+        // Lists language codes supported by Mapbox Streets v7
+        let supportedLanguageCodesv7 = ["ar", "en", "es", "fr", "de", "pt", "ru", "ja", "ko", "zh", "zh-Hans"]
+
+        // Check for Mapbox Streets v7 source, adapt return to match v7 spec
+        for sourceInfo in allSourceIdentifiers where sourceInfo.type == .vector {
             // Force unwrapping since `allSourceIdentifiers` is getting a fresh list of valid sources
             let vectorSource = try! source(withId: sourceInfo.id, type: VectorSource.self)
 
             if vectorSource.url?.contains("mapbox.mapbox-streets-v7") == true {
+                guard supportedLanguageCodesv7.contains(locale.languageCode!) else {
+                    return nil
+                }
+                
                 // Streets v7 only supports "zh" and "zh-Hans"
                 if locale.identifier.contains("zh-Hant") {
                     return "zh"
                 } else if locale.identifier.contains("zh-Hans") {
                     return "zh-Hans"
-                // Streets v7 does not support Italian or Vietnamese
-                } else if locale.identifier.contains("it") || locale.identifier.contains("vi") {
-                    return nil
                 } else {
-                    localeValue = supportedLocaleIdentifiers.contains(locale.identifier) ? locale.identifier : locale.languageCode!
-                    return localeValue
+                    return locale.languageCode
                 }
             }
         }
 
-        localeValue = preferredMapboxStreetsLocalization(among: [locale.identifier]) ?? nil
-
-        return localeValue
+        return preferredMapboxStreetsLocalization(among: preferences) ?? nil
     }
 
     /// Converts the `SymbolLayer.textField` into the new locale

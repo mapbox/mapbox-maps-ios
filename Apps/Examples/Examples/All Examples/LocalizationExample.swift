@@ -49,7 +49,7 @@ public class LocalizationExample: UIViewController, ExampleProtocol {
 
         alert.addAction(UIAlertAction(title: "Device Locale", style: .default, handler: { [weak self] _ in
             do {
-                try self?.mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: Locale.preferredLanguages[0]))
+                try self?.mapView.mapboxMap.style.localizeLabels(into: Locale.current)
             } catch {
                 print(error)
             }

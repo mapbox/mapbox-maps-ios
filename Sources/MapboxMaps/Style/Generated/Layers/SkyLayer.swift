@@ -2,6 +2,7 @@
 import Foundation
 
 /// A spherical dome around the map that is always rendered behind all other layers.
+/// Warning: As of v10.6.0, ``Atmosphere`` is the preferred method for atmospheric styling. Sky layer is not supported by the globe projection, and will be phased out in future major release.
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-sky)
 public struct SkyLayer: Layer {

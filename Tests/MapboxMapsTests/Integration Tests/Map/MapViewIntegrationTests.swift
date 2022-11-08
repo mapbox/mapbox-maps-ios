@@ -81,7 +81,7 @@ final class MapViewIntegrationTests: IntegrationTestCase {
         weak var weakViewport: Viewport?
         weak var weakMapView: MapView?
 
-        try autoreleasepool { () -> Void in
+        try autoreleasepool {
             guard let rootView = rootViewController?.view else {
                 throw XCTSkip("No valid UIWindow or root view controller")
             }

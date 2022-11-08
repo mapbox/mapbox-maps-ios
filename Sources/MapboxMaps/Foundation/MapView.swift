@@ -347,19 +347,19 @@ open class MapView: UIView {
         cameraViewContainerView.isHidden = true
         addSubview(cameraViewContainerView)
 
-        // Setup Telemetry logging. Delay initialization by 10 seconds.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [weak self] in
-            guard let accessToken = self?.resourceOptions.accessToken else { return }
-            let eventsManager = EventsManager.shared(withAccessToken: accessToken)
-            eventsManager.sendTurnstile()
-            eventsManager.sendMapLoadEvent()
-        }
+        sendInitialTelemetryEvents()
 
         // false until added to a window and display link is created
         cameraAnimatorsRunnerEnablable.isEnabled = false
 
         // Set up managers
         setupManagers()
+    }
+
+    internal func sendInitialTelemetryEvents() {
+        let eventsManager = EventsManager.shared(withAccessToken: resourceOptions.accessToken)
+        eventsManager.sendTurnstile()
+        eventsManager.sendMapLoadEvent()
     }
 
     internal func setupManagers() {

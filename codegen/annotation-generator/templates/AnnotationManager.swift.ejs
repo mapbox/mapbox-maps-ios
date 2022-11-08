@@ -9,7 +9,6 @@
   const line = "polyline"
   const specialSymbolLayerProperties = ["icon-allow-overlap", "text-allow-overlap", "icon-ignore-placement", "text-ignore-placement"]
 _%>
-
 // This file is generated.
 import Foundation
 @_implementationOnly import MapboxCommon_Private
@@ -261,8 +260,7 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
         needsSyncSourceAndLayer = false
 
         <%_ if (isPointAnnotationManager) { _%>
-        let newImages = Set(annotations.compactMap(\.image) +
-            [annotationBeingDragged?.image].compactMap { $0 })
+        let newImages = Set(annotations.compactMap(\.image) + [annotationBeingDragged].compactMap(\.?.image))
         let newImageNames = Set(newImages.map(\.name))
         let unusedImages = addedImages.subtracting(newImageNames)
 
@@ -350,6 +348,7 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
         guard annotations.map(\.id).contains(where: queriedFeatureIds.contains(_:)) else {
             return
         }
+        
         <%_ if ( type === circle ) { _%>
         var tappedAnnotations: [CircleAnnotation] = []
         var annotations: [CircleAnnotation] = []

@@ -3,8 +3,13 @@
   const originalType = locals.orignalType
   const properties = locals.properties
   const isPointAnnotationManager = type === "point" // check for behaviors/properties which only apply to PointAnnotationManagers
+  const symbol = "point"
+  const circle = "circle"
+  const fill = "polygon"
+  const line = "polyline"
   const specialSymbolLayerProperties = ["icon-allow-overlap", "text-allow-overlap", "icon-ignore-placement", "text-ignore-placement"]
 _%>
+
 // This file is generated.
 import Foundation
 @_implementationOnly import MapboxCommon_Private
@@ -62,19 +67,55 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
 
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
 
+    <%_ if (type === circle || type === symbol) { _%>
+    private let offsetPointCalculator: OffsetPointCalculator
+    <%_ } else if ( type === line ) { _%>
+    private let offsetLineStringCalculator: OffsetLineStringCalculator
+    <%_ } else if ( type === fill ) { _%>
+    private let offsetPolygonCalculator: OffsetPolygonCalculator
+    <%_ } _%>
+
+    <%_ if (type === circle) { _%>
+    private var annotationBeingDragged: CircleAnnotation?
+    <%_ } else if ( type === fill ) { _%>
+    private var annotationBeingDragged: PolygonAnnotation?
+    <%_ } else if ( type === symbol ) { _%>
+    private var annotationBeingDragged: PointAnnotation?
+    <%_ } else if ( type === line ) { _%>
+    private var annotationBeingDragged: PolylineAnnotation?
+    <%_ } _%>
+
     private var isDestroyed = false
+    private let dragLayerId: String
+    private let dragSourceId: String
 
     internal init(id: String,
                   style: StyleProtocol,
                   layerPosition: LayerPosition?,
                   displayLinkCoordinator: DisplayLinkCoordinator<%_ if (isPointAnnotationManager) { _%>,
-                  clusterOptions: ClusterOptions? = nil<%_ } _%>) {
+                  clusterOptions: ClusterOptions? = nil<%_ } _%>,
+                  <%_ if (type === circle || type === symbol) { _%>
+                  offsetPointCalculator: OffsetPointCalculator) {
+                  <%_ } else if ( type === line ) { _%>
+                  offsetLineStringCalculator: OffsetLineStringCalculator) {
+                  <%_ } else if ( type === fill ) { _%>
+                  offsetPolygonCalculator: OffsetPolygonCalculator) {
+                  <%_ } _%>
         self.id = id
         self.sourceId = id
         self.layerId = id
         self.style = style<% if (isPointAnnotationManager) { %>
         self.clusterOptions = clusterOptions<% } %>
         self.displayLinkCoordinator = displayLinkCoordinator
+         <%_ if (type === circle || type === symbol) { _%>
+        self.offsetPointCalculator = offsetPointCalculator
+        <%_ } else if ( type === line ) { _%>
+        self.offsetLineStringCalculator = offsetLineStringCalculator
+        <%_ } else if ( type === fill ) { _%>
+        self.offsetPolygonCalculator = offsetPolygonCalculator
+        <%_ } _%>
+        self.dragLayerId = id + "_drag-layer"
+        self.dragSourceId = id + "_drag-source"
 
         do {
             // Add the source with empty `data` property
@@ -220,7 +261,8 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
         needsSyncSourceAndLayer = false
 
         <%_ if (isPointAnnotationManager) { _%>
-        let newImages = Set(annotations.compactMap(\.image))
+        let newImages = Set(annotations.compactMap(\.image) +
+            [annotationBeingDragged?.image].compactMap { $0 })
         let newImageNames = Set(newImages.map(\.name))
         let unusedImages = addedImages.subtracting(newImageNames)
 
@@ -302,15 +344,123 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
     }
     <%_ } _%>
 
-    internal func handleQueriedFeatureIds(_ queriedFeatureIds: [String]) {
-        // Find if any `queriedFeatureIds` match an annotation's `id`
-        let tappedAnnotations = annotations.filter { queriedFeatureIds.contains($0.id) }
+    // MARK: - User interaction handling
 
-        // If `tappedAnnotations` is not empty, call delegate
-        if !tappedAnnotations.isEmpty {
-            delegate?.annotationManager(
-                self,
-                didDetectTappedAnnotations: tappedAnnotations)
+    internal func handleQueriedFeatureIds(_ queriedFeatureIds: [String]) {
+        guard annotations.map(\.id).contains(where: queriedFeatureIds.contains(_:)) else {
+            return
+        }
+        <%_ if ( type === circle ) { _%>
+        var tappedAnnotations: [CircleAnnotation] = []
+        var annotations: [CircleAnnotation] = []
+        <%_ } else if ( type === symbol ) { _%>
+        var tappedAnnotations: [PointAnnotation] = []
+        var annotations: [PointAnnotation] = []
+        <%_ } else if ( type === line ) { _%>
+        var tappedAnnotations: [PolylineAnnotation] = []
+        var annotations: [PolylineAnnotation] = []
+        <%_ } else if ( type === fill ) { _%>
+        var tappedAnnotations: [PolygonAnnotation] = []
+        var annotations: [PolygonAnnotation] = []
+        <%_ } _%>
+
+        for var annotation in self.annotations {
+            if queriedFeatureIds.contains(annotation.id) {
+                annotation.isSelected.toggle()
+                tappedAnnotations.append(annotation)
+            }
+            annotations.append(annotation)
+        }
+
+        self.annotations = annotations
+
+        delegate?.annotationManager(
+            self,
+            didDetectTappedAnnotations: tappedAnnotations)
+    }
+
+    private func createDragSourceAndLayer() {
+        var dragSource = GeoJSONSource()
+        dragSource.data = .empty
+        do {
+            try style.addSource(dragSource, id: dragSourceId)
+        } catch {
+            Log.error(forMessage: "Failed to add the source to style. Error: \(error)")
+        }
+
+        do {
+            // copy the existing layer as the drag layer
+            var properties = try style.layerProperties(for: layerId)
+            properties[SymbolLayer.RootCodingKeys.id.rawValue] = dragLayerId
+            properties[SymbolLayer.RootCodingKeys.source.rawValue] = dragSourceId
+
+            try style.addPersistentLayer(with: properties, layerPosition: .above(layerId))
+        } catch {
+            Log.error(forMessage: "Failed to add the layer to style. Error: \(error)")
+        }
+    }
+
+    private func removeDragSourceAndLayer() {
+        do {
+            try style.removeLayer(withId: dragLayerId)
+            try style.removeSource(withId: dragSourceId)
+        } catch {
+            Log.error(forMessage: "Failed to remove drag layer. Error: \(error)")
+        }
+    }
+
+    internal func handleDragBegin(with featureIdentifiers: [String]) {
+        guard let annotation = annotations.first(where: { featureIdentifiers.contains($0.id) }) else { return }
+        createDragSourceAndLayer()
+
+        annotationBeingDragged = annotation
+        annotations.removeAll(where: { $0.id == annotation.id })
+
+        do {
+            try style.updateGeoJSONSource(withId: dragSourceId, geoJSON: .feature(annotation.feature))
+        } catch {
+            Log.error(forMessage: "Failed to update drag source. Error: \(error)")
+        }
+    }
+
+    internal func handleDragChanged(with translation: CGPoint) {
+        <%_ if ( type === symbol || type === circle ) { _%>
+        guard let annotationBeingDragged = annotationBeingDragged,
+              let offsetPoint = offsetPointCalculator.geometry(for: translation, from: annotationBeingDragged.point) else {
+            return
+        }
+
+        self.annotationBeingDragged?.point = offsetPoint
+        <%_ } else if ( type === line ) { _%>
+        guard let annotationBeingDragged = annotationBeingDragged,
+        let offsetPoint = offsetLineStringCalculator.geometry(for: translation, from: annotationBeingDragged.lineString) else {
+            return
+        }
+
+        self.annotationBeingDragged?.lineString = offsetPoint
+        <%_ } else if ( type === fill ) { _%>
+        guard let annotationBeingDragged = annotationBeingDragged,
+        let offsetPoint = offsetPolygonCalculator.geometry(for: translation, from: annotationBeingDragged.polygon) else {
+            return
+        }
+
+        self.annotationBeingDragged?.polygon = offsetPoint
+        <%_ } _%>
+        do {
+            try style.updateGeoJSONSource(withId: dragSourceId, geoJSON: .feature(annotationBeingDragged.feature))
+        } catch {
+            Log.error(forMessage: "Failed to update drag source. Error: \(error)")
+        }
+    }
+
+    internal func handleDragEnded() {
+        guard let annotationBeingDragged = annotationBeingDragged else { return }
+        annotations.append(annotationBeingDragged)
+        self.annotationBeingDragged = nil
+
+        // avoid blinking annotation by waiting
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.removeDragSourceAndLayer()
         }
     }
 }

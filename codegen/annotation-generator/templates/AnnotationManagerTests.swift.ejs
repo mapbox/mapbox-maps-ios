@@ -3,6 +3,10 @@
   const originalType = locals.orignalType
   const properties = locals.properties
   const isPointAnnotationManager = type === "point" // check for behaviors/properties which only apply to PointAnnotationManagers
+  const symbol = "point"
+  const circle = "circle"
+  const fill = "polygon"
+  const line = "polyline"
 
   const annotationLocal = function annotationLocal(declaration) {
     return indent(12)(include('AnnotationLocal.swift.ejs', { "annotationType": type, "declarationKeyword": declaration })).trim();
@@ -20,16 +24,39 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
     var annotations = [<%- camelize(type) %>Annotation]()
     var expectation: XCTestExpectation?
     var delegateAnnotations: [Annotation]?
+    <%_ if (type === circle || type === symbol) { _%>
+    var offsetPointCalculator: OffsetPointCalculator!
+    <%_ } else if ( type === line ) { _%>
+    var offsetLineStringCalculator: OffsetLineStringCalculator!
+    <%_ } else if ( type === fill ) { _%>
+    var offsetPolygonCalculator: OffsetPolygonCalculator!
+    <%_ } _%>
+
+    var mapboxMap = MockMapboxMap()
 
     override func setUp() {
         super.setUp()
 
         style = MockStyle()
         displayLinkCoordinator = MockDisplayLinkCoordinator()
+        <%_ if (type === circle || type === symbol) { _%>
+        offsetPointCalculator = OffsetPointCalculator(mapboxMap: mapboxMap)
+        <%_ } else if ( type === line ) { _%>
+        offsetLineStringCalculator = OffsetLineStringCalculator(mapboxMap: mapboxMap)
+        <%_ } else if ( type === fill ) { _%>
+        offsetPolygonCalculator = OffsetPolygonCalculator(mapboxMap: mapboxMap)
+        <%_ } _%>
         manager = <%- camelize(type) %>AnnotationManager(id: id,
                                           style: style,
                                           layerPosition: nil,
-                                          displayLinkCoordinator: displayLinkCoordinator)
+                                          displayLinkCoordinator: displayLinkCoordinator,
+                                          <%_ if (type === circle || type === symbol) { _%>
+                                          offsetPointCalculator: offsetPointCalculator)
+                                          <%_ } else if ( type === line ) { _%>
+                                          offsetLineStringCalculator: offsetLineStringCalculator)
+                                          <%_ } else if ( type === fill ) { _%>
+                                          offsetPolygonCalculator: offsetPolygonCalculator)
+                                          <%_ } _%>
 
         for _ in 0...10 {
             <%- annotationLocal("let") %>
@@ -53,7 +80,14 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         _ = <%- camelize(type) %>AnnotationManager(id: id,
                                  style: style,
                                  layerPosition: nil,
-                                 displayLinkCoordinator: displayLinkCoordinator)
+                                 displayLinkCoordinator: displayLinkCoordinator,
+                                 <%_ if (type === circle || type === symbol) { _%>
+                                 offsetPointCalculator: offsetPointCalculator)
+                                 <%_ } else if ( type === line ) { _%>
+                                 offsetLineStringCalculator: offsetLineStringCalculator)
+                                 <%_ } else if ( type === fill ) { _%>
+                                 offsetPolygonCalculator: offsetPolygonCalculator)
+                                 <%_ } _%>
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.type, SourceType.geoJson)
@@ -65,7 +99,14 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         let initializedManager = <%- camelize(type) %>AnnotationManager(id: id,
                                                          style: style,
                                                          layerPosition: nil,
-                                                         displayLinkCoordinator: displayLinkCoordinator)
+                                                         displayLinkCoordinator: displayLinkCoordinator,
+                                                         <%_ if (type === circle || type === symbol) { _%>
+                                                         offsetPointCalculator: offsetPointCalculator)
+                                                         <%_ } else if ( type === line ) { _%>
+                                                         offsetLineStringCalculator: offsetLineStringCalculator)
+                                                         <%_ } else if ( type === fill ) { _%>
+                                                         offsetPolygonCalculator: offsetPolygonCalculator)
+                                                         <%_ } _%>
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
@@ -86,7 +127,14 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         let manager2 = <%- camelize(type) %>AnnotationManager(id: manager.id,
                                                style: style,
                                                layerPosition: nil,
-                                               displayLinkCoordinator: displayLinkCoordinator)
+                                               displayLinkCoordinator: displayLinkCoordinator,
+                                               <%_ if (type === circle || type === symbol) { _%>
+                                               offsetPointCalculator: offsetPointCalculator)
+                                               <%_ } else if ( type === line ) { _%>
+                                               offsetLineStringCalculator: offsetLineStringCalculator)
+                                               <%_ } else if ( type === fill ) { _%>
+                                               offsetPolygonCalculator: offsetPolygonCalculator)
+                                               <%_ } _%>
         manager2.annotations = annotations2
 
         XCTAssertEqual(manager.annotations.count, 11)
@@ -97,7 +145,14 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         let manager3 = <%- camelize(type) %>AnnotationManager(id: id,
                                                style: style,
                                                layerPosition: LayerPosition.at(4),
-                                               displayLinkCoordinator: displayLinkCoordinator)
+                                               displayLinkCoordinator: displayLinkCoordinator,
+                                               <%_ if (type === circle || type === symbol) { _%>
+                                               offsetPointCalculator: offsetPointCalculator)
+                                               <%_ } else if ( type === line ) { _%>
+                                               offsetLineStringCalculator: offsetLineStringCalculator)
+                                               <%_ } else if ( type === fill ) { _%>
+                                               offsetPolygonCalculator: offsetPolygonCalculator)
+                                               <%_ } _%>
         manager3.annotations = annotations
 
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition, LayerPosition.at(4))
@@ -416,7 +471,14 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
                                   style: style,
                                   layerPosition: nil,
                                   displayLinkCoordinator: displayLinkCoordinator,
-                                  clusterOptions: clusterOptions)
+                                  clusterOptions: clusterOptions,
+                                  <%_ if (type === circle || type === symbol) { _%>
+                                  offsetPointCalculator: offsetPointCalculator)
+                                  <%_ } else if ( type === line ) { _%>
+                                  offsetLineStringCalculator: offsetLineStringCalculator)
+                                  <%_ } else if ( type === fill ) { _%>
+                                  offsetPolygonCalculator: offsetPolygonCalculator)
+                                  <%_ } _%>
         pointAnnotationManager.annotations = annotations
 
         // then
@@ -456,7 +518,14 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
                                   style: style,
                                   layerPosition: nil,
                                   displayLinkCoordinator: displayLinkCoordinator,
-                                  clusterOptions: clusterOptions)
+                                  clusterOptions: clusterOptions,
+                                  <%_ if (type === circle || type === symbol) { _%>
+                                  offsetPointCalculator: offsetPointCalculator)
+                                  <%_ } else if ( type === line ) { _%>
+                                  offsetLineStringCalculator: offsetLineStringCalculator)
+                                  <%_ } else if ( type === fill ) { _%>
+                                  offsetPolygonCalculator: offsetPolygonCalculator)
+                                  <%_ } _%>
 
         pointAnnotationManager.annotations = annotations
         let geoJSONSource = style.addSourceStub.invocations.last?.parameters.source as! GeoJSONSource
@@ -489,7 +558,14 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
                                   style: style,
                                   layerPosition: nil,
                                   displayLinkCoordinator: displayLinkCoordinator,
-                                  clusterOptions: clusterOptions)
+                                  clusterOptions: clusterOptions,
+                                  <%_ if (type === circle || type === symbol) { _%>
+                                  offsetPointCalculator: offsetPointCalculator)
+                                  <%_ } else if ( type === line ) { _%>
+                                  offsetLineStringCalculator: offsetLineStringCalculator)
+                                  <%_ } else if ( type === fill ) { _%>
+                                  offsetPolygonCalculator: offsetPolygonCalculator)
+                                  <%_ } _%>
         pointAnnotationManager.annotations = annotations
 
         // then
@@ -528,7 +604,14 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
                                   style: style,
                                   layerPosition: nil,
                                   displayLinkCoordinator: displayLinkCoordinator,
-                                  clusterOptions: clusterOptions)
+                                  clusterOptions: clusterOptions,
+                                  <%_ if (type === circle || type === symbol) { _%>
+                                  offsetPointCalculator: offsetPointCalculator)
+                                  <%_ } else if ( type === line ) { _%>
+                                  offsetLineStringCalculator: offsetLineStringCalculator)
+                                  <%_ } else if ( type === fill ) { _%>
+                                  offsetPolygonCalculator: offsetPolygonCalculator)
+                                  <%_ } _%>
         pointAnnotationManager.annotations = annotations
 
         // then
@@ -559,7 +642,14 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
                                   style: style,
                                   layerPosition: nil,
                                   displayLinkCoordinator: displayLinkCoordinator,
-                                  clusterOptions: clusterOptions)
+                                  clusterOptions: clusterOptions,
+                                  <%_ if (type === circle || type === symbol) { _%>
+                                  offsetPointCalculator: offsetPointCalculator)
+                                  <%_ } else if ( type === line ) { _%>
+                                  offsetLineStringCalculator: offsetLineStringCalculator)
+                                  <%_ } else if ( type === fill ) { _%>
+                                  offsetPolygonCalculator: offsetPolygonCalculator)
+                                  <%_ } _%>
         pointAnnotationManager.annotations = annotations
 
         // then
@@ -597,7 +687,14 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
                                   style: style,
                                   layerPosition: nil,
                                   displayLinkCoordinator: displayLinkCoordinator,
-                                  clusterOptions: clusterOptions)
+                                  clusterOptions: clusterOptions,
+                                  <%_ if (type === circle || type === symbol) { _%>
+                                  offsetPointCalculator: offsetPointCalculator)
+                                  <%_ } else if ( type === line ) { _%>
+                                  offsetLineStringCalculator: offsetLineStringCalculator)
+                                  <%_ } else if ( type === fill ) { _%>
+                                  offsetPolygonCalculator: offsetPolygonCalculator)
+                                  <%_ } _%>
         pointAnnotationManager.annotations = annotations
         pointAnnotationManager.syncSourceAndLayerIfNeeded()
         var sourceGeoJSON = style.updateGeoJSONSourceStub.invocations.last?.parameters.geojson
@@ -630,7 +727,14 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
                                   style: style,
                                   layerPosition: nil,
                                   displayLinkCoordinator: displayLinkCoordinator,
-                                  clusterOptions: clusterOptions)
+                                  clusterOptions: clusterOptions,
+                                  <%_ if (type === circle || type === symbol) { _%>
+                                  offsetPointCalculator: offsetPointCalculator)
+                                  <%_ } else if ( type === line ) { _%>
+                                  offsetLineStringCalculator: offsetLineStringCalculator)
+                                  <%_ } else if ( type === fill ) { _%>
+                                  offsetPolygonCalculator: offsetPolygonCalculator)
+                                  <%_ } _%>
         pointAnnotationManager.annotations = annotations
         pointAnnotationManager.destroy()
 
@@ -643,6 +747,196 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         XCTAssertEqual(removeLayerInvocations[2].parameters, id)
     }
     <%_ } _%>
+    func testHandleDragBeginNoFeatureId() {
+        style.addSourceStub.reset()
+        style.addPersistentLayerWithPropertiesStub.reset()
+
+        manager.handleDragBegin(with: [])
+
+        XCTAssertTrue(style.addSourceStub.invocations.isEmpty)
+        XCTAssertTrue(style.addLayerStub.invocations.isEmpty)
+        XCTAssertTrue(style.updateGeoJSONSourceStub.invocations.isEmpty)
+    }
+
+    func testHandleDragBeginInvalidFeatureId() {
+        style.addSourceStub.reset()
+        style.addPersistentLayerWithPropertiesStub.reset()
+
+        manager.handleDragBegin(with: ["not-a-feature"])
+
+        XCTAssertTrue(style.addSourceStub.invocations.isEmpty)
+        XCTAssertTrue(style.addPersistentLayerWithPropertiesStub.invocations.isEmpty)
+        XCTAssertTrue(style.updateGeoJSONSourceStub.invocations.isEmpty)
+    }
+
+    func testHandleDragBegin() throws {
+        <%_ if ( type === symbol) { _%>
+        manager.annotations = [
+            PointAnnotation(id: "point1", coordinate: .random())
+        ]
+        <%_ } else if ( type === circle ) { _%>
+        manager.annotations = [
+            CircleAnnotation(id: "circle1", centerCoordinate: .random())
+        ]
+        <%_ } else if ( type === line ) { _%>
+        manager.annotations = [
+            PolylineAnnotation(id: "line1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)])
+        ]
+        <%_ } else if ( type === fill ) { _%>
+        manager.annotations = [
+            PolygonAnnotation(id: "polygon1", polygon: .init([[
+                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+                CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+                CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+                CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+            ]]))
+        ]
+        <%_ } _%>
+
+        style.addSourceStub.reset()
+        style.addPersistentLayerWithPropertiesStub.reset()
+
+        <%_ if ( type === circle ) { _%>
+        manager.handleDragBegin(with: ["circle1"])
+        <%_ } else if ( type === symbol ) { _%>
+        manager.handleDragBegin(with: ["point1"])
+        <%_ } else if ( type === line ) { _%>
+        manager.handleDragBegin(with: ["line1"])
+        <%_ } else if ( type === fill ) { _%>
+        manager.handleDragBegin(with: ["polygon1"])
+        <%_ } _%>
+
+        let addSourceParameters = try XCTUnwrap(style.addSourceStub.invocations.last).parameters
+        let addLayerParameters = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.last).parameters
+        let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
+
+        XCTAssertEqual(addLayerParameters.properties["source"] as? String, addSourceParameters.id)
+        XCTAssertNotEqual(addLayerParameters.properties["id"] as? String, manager.layerId)
+
+        <%_ if ( type === circle ) { _%>
+        XCTAssertFalse(manager.annotations.contains(where: { $0.id == "circle1" }))
+        <%_ } else if ( type === symbol ) { _%>
+        XCTAssertFalse(manager.annotations.contains(where: { $0.id == "point1" }))
+        <%_ } else if ( type === line ) { _%>
+        XCTAssertFalse(manager.annotations.contains(where: { $0.id == "line1" }))
+        <%_ } else if ( type === fill ) { _%>
+        XCTAssertFalse(manager.annotations.contains(where: { $0.id == "polygon1" }))
+        <%_ } _%>
+        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.id)
+    }
+
+    func testHandleDragChanged() throws {
+        mapboxMap.pointStub.defaultReturnValue = CGPoint(x: 0, y: 0)
+        mapboxMap.coordinateForPointStub.defaultReturnValue = .random()
+        mapboxMap.cameraState.zoom = 1
+
+        <%_ if ( type === symbol) { _%>
+        manager.annotations = [
+            PointAnnotation(id: "point1", coordinate: .init(latitude: 0, longitude: 0))
+        ]
+        <%_ } else if ( type === circle ) { _%>
+        manager.annotations = [
+            CircleAnnotation(id: "circle1", centerCoordinate: .init(latitude: 0, longitude: 0))
+        ]
+        <%_ } else if ( type === line ) { _%>
+        manager.annotations = [
+            PolylineAnnotation(id: "line1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)])
+        ]
+        <%_ } else if ( type === fill ) { _%>
+        manager.annotations = [
+            PolygonAnnotation(id: "polygon1", polygon: .init([[
+                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+                CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+                CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+                CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+            ]]))
+        ]
+        <%_ } _%>
+
+        manager.handleDragChanged(with: .random())
+        XCTAssertTrue(style.updateGeoJSONSourceStub.invocations.isEmpty)
+
+        <%_ if ( type === circle ) { _%>
+        manager.handleDragBegin(with: ["circle1"])
+        <%_ } else if ( type === symbol ) { _%>
+        manager.handleDragBegin(with: ["point1"])
+        <%_ } else if ( type === line ) { _%>
+        manager.handleDragBegin(with: ["line1"])
+        <%_ } else if ( type === fill ) { _%>
+        manager.handleDragBegin(with: ["polygon1"])
+        <%_ } _%>
+        let addSourceParameters = try XCTUnwrap(style.addSourceStub.invocations.last).parameters
+
+        manager.handleDragChanged(with: .random())
+        let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
+        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.id)
+        guard case .feature = updateSourceParameters.geojson.geoJSONObject else {
+            XCTFail("GeoJSONObject should be a feature")
+            return
+        }
+    }
+
+    func testHandleDragEnded() throws {
+        <%_ if ( type === symbol) { _%>
+        manager.annotations = [
+            PointAnnotation(id: "point1", coordinate: .init(latitude: 0, longitude: 0))
+        ]
+        <%_ } else if ( type === circle ) { _%>
+        manager.annotations = [
+            CircleAnnotation(id: "circle1", centerCoordinate: .init(latitude: 0, longitude: 0))
+        ]
+        <%_ } else if ( type === line ) { _%>
+        manager.annotations = [
+            PolylineAnnotation(id: "line1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)])
+        ]
+        <%_ } else if ( type === fill ) { _%>
+        manager.annotations = [
+            PolygonAnnotation(id: "polygon1", polygon: .init([[
+                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+                CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+                CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+                CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+            ]]))
+        ]
+        <%_ } _%>
+
+        manager.handleDragEnded()
+        eventually(timeout: 0.2) {
+            XCTAssertTrue(self.style.removeLayerStub.invocations.isEmpty)
+            XCTAssertTrue(self.style.removeSourceStub.invocations.isEmpty)
+        }
+
+        <%_ if ( type === circle ) { _%>
+        manager.handleDragBegin(with: ["circle1"])
+        <%_ } else if ( type === symbol ) { _%>
+        manager.handleDragBegin(with: ["point1"])
+        <%_ } else if ( type === line ) { _%>
+        manager.handleDragBegin(with: ["line1"])
+        <%_ } else if ( type === fill ) { _%>
+        manager.handleDragBegin(with: ["polygon1"])
+        <%_ } _%>
+        manager.handleDragEnded()
+
+        <%_ if ( type === circle ) { _%>
+        XCTAssertTrue(manager.annotations.contains(where: { $0.id == "circle1" }))
+        <%_ } else if ( type === symbol ) { _%>
+        XCTAssertTrue(manager.annotations.contains(where: { $0.id == "point1" }))
+        <%_ } else if ( type === line ) { _%>
+        XCTAssertTrue(manager.annotations.contains(where: { $0.id == "line1" }))
+        <%_ } else if ( type === fill ) { _%>
+        XCTAssertTrue(manager.annotations.contains(where: { $0.id == "polygon1" }))
+        <%_ } _%>
+        eventually(timeout: 0.2) {
+            let removeSourceParameters = self.style.removeSourceStub.invocations.last!.parameters
+            let removeLayerParameters = self.style.removeLayerStub.invocations.last!.parameters
+
+            XCTAssertNotEqual(removeLayerParameters, self.manager.layerId)
+            XCTAssertNotEqual(removeSourceParameters, self.manager.sourceId)
+        }
+    }
 }
 
 <%_ if (isPointAnnotationManager) { _%>

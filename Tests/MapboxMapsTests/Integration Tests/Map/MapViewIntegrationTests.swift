@@ -76,6 +76,50 @@ final class MapViewIntegrationTests: IntegrationTestCase {
         XCTAssertNil(weakMapView)
     }
 
+    func testViewportAndStateIsReleasedAfterTransition() throws {
+        weak var weakState: ViewportState?
+        weak var weakViewport: Viewport?
+        weak var weakMapView: MapView?
+
+        try autoreleasepool { () -> Void in
+            guard let rootView = rootViewController?.view else {
+                throw XCTSkip("No valid UIWindow or root view controller")
+            }
+
+            let expectation = self.expectation(description: "wait for map")
+
+            let resourceOptions = ResourceOptions(accessToken: accessToken, dataPathURL: dataPathURL)
+            let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions)
+            let mapView = MapView(frame: rootView.bounds, mapInitOptions: mapInitOptions)
+            weakMapView = mapView
+            weakViewport = mapView.viewport
+
+            rootView.addSubview(mapView)
+
+            mapView.mapboxMap.onNext(event: .mapLoaded) { [weak mapView] _ in
+                guard let mapView = mapView else { return }
+                let state = mapView.viewport.makeFollowPuckViewportState()
+                weakState = state
+                mapView.viewport.transition(to: state)
+                expectation.fulfill()
+            }
+
+            wait(for: [expectation], timeout: 30.0)
+            mapView.removeFromSuperview()
+
+             XCTAssertNotNil(weakState)
+             XCTAssertNotNil(weakViewport)
+             XCTAssertNotNil(weakMapView)
+         }
+
+        // appending the check to the end of the queue as some delegate notification are scheduled on the main queue
+        DispatchQueue.main.async {
+            XCTAssertNil(weakState)
+            XCTAssertNil(weakViewport)
+            XCTAssertNil(weakMapView)
+        }
+    }
+
     func testMapViewDoesNotStartLocationServicesAutomatically() {
         let locationProvider = MockLocationProvider()
 

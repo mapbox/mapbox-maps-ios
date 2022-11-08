@@ -39,7 +39,6 @@ internal final class ViewportImpl: ViewportImplProtocol {
 
     deinit {
         currentCancelable?.cancel()
-        currentCancelable = nil
         status = .idle
     }
 

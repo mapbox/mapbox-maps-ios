@@ -134,12 +134,16 @@ internal final class EventsManager {
 
     internal func sendMapLoadEvent() {
         let attributes = self.getMapLoadEventAttributes()
-        let mapLoadEvent = MapboxCommon_Private.Event(priority: .queued, attributes: attributes, deferredOptions: nil)
+        let mapLoadEvent = MapboxCommon_Private.Event(priority: .queued,
+                                                      attributes: attributes,
+                                                      deferredOptions: nil)
         eventsService.sendEvent(for: mapLoadEvent)
     }
 
     internal func sendTurnstile() {
-        let turnstileEvent = TurnstileEvent(skuId: UserSKUIdentifier.mapsMAUS, sdkIdentifier: Constants.MGLAPIClientUserAgentBase, sdkVersion: Constants.SDKVersion)
+        let turnstileEvent = TurnstileEvent(skuId: UserSKUIdentifier.mapsMAUS,
+                                            sdkIdentifier: Constants.MGLAPIClientUserAgentBase,
+                                            sdkVersion: Constants.SDKVersion)
         eventsService.sendTurnstileEvent(for: turnstileEvent)
     }
 

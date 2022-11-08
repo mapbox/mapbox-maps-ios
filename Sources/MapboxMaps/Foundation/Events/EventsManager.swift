@@ -134,7 +134,7 @@ internal final class EventsManager {
 
     internal func sendMapLoadEvent() {
         let attributes = self.getMapLoadEventAttributes()
-        let mapLoadEvent = MapboxCommon_Private.Event(priority: .immediate, attributes: attributes, deferredOptions: nil)
+        let mapLoadEvent = MapboxCommon_Private.Event(priority: .queued, attributes: attributes, deferredOptions: nil)
         eventsService.sendEvent(for: mapLoadEvent)
     }
 

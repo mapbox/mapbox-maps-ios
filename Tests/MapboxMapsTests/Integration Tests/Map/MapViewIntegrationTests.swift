@@ -112,12 +112,16 @@ final class MapViewIntegrationTests: IntegrationTestCase {
              XCTAssertNotNil(weakMapView)
          }
 
+        let mainQueueExpectation = expectation(description: "Main queue scheduled event")
         // appending the check to the end of the queue as some delegate notification are scheduled on the main queue
         DispatchQueue.main.async {
+            mainQueueExpectation.fulfill()
             XCTAssertNil(weakState)
             XCTAssertNil(weakViewport)
             XCTAssertNil(weakMapView)
         }
+
+        wait(for: [mainQueueExpectation], timeout: 1)
     }
 
     func testMapViewDoesNotStartLocationServicesAutomatically() {

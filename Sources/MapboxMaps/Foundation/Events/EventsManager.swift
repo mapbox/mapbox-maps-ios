@@ -142,4 +142,10 @@ internal final class EventsManager {
         let turnstileEvent = TurnstileEvent(skuId: UserSKUIdentifier.mapsMAUS, sdkIdentifier: Constants.MGLAPIClientUserAgentBase, sdkVersion: Constants.SDKVersion)
         eventsService.sendTurnstileEvent(for: turnstileEvent)
     }
+
+    /// Flush events from internal telemetry and events services
+    internal func flush() {
+        telemetryService.flush()
+        eventsService.flush()
+    }
 }

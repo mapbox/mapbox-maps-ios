@@ -367,6 +367,33 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
 
         try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh-Hans-CN"))
         assert(placeLabelProperty: "name_zh-Hans")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh_Hant-TW"))
+        assert(placeLabelProperty: "name_zh")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh_Hant-HK"))
+        assert(placeLabelProperty: "name_zh")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh_Hans-CN"))
+        assert(placeLabelProperty: "name_zh-Hans")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh_Hant_TW"))
+        assert(placeLabelProperty: "name_zh")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh_Hant_HK"))
+        assert(placeLabelProperty: "name_zh")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh_Hans_CN"))
+        assert(placeLabelProperty: "name_zh-Hans")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh-Hant-TW"))
+        assert(placeLabelProperty: "name_zh")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh-Hant-HK"))
+        assert(placeLabelProperty: "name_zh")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh-Hans-CN"))
+        assert(placeLabelProperty: "name_zh-Hans")
     }
 
     func testLocalizeLabelsv8() {
@@ -484,6 +511,33 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         assert(placeLabelProperty: "name_zh-Hant")
 
         try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh-Hans-CN"))
+        assert(placeLabelProperty: "name_zh-Hans")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh_Hant_TW"))
+        assert(placeLabelProperty: "name_zh-Hant")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh_Hant_HK"))
+        assert(placeLabelProperty: "name_zh-Hant")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh_Hans_CN"))
+        assert(placeLabelProperty: "name_zh-Hans")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh_Hant-TW"))
+        assert(placeLabelProperty: "name_zh-Hant")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh_Hant-HK"))
+        assert(placeLabelProperty: "name_zh-Hant")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh_Hans-CN"))
+        assert(placeLabelProperty: "name_zh-Hans")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh-Hant_TW"))
+        assert(placeLabelProperty: "name_zh-Hant")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh-Hant_HK"))
+        assert(placeLabelProperty: "name_zh-Hant")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh-Hans_CN"))
         assert(placeLabelProperty: "name_zh-Hans")
 
         XCTAssertThrowsError(try mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "jkls")), "Locale string needs to match exactly")

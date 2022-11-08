@@ -33,25 +33,31 @@ extension Style {
 
     /// Returns the BCP 47 language tag supported by Mapbox Streets source v8 that is most preferred according to the given preferences.
     /// Docs for language, region, and script codes: https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPInternational/LanguageandLocaleIDs/LanguageandLocaleIDs.html
-    internal func preferredMapboxStreetsLocalization(among preferences: [String]) -> String? {
-        let supportedLanguageCodesv8 = ["ar", "en", "es", "fr", "de", "it", "pt", "ru", "zh-Hans", "zh-Hant", "ja", "ko", "vi"].map(Locale.init(identifier:))
-
+    internal func preferredMapboxStreetsLocalization(among preferences: [String], from supportedCodes: [String]) -> String? {
+        let availableCodes = supportedCodes.filter { languageCode in
+            return Locale.availableIdentifiers.contains(languageCode)
+        }
+        let supportedLanguageCodes = availableCodes.map(Locale.init(identifier:))
         let preferredLocales = preferences.map(Locale.init(identifier:))
 
-        let mostSpecificLanguage = Bundle.preferredLocalizations(from: supportedLanguageCodesv8.map(\.identifier),
-            forPreferences: preferences)
-            .first
-
-        // `Bundle.preferredLocalizations(from:forPreferences:)` is just returning the first localization it could find.
-        if let mostSpecificLanguage = mostSpecificLanguage,
-            !preferredLocales.contains(where: { $0.languageCode == Locale(identifier: mostSpecificLanguage).languageCode }) {
+        // `Bundle.preferredLocalizations(from:forPreferences:)` returns locale identifiers for
+        // which a bundle would provide localized content,
+        // given a specified list of candidates for a user's language preferences.
+        // https://developer.apple.com/documentation/foundation/bundle/1409418-preferredlocalizations
+        // Note that generally one locale identifier is returned, unless compatible entries are available.
+        // If none of the user-preferred localizations are available,
+        // this method returns one of the values in supportedLanguageCodes ("en" if available).
+        let mostSpecificLanguage = Bundle.preferredLocalizations(from: supportedLanguageCodes.map(\.identifier),
+                                                                 forPreferences: preferences).first
+        let mostSpecificLocale = mostSpecificLanguage.map { Locale(identifier: $0) }
+        guard preferredLocales.contains(where: { $0.languageCode == mostSpecificLocale?.languageCode }) else {
             return nil
         }
+
         return mostSpecificLanguage
     }
 
     /// Returns the shortened language identifier string representing a supported Mapbox Streets Localization
-    /// List of supported language identifiers: https://docs.mapbox.com/data/tilesets/reference/mapbox-streets-v8/#common-fields
     internal func getLocaleValue(locale: Locale) -> String? {
         let preferences: [String]
         // Check if the passed Locale is the system or a created Locale
@@ -61,31 +67,27 @@ extension Style {
             preferences = [locale.identifier]
         }
 
-        // Lists language codes supported by Mapbox Streets v7
-        let supportedLanguageCodesv7 = ["ar", "en", "es", "fr", "de", "pt", "ru", "ja", "ko", "zh", "zh-Hans"]
+        // Lists language codes supported by Mapbox Streets Sources 7 and 8
+        // https://docs.mapbox.com/data/tilesets/reference/legacy/mapbox-streets-v7/#name-fields
+        let supportedLanguageCodesv7 = ["ar", "en", "es", "fr", "de", "pt", "ru", "ja", "ko", "zh", "zh_Hans"]
+        // https://docs.mapbox.com/data/tilesets/reference/mapbox-streets-v8/#common-fields
+        let supportedLanguageCodesv8 = ["ar", "en", "es", "fr", "de", "it", "pt", "ru", "zh_Hans", "zh_Hant", "ja", "ko", "vi"]
 
         // Check for Mapbox Streets v7 source, adapt return to match v7 spec
         for sourceInfo in allSourceIdentifiers where sourceInfo.type == .vector {
             // Force unwrapping since `allSourceIdentifiers` is getting a fresh list of valid sources
             let vectorSource = try! source(withId: sourceInfo.id, type: VectorSource.self)
-
             if vectorSource.url?.contains("mapbox.mapbox-streets-v7") == true {
-                guard supportedLanguageCodesv7.contains(locale.languageCode!) else {
-                    return nil
-                }
-
-                // Streets v7 only supports "zh" and "zh-Hans"
-                if locale.identifier.contains("zh-Hant") {
+                // Streets v7 only supports "zh"
+                if locale.identifier.contains("Hant") || locale.identifier.contains("HK") || locale.identifier.contains("TW") {
                     return "zh"
-                } else if locale.identifier.contains("zh-Hans") {
-                    return "zh-Hans"
                 } else {
-                    return locale.languageCode
+                    return preferredMapboxStreetsLocalization(among: preferences, from: supportedLanguageCodesv7) ?? nil
                 }
             }
         }
 
-        return preferredMapboxStreetsLocalization(among: preferences) ?? nil
+        return preferredMapboxStreetsLocalization(among: preferences, from: supportedLanguageCodesv8) ?? nil
     }
 
     /// Converts the `SymbolLayer.textField` into the new locale

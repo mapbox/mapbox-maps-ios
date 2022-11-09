@@ -5,6 +5,7 @@ import MapboxMaps
 class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
+    let clusterLayerID = "fireHydrantClusters"
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -17,6 +18,9 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
         view.addSubview(mapView)
+
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(gestureRecognizer:)))
+        mapView.addGestureRecognizer(tapGestureRecognizer)
 
         // Add the source and style layers once the map has loaded.
         mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
@@ -103,10 +107,44 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
                                             }),
                                             clusterRadius: 75,
                                             clusterProperties: clusterProperty)
-        let pointAnnotationManager = mapView.annotations.makePointAnnotationManager(clusterOptions: clusterOptions)
+        let pointAnnotationManager = mapView.annotations.makePointAnnotationManager(id: clusterLayerID, clusterOptions: clusterOptions)
         pointAnnotationManager.annotations = annotations
+        pointAnnotationManager.delegate = self
 
+        // Additional properties on the text and circle layers can be modified like this:
+        try! mapView.mapboxMap.style.updateLayer(withId: "mapbox-iOS-cluster-circle-layer-manager-" + clusterLayerID, type: CircleLayer.self) { layer in
+            layer.circleStrokeColor = .constant(StyleColor(.black))
+            layer.circleStrokeWidth = .constant(3)
+        }
+        
         finish()
+    }
+
+    @objc func handleTap(gestureRecognizer: UITapGestureRecognizer) {
+        let point = gestureRecognizer.location(in: mapView)
+        
+        mapView.mapboxMap.queryRenderedFeatures(with: point,
+                                                options: RenderedQueryOptions(layerIds: ["mapbox-iOS-cluster-circle-layer-manager-" + clusterLayerID],
+                                                                              filter: nil)) { [weak self] result in
+            switch result {
+            case .success(let queriedFeatures):
+                if let feature = queriedFeatures.first?.feature,
+                   let sourceID = self?.clusterLayerID,
+                   case let .point(clusterCenter) = feature.geometry {
+                    self?.mapView.mapboxMap.getGeoJsonClusterExpansionZoom(forSourceId: sourceID, feature: feature) { result in
+                        switch result {
+                        case .success(let success):
+                            let cameraOptions = CameraOptions(center: clusterCenter.coordinates, zoom: success.value as? CGFloat)
+                            self?.mapView.camera.ease(to: cameraOptions, duration: 1)
+                        case .failure(let error):
+                            print("An error occurred: \(error.localizedDescription). Please try another cluster")
+                        }
+                    }
+                }
+            case .failure(let error):
+                print("An error occurred: \(error.localizedDescription). Please try another cluster")
+            }
+        }
     }
 
     // Load GeoJSON file from local bundle and decode into a `FeatureCollection`.
@@ -125,3 +163,10 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
         return featureCollection
     }
 }
+
+extension PointAnnotationClusteringExample: AnnotationInteractionDelegate {
+    func annotationManager(_ manager: MapboxMaps.AnnotationManager, didDetectTappedAnnotations annotations: [MapboxMaps.Annotation]) {
+        print("AnnotationManager did detect tapped annotations: \(annotations)")
+    }
+}
+

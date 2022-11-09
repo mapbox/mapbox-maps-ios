@@ -12,6 +12,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## 10.9.1 - November 9, 2022
 
 * Bump MapboxCoreMaps to v10.9.1. ([#1703](https://github.com/mapbox/mapbox-maps-ios/pull/1703))
+* Avoid triggering assertion for the 3D puck layer when returning `allLayerIdentifiers`. ([#1705](https://github.com/mapbox/mapbox-maps-ios/pull/1705))
 
 ## 10.9.0 - October 19, 2022
 

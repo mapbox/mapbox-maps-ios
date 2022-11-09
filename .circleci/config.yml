@@ -158,12 +158,15 @@ workflows:
       - unit-test-sdk:
           name: "Run Unit tests"
           xcode: "13.1.0"
-          os: ["11.4", "12.5", "13.7", "14.8", "15.7", "16.1"]
+          matrix:
+            parameters:
+              os: ["11.4", "12.5", "13.7", "14.8", "15.7", "16.1"]
 
       - unit-test-sdk:
           name: "Run Unit Tests with min Turf"
           xcode: "13.1.0"
           turf-revision: v2.0.0
+          os: "latest"
 
       # Build all tests with host application
       # Run on main by default

@@ -72,6 +72,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
         self.offsetPointCalculator = offsetPointCalculator
         self.dragLayerId = id + "_drag-layer"
         self.dragSourceId = id + "_drag-source"
+
         do {
             // Add the source with empty `data` property
             var source = GeoJSONSource()

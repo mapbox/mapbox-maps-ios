@@ -59,7 +59,15 @@ workflows:
           report_failure: true
           matrix:
             parameters:
-              xcode: ["13.1.0", "13.2.1"]
+              xcode: ["13.1.0"]
+              os: ["11.4", "12.5", "13.7", "14.8", "15.7", "16.1"]
+      - unit-test-sdk:
+          configuration: "Release"
+          report_failure: true
+          matrix:
+            parameters:
+              xcode: "13.2.1"
+              os: "latest"
       - build-tests:
           name: Build MapboxTestHost tests
       - run-tests:
@@ -150,6 +158,7 @@ workflows:
       - unit-test-sdk:
           name: "Run Unit tests"
           xcode: "13.1.0"
+          os: ["11.4", "12.5", "13.7", "14.8", "15.7", "16.1"]
 
       - unit-test-sdk:
           name: "Run Unit Tests with min Turf"
@@ -508,6 +517,11 @@ jobs:
 
   unit-test-sdk:
     <<: *base-job
+    parameters:
+      os:
+        default: |
+          latest
+        type: string
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
@@ -526,8 +540,8 @@ jobs:
           command: make build-sdk-for-testing-simulator
           no_output_timeout: 5m
       - run:
-          name: Testing MapboxMaps with simulator
-          command: make test-sdk-without-building-simulator | xcpretty --report junit --output build/reports/junit.xml
+          name: Testing MapboxMaps with iOS << parameters.os >> simulator
+          command: make test-sdk-without-building-simulator OS=<< parameters.os >>| xcpretty --report junit --output build/reports/junit.xml
       - store_test_results:
           path: build/reports
       - run:
@@ -961,7 +975,7 @@ jobs:
           no_output_timeout: 5m
       - run:
           name: Testing MapboxMaps with simulator
-          command: make test-sdk-without-building-simulator
+          command: make test-sdk-without-building-simulator OS=latest
       - run:
           name: Compress XCResult
           command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult

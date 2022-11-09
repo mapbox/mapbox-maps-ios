@@ -98,7 +98,7 @@ build-sdk-for-simulator:
 .PHONY: build-sdk-for-testing-simulator
 build-sdk-for-testing-simulator:
 	$(XCODE_BUILD_SIM_SDK) \
-		-destination 'platform=iOS Simulator,OS=latest,name=iPhone 11' \
+		-destination 'generic/platform=iOS Simulator' \
 		-enableCodeCoverage YES \
 		build-for-testing \
 		ENABLE_TESTABILITY=YES \
@@ -107,7 +107,7 @@ build-sdk-for-testing-simulator:
 .PHONY: test-sdk-without-building-simulator
 test-sdk-without-building-simulator:
 	$(XCODE_BUILD_SIM_SDK) \
-		-destination 'platform=iOS Simulator,OS=latest,name=iPhone 11' \
+		-destination 'platform=iOS Simulator,OS=$(OS)' \
 		-enableCodeCoverage YES \
 		test-without-building \
 		-resultBundlePath MapboxMapsTests.xcresult \

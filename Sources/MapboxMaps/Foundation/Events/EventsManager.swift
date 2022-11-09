@@ -14,7 +14,17 @@ extension UserDefaults {
     }
 }
 
-internal final class EventsManager {
+internal protocol EventsManagerProtocol {
+    static func shared(withAccessToken accessToken: String) -> EventsManagerProtocol
+
+    func sendMapLoadEvent()
+
+    func sendTurnstile()
+
+    func flush()
+}
+
+internal final class EventsManager: EventsManagerProtocol {
     private enum Constants {
         static let MGLAPIClientUserAgentBase = "mapbox-maps-ios"
         static let SDKVersion = Bundle.mapboxMapsMetadata.version
@@ -27,7 +37,7 @@ internal final class EventsManager {
     // calls to MMEEventsManager.shared().flush() when handling memory warnings.
     private static var shared: EventsManager?
 
-    internal static func shared(withAccessToken accessToken: String) -> EventsManager {
+    internal static func shared(withAccessToken accessToken: String) -> EventsManagerProtocol {
         let result = shared ?? EventsManager(accessToken: accessToken)
         shared = result
         return result
@@ -39,8 +49,10 @@ internal final class EventsManager {
 
     private let metricsEnabledObservation: NSKeyValueObservation
 
-    private init(accessToken: String) {
-        let eventsServerOptions = EventsServerOptions(token: accessToken, userAgentFragment: Constants.MGLAPIClientUserAgentBase, deferredDeliveryServiceOptions: nil)
+    internal init(accessToken: String) {
+        let eventsServerOptions = EventsServerOptions(token: accessToken,
+                                                      userAgentFragment: Constants.MGLAPIClientUserAgentBase,
+                                                      deferredDeliveryServiceOptions: nil)
         eventsService = EventsService.getOrCreate(for: eventsServerOptions)
         telemetryService = TelemetryService.getOrCreate(for: eventsServerOptions)
 

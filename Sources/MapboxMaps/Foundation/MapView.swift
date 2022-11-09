@@ -78,7 +78,7 @@ open class MapView: UIView {
     private let viewAnnotationContainerView = SubviewInteractionOnlyView()
 
     /// Resource options for this map view
-    internal private(set) var resourceOptions: ResourceOptions!
+    internal let resourceOptions: ResourceOptions!
 
     private var needsDisplayRefresh: Bool = false
     private var displayLink: DisplayLinkProtocol?
@@ -172,6 +172,8 @@ open class MapView: UIView {
 
     internal let attributionUrlOpener: AttributionURLOpener
 
+    internal let eventsManager: EventsManagerProtocol
+
     /// Initialize a MapView
     /// - Parameters:
     ///   - frame: frame for the MapView.
@@ -186,11 +188,13 @@ open class MapView: UIView {
             orientationProvider = UIApplicationInterfaceOrientationProvider()
         }
 
-        self.dependencyProvider = MapViewDependencyProvider(interfaceOrientationProvider: orientationProvider)
-        self.attributionUrlOpener = DefaultAttributionURLOpener()
+        dependencyProvider = MapViewDependencyProvider(interfaceOrientationProvider: orientationProvider)
+        attributionUrlOpener = DefaultAttributionURLOpener()
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
+        resourceOptions = mapInitOptions.resourceOptions
+        eventsManager = dependencyProvider.makeEventsManager(accessToken: resourceOptions.accessToken)
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
@@ -207,11 +211,13 @@ open class MapView: UIView {
                 mapInitOptions: MapInitOptions = MapInitOptions(),
                 orientationProvider: InterfaceOrientationProvider,
                 urlOpener: AttributionURLOpener) {
-        self.dependencyProvider = MapViewDependencyProvider(interfaceOrientationProvider: orientationProvider)
-        self.attributionUrlOpener = urlOpener
+        dependencyProvider = MapViewDependencyProvider(interfaceOrientationProvider: orientationProvider)
+        attributionUrlOpener = urlOpener
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
+        resourceOptions = mapInitOptions.resourceOptions
+        eventsManager = dependencyProvider.makeEventsManager(accessToken: resourceOptions.accessToken)
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
@@ -226,13 +232,15 @@ open class MapView: UIView {
     public init(frame: CGRect,
                 mapInitOptions: MapInitOptions = MapInitOptions(),
                 urlOpener: AttributionURLOpener) {
-        self.dependencyProvider = MapViewDependencyProvider(
+        dependencyProvider = MapViewDependencyProvider(
             interfaceOrientationProvider: DefaultInterfaceOrientationProvider()
         )
-        self.attributionUrlOpener = urlOpener
+        attributionUrlOpener = urlOpener
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
+        resourceOptions = mapInitOptions.resourceOptions
+        eventsManager = dependencyProvider.makeEventsManager(accessToken: resourceOptions.accessToken)
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
@@ -250,7 +258,9 @@ open class MapView: UIView {
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
-        self.attributionUrlOpener = DefaultAttributionURLOpener()
+        attributionUrlOpener = DefaultAttributionURLOpener()
+        resourceOptions = ResourceOptionsManager.default.resourceOptions
+        eventsManager = dependencyProvider.makeEventsManager(accessToken: resourceOptions.accessToken)
         super.init(coder: coder)
     }
 
@@ -259,10 +269,12 @@ open class MapView: UIView {
                   dependencyProvider: MapViewDependencyProviderProtocol,
                   urlOpener: AttributionURLOpener) {
         self.dependencyProvider = dependencyProvider
-        self.attributionUrlOpener = urlOpener
+        attributionUrlOpener = urlOpener
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
+        resourceOptions = mapInitOptions.resourceOptions
+        eventsManager = dependencyProvider.makeEventsManager(accessToken: resourceOptions.accessToken)
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
@@ -276,8 +288,6 @@ open class MapView: UIView {
 
     private func commonInit(mapInitOptions: MapInitOptions, overridingStyleURI: URL?) {
         checkForMetalSupport()
-
-        self.resourceOptions = mapInitOptions.resourceOptions
 
         let resolvedMapInitOptions: MapInitOptions
         if mapInitOptions.mapOptions.size == nil {
@@ -357,7 +367,6 @@ open class MapView: UIView {
     }
 
     internal func sendInitialTelemetryEvents() {
-        let eventsManager = EventsManager.shared(withAccessToken: resourceOptions.accessToken)
         eventsManager.sendTurnstile()
         eventsManager.sendMapLoadEvent()
     }
@@ -440,8 +449,6 @@ open class MapView: UIView {
         displayLink?.invalidate()
         cameraAnimatorsRunner.cancelAnimations()
         cameraAnimatorsRunnerEnablable.isEnabled = false
-
-        let eventsManager = EventsManager.shared(withAccessToken: resourceOptions.accessToken)
         eventsManager.flush()
     }
 

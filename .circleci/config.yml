@@ -294,7 +294,7 @@ jobs:
   # and aliases as described here
   # https://circleci.com/docs/2.0/writing-yaml/#merging-maps
   base-job: &base-job
-    parameters:
+    parameters: &base-parameters
       xcode:
         type: string
         default: "13.1.0"
@@ -521,9 +521,9 @@ jobs:
   unit-test-sdk:
     <<: *base-job
     parameters:
+      <<: *base-parameters
       os:
-        default: |
-          latest
+        default: "latest"
         type: string
     resource_class: macos.x86.medium.gen2
     steps:

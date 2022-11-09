@@ -52,14 +52,13 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
             layerPosition: nil,
             displayLinkCoordinator: displayLinkCoordinator,
             <%_ if (type === circle || type === symbol) { _%>
-            offsetPointCalculator: offsetPointCalculator)
+            offsetPointCalculator: offsetPointCalculator
             <%_ } else if ( type === line ) { _%>
-            offsetLineStringCalculator: offsetLineStringCalculator)
+            offsetLineStringCalculator: offsetLineStringCalculator
             <%_ } else if ( type === fill ) { _%>
             offsetPolygonCalculator: offsetPolygonCalculator
-
-        )
             <%_ } _%>
+        )
 
         for _ in 0...10 {
             <%- annotationLocal("let") %>
@@ -86,13 +85,13 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
             layerPosition: nil,
             displayLinkCoordinator: displayLinkCoordinator,
             <%_ if (type === circle || type === symbol) { _%>
-            offsetPointCalculator: offsetPointCalculator)
+            offsetPointCalculator: offsetPointCalculator
             <%_ } else if ( type === line ) { _%>
-            offsetLineStringCalculator: offsetLineStringCalculator)
+            offsetLineStringCalculator: offsetLineStringCalculator
             <%_ } else if ( type === fill ) { _%>
             offsetPolygonCalculator: offsetPolygonCalculator
-        )
             <%_ } _%>
+        )
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.type, SourceType.geoJson)
@@ -107,13 +106,13 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
             layerPosition: nil,
             displayLinkCoordinator: displayLinkCoordinator,
             <%_ if (type === circle || type === symbol) { _%>
-            offsetPointCalculator: offsetPointCalculator)
+            offsetPointCalculator: offsetPointCalculator
             <%_ } else if ( type === line ) { _%>
-            offsetLineStringCalculator: offsetLineStringCalculator)
+            offsetLineStringCalculator: offsetLineStringCalculator
             <%_ } else if ( type === fill ) { _%>
             offsetPolygonCalculator: offsetPolygonCalculator
-        )
             <%_ } _%>
+        )
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
@@ -137,13 +136,13 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
             layerPosition: nil,
             displayLinkCoordinator: displayLinkCoordinator,
             <%_ if (type === circle || type === symbol) { _%>
-            offsetPointCalculator: offsetPointCalculator)
+            offsetPointCalculator: offsetPointCalculator
             <%_ } else if ( type === line ) { _%>
-            offsetLineStringCalculator: offsetLineStringCalculator)
+            offsetLineStringCalculator: offsetLineStringCalculator
             <%_ } else if ( type === fill ) { _%>
             offsetPolygonCalculator: offsetPolygonCalculator
-        )
             <%_ } _%>
+        )
         manager2.annotations = annotations2
 
         XCTAssertEqual(manager.annotations.count, 11)
@@ -157,13 +156,13 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
             layerPosition: LayerPosition.at(4),
             displayLinkCoordinator: displayLinkCoordinator,
             <%_ if (type === circle || type === symbol) { _%>
-            offsetPointCalculator: offsetPointCalculator)
+            offsetPointCalculator: offsetPointCalculator
             <%_ } else if ( type === line ) { _%>
-            offsetLineStringCalculator: offsetLineStringCalculator)
+            offsetLineStringCalculator: offsetLineStringCalculator
             <%_ } else if ( type === fill ) { _%>
             offsetPolygonCalculator: offsetPolygonCalculator
-        )
             <%_ } _%>
+        )
         manager3.annotations = annotations
 
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition, LayerPosition.at(4))
@@ -478,18 +477,20 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         }
 
         // when
-        let pointAnnotationManager = PointAnnotationManager(id: id,
-                                                            style: style,
-                                                            layerPosition: nil,
-                                                            displayLinkCoordinator: displayLinkCoordinator,
-                                                            clusterOptions: clusterOptions,
-                                                            <%_ if (type === circle || type === symbol) { _%>
-                                                            offsetPointCalculator: offsetPointCalculator)
-                                                            <%_ } else if ( type === line ) { _%>
-                                                            offsetLineStringCalculator: offsetLineStringCalculator)
-                                                            <%_ } else if ( type === fill ) { _%>
-                                                            offsetPolygonCalculator: offsetPolygonCalculator)
-                                                            <%_ } _%>
+        let pointAnnotationManager = PointAnnotationManager(
+            id: id,
+            style: style,
+            layerPosition: nil,
+            displayLinkCoordinator: displayLinkCoordinator,
+            clusterOptions: clusterOptions,
+            <%_ if (type === circle || type === symbol) { _%>
+            offsetPointCalculator: offsetPointCalculator
+            <%_ } else if ( type === line ) { _%>
+            offsetLineStringCalculator: offsetLineStringCalculator
+            <%_ } else if ( type === fill ) { _%>
+            offsetPolygonCalculator: offsetPolygonCalculator
+            <%_ } _%>
+        )
         pointAnnotationManager.annotations = annotations
 
         // then
@@ -525,19 +526,20 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         }
 
         // when
-        let pointAnnotationManager = PointAnnotationManager(id: id,
-                                                            style: style,
-                                                            layerPosition: nil,
-                                                            displayLinkCoordinator: displayLinkCoordinator,
-                                                            clusterOptions: clusterOptions,
-                                                            <%_ if (type === circle || type === symbol) { _%>
-                                                            offsetPointCalculator: offsetPointCalculator)
-                                                            <%_ } else if ( type === line ) { _%>
-                                                            offsetLineStringCalculator: offsetLineStringCalculator)
-                                                            <%_ } else if ( type === fill ) { _%>
-                                                            offsetPolygonCalculator: offsetPolygonCalculator)
-                                                            <%_ } _%>
-
+        let pointAnnotationManager = PointAnnotationManager(
+            id: id,
+            style: style,
+            layerPosition: nil,
+            displayLinkCoordinator: displayLinkCoordinator,
+            clusterOptions: clusterOptions,
+            <%_ if (type === circle || type === symbol) { _%>
+            offsetPointCalculator: offsetPointCalculator
+            <%_ } else if ( type === line ) { _%>
+            offsetLineStringCalculator: offsetLineStringCalculator
+            <%_ } else if ( type === fill ) { _%>
+            offsetPolygonCalculator: offsetPolygonCalculator
+            <%_ } _%>
+        )
         pointAnnotationManager.annotations = annotations
         let geoJSONSource = style.addSourceStub.invocations.last?.parameters.source as! GeoJSONSource
 
@@ -565,18 +567,20 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         }
 
         // when
-        let pointAnnotationManager = PointAnnotationManager(id: id,
-                                                            style: style,
-                                                            layerPosition: nil,
-                                                            displayLinkCoordinator: displayLinkCoordinator,
-                                                            clusterOptions: clusterOptions,
-                                                            <%_ if (type === circle || type === symbol) { _%>
-                                                            offsetPointCalculator: offsetPointCalculator)
-                                                            <%_ } else if ( type === line ) { _%>
-                                                            offsetLineStringCalculator: offsetLineStringCalculator)
-                                                            <%_ } else if ( type === fill ) { _%>
-                                                            offsetPolygonCalculator: offsetPolygonCalculator)
-                                                            <%_ } _%>
+        let pointAnnotationManager = PointAnnotationManager(
+            id: id,
+            style: style,
+            layerPosition: nil,
+            displayLinkCoordinator: displayLinkCoordinator,
+            clusterOptions: clusterOptions,
+            <%_ if (type === circle || type === symbol) { _%>
+            offsetPointCalculator: offsetPointCalculator
+            <%_ } else if ( type === line ) { _%>
+            offsetLineStringCalculator: offsetLineStringCalculator
+            <%_ } else if ( type === fill ) { _%>
+            offsetPolygonCalculator: offsetPolygonCalculator
+            <%_ } _%>
+        )
         pointAnnotationManager.annotations = annotations
 
         // then
@@ -602,8 +606,8 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         let testTextSize = Value<Double>.testConstantValue()
         let testTextField = Value<String>.testConstantValue()
         let clusterOptions = ClusterOptions(textColor: testTextColor,
-                                  textSize: testTextSize,
-                                  textField: testTextField)
+                                            textSize: testTextSize,
+                                            textField: testTextField)
         var annotations = [PointAnnotation]()
         for _ in 0...500 {
             let annotation = PointAnnotation(coordinate: .random())
@@ -611,18 +615,20 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         }
 
         // when
-        let pointAnnotationManager = PointAnnotationManager(id: id,
-                                                            style: style,
-                                                            layerPosition: nil,
-                                                            displayLinkCoordinator: displayLinkCoordinator,
-                                                            clusterOptions: clusterOptions,
-                                                            <%_ if (type === circle || type === symbol) { _%>
-                                                            offsetPointCalculator: offsetPointCalculator)
-                                                            <%_ } else if ( type === line ) { _%>
-                                                            offsetLineStringCalculator: offsetLineStringCalculator)
-                                                            <%_ } else if ( type === fill ) { _%>
-                                                            offsetPolygonCalculator: offsetPolygonCalculator)
-                                                            <%_ } _%>
+        let pointAnnotationManager = PointAnnotationManager(
+            id: id,
+            style: style,
+            layerPosition: nil,
+            displayLinkCoordinator: displayLinkCoordinator,
+            clusterOptions: clusterOptions,
+            <%_ if (type === circle || type === symbol) { _%>
+            offsetPointCalculator: offsetPointCalculator
+            <%_ } else if ( type === line ) { _%>
+            offsetLineStringCalculator: offsetLineStringCalculator
+            <%_ } else if ( type === fill ) { _%>
+            offsetPolygonCalculator: offsetPolygonCalculator
+            <%_ } _%>
+        )
         pointAnnotationManager.annotations = annotations
 
         // then
@@ -649,18 +655,20 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         }
 
         // when
-        let pointAnnotationManager = PointAnnotationManager(id: id,
-                                                            style: style,
-                                                            layerPosition: nil,
-                                                            displayLinkCoordinator: displayLinkCoordinator,
-                                                            clusterOptions: clusterOptions,
-                                                            <%_ if (type === circle || type === symbol) { _%>
-                                                            offsetPointCalculator: offsetPointCalculator)
-                                                            <%_ } else if ( type === line ) { _%>
-                                                            offsetLineStringCalculator: offsetLineStringCalculator)
-                                                            <%_ } else if ( type === fill ) { _%>
-                                                            offsetPolygonCalculator: offsetPolygonCalculator)
-                                                            <%_ } _%>
+        let pointAnnotationManager = PointAnnotationManager(
+            id: id,
+            style: style,
+            layerPosition: nil,
+            displayLinkCoordinator: displayLinkCoordinator,
+            clusterOptions: clusterOptions,
+            <%_ if (type === circle || type === symbol) { _%>
+            offsetPointCalculator: offsetPointCalculator
+            <%_ } else if ( type === line ) { _%>
+            offsetLineStringCalculator: offsetLineStringCalculator
+            <%_ } else if ( type === fill ) { _%>
+            offsetPolygonCalculator: offsetPolygonCalculator
+            <%_ } _%>
+        )
         pointAnnotationManager.annotations = annotations
 
         // then
@@ -694,26 +702,28 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         }
 
         // when
-        let pointAnnotationManager = PointAnnotationManager(id: id,
-                                                            style: style,
-                                                            layerPosition: nil,
-                                                            displayLinkCoordinator: displayLinkCoordinator,
-                                                            clusterOptions: clusterOptions,
-                                                            <%_ if (type === circle || type === symbol) { _%>
-                                                            offsetPointCalculator: offsetPointCalculator)
-                                                            <%_ } else if ( type === line ) { _%>
-                                                            offsetLineStringCalculator: offsetLineStringCalculator)
-                                                            <%_ } else if ( type === fill ) { _%>
-                                                            offsetPolygonCalculator: offsetPolygonCalculator)
-                                                            <%_ } _%>
+        let pointAnnotationManager = PointAnnotationManager(
+            id: id,
+            style: style,
+            layerPosition: nil,
+            displayLinkCoordinator: displayLinkCoordinator,
+            clusterOptions: clusterOptions,
+            <%_ if (type === circle || type === symbol) { _%>
+            offsetPointCalculator: offsetPointCalculator
+            <%_ } else if ( type === line ) { _%>
+            offsetLineStringCalculator: offsetLineStringCalculator
+            <%_ } else if ( type === fill ) { _%>
+            offsetPolygonCalculator: offsetPolygonCalculator
+            <%_ } _%>
+        )
         pointAnnotationManager.annotations = annotations
         pointAnnotationManager.syncSourceAndLayerIfNeeded()
         var sourceGeoJSON = style.updateGeoJSONSourceStub.invocations.last?.parameters.geojson
         switch sourceGeoJSON {
         case .featureCollection(let data):
-          XCTAssertEqual(data.features.count, 501)
+            XCTAssertEqual(data.features.count, 501)
         default:
-          XCTFail("GeoJSON did not update correctly")
+            XCTFail("GeoJSON did not update correctly")
         }
 
         // then
@@ -722,9 +732,9 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         sourceGeoJSON = style.updateGeoJSONSourceStub.invocations.last?.parameters.geojson
         switch sourceGeoJSON {
         case .featureCollection(let data):
-          XCTAssertEqual(data.features.count, 101)
+            XCTAssertEqual(data.features.count, 101)
         default:
-          XCTFail("GeoJSON did not update correctly")
+            XCTFail("GeoJSON did not update correctly")
         }
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
     }
@@ -734,18 +744,20 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         let clusterOptions = ClusterOptions()
 
         // when
-        let pointAnnotationManager = PointAnnotationManager(id: id,
-                                                            style: style,
-                                                            layerPosition: nil,
-                                                            displayLinkCoordinator: displayLinkCoordinator,
-                                                            clusterOptions: clusterOptions,
-                                                            <%_ if (type === circle || type === symbol) { _%>
-                                                            offsetPointCalculator: offsetPointCalculator)
-                                                            <%_ } else if ( type === line ) { _%>
-                                                            offsetLineStringCalculator: offsetLineStringCalculator)
-                                                            <%_ } else if ( type === fill ) { _%>
-                                                            offsetPolygonCalculator: offsetPolygonCalculator)
-                                                            <%_ } _%>
+        let pointAnnotationManager = PointAnnotationManager(
+            id: id,
+            style: style,
+            layerPosition: nil,
+            displayLinkCoordinator: displayLinkCoordinator,
+            clusterOptions: clusterOptions,
+            <%_ if (type === circle || type === symbol) { _%>
+            offsetPointCalculator: offsetPointCalculator
+            <%_ } else if ( type === line ) { _%>
+            offsetLineStringCalculator: offsetLineStringCalculator
+            <%_ } else if ( type === fill ) { _%>
+            offsetPolygonCalculator: offsetPolygonCalculator
+            <%_ } _%>
+        )
         pointAnnotationManager.annotations = annotations
         pointAnnotationManager.destroy()
 
@@ -758,6 +770,7 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         XCTAssertEqual(removeLayerInvocations[2].parameters, id)
     }
     <%_ } _%>
+
     func testHandleDragBeginNoFeatureId() {
         style.addSourceStub.reset()
         style.addPersistentLayerWithPropertiesStub.reset()

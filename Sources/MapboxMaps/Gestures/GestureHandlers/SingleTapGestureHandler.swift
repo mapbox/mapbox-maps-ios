@@ -12,6 +12,7 @@ internal final class SingleTapGestureHandler: GestureHandler {
         self.cameraAnimationsManager = cameraAnimationsManager
         super.init(gestureRecognizer: gestureRecognizer)
         gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
+        gestureRecognizer.delegate = self
     }
 
     @objc private func handleGesture(_ gestureRecognizer: UITapGestureRecognizer) {
@@ -23,5 +24,11 @@ internal final class SingleTapGestureHandler: GestureHandler {
         default:
             break
         }
+    }
+}
+
+extension SingleTapGestureHandler: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return gestureRecognizer is UITapGestureRecognizer
     }
 }

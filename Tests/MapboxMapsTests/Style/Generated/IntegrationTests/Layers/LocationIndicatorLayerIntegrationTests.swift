@@ -47,6 +47,8 @@ final class LocationIndicatorLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.emphasisCircleRadiusTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.imagePitchDisplacement = Value<Double>.testConstantValue()
             layer.locationTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.locationIndicatorOpacity = Value<Double>.testConstantValue()
+            layer.locationIndicatorOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.perspectiveCompensation = Value<Double>.testConstantValue()
             layer.shadowImageSize = Value<Double>.testConstantValue()
             layer.shadowImageSizeTransition = StyleTransition(duration: 10.0, delay: 10.0)

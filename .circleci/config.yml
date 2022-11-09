@@ -66,8 +66,8 @@ workflows:
           report_failure: true
           matrix:
             parameters:
-              xcode: "13.2.1"
-              os: "latest"
+              xcode: ["13.2.1"]
+              os: ["latest"]
       - build-tests:
           name: Build MapboxTestHost tests
       - run-tests:

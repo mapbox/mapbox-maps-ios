@@ -59,14 +59,14 @@ workflows:
           report_failure: true
           matrix:
             parameters:
-              xcode: ["13.1.0"]
-              os: ["11.4", "12.5", "13.7", "14.8", "15.7", "16.1"]
+              xcode: ["14.0.0"]
+              os: ["11.4", "12.5", "13.7", "14.8", "15.7", "16.0"]
       - unit-test-sdk:
           configuration: "Release"
           report_failure: true
           matrix:
             parameters:
-              xcode: ["13.2.1"]
+              xcode: ["13.1.0"]
               os: ["latest"]
       - build-tests:
           name: Build MapboxTestHost tests
@@ -157,10 +157,10 @@ workflows:
       # Run unit tests on CI simulator
       - unit-test-sdk:
           name: "Run Unit tests"
-          xcode: "13.1.0"
+          xcode: "14.0.0"
           matrix:
             parameters:
-              os: ["11.4", "12.5", "13.7", "14.8", "15.7", "16.1"]
+              os: ["11.4", "12.5", "13.7", "14.8", "15.7", "16.0"]
 
       - unit-test-sdk:
           name: "Run Unit Tests with min Turf"

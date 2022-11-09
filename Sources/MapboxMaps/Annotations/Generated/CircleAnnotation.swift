@@ -136,6 +136,7 @@ public struct CircleAnnotation: Annotation {
             layerProperties["circle-stroke-width"] = newValue
         }
     }
+
 }
 
 // End of generated file.

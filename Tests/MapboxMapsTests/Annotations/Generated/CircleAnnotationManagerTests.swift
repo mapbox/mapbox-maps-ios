@@ -20,11 +20,13 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         style = MockStyle()
         displayLinkCoordinator = MockDisplayLinkCoordinator()
         offsetPointCalculator = OffsetPointCalculator(mapboxMap: mapboxMap)
-        manager = CircleAnnotationManager(id: id,
-                                          style: style,
-                                          layerPosition: nil,
-                                          displayLinkCoordinator: displayLinkCoordinator,
-                                          offsetPointCalculator: offsetPointCalculator)
+        manager = CircleAnnotationManager(
+            id: id,
+            style: style,
+            layerPosition: nil,
+            displayLinkCoordinator: displayLinkCoordinator,
+            offsetPointCalculator: offsetPointCalculator
+        )
 
         for _ in 0...10 {
             let annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
@@ -45,11 +47,13 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     func testSourceSetup() {
         style.addSourceStub.reset()
 
-        _ = CircleAnnotationManager(id: id,
-                                    style: style,
-                                    layerPosition: nil,
-                                    displayLinkCoordinator: displayLinkCoordinator,
-                                    offsetPointCalculator: offsetPointCalculator)
+        _ = CircleAnnotationManager(
+            id: id,
+            style: style,
+            layerPosition: nil,
+            displayLinkCoordinator: displayLinkCoordinator,
+            offsetPointCalculator: offsetPointCalculator
+        )
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.type, SourceType.geoJson)
@@ -58,11 +62,13 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
     func testAddLayer() {
         style.addSourceStub.reset()
-        let initializedManager = CircleAnnotationManager(id: id,
-                                                         style: style,
-                                                         layerPosition: nil,
-                                                         displayLinkCoordinator: displayLinkCoordinator,
-                                                         offsetPointCalculator: offsetPointCalculator)
+        let initializedManager = CircleAnnotationManager(
+            id: id,
+            style: style,
+            layerPosition: nil,
+            displayLinkCoordinator: displayLinkCoordinator,
+            offsetPointCalculator: offsetPointCalculator
+        )
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
@@ -80,11 +86,13 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         }
 
         manager.annotations = annotations
-        let manager2 = CircleAnnotationManager(id: manager.id,
-                                               style: style,
-                                               layerPosition: nil,
-                                               displayLinkCoordinator: displayLinkCoordinator,
-                                               offsetPointCalculator: offsetPointCalculator)
+        let manager2 = CircleAnnotationManager(
+            id: manager.id,
+            style: style,
+            layerPosition: nil,
+            displayLinkCoordinator: displayLinkCoordinator,
+            offsetPointCalculator: offsetPointCalculator
+        )
         manager2.annotations = annotations2
 
         XCTAssertEqual(manager.annotations.count, 11)
@@ -92,11 +100,13 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testLayerPositionPassedCorrectly() {
-        let manager3 = CircleAnnotationManager(id: id,
-                                               style: style,
-                                               layerPosition: LayerPosition.at(4),
-                                               displayLinkCoordinator: displayLinkCoordinator,
-                                               offsetPointCalculator: offsetPointCalculator)
+        let manager3 = CircleAnnotationManager(
+            id: id,
+            style: style,
+            layerPosition: LayerPosition.at(4),
+            displayLinkCoordinator: displayLinkCoordinator,
+            offsetPointCalculator: offsetPointCalculator
+        )
         manager3.annotations = annotations
 
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition, LayerPosition.at(4))
@@ -483,6 +493,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         expectation = nil
     }
 
+
     func testHandleDragBeginNoFeatureId() {
         style.addSourceStub.reset()
         style.addPersistentLayerWithPropertiesStub.reset()
@@ -525,7 +536,6 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertFalse(manager.annotations.contains(where: { $0.id == "circle1" }))
         XCTAssertTrue(updateSourceParameters.id == addSourceParameters.id)
     }
-
 
     func testHandleDragChanged() throws {
         mapboxMap.pointStub.defaultReturnValue = CGPoint(x: 0, y: 0)
@@ -574,7 +584,6 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
             XCTAssertNotEqual(removeSourceParameters, self.manager.sourceId)
         }
     }
-    
 }
 
 // End of generated file

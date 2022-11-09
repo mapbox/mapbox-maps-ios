@@ -20,11 +20,13 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         style = MockStyle()
         displayLinkCoordinator = MockDisplayLinkCoordinator()
         offsetPolygonCalculator = OffsetPolygonCalculator(mapboxMap: mapboxMap)
-        manager = PolygonAnnotationManager(id: id,
-                                           style: style,
-                                           layerPosition: nil,
-                                           displayLinkCoordinator: displayLinkCoordinator,
-                                           offsetPolygonCalculator: offsetPolygonCalculator)
+        manager = PolygonAnnotationManager(
+            id: id,
+            style: style,
+            layerPosition: nil,
+            displayLinkCoordinator: displayLinkCoordinator,
+            offsetPolygonCalculator: offsetPolygonCalculator
+        )
 
         for _ in 0...10 {
             let polygonCoords = [
@@ -52,11 +54,13 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     func testSourceSetup() {
         style.addSourceStub.reset()
 
-        _ = PolygonAnnotationManager(id: id,
-                                     style: style,
-                                     layerPosition: nil,
-                                     displayLinkCoordinator: displayLinkCoordinator,
-                                     offsetPolygonCalculator: offsetPolygonCalculator)
+        _ = PolygonAnnotationManager(
+            id: id,
+            style: style,
+            layerPosition: nil,
+            displayLinkCoordinator: displayLinkCoordinator,
+            offsetPolygonCalculator: offsetPolygonCalculator
+        )
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.type, SourceType.geoJson)
@@ -65,11 +69,13 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
     func testAddLayer() {
         style.addSourceStub.reset()
-        let initializedManager = PolygonAnnotationManager(id: id,
-                                                          style: style,
-                                                          layerPosition: nil,
-                                                          displayLinkCoordinator: displayLinkCoordinator,
-                                                          offsetPolygonCalculator: offsetPolygonCalculator)
+        let initializedManager = PolygonAnnotationManager(
+            id: id,
+            style: style,
+            layerPosition: nil,
+            displayLinkCoordinator: displayLinkCoordinator,
+            offsetPolygonCalculator: offsetPolygonCalculator
+        )
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
@@ -94,11 +100,13 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         }
 
         manager.annotations = annotations
-        let manager2 = PolygonAnnotationManager(id: manager.id,
-                                                style: style,
-                                                layerPosition: nil,
-                                                displayLinkCoordinator: displayLinkCoordinator,
-                                                offsetPolygonCalculator: offsetPolygonCalculator)
+        let manager2 = PolygonAnnotationManager(
+            id: manager.id,
+            style: style,
+            layerPosition: nil,
+            displayLinkCoordinator: displayLinkCoordinator,
+            offsetPolygonCalculator: offsetPolygonCalculator
+        )
         manager2.annotations = annotations2
 
         XCTAssertEqual(manager.annotations.count, 11)
@@ -106,11 +114,13 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     }
 
     func testLayerPositionPassedCorrectly() {
-        let manager3 = PolygonAnnotationManager(id: id,
-                                                style: style,
-                                                layerPosition: LayerPosition.at(4),
-                                                displayLinkCoordinator: displayLinkCoordinator,
-                                                offsetPolygonCalculator: offsetPolygonCalculator)
+        let manager3 = PolygonAnnotationManager(
+            id: id,
+            style: style,
+            layerPosition: LayerPosition.at(4),
+            displayLinkCoordinator: displayLinkCoordinator,
+            offsetPolygonCalculator: offsetPolygonCalculator
+        )
         manager3.annotations = annotations
 
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition, LayerPosition.at(4))
@@ -459,6 +469,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         expectation = nil
     }
 
+
     func testHandleDragBeginNoFeatureId() {
         style.addSourceStub.reset()
         style.addPersistentLayerWithPropertiesStub.reset()
@@ -507,7 +518,6 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertFalse(manager.annotations.contains(where: { $0.id == "polygon1" }))
         XCTAssertTrue(updateSourceParameters.id == addSourceParameters.id)
     }
-
 
     func testHandleDragChanged() throws {
         mapboxMap.pointStub.defaultReturnValue = CGPoint(x: 0, y: 0)
@@ -568,7 +578,6 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
             XCTAssertNotEqual(removeSourceParameters, self.manager.sourceId)
         }
     }
-
 }
 
 // End of generated file

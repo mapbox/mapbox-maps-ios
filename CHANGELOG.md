@@ -22,6 +22,7 @@ Mapbox welcomes participation and contributions from everyone.
 * New API to load custom style JSON on the initilization of MapView. ([#1686](https://github.com/mapbox/mapbox-maps-ios/pull/1686))
 * Update MapboxCoreMaps to `v10.10.0-beta.1` and MapboxCommon to `v23.2.0-beta.1`. ([#1680](https://github.com/mapbox/mapbox-maps-ios/pull/1680))
 * Add API to enable/disable render of world copies. ([#1684](https://github.com/mapbox/mapbox-maps-ios/pull/1684))
+* Avoid triggering assertion for the 3D puck layer when returning `allLayerIdentifiers`. ([#1650](https://github.com/mapbox/mapbox-maps-ios/pull/1650))
 
 ## 10.9.0 - October 19, 2022
 

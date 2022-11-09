@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Fix memory leak when viewport is being deallocated while transition is running. ([#1691](https://github.com/mapbox/mapbox-maps-ios/pull/1691))
+
 ## 10.10.0-beta-1 - November 4, 2022
 
 * Animates to camera that fit a list of view annotations. ([#1634](https://github.com/mapbox/mapbox-maps-ios/pull/1634))

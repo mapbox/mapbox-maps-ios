@@ -10,6 +10,7 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
 
     @Stubbed var cameraAnimatorsRunnerEnablable: MutableEnablableProtocol = Enablable()
 
+    // MARK: - Metal view
     struct MakeMetalViewParams {
         var frame: CGRect
         var device: MTLDevice?
@@ -20,6 +21,7 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
         return makeMetalViewStub.call(with: MakeMetalViewParams(frame: frame, device: device))!
     }
 
+    // MARK: - DispayLink
     struct MakeDisplayLinkParams {
         var window: UIWindow
         var target: Any
@@ -37,6 +39,7 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
                 selector: selector))
     }
 
+    // MARK: - Camera Animators
     let makeCameraAnimatorsRunnerStub = Stub<MapboxMapProtocol, CameraAnimatorsRunnerProtocol>(
         defaultReturnValue: MockCameraAnimatorsRunner())
     func makeCameraAnimatorsRunner(mapboxMap: MapboxMapProtocol) -> CameraAnimatorsRunnerProtocol {
@@ -49,6 +52,7 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
         MockCameraAnimationsManager()
     }
 
+    // MARK: - Gestures
     func makeGestureManager(
         view: UIView,
         mapboxMap: MapboxMapProtocol,
@@ -73,6 +77,7 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
         return GestureHandler(gestureRecognizer: UIGestureRecognizer())
     }
 
+    // MARK: - Location
     struct MakeLocationProducerParameteres {
         let mayRequestWhenInUseAuthorization: Bool
         let userInterfaceOrientationView: UIView
@@ -103,6 +108,7 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
             puckManager: MockPuckManager())
     }
 
+    // MARK: - Viewport
     struct MakeViewportImplParams {
         var mapboxMap: MapboxMapProtocol
         var cameraAnimationsManager: CameraAnimationsManagerProtocol
@@ -124,6 +130,7 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
             doubleTouchGestureRecognizer: doubleTouchGestureRecognizer))
     }
 
+    // MARK: - Annotations
     struct MakeAnnotationOrchestratorImplParams {
         let view: UIView
         let mapboxMap: MapboxMapProtocol

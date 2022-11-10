@@ -29,6 +29,7 @@ internal final class SingleTapGestureHandler: GestureHandler {
 
 extension SingleTapGestureHandler: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return gestureRecognizer is UITapGestureRecognizer
+        return self.gestureRecognizer === gestureRecognizer &&
+        otherGestureRecognizer is UITapGestureRecognizer
     }
 }

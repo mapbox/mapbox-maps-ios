@@ -525,6 +525,7 @@ jobs:
         type: string
         default: "Debug"
     executor: xcode-sdk-min
+    resource_class: macos.x86.medium.gen2
     steps:
       - checkout
       - run:
@@ -535,7 +536,8 @@ jobs:
               build-for-testing \
               -scheme MapboxMaps \
               -sdk iphonesimulator \
-              -configuration << parameters.configuration >> \-jobs $(JOBS) \
+              -configuration << parameters.configuration >> \ 
+              -jobs $(JOBS) \
               -destination 'generic/platform=iOS Simulator' \
               -derivedDataPath build \
               -enableCodeCoverage YES \

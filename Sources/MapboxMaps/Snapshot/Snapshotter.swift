@@ -57,7 +57,8 @@ public class Snapshotter {
         mapSnapshotter = MapSnapshotter(options: MapboxCoreMaps.MapSnapshotOptions(options))
         style = Style(with: mapSnapshotter)
         observable = MapboxObservable(observable: mapSnapshotter)
-        EventsManager.shared(withAccessToken: options.resourceOptions.accessToken).sendTurnstile()
+
+        sendTurnstileEvent(accessToken: options.resourceOptions.accessToken)
     }
 
     /// Enables injecting mocks when unit testing
@@ -68,7 +69,13 @@ public class Snapshotter {
         self.mapSnapshotter = mapSnapshotter
         style = Style(with: mapSnapshotter)
         observable = mapboxObservableProvider(mapSnapshotter)
-        EventsManager.shared(withAccessToken: options.resourceOptions.accessToken).sendTurnstile()
+
+        sendTurnstileEvent(accessToken: options.resourceOptions.accessToken)
+    }
+
+    internal func sendTurnstileEvent(accessToken: String) {
+        let eventsManager = EventsManager(accessToken: accessToken)
+        eventsManager.sendTurnstile()
     }
 
     /// The size of the snapshot

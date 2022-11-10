@@ -15,8 +15,6 @@ extension UserDefaults {
 }
 
 internal protocol EventsManagerProtocol {
-    static func shared(withAccessToken accessToken: String) -> EventsManagerProtocol
-
     func sendMapLoadEvent()
 
     func sendTurnstile()
@@ -31,20 +29,10 @@ internal final class EventsManager: EventsManagerProtocol {
         static let UserAgent = String(format: "%/%", MGLAPIClientUserAgentBase, SDKVersion)
     }
 
-    // use a shared instance to avoid redundant calls to
-    // MMEEventsManager.shared().pauseOrResumeMetricsCollectionIfRequired()
-    // when the MGLMapboxMetricsEnabled UserDefaults key changes and duplicate
-    // calls to MMEEventsManager.shared().flush() when handling memory warnings.
-    private static var shared: EventsManager?
-
-    internal static func shared(withAccessToken accessToken: String) -> EventsManagerProtocol {
-        let result = shared ?? EventsManager(accessToken: accessToken)
-        shared = result
-        return result
-    }
-
-    // We need telemetry service for location and metrics event which will be sent automaticaly if TelemetryService is initialized.
+    /// Responsible for location and telemetry metrics events
     private let telemetryService: TelemetryService
+
+    /// Responsible for all the SDK interaction/feedback events
     private let eventsService: EventsService
 
     private let metricsEnabledObservation: NSKeyValueObservation
@@ -163,5 +151,9 @@ internal final class EventsManager: EventsManagerProtocol {
     internal func flush() {
         telemetryService.flush()
         eventsService.flush()
+    }
+
+    deinit {
+        flush()
     }
 }

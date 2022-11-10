@@ -19,8 +19,8 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
 
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(gestureRecognizer:)))
-        mapView.addGestureRecognizer(tapGestureRecognizer)
+        // Add an additional target to the single tap gesture recognizer for when users click on a cluster
+        mapView.gestures.singleTapGestureRecognizer.addTarget(self, action: #selector(handleTap(gestureRecognizer:)))
 
         // Add the source and style layers once the map has loaded.
         mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
@@ -111,38 +111,46 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
         pointAnnotationManager.annotations = annotations
         pointAnnotationManager.delegate = self
 
-        // Additional properties on the text and circle layers can be modified like this:
-        try! mapView.mapboxMap.style.updateLayer(withId: "mapbox-iOS-cluster-circle-layer-manager-" + clusterLayerID, type: CircleLayer.self) { layer in
-            layer.circleStrokeColor = .constant(StyleColor(.black))
-            layer.circleStrokeWidth = .constant(3)
+        // Additional properties on the text and circle layers can be modified like this below
+        // To modify the text layer use: "mapbox-iOS-cluster-text-layer-manager-" and SymbolLayer.self
+        do {
+            try mapView.mapboxMap.style.updateLayer(withId: "mapbox-iOS-cluster-circle-layer-manager-" + clusterLayerID, type: CircleLayer.self) { layer in
+                layer.circleStrokeColor = .constant(StyleColor(.black))
+                layer.circleStrokeWidth = .constant(3)
+            }
+        } catch {
+            print("Updating the layer failed: \(error.localizedDescription)")
         }
         
         finish()
     }
 
+    // When a user taps on a point, query if it is a cluster.
+    // If it is a cluster get the center and zoom level it expands at
+    // then move the camera there
     @objc func handleTap(gestureRecognizer: UITapGestureRecognizer) {
         let point = gestureRecognizer.location(in: mapView)
-        
+
         mapView.mapboxMap.queryRenderedFeatures(with: point,
                                                 options: RenderedQueryOptions(layerIds: ["mapbox-iOS-cluster-circle-layer-manager-" + clusterLayerID],
                                                                               filter: nil)) { [weak self] result in
             switch result {
             case .success(let queriedFeatures):
-                if let feature = queriedFeatures.first?.feature,
+                if let cluster = queriedFeatures.first?.feature,
                    let sourceID = self?.clusterLayerID,
-                   case let .point(clusterCenter) = feature.geometry {
-                    self?.mapView.mapboxMap.getGeoJsonClusterExpansionZoom(forSourceId: sourceID, feature: feature) { result in
+                   case let .point(clusterCenter) = cluster.geometry {
+                    self?.mapView.mapboxMap.getGeoJsonClusterExpansionZoom(forSourceId: sourceID, feature: cluster) { result in
                         switch result {
-                        case .success(let success):
-                            let cameraOptions = CameraOptions(center: clusterCenter.coordinates, zoom: success.value as? CGFloat)
+                        case .success(let zoomLevel):
+                            let cameraOptions = CameraOptions(center: clusterCenter.coordinates, zoom: zoomLevel.value as? CGFloat)
                             self?.mapView.camera.ease(to: cameraOptions, duration: 1)
                         case .failure(let error):
-                            print("An error occurred: \(error.localizedDescription). Please try another cluster")
+                            print("An error occurred: \(error.localizedDescription). Please try another cluster.")
                         }
                     }
                 }
             case .failure(let error):
-                print("An error occurred: \(error.localizedDescription). Please try another cluster")
+                print("An error occurred: \(error.localizedDescription). Please try another cluster.")
             }
         }
     }
@@ -164,9 +172,9 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
     }
 }
 
+// Print out annotation details when a user selects a non-clustered annotation
 extension PointAnnotationClusteringExample: AnnotationInteractionDelegate {
     func annotationManager(_ manager: MapboxMaps.AnnotationManager, didDetectTappedAnnotations annotations: [MapboxMaps.Annotation]) {
         print("AnnotationManager did detect tapped annotations: \(annotations)")
     }
 }
-

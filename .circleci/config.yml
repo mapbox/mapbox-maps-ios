@@ -155,6 +155,7 @@ workflows:
               only: main
 
       # Run unit tests on CI simulator
+      - build-unit-tests
       - unit-test-sdk:
           name: "Run Unit tests"
           xcode: "14.0.0"
@@ -517,6 +518,35 @@ jobs:
                           echo "Run E2E tests with ${E2E_VERSION_CONFIG} config."
                           scripts/ci-trigger/ci-e2e-compatibility-start-pipeline.py --config mapbox-maps-ios=${CIRCLE_SHA1} --platform all --versions ${E2E_VERSION_CONFIG}
                       name: Trigger E2E SDK test validation pipeline
+
+  build-unit-tests:
+    parameters:
+      configuration:
+        type: string
+        default: "Debug"
+    executor: xcode-sdk-min
+    steps:
+      - checkout
+      - run:
+          name: Building MapboxMaps for simulator
+          command: |
+            JOBS=$(sysctl -n hw.ncpu)
+            xcodebuild \
+              build-for-testing \
+              -scheme MapboxMaps \
+              -sdk iphonesimulator \
+              -configuration << parameters.configuration >> \-jobs $(JOBS) \
+              -destination 'generic/platform=iOS Simulator' \
+              -derivedDataPath build \
+              -enableCodeCoverage YES \
+              COMPILER_INDEX_STORE_ENABLE=NO \
+              ENABLE_TESTABILITY=YES \
+              ONLY_ACTIVE_ARCH=YES
+      - persist_to_workspace:
+          root: build
+          paths:
+            - << parameters.configuration >>-iphonesimulator
+            - "*.xctestrun"
 
   unit-test-sdk:
     <<: *base-job
@@ -1443,3 +1473,5 @@ commands:
               --header 'Accept: application/vnd.github.v3+json' \
               --header "Authorization: token $(mbx-ci github notifier token)" \
               --data "{\"state\":\"failure\",\"target_url\":\"$CIRCLE_BUILD_URL\",\"description\":\"MapboxMaps SDK integration tests failed\",\"context\":\"Maps SDK Integration\"}"
+
+# VS Code Extension Version: 1.0.2

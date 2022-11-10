@@ -532,8 +532,7 @@ jobs:
           name: Building MapboxMaps for simulator
           command: |
             JOBS=$(sysctl -n hw.ncpu)
-            xcodebuild \
-              build-for-testing \
+            xcodebuild build-for-testing \
               -scheme MapboxMaps \
               -sdk iphonesimulator \
               -configuration << parameters.configuration >> \ 

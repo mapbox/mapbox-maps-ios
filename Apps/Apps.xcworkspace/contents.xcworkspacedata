@@ -17,6 +17,15 @@
       location = "group:../TestPlans/MapboxMapsAll.xctestplan">
    </FileRef>
    <FileRef
+      location = "group:../TestPlans/Examples.xctestplan">
+   </FileRef>
+   <FileRef
+      location = "group:../TestPlans/StressTest.xctestplan">
+   </FileRef>
+   <FileRef
+      location = "group:../TestPlans/DebugApp.xctestplan">
+   </FileRef>
+   <FileRef
       location = "group:../TestPlans/UnitTests.xctestplan">
    </FileRef>
    <FileRef

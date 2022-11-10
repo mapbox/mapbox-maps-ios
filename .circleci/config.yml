@@ -535,7 +535,7 @@ jobs:
             xcodebuild build-for-testing \
               -scheme MapboxMaps \
               -sdk iphonesimulator \
-              -configuration << parameters.configuration >> \ 
+              -configuration << parameters.configuration >> \
               -jobs $(JOBS) \
               -destination 'generic/platform=iOS Simulator' \
               -derivedDataPath build \

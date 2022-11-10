@@ -1,4 +1,4 @@
-import MapboxMaps
+import Foundation
 
 final class Stub<ParametersType, ReturnType> {
 

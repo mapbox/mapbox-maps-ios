@@ -98,6 +98,18 @@
             </ActionContent>
          </ExecutionAction>
       </PreActions>
+      <TestPlans>
+         <TestPlanReference
+            reference = "container:TestPlans/MapboxMapsAll.xctestplan"
+            default = "YES">
+         </TestPlanReference>
+         <TestPlanReference
+            reference = "container:TestPlans/UnitTests.xctestplan">
+         </TestPlanReference>
+         <TestPlanReference
+            reference = "container:TestPlans/IntegrationTests.xctestplan">
+         </TestPlanReference>
+      </TestPlans>
       <Testables>
          <TestableReference
             skipped = "NO">

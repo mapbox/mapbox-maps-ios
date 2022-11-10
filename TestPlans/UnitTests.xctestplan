@@ -12,7 +12,52 @@
 
   },
   "testTargets" : [
-
+    {
+      "skippedTests" : [
+        "BackgroundLayerIntegrationTests",
+        "BasicCameraAnimatorImplIntegrationTests",
+        "CircleAnnotationIntegrationTests",
+        "CircleLayerIntegrationTests",
+        "DidIdleFailureIntegrationTest",
+        "ExampleIntegrationTest",
+        "FeatureStateIntegrationTests",
+        "FillExtrusionLayerIntegrationTests",
+        "FillLayerIntegrationTests",
+        "GeoJSONSourceIntegrationTests",
+        "HeatmapLayerIntegrationTests",
+        "HillshadeLayerIntegrationTests",
+        "ImageSourceIntegrationTests",
+        "IntegrationTestCase",
+        "LineLayerIntegrationTests",
+        "LocationIndicatorLayerIntegrationTests",
+        "MapInitOptionsIntegrationTests",
+        "MapViewIntegrationTestCase",
+        "MapViewIntegrationTests",
+        "MapViewRenderedSnapshotIntegrationTests",
+        "MapboxMapIntegrationTests",
+        "MigrationGuideIntegrationTests",
+        "ModelLayerIntegrationTests",
+        "ObservableIntegrationTests",
+        "OfflineGuideIntegrationTests",
+        "OfflineManagerIntegrationTestCase",
+        "PointAnnotationIntegrationTests",
+        "PolygonAnnotationIntegrationTests",
+        "PolylineAnnotationIntegrationTests",
+        "RasterDemSourceIntegrationTests",
+        "RasterLayerIntegrationTests",
+        "RasterSourceIntegrationTests",
+        "SkyLayerIntegrationTests",
+        "StyleIntegrationTests",
+        "StyleLoadIntegrationTests",
+        "SymbolLayerIntegrationTests",
+        "VectorSourceIntegrationTests"
+      ],
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "MapboxMapsTests",
+        "name" : "MapboxMapsTests"
+      }
+    }
   ],
   "version" : 1
 }

@@ -531,12 +531,10 @@ jobs:
       - run:
           name: Building MapboxMaps for simulator
           command: |
-            JOBS=$(sysctl -n hw.ncpu)
             xcodebuild build-for-testing \
               -scheme MapboxMaps \
               -sdk iphonesimulator \
               -configuration << parameters.configuration >> \
-              -jobs $(JOBS) \
               -destination 'generic/platform=iOS Simulator' \
               -derivedDataPath build \
               -enableCodeCoverage YES \

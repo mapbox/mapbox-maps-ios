@@ -1,5 +1,5 @@
 @propertyWrapper
-final class Stubbed<T> {
+final class Stubbed<T>: StubProtocol {
     let getStub: Stub<Void, T>
     let setStub = Stub<T, Void>()
 
@@ -7,7 +7,12 @@ final class Stubbed<T> {
         return self
     }
 
-    init(wrappedValue: T) {
+    let file: String
+    let line: Int
+
+    init(file: String = #file, line: Int = #line,wrappedValue: T) {
+        self.file = file
+        self.line = line
         getStub = Stub(defaultReturnValue: wrappedValue)
     }
 

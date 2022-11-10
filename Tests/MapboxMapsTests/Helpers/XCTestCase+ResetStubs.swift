@@ -7,7 +7,7 @@ extension XCTestCase {
     /// for `StubProtocol` properties. Then call `reset()` for each of them.
     func resetStubs() {
         Mirror(reflecting: self).children
-            .flatMap { (label, value) in
+            .flatMap { (_, value) in
                 // If value is Optional, carefully unwrap it to get a Wrapped type
                 let innerValue = (value as? OptionalProtocol)?.anyValue ?? value
                 assert(!(innerValue is OptionalProtocol))

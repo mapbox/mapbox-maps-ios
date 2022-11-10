@@ -449,7 +449,6 @@ open class MapView: UIView {
         displayLink?.invalidate()
         cameraAnimatorsRunner.cancelAnimations()
         cameraAnimatorsRunnerEnablable.isEnabled = false
-        eventsManager.flush()
     }
 
     private func subscribeToLifecycleNotifications() {

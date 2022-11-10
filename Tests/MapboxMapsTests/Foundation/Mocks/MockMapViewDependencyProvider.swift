@@ -144,4 +144,10 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
             style: style,
             displayLinkCoordinator: displayLinkCoordinator))
     }
+
+    // MARK: - Events Manager
+    let makeEventsManagerStub = Stub<String, EventsManagerProtocol>(defaultReturnValue: EventsManagerStub())
+    func makeEventsManager(accessToken: String) -> EventsManagerProtocol {
+        makeEventsManagerStub.call(with: accessToken)
+    }
 }

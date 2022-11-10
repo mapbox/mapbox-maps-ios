@@ -4,11 +4,11 @@ import XCTest
 
 final class EventsManagerTests: XCTestCase {
 
-    var eventsManager: EventsManager!
+    var eventsManager: EventsManagerProtocol!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        eventsManager = try EventsManager.shared(withAccessToken: mapboxAccessToken())
+        eventsManager = try EventsManager(accessToken: mapboxAccessToken())
     }
 
     override func tearDown() {

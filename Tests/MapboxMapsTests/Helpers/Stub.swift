@@ -34,11 +34,22 @@ final class Stub<ParametersType, ReturnType> {
     func reset() {
         invocations.removeAll()
     }
+
+    /// Temporary replace `defaultReturnValue` with custom value
+    /// - Parameters:
+    ///   - customDefaultReturnValue: New temporary default value
+    ///   - closure: Context to execute with a new defalut value
+    func execute(withDefault customDefaultReturnValue: ReturnType, closure: () -> Void) {
+        let original = defaultReturnValue
+        defaultReturnValue = customDefaultReturnValue
+        closure()
+        defaultReturnValue = original
+    }
 }
 
 extension Stub where ReturnType == Void {
-    convenience init() {
-        self.init(defaultReturnValue: ())
+    convenience init(file: String = #file, line: Int = #line) {
+        self.init(file: file, line: line, defaultReturnValue: ())
     }
 }
 

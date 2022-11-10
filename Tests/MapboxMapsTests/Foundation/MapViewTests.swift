@@ -28,11 +28,7 @@ final class MapViewTests: XCTestCase {
         dependencyProvider.makeDisplayLinkStub.defaultReturnValue = displayLink
         dependencyProvider.makeLocationProducerStub.defaultReturnValue = locationProducer
         attributionURLOpener = MockAttributionURLOpener()
-        mapView = MapView(
-            frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
-            mapInitOptions: MapInitOptions(),
-            dependencyProvider: dependencyProvider,
-            urlOpener: attributionURLOpener)
+        mapView = buildMapView()
         window = UIWindow()
         window.addSubview(mapView)
 
@@ -53,6 +49,14 @@ final class MapViewTests: XCTestCase {
         bundle = nil
         notificationCenter = nil
         super.tearDown()
+    }
+
+    func buildMapView() -> MapView {
+        return MapView(
+            frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
+            mapInitOptions: MapInitOptions(),
+            dependencyProvider: dependencyProvider,
+            urlOpener: attributionURLOpener)
     }
 
     func invokeDisplayLinkCallback() throws {
@@ -326,6 +330,25 @@ final class MapViewTests: XCTestCase {
 
         XCTAssertEqual(attributionURLOpener.openAttributionURLStub.invocations.count, 1)
         XCTAssertEqual(attributionURLOpener.openAttributionURLStub.invocations.first?.parameters, url)
+    }
+
+    func testEventsFlushingOnDeinit() throws {
+        var eventsManager: EventsManagerStub! = EventsManagerStub(accessToken: "token")
+        let flushStub = eventsManager.flushStub
+
+        dependencyProvider.makeEventsManagerStub.execute(withDefault: eventsManager) {
+            autoreleasepool {
+                mapView = buildMapView()
+            }
+        }
+
+        XCTAssertTrue(flushStub.invocations.isEmpty)
+
+        resetStubs()
+        mapView = nil
+        eventsManager = nil
+
+        XCTAssertEqual(flushStub.invocations.count, 1)
     }
 }
 

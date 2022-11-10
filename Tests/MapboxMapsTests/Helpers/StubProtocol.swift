@@ -1,8 +1,10 @@
-//
-//  File.swift
-//  
-//
-//  Created by odnairy on 10.11.22.
-//
+/// Simple Stub description to enable non-generic casting
+/// Can be useful for debugging purposes in conjunction with `Mirror`
+protocol StubProtocol {
+    func reset()
 
-import Foundation
+    var file: String { get }
+    var line: Int { get }
+}
+
+extension Stub: StubProtocol { }

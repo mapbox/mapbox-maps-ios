@@ -10,7 +10,7 @@ final class Stubbed<T>: StubProtocol {
     let file: String
     let line: Int
 
-    init(file: String = #file, line: Int = #line,wrappedValue: T) {
+    init(file: String = #file, line: Int = #line, wrappedValue: T) {
         self.file = file
         self.line = line
         getStub = Stub(defaultReturnValue: wrappedValue)

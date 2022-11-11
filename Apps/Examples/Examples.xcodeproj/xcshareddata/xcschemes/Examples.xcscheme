@@ -55,6 +55,16 @@
                ReferencedContainer = "container:Examples.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "MapboxMapsTests"
+               BuildableName = "MapboxMapsTests"
+               BlueprintName = "MapboxMapsTests"
+               ReferencedContainer = "container:../..">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

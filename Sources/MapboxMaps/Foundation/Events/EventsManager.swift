@@ -14,7 +14,7 @@ extension UserDefaults {
     }
 }
 
-internal protocol EventsManagerProtocol {
+internal protocol EventsManagerProtocol: AnyObject {
     func sendMapLoadEvent()
 
     func sendTurnstile()

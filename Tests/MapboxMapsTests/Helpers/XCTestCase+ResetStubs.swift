@@ -5,7 +5,7 @@ extension XCTestCase {
     ///
     /// Interates through reflection of current `XCTestCase` and lookup
     /// for `StubProtocol` properties. Then call `reset()` for each of them.
-    func resetStubs() {
+    func resetAllStubs() {
         Mirror(reflecting: self).children
             .flatMap { (_, value) -> Mirror.Children in
                 // If value is Optional, carefully unwrap it to get a Wrapped type

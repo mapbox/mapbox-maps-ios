@@ -1,17 +1,12 @@
 import Foundation
 @testable import MapboxMaps
 
-class EventsManagerStub: EventsManagerProtocol {
+class EventsManagerMock: EventsManagerProtocol {
 
     @Stubbed var accessToken: String
 
     init(accessToken: String = "tests") {
         self.accessToken = accessToken
-    }
-
-    static let sharedWithAccessTokenStub = Stub<String, EventsManagerProtocol>(defaultReturnValue: EventsManagerStub())
-    static func shared(withAccessToken accessToken: String) -> MapboxMaps.EventsManagerProtocol {
-        return EventsManagerStub(accessToken: accessToken)
     }
 
     let sendMapLoadEventStub = Stub<Void, Void>()

@@ -333,17 +333,17 @@ final class MapViewTests: XCTestCase {
     }
 
     func testEventsFlushingOnDeinit() throws {
-        dependencyProvider.makeEventsManagerStub.returnValueQueue.append(EventsManagerStub())
+        dependencyProvider.makeEventsManagerStub.returnValueQueue.append(EventsManagerMock())
 
         autoreleasepool {
             mapView = buildMapView()
         }
 
-        let flushStub = try XCTUnwrap(mapView.eventsManager as? EventsManagerStub).flushStub
+        let flushStub = try XCTUnwrap(mapView.eventsManager as? EventsManagerMock).flushStub
 
         XCTAssertTrue(flushStub.invocations.isEmpty)
 
-        resetStubs()
+        resetAllStubs()
         mapView = nil
 
         XCTAssertEqual(flushStub.invocations.count, 1)

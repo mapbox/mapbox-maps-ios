@@ -78,7 +78,7 @@ open class MapView: UIView {
     private let viewAnnotationContainerView = SubviewInteractionOnlyView()
 
     /// Resource options for this map view
-    internal let resourceOptions: ResourceOptions!
+    internal let resourceOptions: ResourceOptions
 
     private var needsDisplayRefresh: Bool = false
     private var displayLink: DisplayLinkProtocol?

@@ -41,7 +41,8 @@ platform :ios do
       scheme: 'Examples',                  # XCTest scheme
       clean: true,                        # Recommended: This would ensure the build would not include unnecessary files
       configuration: "Release",
-      xcargs: "-skipUnavailableActions ENABLE_TESTABILITY=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO COMPILER_INDEX_STORE_ENABLE=NO",
+      testplan: "Examples no unit tests",
+      xcargs: "ENABLE_TESTABILITY=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO COMPILER_INDEX_STORE_ENABLE=NO",
       skip_detect_devices: true,          # Required
       build_for_testing: true,            # Required
       sdk: 'iphoneos',                    # Required

@@ -1,8 +1,14 @@
+import Foundation
+
 final class Stub<ParametersType, ReturnType> {
 
-    struct Invocation {
+    struct Invocation: CustomStringConvertible {
         var parameters: ParametersType
         var returnValue: ReturnType
+
+        var description: String {
+            "Invocation<\(ParametersType.self), \(ReturnType.self)>"
+        }
     }
 
     typealias SideEffect = (Invocation) -> Void
@@ -17,7 +23,12 @@ final class Stub<ParametersType, ReturnType> {
 
     var sideEffectQueue = [SideEffect]()
 
-    init(defaultReturnValue: ReturnType) {
+    let file: String
+    let line: Int
+
+    init(file: String = #file, line: Int = #line, defaultReturnValue: ReturnType) {
+        self.file = file
+        self.line = line
         self.defaultReturnValue = defaultReturnValue
     }
 
@@ -37,8 +48,8 @@ final class Stub<ParametersType, ReturnType> {
 }
 
 extension Stub where ReturnType == Void {
-    convenience init() {
-        self.init(defaultReturnValue: ())
+    convenience init(file: String = #file, line: Int = #line) {
+        self.init(file: file, line: line, defaultReturnValue: ())
     }
 }
 
@@ -55,31 +66,28 @@ extension Stub.Invocation: Equatable where ParametersType: Equatable, ReturnType
     }
 }
 
-@propertyWrapper
-final class Stubbed<T> {
-    let getStub: Stub<Void, T>
-    let setStub = Stub<T, Void>()
+extension Stub: CustomStringConvertible {
+    var description: String {
+        let filePath = NSURL(fileURLWithPath: file).lastPathComponent ?? file
 
-    var projectedValue: Stubbed<T> {
-        return self
-    }
+        var result = "Stub<\(ParametersType.self), \(ReturnType.self)> created at \(filePath):\(line)"
+        result += "\n  Default return value is \(defaultReturnValue)"
 
-    init(wrappedValue: T) {
-        getStub = Stub(defaultReturnValue: wrappedValue)
-    }
-
-    var wrappedValue: T {
-        get {
-            getStub.call()
+        if let defaultSideEffect = defaultSideEffect {
+            result += "\n  Has a default side-effect \(String(describing: defaultSideEffect))"
+        } else {
+            result += "\n  Has no default side-effect"
         }
-        set {
-            setStub.call(with: newValue)
-            getStub.defaultReturnValue = newValue
-        }
-    }
 
-    func reset() {
-        getStub.reset()
-        setStub.reset()
+        if invocations.isEmpty {
+            result += "\n  Has no stored invocations"
+        } else {
+            result += "\n  Has \(invocations.count) stored invocations"
+            for invocation in invocations {
+                result += "\n    \(invocation)"
+            }
+        }
+
+        return result
     }
 }

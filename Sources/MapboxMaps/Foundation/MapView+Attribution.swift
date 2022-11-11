@@ -37,7 +37,7 @@ extension MapView: AttributionDialogManagerDelegate {
         var queryItems = [referrerQueryItem]
 
         let sdkVersion = Bundle.mapboxMapsMetadata.version
-        var accessToken = resourceOptions?.accessToken ?? "unknown"
+        var accessToken = resourceOptions.accessToken
         accessToken = accessToken.isEmpty ? "unknown" : accessToken
 
         if let styleURIString = mapboxMap.style.uri?.rawValue,

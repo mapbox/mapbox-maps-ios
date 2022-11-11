@@ -18,32 +18,13 @@ final class ExamplesUITests: XCTestCase {
         let app = XCUIApplication()
         app.launch()
 
-        let locationPermissionGrantedExpectation = expectation(description: "Location permission granted")
-        locationAuthorizationAlertMonitor = addUIInterruptionMonitor(withDescription: "", handler: { alert in
-            let allowButton = alert.buttons["Allow While Using App"]
-
-            guard allowButton.exists else {
-                XCTFail("Can't find the allow button")
-                return false
-            }
-            locationPermissionGrantedExpectation.fulfill()
-            allowButton.tap()
-            return true
-        })
-
         // Navigate to an example that should trigger location permissoon alert to be shown
-        let searchField = app.navigationBars.firstMatch.searchFields.firstMatch
+        let searchField = app.searchFields.firstMatch
         searchField.tap()
         searchField.typeText("Location")
         app.tables.firstMatch.cells.firstMatch.tap()
 
-        // wait for the alert to appear
-        sleep(2)
-
-        // interact with the app so that UI interruption monitor gets triggered
-        app.swipeUp()
-
-        wait(for: [locationPermissionGrantedExpectation], timeout: 5)
+        acceptLocationPermissionAlert(timeout: 5)
     }
 
     func testEveryExample() throws {
@@ -58,5 +39,22 @@ final class ExamplesUITests: XCTestCase {
             // Navigate back to the table view
             app.navigationBars.buttons.element(boundBy: 0).tap()
         }
+    }
+}
+
+extension XCTestCase {
+    /// Query SpringBoard for alerts and wait for `Allow` or `Allow While Using App` button
+    func acceptLocationPermissionAlert(timeout: TimeInterval) {
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+
+        let predicate = NSPredicate(format: "%K IN %@", #keyPath(XCUIElementAttributes.label), [
+            "Allow", // pre-iOS 13
+            "Allow While Using App" // iOS13+
+        ])
+        let allowButton = springboard.alerts.firstMatch.buttons.matching(predicate).firstMatch
+
+        XCTAssertTrue(allowButton.waitForExistence(timeout: timeout), "Can't find the allow button")
+
+        allowButton.tap()
     }
 }

@@ -28,12 +28,6 @@ final class SingleTapGestureHandlerTests: XCTestCase {
         super.tearDown()
     }
 
-    func sendActions(with state: UIGestureRecognizer.State, numberOfTouches: Int) {
-        gestureRecognizer.getStateStub.defaultReturnValue = state
-        gestureRecognizer.getNumberOfTouchesStub.defaultReturnValue = numberOfTouches
-        gestureRecognizer.sendActions()
-    }
-
     func testInitialization() {
         XCTAssertTrue(gestureRecognizer === gestureHandler.gestureRecognizer)
         XCTAssertEqual(gestureRecognizer.numberOfTapsRequired, 1)

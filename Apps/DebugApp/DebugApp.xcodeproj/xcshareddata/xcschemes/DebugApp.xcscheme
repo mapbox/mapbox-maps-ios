@@ -43,7 +43,7 @@
       </AdditionalOptions>
       <TestPlans>
          <TestPlanReference
-            reference = "container:../../TestPlans/DebugApp.xctestplan"
+            reference = "container:../../Tests/TestPlans/DebugApp.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

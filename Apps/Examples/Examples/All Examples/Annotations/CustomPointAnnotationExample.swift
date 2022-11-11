@@ -44,8 +44,6 @@ final class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
         // Initialize a point annotation with a geometry ("coordinate" in this case)
         // and configure it with a custom image (sourced from the asset catalogue)
         var customPointAnnotation = PointAnnotation(coordinate: centerCoordinate)
-        customPointAnnotation.textField = "test"
-        customPointAnnotation.image = .init(image: "📍".image()! , name: "image")
         customPointAnnotation.isDraggable = true
 
         pointAnnotationManager.delegate = self
@@ -57,23 +55,5 @@ final class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
 extension CustomPointAnnotationExample: AnnotationInteractionDelegate {
     func annotationManager(_ manager: MapboxMaps.AnnotationManager, didDetectTappedAnnotations annotations: [MapboxMaps.Annotation]) {
         print("AnnotationManager did detect tapped annotations: \(annotations)")
-    }
-}
-
-extension String {
-    func image() -> UIImage? {
-        let nsString = (self as NSString)
-        let font = UIFont.systemFont(ofSize: 24) // you can change your font size here
-        let stringAttributes = [NSAttributedString.Key.font: font]
-        let imageSize = nsString.size(withAttributes: stringAttributes)
-
-        UIGraphicsBeginImageContextWithOptions(imageSize, false, 0) //  begin image context
-        UIColor.clear.set() // clear background
-        UIRectFill(CGRect(origin: CGPoint(), size: imageSize)) // set rect size
-        nsString.draw(at: CGPoint.zero, withAttributes: stringAttributes) // draw text within rect
-        let image = UIGraphicsGetImageFromCurrentImageContext() // create image from context
-        UIGraphicsEndImageContext() //  end image context
-
-        return image ?? UIImage()
     }
 }

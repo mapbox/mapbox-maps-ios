@@ -31,8 +31,11 @@
       enableASanStackUseAfterReturn = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../../TestPlans/Examples.xctestplan"
+            reference = "container:../../Tests/TestPlans/Examples.xctestplan"
             default = "YES">
+         </TestPlanReference>
+         <TestPlanReference
+            reference = "container:../../Tests/TestPlans/Examples no unit tests.xctestplan">
          </TestPlanReference>
       </TestPlans>
       <Testables>

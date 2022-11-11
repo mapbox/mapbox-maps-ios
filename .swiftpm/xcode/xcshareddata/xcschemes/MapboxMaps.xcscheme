@@ -100,14 +100,14 @@
       </PreActions>
       <TestPlans>
          <TestPlanReference
-            reference = "container:TestPlans/MapboxMapsAll.xctestplan"
+            reference = "container:Tests/TestPlans/MapboxMapsAll.xctestplan"
             default = "YES">
          </TestPlanReference>
          <TestPlanReference
-            reference = "container:TestPlans/UnitTests.xctestplan">
+            reference = "container:Tests/TestPlans/UnitTests.xctestplan">
          </TestPlanReference>
          <TestPlanReference
-            reference = "container:TestPlans/IntegrationTests.xctestplan">
+            reference = "container:Tests/TestPlans/IntegrationTests.xctestplan">
          </TestPlanReference>
       </TestPlans>
       <Testables>

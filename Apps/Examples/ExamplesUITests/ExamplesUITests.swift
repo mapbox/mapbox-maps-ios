@@ -32,13 +32,22 @@ final class ExamplesUITests: XCTestCase {
         })
 
         // Navigate to an example that should trigger location permissoon alert to be shown
-        let searchField = app.navigationBars.firstMatch.searchFields.firstMatch
+        let searchField = app.searchFields.firstMatch
         searchField.tap()
         searchField.typeText("Location")
         app.tables.firstMatch.cells.firstMatch.tap()
 
-        // wait for the alert to appear
-        sleep(2)
+        // pre iOS 13 solution
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+
+        let allowBtn = springboard.buttons["Allow"]
+
+        // Wait for iOS 12 popup. On iOS 13+ we also need that
+        // to leave some room for monitor to catch alert
+        if allowBtn.waitForExistence(timeout: 2) {
+            allowBtn.tap()
+            locationPermissionGrantedExpectation.fulfill()
+        }
 
         // interact with the app so that UI interruption monitor gets triggered
         app.swipeUp()

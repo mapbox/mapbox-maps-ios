@@ -54,20 +54,21 @@ workflows:
           matrix:
             parameters:
               xcode: ["13.1.0", "13.2.1"]
-      - unit-test-sdk:
-          configuration: "Release"
-          report_failure: true
+      - build-unit-tests
+      - run-unit-tests:
+          xcode: 14.1.0
           matrix:
             parameters:
-              xcode: ["14.0.0"]
-              os: ["11.4", "12.5", "13.7", "14.8", "15.7", "16.0"]
-      - unit-test-sdk:
-          configuration: "Release"
-          report_failure: true
+              destination: ["OS=15.5,name=iPhone 13", "OS=16.1,name=iPhone 14"]
+          requires:
+            - build-unit-tests
+      - run-unit-tests:
+          xcode: 12.5.1
           matrix:
             parameters:
-              xcode: ["13.1.0"]
-              os: ["latest"]
+              destination: ["OS=13.7,name=iPhone 11", "OS=14.5,name=iPhone 11"]
+          requires:
+            - build-unit-tests
       - build-tests:
           name: Build MapboxTestHost tests
       - run-tests:
@@ -157,48 +158,30 @@ workflows:
       # Run unit tests on CI simulator
       - build-unit-tests
       - run-unit-tests:
-          os: "12.4"
-          device: "iPhone 8"
-          xcode: "11.7.0"
-          requires:
-            - build-unit-tests
-      - run-unit-tests:
-          os: "13.7"
-          device: iPhone 11
-          xcode: "12.5.1"
-          requires:
-            - build-unit-tests
-      - run-unit-tests:
-          os: "14.5"
-          device: iPhone 11
-          xcode: "13.4.1"
-          requires:
-            - build-unit-tests
-      - run-unit-tests:
-          os: "15.5"
-          device: iPhone 13
-          xcode: "14.1.0"
-          requires:
-            - build-unit-tests
-      - run-unit-tests:
-          os: "16.1"
-          device: iPhone 14
-          xcode: "14.1.0"
-          requires:
-            - build-unit-tests
-
-      - unit-test-sdk:
-          name: "Run Unit tests"
-          xcode: "14.0.0"
+          xcode: 14.1.0
           matrix:
             parameters:
-              os: ["11.4", "12.5", "13.7", "14.8", "15.7", "16.0"]
+              destination: ["OS=15.5,name=iPhone 13", "OS=16.1,name=iPhone 14"]
+          requires:
+            - build-unit-tests
+      - run-unit-tests:
+          xcode: 12.5.1
+          matrix:
+            parameters:
+              destination: ["OS=13.7,name=iPhone 11", "OS=14.5,name=iPhone 11"]
+          requires:
+            - build-unit-tests
 
-      - unit-test-sdk:
-          name: "Run Unit Tests with min Turf"
-          xcode: "13.1.0"
+      - build-unit-tests:
+          name: build-unit-tests-min-turf
           turf-revision: v2.0.0
-          os: "latest"
+
+      - run-unit-tests:
+          name: run-unit-tests-min-turf
+          xcode: 13.1.0
+          destination: OS=15.0,name=iPhone 12
+          requires:
+            - build-unit-tests-min-turf
 
       # Build all tests with host application
       # Run on main by default
@@ -326,7 +309,7 @@ jobs:
   # and aliases as described here
   # https://circleci.com/docs/2.0/writing-yaml/#merging-maps
   base-job: &base-job
-    parameters: &base-parameters
+    parameters:
       xcode:
         type: string
         default: "13.1.0"
@@ -555,11 +538,21 @@ jobs:
       configuration:
         type: string
         default: "Debug"
+      turf-revision:
+        type: string
+        default: ""
     executor: xcode-sdk-min
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
       - configure-environment
+      - when:
+          condition: << parameters.turf-revision >>
+          steps:
+            - run:
+                name: Set Turf Revision
+                command: |
+                  sed -i '' 's/turf-swift.git", from: "2.0.0"/turf-swift.git", .revision("<< parameters.turf-revision >>")/' Package.swift
       - run:
           name: Checkout xcodebuild deps
           command: xcodebuild -resolvePackageDependencies -scheme MapboxMaps -derivedDataPath build
@@ -584,12 +577,8 @@ jobs:
 
   run-unit-tests:
     parameters:
-      os:
+      destination:
         type: string
-        default: "latest"
-      device:
-        type: string
-        default: "iPhone 11"
       xcode:
         type: string
         default: "13.1.0"
@@ -600,13 +589,13 @@ jobs:
       - attach_workspace:
           at: build
       - run:
-          name: Run MapboxMaps unit test on iOS << parameters.os >> << parameters.device >> simulator
+          name: Run MapboxMaps unit test on << parameters.destination >>  simulator
           command: |
             XCTESTRUN_PATH=$(find build -type f -name '*.xctestrun')
             xcodebuild \
               test-without-building \
               -xctestrun "$XCTESTRUN_PATH" \
-              -destination 'platform=iOS Simulator,OS=<< parameters.os >>,name=<< parameters.device >>' \
+              -destination 'platform=iOS Simulator,<< parameters.destination >>' \
               -enableCodeCoverage YES \
               -resultBundlePath MapboxMapsTests.xcresult | xcpretty --report junit --output junit.xml
       - run:
@@ -619,58 +608,6 @@ jobs:
           path: MapboxMapsTests.xcresult.zip
       - store_artifacts:
           path: ~/Library/Logs/DiagnosticReports
-      
-
-  unit-test-sdk:
-    <<: *base-job
-    parameters:
-      <<: *base-parameters
-      os:
-        default: "latest"
-        type: string
-    resource_class: macos.x86.medium.gen2
-    steps:
-      - checkout
-      - configure-environment
-      - when:
-          condition: << parameters.turf-revision >>
-          steps:
-            - run:
-                name: Set Turf Revision
-                command: |
-                  sed -i '' 's/turf-swift.git", from: "2.0.0"/turf-swift.git", .revision("<< parameters.turf-revision >>")/' Package.swift
-      # Building and testing are split into 2, with the aim that we'll be able to reuse
-      # the build product and test on multiple simulators
-      - run:
-          name: Building MapboxMaps for simulator
-          command: make build-sdk-for-testing-simulator
-          no_output_timeout: 5m
-      - run:
-          name: Testing MapboxMaps with iOS << parameters.os >> simulator
-          command: make test-sdk-without-building-simulator OS=<< parameters.os >>| xcpretty --report junit --output build/reports/junit.xml
-      - store_test_results:
-          path: build/reports
-      - run:
-          name: Compress XCResult
-          command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
-          when: always
-      - store_artifacts:
-          path: MapboxMapsTests.xcresult.zip
-      - store_artifacts:
-          path: ~/Library/Logs/DiagnosticReports
-      - locate-derived-data-directory:
-          base_name: $(basename $(pwd))
-      - run:
-          name: Converting and uploading coverage
-          command: |
-            pip3 install awscli gitpython
-            make update-codecov-with-profdata SCHEME=MapboxMaps BUILD_DIR="$DERIVED_DATA_PATH"
-      - store-logs:
-          artifact_name: MapboxMaps
-          derived_data_path: $DERIVED_DATA_PATH
-      - report-failure:
-          report_failure: << parameters.report_failure >>
-          message: "unit-test-sdk"
 
   build-tests:
     executor: xcode-latest
@@ -1081,7 +1018,7 @@ jobs:
           no_output_timeout: 5m
       - run:
           name: Testing MapboxMaps with simulator
-          command: make test-sdk-without-building-simulator OS=latest
+          command: make test-sdk-without-building-simulator
       - run:
           name: Compress XCResult
           command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
@@ -1546,5 +1483,3 @@ commands:
               --header 'Accept: application/vnd.github.v3+json' \
               --header "Authorization: token $(mbx-ci github notifier token)" \
               --data "{\"state\":\"failure\",\"target_url\":\"$CIRCLE_BUILD_URL\",\"description\":\"MapboxMaps SDK integration tests failed\",\"context\":\"Maps SDK Integration\"}"
-
-# VS Code Extension Version: 1.0.2

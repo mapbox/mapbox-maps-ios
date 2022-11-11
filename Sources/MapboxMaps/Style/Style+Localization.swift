@@ -81,6 +81,8 @@ extension Style {
                 // Streets v7 only supports "zh"
                 if locale.identifier.contains("Hant") || locale.identifier.contains("HK") || locale.identifier.contains("TW") {
                     return "zh"
+                } else if locale.identifier.contains("Hans") || locale.identifier.contains("CN") {
+                    return "zh-Hans"
                 } else {
                     return preferredMapboxStreetsLocalization(among: preferences, from: supportedLanguageCodesv7) ?? nil
                 }

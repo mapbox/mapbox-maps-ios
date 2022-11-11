@@ -14,33 +14,33 @@ extension UserDefaults {
     }
 }
 
-internal final class EventsManager {
+internal protocol EventsManagerProtocol: AnyObject {
+    func sendMapLoadEvent()
+
+    func sendTurnstile()
+
+    func flush()
+}
+
+internal final class EventsManager: EventsManagerProtocol {
     private enum Constants {
         static let MGLAPIClientUserAgentBase = "mapbox-maps-ios"
         static let SDKVersion = Bundle.mapboxMapsMetadata.version
         static let UserAgent = String(format: "%/%", MGLAPIClientUserAgentBase, SDKVersion)
     }
 
-    // use a shared instance to avoid redundant calls to
-    // MMEEventsManager.shared().pauseOrResumeMetricsCollectionIfRequired()
-    // when the MGLMapboxMetricsEnabled UserDefaults key changes and duplicate
-    // calls to MMEEventsManager.shared().flush() when handling memory warnings.
-    private static var shared: EventsManager?
-
-    internal static func shared(withAccessToken accessToken: String) -> EventsManager {
-        let result = shared ?? EventsManager(accessToken: accessToken)
-        shared = result
-        return result
-    }
-
-    // We need telemetry service for location and metrics event which will be sent automaticaly if TelemetryService is initialized.
+    /// Responsible for location and telemetry metrics events
     private let telemetryService: TelemetryService
+
+    /// Responsible for all the SDK interaction/feedback events
     private let eventsService: EventsService
 
     private let metricsEnabledObservation: NSKeyValueObservation
 
-    private init(accessToken: String) {
-        let eventsServerOptions = EventsServerOptions(token: accessToken, userAgentFragment: Constants.MGLAPIClientUserAgentBase, deferredDeliveryServiceOptions: nil)
+    internal init(accessToken: String) {
+        let eventsServerOptions = EventsServerOptions(token: accessToken,
+                                                      userAgentFragment: Constants.MGLAPIClientUserAgentBase,
+                                                      deferredDeliveryServiceOptions: nil)
         eventsService = EventsService.getOrCreate(for: eventsServerOptions)
         telemetryService = TelemetryService.getOrCreate(for: eventsServerOptions)
 
@@ -134,12 +134,26 @@ internal final class EventsManager {
 
     internal func sendMapLoadEvent() {
         let attributes = self.getMapLoadEventAttributes()
-        let mapLoadEvent = MapboxCommon_Private.Event(priority: .immediate, attributes: attributes, deferredOptions: nil)
+        let mapLoadEvent = MapboxCommon_Private.Event(priority: .queued,
+                                                      attributes: attributes,
+                                                      deferredOptions: nil)
         eventsService.sendEvent(for: mapLoadEvent)
     }
 
     internal func sendTurnstile() {
-        let turnstileEvent = TurnstileEvent(skuId: UserSKUIdentifier.mapsMAUS, sdkIdentifier: Constants.MGLAPIClientUserAgentBase, sdkVersion: Constants.SDKVersion)
+        let turnstileEvent = TurnstileEvent(skuId: UserSKUIdentifier.mapsMAUS,
+                                            sdkIdentifier: Constants.MGLAPIClientUserAgentBase,
+                                            sdkVersion: Constants.SDKVersion)
         eventsService.sendTurnstileEvent(for: turnstileEvent)
+    }
+
+    /// Flush events from internal telemetry and events services
+    internal func flush() {
+        telemetryService.flush()
+        eventsService.flush()
+    }
+
+    deinit {
+        flush()
     }
 }

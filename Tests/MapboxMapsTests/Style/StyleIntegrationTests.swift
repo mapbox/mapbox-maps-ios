@@ -253,6 +253,296 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(result, convertedString)
     }
 
+    func testLocalizeLabelsv7() {
+        let resourceOptions = ResourceOptions(accessToken: "")
+        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions)
+        let mapView = MapView(frame: UIScreen.main.bounds, mapInitOptions: mapInitOptions)
+
+        let styleJSONObject: [String: Any] = [
+            "version": 7,
+            "center": [
+                -122.385563, 37.763330
+            ],
+            "zoom": 15,
+            "sources": [
+                "composite": [
+                    "url": "mapbox://mapbox.mapbox-streets-v7,mapbox.mapbox-terrain-v2",
+                    "type": "vector",
+                ]
+            ],
+            "layers": [
+                [
+                    "id": "place-labels",
+                    "type": "symbol",
+                    "source": "composite",
+                    "source-layer": "place",
+                    "layout": [
+                        "text-field": ["coalesce", ["get", "name_en"], ["get", "name"]],
+                    ],
+                ],
+            ],
+        ]
+
+        let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
+        XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
+
+        let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
+        mapLoadingErrorExpectation.assertForOverFulfill = false
+
+        mapView.mapboxMap.onNext(event: .mapLoadingError, handler: { _ in
+            mapLoadingErrorExpectation.fulfill()
+        })
+
+        mapView.mapboxMap.loadStyleJSON(styleJSON)
+
+        wait(for: [mapLoadingErrorExpectation], timeout: 10.0)
+
+        let style = mapView.mapboxMap.style
+        XCTAssertEqual(style.allSourceIdentifiers.count, 1)
+        XCTAssertEqual(style.allLayerIdentifiers.count, 1)
+
+        func textFieldExpression(layerIdentifier: String) -> Exp? {
+            let expressionArray = style.layerProperty(for: layerIdentifier, property: "text-field").value
+
+            var expressionData: Data?
+            XCTAssertNoThrow(expressionData = try JSONSerialization.data(withJSONObject: expressionArray, options: []))
+            guard expressionData != nil else { return nil }
+
+            var expression: Exp?
+            XCTAssertNoThrow(expression = try JSONDecoder().decode(Exp.self, from: expressionData!))
+            return expression
+        }
+
+        XCTAssertEqual(textFieldExpression(layerIdentifier: "place-labels"),
+                       Exp(.format) {
+                        Exp(.coalesce) { Exp(.get) { "name_en" }; Exp(.get) { "name" } }
+                        FormatOptions()
+                       },
+                       "Place labels should be in English by default.")
+
+        func assert(placeLabelProperty: String) {
+            XCTAssertEqual(textFieldExpression(layerIdentifier: "place-labels"),
+                           Exp(.format) {
+                            Exp(.coalesce) { Exp(.get) { placeLabelProperty }; Exp(.get) { "name" } }
+                            FormatOptions()
+                           },
+                           "Place labels should be localized after localization.")
+        }
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "ar"))
+        assert(placeLabelProperty: "name_ar")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "en"))
+        assert(placeLabelProperty: "name_en")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "es"))
+        assert(placeLabelProperty: "name_es")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "fr"))
+        assert(placeLabelProperty: "name_fr")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "de"))
+        assert(placeLabelProperty: "name_de")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "pt"))
+        assert(placeLabelProperty: "name_pt")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "ru"))
+        assert(placeLabelProperty: "name_ru")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "ja"))
+        assert(placeLabelProperty: "name_ja")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "ko"))
+        assert(placeLabelProperty: "name_ko")
+
+        XCTAssertThrowsError(try mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "vi")), "Vietnamese not availabe in Streets v7")
+
+        XCTAssertThrowsError(try mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "it")), "Italian not availabe in Streets v7")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh-Hant-TW"))
+        assert(placeLabelProperty: "name_zh")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh-Hant-HK"))
+        assert(placeLabelProperty: "name_zh")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh-Hans-CN"))
+        assert(placeLabelProperty: "name_zh-Hans")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh_Hant-TW"))
+        assert(placeLabelProperty: "name_zh")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh_Hant-HK"))
+        assert(placeLabelProperty: "name_zh")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh_Hans-CN"))
+        assert(placeLabelProperty: "name_zh-Hans")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh_Hant_TW"))
+        assert(placeLabelProperty: "name_zh")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh_Hant_HK"))
+        assert(placeLabelProperty: "name_zh")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh_Hans_CN"))
+        assert(placeLabelProperty: "name_zh-Hans")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh-Hant-TW"))
+        assert(placeLabelProperty: "name_zh")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh-Hant-HK"))
+        assert(placeLabelProperty: "name_zh")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh-Hans-CN"))
+        assert(placeLabelProperty: "name_zh-Hans")
+    }
+
+    func testLocalizeLabelsv8() {
+        let resourceOptions = ResourceOptions(accessToken: "")
+        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions)
+        let mapView = MapView(frame: UIScreen.main.bounds, mapInitOptions: mapInitOptions)
+
+        let styleJSONObject: [String: Any] = [
+            "version": 8,
+            "center": [
+                -122.385563, 37.763330
+            ],
+            "zoom": 15,
+            "sources": [
+                "composite": [
+                    "url": "mapbox://mapbox.mapbox-streets-v8,mapbox.mapbox-terrain-v2",
+                    "type": "vector",
+                ]
+            ],
+            "layers": [
+                [
+                    "id": "place-labels",
+                    "type": "symbol",
+                    "source": "composite",
+                    "source-layer": "place",
+                    "layout": [
+                        "text-field": ["coalesce", ["get", "name_en"], ["get", "name"]],
+                    ],
+                ],
+            ],
+        ]
+
+        let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
+        XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
+
+        let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
+        mapLoadingErrorExpectation.assertForOverFulfill = false
+
+        mapView.mapboxMap.onNext(event: .mapLoadingError, handler: { _ in
+            mapLoadingErrorExpectation.fulfill()
+        })
+
+        mapView.mapboxMap.loadStyleJSON(styleJSON)
+
+        wait(for: [mapLoadingErrorExpectation], timeout: 10.0)
+
+        let style = mapView.mapboxMap.style
+        XCTAssertEqual(style.allSourceIdentifiers.count, 1)
+        XCTAssertEqual(style.allLayerIdentifiers.count, 1)
+
+        func textFieldExpression(layerIdentifier: String) -> Exp? {
+            let expressionArray = style.layerProperty(for: layerIdentifier, property: "text-field").value
+
+            var expressionData: Data?
+            XCTAssertNoThrow(expressionData = try JSONSerialization.data(withJSONObject: expressionArray, options: []))
+            guard expressionData != nil else { return nil }
+
+            var expression: Exp?
+            XCTAssertNoThrow(expression = try JSONDecoder().decode(Exp.self, from: expressionData!))
+            return expression
+        }
+
+        XCTAssertEqual(textFieldExpression(layerIdentifier: "place-labels"),
+                       Exp(.format) {
+                        Exp(.coalesce) { Exp(.get) { "name_en" }; Exp(.get) { "name" } }
+                        FormatOptions()
+                       },
+                       "Place labels should be in English by default.")
+
+        func assert(placeLabelProperty: String) {
+            XCTAssertEqual(textFieldExpression(layerIdentifier: "place-labels"),
+                           Exp(.format) {
+                            Exp(.coalesce) { Exp(.get) { placeLabelProperty }; Exp(.get) { "name" } }
+                            FormatOptions()
+                           },
+                           "Place labels should be localized after localization.")
+        }
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "ar"))
+        assert(placeLabelProperty: "name_ar")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "en"))
+        assert(placeLabelProperty: "name_en")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "es"))
+        assert(placeLabelProperty: "name_es")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "fr"))
+        assert(placeLabelProperty: "name_fr")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "de"))
+        assert(placeLabelProperty: "name_de")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "pt"))
+        assert(placeLabelProperty: "name_pt")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "ru"))
+        assert(placeLabelProperty: "name_ru")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "ja"))
+        assert(placeLabelProperty: "name_ja")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "ko"))
+        assert(placeLabelProperty: "name_ko")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "vi"))
+        assert(placeLabelProperty: "name_vi")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "it"))
+        assert(placeLabelProperty: "name_it")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh-Hant-TW"))
+        assert(placeLabelProperty: "name_zh-Hant")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh-Hant-HK"))
+        assert(placeLabelProperty: "name_zh-Hant")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh-Hans-CN"))
+        assert(placeLabelProperty: "name_zh-Hans")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh_Hant_TW"))
+        assert(placeLabelProperty: "name_zh-Hant")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh_Hant_HK"))
+        assert(placeLabelProperty: "name_zh-Hant")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh_Hans_CN"))
+        assert(placeLabelProperty: "name_zh-Hans")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh_Hant-TW"))
+        assert(placeLabelProperty: "name_zh-Hant")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh_Hant-HK"))
+        assert(placeLabelProperty: "name_zh-Hant")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh_Hans-CN"))
+        assert(placeLabelProperty: "name_zh-Hans")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh-Hant_TW"))
+        assert(placeLabelProperty: "name_zh-Hant")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh-Hant_HK"))
+        assert(placeLabelProperty: "name_zh-Hant")
+
+        try! mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh-Hans_CN"))
+        assert(placeLabelProperty: "name_zh-Hans")
+
+        XCTAssertThrowsError(try mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "jkls")), "Locale string needs to match exactly")
+    }
+
     func testTerrain() throws {
         let sourceId = String.randomASCII(withLength: .random(in: 1...20))
         let exaggeration = Double.random(in: 0...1000)

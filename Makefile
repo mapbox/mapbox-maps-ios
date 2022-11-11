@@ -86,6 +86,7 @@ XCODE_BUILD_SIM_SDK = set -o pipefail && xcodebuild \
 	-sdk iphonesimulator \
 	-configuration $(CONFIGURATION) \
 	-jobs $(JOBS) \
+	ENABLE_TESTABILITY=YES \
 	COMPILER_INDEX_STORE_ENABLE=NO
 
 .PHONY: build-sdk-for-simulator
@@ -101,7 +102,6 @@ build-sdk-for-testing-simulator:
 		-destination 'platform=iOS Simulator,OS=latest,name=iPhone 11' \
 		-enableCodeCoverage YES \
 		build-for-testing \
-		ENABLE_TESTABILITY=YES \
 		ONLY_ACTIVE_ARCH=YES
 
 .PHONY: test-sdk-without-building-simulator
@@ -154,6 +154,7 @@ build-sdk-for-device:
 		build \
 		ONLY_ACTIVE_ARCH=NO \
 		COMPILER_INDEX_STORE_ENABLE=NO \
+		ENABLE_TESTABILITY=YES \
 		$(CODE_SIGNING)
 
 $(XCODE_PROJECT_FILE): project.yml

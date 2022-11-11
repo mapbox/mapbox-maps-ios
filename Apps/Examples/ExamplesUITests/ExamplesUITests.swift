@@ -47,7 +47,7 @@ extension XCTestCase {
     func acceptLocationPermissionAlert(timeout: TimeInterval) {
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
 
-        let predicate = NSPredicate(format: "label IN %@", [
+        let predicate = NSPredicate(format: "%K IN %@", #keyPath(XCUIElementAttributes.label), [
             "Allow", // pre-iOS 13
             "Allow While Using App" // iOS13+
         ])

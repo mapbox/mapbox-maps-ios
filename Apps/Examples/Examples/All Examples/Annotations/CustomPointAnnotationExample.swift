@@ -44,6 +44,7 @@ final class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
         // Initialize a point annotation with a geometry ("coordinate" in this case)
         // and configure it with a custom image (sourced from the asset catalogue)
         var customPointAnnotation = PointAnnotation(coordinate: centerCoordinate)
+        customPointAnnotation.image = .init(image: customImage, name: "my-custom-image-name")
         customPointAnnotation.isDraggable = true
 
         pointAnnotationManager.delegate = self

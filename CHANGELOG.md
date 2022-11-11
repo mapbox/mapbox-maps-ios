@@ -5,6 +5,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 * Fix memory leak when viewport is being deallocated while transition is running. ([#1691](https://github.com/mapbox/mapbox-maps-ios/pull/1691))
+* Fix label localization to properly handle Simplified and Traditional Chinese. ([#1687](https://github.com/mapbox/mapbox-maps-ios/pull/1687))
 
 ## 10.10.0-beta-1 - November 4, 2022
 

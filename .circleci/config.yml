@@ -621,7 +621,7 @@ jobs:
             make update-codecov-with-profdata \
                 COVERAGE_ARCH=arm64 \
                 COVERAGE_ROOT_DIR="$(pwd)/testlab_results" \
-                COVERAGE_MAPBOX_MAPS="$(pwd)/testlab_results/Release-iphoneos/MapboxMaps.o" SCHEME=<< parameters.scheme >>
+                COVERAGE_MAPBOX_MAPS="$(pwd)/$(find . -name "MapboxMaps.o" | xargs)" SCHEME=<< parameters.scheme >>
       - run:
           name: Parsing xcresults for errors
           command: |

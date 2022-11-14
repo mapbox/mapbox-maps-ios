@@ -54,7 +54,8 @@ workflows:
           matrix:
             parameters:
               xcode: ["13.1.0", "13.2.1"]
-      - build-unit-tests
+      - build-unit-tests:
+          report_failure: true
       - run-unit-tests:
           xcode: 14.1.0
           matrix:
@@ -541,6 +542,9 @@ jobs:
       turf-revision:
         type: string
         default: ""
+      report_failure:
+        type: boolean
+        default: false
     executor: xcode-sdk-min
     resource_class: macos.x86.medium.gen2
     steps:
@@ -574,6 +578,14 @@ jobs:
           paths:
             - << parameters.configuration >>-iphonesimulator
             - "*.xctestrun"
+      - run:
+           name: Converting and uploading coverage
+           command: |
+             pip3 install awscli gitpython
+             make update-codecov-with-profdata SCHEME=MapboxMaps BUILD_DIR=build
+      - report-failure:
+           report_failure: << parameters.report_failure >>
+           message: "unit-test-sdk"
 
   run-unit-tests:
     parameters:
@@ -581,7 +593,6 @@ jobs:
         type: string
       xcode:
         type: string
-        default: "13.1.0"
     macos:
       xcode: << parameters.xcode >>
     resource_class: macos.x86.medium.gen2

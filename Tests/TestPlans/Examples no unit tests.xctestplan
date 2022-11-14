@@ -22,8 +22,8 @@
   },
   "testTargets" : [
     {
-      "skippedTests" : [
-        "ExamplesUITests\/testEveryExample()"
+      "selectedTests" : [
+        "ExamplesUITests\/test_GrantLocationPermission()"
       ],
       "target" : {
         "containerPath" : "container:Examples.xcodeproj",

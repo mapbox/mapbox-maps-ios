@@ -9,7 +9,10 @@
     }
   ],
   "defaultOptions" : {
-
+    "addressSanitizer" : {
+      "detectStackUseAfterReturn" : true,
+      "enabled" : true
+    }
   },
   "testTargets" : [
     {

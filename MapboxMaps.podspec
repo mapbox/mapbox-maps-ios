@@ -1,6 +1,6 @@
 Pod::Spec.new do |m|
 
-  maps_version = '10.8.1'
+  maps_version = '10.8.2'
 
   m.name = 'MapboxMaps'
   m.version = maps_version
@@ -23,7 +23,7 @@ Pod::Spec.new do |m|
 
   m.dependency 'MapboxCoreMaps', '10.8.0'
   m.dependency 'MapboxCommon', '23.0.0'
-  m.dependency 'MapboxMobileEvents', '1.0.8'
+  m.dependency 'MapboxMobileEvents', '1.0.10'
   m.dependency 'Turf', '~> 2.0'
 
 end

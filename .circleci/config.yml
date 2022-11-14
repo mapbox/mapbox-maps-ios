@@ -613,7 +613,23 @@ jobs:
            name: Converting and uploading coverage
            command: |
              pip3 install awscli gitpython
-             make update-codecov-with-profdata SCHEME=MapboxMaps BUILD_DIR=build
+             	@PROF_DATA=`find build/Build/ProfileData -regex '.*\.profdata'` ; \
+              for RESULT in $${PROF_DATA[@]} ; \
+              do \
+                echo "Generating lcov JSON" ; \
+                xcrun llvm-cov export \
+                  build/Build/Products/Debug-iphonesimulator/MapboxMaps.o \
+                  -instr-profile=$${RESULT} \
+                  -arch=x86_64 \
+                  -format=text | python3 -m json.tool > $${RESULT}.json ; \
+                echo "Uploading to S3" ; \
+                python3 ./scripts/code-coverage/parse-code-coverage.py \
+                  -g . \
+                  -c MapboxMaps \
+                  --scheme MapboxMaps \
+                  --report $${RESULT}.json ; \
+              done
+              @echo "Done"
       - store_test_results:
           path: junit.xml
       - store_artifacts:

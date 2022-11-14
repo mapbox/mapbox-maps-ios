@@ -55,6 +55,7 @@ workflows:
             parameters:
               xcode: ["13.1.0", "13.2.1"]
       - build-unit-tests:
+          configuration: "Release"
           report_failure: true
       - run-unit-tests:
           xcode: 14.1.0
@@ -578,13 +579,6 @@ jobs:
           paths:
             - << parameters.configuration >>-iphonesimulator
             - "*.xctestrun"
-      - locate-derived-data-directory:
-           base_name: $(basename $(pwd))
-      - run:
-           name: Converting and uploading coverage
-           command: |
-             pip3 install awscli gitpython
-             make update-codecov-with-profdata SCHEME=MapboxMaps BUILD_DIR="$DERIVED_DATA_PATH"
       - report-failure:
            report_failure: << parameters.report_failure >>
            message: "unit-test-sdk"
@@ -615,6 +609,11 @@ jobs:
           name: Compress XCResult
           command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
           when: always
+      - run:
+           name: Converting and uploading coverage
+           command: |
+             pip3 install awscli gitpython
+             make update-codecov-with-profdata SCHEME=MapboxMaps BUILD_DIR=build
       - store_test_results:
           path: junit.xml
       - store_artifacts:

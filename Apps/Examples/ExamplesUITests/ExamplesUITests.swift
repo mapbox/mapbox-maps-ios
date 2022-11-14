@@ -51,10 +51,18 @@ extension XCTestCase {
             "Allow", // pre-iOS 13
             "Allow While Using App" // iOS13+
         ])
-        let allowButton = springboard.alerts.firstMatch.buttons.matching(predicate).firstMatch
+        let alert = springboard.alerts.firstMatch
+        let buttons = alert.buttons
+        let allowButton = buttons.matching(predicate).firstMatch
 
         XCTAssertTrue(allowButton.waitForExistence(timeout: timeout), "Can't find the allow button")
 
-        allowButton.tap()
+        print("Button:", String(describing: allowButton))
+        if allowButton != nil {
+            allowButton.tap()
+        } else {
+            print("Wat?")
+            allowButton.tap()
+        }
     }
 }

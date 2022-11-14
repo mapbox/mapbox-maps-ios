@@ -105,7 +105,10 @@ workflows:
           scheme: Examples
           requires:
             - Build Examples tests [non-main]
-          devices: --device model=iphonexr,version=12.4
+          devices: |
+            --device model=iphonexr,version=12.4 \
+            --device model=iphonexsmax,version=12.1 \
+
 
   steve:
     when: << pipeline.parameters.turf-revision >>

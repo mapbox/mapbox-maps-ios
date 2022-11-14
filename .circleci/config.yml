@@ -609,11 +609,13 @@ jobs:
           name: Compress XCResult
           command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
           when: always
+      - locate-derived-data-directory:
+           base_name: $(basename $(pwd))
       - run:
            name: Converting and uploading coverage
            command: |
              pip3 install awscli gitpython
-             	PROF_DATA=`find build/Build/ProfileData -regex '.*\.profdata'` ;
+             	PROF_DATA=`find $(DERIVED_DATA_PATH) -regex '.*\.profdata'` ;
               for RESULT in $${PROF_DATA[@]} ;
               do
                 echo "Generating lcov JSON" ;

@@ -610,8 +610,6 @@ jobs:
           name: Compress XCResult
           command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
           when: always
-      - locate-derived-data-directory:
-           base_name: $(basename $(pwd))
       - run:
            name: Converting and uploading coverage
            command: |

@@ -621,7 +621,7 @@ jobs:
               do
                 echo "Generating lcov JSON" ;
                 xcrun llvm-cov export \
-                  build/Build/Products/Debug-iphonesimulator/MapboxMaps.o \
+                  build/Debug-iphonesimulator/MapboxMaps.o \
                   -instr-profile=$${RESULT} \
                   -arch=x86_64 \
                   -format=text | python3 -m json.tool > $${RESULT}.json ;

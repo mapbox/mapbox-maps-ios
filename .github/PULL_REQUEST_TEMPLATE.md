@@ -25,7 +25,8 @@ Describe the changes in this PR here.
         or
         | <video src="" width = 250/> | <video src="" width = 250/> |
     -->
- - [ ] Write tests for all new functionality. If tests were not written, please explain why.
+ - [ ] Write tests for all new functionality. Put tests in correct [Test Plan](https://github.com/mapbox/mapbox-maps-ios/tree/main/Tests/TestPlans) (Unit, Integration, All)
+   - [ ] If tests were not written, please explain why.
  - [ ] Add documentation comments for any added or updated public APIs.
  - [ ] Add any new public, top-level symbols to the Jazzy config's `custom_categories` (scripts/doc-generation/.jazzy.yaml)
  - [ ] Add a changelog entry to to bottom of the relevant section (typically the `## main` heading near the top).

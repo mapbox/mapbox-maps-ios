@@ -608,7 +608,7 @@ jobs:
               -xctestrun "$XCTESTRUN_PATH" \
               -destination 'platform=iOS Simulator,<< parameters.destination >>' \
               -enableCodeCoverage YES \
-              -resultBundlePath MapboxMapsTests.xcresult | xcpretty --report junit --output junit.xml
+              -resultBundlePath MapboxMapsTests.xcresult | tee run_log.txt | xcpretty --report junit --output junit.xml
       - run:
           name: Compress XCResult
           command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
@@ -617,6 +617,8 @@ jobs:
           path: junit.xml
       - store_artifacts:
           path: MapboxMapsTests.xcresult.zip
+      - store_artifacts:
+          path: run_log.txt
       - store_artifacts:
           path: ~/Library/Logs/DiagnosticReports
 

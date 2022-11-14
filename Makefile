@@ -216,7 +216,7 @@ symbolicate:
 # Root directory in which to search for "profdata" coverage files, from which we generate
 # the lcov data (both lcov and json formats)
 COVERAGE_ROOT_DIR ?= $(BUILD_DIR)/Build/ProfileData
-COVERAGE_MAPBOX_MAPS ?= $(BUILD_DIR)/Build/Products/$(CONFIGURATION)-iphonesimulator/MapboxMaps.o
+COVERAGE_MAPBOX_MAPS ?= $(shell find $(BUILD_DIR)/Build/Products/ -name "MapboxMaps.o" | head -n 1)
 COVERAGE_ARCH ?= x86_64
 
 # .PHONY: update-codecov-with-profdata

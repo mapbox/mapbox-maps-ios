@@ -1,0 +1,66 @@
+{
+  "configurations" : [
+    {
+      "id" : "D4553FD6-392E-4B22-9D1D-F47D55866A9B",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "addressSanitizer" : {
+      "detectStackUseAfterReturn" : true,
+      "enabled" : true
+    }
+  },
+  "testTargets" : [
+    {
+      "skippedTests" : [
+        "BackgroundLayerIntegrationTests",
+        "BasicCameraAnimatorImplIntegrationTests",
+        "CircleAnnotationIntegrationTests",
+        "CircleLayerIntegrationTests",
+        "DidIdleFailureIntegrationTest",
+        "ExampleIntegrationTest",
+        "FeatureStateIntegrationTests",
+        "FillExtrusionLayerIntegrationTests",
+        "FillLayerIntegrationTests",
+        "GeoJSONSourceIntegrationTests",
+        "HeatmapLayerIntegrationTests",
+        "HillshadeLayerIntegrationTests",
+        "ImageSourceIntegrationTests",
+        "IntegrationTestCase",
+        "LineLayerIntegrationTests",
+        "LocationIndicatorLayerIntegrationTests",
+        "MapInitOptionsIntegrationTests",
+        "MapViewIntegrationTestCase",
+        "MapViewIntegrationTests",
+        "MapViewRenderedSnapshotIntegrationTests",
+        "MapboxMapIntegrationTests",
+        "MigrationGuideIntegrationTests",
+        "ModelLayerIntegrationTests",
+        "ObservableIntegrationTests",
+        "OfflineGuideIntegrationTests",
+        "OfflineManagerIntegrationTestCase",
+        "PointAnnotationIntegrationTests",
+        "PolygonAnnotationIntegrationTests",
+        "PolylineAnnotationIntegrationTests",
+        "RasterDemSourceIntegrationTests",
+        "RasterLayerIntegrationTests",
+        "RasterSourceIntegrationTests",
+        "SkyLayerIntegrationTests",
+        "StyleIntegrationTests",
+        "StyleLoadIntegrationTests",
+        "SymbolLayerIntegrationTests",
+        "VectorSourceIntegrationTests"
+      ],
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "MapboxMapsTests",
+        "name" : "MapboxMapsTests"
+      }
+    }
+  ],
+  "version" : 1
+}

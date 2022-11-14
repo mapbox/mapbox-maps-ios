@@ -38,6 +38,33 @@
             reference = "container:../../Tests/TestPlans/Examples no unit tests.xctestplan">
          </TestPlanReference>
       </TestPlans>
+      <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "077C4F0A252F7E89007636F1"
+               BuildableName = "ExamplesUITests.xctest"
+               BlueprintName = "ExamplesUITests"
+               ReferencedContainer = "container:Examples.xcodeproj">
+            </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "ExamplesUITests/testEveryExample()">
+               </Test>
+            </SkippedTests>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "077C4EFF252F7E89007636F1"
+               BuildableName = "ExamplesTests.xctest"
+               BlueprintName = "ExamplesTests"
+               ReferencedContainer = "container:Examples.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"

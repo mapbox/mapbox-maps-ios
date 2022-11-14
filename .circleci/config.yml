@@ -603,6 +603,7 @@ jobs:
               test-without-building \
               -xctestrun "$XCTESTRUN_PATH" \
               -destination 'platform=iOS Simulator,<< parameters.destination >>' \
+              -derivedDataPath build \
               -enableCodeCoverage YES \
               -resultBundlePath MapboxMapsTests.xcresult | tee run_log.txt | xcpretty --report junit --output junit.xml
       - run:
@@ -615,7 +616,7 @@ jobs:
            name: Converting and uploading coverage
            command: |
              pip3 install awscli gitpython
-             	PROF_DATA=`find "$DERIVED_DATA_PATH" -regex '.*\.profdata'` ;
+             	PROF_DATA=`find build/Build/ProfileData -regex '.*\.profdata'` ;
               for RESULT in $${PROF_DATA[@]} ;
               do
                 echo "Generating lcov JSON" ;

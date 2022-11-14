@@ -617,11 +617,12 @@ jobs:
            command: |
              pip3 install awscli gitpython
              	PROF_DATA=`find build/Build/ProfileData -regex '.*\.profdata'` ;
+              OBJECT_FILE=`find build -name 'MapboxMaps.o'` ;
               for RESULT in $${PROF_DATA[@]} ;
               do
                 echo "Generating lcov JSON" ;
                 xcrun llvm-cov export \
-                  build/Debug-iphonesimulator/MapboxMaps.o \
+                  $OBJECT_FILE \
                   -instr-profile=$${RESULT} \
                   -arch=x86_64 \
                   -format=text | python3 -m json.tool > $${RESULT}.json ;

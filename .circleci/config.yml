@@ -96,7 +96,7 @@ workflows:
           scheme: MapboxTestHost
           requires:
             - Build MapboxTestHost tests [non-main]
-          devices: --device model=iphone8,version=14.7
+          devices: --device model=iphonexr,version=12.4
 
       - run-examples-tests?:
           type: approval
@@ -112,7 +112,7 @@ workflows:
           scheme: Examples
           requires:
             - Build Examples tests [non-main]
-          devices: --device model=iphone13pro,version=15.7
+          devices: --device model=iphonexr,version=12.4
 
   steve:
     unless: << pipeline.parameters.turf-revision >>

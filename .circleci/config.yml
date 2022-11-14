@@ -108,7 +108,7 @@ workflows:
           devices: --device model=iphonexr,version=12.4
 
   steve:
-    unless: << pipeline.parameters.turf-revision >>
+    when: << pipeline.parameters.turf-revision >>
     jobs:
       - swiftlint
       - depsvalidator:

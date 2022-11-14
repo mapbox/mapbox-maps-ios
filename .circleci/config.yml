@@ -615,7 +615,7 @@ jobs:
            name: Converting and uploading coverage
            command: |
              pip3 install awscli gitpython
-             	PROF_DATA=`find $(DERIVED_DATA_PATH) -regex '.*\.profdata'` ;
+             	PROF_DATA=`find "$DERIVED_DATA_PATH" -regex '.*\.profdata'` ;
               for RESULT in $${PROF_DATA[@]} ;
               do
                 echo "Generating lcov JSON" ;

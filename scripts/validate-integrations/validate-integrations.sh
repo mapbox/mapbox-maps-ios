@@ -59,7 +59,7 @@ main() {
     for scheme in "${PROJECTS_TO_TEST[@]}"
     do
         step "Building $scheme scheme"
-        xcodebuild clean build -workspace "$WORKSPACE_PATH" -scheme "$scheme" -destination 'platform=iOS Simulator,name=iPhone 12' CODE_SIGNING_ALLOWED='NO' &> "$ARTIFACTS_ROOT/${scheme}_xcode-$(date +%Y%m%d%H%M%S).log"
+        xcodebuild clean build -workspace "$WORKSPACE_PATH" -scheme "$scheme" -destination 'platform=iOS Simulator,name=iPhone 14' CODE_SIGNING_ALLOWED='NO' &> "$ARTIFACTS_ROOT/${scheme}_xcode-$(date +%Y%m%d%H%M%S).log"
         info "Finished $scheme building"
     done
 

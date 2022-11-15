@@ -24,7 +24,7 @@ release-precheck: &release-anchor
 executors:
   xcode-latest:
     macos:
-      xcode: 13.4.1
+      xcode: 14.1.0
   # Note that `create-github-draft-release.sh` depends on this structure to parse the minimum supported Xcode version.
   # Please keep them in sync if this structure changes.
   xcode-sdk-min:
@@ -571,14 +571,14 @@ jobs:
               -destination 'generic/platform=iOS Simulator' \
               -derivedDataPath build \
               -enableCodeCoverage YES \
+              -testPlan "MapboxMapsAll" \
               COMPILER_INDEX_STORE_ENABLE=NO \
               ENABLE_TESTABILITY=YES \
               ONLY_ACTIVE_ARCH=YES
       - persist_to_workspace:
-          root: build/Build/Products
+          root: build/Build/
           paths:
-            - << parameters.configuration >>-iphonesimulator
-            - "*.xctestrun"
+            - Products
       - report-failure:
            report_failure: << parameters.report_failure >>
            message: "unit-test-sdk"

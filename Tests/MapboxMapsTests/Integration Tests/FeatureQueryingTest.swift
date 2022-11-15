@@ -34,7 +34,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
             let centerPoint = mapView.center
 
             // When
-            mapView.mapboxMap.queryRenderedFeatures(at: centerPoint) { result in
+            mapView.mapboxMap.queryRenderedFeatures(with: centerPoint) { result in
                 switch result {
                 case .success(let features):
                     if features.count > 0 {
@@ -69,14 +69,14 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                                    height: 50)
 
             // When
-            mapView.mapboxMap.queryRenderedFeatures(in: queryRect) { unfilteredFeatures in
+            mapView.mapboxMap.queryRenderedFeatures(with: queryRect) { unfilteredFeatures in
                 let filter = Exp(.eq) {
                     "$type"
                     "Point"
                 }
 
                 let options = RenderedQueryOptions(layerIds: nil, filter: filter)
-                mapView.mapboxMap.queryRenderedFeatures(in: queryRect, options: options) { filteredFeatures in
+                mapView.mapboxMap.queryRenderedFeatures(with: queryRect, options: options) { filteredFeatures in
                     if case .success(let unfilteredFeatures) = unfilteredFeatures,
                        case .success(let filteredFeatures) = filteredFeatures {
 
@@ -115,7 +115,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                                     zoom: 15.0))
         }
 
-        mapView.mapboxMap.onNext(.mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
             guard let mapView = self?.mapView else { return }
 
             // Given

@@ -645,7 +645,9 @@ jobs:
     steps:
       - checkout
       - install-gcloud
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
+      - install-python-dependencies
       - attach_workspace:
           at: output
       - run:
@@ -765,7 +767,9 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
+      - install-xcodegen
       - make-xcframework-bundle
       - persist_to_workspace:
           root: .
@@ -852,7 +856,9 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
+      - install-xcodegen
       - run:
           name: Build dynamic SDK
           command: ./package-mapbox-maps.sh dynamic
@@ -873,7 +879,9 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
+      - install-xcodegen
       - run:
           name: Build dynamic SDK
           command: ./package-mapbox-maps.sh static
@@ -890,7 +898,8 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
       - make-docs
       - slack-notify-failure-if-any
 
@@ -898,7 +907,8 @@ jobs:
     executor: xcode-latest
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
       - run:
           name: Build Studio Preview with new branch
           command: scripts/validate-integrations/validate-studio-preview.sh -c "$CIRCLE_SHA1"
@@ -908,7 +918,8 @@ jobs:
     executor: xcode-latest
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
       - attach_workspace:
           at: workspace
       - run: ls -lGA workspace
@@ -935,7 +946,9 @@ jobs:
     executor: xcode-latest
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
+      - install-gh
       - attach_workspace:
           at: workspace
       - run:
@@ -951,7 +964,8 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
       - run:
           name: Release Examples App to TestFlight
           command: |
@@ -965,7 +979,8 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
       - run:
           name: Publish CocoaPods Podspec
           command: pod trunk push --allow-warnings
@@ -976,7 +991,9 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
+      - install-gh
       - run: brew install taiki-e/tap/parse-changelog
       - run:
           name: Create draft release on GitHub
@@ -1012,7 +1029,8 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
       - turf-report-pending:
           turf-revision: << parameters.turf-revision >>
       - run:
@@ -1309,6 +1327,7 @@ commands:
   make-docs:
     description: "Generate Documentation"
     steps:
+      - install-gh
       - run: git submodule update --init -- scripts/doc-generation/jazzy-theme
       - run: scripts/doc-generation/generate-maps-docs.sh -v
       - run: zip -r api-docs.zip api-docs

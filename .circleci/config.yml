@@ -617,6 +617,7 @@ jobs:
       - checkout
       - configure-environment:
           skip-dependencies: true
+      - install-xcodegen
       - run: bundle install
       - run:
           name: Build MapboxTestHost for testing
@@ -798,7 +799,7 @@ jobs:
       - checkout
       - configure-environment:
           skip-dependencies: true
-      - run: brew install xcodegen
+      - install-xcodegen
       - run:
           name: Validate SPM and CocoaPods integrations for current branch
           command: scripts/validate-integrations/validate-integrations.sh -b $CIRCLE_BRANCH
@@ -815,7 +816,7 @@ jobs:
       - checkout
       - configure-environment:
           skip-dependencies: true
-      - run: brew install xcodegen
+      - install-xcodegen
       - run:
           name: Inject new Podspec version to CDN cache
           description: |
@@ -1276,18 +1277,30 @@ commands:
           name: Install python dependencies
           command: |
             python3 -m pip install awscli gitpython requests python-dateutil
+      - install-xcodegen
+      - install-gh
+      - install-ccache
+
+  install-xcodegen:
+    description: "Install Xcodegen from Homebrew"
+    steps:
       - run:
           name: Install Xcodegen
-          command: |
-            brew install xcodegen
+          command: brew install xcodegen
+
+  install-gh:
+    description: "Install gh from Homebrew"
+    steps:
       - run:
           name: Install gh
-          command: |
-            brew install gh
+          command: brew install gh
+
+  install-ccache:
+    description: "Install ccache from Homebrew"
+    steps:
       - run:
           name: Install ccache
-          command: |
-            brew install ccache
+          command: brew install ccache
 
   make-docs:
     description: "Generate Documentation"

@@ -9,10 +9,6 @@
     }
   ],
   "defaultOptions" : {
-    "addressSanitizer" : {
-      "detectStackUseAfterReturn" : true,
-      "enabled" : true
-    },
     "codeCoverage" : false,
     "targetForVariableExpansion" : {
       "containerPath" : "container:Examples.xcodeproj",
@@ -32,6 +28,7 @@
       }
     },
     {
+      "enabled" : false,
       "target" : {
         "containerPath" : "container:Examples.xcodeproj",
         "identifier" : "077C4EFF252F7E89007636F1",
@@ -39,6 +36,7 @@
       }
     },
     {
+      "enabled" : false,
       "target" : {
         "containerPath" : "container:..\/..",
         "identifier" : "MapboxMapsTests",

@@ -57,6 +57,7 @@ extension XCTestCase {
 
         XCTAssertTrue(allowButton.waitForExistence(timeout: timeout), "Can't find the allow button")
 
+        alert.tap()
         print("Button:", String(describing: allowButton))
         if allowButton != nil {
             allowButton.tap()

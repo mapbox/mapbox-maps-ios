@@ -571,6 +571,7 @@ jobs:
               -destination 'generic/platform=iOS Simulator' \
               -derivedDataPath build \
               -enableCodeCoverage YES \
+              -testPlan "MapboxMapsAll" \
               COMPILER_INDEX_STORE_ENABLE=NO \
               ENABLE_TESTABILITY=YES \
               ONLY_ACTIVE_ARCH=YES
@@ -597,7 +598,7 @@ jobs:
       - run:
           name: Run MapboxMaps unit test on << parameters.destination >>  simulator
           command: |
-            XCTESTRUN_PATH=$(find build -type f -name '*MapboxMapsAll*.xctestrun')
+            XCTESTRUN_PATH=$(find build -type f -name '*.xctestrun')
             xcodebuild \
               test-without-building \
               -xctestrun "$XCTESTRUN_PATH" \

@@ -363,7 +363,7 @@ jobs:
 
   build-sdk:
     <<: *base-job
-    resource_class: macos.x86.medium.gen2
+    resource_class: large
     steps:
       - checkout
       - configure-environment

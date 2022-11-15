@@ -1247,10 +1247,10 @@ commands:
     parameters:
       version:
         type: string
-        default: "google-cloud-sdk-370.0.0-darwin-x86_64.tar.gz"
+        default: "google-cloud-cli-409.0.0-darwin-x86_64.tar.gz"
       checksum:
         type: string
-        default: "e08541e2e319457698b9154cd064edc5efa95653f5a84b94a1f2f3d0f87ee196"
+        default: "01db2162ebd5ba0983e9ee151893ba7ef4beef4643422db327338009468de3df"
     description: "Install gcloud"
     steps:
       - run:

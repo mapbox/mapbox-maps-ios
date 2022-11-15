@@ -1257,10 +1257,21 @@ commands:
     description: "Install Dependencies"
     steps:
       - run:
-          name: Install basic dependencies
+          name: Install python dependencies
           command: |
             python3 -m pip install awscli gitpython requests python-dateutil
-            brew install xcodegen gh ccache
+      - run:
+          name: Install Xcodegen
+          command: |
+            brew install xcodegen
+      - run:
+          name: Install gh
+          command: |
+            brew install gh
+      - run:
+          name: Install ccache
+          command: |
+            brew install ccache
 
   make-docs:
     description: "Generate Documentation"

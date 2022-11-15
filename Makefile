@@ -86,7 +86,6 @@ XCODE_BUILD_SIM_SDK = set -o pipefail && xcodebuild \
 	-sdk iphonesimulator \
 	-configuration $(CONFIGURATION) \
 	-jobs $(JOBS) \
-	ENABLE_TESTABILITY=YES \
 	COMPILER_INDEX_STORE_ENABLE=NO
 
 .PHONY: build-sdk-for-simulator

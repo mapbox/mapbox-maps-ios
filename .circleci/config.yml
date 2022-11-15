@@ -379,18 +379,6 @@ jobs:
           base_name: $(basename $(pwd))
       - store-logs:
           derived_data_path: $DERIVED_DATA_PATH
-      - run:
-          name: Building scheme DebugApp for simulator
-          command: make build-app-for-simulator SCHEME=DebugApp
-          no_output_timeout: 5m
-      - run:
-          name: Building scheme DebugApp for device
-          command: make build-app-for-device SCHEME=DebugApp
-          no_output_timeout: 5m
-      - locate-derived-data-directory:
-          base_name: Apps
-      - store-logs:
-          derived_data_path: $DERIVED_DATA_PATH
       - report-failure:
           report_failure: << parameters.report_failure >>
           message: "build-sdk"

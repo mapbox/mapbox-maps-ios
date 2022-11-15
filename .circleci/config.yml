@@ -366,7 +366,8 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
       - run:
           name: Building MapboxMaps for simulator
           command: make build-sdk-for-simulator
@@ -540,7 +541,8 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
       - when:
           condition: << parameters.turf-revision >>
           steps:
@@ -613,7 +615,8 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
       - run: bundle install
       - run:
           name: Build MapboxTestHost for testing
@@ -699,7 +702,8 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
       - run:
           name: Build Examples tests
           command: |
@@ -775,7 +779,8 @@ jobs:
       xcode: 13.2.1
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
       - attach_workspace:
           at: workspace
       - check-breaking-api:
@@ -791,7 +796,8 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
       - run: brew install xcodegen
       - run:
           name: Validate SPM and CocoaPods integrations for current branch
@@ -807,7 +813,9 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
+      - run: brew install xcodegen
       - run:
           name: Inject new Podspec version to CDN cache
           description: |
@@ -1058,6 +1066,10 @@ jobs:
 commands:
 
   configure-environment:
+    parameters:
+      skip-dependencies:
+        type: boolean
+        default: false
     steps:
       # CircleCI's checkout step configures git so that it will always clone
       # from github.com via SSH. It also seeds the known_hosts file, however the
@@ -1073,7 +1085,11 @@ commands:
       - parse-release-version-if-available
       - install-mbx-ci
       - add-mapbox-submodules-key
-      - install-dependencies
+      - unless:
+          condition: << parameters.skip-dependencies >>
+          steps:
+            - install-dependencies
+
 
   inject-netrc-credentials:
     steps:

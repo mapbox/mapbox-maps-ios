@@ -575,10 +575,9 @@ jobs:
               ENABLE_TESTABILITY=YES \
               ONLY_ACTIVE_ARCH=YES
       - persist_to_workspace:
-          root: build/Build/Products
+          root: build/Build/
           paths:
-            - << parameters.configuration >>-iphonesimulator
-            - "*.xctestrun"
+            - Products
       - report-failure:
            report_failure: << parameters.report_failure >>
            message: "unit-test-sdk"
@@ -598,7 +597,7 @@ jobs:
       - run:
           name: Run MapboxMaps unit test on << parameters.destination >>  simulator
           command: |
-            XCTESTRUN_PATH=$(find build -type f -name '*.xctestrun')
+            XCTESTRUN_PATH=$(find build -type f -name '*MapboxMapsAll*.xctestrun')
             xcodebuild \
               test-without-building \
               -xctestrun "$XCTESTRUN_PATH" \

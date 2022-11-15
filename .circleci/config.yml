@@ -727,7 +727,7 @@ jobs:
       - ensure-text-exists-in-commit:
           commit-text: "[create xcframework]"
           always-run: << parameters.create-xcframework-always-run >>
-      - install-dependencies
+      - install-all-dependencies
       - make-xcframework-bundle:
           bundle_style: "dynamic"
       - when:
@@ -1089,7 +1089,7 @@ commands:
       - unless:
           condition: << parameters.skip-dependencies >>
           steps:
-            - install-dependencies
+            - install-all-dependencies
 
 
   inject-netrc-credentials:
@@ -1270,16 +1270,20 @@ commands:
       - setup-google-cloud-account
       - login-google-cloud-platform
 
-  install-dependencies:
+  install-all-dependencies:
     description: "Install Dependencies"
     steps:
-      - run:
-          name: Install python dependencies
-          command: |
-            python3 -m pip install awscli gitpython requests python-dateutil
+      - install-python-dependencies
       - install-xcodegen
       - install-gh
       - install-ccache
+
+  install-python-dependencies:
+    description: "Install Python Dependencies"
+    steps:
+      - run:
+          name: Install python dependencies
+          command: python3 -m pip install awscli gitpython requests python-dateutil
 
   install-xcodegen:
     description: "Install Xcodegen from Homebrew"

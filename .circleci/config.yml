@@ -46,8 +46,7 @@ workflows:
                 - main
     jobs:
       - swiftlint
-      - depsvalidator:
-          xcode: "13.3.0"
+      - depsvalidator
       - build-sdk:
           configuration: "Release"
           report_failure: true
@@ -129,8 +128,7 @@ workflows:
     unless: << pipeline.parameters.turf-revision >>
     jobs:
       - swiftlint
-      - depsvalidator:
-          xcode: "13.3.0"
+      - depsvalidator
       - build-sdk:
           xcode: "13.1.0"
           configuration: "Release"
@@ -352,7 +350,7 @@ jobs:
           path: result.xml
 
   depsvalidator:
-    <<: *base-job
+    executor: xcode-latest
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
@@ -368,7 +366,8 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
       - run:
           name: Building MapboxMaps for simulator
           command: make build-sdk-for-simulator
@@ -381,25 +380,13 @@ jobs:
           base_name: $(basename $(pwd))
       - store-logs:
           derived_data_path: $DERIVED_DATA_PATH
-      - run:
-          name: Building scheme DebugApp for simulator
-          command: make build-app-for-simulator SCHEME=DebugApp
-          no_output_timeout: 5m
-      - run:
-          name: Building scheme DebugApp for device
-          command: make build-app-for-device SCHEME=DebugApp
-          no_output_timeout: 5m
-      - locate-derived-data-directory:
-          base_name: Apps
-      - store-logs:
-          derived_data_path: $DERIVED_DATA_PATH
       - report-failure:
           report_failure: << parameters.report_failure >>
           message: "build-sdk"
       - store-default-artifacts
 
   trigger-binary-size:
-    <<: *base-job
+    executor: xcode-latest
     steps:
       - run:
           name: Trigger binary size test
@@ -415,7 +402,7 @@ jobs:
             fi
 
   trigger-metrics-build:
-    <<: *base-job
+    executor: xcode-latest
     steps:
       - run:
           name: Build metrics tests
@@ -459,7 +446,11 @@ jobs:
               }'
 
   trigger-metrics-collection:
-    <<: *base-job
+    parameters:
+      report_failure:
+        type: boolean
+        default: false
+    executor: xcode-latest
     steps:
       - run:
           # TODO: main by default (this is set as a filter), other commits on-demand
@@ -550,7 +541,8 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
       - when:
           condition: << parameters.turf-revision >>
           steps:
@@ -623,7 +615,9 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
+      - install-xcodegen
       - run: bundle install
       - run:
           name: Build MapboxTestHost for testing
@@ -651,7 +645,9 @@ jobs:
     steps:
       - checkout
       - install-gcloud
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
+      - install-python-dependencies
       - attach_workspace:
           at: output
       - run:
@@ -709,7 +705,8 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
       - run:
           name: Build Examples tests
           command: |
@@ -732,7 +729,7 @@ jobs:
       - ensure-text-exists-in-commit:
           commit-text: "[create xcframework]"
           always-run: << parameters.create-xcframework-always-run >>
-      - install-dependencies
+      - install-all-dependencies
       - make-xcframework-bundle:
           bundle_style: "dynamic"
       - when:
@@ -770,7 +767,9 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
+      - install-xcodegen
       - make-xcframework-bundle
       - persist_to_workspace:
           root: .
@@ -785,7 +784,8 @@ jobs:
       xcode: 13.2.1
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
       - attach_workspace:
           at: workspace
       - check-breaking-api:
@@ -801,8 +801,9 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
-      - run: brew install xcodegen
+      - configure-environment:
+          skip-dependencies: true
+      - install-xcodegen
       - run:
           name: Validate SPM and CocoaPods integrations for current branch
           command: scripts/validate-integrations/validate-integrations.sh -b $CIRCLE_BRANCH
@@ -817,7 +818,9 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
+      - install-xcodegen
       - run:
           name: Inject new Podspec version to CDN cache
           description: |
@@ -853,7 +856,10 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
+      - install-xcodegen
+      - install-python-dependencies
       - run:
           name: Build dynamic SDK
           command: ./package-mapbox-maps.sh dynamic
@@ -874,7 +880,10 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
+      - install-xcodegen
+      - install-python-dependencies
       - run:
           name: Build dynamic SDK
           command: ./package-mapbox-maps.sh static
@@ -891,7 +900,8 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
       - make-docs
       - slack-notify-failure-if-any
 
@@ -899,7 +909,8 @@ jobs:
     executor: xcode-latest
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
       - run:
           name: Build Studio Preview with new branch
           command: scripts/validate-integrations/validate-studio-preview.sh -c "$CIRCLE_SHA1"
@@ -909,7 +920,8 @@ jobs:
     executor: xcode-latest
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
       - attach_workspace:
           at: workspace
       - run: ls -lGA workspace
@@ -936,7 +948,9 @@ jobs:
     executor: xcode-latest
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
+      - install-gh
       - attach_workspace:
           at: workspace
       - run:
@@ -952,7 +966,8 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
       - run:
           name: Release Examples App to TestFlight
           command: |
@@ -966,7 +981,8 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
       - run:
           name: Publish CocoaPods Podspec
           command: pod trunk push --allow-warnings
@@ -977,7 +993,9 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
+      - install-gh
       - run: brew install taiki-e/tap/parse-changelog
       - run:
           name: Create draft release on GitHub
@@ -1013,7 +1031,8 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - configure-environment
+      - configure-environment:
+          skip-dependencies: true
       - turf-report-pending:
           turf-revision: << parameters.turf-revision >>
       - run:
@@ -1068,6 +1087,10 @@ jobs:
 commands:
 
   configure-environment:
+    parameters:
+      skip-dependencies:
+        type: boolean
+        default: false
     steps:
       # CircleCI's checkout step configures git so that it will always clone
       # from github.com via SSH. It also seeds the known_hosts file, however the
@@ -1083,7 +1106,11 @@ commands:
       - parse-release-version-if-available
       - install-mbx-ci
       - add-mapbox-submodules-key
-      - install-dependencies
+      - unless:
+          condition: << parameters.skip-dependencies >>
+          steps:
+            - install-all-dependencies
+
 
   inject-netrc-credentials:
     steps:
@@ -1240,10 +1267,10 @@ commands:
     parameters:
       version:
         type: string
-        default: "google-cloud-sdk-370.0.0-darwin-x86_64.tar.gz"
+        default: "google-cloud-cli-409.0.0-darwin-x86_64.tar.gz"
       checksum:
         type: string
-        default: "e08541e2e319457698b9154cd064edc5efa95653f5a84b94a1f2f3d0f87ee196"
+        default: "01db2162ebd5ba0983e9ee151893ba7ef4beef4643422db327338009468de3df"
     description: "Install gcloud"
     steps:
       - run:
@@ -1263,18 +1290,46 @@ commands:
       - setup-google-cloud-account
       - login-google-cloud-platform
 
-  install-dependencies:
+  install-all-dependencies:
     description: "Install Dependencies"
     steps:
+      - install-python-dependencies
+      - install-xcodegen
+      - install-gh
+      - install-ccache
+
+  install-python-dependencies:
+    description: "Install Python Dependencies"
+    steps:
       - run:
-          name: Install basic dependencies
-          command: |
-            python3 -m pip install awscli gitpython requests python-dateutil
-            brew install xcodegen gh ccache
+          name: Install python dependencies
+          command: python3 -m pip install awscli gitpython requests python-dateutil
+
+  install-xcodegen:
+    description: "Install Xcodegen from Homebrew"
+    steps:
+      - run:
+          name: Install Xcodegen
+          command: brew install xcodegen
+
+  install-gh:
+    description: "Install gh from Homebrew"
+    steps:
+      - run:
+          name: Install gh
+          command: brew install gh
+
+  install-ccache:
+    description: "Install ccache from Homebrew"
+    steps:
+      - run:
+          name: Install ccache
+          command: brew install ccache
 
   make-docs:
     description: "Generate Documentation"
     steps:
+      - install-gh
       - run: git submodule update --init -- scripts/doc-generation/jazzy-theme
       - run: scripts/doc-generation/generate-maps-docs.sh -v
       - run: zip -r api-docs.zip api-docs

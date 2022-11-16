@@ -5,7 +5,7 @@ settings:
   DEVELOPMENT_TEAM: GJZR2MEM28
 packages:
   MapboxMaps:
-    url: https://github.com/mapbox/mapbox-maps-ios.git
+    url: git@github.com:mapbox/${REPOSITORY_NAME}
     ${MAPS_VERSION_RULE}: ${MAPS_VERSION}
 targets:
   SwiftPackageManagerIntegration:

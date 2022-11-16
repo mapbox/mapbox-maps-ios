@@ -598,6 +598,21 @@ jobs:
               -enableCodeCoverage YES \
               -resultBundlePath MapboxMapsTests.xcresult | tee run_log.txt | xcpretty --report junit --output junit.xml
       - run:
+          name: Send code coverage
+          command: |
+            curl https://uploader.codecov.io/verification.gpg | gpg --no-default-keyring --keyring trustedkeys.gpg --import # One-time step
+
+            curl -Os https://uploader.codecov.io/latest/macos/codecov
+            curl -Os https://uploader.codecov.io/latest/macos/codecov.SHA256SUM
+            curl -Os https://uploader.codecov.io/latest/macos/codecov.SHA256SUM.sig
+
+            gpgv codecov.SHA256SUM.sig codecov.SHA256SUM
+
+            shasum -a 256 -c codecov.SHA256SUM
+
+            chmod +x codecov
+            ./codecov
+      - run:
           name: Compress XCResult
           command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
           when: always

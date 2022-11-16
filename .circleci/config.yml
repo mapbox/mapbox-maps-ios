@@ -613,19 +613,15 @@ jobs:
             - run:
                 name: Generate code coverage report
                 command: |
-                  find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' -exec cp {} . \;
-                  SDK_FILE=$(find build -name "MapboxMaps.o")
-                  xcrun llvm-cov show -instr-profile=Coverage.profdata "$SDK_FILE" > coverage.txt
-                  xcrun llvm-cov export -arch arm64 -format="lcov" -instr-profile=Coverage.profdata "$SDK_FILE" > coverage.lcov
-                  xcrun llvm-cov export -arch arm64 -format="html" -instr-profile=Coverage.profdata "$SDK_FILE" > coverage.html
-                  xcrun llvm-cov export -arch arm64 -format="text" -instr-profile=Coverage.profdata "$SDK_FILE" > coverageExport.txt
-                  xcrun llvm-cov export -arch arm64 -format="json" -instr-profile=Coverage.profdata "$SDK_FILE" > coverage.json
+                  xcrun llvm-cov export -arch arm64 -format="lcov" \
+                    -instr-profile=$(find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' | head -n 1) \
+                    $(find build -name "MapboxMaps.o") > coverage.lcov
             - run:
                 name: Send code coverage
                 command: |
                   curl -Os https://uploader.codecov.io/latest/macos/codecov
                   chmod +x codecov
-                  time ./codecov #--xc --xp MapboxMapsTests.xcresult
+                  time ./codecov
             - store_artifacts:
                 path: "coverage-report*"
       - run:

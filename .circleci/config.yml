@@ -597,6 +597,7 @@ jobs:
               -destination 'platform=iOS Simulator,<< parameters.destination >>' \
               -enableCodeCoverage YES \
               -resultBundlePath MapboxMapsTests.xcresult | tee run_log.txt | xcpretty --report junit --output junit.xml
+      - run: brew install gnupg
       - run:
           name: Send code coverage
           command: |

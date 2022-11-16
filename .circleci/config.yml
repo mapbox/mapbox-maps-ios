@@ -159,6 +159,7 @@ workflows:
       - build-unit-tests
       - run-unit-tests:
           xcode: 14.1.0
+          codecoverage: true
           matrix:
             parameters:
               destination: ["OS=15.5,name=iPhone 13", "OS=16.1,name=iPhone 14"]
@@ -581,6 +582,9 @@ jobs:
         type: string
       xcode:
         type: string
+      codecoverage:
+        type: boolean
+        default: false
     macos:
       xcode: << parameters.xcode >>
     resource_class: macos.x86.medium.gen2
@@ -598,22 +602,22 @@ jobs:
               -destination 'platform=iOS Simulator,<< parameters.destination >>' \
               -enableCodeCoverage YES \
               -resultBundlePath MapboxMapsTests.xcresult | tee run_log.txt | xcpretty --report junit --output junit.xml
-      - run: brew install gnupg
-      - run:
-          name: Send code coverage
-          command: |
-            curl https://uploader.codecov.io/verification.gpg | gpg --no-default-keyring --keyring trustedkeys.gpg --import # One-time step
-
-            curl -Os https://uploader.codecov.io/latest/macos/codecov
-            curl -Os https://uploader.codecov.io/latest/macos/codecov.SHA256SUM
-            curl -Os https://uploader.codecov.io/latest/macos/codecov.SHA256SUM.sig
-
-            gpgv codecov.SHA256SUM.sig codecov.SHA256SUM
-
-            shasum -a 256 -c codecov.SHA256SUM
-
-            chmod +x codecov
-            time ./codecov --xc --xp MapboxMapsTests.xcresult
+      - run: find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' -exec cp {} . \;
+      - store_artifacts:
+          path: "*.profdata"
+      - store_artifacts:
+          path: Coverage.profdata
+      - when:
+          condition: << parameters.codecoverage >>
+          steps:
+            - run:
+                name: Send code coverage
+                command: |
+                  curl -Os https://uploader.codecov.io/latest/macos/codecov
+                  chmod +x codecov
+                  time ./codecov --xc --xp MapboxMapsTests.xcresult
+            - store_artifacts:
+                path: "coverage-report*"
       - run:
           name: Compress XCResult
           command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult

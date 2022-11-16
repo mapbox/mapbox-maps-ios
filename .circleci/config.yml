@@ -612,7 +612,7 @@ jobs:
             shasum -a 256 -c codecov.SHA256SUM
 
             chmod +x codecov
-            ./codecov
+            time ./codecov --xc --xp MapboxMapsTests.xcresult
       - run:
           name: Compress XCResult
           command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult

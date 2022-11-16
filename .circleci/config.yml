@@ -560,7 +560,7 @@ jobs:
             xcodebuild build-for-testing \
               -scheme MapboxMaps \
               -configuration << parameters.configuration >> \
-              -destination "platform=iOS Simulator,name=iPhone 13" \
+              -destination "generic/platform=iOS Simulator" \
               -derivedDataPath build \
               -enableCodeCoverage YES \
               -testPlan "MapboxMapsAll" \
@@ -612,7 +612,7 @@ jobs:
             - run:
                 name: Generate code coverage report
                 command: |
-                  xcrun llvm-cov export -arch arm64 -format="lcov" \
+                  xcrun llvm-cov export -arch $(uname -m) -format="lcov" \
                     -instr-profile=$(find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' | head -n 1) \
                     $(find build -name "MapboxMaps.o") > coverage.lcov
             - run:

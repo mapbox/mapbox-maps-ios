@@ -601,11 +601,6 @@ jobs:
               -destination 'platform=iOS Simulator,<< parameters.destination >>' \
               -enableCodeCoverage YES \
               -resultBundlePath MapboxMapsTests.xcresult | tee run_log.txt | xcpretty --report junit --output junit.xml
-      - run: find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' -exec cp {} . \;
-      - store_artifacts:
-          path: "*.profdata"
-      - store_artifacts:
-          path: Coverage.profdata
       - when:
           condition: << parameters.codecoverage >>
           steps:

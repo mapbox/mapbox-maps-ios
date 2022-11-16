@@ -617,7 +617,7 @@ jobs:
                   chmod +x codecov
                   time ./codecov
             - store_artifacts:
-                path: "coverage-report*"
+                path: coverage.lcov
       - run:
           name: Compress XCResult
           command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult

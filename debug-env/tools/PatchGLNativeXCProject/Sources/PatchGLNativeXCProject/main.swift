@@ -70,9 +70,7 @@ class GLNativeProject {
 
                     let newLinkerOptions = linkerFlags.compactMap { (linkerFlag: String) -> String in
                         guard linkerFlag.starts(with: pathPrefix) else { return linkerFlag }
-                        let libraryFullName = Path(linkerFlag).lastComponentWithoutExtension
-
-                        return "-l" + libraryFullName.deletingPrefix("lib")
+                        return fixLinkerFlag(linkerFlag)
                     }
 
                     buildConfiguration.buildSettings["OTHER_LDFLAGS"] = newLinkerOptions
@@ -95,6 +93,18 @@ class GLNativeProject {
             }
         }
     }
+}
+
+private func fixLinkerFlag(_ flag: String) -> String {
+    let libraryPath = Path(flag)
+    let parentPath = libraryPath.parent().normalize()
+    if parentPath.extension == "framework" {
+        return "-framework " + parentPath.lastComponentWithoutExtension
+    }
+
+    let libraryFullName = libraryPath.lastComponentWithoutExtension
+
+    return "-l" + libraryFullName.deletingPrefix("lib")
 }
 
 let projectPath = Path(CommandLine.arguments[1])

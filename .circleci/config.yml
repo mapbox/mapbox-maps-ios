@@ -559,9 +559,8 @@ jobs:
           command: |
             xcodebuild build-for-testing \
               -scheme MapboxMaps \
-              -sdk iphonesimulator \
               -configuration << parameters.configuration >> \
-              -destination 'generic/platform=iOS Simulator' \
+              -destination "platform=iOS Simulator,name=iPhone 13" \
               -derivedDataPath build \
               -enableCodeCoverage YES \
               -testPlan "MapboxMapsAll" \

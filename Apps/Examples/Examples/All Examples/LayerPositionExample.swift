@@ -56,6 +56,12 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
                                       message: "Please select the position of polygon layer.",
                                       preferredStyle: .actionSheet)
 
+        if case .pad = UIDevice.current.userInterfaceIdiom {
+            alert.popoverPresentationController?.sourceView = sender
+            alert.popoverPresentationController?.sourceRect = CGRect(x: 0, y: 0, width:
+                                      sender.frame.size.width, height: sender.frame.size.height)
+        }
+
         alert.addAction(UIAlertAction(title: "Above state label", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
             try? self.mapView.mapboxMap.style.removeLayer(withId: self.layer.id)

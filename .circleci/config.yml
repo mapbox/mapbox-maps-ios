@@ -585,6 +585,7 @@ jobs:
       xcode: << parameters.xcode >>
     resource_class: macos.x86.medium.gen2
     steps:
+      - checkout
       - attach_workspace:
           at: build
       - run:

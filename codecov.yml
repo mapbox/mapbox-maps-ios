@@ -18,14 +18,3 @@ coverage:
 comment:
   require_changes: true
   layout: "reach, diff, flags, files"
-
-flag_management:
-  default_rules: # the rules that will be followed for any flag added, generally
-    statuses:
-      - type: project
-        threshold: 2%
-      - type: patch
-        target: 90%
-    individual_flags: # exceptions to the default rules above, stated flag by flag
-    - name: unit
-    - name: integration

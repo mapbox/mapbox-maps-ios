@@ -218,41 +218,6 @@ COVERAGE_ROOT_DIR ?= $(BUILD_DIR)/Build/ProfileData
 COVERAGE_MAPBOX_MAPS ?= $(shell find $(BUILD_DIR)/Build/Products/ -name "MapboxMaps.o" | head -n 1)
 COVERAGE_ARCH ?= x86_64
 
-# .PHONY: update-codecov-with-profdata
-# update-codecov-with-profdata:
-# 	curl -sSfL --retry 5 --connect-timeout 5 https://codecov.io/bash > /tmp/codecov.sh
-# 	@PROF_DATA=`find $(COVERAGE_ROOT_DIR) -regex '.*\.profraw'` ; \
-# 	for RESULT in $${PROF_DATA[@]} ; \
-# 	do \
-# 		echo "Generating $${RESULT}.lcov" ; \
-# 		xcrun llvm-profdata merge -o $${RESULT}.profdata $${RESULT} ; \
-# 		xcrun llvm-cov export \
-# 			$(COVERAGE_MAPBOX_MAPS) \
-# 			-instr-profile=$${RESULT}.profdata \
-# 			-arch=$(COVERAGE_ARCH) \
-# 			-format=lcov > $${RESULT}.lcov ; \
-# 		echo "Uploading $${RESULT}.lcov to CodeCov.io" ; \
-# 		bash /tmp/codecov.sh \
-# 			-f $${RESULT}.lcov \
-# 			-t $(CODECOV_TOKEN) \
-# 			-J '^MapboxMaps$$' \
-# 			-n $${RESULT}.lcov \
-# 			-F "$$(echo '$(SCHEME)' | sed 's/[[:upper:]]/_&/g;s/^_//' | tr '[:upper:]' '[:lower:]')" ; \
-# 		echo "Generating lcov JSON" ; \
-# 		xcrun llvm-cov export \
-# 			$(COVERAGE_MAPBOX_MAPS) \
-# 			-instr-profile=$${RESULT}.profdata \
-# 			-arch=$(COVERAGE_ARCH) \
-# 			-format=text | python3 -m json.tool > $${RESULT}.json ; \
-# 		echo "Uploading to S3" ; \
-# 		python3 ./scripts/code-coverage/parse-code-coverage.py \
-# 			-g . \
-# 			-c MapboxMaps \
-# 			--scheme $(SCHEME) \
-# 			--report $${RESULT}.json ; \
-# 	done
-# 	@echo "Done"
-
 .PHONY: update-codecov-with-profdata
 update-codecov-with-profdata:
 	@PROF_DATA=`find $(COVERAGE_ROOT_DIR) -regex '.*\.profdata'` ; \

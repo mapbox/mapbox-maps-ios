@@ -600,7 +600,7 @@ jobs:
               -xctestrun "$XCTESTRUN_PATH" \
               -destination 'platform=iOS Simulator,<< parameters.destination >>' \
               -enableCodeCoverage YES \
-              -resultBundlePath MapboxMapsTests.xcresult | tee run_log.txt | xcpretty --report junit --output junit.xml
+              -resultBundlePath MapboxMapsTests.xcresult | tee xcodebuild.log | xcpretty --report junit --output junit.xml
       - when:
           condition: << parameters.codecoverage >>
           steps:
@@ -643,7 +643,7 @@ jobs:
       - store_artifacts:
           path: MapboxMapsTests.xcresult.zip
       - store_artifacts:
-          path: run_log.txt
+          path: xcodebuild.log
       - store_artifacts:
           path: ~/Library/Logs/DiagnosticReports
       - when:

@@ -48,6 +48,7 @@ workflows:
       - swiftlint
       - depsvalidator
       - build-sdk:
+          name: Build SDK
           configuration: "Release"
           report_failure: true
           matrix:
@@ -128,8 +129,10 @@ workflows:
     unless: << pipeline.parameters.turf-revision >>
     jobs:
       - swiftlint
-      - depsvalidator
+      - depsvalidator:
+          name: Check dependencies versions
       - build-sdk:
+          name: Build SDK
           xcode: "13.1.0"
           configuration: "Release"
 
@@ -144,19 +147,20 @@ workflows:
       - trigger-metrics-v2
       - trigger-binary-size:
           requires:
-            - build-sdk
+            - Build SDK
       - trigger-metrics-build:
           requires:
-            - build-sdk
+            - Build SDK
       - trigger-metrics-collection:
           requires:
-            - build-sdk
+            - Build SDK
           filters:
             branches:
               only: main
 
       # Run unit tests on CI simulator
-      - build-unit-tests
+      - build-unit-tests:
+          name: Build unit tests
       - run-unit-tests:
           xcode: 14.1.0
           codecoverage: true
@@ -164,14 +168,14 @@ workflows:
             parameters:
               destination: ["OS=15.5,name=iPhone 13", "OS=16.1,name=iPhone 14"]
           requires:
-            - build-unit-tests
+            - Build unit tests
       - run-unit-tests:
           xcode: 12.5.1
           matrix:
             parameters:
               destination: ["OS=13.7,name=iPhone 11", "OS=14.5,name=iPhone 11"]
           requires:
-            - build-unit-tests
+            - Build unit tests
 
       - build-unit-tests:
           name: build-unit-tests-min-turf

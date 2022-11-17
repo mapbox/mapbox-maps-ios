@@ -16,13 +16,6 @@
           "enabled" : true
         }
       }
-    },
-    {
-      "id" : "F72FA70C-FDEC-4A5B-B35C-796A825F874D",
-      "name" : "Thread Sanitizer",
-      "options" : {
-        "threadSanitizerEnabled" : true
-      }
     }
   ],
   "defaultOptions" : {

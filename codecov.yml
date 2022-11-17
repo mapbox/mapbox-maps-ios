@@ -14,7 +14,15 @@ coverage:
         threshold: 2%
     patch:
       default:
-        target: auto
+        target: 90%
 comment:
   require_changes: true
   layout: "reach, diff, flags, files"
+
+flag_management:
+  default_rules: # the rules that will be followed for any flag added, generally
+    statuses:
+      - type: project
+        threshold: 2%
+      - type: patch
+        target: 90%

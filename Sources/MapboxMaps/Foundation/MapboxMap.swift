@@ -52,6 +52,12 @@ public final class MapboxMap: MapboxMapProtocol {
         __map.destroyRenderer()
     }
 
+    /// The `size` of the map view.
+    /// - Parameter cameraOptions: The `CameraOptions` to use when setting the camera.
+    public func setCamera2(to cameraOptions: CameraOptions) {
+        print("setCamera2", cameraOptions)
+    }
+
     internal init(mapClient: MapClient,
                   mapInitOptions: MapInitOptions,
                   mapboxObservableProvider: (ObservableProtocol) -> MapboxObservableProtocol) {

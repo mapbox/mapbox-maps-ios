@@ -626,7 +626,7 @@ jobs:
             - run:
                 name: Generate code coverage report
                 command: |
-                  BINARY_PATH="$(find build -name "MapboxMaps.o")"
+                  BINARY_PATH="$(find build -name "MapboxMaps.o" | head -1)"
 
                   xcrun llvm-cov export -arch $(uname -m) -format="lcov" \
                     -instr-profile="Coverage-unittests.profdata" \

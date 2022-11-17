@@ -623,6 +623,7 @@ jobs:
 
                     zip coverage.zip coverage.lcov coverage.txt "$BINARY_PATH" "$COVERAGE_PATH"
             - install-python-dependencies
+            - install-mbx-ci
             - run:
                 name: Send code coverage
                 command: |

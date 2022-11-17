@@ -159,6 +159,7 @@ workflows:
       - build-unit-tests
       - run-unit-tests:
           xcode: 14.1.0
+          codecoverage: true
           matrix:
             parameters:
               destination: ["OS=15.5,name=iPhone 13", "OS=16.1,name=iPhone 14"]
@@ -558,9 +559,8 @@ jobs:
           command: |
             xcodebuild build-for-testing \
               -scheme MapboxMaps \
-              -sdk iphonesimulator \
               -configuration << parameters.configuration >> \
-              -destination 'generic/platform=iOS Simulator' \
+              -destination "generic/platform=iOS Simulator" \
               -derivedDataPath build \
               -enableCodeCoverage YES \
               -testPlan "MapboxMapsAll" \
@@ -581,10 +581,14 @@ jobs:
         type: string
       xcode:
         type: string
+      codecoverage:
+        type: boolean
+        default: false
     macos:
       xcode: << parameters.xcode >>
     resource_class: macos.x86.medium.gen2
     steps:
+      - checkout
       - attach_workspace:
           at: build
       - run:
@@ -597,6 +601,23 @@ jobs:
               -destination 'platform=iOS Simulator,<< parameters.destination >>' \
               -enableCodeCoverage YES \
               -resultBundlePath MapboxMapsTests.xcresult | tee run_log.txt | xcpretty --report junit --output junit.xml
+      - when:
+          condition: << parameters.codecoverage >>
+          steps:
+            - run:
+                name: Generate code coverage report
+                command: |
+                  xcrun llvm-cov export -arch $(uname -m) -format="lcov" \
+                    -instr-profile=$(find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' | head -n 1) \
+                    $(find build -name "MapboxMaps.o") > coverage.lcov
+            - run:
+                name: Send code coverage
+                command: |
+                  curl -Os https://uploader.codecov.io/latest/macos/codecov
+                  chmod +x codecov
+                  time ./codecov
+            - store_artifacts:
+                path: coverage.lcov
       - run:
           name: Compress XCResult
           command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult

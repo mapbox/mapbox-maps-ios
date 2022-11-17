@@ -1,21 +1,46 @@
 {
   "configurations" : [
     {
-      "id" : "D4553FD6-392E-4B22-9D1D-F47D55866A9B",
-      "name" : "Configuration 1",
+      "id" : "AB060B2F-57FF-4678-9396-AEE47962A9FB",
+      "name" : "Default",
       "options" : {
 
+      }
+    },
+    {
+      "id" : "D4553FD6-392E-4B22-9D1D-F47D55866A9B",
+      "name" : "Address Sanitizer",
+      "options" : {
+        "addressSanitizer" : {
+          "detectStackUseAfterReturn" : true,
+          "enabled" : true
+        }
+      }
+    },
+    {
+      "id" : "F72FA70C-FDEC-4A5B-B35C-796A825F874D",
+      "name" : "Thread Sanitizer",
+      "options" : {
+        "threadSanitizerEnabled" : true
       }
     }
   ],
   "defaultOptions" : {
-    "addressSanitizer" : {
-      "detectStackUseAfterReturn" : true,
-      "enabled" : true
-    }
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:",
+          "identifier" : "MapboxMaps",
+          "name" : "MapboxMaps"
+        }
+      ]
+    },
+    "language" : "en",
+    "testExecutionOrdering" : "random"
   },
   "testTargets" : [
     {
+      "parallelizable" : true,
       "skippedTests" : [
         "BackgroundLayerIntegrationTests",
         "BasicCameraAnimatorImplIntegrationTests",

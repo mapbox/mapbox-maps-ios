@@ -10,6 +10,7 @@ internal protocol DispatchQueueProtocol: AnyObject {
         execute work: @escaping @convention(block) () -> Void
     )
     func async(execute workItem: DispatchWorkItem)
+    func asyncAfter(deadline: DispatchTime, execute: DispatchWorkItem)
 }
 
 extension DispatchQueueProtocol {

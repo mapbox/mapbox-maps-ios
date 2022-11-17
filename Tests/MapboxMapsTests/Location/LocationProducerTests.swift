@@ -282,7 +282,7 @@ final class LocationProducerTests: XCTestCase {
         let newHeading = MockHeading()
         locationProducer.locationProvider(locationProvider, didUpdateHeading: newHeading)
         locationThrottle.flush()
-        
+
         XCTAssertTrue(consumer.locationUpdateStub.invocations.isEmpty)
 
         // send a location update and verify that the observers are notified

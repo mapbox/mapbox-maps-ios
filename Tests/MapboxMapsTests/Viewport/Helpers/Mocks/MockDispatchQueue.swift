@@ -1,6 +1,15 @@
 @testable import MapboxMaps
 
 final class MockMainQueue: MainQueueProtocol {
+    struct AsyncAfterItemParams {
+        let deadline: DispatchTime
+        let item: DispatchWorkItem
+    }
+    let asyncAfterItemStub = Stub<AsyncAfterItemParams, Void>()
+    func asyncAfter(deadline: DispatchTime, execute: DispatchWorkItem) {
+        asyncAfterItemStub.call(with: .init(deadline: deadline, item: execute))
+    }
+
     struct AsyncParams {
         let group: DispatchGroup?
         let qos: DispatchQoS
@@ -24,6 +33,15 @@ final class MockMainQueue: MainQueueProtocol {
 }
 
 final class MockDispatchQueue: DispatchQueueProtocol {
+    struct AsyncAfterItemParams {
+        let deadline: DispatchTime
+        let item: DispatchWorkItem
+    }
+    let asyncAfterItemStub = Stub<AsyncAfterItemParams, Void>()
+    func asyncAfter(deadline: DispatchTime, execute: DispatchWorkItem) {
+        asyncAfterItemStub.call(with: .init(deadline: deadline, item: execute))
+    }
+
     struct AsyncParams {
         let group: DispatchGroup?
         let qos: DispatchQoS

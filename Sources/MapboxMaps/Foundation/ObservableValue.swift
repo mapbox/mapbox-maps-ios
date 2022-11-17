@@ -3,27 +3,13 @@ import Foundation
 /// Wrapper for ``ObservableValue`` to throttle its value updates.
 /// Republishes only the latest event received during the time window interval.
 internal final class Throttle<Value> where Value: Equatable {
-    private var subscriptions = [BlockSubscription<Value>]() {
-        didSet {
-            if !subscriptions.isEmpty, oldValue.isEmpty {
-                cancelToken = observableValue.observe { [weak self] newValue in
-                    if self?.value == nil { // first update
-                        self?.notifyImmediately(with: newValue)
-                    } else {
-                        self?.onValueUpdated(newValue: newValue)
-                    }
-                    return true
-                }
-            } else if subscriptions.isEmpty, !oldValue.isEmpty {
-                cancelToken = nil
-            }
-        }
-    }
-
     internal var value: Value?
+
+    private var subscriptions = [BlockSubscription<Value>]()
     private var latestValue: Value? { observableValue.value }
 
     private let observableValue: ObservableValue<Value>
+    private let dispatchQueue: DispatchQueueProtocol
     private let windowDuration: TimeInterval
     private var cancelToken: Cancelable?
     private var item: DispatchWorkItem?
@@ -32,9 +18,23 @@ internal final class Throttle<Value> where Value: Equatable {
         cancelToken?.cancel()
     }
 
-    init(value: ObservableValue<Value> = .init(), windowDuration: TimeInterval) {
+    internal init(
+        value: ObservableValue<Value> = .init(),
+        windowDuration: TimeInterval,
+        dispatchQueue: DispatchQueueProtocol = DispatchQueue.main
+    ) {
         self.observableValue = value
+        self.dispatchQueue = dispatchQueue
         self.windowDuration = windowDuration
+
+        cancelToken = observableValue.observe { [weak self] newValue in
+            if self?.value == nil { // first update
+                self?.notifyImmediately(with: newValue)
+            } else {
+                self?.onValueUpdated(newValue: newValue)
+            }
+            return true
+        }
     }
 
     internal func notify(with newValue: Value) {
@@ -84,7 +84,7 @@ internal final class Throttle<Value> where Value: Equatable {
         }
 
         self.item = item
-        DispatchQueue.main.asyncAfter(deadline: .now() + windowDuration, execute: item)
+        dispatchQueue.asyncAfter(deadline: .now() + windowDuration, execute: item)
     }
 }
 

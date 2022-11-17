@@ -4,6 +4,10 @@ import Dispatch
 internal protocol MainQueueProtocol: DispatchQueueProtocol { }
 
 internal final class MainQueueWrapper: MainQueueProtocol {
+    func asyncAfter(deadline: DispatchTime, execute: DispatchWorkItem) {
+        DispatchQueue.main.asyncAfter(deadline: deadline, execute: execute)
+    }
+
     func async(
         group: DispatchGroup?,
         qos: DispatchQoS,

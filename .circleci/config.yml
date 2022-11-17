@@ -646,6 +646,12 @@ jobs:
           path: run_log.txt
       - store_artifacts:
           path: ~/Library/Logs/DiagnosticReports
+      - when:
+          condition:
+            equal: [ "main", << pipeline.git.branch >>]
+          steps:
+            - report-failure:
+                message: "Unit test failed: << parameters.destination >>, Xcode: << parameters.xcode >>"
 
   build-tests:
     executor: xcode-latest

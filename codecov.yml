@@ -13,6 +13,8 @@ coverage:
     project:
       default:
         threshold: 2%
+    # patch:
+    #   target: auto
 comment:
   require_changes: true
   layout: "reach, diff, flags, files"
@@ -32,12 +34,12 @@ comment:
 #     ]?
 
 # Explicit list of flags
-flags:
-  mapbox_maps:
-    paths:
-      - Sources/MapboxMaps
-    carryforward: false
-  mapbox_maps_tests_with_host:
-    paths:
-      - Sources/MapboxMaps
-    carryforward: false
+# flags:
+#   mapbox_maps:
+#     paths:
+#       - Sources/MapboxMaps
+#     carryforward: false
+#   mapbox_maps_tests_with_host:
+#     paths:
+#       - Sources/MapboxMaps
+#     carryforward: false

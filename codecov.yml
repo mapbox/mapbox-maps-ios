@@ -12,8 +12,7 @@ coverage:
   status:
     project:
       default:
-        threshold: 2
-      patch: off
+        threshold: 2%
 comment:
   require_changes: true
   layout: "reach, diff, flags, files"

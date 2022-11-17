@@ -2,13 +2,6 @@
   "configurations" : [
     {
       "id" : "AB060B2F-57FF-4678-9396-AEE47962A9FB",
-      "name" : "Default",
-      "options" : {
-
-      }
-    },
-    {
-      "id" : "D4553FD6-392E-4B22-9D1D-F47D55866A9B",
       "name" : "Address Sanitizer",
       "options" : {
         "addressSanitizer" : {

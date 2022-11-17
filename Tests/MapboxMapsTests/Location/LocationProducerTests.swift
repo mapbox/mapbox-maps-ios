@@ -13,6 +13,8 @@ final class LocationProducerTests: XCTestCase {
     var userInterfaceOrientationView: UIView!
     var device: UIDevice!
     var locationThrottle: Throttle<Location>!
+    var observableLocation: ObservableValue<Location>!
+    var throttleQueue: MockDispatchQueue!
 
     override func setUp() {
         super.setUp()
@@ -22,7 +24,9 @@ final class LocationProducerTests: XCTestCase {
         userInterfaceOrientationView = UIView()
         // swiftlint:disable:next discouraged_direct_init
         device = UIDevice()
-        locationThrottle = .init(windowDuration: 1)
+        observableLocation = .init()
+        throttleQueue = MockDispatchQueue()
+        locationThrottle = .init(value: observableLocation, windowDuration: 1, dispatchQueue: throttleQueue)
         locationProducer = LocationProducer(
             locationProvider: locationProvider,
             interfaceOrientationProvider: interfaceOrientationProvider,
@@ -42,6 +46,9 @@ final class LocationProducerTests: XCTestCase {
         notificationCenter = nil
         userInterfaceOrientationView = nil
         device = nil
+        observableLocation = nil
+        throttleQueue = nil
+        locationThrottle = nil
         consumer = nil
         delegate = nil
         locationProducer = nil
@@ -685,4 +692,66 @@ final class LocationProducerTests: XCTestCase {
         XCTAssertEqual(locationProvider.$headingOrientation.setStub.invocations.count, 0)
     }
 
+    func testLocationUpdatesAreThrottled() {
+        // given
+        locationProducer.locationProvider(locationProvider, didUpdateLocations: [CLLocation(latitude: 0, longitude: 0)])
+        XCTAssertEqual(locationProducer.latestLocation?.coordinate, CLLocationCoordinate2D(latitude: 0, longitude: 0))
+
+        // when
+        locationProducer.locationProvider(locationProvider, didUpdateLocations: [CLLocation(latitude: 1, longitude: 1)])
+
+        // then
+        XCTAssertEqual(locationProducer.latestLocation?.coordinate, CLLocationCoordinate2D(latitude: 0, longitude: 0))
+        locationThrottle.flush()
+        XCTAssertEqual(locationProducer.latestLocation?.coordinate, CLLocationCoordinate2D(latitude: 1, longitude: 1))
+    }
+
+    func testHeadingUpdateAreThrottled() {
+        // given
+        let heading = CLHeading()
+        locationProducer.locationProvider(locationProvider, didUpdateLocations: [CLLocation(latitude: 0, longitude: 0)])
+        XCTAssertEqual(locationProducer.latestLocation?.coordinate, CLLocationCoordinate2D(latitude: 0, longitude: 0))
+        XCTAssertNil(locationProducer.latestLocation?.heading)
+
+        // when
+        locationProducer.locationProvider(locationProvider, didUpdateHeading: heading)
+
+        // then
+        XCTAssertNil(locationProducer.latestLocation?.heading)
+        locationThrottle.flush()
+        XCTAssertEqual(locationProducer.latestLocation?.coordinate, CLLocationCoordinate2D(latitude: 0, longitude: 0))
+        XCTAssertEqual(locationProducer.latestLocation?.heading, heading)
+    }
+
+    func testLocationAccuracyAuthorizationChangeUpdatesLocationImmediately() {
+        // given
+        let locationProvider = MockLocationProvider()
+        locationProvider.accuracyAuthorization = .fullAccuracy
+        locationProducer.locationProvider = locationProvider
+        locationProducer.locationProvider(locationProvider, didUpdateLocations: [CLLocation(latitude: 0, longitude: 0)])
+        XCTAssertEqual(locationProducer.latestLocation?.coordinate, CLLocationCoordinate2D(latitude: 0, longitude: 0))
+        XCTAssertEqual(locationProducer.latestLocation?.accuracyAuthorization, .fullAccuracy)
+
+        // when
+        locationProvider.accuracyAuthorization = .reducedAccuracy
+        locationProducer.locationProvider(locationProvider, didUpdateLocations: [CLLocation(latitude: 1, longitude: 1)])
+        locationProducer.locationProviderDidChangeAuthorization(locationProvider)
+
+        // then
+        XCTAssertEqual(locationProducer.latestLocation?.coordinate, CLLocationCoordinate2D(latitude: 1, longitude: 1))
+        XCTAssertEqual(locationProducer.latestLocation?.accuracyAuthorization, .reducedAccuracy)
+    }
+
+    func testNewLocationProviderFlushesScheduledLocationUpdate() {
+        // given
+        locationProducer.locationProvider(locationProvider, didUpdateLocations: [CLLocation(latitude: 0, longitude: 0)])
+        locationProducer.locationProvider(locationProvider, didUpdateLocations: [CLLocation(latitude: 1, longitude: 1)])
+        XCTAssertEqual(locationProducer.latestLocation?.coordinate, CLLocationCoordinate2D(latitude: 0, longitude: 0))
+
+        // when
+        locationProducer.locationProvider = MockLocationProvider()
+
+        // then
+        XCTAssertEqual(locationProducer.latestLocation?.coordinate, CLLocationCoordinate2D(latitude: 1, longitude: 1))
+    }
 }

@@ -26,3 +26,6 @@ flag_management:
         threshold: 2%
       - type: patch
         target: 90%
+    individual_flags: # exceptions to the default rules above, stated flag by flag
+    - name: unit
+    - name: integration

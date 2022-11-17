@@ -48,6 +48,7 @@ workflows:
       - swiftlint
       - depsvalidator
       - build-sdk:
+          name: Build SDK
           configuration: "Release"
           report_failure: true
           matrix:
@@ -128,8 +129,10 @@ workflows:
     unless: << pipeline.parameters.turf-revision >>
     jobs:
       - swiftlint
-      - depsvalidator
+      - depsvalidator:
+          name: Check dependencies versions
       - build-sdk:
+          name: Build SDK
           xcode: "13.1.0"
           configuration: "Release"
 
@@ -144,19 +147,20 @@ workflows:
       - trigger-metrics-v2
       - trigger-binary-size:
           requires:
-            - build-sdk
+            - Build SDK
       - trigger-metrics-build:
           requires:
-            - build-sdk
+            - Build SDK
       - trigger-metrics-collection:
           requires:
-            - build-sdk
+            - Build SDK
           filters:
             branches:
               only: main
 
       # Run unit tests on CI simulator
-      - build-unit-tests
+      - build-unit-tests:
+          name: Build unit tests
       - run-unit-tests:
           xcode: 14.1.0
           codecoverage: true
@@ -164,14 +168,14 @@ workflows:
             parameters:
               destination: ["OS=15.5,name=iPhone 13", "OS=16.1,name=iPhone 14"]
           requires:
-            - build-unit-tests
+            - Build unit tests
       - run-unit-tests:
           xcode: 12.5.1
           matrix:
             parameters:
               destination: ["OS=13.7,name=iPhone 11", "OS=14.5,name=iPhone 11"]
           requires:
-            - build-unit-tests
+            - Build unit tests
 
       - build-unit-tests:
           name: build-unit-tests-min-turf
@@ -600,24 +604,41 @@ jobs:
               -xctestrun "$XCTESTRUN_PATH" \
               -destination 'platform=iOS Simulator,<< parameters.destination >>' \
               -enableCodeCoverage YES \
-              -resultBundlePath MapboxMapsTests.xcresult | tee run_log.txt | xcpretty --report junit --output junit.xml
+              -resultBundlePath MapboxMapsTests.xcresult | tee xcodebuild.log | xcpretty --report junit --output junit.xml
       - when:
           condition: << parameters.codecoverage >>
           steps:
             - run:
                 name: Generate code coverage report
                 command: |
+                  COVERAGE_PATH="$(find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' | head -n 1)"
+                  BINARY_PATH="$(find build -name "MapboxMaps.o")"
+
                   xcrun llvm-cov export -arch $(uname -m) -format="lcov" \
-                    -instr-profile=$(find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' | head -n 1) \
-                    $(find build -name "MapboxMaps.o") > coverage.lcov
+                    -instr-profile="$COVERAGE_PATH" \
+                    "$BINARY_PATH" > coverage.lcov
+                  xcrun llvm-cov export -arch $(uname -m) -format=text \
+                    -instr-profile="$COVERAGE_PATH" \
+                    "$BINARY_PATH" > coverage.txt
+
+                    zip coverage.zip coverage.lcov coverage.txt "$BINARY_PATH" "$COVERAGE_PATH"
+            - install-python-dependencies
+            - install-mbx-ci
             - run:
                 name: Send code coverage
                 command: |
                   curl -Os https://uploader.codecov.io/latest/macos/codecov
                   chmod +x codecov
-                  time ./codecov
+                  ./codecov -f coverage.lcov
+
+                  echo "Uploading to S3" ; \
+                  python3 ./scripts/code-coverage/parse-code-coverage.py \
+                    -g . \
+                    -c MapboxMaps \
+                    --scheme MapboxMaps \
+                    --report coverage.txt
             - store_artifacts:
-                path: coverage.lcov
+                path: coverage.zip
       - run:
           name: Compress XCResult
           command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
@@ -627,9 +648,15 @@ jobs:
       - store_artifacts:
           path: MapboxMapsTests.xcresult.zip
       - store_artifacts:
-          path: run_log.txt
+          path: xcodebuild.log
       - store_artifacts:
           path: ~/Library/Logs/DiagnosticReports
+      - when:
+          condition:
+            equal: [ "main", << pipeline.git.branch >>]
+          steps:
+            - report-failure:
+                message: "Unit test failed: << parameters.destination >>, Xcode: << parameters.xcode >>"
 
   build-tests:
     executor: xcode-latest

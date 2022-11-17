@@ -13,8 +13,9 @@ coverage:
     project:
       default:
         threshold: 2%
-    # patch:
-    #   target: auto
+    patch:
+      default:
+        target: auto
 comment:
   require_changes: true
   layout: "reach, diff, flags, files"

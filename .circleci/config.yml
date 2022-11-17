@@ -666,6 +666,8 @@ jobs:
           when: always
       - store_test_results:
           path: junit.xml
+      - store_test_results:
+          path: junit-integrations.xml
       - store_artifacts:
           path: MapboxMapsTests.xcresult.zip
       - store_artifacts:

@@ -607,17 +607,33 @@ jobs:
             - run:
                 name: Generate code coverage report
                 command: |
+                  COVERAGE_PATH="$(find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' | head -n 1)"
+                  BINARY_PATH="$(find build -name "MapboxMaps.o")"
+
                   xcrun llvm-cov export -arch $(uname -m) -format="lcov" \
-                    -instr-profile=$(find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' | head -n 1) \
-                    $(find build -name "MapboxMaps.o") > coverage.lcov
+                    -instr-profile="$COVERAGE_PATH" \
+                    "$BINARY_PATH" > coverage.lcov
+                  xcrun llvm-cov export -arch $(uname -m) -format=text \
+                    -instr-profile="$COVERAGE_PATH" \
+                    "$BINARY_PATH" > coverage.txt
+
+                    zip coverage.zip coverage.lcov coverage.txt "$BINARY_PATH" "$COVERAGE_PATH"
+            - install-python-dependencies
             - run:
                 name: Send code coverage
                 command: |
                   curl -Os https://uploader.codecov.io/latest/macos/codecov
                   chmod +x codecov
-                  time ./codecov
+                  ./codecov -f coverage.lcov
+
+                  echo "Uploading to S3" ; \
+                  python3 ./scripts/code-coverage/parse-code-coverage.py \
+                    -g . \
+                    -c MapboxMaps \
+                    --scheme MapboxMaps \
+                    --report coverage.txt
             - store_artifacts:
-                path: coverage.lcov
+                path: coverage.zip
       - run:
           name: Compress XCResult
           command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult

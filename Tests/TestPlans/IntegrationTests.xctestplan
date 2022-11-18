@@ -1,0 +1,65 @@
+{
+  "configurations" : [
+    {
+      "id" : "86BCF7AC-2BA2-468F-BE79-EDD42CCF1C4F",
+      "name" : "Address Sanitizer",
+      "options" : {
+        "addressSanitizer" : {
+          "detectStackUseAfterReturn" : true,
+          "enabled" : true
+        }
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "language" : "en"
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "selectedTests" : [
+        "BackgroundLayerIntegrationTests",
+        "BasicCameraAnimatorImplIntegrationTests",
+        "CircleAnnotationIntegrationTests",
+        "CircleLayerIntegrationTests",
+        "DidIdleFailureIntegrationTest",
+        "ExampleIntegrationTest",
+        "FeatureStateIntegrationTests",
+        "FillExtrusionLayerIntegrationTests",
+        "FillLayerIntegrationTests",
+        "GeoJSONSourceIntegrationTests",
+        "HeatmapLayerIntegrationTests",
+        "HillshadeLayerIntegrationTests",
+        "ImageSourceIntegrationTests",
+        "LineLayerIntegrationTests",
+        "LocationIndicatorLayerIntegrationTests",
+        "MapInitOptionsIntegrationTests",
+        "MapViewIntegrationTests",
+        "MapViewRenderedSnapshotIntegrationTests",
+        "MapboxMapIntegrationTests",
+        "MigrationGuideIntegrationTests",
+        "ModelLayerIntegrationTests",
+        "ObservableIntegrationTests",
+        "OfflineGuideIntegrationTests",
+        "OfflineManagerIntegrationTestCase",
+        "PointAnnotationIntegrationTests",
+        "PolygonAnnotationIntegrationTests",
+        "PolylineAnnotationIntegrationTests",
+        "RasterDemSourceIntegrationTests",
+        "RasterLayerIntegrationTests",
+        "RasterSourceIntegrationTests",
+        "SkyLayerIntegrationTests",
+        "StyleIntegrationTests",
+        "StyleLoadIntegrationTests",
+        "SymbolLayerIntegrationTests",
+        "VectorSourceIntegrationTests"
+      ],
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "MapboxMapsTests",
+        "name" : "MapboxMapsTests"
+      }
+    }
+  ],
+  "version" : 1
+}

@@ -32,17 +32,26 @@ main() {
         export DYNAMIC_ARTIFACTS_PATH="$DYNAMIC_ARTIFACTS_DOWNLOAD_PATH/artifacts"
     fi
 
+    set +u
+    if [[ -n "$CIRCLE_REPOSITORY_URL" ]]; then
+        REPOSITORY_NAME=${CIRCLE_REPOSITORY_URL##*/}
+    else
+        if [[ $PRIVATE_REPO_RULE == 1 ]]; then
+            REPOSITORY_NAME="mapbox-maps-ios-private.git"
+        else
+            REPOSITORY_NAME="mapbox-maps-ios.git"
+        fi
+    fi
+    set -u
+
     step "Generate Xcode project with Xcodegen"
     pushd "$SCRIPT_DIR" > /dev/null || exit 1
-    MBX_TOKEN="$(cat ~/.mapbox)" xcodegen
+    MBX_TOKEN="$(cat ~/.mapbox)" REPOSITORY_NAME="${REPOSITORY_NAME}" xcodegen
+
 
     if [[ $BRANCH_RULE == 1 ]]; then
-        # Escape '/' and '\' to make Bash and Sed happy
-        if [[ $PRIVATE_REPO_RULE == 1 ]]; then
-            REPO_URL="https:\/\/github.com\/mapbox\/mapbox-maps-ios-private.git"
-        else
-            REPO_URL="https:\/\/github.com\/mapbox\/mapbox-maps-ios.git"
-        fi
+
+        REPO_URL="git@github.com:mapbox\/$REPOSITORY_NAME"
         sed -i '' -E "s/(pod 'MapboxMaps',).*/\1 :git => '${REPO_URL}', :branch => '${MAPS_VERSION//\//\\/}'/" Podfile
     elif [[ $VERSION_RULE == 1 ]]; then
         sed -i '' -E "s/(pod 'MapboxMaps',).*/\1 '= $MAPS_VERSION'/" Podfile
@@ -59,7 +68,14 @@ main() {
     for scheme in "${PROJECTS_TO_TEST[@]}"
     do
         step "Building $scheme scheme"
-        xcodebuild clean build -workspace "$WORKSPACE_PATH" -scheme "$scheme" -destination 'platform=iOS Simulator,name=iPhone 12' CODE_SIGNING_ALLOWED='NO' &> "$ARTIFACTS_ROOT/${scheme}_xcode-$(date +%Y%m%d%H%M%S).log"
+        set +e
+        LOG_FILE="$ARTIFACTS_ROOT/${scheme}_xcode-$(date +%Y%m%d%H%M%S).log"
+
+        if ! xcodebuild clean build -workspace "$WORKSPACE_PATH" -scheme "$scheme" -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED='NO' &> "$LOG_FILE"; then
+            cat "$LOG_FILE"
+            exit 1
+        fi
+        set -e
         info "Finished $scheme building"
     done
 

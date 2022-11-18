@@ -115,7 +115,7 @@ public extension Expression {
         /// - `"font-scale"`: Applies a scaling factor on `text-size` as specified by the root layout property.
         case format = "format"
 
-        /// Returns the feature's geometry type: `Point`, `MultiPoint`, `LineString`, `MultiLineString`, `Polygon`, `MultiPolygon`. `Multi*` feature types are only returned in GeoJSON sources. When working with vector tile sources, use the singular forms.
+        /// Returns the feature's geometry type: `Point`, `LineString` or `Polygon`. `Multi*` feature types return the singular forms.
         case geometryType = "geometry-type"
 
         /// Retrieves a property value from the current feature's properties, or from another object if a second argument is provided. Returns `null` if the requested property is missing.

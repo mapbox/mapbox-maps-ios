@@ -5,40 +5,16 @@ codecov:
     wait_for_ci: false
 ignore:
   - "Apps"
-  - "docs"
   - "PCVD"
   - "Tests"
 coverage:
   status:
     project:
       default:
-        threshold: 2
-      patch: off
+        threshold: 2%
+    patch:
+      default:
+        target: 90%
 comment:
   require_changes: true
   layout: "reach, diff, flags, files"
-# Flags - does this help?
-# flag_management:
-#   default_rules:
-#     carryforward: boolean?
-#     ignore: [path]?
-#     paths: [path]?
-#     statuses: [ #note, statuses are an array
-#       name_prefix: string (r"^[\w\-\.]+$")
-#       type: OR("project", "patch", "changes")
-#       target: OR("auto", percent)?
-#       include_changes: OR("auto", percent)?
-#       threshold: percent?
-#       **normal status attributes
-#     ]?
-
-# Explicit list of flags
-flags:
-  mapbox_maps:
-    paths:
-      - Sources/MapboxMaps
-    carryforward: false
-  mapbox_maps_tests_with_host:
-    paths:
-      - Sources/MapboxMaps
-    carryforward: false

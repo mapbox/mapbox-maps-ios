@@ -1,0 +1,31 @@
+{
+  "configurations" : [
+    {
+      "id" : "786D5057-2D2C-46F7-9C50-580AA3C1B2C4",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "commandLineArgumentEntries" : [
+      {
+        "argument" : "-testing YES"
+      }
+    ],
+    "mallocStackLoggingOptions" : {
+      "loggingType" : "allAllocations"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:..\/..",
+        "identifier" : "MapboxMapsTests",
+        "name" : "MapboxMapsTests"
+      }
+    }
+  ],
+  "version" : 1
+}

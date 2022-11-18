@@ -1,0 +1,77 @@
+{
+  "configurations" : [
+    {
+      "id" : "AB060B2F-57FF-4678-9396-AEE47962A9FB",
+      "name" : "Address Sanitizer",
+      "options" : {
+        "addressSanitizer" : {
+          "detectStackUseAfterReturn" : true,
+          "enabled" : true
+        }
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:",
+          "identifier" : "MapboxMaps",
+          "name" : "MapboxMaps"
+        }
+      ]
+    },
+    "language" : "en",
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "skippedTests" : [
+        "BackgroundLayerIntegrationTests",
+        "BasicCameraAnimatorImplIntegrationTests",
+        "CircleAnnotationIntegrationTests",
+        "CircleLayerIntegrationTests",
+        "DidIdleFailureIntegrationTest",
+        "ExampleIntegrationTest",
+        "FeatureStateIntegrationTests",
+        "FillExtrusionLayerIntegrationTests",
+        "FillLayerIntegrationTests",
+        "GeoJSONSourceIntegrationTests",
+        "HeatmapLayerIntegrationTests",
+        "HillshadeLayerIntegrationTests",
+        "ImageSourceIntegrationTests",
+        "IntegrationTestCase",
+        "LineLayerIntegrationTests",
+        "LocationIndicatorLayerIntegrationTests",
+        "MapInitOptionsIntegrationTests",
+        "MapViewIntegrationTestCase",
+        "MapViewIntegrationTests",
+        "MapViewRenderedSnapshotIntegrationTests",
+        "MapboxMapIntegrationTests",
+        "MigrationGuideIntegrationTests",
+        "ModelLayerIntegrationTests",
+        "ObservableIntegrationTests",
+        "OfflineGuideIntegrationTests",
+        "OfflineManagerIntegrationTestCase",
+        "PointAnnotationIntegrationTests",
+        "PolygonAnnotationIntegrationTests",
+        "PolylineAnnotationIntegrationTests",
+        "RasterDemSourceIntegrationTests",
+        "RasterLayerIntegrationTests",
+        "RasterSourceIntegrationTests",
+        "SkyLayerIntegrationTests",
+        "StyleIntegrationTests",
+        "StyleLoadIntegrationTests",
+        "SymbolLayerIntegrationTests",
+        "VectorSourceIntegrationTests"
+      ],
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "MapboxMapsTests",
+        "name" : "MapboxMapsTests"
+      }
+    }
+  ],
+  "version" : 1
+}

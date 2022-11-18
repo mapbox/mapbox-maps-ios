@@ -105,7 +105,7 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
 
     func testShouldNotRecognizeSimultaneouslyWithUnrecognizedGestureRecognizer() {
         let recognizers = [UILongPressGestureRecognizer(), UIPanGestureRecognizer(), UITapGestureRecognizer(), UISwipeGestureRecognizer(), UIScreenEdgePanGestureRecognizer(), UIPinchGestureRecognizer(), UIRotationGestureRecognizer()]
-        
+
         for outerRecognizer in recognizers {
             for innerRecognizer in recognizers {
                 let shouldRecognizeSimultaneously = impl.gestureRecognizer(

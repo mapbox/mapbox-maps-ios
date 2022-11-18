@@ -7,7 +7,8 @@ Mapbox welcomes participation and contributions from everyone.
 * Fix memory leak when viewport is being deallocated while transition is running. ([#1691](https://github.com/mapbox/mapbox-maps-ios/pull/1691))
 * Fix issue with simultaneous recognition of tap gesture. ([#1712](https://github.com/mapbox/mapbox-maps-ios/pull/1712))
 * Fix label localization to properly handle Simplified and Traditional Chinese. ([#1687](https://github.com/mapbox/mapbox-maps-ios/pull/1687))
-* Allow simultaneous recognition of map- and annotation- handling gesture recognizers ([#1737](https://github.com/mapbox/mapbox-maps-ios/pull/1737))
+* Allow simultaneous recognition of map- and annotation- handling gesture recognizers. ([#1737](https://github.com/mapbox/mapbox-maps-ios/pull/1737))
+* Update MapboxCommon to `v23.2.0-rc.3`. ([#1738](https://github.com/mapbox/mapbox-maps-ios/pull/1738))
 
 ## 10.10.0-beta-1 - November 4, 2022
 

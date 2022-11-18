@@ -12,10 +12,11 @@
     }
   ],
   "defaultOptions" : {
-
+    "language" : "en"
   },
   "testTargets" : [
     {
+      "parallelizable" : true,
       "selectedTests" : [
         "BackgroundLayerIntegrationTests",
         "BasicCameraAnimatorImplIntegrationTests",

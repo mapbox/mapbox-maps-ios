@@ -12,10 +12,12 @@
     "addressSanitizer" : {
       "detectStackUseAfterReturn" : true,
       "enabled" : true
-    }
+    },
+    "language" : "en"
   },
   "testTargets" : [
     {
+      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
         "identifier" : "MapboxMapsTests",

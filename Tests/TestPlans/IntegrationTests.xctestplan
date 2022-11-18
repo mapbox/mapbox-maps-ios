@@ -2,20 +2,21 @@
   "configurations" : [
     {
       "id" : "86BCF7AC-2BA2-468F-BE79-EDD42CCF1C4F",
-      "name" : "Configuration 1",
+      "name" : "Address Sanitizer",
       "options" : {
-
+        "addressSanitizer" : {
+          "detectStackUseAfterReturn" : true,
+          "enabled" : true
+        }
       }
     }
   ],
   "defaultOptions" : {
-    "addressSanitizer" : {
-      "detectStackUseAfterReturn" : true,
-      "enabled" : true
-    }
+    "language" : "en"
   },
   "testTargets" : [
     {
+      "parallelizable" : true,
       "selectedTests" : [
         "BackgroundLayerIntegrationTests",
         "BasicCameraAnimatorImplIntegrationTests",

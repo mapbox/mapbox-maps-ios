@@ -614,6 +614,7 @@ jobs:
             xcodebuild \
               test-without-building \
               -xctestrun "$XCTESTRUN_PATH" \
+              -parallel-testing-enabled NO \
               -destination 'platform=iOS Simulator,<< parameters.destination >>' \
               -resultBundlePath MapboxMapsTests-integration.xcresult | tee -a xcodebuild.log | xcpretty --report junit --output junit/integration/junit.xml
 
@@ -639,7 +640,7 @@ jobs:
                     -instr-profile="Coverage-integrationtests.profdata" \
                     "$BINARY_PATH" > coverage-integrationtests.txt
 
-                    zip coverage.zip coverage.lcov coverage-integrationtests.lcov coverage.txt coverage-integrationtests.txt "$BINARY_PATH" "$COVERAGE_PATH" junit
+                    zip -r coverage.zip coverage.lcov coverage-integrationtests.lcov coverage.txt coverage-integrationtests.txt "$BINARY_PATH" "$COVERAGE_PATH" junit
             - install-python-dependencies
             - install-mbx-ci
             - run:

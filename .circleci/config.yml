@@ -566,8 +566,7 @@ jobs:
               -configuration << parameters.configuration >> \
               -destination "generic/platform=iOS Simulator" \
               -derivedDataPath build \
-              -enableCodeCoverage YES \
-              -testPlan "MapboxMapsAll" \
+              -testPlan "UnitTests" -testPlan "IntegrationTests" \
               COMPILER_INDEX_STORE_ENABLE=NO \
               ENABLE_TESTABILITY=YES \
               ONLY_ACTIVE_ARCH=YES
@@ -596,32 +595,52 @@ jobs:
       - attach_workspace:
           at: build
       - run:
-          name: Run MapboxMaps unit test on << parameters.destination >>  simulator
+          name: Run MapboxMaps unit tests on << parameters.destination >>  simulator
           command: |
-            XCTESTRUN_PATH=$(find build -type f -name '*.xctestrun')
+            XCTESTRUN_PATH=$(find build -type f -name 'MapboxMaps_UnitTests*.xctestrun' | head -1)
             xcodebuild \
               test-without-building \
               -xctestrun "$XCTESTRUN_PATH" \
+              -parallel-testing-enabled NO \
               -destination 'platform=iOS Simulator,<< parameters.destination >>' \
-              -enableCodeCoverage YES \
-              -resultBundlePath MapboxMapsTests.xcresult | tee xcodebuild.log | xcpretty --report junit --output junit.xml
+              -resultBundlePath MapboxMapsTests.xcresult | tee xcodebuild.log | xcpretty --report junit --output junit/unitTests/junit.xml
+
+            find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' -exec mv {} Coverage-unittests.profdata \;
+            find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profraw' -exec mv {} . \;
+      - run:
+          name: Run MapboxMaps integration tests on << parameters.destination >>  simulator
+          command: |
+            XCTESTRUN_PATH=$(find build -type f -name 'MapboxMaps_IntegrationTests*.xctestrun' | head -1)
+            xcodebuild \
+              test-without-building \
+              -xctestrun "$XCTESTRUN_PATH" \
+              -parallel-testing-enabled NO \
+              -destination 'platform=iOS Simulator,<< parameters.destination >>' \
+              -resultBundlePath MapboxMapsTests-integration.xcresult | tee -a xcodebuild.log | xcpretty --report junit --output junit/integration/junit.xml
+
+            find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' -exec mv {} Coverage-integrationtests.profdata \;
       - when:
           condition: << parameters.codecoverage >>
           steps:
             - run:
                 name: Generate code coverage report
                 command: |
-                  COVERAGE_PATH="$(find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' | head -n 1)"
-                  BINARY_PATH="$(find build -name "MapboxMaps.o")"
+                  BINARY_PATH="$(find build -name "MapboxMaps.o" | head -1)"
 
                   xcrun llvm-cov export -arch $(uname -m) -format="lcov" \
-                    -instr-profile="$COVERAGE_PATH" \
+                    -instr-profile="Coverage-unittests.profdata" \
                     "$BINARY_PATH" > coverage.lcov
+                  xcrun llvm-cov export -arch $(uname -m) -format="lcov" \
+                    -instr-profile="Coverage-integrationtests.profdata" \
+                    "$BINARY_PATH" > coverage-integrationtests.lcov
                   xcrun llvm-cov export -arch $(uname -m) -format=text \
-                    -instr-profile="$COVERAGE_PATH" \
+                    -instr-profile="Coverage-unittests.profdata" \
                     "$BINARY_PATH" > coverage.txt
+                  xcrun llvm-cov export -arch $(uname -m) -format=text \
+                    -instr-profile="Coverage-integrationtests.profdata" \
+                    "$BINARY_PATH" > coverage-integrationtests.txt
 
-                    zip coverage.zip coverage.lcov coverage.txt "$BINARY_PATH" "$COVERAGE_PATH"
+                    zip -r coverage.zip coverage.lcov coverage-integrationtests.lcov coverage.txt coverage-integrationtests.txt "$BINARY_PATH" "$COVERAGE_PATH" junit
             - install-python-dependencies
             - install-mbx-ci
             - run:
@@ -629,7 +648,8 @@ jobs:
                 command: |
                   curl -Os https://uploader.codecov.io/latest/macos/codecov
                   chmod +x codecov
-                  ./codecov -f coverage.lcov
+                  ./codecov -f coverage.lcov -F unit
+                  ./codecov -f coverage-integrationtests.lcov -F integration
 
                   echo "Uploading to S3" ; \
                   python3 ./scripts/code-coverage/parse-code-coverage.py \
@@ -641,10 +661,10 @@ jobs:
                 path: coverage.zip
       - run:
           name: Compress XCResult
-          command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
+          command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult MapboxMapsTests-integration.xcresult
           when: always
       - store_test_results:
-          path: junit.xml
+          path: junit
       - store_artifacts:
           path: MapboxMapsTests.xcresult.zip
       - store_artifacts:

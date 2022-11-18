@@ -2,7 +2,7 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-## main
+## 10.10.0-rc.1 - November 18, 2022
 
 * Fix memory leak when viewport is being deallocated while transition is running. ([#1691](https://github.com/mapbox/mapbox-maps-ios/pull/1691))
 * Fix issue with simultaneous recognition of tap gesture. ([#1712](https://github.com/mapbox/mapbox-maps-ios/pull/1712))
@@ -10,7 +10,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Allow simultaneous recognition of map- and annotation- handling gesture recognizers. ([#1737](https://github.com/mapbox/mapbox-maps-ios/pull/1737))
 * Update MapboxCommon to `v23.2.0-rc.3`. ([#1738](https://github.com/mapbox/mapbox-maps-ios/pull/1738))
 
-## 10.10.0-beta-1 - November 4, 2022
+## 10.10.0-beta.1 - November 4, 2022
 
 * Animates to camera that fit a list of view annotations. ([#1634](https://github.com/mapbox/mapbox-maps-ios/pull/1634))
 * Prevent view annotation being shown erroneously after options update.([#1627](https://github.com/mapbox/mapbox-maps-ios/pull/1627))

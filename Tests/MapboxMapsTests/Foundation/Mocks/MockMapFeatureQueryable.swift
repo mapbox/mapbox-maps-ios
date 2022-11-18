@@ -68,6 +68,7 @@ final class MockMapFeatureQueryable: MapFeatureQueryable {
         let completion: (Result<FeatureExtensionValue, Error>) -> Void
     }
     let queryFeatureExtensionStub = Stub<QueryFeatureExtensionParams, Void>()
+    // swiftlint:disable:next function_parameter_count
     func queryFeatureExtension(
         for sourceId: String,
         feature: Feature,

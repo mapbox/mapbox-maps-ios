@@ -44,26 +44,4 @@ final class SingleTapGestureHandlerTests: XCTestCase {
         XCTAssertEqual(delegate.gestureEndedStub.invocations.first?.parameters.gestureType, .singleTap)
         XCTAssertEqual(delegate.gestureEndedStub.invocations.first?.parameters.willAnimate, false)
     }
-
-    func testSingleTapRecognizesSimultaneouslyWithTapGesture() {
-        let shouldRecognizeSimultaneously = gestureHandler.gestureRecognizer(
-            gestureRecognizer,
-            shouldRecognizeSimultaneouslyWith: UITapGestureRecognizer()
-        )
-
-        XCTAssertTrue(shouldRecognizeSimultaneously)
-    }
-
-    func testSingleTapShouldNotRecognizeSimultaneouslyWithNonTapGesture() {
-        let recognizers = [UIPanGestureRecognizer(), UILongPressGestureRecognizer(), UISwipeGestureRecognizer(), UIScreenEdgePanGestureRecognizer(), UIPinchGestureRecognizer()]
-
-        for recognizer in recognizers {
-            let shouldRecognizeSimultaneously = gestureHandler.gestureRecognizer(
-                gestureRecognizer,
-                shouldRecognizeSimultaneouslyWith: recognizer
-            )
-
-            XCTAssertFalse(shouldRecognizeSimultaneously)
-        }
-    }
 }

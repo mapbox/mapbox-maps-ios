@@ -13,7 +13,7 @@ internal protocol AnnotationOrchestratorImplProtocol: AnyObject {
     func removeAnnotationManager(withId id: String)
 }
 
-internal final class AnnotationOrchestratorImpl: AnnotationOrchestratorImplProtocol {
+internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestratorImplProtocol {
 
     private let tapGestureRecognizer: UIGestureRecognizer
 
@@ -48,8 +48,11 @@ internal final class AnnotationOrchestratorImpl: AnnotationOrchestratorImplProto
         self.offsetLineStringCalculator = offsetLineStringCalculator
         self.offsetPolygonCalculator = offsetPolygonCalculator
 
+        super.init()
         tapGestureRecognizer.addTarget(self, action: #selector(handleTap(_:)))
         longPressGestureRecognizer.addTarget(self, action: #selector(handleDrag(_:)))
+        longPressGestureRecognizer.delegate = self
+        tapGestureRecognizer.delegate = self
     }
 
     /// Dictionary of annotation managers keyed by their identifiers.
@@ -257,6 +260,19 @@ internal final class AnnotationOrchestratorImpl: AnnotationOrchestratorImplProto
             fallthrough
         @unknown default:
             break
+        }
+    }
+}
+
+extension AnnotationOrchestratorImpl: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        switch gestureRecognizer {
+        case self.tapGestureRecognizer where otherGestureRecognizer is UITapGestureRecognizer:
+            return true
+        case self.longPressGestureRecognizer where otherGestureRecognizer is UILongPressGestureRecognizer:
+            return true
+        default:
+            return false
         }
     }
 }

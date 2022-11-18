@@ -12,7 +12,8 @@
     "addressSanitizer" : {
       "detectStackUseAfterReturn" : true,
       "enabled" : true
-    }
+    },
+    "language" : "en"
   },
   "testTargets" : [
     {

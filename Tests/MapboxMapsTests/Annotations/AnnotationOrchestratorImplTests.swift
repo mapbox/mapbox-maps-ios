@@ -78,7 +78,14 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
     }
 
     func testSingleTapShouldNotRecognizeSimultaneouslyWithNonTapGesture() {
-        let recognizers = [UIPanGestureRecognizer(), UILongPressGestureRecognizer(), UISwipeGestureRecognizer(), UIScreenEdgePanGestureRecognizer(), UIPinchGestureRecognizer(), UIRotationGestureRecognizer()]
+        let recognizers = [
+            UIPanGestureRecognizer(),
+            UILongPressGestureRecognizer(),
+            UISwipeGestureRecognizer(),
+            UIScreenEdgePanGestureRecognizer(),
+            UIPinchGestureRecognizer(),
+            UIRotationGestureRecognizer()
+        ]
 
         for recognizer in recognizers {
             let shouldRecognizeSimultaneously = impl.gestureRecognizer(
@@ -91,7 +98,14 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
     }
 
     func testLongPressShouldNotRecognizeSimultaneouslyWithNonLongPressGesture() {
-        let recognizers = [UIPanGestureRecognizer(), UITapGestureRecognizer(), UISwipeGestureRecognizer(), UIScreenEdgePanGestureRecognizer(), UIPinchGestureRecognizer(), UIRotationGestureRecognizer()]
+        let recognizers = [
+            UIPanGestureRecognizer(),
+            UITapGestureRecognizer(),
+            UISwipeGestureRecognizer(),
+            UIScreenEdgePanGestureRecognizer(),
+            UIPinchGestureRecognizer(),
+            UIRotationGestureRecognizer()
+        ]
 
         for recognizer in recognizers {
             let shouldRecognizeSimultaneously = impl.gestureRecognizer(
@@ -104,7 +118,15 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
     }
 
     func testShouldNotRecognizeSimultaneouslyWithUnrecognizedGestureRecognizer() {
-        let recognizers = [UILongPressGestureRecognizer(), UIPanGestureRecognizer(), UITapGestureRecognizer(), UISwipeGestureRecognizer(), UIScreenEdgePanGestureRecognizer(), UIPinchGestureRecognizer(), UIRotationGestureRecognizer()]
+        let recognizers = [
+            UILongPressGestureRecognizer(),
+            UIPanGestureRecognizer(),
+            UITapGestureRecognizer(),
+            UISwipeGestureRecognizer(),
+            UIScreenEdgePanGestureRecognizer(),
+            UIPinchGestureRecognizer(),
+            UIRotationGestureRecognizer()
+        ]
 
         for outerRecognizer in recognizers {
             for innerRecognizer in recognizers {

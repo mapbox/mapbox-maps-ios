@@ -137,9 +137,11 @@ workflows:
           configuration: "Release"
 
       - build-sdk-for-api-compatibility-check
+      - build-baseline-sdk
       - check-api-compatibility:
           requires:
             - build-sdk-for-api-compatibility-check
+            - build-baseline-sdk
       - create-xcframework
       - validate-integrations-for-branch
 
@@ -847,6 +849,39 @@ jobs:
           path: MapboxMaps.zip
       - store-default-artifacts
 
+  build-baseline-sdk:
+    executor: xcode-sdk-min
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - checkout
+      - run:
+          name: Generate cache file for key
+          command: |
+            cp Sources/MapboxMaps/MapboxMaps.json /tmp/MapboxMaps-cachekey.txt
+            xcodebuild -version >> /tmp/MapboxMaps-cachekey.txt
+      - restore_cache:
+          keys:
+            - &sdkCacheKey v1-baseline-sdk-{{ checksum "/tmp/MapboxMaps-cachekey.txt" }}
+      - run:
+          name: Checkout baseline tag
+          command: git checkout v$(jq -r .version Sources/MapboxMaps/MapboxMaps.json)
+      - configure-environment:
+          skip-dependencies: true
+      - install-xcodegen
+      - make-xcframework-bundle
+      - run: mv MapboxMaps.zip MapboxMaps-baseline.zip
+      - save_cache:
+          paths:
+            - MapboxMaps-baseline.zip
+          key: *sdkCacheKey
+      - persist_to_workspace:
+          root: .
+          paths:
+            - MapboxMaps-baseline.zip
+      - store_artifacts:
+          path: MapboxMaps-baseline.zip
+      - store-default-artifacts
+
   check-api-compatibility:
     macos:
       xcode: 13.2.1
@@ -1419,6 +1454,9 @@ commands:
       bundle_style:
         type: string
         default: "dynamic"
+      working_directory:
+        type: string
+        default: "."
     description: "Create << parameters.bundle_style >> xcframework bundle"
     steps:
       - run:
@@ -1429,6 +1467,7 @@ commands:
             ./package-mapbox-maps.sh << parameters.bundle_style >>
             echo "Moving zip to project root"
             mv MapboxMaps*.zip /Users/distiller/project/
+          working_directory: << parameters.working_directory >>
 
   check-breaking-api:
     parameters:

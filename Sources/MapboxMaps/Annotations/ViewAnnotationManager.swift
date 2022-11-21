@@ -321,48 +321,35 @@ public final class ViewAnnotationManager {
         }
         guard !corners.isEmpty else { return nil }
 
-        var camera: CameraOptions!
-        var isLargestBounds = false
+        let initialCamera = mapboxMap.camera(for: MultiPoint(corners.map(\.anchorPoint)).geometry, padding: padding, bearing: bearing, pitch: pitch)
         var north, east, south, west: CoordinateBoundsCorner!
 
-        while !isLargestBounds {
-            let zoom = camera?.zoom
-            isLargestBounds = true
-
-            for corner in corners {
-                let annotationBounds = coordinateBounds(for: corner, zoom: zoom)
-                if north == nil || coordinateBounds(for: north, zoom: zoom).north < annotationBounds.north {
-                    north = corner
-                    isLargestBounds = false
-                }
-                if east == nil || coordinateBounds(for: east, zoom: zoom).east < annotationBounds.east {
-                    east = corner
-                    isLargestBounds = false
-                }
-                if south == nil || coordinateBounds(for: south, zoom: zoom).south > annotationBounds.south {
-                    south = corner
-                    isLargestBounds = false
-                }
-                if west == nil || coordinateBounds(for: west, zoom: zoom).west > annotationBounds.west {
-                    west = corner
-                    isLargestBounds = false
-                }
+        for corner in corners {
+            let annotationBounds = coordinateBounds(for: corner, zoom: initialCamera.zoom)
+            if north == nil || coordinateBounds(for: north, zoom: initialCamera.zoom).north < annotationBounds.north {
+                north = corner
             }
-
-            guard !isLargestBounds else { continue }
-
-            let points = MultiPoint([north, east, south, west].compactMap(\.?.anchorPoint))
-            let accumulatedPadding = UIEdgeInsets(
-                top: abs(north.frame.minY) + padding.top,
-                left: abs(west.frame.minX) + padding.left,
-                // In case the view is completely above its anchor (maxY is negative), then bottom padding should be zero.
-                bottom: max(0, south.frame.maxY) + padding.bottom,
-                // In case the view is completely on the left side of its anchor (max X is negative), then right padding should be zero.
-                right: max(0, east.frame.maxX) + padding.right)
-            camera = mapboxMap.camera(for: points.geometry, padding: accumulatedPadding, bearing: bearing, pitch: pitch)
+            if east == nil || coordinateBounds(for: east, zoom: initialCamera.zoom).east < annotationBounds.east {
+                east = corner
+            }
+            if south == nil || coordinateBounds(for: south, zoom: initialCamera.zoom).south > annotationBounds.south {
+                south = corner
+            }
+            if west == nil || coordinateBounds(for: west, zoom: initialCamera.zoom).west > annotationBounds.west {
+                west = corner
+            }
         }
 
-        return camera
+        let points = MultiPoint([north, east, south, west].compactMap(\.?.anchorPoint))
+        let accumulatedPadding = UIEdgeInsets(
+            top: abs(north.frame.minY) + padding.top,
+            left: abs(west.frame.minX) + padding.left,
+            // In case the view is completely above its anchor (maxY is negative), then bottom padding should be zero.
+            bottom: max(0, south.frame.maxY) + padding.bottom,
+            // In case the view is completely on the left side of its anchor (max X is negative), then right padding should be zero.
+            right: max(0, east.frame.maxX) + padding.right)
+
+        return mapboxMap.camera(for: points.geometry, padding: accumulatedPadding, bearing: bearing, pitch: pitch)
     }
 
     // MARK: - Private functions

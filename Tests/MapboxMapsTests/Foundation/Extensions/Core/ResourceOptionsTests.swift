@@ -1,5 +1,6 @@
 import XCTest
-import MapboxMaps
+@testable import MapboxMaps
+import MapboxCoreMaps
 
 class ResourceOptionsTests: XCTestCase {
 
@@ -26,5 +27,13 @@ class ResourceOptionsTests: XCTestCase {
     func testAccessTokenIsObfuscated() {
         let a = ResourceOptions(accessToken: "pk.HelloWorld")
         XCTAssertEqual(a.description, "ResourceOptions: pk.H◻︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎")
+    }
+
+    func testBaseUrl() {
+        let expectedBaseUrl = URL(string: "https://api.mapbox.com")
+        let a = ResourceOptions(accessToken: "pk.HelloWorld", baseURL: expectedBaseUrl)
+        let c = MapboxCoreMaps.ResourceOptions(a)
+        XCTAssertNotNil(c.baseURL)
+        XCTAssertEqual(a.baseURL?.absoluteString, c.baseURL)
     }
 }

@@ -53,6 +53,8 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
         longPressGestureRecognizer.addTarget(self, action: #selector(handleDrag(_:)))
         longPressGestureRecognizer.delegate = self
         tapGestureRecognizer.delegate = self
+        longPressGestureRecognizer.isEnabled = false
+        tapGestureRecognizer.isEnabled = false
     }
 
     /// Dictionary of annotation managers keyed by their identifiers.
@@ -60,7 +62,14 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
         annotationManagersByIdInternal
     }
 
-    private var annotationManagersByIdInternal = [String: AnnotationManagerInternal]()
+    internal var annotationManagersByIdInternal = [String: AnnotationManagerInternal]() {
+        didSet {
+            if !annotationManagersById.isEmpty {
+                longPressGestureRecognizer.isEnabled = true
+                tapGestureRecognizer.isEnabled = true
+            }
+        }
+    }
 
     /// Creates a `PointAnnotationManager` which is used to manage a collection of
     /// `PointAnnotation`s. Annotations persist across style changes. If an annotation manager with
@@ -182,7 +191,7 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
     }
 
     @objc private func handleTap(_ tap: UITapGestureRecognizer) {
-        let managers = annotationManagersByIdInternal.values.filter { $0.delegate != nil }
+        let managers = annotationManagersByIdInternal.values
         guard !managers.isEmpty else { return }
 
         let layerIds = managers.map(\.layerId)
@@ -215,7 +224,7 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
 
     // swiftlint:disable:next cyclomatic_complexity
     @objc private func handleDrag(_ recognizer: MapboxLongPressGestureRecognizer) {
-        let managers = annotationManagersByIdInternal.values.filter { $0.delegate != nil }
+        let managers = annotationManagersByIdInternal.values
         guard !managers.isEmpty else { return }
 
         switch recognizer.state {

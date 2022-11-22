@@ -2,7 +2,7 @@
 import XCTest
 @testable import MapboxMaps
 
-final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDelegate {
+final class PolygonAnnotationManagerTests: XCTestCase {
     var manager: PolygonAnnotationManager!
     var style: MockStyle!
     var displayLinkCoordinator: MockDisplayLinkCoordinator!
@@ -190,52 +190,6 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.last?.parameters.id, manager.id)
         XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.last?.parameters.geojson, .featureCollection(featureCollection))
-    }
-
-    func testHandleQueriedFeatureIdsPassesNotificationToDelegate() throws {
-        var annotations = [PolygonAnnotation]()
-        for _ in 0...5 {
-            let polygonCoords = [
-                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
-                CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
-                CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
-                CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
-                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
-            ]
-            let annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
-            annotations.append(annotation)
-        }
-        let queriedFeatureIds = [annotations[0].id]
-        manager.delegate = self
-
-        manager.annotations = annotations
-        manager.handleQueriedFeatureIds(queriedFeatureIds)
-
-        let result = try XCTUnwrap(delegateAnnotations)
-        XCTAssertEqual(result[0].id, annotations[0].id)
-    }
-
-    func testHandleQueriedFeatureIdsDoesNotPassNotificationToDelegateWhenNoMatch() throws {
-        var annotations = [PolygonAnnotation]()
-        for _ in 0...5 {
-            let polygonCoords = [
-                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
-                CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
-                CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
-                CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
-                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
-            ]
-            let annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
-            annotations.append(annotation)
-        }
-        let queriedFeatureIds = ["NotAnAnnotationID"]
-        manager.delegate = self
-
-        expectation?.isInverted = true
-        manager.annotations = annotations
-        manager.handleQueriedFeatureIds(queriedFeatureIds)
-
-        XCTAssertNil(delegateAnnotations)
     }
 
     func testInitialFillAntialias() {

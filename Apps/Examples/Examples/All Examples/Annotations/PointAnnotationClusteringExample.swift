@@ -102,14 +102,13 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
                                             circleColor: .expression(circleColorExpression),
                                             textColor: .constant(StyleColor(.black)),
                                             textField: .expression(Exp(.concat) {
-                                                Exp(.get) {"pointString"}
-                                                Exp(.get) {"point_count"}
-                                            }),
+            Exp(.get) {"pointString"}
+            Exp(.get) {"point_count"}
+        }),
                                             clusterRadius: 75,
                                             clusterProperties: clusterProperty)
         let pointAnnotationManager = mapView.annotations.makePointAnnotationManager(id: clusterLayerID, clusterOptions: clusterOptions)
         pointAnnotationManager.annotations = annotations
-        pointAnnotationManager.delegate = self
 
         // Additional properties on the text and circle layers can be modified like this below
         // To modify the text layer use: "mapbox-iOS-cluster-text-layer-manager-" and SymbolLayer.self
@@ -169,12 +168,5 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
             print("Error parsing data: \(error)")
         }
         return featureCollection
-    }
-}
-
-// Print out annotation details when a user selects a non-clustered annotation
-extension PointAnnotationClusteringExample: AnnotationInteractionDelegate {
-    func annotationManager(_ manager: MapboxMaps.AnnotationManager, didDetectTappedAnnotations annotations: [MapboxMaps.Annotation]) {
-        print("AnnotationManager did detect tapped annotations: \(annotations)")
     }
 }

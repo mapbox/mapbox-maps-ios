@@ -16,12 +16,6 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
     private var needsSyncSourceAndLayer = false
 
-    // MARK: - Interaction
-
-    /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
-    /// - NOTE: This annotation manager listens to tap events via the `GestureManager.singleTapGestureRecognizer`.
-    public weak var delegate: AnnotationInteractionDelegate?
-
     // MARK: - AnnotationManager protocol conformance
 
     public let sourceId: String
@@ -263,10 +257,6 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         }
 
         self.annotations = annotations
-
-        delegate?.annotationManager(
-            self,
-            didDetectTappedAnnotations: tappedAnnotations)
     }
 
     private func createDragSourceAndLayer() {

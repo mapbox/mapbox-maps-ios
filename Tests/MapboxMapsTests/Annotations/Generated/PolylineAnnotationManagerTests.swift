@@ -2,7 +2,7 @@
 import XCTest
 @testable import MapboxMaps
 
-final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDelegate {
+final class PolylineAnnotationManagerTests: XCTestCase {
     var manager: PolylineAnnotationManager!
     var style: MockStyle!
     var displayLinkCoordinator: MockDisplayLinkCoordinator!
@@ -172,40 +172,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.last?.parameters.id, manager.id)
         XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.last?.parameters.geojson, .featureCollection(featureCollection))
-    }
-
-    func testHandleQueriedFeatureIdsPassesNotificationToDelegate() throws {
-        var annotations = [PolylineAnnotation]()
-        for _ in 0...5 {
-            let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-            let annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
-            annotations.append(annotation)
-        }
-        let queriedFeatureIds = [annotations[0].id]
-        manager.delegate = self
-
-        manager.annotations = annotations
-        manager.handleQueriedFeatureIds(queriedFeatureIds)
-
-        let result = try XCTUnwrap(delegateAnnotations)
-        XCTAssertEqual(result[0].id, annotations[0].id)
-    }
-
-    func testHandleQueriedFeatureIdsDoesNotPassNotificationToDelegateWhenNoMatch() throws {
-        var annotations = [PolylineAnnotation]()
-        for _ in 0...5 {
-            let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-            let annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
-            annotations.append(annotation)
-        }
-        let queriedFeatureIds = ["NotAnAnnotationID"]
-        manager.delegate = self
-
-        expectation?.isInverted = true
-        manager.annotations = annotations
-        manager.handleQueriedFeatureIds(queriedFeatureIds)
-
-        XCTAssertNil(delegateAnnotations)
     }
 
     func testInitialLineCap() {

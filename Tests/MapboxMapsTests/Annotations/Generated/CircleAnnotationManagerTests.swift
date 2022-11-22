@@ -2,7 +2,7 @@
 import XCTest
 @testable import MapboxMaps
 
-final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDelegate {
+final class CircleAnnotationManagerTests: XCTestCase {
     var manager: CircleAnnotationManager!
     var style: MockStyle!
     var displayLinkCoordinator: MockDisplayLinkCoordinator!
@@ -169,38 +169,6 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.last?.parameters.id, manager.id)
         XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.last?.parameters.geojson, .featureCollection(featureCollection))
-    }
-
-    func testHandleQueriedFeatureIdsPassesNotificationToDelegate() throws {
-        var annotations = [CircleAnnotation]()
-        for _ in 0...5 {
-            let annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
-            annotations.append(annotation)
-        }
-        let queriedFeatureIds = [annotations[0].id]
-        manager.delegate = self
-
-        manager.annotations = annotations
-        manager.handleQueriedFeatureIds(queriedFeatureIds)
-
-        let result = try XCTUnwrap(delegateAnnotations)
-        XCTAssertEqual(result[0].id, annotations[0].id)
-    }
-
-    func testHandleQueriedFeatureIdsDoesNotPassNotificationToDelegateWhenNoMatch() throws {
-        var annotations = [CircleAnnotation]()
-        for _ in 0...5 {
-            let annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
-            annotations.append(annotation)
-        }
-        let queriedFeatureIds = ["NotAnAnnotationID"]
-        manager.delegate = self
-
-        expectation?.isInverted = true
-        manager.annotations = annotations
-        manager.handleQueriedFeatureIds(queriedFeatureIds)
-
-        XCTAssertNil(delegateAnnotations)
     }
 
     func testInitialCirclePitchAlignment() {

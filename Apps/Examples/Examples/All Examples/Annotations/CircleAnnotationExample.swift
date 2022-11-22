@@ -16,7 +16,6 @@ final class CircleAnnotationExample: UIViewController, ExampleProtocol {
         // (`mapView.annotations`) until you explicitly destroy them
         // by calling `mapView.annotations.removeAnnotationManager(withId:)`
         let circleAnnotationManager = mapView.annotations.makeCircleAnnotationManager()
-        circleAnnotationManager.delegate = self
 
         var annotations = [CircleAnnotation]()
         for _ in 0...2000 {
@@ -30,11 +29,5 @@ final class CircleAnnotationExample: UIViewController, ExampleProtocol {
         circleAnnotationManager.annotations = annotations
         // The following line is just for testing purposes.
         finish()
-    }
-}
-
-extension CircleAnnotationExample: AnnotationInteractionDelegate {
-    func annotationManager(_ manager: AnnotationManager, didDetectTappedAnnotations annotations: [Annotation]) {
-        print("AnnotationManager did detect tapped annotations: \(annotations)")
     }
 }

@@ -841,12 +841,17 @@ jobs:
           skip-dependencies: true
       - install-xcodegen
       - make-xcframework-bundle
+      - run:
+          name: Dump SDK API to JSON format
+          command: scripts/api-compatibility-check/breaking-api-check.py dump MapboxMaps.zip -o current_api.json
       - persist_to_workspace:
           root: .
           paths:
-            - MapboxMaps.zip
+            - current_api.json
       - store_artifacts:
           path: MapboxMaps.zip
+      - store_artifacts:
+          path: current_api.json
       - store-default-artifacts
 
   build-baseline-sdk:
@@ -859,27 +864,41 @@ jobs:
           command: |
             cp Sources/MapboxMaps/MapboxMaps.json /tmp/MapboxMaps-cachekey.txt
             xcodebuild -version >> /tmp/MapboxMaps-cachekey.txt
+      - run: ls -lGAh
       - restore_cache:
           keys:
-            - &sdkCacheKey v1-baseline-sdk-{{ checksum "/tmp/MapboxMaps-cachekey.txt" }}
+            - &sdkCacheKey v2-baseline-sdk-{{ checksum "/tmp/MapboxMaps-cachekey.txt" }}
+      - run: ls -lGAh
       - run:
           name: Checkout baseline tag
           command: git checkout v$(jq -r .version Sources/MapboxMaps/MapboxMaps.json)
       - configure-environment:
           skip-dependencies: true
       - install-xcodegen
-      - make-xcframework-bundle
-      - run: mv MapboxMaps.zip MapboxMaps-baseline.zip
+      - run:
+          name: Build SDK and dump API to JSON format
+          command: |
+            FILE=baseline_api.json
+            if [ -f $FILE ]; then
+              echo "File $FILE exists."
+            else
+              pushd scripts/release/packager
+              ./package-mapbox-maps.sh dynamic
+              mv MapboxMaps*.zip /Users/distiller/project/
+              popd
+              scripts/api-compatibility-check/breaking-api-check.py dump MapboxMaps.zip -o "$FILE"
+            fi
+      - run: ls -lGAh
       - save_cache:
           paths:
-            - MapboxMaps-baseline.zip
+            - baseline_api.json
           key: *sdkCacheKey
       - persist_to_workspace:
           root: .
           paths:
-            - MapboxMaps-baseline.zip
+            - baseline_api.json
       - store_artifacts:
-          path: MapboxMaps-baseline.zip
+          path: baseline_api.json
       - store-default-artifacts
 
   check-api-compatibility:
@@ -891,8 +910,12 @@ jobs:
           skip-dependencies: true
       - attach_workspace:
           at: workspace
-      - check-breaking-api:
-          bundle_path: workspace/MapboxMaps.zip
+      - run:
+          name: Check API compatibility
+          command: |
+            scripts/api-compatibility-check/breaking-api-check.py check-api workspace/baseline_api.json workspace/current_api.json --report-path api-compatibility-report.txt
+      - store_artifacts:
+          path: api-compatibility-report.txt
       - store-default-artifacts
 
   validate-integrations-for-branch:

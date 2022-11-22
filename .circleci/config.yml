@@ -912,12 +912,14 @@ jobs:
       - checkout
       - configure-environment:
           skip-dependencies: true
+      - install-gh
       - attach_workspace:
           at: workspace
       - run:
           name: Check API compatibility
           command: |
-            scripts/api-compatibility-check/breaking-api-check.py check-api workspace/baseline_api.json workspace/current_api.json --report-path api-compatibility-report.txt
+            export GITHUB_TOKEN=$(mbx-ci github issues public token)
+            scripts/api-compatibility-check/breaking-api-check.py check-api workspace/baseline_api.json workspace/current_api.json --report-path api-compatibility-report.txt --comment-pr
       - store_artifacts:
           path: api-compatibility-report.txt
       - store-default-artifacts

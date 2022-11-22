@@ -25,20 +25,15 @@ def dump_sdk(sdk_path:str, output_path:str, abi:bool):
     digester = APIDigester()
     digester.dump_sdk(current_xcframework, current_artifacts_dir, output_path, abi)
 
-def check_api_breaking_changes(baseline_dump_path:str, latest_dump_path:str, breakage_allow_list_path:str, report_path:str):
+def check_api_breaking_changes(baseline_dump_path:str, latest_dump_path:str, breakage_allow_list_path:str, report_path:str, should_comment_pr:bool):
     tool = APIDigester()
 
-    tool.compare(baseline_dump_path, latest_dump_path, report_path, breakage_allow_list_path)
+    report = tool.compare(baseline_dump_path, latest_dump_path, report_path, breakage_allow_list_path)
 
+    if should_comment_pr:
+        add_comment_to_pr(report)
 
-    sha_hash = hashlib.sha1()
-    with open(report_path, "rb") as f:
-        # Read and update hash string value in blocks of 4K
-        for byte_block in iter(lambda: f.read(4096),b""):
-            sha_hash.update(byte_block)
-        report_hashsum = sha_hash.hexdigest()
-
-    if report_hashsum != __empty_report_hashsum():
+    if not report.is_good:
         print(f"""
 ======================================
 ERROR: API breakage detected in {os.path.basename(latest_dump_path)}
@@ -46,6 +41,30 @@ ERROR: API breakage detected in {os.path.basename(latest_dump_path)}
 {open(report_path, "r").read()}
         """, file=sys.stderr)
         exit(1)
+
+
+def add_comment_to_pr(report: 'APIDigester.BreakageReport'):
+    print("Commenting on PR")
+    if report.is_good:
+        comment = f"""
+**API compatibility report:** ✅
+        """
+    else:
+        comment = f"""
+## API compatibility report: ❌
+"""
+        for category in report.breakage:
+            comment += f"#### {category}\n"
+            for breakage in report.breakage[category]:
+                comment += f"* `{breakage}`\n"
+
+
+    open("comment.txt", "w").write(comment)
+    proc = subprocess.run(["gh", "pr", "comment", "--edit-last", "--body-file", "comment.txt"])
+    if proc.returncode != 0 and not report.is_good:
+        subprocess.run(["gh", "pr", "comment", "--body-file", "comment.txt"])
+
+    os.remove("comment.txt")
 
 def main():
     parser = argparse.ArgumentParser(
@@ -63,67 +82,14 @@ def main():
     checkAPIParser.add_argument("latest_dump", metavar="latest-dump-path", type=os.path.abspath, help="Path to the latest (new) SDK API JSON dump.")
     checkAPIParser.add_argument("--breakage-allowlist-path", type=os.path.abspath, help="Path to the file containing the list of allowed API breakages.")
     checkAPIParser.add_argument("--report-path", default="api-check-report.txt", type=os.path.abspath, help="Path to the API check report.")
+    checkAPIParser.add_argument("--comment-pr", default=False, action=argparse.BooleanOptionalAction, help="Leave a comment on the PR with the API check report.")
 
     args = parser.parse_args()
-    print(args)
 
     if args.command == "dump":
         dump_sdk(args.sdk_path, args.output_path, args.abi)
     elif args.command == "check-api":
-        check_api_breaking_changes(args.base_dump, args.latest_dump, args.breakage_allowlist_path, args.report_path)
-    exit(0)
-
-    args.sdk_path = "/Users/odnairy/Downloads/MapboxMaps.zip"
-    args.baseline_sdk_path = "/Users/odnairy/Downloads/MapboxMaps-baseline.zip"
-
-    # Make temporary directories to extract the SDKs into.
-    tempDir = tempfile.mkdtemp(prefix="MapboxMaps-API-check-")
-    print(tempDir)
-
-    def dittoSDK(sdk_path, destination):
-        if os.path.splitext(sdk_path)[1] == ".zip":
-            shutil.unpack_archive(sdk_path, destination)
-            return os.path.join(destination, "artifacts")
-        else:
-            raise Exception("SDK path must be a zip archive")
-
-    current_artifacts_dir = dittoSDK(args.sdk_path, os.path.join(tempDir, "current"))
-    baseline_artifacts_dir = dittoSDK(args.baseline_sdk_path, os.path.join(tempDir, "baseline"))
-
-
-    maps_current_xcframework = XCFramework(os.path.join(current_artifacts_dir, "MapboxMaps.xcframework"))
-    maps_baseline_xcframework = XCFramework(os.path.join(baseline_artifacts_dir, "MapboxMaps.xcframework"))
-
-    tool = APIDigester()
-    current_dump = os.path.join(current_artifacts_dir, "current.json")
-    baseline_dump = os.path.join(baseline_artifacts_dir, "baseline.json")
-
-    tool.dump_sdk(maps_current_xcframework, current_artifacts_dir, current_dump)
-    tool.dump_sdk(maps_baseline_xcframework, baseline_artifacts_dir, baseline_dump)
-
-    report_path = os.path.join(tempDir, "report.txt")
-    tool.compare(baseline_dump, current_dump, report_path)
-
-
-    sha_hash = hashlib.sha1()
-    with open(report_path, "rb") as f:
-        # Read and update hash string value in blocks of 4K
-        for byte_block in iter(lambda: f.read(4096),b""):
-            sha_hash.update(byte_block)
-        report_hashsum = sha_hash.hexdigest()
-
-    if report_hashsum != __empty_report_hashsum():
-        print(f"""
-======================================
-ERROR: API breakage detected in {maps_current_xcframework.name}
-======================================
-{open(report_path, "r").read()}
-        """, file=sys.stderr)
-        exit(1)
-
-def __empty_report_hashsum():
-    # Represents a sha1 hashsum of an empty report (including section names).
-    return "afd2a1b542b33273920d65821deddc653063c700"
+        check_api_breaking_changes(args.base_dump, args.latest_dump, args.breakage_allowlist_path, args.report_path, args.comment_pr)
 
 class APIDigester:
 
@@ -144,6 +110,8 @@ class APIDigester:
         if proc.returncode != 0:
             print(proc.stderr)
             raise Exception("swift-api-digester failed")
+
+        return APIDigester.BreakageReport(output_path)
 
     def dump_sdk(self, xcframework: 'XCFramework', dependencies_path, output_path, abi: bool = False):
         module = xcframework.iOSDeviceModule()
@@ -187,6 +155,36 @@ class APIDigester:
         if proc.returncode != 0:
             print(proc.stderr)
             raise Exception("swift-api-digester failed")
+
+    class BreakageReport:
+        def __init__(self, path):
+            self.path = path
+            self.breakage = {}
+            self.__parseReport()
+            self.hashsum = self.__hashsum()
+            self.is_good = self.hashsum == self.__empty_report_hashsum()
+
+        def __parseReport(self):
+            for line in open(self.path).readlines():
+                if len(line.strip()) == 0:
+                    category = None
+                    continue
+                if line.startswith("/* "):
+                    category = line[3:-4]
+                elif category:
+                    self.breakage[category] = self.breakage.get(category, []) + [line]
+
+        def __hashsum(self):
+            sha_hash = hashlib.sha1()
+            with open(self.path, "rb") as f:
+                # Read and update hash string value in blocks of 4K
+                for byte_block in iter(lambda: f.read(4096),b""):
+                    sha_hash.update(byte_block)
+                return sha_hash.hexdigest()
+
+        def __empty_report_hashsum(self):
+        # Represents a sha1 hashsum of an empty report (including section names).
+            return "afd2a1b542b33273920d65821deddc653063c700"
 
 class SDKModule:
     def __init__(self, root, library: 'XCFramework.Library'):

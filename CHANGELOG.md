@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## main
+
+* Remove delegate requirement for annotation interaction. ([#1750](https://github.com/mapbox/mapbox-maps-ios/pull/1750))
+
 ## 10.10.0-rc.1 - November 18, 2022
 
 * Fix memory leak when viewport is being deallocated while transition is running. ([#1691](https://github.com/mapbox/mapbox-maps-ios/pull/1691))

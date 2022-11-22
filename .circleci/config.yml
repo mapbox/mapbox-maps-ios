@@ -869,9 +869,6 @@ jobs:
           keys:
             - &sdkCacheKey v2-baseline-sdk-{{ checksum "/tmp/MapboxMaps-cachekey.txt" }}
       - run: ls -lGAh
-      - run:
-          name: Checkout baseline tag
-          command: git checkout v$(jq -r .version Sources/MapboxMaps/MapboxMaps.json)
       - configure-environment:
           skip-dependencies: true
       - install-xcodegen
@@ -881,13 +878,20 @@ jobs:
             FILE=baseline_api.json
             if [ -f $FILE ]; then
               echo "File $FILE exists."
-            else
-              pushd scripts/release/packager
-              ./package-mapbox-maps.sh dynamic
-              mv MapboxMaps*.zip /Users/distiller/project/
-              popd
-              scripts/api-compatibility-check/breaking-api-check.py dump MapboxMaps.zip -o "$FILE"
+              exit 0
             fi
+
+            INITIAL_COMMIT=$(git rev-parse HEAD)
+
+            git checkout v$(jq -r .version Sources/MapboxMaps/MapboxMaps.json)
+            pushd scripts/release/packager
+            ./package-mapbox-maps.sh dynamic
+            mv MapboxMaps*.zip /Users/distiller/project/
+            popd
+
+            git checkout "$INITIAL_COMMIT"
+
+            scripts/api-compatibility-check/breaking-api-check.py dump MapboxMaps.zip -o "$FILE"
       - run: ls -lGAh
       - save_cache:
           paths:

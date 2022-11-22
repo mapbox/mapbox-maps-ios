@@ -19,7 +19,7 @@ Pod::Spec.new do |m|
   m.swift_version = '5.5'
 
   m.source_files = 'Sources/MapboxMaps/**/*.{swift,h}'
-  m.resources = ['Sources/**/*.{xcassets,strings}', 'Sources/MapboxMaps/MapboxMaps.json']
+  m.resource_bundles = { 'MapboxMapsResources' => ['Sources/**/*.{xcassets,strings}', 'Sources/MapboxMaps/MapboxMaps.json'] }
 
   m.dependency 'MapboxCoreMaps', '10.10.0-rc.1'
   m.dependency 'MapboxMobileEvents', '1.0.8'

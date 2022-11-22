@@ -913,6 +913,7 @@ jobs:
       - configure-environment:
           skip-dependencies: true
       - install-gh
+      - run: brew upgrade gh
       - attach_workspace:
           at: workspace
       - run:

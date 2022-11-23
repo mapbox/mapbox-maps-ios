@@ -13,6 +13,16 @@ internal protocol AnnotationOrchestratorImplProtocol: AnyObject {
     func removeAnnotationManager(withId id: String)
 }
 
+internal protocol AnnotationManagerFactoryProtocol: AnyObject {
+    func makePolygonAnnotationManager(
+        id: String,
+        style: StyleProtocol,
+        layerPosition: LayerPosition?,
+        displayLinkCoordinator: DisplayLinkCoordinator,
+        offsetPolygonCalculator: OffsetPolygonCalculator
+    ) -> AnnotationManagerInternal
+}
+
 internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestratorImplProtocol {
 
     private let tapGestureRecognizer: UIGestureRecognizer
@@ -31,6 +41,8 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
 
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
 
+    private let factory: AnnotationManagerFactory
+
     internal init(tapGestureRecognizer: UIGestureRecognizer,
                   longPressGestureRecognizer: MapboxLongPressGestureRecognizer,
                   mapFeatureQueryable: MapFeatureQueryable,
@@ -38,7 +50,8 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
                   displayLinkCoordinator: DisplayLinkCoordinator,
                   offsetPointCalculator: OffsetPointCalculator,
                   offsetLineStringCalculator: OffsetLineStringCalculator,
-                  offsetPolygonCalculator: OffsetPolygonCalculator) {
+                  offsetPolygonCalculator: OffsetPolygonCalculator,
+                  factory: AnnotationManagerFactory) {
         self.tapGestureRecognizer = tapGestureRecognizer
         self.longPressGestureRecognizer = longPressGestureRecognizer
         self.mapFeatureQueryable = mapFeatureQueryable
@@ -47,6 +60,7 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
         self.offsetPointCalculator = offsetPointCalculator
         self.offsetLineStringCalculator = offsetLineStringCalculator
         self.offsetPolygonCalculator = offsetPolygonCalculator
+        self.factory = factory
 
         super.init()
         tapGestureRecognizer.addTarget(self, action: #selector(handleTap(_:)))
@@ -182,7 +196,7 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
     }
 
     @objc private func handleTap(_ tap: UITapGestureRecognizer) {
-        let managers = annotationManagersByIdInternal.values.filter { $0.delegate != nil }
+        let managers = annotationManagersByIdInternal.values
         guard !managers.isEmpty else { return }
 
         let layerIds = managers.map(\.layerId)
@@ -215,7 +229,7 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
 
     // swiftlint:disable:next cyclomatic_complexity
     @objc private func handleDrag(_ recognizer: MapboxLongPressGestureRecognizer) {
-        let managers = annotationManagersByIdInternal.values.filter { $0.delegate != nil }
+        let managers = annotationManagersByIdInternal.values
         guard !managers.isEmpty else { return }
 
         switch recognizer.state {

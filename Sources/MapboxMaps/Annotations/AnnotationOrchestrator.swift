@@ -26,7 +26,6 @@ public protocol AnnotationManager: AnyObject {
 }
 
 internal protocol AnnotationManagerInternal: AnnotationManager {
-    var delegate: AnnotationInteractionDelegate? { get }
 
     func destroy()
 

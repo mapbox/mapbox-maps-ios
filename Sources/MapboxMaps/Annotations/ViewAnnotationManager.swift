@@ -350,16 +350,12 @@ public final class ViewAnnotationManager {
             }
 
             guard !isLargestBounds else { continue }
-
-            let points = MultiPoint([north, east, south, west].compactMap(\.?.anchorPoint))
-            let accumulatedPadding = UIEdgeInsets(
-                top: abs(north.frame.minY) + padding.top,
-                left: abs(west.frame.minX) + padding.left,
-                // In case the view is completely above its anchor (maxY is negative), then bottom padding should be zero.
-                bottom: max(0, south.frame.maxY) + padding.bottom,
-                // In case the view is completely on the left side of its anchor (max X is negative), then right padding should be zero.
-                right: max(0, east.frame.maxX) + padding.right)
-            camera = mapboxMap.camera(for: points.geometry, padding: accumulatedPadding, bearing: bearing, pitch: pitch)
+            camera = self.camera(
+                forNorth: north,
+                east: east,
+                south: south,
+                west: west,
+                cameraOptions: CameraOptions(padding: padding, bearing: bearing.map(Double.init), pitch: pitch))
         }
 
         return camera
@@ -462,6 +458,35 @@ private extension ViewAnnotationPositionDescriptor {
 
 extension ViewAnnotationManager {
     private typealias CoordinateBoundsCorner = (anchorPoint: LocationCoordinate2D, frame: CGRect)
+
+    /// Calculates ``CameraOptions`` fitting the given corners annotations.
+    /// - Returns: The provided camera with zoom adjusted, so that the cooridnate bounds for annotations
+    /// at top, left, bottom , right at this adjusted zoom would fit into the projection (defined by padding).
+    private func camera(
+        forNorth north: CoordinateBoundsCorner,
+        east: CoordinateBoundsCorner,
+        south: CoordinateBoundsCorner,
+        west: CoordinateBoundsCorner,
+        cameraOptions: CameraOptions
+    ) -> CameraOptions {
+
+        let innerBounds = CoordinateBounds(
+            southwest: .init(latitude: south.anchorPoint.latitude, longitude: west.anchorPoint.longitude),
+            northeast: .init(latitude: north.anchorPoint.latitude, longitude: east.anchorPoint.longitude))
+        var padding = cameraOptions.padding ?? .zero
+        padding.top += abs(north.frame.minY)
+        padding.left += abs(west.frame.minX)
+        // In case the view is completely above its anchor (maxY is negative), then bottom padding should be zero.
+        padding.bottom += max(0, south.frame.maxY)
+        // In case the view is completely on the left side of its anchor (max X is negative), then right padding should be zero.
+        padding.right += max(0, east.frame.maxX)
+
+        return mapboxMap.camera(
+            for: innerBounds,
+            padding: padding,
+            bearing: cameraOptions.bearing,
+            pitch: cameraOptions.pitch.map(Double.init))
+    }
 
     /// Calculates the ``CoordinateBounds`` of an annotation at the given `zoom` level.
     ///

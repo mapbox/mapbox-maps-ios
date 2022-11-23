@@ -29,11 +29,25 @@ class ResourceOptionsTests: XCTestCase {
         XCTAssertEqual(a.description, "ResourceOptions: pk.H◻︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎")
     }
 
-    func testBaseUrl() {
-        let expectedBaseUrl = URL(string: "https://api.mapbox.com")
+    func testBaseUrlConversionToCore() {
+        let expectedBaseUrl = URL(string: "https://api.mapbox.com")!
         let a = ResourceOptions(accessToken: "pk.HelloWorld", baseURL: expectedBaseUrl)
         let c = MapboxCoreMaps.ResourceOptions(a)
-        XCTAssertNotNil(c.baseURL)
-        XCTAssertEqual(a.baseURL?.absoluteString, c.baseURL)
+
+        XCTAssertEqual(c.baseURL, expectedBaseUrl.absoluteString)
+    }
+
+    func testBaseUrlConversionFromCore() {
+        let expectedBaseUrl = URL(string: "https://api.mapbox.com")!
+        let a = MapboxCoreMaps.ResourceOptions(
+            accessToken: "pk.HelloWorld",
+            baseURL: expectedBaseUrl.absoluteString,
+            dataPath: nil,
+            assetPath: nil,
+            tileStore: nil
+        )
+        let c = ResourceOptions(a)
+
+        XCTAssertEqual(c.baseURL, expectedBaseUrl)
     }
 }

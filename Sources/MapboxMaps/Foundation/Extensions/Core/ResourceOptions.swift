@@ -147,7 +147,12 @@ extension ResourceOptions: CustomStringConvertible, CustomDebugStringConvertible
 extension ResourceOptions {
     internal init(_ objcValue: MapboxCoreMaps.ResourceOptions) {
 
-        let baseURL      = objcValue.baseURL.flatMap { URL(fileURLWithPath: $0) }
+        let baseURL: URL?
+        if let baseURLString = objcValue.baseURL {
+            baseURL = URL(string: baseURLString)
+        } else {
+            baseURL = nil
+        }
         let dataPathURL = objcValue.dataPath.flatMap { URL(fileURLWithPath: $0) }
         let assetPathURL = objcValue.assetPath.flatMap { URL(fileURLWithPath: $0) }
 

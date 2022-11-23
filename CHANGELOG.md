@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## main
+
+* Fix loading errors appearing when providing custom endpoint for `ResourceOptions.baseURL`. ([#1749](https://github.com/mapbox/mapbox-maps-ios/pull/1749))
+
 ## 10.10.0-rc.1 - November 18, 2022
 
 * Fix memory leak when viewport is being deallocated while transition is running. ([#1691](https://github.com/mapbox/mapbox-maps-ios/pull/1691))

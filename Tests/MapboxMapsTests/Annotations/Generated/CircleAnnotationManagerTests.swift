@@ -493,7 +493,6 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         expectation = nil
     }
 
-
     func testHandleDragBeginNoFeatureId() {
         style.addSourceStub.reset()
         style.addPersistentLayerWithPropertiesStub.reset()

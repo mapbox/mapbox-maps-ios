@@ -469,7 +469,6 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         expectation = nil
     }
 
-
     func testHandleDragBeginNoFeatureId() {
         style.addSourceStub.reset()
         style.addPersistentLayerWithPropertiesStub.reset()

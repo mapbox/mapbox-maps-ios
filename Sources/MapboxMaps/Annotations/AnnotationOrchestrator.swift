@@ -26,8 +26,6 @@ public protocol AnnotationManager: AnyObject {
 }
 
 internal protocol AnnotationManagerInternal: AnnotationManager {
-    var delegate: AnnotationInteractionDelegate? { get }
-
     func destroy()
 
     func handleQueriedFeatureIds(_ queriedFeatureIds: [String])
@@ -37,18 +35,6 @@ internal protocol AnnotationManagerInternal: AnnotationManager {
     func handleDragChanged(with translation: CGPoint)
 
     func handleDragEnded()
-}
-
-/// A delegate that is called when a tap is detected on an annotation (or on several of them).
-public protocol AnnotationInteractionDelegate: AnyObject {
-
-    /// This method is invoked when a tap gesture is detected on an annotation
-    /// - Parameters:
-    ///   - manager: The `AnnotationManager` that detected this tap gesture
-    ///   - annotations: A list of `Annotations` that were tapped
-    func annotationManager(_ manager: AnnotationManager,
-                           didDetectTappedAnnotations annotations: [Annotation])
-
 }
 
 /// `AnnotationOrchestrator` provides a way to create annotation managers of different types.

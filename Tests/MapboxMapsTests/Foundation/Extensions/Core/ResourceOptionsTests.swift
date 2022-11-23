@@ -49,4 +49,17 @@ class ResourceOptionsTests: XCTestCase {
 
         XCTAssertEqual(sdkOptions.baseURL, expectedBaseUrl)
     }
+
+    func testNilBaseUrlConversionFromCore() {
+        let coreOptions = MapboxCoreMaps.ResourceOptions(
+            accessToken: "pk.HelloWorld",
+            baseURL: nil,
+            dataPath: nil,
+            assetPath: nil,
+            tileStore: nil
+        )
+        let sdkOptions = ResourceOptions(coreOptions)
+
+        XCTAssertNil(sdkOptions.baseURL)
+    }
 }

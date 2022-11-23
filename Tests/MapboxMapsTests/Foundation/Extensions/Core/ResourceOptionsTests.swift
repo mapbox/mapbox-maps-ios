@@ -31,23 +31,23 @@ class ResourceOptionsTests: XCTestCase {
 
     func testBaseUrlConversionToCore() {
         let expectedBaseUrl = URL(string: "https://api.mapbox.com")!
-        let a = ResourceOptions(accessToken: "pk.HelloWorld", baseURL: expectedBaseUrl)
-        let c = MapboxCoreMaps.ResourceOptions(a)
+        let sdkOptions = ResourceOptions(accessToken: "pk.HelloWorld", baseURL: expectedBaseUrl)
+        let coreOptions = MapboxCoreMaps.ResourceOptions(sdkOptions)
 
-        XCTAssertEqual(c.baseURL, expectedBaseUrl.absoluteString)
+        XCTAssertEqual(coreOptions.baseURL, expectedBaseUrl.absoluteString)
     }
 
     func testBaseUrlConversionFromCore() {
         let expectedBaseUrl = URL(string: "https://api.mapbox.com")!
-        let a = MapboxCoreMaps.ResourceOptions(
+        let coreOptions = MapboxCoreMaps.ResourceOptions(
             accessToken: "pk.HelloWorld",
             baseURL: expectedBaseUrl.absoluteString,
             dataPath: nil,
             assetPath: nil,
             tileStore: nil
         )
-        let c = ResourceOptions(a)
+        let sdkOptions = ResourceOptions(coreOptions)
 
-        XCTAssertEqual(c.baseURL, expectedBaseUrl)
+        XCTAssertEqual(sdkOptions.baseURL, expectedBaseUrl)
     }
 }

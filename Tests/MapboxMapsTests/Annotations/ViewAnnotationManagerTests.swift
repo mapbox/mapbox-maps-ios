@@ -427,20 +427,16 @@ final class ViewAnnotationManagerTests: XCTestCase {
         let pitch = CGFloat.random(in: 0...90)
         _ = manager.camera(forAnnotations: ["0", "1", "2", "3"], padding: padding, bearing: bearing, pitch: pitch)
 
-        let parameters = try XCTUnwrap(mapboxMap.cameraForGeometryStub.invocations.last).parameters
+        let parameters = try XCTUnwrap(mapboxMap.cameraForCoordinateBoundsStub.invocations.last).parameters
         XCTAssertEqual(parameters.bearing, bearing)
         XCTAssertEqual(parameters.pitch, pitch)
 
-        let coordinates = try XCTUnwrap(MapboxCommon.Geometry(parameters.geometry).extractLocationsArray()).map(\.mkCoordinateValue)
-        let north = try XCTUnwrap(coordinates.max(by: { $0.latitude < $1.latitude })).latitude
-        let east = try XCTUnwrap(coordinates.max(by: { $0.longitude < $1.longitude })).longitude
-        let south = try XCTUnwrap(coordinates.min(by: { $0.latitude < $1.latitude })).latitude
-        let west = try XCTUnwrap(coordinates.min(by: { $0.longitude < $1.longitude })).longitude
+        let bounds = parameters.coordinateBounds
 
-        XCTAssertFalse(points.contains(where: { $0.latitude > north }))
-        XCTAssertFalse(points.contains(where: { $0.longitude > east }))
-        XCTAssertFalse(points.contains(where: { $0.latitude < south }))
-        XCTAssertFalse(points.contains(where: { $0.longitude < west }))
+        XCTAssertFalse(points.contains(where: { $0.latitude > bounds.north }))
+        XCTAssertFalse(points.contains(where: { $0.longitude > bounds.east }))
+        XCTAssertFalse(points.contains(where: { $0.latitude < bounds.south }))
+        XCTAssertFalse(points.contains(where: { $0.longitude < bounds.west }))
     }
 
     // MARK: - Helper functions

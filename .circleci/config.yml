@@ -8,7 +8,7 @@ parameters:
 
 orbs:
   # https://circleci.com/orbs/registry/orb/circleci/slack
-  slack: circleci/slack@4.10
+  slack: circleci/slack@4.5
 
 
 ### Shared anchors
@@ -833,7 +833,7 @@ jobs:
           message: "create-xcframework"
 
   build-sdk-for-api-compatibility-check:
-    executor: xcode-sdk-min
+    executor: &sdkAPICheckExecutor xcode-sdk-min
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
@@ -855,7 +855,7 @@ jobs:
       - store-default-artifacts
 
   build-baseline-sdk:
-    executor: xcode-sdk-min
+    executor: *sdkAPICheckExecutor
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
@@ -864,39 +864,44 @@ jobs:
           command: |
             cp Sources/MapboxMaps/MapboxMaps.json /tmp/MapboxMaps-cachekey.txt
             xcodebuild -version >> /tmp/MapboxMaps-cachekey.txt
+      - when:
+          condition: "[ -f /tmp/MapboxMaps-cachekey.txt ]"
+          steps:
+            - run:
+                name: There is a file!
+                command: echo "That file exists!"
+      - unless:
+          condition: "[ -f /tmp/MapboxMaps-cachekey.txt ]"
+          steps:
+            - run:
+                name: There is no FILE!
+                command: echo "That file doesn't exists!"
       - restore_cache:
           keys:
-            - &sdkCacheKey v3-baseline-sdk-{{ checksum "/tmp/MapboxMaps-cachekey.txt" }}
-      - save_cache:
-          paths:
-            - baseline_api.json
-          key: *sdkCacheKey
-      - persist_to_workspace:
-          root: .
-          paths:
-            - baseline_api.json
-      - store_artifacts:
-          path: baseline_api.json
-      - run:
-          name: Stop job if baseline API exists
-          command: |
-            if [ -f baseline_api.json ]; then
-              echo "Baseline API exists. Stopping job."
-              circleci-agent step halt
-            fi
+            - &sdkCacheKey v2-baseline-sdk-{{ checksum "/tmp/MapboxMaps-cachekey.txt" }}
       - configure-environment:
           skip-dependencies: true
       - install-xcodegen
       - run:
-          name: Checkout baseline tag
-          command: git checkout "v$(jq -r .version Sources/MapboxMaps/MapboxMaps.json)"
-      - make-xcframework-bundle
-      - run:
-          name: Checkout HEAD back
-          command: git checkout "$CIRCLE_BRANCH"
-      - run:
-          name: Dump SDK API to JSON format
-          command: scripts/api-compatibility-check/breaking-api-check.py dump MapboxMaps.zip --module MapboxMaps -o baseline_api.json
+          name: Build SDK and dump API to JSON format
+          command: |
+            FILE=baseline_api.json
+            if [ -f $FILE ]; then
+              echo "File $FILE exists."
+              exit 0
+            fi
+
+            INITIAL_COMMIT=$(git rev-parse HEAD)
+
+            git checkout v$(jq -r .version Sources/MapboxMaps/MapboxMaps.json)
+            pushd scripts/release/packager
+            ./package-mapbox-maps.sh dynamic
+            mv MapboxMaps*.zip /Users/distiller/project/
+            popd
+
+            git checkout "$INITIAL_COMMIT"
+
+            scripts/api-compatibility-check/breaking-api-check.py dump MapboxMaps.zip --module MapboxMaps -o "$FILE"
       - save_cache:
           paths:
             - baseline_api.json
@@ -1688,5 +1693,3 @@ commands:
               --header 'Accept: application/vnd.github.v3+json' \
               --header "Authorization: token $(mbx-ci github notifier token)" \
               --data "{\"state\":\"failure\",\"target_url\":\"$CIRCLE_BUILD_URL\",\"description\":\"MapboxMaps SDK integration tests failed\",\"context\":\"Maps SDK Integration\"}"
-
-# VS Code Extension Version: 1.1.1

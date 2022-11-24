@@ -76,8 +76,8 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
             impl.removeAnnotationManager(withId: managerId)
         }
 
-        XCTAssertTrue(!tapGestureRecognizer.isEnabled)
-        XCTAssertTrue(!longPressGestureRecognizer.isEnabled)
+        XCTAssertFalse(tapGestureRecognizer.isEnabled)
+        XCTAssertFalse(longPressGestureRecognizer.isEnabled)
     }
 
     func testGesturesEnableAndDisableForPointManager() {

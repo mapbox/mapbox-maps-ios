@@ -9,15 +9,24 @@ import sys
 import tempfile
 import hashlib
 
+
 def main():
     parser = argparse.ArgumentParser(
-            description="Build and check the API compatibility of the Mapbox Maps SDK for iOS.")
+            description="Build and check the API compatibility.")
 
     subparsers = parser.add_subparsers(dest='command')
 
-    dumpSDKParser = subparsers.add_parser("dump", help="Generate JSON API report.")
+    dumpSDKParser = subparsers.add_parser("dump", description="""
+    Dump the SDK to a JSON file.
+    This command supports a few modes:
+        1) Dumping from a zip archive of the SDK. Zip archive must contain XCFramework along with the dependencies.
+        2) Dumping from a XCFramework. The XCFramework dependencies must be in the same root folder.
+        3) Dumping from a folder of swiftmodule files. This is useful for dumping from DerivedData. In that case you must specify the triplet target with --triplet-target.
+    In most cases you also have to specify the module name with --module.
+    """, formatter_class=argparse.RawTextHelpFormatter, help="Generate JSON API report.")
     dumpSDKParser.add_argument("sdk_path", metavar="sdk-path", type=os.path.abspath, help="Path to the Maps SDK release zip archive.")
     dumpSDKParser.add_argument("--module", help="Name of the module to dump.")
+    dumpSDKParser.add_argument("--triplet-target", help="Clang target triplet like 'arm64-apple-ios11.0'")
     dumpSDKParser.add_argument("--abi", default=False, action=argparse.BooleanOptionalAction, help="Generate ABI report.")
     dumpSDKParser.add_argument("-o", "--output-path", type=os.path.abspath, help="Path to the output JSON API report. Default to <sdk-name>.API.json")
 
@@ -31,7 +40,7 @@ def main():
     args = parser.parse_args()
 
     if args.command == "dump":
-        dump_sdk(args.sdk_path, args.output_path, args.abi, args.module)
+        dump_sdk(args.sdk_path, args.output_path, args.abi, args.module, args.triplet_target)
     elif args.command == "check-api":
         check_api_breaking_changes(args.base_dump, args.latest_dump, args.breakage_allowlist_path, args.report_path, args.comment_pr)
 
@@ -47,7 +56,7 @@ def detect_module_name(sdk_path: str, frameworks_root: str) -> str:
     else:
         raise Exception("Cannot detect module name from SDK path. Please specify the module name with --module")
 
-def dump_sdk(sdk_path:str, output_path:str, abi:bool, module_name:str):
+def dump_sdk(sdk_path:str, output_path:str, abi:bool, module_name:str, triplet_target: str = None):
     tempDir = tempfile.mkdtemp(prefix="API-check-")
     print(tempDir)
 
@@ -89,8 +98,9 @@ def dump_sdk(sdk_path:str, output_path:str, abi:bool, module_name:str):
         digester.dump_sdk_xcframework(current_xcframework, frameworks_root, output_path, abi)
     else:
         # We are in the DerivedData folder.
-        digester.dump_sdk(frameworks_root, module_name, output_path, abi)
-        print("Dumping swiftmodule files...")
+        if triplet_target is None:
+            raise Exception("Please specify the triplet target with --triplet-target. That option is required when dumping from modules folder.")
+        digester.dump_sdk(frameworks_root, module_name, triplet_target, output_path, abi)
 
 def check_api_breaking_changes(baseline_dump_path:str, latest_dump_path:str, breakage_allow_list_path:str, report_path:str, should_comment_pr:bool):
     tool = APIDigester()
@@ -155,17 +165,14 @@ class APIDigester:
 
         return APIDigester.BreakageReport(output_path)
 
-    # def detect_triplet(self, sdk_path):
-    #     subprocess.run(["xcrun", "otool", "-l", sdk_path], capture_output=True, text=True).stdout.strip()
-
-    def dump_sdk(self, modules_path: str, module_name: str, output_path: str, abi: bool):
+    def dump_sdk(self, modules_path: str, module_name: str, triplet_target: str, output_path: str, abi: bool):
         arguments = ["xcrun", "--sdk", "iphoneos", "swift-api-digester",
                     "-dump-sdk",
                     "-I", modules_path,
                     "-module", module_name,
                     "-o", output_path,
                     "-avoid-tool-args", "-avoid-location",
-                    "-target", "arm64-apple-ios11.0",
+                    "-target", triplet_target,
                     "-v"
                     ]
 
@@ -249,6 +256,47 @@ class APIDigester:
         # Represents a sha1 hashsum of an empty report (including section names).
             return "afd2a1b542b33273920d65821deddc653063c700"
 
+class Executable:
+    def __init__(self, path):
+        self.path = path
+
+    def parse_load_commands(self):
+        otool_proc = subprocess.run(["otool", "-l", self.path], capture_output=True, text=True)
+        if otool_proc.returncode != 0:
+            print(otool_proc.stderr)
+            raise Exception(f"Failed to run otool -l {self.path}")
+
+        load_commands = []
+        command_buffer = {}
+        index = 0
+        for line in otool_proc.stdout.splitlines()[1:]:
+            index += 1
+            line = line.strip()
+            if len(line) == 0:
+                continue
+
+            if line.startswith("Load command"):
+                if command_buffer and len(command_buffer) > 0:
+                    load_commands.append(command_buffer)
+                command_buffer = {}
+            elif line.startswith("Section"):
+                if command_buffer and len(command_buffer) > 0:
+                    load_commands.append(command_buffer)
+                command_buffer = None
+            elif command_buffer is not None:
+                key = line.split(" ")[0]
+                value = " ".join(line.split(" ")[1:])
+                command_buffer[key] = value
+
+        if command_buffer is not None and len(command_buffer) > 0:
+            load_commands.append(command_buffer)
+
+        return load_commands
+
+    def list_all_dependencies(self):
+        dynamic_dependencies = subprocess.run(["xcrun", "otool", "-L", self.path], capture_output=True, text=True).stdout.strip().split("\n\t")
+        return list(map(lambda x: x.split()[0], dynamic_dependencies[1:]))
+
 class SDKModule:
     def __init__(self, root, library: 'XCFramework.Library'):
         self.library = library
@@ -269,8 +317,9 @@ class SDKModule:
     def executable_path(self):
         return self.plist["CFBundleExecutable"]
 
-    def executable(self) -> os.path:
-        return os.path.join(self.path, self.executable_path())
+    def executable(self) -> Executable:
+        path = os.path.join(self.path, self.executable_path())
+        return Executable(path)
 
     def __repr__(self):
         return f"SDKModule({self.path, self.plist})"
@@ -280,7 +329,6 @@ class SDKModule:
         return list(map(lambda x: x.split()[0], dynamic_dependencies[1:]))
 
     def list_dependencies(self):
-        # return list(filter(lambda x: x.startswith("/System/Library/Frameworks") or x.startswith("/usr/lib"), self.list_all_dependencies()))
         module_path = os.path.join(self.library.library["LibraryPath"], self.executable_path())
         def filter_system_dependencies(dependency):
             return not dependency.startswith("/usr/lib") \
@@ -288,7 +336,7 @@ class SDKModule:
                     and not dependency.endswith(".dylib") \
                         and not dependency.endswith(module_path)
 
-        return list(filter(filter_system_dependencies, self.list_all_dependencies()))
+        return list(filter(filter_system_dependencies, self.executable().list_all_dependencies()))
 
 class XCFramework:
     class Library:

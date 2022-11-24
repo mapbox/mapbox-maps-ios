@@ -71,8 +71,7 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
         XCTAssertTrue(tapGestureRecognizer.isEnabled)
         XCTAssertTrue(longPressGestureRecognizer.isEnabled)
 
-        for factory in factories {
-            _ = factory(managerId, nil)
+        for _ in factories {
             impl.removeAnnotationManager(withId: managerId)
         }
 

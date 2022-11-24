@@ -843,7 +843,7 @@ jobs:
       - make-xcframework-bundle
       - run:
           name: Dump SDK API to JSON format
-          command: scripts/api-compatibility-check/breaking-api-check.py dump MapboxMaps.zip -o current_api.json
+          command: scripts/api-compatibility-check/breaking-api-check.py dump MapboxMaps.zip --module MapboxMaps -o current_api.json
       - persist_to_workspace:
           root: .
           paths:
@@ -891,7 +891,7 @@ jobs:
 
             git checkout "$INITIAL_COMMIT"
 
-            scripts/api-compatibility-check/breaking-api-check.py dump MapboxMaps.zip -o "$FILE"
+            scripts/api-compatibility-check/breaking-api-check.py dump MapboxMaps.zip --module MapboxMaps -o "$FILE"
       - run: ls -lGAh
       - save_cache:
           paths:

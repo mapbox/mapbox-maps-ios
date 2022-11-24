@@ -62,7 +62,7 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
         annotationManagersByIdInternal
     }
 
-    internal var annotationManagersByIdInternal = [String: AnnotationManagerInternal]() {
+    private var annotationManagersByIdInternal = [String: AnnotationManagerInternal]() {
         didSet {
             longPressGestureRecognizer.isEnabled = !annotationManagersByIdInternal.isEmpty
             tapGestureRecognizer.isEnabled = !annotationManagersByIdInternal.isEmpty

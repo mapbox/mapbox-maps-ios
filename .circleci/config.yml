@@ -1656,7 +1656,7 @@ commands:
           name: Build SDK and dump API to JSON format
           command: |
             if [ -f "<< parameters.output >>" ]; then
-              echo "File $FILE exists."
+              echo "File << parameters.output >> exists."
               exit 0
             fi
 

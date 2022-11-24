@@ -44,18 +44,6 @@ def main():
     elif args.command == "check-api":
         check_api_breaking_changes(args.base_dump, args.latest_dump, args.breakage_allowlist_path, args.report_path, args.comment_pr)
 
-def detect_module_name(sdk_path: str, frameworks_root: str) -> str:
-    if os.path.splitext(sdk_path)[1] == ".zip":
-        modules = [f for f in os.listdir(frameworks_root) if f.endswith(".xcframework")]
-        if len(modules) != 1:
-            raise Exception(f"Could not detect module name from {sdk_path}")
-        else:
-            return modules[0].split(".")[0]
-    elif os.path.splitext(sdk_path)[1] == ".xcframework":
-        return os.path.splitext(os.path.basename(sdk_path))[0]
-    else:
-        raise Exception("Cannot detect module name from SDK path. Please specify the module name with --module")
-
 def dump_sdk(sdk_path:str, output_path:str, abi:bool, module_name:str, triplet_target: str = None):
     tempDir = tempfile.mkdtemp(prefix="API-check-")
     print(tempDir)
@@ -79,6 +67,18 @@ def dump_sdk(sdk_path:str, output_path:str, abi:bool, module_name:str, triplet_t
             return sdk_path
         else:
             raise Exception("SDK path must contain a zip archive, XCFrameworks or a folder of swiftmodule files")
+
+    def detect_module_name(sdk_path: str, frameworks_root: str) -> str:
+        if os.path.splitext(sdk_path)[1] == ".zip":
+            modules = [f for f in os.listdir(frameworks_root) if f.endswith(".xcframework")]
+            if len(modules) != 1:
+                raise Exception(f"Could not detect module name from {sdk_path}")
+            else:
+                return modules[0].split(".")[0]
+        elif os.path.splitext(sdk_path)[1] == ".xcframework":
+            return os.path.splitext(os.path.basename(sdk_path))[0]
+        else:
+            raise Exception("Cannot detect module name from SDK path. Please specify the module name with --module")
 
     frameworks_root = dittoSDK(sdk_path, tempDir)
     if module_name is None:
@@ -253,7 +253,7 @@ class APIDigester:
                 return sha_hash.hexdigest()
 
         def __empty_report_hashsum(self):
-        # Represents a sha1 hashsum of an empty report (including section names).
+            # Represents a sha1 hashsum of an empty report (including section names).
             return "afd2a1b542b33273920d65821deddc653063c700"
 
 class Executable:
@@ -268,9 +268,7 @@ class Executable:
 
         load_commands = []
         command_buffer = {}
-        index = 0
         for line in otool_proc.stdout.splitlines()[1:]:
-            index += 1
             line = line.strip()
             if len(line) == 0:
                 continue

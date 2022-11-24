@@ -11,23 +11,6 @@
 fastlane_version "2.204.1"
 default_platform :ios
 
-# def enable_manual_provisioning(project_file, provisioning_profile_uuid)
-#   UI.message 'Switching to manual code signing'
-#   fastlane_require 'xcodeproj'
-#   project = Xcodeproj::Project.open(project_file)
-#   target = project.native_targets.detect { |target| target.name == 'Examples' }
-#   target_attributes = project.root_object.attributes['TargetAttributes']
-#   target_attributes.each { |_id, attrs| attrs['ProvisioningStyle'] = 'Manual' }
-#   target.build_configurations.each do |item|
-#     # item.build_settings['PROVISIONING_PROFILE[sdk=iphoneos*]'] = "match AppStore com.mapbox.examples"
-#     # item.build_settings['DEVELOPMENT_TEAM'] = 'UG77RJKZHH'
-#     item.build_settings['VERSIONING_SYSTEM'] = "Apple Generic"
-#     item.build_settings['CURRENT_PROJECT_VERSION'] = "1.0"
-#     # item.build_settings['CODE_SIGN_IDENTITY[sdk=iphoneos*]'] = 'Apple Distribution'
-#   end
-#   project.save
-# end
-
 ENV["FASTLANE_SKIP_UPDATE_CHECK"] = "1"
 ENV["SPACESHIP_SKIP_2FA_UPGRADE"] = "1"
 # Set default target for get_version_number()
@@ -50,8 +33,6 @@ platform :ios do
         bundle_identifier: "com.mapbox.examples"
 
       )
-      # provisioning_profile = "match Development com.mapbox.examples"
-      # enable_manual_provisioning('../MapboxMaps.xcodeproj', provisioning_profile)
       increment_build_number({
         build_number: latest_testflight_build_number + 1
       })
@@ -110,16 +91,10 @@ platform :ios do
 
   after_all do |lane|
     # This block is called, only if the executed lane was successful
-    # slack(
-    #   message: "Successfully deployed new App Update."
-    # )
   end
 
   error do |lane, exception|
-    # slack(
-    #   message: exception.message,
-    #   success: false
-    # )
+    # This block is called, if an error occurs in the execution
   end
 end
 # More information about multiple platforms in fastlane: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Platforms.md

@@ -864,21 +864,11 @@ jobs:
           command: |
             cp Sources/MapboxMaps/MapboxMaps.json /tmp/MapboxMaps-cachekey.txt
             xcodebuild -version >> /tmp/MapboxMaps-cachekey.txt
-      - when:
-          condition: "[ -f /tmp/MapboxMaps-cachekey.txt ]"
-          steps:
-            - run:
-                name: There is a file!
-                command: echo "That file exists!"
-      - unless:
-          condition: "[ -f /tmp/MapboxMaps-cachekey.txt ]"
-          steps:
-            - run:
-                name: There is no FILE!
-                command: echo "That file doesn't exists!"
+      - run: ls -lGAh
       - restore_cache:
           keys:
             - &sdkCacheKey v2-baseline-sdk-{{ checksum "/tmp/MapboxMaps-cachekey.txt" }}
+      - run: ls -lGAh
       - configure-environment:
           skip-dependencies: true
       - install-xcodegen
@@ -902,6 +892,7 @@ jobs:
             git checkout "$INITIAL_COMMIT"
 
             scripts/api-compatibility-check/breaking-api-check.py dump MapboxMaps.zip --module MapboxMaps -o "$FILE"
+      - run: ls -lGAh
       - save_cache:
           paths:
             - baseline_api.json

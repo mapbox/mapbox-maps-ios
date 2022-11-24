@@ -836,71 +836,18 @@ jobs:
     executor: xcode-sdk-min
     resource_class: macos.x86.medium.gen2
     steps:
-      - checkout
-      - configure-environment:
-          skip-dependencies: true
-      - install-xcodegen
-      - make-xcframework-bundle
-      - run:
-          name: Dump SDK API to JSON format
-          command: scripts/api-compatibility-check/breaking-api-check.py dump MapboxMaps.zip --module MapboxMaps -o current_api.json
-      - persist_to_workspace:
-          root: .
-          paths:
-            - current_api.json
-      - store_artifacts:
-          path: MapboxMaps.zip
-      - store_artifacts:
-          path: current_api.json
-      - store-default-artifacts
+      - dump-sdk-api:
+          baseline: false
+          output: latest.api.json
+
 
   build-baseline-sdk:
     executor: xcode-sdk-min
     resource_class: macos.x86.medium.gen2
     steps:
-      - checkout
-      - run:
-          name: Generate cache file for key
-          command: |
-            xcodebuild -version | head -1 | cut -d ' ' -f 2 >> /tmp/xcode_version.txt
-            jq -r .version Sources/MapboxMaps/MapboxMaps.json > /tmp/MapboxMaps-version.txt
-      - restore_cache:
-          keys:
-            - &sdkCacheKey v2-baseline-sdk-{{ checksum "/tmp/MapboxMaps-version.txt" }}-xcode-{{ checksum "/tmp/xcode_version.txt" }}
-      - configure-environment:
-          skip-dependencies: true
-      - install-xcodegen
-      - run:
-          name: Build SDK and dump API to JSON format
-          command: |
-            FILE=baseline_api.json
-            if [ -f $FILE ]; then
-              echo "File $FILE exists."
-              exit 0
-            fi
-
-            INITIAL_COMMIT=$(git rev-parse HEAD)
-
-            git checkout v$(jq -r .version Sources/MapboxMaps/MapboxMaps.json)
-            pushd scripts/release/packager
-            ./package-mapbox-maps.sh dynamic
-            mv MapboxMaps*.zip /Users/distiller/project/
-            popd
-
-            git checkout "$INITIAL_COMMIT"
-
-            scripts/api-compatibility-check/breaking-api-check.py dump MapboxMaps.zip --module MapboxMaps -o "$FILE"
-      - save_cache:
-          paths:
-            - baseline_api.json
-          key: *sdkCacheKey
-      - persist_to_workspace:
-          root: .
-          paths:
-            - baseline_api.json
-      - store_artifacts:
-          path: baseline_api.json
-      - store-default-artifacts
+      - dump-sdk-api:
+          baseline: true
+          output: baseline.api.json
 
   check-api-compatibility:
     executor: xcode-latest
@@ -916,7 +863,7 @@ jobs:
           name: Check API compatibility
           command: |
             export GITHUB_TOKEN=$(mbx-ci github issues public token)
-            scripts/api-compatibility-check/breaking-api-check.py check-api workspace/baseline_api.json workspace/current_api.json --report-path api-compatibility-report.txt --comment-pr
+            scripts/api-compatibility-check/breaking-api-check.py check-api workspace/baseline.api.json workspace/latest.api.json --report-path api-compatibility-report.txt --comment-pr
       - store_artifacts:
           path: api-compatibility-report.txt
       - store-default-artifacts
@@ -1681,3 +1628,59 @@ commands:
               --header 'Accept: application/vnd.github.v3+json' \
               --header "Authorization: token $(mbx-ci github notifier token)" \
               --data "{\"state\":\"failure\",\"target_url\":\"$CIRCLE_BUILD_URL\",\"description\":\"MapboxMaps SDK integration tests failed\",\"context\":\"Maps SDK Integration\"}"
+
+  dump-sdk-api:
+    parameters:
+      baseline:
+        type: boolean
+      output:
+        type: string
+    steps:
+      - checkout
+      - run:
+          name: Generate cache file for key
+          command: |
+            xcodebuild -version | head -1 | cut -d ' ' -f 2 >> /tmp/xcode_version.txt
+            if [ << parameters.baseline >> = true ]; then
+              git rev-parse v$(jq -r .version Sources/MapboxMaps/MapboxMaps.json) > /tmp/MapboxMaps-version.txt
+            else
+              git rev-parse HEAD > /tmp/MapboxMaps-version.txt
+            fi
+      - restore_cache:
+          keys:
+            - &sdkCacheKey v3-sdk-dump-{{ checksum "/tmp/MapboxMaps-version.txt" }}-xcode-{{ checksum "/tmp/xcode_version.txt" }}
+      - configure-environment:
+          skip-dependencies: true
+      - install-xcodegen
+      - run:
+          name: Build SDK and dump API to JSON format
+          command: |
+            if [ -f "<< parameters.output >>" ]; then
+              echo "File $FILE exists."
+              exit 0
+            fi
+
+            if [ << parameters.baseline >> = true ]; then
+              git checkout "$(cat /tmp/MapboxMaps-version.txt)"
+            fi
+
+            pushd scripts/release/packager
+            ./package-mapbox-maps.sh dynamic
+            mv MapboxMaps*.zip /Users/distiller/project/
+            popd
+
+            if [ << parameters.baseline >> = true ]; then
+              git checkout -
+            fi
+
+            scripts/api-compatibility-check/breaking-api-check.py dump MapboxMaps.zip --module MapboxMaps -o "<< parameters.output >>"
+      - save_cache:
+          paths:
+            - << parameters.output >>
+          key: *sdkCacheKey
+      - persist_to_workspace:
+          root: .
+          paths:
+            - << parameters.output >>
+      - store_artifacts:
+          path: << parameters.output >>

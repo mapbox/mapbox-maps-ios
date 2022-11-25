@@ -37,3 +37,7 @@ Func AnnotationOrchestrator.makePointAnnotationManager(id:layerPosition:) has be
 
 // The new constructor with styleJSON argument (and default argument) was provided
 Constructor MapInitOptions.init(resourceOptions:mapOptions:cameraOptions:styleURI:) has been removed
+
+// Converted parametreless constructors into a parametrized one
+Constructor GestureOptions.init() has been removed
+Constructor LocationOptions.init() has been removed

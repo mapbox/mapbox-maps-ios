@@ -17,14 +17,18 @@ public enum PanMode: String, Equatable, CaseIterable {
 /// Configuration options for the built-in gestures
 public struct GestureOptions: Equatable {
 
-    /// Whether the single-touch pan gesture is enabled. Defaults to `true`.
-    public var panEnabled: Bool = true
+    /// Whether the single-touch pan gesture is enabled.
+    ///
+    /// Defaults to `true`.
+    public var panEnabled: Bool
 
     /// Whether the pinch gesture is enabled. Allows panning, rotating, and zooming.
+    ///
     /// Defaults to `true`.
-    public var pinchEnabled: Bool = true
+    public var pinchEnabled: Bool
 
     /// Whether rotation is enabled for the pinch gesture.
+    ///
     /// Defaults to `true`.
     @available(*, deprecated, renamed: "rotateEnabled")
     public var pinchRotateEnabled: Bool {
@@ -33,42 +37,54 @@ public struct GestureOptions: Equatable {
     }
 
     /// Whether rotation gesture is enabled.
+    ///
     /// Defaults to `true`.
     public var rotateEnabled: Bool
 
     /// Whether rotation is enabled for the pinch to zoom gesture.
+    ///
     /// Defaults to `true`.
     public var simultaneousRotateAndPinchZoomEnabled: Bool
 
     /// Whether zoom is enabled for the pinch gesture.
+    ///
     /// Defaults to `true`.
     public var pinchZoomEnabled: Bool
 
     /// Whether pan is enabled for the pinch gesture.
+    ///
     /// Defaults to `true`.
     public var pinchPanEnabled: Bool
 
-    /// Whether the pitch gesture is enabled. Defaults to `true`.
+    /// Whether the pitch gesture is enabled.
+    ///
+    /// Defaults to `true`.
     public var pitchEnabled: Bool
 
     /// Whether double tapping the map with one touch results in a zoom-in animation.
+    ///
     /// Defaults to `true`.
     public var doubleTapToZoomInEnabled: Bool
 
     /// Whether single tapping the map with two touches results in a zoom-out animation.
+    ///
     /// Defaults to `true`.
     public var doubleTouchToZoomOutEnabled: Bool
 
-    /// Whether the quick zoom gesture is enabled. Defaults to `true`.
+    /// Whether the quick zoom gesture is enabled.
+    ///
+    /// Defaults to `true`.
     public var quickZoomEnabled: Bool
 
     /// Configures the directions in which the map is allowed to move during a pan gesture.
+    ///
     /// Defaults to `PanMode.horizontalAndVertical`. Called `scrollMode` in
     /// the Android SDK for consistency with platform conventions.
     public var panMode: PanMode
 
     /// A constant factor that determines how quickly pan deceleration animations happen.
     /// Multiplied with the velocity vector once per millisecond during deceleration animations.
+    /// 
     /// Defaults to `UIScrollView.DecelerationRate.normal.rawValue`
     public var panDecelerationFactor: CGFloat
 
@@ -78,6 +94,20 @@ public struct GestureOptions: Equatable {
     public var focalPoint: CGPoint?
 
     /// Initializes a `GestureOptions`.
+    /// - Parameters:
+    ///   - panEnabled: Whether the single-touch pan gesture is enabled.
+    ///   - pinchEnabled: Whether the pinch gesture is enabled.
+    ///   - rotateEnabled: Whether rotation gesture is enabled.
+    ///   - simultaneousRotateAndPinchZoomEnabled: Whether rotation is enabled for the pinch to zoom gesture.
+    ///   - pinchZoomEnabled: Whether zoom is enabled for the pinch gesture.
+    ///   - pinchPanEnabled: Whether pan is enabled for the pinch gesture.
+    ///   - pitchEnabled: Whether the pitch gesture is enabled.
+    ///   - doubleTapToZoomInEnabled: Whether double tapping the map with one touch results in a zoom-in animation.
+    ///   - doubleTouchToZoomOutEnabled: Whether single tapping the map with two touches results in a zoom-out animation.
+    ///   - quickZoomEnabled: Whether the quick zoom gesture is enabled.
+    ///   - panMode: The directions in which the map is allowed to move during a pan gesture.
+    ///   - panDecelerationFactor: The constant factor that determines how quickly pan deceleration animations happen.
+    ///   - focalPoint: The centerpoint for rotating and zooming the map.
     public init(
         panEnabled: Bool = true,
         pinchEnabled: Bool = true,
@@ -107,5 +137,4 @@ public struct GestureOptions: Equatable {
         self.panDecelerationFactor = panDecelerationFactor
         self.focalPoint = focalPoint
     }
-
 }

@@ -123,7 +123,7 @@ workflows:
           scheme: Examples
           requires:
             - Build Examples tests [non-main]
-          devices: --device model=ipad5,version=15.4
+          devices: --device model=ipadmini4,version=15.4
 
   steve:
     unless: << pipeline.parameters.turf-revision >>

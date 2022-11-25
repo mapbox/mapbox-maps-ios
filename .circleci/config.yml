@@ -702,10 +702,11 @@ jobs:
     parameters:
       devices:
         default: |
-          --device model=iphone13pro,version=15.2 \
+          --device model=iphone13pro,version=15.7 \
           --device model=iphone11pro,version=14.7 \
           --device model=iphone8,version=13.6 \
           --device model=iphonexr,version=12.4 \
+          --device model=ipad5,version=15.4 \
         type: string
       scheme:
         type: string
@@ -724,9 +725,6 @@ jobs:
             gcloud firebase test ios run --test output/build_products.zip \
               << parameters.devices >> 2>&1 | tee firebase_test_lab_run.log
           no_output_timeout: 30m
-      - run:
-          name: Print device list
-          command: gcloud firebase test ios models list
       - run:
           name: Download XCResults
           command: |

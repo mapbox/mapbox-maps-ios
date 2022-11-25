@@ -1,0 +1,2 @@
+Constructor GestureOptions.init() has been removed
+Constructor LocationOptions.init() has been removed

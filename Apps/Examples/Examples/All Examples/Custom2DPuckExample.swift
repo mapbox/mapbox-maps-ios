@@ -208,6 +208,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         let alert = UIAlertController(title: "Toggle Puck Options",
                                       message: "Select an options to toggle.",
                                       preferredStyle: .actionSheet)
+        alert.popoverPresentationController?.sourceView = sender
 
         alert.addAction(UIAlertAction(title: "Toggle Puck visibility", style: .default) { _ in
             self.showsPuck.toggle()

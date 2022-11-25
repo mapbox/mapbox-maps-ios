@@ -725,6 +725,9 @@ jobs:
               << parameters.devices >> 2>&1 | tee firebase_test_lab_run.log
           no_output_timeout: 30m
       - run:
+          name: Print device list
+          command: gcloud firebase test android models list
+      - run:
           name: Download XCResults
           command: |
             TEST_LAB_PATH=$(cat firebase_test_lab_run.log | grep -o "test-lab.*/")

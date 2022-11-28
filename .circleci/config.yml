@@ -843,7 +843,7 @@ jobs:
           name: Check API compatibility
           command: |
             export GITHUB_TOKEN=$(mbx-ci github issues public token)
-            scripts/api-compatibility-check/breaking-api-check.py check-api workspace/baseline.api.json workspace/latest.api.json --report-path api-compatibility-report.txt --comment-pr
+            scripts/api-compatibility-check/breaking-api-check.py check-api workspace/baseline.api.json workspace/latest.api.json --breakage-allowlist-path scripts/api-compatibility-check/breakage_allowlist.txt --report-path api-compatibility-report.txt --comment-pr
       - store_artifacts:
           path: api-compatibility-report.txt
       - store-default-artifacts

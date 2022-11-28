@@ -53,8 +53,9 @@ final class LiveDataExample: UIViewController, ExampleProtocol {
             try mapView.mapboxMap.style.addLayer(issLayer)
 
             // Create a `Timer` that updates the `GeoJSONSource`.
-            issTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-                self.parseJSON { result in
+            issTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+                self?.parseJSON { [weak self] result in
+                    guard let self = self else { return }
 
                     switch result {
                     case .success(let coordinates):

@@ -111,24 +111,24 @@ final class BasicLocationPulsingExample: UIViewController, ExampleProtocol {
         }
 
         let constantPulseAction = UIAction(title: "Pulse with constant radius",
-                                           state: state == .pulseConstant ? .on : .off) { _ in
-            self.enablePulsingWithConstantRadius()
-            self.updateMenu()
+                                           state: state == .pulseConstant ? .on : .off) { [weak self] _ in
+            self?.enablePulsingWithConstantRadius()
+            self?.updateMenu()
 
         }
         let accuracyPulseAction = UIAction(title: "Pulse with accuracy radius",
-                                           state: state == .pulseAccuracy ? .on : .off) { _ in
-            self.enablePulsingWithAccuracyRadius()
-            self.updateMenu()
+                                           state: state == .pulseAccuracy ? .on : .off) { [weak self] _ in
+            self?.enablePulsingWithAccuracyRadius()
+            self?.updateMenu()
         }
-        let disablePulseAction = UIAction(title: "None", state: state == .disabled ? .on : .off) { _ in
-            self.disablePulsing()
-            self.updateMenu()
+        let disablePulseAction = UIAction(title: "None", state: state == .disabled ? .on : .off) { [weak self] _ in
+            self?.disablePulsing()
+            self?.updateMenu()
         }
         let staticAccuracyRingAction = UIAction(title: "Static with accuracy radius",
-                                                state: state == .static ? .on : .off) { _ in
-            self.enableStaticAccuracyCircle()
-            self.updateMenu()
+                                                state: state == .static ? .on : .off) { [weak self] _ in
+            self?.enableStaticAccuracyCircle()
+            self?.updateMenu()
         }
 
         let menu = UIMenu(

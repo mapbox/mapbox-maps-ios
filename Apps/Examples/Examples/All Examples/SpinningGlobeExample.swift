@@ -3,7 +3,7 @@ import UIKit
 import MapboxMaps
 import CoreLocation
 
-class SpinningGlobeExample: UIViewController, GestureManagerDelegate, ExampleProtocol {
+final class SpinningGlobeExample: UIViewController, GestureManagerDelegate, ExampleProtocol {
 
     var userInteracting = false
     var mapView: MapView!
@@ -48,12 +48,12 @@ class SpinningGlobeExample: UIViewController, GestureManagerDelegate, ExamplePro
 
             // Smoothly animate the map over one second.
             // When this animation is complete, call it again
-            mapView.camera.ease(to: .init(center: targetCenter), duration: 1.0, curve: .linear) { rotating in
+            mapView.camera.ease(to: .init(center: targetCenter), duration: 1.0, curve: .linear) { [weak self] rotating in
 
                 guard rotating == .end else {
                     return
                 }
-                self.spinGlobe()
+                self?.spinGlobe()
             }
         }
     }

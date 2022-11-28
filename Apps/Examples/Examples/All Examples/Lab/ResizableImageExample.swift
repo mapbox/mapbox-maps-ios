@@ -80,11 +80,13 @@ final class ResizableImageExample: UIViewController, ExampleProtocol {
     }
 
     private func startUpdatingIconText() {
-        Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(updateIconText), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: true) { [weak self] _ in
+            self?.updateIconText()
+        }
     }
 
     // Append some text to the layer's textField, stretching the icon image in both X and Y axes
-    @objc private func updateIconText() {
+    private func updateIconText() {
         guard style.isLoaded else {
             return
         }

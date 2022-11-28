@@ -1,7 +1,7 @@
 // This file is generated.
 import Foundation
 
-public struct PointAnnotation: Annotation {
+open struct PointAnnotation: Annotation {
 
     /// Identifier for this annotation
     public let id: String
@@ -52,7 +52,8 @@ public struct PointAnnotation: Annotation {
     ///   - coordinate: Coordinate where this annotation should be rendered
     public init(id: String = UUID().uuidString, coordinate: CLLocationCoordinate2D) {
         let point = Point(coordinate)
-        self.init(id: id, point: point)
+        self.id = id
+        self.point = point
     }
 
     // MARK: - Style Properties -

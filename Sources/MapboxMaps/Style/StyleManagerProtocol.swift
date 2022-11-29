@@ -142,7 +142,9 @@ internal protocol StyleManagerProtocol {
         forSourceId sourceId: String,
         bounds: CoordinateBounds) -> Expected<NSNull, NSString>
 
-    func setStyleSourceDataForSourceId(_ sourceId: String, geojson: GeoJSON) -> Expected<NSNull, NSString>
+    func setStyleSourceDataForSourceId(_ sourceId: String, data: GeoJSON) -> Expected<NSNull, NSString>
+
+    func setStyleSourceDataForSourceId(_ sourceId: String, value: Any) -> Expected<NSNull, NSString>
 }
 
 // MARK: Conformance

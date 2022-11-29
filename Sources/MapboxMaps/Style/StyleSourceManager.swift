@@ -20,8 +20,6 @@ internal protocol StyleSourceManagerProtocol: AnyObject {
 internal final class StyleSourceManager: StyleSourceManagerProtocol {
     private typealias SourceId = String
 
-    internal static var enableDirectGeoJSONUpdate = false
-
     internal static func sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue {
         return StyleManager.getStyleSourcePropertyDefaultValue(forSourceType: sourceType, property: property)
     }
@@ -30,6 +28,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
     private let mainQueue: DispatchQueueProtocol
     private let backgroundQueue: DispatchQueueProtocol
     private var workItems = [SourceId: Cancelable]()
+    private let commonSettings: SettingsServiceInterface
 
     internal var allSourceIdentifiers: [SourceInfo] {
         return styleManager.getStyleSources().compactMap { info in
@@ -48,11 +47,13 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
     internal init(
         styleManager: StyleManagerProtocol,
         mainQueue: DispatchQueueProtocol = DispatchQueue.main,
-        backgroundQueue: DispatchQueueProtocol = DispatchQueue(label: "GeoJSON parsing queue", qos: .userInitiated)
+        backgroundQueue: DispatchQueueProtocol = DispatchQueue(label: "GeoJSON parsing queue", qos: .userInitiated),
+        commonSettings: SettingsServiceInterface = SettingsServiceFactory.getInstance(storageType: .nonPersistent)
     ) {
         self.styleManager = styleManager
         self.mainQueue = mainQueue
         self.backgroundQueue = backgroundQueue
+        self.commonSettings = commonSettings
     }
 
     // MARK: - Typed API
@@ -97,8 +98,8 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
             throw StyleError(message: "Source with id '\(id)' is not found or not a GeoJSONSource.")
         }
 
-        if Self.enableDirectGeoJSONUpdate {
-            directlyApplyGeoJSON(geoJSONObject: geoJSON, sourceId: id)
+        if commonSettings.shouldUseDirectGeoJSONUpdate {
+            directlyApplyGeoJSON(data: geoJSON.sourceData, sourceId: id)
         } else {
             applyGeoJSONData(data: geoJSON.sourceData, sourceId: id)
         }
@@ -148,9 +149,16 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
 
     private func setStyleSourceDataForSourceId(_ id: String, geojson: GeoJSON) throws {
         try handleExpected {
-            return styleManager.setStyleSourceDataForSourceId(id, geojson: geojson)
+            return styleManager.setStyleSourceDataForSourceId(id, data: geojson)
         }
     }
+
+    private func setStyleSourceDataForSourceId(_ id: String, string: String) throws {
+        try handleExpected {
+            return styleManager.setStyleSourceDataForSourceId(id, value: string)
+        }
+    }
+
 
     // MARK: - Async GeoJSON source data parsing
 
@@ -167,22 +175,31 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
         guard let data = data else { return }
         if case GeoJSONSourceData.empty = data { return }
 
-        applyGeoJSONData(data: data, sourceId: id)
+        if commonSettings.shouldUseDirectGeoJSONUpdate {
+            directlyApplyGeoJSON(data: data, sourceId: id)
+        } else {
+            applyGeoJSONData(data: data, sourceId: id)
+        }
     }
 
-    private func directlyApplyGeoJSON(geoJSONObject: GeoJSONObject, sourceId id: String) {
+    private func directlyApplyGeoJSON(data: GeoJSONSourceData, sourceId id: String) {
         workItems.removeValue(forKey: id)?.cancel()
 
         // This implementation favors the first submitted task and the last, in case of many work items queuing up -
         // the item that started execution will disregard cancellation, queued up items in the middle will get cancelled,
         // and the last item will be left waiting in the queue.
         let item = DispatchWorkItem { [weak self] in
-            if self == nil { return } // not capturing self here as toString conversion below can take time
-
-            let geoJSON = geoJSONObject.geoJSON
+            if self == nil { return } // not capturing self here as conversion below can take some time
 
             do {
-                try self?.setStyleSourceDataForSourceId(id, geojson: geoJSON)
+                switch data {
+                case .feature, .featureCollection, .geometry:
+                    try self?.setStyleSourceDataForSourceId(id, geojson: data.geoJSON)
+                case .url(let url):
+                    try self?.setStyleSourceDataForSourceId(id, string: url.absoluteString)
+                case .empty:
+                    break
+                }
             } catch {
                 Log.error(forMessage: "Failed to set data for source with id: \(id), error: \(error)")
             }
@@ -214,5 +231,11 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
 
         workItems[id] = item
         backgroundQueue.async(execute: item)
+    }
+}
+
+private extension SettingsServiceInterface {
+    var shouldUseDirectGeoJSONUpdate: Bool {
+        return (try? self.get(key: "geojson_allow_direct_setter", type: Bool.self).get()) ?? false
     }
 }

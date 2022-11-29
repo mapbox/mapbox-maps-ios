@@ -46,6 +46,10 @@ internal extension StyleProtocol {
 ///
 /// - Important: Style should only be used from the main thread.
 public final class Style: StyleProtocol {
+    internal static var enableDirecGeoJSONUpdate: Bool {
+        get { StyleSourceManager.enableDirectGeoJSONUpdate }
+        set { StyleSourceManager.enableDirectGeoJSONUpdate = newValue }
+    }
 
     private let sourceManager: StyleSourceManagerProtocol
     private let _styleManager: StyleManagerProtocol

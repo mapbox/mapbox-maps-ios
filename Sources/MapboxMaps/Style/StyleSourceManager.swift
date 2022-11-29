@@ -20,6 +20,8 @@ internal protocol StyleSourceManagerProtocol: AnyObject {
 internal final class StyleSourceManager: StyleSourceManagerProtocol {
     private typealias SourceId = String
 
+    internal static var enableDirectGeoJSONUpdate = false
+
     internal static func sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue {
         return StyleManager.getStyleSourcePropertyDefaultValue(forSourceType: sourceType, property: property)
     }
@@ -95,7 +97,11 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
             throw StyleError(message: "Source with id '\(id)' is not found or not a GeoJSONSource.")
         }
 
-        applyGeoJSONData(data: geoJSON.sourceData, sourceId: id)
+        if Self.enableDirectGeoJSONUpdate {
+            directlyApplyGeoJSON(geoJSONObject: geoJSON, sourceId: id)
+        } else {
+            applyGeoJSONData(data: geoJSON.sourceData, sourceId: id)
+        }
     }
 
     // MARK: - Untyped API
@@ -140,6 +146,12 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
         }
     }
 
+    private func setStyleSourceDataForSourceId(_ id: String, geojson: GeoJSON) throws {
+        try handleExpected {
+            return styleManager.setStyleSourceDataForSourceId(id, geojson: geojson)
+        }
+    }
+
     // MARK: - Async GeoJSON source data parsing
 
     private func addGeoJSONSource(_ source: GeoJSONSource, id: String) throws {
@@ -156,6 +168,28 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
         if case GeoJSONSourceData.empty = data { return }
 
         applyGeoJSONData(data: data, sourceId: id)
+    }
+
+    private func directlyApplyGeoJSON(geoJSONObject: GeoJSONObject, sourceId id: String) {
+        workItems.removeValue(forKey: id)?.cancel()
+
+        // This implementation favors the first submitted task and the last, in case of many work items queuing up -
+        // the item that started execution will disregard cancellation, queued up items in the middle will get cancelled,
+        // and the last item will be left waiting in the queue.
+        let item = DispatchWorkItem { [weak self] in
+            if self == nil { return } // not capturing self here as toString conversion below can take time
+
+            let geoJSON = geoJSONObject.geoJSON
+
+            do {
+                try self?.setStyleSourceDataForSourceId(id, geojson: geoJSON)
+            } catch {
+                Log.error(forMessage: "Failed to set data for source with id: \(id), error: \(error)")
+            }
+        }
+
+        workItems[id] = item
+        backgroundQueue.async(execute: item)
     }
 
     private func applyGeoJSONData(data: GeoJSONSourceData, sourceId id: String) {

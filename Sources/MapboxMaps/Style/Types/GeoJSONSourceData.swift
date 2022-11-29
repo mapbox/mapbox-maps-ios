@@ -85,4 +85,18 @@ extension GeoJSONObject {
             return .featureCollection(collection)
         }
     }
+
+    internal var geoJSON: GeoJSON {
+        switch self {
+        case .geometry(let geometry):
+            let geometry = MapboxCommon.Geometry(geometry)
+            return .fromGeometry(geometry)
+        case .feature(let feature):
+            let feature = MapboxCommon.Feature(feature)
+            return .fromFeature(feature)
+        case .featureCollection(let collection):
+            let features = collection.features.map(MapboxCommon.Feature.init)
+            return .fromNSArray(features)
+        }
+    }
 }

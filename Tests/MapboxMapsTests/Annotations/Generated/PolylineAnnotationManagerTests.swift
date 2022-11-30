@@ -725,7 +725,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         expectation = nil
     }
 
-
     func testHandleDragBeginNoFeatureId() {
         style.addSourceStub.reset()
         style.addPersistentLayerWithPropertiesStub.reset()

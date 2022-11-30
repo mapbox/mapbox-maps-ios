@@ -3,7 +3,7 @@ import UIKit
 
 // Custom long press gesture recognizer used for dragging annotations.
 //Takes translation into account for began and changed states.
-internal final class MapboxLongPressGestureRecognizer: UILongPressGestureRecognizer {
+internal class MapboxLongPressGestureRecognizer: UILongPressGestureRecognizer {
     private var translationReference: CGPoint = .zero
     private var translation: CGPoint = .zero
 

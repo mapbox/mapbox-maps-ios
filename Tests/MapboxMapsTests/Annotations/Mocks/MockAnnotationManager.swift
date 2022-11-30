@@ -3,11 +3,11 @@ import XCTest
 
 internal final class MockAnnotationManager: AnnotationManagerInternal {
 
-    var id: String = ""
+    @Stubbed var id: String = ""
 
-    var sourceId: String = ""
+    @Stubbed var sourceId: String = ""
 
-    var layerId: String = ""
+    @Stubbed var layerId: String = ""
 
     let destroyStub = Stub<Void, Void>()
     func destroy() {
@@ -34,4 +34,3 @@ internal final class MockAnnotationManager: AnnotationManagerInternal {
         handleDragEndedStub.call()
     }
 }
-

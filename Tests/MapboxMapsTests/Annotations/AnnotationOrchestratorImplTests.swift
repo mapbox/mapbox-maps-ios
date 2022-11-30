@@ -4,7 +4,7 @@ import XCTest
 
 final class AnnotationOrchestratorImplTests: XCTestCase {
     var tapGestureRecognizer: MockGestureRecognizer!
-    var longPressGestureRecognizer: MapboxLongPressGestureRecognizer!
+    var longPressGestureRecognizer: MockLongPressGestureRecognizer!
     var mapFeatureQueryable: MockMapFeatureQueryable!
     var style: MockStyle!
     var displayLinkCoordinator: MockDisplayLinkCoordinator!
@@ -18,7 +18,7 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
         super.setUp()
 
         tapGestureRecognizer = MockGestureRecognizer()
-        longPressGestureRecognizer = MapboxLongPressGestureRecognizer()
+        longPressGestureRecognizer = MockLongPressGestureRecognizer()
         mapFeatureQueryable = MockMapFeatureQueryable()
         style = MockStyle()
         displayLinkCoordinator = MockDisplayLinkCoordinator()
@@ -143,97 +143,197 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
         }
     }
 
-    func testAnnotationOrchestratorProxiesGestureDragEnd() {
+    func testAnnotationOrchestratorProxiesGestureDragEndForAllManagersButPoint() {
         // given
+        let annotationManagerLayerId = "managerId"
         let annotationManager = MockAnnotationManager()
-        let factory = MockAnnotationManagerFactory()
+//        let factoryStubs = [
+//            factory.makeCircleAnnotationManagerStub.defaultReturnValue,
+//            factory.makePolygonAnnotationManagerStub.defaultReturnValue,
+//            factory.makePolylineAnnotationManagerStub.defaultReturnValue,
+//        ]
+//
+//        for _ in factoryStubs {
+//            _ = annotationManager
+//        }
         factory.makePolygonAnnotationManagerStub.defaultReturnValue = annotationManager
-        let recognizer = MockLongPressGestureRecognizer()
-        let impl = impl
-        recognizer.getStateStub.defaultReturnValue = .ended
-        _ = impl?.makePolygonAnnotationManager(id: "sfsdf", layerPosition: nil)
+        factory.makePolylineAnnotationManagerStub.defaultReturnValue = annotationManager
+        factory.makeCircleAnnotationManagerStub.defaultReturnValue = annotationManager
+        longPressGestureRecognizer.getStateStub.defaultReturnValue = .ended
+        let factories: [(String, LayerPosition?) -> AnnotationManagerInternal] = [
+            impl.makeCircleAnnotationManager,
+            impl.makePolygonAnnotationManager,
+            impl.makePolylineAnnotationManager,
+        ]
 
+        for factory in factories {
+//            factoryStubs = annotationManager
+            _ = factory(annotationManagerLayerId, nil)
+        }
         // when
-        recognizer.sendActions()
+        longPressGestureRecognizer.sendActions()
 
         // then
         XCTAssertEqual(annotationManager.handleDragEndedStub.invocations.count, 1)
     }
 
-    func testAnnotationOrchestratorDragGestureBeginInvokesQueriesRenderedFeatures() {
+    func testAnnotationOrchestratorProxiesGestureDragEndForPointManager() {
         // given
-        let annotationManagerLayerId = "sdfsdfdsf"
+        let annotationManagerLayerId = "managerId"
         let annotationManager = MockAnnotationManager()
-        let factory = MockAnnotationManagerFactory()
+        factory.makePointAnnotationManagerStub.defaultReturnValue = annotationManager
+        longPressGestureRecognizer.getStateStub.defaultReturnValue = .ended
+        _ = impl.makePointAnnotationManager(id: annotationManagerLayerId, layerPosition: nil, clusterOptions: nil)
+
+        // when
+        longPressGestureRecognizer.sendActions()
+
+        // then
+        XCTAssertEqual(annotationManager.handleDragEndedStub.invocations.count, 1)
+    }
+
+    func testAnnotationOrchestratorDragGestureBeginInvokesQueriesRenderedFeaturesForAllManagersExceptPoint() {
+        // given
+        let annotationManagerLayerId = "managerId"
+        let annotationManager = MockAnnotationManager()
+        annotationManager.$id.getStub.defaultReturnValue = annotationManagerLayerId
+        print(annotationManager.id)
         factory.makePolygonAnnotationManagerStub.defaultReturnValue = annotationManager
-        let recognizer = MockLongPressGestureRecognizer()
-        let mapFeatureQueryable = MockMapFeatureQueryable()
-        let impl = impl
-        recognizer.getStateStub.defaultReturnValue = .began
+        longPressGestureRecognizer.getStateStub.defaultReturnValue = .began
         _ = impl?.makePolygonAnnotationManager(id: annotationManagerLayerId, layerPosition: nil)
 
         // when
-        recognizer.sendActions()
+        longPressGestureRecognizer.sendActions()
 
         // then
         XCTAssertEqual(mapFeatureQueryable.queryRenderedFeaturesAtStub.invocations.count, 1)
         XCTAssertEqual(mapFeatureQueryable.queryRenderedFeaturesAtStub.invocations.first?.parameters.options?.layerIds, [annotationManagerLayerId])
     }
 
-    func testAnnotationOrchestratorDragGestureBeginNotifiesAnnotationManagersAboutQRFSuccess() {
+    func testAnnotationOrchestratorDragGestureBeginInvokesQueriesRenderedFeaturesForPointManager() {
         // given
-        let annotationManagerLayerId = "sdfsdfdsf"
+        let annotationManagerLayerId = "managerId"
         let annotationManager = MockAnnotationManager()
-        let factory = MockAnnotationManagerFactory()
+        annotationManager.$id.getStub.defaultReturnValue = annotationManagerLayerId
+        factory.makePointAnnotationManagerStub.defaultReturnValue = annotationManager
+        longPressGestureRecognizer.getStateStub.defaultReturnValue = .began
+        _ = impl?.makePointAnnotationManager(id: annotationManagerLayerId, layerPosition: nil, clusterOptions: nil)
+
+        // when
+        longPressGestureRecognizer.sendActions()
+
+        // then
+        XCTAssertEqual(mapFeatureQueryable.queryRenderedFeaturesAtStub.invocations.count, 1)
+        XCTAssertEqual(mapFeatureQueryable.queryRenderedFeaturesAtStub.invocations.first?.parameters.options?.layerIds, [annotationManagerLayerId])
+    }
+
+    func testAnnotationOrchestratorDragGestureBeginNotifiesAnnotationManagersAboutQRFSuccessForAllManagersExceptPoint() {
+        // given
+        let annotationManagerLayerId = "managerId"
+        let annotationManager = MockAnnotationManager()
+
         factory.makePolygonAnnotationManagerStub.defaultReturnValue = annotationManager
-        let recognizer = MockLongPressGestureRecognizer()
-        let mapFeatureQueryable = MockMapFeatureQueryable()
-        let impl = impl
-        recognizer.getStateStub.defaultReturnValue = .began
+        longPressGestureRecognizer.getStateStub.defaultReturnValue = .began
         _ = impl?.makePolygonAnnotationManager(id: annotationManagerLayerId, layerPosition: nil)
 
         // when
-        recognizer.sendActions()
+        longPressGestureRecognizer.sendActions()
         let qrfCompletions: (Result<[QueriedFeature], Error>) -> Void = (mapFeatureQueryable.queryRenderedFeaturesAtStub.invocations.first?.parameters.completion)!
-        let featureIdentifier = "dsfsdfsdfdsfdsf"
+        let featureIdentifier = "feature"
         let feature = QueriedFeature.init(
             __feature: MapboxCommon.Feature.init(
                 identifier: featureIdentifier as NSObject,
                 geometry: MapboxCommon.Geometry(Point(.init(latitude: 0, longitude: 0))),
                 properties: [:]),
-            source: "sdfdssf",
+            source: "feature-source",
             sourceLayer: nil,
-            state: "dsfsf"
+            state: "feature-state"
         )
 
         qrfCompletions(.success([feature]))
 
         // then
         XCTAssertEqual(annotationManager.handleDragBeginStub.invocations.count, 1)
-        XCTAssertEqual(annotationManager.handleDragBeginStub.invocations.first?.parameters.featureIdentifier, featureIdentifier)
+        XCTAssertEqual(annotationManager.handleDragBeginStub.invocations.first!.parameters.first, featureIdentifier)
+    }
 
+    func testAnnotationOrchestratorDragGestureBeginNotifiesAnnotationManagersAboutQRFSuccessForPointManager() {
+        // given
+        let annotationManagerLayerId = "managerId"
+        let annotationManager = MockAnnotationManager()
+
+        factory.makePointAnnotationManagerStub.defaultReturnValue = annotationManager
+        longPressGestureRecognizer.getStateStub.defaultReturnValue = .began
+        _ = impl?.makePointAnnotationManager(id: annotationManagerLayerId, layerPosition: nil, clusterOptions: nil)
+
+        // when
+        longPressGestureRecognizer.sendActions()
+        let qrfCompletions: (Result<[QueriedFeature], Error>) -> Void = (mapFeatureQueryable.queryRenderedFeaturesAtStub.invocations.first?.parameters.completion)!
+        let featureIdentifier = "feature"
+        let feature = QueriedFeature.init(
+            __feature: MapboxCommon.Feature.init(
+                identifier: featureIdentifier as NSObject,
+                geometry: MapboxCommon.Geometry(Point(.init(latitude: 0, longitude: 0))),
+                properties: [:]),
+            source: "feature-source",
+            sourceLayer: nil,
+            state: "feature-state"
+        )
+
+        qrfCompletions(.success([feature]))
+
+        // then
+        XCTAssertEqual(annotationManager.handleDragBeginStub.invocations.count, 1)
+        XCTAssertEqual(annotationManager.handleDragBeginStub.invocations.first!.parameters.first, featureIdentifier)
     }
 
     enum TestError: Error {
         case test
     }
-    func testAnnotationOrchestratorDragGestureBeginIgnoresQRFFailure() {
+    func testAnnotationOrchestratorDragGestureBeginIgnoresQRFFailureForAllManagersExceptPoint() {
         // given
-        let annotationManagerLayerId = "sdfsdfdsf"
+        let annotationManagerLayerId = "managerId"
         let annotationManager = MockAnnotationManager()
-        let factory = MockAnnotationManagerFactory()
+        factory.makeCircleAnnotationManagerStub.defaultReturnValue = annotationManager
         factory.makePolygonAnnotationManagerStub.defaultReturnValue = annotationManager
-        let recognizer = MockLongPressGestureRecognizer()
-        let mapFeatureQueryable = MockMapFeatureQueryable()
-        let impl = impl
-        recognizer.getStateStub.defaultReturnValue = .began
-        _ = impl?.makePolygonAnnotationManager(id: annotationManagerLayerId, layerPosition: nil)
+        factory.makePolylineAnnotationManagerStub.defaultReturnValue = annotationManager
+        longPressGestureRecognizer.getStateStub.defaultReturnValue = .began
+        let factories: [(String, LayerPosition?) -> AnnotationManagerInternal] = [
+            impl.makeCircleAnnotationManager,
+            impl.makePolygonAnnotationManager,
+            impl.makePolylineAnnotationManager,
+        ]
 
+        for factory in factories {
+            //            factoryStubs = annotationManager
+            _ = factory(annotationManagerLayerId, nil)
+
+            // when
+            longPressGestureRecognizer.sendActions()
+            let qrfCompletions: (Result<[QueriedFeature], Error>) -> Void = (mapFeatureQueryable.queryRenderedFeaturesAtStub.invocations.first?.parameters.completion)!
+            let featureIdentifier = "feature"
+
+            qrfCompletions(.failure(TestError.test))
+
+            // then
+            XCTAssertEqual(annotationManager.handleDragBeginStub.invocations.count, 0)
+        }
+//        _ = impl?.makePolygonAnnotationManager(id: annotationManagerLayerId, layerPosition: nil)
+
+    }
+
+    func testAnnotationOrchestratorDragGestureBeginIgnoresQRFFailureForPointManager() {
+        // given
+        let annotationManagerLayerId = "managerId"
+        let annotationManager = MockAnnotationManager()
+        factory.makePointAnnotationManagerStub.defaultReturnValue = annotationManager
+        longPressGestureRecognizer.getStateStub.defaultReturnValue = .began
+        _ = impl?.makePointAnnotationManager(id: annotationManagerLayerId, layerPosition: nil, clusterOptions: nil)
 
         // when
-        recognizer.sendActions()
+        longPressGestureRecognizer.sendActions()
         let qrfCompletions: (Result<[QueriedFeature], Error>) -> Void = (mapFeatureQueryable.queryRenderedFeaturesAtStub.invocations.first?.parameters.completion)!
-        let featureIdentifier = "dsfsdfsdfdsfdsf"
+        let featureIdentifier = "feature"
 
         qrfCompletions(.failure(TestError.test))
 

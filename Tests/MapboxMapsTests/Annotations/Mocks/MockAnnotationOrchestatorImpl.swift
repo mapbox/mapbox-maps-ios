@@ -7,16 +7,16 @@ final class MockAnnotationOrchestatorImpl: AnnotationOrchestratorImplProtocol {
 
     func makePointAnnotationManager(id: String,
                                     layerPosition: LayerPosition?,
-                                    clusterOptions: ClusterOptions?) -> PointAnnotationManager {
+                                    clusterOptions: ClusterOptions?) -> AnnotationManagerInternal {
         fatalError("TODO")
     }
-    func makePolygonAnnotationManager(id: String, layerPosition: LayerPosition?) -> PolygonAnnotationManager {
+    func makePolygonAnnotationManager(id: String, layerPosition: LayerPosition?) -> AnnotationManagerInternal {
         fatalError("TODO")
     }
-    func makePolylineAnnotationManager(id: String, layerPosition: LayerPosition?) -> PolylineAnnotationManager {
+    func makePolylineAnnotationManager(id: String, layerPosition: LayerPosition?) -> AnnotationManagerInternal {
         fatalError("TODO")
     }
-    func makeCircleAnnotationManager(id: String, layerPosition: LayerPosition?) -> CircleAnnotationManager {
+    func makeCircleAnnotationManager(id: String, layerPosition: LayerPosition?) -> AnnotationManagerInternal {
         fatalError("TODO")
     }
     func removeAnnotationManager(withId id: String) {

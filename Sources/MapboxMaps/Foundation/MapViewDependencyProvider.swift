@@ -240,6 +240,17 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
         let offsetPointCalculator = OffsetPointCalculator(mapboxMap: mapboxMap)
         let offsetLineStringCalculator = OffsetLineStringCalculator(mapboxMap: mapboxMap)
         let offsetPolygonCalculator = OffsetPolygonCalculator(mapboxMap: mapboxMap)
+//        return AnnotationOrchestratorImpl(
+//            tapGestureRecognizer: tapGetureRecognizer,
+//            longPressGestureRecognizer: longPressGestureRecognizer,
+//            mapFeatureQueryable: mapFeatureQueryable,
+//            factory: AnnotationManagerFactory(
+//                style: style,
+//                displayLinkCoordinator: displayLinkCoordinator,
+//                offsetPointCalculator: offsetPointCalculator,
+//                offsetPolygonCalculator: offsetPolygonCalculator,
+//                offsetLineStringCalculator: offsetLineStringCalculator))
+        let factory = AnnotationManagerFactory()
 
         return AnnotationOrchestratorImpl(
             tapGestureRecognizer: tapGetureRecognizer,
@@ -249,7 +260,8 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             displayLinkCoordinator: displayLinkCoordinator,
             offsetPointCalculator: offsetPointCalculator,
             offsetLineStringCalculator: offsetLineStringCalculator,
-            offsetPolygonCalculator: offsetPolygonCalculator)
+            offsetPolygonCalculator: offsetPolygonCalculator,
+            factory: factory)
     }
 
     internal func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool,

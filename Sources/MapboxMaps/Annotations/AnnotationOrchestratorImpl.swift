@@ -6,21 +6,11 @@ internal protocol AnnotationOrchestratorImplProtocol: AnyObject {
     var annotationManagersById: [String: AnnotationManager] { get }
     func makePointAnnotationManager(id: String,
                                     layerPosition: LayerPosition?,
-                                    clusterOptions: ClusterOptions?) -> PointAnnotationManager
-    func makePolygonAnnotationManager(id: String, layerPosition: LayerPosition?) -> PolygonAnnotationManager
-    func makePolylineAnnotationManager(id: String, layerPosition: LayerPosition?) -> PolylineAnnotationManager
-    func makeCircleAnnotationManager(id: String, layerPosition: LayerPosition?) -> CircleAnnotationManager
+                                    clusterOptions: ClusterOptions?) -> AnnotationManagerInternal
+    func makePolygonAnnotationManager(id: String, layerPosition: LayerPosition?) -> AnnotationManagerInternal
+    func makePolylineAnnotationManager(id: String, layerPosition: LayerPosition?) -> AnnotationManagerInternal
+    func makeCircleAnnotationManager(id: String, layerPosition: LayerPosition?) -> AnnotationManagerInternal
     func removeAnnotationManager(withId id: String)
-}
-
-internal protocol AnnotationManagerFactoryProtocol: AnyObject {
-    func makePolygonAnnotationManager(
-        id: String,
-        style: StyleProtocol,
-        layerPosition: LayerPosition?,
-        displayLinkCoordinator: DisplayLinkCoordinator,
-        offsetPolygonCalculator: OffsetPolygonCalculator
-    ) -> AnnotationManagerInternal
 }
 
 internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestratorImplProtocol {
@@ -41,7 +31,7 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
 
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
 
-    private let factory: AnnotationManagerFactory
+    private let factory: AnnotationManagerFactoryProtocol
 
     internal init(tapGestureRecognizer: UIGestureRecognizer,
                   longPressGestureRecognizer: MapboxLongPressGestureRecognizer,
@@ -51,7 +41,7 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
                   offsetPointCalculator: OffsetPointCalculator,
                   offsetLineStringCalculator: OffsetLineStringCalculator,
                   offsetPolygonCalculator: OffsetPolygonCalculator,
-                  factory: AnnotationManagerFactory) {
+                  factory: AnnotationManagerFactoryProtocol) {
         self.tapGestureRecognizer = tapGestureRecognizer
         self.longPressGestureRecognizer = longPressGestureRecognizer
         self.mapFeatureQueryable = mapFeatureQueryable
@@ -74,7 +64,7 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
         annotationManagersByIdInternal
     }
 
-    private var annotationManagersByIdInternal = [String: AnnotationManagerInternal]()
+    internal var annotationManagersByIdInternal = [String: AnnotationManagerInternal]()
 
     /// Creates a `PointAnnotationManager` which is used to manage a collection of
     /// `PointAnnotation`s. Annotations persist across style changes. If an annotation manager with
@@ -88,12 +78,12 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
     /// - Returns: An instance of `PointAnnotationManager`
     internal func makePointAnnotationManager(id: String,
                                              layerPosition: LayerPosition?,
-                                             clusterOptions: ClusterOptions?) -> PointAnnotationManager {
+                                             clusterOptions: ClusterOptions?) -> AnnotationManagerInternal {
         guard let displayLinkCoordinator = displayLinkCoordinator else {
             fatalError("DisplayLinkCoordinator must be present when creating an annotation manager")
         }
         removeAnnotationManager(withId: id, warnIfRemoved: true, function: #function)
-        let annotationManager = PointAnnotationManager(
+        let annotationManager = factory.makePointAnnotationManager(
             id: id,
             style: style,
             layerPosition: layerPosition,
@@ -113,18 +103,19 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
     ///   - id: Optional string identifier for this manager..
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
     /// - Returns: An instance of `PolygonAnnotationManager`
-    internal func makePolygonAnnotationManager(id: String, layerPosition: LayerPosition?) -> PolygonAnnotationManager {
+    internal func makePolygonAnnotationManager(id: String, layerPosition: LayerPosition?) -> AnnotationManagerInternal {
         guard let displayLinkCoordinator = displayLinkCoordinator else {
             fatalError("DisplayLinkCoordinator must be present when creating an annotation manager")
         }
         removeAnnotationManager(withId: id, warnIfRemoved: true, function: #function)
-        let annotationManager = PolygonAnnotationManager(
+        let annotationManager = factory.makePolygonAnnotationManager(
             id: id,
             style: style,
             layerPosition: layerPosition,
             displayLinkCoordinator: displayLinkCoordinator,
             offsetPolygonCalculator: offsetPolygonCalculator)
         annotationManagersByIdInternal[id] = annotationManager
+
         return annotationManager
     }
 
@@ -137,12 +128,12 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
     ///   - id: Optional string identifier for this manager.
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
     /// - Returns: An instance of `PolylineAnnotationManager`
-    internal func makePolylineAnnotationManager(id: String, layerPosition: LayerPosition?) -> PolylineAnnotationManager {
+    internal func makePolylineAnnotationManager(id: String, layerPosition: LayerPosition?) -> AnnotationManagerInternal {
         guard let displayLinkCoordinator = displayLinkCoordinator else {
             fatalError("DisplayLinkCoordinator must be present when creating an annotation manager")
         }
         removeAnnotationManager(withId: id, warnIfRemoved: true, function: #function)
-        let annotationManager = PolylineAnnotationManager(
+        let annotationManager = factory.makePolylineAnnotationManager(
             id: id,
             style: style,
             layerPosition: layerPosition,
@@ -161,12 +152,12 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
     ///   - id: Optional string identifier for this manager.
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
     /// - Returns: An instance of `CircleAnnotationManager`
-    internal func makeCircleAnnotationManager(id: String, layerPosition: LayerPosition?) -> CircleAnnotationManager {
+    internal func makeCircleAnnotationManager(id: String, layerPosition: LayerPosition?) -> AnnotationManagerInternal {
         guard let displayLinkCoordinator = displayLinkCoordinator else {
             fatalError("DisplayLinkCoordinator must be present when creating an annotation manager")
         }
         removeAnnotationManager(withId: id, warnIfRemoved: true, function: #function)
-        let annotationManager = CircleAnnotationManager(
+        let annotationManager = factory.makeCircleAnnotationManager(
             id: id,
             style: style,
             layerPosition: layerPosition,

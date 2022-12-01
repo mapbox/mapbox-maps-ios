@@ -4,25 +4,11 @@ import ObjectiveC.runtime
 import MapboxMaps
 
 //swiftlint:disable force_cast
-extension UINavigationController {
-    func popToRootViewController(animated: Bool, completion: @escaping () -> Void) {
-        popToRootViewController(animated: animated)
-
-        if animated, let coordinator = transitionCoordinator {
-            coordinator.animate(alongsideTransition: nil) { _ in
-                completion()
-            }
-        } else {
-            completion()
-        }
-    }
-}
-
 class TestableExampleTests: XCTestCase {
     private var example: Example!
     private weak var weakExampleViewController: UIViewController?
     private weak var weakMapView: MapView?
-    private var rootControllerExpectation: XCTestExpectation?
+    private var exampleControllerRemovedExpectation: XCTestExpectation?
 
     override class var defaultTestSuite: XCTestSuite {
         let newTestSuite = XCTestSuite(forTestCaseClass: TestableExampleTests.self)
@@ -36,17 +22,13 @@ class TestableExampleTests: XCTestCase {
         for category in Examples.all {
             for example in category["examples"] as! [Example] {
                 // Add a method for this test, but using the same implementation
-                if example.type == OfflineManagerExample.self ||
-                   example.type == SnapshotterCoreGraphicsExample.self ||
-                   example.type == StoryboardMapViewExample.self {
-                    let selectorName = "test\(example.type)"
-                    let testSelector = Selector((selectorName))
-                    class_addMethod(Self.self, testSelector, existingImpl, "v@:f")
+                let selectorName = "test\(example.type)"
+                let testSelector = Selector((selectorName))
+                class_addMethod(Self.self, testSelector, existingImpl, "v@:f")
 
-                    let test = TestableExampleTests(selector: testSelector)
-                    test.example = example
-                    newTestSuite.addTest(test)
-                }
+                let test = TestableExampleTests(selector: testSelector)
+                test.example = example
+                newTestSuite.addTest(test)
             }
         }
         return newTestSuite
@@ -55,6 +37,7 @@ class TestableExampleTests: XCTestCase {
     override func tearDownWithError() throws {
         try super.tearDownWithError()
 
+        // check for the example view controller and its mapview leaking
         XCTAssertNil(weakExampleViewController)
         XCTAssertNil(weakMapView)
     }
@@ -89,17 +72,18 @@ class TestableExampleTests: XCTestCase {
             XCTAssertNotNil(weakMapView)
         }
 
-        rootControllerExpectation = self.expectation(description: "Root controller is shown")
+        exampleControllerRemovedExpectation = self.expectation(description: "Example view controller is removed")
         navigationController.popToRootViewController(animated: false)
 
-        let result1 = XCTWaiter().wait(for: [rootControllerExpectation!], timeout: 3)
-        switch result1 {
-        case .completed:
-            break
-        case .timedOut:
-            XCTFail("Example: \(example.title) timed out. Don't forget to call finish().")
-        default:
-            XCTFail("Expectation failed with \(result)")
+        // wait for navigation controller to remove and release the example view controller
+        wait(for: [exampleControllerRemovedExpectation!], timeout: 3)
+    }
+}
+
+extension TestableExampleTests: UINavigationControllerDelegate {
+    func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+        if viewController == navigationController.viewControllers.first {
+            exampleControllerRemovedExpectation?.fulfill()
         }
     }
 }
@@ -123,13 +107,5 @@ private extension UIViewController {
         }
 
         return nil
-    }
-}
-
-extension TestableExampleTests: UINavigationControllerDelegate {
-    func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
-        if viewController == navigationController.viewControllers.first {
-            rootControllerExpectation?.fulfill()
-        }
     }
 }

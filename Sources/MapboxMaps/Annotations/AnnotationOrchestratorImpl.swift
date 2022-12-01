@@ -37,6 +37,8 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
         longPressGestureRecognizer.addTarget(self, action: #selector(handleDrag(_:)))
         longPressGestureRecognizer.delegate = self
         tapGestureRecognizer.delegate = self
+        longPressGestureRecognizer.isEnabled = false
+        tapGestureRecognizer.isEnabled = false
     }
 
     /// Dictionary of annotation managers keyed by their identifiers.
@@ -45,6 +47,11 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
     }
 
     internal var annotationManagersByIdInternal = [String: AnnotationManagerInternal]()
+        didSet {
+            longPressGestureRecognizer.isEnabled = !annotationManagersByIdInternal.isEmpty
+            tapGestureRecognizer.isEnabled = !annotationManagersByIdInternal.isEmpty
+        }
+    }
 
     /// Creates a `PointAnnotationManager` which is used to manage a collection of
     /// `PointAnnotation`s. Annotations persist across style changes. If an annotation manager with

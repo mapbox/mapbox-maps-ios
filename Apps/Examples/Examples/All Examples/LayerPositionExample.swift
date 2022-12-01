@@ -55,6 +55,7 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
         let alert = UIAlertController(title: "Polygon Layer",
                                       message: "Please select the position of polygon layer.",
                                       preferredStyle: .actionSheet)
+        alert.popoverPresentationController?.sourceView = sender
 
         alert.addAction(UIAlertAction(title: "Above state label", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }

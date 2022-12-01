@@ -48,6 +48,48 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
         impl = nil
     }
 
+    func testGesturesDisabledOnInit() {
+        XCTAssertFalse(tapGestureRecognizer.isEnabled)
+        XCTAssertFalse(longPressGestureRecognizer.isEnabled)
+    }
+
+    func testGesturesEnableForAllButPointManager() {
+        let managerId = "test-manager"
+
+        let factories: [(String, LayerPosition?) -> AnnotationManagerInternal] = [
+            impl.makeCircleAnnotationManager,
+            impl.makePolygonAnnotationManager,
+            impl.makePolylineAnnotationManager,
+        ]
+
+        for factory in factories {
+            _ = factory(managerId, nil)
+        }
+
+        XCTAssertTrue(tapGestureRecognizer.isEnabled)
+        XCTAssertTrue(longPressGestureRecognizer.isEnabled)
+
+        for _ in factories {
+            impl.removeAnnotationManager(withId: managerId)
+        }
+
+        XCTAssertFalse(tapGestureRecognizer.isEnabled)
+        XCTAssertFalse(longPressGestureRecognizer.isEnabled)
+    }
+
+    func testGesturesEnableAndDisableForPointManager() {
+        let managerId = "test-manager"
+        _ = impl.makePointAnnotationManager(id: managerId, layerPosition: nil, clusterOptions: nil)
+
+        XCTAssertTrue(tapGestureRecognizer.isEnabled)
+        XCTAssertTrue(longPressGestureRecognizer.isEnabled)
+
+        impl.removeAnnotationManager(withId: managerId)
+
+        XCTAssertFalse(tapGestureRecognizer.isEnabled)
+        XCTAssertFalse(longPressGestureRecognizer.isEnabled)
+    }
+
     func testSingleTapRecognizesSimultaneouslyWithOtherTapRecognizer() {
         let shouldRecognizeSimultaneously = impl.gestureRecognizer(
             tapGestureRecognizer,

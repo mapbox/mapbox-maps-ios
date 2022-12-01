@@ -90,6 +90,11 @@ final class BasicLocationPulsingExample: UIViewController, ExampleProtocol {
 
         let controller = UIAlertController(title: "Puck circle", message: nil, preferredStyle: .actionSheet)
         controller.modalPresentationStyle = .popover
+        if #available(iOS 16.0, *) {
+            controller.popoverPresentationController?.sourceItem = navigationItem.rightBarButtonItem
+        } else {
+            controller.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
+        }
         [constantPulseAction, accuracyPulseAction, staticAccuracyRingAction, stopPulseAction, cancelAction]
             .forEach(controller.addAction)
 

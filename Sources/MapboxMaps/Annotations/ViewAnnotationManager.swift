@@ -317,48 +317,13 @@ public final class ViewAnnotationManager {
             guard let options = try? mapboxMap.options(forViewAnnotationWithId: $0), case .point(let point) = options.geometry else {
                 return nil
             }
-            return (point.coordinates, options.frame)
+            return ($0, point.coordinates, options.frame)
         }
         guard !corners.isEmpty else { return nil }
 
-        var camera: CameraOptions!
-        var isLargestBounds = false
-        var north, east, south, west: CoordinateBoundsCorner!
-
-        while !isLargestBounds {
-            let zoom = camera?.zoom
-            isLargestBounds = true
-
-            for corner in corners {
-                let annotationBounds = coordinateBounds(for: corner, zoom: zoom)
-                if north == nil || coordinateBounds(for: north, zoom: zoom).north < annotationBounds.north {
-                    north = corner
-                    isLargestBounds = false
-                }
-                if east == nil || coordinateBounds(for: east, zoom: zoom).east < annotationBounds.east {
-                    east = corner
-                    isLargestBounds = false
-                }
-                if south == nil || coordinateBounds(for: south, zoom: zoom).south > annotationBounds.south {
-                    south = corner
-                    isLargestBounds = false
-                }
-                if west == nil || coordinateBounds(for: west, zoom: zoom).west > annotationBounds.west {
-                    west = corner
-                    isLargestBounds = false
-                }
-            }
-
-            guard !isLargestBounds else { continue }
-            camera = self.camera(
-                forNorth: north,
-                east: east,
-                south: south,
-                west: west,
-                cameraOptions: CameraOptions(padding: padding, bearing: bearing.map(Double.init), pitch: pitch))
-        }
-
-        return camera
+        // Calculate initial camera assuming annotations with edging coordinate being the bounds's corners.
+        let initialCamera = camera(forCorners: corners, zoom: nil, padding: padding, bearing: bearing, pitch: pitch)
+        return camera(forCorners: corners, zoom: initialCamera.zoom, padding: padding, bearing: bearing, pitch: pitch)
     }
 
     // MARK: - Private functions
@@ -457,23 +422,42 @@ private extension ViewAnnotationPositionDescriptor {
 }
 
 extension ViewAnnotationManager {
-    private typealias CoordinateBoundsCorner = (anchorPoint: LocationCoordinate2D, frame: CGRect)
+    private typealias CoordinateBoundsCorner = (id: String, anchorPoint: LocationCoordinate2D, frame: CGRect)
 
-    /// Calculates ``CameraOptions`` fitting the given corners annotations.
-    /// - Returns: The provided camera with zoom adjusted, so that the cooridnate bounds for annotations
-    /// at top, left, bottom , right at this adjusted zoom would fit into the projection (defined by padding).
+    /// Calculates ``CameraOptions`` by corners with its bounds calculated with given `zoom`.
+    /// - Returns: The camera with zoom adjusted, so that the cooridnate bounds for annotations
+    /// at top, left, bottom , right at this adjusted zoom would fit into the projection (defined by padding, bearing and pitch).
     private func camera(
-        forNorth north: CoordinateBoundsCorner,
-        east: CoordinateBoundsCorner,
-        south: CoordinateBoundsCorner,
-        west: CoordinateBoundsCorner,
-        cameraOptions: CameraOptions
+        forCorners corners: [CoordinateBoundsCorner],
+        zoom: CGFloat?,
+        padding: UIEdgeInsets,
+        bearing: CGFloat?,
+        pitch: CGFloat?
     ) -> CameraOptions {
+
+        var north, east, south, west: CoordinateBoundsCorner!
+
+        for corner in corners {
+            let annotationBounds = coordinateBounds(for: corner, zoom: zoom)
+            if north == nil || coordinateBounds(for: north, zoom: zoom).north < annotationBounds.north {
+                north = corner
+            }
+            if east == nil || coordinateBounds(for: east, zoom: zoom).east < annotationBounds.east {
+                east = corner
+            }
+            if south == nil || coordinateBounds(for: south, zoom: zoom).south > annotationBounds.south {
+                south = corner
+            }
+            if west == nil || coordinateBounds(for: west, zoom: zoom).west > annotationBounds.west {
+                west = corner
+            }
+        }
 
         let innerBounds = CoordinateBounds(
             southwest: .init(latitude: south.anchorPoint.latitude, longitude: west.anchorPoint.longitude),
             northeast: .init(latitude: north.anchorPoint.latitude, longitude: east.anchorPoint.longitude))
-        var padding = cameraOptions.padding ?? .zero
+
+        var padding = padding
         padding.top += abs(north.frame.minY)
         padding.left += abs(west.frame.minX)
         // In case the view is completely above its anchor (maxY is negative), then bottom padding should be zero.
@@ -484,8 +468,8 @@ extension ViewAnnotationManager {
         return mapboxMap.camera(
             for: innerBounds,
             padding: padding,
-            bearing: cameraOptions.bearing,
-            pitch: cameraOptions.pitch.map(Double.init))
+            bearing: bearing.map(Double.init),
+            pitch: pitch.map(Double.init))
     }
 
     /// Calculates the ``CoordinateBounds`` of an annotation at the given `zoom` level.
@@ -496,7 +480,7 @@ extension ViewAnnotationManager {
     private func coordinateBounds(for corner: CoordinateBoundsCorner, zoom: CGFloat?) -> CoordinateBounds {
         guard let zoom = zoom else { return CoordinateBounds.__singleton(forPoint: corner.anchorPoint) }
 
-        let (anchorPoint, frame) = corner
+        let (_, anchorPoint, frame) = corner
         // Calculates distance for anchor's coordinate in meters.
         let anchorProjectedMeters = Projection.projectedMeters(for: anchorPoint)
         let metersPerPoint = Projection.metersPerPoint(for: anchorPoint.latitude, zoom: zoom)

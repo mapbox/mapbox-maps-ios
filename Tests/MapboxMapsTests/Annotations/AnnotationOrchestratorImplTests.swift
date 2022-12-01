@@ -30,11 +30,6 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
             tapGestureRecognizer: tapGestureRecognizer,
             longPressGestureRecognizer: longPressGestureRecognizer,
             mapFeatureQueryable: mapFeatureQueryable,
-            style: style,
-            displayLinkCoordinator: displayLinkCoordinator,
-            offsetPointCalculator: offsetPointCalculator,
-            offsetLineStringCalculator: offsetLineStringCalculator,
-            offsetPolygonCalculator: offsetPolygonCalculator,
             factory: factory)
     }
 
@@ -147,15 +142,6 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
         // given
         let annotationManagerLayerId = "managerId"
         let annotationManager = MockAnnotationManager()
-//        let factoryStubs = [
-//            factory.makeCircleAnnotationManagerStub.defaultReturnValue,
-//            factory.makePolygonAnnotationManagerStub.defaultReturnValue,
-//            factory.makePolylineAnnotationManagerStub.defaultReturnValue,
-//        ]
-//
-//        for _ in factoryStubs {
-//            _ = annotationManager
-//        }
         factory.makePolygonAnnotationManagerStub.defaultReturnValue = annotationManager
         factory.makePolylineAnnotationManagerStub.defaultReturnValue = annotationManager
         factory.makeCircleAnnotationManagerStub.defaultReturnValue = annotationManager
@@ -167,9 +153,9 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
         ]
 
         for factory in factories {
-//            factoryStubs = annotationManager
             _ = factory(annotationManagerLayerId, nil)
         }
+
         // when
         longPressGestureRecognizer.sendActions()
 
@@ -196,9 +182,10 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
         // given
         let annotationManagerLayerId = "managerId"
         let annotationManager = MockAnnotationManager()
-        annotationManager.$id.getStub.defaultReturnValue = annotationManagerLayerId
-        print(annotationManager.id)
+        annotationManager.$layerId.getStub.defaultReturnValue = annotationManagerLayerId
         factory.makePolygonAnnotationManagerStub.defaultReturnValue = annotationManager
+        factory.makeCircleAnnotationManagerStub.defaultReturnValue = annotationManager
+        factory.makePolylineAnnotationManagerStub.defaultReturnValue = annotationManager
         longPressGestureRecognizer.getStateStub.defaultReturnValue = .began
         _ = impl?.makePolygonAnnotationManager(id: annotationManagerLayerId, layerPosition: nil)
 
@@ -214,7 +201,7 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
         // given
         let annotationManagerLayerId = "managerId"
         let annotationManager = MockAnnotationManager()
-        annotationManager.$id.getStub.defaultReturnValue = annotationManagerLayerId
+        annotationManager.$layerId.getStub.defaultReturnValue = annotationManagerLayerId
         factory.makePointAnnotationManagerStub.defaultReturnValue = annotationManager
         longPressGestureRecognizer.getStateStub.defaultReturnValue = .began
         _ = impl?.makePointAnnotationManager(id: annotationManagerLayerId, layerPosition: nil, clusterOptions: nil)
@@ -231,8 +218,9 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
         // given
         let annotationManagerLayerId = "managerId"
         let annotationManager = MockAnnotationManager()
-
         factory.makePolygonAnnotationManagerStub.defaultReturnValue = annotationManager
+        factory.makeCircleAnnotationManagerStub.defaultReturnValue = annotationManager
+        factory.makePolylineAnnotationManagerStub.defaultReturnValue = annotationManager
         longPressGestureRecognizer.getStateStub.defaultReturnValue = .began
         _ = impl?.makePolygonAnnotationManager(id: annotationManagerLayerId, layerPosition: nil)
 
@@ -318,7 +306,6 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
             // then
             XCTAssertEqual(annotationManager.handleDragBeginStub.invocations.count, 0)
         }
-//        _ = impl?.makePolygonAnnotationManager(id: annotationManagerLayerId, layerPosition: nil)
 
     }
 
@@ -333,7 +320,6 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
         // when
         longPressGestureRecognizer.sendActions()
         let qrfCompletions: (Result<[QueriedFeature], Error>) -> Void = (mapFeatureQueryable.queryRenderedFeaturesAtStub.invocations.first?.parameters.completion)!
-        let featureIdentifier = "feature"
 
         qrfCompletions(.failure(TestError.test))
 

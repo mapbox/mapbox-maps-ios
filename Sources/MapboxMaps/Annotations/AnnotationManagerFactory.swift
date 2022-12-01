@@ -3,43 +3,29 @@ import UIKit
 internal protocol AnnotationManagerFactoryProtocol: AnyObject {
     func makePointAnnotationManager(
         id: String,
-        style: StyleProtocol,
         layerPosition: LayerPosition?,
-        displayLinkCoordinator: DisplayLinkCoordinator,
-        clusterOptions: ClusterOptions?,
-        offsetPointCalculator: OffsetPointCalculator
+        clusterOptions: ClusterOptions?
     ) -> AnnotationManagerInternal
 
     func makePolygonAnnotationManager(
         id: String,
-        style: StyleProtocol,
-        layerPosition: LayerPosition?,
-        displayLinkCoordinator: DisplayLinkCoordinator,
-        offsetPolygonCalculator: OffsetPolygonCalculator
+        layerPosition: LayerPosition?
     ) -> AnnotationManagerInternal
 
     func makePolylineAnnotationManager(
         id: String,
-        style: StyleProtocol,
-        layerPosition: LayerPosition?,
-        displayLinkCoordinator: DisplayLinkCoordinator,
-        offsetLineStringCalculator: OffsetLineStringCalculator
+        layerPosition: LayerPosition?
     ) -> AnnotationManagerInternal
 
     func makeCircleAnnotationManager(
         id: String,
-        style: StyleProtocol,
-        layerPosition: LayerPosition?,
-        displayLinkCoordinator: DisplayLinkCoordinator,
-        offsetPointCalculator: OffsetPointCalculator
+        layerPosition: LayerPosition?
     ) -> AnnotationManagerInternal
 }
 
 internal final class AnnotationManagerFactory: AnnotationManagerFactoryProtocol {
-    // add instance variables here for style, displaylinkCoordinator and calculators
-
     private let style: StyleProtocol
-    private let displayLinkCoordinator: DisplayLinkCoordinator
+    private weak var displayLinkCoordinator: DisplayLinkCoordinator?
     private let offsetPointCalculator: OffsetPointCalculator
     private let offsetPolygonCalculator: OffsetPolygonCalculator
     private let offsetLineStringCalculator: OffsetLineStringCalculator
@@ -58,11 +44,11 @@ internal final class AnnotationManagerFactory: AnnotationManagerFactoryProtocol 
 
     internal func makePointAnnotationManager(
         id: String,
-        style: StyleProtocol,
         layerPosition: LayerPosition?,
-        displayLinkCoordinator: DisplayLinkCoordinator,
-        clusterOptions: ClusterOptions?,
-        offsetPointCalculator: OffsetPointCalculator) -> AnnotationManagerInternal {
+        clusterOptions: ClusterOptions?) -> AnnotationManagerInternal {
+            guard let displayLinkCoordinator = displayLinkCoordinator else {
+                fatalError("DisplayLinkCoordinator must be present when creating an annotation manager")
+            }
             return PointAnnotationManager(
                 id: id,
                 style: style,
@@ -73,10 +59,10 @@ internal final class AnnotationManagerFactory: AnnotationManagerFactoryProtocol 
 
     internal func makePolygonAnnotationManager(
         id: String,
-        style: StyleProtocol,
-        layerPosition: LayerPosition?,
-        displayLinkCoordinator: DisplayLinkCoordinator,
-        offsetPolygonCalculator: OffsetPolygonCalculator) -> AnnotationManagerInternal {
+        layerPosition: LayerPosition?) -> AnnotationManagerInternal {
+            guard let displayLinkCoordinator = displayLinkCoordinator else {
+                fatalError("DisplayLinkCoordinator must be present when creating an annotation manager")
+            }
             return PolygonAnnotationManager(
                 id: id,
                 style: style,
@@ -87,10 +73,10 @@ internal final class AnnotationManagerFactory: AnnotationManagerFactoryProtocol 
 
     internal func makePolylineAnnotationManager(
         id: String,
-        style: StyleProtocol,
-        layerPosition: LayerPosition?,
-        displayLinkCoordinator: DisplayLinkCoordinator,
-        offsetLineStringCalculator: OffsetLineStringCalculator) -> AnnotationManagerInternal {
+        layerPosition: LayerPosition?) -> AnnotationManagerInternal {
+            guard let displayLinkCoordinator = displayLinkCoordinator else {
+                fatalError("DisplayLinkCoordinator must be present when creating an annotation manager")
+            }
             return PolylineAnnotationManager(
                 id: id,
                 style: style,
@@ -101,10 +87,10 @@ internal final class AnnotationManagerFactory: AnnotationManagerFactoryProtocol 
 
     internal func makeCircleAnnotationManager(
         id: String,
-        style: StyleProtocol,
-        layerPosition: LayerPosition?,
-        displayLinkCoordinator: DisplayLinkCoordinator,
-        offsetPointCalculator: OffsetPointCalculator) -> AnnotationManagerInternal {
+        layerPosition: LayerPosition?) -> AnnotationManagerInternal {
+            guard let displayLinkCoordinator = displayLinkCoordinator else {
+                fatalError("DisplayLinkCoordinator must be present when creating an annotation manager")
+            }
             return CircleAnnotationManager(
                 id: id,
                 style: style,

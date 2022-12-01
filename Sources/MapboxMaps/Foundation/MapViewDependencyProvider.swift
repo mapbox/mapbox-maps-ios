@@ -240,27 +240,16 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
         let offsetPointCalculator = OffsetPointCalculator(mapboxMap: mapboxMap)
         let offsetLineStringCalculator = OffsetLineStringCalculator(mapboxMap: mapboxMap)
         let offsetPolygonCalculator = OffsetPolygonCalculator(mapboxMap: mapboxMap)
-//        return AnnotationOrchestratorImpl(
-//            tapGestureRecognizer: tapGetureRecognizer,
-//            longPressGestureRecognizer: longPressGestureRecognizer,
-//            mapFeatureQueryable: mapFeatureQueryable,
-//            factory: AnnotationManagerFactory(
-//                style: style,
-//                displayLinkCoordinator: displayLinkCoordinator,
-//                offsetPointCalculator: offsetPointCalculator,
-//                offsetPolygonCalculator: offsetPolygonCalculator,
-//                offsetLineStringCalculator: offsetLineStringCalculator))
-        let factory = AnnotationManagerFactory()
-
+        let factory = AnnotationManagerFactory(
+            style: style,
+            displayLinkCoordinator: displayLinkCoordinator,
+            offsetPointCalculator: offsetPointCalculator,
+            offsetPolygonCalculator: offsetPolygonCalculator,
+            offsetLineStringCalculator: offsetLineStringCalculator)
         return AnnotationOrchestratorImpl(
             tapGestureRecognizer: tapGetureRecognizer,
             longPressGestureRecognizer: longPressGestureRecognizer,
             mapFeatureQueryable: mapFeatureQueryable,
-            style: style,
-            displayLinkCoordinator: displayLinkCoordinator,
-            offsetPointCalculator: offsetPointCalculator,
-            offsetLineStringCalculator: offsetLineStringCalculator,
-            offsetPolygonCalculator: offsetPolygonCalculator,
             factory: factory)
     }
 

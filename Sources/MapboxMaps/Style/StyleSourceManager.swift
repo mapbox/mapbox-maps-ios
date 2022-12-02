@@ -147,9 +147,9 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
         }
     }
 
-    private func setStyleSourceDataForSourceId(_ id: String, geojsonSourceData: MapboxCoreMaps.GeoJSONSourceData) throws {
+    private func setStyleGeoJSONSourceDataForSourceId(_ id: String, data: MapboxCoreMaps.GeoJSONSourceData) throws {
         try handleExpected {
-            return styleManager.__setStyleSourceDataForSourceId(id, geojsonSourceData: geojsonSourceData)
+            return styleManager.__setStyleGeoJSONSourceDataForSourceId(id, geojsonSourceData: geojsonSourceData)
         }
     }
 
@@ -186,7 +186,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
 
             let data = data.coreData
             do {
-                try self?.setStyleSourceDataForSourceId(id, geojsonSourceData: data)
+                try self?.setStyleGeoJSONSourceDataForSourceId(id, data: data)
             } catch {
                 Log.error(forMessage: "Failed to set data for source with id: \(id), error: \(error)")
             }

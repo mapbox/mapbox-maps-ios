@@ -6,23 +6,30 @@ API compatibility checks help to ensure that we do not accidentally break the pu
 
 ## How to run
 
-You can find two scripts in this folder. The first, `breaking-api-check.sh`, is designed to run a set of public API checks over the pre-built baseline. The second, `rebuild-baseline.sh`, helps to generate a new baseline based on a git reference. Let's take a closer look at each of them.
+The `breaking-api-check.py` Python script has two mods – `dump` and `check-api`.
+To compare two versions you have to dump each of them first and then run comparison check.
+It is recommended to dump SDKs with the same Xcode version as there are might be differences in the output format.
+Another recommendation is to use Xcode 13.1 or newer as there are some fixes in the `swift-api-digester` tool.
 
-### `breaking-api-check.sh`
+### Dumping SDK
 
-`breaking-api-check.sh` accepts an optional argument `-p path` which should be a packaged version of MapboxMaps. Without the `-p` argument, the script triggers `scripts/release/packager/package-mapbox-maps.sh` to build XCFramework from scratch. It is useful to specify the path of a pre-built binary to avoid the extra building steps. Breaking API checks running against the `.baseline.zip` JSON API digester dump. To update the baseline, see `rebuild-baseline.sh`.
+SDK dumping subcommand is used to dump the public API of the SDK into a JSON file.
+It supports a few input formats:
 
-The script is path-independent so you can call it from any other folder with an absolute or relative path.
+1. Zip archive of XCFrameworks (can be nested in one level folder). Archive should contain all non-Apple dependencies in XCFramework format as well.
+2. Dumping directly from XCFramework. In this case script would expect dependencies to be in the same folder as the main XCFramework.
+3. Dumping from DerivedData Products folder. You have to provide path to the folder like `…/DerivedData/<app-name>-<xcode-id>/Build/Products/Release-iphoneos/` and the script will find all swift modules in it. That mode can be easily integrated into existing building jobs. Unfortunately, in this case script cannot detect triplet target automatically and you have to provide it manually with `--triplet-target`.
 
-### `rebuild-baseline.sh`
+Most of the time you also have to specify `--module` name to help script to find appropriate module.
+If no `-o`/`--output-path` is provided, script will dump the JSON file into the same folder as the input file with `<module-name>.API.json` name.
 
-`rebuild-baseline.sh` simplifies baseline data updates. Usually, we should not update the baseline within a single major version. However, the digester tool triggers breaking changes for `@_spi` changes as well which is not the desired behavior since we use these to denote experimental APIs which we reserve the right to change outside of a major version bump.
+### Comparing SDK dumps
 
-To update the baseline, update the `.baseapi` file to include a new git reference, then call the script. The new git worktree is checked out in a hidden folder for script purposes.
-
-Upon success, you will get an updated version of `.baseline.zip`. This archive represents folder structure with JSON SDK API dump made by swift-api-digester. It is a native structure for `swift-api-digester` so we can easily extend our platform validations to include macosx/watchos or any other Apple platform.
-
-This script currently requires to run on Xcode 13.3.0 or later.
+When you have two dumps from different version built with the same Xcode version, you can run comparison check. Just pass two JSON files to the script and it will compare them and print the result: `breaking-api-check.py check-api baseline.API.json latest.API.json`.
+Note that first file is assumed to be the baseline and second is the latest version.
+It is possible to provide whitelist file to ignore some changes. The content of file should include exactly the same failure message you see in the report. The `--breakage-allowlist-path` argument is responsible for that.
+To configure report output you can use `--report-path` argument. By default, the report will be saved in local `api-check-report.txt` file and printed to the console only in case of any error.
+If you have installed `gh` command line tool, you can also use `--comment-pr` argument to post the report as a comment to the PR. That report would be ignored as long as no breaking changes are detected and will override the previous comment if it exists.
 
 ## What is `swift-api-digester`?
 
@@ -38,7 +45,7 @@ Another limitation is that you must use `swift-api-digester` from the same toolc
 To get access to the `swift-api-digester` you have to make a path manually. The handy shortcut can be:
 
 ```bash
-API_DIGESTER_PATH="$(xcode-select -p)/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-api-digester"
+API_DIGESTER_PATH="xcrun -f swift-api-digester"
 ```
 
 There is no access to `swift-api-digester` through the `$PATH` or even `xcrun`.
@@ -47,7 +54,7 @@ There is no access to `swift-api-digester` through the `$PATH` or even `xcrun`.
 
 There are a few modes in `swift-api-digester` but we would use only two:
 
-1. First is `--dump-sdk` mode. As it says, you can build the SDK API dump to the JSON file. It's possible to make a dump based on source code or pre-compiled SDK. You must provide SDK path (iphoneos or other) with `-sdk` argument or through `xcrun -sdk iphoneos swift-api-digester …`. 
+1. First is `--dump-sdk` mode. As it says, you can build the SDK API dump to the JSON file. It's possible to make a dump based on source code or pre-compiled SDK. You must provide SDK path (iphoneos or other) with `-sdk` argument or through `xcrun -sdk iphoneos swift-api-digester …`.
 Pay attention to the `-target` argument which requires clang triplet like `arm64-apple-ios11.0`. To find the compilation options of your framework, open a `YOUR_FRAMEWORK.framework/Modules` folder and find any of `.swiftinterface` files. One of the top lines in this file starts with `swift-module-flags` and contains target compilation triplet (for example, `// swift-module-flags: -target arm64-apple-ios11.0`).
 Call example:
 

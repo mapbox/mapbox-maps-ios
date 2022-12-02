@@ -3,7 +3,7 @@ import MapboxMaps
 
 @objc(SnapshotterCoreGraphicsExample)
 
-public class SnapshotterCoreGraphicsExample: UIViewController, ExampleProtocol {
+public class SnapshotterCoreGraphicsExample: UIViewController, NonMapViewExampleProtocol {
     internal var mapView: MapView!
     public var snapshotter: Snapshotter!
     public var snapshotView: UIImageView!

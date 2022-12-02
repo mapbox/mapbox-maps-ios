@@ -70,7 +70,11 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
         var currentCoordinates = [CLLocationCoordinate2D]()
 
         // Start a timer that will add a new coordinate to the line and redraw it every time it repeats.
-        Timer.scheduledTimer(withTimeInterval: 0.10, repeats: true) { ( timer ) in
+        Timer.scheduledTimer(withTimeInterval: 0.10, repeats: true) { [weak self] timer in
+            guard let self = self else {
+                timer.invalidate()
+                return
+            }
 
             if self.currentIndex > self.allCoordinates.count {
                 timer.invalidate()

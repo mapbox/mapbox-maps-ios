@@ -6,6 +6,8 @@ public protocol ExampleProtocol: AnyObject {
     func finish()
 }
 
+public protocol NonMapViewExampleProtocol: ExampleProtocol { }
+
 extension ExampleProtocol {
     public func resourceOptions() -> ResourceOptions {
         return ResourceOptionsManager.default.resourceOptions

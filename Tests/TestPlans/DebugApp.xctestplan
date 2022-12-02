@@ -13,10 +13,7 @@
       {
         "argument" : "-testing YES"
       }
-    ],
-    "mallocStackLoggingOptions" : {
-      "loggingType" : "allAllocations"
-    }
+    ]
   },
   "testTargets" : [
     {

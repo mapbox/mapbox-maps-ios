@@ -17,7 +17,7 @@ internal class MapboxCompassOrnamentView: UIButton {
     }
 
     internal var tapAction: (() -> Void)?
-    private var originalImage: UIImage?
+
     private var compassBackgroundColor: UIColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
     private var needleColor: UIColor = #colorLiteral(red: 0.9971256852, green: 0.2427211106, blue: 0.196741581, alpha: 1)
     private var lineColor: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
@@ -52,8 +52,7 @@ internal class MapboxCompassOrnamentView: UIButton {
                                               comment: "Accessibility hint")
 
         containerView.translatesAutoresizingMaskIntoConstraints = false
-        self.originalImage = createCompassImage()
-        if let image = self.originalImage {
+        if let image = createCompassImage() {
             updateImage(image: image)
         }
         addSubview(containerView)
@@ -61,7 +60,7 @@ internal class MapboxCompassOrnamentView: UIButton {
     }
 
     func updateImage(image: UIImage?) {
-        let image = image ?? self.originalImage
+        let image = image ?? createCompassImage()
         guard let image = image else { return }
         NSLayoutConstraint.deactivate(containerViewConstraints)
         containerView.image = image

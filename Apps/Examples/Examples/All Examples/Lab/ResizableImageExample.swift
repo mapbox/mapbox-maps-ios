@@ -31,9 +31,9 @@ final class ResizableImageExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
-            self.setupExample()
-            self.startUpdatingIconText()
+        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+            self?.setupExample()
+            self?.startUpdatingIconText()
         }
     }
 

@@ -56,15 +56,15 @@ public class SnapshotterCoreGraphicsExample: UIViewController, NonMapViewExample
             context.move(to: berlin)
             context.addLine(to: krakow)
             context.strokePath()
-        } completion: { ( result ) in
+        } completion: { [weak self] result in
             switch result {
             case .success(let image):
-                self.snapshotView.image = image
+                self?.snapshotView.image = image
             case .failure(let error):
                 print("Error generating snapshot: \(error)")
             }
             // The below line is used for internal testing purposes only.
-            self.finish()
+            self?.finish()
         }
     }
 }

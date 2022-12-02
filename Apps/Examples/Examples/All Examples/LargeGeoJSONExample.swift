@@ -19,8 +19,8 @@ final class LargeGeoJSONPerformanceExample: UIViewController, ExampleProtocol {
         let lineStringAsset = NSDataAsset(name: "long_route")
         routePoints = try! JSONDecoder().decode(Feature.self, from: lineStringAsset!.data)
 
-        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
-            try! self.setupExample()
+        mapView.mapboxMap.onNext(event: .styleLoaded) { [weak self] _ in
+            try! self?.setupExample()
         }
     }
 

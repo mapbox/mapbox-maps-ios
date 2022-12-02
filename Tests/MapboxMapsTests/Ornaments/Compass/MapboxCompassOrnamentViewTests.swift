@@ -112,6 +112,30 @@ class MapboxCompassOrnamentViewTests: XCTestCase {
         XCTAssertTrue(compass.containerView.image!.isEqual(expectedImage))
         // And
         XCTAssertFalse(compass.containerView.image!.isEqual(originalImage))
+
+    }
+
+    func testReturningDefaultCompassImage() {
+        // Given
+        let compass = MapboxCompassOrnamentView()
+        let originalImage = compass.containerView.image
+        let customImage = emptyImage(with: CGSize(width: 25, height: 25))
+
+        // When
+        compass.updateImage(image: customImage)
+
+        // Then
+        XCTAssertEqual(compass.containerView.image, customImage)
+
+        // When
+        compass.updateImage(image: nil)
+
+        // Then
+        XCTAssertNotEqual(compass.containerView.image, customImage)
+        // And
+        XCTAssertNotNil(compass.containerView.image)
+        // And
+        XCTAssertEqual(compass.containerView.image, originalImage)
     }
 
     private func emptyImage(with size: CGSize) -> UIImage? {

@@ -26,11 +26,11 @@ final class PitchAndDistanceExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
         // Wait for the map to load its style before setting the filter.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
-            self.setPitchDistanceFilter()
+        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+            self?.setPitchDistanceFilter()
 
             // The below line is used for internal testing purposes only.
-            self.finish()
+            self?.finish()
         }
     }
 

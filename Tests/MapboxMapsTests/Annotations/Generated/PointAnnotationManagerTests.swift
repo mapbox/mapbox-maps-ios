@@ -2836,6 +2836,28 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     }
 
+    func testUnusedImagesNotRemoveIfNotOwn() {
+        // given
+        let annotations: [PointAnnotation] = .random(withLength: 10) {
+            PointAnnotation(image: .init(image: UIImage(), name: UUID().uuidString))
+        }
+
+        // when
+        style.imageExistsStub.defaultReturnValue = true
+        manager.annotations = annotations
+        manager.syncSourceAndLayerIfNeeded()
+
+        // then
+        XCTAssertTrue(style.addImageWithInsetsStub.invocations.isEmpty)
+
+        // when
+        manager.annotations = []
+        manager.syncSourceAndLayerIfNeeded()
+
+        // then
+        XCTAssertTrue(style.removeImageStub.invocations.isEmpty)
+    }
+
     // Tests for clustering
     func testInitWithDefaultClusterOptions() {
         style.addSourceStub.reset()

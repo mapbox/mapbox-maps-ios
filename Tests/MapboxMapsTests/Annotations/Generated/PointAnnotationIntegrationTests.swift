@@ -1774,6 +1774,29 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
         XCTAssertEqual(layer.textOpacity, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-opacity").value as! NSNumber).doubleValue))
     }
+
+    func testAddImages() throws {
+        if style.imageExists(withId: "test-image-1") {
+            try style.removeImage(withId: "test-image-1")
+        }
+        try style.addImage(XCTUnwrap(UIImage.emptyImage(with: .init(width: 20, height: 20))), id: "test-image-2")
+
+        var annotation1 = PointAnnotation(coordinate: .random())
+        annotation1.image = .init(image: try XCTUnwrap(UIImage.emptyImage(with: .init(width: 20, height: 20))), name: "test-image-1")
+        var annotation2 = PointAnnotation(coordinate: .random())
+        annotation2.image = .init(image: try XCTUnwrap(UIImage.emptyImage(with: .init(width: 20, height: 20))), name: "test-image-2")
+        manager.annotations = [annotation1, annotation2]
+        manager.syncSourceAndLayerIfNeeded()
+
+        XCTAssertTrue(style.imageExists(withId: "test-image-1"))
+        XCTAssertTrue(style.imageExists(withId: "test-image-2"))
+
+        manager.annotations = []
+        manager.syncSourceAndLayerIfNeeded()
+
+        XCTAssertFalse(style.imageExists(withId: "test-image-1"))
+        XCTAssertTrue(style.imageExists(withId: "test-image-2"))
+    }
 }
 
 // End of generated file

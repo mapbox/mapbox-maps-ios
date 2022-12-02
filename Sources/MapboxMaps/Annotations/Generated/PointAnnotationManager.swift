@@ -15,7 +15,10 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     }
 
     private var needsSyncSourceAndLayer = false
-    private var addedImages = Set<String>()
+    /// List of images used by this ``PointAnnotationManager``.
+    private var allImages = Set<String>()
+    /// List of images used and added to Style by this ``PointAnnotationManager``.
+    private(set) internal var addedImages = Set<String>()
     private var clusterOptions: ClusterOptions?
 
     // MARK: - Interaction
@@ -192,7 +195,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
                 forMessage: "Failed to remove source for PointAnnotationManager with id \(id) due to error: \(error)",
                 category: "Annotations")
         }
-        removeImages(from: style, images: addedImages)
+        addedImages.subtract(removeImages(from: style, images: addedImages))
         displayLinkCoordinator?.remove(displayLinkParticipant)
     }
 
@@ -210,12 +213,12 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
         let newImages = Set(annotations.compactMap(\.image) + [annotationBeingDragged].compactMap(\.?.image))
         let newImageNames = Set(newImages.map(\.name))
-        let unusedImages = addedImages.subtracting(newImageNames)
+        let unusedImages = allImages.subtracting(newImageNames)
 
-        addImagesToStyleIfNeeded(style: style, images: newImages)
-        removeImages(from: style, images: unusedImages)
+        addedImages.formUnion(addImagesToStyleIfNeeded(style: style, images: newImages))
+        addedImages.subtract(removeImages(from: style, images: unusedImages))
 
-        addedImages = newImageNames
+        allImages = newImageNames
 
         // Construct the properties dictionary from the annotations
         let dataDrivenLayerPropertyKeys = Set(annotations.flatMap { $0.layerProperties.keys })

@@ -86,8 +86,10 @@ extension GeoJSONSourceData {
         case .featureCollection(let collection):
             let features = collection.features.map(MapboxCommon.Feature.init)
             return .fromNSArray(features)
-        case .url, .empty:
-            return .fromNSArray([])
+        case .url(let url):
+            return .fromNSString(url.absoluteString)
+        case .empty:
+            return .fromNSString("")
         }
     }
 }

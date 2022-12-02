@@ -8,15 +8,19 @@ final class StyleSourceManagerTests: XCTestCase {
     var styleManager: MockStyleManager!
     var mainQueue: MockDispatchQueue!
     var backgroundQueue: MockDispatchQueue!
+    var settingsService: MockSettingsService!
 
     override func setUpWithError() throws {
         styleManager = MockStyleManager()
         mainQueue = MockDispatchQueue()
         backgroundQueue = MockDispatchQueue()
+        settingsService = MockSettingsService()
+        settingsService.getStub.defaultReturnValue = .success(false)
         sourceManager = StyleSourceManager(
             styleManager: styleManager,
             mainQueue: mainQueue,
-            backgroundQueue: backgroundQueue
+            backgroundQueue: backgroundQueue,
+            commonSettings: settingsService
         )
     }
 
@@ -25,6 +29,7 @@ final class StyleSourceManagerTests: XCTestCase {
         mainQueue = nil
         backgroundQueue = nil
         sourceManager = nil
+        settingsService = nil
     }
 
     func testGetAllSourceIdentifiers() {
@@ -130,6 +135,7 @@ final class StyleSourceManagerTests: XCTestCase {
     func testAsyncUpdateGeoJSONCallsMainThreadWithParsedString() throws {
         let id = String.randomASCII(withLength: 10)
         let geoJSONObject = GeoJSONObject.featureCollection(FeatureCollection(features: []))
+        settingsService.getStub.defaultReturnValue = .success(false)
         styleManager.getStyleSourcesStub.defaultReturnValue = [StyleObjectInfo(id: id, type: SourceType.geoJson.rawValue)]
         backgroundQueue.asyncWorkItemStub.defaultSideEffect = { $0.parameters.perform() }
         mainQueue.asyncClosureStub.defaultSideEffect = { $0.parameters.work() }
@@ -144,6 +150,23 @@ final class StyleSourceManagerTests: XCTestCase {
         XCTAssertEqual(setSourcePropertyParams.property, "data")
         XCTAssertEqual(setSourcePropertyParams.value as? String, "{\"type\":\"FeatureCollection\",\"features\":[]}")
     }
+
+    func testDirectAsyncUpdateGeoJSONCallsPassesConvertedDataOnBackground() throws {
+        let id = String.randomASCII(withLength: 10)
+        let geoJSONObject = GeoJSONObject.featureCollection(FeatureCollection(features: []))
+        settingsService.getStub.defaultReturnValue = .success(true)
+        styleManager.getStyleSourcesStub.defaultReturnValue = [StyleObjectInfo(id: id, type: SourceType.geoJson.rawValue)]
+        backgroundQueue.asyncWorkItemStub.defaultSideEffect = { $0.parameters.perform() }
+
+        try sourceManager.updateGeoJSONSource(withId: id, geoJSON: geoJSONObject)
+
+        XCTAssertEqual(backgroundQueue.asyncWorkItemStub.invocations.count, 1)
+        XCTAssertEqual(styleManager.setStyleGeoJSONSourceDataForSourceIdStub.invocations.count, 1)
+        let setGeoJSONParams = try XCTUnwrap(styleManager.setStyleGeoJSONSourceDataForSourceIdStub.invocations.first?.parameters)
+        XCTAssertEqual(setGeoJSONParams.sourceId, id)
+        XCTAssertTrue((setGeoJSONParams.data.value as! Array<Any>).isEmpty)
+    }
+
 
     func testAsyncGeoJSONUpdateSkipsParsingWhenCancelled() throws {
         // given
@@ -170,7 +193,7 @@ final class StyleSourceManagerTests: XCTestCase {
         let id = String.randomASCII(withLength: 10)
         let geoJSONObject = GeoJSONObject.featureCollection(FeatureCollection(features: []))
         styleManager.getStyleSourcesStub.defaultReturnValue = [StyleObjectInfo(id: id, type: SourceType.geoJson.rawValue)]
-
+        settingsService.getStub.defaultReturnValue = .success(false)
         try sourceManager.updateGeoJSONSource(withId: id, geoJSON: geoJSONObject)
 
         let workItem = try XCTUnwrap(backgroundQueue.asyncWorkItemStub.invocations.first?.parameters)
@@ -192,6 +215,7 @@ final class StyleSourceManagerTests: XCTestCase {
         let id = String.randomASCII(withLength: 10)
         let geoJSONObject = GeoJSONObject.featureCollection(FeatureCollection(features: []))
         styleManager.getStyleSourcesStub.defaultReturnValue = [StyleObjectInfo(id: id, type: SourceType.geoJson.rawValue)]
+        settingsService.getStub.defaultReturnValue = .success(false)
 
         // when
         for _ in 0..<iterations {
@@ -213,6 +237,7 @@ final class StyleSourceManagerTests: XCTestCase {
         let ids = (0..<sourceCount).map { _ in UUID().uuidString }
         let geoJSONObject = GeoJSONObject.featureCollection(FeatureCollection(features: []))
         styleManager.getStyleSourcesStub.defaultReturnValue = ids.map { StyleObjectInfo(id: $0, type: SourceType.geoJson.rawValue) }
+        settingsService.getStub.defaultReturnValue = .success(false)
 
         // when
         for id in ids {
@@ -227,6 +252,31 @@ final class StyleSourceManagerTests: XCTestCase {
         XCTAssert(backgroundQueue.asyncWorkItemStub.invocations.allSatisfy { !$0.parameters.isCancelled })
         XCTAssertEqual(mainQueue.asyncClosureStub.invocations.count, sourceCount)
         XCTAssertEqual(styleManager.setStyleSourcePropertyStub.invocations.count, sourceCount)
+    }
+
+    func testMultipleDistinctDirectAsyncGeoJSONUpdateDoNotCancelEachOtherOut() throws {
+        // given
+        let iterations = 100
+        let id = String.randomASCII(withLength: 10)
+        let geoJSONObject = GeoJSONObject.featureCollection(FeatureCollection(features: []))
+        styleManager.getStyleSourcesStub.defaultReturnValue = [StyleObjectInfo(id: id, type: SourceType.geoJson.rawValue)]
+        settingsService.getStub.defaultReturnValue = .success(true)
+
+        // when
+        for _ in 0..<iterations {
+            try sourceManager.updateGeoJSONSource(withId: id, geoJSON: geoJSONObject)
+        }
+
+        // then
+        XCTAssertEqual(
+            backgroundQueue.asyncWorkItemStub.invocations.filter { $0.parameters.isCancelled }.count,
+            iterations - 1
+        )
+
+        backgroundQueue.asyncWorkItemStub.invocations.forEach { $0.parameters.perform() }
+
+        XCTAssertEqual(backgroundQueue.asyncWorkItemStub.invocations.count, iterations)
+        XCTAssertEqual(styleManager.setStyleGeoJSONSourceDataForSourceIdStub.invocations.count, 1)
     }
 
     func testSubsequentAsyncGeoJSONUpdateCancelsExisting() throws {
@@ -339,6 +389,7 @@ final class StyleSourceManagerTests: XCTestCase {
         source.data = .url(url)
         backgroundQueue.asyncWorkItemStub.defaultSideEffect = { $0.parameters.perform() }
         mainQueue.asyncClosureStub.defaultSideEffect = { $0.parameters.work() }
+        settingsService.getStub.defaultReturnValue = .success(false)
 
         try sourceManager.addSource(source, id: id)
 
@@ -353,6 +404,27 @@ final class StyleSourceManagerTests: XCTestCase {
         XCTAssertEqual(setSourcePropertyParams.sourceId, id)
         XCTAssertEqual(setSourcePropertyParams.property, "data")
         XCTAssertEqual(setSourcePropertyParams.value as? String, url.absoluteString)
+    }
+
+    func testDirectAddGeoJSONSourceWithURL() throws {
+        let id = String.randomASCII(withLength: 10)
+        var source = GeoJSONSource()
+        let url = URL(string: "https://www.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson")!
+        source.data = .url(url)
+        backgroundQueue.asyncWorkItemStub.defaultSideEffect = { $0.parameters.perform() }
+        settingsService.getStub.defaultReturnValue = .success(true)
+
+        try sourceManager.addSource(source, id: id)
+
+        XCTAssertEqual(styleManager.addStyleSourceStub.invocations.count, 1)
+        let params = try XCTUnwrap(styleManager.addStyleSourceStub.invocations.first?.parameters)
+        XCTAssertEqual(params.sourceId, id)
+        XCTAssertEqual(params.properties as? NSDictionary, ["type": "geojson", "data": ""] as? NSDictionary)
+        XCTAssertEqual(backgroundQueue.asyncWorkItemStub.invocations.count, 1)
+        XCTAssertEqual(styleManager.setStyleGeoJSONSourceDataForSourceIdStub.invocations.count, 1)
+        let setStyleGeoJSONSourceDataForSourceIdParams = try XCTUnwrap(styleManager.setStyleGeoJSONSourceDataForSourceIdStub.invocations.first?.parameters)
+        XCTAssertEqual(setStyleGeoJSONSourceDataForSourceIdParams.sourceId, id)
+        XCTAssertEqual(setStyleGeoJSONSourceDataForSourceIdParams.data.value as? String, url.absoluteString)
     }
 
     func testAddGeoJSONSourceWithEmptyData() throws {

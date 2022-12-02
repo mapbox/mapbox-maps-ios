@@ -149,7 +149,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
 
     private func setStyleGeoJSONSourceDataForSourceId(_ id: String, data: MapboxCoreMaps.GeoJSONSourceData) throws {
         try handleExpected {
-            return styleManager.__setStyleGeoJSONSourceDataForSourceId(id, geojsonSourceData: geojsonSourceData)
+            return styleManager.__setStyleGeoJSONSourceDataForSourceId(id, data: data)
         }
     }
 

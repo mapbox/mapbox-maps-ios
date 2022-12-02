@@ -68,8 +68,7 @@ class TestableExampleTests: XCTestCase {
         }
 
         if !(exampleViewController is NonMapViewExampleProtocol) {
-            weakMapView = exampleViewController.firstMapView
-            XCTAssertNotNil(weakMapView)
+            weakMapView = try? XCTUnwrap(exampleViewController.firstMapView)
         }
 
         exampleControllerRemovedExpectation = self.expectation(description: "Example view controller is removed")

@@ -39,9 +39,14 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
         // Add the stack view to the root view.
         view.addSubview(stackView)
 
-        NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
+        let horizontalConstrants = [
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ]
+        horizontalConstrants.forEach { $0.priority = .defaultHigh}
+        NSLayoutConstraint.activate(horizontalConstrants + [
+            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stackView.widthAnchor.constraint(lessThanOrEqualToConstant: 430),
             stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])

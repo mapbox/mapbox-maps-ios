@@ -30,7 +30,7 @@ This project:
    `swiftlint` in the root of the repository.
 
 4. uses [Swift Package Manager](https://github.com/apple/swift-package-manager)
-   to manage dependencies for development. Cocapods is supported for *consuming*
+   to manage dependencies for development. Cocoapods is supported for *consuming*
    the SDK.
 
 5. uses [secret-shield](https://github.com/mapbox/secret-shield) to help block

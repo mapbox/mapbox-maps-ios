@@ -26,7 +26,7 @@ public class SnapshotterCoreGraphicsExample: UIViewController, NonMapViewExample
         // scale (UIScreen.main.scale)
         let options = MapSnapshotOptions(size: CGSize(width: view.bounds.size.width,
                                                       height: view.bounds.height),
-                                         pixelRatio: 3)
+                                         pixelRatio: 1)
         snapshotter = Snapshotter(options: options)
         snapshotter.style.uri = .dark
 

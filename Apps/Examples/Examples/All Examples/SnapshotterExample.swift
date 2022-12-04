@@ -79,7 +79,7 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
             height: (view.safeAreaLayoutGuide.layoutFrame.height - stackView.spacing) / 2)
         let options = MapSnapshotOptions(
             size: size,
-            pixelRatio: UIScreen.main.scale,
+            pixelRatio: 1,
             resourceOptions: ResourceOptionsManager.default.resourceOptions)
 
         snapshotter = Snapshotter(options: options)

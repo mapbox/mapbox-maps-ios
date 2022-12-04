@@ -66,12 +66,18 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
         }
     }
 
+//    public override func didReceiveMemoryWarning() {
+//        super.didReceiveMemoryWarning()
+//
+//        snapshotter.cancel()
+//    }
+
     private func initializeSnapshotter() {
         // Configure the snapshotter object with its default access
         // token, size, map style, and camera.
         let size = CGSize(
-            width: view.safeAreaLayoutGuide.layoutFrame.width,
-            height: (view.safeAreaLayoutGuide.layoutFrame.height - stackView.spacing) / 2)
+            width: 4096,
+            height: 4096)
         let options = MapSnapshotOptions(
             size: size,
             pixelRatio: UIScreen.main.scale,

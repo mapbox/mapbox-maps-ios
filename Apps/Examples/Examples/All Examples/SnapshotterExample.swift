@@ -75,8 +75,8 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
         // Configure the snapshotter object with its default access
         // token, size, map style, and camera.
         let size = CGSize(
-            width: view.safeAreaLayoutGuide.layoutFrame.width,
-            height: (view.safeAreaLayoutGuide.layoutFrame.height - stackView.spacing) / 2)
+            width: mapView.frame.width,
+            height: mapView.frame.height)
         let options = MapSnapshotOptions(
             size: size,
             pixelRatio: 1,

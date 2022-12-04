@@ -148,14 +148,14 @@ public class Snapshotter {
             }
 
             // Render attributions over the snapshot
-            let sourceAttributions = style.sourceAttributions()
-            let attributions = Attribution.parse(sourceAttributions)
+//            let sourceAttributions = style.sourceAttributions()
+//            let attributions = Attribution.parse(sourceAttributions)
 
             let margin: CGFloat = 10
             let rect = CGRect(origin: .zero, size: uiImage.size)
 
             let (logoSize, text) = AttributionMeasure.logoAndAttributionThatFits(rect: rect,
-                                                                                 attributions: attributions,
+                                                                                 attributions: [],
                                                                                  margin: margin)
 
             // Create views on the main thread

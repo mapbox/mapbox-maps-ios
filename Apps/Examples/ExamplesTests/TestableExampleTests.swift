@@ -21,6 +21,7 @@ class TestableExampleTests: XCTestCase {
 
         for category in Examples.all {
             for example in category["examples"] as! [Example] {
+                guard example.type == SnapshotterExample.self else { continue }
                 // Add a method for this test, but using the same implementation
                 let selectorName = "test\(example.type)"
                 let testSelector = Selector((selectorName))

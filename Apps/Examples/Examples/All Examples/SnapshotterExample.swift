@@ -66,11 +66,11 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
         }
     }
 
-//    public override func didReceiveMemoryWarning() {
-//        super.didReceiveMemoryWarning()
-//
-//        snapshotter.cancel()
-//    }
+    public override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+
+        snapshotter.cancel()
+    }
 
     private func initializeSnapshotter() {
         // Configure the snapshotter object with its default access

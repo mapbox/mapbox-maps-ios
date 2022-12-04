@@ -40,8 +40,8 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
         view.addSubview(stackView)
 
         NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
             stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
@@ -66,18 +66,12 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
         }
     }
 
-    public override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-
-        snapshotter.cancel()
-    }
-
     private func initializeSnapshotter() {
         // Configure the snapshotter object with its default access
         // token, size, map style, and camera.
         let size = CGSize(
-            width: 4096,
-            height: 4096)
+            width: view.safeAreaLayoutGuide.layoutFrame.width,
+            height: (view.safeAreaLayoutGuide.layoutFrame.height - stackView.spacing) / 2)
         let options = MapSnapshotOptions(
             size: size,
             pixelRatio: UIScreen.main.scale,

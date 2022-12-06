@@ -317,7 +317,7 @@ public final class ViewAnnotationManager {
             guard let options = try? mapboxMap.options(forViewAnnotationWithId: $0), case .point(let point) = options.geometry else {
                 return nil
             }
-            return ($0, point.coordinates, options.frame)
+            return CoordinateBoundsCorner(id: $0, anchorPoint: point.coordinates, frame: options.frame)
         }
         guard !corners.isEmpty else { return nil }
 
@@ -422,7 +422,11 @@ private extension ViewAnnotationPositionDescriptor {
 }
 
 extension ViewAnnotationManager {
-    private typealias CoordinateBoundsCorner = (id: String, anchorPoint: LocationCoordinate2D, frame: CGRect)
+    private struct CoordinateBoundsCorner {
+        let id: String
+        let anchorPoint: LocationCoordinate2D
+        let frame: CGRect
+    }
 
     /// Calculates ``CameraOptions`` by corners with its bounds calculated with given `zoom`.
     /// - Returns: The camera with zoom adjusted, so that the cooridnate bounds for annotations
@@ -480,7 +484,7 @@ extension ViewAnnotationManager {
     private func coordinateBounds(for corner: CoordinateBoundsCorner, zoom: CGFloat?) -> CoordinateBounds {
         guard let zoom = zoom else { return CoordinateBounds.__singleton(forPoint: corner.anchorPoint) }
 
-        let (_, anchorPoint, frame) = corner
+        let anchorPoint = corner.anchorPoint, frame = corner.frame
         // Calculates distance for anchor's coordinate in meters.
         let anchorProjectedMeters = Projection.projectedMeters(for: anchorPoint)
         let metersPerPoint = Projection.metersPerPoint(for: anchorPoint.latitude, zoom: zoom)

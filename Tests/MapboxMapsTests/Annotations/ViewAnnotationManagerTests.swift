@@ -420,7 +420,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         XCTAssertNil(manager.camera(forAnnotations: ["dummy"]))
 
         // Annotations that have been added and are valid.
-        let points: [CLLocationCoordinate2D] = .random(withLength: 10, generator: CLLocationCoordinate2D.random)
+        let points = Array.random(withLength: 10, generator: CLLocationCoordinate2D.random)
         let boundingBox = try XCTUnwrap(BoundingBox(from: points))
 
         for (index, point) in points.enumerated() {
@@ -429,16 +429,14 @@ final class ViewAnnotationManagerTests: XCTestCase {
             mapboxMap.optionsForViewAnnotationWithIdStub.returnValueQueue.insert(options, at: 0)
         }
 
-        var zoomLevel = CGFloat.random(in: 0...5)
         mapboxMap.cameraForCoordinateBoundsStub.defaultSideEffect = { [mapboxMap] invocation in
             let camera = MapboxMaps.CameraOptions(
                 center: invocation.parameters.coordinateBounds.center,
                 padding: invocation.parameters.padding,
-                zoom: zoomLevel,
+                zoom: .random(in: 0...5),
                 bearing: invocation.parameters.bearing,
                 pitch: CGFloat(invocation.parameters.pitch ?? 0)
             )
-            zoomLevel = max(0, zoomLevel - 0.5)
             mapboxMap?.cameraForCoordinateBoundsStub.defaultReturnValue = camera
         }
 

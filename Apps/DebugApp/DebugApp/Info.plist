@@ -33,7 +33,7 @@
 		</dict>
 	</dict>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>`</string>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

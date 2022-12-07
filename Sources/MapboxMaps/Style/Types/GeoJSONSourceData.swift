@@ -74,6 +74,26 @@ public enum GeoJSONSourceData: Codable {
     }
 }
 
+extension GeoJSONSourceData {
+    internal var coreData: MapboxCoreMaps.GeoJSONSourceData {
+        switch self {
+        case .geometry(let geometry):
+            let geometry = MapboxCommon.Geometry(geometry)
+            return .fromGeometry(geometry)
+        case .feature(let feature):
+            let feature = MapboxCommon.Feature(feature)
+            return .fromFeature(feature)
+        case .featureCollection(let collection):
+            let features = collection.features.map(MapboxCommon.Feature.init)
+            return .fromNSArray(features)
+        case .url(let url):
+            return .fromNSString(url.absoluteString)
+        case .empty:
+            return .fromNSString("")
+        }
+    }
+}
+
 extension GeoJSONObject {
     internal var sourceData: GeoJSONSourceData {
         switch self {

@@ -14,8 +14,7 @@ For the full license terms, please see the Mapbox Terms of Service at https://ww
 ## Acknowledgements
 
 This application makes use of the following third party libraries:
-
-### MapboxCoreMaps,10.10.0-beta.1,Mapbox ToS,Mapbox,https://www.mapbox.com/
+### [MapboxCoreMaps](https://www.mapbox.com/) by Mapbox
 
 ```
 Mapbox Core Maps version 10.0
@@ -44,7 +43,7 @@ https://www.mapbox.com/legal/tos/
 
 ---
 
-### icu,61.1,ICU,Unicode Inc,https://github.com/unicode-org/icu
+### [icu](https://github.com/unicode-org/icu) by Unicode, Inc
 
 ```
 COPYRIGHT AND PERMISSION NOTICE (ICU 58 and later)
@@ -466,7 +465,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ---
 
-### filesystem,1.5.10,MIT,Steffen Schümann,https://github.com/gulrak/filesystem/
+### [filesystem](https://github.com/gulrak/filesystem/) by Steffen Schümann
 
 ```
 Copyright (c) 2018, Steffen Schümann <s.schuemann@pobox.com>
@@ -493,7 +492,7 @@ SOFTWARE.
 
 ---
 
-### kdbush.hpp,0.1.3,ISC,Vladimir Agafonkin,https://github.com/mourner/kdbush.hpp
+### [kdbush.hpp](https://github.com/mourner/kdbush.hpp) by Vladimir Agafonkin
 
 ```
 Copyright (c) 2016, Vladimir Agafonkin
@@ -514,7 +513,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ---
 
-### cheap-ruler-cpp,2.5.4,ISC,Mapbox,https://github.com/mapbox/cheap-ruler-cpp
+### [cheap-ruler-cpp](https://github.com/mapbox/cheap-ruler-cpp) by Mapbox
 
 ```
 ISC License
@@ -537,7 +536,7 @@ THIS SOFTWARE.
 
 ---
 
-### geojson-vt-cpp,6.6.5,ISC,Mapbox,https://github.com/mapbox/geojson-vt-cpp
+### [geojson-vt-cpp](https://github.com/mapbox/geojson-vt-cpp) by Mapbox
 
 ```
 ISC License
@@ -560,7 +559,7 @@ THIS SOFTWARE.
 
 ---
 
-### shelf-pack-cpp,2.1.1,ISC,Mapbox,https://github.com/mapbox/shelf-pack-cpp
+### [shelf-pack-cpp](https://github.com/mapbox/shelf-pack-cpp) by Mapbox
 
 ```
 ISC License
@@ -583,7 +582,7 @@ THIS SOFTWARE.
 
 ---
 
-### supercluster.hpp,0.5.0,ISC,Mapbox,https://github.com/mapbox/supercluster.hpp
+### [supercluster.hpp](https://github.com/mapbox/supercluster.hpp) by Mapbox
 
 ```
 Copyright (c) 2016, Mapbox
@@ -604,7 +603,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ---
 
-### Boost C++ Libraries,1.69,BSL-1.0,Boost authors,https://www.boost.org
+### [Boost C++ Libraries](https://www.boost.org) by Boost authors
 
 ```
 Boost Software License - Version 1.0 - August 17th, 2003
@@ -635,7 +634,7 @@ DEALINGS IN THE SOFTWARE.
 
 ---
 
-### csscolorparser,dev,MIT,Dean McNamee and Konstantin Käfer,https://github.com/mapbox/css-color-parser-cpp
+### [csscolorparser](https://github.com/mapbox/css-color-parser-cpp) by Dean McNamee and Konstantin Käfer
 
 ```
 (c) Dean McNamee <dean@gmail.com>, 2012.
@@ -663,7 +662,7 @@ IN THE SOFTWARE.
 
 ---
 
-### earcut.hpp,2.2.4,ISC,Mapbox,https://github.com/mapbox/earcut.hpp
+### [earcut.hpp](https://github.com/mapbox/earcut.hpp) by Mapbox
 
 ```
 ISC License
@@ -686,7 +685,7 @@ THIS SOFTWARE.
 
 ---
 
-### eternal,1.0.1,ISC,Mapbox,https://github.com/mapbox/eternal
+### [eternal](https://github.com/mapbox/eternal) by Mapbox
 
 ```
 ISC License
@@ -709,7 +708,7 @@ THIS SOFTWARE.
 
 ---
 
-### parsedate,dev,curl,Daniel Stenberg and others,https://curl.haxx.se
+### [parsedate](https://curl.haxx.se) by Daniel Stenberg and others
 
 ```
 COPYRIGHT AND PERMISSION NOTICE
@@ -739,7 +738,7 @@ in this Software without prior written authorization of the copyright holder.
 
 ---
 
-### polylabel,1.0.3,ISC,Mapbox,https://github.com/mapbox/polylabel
+### [polylabel](https://github.com/mapbox/polylabel) by Mapbox
 
 ```
 ISC License
@@ -761,7 +760,7 @@ SOFTWARE.
 
 ---
 
-### protozero,1.5.2,BSD-2-Clause,Mapbox,https://github.com/mapbox/protozero
+### [protozero](https://github.com/mapbox/protozero) by Mapbox
 
 ```
 protozero copyright (c) Mapbox.
@@ -793,7 +792,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ---
 
-### unique_resource,dev,BSL-1.0,Shintarou Okada,https://github.com/okdshin/unique_resource
+### [unique_resource](https://github.com/okdshin/unique_resource) by Shintarou Okada
 
 ```
 Boost Software License - Version 1.0 - August 17th, 2003
@@ -824,7 +823,7 @@ DEALINGS IN THE SOFTWARE.
 
 ---
 
-### vector-tile,1.0.4,ISC,Mapbox,https://github.com/mapbox/vector-tile
+### [vector-tile](https://github.com/mapbox/vector-tile) by Mapbox
 
 ```
 Copyright (c) 2016, Mapbox
@@ -845,7 +844,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ---
 
-### wagyu,0.4.3,BSL-1.0,Angus Johnson and Mapbox,https://github.com/mapbox/wagyu.git
+### [wagyu](https://github.com/mapbox/wagyu.git) by Angus Johnson and Mapbox
 
 ```
 Parts of the code in the Wagyu Library are derived from the version of the 
@@ -890,7 +889,7 @@ DEALINGS IN THE SOFTWARE.
 
 ---
 
-### draco,1.5.3,Apache-2.0,Google,https://github.com/google/draco
+### [draco](https://github.com/google/draco) by Google
 
 ```
                                  Apache License
@@ -1150,7 +1149,7 @@ For more information, please refer to <http://unlicense.org>
 
 ---
 
-### tinygltf,2.2.0,MIT,Syoyo Fujita,https://github.com/syoyo/tinygltf
+### [tinygltf](https://github.com/syoyo/tinygltf) by Syoyo Fujita
 
 ```
 MIT License
@@ -1179,7 +1178,7 @@ SOFTWARE.
 
 ---
 
-### mapbox-base,dev,BSD-3-Clause,Mapbox,https://github.com/mapbox/mapbox-base
+### [mapbox-base](https://github.com/mapbox/mapbox-base) by Mapbox
 
 ```
 Copyright (c) MapBox
@@ -1211,7 +1210,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ---
 
-### expected-lite,0.4.0,BSL-1.0,Martin Moene,https://github.com/martinmoene/expected-lite
+### [expected-lite](https://github.com/martinmoene/expected-lite) by Martin Moene
 
 ```
 Boost Software License - Version 1.0 - August 17th, 2003
@@ -1242,7 +1241,7 @@ DEALINGS IN THE SOFTWARE.
 
 ---
 
-### RapidJSON,1.1.0,MIT,THL A29 Limited and Milo Yip,https://rapidjson.org
+### [RapidJSON](https://rapidjson.org) by THL A29 Limited, a Tencent company, and Milo Yip
 
 ```
 Tencent is pleased to support the open source community by making RapidJSON available. 
@@ -1307,7 +1306,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ---
 
-### geojson.hpp,5.1.0,ISC,Mapbox,https://github.com/mapbox/geojson-cpp
+### [geojson.hpp](https://github.com/mapbox/geojson-cpp) by Mapbox
 
 ```
 Copyright (c) 2016, Mapbox
@@ -1328,7 +1327,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ---
 
-### geometry.hpp,1.1.0,ISC,Mapbox,https://github.com/mapbox/geometry.hpp
+### [geometry.hpp](https://github.com/mapbox/geometry.hpp) by Mapbox
 
 ```
 Copyright (c) 2016, Mapbox
@@ -1348,7 +1347,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ---
 
-### Optional,dev,BSL-1.0,Andrzej Krzemienski,https://github.com/akrzemi1/Optional
+### [Optional](https://github.com/akrzemi1/Optional) by Andrzej Krzemienski
 
 ```
 Boost Software License - Version 1.0 - August 17th, 2003
@@ -1379,7 +1378,7 @@ DEALINGS IN THE SOFTWARE.
 
 ---
 
-### variant,1.1.6,BSD-3-Clause,Mapbox,https://github.com/mapbox/variant
+### [variant](https://github.com/mapbox/variant) by Mapbox
 
 ```
 Copyright (c) MapBox
@@ -1411,7 +1410,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ---
 
-### mapbox-common,dev,Mapbox ToS,Mapbox,https://github.com/mapbox/mapbox-sdk-common
+### [mapbox-common](https://github.com/mapbox/mapbox-sdk-common) by Mapbox
 
 ```
 Mapbox Common SDK

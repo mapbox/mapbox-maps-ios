@@ -355,8 +355,9 @@ jobs:
       - run:
           name: Check for up-to-date LICENSE.md
           command: |
+            COREMAPS_VERSION=$(jq -r .MapboxCoreMaps scripts/release/packager/versions.json)
             export GITHUB_TOKEN=$(mbx-ci github reader token)
-            DEPENDENCY_CONTENT=$(gh api -H "Accept: application/vnd.github+json" /repos/mapbox/mapbox-gl-native-internal/contents/LICENSE-iOS.md --jq ".content" | base64 --decode)
+            DEPENDENCY_CONTENT=$(gh api -H "Accept: application/vnd.github+json" "/repos/mapbox/mapbox-gl-native-internal/contents/LICENSE-iOS.md?ref=maps-v$COREMAPS_VERSION" --jq ".content" | base64 --decode)
 
             # Check if length of dependency content is 0
             if [ ${#DEPENDENCY_CONTENT} -eq 0 ]; then

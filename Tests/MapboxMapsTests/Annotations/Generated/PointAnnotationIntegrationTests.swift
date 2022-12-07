@@ -1776,15 +1776,12 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testAddImages() throws {
-        if style.imageExists(withId: "test-image-1") {
-            try style.removeImage(withId: "test-image-1")
-        }
-        try style.addImage(XCTUnwrap(UIImage.emptyImage(with: .init(width: 20, height: 20))), id: "test-image-2")
+        try style.addImage(XCTUnwrap(UIImage.emptyImage()), id: "test-image-2")
 
         var annotation1 = PointAnnotation(coordinate: .random())
-        annotation1.image = .init(image: try XCTUnwrap(UIImage.emptyImage(with: .init(width: 20, height: 20))), name: "test-image-1")
+        annotation1.image = .init(image: try XCTUnwrap(UIImage.emptyImage()), name: "test-image-1")
         var annotation2 = PointAnnotation(coordinate: .random())
-        annotation2.image = .init(image: try XCTUnwrap(UIImage.emptyImage(with: .init(width: 20, height: 20))), name: "test-image-2")
+        annotation2.image = .init(image: try XCTUnwrap(UIImage.emptyImage()), name: "test-image-2")
         manager.annotations = [annotation1, annotation2]
         manager.syncSourceAndLayerIfNeeded()
 

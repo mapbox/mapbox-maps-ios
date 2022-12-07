@@ -2759,19 +2759,21 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testUnusedImagesRemovedFromStyle() {
         // given
-        let unusedAnnotations = 3
-        let annotations = (0..<10)
-            .map { _ in PointAnnotation.Image(image: UIImage(), name: UUID().uuidString) }
-            .map(PointAnnotation.init)
-        manager.annotations = annotations
+        let allAnnotations = Array.random(withLength: 10) {
+            PointAnnotation(image: .init(image: UIImage(), name: UUID().uuidString))
+        }
+        manager.annotations = allAnnotations
         manager.syncSourceAndLayerIfNeeded()
+        XCTAssertTrue(Set(allAnnotations.compactMap(\.image?.name)).isSubset(of: manager.addedImages))
+        style.addImageWithInsetsStub.reset()
 
         // when
-        manager.annotations = annotations.suffix(annotations.count - unusedAnnotations)
+        let (unusedAnnotations, annotations) = (allAnnotations[0..<3], allAnnotations[3...])
+        manager.annotations = Array(annotations)
         manager.syncSourceAndLayerIfNeeded()
 
         // then
-        XCTAssertEqual(style.addImageWithInsetsStub.invocations.count, annotations.count + annotations.count - unusedAnnotations)
+        XCTAssertEqual(style.addImageWithInsetsStub.invocations.count, annotations.count)
         XCTAssertEqual(
             Set(style.addImageWithInsetsStub.invocations.map(\.parameters.id)),
             Set(annotations.compactMap(\.image?.name))
@@ -2780,11 +2782,12 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             Set(style.addImageWithInsetsStub.invocations.map(\.parameters.image)),
             Set(annotations.compactMap(\.image?.image))
         )
-        XCTAssertEqual(style.removeImageStub.invocations.count, unusedAnnotations)
+        XCTAssertEqual(style.removeImageStub.invocations.count, unusedAnnotations.count)
         XCTAssertEqual(
             Set(style.removeImageStub.invocations.map(\.parameters)),
-            Set(annotations.prefix(unusedAnnotations).compactMap(\.image?.name))
+            Set(unusedAnnotations.compactMap(\.image?.name))
         )
+        XCTAssertTrue(Set(unusedAnnotations.compactMap(\.image?.name)).isDisjoint(with: manager.addedImages))
     }
 
     func testAllImagesRemovedFromStyleOnUpdate() {

@@ -164,9 +164,9 @@ final class StyleSourceManagerTests: XCTestCase {
         XCTAssertEqual(styleManager.setStyleGeoJSONSourceDataForSourceIdStub.invocations.count, 1)
         let setGeoJSONParams = try XCTUnwrap(styleManager.setStyleGeoJSONSourceDataForSourceIdStub.invocations.first?.parameters)
         XCTAssertEqual(setGeoJSONParams.sourceId, id)
+        // swiftlint:disable:next force_cast
         XCTAssertTrue((setGeoJSONParams.data.value as! Array<Any>).isEmpty)
     }
-
 
     func testAsyncGeoJSONUpdateSkipsParsingWhenCancelled() throws {
         // given

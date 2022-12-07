@@ -223,6 +223,10 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
 
 private extension SettingsServiceInterface {
     var shouldUseDirectGeoJSONUpdate: Bool {
-        return (try? self.get(key: "geojson_allow_direct_setter", type: Bool.self).get()) ?? false
+        do {
+            return try get(key: "geojson_allow_direct_setter", type: Bool.self).get()
+        } catch {
+            return false
+        }
     }
 }

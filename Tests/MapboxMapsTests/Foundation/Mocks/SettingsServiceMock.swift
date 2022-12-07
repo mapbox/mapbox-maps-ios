@@ -18,6 +18,7 @@ final class MockSettingsService: SettingsServiceInterface {
     }
     let getStub = Stub<GetParams, Result<Any, SettingsServiceError>>(defaultReturnValue: .success(()))
     func get<T>(key: String, type: T.Type) -> Result<T, SettingsServiceError> {
+        // swiftlint:disable:next force_cast
         getStub.call(with: .init(key: key, type: type)).map { $0 as! T }
     }
 
@@ -28,6 +29,7 @@ final class MockSettingsService: SettingsServiceInterface {
     }
     let getDefaultStub = Stub<GetDefaultParams, Result<Any, SettingsServiceError>>(defaultReturnValue: .success(()))
     func get<T>(key: String, type: T.Type, defaultValue: T) -> Result<T, SettingsServiceError> {
+        // swiftlint:disable:next force_cast
         getDefaultStub.call(with: .init(key: key, type: type, defaultValue: defaultValue)).map { $0 as! T }
     }
 

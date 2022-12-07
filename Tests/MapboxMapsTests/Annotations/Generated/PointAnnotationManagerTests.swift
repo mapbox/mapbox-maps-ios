@@ -10,6 +10,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     var annotations = [PointAnnotation]()
     var expectation: XCTestExpectation?
     var delegateAnnotations: [Annotation]?
+    var imagesManager: MockAnnotationImagesManager!
     var offsetPointCalculator: OffsetPointCalculator!
 
     var mapboxMap = MockMapboxMap()
@@ -19,12 +20,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         style = MockStyle()
         displayLinkCoordinator = MockDisplayLinkCoordinator()
+        imagesManager = MockAnnotationImagesManager()
         offsetPointCalculator = OffsetPointCalculator(mapboxMap: mapboxMap)
         manager = PointAnnotationManager(
             id: id,
             style: style,
             layerPosition: nil,
             displayLinkCoordinator: displayLinkCoordinator,
+            imagesManager: imagesManager,
             offsetPointCalculator: offsetPointCalculator
         )
 
@@ -40,6 +43,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         manager = nil
         expectation = nil
         delegateAnnotations = nil
+        imagesManager = nil
 
         super.tearDown()
     }
@@ -52,6 +56,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             style: style,
             layerPosition: nil,
             displayLinkCoordinator: displayLinkCoordinator,
+            imagesManager: imagesManager,
             offsetPointCalculator: offsetPointCalculator
         )
 
@@ -67,6 +72,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             style: style,
             layerPosition: nil,
             displayLinkCoordinator: displayLinkCoordinator,
+            imagesManager: imagesManager,
             offsetPointCalculator: offsetPointCalculator
         )
 
@@ -91,6 +97,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             style: style,
             layerPosition: nil,
             displayLinkCoordinator: displayLinkCoordinator,
+            imagesManager: imagesManager,
             offsetPointCalculator: offsetPointCalculator
         )
         manager2.annotations = annotations2
@@ -105,6 +112,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             style: style,
             layerPosition: LayerPosition.at(4),
             displayLinkCoordinator: displayLinkCoordinator,
+            imagesManager: imagesManager,
             offsetPointCalculator: offsetPointCalculator
         )
         manager3.annotations = annotations
@@ -2745,18 +2753,20 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         manager.syncSourceAndLayerIfNeeded()
 
         // then
-        XCTAssertEqual(style.addImageWithInsetsStub.invocations.count, annotations.count)
+        XCTAssertEqual(imagesManager.addImageStub.invocations.count, annotations.count)
         XCTAssertEqual(
-            Set(style.addImageWithInsetsStub.invocations.map(\.parameters.id)),
+            Set(imagesManager.addImageStub.invocations.map(\.parameters.id)),
             Set(annotations.compactMap(\.image?.name))
         )
         XCTAssertEqual(
-            Set(style.addImageWithInsetsStub.invocations.map(\.parameters.image)),
+            Set(imagesManager.addImageStub.invocations.map(\.parameters.image)),
             Set(annotations.compactMap(\.image?.image))
         )
-        XCTAssertEqual(style.removeImageStub.invocations.count, 0)
+        XCTAssertEqual(imagesManager.removeImageStub.invocations.count, 0)
+        XCTAssertTrue(annotations.compactMap(\.image?.name).allSatisfy(manager.isUsingStyleImage(_:)))
     }
 
+    
     func testUnusedImagesRemovedFromStyle() {
         // given
         let allAnnotations = Array.random(withLength: 10) {
@@ -2764,30 +2774,31 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         }
         manager.annotations = allAnnotations
         manager.syncSourceAndLayerIfNeeded()
-        XCTAssertTrue(Set(allAnnotations.compactMap(\.image?.name)).isSubset(of: manager.addedImages))
-        style.addImageWithInsetsStub.reset()
+        imagesManager.addImageStub.reset()
+        XCTAssertTrue(allAnnotations.compactMap(\.image?.name).allSatisfy(manager.isUsingStyleImage(_:)))
 
         // when
-        let (unusedAnnotations, annotations) = (allAnnotations[0..<3], allAnnotations[3...])
-        manager.annotations = Array(annotations)
+        let (unusedAnnotations, remainingAnnotations) = (allAnnotations[0..<3], allAnnotations[3...])
+        manager.annotations = Array(remainingAnnotations)
         manager.syncSourceAndLayerIfNeeded()
 
         // then
-        XCTAssertEqual(style.addImageWithInsetsStub.invocations.count, annotations.count)
+        XCTAssertEqual(imagesManager.addImageStub.invocations.count, remainingAnnotations.count)
         XCTAssertEqual(
-            Set(style.addImageWithInsetsStub.invocations.map(\.parameters.id)),
-            Set(annotations.compactMap(\.image?.name))
+            Set(imagesManager.addImageStub.invocations.map(\.parameters.id)),
+            Set(remainingAnnotations.compactMap(\.image?.name))
         )
         XCTAssertEqual(
-            Set(style.addImageWithInsetsStub.invocations.map(\.parameters.image)),
-            Set(annotations.compactMap(\.image?.image))
+            Set(imagesManager.addImageStub.invocations.map(\.parameters.image)),
+            Set(remainingAnnotations.compactMap(\.image?.image))
         )
-        XCTAssertEqual(style.removeImageStub.invocations.count, unusedAnnotations.count)
+        XCTAssertEqual(imagesManager.removeImageStub.invocations.count, unusedAnnotations.count)
         XCTAssertEqual(
-            Set(style.removeImageStub.invocations.map(\.parameters)),
+            Set(imagesManager.removeImageStub.invocations.map(\.parameters)),
             Set(unusedAnnotations.compactMap(\.image?.name))
         )
-        XCTAssertTrue(Set(unusedAnnotations.compactMap(\.image?.name)).isDisjoint(with: manager.addedImages))
+        XCTAssertTrue(remainingAnnotations.compactMap(\.image?.name).allSatisfy(manager.isUsingStyleImage(_:)))
+        XCTAssertTrue(unusedAnnotations.compactMap(\.image?.name).filter(manager.isUsingStyleImage(_:)).isEmpty)
     }
 
     func testAllImagesRemovedFromStyleOnUpdate() {
@@ -2803,20 +2814,21 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         manager.syncSourceAndLayerIfNeeded()
 
         // then
-        XCTAssertEqual(style.addImageWithInsetsStub.invocations.count, annotations.count)
+        XCTAssertEqual(imagesManager.addImageStub.invocations.count, annotations.count)
         XCTAssertEqual(
-            Set(style.addImageWithInsetsStub.invocations.map(\.parameters.id)),
+            Set(imagesManager.addImageStub.invocations.map(\.parameters.id)),
             Set(annotations.compactMap(\.image?.name))
         )
         XCTAssertEqual(
-            Set(style.addImageWithInsetsStub.invocations.map(\.parameters.image)),
+            Set(imagesManager.addImageStub.invocations.map(\.parameters.image)),
             Set(annotations.compactMap(\.image?.image))
         )
-        XCTAssertEqual(style.removeImageStub.invocations.count, annotations.count)
+        XCTAssertEqual(imagesManager.removeImageStub.invocations.count, annotations.count)
         XCTAssertEqual(
-            Set(style.removeImageStub.invocations.map(\.parameters)),
+            Set(imagesManager.removeImageStub.invocations.map(\.parameters)),
             Set(annotations.compactMap(\.image?.name))
         )
+        XCTAssertTrue(annotations.compactMap(\.image?.name).filter(manager.isUsingStyleImage(_:)).isEmpty)
     }
 
     func testAllImagesRemovedFromStyleOnDestroy() {
@@ -2831,34 +2843,12 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         manager.destroy()
 
         // then
-        XCTAssertEqual(style.removeImageStub.invocations.count, annotations.count)
+        XCTAssertEqual(imagesManager.removeImageStub.invocations.count, annotations.count)
         XCTAssertEqual(
-            Set(style.removeImageStub.invocations.map(\.parameters)),
+            Set(imagesManager.removeImageStub.invocations.map(\.parameters)),
             Set(annotations.compactMap(\.image?.name))
         )
-
-    }
-
-    func testUnusedImagesNotRemoveIfNotOwn() {
-        // given
-        let annotations: [PointAnnotation] = .random(withLength: 10) {
-            PointAnnotation(image: .init(image: UIImage(), name: UUID().uuidString))
-        }
-
-        // when
-        style.imageExistsStub.defaultReturnValue = true
-        manager.annotations = annotations
-        manager.syncSourceAndLayerIfNeeded()
-
-        // then
-        XCTAssertTrue(style.addImageWithInsetsStub.invocations.isEmpty)
-
-        // when
-        manager.annotations = []
-        manager.syncSourceAndLayerIfNeeded()
-
-        // then
-        XCTAssertTrue(style.removeImageStub.invocations.isEmpty)
+        XCTAssertTrue(annotations.compactMap(\.image?.name).filter(manager.isUsingStyleImage(_:)).isEmpty)
     }
 
     // Tests for clustering
@@ -2880,6 +2870,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             layerPosition: nil,
             displayLinkCoordinator: displayLinkCoordinator,
             clusterOptions: clusterOptions,
+            imagesManager: imagesManager,
             offsetPointCalculator: offsetPointCalculator
         )
         pointAnnotationManager.annotations = annotations
@@ -2923,6 +2914,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             layerPosition: nil,
             displayLinkCoordinator: displayLinkCoordinator,
             clusterOptions: clusterOptions,
+            imagesManager: imagesManager,
             offsetPointCalculator: offsetPointCalculator
         )
         pointAnnotationManager.annotations = annotations
@@ -2958,6 +2950,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             layerPosition: nil,
             displayLinkCoordinator: displayLinkCoordinator,
             clusterOptions: clusterOptions,
+            imagesManager: imagesManager,
             offsetPointCalculator: offsetPointCalculator
         )
         pointAnnotationManager.annotations = annotations
@@ -3000,6 +2993,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             layerPosition: nil,
             displayLinkCoordinator: displayLinkCoordinator,
             clusterOptions: clusterOptions,
+            imagesManager: imagesManager,
             offsetPointCalculator: offsetPointCalculator
         )
         pointAnnotationManager.annotations = annotations
@@ -3034,6 +3028,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             layerPosition: nil,
             displayLinkCoordinator: displayLinkCoordinator,
             clusterOptions: clusterOptions,
+            imagesManager: imagesManager,
             offsetPointCalculator: offsetPointCalculator
         )
         pointAnnotationManager.annotations = annotations
@@ -3075,6 +3070,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             layerPosition: nil,
             displayLinkCoordinator: displayLinkCoordinator,
             clusterOptions: clusterOptions,
+            imagesManager: imagesManager,
             offsetPointCalculator: offsetPointCalculator
         )
         pointAnnotationManager.annotations = annotations
@@ -3111,6 +3107,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             layerPosition: nil,
             displayLinkCoordinator: displayLinkCoordinator,
             clusterOptions: clusterOptions,
+            imagesManager: imagesManager,
             offsetPointCalculator: offsetPointCalculator
         )
         pointAnnotationManager.annotations = annotations

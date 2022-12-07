@@ -31,6 +31,8 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
 
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
 
+    private let imagesManager: AnnotationImagesManagerProtocol
+
     internal init(tapGestureRecognizer: UIGestureRecognizer,
                   longPressGestureRecognizer: MapboxLongPressGestureRecognizer,
                   mapFeatureQueryable: MapFeatureQueryable,
@@ -47,6 +49,7 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
         self.offsetPointCalculator = offsetPointCalculator
         self.offsetLineStringCalculator = offsetLineStringCalculator
         self.offsetPolygonCalculator = offsetPolygonCalculator
+        self.imagesManager = AnnotationImagesManager(style: style)
 
         super.init()
         tapGestureRecognizer.addTarget(self, action: #selector(handleTap(_:)))
@@ -92,6 +95,7 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
             layerPosition: layerPosition,
             displayLinkCoordinator: displayLinkCoordinator,
             clusterOptions: clusterOptions,
+            imagesManager: imagesManager,
             offsetPointCalculator: offsetPointCalculator)
         annotationManagersByIdInternal[id] = annotationManager
         return annotationManager

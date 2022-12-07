@@ -1775,24 +1775,62 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(layer.textOpacity, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-opacity").value as! NSNumber).doubleValue))
     }
 
-    func testAddImages() throws {
-        try style.addImage(XCTUnwrap(UIImage.emptyImage()), id: "test-image-2")
+    func testImagesAddedToStyleIfNotExist() throws {
+        let existingImage = PointAnnotation.Image(image: try XCTUnwrap(UIImage.emptyImage()), name: UUID().uuidString)
+        try style.addImage(existingImage.image, id: existingImage.name)
 
         var annotation1 = PointAnnotation(coordinate: .random())
-        annotation1.image = .init(image: try XCTUnwrap(UIImage.emptyImage()), name: "test-image-1")
+        annotation1.image = existingImage
         var annotation2 = PointAnnotation(coordinate: .random())
         annotation2.image = .init(image: try XCTUnwrap(UIImage.emptyImage()), name: "test-image-2")
         manager.annotations = [annotation1, annotation2]
         manager.syncSourceAndLayerIfNeeded()
 
-        XCTAssertTrue(style.imageExists(withId: "test-image-1"))
+        XCTAssertTrue(style.imageExists(withId: existingImage.name))
         XCTAssertTrue(style.imageExists(withId: "test-image-2"))
 
         manager.annotations = []
         manager.syncSourceAndLayerIfNeeded()
 
-        XCTAssertFalse(style.imageExists(withId: "test-image-1"))
-        XCTAssertTrue(style.imageExists(withId: "test-image-2"))
+        // Images added externally will not be removed from Style when PointAnnotationManager is updated.
+        XCTAssertTrue(style.imageExists(withId: existingImage.name))
+        XCTAssertFalse(style.imageExists(withId: "test-image-2"))
+    }
+
+    func testStyleImagesSharedBetweenMultipleManagers() throws {
+        let otherManager = mapView.annotations.makePointAnnotationManager()
+
+        let sharedImageID = UUID().uuidString
+        let sharedImage = PointAnnotation.Image(image: try XCTUnwrap(UIImage.emptyImage()), name: sharedImageID)
+
+        var pointAnnotation1 = PointAnnotation(coordinate: .random())
+        pointAnnotation1.image = sharedImage
+        manager.annotations = [pointAnnotation1]
+
+        var pointAnnotation2 = PointAnnotation(coordinate: .random())
+        pointAnnotation2.image = sharedImage
+        otherManager.annotations = [pointAnnotation2]
+
+        manager.syncSourceAndLayerIfNeeded()
+        otherManager.syncSourceAndLayerIfNeeded()
+
+        XCTAssertTrue(style.imageExists(withId: sharedImageID))
+        XCTAssertTrue(manager.isUsingStyleImage(sharedImageID))
+        XCTAssertTrue(otherManager.isUsingStyleImage(sharedImageID))
+
+        manager.annotations = []
+        manager.syncSourceAndLayerIfNeeded()
+
+        XCTAssertTrue(style.imageExists(withId: sharedImageID))
+        XCTAssertFalse(manager.isUsingStyleImage(sharedImageID))
+        XCTAssertTrue(otherManager.isUsingStyleImage(sharedImageID))
+
+        otherManager.annotations = []
+        otherManager.syncSourceAndLayerIfNeeded()
+
+        XCTAssertFalse(style.imageExists(withId: sharedImageID))
+        XCTAssertFalse(manager.isUsingStyleImage(sharedImageID))
+        XCTAssertFalse(otherManager.isUsingStyleImage(sharedImageID))
     }
 }
 

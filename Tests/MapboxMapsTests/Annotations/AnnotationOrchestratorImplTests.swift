@@ -78,19 +78,6 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
         XCTAssertFalse(longPressGestureRecognizer.isEnabled)
     }
 
-    func testGesturesEnableAndDisableForPointManager() {
-        let managerId = "test-manager"
-        _ = impl.makePointAnnotationManager(id: managerId, layerPosition: nil, clusterOptions: nil)
-
-        XCTAssertTrue(tapGestureRecognizer.isEnabled)
-        XCTAssertTrue(longPressGestureRecognizer.isEnabled)
-
-        impl.removeAnnotationManager(withId: managerId)
-
-        XCTAssertFalse(tapGestureRecognizer.isEnabled)
-        XCTAssertFalse(longPressGestureRecognizer.isEnabled)
-    }
-
     func testSingleTapRecognizesSimultaneouslyWithOtherTapRecognizer() {
         let shouldRecognizeSimultaneously = impl.gestureRecognizer(
             tapGestureRecognizer,
@@ -181,44 +168,141 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
         }
     }
 
-    func testMakeAnnotationManagers() {
+    func testMakePointAnnotationManagers() {
         //given
-        let annotationManagerId = "managerId"
-        let factories: [(String, LayerPosition?) -> AnnotationManager] = [
-            impl.makeCircleAnnotationManager,
-            impl.makePolygonAnnotationManager,
-            impl.makePolylineAnnotationManager,
-            impl.makePointAnnotationManager,
-        ]
+        let annotationManagerId = UUID().uuidString
 
-        for factory in factories {
-            let newAnnotationManager = factory(annotationManagerId, nil)
+        //when
+        let manager = impl.makePointAnnotationManager(id: annotationManagerId, layerPosition: .default, clusterOptions: nil)
 
-            XCTAssertNotNil(impl.annotationManagersById[annotationManagerId] === newAnnotationManager)
-            XCTAssertEqual(impl.annotationManagersById.count, 1)
-        }
+        //then
+        XCTAssertNotNil(impl.annotationManagersById[annotationManagerId] === manager)
+        XCTAssertEqual(impl.annotationManagersById.count, 1)
+        XCTAssertEqual(factory.makePointAnnotationManagerStub.invocations.count, 1)
     }
 
-    func testRemoveAnnotationManager() throws {
+    func testMakePolygonAnnotationManagers() {
+        //given
+        let annotationManagerId = UUID().uuidString
+
+        //when
+        let manager = impl.makePolygonAnnotationManager(id: annotationManagerId, layerPosition: .default)
+
+        //then
+        XCTAssertNotNil(impl.annotationManagersById[annotationManagerId] === manager)
+        XCTAssertEqual(impl.annotationManagersById.count, 1)
+        XCTAssertEqual(factory.makePolygonAnnotationManagerStub.invocations.count, 1)
+    }
+
+    func testMakePolylineAnnotationManagers() {
+        //given
+        let annotationManagerId = UUID().uuidString
+
+        //when
+        let manager = impl.makePolylineAnnotationManager(id: annotationManagerId, layerPosition: .default)
+
+        //then
+        XCTAssertNotNil(impl.annotationManagersById[annotationManagerId] === manager)
+        XCTAssertEqual(impl.annotationManagersById.count, 1)
+        XCTAssertEqual(factory.makePolylineAnnotationManagerStub.invocations.count, 1)
+    }
+
+    func testMakeCircleAnnotationManagers() {
+        //given
+        let annotationManagerId = UUID().uuidString
+
+        //when
+        let manager = impl.makeCircleAnnotationManager(id: annotationManagerId, layerPosition: .default)
+
+        //then
+        XCTAssertNotNil(impl.annotationManagersById[annotationManagerId] === manager)
+        XCTAssertEqual(impl.annotationManagersById.count, 1)
+        XCTAssertEqual(factory.makeCircleAnnotationManagerStub.invocations.count, 1)
+    }
+
+    func testRemovePointAnnotationManager() throws {
+        let manager = MockAnnotationManager()
+        factory.makePointAnnotationManagerStub.defaultReturnValue = manager
+        var ids = Array.random(withLength: 10, generator: { UUID().uuidString })
+
+        for id in ids {
+            _ = impl.makePointAnnotationManager(id: id, layerPosition: nil)
+
+            // when
+
+            let idToRemove = ids.removeFirst()
+            impl.removeAnnotationManager(withId: idToRemove)
+
+            // then
+            XCTAssertNil(impl.annotationManagersById[idToRemove])
+        }
+        XCTAssertEqual(manager.destroyStub.invocations.count, 10)
+    }
+
+    func testRemovePolygonAnnotationManager() throws {
+        let manager = MockAnnotationManager()
+        factory.makePolygonAnnotationManagerStub.defaultReturnValue = manager
+        var ids = Array.random(withLength: 10, generator: { UUID().uuidString })
+        for id in ids {
+            _ = impl.makePolygonAnnotationManager(id: id, layerPosition: nil)
+
+            // when
+            let idToRemove = ids.removeFirst()
+            impl.removeAnnotationManager(withId: idToRemove)
+
+            // then
+            XCTAssertNil(impl.annotationManagersById[idToRemove])
+        }
+        XCTAssertEqual(manager.destroyStub.invocations.count, 10)
+    }
+
+    func testRemovePolylineAnnotationManager() throws {
+        let manager = MockAnnotationManager()
+        factory.makePolylineAnnotationManagerStub.defaultReturnValue = manager
+        var ids = Array.random(withLength: 10, generator: { UUID().uuidString })
+        for id in ids {
+            _ = impl.makePolylineAnnotationManager(id: id, layerPosition: nil)
+
+            // when
+            let idToRemove = ids.removeFirst()
+            impl.removeAnnotationManager(withId: idToRemove)
+
+            // then
+            XCTAssertNil(impl.annotationManagersById[idToRemove])
+        }
+        XCTAssertEqual(manager.destroyStub.invocations.count, 10)
+    }
+
+    func testRemoveCircleAnnotationManager() throws {
+        let manager = MockAnnotationManager()
+        factory.makeCircleAnnotationManagerStub.defaultReturnValue = manager
         var ids = Array.random(withLength: 10, generator: { UUID().uuidString })
         for id in ids {
             _ = impl.makeCircleAnnotationManager(id: id, layerPosition: nil)
-            _ = impl.makePolygonAnnotationManager(id: id, layerPosition: nil)
-            _ = impl.makePolylineAnnotationManager(id: id, layerPosition: nil)
-            _ = impl.makePointAnnotationManager(id: id, layerPosition: nil)
+
+            // when
+            let idToRemove = ids.removeFirst()
+            impl.removeAnnotationManager(withId: idToRemove)
+
+            // then
+            XCTAssertNil(impl.annotationManagersById[idToRemove])
         }
+        XCTAssertEqual(manager.destroyStub.invocations.count, 10)
+    }
 
-        // when
-        impl.removeAnnotationManager(withId: UUID().uuidString)
-        // then
-        XCTAssertTrue(ids.allSatisfy(impl.annotationManagersById.keys.contains(_:)))
+    func testManagersDestroy() {
+        //given
+        let id = "managerId"
+        let manager = MockAnnotationManager()
+        factory.makePointAnnotationManagerStub.defaultReturnValue = manager
 
-        // when
-        let idToRemove = ids.removeFirst()
-        impl.removeAnnotationManager(withId: idToRemove)
+        _ = impl.makePointAnnotationManager(id: id, layerPosition: nil, clusterOptions: nil)
 
-        // then
-        XCTAssertNil(impl.annotationManagersById[idToRemove])
+        //when
+        impl.removeAnnotationManager(withId: id)
+
+        //then
+        XCTAssertEqual(manager.destroyStub.invocations.count, 1)
     }
 
     func testAnnotationOrchestratorProxiesGestureDragEnd() {

@@ -3,7 +3,7 @@
 /// ClusterOptions exposes a minimal of configuration options, a more advanced setup can be created manually with
 /// using CircleLayer and SymbolLayers directly.
 
-public struct ClusterOptions {
+public struct ClusterOptions: Equatable {
     /// The circle radius of the cluster items, 18 by default. Units in pixels.
     var circleRadius: Value<Double>
 

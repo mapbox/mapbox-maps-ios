@@ -1647,11 +1647,14 @@ commands:
               PREVIOUS_MAPS_VERSION="v$(git show $PREVIOUS_MAPS_JSON_REVISION:Sources/MapboxMaps/MapboxMaps.json | jq -r .version)$TAG_SUFFIX"
 
               if [ $(git tag -l "$CURRENT_MAPS_VERSION") ]; then
+                  echo "Using current version: $CURRENT_MAPS_VERSION"
                   git rev-parse "$CURRENT_MAPS_VERSION" > /tmp/MapboxMaps-version.txt
               elif [ $(git tag -l "$PREVIOUS_MAPS_VERSION") ]; then
+                  echo "No tag for current version, using previous version: $PREVIOUS_MAPS_VERSION"
                   git rev-parse "$PREVIOUS_MAPS_VERSION" > /tmp/MapboxMaps-version.txt
               fi
             else
+              echo "Using current commit: $(git rev-parse HEAD)"
               git rev-parse HEAD > /tmp/MapboxMaps-version.txt
             fi
       - restore_cache:

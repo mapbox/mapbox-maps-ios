@@ -124,7 +124,7 @@ internal final class Puck2D: Puck {
         newLayerPaintProperties[.location] = [
             location.coordinate.latitude,
             location.coordinate.longitude,
-            location.altitude
+            0
         ]
         switch location.accuracyAuthorization {
         case .fullAccuracy:

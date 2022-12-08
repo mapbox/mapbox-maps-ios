@@ -2,13 +2,8 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-## main
-
 ## 10.10.0 - December 8, 2022
 
-* Fix loading errors appearing when providing custom endpoint for `ResourceOptions.baseURL`. ([#1749](https://github.com/mapbox/mapbox-maps-ios/pull/1749))
-* Remove delegate requirement for annotation interaction. ([#1750](https://github.com/mapbox/mapbox-maps-ios/pull/1750))
-* Reset compass image to default one if `nil` was passed to the `MapboxCompassOrnamentView.updateImage(image:)`. ([#1766](https://github.com/mapbox/mapbox-maps-ios/pull/1766), [#1772](https://github.com/mapbox/mapbox-maps-ios/pull/1772))
 * Update CoreMaps and CommonSDK. ([#1777](https://github.com/mapbox/mapbox-maps-ios/pull/1777))
 
 ## 10.10.0-rc.1 - November 18, 2022

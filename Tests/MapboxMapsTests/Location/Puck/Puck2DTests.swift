@@ -235,7 +235,7 @@ final class Puck2DTests: XCTestCase {
         let scale = try! resolvedScale.toJSON()
 
         var expectedPaintLayerProperties = [LocationIndicatorLayer.PaintCodingKeys: Any]()
-        expectedPaintLayerProperties[.location] = [location.coordinate.latitude, location.coordinate.longitude, location.altitude]
+        expectedPaintLayerProperties[.location] = [location.coordinate.latitude, location.coordinate.longitude, 0]
         expectedPaintLayerProperties[.locationTransition] = ["duration": 0, "delay": 0]
         expectedPaintLayerProperties[.topImageSize] = scale
         expectedPaintLayerProperties[.bearingImageSize] = scale
@@ -450,7 +450,7 @@ final class Puck2DTests: XCTestCase {
         expectedProperties["location"] = [
             location.coordinate.latitude,
             location.coordinate.longitude,
-            location.altitude
+            0
         ]
         expectedProperties["accuracy-radius"] = [
             "interpolate",
@@ -522,7 +522,7 @@ final class Puck2DTests: XCTestCase {
         expectedProperties["location"] = [
             location.coordinate.latitude,
             location.coordinate.longitude,
-            location.altitude
+            0
         ]
         expectedProperties["accuracy-radius"] = [
             "interpolate",

@@ -259,17 +259,13 @@ workflows:
           <<: *release-anchor
       - build-studio-preview:
           <<: *release-anchor
-      - check-api-compatibility:
-          <<: *release-anchor
-          requires:
-            - build-dynamic
       - create-registry-pr:
           <<: *release-anchor
           requires:
             - build-static
+            - build-dynamic
             - build-docs
             - build-studio-preview
-            - check-api-compatibility
       - wait-registry-pr:
           <<: *release-anchor
           requires:

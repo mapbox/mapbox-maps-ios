@@ -1640,7 +1640,17 @@ commands:
           command: |
             xcodebuild -version | head -1 | cut -d ' ' -f 2 >> /tmp/xcode_version.txt
             if [ << parameters.baseline >> = true ]; then
-              git rev-parse v$(jq -r .version Sources/MapboxMaps/MapboxMaps.json) > /tmp/MapboxMaps-version.txt
+              TAG_SUFFIX="${CIRCLE_PROJECT_REPONAME:15}"
+              CURRENT_MAPS_VERSION="v$(jq -r .version Sources/MapboxMaps/MapboxMaps.json)$TAG_SUFFIX"
+
+              PREVIOUS_MAPS_JSON_REVISION=$(git rev-list -1 --skip 1 HEAD -- Sources/MapboxMaps/MapboxMaps.json)
+              PREVIOUS_MAPS_VERSION="v$(git show $PREVIOUS_MAPS_JSON_REVISION:Sources/MapboxMaps/MapboxMaps.json | jq -r .version)$TAG_SUFFIX"
+
+              if [ $(git tag -l "$CURRENT_MAPS_VERSION") ]; then
+                  git rev-parse "$CURRENT_MAPS_VERSION" > /tmp/MapboxMaps-version.txt
+              elif [ $(git tag -l "$PREVIOUS_MAPS_VERSION") ]; then
+                  git rev-parse "$PREVIOUS_MAPS_VERSION" > /tmp/MapboxMaps-version.txt
+              fi
             else
               git rev-parse HEAD > /tmp/MapboxMaps-version.txt
             fi

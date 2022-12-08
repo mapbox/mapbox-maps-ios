@@ -128,6 +128,7 @@ workflows:
   steve:
     unless: << pipeline.parameters.turf-revision >>
     jobs:
+      - sanity-check
       - swiftlint
       - depsvalidator:
           name: Check dependencies versions
@@ -137,9 +138,11 @@ workflows:
           configuration: "Release"
 
       - build-sdk-for-api-compatibility-check
+      - build-baseline-sdk
       - check-api-compatibility:
           requires:
             - build-sdk-for-api-compatibility-check
+            - build-baseline-sdk
       - create-xcframework
       - validate-integrations-for-branch
 
@@ -342,6 +345,34 @@ jobs:
     steps:
       # Don't run the default job
       - run: exit 1
+
+  sanity-check:
+    executor: xcode-latest
+    steps:
+      - checkout
+      - install-mbx-ci
+      - install-gh
+      - run:
+          name: Check for up-to-date LICENSE.md
+          command: |
+            COREMAPS_VERSION=$(jq -r .MapboxCoreMaps scripts/release/packager/versions.json)
+            export GITHUB_TOKEN=$(mbx-ci github reader token)
+            DEPENDENCY_CONTENT=$(gh api -H "Accept: application/vnd.github+json" "/repos/mapbox/mapbox-gl-native-internal/contents/LICENSE-iOS.md?ref=maps-v$COREMAPS_VERSION" --jq ".content" | base64 --decode)
+
+            # Check if length of dependency content is 0
+            if [ ${#DEPENDENCY_CONTENT} -eq 0 ]; then
+              echo "LICENSE-iOS.md is empty"
+              exit 1
+            fi
+
+            if [[ "$(cat LICENSE.md)" == *"$DEPENDENCY_CONTENT"* ]];
+            then
+              echo "LICENSE.md is up-to-date"
+              exit 0
+            else
+              echo "LICENSE.md is not up-to-date."
+              exit 1
+            fi
 
   swiftlint:
     executor: xcode-latest
@@ -800,30 +831,10 @@ jobs:
       - install-all-dependencies
       - make-xcframework-bundle:
           bundle_style: "dynamic"
-      - when:
-        # Do not run Check Compatibility API for Xcode 12
-            condition:
-              not:
-                matches:
-                  pattern: "^13.1.*$"
-                  value: << parameters.xcode >>
-            steps:
-              - check-breaking-api:
-                  bundle_path: MapboxMaps.zip
       - store_artifacts:
           path: MapboxMaps.zip
       - make-xcframework-bundle:
           bundle_style: "static"
-      - when:
-        # Do not run Check Compatibility API for Xcode 12
-            condition:
-              not:
-                matches:
-                  pattern: "^13.1.*$"
-                  value: << parameters.xcode >>
-            steps:
-              - check-breaking-api:
-                  bundle_path: MapboxMaps-static.zip
       - store_artifacts:
           path: MapboxMaps-static.zip
       - report-failure:
@@ -834,30 +845,36 @@ jobs:
     executor: xcode-sdk-min
     resource_class: macos.x86.medium.gen2
     steps:
-      - checkout
-      - configure-environment:
-          skip-dependencies: true
-      - install-xcodegen
-      - make-xcframework-bundle
-      - persist_to_workspace:
-          root: .
-          paths:
-            - MapboxMaps.zip
-      - store_artifacts:
-          path: MapboxMaps.zip
-      - store-default-artifacts
+      - dump-sdk-api:
+          baseline: false
+          output: latest.api.json
+
+
+  build-baseline-sdk:
+    executor: xcode-sdk-min
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - dump-sdk-api:
+          baseline: true
+          output: baseline.api.json
 
   check-api-compatibility:
-    macos:
-      xcode: 13.2.1
+    executor: xcode-latest
     steps:
       - checkout
       - configure-environment:
           skip-dependencies: true
+      - install-gh
+      - run: brew upgrade gh
       - attach_workspace:
           at: workspace
-      - check-breaking-api:
-          bundle_path: workspace/MapboxMaps.zip
+      - run:
+          name: Check API compatibility
+          command: |
+            export GITHUB_TOKEN=$(mbx-ci github issues public token)
+            scripts/api-compatibility-check/breaking-api-check.py check-api workspace/baseline.api.json workspace/latest.api.json --breakage-allowlist-path scripts/api-compatibility-check/breakage_allowlist.txt --report-path api-compatibility-report.txt --comment-pr
+      - store_artifacts:
+          path: api-compatibility-report.txt
       - store-default-artifacts
 
   validate-integrations-for-branch:
@@ -1419,6 +1436,9 @@ commands:
       bundle_style:
         type: string
         default: "dynamic"
+      working_directory:
+        type: string
+        default: "."
     description: "Create << parameters.bundle_style >> xcframework bundle"
     steps:
       - run:
@@ -1429,17 +1449,7 @@ commands:
             ./package-mapbox-maps.sh << parameters.bundle_style >>
             echo "Moving zip to project root"
             mv MapboxMaps*.zip /Users/distiller/project/
-
-  check-breaking-api:
-    parameters:
-      bundle_path:
-        type: string
-        default: scripts/release/packager/MapboxMaps.zip
-    description: Compare public interface with pinned baseline with swift-api-digester
-    steps:
-      - run:
-          name: Breaking API check
-          command: scripts/api-compatibility-check/breaking-api-check.sh -p << parameters.bundle_path >>
+          working_directory: << parameters.working_directory >>
 
   slack-notify-failure-if-any:
     steps:
@@ -1616,3 +1626,59 @@ commands:
               --header 'Accept: application/vnd.github.v3+json' \
               --header "Authorization: token $(mbx-ci github notifier token)" \
               --data "{\"state\":\"failure\",\"target_url\":\"$CIRCLE_BUILD_URL\",\"description\":\"MapboxMaps SDK integration tests failed\",\"context\":\"Maps SDK Integration\"}"
+
+  dump-sdk-api:
+    parameters:
+      baseline:
+        type: boolean
+      output:
+        type: string
+    steps:
+      - checkout
+      - run:
+          name: Generate cache file for key
+          command: |
+            xcodebuild -version | head -1 | cut -d ' ' -f 2 >> /tmp/xcode_version.txt
+            if [ << parameters.baseline >> = true ]; then
+              git rev-parse v$(jq -r .version Sources/MapboxMaps/MapboxMaps.json) > /tmp/MapboxMaps-version.txt
+            else
+              git rev-parse HEAD > /tmp/MapboxMaps-version.txt
+            fi
+      - restore_cache:
+          keys:
+            - &sdkCacheKey v3-sdk-dump-{{ checksum "/tmp/MapboxMaps-version.txt" }}-xcode-{{ checksum "/tmp/xcode_version.txt" }}
+      - configure-environment:
+          skip-dependencies: true
+      - install-xcodegen
+      - run:
+          name: Build SDK and dump API to JSON format
+          command: |
+            if [ -f "<< parameters.output >>" ]; then
+              echo "File << parameters.output >> exists."
+              exit 0
+            fi
+
+            if [ << parameters.baseline >> = true ]; then
+              git checkout "$(cat /tmp/MapboxMaps-version.txt)"
+            fi
+
+            pushd scripts/release/packager
+            ./package-mapbox-maps.sh dynamic
+            mv MapboxMaps*.zip /Users/distiller/project/
+            popd
+
+            if [ << parameters.baseline >> = true ]; then
+              git checkout -
+            fi
+
+            scripts/api-compatibility-check/breaking-api-check.py dump MapboxMaps.zip --module MapboxMaps -o "<< parameters.output >>"
+      - save_cache:
+          paths:
+            - << parameters.output >>
+          key: *sdkCacheKey
+      - persist_to_workspace:
+          root: .
+          paths:
+            - << parameters.output >>
+      - store_artifacts:
+          path: << parameters.output >>

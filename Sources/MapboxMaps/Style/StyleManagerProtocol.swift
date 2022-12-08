@@ -141,6 +141,11 @@ internal protocol StyleManagerProtocol {
     func invalidateStyleCustomGeometrySourceRegion(
         forSourceId sourceId: String,
         bounds: CoordinateBounds) -> Expected<NSNull, NSString>
+
+    func __setStyleGeoJSONSourceDataForSourceId(
+        _ sourceId: String,
+        data: MapboxCoreMaps.GeoJSONSourceData
+    ) -> Expected<NSNull, NSString>
 }
 
 // MARK: Conformance

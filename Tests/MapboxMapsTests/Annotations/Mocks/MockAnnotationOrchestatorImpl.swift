@@ -9,7 +9,6 @@ final class MockAnnotationOrchestatorImpl: AnnotationOrchestratorImplProtocol {
         var id: String
         var layerPosition: LayerPosition?
         var clusterOptions: ClusterOptions?
-        
     }
     let makePointAnnotationManagerStub = Stub<MakePointAnnotationManagerParams, AnnotationManagerInternal>(defaultReturnValue: PointAnnotationManager(id: "test", style: MockStyle(), layerPosition: .default, displayLinkCoordinator: MockDisplayLinkCoordinator(), offsetPointCalculator: .init(mapboxMap: MockMapboxMap())))
     func makePointAnnotationManager(

@@ -58,7 +58,7 @@ final class AnnotationOrchestratorTests: XCTestCase {
         let clusterOptions: ClusterOptions? = .random(.init())
 
         //when
-        _ = annotationOrchestrator.makePointAnnotationManager(id: id, layerPosition: layerPosition, clusterOptions: clusterOptions) 
+        _ = annotationOrchestrator.makePointAnnotationManager(id: id, layerPosition: layerPosition, clusterOptions: clusterOptions)
 
         //then
         XCTAssertEqual(mockOrchestrator.makePointAnnotationManagerStub.invocations.count, 1)

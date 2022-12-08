@@ -104,7 +104,7 @@ final class FrameViewAnnotationsExample: UIViewController, ExampleProtocol {
         resetButton.isHidden = false
 
         let camera = self.mapView.viewAnnotations.camera(
-            forAnnotations: Array(self.coordinates.keys),
+            forAnnotations: Array(annotations.keys),
             padding: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10),
             bearing: nil,
             pitch: nil
@@ -130,26 +130,47 @@ final class FrameViewAnnotationsExample: UIViewController, ExampleProtocol {
     }
 
     private func addAnnotations() {
-        for (id, point) in coordinates {
-            let options = ViewAnnotationOptions(
-                geometry: point.geometry,
-                width: 40,
-                height: 40,
-                allowOverlap: true,
-                anchor: .center,
-                offsetX: 0,
-                offsetY: 0)
-            let annotation = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
-            annotation.backgroundColor = .green
-            try! mapView.viewAnnotations.add(annotation, id: id, options: options)
+        func makeView(_ bgColor: UIColor) -> UIView {
+            let view = UIView()
+            view.backgroundColor = bgColor
+            return view
+        }
+
+        for (id, annotationOptions) in annotations {
+            try! mapView.viewAnnotations.add(makeView(.green), id: id, options: annotationOptions)
         }
     }
 
-    private let coordinates: [String: Point] = [
-        "Saigon": .init(LocationCoordinate2D(latitude: 10.823099, longitude: 106.629662)),
-        "Hanoi": .init(LocationCoordinate2D(latitude: 21.027763, longitude: 105.834160)),
-        "Tokyo": .init(LocationCoordinate2D(latitude: 35.689487, longitude: 139.691711)),
-        "Bangkok": .init(LocationCoordinate2D(latitude: 13.756331, longitude: 100.501762)),
-        "Jakarta": .init(LocationCoordinate2D(latitude: -6.175110, longitude: 106.865036)),
+    private let annotations: [String: ViewAnnotationOptions] = [
+        "Saigon": .init(
+            geometry: Point(LocationCoordinate2D(latitude: 10.823099, longitude: 106.629662)),
+            width: 179,
+            height: 40,
+            allowOverlap: true,
+            anchor: .top),
+        "Hanoi": .init(
+            geometry: Point(LocationCoordinate2D(latitude: 21.027763, longitude: 105.834160)),
+            width: 152,
+            height: 40,
+            allowOverlap: true,
+            anchor: .bottomLeft),
+        "Tokyo": .init(
+            geometry: Point(LocationCoordinate2D(latitude: 35.689487, longitude: 139.691711)),
+            width: 102,
+            height: 40,
+            allowOverlap: true,
+            anchor: .right),
+        "Bangkok": .init(
+            geometry: Point(LocationCoordinate2D(latitude: 13.756331, longitude: 100.501762)),
+            width: 191,
+            height: 40,
+            allowOverlap: true,
+            anchor: .topRight),
+        "Jakarta": .init(
+            geometry: Point(LocationCoordinate2D(latitude: -6.175110, longitude: 106.865036)),
+            width: 95,
+            height: 40,
+            allowOverlap: true,
+            anchor: .topLeft),
     ]
 }

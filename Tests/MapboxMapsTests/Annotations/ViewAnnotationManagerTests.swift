@@ -415,11 +415,29 @@ final class ViewAnnotationManagerTests: XCTestCase {
     }
 
     func testCameraForAnnotations() throws {
-        let points: [CLLocationCoordinate2D] = .random(withLength: 4, generator: CLLocationCoordinate2D.random)
+        // For annotation that has not been added or has incorrect geometry (must be a single Point)
+        // we will not calculate camera.
+        XCTAssertNil(manager.camera(forAnnotations: ["dummy"]))
+
+        // Annotations that have been added and are valid.
+        let points = Array.random(withLength: 10, generator: CLLocationCoordinate2D.random)
+        let boundingBox = try XCTUnwrap(BoundingBox(from: points))
+
         for (index, point) in points.enumerated() {
-            let options = ViewAnnotationOptions(geometry: Point(point).geometry, width: 40, height: 40)
+            let options = ViewAnnotationOptions(geometry: Point(point).geometry, width: .random(in: 40...100), height: .random(in: 40...100))
             try manager.add(UIView(), id: "\(index)", options: options)
             mapboxMap.optionsForViewAnnotationWithIdStub.returnValueQueue.insert(options, at: 0)
+        }
+
+        mapboxMap.cameraForCoordinateBoundsStub.defaultSideEffect = { [mapboxMap] invocation in
+            let camera = MapboxMaps.CameraOptions(
+                center: invocation.parameters.coordinateBounds.center,
+                padding: invocation.parameters.padding,
+                zoom: .random(in: 0...5),
+                bearing: invocation.parameters.bearing,
+                pitch: CGFloat(invocation.parameters.pitch ?? 0)
+            )
+            mapboxMap?.cameraForCoordinateBoundsStub.defaultReturnValue = camera
         }
 
         let padding = UIEdgeInsets.random()
@@ -427,20 +445,16 @@ final class ViewAnnotationManagerTests: XCTestCase {
         let pitch = CGFloat.random(in: 0...90)
         _ = manager.camera(forAnnotations: ["0", "1", "2", "3"], padding: padding, bearing: bearing, pitch: pitch)
 
-        let parameters = try XCTUnwrap(mapboxMap.cameraForGeometryStub.invocations.last).parameters
+        let parameters = try XCTUnwrap(mapboxMap.cameraForCoordinateBoundsStub.invocations.last).parameters
         XCTAssertEqual(parameters.bearing, bearing)
         XCTAssertEqual(parameters.pitch, pitch)
 
-        let coordinates = try XCTUnwrap(MapboxCommon.Geometry(parameters.geometry).extractLocationsArray()).map(\.mkCoordinateValue)
-        let north = try XCTUnwrap(coordinates.max(by: { $0.latitude < $1.latitude })).latitude
-        let east = try XCTUnwrap(coordinates.max(by: { $0.longitude < $1.longitude })).longitude
-        let south = try XCTUnwrap(coordinates.min(by: { $0.latitude < $1.latitude })).latitude
-        let west = try XCTUnwrap(coordinates.min(by: { $0.longitude < $1.longitude })).longitude
+        // Coordinate bounds from all annotation's points.
+        let bounds = CoordinateBounds(southwest: boundingBox.southWest, northeast: boundingBox.northEast)
+        // Final camera's inner bounds.
+        let innerBounds = parameters.coordinateBounds
 
-        XCTAssertFalse(points.contains(where: { $0.latitude > north }))
-        XCTAssertFalse(points.contains(where: { $0.longitude > east }))
-        XCTAssertFalse(points.contains(where: { $0.latitude < south }))
-        XCTAssertFalse(points.contains(where: { $0.longitude < west }))
+        XCTAssertTrue(bounds.contains(forArea: innerBounds, wrappedCoordinates: true))
     }
 
     // MARK: - Helper functions

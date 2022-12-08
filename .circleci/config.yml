@@ -128,6 +128,7 @@ workflows:
   steve:
     unless: << pipeline.parameters.turf-revision >>
     jobs:
+      - sanity-check
       - swiftlint
       - depsvalidator:
           name: Check dependencies versions
@@ -344,6 +345,34 @@ jobs:
     steps:
       # Don't run the default job
       - run: exit 1
+
+  sanity-check:
+    executor: xcode-latest
+    steps:
+      - checkout
+      - install-mbx-ci
+      - install-gh
+      - run:
+          name: Check for up-to-date LICENSE.md
+          command: |
+            COREMAPS_VERSION=$(jq -r .MapboxCoreMaps scripts/release/packager/versions.json)
+            export GITHUB_TOKEN=$(mbx-ci github reader token)
+            DEPENDENCY_CONTENT=$(gh api -H "Accept: application/vnd.github+json" "/repos/mapbox/mapbox-gl-native-internal/contents/LICENSE-iOS.md?ref=maps-v$COREMAPS_VERSION" --jq ".content" | base64 --decode)
+
+            # Check if length of dependency content is 0
+            if [ ${#DEPENDENCY_CONTENT} -eq 0 ]; then
+              echo "LICENSE-iOS.md is empty"
+              exit 1
+            fi
+
+            if [[ "$(cat LICENSE.md)" == *"$DEPENDENCY_CONTENT"* ]];
+            then
+              echo "LICENSE.md is up-to-date"
+              exit 0
+            else
+              echo "LICENSE.md is not up-to-date."
+              exit 1
+            fi
 
   swiftlint:
     executor: xcode-latest
@@ -708,7 +737,6 @@ jobs:
           --device model=iphone11pro,version=14.7 \
           --device model=iphone8,version=13.6 \
           --device model=iphonexr,version=12.4 \
-          --device model=ipadmini4,version=15.4 \
         type: string
       scheme:
         type: string

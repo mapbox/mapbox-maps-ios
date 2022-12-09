@@ -398,7 +398,7 @@ final class Puck2DTests: XCTestCase {
             .location: [
                 location.coordinate.latitude,
                 location.coordinate.longitude,
-                location.altitude],
+                0],
             .bearing: 0
         ]
 
@@ -418,7 +418,7 @@ final class Puck2DTests: XCTestCase {
             .location: [
                 location.coordinate.latitude,
                 location.coordinate.longitude,
-                location.altitude],
+                0],
             .bearing: 0
         ]
 
@@ -612,7 +612,7 @@ final class Puck2DTests: XCTestCase {
             .location: [
                 newLocation.coordinate.latitude,
                 newLocation.coordinate.longitude,
-                newLocation.altitude],
+                0],
             .accuracyRadius: newLocation.horizontalAccuracy,
             .bearing: 0
         ]
@@ -637,7 +637,7 @@ final class Puck2DTests: XCTestCase {
             .location: [
                 newLocation.coordinate.latitude,
                 newLocation.coordinate.longitude,
-                newLocation.altitude],
+                0],
             .bearing: 0
         ]
 
@@ -662,7 +662,7 @@ final class Puck2DTests: XCTestCase {
             .location: [
                 newLocation.coordinate.latitude,
                 newLocation.coordinate.longitude,
-                newLocation.altitude],
+                0],
             .bearing: heading
         ]
 
@@ -686,7 +686,7 @@ final class Puck2DTests: XCTestCase {
             .location: [
                 newLocation.coordinate.latitude,
                 newLocation.coordinate.longitude,
-                newLocation.altitude],
+                0],
             .bearing: newLocation.course!
         ]
 
@@ -707,7 +707,7 @@ final class Puck2DTests: XCTestCase {
             .location: [
                 newLocation.coordinate.latitude,
                 newLocation.coordinate.longitude,
-                newLocation.altitude]
+                0]
         ]
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)

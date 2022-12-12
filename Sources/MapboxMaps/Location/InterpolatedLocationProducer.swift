@@ -117,6 +117,9 @@ internal final class InterpolatedLocationProducer: NSObject, InterpolatedLocatio
 
 extension InterpolatedLocationProducer: LocationConsumer {
     internal func locationUpdate(newLocation: Location) {
+        if let location = startLocation, location.coordinate.isDifferentEnough(from: newLocation.coordinate) {
+            return
+        }
         let currentDate = dateProvider.now
 
         // as a first iteration, assume a 1s location update interval and use a

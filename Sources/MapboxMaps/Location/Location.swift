@@ -52,3 +52,16 @@ import CoreLocation
         self.accuracyAuthorization = accuracyAuthorization
     }
 }
+
+internal extension CLLocationCoordinate2D {
+    func isDifferentEnough(from other: CLLocationCoordinate2D) -> Bool {
+        let precision = 0.000_000_1
+        let diff = diff(to: other)
+        
+        return diff.latitude > precision || diff.latitude > precision
+    }
+
+    func diff(to other: CLLocationCoordinate2D) -> CLLocationCoordinate2D {
+        return .init(latitude: abs(latitude - other.latitude), longitude: abs(longitude - other.longitude))
+    }
+}

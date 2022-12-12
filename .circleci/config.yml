@@ -1641,18 +1641,18 @@ commands:
             xcodebuild -version | head -1 | cut -d ' ' -f 2 >> /tmp/xcode_version.txt
             if [ << parameters.baseline >> = true ]; then
               TAG_SUFFIX="${CIRCLE_PROJECT_REPONAME:15}"
-              CURRENT_MAPS_VERSION="v$(jq -r .version Sources/MapboxMaps/MapboxMaps.json)$TAG_SUFFIX"
+              REVISIONS=()
+              while IFS='' read -r line; do REVISIONS+=("$line"); done < <(git rev-list HEAD -- Sources/MapboxMaps/MapboxMaps.json)
 
-              PREVIOUS_MAPS_JSON_REVISION=$(git rev-list -1 --skip 1 HEAD -- Sources/MapboxMaps/MapboxMaps.json)
-              PREVIOUS_MAPS_VERSION="v$(git show $PREVIOUS_MAPS_JSON_REVISION:Sources/MapboxMaps/MapboxMaps.json | jq -r .version)$TAG_SUFFIX"
-
-              if [ $(git tag -l "$CURRENT_MAPS_VERSION") ]; then
-                  echo "Using current version: $CURRENT_MAPS_VERSION"
-                  git rev-parse "$CURRENT_MAPS_VERSION" > /tmp/MapboxMaps-version.txt
-              elif [ $(git tag -l "$PREVIOUS_MAPS_VERSION") ]; then
-                  echo "No tag for current version, using previous version: $PREVIOUS_MAPS_VERSION"
-                  git rev-parse "$PREVIOUS_MAPS_VERSION" > /tmp/MapboxMaps-version.txt
-              fi
+              # loop through revisions and find existing tag
+              for revision in "${REVISIONS[@]}"; do
+                  VERSION="v$(git show "$revision:Sources/MapboxMaps/MapboxMaps.json" | jq -r .version)$TAG_SUFFIX"
+                  if [ "$(git tag -l "$VERSION")" ]; then
+                      echo "Using version: $VERSION"
+                      git rev-parse "$VERSION" > /tmp/MapboxMaps-version.txt
+                      break
+                  fi
+              done
             else
               echo "Using current commit: $(git rev-parse HEAD)"
               git rev-parse HEAD > /tmp/MapboxMaps-version.txt

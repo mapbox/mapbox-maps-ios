@@ -160,6 +160,8 @@ open class MapView: UIView {
         return displayLink?.duration
     }
 
+    @_spi(Metrics) public var metricsReporter: MapViewMetricsReporter?
+
     /// The map's current camera
     public var cameraState: CameraState {
         return mapboxMap.cameraState
@@ -569,28 +571,6 @@ open class MapView: UIView {
         mapboxMap.size = bounds.size
     }
 
-    @_spi(Metrics) public var metricsReporter: MapViewMetricsReporter?
-    private func updateFromDisplayLink(displayLink: CADisplayLink) {
-        metricsReporter?.beforeDisplayLinkCallback(displayLink: displayLink)
-        defer { metricsReporter?.afterDisplayLinkCallback(displayLink: displayLink) }
-        if window == nil {
-            return
-        }
-
-        for participant in displayLinkParticipants.allObjects {
-            participant.participate()
-        }
-
-        cameraAnimatorsRunner.update()
-
-        if needsDisplayRefresh {
-            needsDisplayRefresh = false
-            metricsReporter?.beforeMetalViewDrawCallback(metalView: metalView)
-            metalView?.draw()
-            metricsReporter?.afterMetalViewDrawCallback(metalView: metalView)
-        }
-    }
-
     private func updateDisplayLinkPreferredFramesPerSecond() {
         guard let displayLink = displayLink else {
             return
@@ -621,9 +601,7 @@ open class MapView: UIView {
 
         displayLink = dependencyProvider.makeDisplayLink(
             window: window,
-            target: ForwardingDisplayLinkTarget { [weak self] in
-                self?.updateFromDisplayLink(displayLink: $0)
-            },
+            target: ForwardingDisplayLinkTarget(delegate: self),
             selector: #selector(ForwardingDisplayLinkTarget.update(with:)))
 
         guard let displayLink = displayLink else {
@@ -655,6 +633,29 @@ open class MapView: UIView {
         }
 
         return false
+    }
+}
+
+extension MapView: ForwardingDisplayLinkTargetDelegate {
+    func update(with displayLink: CADisplayLink) {
+        metricsReporter?.beforeDisplayLinkCallback(displayLink: displayLink)
+        defer { metricsReporter?.afterDisplayLinkCallback(displayLink: displayLink) }
+        if window == nil {
+            return
+        }
+
+        for participant in displayLinkParticipants.allObjects {
+            participant.participate()
+        }
+
+        cameraAnimatorsRunner.update()
+
+        if needsDisplayRefresh {
+            needsDisplayRefresh = false
+            metricsReporter?.beforeMetalViewDrawCallback(metalView: metalView)
+            metalView?.draw()
+            metricsReporter?.afterMetalViewDrawCallback(metalView: metalView)
+        }
     }
 }
 

@@ -1,14 +1,17 @@
 import QuartzCore
 
-internal class ForwardingDisplayLinkTarget: NSObject {
-    private let handler: (CADisplayLink) -> Void
+internal protocol ForwardingDisplayLinkTargetDelegate: AnyObject {
+    func update(with displayLink: CADisplayLink)
+}
 
-    internal init(handler: @escaping (CADisplayLink) -> Void) {
-        self.handler = handler
-        super.init()
+internal final class ForwardingDisplayLinkTarget {
+    weak var delegate: ForwardingDisplayLinkTargetDelegate?
+
+    internal init(delegate: ForwardingDisplayLinkTargetDelegate) {
+        self.delegate = delegate
     }
 
     @objc internal func update(with displayLink: CADisplayLink) {
-        handler(displayLink)
+        delegate?.update(with: displayLink)
     }
 }

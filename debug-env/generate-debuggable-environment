@@ -26,6 +26,8 @@ def main():
     parser.add_argument('--private-commit', type=str,
                         help='commit to use for private version of Mapbox Maps iOS')
 
+    parser.add_argument('--force-relative-paths', action='store_true', help="Replace absolute paths with relative paths in the generated project file. Experimental.")
+
     args = parser.parse_args()
     project = "mapbox-maps-ios-private" if args.private_commit else "mapbox-maps-ios"
     project_commit = args.private_commit if args.private_commit else args.commit
@@ -119,7 +121,12 @@ def main():
     os.chdir("..")
 
     print_phase("Patch GL Native project")
-    os.system("swift run --package-path tools/PatchGLNativeXCProject patch-cmake-xcproject build/mapbox-gl-native-internal/build/ios/Mapbox\ GL\ Native.xcodeproj")
+    if args.force_relative_paths:
+        patch_flags = "--force-relative-paths"
+    else:
+        patch_flags = ""
+
+    os.system(f"swift run --package-path tools/PatchGLNativeXCProject patch-cmake-xcproject build/mapbox-gl-native-internal/build/ios/Mapbox\ GL\ Native.xcodeproj {patch_flags}")
 
     print_phase(f"Create {project}/developer.xcconfig")
     with open(f"build/{project}/developer.xcconfig", "w") as f:

@@ -769,6 +769,7 @@ public final class Style: StyleProtocol {
                                       bottom: contentBoxBottom)
         try addImage(image,
                      id: id,
+                     sdf: sdf,
                      stretchX: [ImageStretches(first: stretchXFirst, second: stretchXSecond)],
                      stretchY: [ImageStretches(first: stretchYFirst, second: stretchYSecond)],
                      content: contentBox)

@@ -82,6 +82,7 @@ open class MapView: UIView {
 
     private var needsDisplayRefresh: Bool = false
     private weak var displayLink: DisplayLinkProtocol?
+    private var displayLinkTarget: ForwardingDisplayLinkTarget?
 
     /// Holding onto this value that comes from `MapOptions` since there is a race condition between
     /// getting a `MetalView`, and intializing a `MapView`
@@ -448,6 +449,7 @@ open class MapView: UIView {
     }
 
     deinit {
+        displayLinkTarget?.invalidate()
         displayLink?.invalidate()
         cameraAnimatorsRunner.cancelAnimations()
         cameraAnimatorsRunnerEnablable.isEnabled = false
@@ -599,9 +601,10 @@ open class MapView: UIView {
             return
         }
 
+        displayLinkTarget = ForwardingDisplayLinkTarget(mapView: self)
         displayLink = dependencyProvider.makeDisplayLink(
             window: window,
-            target: ForwardingDisplayLinkTarget(mapView: self),
+            target: displayLinkTarget,
             selector: #selector(ForwardingDisplayLinkTarget.update(with:)))
 
         guard let displayLink = displayLink else {

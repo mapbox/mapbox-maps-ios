@@ -431,10 +431,7 @@ final class StyleTests: XCTestCase {
     }
 
     func testAddImageWithStretches() throws {
-        guard #available(iOS 13.0, *) else {
-            throw XCTSkip("Test requires iOS 13 or higher.")
-        }
-        let image = UIImage.add
+        let image = UIImage.empty
         let id = UUID().uuidString
         let sdf = Bool.random()
         let stretchX = [ImageStretches(first: .random(in: 1...100), second: .random(in: 1...100))]
@@ -458,11 +455,7 @@ final class StyleTests: XCTestCase {
     }
 
     func testAddImageWithInsets() throws {
-        guard #available(iOS 13.0, *) else {
-            throw XCTSkip("Test requires iOS 13 or higher.")
-        }
-
-        let image = UIImage.add
+        let image = UIImage.empty
         let id = UUID().uuidString
         let sdf = Bool.random()
         let insets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 2)
@@ -473,7 +466,7 @@ final class StyleTests: XCTestCase {
         let params = try XCTUnwrap(styleManager.addStyleImageStub.invocations.first?.parameters)
         XCTAssertEqual(params.imageId, id)
         XCTAssertEqual(params.sdf, sdf)
-        XCTAssertEqual(params.stretchX, [ImageStretches(first: 0, second: 59)])
-        XCTAssertEqual(params.stretchY, [ImageStretches(first: 0, second: 57)])
+        XCTAssertEqual(params.stretchX, [ImageStretches(first: 0, second: 1)])
+        XCTAssertEqual(params.stretchY, [ImageStretches(first: 0, second: 1)])
     }
 }

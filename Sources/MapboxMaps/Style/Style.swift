@@ -724,13 +724,13 @@ public final class Style: StyleProtocol {
         }
 
         try handleExpected {
-            return styleManager.addStyleImage(forImageId: id,
-                                              scale: Float(image.scale),
-                                              image: mbmImage,
-                                              sdf: sdf,
-                                              stretchX: stretchX,
-                                              stretchY: stretchY,
-                                              content: content)
+            return _styleManager.addStyleImage(forImageId: id,
+                                               scale: Float(image.scale),
+                                               image: mbmImage,
+                                               sdf: sdf,
+                                               stretchX: stretchX,
+                                               stretchY: stretchY,
+                                               content: content)
         }
     }
 

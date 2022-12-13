@@ -573,6 +573,27 @@ open class MapView: UIView {
         mapboxMap.size = bounds.size
     }
 
+    func update(with displayLink: CADisplayLink) {
+        metricsReporter?.beforeDisplayLinkCallback(displayLink: displayLink)
+        defer { metricsReporter?.afterDisplayLinkCallback(displayLink: displayLink) }
+        if window == nil {
+            return
+        }
+
+        for participant in displayLinkParticipants.allObjects {
+            participant.participate()
+        }
+
+        cameraAnimatorsRunner.update()
+
+        if needsDisplayRefresh {
+            needsDisplayRefresh = false
+            metricsReporter?.beforeMetalViewDrawCallback(metalView: metalView)
+            metalView?.draw()
+            metricsReporter?.afterMetalViewDrawCallback(metalView: metalView)
+        }
+    }
+
     private func updateDisplayLinkPreferredFramesPerSecond() {
         guard let displayLink = displayLink else {
             return
@@ -601,10 +622,11 @@ open class MapView: UIView {
             return
         }
 
-        displayLinkTarget = ForwardingDisplayLinkTarget(mapView: self)
+        let target = ForwardingDisplayLinkTarget(mapView: self)
+        displayLinkTarget = target
         displayLink = dependencyProvider.makeDisplayLink(
             window: window,
-            target: displayLinkTarget,
+            target: target,
             selector: #selector(ForwardingDisplayLinkTarget.update(with:)))
 
         guard let displayLink = displayLink else {
@@ -636,27 +658,6 @@ open class MapView: UIView {
         }
 
         return false
-    }
-
-    func update(with displayLink: CADisplayLink) {
-        metricsReporter?.beforeDisplayLinkCallback(displayLink: displayLink)
-        defer { metricsReporter?.afterDisplayLinkCallback(displayLink: displayLink) }
-        if window == nil {
-            return
-        }
-
-        for participant in displayLinkParticipants.allObjects {
-            participant.participate()
-        }
-
-        cameraAnimatorsRunner.update()
-
-        if needsDisplayRefresh {
-            needsDisplayRefresh = false
-            metricsReporter?.beforeMetalViewDrawCallback(metalView: metalView)
-            metalView?.draw()
-            metricsReporter?.afterMetalViewDrawCallback(metalView: metalView)
-        }
     }
 }
 

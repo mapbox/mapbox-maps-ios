@@ -732,6 +732,47 @@ public final class Style: StyleProtocol {
                                               stretchY: stretchY,
                                               content: content)
         }
+
+        if skipImageUpdate {
+            return
+        }
+
+        let params = ImageParams(image: image, id: id, sdf: sdf, stretchX: stretchX, stretchY: stretchY, content: content)
+        images[id] = params
+    }
+
+    private struct ImageParams {
+        var image: UIImage
+        let id: String
+        let sdf: Bool
+        let stretchX: [ImageStretches]
+        let stretchY: [ImageStretches]
+        let content: ImageContent?
+    }
+
+    private var images: [String: ImageParams] = [:]
+    private var skipImageUpdate = false // Hacky way to avoid overwriting the user-provided image with a trait-based one
+
+    @available(iOS 13.0, *)
+    internal func updateImagesWithTraits(_ traitCollection: UITraitCollection) {
+        skipImageUpdate = true
+        images = images.compactMapValues { params in
+            guard let imageConfiguration = params.image.configuration else { return nil }
+
+            let configuration = imageConfiguration.withTraitCollection(traitCollection)
+            let newImage = params.image.withConfiguration(configuration)
+
+            try! addImage(
+                newImage,
+                id: params.id,
+                sdf: params.sdf,
+                stretchX: params.stretchX,
+                stretchY: params.stretchY,
+                content: params.content
+            )
+            return params
+        }
+        skipImageUpdate = false
     }
 
     /// Adds an image to be used in the style.
@@ -784,6 +825,7 @@ public final class Style: StyleProtocol {
         try handleExpected {
             return styleManager.removeStyleImage(forImageId: id)
         }
+        images.removeValue(forKey: id)
     }
 
     /// Checks whether an image exists.

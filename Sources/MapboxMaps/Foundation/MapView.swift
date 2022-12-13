@@ -81,7 +81,7 @@ open class MapView: UIView {
     internal let resourceOptions: ResourceOptions
 
     private var needsDisplayRefresh: Bool = false
-    private var displayLink: DisplayLinkProtocol?
+    private weak var displayLink: DisplayLinkProtocol?
 
     /// Holding onto this value that comes from `MapOptions` since there is a race condition between
     /// getting a `MetalView`, and intializing a `MapView`
@@ -601,7 +601,7 @@ open class MapView: UIView {
 
         displayLink = dependencyProvider.makeDisplayLink(
             window: window,
-            target: ForwardingDisplayLinkTarget(delegate: self),
+            target: ForwardingDisplayLinkTarget(mapView: self),
             selector: #selector(ForwardingDisplayLinkTarget.update(with:)))
 
         guard let displayLink = displayLink else {
@@ -634,9 +634,7 @@ open class MapView: UIView {
 
         return false
     }
-}
 
-extension MapView: ForwardingDisplayLinkTargetDelegate {
     func update(with displayLink: CADisplayLink) {
         metricsReporter?.beforeDisplayLinkCallback(displayLink: displayLink)
         defer { metricsReporter?.afterDisplayLinkCallback(displayLink: displayLink) }

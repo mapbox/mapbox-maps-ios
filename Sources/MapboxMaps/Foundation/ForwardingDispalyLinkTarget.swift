@@ -1,17 +1,19 @@
 import QuartzCore
 
-internal protocol ForwardingDisplayLinkTargetDelegate: AnyObject {
-    func update(with displayLink: CADisplayLink)
-}
-
 internal final class ForwardingDisplayLinkTarget {
-    weak var delegate: ForwardingDisplayLinkTargetDelegate?
+    private let mapView: Unmanaged<MapView>
+    private var invalidated = false
 
-    internal init(delegate: ForwardingDisplayLinkTargetDelegate) {
-        self.delegate = delegate
+    internal init(mapView: MapView) {
+        self.mapView = Unmanaged.passUnretained(mapView)
+    }
+
+    internal func invalidate() {
+        invalidated = true
     }
 
     @objc internal func update(with displayLink: CADisplayLink) {
-        delegate?.update(with: displayLink)
+        guard invalidated == false else { return }
+        mapView._withUnsafeGuaranteedRef { $0.update(with: displayLink) }
     }
 }

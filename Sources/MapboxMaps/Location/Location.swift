@@ -64,4 +64,19 @@ internal extension CLLocationCoordinate2D {
     func diff(to other: CLLocationCoordinate2D) -> CLLocationCoordinate2D {
         return .init(latitude: abs(latitude - other.latitude), longitude: abs(longitude - other.longitude))
     }
+
+    func isDifferentEnough(from other: CLLocationCoordinate2D, for zoomLevel: CGFloat) -> Bool {
+        let precision = pow(Double(10), -zoomLevelToPrecision(zoomLevel))
+        let diff = diff(to: other)
+
+        return diff.latitude > precision || diff.latitude > precision
+    }
+
+    private func zoomLevelToPrecision(_ zoomLevel: CGFloat) -> Double {
+        let maxZoom: CGFloat = 22
+        let maxPrecision: CGFloat = 7
+        let precision = zoomLevel / maxZoom / maxPrecision
+        let roundedPrecision = round(precision)
+        return roundedPrecision
+    }    
 }

@@ -3,9 +3,11 @@ import Foundation
 import XcodeProj  // @tuist ~> 8.8.0
 import PathKit
 
-guard CommandLine.arguments.count == 2 else {
+let relativePathsFlag = "--force-relative-paths"
+
+guard (2...3).contains(CommandLine.arguments.count) else {
     let arg0 = Path(CommandLine.arguments[0]).lastComponent
-    fputs("usage: \(arg0) <project>\n", stderr)
+    fputs("usage: \(arg0) <project> [\(relativePathsFlag)]\n", stderr)
     exit(1)
 }
 
@@ -45,7 +47,10 @@ class GLNativeProject {
         }
     }
 
-    func fixTargetSettings() {
+    func fixTargetSettings(forceRelativePaths: Bool = false) {
+        if forceRelativePaths {
+            print("Experimental: Forcing relative paths for Xcode target settings")
+        }
         xcproject.pbxproj.nativeTargets.forEach { target in
             target.buildConfigurationList?.buildConfigurations.forEach { buildConfiguration in
                 let buildSettingsToNil = [
@@ -76,19 +81,21 @@ class GLNativeProject {
                     buildConfiguration.buildSettings["OTHER_LDFLAGS"] = newLinkerOptions
                 }
 
-                // There is the same value under the `xcproject.pbxproj.rootProject()!.projectDirPath`.
-                // We have to investigate this approach. The challenge here is that `projectDirPath` an empty string in most projects
-                let projectRoot = path.parent().parent().parent().absolute().string + "/"
-                buildConfiguration.buildSettings = buildConfiguration.buildSettings.mapValues { setting in
-                    switch setting {
-                        case let setting as [String]:
-                            return setting.map({ $0.deletingPrefix(projectRoot) })
-                        case let setting as String:
-                            return setting.deletingPrefix(projectRoot)
-                        default:
-                            break
+                if forceRelativePaths {
+                    // There is the same value under the `xcproject.pbxproj.rootProject()!.projectDirPath`.
+                    // We have to investigate this approach. The challenge here is that `projectDirPath` an empty string in most projects
+                    let projectRoot = path.parent().parent().parent().absolute().string + "/"
+                    buildConfiguration.buildSettings = buildConfiguration.buildSettings.mapValues { setting in
+                        switch setting {
+                            case let setting as [String]:
+                                return setting.map({ $0.deletingPrefix(projectRoot) })
+                            case let setting as String:
+                                return setting.deletingPrefix(projectRoot)
+                            default:
+                                break
+                        }
+                        return setting
                     }
-                    return setting
                 }
             }
         }
@@ -117,7 +124,7 @@ guard projectPath.isDirectory else {
 let project = try GLNativeProject(path: projectPath)
 print("Patching project at:", projectPath.absolute().string)
 project.fixProjectSettings()
-project.fixTargetSettings()
+project.fixTargetSettings(forceRelativePaths: ProcessInfo.processInfo.arguments.contains(relativePathsFlag))
 try project.write()
 
 print("Done at", Date())

@@ -770,7 +770,6 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         XCTAssertEqual(removeLayerInvocations[2].parameters, id)
     }
     <%_ } _%>
-
     func testHandleDragBeginNoFeatureId() {
         style.addSourceStub.reset()
         style.addPersistentLayerWithPropertiesStub.reset()

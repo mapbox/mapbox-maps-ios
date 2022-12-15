@@ -650,7 +650,7 @@ open class MapView: UIView {
             return true
         }
 
-        if #available(iOS 13, *), window.windowScene?.activationState != .foregroundActive {
+        if #available(iOS 13, *), let scene = window.parentScene, scene.activationState != .foregroundActive {
             return true
         }
 

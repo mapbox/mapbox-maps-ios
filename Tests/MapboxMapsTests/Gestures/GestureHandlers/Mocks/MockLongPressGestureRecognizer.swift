@@ -1,6 +1,7 @@
 import UIKit
+@testable import MapboxMaps
 
-final class MockLongPressGestureRecognizer: UILongPressGestureRecognizer {
+final class MockLongPressGestureRecognizer: MapboxLongPressGestureRecognizer {
     let getStateStub = Stub<Void, UIGestureRecognizer.State>(defaultReturnValue: .possible)
     override var state: UIGestureRecognizer.State {
         get {

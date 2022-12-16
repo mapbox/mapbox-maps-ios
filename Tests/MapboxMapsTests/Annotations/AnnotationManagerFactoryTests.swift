@@ -8,7 +8,7 @@ final class AnnotationManagerFactoryTests: XCTestCase {
     var offsetPointCalculator: OffsetPointCalculator!
     var offsetLineStringCalculator: OffsetLineStringCalculator!
     var offsetPolygonCalculator: OffsetPolygonCalculator!
-    var factory: MockAnnotationManagerFactory!
+    var factory: AnnotationManagerFactory!
 
     override func setUp() {
         super.setUp()
@@ -18,7 +18,12 @@ final class AnnotationManagerFactoryTests: XCTestCase {
         offsetPointCalculator = OffsetPointCalculator(mapboxMap: MockMapboxMap())
         offsetLineStringCalculator = OffsetLineStringCalculator(mapboxMap: MockMapboxMap())
         offsetPolygonCalculator = OffsetPolygonCalculator(mapboxMap: MockMapboxMap())
-        factory = MockAnnotationManagerFactory()
+        factory = AnnotationManagerFactory(
+            style: style,
+            displayLinkCoordinator: displayLinkCoordinator,
+            offsetPointCalculator: offsetPointCalculator,
+            offsetPolygonCalculator: offsetPolygonCalculator,
+            offsetLineStringCalculator: offsetLineStringCalculator)
     }
 
     override func tearDown() {
@@ -37,12 +42,6 @@ final class AnnotationManagerFactoryTests: XCTestCase {
         let id = "managerId"
         let layerPosition: LayerPosition? = .random(.at(.random(in: 0...10)))
         let clusterOptions = ClusterOptions()
-        let factory = AnnotationManagerFactory(
-            style: style,
-            displayLinkCoordinator: displayLinkCoordinator,
-            offsetPointCalculator: offsetPointCalculator,
-            offsetPolygonCalculator: offsetPolygonCalculator,
-            offsetLineStringCalculator: offsetLineStringCalculator)
 
         //when
         let manager = factory.makePointAnnotationManager(id: id, layerPosition: layerPosition, clusterOptions: clusterOptions)
@@ -55,12 +54,6 @@ final class AnnotationManagerFactoryTests: XCTestCase {
     func testReturnedPolygonAnnotationManager() {
         let id = "managerId"
         let layerPosition: LayerPosition? = .random(.at(.random(in: 0...10)))
-        let factory = AnnotationManagerFactory(
-            style: style,
-            displayLinkCoordinator: displayLinkCoordinator,
-            offsetPointCalculator: offsetPointCalculator,
-            offsetPolygonCalculator: offsetPolygonCalculator,
-            offsetLineStringCalculator: offsetLineStringCalculator)
 
         //when
         let manager = factory.makePolygonAnnotationManager(id: id, layerPosition: layerPosition)
@@ -73,12 +66,6 @@ final class AnnotationManagerFactoryTests: XCTestCase {
     func testReturnedPolylineAnnotationManager() {
         let id = "managerId"
         let layerPosition: LayerPosition? = .random(.at(.random(in: 0...10)))
-        let factory = AnnotationManagerFactory(
-            style: style,
-            displayLinkCoordinator: displayLinkCoordinator,
-            offsetPointCalculator: offsetPointCalculator,
-            offsetPolygonCalculator: offsetPolygonCalculator,
-            offsetLineStringCalculator: offsetLineStringCalculator)
 
         //when
         let manager = factory.makePolylineAnnotationManager(id: id, layerPosition: layerPosition)
@@ -92,12 +79,6 @@ final class AnnotationManagerFactoryTests: XCTestCase {
         //given
         let id = "managerId"
         let layerPosition: LayerPosition? = .random(.at(.random(in: 0...10)))
-        let factory = AnnotationManagerFactory(
-            style: style,
-            displayLinkCoordinator: displayLinkCoordinator,
-            offsetPointCalculator: offsetPointCalculator,
-            offsetPolygonCalculator: offsetPolygonCalculator,
-            offsetLineStringCalculator: offsetLineStringCalculator)
 
         //when
         let manager = factory.makeCircleAnnotationManager(id: id, layerPosition: layerPosition)

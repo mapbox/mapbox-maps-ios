@@ -3,52 +3,19 @@ import XCTest
 @testable import MapboxMaps
 
 final class AnnotationOrchestratorTests: XCTestCase {
-    var tapGestureRecognizer: MockGestureRecognizer!
-    var longPressGestureRecognizer: MockLongPressGestureRecognizer!
-    var mapFeatureQueryable: MockMapFeatureQueryable!
-    var style: MockStyle!
-    var displayLinkCoordinator: MockDisplayLinkCoordinator!
-    var offsetPointCalculator: OffsetPointCalculator!
-    var offsetLineStringCalculator: OffsetLineStringCalculator!
-    var offsetPolygonCalculator: OffsetPolygonCalculator!
-    var factory: MockAnnotationManagerFactory!
-    var impl: AnnotationOrchestratorImpl!
     var annotationOrchestrator: AnnotationOrchestrator!
     var mockOrchestrator = MockAnnotationOrchestatorImpl()
 
     override func setUp() {
         super.setUp()
 
-        tapGestureRecognizer = MockGestureRecognizer()
-        longPressGestureRecognizer = MockLongPressGestureRecognizer()
-        mapFeatureQueryable = MockMapFeatureQueryable()
-        style = MockStyle()
-        displayLinkCoordinator = MockDisplayLinkCoordinator()
-        offsetPointCalculator = OffsetPointCalculator(mapboxMap: MockMapboxMap())
-        offsetLineStringCalculator = OffsetLineStringCalculator(mapboxMap: MockMapboxMap())
-        offsetPolygonCalculator = OffsetPolygonCalculator(mapboxMap: MockMapboxMap())
-        factory = MockAnnotationManagerFactory()
-        impl = AnnotationOrchestratorImpl(
-            tapGestureRecognizer: tapGestureRecognizer,
-            longPressGestureRecognizer: longPressGestureRecognizer,
-            mapFeatureQueryable: mapFeatureQueryable,
-            factory: factory)
         annotationOrchestrator = AnnotationOrchestrator(impl: mockOrchestrator)
     }
 
     override func tearDown() {
         super.tearDown()
 
-        tapGestureRecognizer = nil
-        longPressGestureRecognizer = nil
-        mapFeatureQueryable = nil
-        style = nil
-        displayLinkCoordinator = nil
-        offsetPointCalculator = nil
-        offsetLineStringCalculator = nil
-        offsetPolygonCalculator = nil
-        factory = nil
-        impl = nil
+        annotationOrchestrator = nil
     }
 
     func testPointAnnotationnManagerInit() {

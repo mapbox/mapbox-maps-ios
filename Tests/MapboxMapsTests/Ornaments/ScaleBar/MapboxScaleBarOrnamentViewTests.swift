@@ -116,7 +116,7 @@ internal struct ScaleBarTestValues {
 
     // Provide test values where the metersPerPoint results in a distance slightly greater than the distance in MapboxScaleBarOrnamentView.Constants.metricTable
     static let metricValues = [
-        (metersPerPoint: Double.random(in: 0..<0.005), numberOfBars: 1),
+        (metersPerPoint: Double.random(in: Double.leastNonzeroMagnitude..<0.005), numberOfBars: 1),
         (metersPerPoint: 0.00505, numberOfBars: 2),
         (metersPerPoint: 0.010049999999999998, numberOfBars: 2),
         (metersPerPoint: 0.02005, numberOfBars: 2),

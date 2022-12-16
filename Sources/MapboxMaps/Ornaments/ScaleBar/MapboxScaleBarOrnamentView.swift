@@ -357,8 +357,8 @@ internal class MapboxScaleBarOrnamentView: UIView {
 
         guard maxDistance.value >= rows[0].distance else {
             // If the minimum pre-defined distance does not fit the maximum width,
-            // then we fallback to use maxDistance (rounded to 1 decimal) displayed with 1 bar.
-            return (round(maxDistance.value * 10.0) / 10.0, 1)
+            // then we fallback to use maxDistance (rounded down with 0.25 granularity) displayed with 1 bar.
+            return ((maxDistance.value * 4).rounded(.down) / 4, 1)
         }
 
         var preferredRow: MapboxScaleBarOrnamentView.Row!

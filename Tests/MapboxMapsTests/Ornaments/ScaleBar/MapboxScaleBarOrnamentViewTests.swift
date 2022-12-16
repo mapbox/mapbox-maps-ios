@@ -57,6 +57,18 @@ class MapboxScaleBarOrnamentViewTests: XCTestCase {
             }
         }
 
+    func testMetricScaleBarLessThanOneMeter() {
+        let scaleBar = MockMapboxScaleBarOrnamentView()
+        scaleBar.useMetricUnits = true
+
+        scaleBar.metersPerPoint = Double.random(in: 0...0.005)
+        let preferredRow = scaleBar.preferredRow()
+
+        XCTAssertEqual(preferredRow.numberOfBars, 1, "Number of bar when max distance is less than 1m should be 1")
+        // Distance to displayed should be the nearest 0.25-
+        XCTAssertEqual(preferredRow.distance.remainder(dividingBy: 0.25), 0)
+        XCTAssertLessThanOrEqual(preferredRow.distance, scaleBar.maximumWidth * scaleBar.metersPerPoint)
+    }
 }
 
 final class MockMapboxScaleBarOrnamentView: MapboxScaleBarOrnamentView {

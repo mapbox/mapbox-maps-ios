@@ -349,40 +349,49 @@ internal class MapboxScaleBarOrnamentView: UIView {
         return effectiveUserInterfaceLayoutDirection == .rightToLeft
     }
 
+    /// Returns the closest ``Row`` to display for the given `maxDistance`.
+    /// - If `maxDistance` is greater than the max row's distance in predefined list, this predefined row will be used.
+    /// - If `maxDistance` is less than the min row's distance in predefined list, a row with `maxDistance` (rounded to 1 decimal) and 1 bar will be used.
     internal func preferredRow() -> Row {
-        let maximumDistance: CLLocationDistance = Double(maximumWidth) * unitsPerPoint
-        let table = useMetricUnits ? Constants.metricTable : Constants.imperialTable
-        var rowIndex = table.firstIndex {
-            return $0.distance > maximumDistance
+        let (maxDistance, rows) = maxDistanceAndRows()
+
+        guard maxDistance.value >= rows[0].distance else {
+            // If the minimum pre-defined distance does not fit the maximum width,
+            // then we fallback to use maxDistance (rounded down with 0.25 granularity) displayed with 1 bar.
+            return ((maxDistance.value * 4).rounded(.down) / 4, 1)
         }
 
-        if rowIndex == nil && maximumDistance > table.last!.distance {
-            return table.last!
-        } else if rowIndex == nil {
-            rowIndex = 0
+        var preferredRow: MapboxScaleBarOrnamentView.Row!
+        for row in rows {
+            if row.distance > maxDistance.value { break }
+            preferredRow = row
         }
 
-        guard rowIndex! > 0 else {
-            return table.first!
-        }
-
-        return table[rowIndex! - 1]
+        return preferredRow ?? rows.last!
     }
 
     private func updateVisibility() {
-        let maximumDistance: CLLocationDistance = Double(maximumWidth) * unitsPerPoint
-        let allowedDistance = useMetricUnits ?
-                              Constants.metricTable.last!.distance : Constants.imperialTable.last!.distance
-        let alpha: CGFloat = maximumDistance >= allowedDistance ? 0 : 1
+        let (maxDistance, rows) = maxDistanceAndRows()
+        let allowedDistance = rows.last!.distance
+
+        let alpha: CGFloat = maxDistance.value >= allowedDistance ? 0 : 1
 
         if alpha != staticContainerView.alpha {
-            UIView.animate(withDuration: 0.2,
-                           delay: 0,
-                           options: .beginFromCurrentState,
-                           animations: {
-                            self.staticContainerView.alpha = alpha
-            },
-                           completion: nil)
+            UIView.animate(
+                withDuration: 0.2,
+                delay: 0,
+                options: .beginFromCurrentState,
+                animations: { self.staticContainerView.alpha = alpha },
+                completion: nil)
+        }
+    }
+
+    private func maxDistanceAndRows() -> (maxDistance: Measurement<UnitLength>, rows: [Row]) {
+        let distanceInMeters = Measurement(value: metersPerPoint * maximumWidth, unit: UnitLength.meters)
+        if useMetricUnits {
+            return (distanceInMeters, Constants.metricTable)
+        } else {
+            return (distanceInMeters.converted(to: .feet), Constants.imperialTable)
         }
     }
 }

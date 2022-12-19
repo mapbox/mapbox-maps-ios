@@ -71,7 +71,6 @@ class MapboxScaleBarOrnamentViewTests: XCTestCase {
 
         scaleBar.metersPerPoint = Double.random(in: 0...0.00125)
         XCTAssertEqual(scaleBar.preferredRow().distance, 0, "Distance less than 0.25m should not be rendered")
-        XCTAssertEqual(scaleBar.preferredRow().numberOfBars, 0, "Distance less than 0.25m should not be rendered")
     }
 }
 

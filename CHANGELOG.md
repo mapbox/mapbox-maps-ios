@@ -11,6 +11,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Use `sdf` parameter when adding a style image. ([#1803](https://github.com/mapbox/mapbox-maps-ios/pull/1803))
 * [CarPlay] Fix map view permanently pausing when moving to window on foreground ([#1808])(https://github.com/mapbox/mapbox-maps-ios/pull/1808)
 * Fix scale bar grows beyond its maximum width at large zoom near north/south poles. ([#1802](https://github.com/mapbox/mapbox-maps-ios/pull/1802))
+* Improve GeoJSONSource add/update performance by passing `GeoJSONSourceData` directly. ([#1815](https://github.com/mapbox/mapbox-maps-ios/pull/1815))
 
 ## 10.10.0 - December 8, 2022
 

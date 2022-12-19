@@ -57,6 +57,21 @@ class MapboxScaleBarOrnamentViewTests: XCTestCase {
             }
         }
 
+    func testMetricScaleBarLessThanOneMeter() {
+        let scaleBar = MockMapboxScaleBarOrnamentView()
+        scaleBar.useMetricUnits = true
+
+        scaleBar.metersPerPoint = Double.random(in: 0.00125..<0.005)
+        let preferredRow = scaleBar.preferredRow()
+
+        XCTAssertEqual(preferredRow.numberOfBars, 1, "Number of bar when max distance is less than 1m should be 1")
+        // Distance to displayed should be the nearest 0.25-
+        XCTAssertEqual(preferredRow.distance.remainder(dividingBy: 0.25), 0)
+        XCTAssertLessThanOrEqual(preferredRow.distance, scaleBar.maximumWidth * scaleBar.metersPerPoint)
+
+        scaleBar.metersPerPoint = Double.random(in: 0...0.00125)
+        XCTAssertEqual(scaleBar.preferredRow().distance, 0, "Distance less than 0.25m should not be rendered")
+    }
 }
 
 final class MockMapboxScaleBarOrnamentView: MapboxScaleBarOrnamentView {
@@ -68,6 +83,7 @@ final class MockMapboxScaleBarOrnamentView: MapboxScaleBarOrnamentView {
 internal struct ScaleBarTestValues {
     // Provide test values where the metersPerPoint results in a distance slightly greater than the distance in MapboxScaleBarOrnamentView.Constants.imperialTable
     static let imperialValues = [
+        (metersPerPoint: 0.001608057543912218, numberOfBars: 1),
         (metersPerPoint: 0.006267938260964437, numberOfBars: 2),
         (metersPerPoint: 0.009394092007081363, numberOfBars: 2),
         (metersPerPoint: 0.015646399499315216, numberOfBars: 2),
@@ -103,6 +119,7 @@ internal struct ScaleBarTestValues {
 
     // Provide test values where the metersPerPoint results in a distance slightly greater than the distance in MapboxScaleBarOrnamentView.Constants.metricTable
     static let metricValues = [
+        (metersPerPoint: Double.random(in: 0.00125..<0.005), numberOfBars: 1),
         (metersPerPoint: 0.00505, numberOfBars: 2),
         (metersPerPoint: 0.010049999999999998, numberOfBars: 2),
         (metersPerPoint: 0.02005, numberOfBars: 2),

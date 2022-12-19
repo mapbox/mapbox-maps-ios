@@ -4,10 +4,18 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Reduce CPU usage/energy consumption whem map idling while showing user location. ([#1789](https://github.com/mapbox/mapbox-maps-ios/pull/1789))
 * Fix loading errors appearing when providing custom endpoint for `ResourceOptions.baseURL`. ([#1749](https://github.com/mapbox/mapbox-maps-ios/pull/1749))
 * Remove delegate requirement for annotation interaction. ([#1750](https://github.com/mapbox/mapbox-maps-ios/pull/1750))
 * Reset compass image to default one if `nil` was passed to the `MapboxCompassOrnamentView.updateImage(image:)`. ([#1766](https://github.com/mapbox/mapbox-maps-ios/pull/1766), [#1772](https://github.com/mapbox/mapbox-maps-ios/pull/1772))
 * Prevent `PointAnnotationManager` to remove images that are not owned by it from Style. ([#1775](https://github.com/mapbox/mapbox-maps-ios/pull/1775))
+* Use `sdf` parameter when adding a style image. ([#1803](https://github.com/mapbox/mapbox-maps-ios/pull/1803))
+* [CarPlay] Fix map view permanently pausing when moving to window on foreground ([#1808])(https://github.com/mapbox/mapbox-maps-ios/pull/1808)
+* Fix scale bar grows beyond its maximum width at large zoom near north/south poles. ([#1802](https://github.com/mapbox/mapbox-maps-ios/pull/1802))
+* Improve GeoJSONSource add/update performance by passing `GeoJSONSourceData` directly. ([#1815](https://github.com/mapbox/mapbox-maps-ios/pull/1815))
+
+## 10.10.0 - December 8, 2022
+
 * Update CoreMaps and CommonSDK. ([#1777](https://github.com/mapbox/mapbox-maps-ios/pull/1777))
 
 ## 10.10.0-rc.1 - November 18, 2022

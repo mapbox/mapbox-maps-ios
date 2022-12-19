@@ -724,13 +724,13 @@ public final class Style: StyleProtocol {
         }
 
         try handleExpected {
-            return styleManager.addStyleImage(forImageId: id,
-                                              scale: Float(image.scale),
-                                              image: mbmImage,
-                                              sdf: sdf,
-                                              stretchX: stretchX,
-                                              stretchY: stretchY,
-                                              content: content)
+            return _styleManager.addStyleImage(forImageId: id,
+                                               scale: Float(image.scale),
+                                               image: mbmImage,
+                                               sdf: sdf,
+                                               stretchX: stretchX,
+                                               stretchY: stretchY,
+                                               content: content)
         }
     }
 
@@ -769,6 +769,7 @@ public final class Style: StyleProtocol {
                                       bottom: contentBoxBottom)
         try addImage(image,
                      id: id,
+                     sdf: sdf,
                      stretchX: [ImageStretches(first: stretchXFirst, second: stretchXSecond)],
                      stretchY: [ImageStretches(first: stretchYFirst, second: stretchYSecond)],
                      content: contentBox)

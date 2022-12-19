@@ -355,6 +355,10 @@ internal class MapboxScaleBarOrnamentView: UIView {
     internal func preferredRow() -> Row {
         let (maxDistance, rows) = maxDistanceAndRows()
 
+        guard maxDistance > Measurement(value: 0.25, unit: .meters) else {
+            // There's no space to render the smallest distance. Don't render anything.
+            return (0, 0)
+        }
         guard maxDistance.value >= rows[0].distance else {
             // If the minimum pre-defined distance does not fit the maximum width,
             // then we fallback to use maxDistance (rounded down with 0.25 granularity) displayed with 1 bar.

@@ -95,7 +95,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
             throw StyleError(message: "Source with id '\(id)' is not found or not a GeoJSONSource.")
         }
 
-        directlyApplyGeoJSON(data: geoJSON.sourceData, sourceId: id)
+        applyGeoJSON(data: geoJSON.sourceData, sourceId: id)
     }
 
     // MARK: - Untyped API
@@ -161,10 +161,10 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
         guard let data = data else { return }
         if case GeoJSONSourceData.empty = data { return }
 
-        directlyApplyGeoJSON(data: data, sourceId: id)
+        applyGeoJSON(data: data, sourceId: id)
     }
 
-    private func directlyApplyGeoJSON(data: GeoJSONSourceData, sourceId id: String) {
+    private func applyGeoJSON(data: GeoJSONSourceData, sourceId id: String) {
         workItems.removeValue(forKey: id)?.cancel()
 
         // This implementation favors the first submitted task and the last, in case of many work items queuing up -

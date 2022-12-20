@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## 10.10.1 - December 20, 2022
+
+* [CarPlay] Fix map view permanently pausing when moving to window on foreground ([#1808])(https://github.com/mapbox/mapbox-maps-ios/pull/1808)
+
 ## 10.10.0 - December 8, 2022
 
 * Update CoreMaps and CommonSDK. ([#1777](https://github.com/mapbox/mapbox-maps-ios/pull/1777))

@@ -242,7 +242,7 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
                     }
 
                     for manager in managers {
-                        manager.handleDragBegin(with: queriedFeatureIds)
+                        manager.handleQueriedFeatureIds(queriedFeatureIds)
                     }
 
                 case .failure(let error):

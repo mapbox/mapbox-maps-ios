@@ -257,6 +257,12 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         for var annotation in self.annotations {
             if queriedFeatureIds.contains(annotation.id) {
                 annotation.isSelected.toggle()
+
+                guard annotation.isDraggable == false else {
+                    handleDragBegin(with: queriedFeatureIds)
+                    return
+                }
+
                 tappedAnnotations.append(annotation)
             }
             annotations.append(annotation)

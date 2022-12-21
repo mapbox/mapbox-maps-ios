@@ -981,9 +981,8 @@ jobs:
       - slack-notify-failure-if-any
 
   build-docs:
-    executor:
-      macos:
-        xcode: 13.4.1
+    macos:
+      xcode: 13.4.1
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout

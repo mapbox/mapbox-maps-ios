@@ -105,7 +105,7 @@ class MapboxCompassOrnamentViewTests: XCTestCase {
         XCTAssertNotNil(originalImage)
 
         // Given
-        let expectedImage = emptyImage(with: CGSize(width: 25, height: 25))
+        let expectedImage = UIImage.emptyImage(with: CGSize(width: 25, height: 25))
         // When
         compass.updateImage(image: expectedImage)
         // Then
@@ -118,7 +118,7 @@ class MapboxCompassOrnamentViewTests: XCTestCase {
         // Given
         let compass = MapboxCompassOrnamentView()
         let originalImageData = compass.containerView.image?.pngData()
-        let customImage = emptyImage(with: CGSize(width: 25, height: 25))
+        let customImage = UIImage.emptyImage(with: CGSize(width: 25, height: 25))
 
         // When
         compass.updateImage(image: customImage)
@@ -135,12 +135,5 @@ class MapboxCompassOrnamentViewTests: XCTestCase {
         XCTAssertNotNil(compass.containerView.image)
         // And
         XCTAssertEqual(compass.containerView.image?.pngData(), originalImageData)
-    }
-
-    private func emptyImage(with size: CGSize) -> UIImage? {
-        UIGraphicsBeginImageContext(size)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return image
     }
 }

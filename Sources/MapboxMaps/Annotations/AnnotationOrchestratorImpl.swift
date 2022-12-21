@@ -31,7 +31,6 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
         self.longPressGestureRecognizer = longPressGestureRecognizer
         self.mapFeatureQueryable = mapFeatureQueryable
         self.factory = factory
-
         super.init()
         tapGestureRecognizer.addTarget(self, action: #selector(handleTap(_:)))
         longPressGestureRecognizer.addTarget(self, action: #selector(handleDrag(_:)))

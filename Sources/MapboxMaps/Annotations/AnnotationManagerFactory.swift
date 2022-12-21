@@ -30,6 +30,8 @@ internal final class AnnotationManagerFactory: AnnotationManagerFactoryProtocol 
     private let offsetPolygonCalculator: OffsetPolygonCalculator
     private let offsetLineStringCalculator: OffsetLineStringCalculator
 
+    private lazy var imagesManager = AnnotationImagesManager(style: style)
+
     internal init(style: StyleProtocol,
                   displayLinkCoordinator: DisplayLinkCoordinator,
                   offsetPointCalculator: OffsetPointCalculator,
@@ -54,6 +56,7 @@ internal final class AnnotationManagerFactory: AnnotationManagerFactoryProtocol 
                 style: style,
                 layerPosition: layerPosition,
                 displayLinkCoordinator: displayLinkCoordinator,
+                imagesManager: imagesManager,
                 offsetPointCalculator: offsetPointCalculator)
         }
 

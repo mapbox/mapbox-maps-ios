@@ -142,7 +142,7 @@ public class Snapshotter {
 
             let mbxImage = snapshot.image()
 
-            guard let uiImage = UIImage(mbxImage: mbxImage, scale: scale) else {
+            guard let uiImage = UIImage(mbxConvertImage: mbxImage, scale: scale) else {
                 completion(.failure(.snapshotFailed(reason: "Could not convert internal Image type to UIImage.")))
                 return
             }

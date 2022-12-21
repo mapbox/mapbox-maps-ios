@@ -8,7 +8,7 @@ extension UIImage {
     /// - Parameters:
     ///   - mbxImage: The internal `Image` type to use for the `UIImage`.
     ///   - scale: The scale of the new `UIImage`.
-    internal convenience init?(mbxImage: Image, scale: CGFloat = UIScreen.main.scale) {
+    internal convenience init?(mbxConvertImage mbxImage: Image, scale: CGFloat = UIScreen.main.scale) {
         let cgImage = mbxImage.cgImage().takeRetainedValue()
 
         let size = CGSize(width: CGFloat(CGFloat(mbxImage.width) / scale),
@@ -30,5 +30,11 @@ extension UIImage {
         guard let generatedImage = generated.cgImage else { return nil }
 
         self.init(cgImage: generatedImage, scale: scale, orientation: .downMirrored)
+    }
+
+    internal convenience init?(mbxNotConvertImage mbxImage: Image, scale: CGFloat = UIScreen.main.scale) {
+        let cgImage = mbxImage.cgImage().takeRetainedValue()
+
+        self.init(cgImage: cgImage, scale: scale, orientation: .downMirrored)
     }
 }

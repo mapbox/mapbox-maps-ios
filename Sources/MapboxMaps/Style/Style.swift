@@ -807,7 +807,7 @@ public final class Style: StyleProtocol {
             return nil
         }
 
-        return UIImage(mbxImage: mbmImage)
+        return UIImage(mbxConvertImage: mbmImage)
     }
 
     // MARK: - Light

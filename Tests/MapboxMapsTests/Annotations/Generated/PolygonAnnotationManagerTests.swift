@@ -469,6 +469,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         expectation = nil
     }
 
+
     func testHandleDragBeginIsDraggableFalse() throws {
         manager.annotations = [
             PolygonAnnotation(id: "polygon1", polygon: .init([[
@@ -483,7 +484,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         style.addSourceStub.reset()
         style.addPersistentLayerWithPropertiesStub.reset()
 
-        manager.handleDragBegin(with: ["line1"])
+        manager.handleDragBegin(with: ["polygon1"])
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
@@ -523,7 +524,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
             ]]))
         ]
 
-        annotations = annotations.map { annotation in
+        manager.annotations = manager.annotations.map { annotation in
             var annotation = annotation
             annotation.isDraggable = true
             return annotation
@@ -560,7 +561,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
             ]]))
         ]
 
-        annotations = annotations.map { annotation in
+        manager.annotations = manager.annotations.map { annotation in
             var annotation = annotation
             annotation.isDraggable = true
             return annotation
@@ -592,7 +593,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
             ]]))
         ]
 
-        annotations = annotations.map { annotation in
+        manager.annotations = manager.annotations.map { annotation in
             var annotation = annotation
             annotation.isDraggable = true
             return annotation

@@ -2766,7 +2766,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertTrue(annotations.compactMap(\.image?.name).allSatisfy(manager.isUsingStyleImage(_:)))
     }
 
-
     func testUnusedImagesRemovedFromStyle() {
         // given
         let allAnnotations = Array.random(withLength: 10) {
@@ -3121,6 +3120,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(removeLayerInvocations[1].parameters, "mapbox-iOS-cluster-text-layer-manager-" + id)
         XCTAssertEqual(removeLayerInvocations[2].parameters, id)
     }
+
     func testHandleDragBeginIsDraggableFalse() throws {
         manager.annotations = [
             PointAnnotation(id: "point1", coordinate: .random())
@@ -3129,7 +3129,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         style.addSourceStub.reset()
         style.addPersistentLayerWithPropertiesStub.reset()
 
-        manager.handleDragBegin(with: ["line1"])
+        manager.handleDragBegin(with: ["point1"])
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
@@ -3163,7 +3163,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             PointAnnotation(id: "point1", coordinate: .random())
         ]
 
-        annotations = annotations.map { annotation in
+        manager.annotations = manager.annotations.map { annotation in
             var annotation = annotation
             annotation.isDraggable = true
             return annotation
@@ -3194,7 +3194,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             PointAnnotation(id: "point1", coordinate: .init(latitude: 0, longitude: 0))
         ]
 
-        annotations = annotations.map { annotation in
+        manager.annotations = manager.annotations.map { annotation in
             var annotation = annotation
             annotation.isDraggable = true
             return annotation
@@ -3220,7 +3220,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             PointAnnotation(id: "point1", coordinate: .init(latitude: 0, longitude: 0))
         ]
 
-        annotations = annotations.map { annotation in
+        manager.annotations = manager.annotations.map { annotation in
             var annotation = annotation
             annotation.isDraggable = true
             return annotation

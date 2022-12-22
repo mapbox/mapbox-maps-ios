@@ -493,6 +493,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         expectation = nil
     }
 
+
     func testHandleDragBeginIsDraggableFalse() throws {
         manager.annotations = [
             CircleAnnotation(id: "circle1", centerCoordinate: .random())
@@ -501,7 +502,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         style.addSourceStub.reset()
         style.addPersistentLayerWithPropertiesStub.reset()
 
-        manager.handleDragBegin(with: ["line1"])
+        manager.handleDragBegin(with: ["circle1"])
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
@@ -535,7 +536,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
             CircleAnnotation(id: "circle1", centerCoordinate: .random())
         ]
 
-        annotations = annotations.map { annotation in
+        manager.annotations = manager.annotations.map { annotation in
             var annotation = annotation
             annotation.isDraggable = true
             return annotation
@@ -566,7 +567,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
             CircleAnnotation(id: "circle1", centerCoordinate: .init(latitude: 0, longitude: 0))
         ]
 
-        annotations = annotations.map { annotation in
+        manager.annotations = manager.annotations.map { annotation in
             var annotation = annotation
             annotation.isDraggable = true
             return annotation
@@ -592,7 +593,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
             CircleAnnotation(id: "circle1", centerCoordinate: .init(latitude: 0, longitude: 0))
         ]
 
-        annotations = annotations.map { annotation in
+        manager.annotations = manager.annotations.map { annotation in
             var annotation = annotation
             annotation.isDraggable = true
             return annotation

@@ -725,6 +725,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         expectation = nil
     }
 
+
     func testHandleDragBeginIsDraggableFalse() throws {
         manager.annotations = [
             PolylineAnnotation(id: "line1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)])
@@ -767,7 +768,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             PolylineAnnotation(id: "line1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)])
         ]
 
-        annotations = annotations.map { annotation in
+        manager.annotations = manager.annotations.map { annotation in
             var annotation = annotation
             annotation.isDraggable = true
             return annotation
@@ -798,7 +799,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             PolylineAnnotation(id: "line1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)])
         ]
 
-        annotations = annotations.map { annotation in
+        manager.annotations = manager.annotations.map { annotation in
             var annotation = annotation
             annotation.isDraggable = true
             return annotation
@@ -824,7 +825,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             PolylineAnnotation(id: "line1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)])
         ]
 
-        annotations = annotations.map { annotation in
+        manager.annotations = manager.annotations.map { annotation in
             var annotation = annotation
             annotation.isDraggable = true
             return annotation

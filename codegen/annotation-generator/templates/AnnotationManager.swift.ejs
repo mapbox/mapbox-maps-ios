@@ -27,7 +27,9 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
 
     private var needsSyncSourceAndLayer = false
     <%_ if (isPointAnnotationManager) { _%>
-    private var addedImages = Set<String>()
+    /// List of images used by this ``PointAnnotationManager``.
+    private(set) internal var allImages = Set<String>()
+    private let imagesManager: AnnotationImagesManagerProtocol
     private var clusterOptions: ClusterOptions?
     <%_ } _%>
 
@@ -92,7 +94,8 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
                   style: StyleProtocol,
                   layerPosition: LayerPosition?,
                   displayLinkCoordinator: DisplayLinkCoordinator<%_ if (isPointAnnotationManager) { _%>,
-                  clusterOptions: ClusterOptions? = nil<%_ } _%>,
+                  clusterOptions: ClusterOptions? = nil,
+                  imagesManager: AnnotationImagesManagerProtocol<%_ } _%>,
                   <%_ if (type === circle || type === symbol) { _%>
                   offsetPointCalculator: OffsetPointCalculator) {
                   <%_ } else if ( type === line ) { _%>
@@ -103,10 +106,13 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
         self.id = id
         self.sourceId = id
         self.layerId = id
-        self.style = style<% if (isPointAnnotationManager) { %>
-        self.clusterOptions = clusterOptions<% } %>
+        self.style = style
+        <%_ if (isPointAnnotationManager) { _%>
+        self.clusterOptions = clusterOptions
+        self.imagesManager = imagesManager
+        <%_ } _%>
         self.displayLinkCoordinator = displayLinkCoordinator
-         <%_ if (type === circle || type === symbol) { _%>
+        <%_ if (type === circle || type === symbol) { _%>
         self.offsetPointCalculator = offsetPointCalculator
         <%_ } else if ( type === line ) { _%>
         self.offsetLineStringCalculator = offsetLineStringCalculator
@@ -115,7 +121,9 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
         <%_ } _%>
         self.dragLayerId = id + "_drag-layer"
         self.dragSourceId = id + "_drag-source"
-
+        <%_ if (isPointAnnotationManager) { %>
+        imagesManager.register(imagesConsumer: self)
+        <%_ } %>
         do {
             // Add the source with empty `data` property
             var source = GeoJSONSource()
@@ -242,7 +250,7 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
                 category: "Annotations")
         }
         <%_ if (isPointAnnotationManager) { _%>
-        removeImages(from: style, images: addedImages)
+        removeAllImages()
         <%_ } _%>
         displayLinkCoordinator?.remove(displayLinkParticipant)
     }
@@ -262,12 +270,12 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
         <%_ if (isPointAnnotationManager) { _%>
         let newImages = Set(annotations.compactMap(\.image) + [annotationBeingDragged].compactMap(\.?.image))
         let newImageNames = Set(newImages.map(\.name))
-        let unusedImages = addedImages.subtracting(newImageNames)
+        let unusedImages = allImages.subtracting(newImageNames)
 
-        addImagesToStyleIfNeeded(style: style, images: newImages)
-        removeImages(from: style, images: unusedImages)
+        addImages(newImages)
+        allImages = newImageNames
 
-        addedImages = newImageNames
+        removeImages(unusedImages)
 
         <%_ } _%>
         // Construct the properties dictionary from the annotations
@@ -470,4 +478,26 @@ extension <%- camelize(type) %>AnnotationManager: DelegatingDisplayLinkParticipa
     }
 }
 
+<%_ if (isPointAnnotationManager) { _%>
+private extension <%- camelize(type) %>AnnotationManager {
+
+    func addImages(_ images: Set<PointAnnotation.Image>) {
+        for image in images {
+            imagesManager.addImage(image.image, id: image.name, sdf: false, contentInsets: .zero)
+        }
+    }
+
+    func removeImages(_ names: Set<String>) {
+        for imageName in names {
+            imagesManager.removeImage(imageName)
+        }
+    }
+
+    func removeAllImages() {
+        let imagesToRemove = allImages
+        allImages.removeAll()
+        removeImages(imagesToRemove)
+    }
+}
+<%_ } _%>
 // End of generated file.

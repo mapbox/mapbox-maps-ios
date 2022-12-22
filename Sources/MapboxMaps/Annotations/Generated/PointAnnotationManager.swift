@@ -74,17 +74,15 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         self.sourceId = id
         self.layerId = id
         self.style = style
-        
         self.clusterOptions = clusterOptions
         self.imagesManager = imagesManager
-        
         self.displayLinkCoordinator = displayLinkCoordinator
         self.offsetPointCalculator = offsetPointCalculator
         self.dragLayerId = id + "_drag-layer"
         self.dragSourceId = id + "_drag-source"
-        
+
         imagesManager.register(imagesConsumer: self)
-        
+
         do {
             // Add the source with empty `data` property
             var source = GeoJSONSource()

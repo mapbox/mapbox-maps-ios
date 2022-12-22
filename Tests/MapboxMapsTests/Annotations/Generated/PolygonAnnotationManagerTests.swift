@@ -469,6 +469,27 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         expectation = nil
     }
 
+    func testHandleDragBeginIsDraggableFalse() throws {
+        manager.annotations = [
+            PolygonAnnotation(id: "polygon1", polygon: .init([[
+                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+                CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+                CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+                CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+            ]]))
+        ]
+
+        style.addSourceStub.reset()
+        style.addPersistentLayerWithPropertiesStub.reset()
+
+        manager.handleDragBegin(with: ["line1"])
+
+        XCTAssertEqual(style.addSourceStub.invocations.count, 0)
+        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
+        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 0)
+    }
+
     func testHandleDragBeginNoFeatureId() {
         style.addSourceStub.reset()
         style.addPersistentLayerWithPropertiesStub.reset()
@@ -502,6 +523,12 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
             ]]))
         ]
 
+        annotations = annotations.map { annotation in
+            var annotation = annotation
+            annotation.isDraggable = true
+            return annotation
+        }
+
         style.addSourceStub.reset()
         style.addPersistentLayerWithPropertiesStub.reset()
 
@@ -533,6 +560,12 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
             ]]))
         ]
 
+        annotations = annotations.map { annotation in
+            var annotation = annotation
+            annotation.isDraggable = true
+            return annotation
+        }
+
         manager.handleDragChanged(with: .random())
         XCTAssertTrue(style.updateGeoJSONSourceStub.invocations.isEmpty)
 
@@ -558,6 +591,12 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
             ]]))
         ]
+
+        annotations = annotations.map { annotation in
+            var annotation = annotation
+            annotation.isDraggable = true
+            return annotation
+        }
 
         manager.handleDragEnded()
         eventually(timeout: 0.2) {

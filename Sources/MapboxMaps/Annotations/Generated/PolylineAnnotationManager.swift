@@ -300,7 +300,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     }
 
     internal func handleDragBegin(with featureIdentifiers: [String]) {
-        guard let annotation = annotations.first(where: { featureIdentifiers.contains($0.id) }) else { return }
+        guard let annotation = annotations.first(where: { featureIdentifiers.contains($0.id) && $0.isDraggable }) else { return }
         createDragSourceAndLayer()
 
         annotationBeingDragged = annotation

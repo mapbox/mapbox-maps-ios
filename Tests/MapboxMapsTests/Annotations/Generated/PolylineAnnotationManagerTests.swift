@@ -725,6 +725,21 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         expectation = nil
     }
 
+    func testHandleDragBeginIsDraggableFalse() throws {
+        manager.annotations = [
+            PolylineAnnotation(id: "line1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)])
+        ]
+
+        style.addSourceStub.reset()
+        style.addPersistentLayerWithPropertiesStub.reset()
+
+        manager.handleDragBegin(with: ["line1"])
+
+        XCTAssertEqual(style.addSourceStub.invocations.count, 0)
+        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
+        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 0)
+    }
+
     func testHandleDragBeginNoFeatureId() {
         style.addSourceStub.reset()
         style.addPersistentLayerWithPropertiesStub.reset()
@@ -752,6 +767,12 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             PolylineAnnotation(id: "line1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)])
         ]
 
+        annotations = annotations.map { annotation in
+            var annotation = annotation
+            annotation.isDraggable = true
+            return annotation
+        }
+
         style.addSourceStub.reset()
         style.addPersistentLayerWithPropertiesStub.reset()
 
@@ -777,6 +798,12 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             PolylineAnnotation(id: "line1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)])
         ]
 
+        annotations = annotations.map { annotation in
+            var annotation = annotation
+            annotation.isDraggable = true
+            return annotation
+        }
+
         manager.handleDragChanged(with: .random())
         XCTAssertTrue(style.updateGeoJSONSourceStub.invocations.isEmpty)
 
@@ -796,6 +823,12 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         manager.annotations = [
             PolylineAnnotation(id: "line1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)])
         ]
+
+        annotations = annotations.map { annotation in
+            var annotation = annotation
+            annotation.isDraggable = true
+            return annotation
+        }
 
         manager.handleDragEnded()
         eventually(timeout: 0.2) {

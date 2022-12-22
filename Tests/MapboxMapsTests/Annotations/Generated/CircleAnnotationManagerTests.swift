@@ -493,6 +493,21 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         expectation = nil
     }
 
+    func testHandleDragBeginIsDraggableFalse() throws {
+        manager.annotations = [
+            CircleAnnotation(id: "circle1", centerCoordinate: .random())
+        ]
+
+        style.addSourceStub.reset()
+        style.addPersistentLayerWithPropertiesStub.reset()
+
+        manager.handleDragBegin(with: ["line1"])
+
+        XCTAssertEqual(style.addSourceStub.invocations.count, 0)
+        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
+        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 0)
+    }
+
     func testHandleDragBeginNoFeatureId() {
         style.addSourceStub.reset()
         style.addPersistentLayerWithPropertiesStub.reset()
@@ -520,6 +535,12 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
             CircleAnnotation(id: "circle1", centerCoordinate: .random())
         ]
 
+        annotations = annotations.map { annotation in
+            var annotation = annotation
+            annotation.isDraggable = true
+            return annotation
+        }
+
         style.addSourceStub.reset()
         style.addPersistentLayerWithPropertiesStub.reset()
 
@@ -545,6 +566,12 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
             CircleAnnotation(id: "circle1", centerCoordinate: .init(latitude: 0, longitude: 0))
         ]
 
+        annotations = annotations.map { annotation in
+            var annotation = annotation
+            annotation.isDraggable = true
+            return annotation
+        }
+
         manager.handleDragChanged(with: .random())
         XCTAssertTrue(style.updateGeoJSONSourceStub.invocations.isEmpty)
 
@@ -564,6 +591,12 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         manager.annotations = [
             CircleAnnotation(id: "circle1", centerCoordinate: .init(latitude: 0, longitude: 0))
         ]
+
+        annotations = annotations.map { annotation in
+            var annotation = annotation
+            annotation.isDraggable = true
+            return annotation
+        }
 
         manager.handleDragEnded()
         eventually(timeout: 0.2) {

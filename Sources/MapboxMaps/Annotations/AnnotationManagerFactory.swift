@@ -56,6 +56,7 @@ internal final class AnnotationManagerFactory: AnnotationManagerFactoryProtocol 
                 style: style,
                 layerPosition: layerPosition,
                 displayLinkCoordinator: displayLinkCoordinator,
+                clusterOptions: clusterOptions,
                 imagesManager: imagesManager,
                 offsetPointCalculator: offsetPointCalculator)
         }

@@ -171,14 +171,23 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
     func testMakePointAnnotationManagers() {
         //given
         let annotationManagerId = UUID().uuidString
+        let clusterOptions: ClusterOptions? = .random(ClusterOptions())
 
         //when
-        let manager = impl.makePointAnnotationManager(id: annotationManagerId, layerPosition: .default, clusterOptions: nil)
+        let manager = impl.makePointAnnotationManager(
+            id: annotationManagerId,
+            layerPosition: .default,
+            clusterOptions: clusterOptions)
 
         //then
         XCTAssertNotNil(impl.annotationManagersById[annotationManagerId] === manager)
         XCTAssertEqual(impl.annotationManagersById.count, 1)
         XCTAssertEqual(factory.makePointAnnotationManagerStub.invocations.count, 1)
+
+        let parameters = factory.makePointAnnotationManagerStub.invocations.last?.parameters
+        XCTAssertEqual(parameters?.layerPosition, .default)
+        XCTAssertEqual(parameters?.clusterOptions, clusterOptions)
+        XCTAssertEqual(parameters?.id, annotationManagerId)
     }
 
     func testMakePolygonAnnotationManagers() {

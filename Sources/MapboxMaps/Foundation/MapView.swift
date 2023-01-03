@@ -410,6 +410,7 @@ open class MapView: UIView {
             userInterfaceOrientationView: self)
         let interpolatedLocationProducer = dependencyProvider.makeInterpolatedLocationProducer(
             locationProducer: locationProducer,
+            mapboxMap: mapboxMap,
             displayLinkCoordinator: self)
         location = dependencyProvider.makeLocationManager(
             locationProducer: locationProducer,

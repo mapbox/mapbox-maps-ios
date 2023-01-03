@@ -54,15 +54,17 @@ import CoreLocation
 }
 
 internal extension CLLocationCoordinate2D {
+    private typealias CoordinateDiff = (latitude: CLLocationDegrees, longitude: CLLocationDegrees)
+
     func isDifferentEnough(from other: CLLocationCoordinate2D) -> Bool {
         let precision = 0.000_000_1
         let diff = diff(to: other)
-        
+
         return diff.latitude > precision || diff.latitude > precision
     }
 
-    func diff(to other: CLLocationCoordinate2D) -> CLLocationCoordinate2D {
-        return .init(latitude: abs(latitude - other.latitude), longitude: abs(longitude - other.longitude))
+    private func diff(to other: CLLocationCoordinate2D) -> CoordinateDiff {
+        return (latitude: abs(latitude - other.latitude), longitude: abs(longitude - other.longitude))
     }
 
     func isDifferentEnough(from other: CLLocationCoordinate2D, for zoomLevel: CGFloat) -> Bool {
@@ -75,8 +77,30 @@ internal extension CLLocationCoordinate2D {
     private func zoomLevelToPrecision(_ zoomLevel: CGFloat) -> Double {
         let maxZoom: CGFloat = 22
         let maxPrecision: CGFloat = 7
-        let precision = zoomLevel / maxZoom / maxPrecision
+        let precision = zoomLevel / (maxZoom / maxPrecision)
         let roundedPrecision = round(precision)
         return roundedPrecision
-    }    
+    }
+
+    func foo() {
+        let formatter = MeasurementFormatter()
+        formatter.unitOptions = [.naturalScale]
+        let zooms = stride(from: CGFloat(0), to: CGFloat(22), by: CGFloat(1))
+        for zoomLevel in zooms {
+            let precision = pow(Double(10), -zoomLevelToPrecision(zoomLevel))
+            let kmPerDegree: CGFloat = 111.11111111
+            let distance = kmPerDegree * precision
+            let measurement: Measurement<UnitLength>
+            if distance <= 0.001 {
+                formatter.unitOptions = [.providedUnit]
+                measurement = Measurement(value: round(distance * 1000.0 * 100.0), unit: UnitLength.centimeters)
+            } else {
+                formatter.unitOptions = [.naturalScale]
+                measurement = Measurement(value: distance, unit: UnitLength.kilometers)
+            }
+
+            print("zoom level: \(zoomLevel), precision: \(precision), distance: \(formatter.string(from: measurement))")
+        }
+        print("end")
+    }
 }

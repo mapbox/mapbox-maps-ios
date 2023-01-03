@@ -16,5 +16,13 @@ final class DebugViewController: UIViewController {
         mapView = MapView(frame: view.bounds)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.insertSubview(mapView, at: 0)
+
+        mapView.location.options.puckType = .puck2D(.makeDefault(showBearing: true))
+    }
+
+    @IBAction @objc func buttonPressed(_ sender: UIButton) {
+        mapView.location.useExperimentalSkipLocationInterpolation.toggle()
+        
+        sender.setTitle(mapView.location.useExperimentalSkipLocationInterpolation.description, for: .normal)
     }
 }

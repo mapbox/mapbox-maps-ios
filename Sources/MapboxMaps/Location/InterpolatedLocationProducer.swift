@@ -1,6 +1,7 @@
 import CoreLocation
 
 internal protocol InterpolatedLocationProducerProtocol: AnyObject {
+    var useExperimentalSkipLocationInterpolation: Bool { get set }
     var isEnabled: Bool { get set }
     var location: InterpolatedLocation? { get }
     func observe(with handler: @escaping (InterpolatedLocation) -> Bool) -> Cancelable
@@ -17,10 +18,11 @@ internal final class InterpolatedLocationProducer: NSObject, InterpolatedLocatio
     private let observableInterpolatedLocation: ObservableInterpolatedLocationProtocol
     private let locationInterpolator: LocationInterpolatorProtocol
     private let dateProvider: DateProvider
+    private let mapboxMap: MapboxMapProtocol
 
     private let consumers = NSHashTable<PuckLocationConsumer>.weakObjects()
     private var cancelableToken: Cancelable?
-
+    internal var useExperimentalSkipLocationInterpolation = false
     internal var location: InterpolatedLocation? {
         observableInterpolatedLocation.value
     }
@@ -39,10 +41,13 @@ internal final class InterpolatedLocationProducer: NSObject, InterpolatedLocatio
                   locationInterpolator: LocationInterpolatorProtocol,
                   dateProvider: DateProvider,
                   locationProducer: LocationProducerProtocol,
+                  mapboxMap: MapboxMapProtocol,
                   displayLinkCoordinator: DisplayLinkCoordinator) {
         self.observableInterpolatedLocation = observableInterpolatedLocation
         self.locationInterpolator = locationInterpolator
         self.dateProvider = dateProvider
+        self.mapboxMap = mapboxMap
+
         super.init()
         observableInterpolatedLocation.onFirstSubscribe = { [weak self, weak displayLinkCoordinator] in
             guard let self = self else { return }
@@ -117,14 +122,25 @@ internal final class InterpolatedLocationProducer: NSObject, InterpolatedLocatio
 
 extension InterpolatedLocationProducer: LocationConsumer {
     internal func locationUpdate(newLocation: Location) {
-        if let location = startLocation, location.coordinate.isDifferentEnough(from: newLocation.coordinate) {
-            return
-        }
-        let currentDate = dateProvider.now
-
         // as a first iteration, assume a 1s location update interval and use a
         // slightly longer interpolation duration to avoid pauses between updates
         let duration: TimeInterval = 1.1
+        let currentDate = dateProvider.now
+
+        // fast-track location update for cases when interpolatation won't be visible
+        if useExperimentalSkipLocationInterpolation, let location = startLocation,
+           !location.coordinate.isDifferentEnough(from: newLocation.coordinate, for: mapboxMap.cameraState.zoom) {
+
+            let newInterpolatedLocation = InterpolatedLocation(location: newLocation)
+            startLocation = newInterpolatedLocation
+            endLocation = newInterpolatedLocation
+            startDate = currentDate - duration
+            endDate = currentDate
+            print("fast track")
+            return
+        }
+
+        print("slow track")
 
         if let location = interpolatedLocation(with: currentDate) {
             // calculate new start location via interpolation to current date

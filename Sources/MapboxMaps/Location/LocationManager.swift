@@ -39,6 +39,10 @@ public final class LocationManager: NSObject {
     /// Manager that handles the visual puck element.
     /// Only created if `showsUserLocation` is `true`.
     private let puckManager: PuckManagerProtocol
+    public var useExperimentalSkipLocationInterpolation: Bool {
+        get { interpolatedLocationProducer.useExperimentalSkipLocationInterpolation }
+        set { interpolatedLocationProducer.useExperimentalSkipLocationInterpolation = newValue }
+    }
 
     internal init(locationProducer: LocationProducerProtocol,
                   interpolatedLocationProducer: InterpolatedLocationProducerProtocol,

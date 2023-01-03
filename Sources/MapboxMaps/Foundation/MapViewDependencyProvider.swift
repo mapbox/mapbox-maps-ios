@@ -17,6 +17,7 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
     func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool,
                               userInterfaceOrientationView: UIView) -> LocationProducerProtocol
     func makeInterpolatedLocationProducer(locationProducer: LocationProducerProtocol,
+                                          mapboxMap: MapboxMapProtocol,
                                           displayLinkCoordinator: DisplayLinkCoordinator) -> InterpolatedLocationProducerProtocol
     func makeLocationManager(locationProducer: LocationProducerProtocol,
                              interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
@@ -266,6 +267,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     }
 
     internal func makeInterpolatedLocationProducer(locationProducer: LocationProducerProtocol,
+                                                   mapboxMap: MapboxMapProtocol,
                                                    displayLinkCoordinator: DisplayLinkCoordinator) -> InterpolatedLocationProducerProtocol {
         let doubleInterpolator = DoubleInterpolator()
         let wrappingInterpolator = WrappingInterpolator()
@@ -285,6 +287,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             locationInterpolator: locationInterpolator,
             dateProvider: DefaultDateProvider(),
             locationProducer: locationProducer,
+            mapboxMap: mapboxMap,
             displayLinkCoordinator: displayLinkCoordinator)
     }
 

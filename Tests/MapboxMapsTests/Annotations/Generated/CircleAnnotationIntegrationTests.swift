@@ -37,7 +37,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testSynchronizesAnnotationsEventually() throws {
-        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.circleRadius = 10
 
         manager.annotations.append(annotation)
@@ -168,7 +168,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testCircleSortKey() throws {
-        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: -100000...100000)
         annotation.circleSortKey = value
@@ -204,7 +204,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testCircleBlur() throws {
-        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: -100000...100000)
         annotation.circleBlur = value
@@ -240,7 +240,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testCircleColor() throws {
-        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = StyleColor.random()
         annotation.circleColor = value
@@ -276,7 +276,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testCircleOpacity() throws {
-        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: 0...1)
         annotation.circleOpacity = value
@@ -312,7 +312,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testCircleRadius() throws {
-        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: 0...100000)
         annotation.circleRadius = value
@@ -348,7 +348,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testCircleStrokeColor() throws {
-        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = StyleColor.random()
         annotation.circleStrokeColor = value
@@ -384,7 +384,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testCircleStrokeOpacity() throws {
-        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: 0...1)
         annotation.circleStrokeOpacity = value
@@ -420,7 +420,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testCircleStrokeWidth() throws {
-        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: 0...100000)
         annotation.circleStrokeWidth = value

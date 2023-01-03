@@ -12,7 +12,7 @@ final class PolygonAnnotationTests: XCTestCase {
             CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
         ]
-        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
         annotation.fillSortKey =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -33,7 +33,7 @@ final class PolygonAnnotationTests: XCTestCase {
             CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
         ]
-        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
         annotation.fillColor =  StyleColor.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -54,7 +54,7 @@ final class PolygonAnnotationTests: XCTestCase {
             CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
         ]
-        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
         annotation.fillOpacity =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -75,7 +75,7 @@ final class PolygonAnnotationTests: XCTestCase {
             CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
         ]
-        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
         annotation.fillOutlineColor =  StyleColor.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -96,7 +96,7 @@ final class PolygonAnnotationTests: XCTestCase {
             CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
         ]
-        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
         annotation.fillPattern =  String.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {

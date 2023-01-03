@@ -37,7 +37,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testSynchronizesAnnotationsEventually() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.textSize = 10
 
         manager.annotations.append(annotation)
@@ -796,7 +796,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testIconAnchor() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = IconAnchor.allCases.randomElement()!
         annotation.iconAnchor = value
@@ -832,7 +832,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testIconImage() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = String.randomASCII(withLength: .random(in: 0...100))
         annotation.iconImage = value
@@ -868,7 +868,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testIconOffset() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
         annotation.iconOffset = value
@@ -906,7 +906,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testIconRotate() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: -100000...100000)
         annotation.iconRotate = value
@@ -942,7 +942,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testIconSize() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: 0...100000)
         annotation.iconSize = value
@@ -978,7 +978,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testSymbolSortKey() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: -100000...100000)
         annotation.symbolSortKey = value
@@ -1014,7 +1014,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testTextAnchor() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = TextAnchor.allCases.randomElement()!
         annotation.textAnchor = value
@@ -1050,7 +1050,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testTextField() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = String.randomASCII(withLength: .random(in: 0...100))
         annotation.textField = value
@@ -1090,7 +1090,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testTextJustify() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = TextJustify.allCases.randomElement()!
         annotation.textJustify = value
@@ -1126,7 +1126,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testTextLetterSpacing() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: -100000...100000)
         annotation.textLetterSpacing = value
@@ -1162,7 +1162,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testTextLineHeight() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: -100000...100000)
         annotation.textLineHeight = value
@@ -1198,7 +1198,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testTextMaxWidth() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: 0...100000)
         annotation.textMaxWidth = value
@@ -1234,7 +1234,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testTextOffset() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
         annotation.textOffset = value
@@ -1272,7 +1272,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testTextRadialOffset() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: -100000...100000)
         annotation.textRadialOffset = value
@@ -1308,7 +1308,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testTextRotate() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: -100000...100000)
         annotation.textRotate = value
@@ -1344,7 +1344,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testTextSize() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: 0...100000)
         annotation.textSize = value
@@ -1380,7 +1380,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testTextTransform() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = TextTransform.allCases.randomElement()!
         annotation.textTransform = value
@@ -1416,7 +1416,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testIconColor() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = StyleColor.random()
         annotation.iconColor = value
@@ -1452,7 +1452,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testIconHaloBlur() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: 0...100000)
         annotation.iconHaloBlur = value
@@ -1488,7 +1488,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testIconHaloColor() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = StyleColor.random()
         annotation.iconHaloColor = value
@@ -1524,7 +1524,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testIconHaloWidth() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: 0...100000)
         annotation.iconHaloWidth = value
@@ -1560,7 +1560,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testIconOpacity() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: 0...1)
         annotation.iconOpacity = value
@@ -1596,7 +1596,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testTextColor() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = StyleColor.random()
         annotation.textColor = value
@@ -1632,7 +1632,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testTextHaloBlur() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: 0...100000)
         annotation.textHaloBlur = value
@@ -1668,7 +1668,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testTextHaloColor() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = StyleColor.random()
         annotation.textHaloColor = value
@@ -1704,7 +1704,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testTextHaloWidth() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: 0...100000)
         annotation.textHaloWidth = value
@@ -1740,7 +1740,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testTextOpacity() throws {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: 0...1)
         annotation.textOpacity = value

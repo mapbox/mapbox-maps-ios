@@ -44,7 +44,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
             CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
         ]
-        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
         annotation.fillOpacity = 10
 
         manager.annotations.append(annotation)
@@ -156,7 +156,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
             CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
         ]
-        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: -100000...100000)
         annotation.fillSortKey = value
@@ -199,7 +199,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
             CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
         ]
-        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = StyleColor.random()
         annotation.fillColor = value
@@ -242,7 +242,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
             CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
         ]
-        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: 0...1)
         annotation.fillOpacity = value
@@ -285,7 +285,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
             CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
         ]
-        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = StyleColor.random()
         annotation.fillOutlineColor = value
@@ -328,7 +328,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
             CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
         ]
-        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+        var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = String.randomASCII(withLength: .random(in: 0...100))
         annotation.fillPattern = value

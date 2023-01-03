@@ -5,7 +5,7 @@ import XCTest
 final class PointAnnotationTests: XCTestCase {
 
     func testIconAnchor() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.iconAnchor =  IconAnchor.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -19,7 +19,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testIconImage() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.iconImage =  String.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -33,7 +33,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testIconOffset() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.iconOffset =  [Double].testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -47,7 +47,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testIconRotate() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.iconRotate =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -61,7 +61,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testIconSize() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.iconSize =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -75,7 +75,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testSymbolSortKey() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.symbolSortKey =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -89,7 +89,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testTextAnchor() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.textAnchor =  TextAnchor.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -103,7 +103,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testTextField() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.textField =  String.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -117,7 +117,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testTextJustify() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.textJustify =  TextJustify.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -131,7 +131,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testTextLetterSpacing() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.textLetterSpacing =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -145,7 +145,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testTextLineHeight() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.textLineHeight =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -159,7 +159,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testTextMaxWidth() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.textMaxWidth =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -173,7 +173,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testTextOffset() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.textOffset =  [Double].testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -187,7 +187,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testTextRadialOffset() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.textRadialOffset =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -201,7 +201,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testTextRotate() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.textRotate =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -215,7 +215,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testTextSize() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.textSize =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -229,7 +229,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testTextTransform() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.textTransform =  TextTransform.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -243,7 +243,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testIconColor() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.iconColor =  StyleColor.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -257,7 +257,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testIconHaloBlur() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.iconHaloBlur =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -271,7 +271,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testIconHaloColor() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.iconHaloColor =  StyleColor.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -285,7 +285,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testIconHaloWidth() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.iconHaloWidth =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -299,7 +299,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testIconOpacity() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.iconOpacity =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -313,7 +313,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testTextColor() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.textColor =  StyleColor.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -327,7 +327,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testTextHaloBlur() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.textHaloBlur =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -341,7 +341,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testTextHaloColor() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.textHaloColor =  StyleColor.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -355,7 +355,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testTextHaloWidth() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.textHaloWidth =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -369,7 +369,7 @@ final class PointAnnotationTests: XCTestCase {
     }
 
     func testTextOpacity() {
-        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.textOpacity =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {

@@ -74,6 +74,7 @@ internal extension CLLocationCoordinate2D {
         return diff.latitude > precision || diff.latitude > precision
     }
 
+    // calculates number of zeroes after the "dot" for latitude/longitude delta threshold
     private func zoomLevelToPrecision(_ zoomLevel: CGFloat) -> Double {
         let maxZoom: CGFloat = 22
         let maxPrecision: CGFloat = 7
@@ -82,25 +83,24 @@ internal extension CLLocationCoordinate2D {
         return roundedPrecision
     }
 
-    func foo() {
-        let formatter = MeasurementFormatter()
-        formatter.unitOptions = [.naturalScale]
-        let zooms = stride(from: CGFloat(0), to: CGFloat(22), by: CGFloat(1))
-        for zoomLevel in zooms {
-            let precision = pow(Double(10), -zoomLevelToPrecision(zoomLevel))
-            let kmPerDegree: CGFloat = 111.11111111
-            let distance = kmPerDegree * precision
-            let measurement: Measurement<UnitLength>
-            if distance <= 0.001 {
-                formatter.unitOptions = [.providedUnit]
-                measurement = Measurement(value: round(distance * 1000.0 * 100.0), unit: UnitLength.centimeters)
-            } else {
-                formatter.unitOptions = [.naturalScale]
-                measurement = Measurement(value: distance, unit: UnitLength.kilometers)
-            }
-
-            print("zoom level: \(zoomLevel), precision: \(precision), distance: \(formatter.string(from: measurement))")
-        }
-        print("end")
-    }
+//    func foo() {
+//        let formatter = MeasurementFormatter()
+//        formatter.unitOptions = [.naturalScale]
+//        let zooms = stride(from: CGFloat(0), to: CGFloat(22), by: CGFloat(1))
+//        for zoomLevel in zooms {
+//            let precision = pow(Double(10), -zoomLevelToPrecision(zoomLevel))
+//            let kmPerDegree: CGFloat = 111.11111111
+//            let distance = kmPerDegree * precision
+//            let measurement: Measurement<UnitLength>
+//            if distance <= 0.001 {
+//                formatter.unitOptions = [.providedUnit]
+//                measurement = Measurement(value: round(distance * 1000.0 * 100.0), unit: UnitLength.centimeters)
+//            } else {
+//                formatter.unitOptions = [.naturalScale]
+//                measurement = Measurement(value: distance, unit: UnitLength.kilometers)
+//            }
+//
+//            print("zoom level: \(zoomLevel), precision: \(precision), distance: \(formatter.string(from: measurement))")
+//        }
+//    }
 }

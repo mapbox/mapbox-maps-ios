@@ -251,6 +251,8 @@ workflows:
           requires: []
       - trigger-metrics-v2:
           <<: *release-anchor
+      - build-baseline-sdk:
+          <<: *release-anchor
       - build-dynamic:
           <<: *release-anchor
       - build-static:
@@ -262,6 +264,7 @@ workflows:
       - check-api-compatibility:
           <<: *release-anchor
           requires:
+            - build-baseline-sdk
             - build-dynamic
       - create-registry-pr:
           <<: *release-anchor
@@ -955,6 +958,9 @@ jobs:
           root: scripts/release/packager
           paths:
             - MapboxMaps.zip
+      - run:
+          name: Dump the SDK to a JSON file
+          command: scripts/api-compatibility-check/breaking-api-check.py dump scripts/release/packager/MapboxMaps.zip --module MapboxMaps -o latest.api.json
       - run:
           name: Upload to S3
           command: scripts/release/upload-to-registry.sh scripts/release/packager/MapboxMaps.zip mobile-maps-ios "$VERSION" MapboxMaps.zip

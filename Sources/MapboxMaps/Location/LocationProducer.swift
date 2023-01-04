@@ -8,6 +8,8 @@ internal protocol LocationProducerProtocol: AnyObject {
     var locationProvider: LocationProvider { get set }
     func add(_ consumer: LocationConsumer)
     func remove(_ consumer: LocationConsumer)
+    func addHeadingConsumer(_ consumer: HeadingConsumer)
+    func removeHeadingConsumer(_ consumer: HeadingConsumer)
 }
 
 internal protocol LocationProducerDelegate: AnyObject {
@@ -36,13 +38,13 @@ internal final class LocationProducer: LocationProducerProtocol {
 
     private var latestCLLocation: CLLocation? {
         didSet {
-            notifyConsumers()
+            notifyLocationConsumers()
         }
     }
 
     private var latestHeading: CLHeading? {
         didSet {
-            notifyConsumers()
+            notifyHeadingConsumers()
         }
     }
 
@@ -51,33 +53,51 @@ internal final class LocationProducer: LocationProducerProtocol {
             if latestAccuracyAuthorization != oldValue {
                 delegate?.locationProducer(self, didChangeAccuracyAuthorization: latestAccuracyAuthorization)
             }
-            notifyConsumers()
+            notifyLocationConsumers()
         }
     }
 
-    private let _consumers = NSHashTable<LocationConsumer>.weakObjects()
+    private let _locationConsumers = NSHashTable<LocationConsumer>.weakObjects()
+    private let _headingConsumers = WeakSet<HeadingConsumer>()
     internal var consumers: NSHashTable<LocationConsumer> {
         // swiftlint:disable:next force_cast
-        return _consumers.copy() as! NSHashTable<LocationConsumer>
+        return _locationConsumers.copy() as! NSHashTable<LocationConsumer>
     }
 
-    private var isUpdating = false {
+    private var isUpdatingLocation = false {
         didSet {
-            guard isUpdating != oldValue else {
+            guard isUpdatingLocation != oldValue else {
                 return
             }
-            if isUpdating {
+            if isUpdatingLocation {
                 /// Get permissions if needed
                 if mayRequestWhenInUseAuthorization,
                    locationProvider.authorizationStatus == .notDetermined {
                     locationProvider.requestWhenInUseAuthorization()
                 }
                 locationProvider.startUpdatingLocation()
+            } else {
+                locationProvider.stopUpdatingLocation()
+            }
+        }
+    }
+
+    private var isUpdatingHeading = false {
+        didSet {
+            guard isUpdatingHeading != oldValue else {
+                return
+            }
+
+            if isUpdatingHeading {
+                /// Get permissions if needed
+                if mayRequestWhenInUseAuthorization,
+                   locationProvider.authorizationStatus == .notDetermined {
+                    locationProvider.requestWhenInUseAuthorization()
+                }
                 locationProvider.startUpdatingHeading()
                 updateHeadingOrientationIfNeeded()
                 startUpdatingInterfaceOrientation()
             } else {
-                locationProvider.stopUpdatingLocation()
                 locationProvider.stopUpdatingHeading()
                 stopUpdatingInterfaceOrientation()
             }
@@ -89,7 +109,7 @@ internal final class LocationProducer: LocationProducerProtocol {
     internal var locationProvider: LocationProvider {
         willSet {
             if _ignoreLocationProviderUpdate { return }
-            isUpdating = false
+            isUpdatingLocation = false
             // setDelegate doesn't accept nil, so provide
             // an empty delegate implementation to clear
             // out the old locationProvider's reference to
@@ -105,7 +125,8 @@ internal final class LocationProducer: LocationProducerProtocol {
             latestHeading = nil
             latestAccuracyAuthorization = locationProvider.accuracyAuthorization
             locationProvider.setDelegate(self)
-            syncIsUpdating()
+            syncIsUpdatingLocation()
+            syncIsUpdatingHeading()
         }
     }
 
@@ -136,8 +157,11 @@ internal final class LocationProducer: LocationProducerProtocol {
         headingOrientationUpdateBackupTimer?.invalidate()
 
         // note that property observers (didSet) don't run during deinit
-        if isUpdating {
+        if isUpdatingLocation {
             locationProvider.stopUpdatingLocation()
+        }
+
+        if isUpdatingHeading {
             locationProvider.stopUpdatingHeading()
             device.endGeneratingDeviceOrientationNotifications()
         }
@@ -145,14 +169,24 @@ internal final class LocationProducer: LocationProducerProtocol {
 
     /// The location manager holds weak references to consumers, client code should retain these references.
     internal func add(_ consumer: LocationConsumer) {
-        _consumers.add(consumer)
-        syncIsUpdating()
+        _locationConsumers.add(consumer)
+        syncIsUpdatingLocation()
     }
 
     /// Removes a location consumer from the location manager.
     internal func remove(_ consumer: LocationConsumer) {
-        _consumers.remove(consumer)
-        syncIsUpdating()
+        _locationConsumers.remove(consumer)
+        syncIsUpdatingLocation()
+    }
+
+    internal func addHeadingConsumer(_ consumer: HeadingConsumer) {
+        _headingConsumers.add(consumer)
+        syncIsUpdatingHeading()
+    }
+
+    internal func removeHeadingConsumer(_ consumer: HeadingConsumer) {
+        _headingConsumers.remove(consumer)
+        syncIsUpdatingHeading()
     }
 
     // MARK: - Location
@@ -211,21 +245,38 @@ internal final class LocationProducer: LocationProducerProtocol {
         }
     }
 
-    private func notifyConsumers() {
-        guard isUpdating else {
+    private func notifyLocationConsumers() {
+        guard isUpdatingLocation else {
             return
         }
         if let latestLocation = latestLocation {
-            for consumer in _consumers.allObjects {
+            for consumer in _locationConsumers.allObjects {
                 consumer.locationUpdate(newLocation: latestLocation)
             }
         }
     }
 
-    private func syncIsUpdating() {
+    private func notifyHeadingConsumers() {
+        guard isUpdatingHeading else {
+            return
+        }
+        if let latestHeading = latestHeading {
+            for consumer in _headingConsumers.allObjects {
+                consumer.headingUpdate(newHeading: latestHeading)
+            }
+        }
+    }
+
+    private func syncIsUpdatingLocation() {
         // check _consumers.anyObject != nil instead of simply _consumers.count
         // which may still include objects that have been deinited
-        isUpdating = (_consumers.anyObject != nil)
+        isUpdatingLocation = (_locationConsumers.anyObject != nil)
+    }
+
+    private func syncIsUpdatingHeading() {
+        // check _consumers.anyObject != nil instead of simply _consumers.count
+        // which may still include objects that have been deinited
+        isUpdatingHeading = (_headingConsumers.anyObject != nil)
     }
 }
 
@@ -235,26 +286,26 @@ internal final class LocationProducer: LocationProducerProtocol {
 // they may be deinited without ever being explicitly removed.
 extension LocationProducer: LocationProviderDelegate {
     internal func locationProvider(_ provider: LocationProvider, didUpdateLocations locations: [CLLocation]) {
-        syncIsUpdating()
+        syncIsUpdatingLocation()
         latestCLLocation = locations.last
     }
 
     internal func locationProvider(_ provider: LocationProvider, didUpdateHeading newHeading: CLHeading) {
-        syncIsUpdating()
+        syncIsUpdatingHeading()
         latestHeading = newHeading
     }
 
     internal func locationProvider(_ provider: LocationProvider, didFailWithError error: Error) {
-        syncIsUpdating()
+        syncIsUpdatingLocation()
         Log.error(forMessage: "\(provider) did fail with error: \(error)", category: "Location")
         delegate?.locationProducer(self, didFailWithError: error)
     }
 
     internal func locationProviderDidChangeAuthorization(_ provider: LocationProvider) {
-        syncIsUpdating()
+        syncIsUpdatingLocation()
         let accuracyAuthorization = provider.accuracyAuthorization
         if #available(iOS 14.0, *),
-           isUpdating,
+           isUpdatingLocation,
            [.authorizedAlways, .authorizedWhenInUse].contains(provider.authorizationStatus),
            accuracyAuthorization == .reducedAccuracy {
             provider.requestTemporaryFullAccuracyAuthorization(

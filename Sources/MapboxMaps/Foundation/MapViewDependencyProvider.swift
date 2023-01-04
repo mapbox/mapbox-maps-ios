@@ -280,9 +280,12 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             doubleInterpolator: doubleInterpolator,
             directionInterpolator: directionInterpolator,
             coordinateInterpolator: coordinateInterpolator)
+        let headingInterpolator = HeadingInterpolator(
+            directionInterpolator: directionInterpolator)
         return InterpolatedLocationProducer(
             observableInterpolatedLocation: ObservableInterpolatedLocation(),
             locationInterpolator: locationInterpolator,
+            headingInterpolator: headingInterpolator,
             dateProvider: DefaultDateProvider(),
             locationProducer: locationProducer,
             displayLinkCoordinator: displayLinkCoordinator)

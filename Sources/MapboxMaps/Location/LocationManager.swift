@@ -105,6 +105,15 @@ public final class LocationManager: NSObject {
         puckManager.puckBearingEnabled = options.puckBearingEnabled
 
         interpolatedLocationProducer.isEnabled = options.puckType != nil
+
+        // TODO: account for viewport's FollowPuckState consuming bearing as well
+        let isHeadingEnabled: Bool
+        if let type = options.puckType, case PuckType.puck2D(let configuraton) = type {
+            isHeadingEnabled = configuraton.bearingImage != nil && options.puckBearingEnabled && options.puckBearingSource == .heading
+        } else {
+            isHeadingEnabled = false
+        }
+        interpolatedLocationProducer.isHeadingEnabled = isHeadingEnabled
     }
 }
 

@@ -19,4 +19,8 @@ internal class WeakSet<T> {
     internal var allObjects: [T] {
         hashTable.allObjects.map { $0 as! T }
     }
+
+    internal var anyObject: T? {
+        hashTable.anyObject as? T
+    }
 }

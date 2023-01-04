@@ -7,3 +7,7 @@ import CoreLocation
     /// New location update received
     func locationUpdate(newLocation: Location)
 }
+
+internal protocol HeadingConsumer: AnyObject {
+    func headingUpdate(newHeading: CLHeading)
+}

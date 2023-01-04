@@ -963,7 +963,7 @@ jobs:
           command: scripts/api-compatibility-check/breaking-api-check.py dump scripts/release/packager/MapboxMaps.zip --module MapboxMaps -o latest.api.json
       - persist_to_workspace:
           root: .
-          path:
+          paths:
             - latest.api.json
       - run:
           name: Upload to S3

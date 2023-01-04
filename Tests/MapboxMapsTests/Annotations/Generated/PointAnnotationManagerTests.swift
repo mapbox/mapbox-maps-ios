@@ -32,7 +32,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         )
 
         for _ in 0...10 {
-            let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
     }
@@ -87,7 +87,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testAddManagerWithDuplicateId() {
         var annotations2 = [PointAnnotation]()
         for _ in 0...50 {
-            let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotations2.append(annotation)
         }
 
@@ -166,7 +166,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testfeatureCollectionPassedtoGeoJSON() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
         let featureCollection = FeatureCollection(features: annotations.map(\.feature))
@@ -182,7 +182,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testHandleQueriedFeatureIdsPassesNotificationToDelegate() throws {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
         let queriedFeatureIds = [annotations[0].id]
@@ -198,7 +198,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testHandleQueriedFeatureIdsDoesNotPassNotificationToDelegateWhenNoMatch() throws {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
         let queriedFeatureIds = ["NotAnAnnotationID"]
@@ -246,7 +246,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewIconAllowOverlapPropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -336,7 +336,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewIconIgnorePlacementPropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -426,7 +426,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewIconKeepUprightPropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -516,7 +516,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewIconOptionalPropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -606,7 +606,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewIconPaddingPropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -696,7 +696,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewIconPitchAlignmentPropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -786,7 +786,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewIconRotationAlignmentPropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -876,7 +876,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewIconTextFitPropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -966,7 +966,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewIconTextFitPaddingPropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -1056,7 +1056,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewSymbolAvoidEdgesPropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -1146,7 +1146,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewSymbolPlacementPropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -1236,7 +1236,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewSymbolSpacingPropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -1326,7 +1326,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewSymbolZOrderPropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -1416,7 +1416,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewTextAllowOverlapPropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -1506,7 +1506,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewTextFontPropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -1596,7 +1596,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewTextIgnorePlacementPropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -1686,7 +1686,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewTextKeepUprightPropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -1776,7 +1776,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewTextMaxAnglePropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -1866,7 +1866,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewTextOptionalPropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -1956,7 +1956,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewTextPaddingPropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -2046,7 +2046,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewTextPitchAlignmentPropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -2136,7 +2136,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewTextRotationAlignmentPropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -2228,7 +2228,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewTextVariableAnchorPropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -2320,7 +2320,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewTextWritingModePropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -2410,7 +2410,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewIconTranslatePropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -2500,7 +2500,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewIconTranslateAnchorPropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -2590,7 +2590,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewTextTranslatePropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -2680,7 +2680,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testNewTextTranslateAnchorPropertyMergedWithAnnotationProperties() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.iconAnchor = IconAnchor.allCases.randomElement()!
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
@@ -2766,7 +2766,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertTrue(annotations.compactMap(\.image?.name).allSatisfy(manager.isUsingStyleImage(_:)))
     }
 
-    
     func testUnusedImagesRemovedFromStyle() {
         // given
         let allAnnotations = Array.random(withLength: 10) {
@@ -2859,7 +2858,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let clusterOptions = ClusterOptions()
         var annotations = [PointAnnotation]()
         for _ in 0...500 {
-            let annotation = PointAnnotation(coordinate: .random())
+            let annotation = PointAnnotation(coordinate: .random(), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
 
@@ -2903,7 +2902,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
                                             clusterProperties: testClusterProperties)
         var annotations = [PointAnnotation]()
         for _ in 0...500 {
-            let annotation = PointAnnotation(coordinate: .random())
+            let annotation = PointAnnotation(coordinate: .random(), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
 
@@ -2939,7 +2938,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
                                             circleColor: testCircleColor)
         var annotations = [PointAnnotation]()
         for _ in 0...500 {
-            let annotation = PointAnnotation(coordinate: .random())
+            let annotation = PointAnnotation(coordinate: .random(), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
 
@@ -2982,7 +2981,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
                                             textField: testTextField)
         var annotations = [PointAnnotation]()
         for _ in 0...500 {
-            let annotation = PointAnnotation(coordinate: .random())
+            let annotation = PointAnnotation(coordinate: .random(), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
 
@@ -3017,7 +3016,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let clusterOptions = ClusterOptions()
         var annotations = [PointAnnotation]()
         for _ in 0...500 {
-            let annotation = PointAnnotation(coordinate: .random())
+            let annotation = PointAnnotation(coordinate: .random(), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
 
@@ -3054,12 +3053,12 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let clusterOptions = ClusterOptions()
         var annotations = [PointAnnotation]()
         for _ in 0...500 {
-            let annotation = PointAnnotation(coordinate: .random())
+            let annotation = PointAnnotation(coordinate: .random(), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
         var newAnnotations = [PointAnnotation]()
         for _ in 0...100 {
-            let annotation = PointAnnotation(coordinate: .random())
+            let annotation = PointAnnotation(coordinate: .random(), isSelected: false, isDraggable: false)
             newAnnotations.append(annotation)
         }
 
@@ -3121,6 +3120,22 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(removeLayerInvocations[1].parameters, "mapbox-iOS-cluster-text-layer-manager-" + id)
         XCTAssertEqual(removeLayerInvocations[2].parameters, id)
     }
+
+    func testHandleDragBeginIsDraggableFalse() throws {
+        manager.annotations = [
+            PointAnnotation(id: "point1", coordinate: .random(), isSelected: false, isDraggable: false)
+        ]
+
+        style.addSourceStub.reset()
+        style.addPersistentLayerWithPropertiesStub.reset()
+
+        manager.handleDragBegin(with: ["point1"])
+
+        XCTAssertEqual(style.addSourceStub.invocations.count, 0)
+        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
+        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 0)
+    }
+
     func testHandleDragBeginNoFeatureId() {
         style.addSourceStub.reset()
         style.addPersistentLayerWithPropertiesStub.reset()
@@ -3145,7 +3160,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testHandleDragBegin() throws {
         manager.annotations = [
-            PointAnnotation(id: "point1", coordinate: .random())
+            PointAnnotation(id: "point1", coordinate: .random(), isSelected: false, isDraggable: true)
         ]
 
         style.addSourceStub.reset()
@@ -3170,7 +3185,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         mapboxMap.cameraState.zoom = 1
 
         manager.annotations = [
-            PointAnnotation(id: "point1", coordinate: .init(latitude: 0, longitude: 0))
+            PointAnnotation(id: "point1", coordinate: .init(latitude: 0, longitude: 0), isSelected: false, isDraggable: true)
         ]
 
         manager.handleDragChanged(with: .random())
@@ -3190,7 +3205,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testHandleDragEnded() throws {
         manager.annotations = [
-            PointAnnotation(id: "point1", coordinate: .init(latitude: 0, longitude: 0))
+            PointAnnotation(id: "point1", coordinate: .init(latitude: 0, longitude: 0), isSelected: false, isDraggable: true)
         ]
 
         manager.handleDragEnded()

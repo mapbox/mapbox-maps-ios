@@ -30,7 +30,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
         for _ in 0...10 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-            let annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+            let annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
     }
@@ -83,7 +83,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         var annotations2 = [PolylineAnnotation]()
         for _ in 0...50 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-            let annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+            let annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
             annotations2.append(annotation)
         }
 
@@ -161,7 +161,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         var annotations = [PolylineAnnotation]()
         for _ in 0...5 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-            let annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+            let annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
         let featureCollection = FeatureCollection(features: annotations.map(\.feature))
@@ -178,7 +178,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         var annotations = [PolylineAnnotation]()
         for _ in 0...5 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-            let annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+            let annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
         let queriedFeatureIds = [annotations[0].id]
@@ -195,7 +195,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         var annotations = [PolylineAnnotation]()
         for _ in 0...5 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-            let annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+            let annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
         let queriedFeatureIds = ["NotAnAnnotationID"]
@@ -244,7 +244,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         var annotations = [PolylineAnnotation]()
         for _ in 0...5 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
             annotation.lineJoin = LineJoin.allCases.randomElement()!
             annotation.lineSortKey = Double.random(in: -100000...100000)
             annotation.lineBlur = Double.random(in: 0...100000)
@@ -317,7 +317,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         var annotations = [PolylineAnnotation]()
         for _ in 0...5 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
             annotation.lineJoin = LineJoin.allCases.randomElement()!
             annotation.lineSortKey = Double.random(in: -100000...100000)
             annotation.lineBlur = Double.random(in: 0...100000)
@@ -390,7 +390,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         var annotations = [PolylineAnnotation]()
         for _ in 0...5 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
             annotation.lineJoin = LineJoin.allCases.randomElement()!
             annotation.lineSortKey = Double.random(in: -100000...100000)
             annotation.lineBlur = Double.random(in: 0...100000)
@@ -463,7 +463,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         var annotations = [PolylineAnnotation]()
         for _ in 0...5 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
             annotation.lineJoin = LineJoin.allCases.randomElement()!
             annotation.lineSortKey = Double.random(in: -100000...100000)
             annotation.lineBlur = Double.random(in: 0...100000)
@@ -536,7 +536,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         var annotations = [PolylineAnnotation]()
         for _ in 0...5 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
             annotation.lineJoin = LineJoin.allCases.randomElement()!
             annotation.lineSortKey = Double.random(in: -100000...100000)
             annotation.lineBlur = Double.random(in: 0...100000)
@@ -609,7 +609,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         var annotations = [PolylineAnnotation]()
         for _ in 0...5 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
             annotation.lineJoin = LineJoin.allCases.randomElement()!
             annotation.lineSortKey = Double.random(in: -100000...100000)
             annotation.lineBlur = Double.random(in: 0...100000)
@@ -682,7 +682,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         var annotations = [PolylineAnnotation]()
         for _ in 0...5 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
             annotation.lineJoin = LineJoin.allCases.randomElement()!
             annotation.lineSortKey = Double.random(in: -100000...100000)
             annotation.lineBlur = Double.random(in: 0...100000)
@@ -725,6 +725,22 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         expectation = nil
     }
 
+
+    func testHandleDragBeginIsDraggableFalse() throws {
+        manager.annotations = [
+            PolylineAnnotation(id: "line1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)], isSelected: false, isDraggable: false)
+        ]
+
+        style.addSourceStub.reset()
+        style.addPersistentLayerWithPropertiesStub.reset()
+
+        manager.handleDragBegin(with: ["line1"])
+
+        XCTAssertEqual(style.addSourceStub.invocations.count, 0)
+        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
+        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 0)
+    }
+
     func testHandleDragBeginNoFeatureId() {
         style.addSourceStub.reset()
         style.addPersistentLayerWithPropertiesStub.reset()
@@ -749,7 +765,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
     func testHandleDragBegin() throws {
         manager.annotations = [
-            PolylineAnnotation(id: "line1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)])
+            PolylineAnnotation(id: "line1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)], isSelected: false, isDraggable: true)
         ]
 
         style.addSourceStub.reset()
@@ -774,7 +790,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         mapboxMap.cameraState.zoom = 1
 
         manager.annotations = [
-            PolylineAnnotation(id: "line1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)])
+            PolylineAnnotation(id: "line1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)], isSelected: false, isDraggable: true)
         ]
 
         manager.handleDragChanged(with: .random())
@@ -794,7 +810,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
     func testHandleDragEnded() throws {
         manager.annotations = [
-            PolylineAnnotation(id: "line1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)])
+            PolylineAnnotation(id: "line1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)], isSelected: false, isDraggable: true)
         ]
 
         manager.handleDragEnded()

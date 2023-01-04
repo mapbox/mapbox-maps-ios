@@ -36,7 +36,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
                 CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
             ]
-            let annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+            let annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
     }
@@ -95,7 +95,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
                 CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
             ]
-            let annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+            let annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
             annotations2.append(annotation)
         }
 
@@ -179,7 +179,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
                 CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
             ]
-            let annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+            let annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
         let featureCollection = FeatureCollection(features: annotations.map(\.feature))
@@ -202,7 +202,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
                 CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
             ]
-            let annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+            let annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
         let queriedFeatureIds = [annotations[0].id]
@@ -225,7 +225,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
                 CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
             ]
-            let annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+            let annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
         let queriedFeatureIds = ["NotAnAnnotationID"]
@@ -280,7 +280,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
                 CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
             ]
-            var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+            var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
             annotation.fillSortKey = Double.random(in: -100000...100000)
             annotation.fillColor = StyleColor.random()
             annotation.fillOpacity = Double.random(in: 0...1)
@@ -355,7 +355,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
                 CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
             ]
-            var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+            var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
             annotation.fillSortKey = Double.random(in: -100000...100000)
             annotation.fillColor = StyleColor.random()
             annotation.fillOpacity = Double.random(in: 0...1)
@@ -430,7 +430,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
                 CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
             ]
-            var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+            var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
             annotation.fillSortKey = Double.random(in: -100000...100000)
             annotation.fillColor = StyleColor.random()
             annotation.fillOpacity = Double.random(in: 0...1)
@@ -469,6 +469,28 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         expectation = nil
     }
 
+
+    func testHandleDragBeginIsDraggableFalse() throws {
+        manager.annotations = [
+            PolygonAnnotation(id: "polygon1", polygon: .init([[
+                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+                CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+                CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+                CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+            ]]), isSelected: false, isDraggable: false)
+        ]
+
+        style.addSourceStub.reset()
+        style.addPersistentLayerWithPropertiesStub.reset()
+
+        manager.handleDragBegin(with: ["polygon1"])
+
+        XCTAssertEqual(style.addSourceStub.invocations.count, 0)
+        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
+        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 0)
+    }
+
     func testHandleDragBeginNoFeatureId() {
         style.addSourceStub.reset()
         style.addPersistentLayerWithPropertiesStub.reset()
@@ -499,7 +521,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
                 CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
                 CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
-            ]]))
+            ]]), isSelected: false, isDraggable: true)
         ]
 
         style.addSourceStub.reset()
@@ -530,7 +552,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
                 CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
                 CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
-            ]]))
+            ]]), isSelected: false, isDraggable: true)
         ]
 
         manager.handleDragChanged(with: .random())
@@ -556,7 +578,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
                 CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
                 CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
-            ]]))
+            ]]), isSelected: false, isDraggable: true)
         ]
 
         manager.handleDragEnded()

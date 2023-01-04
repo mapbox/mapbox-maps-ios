@@ -41,9 +41,11 @@ public struct PolygonAnnotation: Annotation {
     }
 
     /// Create a polygon annotation with a `Polygon` and an optional identifier.
-    public init(id: String = UUID().uuidString, polygon: Polygon) {
+    public init(id: String = UUID().uuidString, polygon: Polygon, isSelected: Bool = false, isDraggable: Bool = false) {
         self.id = id
         self.polygon = polygon
+        self.isSelected = isSelected
+        self.isDraggable = isDraggable
     }
 
     // MARK: - Style Properties -

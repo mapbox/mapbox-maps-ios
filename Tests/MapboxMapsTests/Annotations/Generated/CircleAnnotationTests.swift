@@ -5,7 +5,7 @@ import XCTest
 final class CircleAnnotationTests: XCTestCase {
 
     func testCircleSortKey() {
-        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.circleSortKey =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -19,7 +19,7 @@ final class CircleAnnotationTests: XCTestCase {
     }
 
     func testCircleBlur() {
-        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.circleBlur =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -33,7 +33,7 @@ final class CircleAnnotationTests: XCTestCase {
     }
 
     func testCircleColor() {
-        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.circleColor =  StyleColor.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -47,7 +47,7 @@ final class CircleAnnotationTests: XCTestCase {
     }
 
     func testCircleOpacity() {
-        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.circleOpacity =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -61,7 +61,7 @@ final class CircleAnnotationTests: XCTestCase {
     }
 
     func testCircleRadius() {
-        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.circleRadius =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -75,7 +75,7 @@ final class CircleAnnotationTests: XCTestCase {
     }
 
     func testCircleStrokeColor() {
-        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.circleStrokeColor =  StyleColor.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -89,7 +89,7 @@ final class CircleAnnotationTests: XCTestCase {
     }
 
     func testCircleStrokeOpacity() {
-        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.circleStrokeOpacity =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
@@ -103,7 +103,7 @@ final class CircleAnnotationTests: XCTestCase {
     }
 
     func testCircleStrokeWidth() {
-        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.circleStrokeWidth =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {

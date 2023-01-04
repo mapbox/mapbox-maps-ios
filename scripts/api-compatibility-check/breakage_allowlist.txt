@@ -1,3 +1,11 @@
 // Converted parametreless constructors into a parametrized one
 Constructor GestureOptions.init() has been removed
 Constructor LocationOptions.init() has been removed
+// Annotation initializers changed to incorporate isSelected and isDraggable
+Constructor CircleAnnotation.init(id:centerCoordinate:) has been removed
+Constructor CircleAnnotation.init(id:point:) has been removed
+Constructor PointAnnotation.init(id:coordinate:) has been removed
+Constructor PointAnnotation.init(id:point:) has been removed
+Constructor PolygonAnnotation.init(id:polygon:) has been removed
+Constructor PolylineAnnotation.init(id:lineCoordinates:) has been removed
+Constructor PolylineAnnotation.init(id:lineString:) has been removed

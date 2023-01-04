@@ -29,7 +29,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         )
 
         for _ in 0...10 {
-            let annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
     }
@@ -81,7 +81,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     func testAddManagerWithDuplicateId() {
         var annotations2 = [CircleAnnotation]()
         for _ in 0...50 {
-            let annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotations2.append(annotation)
         }
 
@@ -158,7 +158,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     func testfeatureCollectionPassedtoGeoJSON() {
         var annotations = [CircleAnnotation]()
         for _ in 0...5 {
-            let annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
         let featureCollection = FeatureCollection(features: annotations.map(\.feature))
@@ -174,7 +174,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     func testHandleQueriedFeatureIdsPassesNotificationToDelegate() throws {
         var annotations = [CircleAnnotation]()
         for _ in 0...5 {
-            let annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
         let queriedFeatureIds = [annotations[0].id]
@@ -190,7 +190,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     func testHandleQueriedFeatureIdsDoesNotPassNotificationToDelegateWhenNoMatch() throws {
         var annotations = [CircleAnnotation]()
         for _ in 0...5 {
-            let annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            let annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
         let queriedFeatureIds = ["NotAnAnnotationID"]
@@ -238,7 +238,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     func testNewCirclePitchAlignmentPropertyMergedWithAnnotationProperties() {
         var annotations = [CircleAnnotation]()
         for _ in 0...5 {
-            var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.circleSortKey = Double.random(in: -100000...100000)
             annotation.circleBlur = Double.random(in: -100000...100000)
             annotation.circleColor = StyleColor.random()
@@ -309,7 +309,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     func testNewCirclePitchScalePropertyMergedWithAnnotationProperties() {
         var annotations = [CircleAnnotation]()
         for _ in 0...5 {
-            var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.circleSortKey = Double.random(in: -100000...100000)
             annotation.circleBlur = Double.random(in: -100000...100000)
             annotation.circleColor = StyleColor.random()
@@ -380,7 +380,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     func testNewCircleTranslatePropertyMergedWithAnnotationProperties() {
         var annotations = [CircleAnnotation]()
         for _ in 0...5 {
-            var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.circleSortKey = Double.random(in: -100000...100000)
             annotation.circleBlur = Double.random(in: -100000...100000)
             annotation.circleColor = StyleColor.random()
@@ -451,7 +451,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     func testNewCircleTranslateAnchorPropertyMergedWithAnnotationProperties() {
         var annotations = [CircleAnnotation]()
         for _ in 0...5 {
-            var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotation.circleSortKey = Double.random(in: -100000...100000)
             annotation.circleBlur = Double.random(in: -100000...100000)
             annotation.circleColor = StyleColor.random()
@@ -493,6 +493,22 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         expectation = nil
     }
 
+
+    func testHandleDragBeginIsDraggableFalse() throws {
+        manager.annotations = [
+            CircleAnnotation(id: "circle1", centerCoordinate: .random(), isSelected: false, isDraggable: false)
+        ]
+
+        style.addSourceStub.reset()
+        style.addPersistentLayerWithPropertiesStub.reset()
+
+        manager.handleDragBegin(with: ["circle1"])
+
+        XCTAssertEqual(style.addSourceStub.invocations.count, 0)
+        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
+        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 0)
+    }
+
     func testHandleDragBeginNoFeatureId() {
         style.addSourceStub.reset()
         style.addPersistentLayerWithPropertiesStub.reset()
@@ -517,7 +533,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
     func testHandleDragBegin() throws {
         manager.annotations = [
-            CircleAnnotation(id: "circle1", centerCoordinate: .random())
+            CircleAnnotation(id: "circle1", centerCoordinate: .random(), isSelected: false, isDraggable: true)
         ]
 
         style.addSourceStub.reset()
@@ -542,7 +558,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         mapboxMap.cameraState.zoom = 1
 
         manager.annotations = [
-            CircleAnnotation(id: "circle1", centerCoordinate: .init(latitude: 0, longitude: 0))
+            CircleAnnotation(id: "circle1", centerCoordinate: .init(latitude: 0, longitude: 0), isSelected: false, isDraggable: true)
         ]
 
         manager.handleDragChanged(with: .random())
@@ -562,7 +578,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
     func testHandleDragEnded() throws {
         manager.annotations = [
-            CircleAnnotation(id: "circle1", centerCoordinate: .init(latitude: 0, longitude: 0))
+            CircleAnnotation(id: "circle1", centerCoordinate: .init(latitude: 0, longitude: 0), isSelected: false, isDraggable: true)
         ]
 
         manager.handleDragEnded()

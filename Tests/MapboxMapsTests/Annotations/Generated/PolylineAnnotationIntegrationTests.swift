@@ -38,7 +38,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testSynchronizesAnnotationsEventually() throws {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         annotation.lineWidth = 10
 
         manager.annotations.append(annotation)
@@ -252,7 +252,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineJoin() throws {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = LineJoin.allCases.randomElement()!
         annotation.lineJoin = value
@@ -289,7 +289,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineSortKey() throws {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: -100000...100000)
         annotation.lineSortKey = value
@@ -326,7 +326,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineBlur() throws {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: 0...100000)
         annotation.lineBlur = value
@@ -363,7 +363,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineColor() throws {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = StyleColor.random()
         annotation.lineColor = value
@@ -400,7 +400,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineGapWidth() throws {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: 0...100000)
         annotation.lineGapWidth = value
@@ -437,7 +437,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineOffset() throws {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: -100000...100000)
         annotation.lineOffset = value
@@ -474,7 +474,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineOpacity() throws {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: 0...1)
         annotation.lineOpacity = value
@@ -511,7 +511,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLinePattern() throws {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = String.randomASCII(withLength: .random(in: 0...100))
         annotation.linePattern = value
@@ -548,7 +548,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineWidth() throws {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
+        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
         let value = Double.random(in: 0...100000)
         annotation.lineWidth = value

@@ -47,12 +47,21 @@ public struct FormatOptions: Codable, Equatable, ExpressionArgumentConvertible {
 
     /// Applies a scaling factor on text-size as specified by the root layout property.
     public var fontScale: Double?
+    /// Applies a scaling factor on text-size as specified by the root layout property.
+    /// If specified, this value will override ``fontScale`` when encoding.
+    public var fontScaleExpression: Expression?
 
     /// Overrides the font stack specified by the root layout property
     public var textFont: [String]?
+    /// Overrides the font stack specified by the root layout property
+    /// If specified, this value will override ``textFont`` when encoding.
+    public var textFontExpression: Expression?
 
     /// Overrides the color specified by the root paint property.
     public var textColor: StyleColor?
+    /// Overrides the color specified by the root paint property.
+    /// If specified, this value will override ``textColor`` when encoding.
+    public var textColorExpression: Expression?
 
     internal enum CodingKeys: String, CodingKey {
         case fontScale = "font-scale"
@@ -70,6 +79,50 @@ public struct FormatOptions: Codable, Equatable, ExpressionArgumentConvertible {
 
         if let textColor = textColor {
             self.textColor = StyleColor(textColor)
+        }
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        switch try container.decodeIfPresent(Value<Double>.self, forKey: .fontScale) {
+        case .constant(let fontScale): self.fontScale = fontScale
+        case .expression(let expression): self.fontScaleExpression = expression
+        case .none: break
+        }
+
+        switch try container.decodeIfPresent(Value<[String]>.self, forKey: .textFont) {
+        case .constant(let textFonts): self.textFont = textFonts
+        case .expression(let expression): self.textFontExpression = expression
+        case .none: break
+        }
+
+        switch try container.decodeIfPresent(Value<StyleColor>.self, forKey: .textColor) {
+        case .constant(let textColor): self.textColor = textColor
+        case .expression(let expression): self.textColorExpression = expression
+        case .none: break
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        if let fontScaleExpression = fontScaleExpression {
+            try container.encode(fontScaleExpression, forKey: .fontScale)
+        } else {
+            try container.encodeIfPresent(fontScale, forKey: .fontScale)
+        }
+
+        if let textFontExpression = textFontExpression {
+            try container.encode(textFontExpression, forKey: .textFont)
+        } else {
+            try container.encodeIfPresent(textFont, forKey: .textFont)
+        }
+
+        if let textColorExpression = textColorExpression {
+            try container.encode(textColorExpression, forKey: .textColor)
+        } else {
+            try container.encodeIfPresent(textColor, forKey: .textColor)
         }
     }
 }

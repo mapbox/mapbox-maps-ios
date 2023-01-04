@@ -69,54 +69,62 @@ public struct <%- camelize(type) %>Annotation: Annotation {
     <%_ if (type === symbol) { _%>
 
     /// Create a point annotation with a `Point` and an optional identifier.
-    public init(id: String = UUID().uuidString, point: Point) {
+    public init(id: String = UUID().uuidString, point: Point, isSelected: Bool = false, isDraggable: Bool = false) {
         self.id = id
         self.point = point
+        self.isSelected = isSelected
+        self.isDraggable = isDraggable
     }
 
     /// Create a point annotation with a coordinate and an optional identifier
     /// - Parameters:
     ///   - id: Optional identifier for this annotation
     ///   - coordinate: Coordinate where this annotation should be rendered
-    public init(id: String = UUID().uuidString, coordinate: CLLocationCoordinate2D) {
+    public init(id: String = UUID().uuidString, coordinate: CLLocationCoordinate2D, isSelected: Bool = false, isDraggable: Bool = false) {
         let point = Point(coordinate)
-        self.init(id: id, point: point)
+        self.init(id: id, point: point, isSelected: isSelected, isDraggable: isDraggable)
     }
     <%_ } else if(type === circle) { _%>
 
     /// Create a circle annotation with a `Point` and an optional identifier.
-    public init(id: String = UUID().uuidString, point: Point) {
+    public init(id: String = UUID().uuidString, point: Point, isSelected: Bool = false, isDraggable: Bool = false) {
         self.id = id
         self.point = point
+        self.isSelected = isSelected
+        self.isDraggable = isDraggable
     }
 
     /// Create a circle annotation with a center coordinate and an optional identifier
     /// - Parameters:
     ///   - id: Optional identifier for this annotation
     ///   - coordinate: Coordinate where this circle annotation should be centered
-    public init(id: String = UUID().uuidString, centerCoordinate: CLLocationCoordinate2D) {
+    public init(id: String = UUID().uuidString, centerCoordinate: CLLocationCoordinate2D, isSelected: Bool = false, isDraggable: Bool = false) {
         let point = Point(centerCoordinate)
-        self.init(id: id, point: point)
+        self.init(id: id, point: point, isSelected: isSelected, isDraggable: isDraggable)
     }
     <%_ } else if(type === fill) { _%>
 
     /// Create a polygon annotation with a `Polygon` and an optional identifier.
-    public init(id: String = UUID().uuidString, polygon: Polygon) {
+    public init(id: String = UUID().uuidString, polygon: Polygon, isSelected: Bool = false, isDraggable: Bool = false) {
         self.id = id
         self.polygon = polygon
+        self.isSelected = isSelected
+        self.isDraggable = isDraggable
     }
     <%_ } else if(type === line) { _%>
 
     /// Create a polyline annotation with a `LineString` and an optional identifier.
-    public init(id: String = UUID().uuidString, lineString: LineString) {
+    public init(id: String = UUID().uuidString, lineString: LineString, isSelected: Bool = false, isDraggable: Bool = false) {
         self.id = id
         self.lineString = lineString
+        self.isSelected = isSelected
+        self.isDraggable = isDraggable
     }
 
     /// Create a polyline annotation with an array of coordinates and an optional identifier.
-    public init(id: String = UUID().uuidString, lineCoordinates: [CLLocationCoordinate2D]) {
+    public init(id: String = UUID().uuidString, lineCoordinates: [CLLocationCoordinate2D], isSelected: Bool = false, isDraggable: Bool = false) {
         let lineString = LineString(lineCoordinates)
-        self.init(id: id, lineString: lineString)
+        self.init(id: id, lineString: lineString, isSelected: isSelected, isDraggable: isDraggable)
     }
     <%_ } _%>
 

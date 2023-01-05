@@ -8,7 +8,7 @@ final class FormatOptionsTests: XCTestCase {
                     "case",
                     [
                         ">=",
-                        ["to-number", ["get", "point"]],
+                        ["to-number", ["get", "point_count"]],
                         4
                     ],
                     1,
@@ -18,7 +18,7 @@ final class FormatOptionsTests: XCTestCase {
                     "case",
                     [
                         ">=",
-                        ["to-number", ["get", "point"]],
+                        ["to-number", ["get", "point_count"]],
                         4
                     ],
                     ["Open Sans Semibold"],
@@ -28,7 +28,7 @@ final class FormatOptionsTests: XCTestCase {
                     "case",
                     [
                         ">=",
-                        ["to-number", ["get", "point"]],
+                        ["to-number", ["get", "point_count"]],
                         4
                     ],
                     "#ffffff",
@@ -41,13 +41,13 @@ final class FormatOptionsTests: XCTestCase {
         let formatOptions = try JSONDecoder().decode(FormatOptions.self, from: try XCTUnwrap(jsonString.data(using: .utf8)))
         XCTAssertEqual(
             try formatOptions.fontScaleExpression?.toString(),
-            #"["case",[">=",["to-number",["get","point"]],4],1,2]"#)
+            #"["case",[">=",["to-number",["get","point_count"]],4],1,2]"#)
         XCTAssertEqual(
             try formatOptions.textFontExpression?.toString(),
-            #"["case",[">=",["to-number",["get","point"]],4],["Open Sans Semibold"],["Arial Unicode MS Bold"]]"#)
-        XCTAssertNotNil(
+            #"["case",[">=",["to-number",["get","point_count"]],4],["Open Sans Semibold"],["Arial Unicode MS Bold"]]"#)
+        XCTAssertEqual(
             try formatOptions.textColorExpression?.toString(),
-            ##"["case",[">=",["to-number",["get","point"]],4],"#ffffff","#000000"]]"##)
+            ##"["case",[">=",["to-number",["get","point_count"]],4],"#ffffff","#000000"]"##)
     }
 
     func testDecodeWithValue() throws {
@@ -107,11 +107,18 @@ final class FormatOptionsTests: XCTestCase {
             "#000000"
         }
 
-        let jsonString = try formatOptions.toString()
-
+        let encoded = try DictionaryEncoder().encode(formatOptions)
         XCTAssertEqual(
-            try formatOptions.toString(),
-            jsonString
+            String(data: try JSONSerialization.data(withJSONObject: encoded["font-scale"] as Any), encoding: .utf8),
+            #"["case",[">=",["to-number",["get","point_count"]],4],1,2]"#
+        )
+        XCTAssertEqual(
+            String(data: try JSONSerialization.data(withJSONObject: encoded["text-font"] as Any), encoding: .utf8),
+            #"["case",[">=",["to-number",["get","point_count"]],4],["Open Sans Semibold"],["Arial Unicode MS Bold"]]"#
+        )
+        XCTAssertEqual(
+            String(data: try JSONSerialization.data(withJSONObject: encoded["text-color"] as Any), encoding: .utf8),
+            ##"["case",[">=",["to-number",["get","point_count"]],4],"#ffffff","#000000"]"##
         )
     }
 }

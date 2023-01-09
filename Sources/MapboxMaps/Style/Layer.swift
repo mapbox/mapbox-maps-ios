@@ -5,7 +5,7 @@ public protocol Layer: Codable, StyleEncodable, StyleDecodable {
     /// Rendering type of this layer.
     var type: LayerType { get }
 
-    /// A expression specifying conditions on source features.
+    /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
     var filter: Expression? { get set }
 

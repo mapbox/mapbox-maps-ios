@@ -566,7 +566,7 @@ jobs:
 
   depsvalidator:
     executor: xcode-latest
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.large.gen1
     steps:
       - checkout
       - run:
@@ -578,7 +578,7 @@ jobs:
 
   build-sdk:
     <<: *base-job
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.large.gen1
     steps:
       - checkout
       - configure-environment:
@@ -751,7 +751,7 @@ jobs:
         type: boolean
         default: false
     executor: xcode-sdk-min
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.large.gen1
     steps:
       - checkout
       - configure-environment:
@@ -797,7 +797,7 @@ jobs:
         default: false
     macos:
       xcode: << parameters.xcode >>
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.large.gen1
     steps:
       - checkout
       - attach_workspace:
@@ -889,7 +889,7 @@ jobs:
 
   build-tests:
     executor: xcode-latest
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.large.gen1
     steps:
       - checkout
       - configure-environment:
@@ -979,7 +979,7 @@ jobs:
 
   build-examples-tests:
     executor: xcode-latest
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.large.gen1
     steps:
       - checkout
       - configure-environment:
@@ -999,7 +999,7 @@ jobs:
 
   create-xcframework:
     <<: *base-job
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.large.gen1
     steps:
       - checkout
       - configure-environment
@@ -1021,7 +1021,7 @@ jobs:
 
   build-sdk-for-api-compatibility-check:
     executor: xcode-sdk-min
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.large.gen1
     steps:
       - dump-sdk-api:
           baseline: false
@@ -1030,7 +1030,7 @@ jobs:
 
   build-baseline-sdk:
     executor: xcode-sdk-min
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.large.gen1
     steps:
       - dump-sdk-api:
           baseline: true
@@ -1061,7 +1061,7 @@ jobs:
       It is validating dependency managers integration per branch version rule.
       However, this job would run exclusively for open PRs to the release branches (aka "release/v.*"")
     executor: xcode-latest
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.large.gen1
     steps:
       - checkout
       - configure-environment:
@@ -1078,7 +1078,7 @@ jobs:
       It requires binaries to be publicly available and downloadable
       SPM, Cocoapods and DirectDownload tests would be called.
     executor: xcode-latest
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.large.gen1
     steps:
       - checkout
       - configure-environment:
@@ -1116,7 +1116,7 @@ jobs:
 
   build-dynamic:
     executor: xcode-sdk-min
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.large.gen1
     steps:
       - checkout
       - configure-environment:
@@ -1147,7 +1147,7 @@ jobs:
 
   build-static:
     executor: xcode-sdk-min
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.large.gen1
     steps:
       - checkout
       - configure-environment:
@@ -1168,7 +1168,7 @@ jobs:
   build-docs:
     macos:
       xcode: 13.4.1
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.large.gen1
     steps:
       - checkout
       - configure-environment:
@@ -1234,7 +1234,7 @@ jobs:
 
   update-examples:
     executor: xcode-latest
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.large.gen1
     steps:
       - checkout
       - configure-environment:
@@ -1249,7 +1249,7 @@ jobs:
 
   publish-podspec:
     executor: xcode-latest
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.large.gen1
     steps:
       - checkout
       - configure-environment:
@@ -1261,7 +1261,7 @@ jobs:
 
   create-draft-release:
     executor: xcode-latest
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.large.gen1
     steps:
       - checkout
       - configure-environment:
@@ -1286,7 +1286,7 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: 1
       HOMEBREW_NO_INSTALL_CLEANUP: 1
       CONFIGURATION: "Debug"
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.large.gen1
     steps:
       - checkout
       - configure-environment:

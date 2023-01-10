@@ -46,32 +46,52 @@ extension Expression {
 public struct FormatOptions: Codable, Equatable, ExpressionArgumentConvertible {
 
     /// Applies a scaling factor on text-size as specified by the root layout property.
-    public var fontScale: Double?
+    public var fontScaleValue: Value<Double>?
+    /// Applies a scaling factor on text-size as specified by the root layout property.
+    public var fontScale: Double? {
+        get { fontScaleValue?.asConstant }
+        set { fontScaleValue = newValue.map(Value.init(constant:)) }
+    }
 
-    /// Overrides the font stack specified by the root layout property
-    public var textFont: [String]?
+    /// Overrides the font stack specified by the root layout property.
+    public var textFontValue: Value<[String]>?
+    /// Overrides the font stack specified by the root layout property.
+    public var textFont: [String]? {
+        get { textFontValue?.asConstant }
+        set { textFontValue = newValue.map(Value.init(constant:)) }
+    }
 
     /// Overrides the color specified by the root paint property.
-    public var textColor: StyleColor?
+    public var textColorValue: Value<StyleColor>?
+    /// Overrides the color specified by the root paint property.
+    public var textColor: StyleColor? {
+        get { textColorValue?.asConstant }
+        set { textColorValue = newValue.map(Value.init(constant:)) }
+    }
 
     internal enum CodingKeys: String, CodingKey {
-        case fontScale = "font-scale"
-        case textFont = "text-font"
-        case textColor = "text-color"
+        case fontScaleValue = "font-scale"
+        case textFontValue = "text-font"
+        case textColorValue = "text-color"
     }
 
     public var expressionArguments: [Expression.Argument] {
         return [.option(.format(self))]
     }
 
+    public init(fontScale: Value<Double>? = nil, textFont: Value<[String]>? = nil, textColor: Value<StyleColor>? = nil) {
+        self.fontScaleValue = fontScale
+        self.textFontValue = textFont
+        self.textColorValue = textColor
+    }
+
     public init(fontScale: Double? = nil, textFont: [String]? = nil, textColor: UIColor? = nil) {
         self.fontScale = fontScale
         self.textFont = textFont
-
-        if let textColor = textColor {
-            self.textColor = StyleColor(textColor)
-        }
+        self.textColor = textColor.map(StyleColor.init(_:))
     }
+
+    public init() {}
 }
 
 public struct NumberFormatOptions: Codable, Equatable, ExpressionArgumentConvertible {

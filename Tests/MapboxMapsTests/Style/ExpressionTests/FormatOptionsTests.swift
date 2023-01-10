@@ -91,8 +91,14 @@ final class FormatOptionsTests: XCTestCase {
         XCTAssertEqual(formatOptions.fontScale, 1)
         XCTAssertEqual(formatOptions.textFont, ["Open Sans Semibold", "Arial Unicode MS Bold"])
         XCTAssertNil(formatOptions.textColor)
-        let encoded = try formatOptions.toString()
-        XCTAssertEqual(encoded, ##"{"text-color":["case",[">=",["to-number",["get","point_count"]],4],"#ffffff","#000000"],"font-scale":1,"text-font":["Open Sans Semibold","Arial Unicode MS Bold"]}"##)
+        let encoded = try DictionaryEncoder().encode(formatOptions)
+
+        XCTAssertEqual(encoded["font-scale"] as? Double, 1)
+        XCTAssertEqual(encoded["text-font"] as? [String], ["Open Sans Semibold", "Arial Unicode MS Bold"])
+        XCTAssertEqual(
+            String(data: try JSONSerialization.data(withJSONObject: encoded["text-color"] as Any), encoding: .utf8),
+            ##"["case",[">=",["to-number",["get","point_count"]],4],"#ffffff","#000000"]"##
+        )
     }
 
     func testEncodeWithExpression() throws {

@@ -14,7 +14,7 @@ For the full license terms, please see the Mapbox Terms of Service at https://ww
 ## Acknowledgements
 
 This application makes use of the following third party libraries:
-### [MapboxCoreMaps](https://www.mapbox.com/) by Mapbox
+### MapboxCoreMaps,10.11.0-beta.1,Mapbox ToS,Mapbox,https://www.mapbox.com/
 
 ```
 Mapbox Core Maps version 10.0
@@ -1426,6 +1426,5 @@ All other rights reserved.
 
 
 ```
-
 
 ---

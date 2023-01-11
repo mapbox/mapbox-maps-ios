@@ -1399,7 +1399,7 @@ commands:
     steps:
       - run:
           name: Install python dependencies
-          command: python3 -m pip install awscli gitpython requests python-dateutil
+          command: python3 -m pip install awscli gitpython requests python-dateutil pyyaml
 
   install-xcodegen:
     description: "Install Xcodegen from Homebrew"

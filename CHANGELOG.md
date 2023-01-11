@@ -13,6 +13,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Fix scale bar grows beyond its maximum width at large zoom near north/south poles. ([#1802](https://github.com/mapbox/mapbox-maps-ios/pull/1802))
 * Improve GeoJSONSource add/update performance by passing `GeoJSONSourceData` directly. ([#1815](https://github.com/mapbox/mapbox-maps-ios/pull/1815))
 * Support `Expression` in `FormatOptions`. ([#1826](https://github.com/mapbox/mapbox-maps-ios/pull/1826))
+* Update to MapboxCoreMaps 10.11.0-beta.1 and MapboxCommon 23.3.0-beta.1. ([#1842](https://github.com/mapbox/mapbox-maps-ios/pull/1842))
 
 ## 10.10.1 - December 20, 2022
 * [CarPlay] Fix map view permanently pausing when moving to window on foreground ([#1808])(https://github.com/mapbox/mapbox-maps-ios/pull/1808)

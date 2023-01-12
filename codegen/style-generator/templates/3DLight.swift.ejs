@@ -1,0 +1,43 @@
+<%
+  const properties = locals.properties
+  const lightName = locals.name
+-%>
+// This file is generated.
+import Foundation
+
+/// Represents 3D <%- camelizeWithLeadingLowercase(lightName) %> light.
+/// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#light)
+<% if (locals.experimental) { -%>@_spi(Experimental) <% } -%>public struct <%- camelizeWithUndercoreRemoved(lightName) %>Light: Light3DProtocol {
+    public let lightType: Light3DType
+    <%_ for (const property of properties) { -%>
+
+    /// <%- markdownFriendlyDoc(property) %>
+    <%_ if (property.name === 'id') { _%>
+    <% if (property.experimental) { -%>@_spi(Experimental) <% } -%>public let <%- camelizeWithLeadingLowercase(property.name) %>: <%- propertySwiftElementType(property) %>
+    <%_ } else { _%>
+    <% if (property.experimental) { -%>@_spi(Experimental) <% } -%>public var <%- camelizeWithLeadingLowercase(property.name) %>: <%- propertySwiftValueType(property) %>?
+    <%_ } _%>
+    <%_ if (property.transition) { -%>
+    
+    /// Transition property for `<%- camelizeWithLeadingLowercase(property.name) %>`
+    <% if (property.experimental) { -%>@_spi(Experimental) <% } -%>public var <%- camelizeWithLeadingLowercase(property.name) %>Transition: StyleTransition?
+    <%_ } -%>
+    <%_ } -%>
+    
+    public init(id: String) {
+        self.id = id
+        self.lightType = .<%- camelizeWithLeadingLowercase(lightName) %>
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case lightType = "type"
+        <%_ for (const property of properties) { -%>
+        case <%- camelizeWithLeadingLowercase(property.name) %> = "<%- property.name %>"
+        <%_ if (property.transition) { -%>
+        case <%- camelizeWithLeadingLowercase(property.name) %>Transition = "<%- property.name %>-transition"
+        <%_ } -%>
+        <%_ } -%>
+    }
+}
+
+// End of generated file.

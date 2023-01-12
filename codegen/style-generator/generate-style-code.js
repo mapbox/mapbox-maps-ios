@@ -17,6 +17,14 @@ const baseDirectory = generatePremiumApis ? '../mapbox-maps-ios-private' : '../m
 const lightSwift = ejs.compile(fs.readFileSync('style-generator/templates/Light.swift.ejs', 'utf8'), { strict: true });
 writeIfModified(`${baseDirectory}/Sources/MapboxMaps/Style/Generated/Light/Light.swift`, lightSwift({ properties: style.light.properties }));
 
+// Swift 3D Light
+const light3DSwift = ejs.compile(fs.readFileSync('style-generator/templates/3DLight.swift.ejs', 'utf8'), { strict: true });
+const light3DTestsSwift = ejs.compile(fs.readFileSync('style-generator/templates/3DLightTests.swift.ejs', 'utf8'), { strict: true });
+for (const light of style.lights3D) {
+  writeIfModified(`${baseDirectory}/Sources/MapboxMaps/Style/Generated/Light/${camelizeWithUndercoreRemoved(light.name)}Light.swift`, light3DSwift(light));
+  writeIfModified(`${baseDirectory}/Tests/MapboxMapsTests/Style/Generated/${camelizeWithUndercoreRemoved(light.name)}LightTests.swift`, light3DTestsSwift(light));
+}
+
 // Swift Layers
 const layerSwift = ejs.compile(fs.readFileSync('style-generator/templates/Layer.swift.ejs', 'utf8'), { strict: true });
 for (const layer of style.layers) {

@@ -1,0 +1,44 @@
+<%
+  const properties = locals.properties
+  const lightName = locals.name
+  const containsExperimentalApi = properties.some((property) => property.experimental === true) || locals.experimental
+-%>
+// This file is generated
+import XCTest
+<%if (containsExperimentalApi) { -%>@_spi(Experimental) <% } -%>@testable import MapboxMaps
+
+final class <%- camelizeWithUndercoreRemoved(lightName) %>LightTests: XCTestCase {
+
+    func testLightEncodingAndDecoding() throws {
+        let lightID = UUID().uuidString
+        var light = <%- camelizeWithUndercoreRemoved(lightName) %>Light(id: lightID)
+        <%_ for (const property of properties) { -%>
+        <%_ if (property.name !== 'id') { _%>
+        light.<%- camelizeWithLeadingLowercase(property.name) %> = <%- propertySwiftValueType(property) %>.testConstantValue()
+        <%_ if (property.transition) { -%>
+        light.<%- camelizeWithLeadingLowercase(property.name) %>Transition = StyleTransition(duration: 10.0, delay: 10.0)
+        <%_ } -%>
+        <%_ } _%>
+        <%_ } -%>
+
+        let data = try JSONEncoder().encode(light)
+        XCTAssertFalse(data.isEmpty)
+
+        let decodedLight = try JSONDecoder().decode(<%- camelizeWithUndercoreRemoved(lightName) %>Light.self, from: data)
+
+        XCTAssertEqual(decodedLight.lightType, Light3DType.<%- camelizeWithLeadingLowercase(lightName) %>)
+        <%_ for (const property of properties) { -%>
+        <%_ if (property.name === 'id') { _%>
+        XCTAssertEqual(decodedLight.id, lightID)
+        <%_ } else { _%>
+        XCTAssertEqual(decodedLight.<%- camelizeWithLeadingLowercase(property.name) %>, <%- propertySwiftValueType(property) %>.testConstantValue())
+        <%_ if (property.transition) { -%>
+        XCTAssertEqual(decodedLight.<%- camelizeWithLeadingLowercase(property.name) %>Transition?.duration, 10)
+        XCTAssertEqual(decodedLight.<%- camelizeWithLeadingLowercase(property.name) %>Transition?.delay, 10)
+        <%_ } -%>
+        <%_ } -%>
+        <%_ } -%>
+    }
+}
+
+// End of generated file

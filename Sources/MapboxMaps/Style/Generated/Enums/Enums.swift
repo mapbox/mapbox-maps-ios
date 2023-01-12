@@ -1,6 +1,16 @@
 // This file is generated.
 import Foundation
 
+/// Defines rendering behavior of model in respect to other 3D scene objects.
+public enum ModelType: String, Codable, CaseIterable {
+
+    /// Integrated to 3D scene, using depth testing, along with terrain, fill-extrusions and custom layer.
+    case common3d = "common-3d"
+
+    /// Displayed over other 3D content, occluded by terrain.
+    case locationIndicator = "location-indicator"
+}
+
 public enum Visibility: String, Codable {
 
     /// The layer is shown.

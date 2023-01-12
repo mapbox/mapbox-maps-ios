@@ -1007,7 +1007,7 @@ public final class Style: StyleProtocol {
     ///   - Parameter identifier: A unique source identifier.
     ///
     /// - Throws: StyleError or type conversion errors
-    @_spi(Experimental) public func addModel(withId id: String, modelURI: String) throws {
+    public func addModel(withId id: String, modelURI: String) throws {
         try handleExpected {
             styleManager.addStyleModel(forModelId: id, modelUri: modelURI)
         }
@@ -1019,7 +1019,7 @@ public final class Style: StyleProtocol {
     ///
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
-    @_spi(Experimental) public func removeModel(withId id: String) throws {
+    public func removeModel(withId id: String) throws {
         try handleExpected {
             styleManager.removeStyleModel(forModelId: id)
         }
@@ -1030,7 +1030,7 @@ public final class Style: StyleProtocol {
     /// - Parameter id: Style model identifier.
     ///
     /// - Returns: `true` if the given model exists, `false` otherwise.
-    @_spi(Experimental) public func modelExists(withId id: String) -> Bool {
+    public func modelExists(withId id: String) -> Bool {
         styleManager.hasStyleModel(forModelId: id)
     }
 

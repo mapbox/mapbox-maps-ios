@@ -21,16 +21,16 @@ GEM
     artifactory (3.0.15)
     atomos (0.1.3)
     aws-eventstream (1.2.0)
-    aws-partitions (1.663.0)
-    aws-sdk-core (3.168.0)
+    aws-partitions (1.692.0)
+    aws-sdk-core (3.168.4)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.5)
       jmespath (~> 1, >= 1.6.1)
-    aws-sdk-kms (1.59.0)
+    aws-sdk-kms (1.61.0)
       aws-sdk-core (~> 3, >= 3.165.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.117.1)
+    aws-sdk-s3 (1.117.2)
       aws-sdk-core (~> 3, >= 3.165.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.4)
@@ -49,7 +49,7 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.8.1)
     emoji_regex (3.2.3)
-    excon (0.94.0)
+    excon (0.97.1)
     faraday (1.10.2)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
@@ -79,7 +79,7 @@ GEM
     faraday_middleware (1.2.0)
       faraday (~> 1.0)
     fastimage (2.2.6)
-    fastlane (2.211.0)
+    fastlane (2.210.1)
       CFPropertyList (>= 2.3, < 4.0.0)
       addressable (>= 2.8, < 3.0.0)
       artifactory (~> 3.0)
@@ -119,9 +119,9 @@ GEM
       xcpretty (~> 0.3.0)
       xcpretty-travis-formatter (>= 0.0.3)
     gh_inspector (1.1.3)
-    google-apis-androidpublisher_v3 (0.31.0)
+    google-apis-androidpublisher_v3 (0.32.0)
       google-apis-core (>= 0.9.1, < 2.a)
-    google-apis-core (0.9.1)
+    google-apis-core (0.9.5)
       addressable (~> 2.5, >= 2.5.1)
       googleauth (>= 0.16.2, < 2.a)
       httpclient (>= 2.8.1, < 3.a)
@@ -161,11 +161,11 @@ GEM
     http-cookie (1.0.5)
       domain_name (~> 0.5)
     httpclient (2.8.3)
-    jmespath (1.6.1)
-    json (2.6.2)
-    jwt (2.5.0)
+    jmespath (1.6.2)
+    json (2.6.3)
+    jwt (2.6.0)
     memoist (0.16.2)
-    mini_magick (4.11.0)
+    mini_magick (4.12.0)
     mini_mime (1.1.2)
     multi_json (1.15.0)
     multipart-post (2.0.0)
@@ -174,7 +174,7 @@ GEM
     optparse (0.1.1)
     os (1.1.4)
     plist (3.6.0)
-    public_suffix (5.0.0)
+    public_suffix (5.0.1)
     rake (13.0.6)
     representable (3.2.0)
       declarative (< 0.1.0)
@@ -223,10 +223,11 @@ GEM
 
 PLATFORMS
   arm64-darwin-21
+  arm64-darwin-22
 
 DEPENDENCIES
-  fastlane
+  fastlane (~> 2.210.0)
   fastlane-plugin-firebase_test_lab!
 
 BUNDLED WITH
-   2.3.21
+   2.4.3

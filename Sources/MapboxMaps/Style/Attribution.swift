@@ -92,13 +92,17 @@ internal struct Attribution: Hashable {
             completion(parseSynchronously(rawAttributions))
             return
         }
-
+#if compiler(>=5.6.0) && canImport(_Concurrency)
         Task { @MainActor in
             let attributons = await parseAsync(rawAttributions)
             completion(attributons)
         }
+#else
+        completion(parseSynchronously(rawAttributions))
+#endif
     }
 
+#if compiler(>=5.6.0) && canImport(_Concurrency)
     /// Parse the raw attribution strings from sources asynchronously
     /// - Parameter rawAttributions: Array of HTML strings
     /// - Returns: Array of Attribution structs
@@ -118,6 +122,7 @@ internal struct Attribution: Hashable {
         // swiftlint:disable:next force_cast
         return NSOrderedSet(array: result).array as! [Attribution]
     }
+#endif
 
     /// Parse the raw attribution strings from sources synchronously.
     /// Known for intermittent crashes - https://developer.apple.com/forums/thread/115405?answerId=356326022#356326022

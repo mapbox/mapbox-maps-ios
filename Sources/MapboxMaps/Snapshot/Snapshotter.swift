@@ -124,6 +124,21 @@ public class Snapshotter {
     public func start(overlayHandler: SnapshotOverlayHandler?,
                       completion: @escaping (Result<UIImage, SnapshotError>) -> Void) {
 
+        #if !targetEnvironment(simulator)
+        if #available(iOS 13.0, *) {
+            let availableMemory = Int64(os_proc_available_memory())
+            let estimatedSnapshotMemoryUse = options.estimatedMemoryUse
+
+            if availableMemory < estimatedSnapshotMemoryUse {
+                let formatter = ByteCountFormatter()
+                Log.warning(
+                    forMessage: "Not enough memory for snapshot processing: required \(formatter.string(fromByteCount: availableMemory)), available: \(formatter.string(fromByteCount: estimatedSnapshotMemoryUse))",
+                    category: "Snapshot"
+                )
+            }
+        }
+        #endif
+
         let scale = CGFloat(options.pixelRatio)
 
         let style = self.style
@@ -489,5 +504,16 @@ extension Snapshotter {
         context.translateBy(x: attributionView.frame.origin.x, y: attributionView.frame.origin.y)
         attributionView.layer.contents = blurredImage
         attributionView.layer.render(in: context)
+    }
+}
+
+private extension MapSnapshotOptions {
+
+    /// Estimates the amount of bytes use by the snapshot image.
+    ///
+    /// Typically, 1 pixel of a decoded image will take up 4 bytes of memory — 1 byte for red, 1 byte for green, 1 byte for blue, and 1 byte for the alpha component.
+    /// - Seealso: [iOS Memory Deep Dive](https://developer.apple.com/videos/play/wwdc2018/416/)
+    var estimatedMemoryUse: Int64 {
+        Int64(size.width * pixelRatio) * Int64(size.height * pixelRatio) * 4
     }
 }

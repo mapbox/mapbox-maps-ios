@@ -1,4 +1,5 @@
 import Foundation
+import WebKit
 
 internal struct Attribution: Hashable {
 
@@ -83,52 +84,83 @@ internal struct Attribution: Hashable {
         return NSAttributedString(string: attributionText, attributes: attributes)
     }
 
-    /// Parse the raw attribution strings from sources
+    /// Parse the raw attribution strings from sources asynchronously
+    /// - Parameter rawAttributions: Array of HTML strings
+    /// - Parameter completion: A block that will be passed the result of parsing.
+    internal static func parse(_ rawAttributions: [String], completion: @escaping ([Attribution]) -> Void) {
+        guard #available(iOS 13, *) else {
+            completion(parseSynchronously(rawAttributions))
+            return
+        }
+
+        Task { @MainActor in
+            let attributons = await parseAsync(rawAttributions)
+            completion(attributons)
+        }
+    }
+
+    /// Parse the raw attribution strings from sources asynchronously
     /// - Parameter rawAttributions: Array of HTML strings
     /// - Returns: Array of Attribution structs
-    static func parse(_ rawAttributions: [String]) -> [Attribution] {
-
-        var characterSet = CharacterSet(charactersIn: "©")
-        characterSet.formUnion(.whitespacesAndNewlines)
-
-        var attributions: [Attribution] = []
+    @available(iOS 13.0, *)
+    private static func parseAsync(_ rawAttributions: [String]) async -> [Attribution] {
+        var result: [Attribution] = []
 
         for attributionString in rawAttributions {
-
-            guard let htmlData = attributionString.data(using: .utf8) else {
+            guard let attributedString = try? await NSAttributedString.fromHTML(attributionString).0 else {
                 continue
             }
 
-            let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
-                .characterEncoding: NSNumber(value: String.Encoding.utf8.rawValue),
-                .documentType: NSAttributedString.DocumentType.html
-            ]
+            result.append(contentsOf: attributedString.attributions)
+        }
 
-            guard let attributedString = try? NSMutableAttributedString(data: htmlData, options: options, documentAttributes: nil) else {
-                continue
+        // Disallow duplicates.
+        // swiftlint:disable:next force_cast
+        return NSOrderedSet(array: result).array as! [Attribution]
+    }
+
+    /// Parse the raw attribution strings from sources synchronously.
+    /// Known for intermittent crashes - https://developer.apple.com/forums/thread/115405?answerId=356326022#356326022
+    /// - Parameter rawAttributions: Array of HTML strings
+    /// - Returns: Array of Attribution structs
+    private static func parseSynchronously(_ rawAttributions: [String]) -> [Attribution] {
+        let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
+            .characterEncoding: NSNumber(value: String.Encoding.utf8.rawValue),
+            .documentType: NSAttributedString.DocumentType.html
+        ]
+
+        let attributions = rawAttributions
+            .compactMap { $0.data(using: .utf8) }
+            .compactMap { try? NSAttributedString(data: $0, options: options, documentAttributes: nil) }
+            .flatMap(\.attributions)
+
+        // Disallow duplicates.
+        // swiftlint:disable:next force_cast
+        return NSOrderedSet(array: attributions).array as! [Attribution]
+    }
+}
+
+fileprivate extension NSAttributedString {
+    var attributions: [Attribution] {
+        let characterSet = CharacterSet(charactersIn: "©").union(.whitespacesAndNewlines)
+        var attributions: [Attribution] = []
+
+        enumerateAttribute(.link,
+                           in: NSRange(location: 0, length: length),
+                           options: []) { (value: Any?, range: NSRange, _: UnsafeMutablePointer<ObjCBool>) in
+            guard range.location != NSNotFound else {
+                return
             }
 
-            attributedString.enumerateAttribute(.link,
-                                                in: NSRange(location: 0, length: attributedString.length),
-                                                options: []) { (value: Any?, range: NSRange, _: UnsafeMutablePointer<ObjCBool>) in
-                guard range.location != NSNotFound else {
-                    return
-                }
+            let substring = attributedSubstring(from: range).string
+            let trimmedString = substring.trimmingCharacters(in: characterSet)
 
-                let substring = attributedString.attributedSubstring(from: range).string
-                let trimmedString = substring.trimmingCharacters(in: characterSet)
-
-                guard !trimmedString.isEmpty else {
-                    return
-                }
-
-                let attribution = Attribution(title: trimmedString, url: value as? URL)
-
-                // Disallow duplicates.
-                if !attributions.contains(attribution) {
-                    attributions.append(attribution)
-                }
+            guard !trimmedString.isEmpty else {
+                return
             }
+
+            let attribution = Attribution(title: trimmedString, url: value as? URL)
+            attributions.append(attribution)
         }
 
         return attributions

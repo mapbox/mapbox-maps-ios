@@ -1,6 +1,6 @@
 import UIKit
 internal protocol AttributionDataSource: AnyObject {
-    func attributions() -> [Attribution]
+    func loadAttributions(completion: @escaping ([Attribution]) -> Void)
 }
 
 internal protocol AttributionDialogManagerDelegate: AnyObject {
@@ -109,6 +109,12 @@ internal class AttributionDialogManager {
 // MARK: InfoButtonOrnamentDelegate Implementation
 extension AttributionDialogManager: InfoButtonOrnamentDelegate {
     func didTap(_ infoButtonOrnament: InfoButtonOrnament) {
+        dataSource?.loadAttributions { [weak self] attributions in
+            self?.showAttributionDialog(for: attributions)
+        }
+    }
+
+    private func showAttributionDialog(for attributions: [Attribution]) {
         guard let viewController = delegate?.viewControllerForPresenting(self) else {
             fatalError("No view controller found")
         }
@@ -128,19 +134,17 @@ extension AttributionDialogManager: InfoButtonOrnamentDelegate {
 
         let bundle = Bundle.mapboxMaps
 
-        if let attributions = dataSource?.attributions() {
 
-            // Non actionable single item gets displayed as alert's message
-            if attributions.count == 1, let attribution = attributions.first, attribution.kind == .nonActionable {
-                alert.message = attribution.title
-            } else {
-                for attribution in attributions {
-                    let action = UIAlertAction(title: attribution.title, style: .default) { _ in
-                        self.delegate?.attributionDialogManager(self, didTriggerActionFor: attribution)
-                    }
-                    action.isEnabled = attribution.kind != .nonActionable
-                    alert.addAction(action)
+        // Non actionable single item gets displayed as alert's message
+        if attributions.count == 1, let attribution = attributions.first, attribution.kind == .nonActionable {
+            alert.message = attribution.title
+        } else {
+            for attribution in attributions {
+                let action = UIAlertAction(title: attribution.title, style: .default) { _ in
+                    self.delegate?.attributionDialogManager(self, didTriggerActionFor: attribution)
                 }
+                action.isEnabled = attribution.kind != .nonActionable
+                alert.addAction(action)
             }
         }
 

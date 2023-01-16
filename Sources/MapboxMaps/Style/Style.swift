@@ -1098,11 +1098,9 @@ internal func handleExpected<Value, Error, ReturnType>(closure: () -> (Expected<
 
 extension Style {
     internal func sourceAttributions() -> [String] {
-        let foo = allSourceIdentifiers.compactMap {
+        return allSourceIdentifiers.compactMap {
             sourceProperty(for: $0.id, property: "attribution").value as? String
         }
-
-        return (foo + foo).map { $0 + $0 }
     }
 }
 

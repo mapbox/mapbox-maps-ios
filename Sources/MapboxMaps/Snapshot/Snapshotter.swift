@@ -165,7 +165,7 @@ public class Snapshotter {
             Attribution.parse(sourceAttributions) { [weak self] attributions in
                 self?.overlaySnapshotWith(
                     attributions: attributions,
-                    uiImage: uiImage,
+                    snapshotImage: uiImage,
                     options: options,
                     overlayDescriptor: overlayDescriptor,
                     completion: completion
@@ -176,7 +176,7 @@ public class Snapshotter {
 
     private func overlaySnapshotWith(
         attributions: [Attribution],
-        uiImage: UIImage,
+        snapshotImage uiImage: UIImage,
         options: MapSnapshotOptions,
         overlayDescriptor: SnapshotOverlayDescriptor?,
         completion: @escaping (Result<UIImage, SnapshotError>) -> Void

@@ -12,6 +12,7 @@ internal class AttributionDialogManager {
 
     private weak var dataSource: AttributionDataSource?
     private weak var delegate: AttributionDialogManagerDelegate?
+    private var inProcessOfParsingAttributions: Bool = false
 
     internal init(dataSource: AttributionDataSource, delegate: AttributionDialogManagerDelegate?) {
         self.dataSource = dataSource
@@ -109,8 +110,12 @@ internal class AttributionDialogManager {
 // MARK: InfoButtonOrnamentDelegate Implementation
 extension AttributionDialogManager: InfoButtonOrnamentDelegate {
     func didTap(_ infoButtonOrnament: InfoButtonOrnament) {
+        guard inProcessOfParsingAttributions == false else { return }
+
+        inProcessOfParsingAttributions = true
         dataSource?.loadAttributions { [weak self] attributions in
             self?.showAttributionDialog(for: attributions)
+            self?.inProcessOfParsingAttributions = false
         }
     }
 
@@ -133,7 +138,6 @@ extension AttributionDialogManager: InfoButtonOrnamentDelegate {
         }
 
         let bundle = Bundle.mapboxMaps
-
 
         // Non actionable single item gets displayed as alert's message
         if attributions.count == 1, let attribution = attributions.first, attribution.kind == .nonActionable {

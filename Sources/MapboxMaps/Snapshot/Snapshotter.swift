@@ -129,7 +129,7 @@ public class Snapshotter {
         let style = self.style
         let options = self.options
 
-        mapSnapshotter.start { (expected) in
+        mapSnapshotter.start { [weak self] (expected) in
             if expected.isError() {
                 completion(.failure(.snapshotFailed(reason: expected.error as String)))
                 return
@@ -160,6 +160,8 @@ public class Snapshotter {
             }
 
             let sourceAttributions = style.sourceAttributions()
+
+            guard let self = self else { return }
 
             // Render attributions over the snapshot
             Attribution.parse(sourceAttributions) { [weak self] attributions in

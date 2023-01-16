@@ -66,6 +66,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
         weak var weakSnapshotter: Snapshotter?
         let options = try snapshotterOptions()
         let expectation = self.expectation(description: "snapshot")
+        expectation.isInverted = true
          autoreleasepool {
             let snapshotter = Snapshotter(options: options)
             weakSnapshotter = snapshotter
@@ -73,8 +74,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
             weakSnapshotter?.style.JSON = emptyBlueStyle
             weakSnapshotter?.start(overlayHandler: nil) { (result) in
                 expectation.fulfill()
-                XCTAssertNotNil(result)
-                XCTAssertNil(weakSnapshotter)
             }
         }
         XCTAssertNil(weakSnapshotter)

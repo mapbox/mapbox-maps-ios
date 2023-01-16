@@ -142,8 +142,7 @@ public class Snapshotter {
 
             let mbxImage = snapshot.image()
             let pointForCoordinate = { (coordinate: CLLocationCoordinate2D) -> CGPoint in
-                let screenCoordinate = snapshot.screenCoordinate(for: coordinate)
-                return CGPoint(x: screenCoordinate.x, y: screenCoordinate.y)
+                return snapshot.screenCoordinate(for: coordinate).point
             }
 
             let coordinateForPoint = { (point: CGPoint) -> CLLocationCoordinate2D in
@@ -531,7 +530,7 @@ private struct SnapshotOverlayDescriptor {
     }
 }
 
-fileprivate extension SnapshotOverlay {
+private extension SnapshotOverlay {
     init(from context: CGContext, scale: CGFloat, descriptor: SnapshotOverlayDescriptor) {
         self.init(
             context: context,

@@ -45,9 +45,15 @@ workflows:
               only:
                 - main
     jobs:
-      - swiftlint
-      - depsvalidator
+      - swiftlint:
+          context:
+            - Slack Orb
+      - depsvalidator:
+          context:
+            - Slack Orb
       - build-sdk:
+          context:
+            - Slack Orb
           name: Build SDK
           configuration: "Release"
           report_failure: true
@@ -55,9 +61,13 @@ workflows:
             parameters:
               xcode: ["13.1.0", "13.2.1"]
       - build-unit-tests:
+          context:
+            - Slack Orb
           configuration: "Release"
           report_failure: true
       - run-unit-tests:
+          context:
+            - Slack Orb
           xcode: 14.1.0
           matrix:
             parameters:
@@ -65,6 +75,8 @@ workflows:
           requires:
             - build-unit-tests
       - run-unit-tests:
+          context:
+            - Slack Orb
           xcode: 12.5.1
           matrix:
             parameters:
@@ -72,20 +84,30 @@ workflows:
           requires:
             - build-unit-tests
       - build-tests:
+          context:
+            - Slack Orb
           name: Build MapboxTestHost tests
       - run-tests:
+          context:
+            - Slack Orb
           name: Run MapboxTestHost tests
           scheme: MapboxTestHost
           requires:
             - Build MapboxTestHost tests
       - build-examples-tests:
+          context:
+            - Slack Orb
           name: Build Examples tests
       - run-tests:
+          context:
+            - Slack Orb
           name: Run Examples tests
           scheme: Examples
           requires:
             - Build Examples tests
       - create-xcframework:
+          context:
+            - Slack Orb
           create-xcframework-always-run: true
           report_failure: true
           xcode: "13.1.0"
@@ -99,10 +121,14 @@ workflows:
             branches:
               ignore: main
       - build-tests:
+          context:
+            - Slack Orb
           name: Build MapboxTestHost tests [non-main]
           requires:
             - run-tests?
       - run-tests:
+          context:
+            - Slack Orb
           name: Run MapboxTestHost tests [non-main]
           scheme: MapboxTestHost
           requires:
@@ -115,10 +141,14 @@ workflows:
             branches:
               ignore: main
       - build-examples-tests:
+          context:
+            - Slack Orb
           name: Build Examples tests [non-main]
           requires:
             - run-examples-tests?
       - run-tests:
+          context:
+            - Slack Orb
           name: Run Examples tests [non-main]
           scheme: Examples
           requires:
@@ -128,33 +158,59 @@ workflows:
   steve:
     unless: << pipeline.parameters.turf-revision >>
     jobs:
-      - sanity-check
-      - swiftlint
+      - sanity-check:
+          context:
+            - Slack Orb
+      - swiftlint:
+          context:
+            - Slack Orb
       - depsvalidator:
+          context:
+            - Slack Orb
           name: Check dependencies versions
       - build-sdk:
+          context:
+            - Slack Orb
           name: Build SDK
           xcode: "13.1.0"
           configuration: "Release"
 
-      - build-sdk-for-api-compatibility-check
-      - build-baseline-sdk
+      - build-sdk-for-api-compatibility-check:
+          context:
+            - Slack Orb
+      - build-baseline-sdk:
+          context:
+            - Slack Orb
       - check-api-compatibility:
+          context:
+            - Slack Orb
           requires:
             - build-sdk-for-api-compatibility-check
             - build-baseline-sdk
-      - create-xcframework
-      - validate-integrations-for-branch
+      - create-xcframework:
+          context:
+            - Slack Orb
+      - validate-integrations-for-branch:
+          context:
+            - Slack Orb
 
       # Trigger mobile-metrics workflows
-      - trigger-metrics-v2
+      - trigger-metrics-v2:
+          context:
+            - Slack Orb
       - trigger-binary-size:
+          context:
+            - Slack Orb
           requires:
             - Build SDK
       - trigger-metrics-build:
+          context:
+            - Slack Orb
           requires:
             - Build SDK
       - trigger-metrics-collection:
+          context:
+            - Slack Orb
           requires:
             - Build SDK
           filters:
@@ -163,8 +219,12 @@ workflows:
 
       # Run unit tests on CI simulator
       - build-unit-tests:
+          context:
+            - Slack Orb
           name: Build unit tests
       - run-unit-tests:
+          context:
+            - Slack Orb
           xcode: 14.1.0
           codecoverage: true
           matrix:
@@ -173,6 +233,8 @@ workflows:
           requires:
             - Build unit tests
       - run-unit-tests:
+          context:
+            - Slack Orb
           xcode: 12.5.1
           matrix:
             parameters:
@@ -181,10 +243,14 @@ workflows:
             - Build unit tests
 
       - build-unit-tests:
+          context:
+            - Slack Orb
           name: build-unit-tests-min-turf
           turf-revision: v2.0.0
 
       - run-unit-tests:
+          context:
+            - Slack Orb
           name: run-unit-tests-min-turf
           xcode: 13.1.0
           destination: OS=15.0,name=iPhone 12
@@ -195,8 +261,12 @@ workflows:
       # Run on main by default
       # Can be approved to run on other branches
       - build-tests:
+          context:
+            - Slack Orb
           name: Build MapboxTestHost tests
       - run-tests:
+          context:
+            - Slack Orb
           name: Run MapboxTestHost tests
           scheme: MapboxTestHost
           requires:
@@ -209,8 +279,12 @@ workflows:
       # Enabled by-default on 'main' branch
       # Can be approved on purpose for others
       - build-examples-tests:
+          context:
+            - Slack Orb
           name: Build Examples tests
       - run-tests:
+          context:
+            - Slack Orb
           name: Run Examples tests
           scheme: Examples
           requires:
@@ -221,6 +295,8 @@ workflows:
 
       # Notify internal CI about main and release branch updates
       - trigger-internal-ci-sync:
+          context:
+            - Slack Orb
           filters:
             branches:
               only:
@@ -229,12 +305,16 @@ workflows:
 
       # Configure triggering end-to-end verification
       - sdk-e2e-test:
+          context:
+            - Slack Orb
           filters:
               branches:
                   ignore:
                       - main
           name: run-sdk-e2e-test-devel
       - sdk-e2e-test:
+          context:
+            - Slack Orb
           filters:
               branches:
                   only:
@@ -247,26 +327,44 @@ workflows:
   release:
     jobs:
       - release-precheck:
+          context:
+            - Slack Orb
           <<: *release-anchor
           requires: []
       - trigger-metrics-v2:
+          context:
+            - Slack Orb
           <<: *release-anchor
       - build-baseline-sdk:
+          context:
+            - Slack Orb
           <<: *release-anchor
       - build-dynamic:
+          context:
+            - Slack Orb
           <<: *release-anchor
       - build-static:
+          context:
+            - Slack Orb
           <<: *release-anchor
       - build-docs:
+          context:
+            - Slack Orb
           <<: *release-anchor
       - build-studio-preview:
+          context:
+            - Slack Orb
           <<: *release-anchor
       - check-api-compatibility:
+          context:
+            - Slack Orb
           <<: *release-anchor
           requires:
             - build-baseline-sdk
             - build-dynamic
       - create-registry-pr:
+          context:
+            - Slack Orb
           <<: *release-anchor
           requires:
             - build-static
@@ -279,26 +377,38 @@ workflows:
             - create-registry-pr
           type: approval
       - check-registry:
+          context:
+            - Slack Orb
           <<: *release-anchor
           requires:
             - wait-registry-pr
       - create-docs-prs:
+          context:
+            - Slack Orb
           <<: *release-anchor
           requires:
             - check-registry
       - update-examples:
+          context:
+            - Slack Orb
           <<: *release-anchor
           requires:
             - check-registry
       - publish-podspec:
+          context:
+            - Slack Orb
           <<: *release-anchor
           requires:
             - check-registry
       - validate-integrations:
+          context:
+            - Slack Orb
           <<: *release-anchor
           requires:
             - publish-podspec
       - create-draft-release:
+          context:
+            - Slack Orb
           <<: *release-anchor
           requires:
             - create-docs-prs
@@ -309,6 +419,8 @@ workflows:
     when: << pipeline.parameters.turf-revision >>
     jobs:
       - turf-integration:
+          context:
+            - Slack Orb
           name: "Run Unit Tests"
           turf-revision: << pipeline.parameters.turf-revision >>
 

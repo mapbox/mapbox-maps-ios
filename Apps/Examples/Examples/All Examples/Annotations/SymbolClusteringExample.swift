@@ -50,6 +50,32 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         // Enable clustering for this source.
         source.cluster = true
         source.clusterRadius = 75
+
+//        "clusterProperties": {
+//            "max": ["max", ["get", "FLOW"]],
+//            "sum": [["+", ["accumulated"], ["get", "sum"]], ["get", "FLOW"]],
+//            "in_e9": ["any", ["==", ["get", "ENGINEID"], "E-9"]]
+//        }
+
+        let clusterProperties: [String: [Expression]] = [
+//                                                        "max": [Exp(.max) {Exp(.get) { "FLOW" }}],
+//                                                       "in_e9": [Exp(.any) {
+//                                                            Exp(.eq) {
+//                                                                Exp(.get) { "ENGINEID" }
+//                                                                "E-9"
+//                                                            }
+//                                                        }],
+                                                         "sum": [Exp(.sum) {
+            Exp(.accumulated)
+            Exp(.get) {
+                "sum"
+            }},
+            Exp(.get) { "FLOW" }]
+        ]
+        print(clusterProperties)
+
+        source.clusterProperties = clusterProperties
+
         let sourceID = "fire-hydrant-source"
 
         var clusteredLayer = createClusteredLayer()
@@ -154,8 +180,14 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
                 // when the cluster is created.
                 } else if let selectedFeatureProperties = queriedFeatures.first?.feature.properties,
                           case let .number(pointCount) = selectedFeatureProperties["point_count"],
-                          case let .number(clusterId) = selectedFeatureProperties["cluster_id"] {
-                    // If the tap landed on a cluster, pass the cluster ID and point count to the alert.
+                          case let .number(clusterId) = selectedFeatureProperties["cluster_id"],
+                          //case let .number(maxFlow) = selectedFeatureProperties["max"],
+                          case let .number(sum) = selectedFeatureProperties["sum"] {
+                          //case let .number(in_e9) = selectedFeatureProperties["in_e9"] {
+                // If the tap landed on a cluster, pass the cluster ID and point count to the alert.
+                   // print("Max cluster flow: \(maxFlow)")
+                    print("Sum flow: \(sum)")
+                    //print("In e9?: \(in_e9)")
                     self?.showAlert(withTitle: "Cluster ID \(Int(clusterId))", and: "There are \(Int(pointCount)) points in this cluster")
                 }
             case .failure(let error):

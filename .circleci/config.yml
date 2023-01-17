@@ -8,7 +8,7 @@ parameters:
 
 orbs:
   # https://circleci.com/orbs/registry/orb/circleci/slack
-  slack: circleci/slack@4.5
+  slack: circleci/slack@4
 
 
 ### Shared anchors

@@ -2,6 +2,7 @@
 import UIKit
 import CoreLocation
 import CoreImage.CIFilterBuiltins
+import os
 
 @_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
@@ -132,7 +133,7 @@ public class Snapshotter {
             if availableMemory < estimatedSnapshotMemoryUse {
                 let formatter = ByteCountFormatter()
                 Log.warning(
-                    forMessage: "Not enough memory for snapshot processing: required \(formatter.string(fromByteCount: availableMemory)), available: \(formatter.string(fromByteCount: estimatedSnapshotMemoryUse))",
+                    forMessage: "Not enough memory for snapshot processing: required \(formatter.string(fromByteCount: estimatedSnapshotMemoryUse)), available: \(formatter.string(fromByteCount: availableMemory))",
                     category: "Snapshot"
                 )
             }

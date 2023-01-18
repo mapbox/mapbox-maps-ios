@@ -506,9 +506,7 @@ jobs:
               default: false
               type: boolean
       steps:
-          - add_ssh_keys:
-              fingerprints:
-                  - 3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e
+          - add-mapbox-submodules-key
           - checkout
           - install-mbx-ci:
               platform: linux
@@ -1214,7 +1212,7 @@ commands:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
+            - 9d:db:07:0b:62:81:11:c3:46:21:8e:fa:51:99:80:2d
 
   install-mbx-ci:
     parameters:

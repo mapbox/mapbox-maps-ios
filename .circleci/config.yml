@@ -30,6 +30,7 @@ workflows:
           context:
             - SDK Registry Token
             - MapboxCI GitHub UserToken
+            - Maps SDK/Public Mapbox Token
       - run-benchmark:
           requires:
             - build-benchmark

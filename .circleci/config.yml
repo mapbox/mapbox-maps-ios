@@ -18,6 +18,7 @@ workflows:
           context:
             - SDK Registry Token
             - MapboxCI GitHub UserToken
+            - Maps SDK/Public Mapbox Token
       - build-maps:
           upload-size-metrics: false
           context:
@@ -327,7 +328,7 @@ orbs:
         parameters:
           token:
             type: string
-            default: $SDK_REGISTRY_TOKEN
+            default: $MAPBOX_ACCESS_TOKEN
           path:
             type: string
             default: ~/.mapbox

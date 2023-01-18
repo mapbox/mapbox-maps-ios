@@ -105,8 +105,7 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
                                                 Exp(.get) {"pointString"}
                                                 Exp(.get) {"point_count"}
                                             }),
-                                            clusterRadius: 75,
-                                            clusterProperties: clusterProperty)
+                                            clusterRadius: 75)
         let pointAnnotationManager = mapView.annotations.makePointAnnotationManager(id: clusterLayerID, clusterOptions: clusterOptions)
         pointAnnotationManager.annotations = annotations
         pointAnnotationManager.delegate = self

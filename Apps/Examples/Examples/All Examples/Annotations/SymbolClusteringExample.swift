@@ -51,28 +51,33 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         source.cluster = true
         source.clusterRadius = 75
 
-//        "clusterProperties": {
-//            "max": ["max", ["get", "FLOW"]],
-//            "sum": [["+", ["accumulated"], ["get", "sum"]], ["get", "FLOW"]],
-//            "in_e9": ["any", ["==", ["get", "ENGINEID"], "E-9"]]
-//        }
+        // ["max", ["get", "FLOW"]]
+        let maxExpression = Exp(.max) {Exp(.get) { "FLOW" }}
 
-        let clusterProperties: [String: [Expression]] = [
-//                                                        "max": [Exp(.max) {Exp(.get) { "FLOW" }}],
-//                                                       "in_e9": [Exp(.any) {
-//                                                            Exp(.eq) {
-//                                                                Exp(.get) { "ENGINEID" }
-//                                                                "E-9"
-//                                                            }
-//                                                        }],
-                                                         "sum": [Exp(.sum) {
+        // ["any", ["==", ["get", "ENGINEID"], "E-9"]]
+        let ine9Expression = Exp(.any) {
+            Exp(.eq) {
+                Exp(.get) { "ENGINEID" }
+                "E-9"
+            }
+        }
+
+        // [["+", ["accumulated"], ["get", "sum"]], ["get", "FLOW"]]
+        let sumExpression1 = Exp(.sum) {
             Exp(.accumulated)
             Exp(.get) {
                 "sum"
-            }},
-            Exp(.get) { "FLOW" }]
+            }}
+        let sumExpression2 = Exp(.get) { "FLOW" }
+
+        let expressionWrappedInArgument1 = Expression.Element.argument(Expression.Argument.expression(sumExpression1))
+        let expressionWrappedInArgument2 = Expression.Element.argument(Expression.Argument.expression(sumExpression2))
+
+        let clusterProperties: [String: [Expression.Element]] = [
+            "max": maxExpression.elements,
+            "in_e9": ine9Expression.elements,
+            "sum": [expressionWrappedInArgument1, expressionWrappedInArgument2]
         ]
-        print(clusterProperties)
 
         source.clusterProperties = clusterProperties
 
@@ -179,15 +184,15 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
                 // If the feature is a cluster, it will have `point_count` and `cluster_id` properties. These are assigned
                 // when the cluster is created.
                 } else if let selectedFeatureProperties = queriedFeatures.first?.feature.properties,
-                          case let .number(pointCount) = selectedFeatureProperties["point_count"],
-                          case let .number(clusterId) = selectedFeatureProperties["cluster_id"],
-                          //case let .number(maxFlow) = selectedFeatureProperties["max"],
-                          case let .number(sum) = selectedFeatureProperties["sum"] {
-                          //case let .number(in_e9) = selectedFeatureProperties["in_e9"] {
+                  case let .number(pointCount) = selectedFeatureProperties["point_count"],
+                  case let .number(clusterId) = selectedFeatureProperties["cluster_id"],
+                  case let .number(maxFlow) = selectedFeatureProperties["max"],
+                  case let .number(sum) = selectedFeatureProperties["sum"],
+                  case let .boolean(in_e9) = selectedFeatureProperties["in_e9"] {
                 // If the tap landed on a cluster, pass the cluster ID and point count to the alert.
-                   // print("Max cluster flow: \(maxFlow)")
+                    print("Max cluster flow: \(maxFlow)")
                     print("Sum flow: \(sum)")
-                    //print("In e9?: \(in_e9)")
+                    print("In Engine 9's district?: \(in_e9)")
                     self?.showAlert(withTitle: "Cluster ID \(Int(clusterId))", and: "There are \(Int(pointCount)) points in this cluster")
                 }
             case .failure(let error):

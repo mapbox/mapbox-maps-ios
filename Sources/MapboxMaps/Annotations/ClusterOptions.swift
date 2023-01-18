@@ -40,7 +40,7 @@ public struct ClusterOptions: Equatable {
     /// For more advanced use cases, in place of `operator`, you can use a custom reduce expression
     /// that references a special `["accumulated"]` value, e.g.:
     /// `{"sum": [["+", ["accumulated"], ["get", "sum"]], ["get", "scalerank"]]}`
-    var clusterProperties: [String: [Expression]]?
+    var clusterProperties: [String: [Expression.Element]]?
 
     /// Define a set of cluster options to determine how to cluster annotations.
     /// Providing clusterOptions when initializing a ``PointAnnotationManager``
@@ -52,7 +52,7 @@ public struct ClusterOptions: Equatable {
                 textField: Value<String> = .expression(Exp(.get) { "point_count" }),
                 clusterRadius: Double = 50,
                 clusterMaxZoom: Double = 14,
-                clusterProperties: [String: [Expression]]? = nil) {
+                clusterProperties: [String: [Expression.Element]]? = nil) {
         self.circleRadius = circleRadius
         self.circleColor = circleColor
         self.textColor = textColor

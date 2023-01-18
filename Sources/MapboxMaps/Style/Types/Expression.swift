@@ -13,7 +13,7 @@ public typealias Exp = Expression
 public struct Expression: Codable, CustomStringConvertible, Equatable {
 
     /// The individual elements of the expression in an array
-    internal var elements: [Element]
+    public var elements: [Element]
 
     /// The operator of this expression
     public var `operator`: Operator {

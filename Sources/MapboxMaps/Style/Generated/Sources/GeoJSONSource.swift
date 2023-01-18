@@ -46,7 +46,7 @@ public struct GeoJSONSource: Source {
     /// ["propertyKey" : [operator, [mapExpression]]]
     /// ["propertyKey" : [[operator, ['accumulated'], ['get', propertyKey]], [mapExpression]]]
     /// ["propertyKey" : [[reduceExpression], [mapExpression]]]
-    public var clusterProperties: [String: [Expression]]?
+    public var clusterProperties: [String: [Expression.Element]]?
 
     /// Whether to calculate line distance metrics. This is required for line layers that specify `line-gradient` values.
     public var lineMetrics: Bool?

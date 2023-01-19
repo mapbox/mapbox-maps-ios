@@ -54,6 +54,7 @@ workflows:
       - build-sdk:
           context:
             - Slack Orb
+            - SDK Registry Token
           name: Build SDK
           configuration: "Release"
           report_failure: true
@@ -63,6 +64,7 @@ workflows:
       - build-unit-tests:
           context:
             - Slack Orb
+            - SDK Registry Token
           configuration: "Release"
           report_failure: true
       - run-unit-tests:
@@ -87,6 +89,7 @@ workflows:
           context:
             - Slack Orb
             - Fastlane Match
+            - SDK Registry Token
           name: Build MapboxTestHost tests
       - run-tests:
           context:
@@ -99,6 +102,7 @@ workflows:
           context:
             - Slack Orb
             - Fastlane Match
+            - SDK Registry Token
           name: Build Examples tests
       - run-tests:
           context:
@@ -110,6 +114,7 @@ workflows:
       - create-xcframework:
           context:
             - Slack Orb
+            - SDK Registry Token
           create-xcframework-always-run: true
           report_failure: true
           xcode: "13.1.0"
@@ -126,6 +131,7 @@ workflows:
           context:
             - Slack Orb
             - Fastlane Match
+            - SDK Registry Token
           name: Build MapboxTestHost tests [non-main]
           requires:
             - run-tests?
@@ -147,6 +153,7 @@ workflows:
           context:
             - Slack Orb
             - Fastlane Match
+            - SDK Registry Token
           name: Build Examples tests [non-main]
           requires:
             - run-examples-tests?
@@ -175,6 +182,7 @@ workflows:
       - build-sdk:
           context:
             - Slack Orb
+            - SDK Registry Token
           name: Build SDK
           xcode: "13.1.0"
           configuration: "Release"
@@ -182,9 +190,11 @@ workflows:
       - build-sdk-for-api-compatibility-check:
           context:
             - Slack Orb
+            - SDK Registry Token
       - build-baseline-sdk:
           context:
             - Slack Orb
+            - SDK Registry Token
       - check-api-compatibility:
           context:
             - Slack Orb
@@ -194,9 +204,11 @@ workflows:
       - create-xcframework:
           context:
             - Slack Orb
+            - SDK Registry Token
       - validate-integrations-for-branch:
           context:
             - Slack Orb
+            - SDK Registry Token
 
       # Trigger mobile-metrics workflows
       - trigger-metrics-v2:
@@ -225,6 +237,7 @@ workflows:
       - build-unit-tests:
           context:
             - Slack Orb
+            - SDK Registry Token
           name: Build unit tests
       - run-unit-tests:
           context:
@@ -249,6 +262,7 @@ workflows:
       - build-unit-tests:
           context:
             - Slack Orb
+            - SDK Registry Token
           name: build-unit-tests-min-turf
           turf-revision: v2.0.0
 
@@ -268,6 +282,7 @@ workflows:
           context:
             - Slack Orb
             - Fastlane Match
+            - SDK Registry Token
           name: Build MapboxTestHost tests
       - run-tests:
           context:
@@ -287,6 +302,7 @@ workflows:
           context:
             - Slack Orb
             - Fastlane Match
+            - SDK Registry Token
           name: Build Examples tests
       - run-tests:
           context:
@@ -335,6 +351,7 @@ workflows:
       - release-precheck:
           context:
             - Slack Orb
+            - SDK Registry Token
           <<: *release-anchor
           requires: []
       - trigger-metrics-v2:
@@ -344,22 +361,27 @@ workflows:
       - build-baseline-sdk:
           context:
             - Slack Orb
+            - SDK Registry Token
           <<: *release-anchor
       - build-dynamic:
           context:
             - Slack Orb
+            - SDK Registry Token
           <<: *release-anchor
       - build-static:
           context:
             - Slack Orb
+            - SDK Registry Token
           <<: *release-anchor
       - build-docs:
           context:
             - Slack Orb
+            - SDK Registry Token
           <<: *release-anchor
       - build-studio-preview:
           context:
             - Slack Orb
+            - SDK Registry Token
           <<: *release-anchor
       - check-api-compatibility:
           context:
@@ -385,6 +407,7 @@ workflows:
       - check-registry:
           context:
             - Slack Orb
+            - SDK Registry Token
           <<: *release-anchor
           requires:
             - wait-registry-pr
@@ -398,6 +421,7 @@ workflows:
           context:
             - Slack Orb
             - Fastlane Match
+            - SDK Registry Token
           <<: *release-anchor
           requires:
             - check-registry
@@ -411,6 +435,7 @@ workflows:
       - validate-integrations:
           context:
             - Slack Orb
+            - SDK Registry Token
           <<: *release-anchor
           requires:
             - publish-podspec
@@ -426,9 +451,10 @@ workflows:
   turf-integration:
     when: << pipeline.parameters.turf-revision >>
     jobs:
-      - turf-integration:
+      - turf-integration-job:
           context:
             - Slack Orb
+            - SDK Registry Token
           name: "Run Unit Tests"
           turf-revision: << pipeline.parameters.turf-revision >>
 
@@ -1218,20 +1244,7 @@ jobs:
           event: pass
           template: success_tagged_deploy_1
 
-  wait-for-binaries:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - parse-release-version-if-available
-      - inject-netrc-credentials
-      - run:
-          name: Wait binaries public access
-          command: |
-            echo $VERSION
-            timeout 1800 bash -c 'while [[ "$(curl -n -s -o /dev/null -w ''%{http_code}'' https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/$VERSION/MapboxMaps.zip)" != "200" ]]; do sleep 5; done' || false
-          no_output_timeout: 30m
-
-  turf-integration:
+  turf-integration-job:
     parameters:
       turf-revision:
         type: string

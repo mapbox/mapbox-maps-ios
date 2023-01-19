@@ -397,6 +397,7 @@ workflows:
       - publish-podspec:
           context:
             - Slack Orb
+            - CocoaPods trunk token
           <<: *release-anchor
           requires:
             - check-registry

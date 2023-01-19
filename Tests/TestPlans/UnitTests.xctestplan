@@ -49,6 +49,7 @@
         "MapViewIntegrationTests",
         "MapViewRenderedSnapshotIntegrationTests",
         "MapboxMapIntegrationTests",
+        "MapboxMapsSnapshotTests",
         "MigrationGuideIntegrationTests",
         "ModelLayerIntegrationTests",
         "ObservableIntegrationTests",

@@ -34,7 +34,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        try guardForMetalDevice()
+//        try guardForMetalDevice()
         dataPathURL = try temporaryCacheDirectory()
     }
 

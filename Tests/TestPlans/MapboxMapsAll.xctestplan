@@ -13,7 +13,8 @@
       "detectStackUseAfterReturn" : true,
       "enabled" : true
     },
-    "language" : "en"
+    "language" : "en",
+    "testRepetitionMode" : "retryOnFailure"
   },
   "testTargets" : [
     {

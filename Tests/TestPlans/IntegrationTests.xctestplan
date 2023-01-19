@@ -12,7 +12,8 @@
     }
   ],
   "defaultOptions" : {
-    "language" : "en"
+    "language" : "en",
+    "testRepetitionMode" : "retryOnFailure"
   },
   "testTargets" : [
     {

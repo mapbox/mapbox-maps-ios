@@ -22,7 +22,8 @@
       ]
     },
     "language" : "en",
-    "testExecutionOrdering" : "random"
+    "testExecutionOrdering" : "random",
+    "testRepetitionMode" : "retryOnFailure"
   },
   "testTargets" : [
     {

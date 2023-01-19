@@ -6,7 +6,8 @@ final class MapViewRenderedSnapshotIntegrationTests: MapViewIntegrationTestCase 
 
     func testLoadStyleAndTakeSnapshotSucceeds() throws {
         guard !UIApplication.shared.windows.isEmpty else {
-            throw XCTSkip("Requires a host application")
+            XCTFail("Requires a host application")
+            return
         }
 
         style.uri = .dark

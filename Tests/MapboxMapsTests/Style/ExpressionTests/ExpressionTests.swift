@@ -149,4 +149,37 @@ final class ExpressionTests: XCTestCase {
         XCTAssertEqual(expression.description, "[pitch, [literal, 20.0]]")
     }
 
+    func testCreateOperatorlessExpression() {
+        let expression = Exp {
+            Exp(.sum) {
+                Exp(.accumulated)
+                Exp(.get) { "sum" }
+            }
+            Exp(.get) { "scalerank" }
+        }
+
+        XCTAssertEqual(expression.description, "[[+, [accumulated], [get, sum]], [get, scalerank]]")
+    }
+
+    func testCreateClusterPropertiesExpressions() {
+        let maxExpression = Exp(.max) {Exp(.get) { "scalerank" }}
+        let islandExpression = Exp(.any) {
+            Exp(.eq) {
+                Exp(.get) { "featureclass" }
+                "island"
+            }
+        }
+        let sumExpression = Exp {
+            Exp(.sum) {
+                Exp(.accumulated)
+                Exp(.get) { "sum" }
+            }
+            Exp(.get) { "scalerank" }
+        }
+
+        XCTAssertEqual(maxExpression.description, "[max, [get, scalerank]]")
+        XCTAssertEqual(islandExpression.description, "[any, [==, [get, featureclass], island]]")
+        XCTAssertEqual(sumExpression.description, "[[+, [accumulated], [get, sum]], [get, scalerank]]")
+    }
+
 }

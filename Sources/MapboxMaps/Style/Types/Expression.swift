@@ -53,6 +53,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
         self.init(arguments: content())
     }
 
+    /// Initialize an expression with only arguments
     public init(arguments: [Argument]) {
         self.elements = arguments.map { Element.argument($0) }
     }

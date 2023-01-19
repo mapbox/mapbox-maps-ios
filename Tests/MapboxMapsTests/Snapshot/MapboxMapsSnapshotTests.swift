@@ -72,7 +72,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
             weakSnapshotter = snapshotter
             weakSnapshotter?.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5))
             weakSnapshotter?.style.JSON = emptyBlueStyle
-            weakSnapshotter?.start(overlayHandler: nil) { (result) in
+            weakSnapshotter?.start(overlayHandler: nil) { _ in
                 expectation.fulfill()
             }
         }

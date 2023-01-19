@@ -81,7 +81,7 @@ class AttributionTests: XCTestCase {
                 XCTAssertEqual(attribution.title, attributionString)
                 XCTAssertEqual(attribution.kind, .nonActionable)
             } catch {
-                XCTFail()
+                XCTFail("Parsing should result in an attribution")
             }
             parseExpectation.fulfill()
         }

@@ -90,6 +90,7 @@ workflows:
             - Slack Orb
             - Fastlane Match
             - SDK Registry Token
+            - Apple Machine account
           name: Build MapboxTestHost tests
       - run-tests:
           context:
@@ -103,6 +104,7 @@ workflows:
             - Slack Orb
             - Fastlane Match
             - SDK Registry Token
+            - Apple Machine account
           name: Build Examples tests
       - run-tests:
           context:
@@ -132,6 +134,7 @@ workflows:
             - Slack Orb
             - Fastlane Match
             - SDK Registry Token
+            - Apple Machine account
           name: Build MapboxTestHost tests [non-main]
           requires:
             - run-tests?
@@ -154,6 +157,7 @@ workflows:
             - Slack Orb
             - Fastlane Match
             - SDK Registry Token
+            - Apple Machine account
           name: Build Examples tests [non-main]
           requires:
             - run-examples-tests?
@@ -283,6 +287,7 @@ workflows:
             - Slack Orb
             - Fastlane Match
             - SDK Registry Token
+            - Apple Machine account
           name: Build MapboxTestHost tests
       - run-tests:
           context:
@@ -303,6 +308,7 @@ workflows:
             - Slack Orb
             - Fastlane Match
             - SDK Registry Token
+            - Apple Machine account
           name: Build Examples tests
       - run-tests:
           context:
@@ -422,6 +428,7 @@ workflows:
             - Slack Orb
             - Fastlane Match
             - SDK Registry Token
+            - Apple Machine account
           <<: *release-anchor
           requires:
             - check-registry

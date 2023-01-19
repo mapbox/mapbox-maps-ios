@@ -13,7 +13,7 @@ public typealias Exp = Expression
 public struct Expression: Codable, CustomStringConvertible, Equatable {
 
     /// The individual elements of the expression in an array
-    public var elements: [Element]
+    internal var elements: [Element]
 
     /// The operator of this expression
     public var `operator`: Operator {
@@ -46,6 +46,15 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
     /// Initialize an expression with an operator and arguments
     public init(operator op: Operator, arguments: [Argument]) {
         self.elements = [.operator(op)] + arguments.map { Element.argument($0) }
+    }
+
+    /// Initialize an expression with only arguments
+    public init(@ExpressionArgumentBuilder content: () -> [Expression.Argument]) {
+        self.init(arguments: content())
+    }
+
+    public init(arguments: [Argument]) {
+        self.elements = arguments.map { Element.argument($0) }
     }
 
     public func encode(to encoder: Encoder) throws {

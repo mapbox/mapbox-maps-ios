@@ -51,9 +51,11 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         source.cluster = true
         source.clusterRadius = 75
 
+        // Create expression to identify the max flow rate of one hydrant in the cluster
         // ["max", ["get", "FLOW"]]
         let maxExpression = Exp(.max) {Exp(.get) { "FLOW" }}
 
+        // Create expression to determine if a hydrant with EngineID E-9 is in the cluster
         // ["any", ["==", ["get", "ENGINEID"], "E-9"]]
         let ine9Expression = Exp(.any) {
             Exp(.eq) {
@@ -62,23 +64,22 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
             }
         }
 
+        // Create expression to get the sum of all of the flow rates in the cluster
         // [["+", ["accumulated"], ["get", "sum"]], ["get", "FLOW"]]
-        let sumExpression1 = Exp(.sum) {
-            Exp(.accumulated)
-            Exp(.get) {
-                "sum"
-            }}
-        let sumExpression2 = Exp(.get) { "FLOW" }
+        let sumExpression = Exp {
+            Exp(.sum) {
+                Exp(.accumulated)
+                Exp(.get) { "sum" }
+            }
+            Exp(.get) { "FLOW" }
+        }
 
-        let expressionWrappedInArgument1 = Expression.Element.argument(Expression.Argument.expression(sumExpression1))
-        let expressionWrappedInArgument2 = Expression.Element.argument(Expression.Argument.expression(sumExpression2))
-
-        let clusterProperties: [String: [Expression.Element]] = [
-            "max": maxExpression.elements,
-            "in_e9": ine9Expression.elements,
-            "sum": [expressionWrappedInArgument1, expressionWrappedInArgument2]
+        // Add the expressions to the cluster as ClusterProperties so they can be accessed below
+        let clusterProperties: [String: Expression] = [
+            "max": maxExpression,
+            "in_e9": ine9Expression,
+            "sum": sumExpression
         ]
-
         source.clusterProperties = clusterProperties
 
         let sourceID = "fire-hydrant-source"
@@ -190,10 +191,8 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
                   case let .number(sum) = selectedFeatureProperties["sum"],
                   case let .boolean(in_e9) = selectedFeatureProperties["in_e9"] {
                 // If the tap landed on a cluster, pass the cluster ID and point count to the alert.
-                    print("Max cluster flow: \(maxFlow)")
-                    print("Sum flow: \(sum)")
-                    print("In Engine 9's district?: \(in_e9)")
-                    self?.showAlert(withTitle: "Cluster ID \(Int(clusterId))", and: "There are \(Int(pointCount)) points in this cluster")
+                    let inEngineNine = in_e9 ? "Some hydrants belong to Engine 9." : "No hydrants belong to Engine 9."
+                    self?.showAlert(withTitle: "Cluster ID \(Int(clusterId))", and: "There are \(Int(pointCount)) hydrants in this cluster. The highest water flow is \(Int(maxFlow)) and the collective flow is \(Int(sum)). \(inEngineNine)")
                 }
             case .failure(let error):
                 self?.showAlert(withTitle: "An error occurred: \(error.localizedDescription)", and: "Please try another hydrant")

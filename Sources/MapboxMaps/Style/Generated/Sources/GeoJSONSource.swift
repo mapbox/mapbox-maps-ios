@@ -36,17 +36,32 @@ public struct GeoJSONSource: Source {
     /// Max zoom on which to cluster points if clustering is enabled. Defaults to one zoom less than maxzoom (so that last zoom features are not clustered). Clusters are re-evaluated at integer zoom levels so setting clusterMaxZoom to 14 means the clusters will be displayed until z15.
     public var clusterMaxZoom: Double?
 
-    /// An object defining custom properties on the generated clusters if clustering is enabled, aggregating values from clustered points. Has the form `{"property_name": [operator, map_expression]}`. `operator` is any expression function that accepts at least 2 operands (e.g. `"+"` or `"max"`) — it accumulates the property value from clusters/points the cluster contains; `map_expression` produces the value of a single point.
+    /// An object defining custom properties on the generated clusters if clustering is enabled, aggregating values from clustered points. Has the form `{"property_name": [operator, map_expression]}`. `operator` is any expression function that accepts at least 2 operands (e.g. `"+"` or `"max"`) — it accumulates the property value from clusters/points the cluster contains; `map_expression` produces the value of a single point. Example:
     ///
-    /// Example: `{"sum": ["+", ["get", "scalerank"]]}`.
+    /// ``Expression`` syntax:
+    /// let expression = Exp(.sum) {
+    ///     Exp(.get) { "scalerank" }
+    /// }
+    /// clusterProperties: ["sum": expression]
     ///
-    /// For more advanced use cases, in place of `operator`, you can use a custom reduce expression that references a special `["accumulated"]` value, e.g.:
+    /// JSON syntax:
+    /// `{"sum": ["+", ["get", "scalerank"]]}`
+    ///
+    /// For more advanced use cases, in place of `operator`, you can use a custom reduce expression that references a special `["accumulated"]` value. Example:
+    ///
+    /// ``Expression`` syntax:
+    /// let expression = Exp {
+    ///     Exp(.sum) {
+    ///         Exp(.accumulated)
+    ///         Exp(.get) { "sum" }
+    ///     }
+    ///     Exp(.get) { "scalerank" }
+    /// }
+    /// clusterProperties: ["sum": expression]
+    ///
+    /// JSON syntax:
     /// `{"sum": [["+", ["accumulated"], ["get", "sum"]], ["get", "scalerank"]]}`
-    ///
-    /// ["propertyKey" : [operator, [mapExpression]]]
-    /// ["propertyKey" : [[operator, ['accumulated'], ['get', propertyKey]], [mapExpression]]]
-    /// ["propertyKey" : [[reduceExpression], [mapExpression]]]
-    public var clusterProperties: [String: [Expression.Element]]?
+    public var clusterProperties: [String: Expression]?
 
     /// Whether to calculate line distance metrics. This is required for line layers that specify `line-gradient` values.
     public var lineMetrics: Bool?

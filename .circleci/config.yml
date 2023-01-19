@@ -86,6 +86,7 @@ workflows:
       - build-tests:
           context:
             - Slack Orb
+            - Fastlane Match
           name: Build MapboxTestHost tests
       - run-tests:
           context:
@@ -97,6 +98,7 @@ workflows:
       - build-examples-tests:
           context:
             - Slack Orb
+            - Fastlane Match
           name: Build Examples tests
       - run-tests:
           context:
@@ -123,6 +125,7 @@ workflows:
       - build-tests:
           context:
             - Slack Orb
+            - Fastlane Match
           name: Build MapboxTestHost tests [non-main]
           requires:
             - run-tests?
@@ -143,6 +146,7 @@ workflows:
       - build-examples-tests:
           context:
             - Slack Orb
+            - Fastlane Match
           name: Build Examples tests [non-main]
           requires:
             - run-examples-tests?
@@ -263,6 +267,7 @@ workflows:
       - build-tests:
           context:
             - Slack Orb
+            - Fastlane Match
           name: Build MapboxTestHost tests
       - run-tests:
           context:
@@ -281,6 +286,7 @@ workflows:
       - build-examples-tests:
           context:
             - Slack Orb
+            - Fastlane Match
           name: Build Examples tests
       - run-tests:
           context:
@@ -391,6 +397,7 @@ workflows:
       - update-examples:
           context:
             - Slack Orb
+            - Fastlane Match
           <<: *release-anchor
           requires:
             - check-registry

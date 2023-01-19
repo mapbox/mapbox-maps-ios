@@ -96,6 +96,7 @@ workflows:
       - run-tests:
           context:
             - Slack Orb
+            - Maps SDK/Google Cloud credentials
           name: Run MapboxTestHost tests
           scheme: MapboxTestHost
           requires:
@@ -110,6 +111,7 @@ workflows:
       - run-tests:
           context:
             - Slack Orb
+            - Maps SDK/Google Cloud credentials
           name: Run Examples tests
           scheme: Examples
           requires:
@@ -143,6 +145,7 @@ workflows:
       - run-tests:
           context:
             - Slack Orb
+            - Maps SDK/Google Cloud credentials
           name: Run MapboxTestHost tests [non-main]
           scheme: MapboxTestHost
           requires:
@@ -167,6 +170,7 @@ workflows:
       - run-tests:
           context:
             - Slack Orb
+            - Maps SDK/Google Cloud credentials
           name: Run Examples tests [non-main]
           scheme: Examples
           requires:
@@ -300,6 +304,7 @@ workflows:
       - run-tests:
           context:
             - Slack Orb
+            - Maps SDK/Google Cloud credentials
           name: Run MapboxTestHost tests
           scheme: MapboxTestHost
           requires:
@@ -322,6 +327,7 @@ workflows:
       - run-tests:
           context:
             - Slack Orb
+            - Maps SDK/Google Cloud credentials
           name: Run Examples tests
           scheme: Examples
           requires:

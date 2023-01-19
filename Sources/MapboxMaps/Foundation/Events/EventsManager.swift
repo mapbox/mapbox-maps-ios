@@ -58,7 +58,7 @@ internal final class EventsManager: EventsManagerProtocol {
     }
 
     private func getContentScale() -> Int {
-        let sc = UIApplication.shared.preferredContentSizeCategory
+        let sc = UIScreen.main.traitCollection.preferredContentSizeCategory
 
         let defaultScale = -9999
         let scToScale: [UIContentSizeCategory: Int] = [

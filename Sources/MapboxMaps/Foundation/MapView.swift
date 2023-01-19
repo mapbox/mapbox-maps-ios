@@ -172,6 +172,8 @@ open class MapView: UIView {
 
     internal let attributionUrlOpener: AttributionURLOpener
 
+    internal let applicationStateProvider: ApplicationStateProvider
+
     internal let eventsManager: EventsManagerProtocol
 
     /// Initialize a MapView
@@ -190,6 +192,7 @@ open class MapView: UIView {
 
         dependencyProvider = MapViewDependencyProvider(interfaceOrientationProvider: orientationProvider)
         attributionUrlOpener = DefaultAttributionURLOpener()
+        applicationStateProvider = DefaultApplicationStateProvider()
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
@@ -206,13 +209,16 @@ open class MapView: UIView {
     ///    `ResourceOptionsManager.default` to retrieve a shared default resource option, including the access token.
     ///   - orientationProvider: User interface orientation provider
     ///   - urlOpener: Attribution URL opener
+    ///   - applicationStateProvider: Application state provider
     @available(iOS, deprecated: 13, message: "Use init(frame:mapInitOptions:urlOpener:) instead")
     public init(frame: CGRect,
                 mapInitOptions: MapInitOptions = MapInitOptions(),
                 orientationProvider: InterfaceOrientationProvider,
-                urlOpener: AttributionURLOpener) {
+                urlOpener: AttributionURLOpener,
+                applicationStateProvider: ApplicationStateProvider) {
         dependencyProvider = MapViewDependencyProvider(interfaceOrientationProvider: orientationProvider)
         attributionUrlOpener = urlOpener
+        self.applicationStateProvider = applicationStateProvider
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
@@ -228,14 +234,17 @@ open class MapView: UIView {
     ///   - mapInitOptions: `MapInitOptions`; default uses
     ///    `ResourceOptionsManager.default` to retrieve a shared default resource option, including the access token.
     ///   - urlOpener: Attribution URL opener
+    ///   - applicationStateProvider: Application state provider
     @available(iOS 13.0, *)
     public init(frame: CGRect,
                 mapInitOptions: MapInitOptions = MapInitOptions(),
-                urlOpener: AttributionURLOpener) {
+                urlOpener: AttributionURLOpener,
+                applicationStateProvider: ApplicationStateProvider) {
         dependencyProvider = MapViewDependencyProvider(
             interfaceOrientationProvider: DefaultInterfaceOrientationProvider()
         )
         attributionUrlOpener = urlOpener
+        self.applicationStateProvider = applicationStateProvider
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
@@ -259,6 +268,7 @@ open class MapView: UIView {
         bundle = dependencyProvider.bundle
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
         attributionUrlOpener = DefaultAttributionURLOpener()
+        applicationStateProvider = DefaultApplicationStateProvider()
         resourceOptions = ResourceOptionsManager.default.resourceOptions
         eventsManager = dependencyProvider.makeEventsManager(accessToken: resourceOptions.accessToken)
         super.init(coder: coder)
@@ -267,9 +277,11 @@ open class MapView: UIView {
     internal init(frame: CGRect,
                   mapInitOptions: MapInitOptions,
                   dependencyProvider: MapViewDependencyProviderProtocol,
-                  urlOpener: AttributionURLOpener) {
+                  urlOpener: AttributionURLOpener,
+                  applicationStateProvider: ApplicationStateProvider) {
         self.dependencyProvider = dependencyProvider
         attributionUrlOpener = urlOpener
+        self.applicationStateProvider = applicationStateProvider
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
@@ -646,7 +658,7 @@ open class MapView: UIView {
     }
 
     private func shouldDisplayLinkBePaused(window: UIWindow) -> Bool {
-        if UIApplication.shared.applicationState != .active {
+        if applicationStateProvider.applicationState != .active {
             return true
         }
 

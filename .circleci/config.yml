@@ -107,6 +107,7 @@ workflows:
             - Fastlane Match
             - SDK Registry Token
             - Apple Machine account
+            - Maps SDK/Public Mapbox Token
           name: Build Examples tests
       - run-tests:
           context:

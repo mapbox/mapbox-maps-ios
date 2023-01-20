@@ -36,10 +36,12 @@ public struct ClusterOptions: Equatable {
     /// cluster contains; `map_expression` produces the value of a single point. Example:
     ///
     /// ``Expression`` syntax:
+    /// ```
     /// let expression = Exp(.sum) {
     ///     Exp(.get) { "scalerank" }
     /// }
     /// clusterProperties: ["sum": expression]
+    /// ```
     ///
     /// JSON syntax:
     /// `{"sum": ["+", ["get", "scalerank"]]}`
@@ -47,6 +49,7 @@ public struct ClusterOptions: Equatable {
     /// For more advanced use cases, in place of `operator`, you can use a custom reduce expression that references a special `["accumulated"]` value. Example:
     ///
     /// ``Expression`` syntax:
+    /// ```
     /// let expression = Exp {
     ///     Exp(.sum) {
     ///         Exp(.accumulated)
@@ -55,7 +58,8 @@ public struct ClusterOptions: Equatable {
     ///     Exp(.get) { "scalerank" }
     /// }
     /// clusterProperties: ["sum": expression]
-    ///
+    /// ```
+    /// 
     /// JSON syntax:
     /// `{"sum": [["+", ["accumulated"], ["get", "sum"]], ["get", "scalerank"]]}`
     var clusterProperties: [String: Expression]?

@@ -51,9 +51,7 @@ final class ExpressionTests: XCTestCase {
         do {
             let decodedExpression = try JSONDecoder().decode(Expression.self, from: data!)
             XCTAssertEqual(decodedExpression.operator, .format)
-            verifyExpressionArgument(for: decodedExpression,
-                                     toMatch: .option(.format(FormatOptions())),
-                                     at: 1)
+            XCTAssertEqual(decodedExpression.arguments.first, .option(.format(FormatOptions())))
         } catch {
             XCTFail("Could not decode empty json as format expression")
         }
@@ -79,24 +77,6 @@ final class ExpressionTests: XCTestCase {
         let data = jsonString.data(using: .utf8)!
 
         XCTAssertThrowsError(try JSONDecoder().decode(Expression.self, from: data))
-    }
-
-    // MARK: - Helpers
-    func verifyExpressionArgument(for expression: Expression, toMatch argument: Expression.Argument, at index: Int) {
-
-        guard let op = expression.elements.first, case .operator = op else {
-            XCTFail("There was no valid operator in the first element of the expression array")
-            return
-        }
-
-        let arg = expression.elements[index]
-        guard case let .argument(validArg) = arg else {
-            XCTFail("There was no valid argument in the element at index = \(index) of the expression array")
-            return
-        }
-        print(validArg)
-
-        XCTAssertEqual(validArg, argument)
     }
 
     func testGeoJSONObjectExpression() throws {
@@ -182,4 +162,64 @@ final class ExpressionTests: XCTestCase {
         XCTAssertEqual(sumExpression.description, "[[+, [accumulated], [get, sum]], [get, scalerank]]")
     }
 
+    func testDecodingOperatorlessExpression() {
+
+        let expressionString =
+        """
+        [
+            ["+", ["accumulated"], ["get", "sum"]],
+            ["get", "scalerank"]
+        ]
+        """
+        let expressionData = expressionString.data(using: .utf8)
+        XCTAssertNotNil(expressionData)
+
+        do {
+            let decodedExpression = try JSONDecoder().decode(Expression.self, from: expressionData!)
+            let matchingExpression = Exp {
+                Exp(.sum) {
+                    Exp(.accumulated)
+                    Exp(.get) { "sum" }
+                }
+                Exp(.get) { "scalerank" }
+            }
+            XCTAssertEqual(decodedExpression, matchingExpression)
+        } catch {
+            print(error)
+            XCTFail("Could not decode json as expression")
+        }
+    }
+
+    func testDecodingJSONToExpression() throws {
+
+        let expressionString =
+        """
+        [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            0,
+            "hsl(0, 79%, 53%)",
+            14,
+            "hsl(233, 80%, 47%)"
+        ]
+        """
+        let expressionData = expressionString.data(using: .utf8)
+        XCTAssertNotNil(expressionData)
+
+        do {
+            let decodedExpression = try JSONDecoder().decode(Expression.self, from: expressionData!)
+            let matchingExpression = Exp(.interpolate) {
+                Exp(.linear)
+                Exp(.zoom)
+                0
+                "hsl(0, 79%, 53%)"
+                14
+                "hsl(233, 80%, 47%)"
+            }
+            XCTAssertEqual(decodedExpression, matchingExpression)
+        } catch {
+            XCTFail("Could not decode json as expression")
+        }
+    }
 }

@@ -74,12 +74,13 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
         var container = try decoder.unkeyedContainer()
         elements = []
         guard !container.isAtEnd else {
-            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Expression requires an operator, but no operator was present.")
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Expression requires an operator or argument, but neither was present.")
         }
-        // First element must be an operator
-        let decodedOperator = try container.decode(Operator.self)
-        elements.append(.operator(decodedOperator))
-        // Subsequent elemenets must be arguments
+        // First element can be an operator or argument
+        if let decodedOperator = try? container.decode(Operator.self) {
+            elements.append(.operator(decodedOperator))
+        }
+        // Subsequent elements must be arguments
         while !container.isAtEnd {
             let decodedArgument = try container.decode(Argument.self)
             elements.append(.argument(decodedArgument))

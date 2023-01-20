@@ -160,6 +160,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         symbolLayer.textField = clusterOptions.textField
         symbolLayer.textSize = clusterOptions.textSize
         symbolLayer.textColor = clusterOptions.textColor
+        symbolLayer.filter = Exp(.has) { "point_count" }
         return symbolLayer
     }
 

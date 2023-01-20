@@ -824,6 +824,7 @@ jobs:
               -resultBundlePath MapboxMapsTests-integration.xcresult | tee -a xcodebuild.log | xcpretty --report junit --output junit/integration/junit.xml
 
             find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' -exec mv {} Coverage-integrationtests.profdata \;
+          when: always
       - when:
           condition: << parameters.codecoverage >>
           steps:

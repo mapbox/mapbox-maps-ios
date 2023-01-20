@@ -65,6 +65,7 @@ workflows:
           context:
             - Slack Orb
             - SDK Registry Token
+            - Maps SDK/Public Mapbox Token
           configuration: "Release"
           report_failure: true
       - run-unit-tests:
@@ -256,6 +257,7 @@ workflows:
           context:
             - Slack Orb
             - SDK Registry Token
+            - Maps SDK/Public Mapbox Token
           name: Build unit tests
       - run-unit-tests:
           context:
@@ -283,6 +285,7 @@ workflows:
           context:
             - Slack Orb
             - SDK Registry Token
+            - Maps SDK/Public Mapbox Token
           name: build-unit-tests-min-turf
           turf-revision: v2.0.0
 

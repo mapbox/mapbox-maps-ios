@@ -70,6 +70,7 @@ workflows:
       - run-unit-tests:
           context:
             - Slack Orb
+            - Maps SDK/Public Mapbox Token
           xcode: 14.1.0
           matrix:
             parameters:
@@ -79,6 +80,7 @@ workflows:
       - run-unit-tests:
           context:
             - Slack Orb
+            - Maps SDK/Public Mapbox Token
           xcode: 12.5.1
           matrix:
             parameters:
@@ -258,6 +260,7 @@ workflows:
       - run-unit-tests:
           context:
             - Slack Orb
+            - Maps SDK/Public Mapbox Token
           xcode: 14.1.0
           codecoverage: true
           matrix:
@@ -268,6 +271,7 @@ workflows:
       - run-unit-tests:
           context:
             - Slack Orb
+            - Maps SDK/Public Mapbox Token
           xcode: 12.5.1
           matrix:
             parameters:
@@ -285,6 +289,7 @@ workflows:
       - run-unit-tests:
           context:
             - Slack Orb
+            - Maps SDK/Public Mapbox Token
           name: run-unit-tests-min-turf
           xcode: 13.1.0
           destination: OS=15.0,name=iPhone 12

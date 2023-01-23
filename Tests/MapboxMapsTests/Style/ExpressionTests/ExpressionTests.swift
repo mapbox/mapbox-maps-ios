@@ -162,7 +162,7 @@ final class ExpressionTests: XCTestCase {
         XCTAssertEqual(sumExpression.description, "[[+, [accumulated], [get, sum]], [get, scalerank]]")
     }
 
-    func testDecodingOperatorlessExpression() {
+    func testDecodingForOperatorlessExpression() {
 
         let expressionString =
         """
@@ -184,6 +184,10 @@ final class ExpressionTests: XCTestCase {
                 Exp(.get) { "scalerank" }
             }
             XCTAssertEqual(decodedExpression, matchingExpression)
+            XCTAssertNoThrow(decodedExpression.operator)
+            XCTAssertNoThrow(decodedExpression.arguments)
+            XCTAssertEqual(decodedExpression.operator.rawValue, "+")
+            XCTAssertEqual(decodedExpression.arguments.description, "[[+, [accumulated], [get, sum]], [get, scalerank]]")
         } catch {
             print(error)
             XCTFail("Could not decode json as expression")
@@ -221,5 +225,54 @@ final class ExpressionTests: XCTestCase {
         } catch {
             XCTFail("Could not decode json as expression")
         }
+    }
+
+    func testAccessExpressionOperatorForOperatorlessExpression() throws {
+        let expectedExpressionOperator = Exp(.sum).operator
+        let sumExpression = Exp {
+            Exp(.sum) {
+                Exp(.accumulated)
+                Exp(.get) { "sum" }
+            }
+            Exp(.get) { "scalerank" }
+        }
+
+        let sumExpressionOperator = sumExpression.operator
+
+        XCTAssertNoThrow(sumExpression.operator)
+        XCTAssertEqual(expectedExpressionOperator, sumExpressionOperator)
+    }
+
+    func testAccessExpressionArgumentsForOperatorlessExpression() throws {
+        let expectedExpressionArguments: [Expression.Argument] = [Expression.Argument.expression(Exp(.sum) {
+            Exp(.accumulated)
+            Exp(.get) { "sum" }
+        }), Expression.Argument.expression(Exp(.get) { "scalerank" })]
+
+        let sumExpression = Exp {
+            Exp(.sum) {
+                Exp(.accumulated)
+                Exp(.get) { "sum" }
+            }
+            Exp(.get) { "scalerank" }
+        }
+
+        let sumExpressionArguments = sumExpression.arguments
+        XCTAssertNoThrow(sumExpression.arguments)
+        XCTAssertEqual(expectedExpressionArguments, sumExpressionArguments)
+    }
+
+    func testAccessExpressionDescriptionForOperatorlessExpression() throws {
+        let expectedExpressionDescription = "[[+, [accumulated], [get, sum]], [get, scalerank]]"
+        let sumExpression = Exp {
+            Exp(.sum) {
+                Exp(.accumulated)
+                Exp(.get) { "sum" }
+            }
+            Exp(.get) { "scalerank" }
+        }
+
+        let sumExpressionDescription = sumExpression.description
+        XCTAssertEqual(expectedExpressionDescription, sumExpressionDescription)
     }
 }

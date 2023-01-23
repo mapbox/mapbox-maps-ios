@@ -17,20 +17,34 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
 
     /// The operator of this expression
     public var `operator`: Operator {
-        guard let first = elements.first, case Element.operator(let op) = first else {
-            fatalError("First element of the expression is not an operator.")
+        var firstElement = elements.first
+        /// If the expression starts with an argument instead of an operator, return the first operator of a contained expression if available.
+        if case let .argument(firstArgument) = firstElement,
+           case let .expression(firstExpression) = firstArgument {
+            firstElement = firstExpression.elements.first
+        }
+
+        guard let first = firstElement, case Element.operator(let op) = first else {
+            fatalError("First element of the expression is not an operator nor another expression.")
         }
         return op
     }
 
     /// The arguments contained in this expression
     public var arguments: [Argument] {
-        return elements.dropFirst().map { (element) -> Argument in
-            guard case Element.argument(let arg) = element else {
-                fatalError("All elements after the first element in the expression must be arguments.")
-            }
-            return arg
+        /// If the expression starts with an argument instead of an operator, return all of the arguments
+        if case .argument = elements.first {
+            return elements.map(returnArgument)
         }
+        return elements.dropFirst().map(returnArgument)
+    }
+
+    /// Check if element is argument and return, fatalError if not
+    internal func returnArgument(element: Element) -> Argument {
+        guard case Element.argument(let arg) = element else {
+            fatalError("All elements after the first element in the expression must be arguments.")
+        }
+        return arg
     }
 
     public init(_ op: Operator,

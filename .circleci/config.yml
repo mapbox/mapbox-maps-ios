@@ -86,7 +86,7 @@ workflows:
               destination: ["OS=13.7,name=iPhone 11", "OS=14.5,name=iPhone 11"]
           requires:
             - build-unit-tests
-      - build-tests:
+      - build-host-tests:
           context:
             - Slack Orb
             - Fastlane Match
@@ -134,7 +134,7 @@ workflows:
           filters:
             branches:
               ignore: main
-      - build-tests:
+      - build-host-tests:
           context:
             - Slack Orb
             - Fastlane Match
@@ -297,7 +297,7 @@ workflows:
       # Build all tests with host application
       # Run on main by default
       # Can be approved to run on other branches
-      - build-tests:
+      - build-host-tests:
           context:
             - Slack Orb
             - Fastlane Match
@@ -887,7 +887,7 @@ jobs:
             - report-failure:
                 message: "Unit test failed: << parameters.destination >>, Xcode: << parameters.xcode >>"
 
-  build-tests:
+  build-host-tests:
     executor: xcode-latest
     resource_class: macos.x86.medium.gen2
     steps:

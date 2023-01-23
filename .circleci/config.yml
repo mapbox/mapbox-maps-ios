@@ -61,7 +61,7 @@ workflows:
           matrix:
             parameters:
               xcode: ["13.1.0", "13.2.1"]
-      - build-unit-tests:
+      - build-tests:
           context:
             - Slack Orb
             - SDK Registry Token
@@ -76,7 +76,7 @@ workflows:
             parameters:
               destination: ["OS=15.5,name=iPhone 13", "OS=16.1,name=iPhone 14"]
           requires:
-            - build-unit-tests
+            - build-tests
       - run-unit-tests:
           context:
             - Slack Orb
@@ -85,7 +85,7 @@ workflows:
             parameters:
               destination: ["OS=13.7,name=iPhone 11", "OS=14.5,name=iPhone 11"]
           requires:
-            - build-unit-tests
+            - build-tests
       - build-host-tests:
           context:
             - Slack Orb
@@ -251,7 +251,7 @@ workflows:
               only: main
 
       # Run unit tests on CI simulator
-      - build-unit-tests:
+      - build-tests:
           context:
             - Slack Orb
             - SDK Registry Token
@@ -277,12 +277,12 @@ workflows:
           requires:
             - Build unit tests
 
-      - build-unit-tests:
+      - build-tests:
           context:
             - Slack Orb
             - SDK Registry Token
             - Maps SDK/Public Mapbox Token
-          name: build-unit-tests-min-turf
+          name: build-tests-min-turf
           turf-revision: v2.0.0
 
       - run-unit-tests:
@@ -292,7 +292,7 @@ workflows:
           xcode: 13.1.0
           destination: OS=15.0,name=iPhone 12
           requires:
-            - build-unit-tests-min-turf
+            - build-tests-min-turf
 
       # Build all tests with host application
       # Run on main by default
@@ -739,7 +739,7 @@ jobs:
                           scripts/ci-trigger/ci-e2e-compatibility-start-pipeline.py --config mapbox-maps-ios=${CIRCLE_SHA1} --platform all --versions ${E2E_VERSION_CONFIG}
                       name: Trigger E2E SDK test validation pipeline
 
-  build-unit-tests:
+  build-tests:
     parameters:
       configuration:
         type: string

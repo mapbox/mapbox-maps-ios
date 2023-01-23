@@ -94,7 +94,7 @@ workflows:
             - Apple Machine account
             - Maps SDK/Public Mapbox Token
           name: Build MapboxTestHost tests
-      - run-tests:
+      - run-firebase-tests:
           context:
             - Slack Orb
             - Maps SDK/Google Cloud credentials
@@ -110,7 +110,7 @@ workflows:
             - Apple Machine account
             - Maps SDK/Public Mapbox Token
           name: Build Examples tests
-      - run-tests:
+      - run-firebase-tests:
           context:
             - Slack Orb
             - Maps SDK/Google Cloud credentials
@@ -144,7 +144,7 @@ workflows:
           name: Build MapboxTestHost tests [non-main]
           requires:
             - run-tests?
-      - run-tests:
+      - run-firebase-tests:
           context:
             - Slack Orb
             - Maps SDK/Google Cloud credentials
@@ -169,7 +169,7 @@ workflows:
           name: Build Examples tests [non-main]
           requires:
             - run-examples-tests?
-      - run-tests:
+      - run-firebase-tests:
           context:
             - Slack Orb
             - Maps SDK/Google Cloud credentials
@@ -305,7 +305,7 @@ workflows:
             - Apple Machine account
             - Maps SDK/Public Mapbox Token
           name: Build MapboxTestHost tests
-      - run-tests:
+      - run-firebase-tests:
           context:
             - Slack Orb
             - Maps SDK/Google Cloud credentials
@@ -328,7 +328,7 @@ workflows:
             - Apple Machine account
             - Maps SDK/Public Mapbox Token
           name: Build Examples tests
-      - run-tests:
+      - run-firebase-tests:
           context:
             - Slack Orb
             - Maps SDK/Google Cloud credentials
@@ -907,7 +907,7 @@ jobs:
             - build_products.zip
       - slack-notify-failure-if-any
 
-  run-tests:
+  run-firebase-tests:
     parameters:
       devices:
         default: |

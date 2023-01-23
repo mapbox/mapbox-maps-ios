@@ -68,6 +68,7 @@ workflows:
             - Maps SDK/Public Mapbox Token
           configuration: "Release"
           report_failure: true
+          name: Build tests
       - run-unit-tests:
           context:
             - Slack Orb
@@ -76,7 +77,7 @@ workflows:
             parameters:
               destination: ["OS=15.5,name=iPhone 13", "OS=16.1,name=iPhone 14"]
           requires:
-            - build-tests
+            - Build tests
       - run-unit-tests:
           context:
             - Slack Orb
@@ -85,7 +86,7 @@ workflows:
             parameters:
               destination: ["OS=13.7,name=iPhone 11", "OS=14.5,name=iPhone 11"]
           requires:
-            - build-tests
+            - Build tests
       - build-host-tests:
           context:
             - Slack Orb
@@ -256,7 +257,7 @@ workflows:
             - Slack Orb
             - SDK Registry Token
             - Maps SDK/Public Mapbox Token
-          name: Build unit tests
+          name: Build tests
       - run-unit-tests:
           context:
             - Slack Orb
@@ -266,7 +267,7 @@ workflows:
             parameters:
               destination: ["OS=15.5,name=iPhone 13", "OS=16.1,name=iPhone 14"]
           requires:
-            - Build unit tests
+            - Build tests
       - run-unit-tests:
           context:
             - Slack Orb
@@ -275,7 +276,7 @@ workflows:
             parameters:
               destination: ["OS=13.7,name=iPhone 11", "OS=14.5,name=iPhone 11"]
           requires:
-            - Build unit tests
+            - Build tests
 
       - build-tests:
           context:

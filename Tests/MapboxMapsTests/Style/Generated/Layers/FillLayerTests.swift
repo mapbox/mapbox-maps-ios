@@ -90,7 +90,6 @@ final class FillLayerTests: XCTestCase {
        layer.fillOutlineColor = Value<StyleColor>.testConstantValue()
        layer.fillOutlineColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.fillPattern = Value<ResolvedImage>.testConstantValue()
-       layer.fillPatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.fillTranslate = Value<[Double]>.testConstantValue()
        layer.fillTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.fillTranslateAnchor = Value<FillTranslateAnchor>.testConstantValue()

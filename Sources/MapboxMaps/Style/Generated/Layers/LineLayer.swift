@@ -49,6 +49,7 @@ public struct LineLayer: Layer {
     public var lineDasharray: Value<[Double]>?
 
     /// Transition options for `lineDasharray`.
+    @available(*, deprecated, message: "This property is deprecated and will be removed in the future. Setting this will have no effect.")
     public var lineDasharrayTransition: StyleTransition?
 
     /// Draws a line casing outside of a line's actual path. Value indicates the width of the inner gap.
@@ -76,6 +77,7 @@ public struct LineLayer: Layer {
     public var linePattern: Value<ResolvedImage>?
 
     /// Transition options for `linePattern`.
+    @available(*, deprecated, message: "This property is deprecated and will be removed in the future. Setting this will have no effect.")
     public var linePatternTransition: StyleTransition?
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
@@ -118,7 +120,6 @@ public struct LineLayer: Layer {
         try paintContainer.encodeIfPresent(lineColor, forKey: .lineColor)
         try paintContainer.encodeIfPresent(lineColorTransition, forKey: .lineColorTransition)
         try paintContainer.encodeIfPresent(lineDasharray, forKey: .lineDasharray)
-        try paintContainer.encodeIfPresent(lineDasharrayTransition, forKey: .lineDasharrayTransition)
         try paintContainer.encodeIfPresent(lineGapWidth, forKey: .lineGapWidth)
         try paintContainer.encodeIfPresent(lineGapWidthTransition, forKey: .lineGapWidthTransition)
         try paintContainer.encodeIfPresent(lineGradient, forKey: .lineGradient)
@@ -127,7 +128,6 @@ public struct LineLayer: Layer {
         try paintContainer.encodeIfPresent(lineOpacity, forKey: .lineOpacity)
         try paintContainer.encodeIfPresent(lineOpacityTransition, forKey: .lineOpacityTransition)
         try paintContainer.encodeIfPresent(linePattern, forKey: .linePattern)
-        try paintContainer.encodeIfPresent(linePatternTransition, forKey: .linePatternTransition)
         try paintContainer.encodeIfPresent(lineTranslate, forKey: .lineTranslate)
         try paintContainer.encodeIfPresent(lineTranslateTransition, forKey: .lineTranslateTransition)
         try paintContainer.encodeIfPresent(lineTranslateAnchor, forKey: .lineTranslateAnchor)
@@ -160,7 +160,6 @@ public struct LineLayer: Layer {
             lineColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .lineColor)
             lineColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineColorTransition)
             lineDasharray = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .lineDasharray)
-            lineDasharrayTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineDasharrayTransition)
             lineGapWidth = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineGapWidth)
             lineGapWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineGapWidthTransition)
             lineGradient = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .lineGradient)
@@ -169,7 +168,6 @@ public struct LineLayer: Layer {
             lineOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineOpacity)
             lineOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineOpacityTransition)
             linePattern = try paintContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .linePattern)
-            linePatternTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .linePatternTransition)
             lineTranslate = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .lineTranslate)
             lineTranslateTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineTranslateTransition)
             lineTranslateAnchor = try paintContainer.decodeIfPresent(Value<LineTranslateAnchor>.self, forKey: .lineTranslateAnchor)
@@ -215,7 +213,6 @@ public struct LineLayer: Layer {
         case lineColor = "line-color"
         case lineColorTransition = "line-color-transition"
         case lineDasharray = "line-dasharray"
-        case lineDasharrayTransition = "line-dasharray-transition"
         case lineGapWidth = "line-gap-width"
         case lineGapWidthTransition = "line-gap-width-transition"
         case lineGradient = "line-gradient"
@@ -224,7 +221,6 @@ public struct LineLayer: Layer {
         case lineOpacity = "line-opacity"
         case lineOpacityTransition = "line-opacity-transition"
         case linePattern = "line-pattern"
-        case linePatternTransition = "line-pattern-transition"
         case lineTranslate = "line-translate"
         case lineTranslateTransition = "line-translate-transition"
         case lineTranslateAnchor = "line-translate-anchor"

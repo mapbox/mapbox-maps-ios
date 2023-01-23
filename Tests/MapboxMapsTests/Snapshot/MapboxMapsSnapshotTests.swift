@@ -66,15 +66,14 @@ class MapboxMapsSnapshotTests: XCTestCase {
         weak var weakSnapshotter: Snapshotter?
         let options = try snapshotterOptions()
         let expectation = self.expectation(description: "snapshot")
+        expectation.isInverted = true
          autoreleasepool {
             let snapshotter = Snapshotter(options: options)
             weakSnapshotter = snapshotter
             weakSnapshotter?.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5))
             weakSnapshotter?.style.JSON = emptyBlueStyle
-            weakSnapshotter?.start(overlayHandler: nil) { (result) in
+            weakSnapshotter?.start(overlayHandler: nil) { _ in
                 expectation.fulfill()
-                XCTAssertNotNil(result)
-                XCTAssertNil(weakSnapshotter)
             }
         }
         XCTAssertNil(weakSnapshotter)

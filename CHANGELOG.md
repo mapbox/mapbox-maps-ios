@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## main
+
+* Improve stability of attribution parsing. ([#1849](https://github.com/mapbox/mapbox-maps-ios/pull/1849))
+
 ## 10.11.0-beta.1 - January 12, 2023
 
 * Reduce CPU usage/energy consumption whem map idling while showing user location. ([#1789](https://github.com/mapbox/mapbox-maps-ios/pull/1789))

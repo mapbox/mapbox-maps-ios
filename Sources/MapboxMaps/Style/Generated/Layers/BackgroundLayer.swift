@@ -34,7 +34,7 @@ public struct BackgroundLayer: Layer {
     public var backgroundPattern: Value<ResolvedImage>?
 
     /// Transition options for `backgroundPattern`.
-    @available(*, deprecated, message: "This property is deprecated and will be removed in v11. Setting this will take no effect.")
+    @available(*, deprecated, message: "This property is deprecated and will be removed in the future. Setting this will have no effect.")
     public var backgroundPatternTransition: StyleTransition?
 
     public init(id: String) {

@@ -49,7 +49,7 @@ public struct LineLayer: Layer {
     public var lineDasharray: Value<[Double]>?
 
     /// Transition options for `lineDasharray`.
-    @available(*, deprecated, message: "This property is deprecated and will be removed in v11. Setting this will take no effect.")
+    @available(*, deprecated, message: "This property is deprecated and will be removed in the future. Setting this will have no effect.")
     public var lineDasharrayTransition: StyleTransition?
 
     /// Draws a line casing outside of a line's actual path. Value indicates the width of the inner gap.
@@ -77,7 +77,7 @@ public struct LineLayer: Layer {
     public var linePattern: Value<ResolvedImage>?
 
     /// Transition options for `linePattern`.
-    @available(*, deprecated, message: "This property is deprecated and will be removed in v11. Setting this will take no effect.")
+    @available(*, deprecated, message: "This property is deprecated and will be removed in the future. Setting this will have no effect.")
     public var linePatternTransition: StyleTransition?
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.

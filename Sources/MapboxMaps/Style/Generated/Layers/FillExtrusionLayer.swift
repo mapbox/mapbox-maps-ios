@@ -58,7 +58,7 @@ public struct FillExtrusionLayer: Layer {
     public var fillExtrusionPattern: Value<ResolvedImage>?
 
     /// Transition options for `fillExtrusionPattern`.
-    @available(*, deprecated, message: "This property is deprecated and will be removed in v11. Setting this will take no effect.")
+    @available(*, deprecated, message: "This property is deprecated and will be removed in the future. Setting this will have no effect.")
     public var fillExtrusionPatternTransition: StyleTransition?
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up (on the flat plane), respectively.

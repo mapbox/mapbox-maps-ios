@@ -46,7 +46,7 @@ public struct FillLayer: Layer {
     public var fillPattern: Value<ResolvedImage>?
 
     /// Transition options for `fillPattern`.
-    @available(*, deprecated, message: "This property is deprecated and will be removed in v11. Setting this will take no effect.")
+    @available(*, deprecated, message: "This property is deprecated and will be removed in the future. Setting this will have no effect.")
     public var fillPatternTransition: StyleTransition?
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.

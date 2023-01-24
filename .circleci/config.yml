@@ -68,7 +68,7 @@ workflows:
             - Maps SDK/Public Mapbox Token
           configuration: "Release"
           report_failure: true
-          name: Build tests
+          name: Build tests (nightly)
       - run-unit-tests:
           context:
             - Slack Orb
@@ -77,7 +77,7 @@ workflows:
             parameters:
               destination: ["OS=15.5,name=iPhone 13", "OS=16.1,name=iPhone 14"]
           requires:
-            - Build tests
+            - Build tests (nightly)
       - run-unit-tests:
           context:
             - Slack Orb
@@ -86,7 +86,7 @@ workflows:
             parameters:
               destination: ["OS=13.7,name=iPhone 11", "OS=14.5,name=iPhone 11"]
           requires:
-            - Build tests
+            - Build tests (nightly)
       - build-host-tests:
           context:
             - Slack Orb
@@ -828,67 +828,27 @@ jobs:
               -xctestrun "$XCTESTRUN_PATH" \
               -parallel-testing-enabled NO \
               -destination 'platform=iOS Simulator,<< parameters.destination >>' \
-              -resultBundlePath MapboxMapsTests.xcresult | tee xcodebuild.log | xcpretty --report junit --output junit/unitTests/junit.xml
+              -resultBundlePath MapboxMapsTests.xcresult | tee xcodebuild.log | xcpretty --report junit --output junit.xml
 
-            find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' -exec mv {} Coverage-unittests.profdata \;
-            find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profraw' -exec mv {} . \;
+            find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' -exec cp {} . \;
+            find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profraw' -exec cp {} . \;
       - when:
           condition: << parameters.codecoverage >>
           steps:
-            - run:
-                name: Generate code coverage report
-                command: |
-                  BINARY_PATH="$(find build -name "MapboxMaps.o" | head -1)"
-
-                  xcrun llvm-cov export -arch $(uname -m) -format="lcov" \
-                    -instr-profile="Coverage-unittests.profdata" \
-                    "$BINARY_PATH" > coverage.lcov
-                  xcrun llvm-cov export -arch $(uname -m) -format="lcov" \
-                    -instr-profile="Coverage-integrationtests.profdata" \
-                    "$BINARY_PATH" > coverage-integrationtests.lcov
-                  xcrun llvm-cov export -arch $(uname -m) -format=text \
-                    -instr-profile="Coverage-unittests.profdata" \
-                    "$BINARY_PATH" > coverage.txt
-                  xcrun llvm-cov export -arch $(uname -m) -format=text \
-                    -instr-profile="Coverage-integrationtests.profdata" \
-                    "$BINARY_PATH" > coverage-integrationtests.txt
-
-                    zip -r coverage.zip coverage.lcov coverage-integrationtests.lcov coverage.txt coverage-integrationtests.txt "$BINARY_PATH" "$COVERAGE_PATH" junit
-            - install-python-dependencies
-            - install-mbx-ci
-            - run:
-                name: Send code coverage
-                command: |
-                  curl -Os https://uploader.codecov.io/latest/macos/codecov
-                  chmod +x codecov
-                  ./codecov -f coverage.lcov -F unit
-                  ./codecov -f coverage-integrationtests.lcov -F integration
-
-                  echo "Uploading to S3" ; \
-                  python3 ./scripts/code-coverage/parse-code-coverage.py \
-                    -g . \
-                    -c MapboxMaps \
-                    --scheme MapboxMaps \
-                    --report coverage.txt
-            - store_artifacts:
-                path: coverage.zip
+            - collect-code-coverage
       - run:
           name: Compress XCResult
-          command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult MapboxMapsTests-integration.xcresult
+          command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
           when: always
       - store_test_results:
-          path: junit
+          path: junit.xml
       - store_artifacts:
           path: MapboxMapsTests.xcresult.zip
       - store_artifacts:
           path: xcodebuild.log
       - store_artifacts:
           path: ~/Library/Logs/DiagnosticReports
-      - when:
-          condition:
-            equal: [ "main", << pipeline.git.branch >>]
-          steps:
-            - report-failure:
+      - report-failure:
                 message: "Unit test failed: << parameters.destination >>, Xcode: << parameters.xcode >>"
 
   run-integration-tests:
@@ -920,12 +880,14 @@ jobs:
               -xctestrun "$XCTESTRUN_PATH" \
               -parallel-testing-enabled NO \
               -destination 'platform=iOS Simulator,<< parameters.destination >>' \
-              -resultBundlePath MapboxMapsTests-integration.xcresult | tee -a xcodebuild.log | xcpretty --report junit --output junit/integration/junit.xml
+              -resultBundlePath MapboxMapsTests.xcresult | tee -a xcodebuild.log | xcpretty --report junit --output junit.xml
 
-            find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' -exec mv {} Coverage-integrationtests.profdata \;
+            find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' -exec cp {} . \;
+      - collect-code-coverage:
+          codecov_flag_name: integration
       - run:
           name: Compress XCResult
-          command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult MapboxMapsTests-integration.xcresult
+          command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
           when: always
       - store_test_results:
           path: junit
@@ -1919,3 +1881,49 @@ commands:
             - << parameters.output >>
       - store_artifacts:
           path: << parameters.output >>
+
+  collect-code-coverage:
+    parameters:
+      profdata_path:
+        type: string
+        default: Coverage.profdata
+      binary_name:
+        type: string
+        default: MapboxMaps.o
+      codecov_flag_name:
+        type: string
+        default: unit
+    steps:
+      - run:
+          name: Generate code coverage report
+          command: |
+            BINARY_PATH="$(find build -name "<< parameters.binary_name >>" | head -1)"
+
+            echo "Generating LCOV code coverage report for $BINARY_PATH"
+            xcrun llvm-cov export -arch $(uname -m) -format="lcov" \
+              -instr-profile="<< parameters.profdata_path >>" \
+              "$BINARY_PATH" > coverage.lcov
+
+            echo "Generating TXT code coverage report for $BINARY_PATH"
+            xcrun llvm-cov export -arch $(uname -m) -format=text \
+              -instr-profile="<< parameters.profdata_path >>" \
+              "$BINARY_PATH" > coverage.txt
+
+              zip -r coverage.zip coverage.lcov coverage.txt "<< parameters.profdata_path >>" "$BINARY_PATH" junit*
+      - install-python-dependencies
+      - install-mbx-ci
+      - run:
+          name: Send code coverage
+          command: |
+            curl -Os https://uploader.codecov.io/latest/macos/codecov
+            chmod +x codecov
+            ./codecov -f coverage.lcov -F << parameters.codecov_flag_name >>
+
+            echo "Uploading to S3" ; \
+            python3 ./scripts/code-coverage/parse-code-coverage.py \
+              -g . \
+              -c MapboxMaps \
+              --scheme MapboxMaps \
+              --report coverage.txt
+      - store_artifacts:
+          path: coverage.zip

@@ -87,6 +87,15 @@ workflows:
               destination: ["OS=13.7,name=iPhone 11", "OS=14.5,name=iPhone 11"]
           requires:
             - Build tests (nightly)
+      - run-integration-tests:
+          context:
+            - Slack Orb
+          xcode: 14.0.1
+          resource_class: macos.m1.large.gen1
+          destination: "name=iPhone 14"
+          requires:
+              - Build tests (nightly)
+          name: Run integration tests (nightly)
       - build-host-tests:
           context:
             - Slack Orb

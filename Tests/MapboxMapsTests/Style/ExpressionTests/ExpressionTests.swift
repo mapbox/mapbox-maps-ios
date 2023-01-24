@@ -275,4 +275,21 @@ final class ExpressionTests: XCTestCase {
         let sumExpressionDescription = sumExpression.description
         XCTAssertEqual(expectedExpressionDescription, sumExpressionDescription)
     }
+
+    func testAccessExpressionOperatorForOperatorlessExpressionWithDepth() throws {
+        let expectedExpressionOperator = Exp(.sum).operator
+        let sumExpression = Exp {
+            Exp {
+                Exp(.sum) {
+                    Exp(.accumulated)
+                    Exp(.get) { "sum" }
+                }
+                Exp(.get) { "scalerank" }
+            }
+        }
+
+        let sumExpressionOperator = sumExpression.operator
+        XCTAssertNoThrow(sumExpression.operator)
+        XCTAssertEqual(expectedExpressionOperator, sumExpressionOperator)
+    }
 }

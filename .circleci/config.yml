@@ -90,9 +90,6 @@ workflows:
       - run-integration-tests:
           context:
             - Slack Orb
-          xcode: 14.0.1
-          resource_class: macos.m1.large.gen1
-          destination: "name=iPhone 14"
           requires:
               - Build tests (nightly)
           name: Run integration tests (nightly)
@@ -289,9 +286,6 @@ workflows:
       - run-integration-tests:
           context:
             - Slack Orb
-          xcode: 14.0.1
-          resource_class: macos.m1.large.gen1
-          destination: "name=iPhone 14"
           requires:
               - Build tests
           name: Run integration tests
@@ -863,6 +857,7 @@ jobs:
     parameters:
       destination:
         type: string
+        default: "name=iPhone 14"
       xcode:
         type: string
         default: "14.0.1"

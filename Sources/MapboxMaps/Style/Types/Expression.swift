@@ -17,17 +17,12 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
 
     /// The operator of this expression
     public var `operator`: Operator {
-        var firstElement = elements.first
-        /// If the expression starts with an argument instead of an operator, return the first operator of a contained expression if available.
-        if case let .argument(firstArgument) = firstElement,
-           case let .expression(firstExpression) = firstArgument {
-            firstElement = firstExpression.elements.first
+        switch elements.first {
+            case .operator(let op): return op
+            case .argument(.expression(let expression)): return expression.operator
+            default:
+                fatalError("First element of the expression is not an operator nor another expression.")
         }
-
-        guard let first = firstElement, case Element.operator(let op) = first else {
-            fatalError("First element of the expression is not an operator nor another expression.")
-        }
-        return op
     }
 
     /// The arguments contained in this expression

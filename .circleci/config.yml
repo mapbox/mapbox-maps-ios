@@ -864,9 +864,6 @@ jobs:
       resource_class:
         type: string
         default: macos.m1.large.gen1
-      codecoverage:
-        type: boolean
-        default: false
     macos:
       xcode: << parameters.xcode >>
     resource_class: << parameters.resource_class >>

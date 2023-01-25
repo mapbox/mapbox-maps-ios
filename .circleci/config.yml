@@ -867,7 +867,8 @@ jobs:
       - store_artifacts:
           path: ~/Library/Logs/DiagnosticReports
       - report-failure:
-                message: "Unit test failed: << parameters.destination >>, Xcode: << parameters.xcode >>"
+          report_failure: true
+          message: "Unit test failed: << parameters.destination >>, Xcode: << parameters.xcode >>"
 
   run-integration-tests:
     parameters:
@@ -1394,6 +1395,9 @@ jobs:
           root: .
           paths:
             - latest
+      - report-failure:
+          report_failure: true
+          message: "Failed to generate docc"
 
   upload-docc:
     executor: xcode-latest
@@ -1409,6 +1413,9 @@ jobs:
             scripts/release/create-docs-prs.sh -sep latest
           environment:
             VERSION: latest
+      - report-failure:
+          report_failure: true
+          message: "Failed to upload docc"
 
 
 # ==============================================================================

@@ -30,8 +30,6 @@ main() {
     maps_ios_upload_docs
 
     # if STAGING_ONLY is set to true, then exit
-
-    # Exit is should be staging only
     [ "$STAGING_ONLY" = true ] && exit 0
     brew_install_if_needed gh
 

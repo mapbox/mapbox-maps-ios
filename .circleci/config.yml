@@ -1402,7 +1402,7 @@ jobs:
       - run:
           name: Create documentation pull requests
           command: |
-            scripts/release/create-docs-prs.sh -s -p latest
+            scripts/release/create-docs-prs.sh -sep latest
           environment:
             VERSION: latest
 

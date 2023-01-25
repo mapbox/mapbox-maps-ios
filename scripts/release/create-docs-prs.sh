@@ -81,6 +81,12 @@ maps_ios_upload_docs() {
         git push --set-upstream origin "$VERSION_BRANCH_NAME" --force --quiet
     fi
 
+    if [ "$EXTRA_EMPTY_COMMIT" = true ]; then
+        info "Add empty commit to trigger CI"
+        git commit --allow-empty -m "Trigger CI" --quiet
+        git push --force --quiet
+    fi
+
     popd > /dev/null
 }
 
@@ -174,10 +180,11 @@ Usage:
 
     -p  Path to the generated docs to upload
     -s  To upload docs to staging only
+    -e  Push an extra empty commit to trigger CI
 HELP_USAGE
 }
 
-while getopts 'p:s' flag; do
+while getopts 'p:se' flag; do
 case "${flag}" in
     p)  DOCS_PATH="$OPTARG"
         if [[ ! -d $DOCS_PATH ]]; then
@@ -185,6 +192,8 @@ case "${flag}" in
         fi
         ;;
     s)  STAGING_ONLY=true
+        ;;
+    e)  EXTRA_EMPTY_COMMIT=true
         ;;
     *) print_usage ;;
 esac

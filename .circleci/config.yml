@@ -390,14 +390,18 @@ workflows:
           context:
             - Slack Orb
             - SDK Registry Token
-          # filters:
-          #   branches:
-          #     only: main
+            - Maps SDK/Public Mapbox Token
+          filters:
+            branches:
+              only: main
       - upload-docc:
           context:
             - Slack Orb
           requires:
             - generate-docc
+          filters:
+            branches:
+              only: main
 
   release:
     jobs:

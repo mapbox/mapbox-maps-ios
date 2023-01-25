@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -euo pipefail
-set -x
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 UTILS_PATH="$SCRIPT_DIR/../utils.sh"
 
@@ -83,6 +82,7 @@ maps_ios_upload_docs() {
 
     if [ "$EXTRA_EMPTY_COMMIT" = true ]; then
         info "Add empty commit to trigger CI"
+        sleep 10 # Avoid CI sometimes cancelling the "Trigger CI" build
         git commit --allow-empty -m "Trigger CI" --quiet
         git push --force --quiet
     fi

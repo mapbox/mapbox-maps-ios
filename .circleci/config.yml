@@ -902,7 +902,7 @@ jobs:
           command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
           when: always
       - store_test_results:
-          path: junit
+          path: junit.xml
       - store_artifacts:
           path: MapboxMapsTests.xcresult.zip
       - store_artifacts:

@@ -386,6 +386,22 @@ workflows:
                   only: /^v.*/
           name: run-sdk-e2e-test-validation
           validation: true
+      - generate-docc:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+            - Maps SDK/Public Mapbox Token
+          filters:
+            branches:
+              only: main
+      - upload-docc:
+          context:
+            - Slack Orb
+          requires:
+            - generate-docc
+          filters:
+            branches:
+              only: main
 
   release:
     jobs:
@@ -851,7 +867,8 @@ jobs:
       - store_artifacts:
           path: ~/Library/Logs/DiagnosticReports
       - report-failure:
-                message: "Unit test failed: << parameters.destination >>, Xcode: << parameters.xcode >>"
+          report_failure: true
+          message: "Unit test failed: << parameters.destination >>, Xcode: << parameters.xcode >>"
 
   run-integration-tests:
     parameters:
@@ -890,7 +907,7 @@ jobs:
           command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
           when: always
       - store_test_results:
-          path: junit
+          path: junit.xml
       - store_artifacts:
           path: MapboxMapsTests.xcresult.zip
       - store_artifacts:
@@ -1352,6 +1369,54 @@ jobs:
                           "mapbox_sync_branch": "'$CIRCLE_BRANCH'"
                         }
                       }'
+
+  generate-docc:
+    executor: xcode-latest
+    steps:
+      - checkout
+      - configure-environment:
+          skip-dependencies: true
+      - run:
+          name: Generate docc
+          command: |
+            xcodebuild docbuild -config Release -scheme MapboxMaps -destination "generic/platform=iOS"
+            DOCCARCHIVE_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "MapboxMaps.doccarchive" | head -1)
+            echo "Found DocC archive at: $DOCCARCHIVE_PATH"
+            cp -r $DOCCARCHIVE_PATH MapboxMaps.doccarchive
+            ls -la MapboxMaps.doccarchive
+            zip -r MapboxMaps.doccarchive.zip MapboxMaps.doccarchive
+
+            xcrun docc process-archive transform-for-static-hosting MapboxMaps.doccarchive \
+              --output-path latest \
+              --hosting-base-path "ios/maps/api/latest/"
+      - store_artifacts:
+          path: MapboxMaps.doccarchive.zip
+      - persist_to_workspace:
+          root: .
+          paths:
+            - latest
+      - report-failure:
+          report_failure: true
+          message: "Failed to generate docc"
+
+  upload-docc:
+    executor: xcode-latest
+    steps:
+      - checkout
+      - configure-environment:
+          skip-dependencies: true
+      - attach_workspace:
+          at: .
+      - run:
+          name: Create documentation pull requests
+          command: |
+            scripts/release/create-docs-prs.sh -sep latest
+          environment:
+            VERSION: latest
+      - report-failure:
+          report_failure: true
+          message: "Failed to upload docc"
+
 
 # ==============================================================================
 # Reusable commands

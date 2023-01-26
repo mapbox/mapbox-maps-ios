@@ -82,6 +82,7 @@ workflows:
           context:
             - Slack Orb
           xcode: 12.5.1
+          disable_codecoverage: true
           matrix:
             parameters:
               destination: ["OS=13.7,name=iPhone 11", "OS=14.5,name=iPhone 11"]

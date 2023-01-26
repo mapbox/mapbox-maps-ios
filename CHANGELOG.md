@@ -9,6 +9,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Improve stability of attribution parsing. ([#1849](https://github.com/mapbox/mapbox-maps-ios/pull/1849))
 * Enable `Expression` to be created without an operator so `clusterProperties` can support advanced use cases. ([#1855](https://github.com/mapbox/mapbox-maps-ios/pull/1855))
 * Update CoreMaps `10.11.0-rc.1` and CommonSDK `23.3.0-rc.1`. ([#1856](https://github.com/mapbox/mapbox-maps-ios/pull/1875))
+* Angle normalization function was improved to prevent map spinning on close angles. ([#1828](https://github.com/mapbox/mapbox-maps-ios/pull/1828))
 
 ## 10.11.0-beta.1 - January 12, 2023
 

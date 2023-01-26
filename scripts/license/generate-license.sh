@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+if [ -z "${GITHUB_TOKEN}" ]; then
+    echo "This script requires GITHUB_TOKEN variable to be set."
+    exit 1
+fi
+
 COREMAPS_VERSION=$(jq -r .MapboxCoreMaps scripts/release/packager/versions.json)
 TURF_VERSION=$(jq -r .Turf scripts/release/packager/versions.json)
 LICENSE_HEADER=$(<scripts/license/LICENSE-header.md)

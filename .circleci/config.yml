@@ -564,7 +564,9 @@ jobs:
       - run:
           name: Check for up-to-date LICENSE.md
           command: |
+            export GITHUB_TOKEN=$(mbx-ci github reader token)
             EXPECTED_LICENSE=$(scripts/license/generate-license.sh)
+
             if [[ "$(cat LICENSE.md)" == "$EXPECTED_LICENSE" ]];
             then
               echo "LICENSE.md is up-to-date"

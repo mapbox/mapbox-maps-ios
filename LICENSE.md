@@ -11,6 +11,7 @@ The software and files in this repository (collectively, “Software”) are lic
 ## Acknowledgements
 
 This application makes use of the following third party libraries:
+
 ### turf-swift, https://github.com/mapbox/turf-swift
 
 ```

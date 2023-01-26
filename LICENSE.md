@@ -1,4 +1,4 @@
-// This file is generated.
+<!-- This file is generated. -->
 ## License
 
 Mapbox Maps for iOS version 10.0
@@ -1446,4 +1446,4 @@ All other rights reserved.
 ```
 
 ---
-// End of generated file.
+<!-- End of generated file. -->

@@ -19,7 +19,8 @@ class OfflineGuideIntegrationTests: XCTestCase {
         do {
             accessToken = try mapboxAccessToken()
         } catch {
-            throw XCTSkip("Mapbox access token not found")
+            XCTFail("Mapbox access token not found")
+            return
         }
 
         tileStorePathURL = try temporaryCacheDirectory()

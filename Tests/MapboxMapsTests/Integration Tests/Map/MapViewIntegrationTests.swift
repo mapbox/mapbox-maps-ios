@@ -12,7 +12,8 @@ final class MapViewIntegrationTests: IntegrationTestCase {
         try guardForMetalDevice()
 
         guard let root = rootViewController?.view else {
-            throw XCTSkip("No valid UIWindow or root view controller")
+            XCTFail("No valid UIWindow or root view controller")
+            return
         }
         rootView = root
 
@@ -46,10 +47,11 @@ final class MapViewIntegrationTests: IntegrationTestCase {
 
     func testMapViewIsReleasedAfterCameraTransition() throws {
         weak var weakMapView: MapView?
-        try autoreleasepool {
+        autoreleasepool {
 
             guard let rootView = rootViewController?.view else {
-                throw XCTSkip("No valid UIWindow or root view controller")
+                XCTFail("No valid UIWindow or root view controller")
+                return
             }
 
             let expectation = self.expectation(description: "wait for map")
@@ -81,9 +83,10 @@ final class MapViewIntegrationTests: IntegrationTestCase {
         weak var weakViewport: Viewport?
         weak var weakMapView: MapView?
 
-        try autoreleasepool {
+        autoreleasepool {
             guard let rootView = rootViewController?.view else {
-                throw XCTSkip("No valid UIWindow or root view controller")
+                XCTFail("No valid UIWindow or root view controller")
+                return
             }
 
             let expectation = self.expectation(description: "wait for map")

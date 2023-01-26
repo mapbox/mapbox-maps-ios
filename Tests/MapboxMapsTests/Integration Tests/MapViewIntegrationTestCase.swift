@@ -19,7 +19,8 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
 
         guard let window = window,
               let rootView = rootViewController?.view else {
-            throw XCTSkip("No valid UIWindow or root view controller")
+            XCTFail("No valid UIWindow or root view controller")
+            return
         }
 
         let resourceOptions = ResourceOptions(accessToken: accessToken,

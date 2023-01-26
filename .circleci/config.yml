@@ -8,7 +8,7 @@ parameters:
 
 orbs:
   # https://circleci.com/orbs/registry/orb/circleci/slack
-  slack: circleci/slack@4.5
+  slack: circleci/slack@4
 
 
 ### Shared anchors
@@ -45,47 +45,90 @@ workflows:
               only:
                 - main
     jobs:
-      - swiftlint
-      - depsvalidator
+      - swiftlint:
+          context:
+            - Slack Orb
+      - depsvalidator:
+          context:
+            - Slack Orb
       - build-sdk:
+          context:
+            - Slack Orb
+            - SDK Registry Token
           name: Build SDK
           configuration: "Release"
           report_failure: true
           matrix:
             parameters:
               xcode: ["13.1.0", "13.2.1"]
-      - build-unit-tests:
+      - build-tests:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+            - Maps SDK/Public Mapbox Token
           configuration: "Release"
           report_failure: true
+          name: Build tests (nightly)
       - run-unit-tests:
+          context:
+            - Slack Orb
           xcode: 14.1.0
           matrix:
             parameters:
               destination: ["OS=15.5,name=iPhone 13", "OS=16.1,name=iPhone 14"]
           requires:
-            - build-unit-tests
+            - Build tests (nightly)
       - run-unit-tests:
+          context:
+            - Slack Orb
           xcode: 12.5.1
           matrix:
             parameters:
               destination: ["OS=13.7,name=iPhone 11", "OS=14.5,name=iPhone 11"]
           requires:
-            - build-unit-tests
-      - build-tests:
+            - Build tests (nightly)
+      - run-integration-tests:
+          context:
+            - Slack Orb
+          requires:
+              - Build tests (nightly)
+          name: Run integration tests (nightly)
+      - build-host-tests:
+          context:
+            - Slack Orb
+            - Fastlane Match
+            - SDK Registry Token
+            - Apple Machine account
+            - Maps SDK/Public Mapbox Token
           name: Build MapboxTestHost tests
-      - run-tests:
+      - run-firebase-tests:
+          context:
+            - Slack Orb
+            - Maps SDK/Google Cloud credentials
           name: Run MapboxTestHost tests
           scheme: MapboxTestHost
           requires:
             - Build MapboxTestHost tests
       - build-examples-tests:
+          context:
+            - Slack Orb
+            - Fastlane Match
+            - SDK Registry Token
+            - Apple Machine account
+            - Maps SDK/Public Mapbox Token
           name: Build Examples tests
-      - run-tests:
+      - run-firebase-tests:
+          context:
+            - Slack Orb
+            - Maps SDK/Google Cloud credentials
           name: Run Examples tests
           scheme: Examples
           requires:
             - Build Examples tests
       - create-xcframework:
+          context:
+            - Slack Orb
+            - SDK Registry Token
           create-xcframework-always-run: true
           report_failure: true
           xcode: "13.1.0"
@@ -98,11 +141,20 @@ workflows:
           filters:
             branches:
               ignore: main
-      - build-tests:
+      - build-host-tests:
+          context:
+            - Slack Orb
+            - Fastlane Match
+            - SDK Registry Token
+            - Apple Machine account
+            - Maps SDK/Public Mapbox Token
           name: Build MapboxTestHost tests [non-main]
           requires:
             - run-tests?
-      - run-tests:
+      - run-firebase-tests:
+          context:
+            - Slack Orb
+            - Maps SDK/Google Cloud credentials
           name: Run MapboxTestHost tests [non-main]
           scheme: MapboxTestHost
           requires:
@@ -115,10 +167,19 @@ workflows:
             branches:
               ignore: main
       - build-examples-tests:
+          context:
+            - Slack Orb
+            - Fastlane Match
+            - SDK Registry Token
+            - Apple Machine account
+            - Maps SDK/Public Mapbox Token
           name: Build Examples tests [non-main]
           requires:
             - run-examples-tests?
-      - run-tests:
+      - run-firebase-tests:
+          context:
+            - Slack Orb
+            - Maps SDK/Google Cloud credentials
           name: Run Examples tests [non-main]
           scheme: Examples
           requires:
@@ -128,33 +189,68 @@ workflows:
   steve:
     unless: << pipeline.parameters.turf-revision >>
     jobs:
-      - sanity-check
-      - swiftlint
+      - sanity-check:
+          context:
+            - Slack Orb
+      - swiftlint:
+          context:
+            - Slack Orb
       - depsvalidator:
+          context:
+            - Slack Orb
           name: Check dependencies versions
       - build-sdk:
+          context:
+            - Slack Orb
+            - SDK Registry Token
           name: Build SDK
           xcode: "13.1.0"
           configuration: "Release"
 
-      - build-sdk-for-api-compatibility-check
-      - build-baseline-sdk
+      - build-sdk-for-api-compatibility-check:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+      - build-baseline-sdk:
+          context:
+            - Slack Orb
+            - SDK Registry Token
       - check-api-compatibility:
+          context:
+            - Slack Orb
           requires:
             - build-sdk-for-api-compatibility-check
             - build-baseline-sdk
-      - create-xcframework
-      - validate-integrations-for-branch
+      - create-xcframework:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+      - validate-integrations-for-branch:
+          context:
+            - Slack Orb
+            - SDK Registry Token
 
       # Trigger mobile-metrics workflows
-      - trigger-metrics-v2
+      - trigger-metrics-v2:
+          context:
+            - Slack Orb
+            - Maps SDK/CircleCI API Token
       - trigger-binary-size:
+          context:
+            - Slack Orb
+            - Maps SDK/CircleCI API Token
           requires:
             - Build SDK
       - trigger-metrics-build:
+          context:
+            - Slack Orb
+            - Maps SDK/CircleCI API Token
           requires:
             - Build SDK
       - trigger-metrics-collection:
+          context:
+            - Slack Orb
+            - Maps SDK/CircleCI API Token
           requires:
             - Build SDK
           filters:
@@ -162,41 +258,70 @@ workflows:
               only: main
 
       # Run unit tests on CI simulator
-      - build-unit-tests:
-          name: Build unit tests
+      - build-tests:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+            - Maps SDK/Public Mapbox Token
+          name: Build tests
       - run-unit-tests:
+          context:
+            - Slack Orb
           xcode: 14.1.0
-          codecoverage: true
           matrix:
             parameters:
               destination: ["OS=15.5,name=iPhone 13", "OS=16.1,name=iPhone 14"]
           requires:
-            - Build unit tests
+            - Build tests
       - run-unit-tests:
+          context:
+            - Slack Orb
           xcode: 12.5.1
+          disable_codecoverage: true
           matrix:
             parameters:
               destination: ["OS=13.7,name=iPhone 11", "OS=14.5,name=iPhone 11"]
           requires:
-            - Build unit tests
+            - Build tests
+      - run-integration-tests:
+          context:
+            - Slack Orb
+          requires:
+              - Build tests
+          name: Run integration tests
 
-      - build-unit-tests:
-          name: build-unit-tests-min-turf
+      - build-tests:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+            - Maps SDK/Public Mapbox Token
+          name: build-tests-min-turf
           turf-revision: v2.0.0
 
       - run-unit-tests:
+          context:
+            - Slack Orb
           name: run-unit-tests-min-turf
           xcode: 13.1.0
           destination: OS=15.0,name=iPhone 12
           requires:
-            - build-unit-tests-min-turf
+            - build-tests-min-turf
 
       # Build all tests with host application
       # Run on main by default
       # Can be approved to run on other branches
-      - build-tests:
+      - build-host-tests:
+          context:
+            - Slack Orb
+            - Fastlane Match
+            - SDK Registry Token
+            - Apple Machine account
+            - Maps SDK/Public Mapbox Token
           name: Build MapboxTestHost tests
-      - run-tests:
+      - run-firebase-tests:
+          context:
+            - Slack Orb
+            - Maps SDK/Google Cloud credentials
           name: Run MapboxTestHost tests
           scheme: MapboxTestHost
           requires:
@@ -209,8 +334,17 @@ workflows:
       # Enabled by-default on 'main' branch
       # Can be approved on purpose for others
       - build-examples-tests:
+          context:
+            - Slack Orb
+            - Fastlane Match
+            - SDK Registry Token
+            - Apple Machine account
+            - Maps SDK/Public Mapbox Token
           name: Build Examples tests
-      - run-tests:
+      - run-firebase-tests:
+          context:
+            - Slack Orb
+            - Maps SDK/Google Cloud credentials
           name: Run Examples tests
           scheme: Examples
           requires:
@@ -221,6 +355,9 @@ workflows:
 
       # Notify internal CI about main and release branch updates
       - trigger-internal-ci-sync:
+          context:
+            - Slack Orb
+            - Maps SDK/CircleCI API Token
           filters:
             branches:
               only:
@@ -229,12 +366,18 @@ workflows:
 
       # Configure triggering end-to-end verification
       - sdk-e2e-test:
+          context:
+            - Slack Orb
+            - Maps SDK/CircleCI API Token
           filters:
               branches:
                   ignore:
                       - main
           name: run-sdk-e2e-test-devel
       - sdk-e2e-test:
+          context:
+            - Slack Orb
+            - Maps SDK/CircleCI API Token
           filters:
               branches:
                   only:
@@ -243,30 +386,71 @@ workflows:
                   only: /^v.*/
           name: run-sdk-e2e-test-validation
           validation: true
+      - generate-docc:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+            - Maps SDK/Public Mapbox Token
+          filters:
+            branches:
+              only: main
+      - upload-docc:
+          context:
+            - Slack Orb
+          requires:
+            - generate-docc
+          filters:
+            branches:
+              only: main
 
   release:
     jobs:
       - release-precheck:
+          context:
+            - Slack Orb
+            - SDK Registry Token
           <<: *release-anchor
           requires: []
       - trigger-metrics-v2:
+          context:
+            - Slack Orb
+            - Maps SDK/CircleCI API Token
           <<: *release-anchor
       - build-baseline-sdk:
+          context:
+            - Slack Orb
+            - SDK Registry Token
           <<: *release-anchor
       - build-dynamic:
+          context:
+            - Slack Orb
+            - SDK Registry Token
           <<: *release-anchor
       - build-static:
+          context:
+            - Slack Orb
+            - SDK Registry Token
           <<: *release-anchor
       - build-docs:
+          context:
+            - Slack Orb
+            - SDK Registry Token
           <<: *release-anchor
       - build-studio-preview:
+          context:
+            - Slack Orb
+            - SDK Registry Token
           <<: *release-anchor
       - check-api-compatibility:
+          context:
+            - Slack Orb
           <<: *release-anchor
           requires:
             - build-baseline-sdk
             - build-dynamic
       - create-registry-pr:
+          context:
+            - Slack Orb
           <<: *release-anchor
           requires:
             - build-static
@@ -279,26 +463,44 @@ workflows:
             - create-registry-pr
           type: approval
       - check-registry:
+          context:
+            - Slack Orb
+            - SDK Registry Token
           <<: *release-anchor
           requires:
             - wait-registry-pr
       - create-docs-prs:
+          context:
+            - Slack Orb
           <<: *release-anchor
           requires:
             - check-registry
       - update-examples:
+          context:
+            - Slack Orb
+            - Fastlane Match
+            - SDK Registry Token
+            - Apple Machine account
           <<: *release-anchor
           requires:
             - check-registry
       - publish-podspec:
+          context:
+            - Slack Orb
+            - CocoaPods trunk token
           <<: *release-anchor
           requires:
             - check-registry
       - validate-integrations:
+          context:
+            - Slack Orb
+            - SDK Registry Token
           <<: *release-anchor
           requires:
             - publish-podspec
       - create-draft-release:
+          context:
+            - Slack Orb
           <<: *release-anchor
           requires:
             - create-docs-prs
@@ -308,7 +510,10 @@ workflows:
   turf-integration:
     when: << pipeline.parameters.turf-revision >>
     jobs:
-      - turf-integration:
+      - turf-integration-job:
+          context:
+            - Slack Orb
+            - SDK Registry Token
           name: "Run Unit Tests"
           turf-revision: << pipeline.parameters.turf-revision >>
 
@@ -430,14 +635,14 @@ jobs:
       - run:
           name: Trigger binary size test
           command: |
-            if [ -n "${CIRCLECI_API_TOKEN_MOBILE_METRICS}" ]; then
+            if [ -n "${CIRCLECI_API_TOKEN}" ]; then
               if [[ $CIRCLE_BRANCH == main ]]; then
-                curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_API_TOKEN_MOBILE_METRICS}
+                curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_API_TOKEN}
               else
-                curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\",\"SOURCE_COMPARE_BASELINE\":\"YES\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_API_TOKEN_MOBILE_METRICS}
+                curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\",\"SOURCE_COMPARE_BASELINE\":\"YES\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_API_TOKEN}
               fi
             else
-              echo "CIRCLECI_API_TOKEN_MOBILE_METRICS not provided"
+              echo "CIRCLECI_API_TOKEN not provided"
             fi
 
   trigger-metrics-build:
@@ -446,18 +651,18 @@ jobs:
       - run:
           name: Build metrics tests
           command: |
-            if [ -n "${CIRCLECI_API_TOKEN_MOBILE_METRICS}" ]; then
+            if [ -n "${CIRCLECI_API_TOKEN}" ]; then
               if [[ $CIRCLE_BRANCH == main ]]; then
-                curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_API_TOKEN_MOBILE_METRICS}
+                curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_API_TOKEN}
               else
                 echo "Trying $CIRCLE_BRANCH first:"
-                if ! curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/$CIRCLE_BRANCH?circle-token=${CIRCLECI_API_TOKEN_MOBILE_METRICS}; then
+                if ! curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/$CIRCLE_BRANCH?circle-token=${CIRCLECI_API_TOKEN}; then
                   echo "Falling back to `master` branch:"
-                  curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_API_TOKEN_MOBILE_METRICS}
+                  curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_API_TOKEN}
                 fi
               fi
             else
-              echo "CIRCLECI_API_TOKEN_MOBILE_METRICS not provided"
+              echo "CIRCLECI_API_TOKEN not provided"
             fi
 
   trigger-metrics-v2:
@@ -475,7 +680,7 @@ jobs:
 
             curl -X POST "https://circleci.com/api/v2/project/github/mapbox/mapbox-maps-ios-internal/pipeline" \
                   -H 'Content-Type: application/json' \
-                  -H "Circle-Token: $CIRCLECI_API_TOKEN_MAPBOX_MAPS_IOS_INTERNAL" \
+                  -H "Circle-Token: $CIRCLECI_API_TOKEN" \
                   -d $'{
                 "branch": "main",
                 "parameters": {
@@ -495,10 +700,10 @@ jobs:
           # TODO: main by default (this is set as a filter), other commits on-demand
           name: Trigger metrics
           command: |
-            if [ -n "${CIRCLECI_API_TOKEN_MOBILE_METRICS}" ]; then
-              curl --fail -X POST --header "Content-Type: application/json" --data "{\"parameters\":{\"run_ios_maps_v10_benchmark\":true,\"ci_ref\":${CIRCLE_BUILD_NUM},\"mapbox_hash\":\"${CIRCLE_SHA1}\",\"target_branch\":\"${CIRCLE_BRANCH}\"},\"branch\":\"master\"}" https://circleci.com/api/v2/project/github/mapbox/mobile-metrics/pipeline?circle-token=${CIRCLECI_API_TOKEN_MOBILE_METRICS}
+            if [ -n "${CIRCLECI_API_TOKEN}" ]; then
+              curl --fail -X POST --header "Content-Type: application/json" --data "{\"parameters\":{\"run_ios_maps_v10_benchmark\":true,\"ci_ref\":${CIRCLE_BUILD_NUM},\"mapbox_hash\":\"${CIRCLE_SHA1}\",\"target_branch\":\"${CIRCLE_BRANCH}\"},\"branch\":\"master\"}" https://circleci.com/api/v2/project/github/mapbox/mobile-metrics/pipeline?circle-token=${CIRCLECI_API_TOKEN}
             else
-              echo "CIRCLECI_API_TOKEN_MOBILE_METRICS not provided"
+              echo "CIRCLECI_API_TOKEN not provided"
             fi
       - report-failure:
           report_failure: << parameters.report_failure >>
@@ -513,9 +718,7 @@ jobs:
               default: false
               type: boolean
       steps:
-          - add_ssh_keys:
-              fingerprints:
-                  - 3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e
+          - add-mapbox-submodules-key
           - checkout
           - install-mbx-ci:
               platform: linux
@@ -525,7 +728,7 @@ jobs:
                   echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
                   sudo apt update && sudo apt install gh -y
                   sudo pip3 install gitpython
-                  echo "export CIRCLE_API_TOKEN=$CIRCLECI_API_TOKEN_MAPBOX_MAPS_IOS_INTERNAL" >> $BASH_ENV
+                  echo "export CIRCLE_API_TOKEN=$CIRCLECI_API_TOKEN" >> $BASH_ENV
                   source $BASH_ENV
               name: Install dependency
           - when:
@@ -565,7 +768,7 @@ jobs:
                           scripts/ci-trigger/ci-e2e-compatibility-start-pipeline.py --config mapbox-maps-ios=${CIRCLE_SHA1} --platform all --versions ${E2E_VERSION_CONFIG}
                       name: Trigger E2E SDK test validation pipeline
 
-  build-unit-tests:
+  build-tests:
     parameters:
       configuration:
         type: string
@@ -618,12 +821,18 @@ jobs:
         type: string
       xcode:
         type: string
-      codecoverage:
+      disable_codecoverage:
         type: boolean
         default: false
+      resource_class:
+        type: string
+        default: macos.x86.medium.gen2
+      xctestrun_prefix:
+        type: string
+        default: MapboxMaps_UnitTests
     macos:
       xcode: << parameters.xcode >>
-    resource_class: macos.x86.medium.gen2
+    resource_class: << parameters.resource_class >>
     steps:
       - checkout
       - attach_workspace:
@@ -631,16 +840,54 @@ jobs:
       - run:
           name: Run MapboxMaps unit tests on << parameters.destination >>  simulator
           command: |
-            XCTESTRUN_PATH=$(find build -type f -name 'MapboxMaps_UnitTests*.xctestrun' | head -1)
+            XCTESTRUN_PATH=$(find build -type f -name '<< parameters.xctestrun_prefix >>*.xctestrun' | head -1)
             xcodebuild \
               test-without-building \
               -xctestrun "$XCTESTRUN_PATH" \
               -parallel-testing-enabled NO \
               -destination 'platform=iOS Simulator,<< parameters.destination >>' \
-              -resultBundlePath MapboxMapsTests.xcresult | tee xcodebuild.log | xcpretty --report junit --output junit/unitTests/junit.xml
+              -resultBundlePath MapboxMapsTests.xcresult | tee xcodebuild.log | xcpretty --report junit --output junit.xml
 
-            find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' -exec mv {} Coverage-unittests.profdata \;
-            find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profraw' -exec mv {} . \;
+            find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' -exec cp {} . \;
+            find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profraw' -exec cp {} . \;
+      - unless:
+          condition: << parameters.disable_codecoverage >>
+          steps:
+            - collect-code-coverage
+      - run:
+          name: Compress XCResult
+          command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
+          when: always
+      - store_test_results:
+          path: junit.xml
+      - store_artifacts:
+          path: MapboxMapsTests.xcresult.zip
+      - store_artifacts:
+          path: xcodebuild.log
+      - store_artifacts:
+          path: ~/Library/Logs/DiagnosticReports
+      - report-failure:
+          report_failure: true
+          message: "Unit test failed: << parameters.destination >>, Xcode: << parameters.xcode >>"
+
+  run-integration-tests:
+    parameters:
+      destination:
+        type: string
+        default: "name=iPhone 14"
+      xcode:
+        type: string
+        default: "14.0.1"
+      resource_class:
+        type: string
+        default: macos.m1.large.gen1
+    macos:
+      xcode: << parameters.xcode >>
+    resource_class: << parameters.resource_class >>
+    steps:
+      - checkout
+      - attach_workspace:
+          at: build
       - run:
           name: Run MapboxMaps integration tests on << parameters.destination >>  simulator
           command: |
@@ -650,69 +897,27 @@ jobs:
               -xctestrun "$XCTESTRUN_PATH" \
               -parallel-testing-enabled NO \
               -destination 'platform=iOS Simulator,<< parameters.destination >>' \
-              -resultBundlePath MapboxMapsTests-integration.xcresult | tee -a xcodebuild.log | xcpretty --report junit --output junit/integration/junit.xml
+              -resultBundlePath MapboxMapsTests.xcresult | tee -a xcodebuild.log | xcpretty --report junit --output junit.xml
 
-            find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' -exec mv {} Coverage-integrationtests.profdata \;
-      - when:
-          condition: << parameters.codecoverage >>
-          steps:
-            - run:
-                name: Generate code coverage report
-                command: |
-                  BINARY_PATH="$(find build -name "MapboxMaps.o" | head -1)"
-
-                  xcrun llvm-cov export -arch $(uname -m) -format="lcov" \
-                    -instr-profile="Coverage-unittests.profdata" \
-                    "$BINARY_PATH" > coverage.lcov
-                  xcrun llvm-cov export -arch $(uname -m) -format="lcov" \
-                    -instr-profile="Coverage-integrationtests.profdata" \
-                    "$BINARY_PATH" > coverage-integrationtests.lcov
-                  xcrun llvm-cov export -arch $(uname -m) -format=text \
-                    -instr-profile="Coverage-unittests.profdata" \
-                    "$BINARY_PATH" > coverage.txt
-                  xcrun llvm-cov export -arch $(uname -m) -format=text \
-                    -instr-profile="Coverage-integrationtests.profdata" \
-                    "$BINARY_PATH" > coverage-integrationtests.txt
-
-                    zip -r coverage.zip coverage.lcov coverage-integrationtests.lcov coverage.txt coverage-integrationtests.txt "$BINARY_PATH" "$COVERAGE_PATH" junit
-            - install-python-dependencies
-            - install-mbx-ci
-            - run:
-                name: Send code coverage
-                command: |
-                  curl -Os https://uploader.codecov.io/latest/macos/codecov
-                  chmod +x codecov
-                  ./codecov -f coverage.lcov -F unit
-                  ./codecov -f coverage-integrationtests.lcov -F integration
-
-                  echo "Uploading to S3" ; \
-                  python3 ./scripts/code-coverage/parse-code-coverage.py \
-                    -g . \
-                    -c MapboxMaps \
-                    --scheme MapboxMaps \
-                    --report coverage.txt
-            - store_artifacts:
-                path: coverage.zip
+            find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' -exec cp {} . \;
+      - collect-code-coverage:
+          codecov_flag_name: integration
       - run:
           name: Compress XCResult
-          command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult MapboxMapsTests-integration.xcresult
+          command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
           when: always
       - store_test_results:
-          path: junit
+          path: junit.xml
       - store_artifacts:
           path: MapboxMapsTests.xcresult.zip
       - store_artifacts:
           path: xcodebuild.log
       - store_artifacts:
           path: ~/Library/Logs/DiagnosticReports
-      - when:
-          condition:
-            equal: [ "main", << pipeline.git.branch >>]
-          steps:
-            - report-failure:
-                message: "Unit test failed: << parameters.destination >>, Xcode: << parameters.xcode >>"
+      - report-failure:
+          message: "Integration test failed: << parameters.destination >>, Xcode: << parameters.xcode >>"
 
-  build-tests:
+  build-host-tests:
     executor: xcode-latest
     resource_class: macos.x86.medium.gen2
     steps:
@@ -732,7 +937,7 @@ jobs:
             - build_products.zip
       - slack-notify-failure-if-any
 
-  run-tests:
+  run-firebase-tests:
     parameters:
       devices:
         default: |
@@ -1100,20 +1305,7 @@ jobs:
           event: pass
           template: success_tagged_deploy_1
 
-  wait-for-binaries:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - parse-release-version-if-available
-      - inject-netrc-credentials
-      - run:
-          name: Wait binaries public access
-          command: |
-            echo $VERSION
-            timeout 1800 bash -c 'while [[ "$(curl -n -s -o /dev/null -w ''%{http_code}'' https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/$VERSION/MapboxMaps.zip)" != "200" ]]; do sleep 5; done' || false
-          no_output_timeout: 30m
-
-  turf-integration:
+  turf-integration-job:
     parameters:
       turf-revision:
         type: string
@@ -1170,13 +1362,61 @@ jobs:
           command: |
             curl -X POST "https://circleci.com/api/v2/project/github/mapbox/mapbox-maps-ios-private/pipeline" \
                 -H 'Content-Type: application/json' \
-                -H "Circle-Token: $CIRCLECI_API_TOKEN_MAPBOX_MAPS_IOS_INTERNAL" \
+                -H "Circle-Token: $CIRCLECI_API_TOKEN" \
                 -d $'{
                         "branch": "internal",
                         "parameters": {
                           "mapbox_sync_branch": "'$CIRCLE_BRANCH'"
                         }
                       }'
+
+  generate-docc:
+    executor: xcode-latest
+    steps:
+      - checkout
+      - configure-environment:
+          skip-dependencies: true
+      - run:
+          name: Generate docc
+          command: |
+            xcodebuild docbuild -config Release -scheme MapboxMaps -destination "generic/platform=iOS"
+            DOCCARCHIVE_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "MapboxMaps.doccarchive" | head -1)
+            echo "Found DocC archive at: $DOCCARCHIVE_PATH"
+            cp -r $DOCCARCHIVE_PATH MapboxMaps.doccarchive
+            ls -la MapboxMaps.doccarchive
+            zip -r MapboxMaps.doccarchive.zip MapboxMaps.doccarchive
+
+            xcrun docc process-archive transform-for-static-hosting MapboxMaps.doccarchive \
+              --output-path latest \
+              --hosting-base-path "ios/maps/api/latest/"
+      - store_artifacts:
+          path: MapboxMaps.doccarchive.zip
+      - persist_to_workspace:
+          root: .
+          paths:
+            - latest
+      - report-failure:
+          report_failure: true
+          message: "Failed to generate docc"
+
+  upload-docc:
+    executor: xcode-latest
+    steps:
+      - checkout
+      - configure-environment:
+          skip-dependencies: true
+      - attach_workspace:
+          at: .
+      - run:
+          name: Create documentation pull requests
+          command: |
+            scripts/release/create-docs-prs.sh -sep latest
+          environment:
+            VERSION: latest
+      - report-failure:
+          report_failure: true
+          message: "Failed to upload docc"
+
 
 # ==============================================================================
 # Reusable commands
@@ -1229,7 +1469,7 @@ commands:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
+            - 9d:db:07:0b:62:81:11:c3:46:21:8e:fa:51:99:80:2d
 
   install-mbx-ci:
     parameters:
@@ -1706,3 +1946,49 @@ commands:
             - << parameters.output >>
       - store_artifacts:
           path: << parameters.output >>
+
+  collect-code-coverage:
+    parameters:
+      profdata_path:
+        type: string
+        default: Coverage.profdata
+      binary_name:
+        type: string
+        default: MapboxMaps.o
+      codecov_flag_name:
+        type: string
+        default: unit
+    steps:
+      - run:
+          name: Generate code coverage report
+          command: |
+            BINARY_PATH="$(find build -name "<< parameters.binary_name >>" | head -1)"
+
+            echo "Generating LCOV code coverage report for $BINARY_PATH"
+            xcrun llvm-cov export -arch $(uname -m) -format="lcov" \
+              -instr-profile="<< parameters.profdata_path >>" \
+              "$BINARY_PATH" > coverage.lcov
+
+            echo "Generating TXT code coverage report for $BINARY_PATH"
+            xcrun llvm-cov export -arch $(uname -m) -format=text \
+              -instr-profile="<< parameters.profdata_path >>" \
+              "$BINARY_PATH" > coverage.txt
+
+              zip -r coverage.zip coverage.lcov coverage.txt "<< parameters.profdata_path >>" "$BINARY_PATH" junit*
+      - install-python-dependencies
+      - install-mbx-ci
+      - run:
+          name: Send code coverage
+          command: |
+            curl -Os https://uploader.codecov.io/latest/macos/codecov
+            chmod +x codecov
+            ./codecov -f coverage.lcov -F << parameters.codecov_flag_name >>
+
+            echo "Uploading to S3" ; \
+            python3 ./scripts/code-coverage/parse-code-coverage.py \
+              -g . \
+              -c MapboxMaps \
+              --scheme MapboxMaps \
+              --report coverage.txt
+      - store_artifacts:
+          path: coverage.zip

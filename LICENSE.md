@@ -10,7 +10,7 @@ The software and files in this repository (collectively, “Software”) are lic
 ## Acknowledgements
 
 This application makes use of the following third party libraries:
-### MapboxCoreMaps,10.11.0-beta.1,Mapbox ToS,Mapbox,https://www.mapbox.com/
+### MapboxCoreMaps,10.11.0-rc.1,Mapbox ToS,Mapbox,https://www.mapbox.com/
 
 ```
 Mapbox Core Maps version 10.0
@@ -1424,4 +1424,3 @@ All other rights reserved.
 ```
 
 ---
-

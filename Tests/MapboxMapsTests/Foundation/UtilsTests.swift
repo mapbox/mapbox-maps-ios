@@ -23,4 +23,12 @@ class UtilsTests: XCTestCase {
         XCTAssert(wrappedValue == 45.0)
     }
 
+    func testNormalizeWithSameDegree() throws {
+        for bearing in (0..<361).map({Double($0)}) {
+            let destBearing = -Utils.normalize(angle: -bearing.toRadians(), anchorAngle: CLLocationDirection(floatLiteral: bearing).toRadians()).toDegrees()
+            let sourceBearing = Utils.normalize(angle: CLLocationDirection(floatLiteral: bearing).toRadians(), anchorAngle: destBearing.toRadians()).toDegrees()
+            let epsilon = 0.0001
+            XCTAssertEqual(destBearing, sourceBearing, accuracy: epsilon, "bearing: "+bearing.description)
+        }
+    }
 }

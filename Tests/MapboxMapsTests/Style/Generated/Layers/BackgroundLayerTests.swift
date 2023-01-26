@@ -85,7 +85,6 @@ final class BackgroundLayerTests: XCTestCase {
        layer.backgroundOpacity = Value<Double>.testConstantValue()
        layer.backgroundOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.backgroundPattern = Value<ResolvedImage>.testConstantValue()
-       layer.backgroundPatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
 
        var data: Data?
        do {

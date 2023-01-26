@@ -24,9 +24,7 @@ internal struct Utils {
 
         if fabs(angle - (Double.pi * 2) - anchorAngle) < diff {
             angle -= (Double.pi * 2)
-        }
-
-        if fabs(angle + (Double.pi * 2) - anchorAngle) < diff {
+        } else if fabs(angle + (Double.pi * 2) - anchorAngle) < diff {
             angle += (Double.pi * 2)
         }
 

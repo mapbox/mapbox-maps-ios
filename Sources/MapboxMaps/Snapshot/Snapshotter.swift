@@ -129,7 +129,7 @@ public class Snapshotter {
         let style = self.style
         let options = self.options
 
-        mapSnapshotter.start { (expected) in
+        mapSnapshotter.start { [weak self] (expected) in
             if expected.isError() {
                 completion(.failure(.snapshotFailed(reason: expected.error as String)))
                 return
@@ -141,112 +141,130 @@ public class Snapshotter {
             }
 
             let mbxImage = snapshot.image()
+            let pointForCoordinate = { (coordinate: CLLocationCoordinate2D) -> CGPoint in
+                return snapshot.screenCoordinate(for: coordinate).point
+            }
 
+            let coordinateForPoint = { (point: CGPoint) -> CLLocationCoordinate2D in
+                return snapshot.coordinate(for: point.screenCoordinate)
+            }
+            let overlayDescriptor = SnapshotOverlayDescriptor(
+                handler: overlayHandler,
+                pointForCoordinate: pointForCoordinate,
+                coordinateForPoint: coordinateForPoint
+            )
             guard let uiImage = UIImage(mbxImage: mbxImage, scale: scale) else {
                 completion(.failure(.snapshotFailed(reason: "Could not convert internal Image type to UIImage.")))
                 return
             }
 
-            // Render attributions over the snapshot
             let sourceAttributions = style.sourceAttributions()
-            let attributions = Attribution.parse(sourceAttributions)
 
-            let margin: CGFloat = 10
-            let rect = CGRect(origin: .zero, size: uiImage.size)
+            guard let self = self else { return }
 
-            let (logoSize, text) = AttributionMeasure.logoAndAttributionThatFits(rect: rect,
-                                                                                 attributions: attributions,
-                                                                                 margin: margin)
-
-            // Create views on the main thread
-            let logoView = LogoView(logoSize: logoSize)
-
-            // Center logo horizontally if not enough space
-            let logoCenteredX = (rect.width - logoView.bounds.width)/2
-            let logoOriginX: CGFloat
-
-            if case .compact = logoSize, text == nil {
-                // Center
-                logoOriginX = logoCenteredX
-            } else {
-                // Otherwise, position logo on the left hand side with margin
-                // if possible
-                logoOriginX = min(margin, logoCenteredX)
+            // Render attributions over the snapshot
+            Attribution.parse(sourceAttributions) { [weak self] attributions in
+                self?.overlaySnapshotWith(
+                    attributions: attributions,
+                    snapshotImage: uiImage,
+                    options: options,
+                    overlayDescriptor: overlayDescriptor,
+                    completion: completion
+                )
             }
+        }
+    }
 
-            logoView.frame.origin = CGPoint(x: logoOriginX,
-                                            y: rect.height - logoView.bounds.height - margin)
+    private func overlaySnapshotWith(
+        attributions: [Attribution],
+        snapshotImage uiImage: UIImage,
+        options: MapSnapshotOptions,
+        overlayDescriptor: SnapshotOverlayDescriptor?,
+        completion: @escaping (Result<UIImage, SnapshotError>) -> Void
+    ) {
+        let margin: CGFloat = 10
+        let rect = CGRect(origin: .zero, size: uiImage.size)
 
-            let attributionView: AttributionView!
-            if let text = text {
-                attributionView = AttributionView(text: text)
+        let (logoSize, text) = AttributionMeasure.logoAndAttributionThatFits(rect: rect,
+                                                                             attributions: attributions,
+                                                                             margin: margin)
 
-                // Attribution on RHS centered vertically with logo
-                let textSize = attributionView.bounds.size
-                let logoHeight = logoView.bounds.height
-                let h1 = logoHeight > 0 ? logoHeight : textSize.height
+        // Create views on the main thread
+        let logoView = LogoView(logoSize: logoSize)
 
-                attributionView.frame.origin = CGPoint(x: rect.width - textSize.width - margin,
-                                                       y: rect.height - ((h1 + textSize.height)/2) - margin)
-            } else {
-                attributionView = nil
-            }
+        // Center logo horizontally if not enough space
+        let logoCenteredX = (rect.width - logoView.bounds.width)/2
+        let logoOriginX: CGFloat
 
-            // Composite custom overlay, logo and attribution
-            let compositor = { (blurredImage: CGImage?) in
-                let format = UIGraphicsImageRendererFormat()
-                format.scale = scale
-                let renderer = UIGraphicsImageRenderer(size: uiImage.size, format: format)
-                let compositeImage = renderer.image { rendererContext in
+        if case .compact = logoSize, text == nil {
+            // Center
+            logoOriginX = logoCenteredX
+        } else {
+            // Otherwise, position logo on the left hand side with margin
+            // if possible
+            logoOriginX = min(margin, logoCenteredX)
+        }
 
-                    // First draw the snaphot image into the context
-                    let context = rendererContext.cgContext
+        logoView.frame.origin = CGPoint(x: logoOriginX,
+                                        y: rect.height - logoView.bounds.height - margin)
 
-                    if let cgImage = uiImage.cgImage {
-                        context.draw(cgImage, in: rect)
-                    }
+        let attributionView: AttributionView!
+        if let text = text {
+            attributionView = AttributionView(text: text)
 
-                    let pointForCoordinate = { (coordinate: CLLocationCoordinate2D) -> CGPoint in
-                        let screenCoordinate = snapshot.screenCoordinate(for: coordinate)
-                        return CGPoint(x: screenCoordinate.x, y: screenCoordinate.y)
-                    }
+            // Attribution on RHS centered vertically with logo
+            let textSize = attributionView.bounds.size
+            let logoHeight = logoView.bounds.height
+            let h1 = logoHeight > 0 ? logoHeight : textSize.height
 
-                    let coordinateForPoint = { (point: CGPoint) -> CLLocationCoordinate2D in
-                        return snapshot.coordinate(for: point.screenCoordinate)
-                    }
+            attributionView.frame.origin = CGPoint(x: rect.width - textSize.width - margin,
+                                                   y: rect.height - ((h1 + textSize.height)/2) - margin)
+        } else {
+            attributionView = nil
+        }
 
-                    // Apply the overlay, if provided.
-                    let overlay = SnapshotOverlay(context: context,
-                                                  scale: scale,
-                                                  pointForCoordinate: pointForCoordinate,
-                                                  coordinateForPoint: coordinateForPoint)
+        // Composite custom overlay, logo and attribution
+        let compositor = { (blurredImage: CGImage?) in
+            let format = UIGraphicsImageRendererFormat()
+            format.scale = options.pixelRatio
+            let renderer = UIGraphicsImageRenderer(size: uiImage.size, format: format)
+            let compositeImage = renderer.image { rendererContext in
 
-                    if let overlayHandler = overlayHandler {
-                        context.saveGState()
-                        overlayHandler(overlay)
-                        context.restoreGState()
-                    }
+                // First draw the snaphot image into the context
+                let context = rendererContext.cgContext
 
-                    if options.showsLogo {
-                        Snapshotter.renderLogoView(logoView, context: context)
-                    }
-
-                    if let attributionView = attributionView,
-                       options.showsAttribution {
-                        Snapshotter.renderAttributionView(attributionView,
-                                                          blurredImage: blurredImage,
-                                                          context: context)
-                    }
+                if let cgImage = uiImage.cgImage {
+                    context.draw(cgImage, in: rect)
                 }
-                completion(.success(compositeImage))
-            }
 
-            if text != nil {
-                // Generate blurred background for
-                Snapshotter.blurredAttributionBackground(for: uiImage, rect: attributionView.frame, completion: compositor)
-            } else {
-                compositor(nil)
+                if let overlayDescriptor = overlayDescriptor {
+                    // Apply the overlay, if provided.
+                    let overlay = SnapshotOverlay(from: context, scale: options.pixelRatio, descriptor: overlayDescriptor)
+
+                    context.saveGState()
+                    overlayDescriptor.handler(overlay)
+                    context.restoreGState()
+                }
+
+                if options.showsLogo {
+                    Snapshotter.renderLogoView(logoView, context: context)
+                }
+
+                if let attributionView = attributionView,
+                   options.showsAttribution {
+                    Snapshotter.renderAttributionView(attributionView,
+                                                      blurredImage: blurredImage,
+                                                      context: context)
+                }
             }
+            completion(.success(compositeImage))
+        }
+
+        if text != nil {
+            // Generate blurred background for
+            Snapshotter.blurredAttributionBackground(for: uiImage, rect: attributionView.frame, completion: compositor)
+        } else {
+            compositor(nil)
         }
     }
 
@@ -489,5 +507,35 @@ extension Snapshotter {
         context.translateBy(x: attributionView.frame.origin.x, y: attributionView.frame.origin.y)
         attributionView.layer.contents = blurredImage
         attributionView.layer.render(in: context)
+    }
+}
+
+private struct SnapshotOverlayDescriptor {
+    fileprivate let handler: SnapshotOverlayHandler
+    fileprivate let pointForCoordinate: (CLLocationCoordinate2D) -> CGPoint
+    fileprivate let coordinateForPoint: (CGPoint) -> CLLocationCoordinate2D
+
+    init?(
+        handler: SnapshotOverlayHandler?,
+        pointForCoordinate: @escaping ((CLLocationCoordinate2D) -> CGPoint),
+        coordinateForPoint: @escaping ((CGPoint) -> CLLocationCoordinate2D)
+    ) {
+        guard let handler = handler else {
+            return nil
+        }
+
+        self.handler = handler
+        self.pointForCoordinate = pointForCoordinate
+        self.coordinateForPoint = coordinateForPoint
+    }
+}
+
+private extension SnapshotOverlay {
+    init(from context: CGContext, scale: CGFloat, descriptor: SnapshotOverlayDescriptor) {
+        self.init(
+            context: context,
+            scale: scale,
+            pointForCoordinate: descriptor.pointForCoordinate,
+            coordinateForPoint: descriptor.coordinateForPoint)
     }
 }

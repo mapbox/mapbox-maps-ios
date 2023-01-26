@@ -108,8 +108,8 @@ class InfoButtonOrnamentTests: XCTestCase {
 }
 
 extension InfoButtonOrnamentTests: AttributionDataSource {
-    func attributions() -> [Attribution] {
-        return []
+    func loadAttributions(completion: @escaping ([MapboxMaps.Attribution]) -> Void) {
+        completion([])
     }
 }
 

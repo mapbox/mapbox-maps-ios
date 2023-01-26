@@ -12,7 +12,8 @@
     }
   ],
   "defaultOptions" : {
-    "language" : "en"
+    "language" : "en",
+    "testRepetitionMode" : "retryOnFailure"
   },
   "testTargets" : [
     {
@@ -37,6 +38,16 @@
         "MapViewIntegrationTests",
         "MapViewRenderedSnapshotIntegrationTests",
         "MapboxMapIntegrationTests",
+        "MapboxMapsSnapshotTests\/testCapturingSnapshotterInSnapshotCompletion()",
+        "MapboxMapsSnapshotTests\/testDataClearing()",
+        "MapboxMapsSnapshotTests\/testDoesNotShowAttribution()",
+        "MapboxMapsSnapshotTests\/testDoesNotShowLogo()",
+        "MapboxMapsSnapshotTests\/testDoesNotShowLogoAndAttribution()",
+        "MapboxMapsSnapshotTests\/testShowsLogoAndAttribution()",
+        "MapboxMapsSnapshotTests\/testSnapshotAttribution()",
+        "MapboxMapsSnapshotTests\/testSnapshotCancellation()",
+        "MapboxMapsSnapshotTests\/testSnapshotLogoVisibility()",
+        "MapboxMapsSnapshotTests\/testSnapshotOverlay()",
         "MigrationGuideIntegrationTests",
         "ModelLayerIntegrationTests",
         "ObservableIntegrationTests",

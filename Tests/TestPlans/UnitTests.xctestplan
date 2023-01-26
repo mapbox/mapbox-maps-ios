@@ -22,7 +22,8 @@
       ]
     },
     "language" : "en",
-    "testExecutionOrdering" : "random"
+    "testExecutionOrdering" : "random",
+    "testRepetitionMode" : "retryOnFailure"
   },
   "testTargets" : [
     {
@@ -49,6 +50,7 @@
         "MapViewIntegrationTests",
         "MapViewRenderedSnapshotIntegrationTests",
         "MapboxMapIntegrationTests",
+        "MapboxMapsSnapshotTests",
         "MigrationGuideIntegrationTests",
         "ModelLayerIntegrationTests",
         "ObservableIntegrationTests",

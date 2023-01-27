@@ -1,6 +1,7 @@
 import UIKit
 import MapboxMaps
 import SwiftUI
+import Combine
 
 struct Camera {
     var center: CLLocationCoordinate2D
@@ -127,23 +128,24 @@ final class SwiftUIMapViewCoordinator {
 
             /// The coordinator observes the `.cameraChanged` event, and
             /// whenever the camera changes, it updates the camera binding.
-            cancelable = mapView.mapboxMap.onEvery(event: .cameraChanged) { [unowned self] _ in
-                guard !ignoreNotifications else {
-                    return
-                }
+            cancelable = mapView.mapboxMap.mapEvents.publisher(for: .cameraChanged)
+                .sink { [unowned self] _ in
+                    guard !ignoreNotifications else {
+                        return
+                    }
 
-                /// As the camera changes, we update the binding. SwiftUI
-                /// will propagate this change to any other UI elements connected
-                /// to the same binding.
-                camera.center = mapView.cameraState.center
-                camera.zoom = mapView.cameraState.zoom
-            }
+                    /// As the camera changes, we update the binding. SwiftUI
+                    /// will propagate this change to any other UI elements connected
+                    /// to the same binding.
+                    camera.center = mapView.cameraState.center
+                    camera.zoom = mapView.cameraState.zoom
+                }
 
             pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
         }
     }
 
-    private var cancelable: Cancelable?
+    private var cancelable: Combine.Cancellable?
 
     init(camera: Binding<Camera>) {
         _camera = camera

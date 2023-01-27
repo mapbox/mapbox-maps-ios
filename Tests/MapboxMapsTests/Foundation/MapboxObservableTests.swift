@@ -679,4 +679,62 @@ final class MapboxObservableTests: XCTestCase {
 
         try eventInvocations.randomElement()!()
     }
+
+    func testEventPublisherWillDeferSubscribingToSource() throws {
+        guard #available(iOS 13.0, *) else {
+            throw XCTSkip("Test requires to run on iOS 13 or higher")
+        }
+
+        let publisher = mapboxObservable.publisher(for: .mapLoaded)
+        XCTAssertTrue(observable.subscribeStub.invocations.isEmpty)
+
+        let expectation = self.expectation(description: "event publisher should receive subscription")
+        _ = publisher
+            .handleEvents(receiveSubscription: { _ in expectation.fulfill() })
+            .sink(receiveValue: { _ in })
+        waitForExpectations(timeout: 0.5)
+        XCTAssertEqual(observable.subscribeStub.invocations.last?.parameters.events, ["map-loaded"])
+    }
+
+    func testEventPublisherCanEmitEvent() throws {
+        guard #available(iOS 13.0, *) else {
+            throw XCTSkip("Test requires to run on iOS 13 or higher")
+        }
+
+        let expectation = self.expectation(description: "event publisher should emit event")
+        let publisher = mapboxObservable
+            .publisher(for: .mapLoaded)
+            .handleEvents(
+                receiveSubscription: { [weak self] _ in
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        self?.notify(with: Event(type: "map-loaded", data: 0))
+                    }
+                }
+            )
+        let subscription = publisher
+            .sink(receiveValue: { mapEvent in
+                XCTAssertEqual(mapEvent.name, "map-loaded")
+                expectation.fulfill()
+            })
+
+        waitForExpectations(timeout: 1)
+    }
+
+    func testEventPublisherWillUnsubcribeOnCancel() throws {
+        guard #available(iOS 13.0, *) else {
+            throw XCTSkip("Test requires to run on iOS 13 or higher")
+        }
+
+        let publisher = mapboxObservable.publisher(for: .mapLoaded).share()
+        let subscription1 = publisher.sink { _ in }
+        let subscription2 = publisher.sink { _ in }
+
+        let subscriptionParameters = try XCTUnwrap(observable.subscribeStub.invocations.last?.parameters)
+        XCTAssertEqual(subscriptionParameters.events, ["map-loaded"])
+
+        subscription1.cancel()
+        XCTAssertTrue(observable.unsubscribeStub.invocations.isEmpty)
+        subscription2.cancel()
+        XCTAssertIdentical(subscriptionParameters.observer, observable.unsubscribeStub.invocations.last?.parameters)
+    }
 }

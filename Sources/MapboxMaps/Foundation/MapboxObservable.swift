@@ -1,6 +1,6 @@
 import MapboxCoreMaps
 
-internal protocol MapboxObservableProtocol: AnyObject {
+internal protocol MapboxObservableProtocol: AnyObject, MapEventsPublisher {
     func subscribe(_ observer: Observer, events: [String])
     func unsubscribe(_ observer: Observer, events: [String])
     @available(*, deprecated, renamed: "onNext(event:handler:)")

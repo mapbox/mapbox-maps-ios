@@ -48,6 +48,8 @@ public final class MapboxMap: MapboxMapProtocol {
     public let style: Style
 
     private let observable: MapboxObservableProtocol
+    @available(iOS 13.0, *)
+    public var mapEvents: MapEventsPublisher { observable }
 
     deinit {
         __map.destroyRenderer()

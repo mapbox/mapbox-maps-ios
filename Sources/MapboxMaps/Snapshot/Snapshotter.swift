@@ -48,6 +48,8 @@ public class Snapshotter {
     private let options: MapSnapshotOptions
 
     private let observable: MapboxObservableProtocol
+    @available(iOS 13.0, *)
+    public var mapEvents: MapEventsPublisher { observable }
 
     /// Initialize a `Snapshotter` instance
     /// - Parameters:

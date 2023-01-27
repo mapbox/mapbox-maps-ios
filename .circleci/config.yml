@@ -482,6 +482,7 @@ workflows:
             - Fastlane Match
             - SDK Registry Token
             - Apple Machine account
+            - Maps SDK/Public Mapbox Token
           <<: *release-anchor
           requires:
             - check-registry
@@ -1275,6 +1276,7 @@ jobs:
           command: |
             bundle install
             bundle exec fastlane beta
+          no_output_timeout: "20m"
       - slack-notify-failure-if-any
 
 
@@ -1287,7 +1289,9 @@ jobs:
           skip-dependencies: true
       - run:
           name: Publish CocoaPods Podspec
-          command: pod trunk push --allow-warnings
+          command: |
+            pod repo add-cdn trunk https://cdn.cocoapods.org/
+            pod trunk push --allow-warnings
       - slack-notify-failure-if-any
 
   create-draft-release:

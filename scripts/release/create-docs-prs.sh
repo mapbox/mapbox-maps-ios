@@ -7,6 +7,8 @@ CLA_SIGNED_GITHUB_EMAIL="it-admin+mapboxci@mapbox.com"
 
 TMP_ROOT=$(mktemp -d)
 WORKTREE_TO_REMOVE=""
+STAGING_ONLY=false
+EXTRA_EMPTY_COMMIT=false
 cleanup() {
     if [[ -d $WORKTREE_TO_REMOVE ]]
     then

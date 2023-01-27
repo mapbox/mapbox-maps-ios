@@ -21,6 +21,12 @@
         }
       ]
     },
+    "environmentVariableEntries" : [
+      {
+        "key" : "MAPBOX_MAPS_SIGNPOSTS_ENABLED",
+        "value" : ""
+      }
+    ],
     "language" : "en",
     "testExecutionOrdering" : "random",
     "testRepetitionMode" : "retryOnFailure"

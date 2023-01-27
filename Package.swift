@@ -11,6 +11,9 @@ let package = Package(
         .library(
             name: "MapboxMaps",
             targets: ["MapboxMaps"]),
+        .library(
+            name: "MapboxMapsSwiftUI",
+            targets: ["MapboxMapsSwiftUI"])
     ],
     dependencies: [
         .package(name: "MapboxCoreMaps", url: "https://github.com/mapbox/mapbox-core-maps-ios.git", .exact("10.11.0-rc.1")),
@@ -30,6 +33,10 @@ let package = Package(
             resources: [
                 .copy("MapboxMaps.json")
             ]
+        ),
+        .target(
+            name: "MapboxMapsSwiftUI",
+            dependencies: ["MapboxMaps"]
         ),
         .testTarget(
             name: "MapboxMapsTests",

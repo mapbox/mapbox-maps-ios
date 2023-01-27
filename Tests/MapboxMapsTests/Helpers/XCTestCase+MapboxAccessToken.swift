@@ -16,7 +16,8 @@ extension XCTestCase {
                 print("Found access token in MapboxAccessToken")
                 return token
             } else {
-                throw XCTSkip("Mapbox access token not found")
+                XCTFail("Mapbox access token not found")
+                return ""
             }
         }
 
@@ -26,7 +27,8 @@ extension XCTestCase {
             } else if token.isEmpty {
                 print("⚠️ token is empty.")
             } else {
-                throw XCTSkip("Mapbox access token is invalid")
+                XCTFail("Mapbox access token is invalid")
+                return token
             }
             return token
         }

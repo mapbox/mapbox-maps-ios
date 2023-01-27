@@ -33,12 +33,34 @@ public struct ClusterOptions: Equatable {
     /// clustered points. Has the form `{"property_name": [operator, map_expression]}`.
     /// `operator` is any expression function that accepts at
     /// least 2 operands (e.g. `"+"` or `"max"`) — it accumulates the property value from clusters/points the
-    /// cluster contains; `map_expression` produces the value of a single point.
+    /// cluster contains; `map_expression` produces the value of a single point. Example:
     ///
-    /// Example: `{"sum": ["+", ["get", "scalerank"]]}`.
+    /// ``Expression`` syntax:
+    /// ```
+    /// let expression = Exp(.sum) {
+    ///     Exp(.get) { "scalerank" }
+    /// }
+    /// clusterProperties: ["sum": expression]
+    /// ```
     ///
-    /// For more advanced use cases, in place of `operator`, you can use a custom reduce expression
-    /// that references a special `["accumulated"]` value, e.g.:
+    /// JSON syntax:
+    /// `{"sum": ["+", ["get", "scalerank"]]}`
+    ///
+    /// For more advanced use cases, in place of `operator`, you can use a custom reduce expression that references a special `["accumulated"]` value. Example:
+    ///
+    /// ``Expression`` syntax:
+    /// ```
+    /// let expression = Exp {
+    ///     Exp(.sum) {
+    ///         Exp(.accumulated)
+    ///         Exp(.get) { "sum" }
+    ///     }
+    ///     Exp(.get) { "scalerank" }
+    /// }
+    /// clusterProperties: ["sum": expression]
+    /// ```
+    /// 
+    /// JSON syntax:
     /// `{"sum": [["+", ["accumulated"], ["get", "sum"]], ["get", "scalerank"]]}`
     var clusterProperties: [String: Expression]?
 

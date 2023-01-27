@@ -150,3 +150,11 @@ own `UIWindow` and root view controller, before adding the MapView to it.
 
 * Check out this [doc](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/README.md)
   to get more information about adding examples to our project.
+
+## Tracing map performance
+
+Internal events of MapboxMaps can captured in Xcode Instruments using [signposts](https://developer.apple.com/documentation/os/logging/recording_performance_data). Most useful examples of them:
+- Rendering calls
+- Gestures points of interests
+
+In order to enable them, set `MAPBOX_MAPS_SIGNPOSTS_ENABLED` environment variable to your Profile Scheme.

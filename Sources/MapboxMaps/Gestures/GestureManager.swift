@@ -1,4 +1,5 @@
 import UIKit
+import os
 
 public protocol GestureManagerDelegate: AnyObject {
 
@@ -169,6 +170,7 @@ public final class GestureManager: GestureHandlerDelegate {
             }
         }
 
+        OSLog.poi.signpostEvent("Gesture began", message: "type: \(gestureType)")
         mapboxMap.beginGesture()
         delegate?.gestureManager(self, didBegin: gestureType)
     }
@@ -184,6 +186,8 @@ public final class GestureManager: GestureHandlerDelegate {
                 return
             }
         }
+
+        OSLog.poi.signpostEvent("Gesture ended", message: "type: \(gestureType)")
         mapboxMap.endGesture()
         delegate?.gestureManager(self, didEnd: gestureType, willAnimate: willAnimate)
     }

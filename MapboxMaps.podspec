@@ -19,11 +19,14 @@ Pod::Spec.new do |m|
   m.swift_version = '5.5'
 
   m.source_files = 'Sources/MapboxMaps/**/*.{swift,h}'
-  m.resource_bundles = { 'MapboxMapsResources' => ['Sources/**/*.{xcassets,strings}', 'Sources/MapboxMaps/MapboxMaps.json'] }
 
 # Xcode 14.x throws an error about code signing on resource bundles, turn it off for now.
 #  m.pod_target_xcconfig = { 'CODE_SIGNING_ALLOWED' => 'NO' }
 # configuration.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
+
+  m.subspec 'Resources' do |r|
+    r.resource_bundles = { 'MapboxMapsResources' => ['Sources/**/*.{xcassets,strings}', 'Sources/MapboxMaps/MapboxMaps.json'] }
+  end
 
   m.dependency 'MapboxCoreMaps', '10.11.0-rc.1'
   m.dependency 'MapboxMobileEvents', '1.0.10'

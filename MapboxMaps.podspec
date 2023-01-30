@@ -26,6 +26,7 @@ Pod::Spec.new do |m|
 
   m.subspec 'Resources' do |r|
     r.resource_bundles = { 'MapboxMapsResources' => ['Sources/**/*.{xcassets,strings}', 'Sources/MapboxMaps/MapboxMaps.json'] }
+    r.pod_target_xcconfig = { 'CODE_SIGNING_ALLOWED' => 'NO' }
   end
 
   m.dependency 'MapboxCoreMaps', '10.11.0-rc.1'

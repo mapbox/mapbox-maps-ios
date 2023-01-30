@@ -1,6 +1,8 @@
 @_exported import MapboxMaps
 import SwiftUI
 
+@_spi(Experimental)
+@available(iOS 13.0, *)
 public extension CameraState {
     /// Initializes CameraState with center and zoom.
     init(center: CLLocationCoordinate2D, zoom: CGFloat) {
@@ -9,11 +11,18 @@ public extension CameraState {
 }
 
 /// The action that is called when the map is loaded.
+@_spi(Experimental)
+@available(iOS 13.0, *)
 public typealias MapLoadedAction = (MapboxMap) -> Void
+
+@_spi(Experimental)
+@available(iOS 13.0, *)
+public typealias Map = MapboxView
 
 /// View displaying Mapbox Map in SwiftUI.
 @_spi(Experimental)
 @available(iOS 13.0, *)
+// TODO: To be renamed to InternalMap
 public struct MapboxView: UIViewRepresentable {
     public typealias InitialOptionsProvider = () -> MapInitOptions
     public typealias TapAction = (CGPoint) -> Void
@@ -26,28 +35,37 @@ public struct MapboxView: UIViewRepresentable {
         var tapActionsWithQuery = [TapActionWithQueryPair]()
     }
 
-    @Binding
-    var camera: CameraState
+    struct StyleURIs {
+        var `default`: StyleURI
+        var darkMode: StyleURI?
+    }
+
+    @Environment(\.colorScheme) var colorScheme
+
+    var camera: Binding<CameraState>?
     var cameraBounds: CameraBoundsOptions?
     var annotations = [PointAnnotation]()
     var actions = Actions()
-    var styleURI = StyleURI.streets
+    var styleURIs = StyleURIs(default: .streets)
     var getstureOptions: GestureOptions = GestureOptions()
+    var effectiveStyleURI: StyleURI {
+        styleURIs.effectiveURI(with: colorScheme)
+    }
 
     private let initialOptions: InitialOptionsProvider?
 
     /// Creates an instance showing scpecisif region.
     ///
     /// - Parameters:
-    ///     - camera: The camera state to display.
-    ///     - initialOptions: A closure to provide initial map parameters. It gets called only once when `MapboxView` is created.
-    public init(camera: Binding<CameraState>, initialOptions: InitialOptionsProvider? = nil) {
+    ///     - camera: The camera state to display. If not specified, the default camera options from style will be used. See [center](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-center), [zoom](https://docs.mapbox.com/mapbox-gl-js/style-spec/root/#zoom), [bearing](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-bearing), [pitch](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-pitch).
+    ///     - initialOptions: A closure to provide initial map parameters. It gets called only once when `Map` is created.
+    public init(camera: Binding<CameraState>? = nil, initialOptions: InitialOptionsProvider? = nil) {
         self.initialOptions = initialOptions
-        _camera = camera
+        self.camera = camera
     }
 
-    public func makeCoordinator() -> SwiftUIMapViewCoordinator {
-        SwiftUIMapViewCoordinator(camera: $camera)
+    public func makeCoordinator() -> MapCoordinator {
+        MapCoordinator(camera: camera)
     }
 
     public func makeUIView(context: UIViewRepresentableContext<MapboxView>) -> MapView {
@@ -81,8 +99,13 @@ extension MapboxView {
     }
 
     /// Sets style to the map.
-    public func styleURI(_ styleURI: StyleURI) -> Self {
-        set(\.styleURI, styleURI)
+    ///
+    /// - Parameters:
+    ///     - default: A Style URI to be used by default.
+    ///     - darkMode: A Style URI which will automaticaly be used for dark mode. If not specified,
+    ///         the default option will continue to be used.
+    public func styleURI(_ default: StyleURI, darkMode: StyleURI? = nil) -> Self {
+        set(\.styleURIs, StyleURIs(default: `default`, darkMode: darkMode))
     }
 
     /// Configures gestures options.
@@ -117,5 +140,19 @@ extension MapboxView {
         var updated = self
         updated.actions.tapActionsWithQuery.append((options: queryOptions, action: action))
         return updated
+    }
+}
+
+@available(iOS 13.0, *)
+extension MapboxView.StyleURIs {
+    func effectiveURI(with colorScheme: ColorScheme) -> StyleURI {
+        switch colorScheme {
+        case .dark:
+            return darkMode ?? `default`
+        case .light:
+            fallthrough
+        @unknown default:
+            return `default`
+        }
     }
 }

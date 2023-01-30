@@ -1,10 +1,3 @@
-//
-//  Modifiers.swift
-//  SwiftUIExamples
-//
-//  Created by Ivan Persidskiy on 1/26/23.
-//
-
 import SwiftUI
 
 @available(iOS 14.0, *)
@@ -30,5 +23,10 @@ extension View {
         if #available(iOS 15, *) {
             buttonStyle(.borderedProminent)
         }
+    }
+
+    func debug(_ closure: () -> Void) -> some View {
+        closure()
+        return self
     }
 }

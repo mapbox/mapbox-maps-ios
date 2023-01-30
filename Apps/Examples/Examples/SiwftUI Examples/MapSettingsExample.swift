@@ -16,7 +16,7 @@ struct MapSettingsExample : View {
     @State private var settings = Settings()
 
     var body: some View {
-        MapboxView(camera: $camera, initialOptions: initialOptions)
+        Map(camera: $camera, initialOptions: initialOptions)
             .cameraBounds(settings.cameraBounds)
             .styleURI(settings.styleURI)
             .gestureOptions(settings.gestureOptions)
@@ -32,7 +32,6 @@ struct MapSettingsExample : View {
                 Button("Settings") {
                     settingsOpened.toggle()
                 }
-
             }
     }
 
@@ -52,6 +51,8 @@ struct SettingsView : View {
                     Text("Outdoors").tag(StyleURI.outdoors)
                     Text("Dark").tag(StyleURI.dark)
                     Text("Light").tag(StyleURI.light)
+                    Text("Satellite").tag(StyleURI.satellite)
+                    Text("Satellite Streets").tag(StyleURI.satelliteStreets)
                     Text("Custom").tag(StyleURI.customStyle)
                 }
                 Picker(selection: $settings.cameraBounds, label: Text("Camera Bounds")) {

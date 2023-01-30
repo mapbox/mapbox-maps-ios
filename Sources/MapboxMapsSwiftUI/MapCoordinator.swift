@@ -3,8 +3,8 @@ import SwiftUI
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-public final class SwiftUIMapViewCoordinator {
-    @Binding private var camera: CameraState
+public final class MapCoordinator {
+    var camera: Binding<CameraState>?
 
     private var pointAnnotationManager: PointAnnotationManager?
 
@@ -14,8 +14,8 @@ public final class SwiftUIMapViewCoordinator {
     private var bag = Bag()
     private var queriesBag = Bag()
 
-    init(camera: Binding<CameraState>) {
-        _camera = camera
+    init(camera: Binding<CameraState>?) {
+        self.camera = camera
     }
 
     var mapView: MapView! {
@@ -29,12 +29,14 @@ public final class SwiftUIMapViewCoordinator {
                 self?.onTapGesure(gesture)
             }.addTo(bag)
 
-            mapView.mapboxMap.onEvery(event: .cameraChanged) { [weak self] _ in
-                guard let self = self else { return }
-                if !self.ignoreNotifications {
-                    self.camera = self.mapView.cameraState
-                }
-            }.addTo(bag)
+            if let camera = camera {
+                mapView.mapboxMap.onEvery(event: .cameraChanged) { [weak self] _ in
+                    guard let self = self else { return }
+                    if !self.ignoreNotifications {
+                        camera.wrappedValue = self.mapView.cameraState
+                    }
+                }.addTo(bag)
+            }
 
             mapView.mapboxMap.onEvery(event: .mapLoaded) { [weak self] _ in
                 guard let self = self else { return }
@@ -54,15 +56,17 @@ public final class SwiftUIMapViewCoordinator {
     func update(from view: MapboxView) {
         do {
             try withoutNofifications {
-                mapView.mapboxMap.setCamera(to: CameraOptions(cameraState: view.camera))
+                if let camera = view.camera {
+                    mapView.mapboxMap.setCamera(to: CameraOptions(cameraState: camera.wrappedValue))
+                }
+
                 if let cameraBounds = view.cameraBounds {
                     // TODO: This call can change the camera, but it won't be reflected on camera Binding.
                     try mapView.mapboxMap.setCameraBounds(with: cameraBounds)
                 }
             }
-
-            if mapView.mapboxMap.style.uri != view.styleURI {
-                mapView.mapboxMap.style.uri = view.styleURI
+            if mapView.mapboxMap.style.uri != view.effectiveStyleURI {
+                mapView.mapboxMap.style.uri = view.effectiveStyleURI
             }
             mapView.gestures.options = view.getstureOptions
         } catch {

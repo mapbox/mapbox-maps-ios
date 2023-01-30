@@ -17,12 +17,7 @@ struct CameraDebugView: View {
         }
         .font(.footnote.safeMonospaced())
         .padding(5)
-        .background(
-            RoundedRectangle(cornerSize: CGSize(width: 8, height: 8))
-                .fill(.background)
-                .shadow(radius: 1.4, y: 0.7)
-        )
-        .padding(5)
+        .floating(RoundedRectangle(cornerSize: CGSize(width: 8, height: 8)))
     }
 }
 
@@ -41,7 +36,7 @@ struct CameraDebugViewModifier: ViewModifier {
 extension View {
     func cameraDebugOverlay(
         alignment: Alignment = .bottomTrailing,
-        camera: Binding<CameraState>) -> some View {
+        camera: Binding<CameraState>) -> some  View {
             modifier(CameraDebugViewModifier(alignment: alignment, camera: camera.projectedValue))
     }
 }

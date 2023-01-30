@@ -8,7 +8,7 @@ struct FeaturesQueryExample: View {
     @State private var queryResult: QueryResult? = nil
 
     var body: some View {
-            MapboxView(camera: $camera)
+            Map(camera: $camera)
                 .styleURI(.streets)
                 .onMapTapGesture(action: { _, res in
                     queryResult = try? QueryResult(features: res.get())

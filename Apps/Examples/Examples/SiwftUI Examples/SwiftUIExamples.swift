@@ -1,5 +1,6 @@
 import SwiftUI
 import UIKit
+@_spi(Experimental) import MapboxMapsSwiftUI
 
 @available(iOS 14.0, *)
 struct SwiftUIExamples: View {
@@ -7,6 +8,7 @@ struct SwiftUIExamples: View {
     var body: some View {
         NavigationView {
             List {
+                NavigationLink("Show me the map!", destination: Map())
                 NavigationLink("Simple Map", destination: SimpleMapExample())
                 NavigationLink("Query features", destination: FeaturesQueryExample())
                 NavigationLink(destination: MapSettingsExample()) {

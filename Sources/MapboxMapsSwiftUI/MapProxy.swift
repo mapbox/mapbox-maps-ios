@@ -3,7 +3,7 @@ import MapboxMaps
 /// A proxy for access map interfaces of child MapboxView.
 @_spi(Experimental)
 @available(iOS 13.0, *)
-public struct MapboxViewProxy {
+public struct MapProxy {
     private var provider: MapViewProvider
 
     init(provider: MapViewProvider) {

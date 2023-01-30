@@ -12,8 +12,8 @@ import SwiftUI
 ///     }
 @_spi(Experimental)
 @available(iOS 13.0, *)
-public struct MapboxViewReader<Content: View>: View {
-    public typealias ContentProvider = (MapboxViewProxy) -> Content
+public struct MapReader<Content: View>: View {
+    public typealias ContentProvider = (MapProxy) -> Content
     @State private var mapViewProvider = MapViewProvider()
     public var content: ContentProvider
 
@@ -22,7 +22,7 @@ public struct MapboxViewReader<Content: View>: View {
     }
 
     public var body: some View {
-        content(MapboxViewProxy(provider: mapViewProvider))
+        content(MapProxy(provider: mapViewProvider))
             .environment(\.mapViewProvider, mapViewProvider)
     }
 }

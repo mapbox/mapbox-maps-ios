@@ -1,5 +1,4 @@
 changequote("""","""")dnl # prevents m4 from being confused with backquotes by changing quotes to non-existent tokens
-<!-- This file is generated, edit LICENSE-header.md to update the license. -->
 ## License
 
 Mapbox Maps for iOS version __MAPS_SDK_VERSION__
@@ -22,4 +21,3 @@ __TURF_LICENSE_CONTENT__
 ---
 
 __CORE_LICENSE__
-<!-- End of generated file. -->

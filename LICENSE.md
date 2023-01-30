@@ -1,4 +1,3 @@
-<!-- This file is generated, edit LICENSE-header.md to update the license. -->
 ## License
 
 Mapbox Maps for iOS version 10.11.0-rc.1
@@ -1446,4 +1445,3 @@ All other rights reserved.
 ```
 
 ---
-<!-- End of generated file. -->

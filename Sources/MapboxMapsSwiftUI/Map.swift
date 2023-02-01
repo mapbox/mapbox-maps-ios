@@ -18,7 +18,6 @@ public typealias MapLoadedAction = (MapboxMap) -> Void
 @_spi(Experimental)
 @available(iOS 13.0, *)
 public struct Map: View {
-    public typealias InitialOptionsProvider = () -> MapInitOptions
     public typealias TapAction = (CGPoint) -> Void
     public typealias TapQueryAction = (CGPoint, (Result<[QueriedFeature], Error>)) -> Void
     typealias TapActionWithQueryPair = (options: RenderedQueryOptions?, action: TapQueryAction)
@@ -27,6 +26,12 @@ public struct Map: View {
     private var mapConfiguration = MapConfiguration()
     private let mapInitOptions: (CameraState?) -> MapInitOptions
 
+    /// Creates an instance showing scpecisif region.
+    ///
+    /// - Parameters:
+    ///     - camera: The camera state to display. If not specified, the default camera options from style will be used. See [center](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-center), [zoom](https://docs.mapbox.com/mapbox-gl-js/style-spec/root/#zoom), [bearing](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-bearing), [pitch](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-pitch).
+    ///     - resourceOptions: ``ResourceOptions``; default creates an instance using `ResourceOptionsManager.default`.
+    ///     - mapOptions: ``MapOptions``; see ``GlyphsRasterizationOptions`` for the default  used for glyph rendering.
     public init(
         camera: Binding<CameraState>? = nil,
         resourceOptions: ResourceOptions? = nil,

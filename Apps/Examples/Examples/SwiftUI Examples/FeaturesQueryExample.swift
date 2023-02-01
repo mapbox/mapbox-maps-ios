@@ -4,20 +4,18 @@ import SwiftUI
 @available(iOS 14.0, *)
 struct FeaturesQueryExample: View {
     @State private var camera = CameraState(center: .newYork, zoom: 10)
-
     @State private var queryResult: QueryResult? = nil
 
     var body: some View {
-            Map(camera: $camera)
-                .styleURI(.streets)
-                .onMapTapGesture(action: { _, res in
-                    queryResult = try? QueryResult(features: res.get())
-                })
-        .edgesIgnoringSafeArea(.all)
-        .sheet(item: $queryResult, onDismiss: { queryResult = nil }) { res in
-            ResultView(result: res)
-                .defaultDetents()
-        }
+        Map(camera: $camera)
+            .onMapTapGesture { _, result in
+                queryResult = try? QueryResult(features: result.get())
+            }
+            .ignoresSafeArea()
+            .sheet(item: $queryResult, onDismiss: { queryResult = nil }) {
+                ResultView(result: $0)
+                    .defaultDetents()
+            }
     }
 }
 
@@ -60,9 +58,7 @@ struct ResultView: View {
             List {
                 Section {
                     ForEach(result.features) { f in
-                        VStack(alignment: .leading) {
-                            FeatureView(f: f)
-                        }
+                        FeatureView(f: f)
                     }
                 } header: {
                     Text("Features")
@@ -76,19 +72,21 @@ struct ResultView: View {
 struct FeatureView: View {
     var f: QueryResult.Feature
     var body: some View {
-        f.name.map { Text($0) }
-        f.category.map {
-            Text($0)
-            .font(.callout)
-            .foregroundColor(.purple)
-        }
         VStack(alignment: .leading) {
-            Text("sourceId: \(f.sourceId)")
-            f.sourceLayer.map { Text("sourceLayer: \($0)")}
+            f.name.map { Text($0) }
+            f.category.map {
+                Text($0)
+                .font(.callout)
+                .foregroundColor(.purple)
+            }
+            VStack(alignment: .leading) {
+                Text("sourceId: \(f.sourceId)")
+                f.sourceLayer.map { Text("sourceLayer: \($0)")}
 
+            }
+            .font(.footnote)
+            .foregroundColor(.secondary)
         }
-        .font(.footnote)
-        .foregroundColor(.secondary)
     }
 }
 

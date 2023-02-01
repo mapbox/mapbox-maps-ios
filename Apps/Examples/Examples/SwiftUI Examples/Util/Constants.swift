@@ -6,6 +6,7 @@ extension CLLocationCoordinate2D {
     static let berlin = CLLocationCoordinate2D(latitude: 52.5170365, longitude: 13.3888599)
     static let london = CLLocationCoordinate2D(latitude: 51.5073219, longitude: -0.1276474)
     static let newYork = CLLocationCoordinate2D(latitude: 40.7306, longitude: -73.9866)
+    static let dc = CLLocationCoordinate2D(latitude: 38.889215, longitude: -77.039354)
     static let zero = CLLocationCoordinate2D(latitude: 0, longitude: 0)
 }
 

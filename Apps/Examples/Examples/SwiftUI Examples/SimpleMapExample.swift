@@ -7,7 +7,7 @@ struct SimpleMapExample: View {
     var body: some View {
         Map(camera: $camera)
             .styleURI(.streets, dark: .dark)
-            .edgesIgnoringSafeArea(.all)
+            .ignoresSafeArea()
             .cameraDebugOverlay(alignment: .bottom, camera: $camera)
     }
 }

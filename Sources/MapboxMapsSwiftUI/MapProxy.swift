@@ -1,6 +1,6 @@
 import MapboxMaps
 
-/// A proxy for access map interfaces of child MapboxView.
+/// A proxy for access map interfaces on underlying Mapbox Map.
 @_spi(Experimental)
 @available(iOS 13.0, *)
 public struct MapProxy {

@@ -40,6 +40,6 @@ extension EnvironmentValues {
     }
 }
 
-class MapViewProvider {
+final class MapViewProvider {
     weak var mapView: MapView?
 }

@@ -2,7 +2,7 @@ import Foundation
 import MapboxCoreMaps
 
 /// Layer rendering types
-public enum LayerType: String, Codable {
+public enum LayerType: String, Codable, Equatable {
     /// A filled polygon with an optional stroked border.
     case fill
 

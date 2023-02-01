@@ -45,7 +45,7 @@ public enum LineJoin: String, Codable, CaseIterable {
 // MARK: ICON_ANCHOR
 
 /// Part of the icon placed closest to the anchor.
-public enum IconAnchor: String, Codable, CaseIterable {
+public enum IconAnchor: String, Codable, CaseIterable, Equatable {
 
     /// The center of the icon is placed closest to the anchor.
     case center = "center"
@@ -79,7 +79,7 @@ public enum IconAnchor: String, Codable, CaseIterable {
 // MARK: ICON_PITCH_ALIGNMENT
 
 /// Orientation of icon when map is pitched.
-public enum IconPitchAlignment: String, Codable, CaseIterable {
+public enum IconPitchAlignment: String, Codable, CaseIterable, Equatable {
 
     /// The icon is aligned to the plane of the map.
     case map = "map"

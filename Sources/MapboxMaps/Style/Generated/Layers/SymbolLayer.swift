@@ -5,6 +5,84 @@ import Foundation
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-symbol)
 public struct SymbolLayer: Layer {
+    public init(id: String, filter: Expression? = nil, source: String? = nil, sourceLayer: String? = nil, minZoom: Double? = nil, maxZoom: Double? = nil, visibility: Value<Visibility>? = nil, iconAllowOverlap: Value<Bool>? = nil, iconAnchor: Value<IconAnchor>? = nil, iconIgnorePlacement: Value<Bool>? = nil, iconImage: Value<ResolvedImage>? = nil, iconKeepUpright: Value<Bool>? = nil, iconOffset: Value<[Double]>? = nil, iconOptional: Value<Bool>? = nil, iconPadding: Value<Double>? = nil, iconPitchAlignment: Value<IconPitchAlignment>? = nil, iconRotate: Value<Double>? = nil, iconRotationAlignment: Value<IconRotationAlignment>? = nil, iconSize: Value<Double>? = nil, iconTextFit: Value<IconTextFit>? = nil, iconTextFitPadding: Value<[Double]>? = nil, symbolAvoidEdges: Value<Bool>? = nil, symbolPlacement: Value<SymbolPlacement>? = nil, symbolSortKey: Value<Double>? = nil, symbolSpacing: Value<Double>? = nil, symbolZOrder: Value<SymbolZOrder>? = nil, textAllowOverlap: Value<Bool>? = nil, textAnchor: Value<TextAnchor>? = nil, textField: Value<String>? = nil, textFont: Value<[String]>? = nil, textIgnorePlacement: Value<Bool>? = nil, textJustify: Value<TextJustify>? = nil, textKeepUpright: Value<Bool>? = nil, textLetterSpacing: Value<Double>? = nil, textLineHeight: Value<Double>? = nil, textMaxAngle: Value<Double>? = nil, textMaxWidth: Value<Double>? = nil, textOffset: Value<[Double]>? = nil, textOptional: Value<Bool>? = nil, textPadding: Value<Double>? = nil, textPitchAlignment: Value<TextPitchAlignment>? = nil, textRadialOffset: Value<Double>? = nil, textRotate: Value<Double>? = nil, textRotationAlignment: Value<TextRotationAlignment>? = nil, textSize: Value<Double>? = nil, textTransform: Value<TextTransform>? = nil, textVariableAnchor: Value<[TextAnchor]>? = nil, textWritingMode: Value<[TextWritingMode]>? = nil, iconColor: Value<StyleColor>? = nil, iconColorTransition: StyleTransition? = nil, iconHaloBlur: Value<Double>? = nil, iconHaloBlurTransition: StyleTransition? = nil, iconHaloColor: Value<StyleColor>? = nil, iconHaloColorTransition: StyleTransition? = nil, iconHaloWidth: Value<Double>? = nil, iconHaloWidthTransition: StyleTransition? = nil, iconOpacity: Value<Double>? = nil, iconOpacityTransition: StyleTransition? = nil, iconTranslate: Value<[Double]>? = nil, iconTranslateTransition: StyleTransition? = nil, iconTranslateAnchor: Value<IconTranslateAnchor>? = nil, textColor: Value<StyleColor>? = nil, textColorTransition: StyleTransition? = nil, textHaloBlur: Value<Double>? = nil, textHaloBlurTransition: StyleTransition? = nil, textHaloColor: Value<StyleColor>? = nil, textHaloColorTransition: StyleTransition? = nil, textHaloWidth: Value<Double>? = nil, textHaloWidthTransition: StyleTransition? = nil, textOpacity: Value<Double>? = nil, textOpacityTransition: StyleTransition? = nil, textTranslate: Value<[Double]>? = nil, textTranslateTransition: StyleTransition? = nil, textTranslateAnchor: Value<TextTranslateAnchor>? = nil) {
+        self.id = id
+        self.type = .symbol
+        self.filter = filter
+        self.source = source
+        self.sourceLayer = sourceLayer
+        self.minZoom = minZoom
+        self.maxZoom = maxZoom
+        self.visibility = visibility
+        self.iconAllowOverlap = iconAllowOverlap
+        self.iconAnchor = iconAnchor
+        self.iconIgnorePlacement = iconIgnorePlacement
+        self.iconImage = iconImage
+        self.iconKeepUpright = iconKeepUpright
+        self.iconOffset = iconOffset
+        self.iconOptional = iconOptional
+        self.iconPadding = iconPadding
+        self.iconPitchAlignment = iconPitchAlignment
+        self.iconRotate = iconRotate
+        self.iconRotationAlignment = iconRotationAlignment
+        self.iconSize = iconSize
+        self.iconTextFit = iconTextFit
+        self.iconTextFitPadding = iconTextFitPadding
+        self.symbolAvoidEdges = symbolAvoidEdges
+        self.symbolPlacement = symbolPlacement
+        self.symbolSortKey = symbolSortKey
+        self.symbolSpacing = symbolSpacing
+        self.symbolZOrder = symbolZOrder
+        self.textAllowOverlap = textAllowOverlap
+        self.textAnchor = textAnchor
+        self.textField = textField
+        self.textFont = textFont
+        self.textIgnorePlacement = textIgnorePlacement
+        self.textJustify = textJustify
+        self.textKeepUpright = textKeepUpright
+        self.textLetterSpacing = textLetterSpacing
+        self.textLineHeight = textLineHeight
+        self.textMaxAngle = textMaxAngle
+        self.textMaxWidth = textMaxWidth
+        self.textOffset = textOffset
+        self.textOptional = textOptional
+        self.textPadding = textPadding
+        self.textPitchAlignment = textPitchAlignment
+        self.textRadialOffset = textRadialOffset
+        self.textRotate = textRotate
+        self.textRotationAlignment = textRotationAlignment
+        self.textSize = textSize
+        self.textTransform = textTransform
+        self.textVariableAnchor = textVariableAnchor
+        self.textWritingMode = textWritingMode
+        self.iconColor = iconColor
+        self.iconColorTransition = iconColorTransition
+        self.iconHaloBlur = iconHaloBlur
+        self.iconHaloBlurTransition = iconHaloBlurTransition
+        self.iconHaloColor = iconHaloColor
+        self.iconHaloColorTransition = iconHaloColorTransition
+        self.iconHaloWidth = iconHaloWidth
+        self.iconHaloWidthTransition = iconHaloWidthTransition
+        self.iconOpacity = iconOpacity
+        self.iconOpacityTransition = iconOpacityTransition
+        self.iconTranslate = iconTranslate
+        self.iconTranslateTransition = iconTranslateTransition
+        self.iconTranslateAnchor = iconTranslateAnchor
+        self.textColor = textColor
+        self.textColorTransition = textColorTransition
+        self.textHaloBlur = textHaloBlur
+        self.textHaloBlurTransition = textHaloBlurTransition
+        self.textHaloColor = textHaloColor
+        self.textHaloColorTransition = textHaloColorTransition
+        self.textHaloWidth = textHaloWidth
+        self.textHaloWidthTransition = textHaloWidthTransition
+        self.textOpacity = textOpacity
+        self.textOpacityTransition = textOpacityTransition
+        self.textTranslate = textTranslate
+        self.textTranslateTransition = textTranslateTransition
+        self.textTranslateAnchor = textTranslateAnchor
+    }
+
 
     // MARK: - Conformance to `Layer` protocol
     public var id: String

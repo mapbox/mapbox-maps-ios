@@ -11,7 +11,6 @@ struct Settings {
 @available(iOS 14.0, *)
 struct MapSettingsExample : View {
     @State private var camera = CameraState(center: .berlin, zoom: 12)
-
     @State private var settingsOpened = false
     @State private var settings = Settings()
 
@@ -29,6 +28,7 @@ struct MapSettingsExample : View {
             }
             .cameraDebugOverlay(alignment: .bottom, camera: $camera)
             .toolbar {
+
                 Button("Settings") {
                     settingsOpened.toggle()
                 }

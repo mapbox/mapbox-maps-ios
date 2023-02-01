@@ -5,6 +5,37 @@ import Foundation
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-circle)
 public struct CircleLayer: Layer {
+    public init(id: String, filter: Expression? = nil, source: String? = nil, sourceLayer: String? = nil, minZoom: Double? = nil, maxZoom: Double? = nil, visibility: Value<Visibility>? = nil, circleSortKey: Value<Double>? = nil, circleBlur: Value<Double>? = nil, circleBlurTransition: StyleTransition? = nil, circleColor: Value<StyleColor>? = nil, circleColorTransition: StyleTransition? = nil, circleOpacity: Value<Double>? = nil, circleOpacityTransition: StyleTransition? = nil, circlePitchAlignment: Value<CirclePitchAlignment>? = nil, circlePitchScale: Value<CirclePitchScale>? = nil, circleRadius: Value<Double>? = nil, circleRadiusTransition: StyleTransition? = nil, circleStrokeColor: Value<StyleColor>? = nil, circleStrokeColorTransition: StyleTransition? = nil, circleStrokeOpacity: Value<Double>? = nil, circleStrokeOpacityTransition: StyleTransition? = nil, circleStrokeWidth: Value<Double>? = nil, circleStrokeWidthTransition: StyleTransition? = nil, circleTranslate: Value<[Double]>? = nil, circleTranslateTransition: StyleTransition? = nil, circleTranslateAnchor: Value<CircleTranslateAnchor>? = nil) {
+        self.id = id
+        self.type = .circle
+        self.filter = filter
+        self.source = source
+        self.sourceLayer = sourceLayer
+        self.minZoom = minZoom
+        self.maxZoom = maxZoom
+        self.visibility = visibility
+        self.circleSortKey = circleSortKey
+        self.circleBlur = circleBlur
+        self.circleBlurTransition = circleBlurTransition
+        self.circleColor = circleColor
+        self.circleColorTransition = circleColorTransition
+        self.circleOpacity = circleOpacity
+        self.circleOpacityTransition = circleOpacityTransition
+        self.circlePitchAlignment = circlePitchAlignment
+        self.circlePitchScale = circlePitchScale
+        self.circleRadius = circleRadius
+        self.circleRadiusTransition = circleRadiusTransition
+        self.circleStrokeColor = circleStrokeColor
+        self.circleStrokeColorTransition = circleStrokeColorTransition
+        self.circleStrokeOpacity = circleStrokeOpacity
+        self.circleStrokeOpacityTransition = circleStrokeOpacityTransition
+        self.circleStrokeWidth = circleStrokeWidth
+        self.circleStrokeWidthTransition = circleStrokeWidthTransition
+        self.circleTranslate = circleTranslate
+        self.circleTranslateTransition = circleTranslateTransition
+        self.circleTranslateAnchor = circleTranslateAnchor
+    }
+
 
     // MARK: - Conformance to `Layer` protocol
     public var id: String

@@ -20,14 +20,14 @@ struct MapSettingsExample : View {
             .cameraBounds(settings.cameraBounds)
             .styleURI(settings.styleURI)
             .gestureOptions(settings.gestureOptions)
-            .edgesIgnoringSafeArea(.all)
-            // Force full map reinitialization on every orientation change
+            .ignoresSafeArea()
+            // Force full map reinitialization on every orientation change.
             .id(settings.orientation)
             .sheet(isPresented: $settingsOpened) {
                 SettingsView(settings: $settings)
                     .defaultDetents()
             }
-            .cameraDebugOverlay(alignment: .topTrailing, camera: $camera)
+            .cameraDebugOverlay(alignment: .bottom, camera: $camera)
             .toolbar {
                 Button("Settings") {
                     settingsOpened.toggle()

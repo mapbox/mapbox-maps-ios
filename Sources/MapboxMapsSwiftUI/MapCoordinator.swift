@@ -1,4 +1,4 @@
-import MapboxMaps
+@_spi(Package) import MapboxMaps
 import SwiftUI
 
 @_spi(Experimental)
@@ -6,9 +6,7 @@ import SwiftUI
 public final class MapCoordinator {
     var camera: Binding<CameraState>?
 
-    private var pointAnnotationManager: PointAnnotationManager?
-
-    var actions: MapboxView.Actions?
+    var actions: InternalMap.Actions?
 
     private var ignoreNotifications = false
     private var bag = Bag()
@@ -32,9 +30,7 @@ public final class MapCoordinator {
             if let camera = camera {
                 mapView.mapboxMap.onEvery(event: .cameraChanged) { [weak self] _ in
                     guard let self = self else { return }
-                    if !self.ignoreNotifications {
-                        camera.wrappedValue = self.mapView.cameraState
-                    }
+                    camera.wrappedValue = self.mapView.cameraState
                 }.addTo(bag)
             }
 
@@ -42,20 +38,12 @@ public final class MapCoordinator {
                 guard let self = self else { return }
                 self.actions?.onMapLoaded?(self.mapView.mapboxMap)
             }.addTo(bag)
-
-            pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
         }
     }
 
-    private func withoutNofifications(_ block: () throws -> Void) rethrows {
-        ignoreNotifications = true
-        try block()
-        ignoreNotifications = false
-    }
-
-    func update(from view: MapboxView) {
+    func update(from view: InternalMap) {
         do {
-            try withoutNofifications {
+            try mapView.mapboxMap.performWithoutNotifying {
                 if let camera = view.camera {
                     mapView.mapboxMap.setCamera(to: CameraOptions(cameraState: camera.wrappedValue))
                 }
@@ -68,13 +56,10 @@ public final class MapCoordinator {
             if mapView.mapboxMap.style.uri != view.effectiveStyleURI {
                 mapView.mapboxMap.style.uri = view.effectiveStyleURI
             }
-            mapView.gestures.options = view.getstureOptions
+            mapView.gestures.options = view.gestureOptions
         } catch {
             print("error: \(error)") // TODO: Logger
         }
-
-        // TODO: Do annotations better, current implementation forces style to update on every display link.
-        pointAnnotationManager?.annotations = view.annotations
         actions = view.actions
     }
 

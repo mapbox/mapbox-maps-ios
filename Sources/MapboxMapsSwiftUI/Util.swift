@@ -51,7 +51,7 @@ extension Sequence where Element == Cancelable {
 }
 
 /// Incapsulates play with target/action for gesture recognizers.
-@objc private class Handler: NSObject {
+@objc private final class Handler: NSObject {
     private let handle: () -> Void
     private let gesture: UIGestureRecognizer
     init(_ gesture: UIGestureRecognizer, _ handle: @escaping () -> Void) {

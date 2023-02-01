@@ -17,13 +17,13 @@ public typealias MapLoadedAction = (MapboxMap) -> Void
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-public typealias Map = MapboxView
+public typealias Map = InternalMap
 
-/// View displaying Mapbox Map in SwiftUI.
+/// A view displaying Mapbox Map in SwiftUI.
 @_spi(Experimental)
 @available(iOS 13.0, *)
-// TODO: To be renamed to InternalMap
-public struct MapboxView: UIViewRepresentable {
+// TODO: Wrap it in Map and make internal.
+public struct InternalMap: UIViewRepresentable {
     public typealias InitialOptionsProvider = () -> MapInitOptions
     public typealias TapAction = (CGPoint) -> Void
     public typealias TapQueryAction = (CGPoint, (Result<[QueriedFeature], Error>)) -> Void
@@ -44,10 +44,9 @@ public struct MapboxView: UIViewRepresentable {
 
     var camera: Binding<CameraState>?
     var cameraBounds: CameraBoundsOptions?
-    var annotations = [PointAnnotation]()
     var actions = Actions()
     var styleURIs = StyleURIs(default: .streets)
-    var getstureOptions: GestureOptions = GestureOptions()
+    var gestureOptions: GestureOptions = GestureOptions()
     var effectiveStyleURI: StyleURI {
         styleURIs.effectiveURI(with: colorScheme)
     }
@@ -68,7 +67,7 @@ public struct MapboxView: UIViewRepresentable {
         MapCoordinator(camera: camera)
     }
 
-    public func makeUIView(context: UIViewRepresentableContext<MapboxView>) -> MapView {
+    public func makeUIView(context: UIViewRepresentableContext<InternalMap>) -> MapView {
         MapView(frame: .zero, mapInitOptions: initialOptions?() ?? MapInitOptions())
     }
 
@@ -81,8 +80,8 @@ public struct MapboxView: UIViewRepresentable {
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-extension MapboxView {
-    private func set<T>(_ keyPath: WritableKeyPath<MapboxView, T>, _ value: T) -> Self {
+extension InternalMap {
+    private func set<T>(_ keyPath: WritableKeyPath<InternalMap, T>, _ value: T) -> Self {
         var updated = self
         updated[keyPath: keyPath] = value
         return updated
@@ -94,8 +93,8 @@ extension MapboxView {
     }
 
     /// Adds callback to map loaded event.
-    public func onMapLoaded(_ callback: @escaping MapLoadedAction) -> Self {
-        set(\.actions.onMapLoaded, callback)
+    public func onMapLoaded(perform action: @escaping MapLoadedAction) -> Self {
+        set(\.actions.onMapLoaded, action)
     }
 
     /// Sets style to the map.
@@ -110,12 +109,7 @@ extension MapboxView {
 
     /// Configures gestures options.
     public func gestureOptions(_ options: GestureOptions) -> Self {
-        set(\.getstureOptions, options)
-    }
-
-    /// Adds point annotations to the map.
-    public func annotations(_ annotations: [PointAnnotation]) -> Self {
-        set(\.annotations, annotations)
+        set(\.gestureOptions, options)
     }
 
     /// Adds tap handler to the map.
@@ -124,7 +118,7 @@ extension MapboxView {
     ///
     /// - Parameters:
     ///  - action: The action to perform.
-    public func onMapTapGesture(action: @escaping TapAction) -> Self {
+    public func onMapTapGesture(perform action: @escaping TapAction) -> Self {
         set(\.actions.onMapTapGesture, action)
     }
 
@@ -136,7 +130,7 @@ extension MapboxView {
     /// - Parameters:
     ///  - queryOptions: The options used to query features.
     ///  - action: The action to perform.
-    public func onMapTapGesture(queryOptions: RenderedQueryOptions? = nil, action: @escaping TapQueryAction) -> Self {
+    public func onMapTapGesture(queryOptions: RenderedQueryOptions? = nil, perform action: @escaping TapQueryAction) -> Self {
         var updated = self
         updated.actions.tapActionsWithQuery.append((options: queryOptions, action: action))
         return updated
@@ -144,7 +138,7 @@ extension MapboxView {
 }
 
 @available(iOS 13.0, *)
-extension MapboxView.StyleURIs {
+extension InternalMap.StyleURIs {
     func effectiveURI(with colorScheme: ColorScheme) -> StyleURI {
         switch colorScheme {
         case .dark:

@@ -31,7 +31,7 @@ internal protocol MapboxMapProtocol: AnyObject {
     func camera(for coordinateBounds: CoordinateBounds, padding: UIEdgeInsets, bearing: Double?, pitch: Double?) -> CameraOptions
     func coordinate(for point: CGPoint) -> CLLocationCoordinate2D
     func point(for coordinate: CLLocationCoordinate2D) -> CGPoint
-    func performWithoutNotifying(_ block: () -> Void)
+    func performWithoutNotifying(_ block: () throws -> Void) rethrows
 }
 
 // swiftlint:disable type_body_length
@@ -1018,8 +1018,9 @@ extension MapboxMap: MapEventsObservable {
         return observable.onEvery(event: event, handler: handler)
     }
 
-    internal func performWithoutNotifying(_ block: () -> Void) {
-        observable.performWithoutNotifying(block)
+    @_spi(Package)
+    public func performWithoutNotifying(_ block: () throws -> Void) rethrows {
+        try observable.performWithoutNotifying(block)
     }
 }
 

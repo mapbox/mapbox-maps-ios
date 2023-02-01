@@ -1,0 +1,95 @@
+/* East, short */
+"E" = "מז";
+
+/* East by north, short */
+"EbN" = "EbN";
+
+/* East by south, short */
+"EbS" = "EbS";
+
+/* East-northeast, short */
+"ENE" = "מז-צ-מז";
+
+/* East-southeast, short */
+"ESE" = "מז-ד-מז";
+
+/* North, short */
+"N" = "צ";
+
+/* North by east, short */
+"NbE" = "NbE";
+
+/* North by west, short */
+"NbW" = "NbW";
+
+/* Northeast, short */
+"NE" = "צ-מז";
+
+/* Northeast by east, short */
+"NEbE" = "NEbE";
+
+/* Northeast by north, short */
+"NEbN" = "NEbN";
+
+/* North-northeast, short */
+"NNE" = "צ-צ-מז";
+
+/* North-northwest, short */
+"NNW" = "צ-צ-מע";
+
+/* Northwest, short */
+"NW" = "צ-מע";
+
+/* Northwest by north, short */
+"NWbN" = "NWbN";
+
+/* Northwest by west, short */
+"NWbW" = "NWbW";
+
+/* South, short */
+"S" = "ד";
+
+/* South by east, short */
+"SbE" = "SbE";
+
+/* South by west, short */
+"SbW" = "SbW";
+
+/* Southeast, short */
+"SE" = "ד-מז";
+
+/* Southeast by east, short */
+"SEbE" = "SEbE";
+
+/* Southeast by south, short */
+"SEbS" = "SEbS";
+
+/* South-southeast, short */
+"SSE" = "ד-ד-מז";
+
+/* South-southwest, short */
+"SSW" = "ד-ד-מע";
+
+/* Southwest, short */
+"SW" = "ד-מע";
+
+/* Southwest by south, short */
+"SWbS" = "SWbS";
+
+/* Southwest by west, short */
+"SWbW" = "SWbW";
+
+/* West, short */
+"W" = "מע";
+
+/* West by north, short */
+"WbN" = "WbN";
+
+/* West by south, short */
+"WbS" = "WbS";
+
+/* West-northwest, short */
+"WNW" = "מע-צ-מע";
+
+/* West-southwest, short */
+"WSW" = "מע-ד-מע";

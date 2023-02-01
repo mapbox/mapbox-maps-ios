@@ -1,0 +1,6 @@
+---
+type_name:
+  allowed_symbols: ['_']
+disabled_rules:
+  - type_body_length
+  - file_length

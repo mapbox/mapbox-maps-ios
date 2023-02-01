@@ -1,0 +1,95 @@
+/* East, long */
+"E" = "øst";
+
+/* East by north, long */
+"EbN" = "øst via nord";
+
+/* East by south, long */
+"EbS" = "øst via syd";
+
+/* East-northeast, long */
+"ENE" = "øst-nordøst";
+
+/* East-southeast, long */
+"ESE" = "øst-sydøst";
+
+/* North, long */
+"N" = "nord";
+
+/* North by east, long */
+"NbE" = "nord via øst";
+
+/* North by west, long */
+"NbW" = "nord via vest";
+
+/* Northeast, long */
+"NE" = "nordøst";
+
+/* Northeast by east, long */
+"NEbE" = "nordøst via øst";
+
+/* Northeast by north, long */
+"NEbN" = "nordøst via nord";
+
+/* North-northeast, long */
+"NNE" = "nord-nordøst";
+
+/* North-northwest, long */
+"NNW" = "nord-nordvest";
+
+/* Northwest, long */
+"NW" = "nordvest";
+
+/* Northwest by north, long */
+"NWbN" = "nordvest via nord";
+
+/* Northwest by west, long */
+"NWbW" = "nordvest via vest";
+
+/* South, long */
+"S" = "syd";
+
+/* South by east, long */
+"SbE" = "syd via øst";
+
+/* South by west, long */
+"SbW" = "syd via vest";
+
+/* Southeast, long */
+"SE" = "sydøst";
+
+/* Southeast by east, long */
+"SEbE" = "sydøst via øst";
+
+/* Southeast by south, long */
+"SEbS" = "sydøst via syd";
+
+/* South-southeast, long */
+"SSE" = "syd-sydøst";
+
+/* South-southwest, long */
+"SSW" = "syd-sydvest";
+
+/* Southwest, long */
+"SW" = "sydvest";
+
+/* Southwest by south, long */
+"SWbS" = "sydvest via syd";
+
+/* Southwest by west, long */
+"SWbW" = "sydvest via vest";
+
+/* West, long */
+"W" = "vest";
+
+/* West by north, long */
+"WbN" = "vest via nord";
+
+/* West by south, long */
+"WbS" = "vest via syd";
+
+/* West-northwest, long */
+"WNW" = "vest-nordvest";
+
+/* West-southwest, long */
+"WSW" = "vest-sydvest";

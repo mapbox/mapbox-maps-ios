@@ -1,0 +1,1993 @@
+---
+version: 2.1
+
+parameters:
+  turf-revision:
+    type: string
+    default: ""
+
+orbs:
+  # https://circleci.com/orbs/registry/orb/circleci/slack
+  slack: circleci/slack@4
+
+
+### Shared anchors
+release-precheck: &release-anchor
+  filters:
+    tags:
+      only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+    branches:
+      ignore: /.*/
+  requires:
+    - release-precheck
+
+executors:
+  xcode-latest:
+    macos:
+      xcode: 14.1.0
+  # Note that `create-github-draft-release.sh` depends on this structure to parse the minimum supported Xcode version.
+  # Please keep them in sync if this structure changes.
+  xcode-sdk-min:
+    macos:
+      xcode: 13.1.0
+
+### Workflows
+
+workflows:
+
+  # Runs daily at midnight UTC
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 6 * * *"
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - swiftlint:
+          context:
+            - Slack Orb
+      - depsvalidator:
+          context:
+            - Slack Orb
+      - build-sdk:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+          name: Build SDK
+          configuration: "Release"
+          report_failure: true
+          matrix:
+            parameters:
+              xcode: ["13.1.0", "13.2.1"]
+      - build-tests:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+            - Maps SDK/Public Mapbox Token
+          configuration: "Release"
+          report_failure: true
+          name: Build tests (nightly)
+      - run-unit-tests:
+          context:
+            - Slack Orb
+          xcode: 14.1.0
+          matrix:
+            parameters:
+              destination: ["OS=15.5,name=iPhone 13", "OS=16.1,name=iPhone 14"]
+          requires:
+            - Build tests (nightly)
+      - run-unit-tests:
+          context:
+            - Slack Orb
+          xcode: 12.5.1
+          disable_codecoverage: true
+          matrix:
+            parameters:
+              destination: ["OS=13.7,name=iPhone 11", "OS=14.5,name=iPhone 11"]
+          requires:
+            - Build tests (nightly)
+      - run-integration-tests:
+          context:
+            - Slack Orb
+          requires:
+              - Build tests (nightly)
+          name: Run integration tests (nightly)
+      - build-host-tests:
+          context:
+            - Slack Orb
+            - Fastlane Match
+            - SDK Registry Token
+            - Apple Machine account
+            - Maps SDK/Public Mapbox Token
+          name: Build MapboxTestHost tests
+      - run-firebase-tests:
+          context:
+            - Slack Orb
+            - Maps SDK/Google Cloud credentials
+          name: Run MapboxTestHost tests
+          scheme: MapboxTestHost
+          requires:
+            - Build MapboxTestHost tests
+      - build-examples-tests:
+          context:
+            - Slack Orb
+            - Fastlane Match
+            - SDK Registry Token
+            - Apple Machine account
+            - Maps SDK/Public Mapbox Token
+          name: Build Examples tests
+      - run-firebase-tests:
+          context:
+            - Slack Orb
+            - Maps SDK/Google Cloud credentials
+          name: Run Examples tests
+          scheme: Examples
+          requires:
+            - Build Examples tests
+      - create-xcframework:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+          create-xcframework-always-run: true
+          report_failure: true
+          xcode: "13.1.0"
+
+  optional-tests:
+    unless: << pipeline.parameters.turf-revision >>
+    jobs:
+      - run-tests?:
+          type: approval
+          filters:
+            branches:
+              ignore: main
+      - build-host-tests:
+          context:
+            - Slack Orb
+            - Fastlane Match
+            - SDK Registry Token
+            - Apple Machine account
+            - Maps SDK/Public Mapbox Token
+          name: Build MapboxTestHost tests [non-main]
+          requires:
+            - run-tests?
+      - run-firebase-tests:
+          context:
+            - Slack Orb
+            - Maps SDK/Google Cloud credentials
+          name: Run MapboxTestHost tests [non-main]
+          scheme: MapboxTestHost
+          requires:
+            - Build MapboxTestHost tests [non-main]
+          devices: --device model=iphone8,version=14.7
+
+      - run-examples-tests?:
+          type: approval
+          filters:
+            branches:
+              ignore: main
+      - build-examples-tests:
+          context:
+            - Slack Orb
+            - Fastlane Match
+            - SDK Registry Token
+            - Apple Machine account
+            - Maps SDK/Public Mapbox Token
+          name: Build Examples tests [non-main]
+          requires:
+            - run-examples-tests?
+      - run-firebase-tests:
+          context:
+            - Slack Orb
+            - Maps SDK/Google Cloud credentials
+          name: Run Examples tests [non-main]
+          scheme: Examples
+          requires:
+            - Build Examples tests [non-main]
+          devices: --device model=iphone13pro,version=15.7
+
+  steve:
+    unless: << pipeline.parameters.turf-revision >>
+    jobs:
+      - sanity-check:
+          context:
+            - Slack Orb
+      - swiftlint:
+          context:
+            - Slack Orb
+      - depsvalidator:
+          context:
+            - Slack Orb
+          name: Check dependencies versions
+      - build-sdk:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+          name: Build SDK
+          xcode: "13.1.0"
+          configuration: "Release"
+
+      - build-sdk-for-api-compatibility-check:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+      - build-baseline-sdk:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+      - check-api-compatibility:
+          context:
+            - Slack Orb
+          requires:
+            - build-sdk-for-api-compatibility-check
+            - build-baseline-sdk
+      - create-xcframework:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+      - validate-integrations-for-branch:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+
+      # Trigger mobile-metrics workflows
+      - trigger-metrics-v2:
+          context:
+            - Slack Orb
+            - Maps SDK/CircleCI API Token
+      - trigger-binary-size:
+          context:
+            - Slack Orb
+            - Maps SDK/CircleCI API Token
+          requires:
+            - Build SDK
+      - trigger-metrics-build:
+          context:
+            - Slack Orb
+            - Maps SDK/CircleCI API Token
+          requires:
+            - Build SDK
+      - trigger-metrics-collection:
+          context:
+            - Slack Orb
+            - Maps SDK/CircleCI API Token
+          requires:
+            - Build SDK
+          filters:
+            branches:
+              only: main
+
+      # Run unit tests on CI simulator
+      - build-tests:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+            - Maps SDK/Public Mapbox Token
+          name: Build tests
+      - run-unit-tests:
+          context:
+            - Slack Orb
+          xcode: 14.1.0
+          matrix:
+            parameters:
+              destination: ["OS=15.5,name=iPhone 13", "OS=16.1,name=iPhone 14"]
+          requires:
+            - Build tests
+      - run-unit-tests:
+          context:
+            - Slack Orb
+          xcode: 12.5.1
+          disable_codecoverage: true
+          matrix:
+            parameters:
+              destination: ["OS=13.7,name=iPhone 11", "OS=14.5,name=iPhone 11"]
+          requires:
+            - Build tests
+      - run-integration-tests:
+          context:
+            - Slack Orb
+          requires:
+              - Build tests
+          name: Run integration tests
+
+      - build-tests:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+            - Maps SDK/Public Mapbox Token
+          name: build-tests-min-turf
+          turf-revision: v2.0.0
+
+      - run-unit-tests:
+          context:
+            - Slack Orb
+          name: run-unit-tests-min-turf
+          xcode: 13.1.0
+          destination: OS=15.0,name=iPhone 12
+          requires:
+            - build-tests-min-turf
+
+      # Build all tests with host application
+      # Run on main by default
+      # Can be approved to run on other branches
+      - build-host-tests:
+          context:
+            - Slack Orb
+            - Fastlane Match
+            - SDK Registry Token
+            - Apple Machine account
+            - Maps SDK/Public Mapbox Token
+          name: Build MapboxTestHost tests
+      - run-firebase-tests:
+          context:
+            - Slack Orb
+            - Maps SDK/Google Cloud credentials
+          name: Run MapboxTestHost tests
+          scheme: MapboxTestHost
+          requires:
+            - Build MapboxTestHost tests
+          filters:
+            branches:
+              only: main
+
+      # Build and Run tests on Examples scheme.
+      # Enabled by-default on 'main' branch
+      # Can be approved on purpose for others
+      - build-examples-tests:
+          context:
+            - Slack Orb
+            - Fastlane Match
+            - SDK Registry Token
+            - Apple Machine account
+            - Maps SDK/Public Mapbox Token
+          name: Build Examples tests
+      - run-firebase-tests:
+          context:
+            - Slack Orb
+            - Maps SDK/Google Cloud credentials
+          name: Run Examples tests
+          scheme: Examples
+          requires:
+            - Build Examples tests
+          filters:
+            branches:
+              only: main
+
+      # Notify internal CI about main and release branch updates
+      - trigger-internal-ci-sync:
+          context:
+            - Slack Orb
+            - Maps SDK/CircleCI API Token
+          filters:
+            branches:
+              only:
+                - main
+                - /^release/v10.*/
+
+      # Configure triggering end-to-end verification
+      - sdk-e2e-test:
+          context:
+            - Slack Orb
+            - Maps SDK/CircleCI API Token
+          filters:
+              branches:
+                  ignore:
+                      - main
+          name: run-sdk-e2e-test-devel
+      - sdk-e2e-test:
+          context:
+            - Slack Orb
+            - Maps SDK/CircleCI API Token
+          filters:
+              branches:
+                  only:
+                      - main
+              tags:
+                  only: /^v.*/
+          name: run-sdk-e2e-test-validation
+          validation: true
+      - generate-docc:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+            - Maps SDK/Public Mapbox Token
+          filters:
+            branches:
+              only: main
+      - upload-docc:
+          context:
+            - Slack Orb
+          requires:
+            - generate-docc
+          filters:
+            branches:
+              only: main
+
+  release:
+    jobs:
+      - release-precheck:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+          <<: *release-anchor
+          requires: []
+      - trigger-metrics-v2:
+          context:
+            - Slack Orb
+            - Maps SDK/CircleCI API Token
+          <<: *release-anchor
+      - build-baseline-sdk:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+          <<: *release-anchor
+      - build-dynamic:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+          <<: *release-anchor
+      - build-static:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+          <<: *release-anchor
+      - build-docs:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+          <<: *release-anchor
+      - build-studio-preview:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+          <<: *release-anchor
+      - check-api-compatibility:
+          context:
+            - Slack Orb
+          <<: *release-anchor
+          requires:
+            - build-baseline-sdk
+            - build-dynamic
+      - create-registry-pr:
+          context:
+            - Slack Orb
+          <<: *release-anchor
+          requires:
+            - build-static
+            - build-docs
+            - build-studio-preview
+            - check-api-compatibility
+      - wait-registry-pr:
+          <<: *release-anchor
+          requires:
+            - create-registry-pr
+          type: approval
+      - check-registry:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+          <<: *release-anchor
+          requires:
+            - wait-registry-pr
+      - create-docs-prs:
+          context:
+            - Slack Orb
+          <<: *release-anchor
+          requires:
+            - check-registry
+      - update-examples:
+          context:
+            - Slack Orb
+            - Fastlane Match
+            - SDK Registry Token
+            - Apple Machine account
+            - Maps SDK/Public Mapbox Token
+          <<: *release-anchor
+          requires:
+            - check-registry
+      - publish-podspec:
+          context:
+            - Slack Orb
+            - CocoaPods trunk token
+          <<: *release-anchor
+          requires:
+            - check-registry
+      - validate-integrations:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+          <<: *release-anchor
+          requires:
+            - publish-podspec
+      - create-draft-release:
+          context:
+            - Slack Orb
+          <<: *release-anchor
+          requires:
+            - create-docs-prs
+            - update-examples
+            - validate-integrations
+
+  turf-integration:
+    when: << pipeline.parameters.turf-revision >>
+    jobs:
+      - turf-integration-job:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+          name: "Run Unit Tests"
+          turf-revision: << pipeline.parameters.turf-revision >>
+
+# ==============================================================================
+
+jobs:
+
+  # This is a base job that can be merged into specific jobs. It uses anchors
+  # and aliases as described here
+  # https://circleci.com/docs/2.0/writing-yaml/#merging-maps
+  base-job: &base-job
+    parameters:
+      xcode:
+        type: string
+        default: "13.1.0"
+      create-xcframework-always-run:
+        type: boolean
+        default: false
+      configuration:
+        type: string
+        default: "Debug"
+      report_failure:
+        type: boolean
+        default: false
+      scheme:
+        type: string
+        default: "MapboxTestHost"
+      turf-revision:
+        type: string
+        default: ""
+    macos:
+      xcode: << parameters.xcode >>
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
+      CONFIGURATION: << parameters.configuration >>
+    steps:
+      # Don't run the default job
+      - run: exit 1
+
+  sanity-check:
+    executor: xcode-latest
+    steps:
+      - checkout
+      - install-mbx-ci
+      - install-gh
+      - run:
+          name: Check for up-to-date LICENSE.md
+          command: |
+            export GITHUB_TOKEN=$(mbx-ci github reader token)
+            EXPECTED_LICENSE=$(scripts/license/generate-license.sh)
+
+            if [[ "$(cat LICENSE.md)" == "$EXPECTED_LICENSE" ]];
+            then
+              echo "LICENSE.md is up-to-date"
+              exit 0
+            else
+              echo "LICENSE.md is not up-to-date.\n\nExpected LICENSE.md:"
+              echo "$EXPECTED_LICENSE"
+              exit 1
+            fi
+
+  swiftlint:
+    executor: xcode-latest
+    steps:
+      - checkout
+      - run: brew install swiftlint
+      - run: swiftlint lint --strict --reporter junit | tee result.xml
+      - store_artifacts:
+          path: result.xml
+      - store_test_results:
+          path: result.xml
+
+  depsvalidator:
+    executor: xcode-latest
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - checkout
+      - run:
+          name: Build depsvalidator
+          command: swift build --package-path scripts/depsvalidator
+      - run:
+          name: Run depsvalidator
+          command: swift run --package-path scripts/depsvalidator depsvalidator
+
+  build-sdk:
+    <<: *base-job
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - checkout
+      - configure-environment:
+          skip-dependencies: true
+      - run:
+          name: Building MapboxMaps for simulator
+          command: make build-sdk-for-simulator
+          no_output_timeout: 5m
+      - run:
+          name: Building MapboxMaps for device
+          command: make build-sdk-for-device
+          no_output_timeout: 5m
+      - locate-derived-data-directory:
+          base_name: $(basename $(pwd))
+      - store-logs:
+          derived_data_path: $DERIVED_DATA_PATH
+      - report-failure:
+          report_failure: << parameters.report_failure >>
+          message: "build-sdk"
+      - store-default-artifacts
+
+  trigger-binary-size:
+    executor: xcode-latest
+    steps:
+      - run:
+          name: Trigger binary size test
+          command: |
+            if [ -n "${CIRCLECI_API_TOKEN}" ]; then
+              if [[ $CIRCLE_BRANCH == main ]]; then
+                curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_API_TOKEN}
+              else
+                curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\",\"SOURCE_COMPARE_BASELINE\":\"YES\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_API_TOKEN}
+              fi
+            else
+              echo "CIRCLECI_API_TOKEN not provided"
+            fi
+
+  trigger-metrics-build:
+    executor: xcode-latest
+    steps:
+      - run:
+          name: Build metrics tests
+          command: |
+            if [ -n "${CIRCLECI_API_TOKEN}" ]; then
+              if [[ $CIRCLE_BRANCH == main ]]; then
+                curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_API_TOKEN}
+              else
+                echo "Trying $CIRCLE_BRANCH first:"
+                if ! curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/$CIRCLE_BRANCH?circle-token=${CIRCLECI_API_TOKEN}; then
+                  echo "Falling back to `master` branch:"
+                  curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_API_TOKEN}
+                fi
+              fi
+            else
+              echo "CIRCLECI_API_TOKEN not provided"
+            fi
+
+  trigger-metrics-v2:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: Run Workflow
+          command: |
+            RUN_TESTS=false
+
+            if [[ $CIRCLE_BRANCH == "main" || -n $CIRCLE_TAG ]]; then
+              RUN_TESTS=true
+            fi
+
+            curl -X POST "https://circleci.com/api/v2/project/github/mapbox/mapbox-maps-ios-internal/pipeline" \
+                  -H 'Content-Type: application/json' \
+                  -H "Circle-Token: $CIRCLECI_API_TOKEN" \
+                  -d $'{
+                "branch": "main",
+                "parameters": {
+                  "maps-ios-checkout-reference": "<< pipeline.git.revision >>",
+                  "run-tests": '$RUN_TESTS'
+                }
+              }'
+
+  trigger-metrics-collection:
+    parameters:
+      report_failure:
+        type: boolean
+        default: false
+    executor: xcode-latest
+    steps:
+      - run:
+          # TODO: main by default (this is set as a filter), other commits on-demand
+          name: Trigger metrics
+          command: |
+            if [ -n "${CIRCLECI_API_TOKEN}" ]; then
+              curl --fail -X POST --header "Content-Type: application/json" --data "{\"parameters\":{\"run_ios_maps_v10_benchmark\":true,\"ci_ref\":${CIRCLE_BUILD_NUM},\"mapbox_hash\":\"${CIRCLE_SHA1}\",\"target_branch\":\"${CIRCLE_BRANCH}\"},\"branch\":\"master\"}" https://circleci.com/api/v2/project/github/mapbox/mobile-metrics/pipeline?circle-token=${CIRCLECI_API_TOKEN}
+            else
+              echo "CIRCLECI_API_TOKEN not provided"
+            fi
+      - report-failure:
+          report_failure: << parameters.report_failure >>
+          message: "metrics"
+
+  sdk-e2e-test:
+      docker:
+        - image: "mbxci/linux-base:ebee268fbe3d078cdacefee679f09c609006cdf4"
+      resource_class: small
+      parameters:
+          validation:
+              default: false
+              type: boolean
+      steps:
+          - add-mapbox-submodules-key
+          - checkout
+          - install-mbx-ci:
+              platform: linux
+          - run:
+              command: |
+                  curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+                  echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+                  sudo apt update && sudo apt install gh -y
+                  sudo pip3 install gitpython
+                  echo "export CIRCLE_API_TOKEN=$CIRCLECI_API_TOKEN" >> $BASH_ENV
+                  source $BASH_ENV
+              name: Install dependency
+          - when:
+              condition:
+                  not: << parameters.validation >>
+              steps:
+                  - run:
+                      command: |
+                          E2E_TRIGGER=$(./scripts/ci-trigger/ci-e2e-job-trigger-checker.sh || echo -n "retval $?")
+                          if [[ $E2E_TRIGGER == *"retval 1"* ]]; then
+                              echo "E2E tests not requested, skipping."
+                              exit 0
+                          fi
+                          if [[ -z "$CIRCLE_PULL_REQUEST" ]]; then
+                              echo "Not a pull request, skipping."
+                              exit 0
+                          fi
+                          export GITHUB_TOKEN=$(mbx-ci github reader token)
+                          LABELS=$(gh pr view --repo $CIRCLE_REPOSITORY_URL $CIRCLE_PULL_REQUEST --json labels)
+                          if [[ $LABELS == *"e2e_trunk"* ]]; then
+                              export E2E_VERSION_CONFIG="trunk"
+                          elif [[ $LABELS == *"e2e_latest"* ]]; then
+                              export E2E_VERSION_CONFIG="latest"
+                          else
+                              export E2E_VERSION_CONFIG="default"
+                          fi
+                          echo "Run E2E tests with ${E2E_VERSION_CONFIG} config."
+                          scripts/ci-trigger/ci-e2e-compatibility-start-pipeline.py --config mapbox-maps-ios=${CIRCLE_SHA1} --platform all --versions ${E2E_VERSION_CONFIG}
+                      name: Trigger E2E SDK test devel pipeline
+          - when:
+              condition: << parameters.validation >>
+              steps:
+                  - run:
+                      command: |
+                          export E2E_VERSION_CONFIG="latest"
+                          echo "Run E2E tests with ${E2E_VERSION_CONFIG} config."
+                          scripts/ci-trigger/ci-e2e-compatibility-start-pipeline.py --config mapbox-maps-ios=${CIRCLE_SHA1} --platform all --versions ${E2E_VERSION_CONFIG}
+                      name: Trigger E2E SDK test validation pipeline
+
+  build-tests:
+    parameters:
+      configuration:
+        type: string
+        default: "Debug"
+      turf-revision:
+        type: string
+        default: ""
+      report_failure:
+        type: boolean
+        default: false
+    executor: xcode-sdk-min
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - checkout
+      - configure-environment:
+          skip-dependencies: true
+      - when:
+          condition: << parameters.turf-revision >>
+          steps:
+            - run:
+                name: Set Turf Revision
+                command: |
+                  sed -i '' 's/turf-swift.git", from: "2.0.0"/turf-swift.git", .revision("<< parameters.turf-revision >>")/' Package.swift
+      - run:
+          name: Checkout xcodebuild deps
+          command: xcodebuild -resolvePackageDependencies -scheme MapboxMaps -derivedDataPath build
+      - run:
+          name: Building MapboxMaps for simulator
+          command: |
+            xcodebuild build-for-testing \
+              -scheme MapboxMaps \
+              -configuration << parameters.configuration >> \
+              -destination "generic/platform=iOS Simulator" \
+              -derivedDataPath build \
+              -testPlan "UnitTests" -testPlan "IntegrationTests" \
+              COMPILER_INDEX_STORE_ENABLE=NO \
+              ENABLE_TESTABILITY=YES \
+              ONLY_ACTIVE_ARCH=YES
+      - persist_to_workspace:
+          root: build/Build/
+          paths:
+            - Products
+      - report-failure:
+           report_failure: << parameters.report_failure >>
+           message: "unit-test-sdk"
+
+  run-unit-tests:
+    parameters:
+      destination:
+        type: string
+      xcode:
+        type: string
+      disable_codecoverage:
+        type: boolean
+        default: false
+      resource_class:
+        type: string
+        default: macos.x86.medium.gen2
+      xctestrun_prefix:
+        type: string
+        default: MapboxMaps_UnitTests
+    macos:
+      xcode: << parameters.xcode >>
+    resource_class: << parameters.resource_class >>
+    steps:
+      - checkout
+      - attach_workspace:
+          at: build
+      - run:
+          name: Run MapboxMaps unit tests on << parameters.destination >>  simulator
+          command: |
+            XCTESTRUN_PATH=$(find build -type f -name '<< parameters.xctestrun_prefix >>*.xctestrun' | head -1)
+            xcodebuild \
+              test-without-building \
+              -xctestrun "$XCTESTRUN_PATH" \
+              -parallel-testing-enabled NO \
+              -destination 'platform=iOS Simulator,<< parameters.destination >>' \
+              -resultBundlePath MapboxMapsTests.xcresult | tee xcodebuild.log | xcpretty --report junit --output junit.xml
+
+            find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' -exec cp {} . \;
+            find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profraw' -exec cp {} . \;
+      - unless:
+          condition: << parameters.disable_codecoverage >>
+          steps:
+            - collect-code-coverage
+      - run:
+          name: Compress XCResult
+          command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
+          when: always
+      - store_test_results:
+          path: junit.xml
+      - store_artifacts:
+          path: MapboxMapsTests.xcresult.zip
+      - store_artifacts:
+          path: xcodebuild.log
+      - store_artifacts:
+          path: ~/Library/Logs/DiagnosticReports
+      - report-failure:
+          report_failure: true
+          message: "Unit test failed: << parameters.destination >>, Xcode: << parameters.xcode >>"
+
+  run-integration-tests:
+    parameters:
+      destination:
+        type: string
+        default: "name=iPhone 14"
+      xcode:
+        type: string
+        default: "14.0.1"
+      resource_class:
+        type: string
+        default: macos.m1.large.gen1
+    macos:
+      xcode: << parameters.xcode >>
+    resource_class: << parameters.resource_class >>
+    steps:
+      - checkout
+      - attach_workspace:
+          at: build
+      - run:
+          name: Run MapboxMaps integration tests on << parameters.destination >>  simulator
+          command: |
+            XCTESTRUN_PATH=$(find build -type f -name 'MapboxMaps_IntegrationTests*.xctestrun' | head -1)
+            xcodebuild \
+              test-without-building \
+              -xctestrun "$XCTESTRUN_PATH" \
+              -parallel-testing-enabled NO \
+              -destination 'platform=iOS Simulator,<< parameters.destination >>' \
+              -resultBundlePath MapboxMapsTests.xcresult | tee -a xcodebuild.log | xcpretty --report junit --output junit.xml
+
+            find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' -exec cp {} . \;
+      - collect-code-coverage:
+          codecov_flag_name: integration
+      - run:
+          name: Compress XCResult
+          command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
+          when: always
+      - store_test_results:
+          path: junit.xml
+      - store_artifacts:
+          path: MapboxMapsTests.xcresult.zip
+      - store_artifacts:
+          path: xcodebuild.log
+      - store_artifacts:
+          path: ~/Library/Logs/DiagnosticReports
+      - report-failure:
+          message: "Integration test failed: << parameters.destination >>, Xcode: << parameters.xcode >>"
+
+  build-host-tests:
+    executor: xcode-latest
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - checkout
+      - configure-environment:
+          skip-dependencies: true
+      - install-xcodegen
+      - run: bundle install
+      - run:
+          name: Build MapboxTestHost for testing
+          command: bundle exec fastlane build_tests
+      - store_artifacts:
+          path: output/build_products.zip
+      - persist_to_workspace:
+          root: output/
+          paths:
+            - build_products.zip
+      - slack-notify-failure-if-any
+
+  run-firebase-tests:
+    parameters:
+      devices:
+        default: |
+          --device model=iphone13pro,version=15.7 \
+          --device model=iphone11pro,version=14.7 \
+          --device model=iphone8,version=13.6 \
+          --device model=iphonexr,version=12.4 \
+        type: string
+      scheme:
+        type: string
+    executor: xcode-latest
+    steps:
+      - checkout
+      - install-gcloud
+      - configure-environment:
+          skip-dependencies: true
+      - install-python-dependencies
+      - attach_workspace:
+          at: output
+      - run:
+          name: Run << parameters.scheme >> tests on devices
+          command: |
+            gcloud firebase test ios run --test output/build_products.zip \
+              << parameters.devices >> 2>&1 | tee firebase_test_lab_run.log
+          no_output_timeout: 30m
+      - run:
+          name: Download XCResults
+          command: |
+            TEST_LAB_PATH=$(cat firebase_test_lab_run.log | grep -o "test-lab.*/")
+
+            mkdir testlab_results
+            gsutil -m cp -r "gs://${TEST_LAB_PATH}i*" testlab_results
+            zip -r testlab_results.zip testlab_results
+          when: always
+      - run:
+          name: Symbolicate crash logs
+          command: |
+            (
+              unzip output/build_products.zip -d testlab_results/
+              rsync -R testlab_results/*/CrashLogs/*.ips CrashLogs/
+              make symbolicate \
+                BUILD_DIR=CrashLogs \
+                BUILT_DEVICE_PRODUCTS_DIR=testlab_results/Release-iphoneos/ \
+                APP_NAME=<< parameters.scheme >>
+              zip -r crashlogs.zip CrashLogs
+            ) || true
+          when: always
+      - run:
+          name: Update coverage
+          command: |
+            make update-codecov-with-profdata \
+                COVERAGE_ARCH=arm64 \
+                COVERAGE_ROOT_DIR="$(pwd)/testlab_results" \
+                COVERAGE_MAPBOX_MAPS="$(pwd)/$(find . -name "MapboxMaps.o" | xargs)" SCHEME=<< parameters.scheme >>
+      - run:
+          name: Parsing xcresults for errors
+          command: |
+            find "testlab_results" -name '*.xcresult' -exec swift run --package-path scripts/xcparty xcparty {} \;
+          when: on_fail
+      - store_artifacts:
+          path: firebase_test_lab_run.log
+      - store_artifacts:
+          path: crashlogs.zip
+      - store_artifacts:
+          path: testlab_results.zip
+      - store_test_results:
+          path: testlab_results
+      - slack-notify-failure-if-any
+
+  build-examples-tests:
+    executor: xcode-latest
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - checkout
+      - configure-environment:
+          skip-dependencies: true
+      - run:
+          name: Build Examples tests
+          command: |
+            bundle install
+            bundle exec fastlane build_examples_tests
+      - store_artifacts:
+          path: output/build_products.zip
+      - persist_to_workspace:
+          root: output/
+          paths:
+            - build_products.zip
+      - slack-notify-failure-if-any
+
+  create-xcframework:
+    <<: *base-job
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - checkout
+      - configure-environment
+      - ensure-text-exists-in-commit:
+          commit-text: "[create xcframework]"
+          always-run: << parameters.create-xcframework-always-run >>
+      - install-all-dependencies
+      - make-xcframework-bundle:
+          bundle_style: "dynamic"
+      - store_artifacts:
+          path: MapboxMaps.zip
+      - make-xcframework-bundle:
+          bundle_style: "static"
+      - store_artifacts:
+          path: MapboxMaps-static.zip
+      - report-failure:
+          report_failure: << parameters.report_failure >>
+          message: "create-xcframework"
+
+  build-sdk-for-api-compatibility-check:
+    executor: xcode-sdk-min
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - dump-sdk-api:
+          baseline: false
+          output: latest.api.json
+
+
+  build-baseline-sdk:
+    executor: xcode-sdk-min
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - dump-sdk-api:
+          baseline: true
+          output: baseline.api.json
+
+  check-api-compatibility:
+    executor: xcode-latest
+    steps:
+      - checkout
+      - configure-environment:
+          skip-dependencies: true
+      - install-gh
+      - run: brew upgrade gh
+      - attach_workspace:
+          at: workspace
+      - run:
+          name: Check API compatibility
+          command: |
+            export GITHUB_TOKEN=$(mbx-ci github issues public token)
+            scripts/api-compatibility-check/breaking-api-check.py check-api workspace/baseline.api.json workspace/latest.api.json --breakage-allowlist-path scripts/api-compatibility-check/breakage_allowlist.txt --report-path api-compatibility-report.txt --comment-pr
+      - store_artifacts:
+          path: api-compatibility-report.txt
+      - store-default-artifacts
+
+  validate-integrations-for-branch:
+    description: <
+      This job is designed to be called on daily bases.
+      It is validating dependency managers integration per branch version rule.
+      However, this job would run exclusively for open PRs to the release branches (aka "release/v.*"")
+    executor: xcode-latest
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - checkout
+      - configure-environment:
+          skip-dependencies: true
+      - install-xcodegen
+      - run:
+          name: Validate SPM and CocoaPods integrations for current branch
+          command: scripts/validate-integrations/validate-integrations.sh -b $CIRCLE_BRANCH
+      - store-default-artifacts
+
+  validate-integrations:
+    description: <
+      This job is designed to be called after SDK Registry PR merge.
+      It requires binaries to be publicly available and downloadable
+      SPM, Cocoapods and DirectDownload tests would be called.
+    executor: xcode-latest
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - checkout
+      - configure-environment:
+          skip-dependencies: true
+      - install-xcodegen
+      - run:
+          name: Inject new Podspec version to CDN cache
+          description: |
+            Force adding new version to the cache to avoid long running clone operation
+            The following command would take the latest CocoaPods version from cache.
+
+            Alternative is to replace CDN with Specs repository and checkout it for the latest changes. It usually takes 3+ minutes on CircleCI
+          command: |
+            source scripts/utilities/cocoapods.sh
+            pod_inject_cdn_version MapboxMaps "$VERSION"
+      - run:
+          name: Test direct download integrations
+          command: scripts/validate-integrations/validate-integrations.sh -v "$VERSION"
+      - store-default-artifacts
+      - slack-notify-failure-if-any
+
+  release-precheck:
+    executor: xcode-latest
+    steps:
+      - checkout
+      - parse-release-version-if-available
+      - run:
+          name: Podspec points to the release version
+          command: '[[ $(pod ipc spec  MapboxMaps.podspec | jq -r .version) == "$VERSION" ]]'
+      - inject-netrc-credentials
+      - run:
+          name: General podspec check
+          command: pod spec lint --verbose --allow-warnings
+      - slack-notify-failure-if-any
+
+  build-dynamic:
+    executor: xcode-sdk-min
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - checkout
+      - configure-environment:
+          skip-dependencies: true
+      - install-xcodegen
+      - install-python-dependencies
+      - run:
+          name: Build dynamic SDK
+          command: ./package-mapbox-maps.sh dynamic
+          working_directory: scripts/release/packager
+      - store_artifacts:
+          path: scripts/release/packager/MapboxMaps.zip
+      - persist_to_workspace:
+          root: scripts/release/packager
+          paths:
+            - MapboxMaps.zip
+      - run:
+          name: Dump the SDK to a JSON file
+          command: scripts/api-compatibility-check/breaking-api-check.py dump scripts/release/packager/MapboxMaps.zip --module MapboxMaps -o latest.api.json
+      - persist_to_workspace:
+          root: .
+          paths:
+            - latest.api.json
+      - run:
+          name: Upload to S3
+          command: scripts/release/upload-to-registry.sh scripts/release/packager/MapboxMaps.zip mobile-maps-ios "$VERSION" MapboxMaps.zip
+      - slack-notify-failure-if-any
+
+  build-static:
+    executor: xcode-sdk-min
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - checkout
+      - configure-environment:
+          skip-dependencies: true
+      - install-xcodegen
+      - install-python-dependencies
+      - run:
+          name: Build dynamic SDK
+          command: ./package-mapbox-maps.sh static
+          working_directory: scripts/release/packager
+      - store_artifacts:
+          path: scripts/release/packager/MapboxMaps-static.zip
+      - run:
+          name: Upload to S3
+          command: scripts/release/upload-to-registry.sh scripts/release/packager/MapboxMaps-static.zip mobile-maps-ios-static "$VERSION" MapboxMaps-static.zip
+      - slack-notify-failure-if-any
+
+  build-docs:
+    macos:
+      xcode: 13.4.1
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - checkout
+      - configure-environment:
+          skip-dependencies: true
+      - make-docs
+      - slack-notify-failure-if-any
+
+  build-studio-preview:
+    executor: xcode-latest
+    steps:
+      - checkout
+      - configure-environment:
+          skip-dependencies: true
+      - run:
+          name: Build Studio Preview with new branch
+          command: scripts/validate-integrations/validate-studio-preview.sh -c "$CIRCLE_SHA1"
+      - slack-notify-failure-if-any
+
+  create-registry-pr:
+    executor: xcode-latest
+    steps:
+      - checkout
+      - configure-environment:
+          skip-dependencies: true
+      - attach_workspace:
+          at: workspace
+      - run: ls -lGA workspace
+      - run:
+          name: Create SDK Registry PR
+          command: scripts/release/create-api-downloads-pr.sh mobile-maps-ios "$VERSION"
+      - slack-notify-failure-if-any
+
+  check-registry:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - parse-release-version-if-available
+      - inject-netrc-credentials
+      - run:
+          name: Wait binaries public access
+          command: |
+            echo $VERSION
+            timeout 3600 bash -c 'while [[ "$(curl -n -s -o /dev/null -w ''%{http_code}'' https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/$VERSION/MapboxMaps.zip)" != "200" ]]; do sleep 5; done' || false
+          no_output_timeout: 60m
+      - slack-notify-failure-if-any
+
+  create-docs-prs:
+    executor: xcode-latest
+    steps:
+      - checkout
+      - configure-environment:
+          skip-dependencies: true
+      - install-gh
+      - attach_workspace:
+          at: workspace
+      - run:
+          name: Create documentation pull requests
+          command: |
+            unzip workspace/api-docs.zip -d .
+            scripts/release/create-docs-prs.sh -p api-docs
+      - store-default-artifacts
+      - slack-notify-failure-if-any
+
+  update-examples:
+    executor: xcode-latest
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - checkout
+      - configure-environment:
+          skip-dependencies: true
+      - run:
+          name: Release Examples App to TestFlight
+          command: |
+            bundle install
+            bundle exec fastlane beta
+          no_output_timeout: "20m"
+      - slack-notify-failure-if-any
+
+
+  publish-podspec:
+    executor: xcode-latest
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - checkout
+      - configure-environment:
+          skip-dependencies: true
+      - run:
+          name: Publish CocoaPods Podspec
+          command: |
+            pod repo add-cdn trunk https://cdn.cocoapods.org/
+            pod trunk push --allow-warnings
+      - slack-notify-failure-if-any
+
+  create-draft-release:
+    executor: xcode-latest
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - checkout
+      - configure-environment:
+          skip-dependencies: true
+      - install-gh
+      - run: brew install taiki-e/tap/parse-changelog
+      - run:
+          name: Create draft release on GitHub
+          command: ./scripts/release/create-github-draft-release.sh "$VERSION"
+      - slack/notify:
+          event: pass
+          template: success_tagged_deploy_1
+
+  turf-integration-job:
+    parameters:
+      turf-revision:
+        type: string
+        default: ""
+    macos:
+      xcode: "13.1.0"
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
+      CONFIGURATION: "Debug"
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - checkout
+      - configure-environment:
+          skip-dependencies: true
+      - turf-report-pending:
+          turf-revision: << parameters.turf-revision >>
+      - run:
+          name: Set Turf Revision
+          command: |
+            sed -i '' 's/turf-swift.git", from: "2.0.0"/turf-swift.git", .revision("<< parameters.turf-revision >>")/' Package.swift
+      # Building and testing are split into 2, with the aim that we'll be able to reuse
+      # the build product and test on multiple simulators
+      - run:
+          name: Building MapboxMaps for simulator
+          command: make build-sdk-for-testing-simulator
+          no_output_timeout: 5m
+      - run:
+          name: Testing MapboxMaps with simulator
+          command: make test-sdk-without-building-simulator
+      - run:
+          name: Compress XCResult
+          command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
+          when: always
+      - store_artifacts:
+          path: MapboxMapsTests.xcresult.zip
+      - locate-derived-data-directory:
+          base_name: $(basename $(pwd))
+      - store-logs:
+          artifact_name: MapboxMaps
+          derived_data_path: $DERIVED_DATA_PATH
+      - turf-report-success:
+          turf-revision: << parameters.turf-revision >>
+      - turf-report-failure:
+          turf-revision: << parameters.turf-revision >>
+
+  trigger-internal-ci-sync:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - run:
+          name: Notify maps internal CI about $CIRCLE_BRANCH branch update
+          command: |
+            curl -X POST "https://circleci.com/api/v2/project/github/mapbox/mapbox-maps-ios-private/pipeline" \
+                -H 'Content-Type: application/json' \
+                -H "Circle-Token: $CIRCLECI_API_TOKEN" \
+                -d $'{
+                        "branch": "internal",
+                        "parameters": {
+                          "mapbox_sync_branch": "'$CIRCLE_BRANCH'"
+                        }
+                      }'
+
+  generate-docc:
+    executor: xcode-latest
+    steps:
+      - checkout
+      - configure-environment:
+          skip-dependencies: true
+      - run:
+          name: Generate docc
+          command: |
+            xcodebuild docbuild -config Release -scheme MapboxMaps -destination "generic/platform=iOS"
+            DOCCARCHIVE_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "MapboxMaps.doccarchive" | head -1)
+            echo "Found DocC archive at: $DOCCARCHIVE_PATH"
+            cp -r $DOCCARCHIVE_PATH MapboxMaps.doccarchive
+            ls -la MapboxMaps.doccarchive
+            zip -r MapboxMaps.doccarchive.zip MapboxMaps.doccarchive
+
+            xcrun docc process-archive transform-for-static-hosting MapboxMaps.doccarchive \
+              --output-path latest \
+              --hosting-base-path "ios/maps/api/latest/"
+      - store_artifacts:
+          path: MapboxMaps.doccarchive.zip
+      - persist_to_workspace:
+          root: .
+          paths:
+            - latest
+      - report-failure:
+          report_failure: true
+          message: "Failed to generate docc"
+
+  upload-docc:
+    executor: xcode-latest
+    steps:
+      - checkout
+      - configure-environment:
+          skip-dependencies: true
+      - attach_workspace:
+          at: .
+      - run:
+          name: Create documentation pull requests
+          command: |
+            scripts/release/create-docs-prs.sh -sep latest
+          environment:
+            VERSION: latest
+      - report-failure:
+          report_failure: true
+          message: "Failed to upload docc"
+
+
+# ==============================================================================
+# Reusable commands
+commands:
+
+  configure-environment:
+    parameters:
+      skip-dependencies:
+        type: boolean
+        default: false
+    steps:
+      # CircleCI's checkout step configures git so that it will always clone
+      # from github.com via SSH. It also seeds the known_hosts file, however the
+      # value it uses doesn't seem to work for xcodebuild when it is resolving
+      # the Swift package graph. This step reverts CircleCI's git configuration
+      # change so that xcodebuild can clone Swift packages via HTTPS.
+      - run:
+          name: Allow cloning from github.com via HTTPS
+          command: git config --global --unset url."ssh://git@github.com".insteadOf
+      - inject-netrc-credentials
+      - inject-mapbox-public-token
+      - declare-default-artifacts-path
+      - parse-release-version-if-available
+      - install-mbx-ci
+      - add-mapbox-submodules-key
+      - unless:
+          condition: << parameters.skip-dependencies >>
+          steps:
+            - install-all-dependencies
+
+
+  inject-netrc-credentials:
+    steps:
+      - run:
+          name: Configure .netrc
+          command: |
+            echo "machine api.mapbox.com login mapbox password $SDK_REGISTRY_TOKEN" >> ~/.netrc
+            chmod 0600 ~/.netrc
+
+  inject-mapbox-public-token:
+    steps:
+      - run:
+          name: Injecting Mapbox public token
+          command: |
+            echo "MAPBOX_ACCESS_TOKEN = ${MAPBOX_ACCESS_TOKEN}" > ./developer.xcconfig
+            echo "${MAPBOX_ACCESS_TOKEN}" > ~/.mapbox
+            echo "${MAPBOX_ACCESS_TOKEN}" > ./Tests/MapboxMapsTests/Helpers/MapboxAccessToken
+
+  add-mapbox-submodules-key:
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - 9d:db:07:0b:62:81:11:c3:46:21:8e:fa:51:99:80:2d
+
+  install-mbx-ci:
+    parameters:
+      platform:
+        type: enum
+        enum:
+          - darwin
+          - linux
+        default: darwin
+      arch:
+        type: enum
+        enum:
+          - amd64
+          - arm64
+        default: amd64
+      version:
+        type: string
+        default: latest
+      install_path:
+        type: string
+        default: /usr/local/bin
+    steps:
+      - run:
+          name: Install latest mbx-ci
+          command: |
+            curl -Ls https://mapbox-release-engineering.s3.amazonaws.com/mbx-ci/<<parameters.version>>/mbx-ci-<<parameters.platform>>-<<parameters.arch>> | sudo tee <<parameters.install_path>>/mbx-ci >/dev/null
+            sudo chmod 755 <<parameters.install_path>>/mbx-ci
+            mbx-ci aws setup
+
+  ensure-text-exists-in-commit:
+    parameters:
+      commit-text:
+        type: string
+      always-run:
+        type: boolean
+    steps:
+      - run:
+          name: Check for "<< parameters.commit-text >>" in commit message
+          command: |
+            export RUN_JOB="$(git log -1 --pretty=%B | fgrep "<< parameters.commit-text >>" | wc -l)"
+            if << parameters.always-run >>; then
+              echo "Job configured to always run"
+            elif [[ "$RUN_JOB" -ne "0" ]]; then
+              echo "<< parameters.commit-text >> found."
+            else
+              echo "Skipping job"
+              circleci-agent step halt
+            fi
+
+  setup-google-cloud-account:
+    steps:
+      - run:
+          name: Setup Google Cloud default application credentials
+          command: |
+            mkdir -p ~/.config/gcloud/
+            echo "${GOOGLE_CLOUD_KEY_FILE}" > ~/.config/gcloud/application_default_credentials.json
+
+  login-google-cloud-platform:
+    parameters:
+      project:
+        type: string
+        default: mapbox-maps-ios-dc24c
+    steps:
+      - run:
+          name: Log in to Google Cloud Platform
+          command: gcloud auth activate-service-account --key-file ~/.config/gcloud/application_default_credentials.json --project << parameters.project >>
+
+  get-test-results-from-firebase:
+    parameters:
+      scheme:
+        type: string
+        default: ""
+    steps:
+      - run:
+          name: Retrieve TestResult from gcloud for << parameters.scheme >>
+          command: |
+            testResult=$(gsutil ls gs://${TEST_LAB_EXAMPLES}/<< parameters.scheme >>-${CIRCLE_BUILD_NUM}/iphone11-13.6-en_US-portrait)
+            gsutil cp -r $testResult $DERIVED_DATA_PATH
+          when: always
+
+  store-logs:
+    parameters:
+      artifact_name:
+        type: string
+        default: "build"
+      derived_data_path:
+        type: string
+        default: "build"
+    description: "Save Logs as Artifacts"
+    steps:
+      - run:
+          name: Zipping logs
+          command: |
+            export ZIP_FILE="$PWD/<< parameters.artifact_name >>.zip"
+            cd "<< parameters.derived_data_path >>"
+            zip -r "$ZIP_FILE" Build/Products || echo "Skipping Build/Products"
+            zip -r "$ZIP_FILE" Build/ProfileData || echo "Skipping Build/ProfileData"
+            zip -r "$ZIP_FILE" Logs || echo "Skipping Logs"
+          when: always
+      - store_artifacts:
+          path: << parameters.artifact_name >>.zip
+
+  store-firebase-artifacts:
+    parameters:
+      artifact_name:
+        type: string
+        default: "firebase"
+      derived_data_path:
+        type: string
+        default: "build"
+    description: "Save firebase Results as Artifacts"
+    steps:
+      - run:
+          name: Zipping firebase results
+          command: |
+            export ZIP_FILE="$PWD/<< parameters.artifact_name >>.zip"
+            cd "<< parameters.derived_data_path >>"
+            zip -r "$ZIP_FILE" xcodebuild_output.log || echo "Skipping xcodebuild_output.log"
+            zip -r "$ZIP_FILE" video.mp4 || echo "Skipping video.mp4"
+            zip -r "$ZIP_FILE" test_result_0.xml || echo "Skipping test_result_0.xml"
+            zip -r "$ZIP_FILE" syslog.txt || echo "Skipping syslog.txt"
+            zip -r "$ZIP_FILE" TestLogs || echo "Skipping TestLogs"
+            zip -r "$ZIP_FILE" ProfileData || echo "Skipping ProfileData"
+            zip -r "$ZIP_FILE" CrashLogs || echo "Skipping CrashLogs"
+          when: always
+      - store_artifacts:
+          path: << parameters.artifact_name >>.zip
+
+  install-gcloud:
+    # Link for gcloud versions: https://cloud.google.com/sdk/docs/downloads-versioned-archives#installation_instructions
+    parameters:
+      version:
+        type: string
+        default: "google-cloud-cli-409.0.0-darwin-x86_64.tar.gz"
+      checksum:
+        type: string
+        default: "01db2162ebd5ba0983e9ee151893ba7ef4beef4643422db327338009468de3df"
+    description: "Install gcloud"
+    steps:
+      - run:
+          name: Install gcloud
+          command: |
+            mkdir /tmp/gcloud && cd /tmp/gcloud
+
+            curl -OL https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/<< parameters.version >>
+            echo '<< parameters.checksum >> *<< parameters.version >>' >> checksumfile
+            shasum -a 256 -c checksumfile
+
+            tar zxvf << parameters.version >>
+            ./google-cloud-sdk/install.sh -q --install-python false
+
+            echo "source /tmp/gcloud/google-cloud-sdk/path.bash.inc" >> $BASH_ENV
+            echo "source /tmp/gcloud/google-cloud-sdk/completion.bash.inc" >> $BASH_ENV
+      - setup-google-cloud-account
+      - login-google-cloud-platform
+
+  install-all-dependencies:
+    description: "Install Dependencies"
+    steps:
+      - install-python-dependencies
+      - install-xcodegen
+      - install-gh
+      - install-ccache
+
+  install-python-dependencies:
+    description: "Install Python Dependencies"
+    steps:
+      - run:
+          name: Install python dependencies
+          command: python3 -m pip install awscli gitpython requests python-dateutil pyyaml
+
+  install-xcodegen:
+    description: "Install Xcodegen from Homebrew"
+    steps:
+      - run:
+          name: Install Xcodegen
+          command: brew install xcodegen
+
+  install-gh:
+    description: "Install gh from Homebrew"
+    steps:
+      - run:
+          name: Install gh
+          command: brew install gh
+
+  install-ccache:
+    description: "Install ccache from Homebrew"
+    steps:
+      - run:
+          name: Install ccache
+          command: brew install ccache
+
+  make-docs:
+    description: "Generate Documentation"
+    steps:
+      - install-gh
+      - run: git submodule update --init -- scripts/doc-generation/jazzy-theme
+      - run: scripts/doc-generation/generate-maps-docs.sh -v
+      - run: zip -r api-docs.zip api-docs
+      - store_artifacts:
+          path: api-docs.zip
+      - persist_to_workspace:
+          root: .
+          paths:
+            - api-docs.zip
+
+  open-docs-pull-requests:
+    steps:
+      - run:
+          name: Create documentation pull requests
+          command: scripts/release/create-docs-prs.sh -p api-docs
+
+  make-xcframework-bundle:
+    parameters:
+      bundle_style:
+        type: string
+        default: "dynamic"
+      working_directory:
+        type: string
+        default: "."
+    description: "Create << parameters.bundle_style >> xcframework bundle"
+    steps:
+      - run:
+          name: Creating << parameters.bundle_style >> bundled artifact
+          command: |
+            echo "Navigating to packager script"
+            cd scripts/release/packager
+            ./package-mapbox-maps.sh << parameters.bundle_style >>
+            echo "Moving zip to project root"
+            mv MapboxMaps*.zip /Users/distiller/project/
+          working_directory: << parameters.working_directory >>
+
+  slack-notify-failure-if-any:
+    steps:
+      - slack/notify:
+          event: fail
+          mentions: '@maps-ios'
+          template: basic_fail_1
+          branch_pattern: ^(main|release.*)$
+
+  report-failure:
+    parameters:
+      report_failure:
+        type: boolean
+        default: false
+      message:
+        type: string
+        default: ""
+    steps:
+      - run:
+          name: Detected failure, report to Slack? << parameters.report_failure >>
+          command: |
+            if ! << parameters.report_failure >> ; then
+              echo "Skipping Slack notification"
+              circleci-agent step halt
+            fi
+          when: on_fail
+      - slack/notify:
+          branch_pattern: main
+          event: fail
+          custom: |
+            {
+              "text": "CircleCI job failed.",
+              "blocks": [
+                  {
+                      "type": "header",
+                      "text": {
+                          "type": "plain_text",
+                          "text": "Job Failed. :red_circle:",
+                          "emoji": true
+                      }
+                  },
+                  {
+                      "type": "section",
+                      "fields": [
+                          {
+                              "type": "mrkdwn",
+                              "text": "*Job*: ${CIRCLE_JOB}"
+                          }
+                      ]
+                  },
+                  {
+                      "type": "section",
+                      "fields": [
+                          {
+                              "type": "mrkdwn",
+                              "text": "*Project*: $CIRCLE_PROJECT_REPONAME"
+                          },
+                          {
+                              "type": "mrkdwn",
+                              "text": "*Branch*: $CIRCLE_BRANCH"
+                          },
+                          {
+                              "type": "mrkdwn",
+                              "text": "*Author*: @${CIRCLE_USERNAME}"
+                          }
+                      ],
+                      "accessory": {
+                          "type": "image",
+                          "image_url": "https://assets.brandfolder.com/otz5mn-bw4j2w-6jzqo8/original/circle-logo-badge-black.png",
+                          "alt_text": "CircleCI logo"
+                      }
+                  },
+                  {
+                    "type": "section",
+                    "text": {
+                      "type": "mrkdwn",
+                      "text": "*Message*: << parameters.message >>"
+                    }
+                  },
+                  {
+                      "type": "actions",
+                      "elements": [
+                          {
+                              "type": "button",
+                              "text": {
+                                  "type": "plain_text",
+                                  "text": "View Job"
+                              },
+                              "url": "${CIRCLE_BUILD_URL}"
+                          }
+                      ]
+                  }
+              ]
+            }
+
+  locate-derived-data-directory:
+    parameters:
+      base_name:
+        type: string
+    steps:
+      - run:
+          name: Locate derived data directory
+          command: |
+            echo "export DERIVED_DATA_PATH=\"$(find ~/Library/Developer/Xcode/DerivedData -name "<< parameters.base_name >>*" -depth 1)\"" >> $BASH_ENV
+
+  parse-release-version-if-available:
+    steps:
+      - run:
+          name: Parse SDK version from release tag
+          command: |
+            if [[ -n "$CIRCLE_TAG" ]]; then
+              echo "export VERSION=${CIRCLE_TAG#v}" >> $BASH_ENV
+            fi
+
+  declare-default-artifacts-path:
+    steps:
+      - run:
+          name: Create default artifacts folder
+          command: |
+            echo "export DEFAULT_ARTIFACTS_DIR='$(mktemp -d)'" >> $BASH_ENV
+            cat $BASH_ENV
+
+  store-default-artifacts:
+    steps:
+      - run:
+          name: Compress default artifacts
+          command: |
+            CURRENT_DIR=$(pwd)
+            cd $DEFAULT_ARTIFACTS_DIR
+            zip -yr "$CURRENT_DIR/artifacts.zip" . || true
+          when: always
+      - store_artifacts:
+          path: artifacts.zip
+
+  turf-report-pending:
+    parameters:
+      turf-revision:
+        type: string
+    steps:
+      - run:
+          name: Set Turf commit status to pending
+          command: |
+            curl --request POST \
+              --url https://api.github.com/repos/mapbox/turf-swift/statuses/<< parameters.turf-revision >> \
+              --header 'Accept: application/vnd.github.v3+json' \
+              --header "Authorization: token $(mbx-ci github notifier token)" \
+              --data "{\"state\":\"pending\",\"target_url\":\"$CIRCLE_BUILD_URL\",\"description\":\"MapboxMaps SDK integration tests are running\",\"context\":\"Maps SDK Integration\"}"
+
+  turf-report-success:
+    parameters:
+      turf-revision:
+        type: string
+    steps:
+      - run:
+          name: Set Turf commit status to success
+          command: |
+            curl --request POST \
+              --url https://api.github.com/repos/mapbox/turf-swift/statuses/<< parameters.turf-revision >> \
+              --header 'Accept: application/vnd.github.v3+json' \
+              --header "Authorization: token $(mbx-ci github notifier token)" \
+              --data "{\"state\":\"success\",\"target_url\":\"$CIRCLE_BUILD_URL\",\"description\":\"MapboxMaps SDK integration tests passed\",\"context\":\"Maps SDK Integration\"}"
+
+  turf-report-failure:
+    parameters:
+      turf-revision:
+        type: string
+    steps:
+      - run:
+          when: on_fail
+          name: Set Turf commit status to failure
+          command: |
+            curl --request POST \
+              --url https://api.github.com/repos/mapbox/turf-swift/statuses/<< parameters.turf-revision >> \
+              --header 'Accept: application/vnd.github.v3+json' \
+              --header "Authorization: token $(mbx-ci github notifier token)" \
+              --data "{\"state\":\"failure\",\"target_url\":\"$CIRCLE_BUILD_URL\",\"description\":\"MapboxMaps SDK integration tests failed\",\"context\":\"Maps SDK Integration\"}"
+
+  dump-sdk-api:
+    parameters:
+      baseline:
+        type: boolean
+      output:
+        type: string
+    steps:
+      - checkout
+      - run:
+          name: Generate cache file for key
+          command: |
+            xcodebuild -version | head -1 | cut -d ' ' -f 2 >> /tmp/xcode_version.txt
+            if [ << parameters.baseline >> = true ]; then
+              TAG_SUFFIX="${CIRCLE_PROJECT_REPONAME:15}"
+              REVISIONS=()
+              while IFS='' read -r line; do REVISIONS+=("$line"); done < <(git rev-list HEAD -- Sources/MapboxMaps/MapboxMaps.json)
+
+              # loop through revisions and find existing tag
+              for revision in "${REVISIONS[@]}"; do
+                  VERSION="v$(git show "$revision:Sources/MapboxMaps/MapboxMaps.json" | jq -r .version)$TAG_SUFFIX"
+                  if [ "$(git tag -l "$VERSION")" ]; then
+                      echo "Using version: $VERSION"
+                      git rev-parse "$VERSION" > /tmp/MapboxMaps-version.txt
+                      break
+                  fi
+              done
+            else
+              echo "Using current commit: $(git rev-parse HEAD)"
+              git rev-parse HEAD > /tmp/MapboxMaps-version.txt
+            fi
+      - restore_cache:
+          keys:
+            - &sdkCacheKey v3-sdk-dump-{{ checksum "/tmp/MapboxMaps-version.txt" }}-xcode-{{ checksum "/tmp/xcode_version.txt" }}
+      - configure-environment:
+          skip-dependencies: true
+      - install-xcodegen
+      - run:
+          name: Build SDK and dump API to JSON format
+          command: |
+            if [ -f "<< parameters.output >>" ]; then
+              echo "File << parameters.output >> exists."
+              exit 0
+            fi
+
+            if [ << parameters.baseline >> = true ]; then
+              git checkout "$(cat /tmp/MapboxMaps-version.txt)"
+            fi
+
+            pushd scripts/release/packager
+            ./package-mapbox-maps.sh dynamic
+            mv MapboxMaps*.zip /Users/distiller/project/
+            popd
+
+            if [ << parameters.baseline >> = true ]; then
+              git checkout -
+            fi
+
+            scripts/api-compatibility-check/breaking-api-check.py dump MapboxMaps.zip --module MapboxMaps -o "<< parameters.output >>"
+      - save_cache:
+          paths:
+            - << parameters.output >>
+          key: *sdkCacheKey
+      - persist_to_workspace:
+          root: .
+          paths:
+            - << parameters.output >>
+      - store_artifacts:
+          path: << parameters.output >>
+
+  collect-code-coverage:
+    parameters:
+      profdata_path:
+        type: string
+        default: Coverage.profdata
+      binary_name:
+        type: string
+        default: MapboxMaps.o
+      codecov_flag_name:
+        type: string
+        default: unit
+    steps:
+      - run:
+          name: Generate code coverage report
+          command: |
+            BINARY_PATH="$(find build -name "<< parameters.binary_name >>" | head -1)"
+
+            echo "Generating LCOV code coverage report for $BINARY_PATH"
+            xcrun llvm-cov export -arch $(uname -m) -format="lcov" \
+              -instr-profile="<< parameters.profdata_path >>" \
+              "$BINARY_PATH" > coverage.lcov
+
+            echo "Generating TXT code coverage report for $BINARY_PATH"
+            xcrun llvm-cov export -arch $(uname -m) -format=text \
+              -instr-profile="<< parameters.profdata_path >>" \
+              "$BINARY_PATH" > coverage.txt
+
+              zip -r coverage.zip coverage.lcov coverage.txt "<< parameters.profdata_path >>" "$BINARY_PATH" junit*
+      - install-python-dependencies
+      - install-mbx-ci
+      - run:
+          name: Send code coverage
+          command: |
+            curl -Os https://uploader.codecov.io/latest/macos/codecov
+            chmod +x codecov
+            ./codecov -f coverage.lcov -F << parameters.codecov_flag_name >>
+
+            echo "Uploading to S3" ; \
+            python3 ./scripts/code-coverage/parse-code-coverage.py \
+              -g . \
+              -c MapboxMaps \
+              --scheme MapboxMaps \
+              --report coverage.txt
+      - store_artifacts:
+          path: coverage.zip

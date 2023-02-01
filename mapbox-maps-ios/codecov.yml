@@ -1,0 +1,20 @@
+---
+codecov:
+  require_ci_to_pass: false
+  notify:
+    wait_for_ci: false
+ignore:
+  - "Apps"
+  - "PCVD"
+  - "Tests"
+coverage:
+  status:
+    project:
+      default:
+        threshold: 2%
+    patch:
+      default:
+        target: 90%
+comment:
+  require_changes: true
+  layout: "reach, diff, flags, files"

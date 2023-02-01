@@ -1,0 +1,95 @@
+/* East, long */
+"E" = "восток";
+
+/* East by north, long */
+"EbN" = "северо-восток";
+
+/* East by south, long */
+"EbS" = "юго-восток";
+
+/* East-northeast, long */
+"ENE" = "восток-северо-восток";
+
+/* East-southeast, long */
+"ESE" = "юго-юго-восток";
+
+/* North, long */
+"N" = "север";
+
+/* North by east, long */
+"NbE" = "северо-восток";
+
+/* North by west, long */
+"NbW" = "северо-запад";
+
+/* Northeast, long */
+"NE" = "северо-восток";
+
+/* Northeast by east, long */
+"NEbE" = "восток-северо-восток";
+
+/* Northeast by north, long */
+"NEbN" = "северо-северо-восток";
+
+/* North-northeast, long */
+"NNE" = "северо-северо-восток";
+
+/* North-northwest, long */
+"NNW" = "северо-северо-запад";
+
+/* Northwest, long */
+"NW" = "северо-запад";
+
+/* Northwest by north, long */
+"NWbN" = "северо-северо-запад";
+
+/* Northwest by west, long */
+"NWbW" = "запад-северо-запад";
+
+/* South, long */
+"S" = "юг";
+
+/* South by east, long */
+"SbE" = "юго-восток";
+
+/* South by west, long */
+"SbW" = "юго-запад";
+
+/* Southeast, long */
+"SE" = "юго-восток";
+
+/* Southeast by east, long */
+"SEbE" = "восток-юго-восток";
+
+/* Southeast by south, long */
+"SEbS" = "юго-юго-восток";
+
+/* South-southeast, long */
+"SSE" = "юго-юго-восток";
+
+/* South-southwest, long */
+"SSW" = "юго-юго-запад";
+
+/* Southwest, long */
+"SW" = "юго-запад";
+
+/* Southwest by south, long */
+"SWbS" = "юго-юго-запад";
+
+/* Southwest by west, long */
+"SWbW" = "восток-юго-восток";
+
+/* West, long */
+"W" = "запад";
+
+/* West by north, long */
+"WbN" = "северо-запад";
+
+/* West by south, long */
+"WbS" = "юго-запад";
+
+/* West-northwest, long */
+"WNW" = "запад-северо-запад";
+
+/* West-southwest, long */
+"WSW" = "запад-юго-запад";

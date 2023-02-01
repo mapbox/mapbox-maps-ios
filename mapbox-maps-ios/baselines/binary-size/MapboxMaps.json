@@ -1,0 +1,33 @@
+{
+  "binary_name": "MapboxMaps.xcframework",
+  "created": "2022-12-19T12:10:20.121611",
+  "binary_size": 19613669,
+  "platform": {
+    "MapboxMaps_iphoneos_arm64": 2405512,
+    "MapboxMaps_iphoneos_arm64_bitcodeSize": 15695872,
+    "MapboxMaps_iphoneos_arm64_debugSymbolsSize": 190104,
+    "MapboxMaps_iphoneos_arm64_humanReadableSize": "2.3 MB",
+    "MapboxMaps_iphonesimulator_arm64": 2409568,
+    "MapboxMaps_iphonesimulator_arm64_bitcodeSize": 0,
+    "MapboxMaps_iphonesimulator_arm64_debugSymbolsSize": 189664,
+    "MapboxMaps_iphonesimulator_arm64_humanReadableSize": "2.3 MB",
+    "MapboxMaps_iphonesimulator_x86_64": 2475840,
+    "MapboxMaps_iphonesimulator_x86_64_bitcodeSize": 0,
+    "MapboxMaps_iphonesimulator_x86_64_debugSymbolsSize": 190080,
+    "MapboxMaps_iphonesimulator_x86_64_humanReadableSize": "2.4 MB"
+  },
+  "core": {},
+  "build": {
+    "build": 56338,
+    "project": "mapbox-maps-ios",
+    "branch": "HEAD",
+    "sha": "96b72437db29820c0431cfdfd67e7e3cd860fece",
+    "author": "Mai Mai",
+    "timestamp": 1671438467,
+    "message": "Fix assertion failure\n",
+    "xcode": "Xcode 13.1 Build version 13A1030d",
+    "metrics-sha": "b5adb2df9eeed65aab59adcd584e5b4822f0a67f"
+  },
+  "name": "ios-maps-v10",
+  "version": "3"
+}

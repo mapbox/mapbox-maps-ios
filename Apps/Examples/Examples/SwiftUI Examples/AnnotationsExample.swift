@@ -20,7 +20,7 @@ struct AnnotationsExample: View {
     ]
 
     var body: some View {
-        MapboxView(camera: $camera)
+        Map(camera: $camera)
             .annotations(cities.map {
                 var annotation = PointAnnotation(
                     id: $0.name,

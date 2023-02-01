@@ -16,7 +16,7 @@ struct MapSettingsExample : View {
     @State private var settings = Settings()
 
     var body: some View {
-        Map(camera: $camera, initialOptions: initialOptions)
+        Map(camera: $camera, mapOptions: MapOptions(orientation: settings.orientation))
             .cameraBounds(settings.cameraBounds)
             .styleURI(settings.styleURI)
             .gestureOptions(settings.gestureOptions)
@@ -33,10 +33,6 @@ struct MapSettingsExample : View {
                     settingsOpened.toggle()
                 }
             }
-    }
-
-    func initialOptions() -> MapInitOptions {
-        MapInitOptions(mapOptions: MapOptions(orientation: settings.orientation))
     }
 }
 

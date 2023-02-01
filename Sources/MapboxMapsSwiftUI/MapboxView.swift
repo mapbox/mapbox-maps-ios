@@ -17,72 +17,41 @@ public typealias MapLoadedAction = (MapboxMap) -> Void
 
 @_spi(Experimental)
 @available(iOS 13.0, *)
-public typealias Map = MapboxView
-
-/// View displaying Mapbox Map in SwiftUI.
-@_spi(Experimental)
-@available(iOS 13.0, *)
-// TODO: To be renamed to InternalMap
-public struct MapboxView: UIViewRepresentable {
+public struct Map: View {
     public typealias InitialOptionsProvider = () -> MapInitOptions
     public typealias TapAction = (CGPoint) -> Void
     public typealias TapQueryAction = (CGPoint, (Result<[QueriedFeature], Error>)) -> Void
-
     typealias TapActionWithQueryPair = (options: RenderedQueryOptions?, action: TapQueryAction)
-    struct Actions {
-        var onMapLoaded: MapLoadedAction?
-        var onMapTapGesture: TapAction?
-        var tapActionsWithQuery = [TapActionWithQueryPair]()
-    }
-
-    struct StyleURIs {
-        var `default`: StyleURI
-        var darkMode: StyleURI?
-    }
-
-    @Environment(\.colorScheme) var colorScheme
 
     var camera: Binding<CameraState>?
-    var cameraBounds: CameraBoundsOptions?
-    var annotations = [PointAnnotation]()
-    var actions = Actions()
-    var styleURIs = StyleURIs(default: .streets)
-    var getstureOptions: GestureOptions = GestureOptions()
-    var effectiveStyleURI: StyleURI {
-        styleURIs.effectiveURI(with: colorScheme)
-    }
+    private var mapConfiguration = MapConfiguration()
+    private let mapInitOptions: (CameraState?) -> MapInitOptions
 
-    private let initialOptions: InitialOptionsProvider?
-
-    /// Creates an instance showing scpecisif region.
-    ///
-    /// - Parameters:
-    ///     - camera: The camera state to display. If not specified, the default camera options from style will be used. See [center](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-center), [zoom](https://docs.mapbox.com/mapbox-gl-js/style-spec/root/#zoom), [bearing](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-bearing), [pitch](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-pitch).
-    ///     - initialOptions: A closure to provide initial map parameters. It gets called only once when `Map` is created.
-    public init(camera: Binding<CameraState>? = nil, initialOptions: InitialOptionsProvider? = nil) {
-        self.initialOptions = initialOptions
+    public init(
+        camera: Binding<CameraState>? = nil,
+        resourceOptions: ResourceOptions? = nil,
+        mapOptions: MapOptions? = nil
+    ) {
         self.camera = camera
+        mapInitOptions = { camera in
+            MapInitOptions(
+                resourceOptions: resourceOptions ?? ResourceOptionsManager.default.resourceOptions,
+                mapOptions: mapOptions ?? MapOptions(),
+                cameraOptions: camera.map { CameraOptions(cameraState: $0) }
+            )
+        }
     }
 
-    public func makeCoordinator() -> MapCoordinator {
-        MapCoordinator(camera: camera)
-    }
-
-    public func makeUIView(context: UIViewRepresentableContext<MapboxView>) -> MapView {
-        MapView(frame: .zero, mapInitOptions: initialOptions?() ?? MapInitOptions())
-    }
-
-    public func updateUIView(_ mapView: MapView, context: Context) {
-        context.environment.mapViewProvider?.mapView = mapView
-        context.coordinator.mapView = mapView
-        context.coordinator.update(from: self)
+    public var body: some View {
+        ZStack {
+            InternalMap(camera: camera, mapConfiguration: mapConfiguration, mapInitOptions: mapInitOptions)
+        }
     }
 }
 
-@_spi(Experimental)
-@available(iOS 13.0, *)
-extension MapboxView {
-    private func set<T>(_ keyPath: WritableKeyPath<MapboxView, T>, _ value: T) -> Self {
+@available(iOS 14.0, *)
+extension Map {
+    private func set<T>(_ keyPath: WritableKeyPath<Map, T>, _ value: T) -> Self {
         var updated = self
         updated[keyPath: keyPath] = value
         return updated
@@ -90,12 +59,12 @@ extension MapboxView {
 
     /// Sets camera bounds.
     public func cameraBounds(_ cameraBounds: CameraBoundsOptions) -> Self {
-        set(\.cameraBounds, cameraBounds)
+        set(\.mapConfiguration.cameraBounds, cameraBounds)
     }
 
     /// Adds callback to map loaded event.
     public func onMapLoaded(_ callback: @escaping MapLoadedAction) -> Self {
-        set(\.actions.onMapLoaded, callback)
+        set(\.mapConfiguration.actions.onMapLoaded, callback)
     }
 
     /// Sets style to the map.
@@ -104,18 +73,18 @@ extension MapboxView {
     ///     - default: A Style URI to be used by default.
     ///     - darkMode: A Style URI which will automaticaly be used for dark mode. If not specified,
     ///         the default option will continue to be used.
-    public func styleURI(_ default: StyleURI, darkMode: StyleURI? = nil) -> Self {
-        set(\.styleURIs, StyleURIs(default: `default`, darkMode: darkMode))
+    public func styleURI(_ light: StyleURI, dark: StyleURI? = nil) -> Self {
+        set(\.mapConfiguration.styleURIs, .init(light: light, dark: dark))
     }
 
     /// Configures gestures options.
     public func gestureOptions(_ options: GestureOptions) -> Self {
-        set(\.getstureOptions, options)
+        set(\.mapConfiguration.getstureOptions, options)
     }
 
     /// Adds point annotations to the map.
     public func annotations(_ annotations: [PointAnnotation]) -> Self {
-        set(\.annotations, annotations)
+        set(\.mapConfiguration.annotations, annotations)
     }
 
     /// Adds tap handler to the map.
@@ -125,7 +94,7 @@ extension MapboxView {
     /// - Parameters:
     ///  - action: The action to perform.
     public func onMapTapGesture(action: @escaping TapAction) -> Self {
-        set(\.actions.onMapTapGesture, action)
+        set(\.mapConfiguration.actions.onMapTapGesture, action)
     }
 
     /// Adds tap handler which additionally queries rendered features under the point.
@@ -138,21 +107,7 @@ extension MapboxView {
     ///  - action: The action to perform.
     public func onMapTapGesture(queryOptions: RenderedQueryOptions? = nil, action: @escaping TapQueryAction) -> Self {
         var updated = self
-        updated.actions.tapActionsWithQuery.append((options: queryOptions, action: action))
+        updated.mapConfiguration.actions.tapActionsWithQuery.append((options: queryOptions, action: action))
         return updated
-    }
-}
-
-@available(iOS 13.0, *)
-extension MapboxView.StyleURIs {
-    func effectiveURI(with colorScheme: ColorScheme) -> StyleURI {
-        switch colorScheme {
-        case .dark:
-            return darkMode ?? `default`
-        case .light:
-            fallthrough
-        @unknown default:
-            return `default`
-        }
     }
 }

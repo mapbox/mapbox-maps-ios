@@ -412,7 +412,7 @@
 		077C4EEC252F7E88007636F1 /* Examples */ = {
 			isa = PBXGroup;
 			children = (
-				95B5898E2982BF4900BF4F31 /* SiwftUI Examples */,
+				95B5898E2982BF4900BF4F31 /* SwiftUI Examples */,
 				0746C182252FB0F4001638BD /* All Examples */,
 				0746C143252FA97E001638BD /* Models */,
 				0746C144252FA983001638BD /* Controllers */,
@@ -525,7 +525,7 @@
 			path = Annotations;
 			sourceTree = "<group>";
 		};
-		95B5898E2982BF4900BF4F31 /* SiwftUI Examples */ = {
+		95B5898E2982BF4900BF4F31 /* SwiftUI Examples */ = {
 			isa = PBXGroup;
 			children = (
 				95B589B22982BFE800BF4F31 /* SwiftUIExamples.swift */,
@@ -535,7 +535,7 @@
 				95B589B02982BFE800BF4F31 /* SimpleMapExample.swift */,
 				95B589C32982C07900BF4F31 /* Util */,
 			);
-			path = "SiwftUI Examples";
+			path = "SwiftUI Examples";
 			sourceTree = "<group>";
 		};
 		95B589C32982C07900BF4F31 /* Util */ = {

@@ -13,7 +13,7 @@ exemptLabels:
 
 pulls:
   daysUntilStale: 60
-  daysUntilClose: -1
+  daysUntilClose: 7
   markComment: false
   closeComment: >
     This pull request has been automatically detected as stale because it has not had

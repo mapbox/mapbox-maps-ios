@@ -3,7 +3,9 @@
 Mapbox welcomes participation and contributions from everyone.
 
 ## main
+
 * Added basic signposts for performance profiling. To enable them, use `MAPBOX_MAPS_SIGNPOSTS_ENABLED` environment variable. ([#1818](https://github.com/mapbox/mapbox-maps-ios/pull/1818))
+* Fix build erros appearing when SDK distributed as a static library through Cocoapods. ([#1888](https://github.com/mapbox/mapbox-maps-ios/pull/1888))
 
 ## 10.11.0-rc.1 - January 26, 2023
 

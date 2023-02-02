@@ -19,7 +19,7 @@ struct ClusteringExample : View {
                 // This example uses direct modification of Style. It's not SwiftUI-way, yet possible.
                 try! setupClusteringLayer(map.style)
             }
-            .onMapTapGesture(queryOptions: queryOptions) { _, result in
+            .onMapTapGesture(queryOptions: queryOptions) { _, _, result in
                 details = try? Detail.init(features: result.get())
             }
             .ignoresSafeArea()

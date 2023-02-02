@@ -18,6 +18,8 @@ struct SwiftUIRoot: View {
                 Section {
                     ExampleLink("Display details on tap", note: "Query rendered map features on tap and display them in details.", destination: FeaturesQueryExample())
                     ExampleLink("Clustering data", note: "Clusteing annotations using direct style modification", destination: ClusteringExample())
+                    ExampleLink("Image annotations", note: "Displays Image annotations from GeoJSON using custom StyleComponent.", destination: StyleAnnotationsExample())
+                    ExampleLink("Add annotation by tap", note: "Add dynamic annotations using custom StyleComponent.", destination: DynamicAnnotaionsExample())
                 } header: { Text("Use cases") }
             }
             .listStyle(.plain)

@@ -56,8 +56,24 @@ public struct GeoJSONSource: Source {
     /// When loading a map, if PrefetchZoomDelta is set to any number greater than 0, the map will first request a tile at zoom level lower than zoom - delta, but so that the zoom level is multiple of delta, in an attempt to display a full map at lower resolution as quick as possible. It will get clamped at the tile source minimum zoom. The default delta is 4.
     public var prefetchZoomDelta: Double?
 
-    public init() {
+//    public init() {
+//        self.type = .geoJson
+//    }
+    public init(data: GeoJSONSourceData? = nil, maxzoom: Double? = nil, attribution: String? = nil, buffer: Double? = nil, tolerance: Double? = nil, cluster: Bool? = nil, clusterRadius: Double? = nil, clusterMaxZoom: Double? = nil, clusterProperties: [String : Expression]? = nil, lineMetrics: Bool? = nil, generateId: Bool? = nil, promoteId: PromoteId? = nil, prefetchZoomDelta: Double? = nil) {
         self.type = .geoJson
+        self.data = data
+        self.maxzoom = maxzoom
+        self.attribution = attribution
+        self.buffer = buffer
+        self.tolerance = tolerance
+        self.cluster = cluster
+        self.clusterRadius = clusterRadius
+        self.clusterMaxZoom = clusterMaxZoom
+        self.clusterProperties = clusterProperties
+        self.lineMetrics = lineMetrics
+        self.generateId = generateId
+        self.promoteId = promoteId
+        self.prefetchZoomDelta = prefetchZoomDelta
     }
 }
 

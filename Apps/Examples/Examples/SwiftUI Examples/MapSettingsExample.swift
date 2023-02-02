@@ -6,6 +6,17 @@ struct Settings {
     var orientation: NorthOrientation = .upwards
     var gestureOptions: GestureOptions = .init()
     var cameraBounds: CameraBoundsOptions = .init()
+    var globe: Bool = false
+}
+
+struct SettingsStyle: StyleComponent {
+    var globe: Bool
+    var body: some StyleComponent {
+        if globe {
+            StyleProjection(name: .globe)
+            Atmosphere()
+        }
+    }
 }
 
 @available(iOS 14.0, *)
@@ -16,8 +27,9 @@ struct MapSettingsExample : View {
 
     var body: some View {
         Map(camera: $camera, initialOptions: initialOptions)
-            .cameraBounds(settings.cameraBounds)
             .styleURI(settings.styleURI)
+            .style(SettingsStyle(globe: settings.globe))
+            .cameraBounds(settings.cameraBounds)
             .gestureOptions(settings.gestureOptions)
             .ignoresSafeArea()
             // Force full map reinitialization on every orientation change.
@@ -28,7 +40,6 @@ struct MapSettingsExample : View {
             }
             .cameraDebugOverlay(alignment: .bottom, camera: $camera)
             .toolbar {
-
                 Button("Settings") {
                     settingsOpened.toggle()
                 }
@@ -69,6 +80,7 @@ struct SettingsView : View {
                     }
                     .pickerStyle(.segmented)
                 }
+                Toggle("Globe Projection", isOn: $settings.globe)
             }.pickerStyle(.menu)
             Section {
                 Toggle("Pan", isOn: $settings.gestureOptions.panEnabled)

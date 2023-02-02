@@ -8,7 +8,7 @@ struct FeaturesQueryExample: View {
 
     var body: some View {
         Map(camera: $camera)
-            .onMapTapGesture { _, result in
+            .onMapTapGesture { _, _, result in
                 queryResult = try? QueryResult(features: result.get())
             }
             .ignoresSafeArea()

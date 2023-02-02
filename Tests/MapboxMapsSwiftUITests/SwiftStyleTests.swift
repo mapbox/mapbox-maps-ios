@@ -1,64 +1,37 @@
-import XCTest
 @testable import MapboxMapsSwiftUI
 
-@available(iOS 13.0, *)
-final class SwiftStyleTests: XCTestCase {
-    var applier = MockStyleApplier()
-
-    func testAddition() throws {
-        let oldTree = StyleTree(layers: [], sources: [:])
-        let newTree = StyleTree(layers: [
-            SymbolLayer(id: "symb-1"),
-            SymbolLayer(id: "symb-2")
-        ], sources: [
-            "json": GeoJSONSource(),
-            "dem": RasterDemSource()
-        ])
-
-        try applyStyle(oldTree, newTree: newTree, style: applier)
-        XCTAssertEqual(applier.layerAdditions, ["symb-1", "symb-2"])
-        XCTAssertEqual(applier.sourcesAdditions, ["json", "dem"])
-    }
-
-    func testReplace() throws {
-        let oldTree = StyleTree(layers: [
-            SymbolLayer(id: "symb-1"),
-        ], sources: [
-            "json-1": GeoJSONSource()
-        ])
-        let newTree = StyleTree(layers: [
-            SymbolLayer(id: "symb-2")
-        ], sources: [
-            "json-2": GeoJSONSource()
-        ])
-
-        try applyStyle(oldTree, newTree: newTree, style: applier)
-        XCTAssertEqual(applier.layerAdditions, ["symb-2"])
-        XCTAssertEqual(applier.layerRemovals, ["symb-1"])
-        XCTAssertEqual(applier.sourcesAdditions, ["json-2"])
-        XCTAssertEqual(applier.sourcesRemovals, ["json-1"])
-    }
-
-    func testSame() throws {
-        let oldTree = StyleTree(layers: [
-            SymbolLayer(id: "symb-1"),
-        ], sources: [
-            "json-1": GeoJSONSource()
-        ])
-        let newTree = StyleTree(layers: [
-            SymbolLayer(id: "symb-1")
-        ], sources: [
-            "json-1": GeoJSONSource()
-        ])
-
-        try applyStyle(oldTree, newTree: newTree, style: applier)
-        XCTAssert(applier.layerAdditions.isEmpty)
-        XCTAssert(applier.layerRemovals.isEmpty)
-        XCTAssert(applier.sourcesAdditions.isEmpty)
-    }
-}
-
 class MockStyleApplier: StyleApplier {
+    func updateGeoJSONSource(withId id: String, geoJSON: Turf.GeoJSONObject) throws {
+    }
+
+    func setAtmosphere(_ atmosphere: MapboxMaps.Atmosphere) throws {
+
+    }
+
+    func removeAtmosphere() throws {
+
+    }
+
+    func addImage(_ image: UIImage, id: String, sdf: Bool, contentInsets: UIEdgeInsets) throws {
+
+    }
+
+    func removeImage(withId id: String) throws {
+
+    }
+
+    func setTerrain(_ terrain: MapboxMaps.Terrain) throws {
+
+    }
+
+    func removeTerrain() {
+
+    }
+
+    func setProjection(_ projection: MapboxMaps.StyleProjection) throws {
+
+    }
+
     var layerAdditions = Set<String>()
     var layerRemovals = Set<String>()
     

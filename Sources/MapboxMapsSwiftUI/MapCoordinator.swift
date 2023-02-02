@@ -11,6 +11,7 @@ public final class MapCoordinator {
     private var ignoreNotifications = false
     private var bag = Bag()
     private var queriesBag = Bag()
+    private var styleRuntime: StyleRuntime?
 
     init(camera: Binding<CameraState>?) {
         self.camera = camera
@@ -38,6 +39,10 @@ public final class MapCoordinator {
                 guard let self = self else { return }
                 self.actions?.onMapLoaded?(self.mapView.mapboxMap)
             }.addTo(bag)
+            mapView.mapboxMap.onEvery(event: .styleLoaded) { [weak self] _ in
+                self?.styleRuntime?.update()
+            }
+            styleRuntime = StyleRuntime(styleApplier: mapView.mapboxMap.style, comopnent: AnyBuiltinComponent(EmptyComponent()))
         }
     }
 
@@ -61,6 +66,10 @@ public final class MapCoordinator {
             print("error: \(error)") // TODO: Logger
         }
         actions = view.actions
+        styleRuntime?.comopnent = view.styleComponent
+        if(mapView.mapboxMap.style.isLoaded) {
+            styleRuntime?.update()
+        }
     }
 
     private func onTapGesure(_ gesture: UIGestureRecognizer) {
@@ -68,13 +77,51 @@ public final class MapCoordinator {
         guard let actions = actions else {
             return
         }
-        let location = gesture.location(in: mapView)
-        actions.onMapTapGesture?(location)
+        let point = gesture.location(in: mapView)
+        let coordinate = mapView.mapboxMap.coordinate(for: point)
+        actions.onMapTapGesture?(point, coordinate)
 
         actions.tapActionsWithQuery.map { options, action in
-            self.mapView.mapboxMap.queryRenderedFeatures(with: location, options: options) { result in
-                action(location, result)
+            self.mapView.mapboxMap.queryRenderedFeatures(with: point, options: options) { result in
+                action(point, coordinate, result)
             }
         }.addTo(queriesBag)
+    }
+}
+
+extension Style: StyleApplier {
+    func addLayer(_ layer: MapboxMaps.Layer) throws {
+        try addLayer(layer, layerPosition: nil)
+    }
+}
+
+private class StyleRuntime {
+    private let styleApplier: StyleApplier
+    private let node: Node
+    var dirty = false
+    var comopnent: AnyBuiltinComponent {
+        didSet {
+           dirty = true
+        }
+    }
+
+    init(styleApplier: StyleApplier, comopnent: AnyBuiltinComponent) {
+        self.styleApplier = styleApplier
+        self.comopnent = comopnent
+
+        let styleState = StyleState()
+        node = Node(style: styleState)
+    }
+
+    func update() {
+        guard dirty else {
+            return
+        }
+        dirty = false
+
+        let from = node.style.take()
+        comopnent._visit(node)
+        let to = node.style.s
+        from.applyDiff(to: to, styleApplier: styleApplier)
     }
 }

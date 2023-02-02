@@ -70,6 +70,8 @@
 		74A2313E27EE1C640065FB7D /* ViewAnnotationWithPointAnnotationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A2313D27EE1C630065FB7D /* ViewAnnotationWithPointAnnotationExample.swift */; };
 		74D0803A28A13916008EB69C /* BasicLocationPulsingExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D0803928A13916008EB69C /* BasicLocationPulsingExample.swift */; };
 		953290572982C681005E1FE1 /* MapboxMapsSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 953290562982C681005E1FE1 /* MapboxMapsSwiftUI */; };
+		953DFC09298BBC7400CDBBFF /* StyleAnnotationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953DFC08298BBC7400CDBBFF /* StyleAnnotationExample.swift */; };
+		953DFC0B298BC71E00CDBBFF /* DynamicStyleAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953DFC0A298BC71E00CDBBFF /* DynamicStyleAnnotation.swift */; };
 		954AF549298A821E00365B6C /* ClusteringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954AF548298A821E00365B6C /* ClusteringExample.swift */; };
 		95ABB68E2984564400028F0E /* ButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95ABB68D2984564400028F0E /* ButtonStyle.swift */; };
 		95B589B62982BFE800BF4F31 /* SimpleMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B589B02982BFE800BF4F31 /* SimpleMapExample.swift */; };
@@ -236,6 +238,8 @@
 		74A2313D27EE1C630065FB7D /* ViewAnnotationWithPointAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAnnotationWithPointAnnotationExample.swift; sourceTree = "<group>"; };
 		74A2313F27EE243B0065FB7D /* annotations.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = annotations.json; sourceTree = "<group>"; };
 		74D0803928A13916008EB69C /* BasicLocationPulsingExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicLocationPulsingExample.swift; sourceTree = "<group>"; };
+		953DFC08298BBC7400CDBBFF /* StyleAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleAnnotationExample.swift; sourceTree = "<group>"; };
+		953DFC0A298BC71E00CDBBFF /* DynamicStyleAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicStyleAnnotation.swift; sourceTree = "<group>"; };
 		954AF548298A821E00365B6C /* ClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClusteringExample.swift; sourceTree = "<group>"; };
 		95ABB68D2984564400028F0E /* ButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyle.swift; sourceTree = "<group>"; };
 		95B589B02982BFE800BF4F31 /* SimpleMapExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleMapExample.swift; sourceTree = "<group>"; };
@@ -533,6 +537,8 @@
 				95B589B42982BFE800BF4F31 /* MapSettingsExample.swift */,
 				95B589B32982BFE800BF4F31 /* FeaturesQueryExample.swift */,
 				954AF548298A821E00365B6C /* ClusteringExample.swift */,
+				953DFC08298BBC7400CDBBFF /* StyleAnnotationExample.swift */,
+				953DFC0A298BC71E00CDBBFF /* DynamicStyleAnnotation.swift */,
 				95B589C32982C07900BF4F31 /* Util */,
 			);
 			path = "SwiftUI Examples";
@@ -776,6 +782,7 @@
 				74797C1A28F5B72F0008BBB9 /* ViewAnnotationAnimationExample.swift in Sources */,
 				95B589B82982BFE800BF4F31 /* SwiftUIRoot.swift in Sources */,
 				CADCF7222584990E0065C51B /* ColorExpressionExample.swift in Sources */,
+				953DFC0B298BC71E00CDBBFF /* DynamicStyleAnnotation.swift in Sources */,
 				58A28B5B2869F69C006F7D93 /* HeatmapLayerGlobeExample.swift in Sources */,
 				95B589C22982C04000BF4F31 /* Constants.swift in Sources */,
 				74A2313C27EDCE7F0065FB7D /* AnnotationView.swift in Sources */,
@@ -788,6 +795,7 @@
 				17B40D2426A85500000887EF /* LiveDataExample.swift in Sources */,
 				95B589C02982C04000BF4F31 /* CameraDebugView.swift in Sources */,
 				95B589B62982BFE800BF4F31 /* SimpleMapExample.swift in Sources */,
+				953DFC09298BBC7400CDBBFF /* StyleAnnotationExample.swift in Sources */,
 				CADCF7242584990E0065C51B /* AnimateLayerExample.swift in Sources */,
 				95ABB68E2984564400028F0E /* ButtonStyle.swift in Sources */,
 				073475D725AFAE520049B0B8 /* CustomLayerExample.swift in Sources */,

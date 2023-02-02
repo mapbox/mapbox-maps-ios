@@ -25,8 +25,8 @@ public typealias Map = InternalMap
 // TODO: Wrap it in Map and make internal.
 public struct InternalMap: UIViewRepresentable {
     public typealias InitialOptionsProvider = () -> MapInitOptions
-    public typealias TapAction = (CGPoint) -> Void
-    public typealias TapQueryAction = (CGPoint, (Result<[QueriedFeature], Error>)) -> Void
+    public typealias TapAction = (CGPoint, CLLocationCoordinate2D) -> Void
+    public typealias TapQueryAction = (CGPoint, CLLocationCoordinate2D, (Result<[QueriedFeature], Error>)) -> Void
 
     typealias TapActionWithQueryPair = (options: RenderedQueryOptions?, action: TapQueryAction)
     struct Actions {
@@ -47,6 +47,7 @@ public struct InternalMap: UIViewRepresentable {
     var actions = Actions()
     var styleURIs = StyleURIs(default: .streets)
     var gestureOptions: GestureOptions = GestureOptions()
+    var styleComponent: AnyBuiltinComponent = AnyBuiltinComponent(EmptyComponent())
     var effectiveStyleURI: StyleURI {
         styleURIs.effectiveURI(with: colorScheme)
     }
@@ -134,6 +135,10 @@ extension InternalMap {
         var updated = self
         updated.actions.tapActionsWithQuery.append((options: queryOptions, action: action))
         return updated
+    }
+
+    public func style<T: StyleComponent>(_ component: T) -> Self {
+        set(\.styleComponent, AnyBuiltinComponent(component))
     }
 }
 

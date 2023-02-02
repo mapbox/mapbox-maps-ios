@@ -76,6 +76,7 @@ public final class Style: StyleProtocol {
     ///
     /// - Throws: ``StyleError`` if there is a problem adding the given `layer` at the given `position`.
     public func addLayer(_ layer: Layer, layerPosition: LayerPosition? = nil) throws {
+        print("==[style] add layer \(layer.id)")
         // Attempt to encode the provided layer into a dictionary and apply it to the map.
         let layerProperties = try layer.allStyleProperties()
         try addLayer(with: layerProperties, layerPosition: layerPosition)
@@ -202,6 +203,7 @@ public final class Style: StyleProtocol {
      - Throws: ``StyleError`` if there is a problem adding the `source`.
      */
     public func addSource(_ source: Source, id: String) throws {
+        print("==[style] add source \(id)")
         try sourceManager.addSource(source, id: id)
     }
 
@@ -246,6 +248,7 @@ public final class Style: StyleProtocol {
     /// - Attention: This method is only effective with sources of `GeoJSONSource`
     /// type, and cannot be used to update other source types.
     public func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject) throws {
+        print("==[style] update geo-json \(id)")
         try sourceManager.updateGeoJSONSource(withId: id, geoJSON: geoJSON)
     }
 
@@ -348,6 +351,7 @@ public final class Style: StyleProtocol {
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
     public func addLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws {
+        print("== add layer \(properties)")
         try handleExpected {
             return _styleManager.addStyleLayer(forProperties: properties, layerPosition: layerPosition?.corePosition)
         }
@@ -945,6 +949,7 @@ public final class Style: StyleProtocol {
     /// Set the atmosphere of the style
     /// - Parameter atmosphere: ``Atmosphere`` object describing the fog, space and stars.
     public func setAtmosphere(_ atmosphere: Atmosphere) throws {
+        print("==[style] add atmosphere")
         guard let atmosphereDictionary = try atmosphere.toJSON() as? [String: Any] else {
             throw TypeConversionError.unexpectedType
         }
@@ -954,6 +959,7 @@ public final class Style: StyleProtocol {
 
     /// Remove the atmosphere of the style. No fog, space or stars would be rendered.
     public func removeAtmosphere() throws {
+        print("==[style] remove atmosphere")
         try handleExpected {
             styleManager.setStyleAtmosphereForProperties(NSNull())
         }
@@ -1112,6 +1118,7 @@ extension Style {
     /// - Parameter projection: The ``StyleProjection`` to apply to the style.
     /// - Throws: ``StyleError`` if the projection could not be applied.
     public func setProjection(_ projection: StyleProjection) throws {
+        print("==[style] set projection \(projection.name)")
         let expected = _styleManager.setStyleProjectionPropertyForProperty(
             StyleProjection.CodingKeys.name.rawValue,
             value: projection.name.rawValue)
@@ -1140,7 +1147,7 @@ extension Style {
  A transition property controls timing for the interpolation between a
  transitionable style property's previous value and new value.
  */
-public struct StyleTransition: Codable {
+public struct StyleTransition: Codable, Equatable {
 
     internal enum CodingKeys: String, CodingKey {
         case duration

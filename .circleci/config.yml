@@ -12,10 +12,6 @@ jobs:
     macos:
       xcode: 14.2.0
     steps:
-      - checkout
-      - run:
-          name: Install CircleCI CLI
-          command: brew install circleci
       - run:
           name: Generate config
           command: circleci config pack .circleci/config > circle.yml

@@ -12,6 +12,7 @@ jobs:
     macos:
       xcode: 14.2.0
     steps:
+      - checkout
       - run:
           name: Generate config
           command: circleci config pack .circleci/config > circle.yml

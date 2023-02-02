@@ -1,0 +1,6 @@
+maps-ios-checkout-reference:
+  type: string
+  default: ""
+run-tests:
+  type: boolean
+  default: false

@@ -1,0 +1,3 @@
+docker:
+  - image: cimg/base:stable
+resource_class: small

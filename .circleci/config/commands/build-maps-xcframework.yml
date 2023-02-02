@@ -1,0 +1,59 @@
+parameters:
+  upload-size-metrics:
+    type: boolean
+    default: true
+steps:
+  - run:
+      name: Install dependencies
+      command: brew install xcodegen
+      environment:
+        HOMEBREW_NO_AUTO_UPDATE: 1
+        HOMEBREW_NO_INSTALL_CLEANUP: 1
+  - run:
+      name: Build Maps SDK (dynamic)
+      working_directory: mapbox-maps-ios/scripts/release/packager
+      command: |
+        ./package-mapbox-maps.sh dynamic
+        cp MapboxMaps.zip ~/project/MapboxMaps.zip
+  - store_artifacts:
+      path: MapboxMaps.zip
+  - persist_to_workspace:
+      root: .
+      paths:
+        - MapboxMaps.zip
+  - run:
+      name: Prepare for binary size metrics
+      command: |
+        brew install mint
+        pip3 install gitpython awscli
+        echo "export PATH=\"$HOME/.mint/bin:$PATH\"" >> $BASH_ENV
+        mint install git@github.com:mapbox/ios-binary-size.git
+        unzip MapboxMaps.zip "artifacts/MapboxMaps.xcframework/*"
+  - unless:
+      condition: << parameters.upload-size-metrics >>
+      steps:
+        - run:
+            name: Calculate binary size metrics
+            command: |
+              BASELINE_TOLERANCE=${BASELINE_TOLERANCE:-10}
+              mobile-metrics/scripts/ios-binary-analyzer.py \
+                  -r . \
+                  -g "mapbox-maps-ios" \
+                  -x "artifacts/MapboxMaps.xcframework" \
+                  --name "ios-maps-v10-benchmark" \
+                  --build ${CIRCLE_BUILD_NUM} \
+                  -t ${BASELINE_TOLERANCE} \
+                  --baseline mapbox-maps-ios/baselines/binary-size/MapboxMaps.json \
+                  --dryrun
+  - when:
+      condition: << parameters.upload-size-metrics >>
+      steps:
+        - run:
+            name: Calculate and upload binary size metrics
+            command: |
+              mobile-metrics/scripts/ios-binary-analyzer.py \
+                  -r . \
+                  -g "mapbox-maps-ios" \
+                  -x "artifacts/MapboxMaps.xcframework" \
+                  --name "ios-maps-v10-benchmark" \
+                  --build ${CIRCLE_BUILD_NUM}

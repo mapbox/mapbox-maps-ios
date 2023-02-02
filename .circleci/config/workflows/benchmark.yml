@@ -1,0 +1,12 @@
+when:
+  not: << pipeline.parameters.run-tests >>
+jobs:
+  - build-benchmark:
+      context:
+        - SDK Registry Token
+        - MapboxCI GitHub UserToken
+        - Maps SDK/Public Mapbox Token
+  - build-maps:
+      upload-size-metrics: false
+      context:
+        - SDK Registry Token

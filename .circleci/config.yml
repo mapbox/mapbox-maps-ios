@@ -9,7 +9,8 @@ orbs:
 
 jobs:
   setup:
-    executor: continuation/default
+    macos:
+      xcode: 14.2.0
     steps:
       - checkout
       - run:

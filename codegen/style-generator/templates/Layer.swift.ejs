@@ -6,6 +6,7 @@
   const doc = locals.doc
   const isExperimental = locals.experimental
   const isInternal = locals.internal
+  const deprecatedTransitionProperties = ["line-dasharray", "line-pattern", "fill-extrusion-pattern", "fill-pattern", "background-pattern"]
 -%>
 // This file is generated.
 import Foundation
@@ -48,6 +49,9 @@ import Foundation
     <%_ if (property.transition) { -%>
 
     /// Transition options for `<%- camelizeWithLeadingLowercase(property.name) _%>`.
+    <%_ if (deprecatedTransitionProperties.includes(property.name)) { _%>
+    @available(*, deprecated, message: "This property is deprecated and will be removed in the future. Setting this will have no effect.")
+    <%_ } -%>
     <%if (!isExperimental && property.experimental) { -%>@_spi(Experimental) <% } -%>public var <%- camelizeWithLeadingLowercase(property.name) _%>Transition: StyleTransition?
     <%_ } -%>
     <%_ } -%>
@@ -71,7 +75,7 @@ import Foundation
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
         <%_ for (const property of paintProperties) { -%>
         try paintContainer.encodeIfPresent(<%- camelizeWithLeadingLowercase(property.name) %>, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>)
-        <%_ if (property.transition) { -%>
+        <%_ if (property.transition && !deprecatedTransitionProperties.includes(property.name)) { -%>
         try paintContainer.encodeIfPresent(<%- camelizeWithLeadingLowercase(property.name) %>Transition, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>Transition)
         <%_ } -%>
         <%_ } -%>
@@ -99,7 +103,7 @@ import Foundation
         if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
             <%_ for (const property of paintProperties) { -%>
             <%- camelizeWithLeadingLowercase(property.name) %> = try paintContainer.decodeIfPresent(<%- propertySwiftValueType(property) %>.self, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>)
-            <%_ if (property.transition) { -%>
+            <%_ if (property.transition && !deprecatedTransitionProperties.includes(property.name)) { -%>
             <%- camelizeWithLeadingLowercase(property.name) %>Transition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>Transition)
             <%_ } -%>
             <%_ } -%>
@@ -141,7 +145,7 @@ import Foundation
     enum PaintCodingKeys: String, CodingKey {
         <%_ for (const property of paintProperties) { -%>
         case <%- camelizeWithLeadingLowercase(property.name) %> = "<%- property.name %>"
-        <%_ if (property.transition) { -%>
+        <%_ if (property.transition && !deprecatedTransitionProperties.includes(property.name)) { -%>
         case <%- camelizeWithLeadingLowercase(property.name) %>Transition = "<%- property.name %>-transition"
         <%_ } -%>
         <%_ } -%>

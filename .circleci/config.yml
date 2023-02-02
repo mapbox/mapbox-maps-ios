@@ -9,8 +9,8 @@ orbs:
 
 jobs:
   setup:
-    macos:
-      xcode: 14.2.0
+    docker:
+      - image: circleci/circleci-cli:latest
     steps:
       - checkout
       - run:

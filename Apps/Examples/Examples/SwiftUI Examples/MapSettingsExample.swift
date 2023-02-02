@@ -16,13 +16,12 @@ struct MapSettingsExample : View {
     @State private var settings = Settings()
 
     var body: some View {
-        Map(camera: $camera, mapOptions: MapOptions(orientation: settings.orientation))
+        Map(camera: $camera)
             .cameraBounds(settings.cameraBounds)
             .styleURI(settings.styleURI)
             .gestureOptions(settings.gestureOptions)
+            .northOrientation(settings.orientation)
             .ignoresSafeArea()
-            // Force full map reinitialization on every orientation change.
-            .id(settings.orientation)
             .sheet(isPresented: $settingsOpened) {
                 SettingsView(settings: $settings)
                     .defaultDetents()

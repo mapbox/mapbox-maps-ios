@@ -18,13 +18,15 @@ public typealias MapLoadedAction = (MapboxMap) -> Void
 @_spi(Experimental)
 @available(iOS 13.0, *)
 public struct Map: View {
+    public typealias ResourceOptionsProvider = () -> ResourceOptions
     public typealias TapAction = (CGPoint) -> Void
     public typealias TapQueryAction = (CGPoint, (Result<[QueriedFeature], Error>)) -> Void
     typealias TapActionWithQueryPair = (options: RenderedQueryOptions?, action: TapQueryAction)
+    typealias InitOptionsProvider = () -> MapInitOptions
 
     var camera: Binding<CameraState>?
-    private var mapConfiguration = MapConfiguration()
-    private let mapInitOptions: (CameraState?) -> MapInitOptions
+    private var mapDependencies = MapDependencies()
+    private let mapInitOptions: InitOptionsProvider
 
     /// Creates an instance showing scpecisif region.
     ///
@@ -34,22 +36,17 @@ public struct Map: View {
     ///     - mapOptions: ``MapOptions``; see ``GlyphsRasterizationOptions`` for the default  used for glyph rendering.
     public init(
         camera: Binding<CameraState>? = nil,
-        resourceOptions: ResourceOptions? = nil,
-        mapOptions: MapOptions? = nil
+        resourceOptions: ResourceOptionsProvider? = nil
     ) {
         self.camera = camera
-        mapInitOptions = { camera in
-            MapInitOptions(
-                resourceOptions: resourceOptions ?? ResourceOptionsManager.default.resourceOptions,
-                mapOptions: mapOptions ?? MapOptions(),
-                cameraOptions: camera.map { CameraOptions(cameraState: $0) }
-            )
+        self.mapInitOptions = {
+            MapInitOptions(resourceOptions: resourceOptions?() ?? ResourceOptionsManager.default.resourceOptions)
         }
     }
 
     public var body: some View {
         ZStack {
-            InternalMap(camera: camera, mapConfiguration: mapConfiguration, mapInitOptions: mapInitOptions)
+            InternalMap(camera: camera, mapConfiguration: mapDependencies, mapInitOptions: mapInitOptions)
         }
     }
 }
@@ -64,12 +61,12 @@ extension Map {
 
     /// Sets camera bounds.
     public func cameraBounds(_ cameraBounds: CameraBoundsOptions) -> Self {
-        set(\.mapConfiguration.cameraBounds, cameraBounds)
+        set(\.mapDependencies.cameraBounds, cameraBounds)
     }
 
     /// Adds callback to map loaded event.
     public func onMapLoaded(_ callback: @escaping MapLoadedAction) -> Self {
-        set(\.mapConfiguration.actions.onMapLoaded, callback)
+        set(\.mapDependencies.actions.onMapLoaded, callback)
     }
 
     /// Sets style to the map.
@@ -79,17 +76,17 @@ extension Map {
     ///     - darkMode: A Style URI which will automaticaly be used for dark mode. If not specified,
     ///         the default option will continue to be used.
     public func styleURI(_ light: StyleURI, dark: StyleURI? = nil) -> Self {
-        set(\.mapConfiguration.styleURIs, .init(light: light, dark: dark))
+        set(\.mapDependencies.styleURIs, .init(light: light, dark: dark))
     }
 
     /// Configures gestures options.
     public func gestureOptions(_ options: GestureOptions) -> Self {
-        set(\.mapConfiguration.getstureOptions, options)
+        set(\.mapDependencies.getstureOptions, options)
     }
 
     /// Adds point annotations to the map.
     public func annotations(_ annotations: [PointAnnotation]) -> Self {
-        set(\.mapConfiguration.annotations, annotations)
+        set(\.mapDependencies.annotations, annotations)
     }
 
     /// Adds tap handler to the map.
@@ -99,7 +96,7 @@ extension Map {
     /// - Parameters:
     ///  - action: The action to perform.
     public func onMapTapGesture(action: @escaping TapAction) -> Self {
-        set(\.mapConfiguration.actions.onMapTapGesture, action)
+        set(\.mapDependencies.actions.onMapTapGesture, action)
     }
 
     /// Adds tap handler which additionally queries rendered features under the point.
@@ -112,7 +109,22 @@ extension Map {
     ///  - action: The action to perform.
     public func onMapTapGesture(queryOptions: RenderedQueryOptions? = nil, action: @escaping TapQueryAction) -> Self {
         var updated = self
-        updated.mapConfiguration.actions.tapActionsWithQuery.append((options: queryOptions, action: action))
+        updated.mapDependencies.actions.tapActionsWithQuery.append((options: queryOptions, action: action))
         return updated
+    }
+
+    /// Sets constraint mode to the map
+    public func constrainMode(_ constrainMode: ConstrainMode) -> Self {
+        set(\.mapDependencies.constrainMode, constrainMode)
+    }
+
+    /// Sets viewport mode to the map
+    public func viewportMode(_ viewportMode: ViewportMode) -> Self {
+        set(\.mapDependencies.viewportMode, viewportMode)
+    }
+
+    /// Sets ``NorthOrientation`` to the map.
+    public func northOrientation(_ northOrientation: NorthOrientation) -> Self {
+        set(\.mapDependencies.orientation, northOrientation)
     }
 }

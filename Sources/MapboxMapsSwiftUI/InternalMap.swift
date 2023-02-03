@@ -5,7 +5,7 @@ import MapboxMaps
 struct InternalMap: UIViewRepresentable {
     var camera: Binding<CameraState>?
     let mapDependencies: MapDependencies
-    private var mapInitOptions: Map.InitOptionsProvider
+    private var mapInitOptions: Map.InitOptionsProvider?
 
     @Environment(\.colorScheme) var colorScheme
     var effectiveStyleURI: StyleURI {
@@ -15,7 +15,7 @@ struct InternalMap: UIViewRepresentable {
     init(
         camera: Binding<CameraState>?,
         mapConfiguration: MapDependencies,
-        mapInitOptions: @escaping Map.InitOptionsProvider
+        mapInitOptions: Map.InitOptionsProvider?
     ) {
         self.camera = camera
         self.mapDependencies = mapConfiguration
@@ -27,7 +27,7 @@ struct InternalMap: UIViewRepresentable {
     }
 
     func makeUIView(context: Context) -> MapView {
-        MapView(frame: .zero, mapInitOptions: mapInitOptions())
+        MapView(frame: .zero, mapInitOptions: mapInitOptions?() ?? MapInitOptions())
     }
 
     func updateUIView(_ mapView: MapView, context: Context) {

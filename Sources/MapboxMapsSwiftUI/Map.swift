@@ -18,15 +18,14 @@ public typealias MapLoadedAction = (MapboxMap) -> Void
 @_spi(Experimental)
 @available(iOS 13.0, *)
 public struct Map: View {
-    public typealias ResourceOptionsProvider = () -> ResourceOptions
+    public typealias InitOptionsProvider = () -> MapInitOptions
     public typealias TapAction = (CGPoint) -> Void
     public typealias TapQueryAction = (CGPoint, (Result<[QueriedFeature], Error>)) -> Void
     typealias TapActionWithQueryPair = (options: RenderedQueryOptions?, action: TapQueryAction)
-    typealias InitOptionsProvider = () -> MapInitOptions
 
     var camera: Binding<CameraState>?
     private var mapDependencies = MapDependencies()
-    private let mapInitOptions: InitOptionsProvider
+    private let mapInitOptions: InitOptionsProvider?
 
     /// Creates an instance showing scpecisif region.
     ///
@@ -36,12 +35,10 @@ public struct Map: View {
     ///     - mapOptions: ``MapOptions``; see ``GlyphsRasterizationOptions`` for the default  used for glyph rendering.
     public init(
         camera: Binding<CameraState>? = nil,
-        resourceOptions: ResourceOptionsProvider? = nil
+        mapInitOptions: InitOptionsProvider? = nil
     ) {
         self.camera = camera
-        self.mapInitOptions = {
-            MapInitOptions(resourceOptions: resourceOptions?() ?? ResourceOptionsManager.default.resourceOptions)
-        }
+        self.mapInitOptions = mapInitOptions
     }
 
     public var body: some View {

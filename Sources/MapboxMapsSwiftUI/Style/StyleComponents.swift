@@ -291,25 +291,25 @@ func applyProperty<T, U: Equatable>(_ keyPath: KeyPath<T, Optional<U>>, old: T, 
 extension StyleState.InternalStyleState {
     func applyDiff(to new: Self, styleApplier: StyleApplier) {
         MapboxMapsSwiftUI.applyDiff(from: images, to: new.images, insert: {
-            try! styleApplier.addImage($1.uiImage, id: $1.id, sdf: $1.sdf, contentInsets: $1.contentInsets)
+            try? styleApplier.addImage($1.uiImage, id: $1.id, sdf: $1.sdf, contentInsets: $1.contentInsets)
         }, remove: {
-            try! styleApplier.removeImage(withId: $0)
+            try? styleApplier.removeImage(withId: $0)
         })
 
         MapboxMapsSwiftUI.applyDiff(from: layers, to: new.layers, insert: {
-            try! styleApplier.addLayer($1)
+            try? styleApplier.addLayer($1)
         }, remove: {
-            try! styleApplier.removeLayer(withId: $0)
+            try? styleApplier.removeLayer(withId: $0)
         })
 
         MapboxMapsSwiftUI.applyDiff(from: sources, to: new.sources, insert: {
-            try! styleApplier.addSource($1, id: $0)
+            try? styleApplier.addSource($1, id: $0)
         }, remove: {
-            try! styleApplier.removeSource(withId: $0)
+            try? styleApplier.removeSource(withId: $0)
         }, update: { id, from, to in
             if let from = from as? GeoJSONSource, let to = to as? GeoJSONSource {
                 // TODO: terrible cast, should decide if need redraw during body execution.
-                try! to.update(from: from, id: id, in: styleApplier)
+                try? to.update(from: from, id: id, in: styleApplier)
             }
         })
 

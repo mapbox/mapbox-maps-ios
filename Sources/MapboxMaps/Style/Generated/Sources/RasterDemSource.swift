@@ -50,8 +50,25 @@ public struct RasterDemSource: Source {
     /// For the tiled sources, this property sets the tile network requests delay. The given delay comes in action only during an ongoing animation or gestures. It helps to avoid loading the transient tiles from the network and thus to avoid redundant network requests. Note that tile-network-requests-delay value is superseded with tile-requests-delay property value, if both are provided.
     public var tileNetworkRequestsDelay: Double?
 
-    public init() {
+//    public init() {
+//        self.type = .rasterDem
+//    }
+    public init(url: String? = nil, tiles: [String]? = nil, bounds: [Double]? = nil, minzoom: Double? = nil, maxzoom: Double? = nil, tileSize: Double? = nil, attribution: String? = nil, encoding: Encoding? = nil, volatile: Bool? = nil, prefetchZoomDelta: Double? = nil, minimumTileUpdateInterval: Double? = nil, maxOverscaleFactorForParentTiles: Double? = nil, tileRequestsDelay: Double? = nil, tileNetworkRequestsDelay: Double? = nil) {
         self.type = .rasterDem
+        self.url = url
+        self.tiles = tiles
+        self.bounds = bounds
+        self.minzoom = minzoom
+        self.maxzoom = maxzoom
+        self.tileSize = tileSize
+        self.attribution = attribution
+        self.encoding = encoding
+        self.volatile = volatile
+        self.prefetchZoomDelta = prefetchZoomDelta
+        self.minimumTileUpdateInterval = minimumTileUpdateInterval
+        self.maxOverscaleFactorForParentTiles = maxOverscaleFactorForParentTiles
+        self.tileRequestsDelay = tileRequestsDelay
+        self.tileNetworkRequestsDelay = tileNetworkRequestsDelay
     }
 }
 

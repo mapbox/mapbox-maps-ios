@@ -7,14 +7,26 @@ struct Settings {
     var gestureOptions: GestureOptions = .init()
     var cameraBounds: CameraBoundsOptions = .init()
     var globe: Bool = false
+    var terrain: Bool = false
 }
 
 struct SettingsStyle: StyleComponent {
     var globe: Bool
+    var terrain: Bool
     var body: some StyleComponent {
         if globe {
             StyleProjection(name: .globe)
             Atmosphere()
+        }
+
+        if terrain {
+            Terrain(sourceId: "terrain-source",
+                    exaggeration: .constant(1.5))
+            RasterDemSource(
+                url: "mapbox://mapbox.mapbox-terrain-dem-v1",
+                maxzoom: 14,
+                tileSize: 514
+            ).id("terrain-source")
         }
     }
 }
@@ -28,7 +40,7 @@ struct MapSettingsExample : View {
     var body: some View {
         Map(camera: $camera, initialOptions: initialOptions)
             .styleURI(settings.styleURI)
-            .style(SettingsStyle(globe: settings.globe))
+            .style(SettingsStyle(globe: settings.globe, terrain: settings.terrain))
             .cameraBounds(settings.cameraBounds)
             .gestureOptions(settings.gestureOptions)
             .ignoresSafeArea()
@@ -81,6 +93,7 @@ struct SettingsView : View {
                     .pickerStyle(.segmented)
                 }
                 Toggle("Globe Projection", isOn: $settings.globe)
+                Toggle("Terrain", isOn: $settings.terrain)
             }.pickerStyle(.menu)
             Section {
                 Toggle("Pan", isOn: $settings.gestureOptions.panEnabled)

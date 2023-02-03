@@ -1039,6 +1039,7 @@ jobs:
   create-xcframework:
     <<: *base-job
     resource_class: macos.x86.medium.gen2
+    working_directory: ~/mapbox-maps-ios-internal/mapbox-maps-ios
     steps:
       - checkout:
           path: ~/mapbox-maps-ios-internal

@@ -1961,7 +1961,7 @@ commands:
 
             pushd scripts/release/packager
             ./package-mapbox-maps.sh dynamic
-            mv MapboxMaps*.zip $CIRCLE_WORKING_DIRECTORY
+            mv MapboxMaps*.zip /Users/distiller/project/mapbox-maps-ios-internal/mapbox-maps-ios
             popd
 
             if [ << parameters.baseline >> = true ]; then

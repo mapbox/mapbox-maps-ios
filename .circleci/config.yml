@@ -19,10 +19,6 @@ jobs:
       - run:
           name: Show config
           command: cat circle.yml
-      - run:
-          name: Prepare to continue with public config
-          command: |
-            CIRCLE_WORKING_DIRECTORY=$(eval "echo $CIRCLE_WORKING_DIRECTORY/mapbox-maps-ios")
       - continuation/continue:
           configuration_path: mapbox-maps-ios/.circleci/config.yml
 

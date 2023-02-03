@@ -20,7 +20,7 @@ jobs:
           name: Show config
           command: cat circle.yml
       - continuation/continue:
-          configuration_path: circle.yml
+          configuration_path: mapbox-maps-ios/.circleci/config.yml
 
 workflows:
   setup:

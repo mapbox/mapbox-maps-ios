@@ -31,7 +31,7 @@ executors:
   xcode-sdk-min:
     macos:
       xcode: 13.1.0
-        working_directory: ~/mapbox-maps-ios
+    working_directory: ~/mapbox-maps-ios
 
 ### Workflows
 

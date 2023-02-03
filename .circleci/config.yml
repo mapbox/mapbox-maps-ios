@@ -1929,7 +1929,7 @@ commands:
 
               # loop through revisions and find existing tag
               for revision in "${REVISIONS[@]}"; do
-                  VERSION="v$(git show "$revision:Sources/MapboxMaps/MapboxMaps.json" | jq -r .version)$TAG_SUFFIX"
+                  VERSION="v$(git show "$revision:.Sources/MapboxMaps/MapboxMaps.json" | jq -r .version)$TAG_SUFFIX"
                   if [ "$(git tag -l "$VERSION")" ]; then
                       echo "Using version: $VERSION"
                       git rev-parse "$VERSION" > /tmp/MapboxMaps-version.txt

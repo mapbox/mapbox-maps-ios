@@ -25,11 +25,13 @@ executors:
   xcode-latest:
     macos:
       xcode: 14.1.0
+    working_directory: ~/mapbox-maps-ios
   # Note that `create-github-draft-release.sh` depends on this structure to parse the minimum supported Xcode version.
   # Please keep them in sync if this structure changes.
   xcode-sdk-min:
     macos:
       xcode: 13.1.0
+        working_directory: ~/mapbox-maps-ios
 
 ### Workflows
 
@@ -557,7 +559,6 @@ jobs:
       - run: exit 1
 
   sanity-check:
-    working_directory: mapbox-maps-ios
     executor: xcode-latest
     steps:
       - checkout

@@ -2025,7 +2025,7 @@ commands:
 
             echo "Uploading to S3" ; \
             python3 ~/mapbox-maps-ios-internal/mapbox-maps-ios/scripts/code-coverage/parse-code-coverage.py \
-              -g . \
+              -g ~/mapbox-maps-ios-internal \
               -c MapboxMaps \
               --scheme MapboxMaps \
               --report coverage.txt

@@ -4,7 +4,7 @@ import MapboxMaps
 @available(iOS 13.0, *)
 struct MapDependencies {
     var cameraBounds = CameraBoundsOptions()
-    var styleURIs = StyleURIs(light: .streets, dark: nil)
+    var styleURIs = StyleURIs(default: .streets, darkMode: nil)
     var annotations = [PointAnnotation]()
     var getstureOptions = GestureOptions()
     var actions = Actions()
@@ -17,8 +17,8 @@ struct MapDependencies {
 extension MapDependencies {
 
     struct StyleURIs {
-        let light: StyleURI
-        let dark: StyleURI?
+        let `default`: StyleURI
+        let darkMode: StyleURI?
     }
 
     struct Actions {
@@ -32,9 +32,9 @@ extension MapDependencies {
 extension MapDependencies.StyleURIs {
 
     func effectiveURI(with colorScheme: ColorScheme) -> StyleURI {
-        if case .dark = colorScheme, let dark = dark {
+        if case .dark = colorScheme, let dark = darkMode {
             return dark
         }
-        return light
+        return `default`
     }
 }

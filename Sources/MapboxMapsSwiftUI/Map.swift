@@ -72,18 +72,13 @@ extension Map {
     ///     - default: A Style URI to be used by default.
     ///     - darkMode: A Style URI which will automaticaly be used for dark mode. If not specified,
     ///         the default option will continue to be used.
-    public func styleURI(_ light: StyleURI, dark: StyleURI? = nil) -> Self {
-        set(\.mapDependencies.styleURIs, .init(light: light, dark: dark))
+    public func styleURI(_ default: StyleURI, darkMode: StyleURI? = nil) -> Self {
+        set(\.mapDependencies.styleURIs, .init(default: `default`, darkMode: darkMode))
     }
 
     /// Configures gestures options.
     public func gestureOptions(_ options: GestureOptions) -> Self {
         set(\.mapDependencies.getstureOptions, options)
-    }
-
-    /// Adds point annotations to the map.
-    public func annotations(_ annotations: [PointAnnotation]) -> Self {
-        set(\.mapDependencies.annotations, annotations)
     }
 
     /// Adds tap handler to the map.

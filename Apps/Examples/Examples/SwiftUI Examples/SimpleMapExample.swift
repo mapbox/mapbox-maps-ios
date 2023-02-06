@@ -6,7 +6,7 @@ struct SimpleMapExample: View {
     @State var camera = CameraState(center: .helsinki, zoom: 12)
     var body: some View {
         Map(camera: $camera)
-            .styleURI(.streets, dark: .dark)
+            .styleURI(.streets, darkMode: .dark)
             .ignoresSafeArea()
             .cameraDebugOverlay(alignment: .bottom, camera: $camera)
     }

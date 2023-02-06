@@ -16,8 +16,8 @@ struct SwiftUIRoot: View {
                 } header: { Text("Getting started") }
 
                 Section {
-                    ExampleLink("Display details on tap", note: "Query rendered map features on tap and display them in details.", destination: FeaturesQueryExample())
-                    ExampleLink("Clustering data", note: "Clusteing annotations using direct style modification", destination: ClusteringExample())
+                    ExampleLink("Query Rendered Features on tap", note: "Use MapReader and MapboxMap to query rendered features.", destination: FeaturesQueryExample())
+                    ExampleLink("Clustering data", note: "Display GeoJSON data with clustering using custom layers and handle interactions with them.", destination: ClusteringExample())
                 } header: { Text("Use cases") }
             }
             .listStyle(.plain)

@@ -26,13 +26,18 @@ public typealias Map = InternalMap
 public struct InternalMap: UIViewRepresentable {
     public typealias InitialOptionsProvider = () -> MapInitOptions
     public typealias TapAction = (CGPoint) -> Void
-    public typealias TapQueryAction = (CGPoint, (Result<[QueriedFeature], Error>)) -> Void
+    public typealias LayerTapAction = (LayerTapPayload) -> Void
 
-    typealias TapActionWithQueryPair = (options: RenderedQueryOptions?, action: TapQueryAction)
+    public struct LayerTapPayload {
+        public var point: CGPoint
+        public var coordinate: CLLocationCoordinate2D
+        public var features: [QueriedFeature]
+    }
+
     struct Actions {
         var onMapLoaded: MapLoadedAction?
         var onMapTapGesture: TapAction?
-        var tapActionsWithQuery = [TapActionWithQueryPair]()
+        var layerTapActions = [([String], LayerTapAction)]()
     }
 
     struct StyleURIs {
@@ -122,17 +127,16 @@ extension InternalMap {
         set(\.actions.onMapTapGesture, action)
     }
 
-    /// Adds tap handler which additionally queries rendered features under the point.
+    /// Adds tap action to layers with specified `layerIds`.
     ///
-    /// Prefer using this handler instead of `onTapGesture` since it waits for the failure of other map gestures like quick-zoom.
-    /// The queried features can be filtered by `queryOptions`.
+    /// The action will only be called when at least one of specified layers are at the tap position.
     ///
     /// - Parameters:
-    ///  - queryOptions: The options used to query features.
+    ///  - layerIds: The identifiers of layers where to perform features lookup.
     ///  - action: The action to perform.
-    public func onMapTapGesture(queryOptions: RenderedQueryOptions? = nil, perform action: @escaping TapQueryAction) -> Self {
+    public func onLayerTapGesture(_ layerIds: String..., perform action: @escaping LayerTapAction) -> Self {
         var updated = self
-        updated.actions.tapActionsWithQuery.append((options: queryOptions, action: action))
+        updated.actions.layerTapActions.append((layerIds, action))
         return updated
     }
 }

@@ -1929,14 +1929,20 @@ commands:
               while IFS='' read -r line; do REVISIONS+=("$line"); done < <(git rev-list HEAD -- mapbox-maps-ios/Sources/MapboxMaps/MapboxMaps.json)
 
               # loop through revisions and find existing tag
+              TAG_FOUND=false
               for revision in "${REVISIONS[@]}"; do
                   VERSION="v$(git show "$revision:mapbox-maps-ios/Sources/MapboxMaps/MapboxMaps.json" | jq -r .version)$TAG_SUFFIX"
                   if [ "$(git tag -l "$VERSION")" ]; then
                       echo "Using version: $VERSION"
                       git rev-parse "$VERSION" > /tmp/MapboxMaps-version.txt
+                      TAG_FOUND=true
                       break
                   fi
               done
+              if [ "$TAG_FOUND" = false ]; then
+                echo "Using current commit: $(git rev-parse HEAD)"
+                git rev-parse HEAD > /tmp/MapboxMaps-version.txt
+              fi
             else
               echo "Using current commit: $(git rev-parse HEAD)"
               git rev-parse HEAD > /tmp/MapboxMaps-version.txt

@@ -5,7 +5,7 @@ settings:
   DEVELOPMENT_TEAM: GJZR2MEM28
 packages:
   MapboxMaps:
-    path: mapbox-maps-ios
+    path: ../..
 targets:
   SwiftPackageManagerIntegration:
     templates:

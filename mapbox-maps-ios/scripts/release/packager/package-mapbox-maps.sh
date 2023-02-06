@@ -63,5 +63,5 @@ cp "$README_PATH" artifacts/README.md
 step 'Zip Bundle'
 zip -qyr "$ZIP_ARCHIVE_NAME" artifacts
 
-step 'Delete Artifacts Directory'
-rm -rf artifacts
+# step 'Delete Artifacts Directory'
+# rm -rf artifacts

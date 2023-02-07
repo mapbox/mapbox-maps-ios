@@ -2024,8 +2024,8 @@ commands:
             ./codecov -f coverage.lcov -F << parameters.codecov_flag_name >>
 
             echo "Uploading to S3" ; \
-            python3 ~/project/mapbox-maps-ios/scripts/code-coverage/parse-code-coverage.py \
-              -g ~/project \
+            python3 ./mapbox-maps-ios/scripts/code-coverage/parse-code-coverage.py \
+              -g . \
               -c MapboxMaps \
               --scheme MapboxMaps \
               --report coverage.txt

@@ -15,7 +15,7 @@ struct CameraDebugView: View {
                 Text("pitch: \(String(format: "%.2f", camera.pitch))")
             }.foregroundColor(.gray)
         }
-        .font(.footnote.safeMonospaced())
+        .font(.safeMonospaced)
         .padding(5)
         .floating(RoundedRectangle(cornerSize: CGSize(width: 8, height: 8)))
     }
@@ -50,19 +50,6 @@ struct CameraDebugView_Preview: PreviewProvider {
                 zoom: 12,
                 bearing: -0.76890,
                 pitch: 32.77)))
-
-
-    }
-}
-
-@available(iOS 14.0, *)
-extension Font {
-    fileprivate func safeMonospaced() -> Font {
-        if #available(iOS 15, *) {
-            return self.monospaced()
-        } else {
-            return self.monospacedDigit()
-        }
     }
 }
 

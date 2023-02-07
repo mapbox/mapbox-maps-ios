@@ -24,7 +24,7 @@ extension MapDependencies {
     struct Actions {
         var onMapLoaded: MapLoadedAction?
         var onMapTapGesture: Map.TapAction?
-        var tapActionsWithQuery = [Map.TapActionWithQueryPair]()
+        var layerTapActions = [([String], Map.LayerTapAction)]()
     }
 }
 

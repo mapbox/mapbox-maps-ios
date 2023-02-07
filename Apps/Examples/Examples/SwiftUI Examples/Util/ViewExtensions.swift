@@ -30,3 +30,8 @@ extension View {
         return self
     }
 }
+
+@available(iOS 14.0, *)
+extension Font {
+    static let safeMonospaced: Font = .system(.footnote, design: .monospaced)
+}

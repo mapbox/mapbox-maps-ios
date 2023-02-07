@@ -70,12 +70,21 @@ public final class MapCoordinator {
         guard let actions = actions else {
             return
         }
-        let location = gesture.location(in: mapView)
-        actions.onMapTapGesture?(location)
+        let point = gesture.location(in: mapView)
+        let coordinate = mapView.mapboxMap.coordinate(for: point)
+        actions.onMapTapGesture?(point)
 
-        actions.tapActionsWithQuery.map { options, action in
-            self.mapView.mapboxMap.queryRenderedFeatures(with: location, options: options) { result in
-                action(location, result)
+        actions.layerTapActions.map { layerIds, action in
+            let options = RenderedQueryOptions(layerIds: layerIds, filter: nil)
+            return mapView.mapboxMap.queryRenderedFeatures(with: point, options: options) { result in
+                if let features = try? result.get(),
+                   !features.isEmpty {
+                    let payload = Map.LayerTapPayload(
+                        point: point,
+                        coordinate: coordinate,
+                        features: features)
+                    action(payload)
+                }
             }
         }.addTo(queriesBag)
     }

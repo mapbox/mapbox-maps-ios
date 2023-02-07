@@ -20,8 +20,13 @@ public typealias MapLoadedAction = (MapboxMap) -> Void
 public struct Map: View {
     public typealias InitOptionsProvider = () -> MapInitOptions
     public typealias TapAction = (CGPoint) -> Void
-    public typealias TapQueryAction = (CGPoint, (Result<[QueriedFeature], Error>)) -> Void
-    typealias TapActionWithQueryPair = (options: RenderedQueryOptions?, action: TapQueryAction)
+    public typealias LayerTapAction = (LayerTapPayload) -> Void
+
+    public struct LayerTapPayload {
+        public var point: CGPoint
+        public var coordinate: CLLocationCoordinate2D
+        public var features: [QueriedFeature]
+    }
 
     var camera: Binding<CameraState>?
     private var mapDependencies = MapDependencies()
@@ -87,21 +92,20 @@ extension Map {
     ///
     /// - Parameters:
     ///  - action: The action to perform.
-    public func onMapTapGesture(action: @escaping TapAction) -> Self {
+    public func onMapTapGesture(perform action: @escaping TapAction) -> Self {
         set(\.mapDependencies.actions.onMapTapGesture, action)
     }
 
-    /// Adds tap handler which additionally queries rendered features under the point.
+    /// Adds tap action to layers with specified `layerIds`.
     ///
-    /// Prefer using this handler instead of `onTapGesture` since it waits for the failure of other map gestures like quick-zoom.
-    /// The queried features can be filtered by `queryOptions`.
+    /// The action will only be called when at least one of specified layers are at the tap position.
     ///
     /// - Parameters:
-    ///  - queryOptions: The options used to query features.
+    ///  - layerIds: The identifiers of layers where to perform features lookup.
     ///  - action: The action to perform.
-    public func onMapTapGesture(queryOptions: RenderedQueryOptions? = nil, action: @escaping TapQueryAction) -> Self {
+    public func onLayerTapGesture(_ layerIds: String..., perform action: @escaping LayerTapAction) -> Self {
         var updated = self
-        updated.mapDependencies.actions.tapActionsWithQuery.append((options: queryOptions, action: action))
+        updated.mapDependencies.actions.layerTapActions.append((layerIds, action))
         return updated
     }
 

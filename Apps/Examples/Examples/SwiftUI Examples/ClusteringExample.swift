@@ -1,6 +1,12 @@
 import SwiftUI
 @_spi(Experimental) import MapboxMapsSwiftUI
 
+private enum LayerId {
+    static let clusterCircle = "clustered-circle-layer"
+    static let point = "unclustered-point-layer"
+    static let count = "cluster-count-layer"
+}
+
 @available(iOS 14.0, *)
 struct ClusteringExample : View {
     struct Detail: Identifiable {
@@ -19,17 +25,13 @@ struct ClusteringExample : View {
                 // This example uses direct modification of Style. It's not SwiftUI-way, yet possible.
                 try! setupClusteringLayer(map.style)
             }
-            .onMapTapGesture(queryOptions: queryOptions) { _, result in
-                details = try? Detail.init(features: result.get())
+            .onLayerTapGesture(LayerId.clusterCircle, LayerId.point) {
+                details = Detail(features: $0.features)
             }
             .ignoresSafeArea()
             .alert(item: $details) {
                 Alert(title: Text($0.title), message: Text($0.message))
             }
-    }
-
-    var queryOptions: RenderedQueryOptions {
-        RenderedQueryOptions(layerIds: ["clustered-circle-layer", "unclustered-point-layer"], filter: nil)
     }
 }
 
@@ -98,7 +100,7 @@ private func setupClusteringLayer(_ style: Style) throws {
 @available(iOS 14.0, *)
 private func createClusteredLayer() -> CircleLayer {
     // Create a symbol layer to represent the clustered points.
-    var clusteredLayer = CircleLayer(id: "clustered-circle-layer")
+    var clusteredLayer = CircleLayer(id: LayerId.clusterCircle)
 
     // Filter out unclustered features by checking for `point_count`. This
     // is added to clusters when the cluster is created. If your source
@@ -125,7 +127,7 @@ private func createClusteredLayer() -> CircleLayer {
 @available(iOS 14.0, *)
 private func createUnclusteredLayer() -> SymbolLayer {
     // Create a symbol layer to represent the points that aren't clustered.
-    var unclusteredLayer = SymbolLayer(id: "unclustered-point-layer")
+    var unclusteredLayer = SymbolLayer(id: LayerId.point)
 
     // Filter out clusters by checking for `point_count`.
     unclusteredLayer.filter = Exp(.not) {
@@ -147,7 +149,7 @@ private func createUnclusteredLayer() -> SymbolLayer {
 
 @available(iOS 14.0, *)
 private func createNumberLayer() -> SymbolLayer {
-    var numberLayer = SymbolLayer(id: "cluster-count-layer")
+    var numberLayer = SymbolLayer(id: LayerId.count)
 
     // check whether the point feature is clustered
     numberLayer.filter = Exp(.has) { "point_count" }

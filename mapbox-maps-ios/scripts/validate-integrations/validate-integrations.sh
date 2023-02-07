@@ -50,8 +50,6 @@ main() {
 
 
     if [[ $BRANCH_RULE == 1 ]]; then
-
-        REPO_URL="git@github.com:mapbox\/$REPOSITORY_NAME"
         sed -i '' -E "s/(pod 'MapboxMaps',).*/\1 :path => '..\/..'/" Podfile
     elif [[ $VERSION_RULE == 1 ]]; then
         sed -i '' -E "s/(pod 'MapboxMaps',).*/\1 '= $MAPS_VERSION'/" Podfile

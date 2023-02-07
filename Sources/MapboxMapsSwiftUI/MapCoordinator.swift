@@ -4,9 +4,9 @@ import SwiftUI
 @_spi(Experimental)
 @available(iOS 13.0, *)
 public final class MapCoordinator {
-    var camera: Binding<CameraState>?
+    private var camera: Binding<CameraState>?
 
-    var actions: InternalMap.Actions?
+    var actions: MapDependencies.Actions?
 
     private var ignoreNotifications = false
     private var bag = Bag()
@@ -48,19 +48,28 @@ public final class MapCoordinator {
                     mapView.mapboxMap.setCamera(to: CameraOptions(cameraState: camera.wrappedValue))
                 }
 
-                if let cameraBounds = view.cameraBounds {
-                    // TODO: This call can change the camera, but it won't be reflected on camera Binding.
-                    try mapView.mapboxMap.setCameraBounds(with: cameraBounds)
+                // TODO: This call can change the camera, but it won't be reflected on camera Binding.
+                try mapView.mapboxMap.setCameraBounds(with: view.mapDependencies.cameraBounds)
+
+                let mapOptions = mapView.mapboxMap.options
+                if mapOptions.constrainMode != view.mapDependencies.constrainMode {
+                    mapView.mapboxMap.setConstrainMode(view.mapDependencies.constrainMode)
+                }
+                if mapOptions.viewportMode != view.mapDependencies.viewportMode {
+                    mapView.mapboxMap.setViewportMode(view.mapDependencies.viewportMode)
+                }
+                if mapOptions.orientation != view.mapDependencies.orientation {
+                    mapView.mapboxMap.setNorthOrientation(northOrientation: view.mapDependencies.orientation)
                 }
             }
             if mapView.mapboxMap.style.uri != view.effectiveStyleURI {
                 mapView.mapboxMap.style.uri = view.effectiveStyleURI
             }
-            mapView.gestures.options = view.gestureOptions
+            mapView.gestures.options = view.mapDependencies.getstureOptions
         } catch {
             print("error: \(error)") // TODO: Logger
         }
-        actions = view.actions
+        actions = view.mapDependencies.actions
     }
 
     private func onTapGesure(_ gesture: UIGestureRecognizer) {

@@ -327,21 +327,24 @@ public final class MapboxMap: MapboxMapProtocol {
     /// Set the map north orientation
     ///
     /// - Parameter northOrientation: The map north orientation to set
-    internal func setNorthOrientation(northOrientation: NorthOrientation) {
+    @_spi(Package)
+    public func setNorthOrientation(northOrientation: NorthOrientation) {
         __map.setNorthOrientationFor(northOrientation)
     }
 
     /// Set the map constrain mode
     ///
     /// - Parameter constrainMode: The map constraint mode to set
-    internal func setConstrainMode(_ constrainMode: ConstrainMode) {
+    @_spi(Package)
+    public func setConstrainMode(_ constrainMode: ConstrainMode) {
         __map.setConstrainModeFor(constrainMode)
     }
 
     /// Set the map viewport mode
     ///
     /// - Parameter viewportMode: The map viewport mode to set
-    internal func setViewportMode(_ viewportMode: ViewportMode) {
+    @_spi(Package)
+    public func setViewportMode(_ viewportMode: ViewportMode) {
         __map.setViewportModeFor(viewportMode)
     }
 

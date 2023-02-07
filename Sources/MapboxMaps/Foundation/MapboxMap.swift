@@ -31,7 +31,7 @@ internal protocol MapboxMapProtocol: AnyObject {
     func camera(for coordinateBounds: CoordinateBounds, padding: UIEdgeInsets, bearing: Double?, pitch: Double?) -> CameraOptions
     func coordinate(for point: CGPoint) -> CLLocationCoordinate2D
     func point(for coordinate: CLLocationCoordinate2D) -> CGPoint
-    func performWithoutNotifying(_ block: () -> Void)
+    func performWithoutNotifying(_ block: () throws -> Void) rethrows
 }
 
 // swiftlint:disable type_body_length
@@ -327,21 +327,24 @@ public final class MapboxMap: MapboxMapProtocol {
     /// Set the map north orientation
     ///
     /// - Parameter northOrientation: The map north orientation to set
-    internal func setNorthOrientation(northOrientation: NorthOrientation) {
+    @_spi(Package)
+    public func setNorthOrientation(northOrientation: NorthOrientation) {
         __map.setNorthOrientationFor(northOrientation)
     }
 
     /// Set the map constrain mode
     ///
     /// - Parameter constrainMode: The map constraint mode to set
-    internal func setConstrainMode(_ constrainMode: ConstrainMode) {
+    @_spi(Package)
+    public func setConstrainMode(_ constrainMode: ConstrainMode) {
         __map.setConstrainModeFor(constrainMode)
     }
 
     /// Set the map viewport mode
     ///
     /// - Parameter viewportMode: The map viewport mode to set
-    internal func setViewportMode(_ viewportMode: ViewportMode) {
+    @_spi(Package)
+    public func setViewportMode(_ viewportMode: ViewportMode) {
         __map.setViewportModeFor(viewportMode)
     }
 
@@ -1018,8 +1021,9 @@ extension MapboxMap: MapEventsObservable {
         return observable.onEvery(event: event, handler: handler)
     }
 
-    internal func performWithoutNotifying(_ block: () -> Void) {
-        observable.performWithoutNotifying(block)
+    @_spi(Package)
+    public func performWithoutNotifying(_ block: () throws -> Void) rethrows {
+        try observable.performWithoutNotifying(block)
     }
 }
 

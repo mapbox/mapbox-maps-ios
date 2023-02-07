@@ -25,13 +25,13 @@ executors:
   xcode-latest:
     macos:
       xcode: 14.1.0
-    working_directory: ~/mapbox-maps-ios-internal/mapbox-maps-ios
+    working_directory: ~/project/mapbox-maps-ios-internal/mapbox-maps-ios
   # Note that `create-github-draft-release.sh` depends on this structure to parse the minimum supported Xcode version.
   # Please keep them in sync if this structure changes.
   xcode-sdk-min:
     macos:
       xcode: 13.1.0
-    working_directory: ~/mapbox-maps-ios-internal/mapbox-maps-ios
+    working_directory: ~/project/mapbox-maps-ios-internal/mapbox-maps-ios
 
 ### Workflows
 
@@ -562,7 +562,7 @@ jobs:
     executor: xcode-latest
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - install-mbx-ci
       - install-gh
       - run:
@@ -585,7 +585,7 @@ jobs:
     executor: xcode-latest
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - run: brew install swiftlint
       - run: swiftlint lint --strict --reporter junit | tee result.xml
       - store_artifacts:
@@ -598,7 +598,7 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - run:
           name: Build depsvalidator
           command: swift build --package-path scripts/depsvalidator
@@ -609,10 +609,10 @@ jobs:
   build-sdk:
     <<: *base-job
     resource_class: macos.x86.medium.gen2
-    working_directory: ~/mapbox-maps-ios-internal/mapbox-maps-ios
+    working_directory: ~/project/mapbox-maps-ios-internal/mapbox-maps-ios
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - configure-environment:
           skip-dependencies: true
       - run:
@@ -723,7 +723,7 @@ jobs:
       steps:
           - add-mapbox-submodules-key
           - checkout:
-              path: ~/mapbox-maps-ios-internal
+              path: ~/project/mapbox-maps-ios-internal
           - install-mbx-ci:
               platform: linux
           - run:
@@ -787,7 +787,7 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - configure-environment:
           skip-dependencies: true
       - when:
@@ -840,7 +840,7 @@ jobs:
     resource_class: << parameters.resource_class >>
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - attach_workspace:
           at: build
       - run:
@@ -892,7 +892,7 @@ jobs:
     resource_class: << parameters.resource_class >>
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - attach_workspace:
           at: build
       - run:
@@ -929,7 +929,7 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - configure-environment:
           skip-dependencies: true
       - install-xcodegen
@@ -959,7 +959,7 @@ jobs:
     executor: xcode-latest
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - install-gcloud
       - configure-environment:
           skip-dependencies: true
@@ -1021,7 +1021,7 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - configure-environment:
           skip-dependencies: true
       - run:
@@ -1040,10 +1040,10 @@ jobs:
   create-xcframework:
     <<: *base-job
     resource_class: macos.x86.medium.gen2
-    working_directory: ~/mapbox-maps-ios-internal/mapbox-maps-ios
+    working_directory: ~/project/mapbox-maps-ios-internal/mapbox-maps-ios
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - configure-environment
       - ensure-text-exists-in-commit:
           commit-text: "[create xcframework]"
@@ -1082,7 +1082,7 @@ jobs:
     executor: xcode-latest
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - configure-environment:
           skip-dependencies: true
       - install-gh
@@ -1107,7 +1107,7 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - configure-environment:
           skip-dependencies: true
       - install-xcodegen
@@ -1125,7 +1125,7 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - configure-environment:
           skip-dependencies: true
       - install-xcodegen
@@ -1149,7 +1149,7 @@ jobs:
     executor: xcode-latest
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - parse-release-version-if-available
       - run:
           name: Podspec points to the release version
@@ -1165,7 +1165,7 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - configure-environment:
           skip-dependencies: true
       - install-xcodegen
@@ -1197,7 +1197,7 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - configure-environment:
           skip-dependencies: true
       - install-xcodegen
@@ -1219,7 +1219,7 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - configure-environment:
           skip-dependencies: true
       - make-docs
@@ -1229,7 +1229,7 @@ jobs:
     executor: xcode-latest
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - configure-environment:
           skip-dependencies: true
       - run:
@@ -1241,7 +1241,7 @@ jobs:
     executor: xcode-latest
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - configure-environment:
           skip-dependencies: true
       - attach_workspace:
@@ -1270,7 +1270,7 @@ jobs:
     executor: xcode-latest
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - configure-environment:
           skip-dependencies: true
       - install-gh
@@ -1289,7 +1289,7 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - configure-environment:
           skip-dependencies: true
       - run:
@@ -1306,7 +1306,7 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - configure-environment:
           skip-dependencies: true
       - run:
@@ -1321,7 +1321,7 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - configure-environment:
           skip-dependencies: true
       - install-gh
@@ -1347,7 +1347,7 @@ jobs:
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - configure-environment:
           skip-dependencies: true
       - turf-report-pending:
@@ -1386,7 +1386,7 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - run:
           name: Notify maps internal CI about $CIRCLE_BRANCH branch update
           command: |
@@ -1404,7 +1404,7 @@ jobs:
     executor: xcode-latest
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - configure-environment:
           skip-dependencies: true
       - run:
@@ -1434,7 +1434,7 @@ jobs:
     executor: xcode-latest
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - configure-environment:
           skip-dependencies: true
       - attach_workspace:
@@ -1918,7 +1918,7 @@ commands:
         type: string
     steps:
       - checkout:
-          path: ~/mapbox-maps-ios-internal
+          path: ~/project/mapbox-maps-ios-internal
       - run:
           name: Generate cache file for key
           command: |
@@ -2024,8 +2024,8 @@ commands:
             ./codecov -f coverage.lcov -F << parameters.codecov_flag_name >>
 
             echo "Uploading to S3" ; \
-            python3 ~/mapbox-maps-ios-internal/mapbox-maps-ios/scripts/code-coverage/parse-code-coverage.py \
-              -g ~/mapbox-maps-ios-internal \
+            python3 ~/project/mapbox-maps-ios-internal/mapbox-maps-ios/scripts/code-coverage/parse-code-coverage.py \
+              -g ~/project/mapbox-maps-ios-internal \
               -c MapboxMaps \
               --scheme MapboxMaps \
               --report coverage.txt

@@ -1,5 +1,6 @@
-import Foundation
+@testable import TestsSupport
 @testable import MapboxMaps
+import Foundation
 import XCTest
 
 final class UIApplicationInterfaceOrientationProviderTests: XCTestCase {

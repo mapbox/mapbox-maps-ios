@@ -1,3 +1,4 @@
+@testable import TestsSupport
 @testable import MapboxMaps
 
 internal final class MockAnnotationManagerFactory: AnnotationManagerFactoryProtocol {

@@ -1,3 +1,4 @@
+@testable import TestsSupport
 import CoreLocation
 import XCTest
 @testable import MapboxMaps

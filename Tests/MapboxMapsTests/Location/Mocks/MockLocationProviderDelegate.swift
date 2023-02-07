@@ -1,3 +1,4 @@
+@testable import TestsSupport
 import MapboxMaps
 
 final class MockLocationProviderDelegate: LocationProviderDelegate {

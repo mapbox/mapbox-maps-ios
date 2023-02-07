@@ -1,3 +1,4 @@
+@testable import TestsSupport
 import MetalKit
 
 final class MockMetalView: MTKView {

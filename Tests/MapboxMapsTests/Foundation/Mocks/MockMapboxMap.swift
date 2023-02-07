@@ -1,4 +1,5 @@
 @testable import MapboxMaps
+@testable import TestsSupport
 @_implementationOnly import MapboxCoreMaps_Private
 import CoreLocation
 

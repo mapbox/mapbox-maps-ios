@@ -1,3 +1,4 @@
+@testable import TestsSupport
 import CoreLocation
 
 final class MockHeading: CLHeading {

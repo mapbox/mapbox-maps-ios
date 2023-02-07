@@ -1,3 +1,4 @@
+@testable import TestsSupport
 @testable import MapboxMaps
 
 struct LocationChangeHandlerParams: Equatable {

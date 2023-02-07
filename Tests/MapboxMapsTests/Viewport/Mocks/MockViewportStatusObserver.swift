@@ -1,4 +1,5 @@
-import MapboxMaps
+@testable import TestsSupport
+@testable import MapboxMaps
 
 final class MockViewportStatusObserver: ViewportStatusObserver {
     struct ViewportStatusDidChangeParams: Equatable {

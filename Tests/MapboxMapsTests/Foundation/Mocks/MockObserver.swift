@@ -1,3 +1,4 @@
+@testable import TestsSupport
 import MapboxCoreMaps
 
 final class MockObserver: NSObject, Observer {

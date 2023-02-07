@@ -1,3 +1,4 @@
+@testable import TestsSupport
 import XCTest
 @_spi(Package) @testable import MapboxMaps
 @_implementationOnly import MapboxCoreMaps_Private

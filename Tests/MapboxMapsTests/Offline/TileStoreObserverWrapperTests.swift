@@ -1,3 +1,4 @@
+@testable import TestsSupport
 import XCTest
 @_implementationOnly import MapboxCommon_Private
 @testable import MapboxMaps

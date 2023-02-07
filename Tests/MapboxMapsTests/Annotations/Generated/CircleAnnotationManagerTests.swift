@@ -1,3 +1,4 @@
+@testable import TestsSupport
 // This file is generated
 import XCTest
 @testable import MapboxMaps

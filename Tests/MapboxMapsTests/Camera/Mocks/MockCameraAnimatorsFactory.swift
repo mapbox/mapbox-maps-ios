@@ -1,3 +1,4 @@
+@testable import TestsSupport
 @testable import MapboxMaps
 
 final class MockCameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {

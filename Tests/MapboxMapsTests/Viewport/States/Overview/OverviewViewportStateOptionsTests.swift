@@ -1,4 +1,5 @@
-import MapboxMaps
+@testable import TestsSupport
+@testable import MapboxMaps
 import XCTest
 
 final class OverviewViewportStateOptionsTests: XCTestCase {

@@ -1,5 +1,6 @@
-import XCTest
+@testable import TestsSupport
 @testable import MapboxMaps
+import XCTest
 
 final class ViewportImplTests: XCTestCase {
 

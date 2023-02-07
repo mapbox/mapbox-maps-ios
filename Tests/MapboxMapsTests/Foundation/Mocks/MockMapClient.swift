@@ -1,3 +1,4 @@
+@testable import TestsSupport
 import MapboxCoreMaps
 @_implementationOnly import MapboxCoreMaps_Private
 

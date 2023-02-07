@@ -38,9 +38,14 @@ let package = Package(
             name: "MapboxMapsSwiftUI",
             dependencies: ["MapboxMaps"]
         ),
+        .target(
+            name: "TestsSupport",
+            dependencies: ["MapboxMaps"],
+            path: "Tests/TestsSupport"
+        ),
         .testTarget(
             name: "MapboxMapsTests",
-            dependencies: ["MapboxMaps", "CocoaImageHashing"],
+            dependencies: ["MapboxMaps", "CocoaImageHashing", "TestsSupport"],
             exclude: [
                 "Info.plist",
                 "Integration Tests/HTTP/HTTPIntegrationTests.swift",

@@ -175,6 +175,8 @@ open class MapView: UIView {
     internal let applicationStateProvider: ApplicationStateProvider
 
     internal let eventsManager: EventsManagerProtocol
+    
+    internal let preferredContentSizeCategoryProvider: PreferredContentSizeCategoryProvider
 
     /// Initialize a MapView
     /// - Parameters:
@@ -193,6 +195,7 @@ open class MapView: UIView {
         dependencyProvider = MapViewDependencyProvider(interfaceOrientationProvider: orientationProvider)
         attributionUrlOpener = DefaultAttributionURLOpener()
         applicationStateProvider = DefaultApplicationStateProvider()
+        preferredContentSizeCategoryProvider = DefaultPreferredContentSizeCategoryProvider()
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
@@ -210,15 +213,18 @@ open class MapView: UIView {
     ///   - orientationProvider: User interface orientation provider
     ///   - urlOpener: Attribution URL opener
     ///   - applicationStateProvider: Application state provider
+    ///   - preferredContentSizeCategoryProvider: Preferred content size category provider
     @available(iOS, deprecated: 13, message: "Use init(frame:mapInitOptions:urlOpener:) instead")
     public init(frame: CGRect,
                 mapInitOptions: MapInitOptions = MapInitOptions(),
                 orientationProvider: InterfaceOrientationProvider,
                 urlOpener: AttributionURLOpener,
-                applicationStateProvider: ApplicationStateProvider) {
+                applicationStateProvider: ApplicationStateProvider,
+                preferredContentSizeCategoryProvider: PreferredContentSizeCategoryProvider) {
         dependencyProvider = MapViewDependencyProvider(interfaceOrientationProvider: orientationProvider)
         attributionUrlOpener = urlOpener
         self.applicationStateProvider = applicationStateProvider
+        self.preferredContentSizeCategoryProvider = preferredContentSizeCategoryProvider
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
@@ -235,16 +241,19 @@ open class MapView: UIView {
     ///    `ResourceOptionsManager.default` to retrieve a shared default resource option, including the access token.
     ///   - urlOpener: Attribution URL opener
     ///   - applicationStateProvider: Application state provider
+    ///   - preferredContentSizeCategoryProvider: Preferred content size category provider
     @available(iOS 13.0, *)
     public init(frame: CGRect,
                 mapInitOptions: MapInitOptions = MapInitOptions(),
                 urlOpener: AttributionURLOpener,
-                applicationStateProvider: ApplicationStateProvider) {
+                applicationStateProvider: ApplicationStateProvider,
+                preferredContentSizeCategoryProvider: PreferredContentSizeCategoryProvider) {
         dependencyProvider = MapViewDependencyProvider(
             interfaceOrientationProvider: DefaultInterfaceOrientationProvider()
         )
         attributionUrlOpener = urlOpener
         self.applicationStateProvider = applicationStateProvider
+        self.preferredContentSizeCategoryProvider = preferredContentSizeCategoryProvider
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
@@ -269,6 +278,7 @@ open class MapView: UIView {
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
         attributionUrlOpener = DefaultAttributionURLOpener()
         applicationStateProvider = DefaultApplicationStateProvider()
+        preferredContentSizeCategoryProvider = DefaultPreferredContentSizeCategoryProvider()
         resourceOptions = ResourceOptionsManager.default.resourceOptions
         eventsManager = dependencyProvider.makeEventsManager(accessToken: resourceOptions.accessToken)
         super.init(coder: coder)
@@ -278,10 +288,12 @@ open class MapView: UIView {
                   mapInitOptions: MapInitOptions,
                   dependencyProvider: MapViewDependencyProviderProtocol,
                   urlOpener: AttributionURLOpener,
-                  applicationStateProvider: ApplicationStateProvider) {
+                  applicationStateProvider: ApplicationStateProvider,
+                  preferredContentSizeCategoryProvider: PreferredContentSizeCategoryProvider) {
         self.dependencyProvider = dependencyProvider
         attributionUrlOpener = urlOpener
         self.applicationStateProvider = applicationStateProvider
+        self.preferredContentSizeCategoryProvider = preferredContentSizeCategoryProvider
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
@@ -380,7 +392,7 @@ open class MapView: UIView {
 
     internal func sendInitialTelemetryEvents() {
         eventsManager.sendTurnstile()
-        eventsManager.sendMapLoadEvent()
+        eventsManager.sendMapLoadEvent(preferredContentSizeCategoryProvider: preferredContentSizeCategoryProvider)
     }
 
     internal func setupManagers() {

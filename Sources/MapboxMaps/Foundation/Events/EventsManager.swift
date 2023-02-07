@@ -15,7 +15,7 @@ extension UserDefaults {
 }
 
 internal protocol EventsManagerProtocol: AnyObject {
-    func sendMapLoadEvent()
+    func sendMapLoadEvent(preferredContentSizeCategoryProvider: PreferredContentSizeCategoryProvider)
 
     func sendTurnstile()
 
@@ -57,8 +57,8 @@ internal final class EventsManager: EventsManagerProtocol {
         }
     }
 
-    private func getContentScale() -> Int {
-        let sc = UIScreen.main.traitCollection.preferredContentSizeCategory
+    private func getContentScale(preferredContentSizeCategoryProvider: PreferredContentSizeCategoryProvider) -> Int {
+        let sc = preferredContentSizeCategoryProvider.preferredContentSizeCategory
 
         let defaultScale = -9999
         let scToScale: [UIContentSizeCategory: Int] = [
@@ -106,14 +106,14 @@ internal final class EventsManager: EventsManagerProtocol {
         return String(cString: model)
     }
 
-    private func getMapLoadEventAttributes() -> [String: Any] {
+    private func getMapLoadEventAttributes(preferredContentSizeCategoryProvider: PreferredContentSizeCategoryProvider) -> [String: Any] {
         let event = "map.load"
         let created = ISO8601DateFormatter().string(from: Date())
         let userId = UIDevice.current.identifierForVendor?.uuidString ?? ""
         let model = lookupDeviceModel()
         let operatingSystem = String(format: "%@ %@", UIDevice.current.systemName, UIDevice.current.systemVersion)
         let resolution = UIScreen.main.nativeScale
-        let accessibilityFontScale = self.getContentScale()
+        let accessibilityFontScale = self.getContentScale(preferredContentSizeCategoryProvider: preferredContentSizeCategoryProvider)
         let orientation = self.getOrientation()
         let wifi = ReachabilityFactory.reachability(forHostname: nil).currentNetworkStatus() == .reachableViaWiFi
 
@@ -132,8 +132,8 @@ internal final class EventsManager: EventsManagerProtocol {
         return eventAttributes
     }
 
-    internal func sendMapLoadEvent() {
-        let attributes = self.getMapLoadEventAttributes()
+    internal func sendMapLoadEvent(preferredContentSizeCategoryProvider: PreferredContentSizeCategoryProvider) {
+        let attributes = self.getMapLoadEventAttributes(preferredContentSizeCategoryProvider: preferredContentSizeCategoryProvider)
         let mapLoadEvent = MapboxCommon_Private.Event(priority: .queued,
                                                       attributes: attributes,
                                                       deferredOptions: nil)

@@ -1,0 +1,28 @@
+executor: xcode-latest
+steps:
+  - checkout:
+      path: ~/project
+  - configure-environment:
+      skip-dependencies: true
+  - run:
+      name: Generate docc
+      command: |
+        xcodebuild docbuild -config Release -scheme MapboxMaps -destination "generic/platform=iOS"
+        DOCCARCHIVE_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "MapboxMaps.doccarchive" | head -1)
+        echo "Found DocC archive at: $DOCCARCHIVE_PATH"
+        cp -r $DOCCARCHIVE_PATH MapboxMaps.doccarchive
+        ls -la MapboxMaps.doccarchive
+        zip -r MapboxMaps.doccarchive.zip MapboxMaps.doccarchive
+
+        xcrun docc process-archive transform-for-static-hosting MapboxMaps.doccarchive \
+          --output-path latest \
+          --hosting-base-path "ios/maps/api/latest/"
+  - store_artifacts:
+      path: MapboxMaps.doccarchive.zip
+  - persist_to_workspace:
+      root: .
+      paths:
+        - latest
+  - report-failure:
+      report_failure: true
+      message: "Failed to generate docc"

@@ -1,0 +1,10 @@
+executor: xcode-latest
+steps:
+  - checkout:
+      path: ~/project
+  - run: brew install swiftlint
+  - run: swiftlint lint --strict --reporter junit | tee result.xml
+  - store_artifacts:
+      path: result.xml
+  - store_test_results:
+      path: result.xml

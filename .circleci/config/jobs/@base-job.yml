@@ -1,0 +1,32 @@
+# This is a base job that can be merged into specific jobs. It uses anchors
+# and aliases as described here
+# https://circleci.com/docs/2.0/writing-yaml/#merging-maps
+base-job: &base-job
+  parameters:
+    xcode:
+      type: string
+      default: "13.1.0"
+    create-xcframework-always-run:
+      type: boolean
+      default: false
+    configuration:
+      type: string
+      default: "Debug"
+    report_failure:
+      type: boolean
+      default: false
+    scheme:
+      type: string
+      default: "MapboxTestHost"
+    turf-revision:
+      type: string
+      default: ""
+  macos:
+    xcode: << parameters.xcode >>
+  environment:
+    HOMEBREW_NO_AUTO_UPDATE: 1
+    HOMEBREW_NO_INSTALL_CLEANUP: 1
+    CONFIGURATION: << parameters.configuration >>
+  steps:
+    # Don't run the default job
+    - run: exit 1

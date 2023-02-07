@@ -1,0 +1,69 @@
+parameters:
+  devices:
+    default: |
+      --device model=iphone13pro,version=15.7 \
+      --device model=iphone11pro,version=14.7 \
+      --device model=iphone8,version=13.6 \
+      --device model=iphonexr,version=12.4 \
+    type: string
+  scheme:
+    type: string
+executor: xcode-latest
+steps:
+  - checkout:
+      path: ~/project
+  - install-gcloud
+  - configure-environment:
+      skip-dependencies: true
+  - install-python-dependencies
+  - attach_workspace:
+      at: output
+  - run:
+      name: Run << parameters.scheme >> tests on devices
+      command: |
+        gcloud firebase test ios run --test output/build_products.zip \
+          << parameters.devices >> 2>&1 | tee firebase_test_lab_run.log
+      no_output_timeout: 30m
+  - run:
+      name: Download XCResults
+      command: |
+        TEST_LAB_PATH=$(cat firebase_test_lab_run.log | grep -o "test-lab.*/")
+
+        mkdir testlab_results
+        gsutil -m cp -r "gs://${TEST_LAB_PATH}i*" testlab_results
+        zip -r testlab_results.zip testlab_results
+      when: always
+  - run:
+      name: Symbolicate crash logs
+      command: |
+        (
+          unzip output/build_products.zip -d testlab_results/
+          rsync -R testlab_results/*/CrashLogs/*.ips CrashLogs/
+          make symbolicate \
+            BUILD_DIR=CrashLogs \
+            BUILT_DEVICE_PRODUCTS_DIR=testlab_results/Release-iphoneos/ \
+            APP_NAME=<< parameters.scheme >>
+          zip -r crashlogs.zip CrashLogs
+        ) || true
+      when: always
+  - run:
+      name: Update coverage
+      command: |
+        make update-codecov-with-profdata \
+            COVERAGE_ARCH=arm64 \
+            COVERAGE_ROOT_DIR="$(pwd)/testlab_results" \
+            COVERAGE_MAPBOX_MAPS="$(pwd)/$(find . -name "MapboxMaps.o" | xargs)" SCHEME=<< parameters.scheme >>
+  - run:
+      name: Parsing xcresults for errors
+      command: |
+        find "testlab_results" -name '*.xcresult' -exec swift run --package-path scripts/xcparty xcparty {} \;
+      when: on_fail
+  - store_artifacts:
+      path: firebase_test_lab_run.log
+  - store_artifacts:
+      path: crashlogs.zip
+  - store_artifacts:
+      path: testlab_results.zip
+  - store_test_results:
+      path: testlab_results
+  - slack-notify-failure-if-any

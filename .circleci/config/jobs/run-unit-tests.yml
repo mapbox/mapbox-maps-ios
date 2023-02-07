@@ -1,0 +1,54 @@
+parameters:
+  destination:
+    type: string
+  xcode:
+    type: string
+  disable_codecoverage:
+    type: boolean
+    default: false
+  resource_class:
+    type: string
+    default: macos.x86.medium.gen2
+  xctestrun_prefix:
+    type: string
+    default: MapboxMaps_UnitTests
+macos:
+  xcode: << parameters.xcode >>
+resource_class: << parameters.resource_class >>
+steps:
+  - checkout:
+      path: ~/project
+  - attach_workspace:
+      at: build
+  - run:
+      name: Run MapboxMaps unit tests on << parameters.destination >>  simulator
+      command: |
+        XCTESTRUN_PATH=$(find build -type f -name '<< parameters.xctestrun_prefix >>*.xctestrun' | head -1)
+        xcodebuild \
+          test-without-building \
+          -xctestrun "$XCTESTRUN_PATH" \
+          -parallel-testing-enabled NO \
+          -destination 'platform=iOS Simulator,<< parameters.destination >>' \
+          -resultBundlePath MapboxMapsTests.xcresult | tee xcodebuild.log | xcpretty --report junit --output junit.xml
+
+        find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' -exec cp {} . \;
+        find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profraw' -exec cp {} . \;
+  - unless:
+      condition: << parameters.disable_codecoverage >>
+      steps:
+        - collect-code-coverage
+  - run:
+      name: Compress XCResult
+      command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
+      when: always
+  - store_test_results:
+      path: junit.xml
+  - store_artifacts:
+      path: MapboxMapsTests.xcresult.zip
+  - store_artifacts:
+      path: xcodebuild.log
+  - store_artifacts:
+      path: ~/Library/Logs/DiagnosticReports
+  - report-failure:
+      report_failure: true
+      message: "Unit test failed: << parameters.destination >>, Xcode: << parameters.xcode >>"

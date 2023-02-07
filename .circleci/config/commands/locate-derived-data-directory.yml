@@ -1,0 +1,8 @@
+parameters:
+  base_name:
+    type: string
+steps:
+  - run:
+      name: Locate derived data directory
+      command: |
+        echo "export DERIVED_DATA_PATH=\"$(find ~/Library/Developer/Xcode/DerivedData -name "<< parameters.base_name >>*" -depth 1)\"" >> $BASH_ENV

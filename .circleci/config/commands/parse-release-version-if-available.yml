@@ -1,0 +1,7 @@
+steps:
+  - run:
+      name: Parse SDK version from release tag
+      command: |
+        if [[ -n "$CIRCLE_TAG" ]]; then
+          echo "export VERSION=${CIRCLE_TAG#v}" >> $BASH_ENV
+        fi

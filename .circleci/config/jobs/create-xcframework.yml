@@ -1,0 +1,22 @@
+<<: *base-job
+resource_class: macos.x86.medium.gen2
+working_directory: ~/project/mapbox-maps-ios
+steps:
+  - checkout:
+      path: ~/project
+  - configure-environment
+  - ensure-text-exists-in-commit:
+      commit-text: "[create xcframework]"
+      always-run: << parameters.create-xcframework-always-run >>
+  - install-all-dependencies
+  - make-xcframework-bundle:
+      bundle_style: "dynamic"
+  - store_artifacts:
+      path: MapboxMaps.zip
+  - make-xcframework-bundle:
+      bundle_style: "static"
+  - store_artifacts:
+      path: MapboxMaps-static.zip
+  - report-failure:
+      report_failure: << parameters.report_failure >>
+      message: "create-xcframework"

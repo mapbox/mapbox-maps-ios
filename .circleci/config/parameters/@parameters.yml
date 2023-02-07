@@ -4,3 +4,6 @@ maps-ios-checkout-reference:
 run-tests:
   type: boolean
   default: false
+turf-revision:
+  type: string
+  default: ""

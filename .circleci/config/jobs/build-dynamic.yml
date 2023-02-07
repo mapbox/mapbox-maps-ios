@@ -1,0 +1,30 @@
+executor: xcode-sdk-min
+resource_class: macos.x86.medium.gen2
+steps:
+  - checkout:
+      path: ~/project
+  - configure-environment:
+      skip-dependencies: true
+  - install-xcodegen
+  - install-python-dependencies
+  - run:
+      name: Build dynamic SDK
+      command: ./package-mapbox-maps.sh dynamic
+      working_directory: scripts/release/packager
+  - store_artifacts:
+      path: scripts/release/packager/MapboxMaps.zip
+  - persist_to_workspace:
+      root: scripts/release/packager
+      paths:
+        - MapboxMaps.zip
+  - run:
+      name: Dump the SDK to a JSON file
+      command: scripts/api-compatibility-check/breaking-api-check.py dump scripts/release/packager/MapboxMaps.zip --module MapboxMaps -o latest.api.json
+  - persist_to_workspace:
+      root: .
+      paths:
+        - latest.api.json
+  - run:
+      name: Upload to S3
+      command: scripts/release/upload-to-registry.sh scripts/release/packager/MapboxMaps.zip mobile-maps-ios "$VERSION" MapboxMaps.zip
+  - slack-notify-failure-if-any

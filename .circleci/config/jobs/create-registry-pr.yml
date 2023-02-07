@@ -1,0 +1,13 @@
+executor: xcode-latest
+steps:
+  - checkout:
+      path: ~/project
+  - configure-environment:
+      skip-dependencies: true
+  - attach_workspace:
+      at: workspace
+  - run: ls -lGA workspace
+  - run:
+      name: Create SDK Registry PR
+      command: scripts/release/create-api-downloads-pr.sh mobile-maps-ios "$VERSION"
+  - slack-notify-failure-if-any

@@ -1,0 +1,103 @@
+jobs:
+  - release-precheck:
+      context:
+        - Slack Orb
+        - SDK Registry Token
+      <<: *release-anchor
+      requires: []
+  - trigger-metrics-v2:
+      context:
+        - Slack Orb
+        - Maps SDK/CircleCI API Token
+      <<: *release-anchor
+  - build-baseline-sdk:
+      context:
+        - Slack Orb
+        - SDK Registry Token
+      <<: *release-anchor
+  - build-dynamic:
+      context:
+        - Slack Orb
+        - SDK Registry Token
+      <<: *release-anchor
+  - build-static:
+      context:
+        - Slack Orb
+        - SDK Registry Token
+      <<: *release-anchor
+  - build-docs:
+      context:
+        - Slack Orb
+        - SDK Registry Token
+      <<: *release-anchor
+  - build-studio-preview:
+      context:
+        - Slack Orb
+        - SDK Registry Token
+      <<: *release-anchor
+  - check-api-compatibility:
+      context:
+        - Slack Orb
+      <<: *release-anchor
+      requires:
+        - build-baseline-sdk
+        - build-dynamic
+  - create-registry-pr:
+      context:
+        - Slack Orb
+      <<: *release-anchor
+      requires:
+        - build-static
+        - build-docs
+        - build-studio-preview
+        - check-api-compatibility
+  - wait-registry-pr:
+      <<: *release-anchor
+      requires:
+        - create-registry-pr
+      type: approval
+  - check-registry:
+      context:
+        - Slack Orb
+        - SDK Registry Token
+      <<: *release-anchor
+      requires:
+        - wait-registry-pr
+  - create-docs-prs:
+      context:
+        - Slack Orb
+      <<: *release-anchor
+      requires:
+        - check-registry
+  - update-examples:
+      context:
+        - Slack Orb
+        - Fastlane Match
+        - SDK Registry Token
+        - Apple Machine account
+        - Maps SDK/Public Mapbox Token
+      <<: *release-anchor
+      requires:
+        - check-registry
+  - publish-podspec:
+      context:
+        - Slack Orb
+        - CocoaPods trunk token
+      <<: *release-anchor
+      requires:
+        - check-registry
+  - validate-integrations:
+      context:
+        - Slack Orb
+        - SDK Registry Token
+      <<: *release-anchor
+      requires:
+        - publish-podspec
+  - create-draft-release:
+      context:
+        - Slack Orb
+      <<: *release-anchor
+      requires:
+        - create-docs-prs
+        - update-examples
+        - validate-integrations

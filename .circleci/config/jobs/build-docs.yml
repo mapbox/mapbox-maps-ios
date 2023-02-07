@@ -1,0 +1,10 @@
+macos:
+  xcode: 13.4.1
+resource_class: macos.x86.medium.gen2
+steps:
+  - checkout:
+      path: ~/project
+  - configure-environment:
+      skip-dependencies: true
+  - make-docs
+  - slack-notify-failure-if-any

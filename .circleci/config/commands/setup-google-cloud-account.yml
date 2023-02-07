@@ -1,0 +1,6 @@
+steps:
+  - run:
+      name: Setup Google Cloud default application credentials
+      command: |
+        mkdir -p ~/.config/gcloud/
+        echo "${GOOGLE_CLOUD_KEY_FILE}" > ~/.config/gcloud/application_default_credentials.json

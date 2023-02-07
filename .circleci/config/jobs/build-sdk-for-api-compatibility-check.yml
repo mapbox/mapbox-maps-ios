@@ -1,0 +1,6 @@
+executor: xcode-sdk-min
+resource_class: macos.x86.medium.gen2
+steps:
+  - dump-sdk-api:
+      baseline: false
+      output: latest.api.json

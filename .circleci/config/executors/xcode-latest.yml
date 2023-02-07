@@ -1,0 +1,4 @@
+xcode-latest:
+  macos:
+    xcode: 14.1.0
+  working_directory: ~/project/mapbox-maps-ios

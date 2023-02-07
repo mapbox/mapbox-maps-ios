@@ -1,0 +1,46 @@
+parameters:
+  configuration:
+    type: string
+    default: "Debug"
+  turf-revision:
+    type: string
+    default: ""
+  report_failure:
+    type: boolean
+    default: false
+executor: xcode-sdk-min
+resource_class: macos.x86.medium.gen2
+steps:
+  - checkout:
+      path: ~/project
+  - configure-environment:
+      skip-dependencies: true
+  - when:
+      condition: << parameters.turf-revision >>
+      steps:
+        - run:
+            name: Set Turf Revision
+            command: |
+              sed -i '' 's/turf-swift.git", from: "2.0.0"/turf-swift.git", .revision("<< parameters.turf-revision >>")/' Package.swift
+  - run:
+      name: Checkout xcodebuild deps
+      command: xcodebuild -resolvePackageDependencies -scheme MapboxMaps -derivedDataPath build
+  - run:
+      name: Building MapboxMaps for simulator
+      command: |
+        xcodebuild build-for-testing \
+          -scheme MapboxMaps \
+          -configuration << parameters.configuration >> \
+          -destination "generic/platform=iOS Simulator" \
+          -derivedDataPath build \
+          -testPlan "UnitTests" -testPlan "IntegrationTests" \
+          COMPILER_INDEX_STORE_ENABLE=NO \
+          ENABLE_TESTABILITY=YES \
+          ONLY_ACTIVE_ARCH=YES
+  - persist_to_workspace:
+      root: build/Build/
+      paths:
+        - Products
+  - report-failure:
+        report_failure: << parameters.report_failure >>
+        message: "unit-test-sdk"

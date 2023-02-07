@@ -1,0 +1,26 @@
+parameters:
+  platform:
+    type: enum
+    enum:
+      - darwin
+      - linux
+    default: darwin
+  arch:
+    type: enum
+    enum:
+      - amd64
+      - arm64
+    default: amd64
+  version:
+    type: string
+    default: latest
+  install_path:
+    type: string
+    default: /usr/local/bin
+steps:
+  - run:
+      name: Install latest mbx-ci
+      command: |
+        curl -Ls https://mapbox-release-engineering.s3.amazonaws.com/mbx-ci/<<parameters.version>>/mbx-ci-<<parameters.platform>>-<<parameters.arch>> | sudo tee <<parameters.install_path>>/mbx-ci >/dev/null
+        sudo chmod 755 <<parameters.install_path>>/mbx-ci
+        mbx-ci aws setup

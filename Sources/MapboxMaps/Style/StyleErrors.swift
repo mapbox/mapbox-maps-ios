@@ -72,7 +72,8 @@ public enum MapLoadingError: LocalizedError {
         case "glyphs":
             self = .glyphs(message)
         default:
-            fatalError("Unknown map load error \(type):\(message)")
+            // TODO: Revert this after the underlying issue(MAPSNAT-896) is fixed on GL Native side
+            self = .source(message)
         }
     }
 

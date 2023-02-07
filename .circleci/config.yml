@@ -16,9 +16,6 @@ jobs:
       - run:
           name: Generate config
           command: circleci config pack .circleci/config > circle.yml
-      - run:
-          name: Show config
-          command: cat circle.yml
       - continuation/continue:
           configuration_path: mapbox-maps-ios/.circleci/config.yml
 
@@ -26,3 +23,4 @@ workflows:
   setup:
     jobs:
       - setup
+      

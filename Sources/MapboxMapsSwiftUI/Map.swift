@@ -36,8 +36,7 @@ public struct Map: View {
     ///
     /// - Parameters:
     ///     - camera: The camera state to display. If not specified, the default camera options from style will be used. See [center](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-center), [zoom](https://docs.mapbox.com/mapbox-gl-js/style-spec/root/#zoom), [bearing](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-bearing), [pitch](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-pitch).
-    ///     - resourceOptions: ``ResourceOptions``; default creates an instance using `ResourceOptionsManager.default`.
-    ///     - mapOptions: ``MapOptions``; see ``GlyphsRasterizationOptions`` for the default  used for glyph rendering.
+    ///     - mapInitOptions: A closure to provide initial map parameters. It gets called only once when `Map` is created.
     public init(
         camera: Binding<CameraState>? = nil,
         mapInitOptions: InitOptionsProvider? = nil
@@ -48,12 +47,12 @@ public struct Map: View {
 
     public var body: some View {
         ZStack {
-            InternalMap(camera: camera, mapConfiguration: mapDependencies, mapInitOptions: mapInitOptions)
+            InternalMap(camera: camera, mapDependencies: mapDependencies, mapInitOptions: mapInitOptions)
         }
     }
 }
 
-@available(iOS 14.0, *)
+@available(iOS 13.0, *)
 extension Map {
     private func set<T>(_ keyPath: WritableKeyPath<Map, T>, _ value: T) -> Self {
         var updated = self
@@ -109,7 +108,7 @@ extension Map {
         return updated
     }
 
-    /// Sets constraint mode to the map
+    /// Sets constraint mode to the map. If not set, `heightOnly` wil be in use.
     public func constrainMode(_ constrainMode: ConstrainMode) -> Self {
         set(\.mapDependencies.constrainMode, constrainMode)
     }
@@ -119,7 +118,7 @@ extension Map {
         set(\.mapDependencies.viewportMode, viewportMode)
     }
 
-    /// Sets ``NorthOrientation`` to the map.
+    /// Sets ``NorthOrientation`` to the map. If not set, `upwards` will be in use.
     public func northOrientation(_ northOrientation: NorthOrientation) -> Self {
         set(\.mapDependencies.orientation, northOrientation)
     }

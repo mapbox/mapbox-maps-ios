@@ -14,11 +14,11 @@ struct InternalMap: UIViewRepresentable {
 
     init(
         camera: Binding<CameraState>?,
-        mapConfiguration: MapDependencies,
+        mapDependencies: MapDependencies,
         mapInitOptions: Map.InitOptionsProvider?
     ) {
         self.camera = camera
-        self.mapDependencies = mapConfiguration
+        self.mapDependencies = mapDependencies
         self.mapInitOptions = mapInitOptions
     }
 

@@ -51,9 +51,16 @@ public final class MapCoordinator {
                 // TODO: This call can change the camera, but it won't be reflected on camera Binding.
                 try mapView.mapboxMap.setCameraBounds(with: view.mapDependencies.cameraBounds)
 
-                mapView.mapboxMap.setConstrainMode(view.mapDependencies.constrainMode)
-                mapView.mapboxMap.setViewportMode(view.mapDependencies.viewportMode)
-                mapView.mapboxMap.setNorthOrientation(northOrientation: view.mapDependencies.orientation)
+                let mapOptions = mapView.mapboxMap.options
+                if mapOptions.constrainMode != view.mapDependencies.constrainMode {
+                    mapView.mapboxMap.setConstrainMode(view.mapDependencies.constrainMode)
+                }
+                if mapOptions.viewportMode != view.mapDependencies.viewportMode {
+                    mapView.mapboxMap.setViewportMode(view.mapDependencies.viewportMode)
+                }
+                if mapOptions.orientation != view.mapDependencies.orientation {
+                    mapView.mapboxMap.setNorthOrientation(northOrientation: view.mapDependencies.orientation)
+                }
             }
             if mapView.mapboxMap.style.uri != view.effectiveStyleURI {
                 mapView.mapboxMap.style.uri = view.effectiveStyleURI

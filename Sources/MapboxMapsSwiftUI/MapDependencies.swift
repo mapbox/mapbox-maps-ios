@@ -5,7 +5,6 @@ import MapboxMaps
 struct MapDependencies {
     var cameraBounds = CameraBoundsOptions()
     var styleURIs = StyleURIs(default: .streets, darkMode: nil)
-    var annotations = [PointAnnotation]()
     var getstureOptions = GestureOptions()
     var actions = Actions()
     var constrainMode = ConstrainMode.heightOnly

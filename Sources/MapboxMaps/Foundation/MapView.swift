@@ -174,9 +174,9 @@ open class MapView: UIView {
 
     internal let applicationStateProvider: ApplicationStateProvider
 
-    internal let eventsManager: EventsManagerProtocol
-    
     internal let preferredContentSizeCategoryProvider: PreferredContentSizeCategoryProvider
+
+    internal let eventsManager: EventsManagerProtocol
 
     /// Initialize a MapView
     /// - Parameters:

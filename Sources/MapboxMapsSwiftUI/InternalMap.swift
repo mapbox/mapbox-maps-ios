@@ -4,13 +4,10 @@ import MapboxMaps
 @available(iOS 13.0, *)
 struct InternalMap: UIViewRepresentable {
     var camera: Binding<CameraState>?
-    let mapDependencies: MapDependencies
+    var mapDependencies: MapDependencies
     private var mapInitOptions: Map.InitOptionsProvider?
 
     @Environment(\.colorScheme) var colorScheme
-    var effectiveStyleURI: StyleURI {
-        mapDependencies.styleURIs.effectiveURI(with: colorScheme)
-    }
 
     init(
         camera: Binding<CameraState>?,
@@ -23,16 +20,27 @@ struct InternalMap: UIViewRepresentable {
     }
 
     func makeCoordinator() -> MapCoordinator {
-        MapCoordinator(camera: camera)
+        MapCoordinator(setCamera: camera.map(\.setter))
     }
 
     func makeUIView(context: Context) -> MapView {
-        MapView(frame: .zero, mapInitOptions: mapInitOptions?() ?? MapInitOptions())
+        let mapView = MapView(frame: .zero, mapInitOptions: mapInitOptions?() ?? MapInitOptions())
+        context.environment.mapViewProvider?.mapView = mapView
+        context.coordinator.mapView = mapView
+        return mapView
     }
 
     func updateUIView(_ mapView: MapView, context: Context) {
-        context.environment.mapViewProvider?.mapView = mapView
-        context.coordinator.mapView = mapView
-        context.coordinator.update(from: self)
+        context.coordinator.update(
+            camera: camera?.wrappedValue,
+            deps: mapDependencies,
+            colorScheme: colorScheme)
+    }
+}
+
+@available(iOS 13.0, *)
+private extension Binding {
+    var setter: (Value) -> Void {
+        { self.wrappedValue = $0 }
     }
 }

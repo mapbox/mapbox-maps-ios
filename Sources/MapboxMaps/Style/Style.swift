@@ -3,7 +3,9 @@
 @_implementationOnly import MapboxCoreMaps_Private
 import UIKit
 
-internal protocol StyleProtocol: AnyObject {
+/// Style interface for testing purposes.
+public protocol StyleProtocol: AnyObject {
+    var uri: StyleURI? { get set }
     func addLayer(_ layer: Layer, layerPosition: LayerPosition?) throws
     func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition?) throws
     func addPersistentLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws

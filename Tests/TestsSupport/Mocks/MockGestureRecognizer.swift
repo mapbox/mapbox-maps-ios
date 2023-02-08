@@ -1,4 +1,3 @@
-@testable import TestsSupport
 import UIKit
 
 final class MockGestureRecognizer: UIGestureRecognizer {

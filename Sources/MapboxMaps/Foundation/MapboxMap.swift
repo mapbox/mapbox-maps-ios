@@ -5,6 +5,7 @@ import UIKit
 @_implementationOnly import MapboxCoreMaps_Private
 import Turf
 
+/// Map interface for testing purposes.
 public protocol MapboxMapProtocol: AnyObject {
     var cameraBounds: CameraBounds { get }
     var cameraState: CameraState { get }

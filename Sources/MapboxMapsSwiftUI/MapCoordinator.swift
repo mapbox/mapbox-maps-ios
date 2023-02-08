@@ -11,13 +11,13 @@ public final class MapCoordinator {
     private var bag = Bag()
     private var queriesBag = Bag()
     private var setCamera: CameraSetter?
-    private var mapView: MapViewType?
+    private var mapView: MapViewFacade?
 
     init(setCamera: CameraSetter?) {
         self.setCamera = setCamera
     }
 
-    func setMapView(_ mapView: MapViewType) {
+    func setMapView(_ mapView: MapViewFacade) {
         guard self.mapView == nil else { return }
         self.mapView = mapView
 

@@ -26,7 +26,7 @@ struct InternalMap: UIViewRepresentable {
     func makeUIView(context: Context) -> MapView {
         let mapView = MapView(frame: .zero, mapInitOptions: mapInitOptions?() ?? MapInitOptions())
         context.environment.mapViewProvider?.mapView = mapView
-        context.coordinator.setMapView(MapViewType(from: mapView))
+        context.coordinator.setMapView(MapViewFacade(from: mapView))
         return mapView
     }
 

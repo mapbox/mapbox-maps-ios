@@ -1,9 +1,39 @@
 @testable import MapboxMaps
-@testable import TestsSupport
 @_implementationOnly import MapboxCoreMaps_Private
 import CoreLocation
 
-final class MockMapboxMap: MapboxMapProtocol {
+final class MockMapboxMap: MapboxMapProtocolInternal {
+    @Stubbed var options = MapOptions()
+
+    let setCameraBoundsStub = Stub<MapboxMaps.CameraBoundsOptions, Void>()
+    func setCameraBounds(with options: MapboxMaps.CameraBoundsOptions) throws {
+        setCameraBoundsStub.call(with: options)
+    }
+
+    let northOrientationStub = Stub<NorthOrientation, Void>()
+    func setNorthOrientation(northOrientation: NorthOrientation) {
+        northOrientationStub.call(with: northOrientation)
+    }
+
+    let setConstraintModeStub = Stub<ConstrainMode, Void>()
+    func setConstrainMode(_ constrainMode: ConstrainMode) {
+        setConstraintModeStub.call(with: constrainMode)
+    }
+
+    let setViewportModeStub = Stub<ViewportMode, Void>()
+    func setViewportMode(_ viewportMode: ViewportMode) {
+        setViewportModeStub.call(with: viewportMode)
+    }
+
+    struct QRFParameters {
+        var point: CGPoint
+        var options: RenderedQueryOptions?
+        var completion: (Result<[QueriedFeature], Error>) -> Void
+    }
+    let qrfStub = Stub<QRFParameters, Cancelable>(defaultReturnValue: MockCancelable())
+    func queryRenderedFeatures(with point: CGPoint, options: RenderedQueryOptions?, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) -> Cancelable {
+        qrfStub.call(with: QRFParameters(point: point, options: options, completion: completion))
+    }
 
     var size: CGSize = .zero
 

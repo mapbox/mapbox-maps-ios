@@ -7,12 +7,12 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
     var cameraAnimatorsRunnerEnablable: MutableEnablableProtocol { get }
     func makeMetalView(frame: CGRect, device: MTLDevice?) -> MTKView
     func makeDisplayLink(window: UIWindow, target: Any, selector: Selector) -> DisplayLinkProtocol?
-    func makeCameraAnimatorsRunner(mapboxMap: MapboxMapProtocol) -> CameraAnimatorsRunnerProtocol
+    func makeCameraAnimatorsRunner(mapboxMap: MapboxMapProtocolInternal) -> CameraAnimatorsRunnerProtocol
     func makeCameraAnimationsManagerImpl(cameraViewContainerView: UIView,
-                                         mapboxMap: MapboxMapProtocol,
+                                         mapboxMap: MapboxMapProtocolInternal,
                                          cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol) -> CameraAnimationsManagerProtocol
     func makeGestureManager(view: UIView,
-                            mapboxMap: MapboxMapProtocol,
+                            mapboxMap: MapboxMapProtocolInternal,
                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager
     func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool,
                               userInterfaceOrientationView: UIView) -> LocationProducerProtocol
@@ -62,7 +62,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
         window.screen.displayLink(withTarget: target, selector: selector)
     }
 
-    internal func makeCameraAnimatorsRunner(mapboxMap: MapboxMapProtocol) -> CameraAnimatorsRunnerProtocol {
+    internal func makeCameraAnimatorsRunner(mapboxMap: MapboxMapProtocolInternal) -> CameraAnimatorsRunnerProtocol {
         CameraAnimatorsRunner(
             mapboxMap: mapboxMap,
             enablable: CompositeEnablable(
@@ -72,7 +72,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     }
 
     internal func makeCameraAnimationsManagerImpl(cameraViewContainerView: UIView,
-                                                  mapboxMap: MapboxMapProtocol,
+                                                  mapboxMap: MapboxMapProtocolInternal,
                                                   cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol) -> CameraAnimationsManagerProtocol {
         let doubleInterpolator = DoubleInterpolator()
         let wrappingInterpolator = WrappingInterpolator()
@@ -101,7 +101,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     }
 
     private func makePanGestureHandler(view: UIView,
-                                       mapboxMap: MapboxMapProtocol,
+                                       mapboxMap: MapboxMapProtocolInternal,
                                        cameraAnimationsManager: CameraAnimationsManagerProtocol) -> PanGestureHandlerProtocol {
         let gestureRecognizer = UIPanGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
@@ -195,7 +195,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     }
 
     internal func makeGestureManager(view: UIView,
-                                     mapboxMap: MapboxMapProtocol,
+                                     mapboxMap: MapboxMapProtocolInternal,
                                      cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager {
         return GestureManager(
             panGestureHandler: makePanGestureHandler(

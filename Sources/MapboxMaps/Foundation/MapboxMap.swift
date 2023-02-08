@@ -5,12 +5,15 @@ import UIKit
 @_implementationOnly import MapboxCoreMaps_Private
 import Turf
 
-internal protocol MapboxMapProtocol: AnyObject {
-    var size: CGSize { get }
+public protocol MapboxMapProtocol: AnyObject {
     var cameraBounds: CameraBounds { get }
     var cameraState: CameraState { get }
-    var anchor: CGPoint { get }
+    var options: MapOptions { get }
     func setCamera(to cameraOptions: CameraOptions)
+    func setCameraBounds(with options: CameraBoundsOptions) throws
+    func setNorthOrientation(northOrientation: NorthOrientation)
+    func setConstrainMode(_ constrainMode: ConstrainMode)
+    func setViewportMode(_ viewportMode: ViewportMode)
     func dragStart(for point: CGPoint)
     func dragCameraOptions(from: CGPoint, to: CGPoint) -> CameraOptions
     func dragEnd()
@@ -20,18 +23,24 @@ internal protocol MapboxMapProtocol: AnyObject {
     func endGesture()
     @discardableResult
     func onEvery<Payload>(event eventType: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable
-    // View annotation management
+    func camera(for geometry: Geometry, padding: UIEdgeInsets, bearing: CGFloat?, pitch: CGFloat?) -> CameraOptions
+    func camera(for coordinateBounds: CoordinateBounds, padding: UIEdgeInsets, bearing: Double?, pitch: Double?) -> CameraOptions
+    func coordinate(for point: CGPoint) -> CLLocationCoordinate2D
+    func point(for coordinate: CLLocationCoordinate2D) -> CGPoint
+    @discardableResult
+    func queryRenderedFeatures(with point: CGPoint, options: RenderedQueryOptions?, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) -> Cancelable
+    func performWithoutNotifying(_ block: () throws -> Void) rethrows
+}
+
+protocol MapboxMapProtocolInternal: MapboxMapProtocol {
+    var size: CGSize { get }
+    var anchor: CGPoint { get }
+    func pointIsAboveHorizon(_ point: CGPoint) -> Bool
     func setViewAnnotationPositionsUpdateListener(_ listener: ViewAnnotationPositionsUpdateListener?)
     func addViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws
     func updateViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws
     func removeViewAnnotation(withId id: String) throws
     func options(forViewAnnotationWithId id: String) throws -> ViewAnnotationOptions
-    func pointIsAboveHorizon(_ point: CGPoint) -> Bool
-    func camera(for geometry: Geometry, padding: UIEdgeInsets, bearing: CGFloat?, pitch: CGFloat?) -> CameraOptions
-    func camera(for coordinateBounds: CoordinateBounds, padding: UIEdgeInsets, bearing: Double?, pitch: Double?) -> CameraOptions
-    func coordinate(for point: CGPoint) -> CLLocationCoordinate2D
-    func point(for coordinate: CLLocationCoordinate2D) -> CGPoint
-    func performWithoutNotifying(_ block: () throws -> Void) rethrows
 }
 
 // swiftlint:disable type_body_length
@@ -40,7 +49,7 @@ internal protocol MapboxMapProtocol: AnyObject {
 /// and querying rendered features. Obtain the MapboxMap instance for a `MapView` via MapView.mapboxMap.
 ///
 /// - Important: MapboxMap should only be used from the main thread.
-public final class MapboxMap: MapboxMapProtocol {
+public final class MapboxMap: MapboxMapProtocolInternal {
     /// The underlying renderer object responsible for rendering the map
     private let __map: Map
 
@@ -327,7 +336,6 @@ public final class MapboxMap: MapboxMapProtocol {
     /// Set the map north orientation
     ///
     /// - Parameter northOrientation: The map north orientation to set
-    @_spi(Package)
     public func setNorthOrientation(northOrientation: NorthOrientation) {
         __map.setNorthOrientationFor(northOrientation)
     }
@@ -335,7 +343,6 @@ public final class MapboxMap: MapboxMapProtocol {
     /// Set the map constrain mode
     ///
     /// - Parameter constrainMode: The map constraint mode to set
-    @_spi(Package)
     public func setConstrainMode(_ constrainMode: ConstrainMode) {
         __map.setConstrainModeFor(constrainMode)
     }
@@ -343,7 +350,6 @@ public final class MapboxMap: MapboxMapProtocol {
     /// Set the map viewport mode
     ///
     /// - Parameter viewportMode: The map viewport mode to set
-    @_spi(Package)
     public func setViewportMode(_ viewportMode: ViewportMode) {
         __map.setViewportModeFor(viewportMode)
     }

@@ -1,11 +1,11 @@
-@testable import TestsSupport
 import MapboxMaps
 
-extension CameraState {
+extension CameraOptions {
     static func random() -> Self {
-        return CameraState(
+        return CameraOptions(
             center: .random(),
             padding: .random(),
+            anchor: .random(),
             zoom: .random(in: 0...20),
             bearing: .random(in: 0..<360),
             pitch: .random(in: 0...50))

@@ -49,7 +49,7 @@ public protocol ViewAnnotationUpdateObserver: AnyObject {
 public final class ViewAnnotationManager {
 
     private let containerView: UIView
-    private let mapboxMap: MapboxMapProtocol
+    private let mapboxMap: MapboxMapProtocolInternal
     private var viewsById: [String: UIView] = [:]
     private var idsByView: [UIView: String] = [:]
     private var expectedHiddenByView: [UIView: Bool] = [:]
@@ -69,7 +69,7 @@ public final class ViewAnnotationManager {
         }
     }
 
-    internal init(containerView: UIView, mapboxMap: MapboxMapProtocol) {
+    internal init(containerView: UIView, mapboxMap: MapboxMapProtocolInternal) {
         self.containerView = containerView
         self.mapboxMap = mapboxMap
         let delegatingPositionsListener = DelegatingViewAnnotationPositionsUpdateListener()

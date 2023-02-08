@@ -36,13 +36,13 @@ internal protocol CameraAnimatorsFactoryProtocol: AnyObject {
 internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
 
     private let cameraViewContainerView: UIView
-    private let mapboxMap: MapboxMapProtocol
+    private let mapboxMap: MapboxMapProtocolInternal
     private let mainQueue: MainQueueProtocol
     private let dateProvider: DateProvider
     private let cameraOptionsInterpolator: CameraOptionsInterpolatorProtocol
 
     internal init(cameraViewContainerView: UIView,
-                  mapboxMap: MapboxMapProtocol,
+                  mapboxMap: MapboxMapProtocolInternal,
                   mainQueue: MainQueueProtocol,
                   dateProvider: DateProvider,
                   cameraOptionsInterpolator: CameraOptionsInterpolatorProtocol) {

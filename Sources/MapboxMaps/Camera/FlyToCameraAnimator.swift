@@ -64,7 +64,7 @@ public final class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimator
     internal init(toCamera: CameraOptions,
                   owner: AnimationOwner,
                   duration: TimeInterval? = nil,
-                  mapboxMap: MapboxMapProtocol,
+                  mapboxMap: MapboxMapProtocolInternal,
                   mainQueue: MainQueueProtocol,
                   dateProvider: DateProvider) {
         let flyToInterpolator = FlyToInterpolator(

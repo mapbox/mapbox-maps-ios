@@ -22,7 +22,7 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
     /// The date when the most recent gesture changed event was handled
     private var lastChangedDate: Date?
 
-    private let mapboxMap: MapboxMapProtocol
+    private let mapboxMap: MapboxMapProtocolInternal
 
     private let cameraAnimationsManager: CameraAnimationsManagerProtocol
 
@@ -33,7 +33,7 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
     private var isPanning = false
 
     internal init(gestureRecognizer: UIPanGestureRecognizer,
-                  mapboxMap: MapboxMapProtocol,
+                  mapboxMap: MapboxMapProtocolInternal,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol,
                   dateProvider: DateProvider) {
         gestureRecognizer.maximumNumberOfTouches = 1

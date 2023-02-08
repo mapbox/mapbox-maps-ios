@@ -41,7 +41,7 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
     /// The `CameraView` owned by this animator
     private let cameraView: CameraView
 
-    private let mapboxMap: MapboxMapProtocol
+    private let mapboxMap: MapboxMapProtocolInternal
 
     private let mainQueue: MainQueueProtocol
 
@@ -110,7 +110,7 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
     // MARK: Initializer
     internal init(propertyAnimator: UIViewPropertyAnimator,
                   owner: AnimationOwner,
-                  mapboxMap: MapboxMapProtocol,
+                  mapboxMap: MapboxMapProtocolInternal,
                   mainQueue: MainQueueProtocol,
                   cameraView: CameraView) {
         self.propertyAnimator = propertyAnimator

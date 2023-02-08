@@ -43,12 +43,12 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
     // MARK: - Camera Animators
     let makeCameraAnimatorsRunnerStub = Stub<MapboxMapProtocol, CameraAnimatorsRunnerProtocol>(
         defaultReturnValue: MockCameraAnimatorsRunner())
-    func makeCameraAnimatorsRunner(mapboxMap: MapboxMapProtocol) -> CameraAnimatorsRunnerProtocol {
+    func makeCameraAnimatorsRunner(mapboxMap: MapboxMapProtocolInternal) -> CameraAnimatorsRunnerProtocol {
         makeCameraAnimatorsRunnerStub.call(with: mapboxMap)
     }
 
     func makeCameraAnimationsManagerImpl(cameraViewContainerView: UIView,
-                                         mapboxMap: MapboxMapProtocol,
+                                         mapboxMap: MapboxMapProtocolInternal,
                                          cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol) -> CameraAnimationsManagerProtocol {
         MockCameraAnimationsManager()
     }
@@ -56,7 +56,7 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
     // MARK: - Gestures
     func makeGestureManager(
         view: UIView,
-        mapboxMap: MapboxMapProtocol,
+        mapboxMap: MapboxMapProtocolInternal,
         cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager {
         return GestureManager(
             panGestureHandler: MockPanGestureHandler(

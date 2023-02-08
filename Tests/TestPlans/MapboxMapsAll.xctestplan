@@ -13,7 +13,14 @@
       "detectStackUseAfterReturn" : true,
       "enabled" : true
     },
-    "language" : "en"
+    "environmentVariableEntries" : [
+      {
+        "key" : "MAPBOX_MAPS_SIGNPOSTS_ENABLED",
+        "value" : ""
+      }
+    ],
+    "language" : "en",
+    "testRepetitionMode" : "retryOnFailure"
   },
   "testTargets" : [
     {

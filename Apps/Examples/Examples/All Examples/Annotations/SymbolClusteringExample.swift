@@ -50,6 +50,38 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         // Enable clustering for this source.
         source.cluster = true
         source.clusterRadius = 75
+
+        // Create expression to identify the max flow rate of one hydrant in the cluster
+        // ["max", ["get", "FLOW"]]
+        let maxExpression = Exp(.max) {Exp(.get) { "FLOW" }}
+
+        // Create expression to determine if a hydrant with EngineID E-9 is in the cluster
+        // ["any", ["==", ["get", "ENGINEID"], "E-9"]]
+        let ine9Expression = Exp(.any) {
+            Exp(.eq) {
+                Exp(.get) { "ENGINEID" }
+                "E-9"
+            }
+        }
+
+        // Create expression to get the sum of all of the flow rates in the cluster
+        // [["+", ["accumulated"], ["get", "sum"]], ["get", "FLOW"]]
+        let sumExpression = Exp {
+            Exp(.sum) {
+                Exp(.accumulated)
+                Exp(.get) { "sum" }
+            }
+            Exp(.get) { "FLOW" }
+        }
+
+        // Add the expressions to the cluster as ClusterProperties so they can be accessed below
+        let clusterProperties: [String: Expression] = [
+            "max": maxExpression,
+            "in_e9": ine9Expression,
+            "sum": sumExpression
+        ]
+        source.clusterProperties = clusterProperties
+
         let sourceID = "fire-hydrant-source"
 
         var clusteredLayer = createClusteredLayer()
@@ -153,10 +185,14 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
                 // If the feature is a cluster, it will have `point_count` and `cluster_id` properties. These are assigned
                 // when the cluster is created.
                 } else if let selectedFeatureProperties = queriedFeatures.first?.feature.properties,
-                          case let .number(pointCount) = selectedFeatureProperties["point_count"],
-                          case let .number(clusterId) = selectedFeatureProperties["cluster_id"] {
-                    // If the tap landed on a cluster, pass the cluster ID and point count to the alert.
-                    self?.showAlert(withTitle: "Cluster ID \(Int(clusterId))", and: "There are \(Int(pointCount)) points in this cluster")
+                  case let .number(pointCount) = selectedFeatureProperties["point_count"],
+                  case let .number(clusterId) = selectedFeatureProperties["cluster_id"],
+                  case let .number(maxFlow) = selectedFeatureProperties["max"],
+                  case let .number(sum) = selectedFeatureProperties["sum"],
+                  case let .boolean(in_e9) = selectedFeatureProperties["in_e9"] {
+                // If the tap landed on a cluster, pass the cluster ID and point count to the alert.
+                    let inEngineNine = in_e9 ? "Some hydrants belong to Engine 9." : "No hydrants belong to Engine 9."
+                    self?.showAlert(withTitle: "Cluster ID \(Int(clusterId))", and: "There are \(Int(pointCount)) hydrants in this cluster. The highest water flow is \(Int(maxFlow)) and the collective flow is \(Int(sum)). \(inEngineNine)")
                 }
             case .failure(let error):
                 self?.showAlert(withTitle: "An error occurred: \(error.localizedDescription)", and: "Please try another hydrant")

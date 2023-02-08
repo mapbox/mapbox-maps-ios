@@ -46,6 +46,7 @@ public struct FillLayer: Layer {
     public var fillPattern: Value<ResolvedImage>?
 
     /// Transition options for `fillPattern`.
+    @available(*, deprecated, message: "This property is deprecated and will be removed in the future. Setting this will have no effect.")
     public var fillPatternTransition: StyleTransition?
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
@@ -82,7 +83,6 @@ public struct FillLayer: Layer {
         try paintContainer.encodeIfPresent(fillOutlineColor, forKey: .fillOutlineColor)
         try paintContainer.encodeIfPresent(fillOutlineColorTransition, forKey: .fillOutlineColorTransition)
         try paintContainer.encodeIfPresent(fillPattern, forKey: .fillPattern)
-        try paintContainer.encodeIfPresent(fillPatternTransition, forKey: .fillPatternTransition)
         try paintContainer.encodeIfPresent(fillTranslate, forKey: .fillTranslate)
         try paintContainer.encodeIfPresent(fillTranslateTransition, forKey: .fillTranslateTransition)
         try paintContainer.encodeIfPresent(fillTranslateAnchor, forKey: .fillTranslateAnchor)
@@ -111,7 +111,6 @@ public struct FillLayer: Layer {
             fillOutlineColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .fillOutlineColor)
             fillOutlineColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillOutlineColorTransition)
             fillPattern = try paintContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .fillPattern)
-            fillPatternTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillPatternTransition)
             fillTranslate = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .fillTranslate)
             fillTranslateTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillTranslateTransition)
             fillTranslateAnchor = try paintContainer.decodeIfPresent(Value<FillTranslateAnchor>.self, forKey: .fillTranslateAnchor)
@@ -149,7 +148,6 @@ public struct FillLayer: Layer {
         case fillOutlineColor = "fill-outline-color"
         case fillOutlineColorTransition = "fill-outline-color-transition"
         case fillPattern = "fill-pattern"
-        case fillPatternTransition = "fill-pattern-transition"
         case fillTranslate = "fill-translate"
         case fillTranslateTransition = "fill-translate-transition"
         case fillTranslateAnchor = "fill-translate-anchor"

@@ -6,6 +6,7 @@
 @_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
 import UIKit
+import os
 
 // swiftlint:disable type_body_length
 open class MapView: UIView {
@@ -185,6 +186,8 @@ open class MapView: UIView {
     ///    `ResourceOptionsManager.default` to retrieve a shared default resource option, including the access token.
     @available(iOSApplicationExtension, unavailable)
     public init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions()) {
+        let trace = OSLog.platform.beginInterval("MapView.init")
+        defer { trace.end() }
         let orientationProvider: InterfaceOrientationProvider
         if #available(iOS 13, *) {
             orientationProvider = DefaultInterfaceOrientationProvider()
@@ -221,6 +224,8 @@ open class MapView: UIView {
                 urlOpener: AttributionURLOpener,
                 applicationStateProvider: ApplicationStateProvider,
                 preferredContentSizeCategoryProvider: PreferredContentSizeCategoryProvider) {
+        let trace = OSLog.platform.beginInterval("MapView.init")
+        defer { trace.end() }
         dependencyProvider = MapViewDependencyProvider(interfaceOrientationProvider: orientationProvider)
         attributionUrlOpener = urlOpener
         self.applicationStateProvider = applicationStateProvider
@@ -248,6 +253,8 @@ open class MapView: UIView {
                 urlOpener: AttributionURLOpener,
                 applicationStateProvider: ApplicationStateProvider,
                 preferredContentSizeCategoryProvider: PreferredContentSizeCategoryProvider) {
+        let trace = OSLog.platform.beginInterval("MapView.init")
+        defer { trace.end() }
         dependencyProvider = MapViewDependencyProvider(
             interfaceOrientationProvider: DefaultInterfaceOrientationProvider()
         )
@@ -265,6 +272,8 @@ open class MapView: UIView {
 
     @available(iOSApplicationExtension, unavailable)
     required public init?(coder: NSCoder) {
+        let trace = OSLog.platform.beginInterval("MapView.init")
+        defer { trace.end() }
         let orientationProvider: InterfaceOrientationProvider
         if #available(iOS 13, *) {
             orientationProvider = DefaultInterfaceOrientationProvider()
@@ -290,6 +299,8 @@ open class MapView: UIView {
                   urlOpener: AttributionURLOpener,
                   applicationStateProvider: ApplicationStateProvider,
                   preferredContentSizeCategoryProvider: PreferredContentSizeCategoryProvider) {
+        let trace = OSLog.platform.beginInterval("MapView.init")
+        defer { trace.end() }
         self.dependencyProvider = dependencyProvider
         attributionUrlOpener = urlOpener
         self.applicationStateProvider = applicationStateProvider
@@ -595,8 +606,12 @@ open class MapView: UIView {
 
     @_spi(Metrics) public var metricsReporter: MapViewMetricsReporter?
     private func updateFromDisplayLink(displayLink: CADisplayLink) {
+        let trace = OSLog.platform.beginInterval("MapView.displayLink")
+        defer { trace.end() }
+
         metricsReporter?.beforeDisplayLinkCallback(displayLink: displayLink)
         defer { metricsReporter?.afterDisplayLinkCallback(displayLink: displayLink) }
+
         if window == nil {
             return
         }
@@ -604,11 +619,15 @@ open class MapView: UIView {
         for participant in displayLinkParticipants.allObjects {
             participant.participate()
         }
+        trace.event(message: "Participants")
 
         cameraAnimatorsRunner.update()
+        trace.event(message: "Camera animations")
 
         if needsDisplayRefresh {
             needsDisplayRefresh = false
+            let trace = OSLog.platform.beginInterval("MetalView.draw")
+            defer { trace.end() }
             metricsReporter?.beforeMetalViewDrawCallback(metalView: metalView)
             metalView?.draw()
             metricsReporter?.afterMetalViewDrawCallback(metalView: metalView)

@@ -214,7 +214,7 @@ open class MapView: UIView {
     ///   - urlOpener: Attribution URL opener
     ///   - applicationStateProvider: Application state provider
     ///   - preferredContentSizeCategoryProvider: Preferred content size category provider
-    @available(iOS, deprecated: 13, message: "Use init(frame:mapInitOptions:urlOpener:) instead")
+    @available(iOS, deprecated: 13, message: "Use init(frame:mapInitOptions:urlOpener:applicationStateProvider:preferredContentSizeCategoryProvider:) instead")
     public init(frame: CGRect,
                 mapInitOptions: MapInitOptions = MapInitOptions(),
                 orientationProvider: InterfaceOrientationProvider,

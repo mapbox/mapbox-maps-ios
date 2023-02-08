@@ -1,8 +1,8 @@
 # Changelog for Mapbox Maps SDK v10 for iOS
 
 Mapbox welcomes participation and contributions from everyone.
-
-## main
+## 10.11.0 - February 8, 2023
+* Update to MapboxCoreMaps 10.11.1 and MapboxCommon 23.3.1. ([#1899](https://github.com/mapbox/mapbox-maps-ios/pull/1899))
 
 ## 10.11.0-rc.1 - January 26, 2023
 

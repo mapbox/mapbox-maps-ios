@@ -31,6 +31,7 @@ public struct Map: View {
     var camera: Binding<CameraState>?
     private var mapDependencies = MapDependencies()
     private let mapInitOptions: InitOptionsProvider?
+    @StateObject private var viewAnnotationsProvider = ViewAnnotationsProvider()
 
     /// Creates an instance showing scpecisif region.
     ///
@@ -45,9 +46,33 @@ public struct Map: View {
         self.mapInitOptions = mapInitOptions
     }
 
+    public init<T: Identifiable>(
+        camera: Binding<CameraState>? = nil,
+        mapInitOptions: InitOptionsProvider? = nil,
+        viewAnnotationItems: [T],
+        _ viewAnnotationContent: @escaping (T) -> ViewAnnotation
+    ) {
+        self.camera = camera
+        self.mapInitOptions = mapInitOptions
+        mapDependencies.viewAnnotations = viewAnnotationItems.map(viewAnnotationContent)
+    }
+
     public var body: some View {
-        ZStack {
-            InternalMap(camera: camera, mapDependencies: mapDependencies, mapInitOptions: mapInitOptions)
+        ZStack(alignment: .topLeading) {
+            InternalMap(
+                camera: camera,
+                mapDependencies: mapDependencies,
+                mapInitOptions: mapInitOptions
+            ) { map in
+                viewAnnotationsProvider.connect(to: map)
+            }
+            ForEach(viewAnnotationsProvider.visibleAnnotations) { position in
+                if let annotation = mapDependencies.viewAnnotations.first(where: { $0.id == position.id }) {
+                    annotation.body
+                        .frame(width: position.frame.width, height: position.frame.height)
+                        .offset(x: position.frame.minX, y: position.frame.minY)
+                }
+            }
         }
     }
 }

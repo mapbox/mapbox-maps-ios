@@ -19,6 +19,10 @@ struct SwiftUIRoot: View {
                     ExampleLink("Query Rendered Features on tap", note: "Use MapReader and MapboxMap to query rendered features.", destination: FeaturesQueryExample())
                     ExampleLink("Clustering data", note: "Display GeoJSON data with clustering using custom layers and handle interactions with them.", destination: ClusteringExample())
                 } header: { Text("Use cases") }
+
+                Section {
+                    ExampleLink("Basic View annotations example", note: "Add/remove view annotation on tap", destination: ViewAnnotationsExample())
+                } header: { Text("View Annotations") }
             }
             .listStyle(.plain)
             .navigationTitle(title)

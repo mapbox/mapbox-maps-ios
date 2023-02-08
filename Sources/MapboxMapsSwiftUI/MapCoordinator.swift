@@ -11,6 +11,7 @@ public final class MapCoordinator {
     private var bag = Bag()
     private var queriesBag = Bag()
     private var setCamera: CameraSetter?
+    private var viewAnnotations = [ViewAnnotation]()
 
     init(setCamera: CameraSetter?) {
         self.setCamera = setCamera
@@ -76,6 +77,8 @@ public final class MapCoordinator {
                 self?.syncCamera()
             }
         }
+
+        wrapError { try updateViewAnnotations(deps.viewAnnotations) }
     }
 
     private func syncCamera() {
@@ -104,6 +107,27 @@ public final class MapCoordinator {
                 }
             }
         }.addTo(queriesBag)
+    }
+
+    private func updateViewAnnotations(_ viewAnnotations: [ViewAnnotation]) throws {
+        let changes = viewAnnotations.difference(from: self.viewAnnotations)
+        guard !changes.isEmpty else { return }
+
+        self.viewAnnotations = viewAnnotations
+
+        let insertions = changes.insertions.map(\.element)
+        let removals = changes.removals.map(\.element)
+        let updates = insertions.filter { removals.map(\.id).contains($0.id) }
+
+        for insertion in insertions {
+            try mapView.mapboxMap.addViewAnnotation(withId: insertion.id, options: insertion.viewAnnotationOptions)
+        }
+        for update in updates {
+            try mapView.mapboxMap.updateViewAnnotation(withId: update.id, options: update.viewAnnotationOptions)
+        }
+        for removal in removals {
+            try mapView.mapboxMap.removeViewAnnotation(withId: removal.id)
+        }
     }
 }
 

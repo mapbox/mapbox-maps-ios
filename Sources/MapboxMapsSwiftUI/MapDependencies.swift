@@ -10,6 +10,7 @@ struct MapDependencies {
     var constrainMode = ConstrainMode.heightOnly
     var viewportMode = ViewportMode.default
     var orientation = NorthOrientation.upwards
+    var viewAnnotations: [ViewAnnotation] = []
 }
 
 @available(iOS 13.0, *)

@@ -40,6 +40,7 @@
 		3A7432EF27F3096100E06485 /* DebugMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7432EE27F3096100E06485 /* DebugMapExample.swift */; };
 		3A7CE986282511C900C3A0B8 /* NavigationSimulatorExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CE985282511C900C3A0B8 /* NavigationSimulatorExample.swift */; };
 		3A7CE98B282AB0DE00C3A0B8 /* NavigationSimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CE98A282AB0DE00C3A0B8 /* NavigationSimulator.swift */; };
+		3ADF96022992787A00819649 /* ViewAnnotationsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADF96012992787A00819649 /* ViewAnnotationsExample.swift */; };
 		5812B55127C5A0E500E10063 /* CustomLocationProviderExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5812B55027C5A0E500E10063 /* CustomLocationProviderExample.swift */; };
 		58248C2F2695FF24009AC598 /* StoryboardMapViewExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58248C2E2695FF24009AC598 /* StoryboardMapViewExample.swift */; };
 		5830FDB7270B5AF7005549EE /* sportcar.glb in Resources */ = {isa = PBXBuildFile; fileRef = 5830FDB6270B5AF7005549EE /* sportcar.glb */; };
@@ -205,6 +206,7 @@
 		3A7432EE27F3096100E06485 /* DebugMapExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugMapExample.swift; sourceTree = "<group>"; };
 		3A7CE985282511C900C3A0B8 /* NavigationSimulatorExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSimulatorExample.swift; sourceTree = "<group>"; };
 		3A7CE98A282AB0DE00C3A0B8 /* NavigationSimulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSimulator.swift; sourceTree = "<group>"; };
+		3ADF96012992787A00819649 /* ViewAnnotationsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAnnotationsExample.swift; sourceTree = "<group>"; };
 		5812B55027C5A0E500E10063 /* CustomLocationProviderExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLocationProviderExample.swift; sourceTree = "<group>"; };
 		58248C2E2695FF24009AC598 /* StoryboardMapViewExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardMapViewExample.swift; sourceTree = "<group>"; };
 		5830FDB6270B5AF7005549EE /* sportcar.glb */ = {isa = PBXFileReference; lastKnownFileType = file; path = sportcar.glb; sourceTree = "<group>"; };
@@ -533,6 +535,7 @@
 				95B589B42982BFE800BF4F31 /* MapSettingsExample.swift */,
 				95B589B32982BFE800BF4F31 /* FeaturesQueryExample.swift */,
 				954AF548298A821E00365B6C /* ClusteringExample.swift */,
+				3ADF96012992787A00819649 /* ViewAnnotationsExample.swift */,
 				95B589C32982C07900BF4F31 /* Util */,
 			);
 			path = "SwiftUI Examples";
@@ -807,6 +810,7 @@
 				304AB3B527439287005B6D09 /* ViewAnnotationMarkerExample.swift in Sources */,
 				CA4F1F7225E815CF00822D2A /* SwiftUIExample.swift in Sources */,
 				CAC195B725AC098A00F69FEA /* CameraAnimatorsExample.swift in Sources */,
+				3ADF96022992787A00819649 /* ViewAnnotationsExample.swift in Sources */,
 				732A550028DA470E00CDBFB7 /* PitchAndDistanceExample.swift in Sources */,
 				587429C027BBFDA100104CCA /* VoiceOverAccessibilityExample.swift in Sources */,
 				73E27C2627AF024C0067F277 /* DataJoinExample.swift in Sources */,

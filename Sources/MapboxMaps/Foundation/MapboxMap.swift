@@ -1110,32 +1110,37 @@ extension MapboxMap {
 
 extension MapboxMap {
 
-    internal func setViewAnnotationPositionsUpdateListener(_ listener: ViewAnnotationPositionsUpdateListener?) {
+    @_spi(Package)
+    public func setViewAnnotationPositionsUpdateListener(_ listener: ViewAnnotationPositionsUpdateListener?) {
         __map.setViewAnnotationPositionsUpdateListenerFor(listener)
     }
 
-    internal func addViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws {
+    @_spi(Package)
+    public func addViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws {
         let expected = __map.addViewAnnotation(forIdentifier: id, options: MapboxCoreMaps.ViewAnnotationOptions(options))
         if expected.isError(), let reason = expected.error {
             throw MapError(coreError: reason)
         }
     }
 
-    internal func updateViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws {
+    @_spi(Package)
+    public func updateViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws {
         let expected = __map.updateViewAnnotation(forIdentifier: id, options: MapboxCoreMaps.ViewAnnotationOptions(options))
         if expected.isError(), let reason = expected.error {
             throw MapError(coreError: reason)
         }
     }
 
-    internal func removeViewAnnotation(withId id: String) throws {
+    @_spi(Package)
+    public func removeViewAnnotation(withId id: String) throws {
         let expected = __map.removeViewAnnotation(forIdentifier: id)
         if expected.isError(), let reason = expected.error {
             throw MapError(coreError: reason)
         }
     }
 
-    internal func options(forViewAnnotationWithId id: String) throws -> ViewAnnotationOptions {
+    @_spi(Package)
+    public func options(forViewAnnotationWithId id: String) throws -> ViewAnnotationOptions {
         let expected = __map.getViewAnnotationOptions(forIdentifier: id)
         if expected.isError(), let reason = expected.error {
             throw MapError(coreError: reason)

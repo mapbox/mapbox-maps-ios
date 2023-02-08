@@ -6,17 +6,20 @@ struct InternalMap: UIViewRepresentable {
     var camera: Binding<CameraState>?
     var mapDependencies: MapDependencies
     private var mapInitOptions: Map.InitOptionsProvider?
+    private var onMapCreated: ((MapboxMap) -> Void)?
 
     @Environment(\.colorScheme) var colorScheme
 
     init(
         camera: Binding<CameraState>?,
         mapDependencies: MapDependencies,
-        mapInitOptions: Map.InitOptionsProvider?
+        mapInitOptions: Map.InitOptionsProvider?,
+        onMapCreated: ((MapboxMap) -> Void)?
     ) {
         self.camera = camera
         self.mapDependencies = mapDependencies
         self.mapInitOptions = mapInitOptions
+        self.onMapCreated = onMapCreated
     }
 
     func makeCoordinator() -> MapCoordinator {
@@ -27,6 +30,7 @@ struct InternalMap: UIViewRepresentable {
         let mapView = MapView(frame: .zero, mapInitOptions: mapInitOptions?() ?? MapInitOptions())
         context.environment.mapViewProvider?.mapView = mapView
         context.coordinator.mapView = mapView
+        onMapCreated?(mapView.mapboxMap)
         return mapView
     }
 

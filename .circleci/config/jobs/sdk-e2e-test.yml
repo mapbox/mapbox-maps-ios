@@ -7,8 +7,7 @@ parameters:
         type: boolean
 steps:
     - add-mapbox-submodules-key
-    - checkout:
-        path: ~/project
+    - checkout-root
     - install-mbx-ci:
         platform: linux
     - run:

@@ -17,8 +17,7 @@ environment:
 resource_class: macos.x86.medium.gen2
 working_directory: ~/project/mapbox-maps-ios
 steps:
-  - checkout:
-      path: ~/project
+  - checkout-root
   - configure-environment:
       skip-dependencies: true
   - run:

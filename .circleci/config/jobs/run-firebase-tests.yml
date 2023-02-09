@@ -10,8 +10,7 @@ parameters:
     type: string
 executor: xcode-latest
 steps:
-  - checkout:
-      path: ~/project
+  - checkout-root
   - install-gcloud
   - configure-environment:
       skip-dependencies: true

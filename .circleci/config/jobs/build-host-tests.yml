@@ -1,8 +1,7 @@
 executor: xcode-latest
 resource_class: macos.x86.medium.gen2
 steps:
-  - checkout:
-      path: ~/project
+  - checkout-root
   - configure-environment:
       skip-dependencies: true
   - install-xcodegen

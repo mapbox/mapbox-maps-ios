@@ -16,8 +16,7 @@ macos:
   xcode: << parameters.xcode >>
 resource_class: << parameters.resource_class >>
 steps:
-  - checkout:
-      path: ~/project
+  - checkout-root
   - attach_workspace:
       at: build
   - run:

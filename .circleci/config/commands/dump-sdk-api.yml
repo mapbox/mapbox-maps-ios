@@ -4,8 +4,7 @@ parameters:
   output:
     type: string
 steps:
-  - checkout:
-      path: ~/project
+  - checkout-root
   - run:
       name: Generate cache file for key
       command: |

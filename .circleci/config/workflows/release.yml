@@ -3,72 +3,81 @@ jobs:
       context:
         - Slack Orb
         - SDK Registry Token
-      <<: *release-anchor
-      requires: []
+      filters:
+        tags:
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+        branches:
+          ignore: /.*/
   - trigger-metrics-v2:
       context:
         - Slack Orb
         - Maps SDK/CircleCI API Token
-      <<: *release-anchor
+      requires:
+        - release-precheck
   - build-baseline-sdk:
       context:
         - Slack Orb
         - SDK Registry Token
-      <<: *release-anchor
+      requires:
+        - release-precheck
   - build-dynamic:
       context:
         - Slack Orb
         - SDK Registry Token
-      <<: *release-anchor
+      requires:
+        - release-precheck
   - build-static:
       context:
         - Slack Orb
         - SDK Registry Token
-      <<: *release-anchor
+      requires:
+        - release-precheck
   - build-docs:
       context:
         - Slack Orb
         - SDK Registry Token
-      <<: *release-anchor
+      requires:
+        - release-precheck
   - build-studio-preview:
       context:
         - Slack Orb
         - SDK Registry Token
-      <<: *release-anchor
+      requires:
+        - release-precheck
   - check-api-compatibility:
       context:
         - Slack Orb
-      <<: *release-anchor
       requires:
         - build-baseline-sdk
         - build-dynamic
+        - release-precheck
   - create-registry-pr:
       context:
         - Slack Orb
-      <<: *release-anchor
       requires:
         - build-static
         - build-docs
         - build-studio-preview
         - check-api-compatibility
+        - release-precheck
   - wait-registry-pr:
-      <<: *release-anchor
       requires:
         - create-registry-pr
+        - release-precheck
       type: approval
   - check-registry:
       context:
         - Slack Orb
         - SDK Registry Token
-      <<: *release-anchor
       requires:
         - wait-registry-pr
+        - release-precheck
   - create-docs-prs:
       context:
         - Slack Orb
-      <<: *release-anchor
       requires:
         - check-registry
+        - release-precheck
   - update-examples:
       context:
         - Slack Orb
@@ -76,28 +85,28 @@ jobs:
         - SDK Registry Token
         - Apple Machine account
         - Maps SDK/Public Mapbox Token
-      <<: *release-anchor
       requires:
         - check-registry
+        - release-precheck
   - publish-podspec:
       context:
         - Slack Orb
         - CocoaPods trunk token
-      <<: *release-anchor
       requires:
         - check-registry
+        - release-precheck
   - validate-integrations:
       context:
         - Slack Orb
         - SDK Registry Token
-      <<: *release-anchor
       requires:
         - publish-podspec
+        - release-precheck
   - create-draft-release:
       context:
         - Slack Orb
-      <<: *release-anchor
       requires:
         - create-docs-prs
         - update-examples
         - validate-integrations
+        - release-precheck

@@ -60,13 +60,13 @@ public final class MapCoordinator {
             }
 
             let mapOptions = mapView.mapboxMap.options
-            set(mapOptions.constrainMode, mapboxMap.setConstrainMode, value: deps.constrainMode)
-            set(mapOptions.viewportMode ?? .default, mapboxMap.setViewportMode, value: deps.viewportMode)
-            set(mapOptions.orientation, mapboxMap.setNorthOrientation, value: deps.orientation)
+            assign(mapOptions.constrainMode, mapboxMap.setConstrainMode, value: deps.constrainMode)
+            assign(mapOptions.viewportMode ?? .default, mapboxMap.setViewportMode, value: deps.viewportMode)
+            assign(mapOptions.orientation, mapboxMap.setNorthOrientation, value: deps.orientation)
         }
 
-        set(mapView, \.mapboxMap.style.uri, value: deps.styleURIs.effectiveURI(with: colorScheme))
-        set(mapView, \.gestures.options, value: deps.getstureOptions)
+        assign(mapView, \.mapboxMap.style.uri, value: deps.styleURIs.effectiveURI(with: colorScheme))
+        assign(mapView, \.gestures.options, value: deps.getstureOptions)
 
         actions = deps.actions
 
@@ -115,18 +115,14 @@ private func wrapError(_ body: () throws -> Void) {
     }
 }
 
-private func set<T: Equatable>(_ getter: () -> T, _ setter: (T) throws -> Void, value: T) {
+private func assign<T: Equatable>(_ oldValue: T, _ setter: (T) throws -> Void, value: T) {
     wrapError {
-        if getter() != value {
+        if oldValue != value {
             try setter(value)
         }
     }
 }
 
-private func set<T: Equatable>(_ oldValue: T, _ setter: (T) throws -> Void, value: T) {
-    set({ oldValue }, setter, value: value)
-}
-
-private func set<U: AnyObject, T: Equatable>(_ object: U, _ keyPath: ReferenceWritableKeyPath<U, T>, value: T) {
-    set({ object[keyPath: keyPath] }, { object[keyPath: keyPath] = $0 }, value: value)
+private func assign<U: AnyObject, T: Equatable>(_ object: U, _ keyPath: ReferenceWritableKeyPath<U, T>, value: T) {
+    assign(object[keyPath: keyPath], { object[keyPath: keyPath] = $0 }, value: value)
 }

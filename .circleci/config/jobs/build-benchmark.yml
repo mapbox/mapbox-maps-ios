@@ -1,0 +1,18 @@
+executor: xcode-min
+steps:
+  - checkout
+  - mapbox/add-mapbox-ssh-key
+  - checkout-maps-submodule
+  - checkout-maps-internal
+  - mapbox/github-commit-progress:
+      commit: $MAPS_COMMIT_HASH
+      repository: mapbox-maps-ios
+      token: $MAPBOXCI_GITHUB_USER_TOKEN
+      steps:
+        - mapbox/add-mapbox-netrc
+        - mapbox/add-mapbox-filetoken
+        - mapbox/install-mbx-ci
+        - build-benchmark
+        - mapbox/prepare-build-for-device-testing:
+            derivedDataPath: benchmark/DerivedData
+            outputPath: output

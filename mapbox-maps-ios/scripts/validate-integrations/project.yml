@@ -5,8 +5,7 @@ settings:
   DEVELOPMENT_TEAM: GJZR2MEM28
 packages:
   MapboxMaps:
-    url: git@github.com:mapbox/${REPOSITORY_NAME}
-    ${MAPS_VERSION_RULE}: ${MAPS_VERSION}
+    path: ../..
 targets:
   SwiftPackageManagerIntegration:
     templates:

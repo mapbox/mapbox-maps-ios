@@ -25,11 +25,13 @@ executors:
   xcode-latest:
     macos:
       xcode: 14.1.0
+    working_directory: ~/project/mapbox-maps-ios
   # Note that `create-github-draft-release.sh` depends on this structure to parse the minimum supported Xcode version.
   # Please keep them in sync if this structure changes.
   xcode-sdk-min:
     macos:
       xcode: 13.1.0
+    working_directory: ~/project/mapbox-maps-ios
 
 ### Workflows
 
@@ -559,7 +561,7 @@ jobs:
   sanity-check:
     executor: xcode-latest
     steps:
-      - checkout
+      - checkout-root
       - install-mbx-ci
       - install-gh
       - run:
@@ -581,7 +583,7 @@ jobs:
   swiftlint:
     executor: xcode-latest
     steps:
-      - checkout
+      - checkout-root
       - run: brew install swiftlint
       - run: swiftlint lint --strict --reporter junit | tee result.xml
       - store_artifacts:
@@ -593,7 +595,7 @@ jobs:
     executor: xcode-latest
     resource_class: macos.x86.medium.gen2
     steps:
-      - checkout
+      - checkout-root
       - run:
           name: Build depsvalidator
           command: swift build --package-path scripts/depsvalidator
@@ -604,8 +606,9 @@ jobs:
   build-sdk:
     <<: *base-job
     resource_class: macos.x86.medium.gen2
+    working_directory: ~/project/mapbox-maps-ios
     steps:
-      - checkout
+      - checkout-root
       - configure-environment:
           skip-dependencies: true
       - run:
@@ -715,7 +718,7 @@ jobs:
               type: boolean
       steps:
           - add-mapbox-submodules-key
-          - checkout
+          - checkout-root
           - install-mbx-ci:
               platform: linux
           - run:
@@ -778,7 +781,7 @@ jobs:
     executor: xcode-sdk-min
     resource_class: macos.x86.medium.gen2
     steps:
-      - checkout
+      - checkout-root
       - configure-environment:
           skip-dependencies: true
       - when:
@@ -830,7 +833,7 @@ jobs:
       xcode: << parameters.xcode >>
     resource_class: << parameters.resource_class >>
     steps:
-      - checkout
+      - checkout-root
       - attach_workspace:
           at: build
       - run:
@@ -881,7 +884,7 @@ jobs:
       xcode: << parameters.xcode >>
     resource_class: << parameters.resource_class >>
     steps:
-      - checkout
+      - checkout-root
       - attach_workspace:
           at: build
       - run:
@@ -917,7 +920,7 @@ jobs:
     executor: xcode-latest
     resource_class: macos.x86.medium.gen2
     steps:
-      - checkout
+      - checkout-root
       - configure-environment:
           skip-dependencies: true
       - install-xcodegen
@@ -946,7 +949,7 @@ jobs:
         type: string
     executor: xcode-latest
     steps:
-      - checkout
+      - checkout-root
       - install-gcloud
       - configure-environment:
           skip-dependencies: true
@@ -1007,7 +1010,7 @@ jobs:
     executor: xcode-latest
     resource_class: macos.x86.medium.gen2
     steps:
-      - checkout
+      - checkout-root
       - configure-environment:
           skip-dependencies: true
       - run:
@@ -1026,8 +1029,9 @@ jobs:
   create-xcframework:
     <<: *base-job
     resource_class: macos.x86.medium.gen2
+    working_directory: ~/project/mapbox-maps-ios
     steps:
-      - checkout
+      - checkout-root
       - configure-environment
       - ensure-text-exists-in-commit:
           commit-text: "[create xcframework]"
@@ -1065,7 +1069,7 @@ jobs:
   check-api-compatibility:
     executor: xcode-latest
     steps:
-      - checkout
+      - checkout-root
       - configure-environment:
           skip-dependencies: true
       - install-gh
@@ -1089,7 +1093,7 @@ jobs:
     executor: xcode-latest
     resource_class: macos.x86.medium.gen2
     steps:
-      - checkout
+      - checkout-root
       - configure-environment:
           skip-dependencies: true
       - install-xcodegen
@@ -1106,7 +1110,7 @@ jobs:
     executor: xcode-latest
     resource_class: macos.x86.medium.gen2
     steps:
-      - checkout
+      - checkout-root
       - configure-environment:
           skip-dependencies: true
       - install-xcodegen
@@ -1129,7 +1133,7 @@ jobs:
   release-precheck:
     executor: xcode-latest
     steps:
-      - checkout
+      - checkout-root
       - parse-release-version-if-available
       - run:
           name: Podspec points to the release version
@@ -1144,7 +1148,7 @@ jobs:
     executor: xcode-sdk-min
     resource_class: macos.x86.medium.gen2
     steps:
-      - checkout
+      - checkout-root
       - configure-environment:
           skip-dependencies: true
       - install-xcodegen
@@ -1175,7 +1179,7 @@ jobs:
     executor: xcode-sdk-min
     resource_class: macos.x86.medium.gen2
     steps:
-      - checkout
+      - checkout-root
       - configure-environment:
           skip-dependencies: true
       - install-xcodegen
@@ -1196,7 +1200,7 @@ jobs:
       xcode: 13.4.1
     resource_class: macos.x86.medium.gen2
     steps:
-      - checkout
+      - checkout-root
       - configure-environment:
           skip-dependencies: true
       - make-docs
@@ -1205,7 +1209,7 @@ jobs:
   build-studio-preview:
     executor: xcode-latest
     steps:
-      - checkout
+      - checkout-root
       - configure-environment:
           skip-dependencies: true
       - run:
@@ -1216,7 +1220,7 @@ jobs:
   create-registry-pr:
     executor: xcode-latest
     steps:
-      - checkout
+      - checkout-root
       - configure-environment:
           skip-dependencies: true
       - attach_workspace:
@@ -1244,7 +1248,7 @@ jobs:
   create-docs-prs:
     executor: xcode-latest
     steps:
-      - checkout
+      - checkout-root
       - configure-environment:
           skip-dependencies: true
       - install-gh
@@ -1262,7 +1266,7 @@ jobs:
     executor: xcode-latest
     resource_class: macos.x86.medium.gen2
     steps:
-      - checkout
+      - checkout-root
       - configure-environment:
           skip-dependencies: true
       - run:
@@ -1278,7 +1282,7 @@ jobs:
     executor: xcode-latest
     resource_class: macos.x86.medium.gen2
     steps:
-      - checkout
+      - checkout-root
       - configure-environment:
           skip-dependencies: true
       - run:
@@ -1292,7 +1296,7 @@ jobs:
     executor: xcode-latest
     resource_class: macos.x86.medium.gen2
     steps:
-      - checkout
+      - checkout-root
       - configure-environment:
           skip-dependencies: true
       - install-gh
@@ -1317,7 +1321,7 @@ jobs:
       CONFIGURATION: "Debug"
     resource_class: macos.x86.medium.gen2
     steps:
-      - checkout
+      - checkout-root
       - configure-environment:
           skip-dependencies: true
       - turf-report-pending:
@@ -1355,7 +1359,7 @@ jobs:
     docker:
       - image: cimg/base:stable
     steps:
-      - checkout
+      - checkout-root
       - run:
           name: Notify maps internal CI about $CIRCLE_BRANCH branch update
           command: |
@@ -1372,7 +1376,7 @@ jobs:
   generate-docc:
     executor: xcode-latest
     steps:
-      - checkout
+      - checkout-root
       - configure-environment:
           skip-dependencies: true
       - run:
@@ -1401,7 +1405,7 @@ jobs:
   upload-docc:
     executor: xcode-latest
     steps:
-      - checkout
+      - checkout-root
       - configure-environment:
           skip-dependencies: true
       - attach_workspace:
@@ -1420,7 +1424,10 @@ jobs:
 # ==============================================================================
 # Reusable commands
 commands:
-
+  checkout-root:
+    steps:
+      - checkout:
+          path: ~/project
   configure-environment:
     parameters:
       skip-dependencies:
@@ -1884,7 +1891,7 @@ commands:
       output:
         type: string
     steps:
-      - checkout
+      - checkout-root
       - run:
           name: Generate cache file for key
           command: |
@@ -1892,17 +1899,23 @@ commands:
             if [ << parameters.baseline >> = true ]; then
               TAG_SUFFIX="${CIRCLE_PROJECT_REPONAME:15}"
               REVISIONS=()
-              while IFS='' read -r line; do REVISIONS+=("$line"); done < <(git rev-list HEAD -- Sources/MapboxMaps/MapboxMaps.json)
+              while IFS='' read -r line; do REVISIONS+=("$line"); done < <(git rev-list HEAD -- mapbox-maps-ios/Sources/MapboxMaps/MapboxMaps.json)
 
               # loop through revisions and find existing tag
+              TAG_FOUND=false
               for revision in "${REVISIONS[@]}"; do
-                  VERSION="v$(git show "$revision:Sources/MapboxMaps/MapboxMaps.json" | jq -r .version)$TAG_SUFFIX"
+                  VERSION="v$(git show "$revision:mapbox-maps-ios/Sources/MapboxMaps/MapboxMaps.json" | jq -r .version)$TAG_SUFFIX"
                   if [ "$(git tag -l "$VERSION")" ]; then
                       echo "Using version: $VERSION"
                       git rev-parse "$VERSION" > /tmp/MapboxMaps-version.txt
+                      TAG_FOUND=true
                       break
                   fi
               done
+              if [ "$TAG_FOUND" = false ]; then
+                echo "Using current commit: $(git rev-parse HEAD)"
+                git rev-parse HEAD > /tmp/MapboxMaps-version.txt
+              fi
             else
               echo "Using current commit: $(git rev-parse HEAD)"
               git rev-parse HEAD > /tmp/MapboxMaps-version.txt
@@ -1927,7 +1940,7 @@ commands:
 
             pushd scripts/release/packager
             ./package-mapbox-maps.sh dynamic
-            mv MapboxMaps*.zip /Users/distiller/project/
+            mv MapboxMaps*.zip ~/project/mapbox-maps-ios
             popd
 
             if [ << parameters.baseline >> = true ]; then
@@ -1984,7 +1997,7 @@ commands:
             ./codecov -f coverage.lcov -F << parameters.codecov_flag_name >>
 
             echo "Uploading to S3" ; \
-            python3 ./scripts/code-coverage/parse-code-coverage.py \
+            python3 ./mapbox-maps-ios/scripts/code-coverage/parse-code-coverage.py \
               -g . \
               -c MapboxMaps \
               --scheme MapboxMaps \

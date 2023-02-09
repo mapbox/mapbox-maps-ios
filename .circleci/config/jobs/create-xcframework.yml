@@ -1,4 +1,22 @@
-<<: *base-job
+parameters:
+  xcode:
+    type: string
+    default: "13.1.0"
+  create-xcframework-always-run:
+    type: boolean
+    default: false
+  configuration:
+    type: string
+    default: "Debug"
+  report_failure:
+    type: boolean
+    default: false
+macos:
+  xcode: << parameters.xcode >>
+environment:
+  HOMEBREW_NO_AUTO_UPDATE: 1
+  HOMEBREW_NO_INSTALL_CLEANUP: 1
+  CONFIGURATION: << parameters.configuration >>
 resource_class: macos.x86.medium.gen2
 working_directory: ~/project/mapbox-maps-ios
 steps:

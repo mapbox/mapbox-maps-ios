@@ -4,16 +4,16 @@ import SwiftUI
 @_spi(Experimental)
 @available(iOS 13.0, *)
 public final class MapCoordinator {
-    private var camera: Binding<CameraState>?
+    typealias CameraSetter = (CameraState) -> Void
 
     var actions: MapDependencies.Actions?
 
-    private var ignoreNotifications = false
     private var bag = Bag()
     private var queriesBag = Bag()
+    private var setCamera: CameraSetter?
 
-    init(camera: Binding<CameraState>?) {
-        self.camera = camera
+    init(setCamera: CameraSetter?) {
+        self.setCamera = setCamera
     }
 
     var mapView: MapView! {
@@ -27,10 +27,10 @@ public final class MapCoordinator {
                 self?.onTapGesure(gesture)
             }.addTo(bag)
 
-            if let camera = camera {
+            if let setCamera = setCamera {
                 mapView.mapboxMap.onEvery(event: .cameraChanged) { [weak self] _ in
                     guard let self = self else { return }
-                    camera.wrappedValue = self.mapView.cameraState
+                    setCamera(self.mapView.cameraState)
                 }.addTo(bag)
             }
 
@@ -41,35 +41,45 @@ public final class MapCoordinator {
         }
     }
 
-    func update(from view: InternalMap) {
-        do {
-            try mapView.mapboxMap.performWithoutNotifying {
-                if let camera = view.camera {
-                    mapView.mapboxMap.setCamera(to: CameraOptions(cameraState: camera.wrappedValue))
-                }
+    func update(camera: CameraState?, deps: MapDependencies, colorScheme: ColorScheme) {
+        let mapboxMap = mapView.mapboxMap!
 
-                // TODO: This call can change the camera, but it won't be reflected on camera Binding.
-                try mapView.mapboxMap.setCameraBounds(with: view.mapDependencies.cameraBounds)
+        // This is camera state which is inspected after current update loop.
+        // It camera changed by method other than setCamera, we will propogate that change
+        // to the source of truth (user's State).
+        var expectedCamera: CameraState?
 
-                let mapOptions = mapView.mapboxMap.options
-                if mapOptions.constrainMode != view.mapDependencies.constrainMode {
-                    mapView.mapboxMap.setConstrainMode(view.mapDependencies.constrainMode)
-                }
-                if mapOptions.viewportMode != view.mapDependencies.viewportMode {
-                    mapView.mapboxMap.setViewportMode(view.mapDependencies.viewportMode)
-                }
-                if mapOptions.orientation != view.mapDependencies.orientation {
-                    mapView.mapboxMap.setNorthOrientation(northOrientation: view.mapDependencies.orientation)
-                }
+        mapboxMap.performWithoutNotifying {
+            if let camera = camera {
+                mapView.mapboxMap.setCamera(to: CameraOptions(cameraState: camera))
+                expectedCamera = mapboxMap.cameraState
             }
-            if mapView.mapboxMap.style.uri != view.effectiveStyleURI {
-                mapView.mapboxMap.style.uri = view.effectiveStyleURI
+
+            wrapError {
+                try mapboxMap.setCameraBounds(with: deps.cameraBounds)
             }
-            mapView.gestures.options = view.mapDependencies.getstureOptions
-        } catch {
-            print("error: \(error)") // TODO: Logger
+
+            let mapOptions = mapView.mapboxMap.options
+            assign(mapOptions.constrainMode, mapboxMap.setConstrainMode, value: deps.constrainMode)
+            assign(mapOptions.viewportMode ?? .default, mapboxMap.setViewportMode, value: deps.viewportMode)
+            assign(mapOptions.orientation, mapboxMap.setNorthOrientation, value: deps.orientation)
         }
-        actions = view.mapDependencies.actions
+
+        assign(mapView, \.mapboxMap.style.uri, value: deps.styleURIs.effectiveURI(with: colorScheme))
+        assign(mapView, \.gestures.options, value: deps.getstureOptions)
+
+        actions = deps.actions
+
+        if let expectedCamera = expectedCamera, expectedCamera != mapboxMap.cameraState {
+            // The camera state has changed after setting the expected state.
+            DispatchQueue.main.async { [weak self] in
+                self?.syncCamera()
+            }
+        }
+    }
+
+    private func syncCamera() {
+        setCamera?(mapView.mapboxMap.cameraState)
     }
 
     private func onTapGesure(_ gesture: UIGestureRecognizer) {
@@ -95,4 +105,24 @@ public final class MapCoordinator {
             }
         }.addTo(queriesBag)
     }
+}
+
+private func wrapError(_ body: () throws -> Void) {
+    do {
+        try body()
+    } catch {
+        print("error: \(error)") // TODO: Logger
+    }
+}
+
+private func assign<T: Equatable>(_ oldValue: T, _ setter: (T) throws -> Void, value: T) {
+    wrapError {
+        if oldValue != value {
+            try setter(value)
+        }
+    }
+}
+
+private func assign<U: AnyObject, T: Equatable>(_ object: U, _ keyPath: ReferenceWritableKeyPath<U, T>, value: T) {
+    assign(object[keyPath: keyPath], { object[keyPath: keyPath] = $0 }, value: value)
 }

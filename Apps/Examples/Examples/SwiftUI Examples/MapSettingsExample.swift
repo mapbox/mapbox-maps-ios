@@ -2,10 +2,11 @@ import SwiftUI
 @_spi(Experimental) import MapboxMapsSwiftUI
 
 struct Settings {
-    var styleURI: StyleURI = .streets
+    var styleURI: StyleURI = .streetsV12
     var orientation: NorthOrientation = .upwards
     var gestureOptions: GestureOptions = .init()
     var cameraBounds: CameraBoundsOptions = .init()
+    var constrainMode: ConstrainMode = .heightOnly
 }
 
 @available(iOS 14.0, *)
@@ -21,6 +22,7 @@ struct MapSettingsExample : View {
             .styleURI(settings.styleURI)
             .gestureOptions(settings.gestureOptions)
             .northOrientation(settings.orientation)
+            .constrainMode(settings.constrainMode)
             .ignoresSafeArea()
             .sheet(isPresented: $settingsOpened) {
                 SettingsView(settings: $settings)
@@ -42,6 +44,7 @@ struct SettingsView : View {
         Form {
             Section {
                 Picker(selection: $settings.styleURI, label: Text("Map Style")) {
+                    Text("Streets v12").tag(StyleURI.streetsV12)
                     Text("Streets").tag(StyleURI.streets)
                     Text("Outdoors").tag(StyleURI.outdoors)
                     Text("Dark").tag(StyleURI.dark)
@@ -61,6 +64,15 @@ struct SettingsView : View {
                         Text("Down").tag(NorthOrientation.downwards)
                         Text("Left").tag(NorthOrientation.rightwards)
                         Text("Right").tag(NorthOrientation.leftwards)
+                    }
+                    .pickerStyle(.segmented)
+                }
+                HStack {
+                    Text("Constrain Mode")
+                    Picker("constrain mode", selection: $settings.constrainMode) {
+                        Text("Height").tag(ConstrainMode.heightOnly)
+                        Text("Width+Height").tag(ConstrainMode.widthAndHeight)
+                        Text("None").tag(ConstrainMode.none)
                     }
                     .pickerStyle(.segmented)
                 }

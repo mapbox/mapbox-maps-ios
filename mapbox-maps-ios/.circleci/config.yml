@@ -1426,9 +1426,8 @@ jobs:
 commands:
   checkout-root:
     steps:
-      - run:
-          name: Checkout code to the project folder
-          command: git clone -b "$CIRCLE_BRANCH" "$CIRCLE_REPOSITORY_URL" $HOME/project
+      - checkout:
+          path: $HOME/project
   configure-environment:
     parameters:
       skip-dependencies:

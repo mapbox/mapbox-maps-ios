@@ -1,6 +1,5 @@
 # Note that `create-github-draft-release.sh` depends on this structure to parse the minimum supported Xcode version.
 # Please keep them in sync if this structure changes.
-xcode-sdk-min:
-  macos:
-    xcode: 13.1.0
-  working_directory: ~/project/mapbox-maps-ios
+macos:
+  xcode: 13.1.0
+working_directory: ~/project/mapbox-maps-ios

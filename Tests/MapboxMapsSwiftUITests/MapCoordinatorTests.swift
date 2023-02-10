@@ -143,7 +143,7 @@ final class MapCoordinatorTests: XCTestCase {
     func testTapGesture() {
         let mockActions = MockActions()
         let deps = MapDependencies(actions: mockActions.actions)
-        me.update(camera: nil, deps: deps,colorScheme: .light)
+        me.update(camera: nil, deps: deps, colorScheme: .light)
 
         let point = CGPoint.random()
         let coordinate = CLLocationCoordinate2D.random()
@@ -164,7 +164,6 @@ final class MapCoordinatorTests: XCTestCase {
         XCTAssertEqual(qrfStub.invocations.first?.parameters.point, point)
         XCTAssertEqual(qrfStub.invocations.first?.parameters.options?.layerIds, ["layer-foo"])
 
-
         let feature = Feature(geometry: Point(coordinate))
         let queriedFeature = QueriedFeature(
             __feature: MapboxCommon.Feature(feature),
@@ -181,7 +180,7 @@ final class MapCoordinatorTests: XCTestCase {
     func testTapGestureMissLayer() {
         let mockActions = MockActions()
         let deps = MapDependencies(actions: mockActions.actions)
-        me.update(camera: nil, deps: deps,colorScheme: .light)
+        me.update(camera: nil, deps: deps, colorScheme: .light)
 
         mapView.gestures.singleTapGestureRecognizerMock.sendActions()
 
@@ -209,7 +208,6 @@ struct MockActions {
             ])
     }
 }
-
 
 extension CameraState {
     init(options: CameraOptions) {

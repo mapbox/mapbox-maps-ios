@@ -6,7 +6,6 @@ struct MapViewFacade {
     var style: StyleProtocol
     var mapboxMap: MapboxMapProtocol
     var gestures: GestureManagerProtocol
-    var realMapboxMap: MapboxMap? // nil for tests
     var locationForGesture: (UIGestureRecognizer) -> CGPoint
     var cameraState: () -> CameraState
 }
@@ -16,7 +15,6 @@ extension MapViewFacade {
         style = mapView.mapboxMap.style
         mapboxMap = mapView.mapboxMap
         gestures = mapView.gestures
-        realMapboxMap = mapView.mapboxMap
         locationForGesture = { $0.location(in: mapView) }
         cameraState = { mapView.cameraState }
     }

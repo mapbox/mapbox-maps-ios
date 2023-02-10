@@ -105,6 +105,17 @@ final class MockMapboxMap: MapboxMapProtocolInternal {
         onEveryStub.call(with: OnEveryParams(eventName: event.name, handler: { handler($0 as! MapEvent<Payload>)}))
     }
 
+    func simulateEvent<Payload: Decodable>(event: MapEvents.Event<Payload>, data: Any) {
+        let invocations = onEveryStub.invocations.filter { $0.parameters.eventName == event.name }
+        for invocation in invocations {
+            let handler = invocation.parameters.handler
+            handler(MapEvent<Payload>(event: Event(type: event.name, data: data)))
+        }
+    }
+    func simulateEvent(event: MapEvents.Event<NoPayload>) {
+        simulateEvent(event: event, data: Void())
+    }
+
     let beginAnimationStub = Stub<Void, Void>()
     func beginAnimation() {
         beginAnimationStub.call()

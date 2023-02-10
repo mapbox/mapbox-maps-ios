@@ -68,6 +68,10 @@ let package = Package(
                 .copy("Snapshot/testSnapshotOverlay.png"),
                 .process("Resources/MapInitOptionsTests.xib"),
             ]
+        ),
+        .testTarget(
+            name: "MapboxMapsSwiftUITests",
+            dependencies: ["MapboxMapsSwiftUI", "TestsSupport"]
         )
     ]
 )

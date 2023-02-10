@@ -32,7 +32,7 @@ public struct Map: View {
     private var mapDependencies = MapDependencies()
     private let mapInitOptions: InitOptionsProvider?
 
-    /// Creates an instance showing scpecisif region.
+    /// Creates an instance of Map showing specific region.
     ///
     /// - Parameters:
     ///     - camera: The camera state to display. If not specified, the default camera options from style will be used. See [center](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-center), [zoom](https://docs.mapbox.com/mapbox-gl-js/style-spec/root/#zoom), [bearing](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-bearing), [pitch](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-pitch).

@@ -33,7 +33,7 @@ public final class MapCoordinator {
 
         mapView.mapboxMap.onEvery(event: .mapLoaded) { [weak self] _ in
             guard let self = self,
-                  let mapboxMap = self.mapView?.realMapboxMap else { return }
+                  let mapboxMap = self.mapView?.mapboxMap as? MapboxMap else { return }
             self.actions?.onMapLoaded?(mapboxMap)
         }.addTo(bag)
     }
@@ -42,8 +42,8 @@ public final class MapCoordinator {
         guard var mapView = mapView else { return }
         let mapboxMap = mapView.mapboxMap
 
-        // This is camera state which is inspected after current update loop.
-        // It camera changed by method other than setCamera, we will propogate that change
+        // This is camera state which is expected after current update loop.
+        // If the camera changed by method other than setCamera, we will propogate that change
         // to the source of truth (user's State).
         var expectedCamera: CameraState?
 
@@ -54,6 +54,8 @@ public final class MapCoordinator {
             }
 
             wrapError {
+                // The camera bounds update is known to change camera if
+                // the current camera state is out of desired bounds.
                 try mapboxMap.setCameraBounds(with: deps.cameraBounds)
             }
 

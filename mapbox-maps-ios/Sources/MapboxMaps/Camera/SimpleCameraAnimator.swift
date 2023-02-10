@@ -22,6 +22,9 @@ internal final class SimpleCameraAnimator: NSObject, SimpleCameraAnimatorProtoco
     /// The animator's owner
     internal let owner: AnimationOwner
 
+    /// Type of the embeded animation
+    internal let animationType: AnimationType
+
     private let from: CameraOptions
 
     /// The target camera.
@@ -102,6 +105,7 @@ internal final class SimpleCameraAnimator: NSObject, SimpleCameraAnimatorProtoco
                   duration: TimeInterval,
                   curve: TimingCurve,
                   owner: AnimationOwner,
+                  type: AnimationType = .unspecified,
                   mapboxMap: MapboxMapProtocol,
                   mainQueue: MainQueueProtocol,
                   cameraOptionsInterpolator: CameraOptionsInterpolatorProtocol,
@@ -111,6 +115,7 @@ internal final class SimpleCameraAnimator: NSObject, SimpleCameraAnimatorProtoco
         self.duration = duration
         self.unitBezier = UnitBezier(p1: curve.p1, p2: curve.p2)
         self.owner = owner
+        self.animationType = type
         self.mapboxMap = mapboxMap
         self.mainQueue = mainQueue
         self.cameraOptionsInterpolator = cameraOptionsInterpolator

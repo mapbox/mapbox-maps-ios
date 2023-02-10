@@ -12,9 +12,11 @@ public final class MapCoordinator {
     private var queriesBag = Bag()
     private var setCamera: CameraSetter?
     private var mapView: MapViewFacade?
+    private let mainQueue: MainQueueProtocol
 
-    init(setCamera: CameraSetter?) {
+    init(setCamera: CameraSetter?, mainQueue: MainQueueProtocol = MainQueueWrapper()) {
         self.setCamera = setCamera
+        self.mainQueue = mainQueue
     }
 
     func setMapView(_ mapView: MapViewFacade) {
@@ -72,7 +74,7 @@ public final class MapCoordinator {
 
         if let expectedCamera = expectedCamera, expectedCamera != mapboxMap.cameraState {
             // The camera state has changed after setting the expected state.
-            DispatchQueue.main.async { [weak self] in
+            mainQueue.async { [weak self] in
                 self?.syncCamera()
             }
         }
@@ -80,7 +82,7 @@ public final class MapCoordinator {
 
     private func syncCamera() {
         guard let mapView = mapView else { return }
-        setCamera?(mapView.cameraState())
+        setCamera?(mapView.mapboxMap.cameraState)
     }
 
     private func onTapGesure(_ gesture: UIGestureRecognizer) {

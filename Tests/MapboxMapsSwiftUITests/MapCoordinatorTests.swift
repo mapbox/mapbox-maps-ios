@@ -10,11 +10,13 @@ final class MapCoordinatorTests: XCTestCase {
     var mapView: MockMapView!
     var setCameraStub: Stub<CameraState, Void>!
     var me: MapCoordinator!
+    var mainQueue: MockMainQueue!
 
     override func setUpWithError() throws {
         mapView = MockMapView()
         setCameraStub = Stub()
-        me = MapCoordinator(setCamera: setCameraStub.call(with:))
+        mainQueue = MockMainQueue()
+        me = MapCoordinator(setCamera: setCameraStub.call(with:), mainQueue: mainQueue)
         me.setMapView(mapView.facade)
     }
 
@@ -47,6 +49,30 @@ final class MapCoordinatorTests: XCTestCase {
             colorScheme: .light)
         XCTAssertEqual(mapView.mapboxMap.setCameraStub.invocations.count, 1)
         XCTAssertEqual(mapView.mapboxMap.setCameraStub.invocations.first?.parameters, CameraOptions(cameraState: cameraState))
+    }
+
+    func testDownstreamCameraUpdateWithFollowingSync() {
+        let cameraState = CameraState.random()
+        let sideEffectCamera = CameraState.random()
+
+        let mapboxMap = mapView.mapboxMap
+        mapView.mapboxMap.setCameraStub.sideEffectQueue.append {
+            mapboxMap.cameraState = CameraState(options: $0.parameters)
+        }
+        mapView.mapboxMap.setCameraBoundsStub.sideEffectQueue.append {  _ in
+            mapboxMap.cameraState = sideEffectCamera
+        }
+
+        me.update(
+            camera: cameraState,
+            deps: MapDependencies(),
+            colorScheme: .light)
+
+        mainQueue.asyncClosureStub.invocations.first?.parameters.work()
+
+        XCTAssertEqual(mapboxMap.cameraState, sideEffectCamera)
+        XCTAssertEqual(setCameraStub.invocations.count, 1)
+        XCTAssertEqual(setCameraStub.invocations.first?.parameters, sideEffectCamera)
     }
 
     func testCameraBounds() {
@@ -181,5 +207,17 @@ struct MockActions {
             layerTapActions: [
                 (["layer-foo"], onLayerTapAction.call(with:))
             ])
+    }
+}
+
+
+extension CameraState {
+    init(options: CameraOptions) {
+        self.init(
+            center: options.center ?? CLLocationCoordinate2D(latitude: 0, longitude: 0),
+            padding: options.padding ?? .zero,
+            zoom: options.zoom ?? 0,
+            bearing: options.bearing ?? 0,
+            pitch: options.pitch ?? 0)
     }
 }

@@ -2,7 +2,8 @@ import Dispatch
 
 // depending on this protocol instead of on DispatchQueue directly
 // allow mocking the main queue in tests which avoids the need for waits
-internal protocol DispatchQueueProtocol: AnyObject {
+@_spi(Package)
+public protocol DispatchQueueProtocol: AnyObject {
     func async(
         group: DispatchGroup?,
         qos: DispatchQoS,
@@ -12,12 +13,13 @@ internal protocol DispatchQueueProtocol: AnyObject {
     func async(execute workItem: DispatchWorkItem)
 }
 
+@_spi(Package)
 extension DispatchQueueProtocol {
-    func async(execute work: @escaping @convention(block) () -> Void) {
+    public func async(execute work: @escaping @convention(block) () -> Void) {
         async(group: nil, qos: .unspecified, flags: [], execute: work)
     }
 
-    func async(
+    public func async(
         qos: DispatchQoS,
         execute work: @escaping @convention(block) () -> Void
     ) {
@@ -25,5 +27,7 @@ extension DispatchQueueProtocol {
     }
 }
 
+@_spi(Package)
 extension DispatchQueue: DispatchQueueProtocol { }
+@_spi(Package)
 extension DispatchWorkItem: Cancelable { }

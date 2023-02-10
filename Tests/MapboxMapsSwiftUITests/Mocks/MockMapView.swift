@@ -13,7 +13,6 @@ struct MockMapView {
             style: style,
             mapboxMap: mapboxMap,
             gestures: gestures,
-            locationForGesture: locationsStub.call(with:),
-            cameraState: {  .random() })
+            locationForGesture: locationsStub.call(with:))
     }
 }

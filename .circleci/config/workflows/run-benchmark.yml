@@ -1,9 +1,7 @@
-filters:
-  branches:
-    only:
-      - main
-  tags:
-    only: /.*/ # run for all tags
+when:
+  or:
+    - equal: [main, << pipeline.git.branch >>]
+    - << pipeline.git.tag >> # run for all tags
 jobs:
   - build-benchmark:
       context:

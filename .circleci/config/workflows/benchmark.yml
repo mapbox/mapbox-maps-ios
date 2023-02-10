@@ -1,9 +1,8 @@
-filters:
-  branches:
-    ignore:
-      - main # ignore main branch
-  tags:
-    ignore: /.*/ # ignore all tags
+when:
+  not:
+    or:
+      - equal: [main, << pipeline.git.branch >>]
+      - << pipeline.git.tag >> # ignore all tags
 jobs:
   - build-benchmark:
       context:

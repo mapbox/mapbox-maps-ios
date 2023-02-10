@@ -10,6 +10,11 @@ final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
         cancelAnimationsStub.call()
     }
 
+    let cancelAnimationsOwnersTypesStub = Stub<(owners: [AnimationOwner], types: [AnimationType]), Void>()
+    func cancelAnimations(withOwners owners: [AnimationOwner], andTypes types: [AnimationType]) {
+        cancelAnimationsOwnersTypesStub.call(with: (owners: owners, types: types))
+    }
+
     struct FlyToParams {
         var to: CameraOptions
         var duration: TimeInterval?

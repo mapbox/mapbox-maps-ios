@@ -70,6 +70,7 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
             quickZoomGestureHandler: MockFocusableGestureHandler(gestureRecognizer: UIGestureRecognizer()),
             singleTapGestureHandler: makeGestureHandler(),
             anyTouchGestureHandler: makeGestureHandler(),
+            interruptDecelerationGestureHandler: makeGestureHandler(),
             mapboxMap: mapboxMap)
     }
 

@@ -14,6 +14,7 @@ final class GestureManagerTests: XCTestCase {
     var quickZoomGestureHandler: MockFocusableGestureHandler!
     var singleTapGestureHandler: GestureHandler!
     var anyTouchGestureHandler: GestureHandler!
+    var interruptDecelerationGestureHandler: GestureHandler!
     var gestureManager: GestureManager!
     // swiftlint:disable:next weak_delegate
     var delegate: MockGestureManagerDelegate!
@@ -35,6 +36,7 @@ final class GestureManagerTests: XCTestCase {
         quickZoomGestureHandler = MockFocusableGestureHandler(gestureRecognizer: MockGestureRecognizer())
         singleTapGestureHandler = makeGestureHandler()
         anyTouchGestureHandler = makeGestureHandler()
+        interruptDecelerationGestureHandler = makeGestureHandler()
         gestureManager = GestureManager(
             panGestureHandler: panGestureHandler,
             pinchGestureHandler: pinchGestureHandler,
@@ -45,6 +47,7 @@ final class GestureManagerTests: XCTestCase {
             quickZoomGestureHandler: quickZoomGestureHandler,
             singleTapGestureHandler: singleTapGestureHandler,
             anyTouchGestureHandler: anyTouchGestureHandler,
+            interruptDecelerationGestureHandler: interruptDecelerationGestureHandler,
             mapboxMap: mapboxMap)
         delegate = MockGestureManagerDelegate()
         gestureManager.delegate = delegate

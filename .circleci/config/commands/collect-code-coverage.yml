@@ -1,0 +1,44 @@
+parameters:
+  profdata_path:
+    type: string
+    default: Coverage.profdata
+  binary_name:
+    type: string
+    default: MapboxMaps.o
+  codecov_flag_name:
+    type: string
+    default: unit
+steps:
+  - run:
+      name: Generate code coverage report
+      command: |
+        BINARY_PATH="$(find build -name "<< parameters.binary_name >>" | head -1)"
+
+        echo "Generating LCOV code coverage report for $BINARY_PATH"
+        xcrun llvm-cov export -arch $(uname -m) -format="lcov" \
+          -instr-profile="<< parameters.profdata_path >>" \
+          "$BINARY_PATH" > coverage.lcov
+
+        echo "Generating TXT code coverage report for $BINARY_PATH"
+        xcrun llvm-cov export -arch $(uname -m) -format=text \
+          -instr-profile="<< parameters.profdata_path >>" \
+          "$BINARY_PATH" > coverage.txt
+
+          zip -r coverage.zip coverage.lcov coverage.txt "<< parameters.profdata_path >>" "$BINARY_PATH" junit*
+  - install-python-dependencies
+  - install-mbx-ci
+  - run:
+      name: Send code coverage
+      command: |
+        curl -Os https://uploader.codecov.io/latest/macos/codecov
+        chmod +x codecov
+        ./codecov -f coverage.lcov -F << parameters.codecov_flag_name >>
+
+        echo "Uploading to S3" ; \
+        python3 ./mapbox-maps-ios/scripts/code-coverage/parse-code-coverage.py \
+          -g . \
+          -c MapboxMaps \
+          --scheme MapboxMaps \
+          --report coverage.txt
+  - store_artifacts:
+      path: coverage.zip

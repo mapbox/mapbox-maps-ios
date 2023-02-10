@@ -1,0 +1,8 @@
+parameters:
+  project:
+    type: string
+    default: mapbox-maps-ios-dc24c
+steps:
+  - run:
+      name: Log in to Google Cloud Platform
+      command: gcloud auth activate-service-account --key-file ~/.config/gcloud/application_default_credentials.json --project << parameters.project >>

@@ -1,0 +1,73 @@
+parameters:
+  baseline:
+    type: boolean
+  output:
+    type: string
+steps:
+  - checkout-root
+  - run:
+      name: Generate cache file for key
+      command: |
+        xcodebuild -version | head -1 | cut -d ' ' -f 2 >> /tmp/xcode_version.txt
+        if [ << parameters.baseline >> = true ]; then
+          TAG_SUFFIX="${CIRCLE_PROJECT_REPONAME:15}"
+          REVISIONS=()
+          while IFS='' read -r line; do REVISIONS+=("$line"); done < <(git rev-list HEAD -- mapbox-maps-ios/Sources/MapboxMaps/MapboxMaps.json)
+
+          # loop through revisions and find existing tag
+          TAG_FOUND=false
+          for revision in "${REVISIONS[@]}"; do
+              VERSION="v$(git show "$revision:mapbox-maps-ios/Sources/MapboxMaps/MapboxMaps.json" | jq -r .version)$TAG_SUFFIX"
+              if [ "$(git tag -l "$VERSION")" ]; then
+                  echo "Using version: $VERSION"
+                  git rev-parse "$VERSION" > /tmp/MapboxMaps-version.txt
+                  TAG_FOUND=true
+                  break
+              fi
+          done
+          if [ "$TAG_FOUND" = false ]; then
+            echo "Using current commit: $(git rev-parse HEAD)"
+            git rev-parse HEAD > /tmp/MapboxMaps-version.txt
+          fi
+        else
+          echo "Using current commit: $(git rev-parse HEAD)"
+          git rev-parse HEAD > /tmp/MapboxMaps-version.txt
+        fi
+  - restore_cache:
+      keys:
+        - &sdkCacheKey v3-sdk-dump-{{ checksum "/tmp/MapboxMaps-version.txt" }}-xcode-{{ checksum "/tmp/xcode_version.txt" }}
+  - configure-environment:
+      skip-dependencies: true
+  - install-xcodegen
+  - run:
+      name: Build SDK and dump API to JSON format
+      command: |
+        if [ -f "<< parameters.output >>" ]; then
+          echo "File << parameters.output >> exists."
+          exit 0
+        fi
+
+        if [ << parameters.baseline >> = true ]; then
+          git checkout "$(cat /tmp/MapboxMaps-version.txt)"
+        fi
+
+        pushd scripts/release/packager
+        ./package-mapbox-maps.sh dynamic
+        mv MapboxMaps*.zip ~/project/mapbox-maps-ios
+        popd
+
+        if [ << parameters.baseline >> = true ]; then
+          git checkout -
+        fi
+
+        scripts/api-compatibility-check/breaking-api-check.py dump MapboxMaps.zip --module MapboxMaps -o "<< parameters.output >>"
+  - save_cache:
+      paths:
+        - << parameters.output >>
+      key: *sdkCacheKey
+  - persist_to_workspace:
+      root: .
+      paths:
+        - << parameters.output >>
+  - store_artifacts:
+      path: << parameters.output >>

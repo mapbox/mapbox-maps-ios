@@ -1,0 +1,5 @@
+description: "Install Python Dependencies"
+steps:
+  - run:
+      name: Install python dependencies
+      command: python3 -m pip install awscli gitpython requests python-dateutil pyyaml

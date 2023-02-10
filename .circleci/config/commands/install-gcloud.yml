@@ -1,0 +1,26 @@
+# Link for gcloud versions: https://cloud.google.com/sdk/docs/downloads-versioned-archives#installation_instructions
+parameters:
+  version:
+    type: string
+    default: "google-cloud-cli-409.0.0-darwin-x86_64.tar.gz"
+  checksum:
+    type: string
+    default: "01db2162ebd5ba0983e9ee151893ba7ef4beef4643422db327338009468de3df"
+description: "Install gcloud"
+steps:
+  - run:
+      name: Install gcloud
+      command: |
+        mkdir /tmp/gcloud && cd /tmp/gcloud
+
+        curl -OL https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/<< parameters.version >>
+        echo '<< parameters.checksum >> *<< parameters.version >>' >> checksumfile
+        shasum -a 256 -c checksumfile
+
+        tar zxvf << parameters.version >>
+        ./google-cloud-sdk/install.sh -q --install-python false
+
+        echo "source /tmp/gcloud/google-cloud-sdk/path.bash.inc" >> $BASH_ENV
+        echo "source /tmp/gcloud/google-cloud-sdk/completion.bash.inc" >> $BASH_ENV
+  - setup-google-cloud-account
+  - login-google-cloud-platform

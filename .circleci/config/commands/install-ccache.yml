@@ -1,0 +1,5 @@
+description: "Install ccache from Homebrew"
+steps:
+  - run:
+      name: Install ccache
+      command: brew install ccache

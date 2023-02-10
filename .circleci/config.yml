@@ -5,7 +5,7 @@ version: 2.1
 setup: true
 
 orbs:
-  continuation: circleci/continuation@0.1.2
+  continuation: circleci/continuation@0.3.1
 
 jobs:
   setup:
@@ -17,7 +17,7 @@ jobs:
           name: Generate config
           command: circleci config pack .circleci/config > circle.yml
       - continuation/continue:
-          configuration_path: mapbox-maps-ios/.circleci/config.yml
+          configuration_path: circle.yml
 
 workflows:
   setup:

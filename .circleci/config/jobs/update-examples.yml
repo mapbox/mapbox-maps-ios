@@ -1,0 +1,13 @@
+executor: xcode-latest
+resource_class: macos.x86.medium.gen2
+steps:
+  - checkout-root
+  - configure-environment:
+      skip-dependencies: true
+  - run:
+      name: Release Examples App to TestFlight
+      command: |
+        bundle install
+        bundle exec fastlane beta
+      no_output_timeout: "20m"
+  - slack-notify-failure-if-any

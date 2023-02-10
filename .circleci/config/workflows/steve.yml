@@ -42,10 +42,6 @@ jobs:
         - SDK Registry Token
 
   # Trigger mobile-metrics workflows
-  - trigger-metrics-v2:
-      context:
-        - Slack Orb
-        - Maps SDK/CircleCI API Token
   - trigger-binary-size:
       context:
         - Slack Orb

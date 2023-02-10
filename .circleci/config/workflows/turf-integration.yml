@@ -1,0 +1,8 @@
+when: << pipeline.parameters.turf-revision >>
+jobs:
+  - turf-integration-job:
+      context:
+        - Slack Orb
+        - SDK Registry Token
+      name: "Run Unit Tests"
+      turf-revision: << pipeline.parameters.turf-revision >>

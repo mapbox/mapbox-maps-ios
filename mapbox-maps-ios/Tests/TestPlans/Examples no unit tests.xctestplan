@@ -1,0 +1,52 @@
+{
+  "configurations" : [
+    {
+      "id" : "117C2FB7-9887-4CA7-9957-C6ECB5B95193",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "addressSanitizer" : {
+      "detectStackUseAfterReturn" : true,
+      "enabled" : true
+    },
+    "codeCoverage" : false,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Examples.xcodeproj",
+      "identifier" : "077C4EE9252F7E88007636F1",
+      "name" : "Examples"
+    },
+    "testRepetitionMode" : "retryOnFailure"
+  },
+  "testTargets" : [
+    {
+      "selectedTests" : [
+        "ExamplesUITests\/test_GrantLocationPermission()"
+      ],
+      "target" : {
+        "containerPath" : "container:Examples.xcodeproj",
+        "identifier" : "077C4F0A252F7E89007636F1",
+        "name" : "ExamplesUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Examples.xcodeproj",
+        "identifier" : "077C4EFF252F7E89007636F1",
+        "name" : "ExamplesTests"
+      }
+    },
+    {
+      "enabled" : false,
+      "target" : {
+        "containerPath" : "container:..\/..",
+        "identifier" : "MapboxMapsTests",
+        "name" : "MapboxMapsTests"
+      }
+    }
+  ],
+  "version" : 1
+}

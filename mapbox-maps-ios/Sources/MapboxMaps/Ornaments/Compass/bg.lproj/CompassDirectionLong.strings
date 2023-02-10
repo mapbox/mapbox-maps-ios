@@ -1,0 +1,95 @@
+/* East, long */
+"E" = "изток";
+
+/* East by north, long */
+"EbN" = "ийст-тен-уест";
+
+/* East by south, long */
+"EbS" = "ийст-тен-саут";
+
+/* East-northeast, long */
+"ENE" = "север-североизток";
+
+/* East-southeast, long */
+"ESE" = "изток-югоизток";
+
+/* North, long */
+"N" = "север";
+
+/* North by east, long */
+"NbE" = "норд-тен-ийст";
+
+/* North by west, long */
+"NbW" = "норд-тен-уест";
+
+/* Northeast, long */
+"NE" = "североизток";
+
+/* Northeast by east, long */
+"NEbE" = "нордийст-тен-ийст";
+
+/* Northeast by north, long */
+"NEbN" = "нордийст-тен-норд";
+
+/* North-northeast, long */
+"NNE" = "север-североизток";
+
+/* North-northwest, long */
+"NNW" = "север-северозапад";
+
+/* Northwest, long */
+"NW" = "северозапад";
+
+/* Northwest by north, long */
+"NWbN" = "нордуест-тен-норд";
+
+/* Northwest by west, long */
+"NWbW" = "нордуест-тен-уест";
+
+/* South, long */
+"S" = "юг";
+
+/* South by east, long */
+"SbE" = "саут-тен-ийст";
+
+/* South by west, long */
+"SbW" = "саут-тен-уест";
+
+/* Southeast, long */
+"SE" = "югоизток";
+
+/* Southeast by east, long */
+"SEbE" = "саутийст-тен-ийст";
+
+/* Southeast by south, long */
+"SEbS" = "саутийст-тен-саут";
+
+/* South-southeast, long */
+"SSE" = "юг-югоизток";
+
+/* South-southwest, long */
+"SSW" = "юг-югозапад";
+
+/* Southwest, long */
+"SW" = "югозапад";
+
+/* Southwest by south, long */
+"SWbS" = "саутуест-тен-саут";
+
+/* Southwest by west, long */
+"SWbW" = "саутуест-тен-уест";
+
+/* West, long */
+"W" = "запад";
+
+/* West by north, long */
+"WbN" = "уест-тен-норд";
+
+/* West by south, long */
+"WbS" = "уест-тен-саут";
+
+/* West-northwest, long */
+"WNW" = "запад-северозапад";
+
+/* West-southwest, long */
+"WSW" = "запад-югозапад";

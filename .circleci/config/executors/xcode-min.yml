@@ -1,0 +1,3 @@
+macos:
+  xcode: 13.3.0
+resource_class: macos.x86.medium.gen2

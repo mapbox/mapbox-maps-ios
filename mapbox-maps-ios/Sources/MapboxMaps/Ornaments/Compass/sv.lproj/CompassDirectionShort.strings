@@ -1,0 +1,95 @@
+/* East, short */
+"E" = "O";
+
+/* East by north, short */
+"EbN" = "OtN";
+
+/* East by south, short */
+"EbS" = "OtS";
+
+/* East-northeast, short */
+"ENE" = "ONO";
+
+/* East-southeast, short */
+"ESE" = "OSO";
+
+/* North, short */
+"N" = "N";
+
+/* North by east, short */
+"NbE" = "NtO";
+
+/* North by west, short */
+"NbW" = "NtV";
+
+/* Northeast, short */
+"NE" = "NO";
+
+/* Northeast by east, short */
+"NEbE" = "NOtO";
+
+/* Northeast by north, short */
+"NEbN" = "NOtN";
+
+/* North-northeast, short */
+"NNE" = "NNO";
+
+/* North-northwest, short */
+"NNW" = "NNV";
+
+/* Northwest, short */
+"NW" = "NV";
+
+/* Northwest by north, short */
+"NWbN" = "NVtN";
+
+/* Northwest by west, short */
+"NWbW" = "NVtV";
+
+/* South, short */
+"S" = "S";
+
+/* South by east, short */
+"SbE" = "StO";
+
+/* South by west, short */
+"SbW" = "StV";
+
+/* Southeast, short */
+"SE" = "SO";
+
+/* Southeast by east, short */
+"SEbE" = "SOtO";
+
+/* Southeast by south, short */
+"SEbS" = "SOtS";
+
+/* South-southeast, short */
+"SSE" = "SSO";
+
+/* South-southwest, short */
+"SSW" = "SSV";
+
+/* Southwest, short */
+"SW" = "SV";
+
+/* Southwest by south, short */
+"SWbS" = "SVtS";
+
+/* Southwest by west, short */
+"SWbW" = "SVtV";
+
+/* West, short */
+"W" = "V";
+
+/* West by north, short */
+"WbN" = "VtN";
+
+/* West by south, short */
+"WbS" = "VtS";
+
+/* West-northwest, short */
+"WNW" = "VNV";
+
+/* West-southwest, short */
+"WSW" = "VSV";

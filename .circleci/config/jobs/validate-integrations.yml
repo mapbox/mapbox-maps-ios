@@ -1,0 +1,26 @@
+description: <
+  This job is designed to be called after SDK Registry PR merge.
+  It requires binaries to be publicly available and downloadable
+  SPM, Cocoapods and DirectDownload tests would be called.
+executor: xcode-latest
+resource_class: macos.x86.medium.gen2
+steps:
+  - checkout-root
+  - configure-environment:
+      skip-dependencies: true
+  - install-xcodegen
+  - run:
+      name: Inject new Podspec version to CDN cache
+      description: |
+        Force adding new version to the cache to avoid long running clone operation
+        The following command would take the latest CocoaPods version from cache.
+
+        Alternative is to replace CDN with Specs repository and checkout it for the latest changes. It usually takes 3+ minutes on CircleCI
+      command: |
+        source scripts/utilities/cocoapods.sh
+        pod_inject_cdn_version MapboxMaps "$VERSION"
+  - run:
+      name: Test direct download integrations
+      command: scripts/validate-integrations/validate-integrations.sh -v "$VERSION"
+  - store-default-artifacts
+  - slack-notify-failure-if-any

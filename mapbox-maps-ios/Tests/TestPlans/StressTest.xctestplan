@@ -1,0 +1,36 @@
+{
+  "configurations" : [
+    {
+      "id" : "94D10DAC-8A7F-4F3B-A9F8-406597383705",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:StressTest.xcodeproj",
+      "identifier" : "CADCF8AC258551390065C51B",
+      "name" : "StressTest"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:StressTest.xcodeproj",
+        "identifier" : "CADCF8C22585513C0065C51B",
+        "name" : "StressTestTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:StressTest.xcodeproj",
+        "identifier" : "CADCF8CD2585513C0065C51B",
+        "name" : "StressTestUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

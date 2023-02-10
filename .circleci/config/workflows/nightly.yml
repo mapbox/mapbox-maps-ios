@@ -1,0 +1,97 @@
+# Runs daily at midnight UTC
+triggers:
+  - schedule:
+      cron: "0 6 * * *"
+      filters:
+        branches:
+          only:
+            - main
+jobs:
+  - swiftlint:
+      context:
+        - Slack Orb
+  - depsvalidator:
+      context:
+        - Slack Orb
+  - build-sdk:
+      context:
+        - Slack Orb
+        - SDK Registry Token
+      name: Build SDK
+      configuration: "Release"
+      report_failure: true
+      matrix:
+        parameters:
+          xcode: ["13.1.0", "13.2.1"]
+  - build-tests:
+      context:
+        - Slack Orb
+        - SDK Registry Token
+        - Maps SDK/Public Mapbox Token
+      configuration: "Release"
+      report_failure: true
+      name: Build tests (nightly)
+  - run-unit-tests:
+      context:
+        - Slack Orb
+      xcode: 14.1.0
+      matrix:
+        parameters:
+          destination: ["OS=15.5,name=iPhone 13", "OS=16.1,name=iPhone 14"]
+      requires:
+        - Build tests (nightly)
+  - run-unit-tests:
+      context:
+        - Slack Orb
+      xcode: 12.5.1
+      disable_codecoverage: true
+      matrix:
+        parameters:
+          destination: ["OS=13.7,name=iPhone 11", "OS=14.5,name=iPhone 11"]
+      requires:
+        - Build tests (nightly)
+  - run-integration-tests:
+      context:
+        - Slack Orb
+      requires:
+          - Build tests (nightly)
+      name: Run integration tests (nightly)
+  - build-host-tests:
+      context:
+        - Slack Orb
+        - Fastlane Match
+        - SDK Registry Token
+        - Apple Machine account
+        - Maps SDK/Public Mapbox Token
+      name: Build MapboxTestHost tests
+  - run-firebase-tests:
+      context:
+        - Slack Orb
+        - Maps SDK/Google Cloud credentials
+      name: Run MapboxTestHost tests
+      scheme: MapboxTestHost
+      requires:
+        - Build MapboxTestHost tests
+  - build-examples-tests:
+      context:
+        - Slack Orb
+        - Fastlane Match
+        - SDK Registry Token
+        - Apple Machine account
+        - Maps SDK/Public Mapbox Token
+      name: Build Examples tests
+  - run-firebase-tests:
+      context:
+        - Slack Orb
+        - Maps SDK/Google Cloud credentials
+      name: Run Examples tests
+      scheme: Examples
+      requires:
+        - Build Examples tests
+  - create-xcframework:
+      context:
+        - Slack Orb
+        - SDK Registry Token
+      create-xcframework-always-run: true
+      report_failure: true
+      xcode: "13.1.0"

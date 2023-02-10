@@ -1,0 +1,12 @@
+executor: xcode-latest
+resource_class: macos.x86.medium.gen2
+steps:
+  - checkout-root
+  - configure-environment:
+      skip-dependencies: true
+  - run:
+      name: Publish CocoaPods Podspec
+      command: |
+        pod repo add-cdn trunk https://cdn.cocoapods.org/
+        pod trunk push --allow-warnings
+  - slack-notify-failure-if-any

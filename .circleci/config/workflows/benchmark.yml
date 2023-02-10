@@ -1,0 +1,15 @@
+when:
+  not:
+    or:
+      - equal: [main, << pipeline.git.branch >>]
+      - << pipeline.git.tag >> # ignore all tags
+jobs:
+  - build-benchmark:
+      context:
+        - SDK Registry Token
+        - MapboxCI GitHub UserToken
+        - Maps SDK/Public Mapbox Token
+  - build-maps:
+      upload-size-metrics: false
+      context:
+        - SDK Registry Token

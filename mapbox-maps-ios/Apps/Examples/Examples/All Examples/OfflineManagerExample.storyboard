@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="p6J-Gi-W7S">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Offline Manager Example-->
+        <scene sceneID="Jaq-1S-aZV">
+            <objects>
+                <viewController id="p6J-Gi-W7S" customClass="OfflineManagerExample" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="qbu-bJ-H9h">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t7M-79-XaT">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="493"/>
+                                <color key="backgroundColor" systemColor="systemGray5Color"/>
+                            </view>
+                            <view contentMode="scaleToFill" verticalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="9fO-jU-7Bj" userLabel="Progress Container">
+                                <rect key="frame" x="10" y="237" width="394" height="99"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Style Pack" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Rl-Ot-P1B">
+                                        <rect key="frame" x="0.0" y="10" width="60" height="14.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="tTi-kr-gUv">
+                                        <rect key="frame" x="73" y="15" width="321" height="4"/>
+                                    </progressView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tile Region" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iNJ-Ee-Lev">
+                                        <rect key="frame" x="0.0" y="64.5" width="63" height="14.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="XK3-DS-3sZ">
+                                        <rect key="frame" x="73" y="69.5" width="321" height="4"/>
+                                    </progressView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="XK3-DS-3sZ" secondAttribute="trailing" id="6Qg-Q3-BCi"/>
+                                    <constraint firstItem="9Rl-Ot-P1B" firstAttribute="top" secondItem="9fO-jU-7Bj" secondAttribute="top" constant="10" id="Ggj-Sb-fhx"/>
+                                    <constraint firstItem="tTi-kr-gUv" firstAttribute="leading" secondItem="XK3-DS-3sZ" secondAttribute="leading" id="IvY-AR-5IN"/>
+                                    <constraint firstItem="9Rl-Ot-P1B" firstAttribute="centerY" secondItem="tTi-kr-gUv" secondAttribute="centerY" id="Vag-0I-ffw"/>
+                                    <constraint firstItem="iNJ-Ee-Lev" firstAttribute="leading" secondItem="9fO-jU-7Bj" secondAttribute="leading" id="dIw-rk-mzG"/>
+                                    <constraint firstItem="iNJ-Ee-Lev" firstAttribute="centerY" secondItem="XK3-DS-3sZ" secondAttribute="centerY" id="dmV-g4-x0p"/>
+                                    <constraint firstAttribute="bottom" secondItem="iNJ-Ee-Lev" secondAttribute="bottom" constant="20" id="gRP-hu-EqY"/>
+                                    <constraint firstAttribute="trailing" secondItem="tTi-kr-gUv" secondAttribute="trailing" id="ifS-jO-DgJ"/>
+                                    <constraint firstItem="9Rl-Ot-P1B" firstAttribute="leading" secondItem="9fO-jU-7Bj" secondAttribute="leading" id="jdc-i2-K4d"/>
+                                    <constraint firstItem="XK3-DS-3sZ" firstAttribute="leading" secondItem="iNJ-Ee-Lev" secondAttribute="trailing" constant="10" id="xtC-ih-Uha"/>
+                                    <constraint firstItem="iNJ-Ee-Lev" firstAttribute="top" secondItem="9Rl-Ot-P1B" secondAttribute="bottom" constant="40" id="zIJ-5D-Qzm"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wmP-zc-si6">
+                                <rect key="frame" x="98.5" y="513" width="217" height="48"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
+                                <state key="normal" title="Start Download"/>
+                                <connections>
+                                    <action selector="didTapButton:" destination="p6J-Gi-W7S" eventType="touchUpInside" id="HHj-HI-LNL"/>
+                                </connections>
+                            </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="999" showsHorizontalScrollIndicator="NO" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="scd-sH-5JU">
+                                <rect key="frame" x="10" y="581" width="394" height="315"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+
+Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </string>
+                                <color key="textColor" systemColor="labelColor"/>
+                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="JnB-68-BuS"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="wmP-zc-si6" firstAttribute="top" secondItem="t7M-79-XaT" secondAttribute="bottom" constant="20" id="9em-hG-7eS"/>
+                            <constraint firstItem="t7M-79-XaT" firstAttribute="top" secondItem="qbu-bJ-H9h" secondAttribute="top" id="EMs-1O-Yys"/>
+                            <constraint firstItem="scd-sH-5JU" firstAttribute="top" secondItem="wmP-zc-si6" secondAttribute="bottom" constant="20" id="O8f-Cy-NCx"/>
+                            <constraint firstItem="9fO-jU-7Bj" firstAttribute="centerY" secondItem="t7M-79-XaT" secondAttribute="centerY" constant="40" id="PBC-ad-Gs2"/>
+                            <constraint firstItem="wmP-zc-si6" firstAttribute="centerX" secondItem="JnB-68-BuS" secondAttribute="centerX" id="Raq-kB-UXR"/>
+                            <constraint firstItem="t7M-79-XaT" firstAttribute="trailing" secondItem="9fO-jU-7Bj" secondAttribute="trailing" constant="10" id="Uz4-PE-EFg"/>
+                            <constraint firstItem="t7M-79-XaT" firstAttribute="height" secondItem="qbu-bJ-H9h" secondAttribute="height" multiplier="0.55" id="Wfk-ie-QVe"/>
+                            <constraint firstItem="JnB-68-BuS" firstAttribute="trailing" secondItem="scd-sH-5JU" secondAttribute="trailing" constant="10" id="XPT-7w-qlg"/>
+                            <constraint firstItem="t7M-79-XaT" firstAttribute="leading" secondItem="qbu-bJ-H9h" secondAttribute="leading" id="bEn-Lo-Rmm"/>
+                            <constraint firstItem="t7M-79-XaT" firstAttribute="leading" secondItem="9fO-jU-7Bj" secondAttribute="leading" constant="-10" id="cEf-xa-4KX"/>
+                            <constraint firstItem="scd-sH-5JU" firstAttribute="leading" secondItem="qbu-bJ-H9h" secondAttribute="leading" constant="10" id="czx-Bk-SoG"/>
+                            <constraint firstAttribute="trailing" secondItem="t7M-79-XaT" secondAttribute="trailing" id="qju-Fo-9Tg"/>
+                            <constraint firstItem="scd-sH-5JU" firstAttribute="bottom" secondItem="qbu-bJ-H9h" secondAttribute="bottom" id="qsk-g3-iOg"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="button" destination="wmP-zc-si6" id="Vek-S9-XuP"/>
+                        <outlet property="logView" destination="scd-sH-5JU" id="pfc-Qc-c5d"/>
+                        <outlet property="mapViewContainer" destination="t7M-79-XaT" id="qVz-A2-2Dc"/>
+                        <outlet property="progressContainer" destination="9fO-jU-7Bj" id="kuk-4G-pfO"/>
+                        <outlet property="stylePackProgressView" destination="tTi-kr-gUv" id="Puh-FW-RqG"/>
+                        <outlet property="tileRegionProgressView" destination="XK3-DS-3sZ" id="mwN-Gm-2ld"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UaR-Hg-6ea" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-630.43478260869574" y="6.6964285714285712"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGray5Color">
+            <color red="0.89803921568627454" green="0.89803921568627454" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

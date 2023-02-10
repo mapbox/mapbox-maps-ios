@@ -1,0 +1,4 @@
+steps:
+  - add_ssh_keys:
+      fingerprints:
+        - 9d:db:07:0b:62:81:11:c3:46:21:8e:fa:51:99:80:2d

@@ -1,0 +1,5 @@
+description: "Install Xcodegen from Homebrew"
+steps:
+  - run:
+      name: Install Xcodegen
+      command: brew install xcodegen

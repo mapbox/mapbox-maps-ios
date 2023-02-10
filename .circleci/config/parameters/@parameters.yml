@@ -1,0 +1,6 @@
+maps-ios-checkout-reference:
+  type: string
+  default: ""
+turf-revision:
+  type: string
+  default: ""

@@ -1,0 +1,18 @@
+parameters:
+  bundle_style:
+    type: string
+    default: "dynamic"
+  working_directory:
+    type: string
+    default: "."
+description: "Create << parameters.bundle_style >> xcframework bundle"
+steps:
+  - run:
+      name: Creating << parameters.bundle_style >> bundled artifact
+      command: |
+        echo "Navigating to packager script"
+        cd scripts/release/packager
+        ./package-mapbox-maps.sh << parameters.bundle_style >>
+        echo "Moving zip to project root"
+        mv MapboxMaps*.zip /Users/distiller/project/
+      working_directory: << parameters.working_directory >>

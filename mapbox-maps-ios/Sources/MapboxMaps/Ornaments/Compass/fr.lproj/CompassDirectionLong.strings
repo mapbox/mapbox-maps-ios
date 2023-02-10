@@ -1,0 +1,95 @@
+/* East, long */
+"E" = "est";
+
+/* East by north, long */
+"EbN" = "est par le nord";
+
+/* East by south, long */
+"EbS" = "est par le sud";
+
+/* East-northeast, long */
+"ENE" = "est-nord-est";
+
+/* East-southeast, long */
+"ESE" = "est-sud-est";
+
+/* North, long */
+"N" = "nord";
+
+/* North by east, long */
+"NbE" = "nord par l’est";
+
+/* North by west, long */
+"NbW" = "nord par l’ouest";
+
+/* Northeast, long */
+"NE" = "nord-est";
+
+/* Northeast by east, long */
+"NEbE" = "nord-est par l’est";
+
+/* Northeast by north, long */
+"NEbN" = "nord-est par le nord";
+
+/* North-northeast, long */
+"NNE" = "nord-nord-est";
+
+/* North-northwest, long */
+"NNW" = "nord-nord-ouest";
+
+/* Northwest, long */
+"NW" = "nord-ouest";
+
+/* Northwest by north, long */
+"NWbN" = "nord-ouest par le nord";
+
+/* Northwest by west, long */
+"NWbW" = "nord-ouest par l’ouest";
+
+/* South, long */
+"S" = "sud";
+
+/* South by east, long */
+"SbE" = "sud par l’est";
+
+/* South by west, long */
+"SbW" = "sud par l’ouest";
+
+/* Southeast, long */
+"SE" = "sud-est";
+
+/* Southeast by east, long */
+"SEbE" = "sud-est par l’est";
+
+/* Southeast by south, long */
+"SEbS" = "sud-est par le sud";
+
+/* South-southeast, long */
+"SSE" = "sud-sud-est";
+
+/* South-southwest, long */
+"SSW" = "sud-sud-ouest";
+
+/* Southwest, long */
+"SW" = "sud-ouest";
+
+/* Southwest by south, long */
+"SWbS" = "sud-ouest par le sud";
+
+/* Southwest by west, long */
+"SWbW" = "sud-ouest par l’ouest";
+
+/* West, long */
+"W" = "ouest";
+
+/* West by north, long */
+"WbN" = "ouest par le nord";
+
+/* West by south, long */
+"WbS" = "ouest par le sud";
+
+/* West-northwest, long */
+"WNW" = "ouest-nord-ouest";
+
+/* West-southwest, long */
+"WSW" = "ouest-sud-ouest";

@@ -1,0 +1,16 @@
+docker:
+  - image: cimg/base:stable
+steps:
+  - checkout-root
+  - run:
+      name: Notify maps internal CI about $CIRCLE_BRANCH branch update
+      command: |
+        curl -X POST "https://circleci.com/api/v2/project/github/mapbox/mapbox-maps-ios-private/pipeline" \
+            -H 'Content-Type: application/json' \
+            -H "Circle-Token: $CIRCLECI_API_TOKEN" \
+            -d $'{
+                    "branch": "internal",
+                    "parameters": {
+                      "mapbox_sync_branch": "'$CIRCLE_BRANCH'"
+                    }
+                  }'

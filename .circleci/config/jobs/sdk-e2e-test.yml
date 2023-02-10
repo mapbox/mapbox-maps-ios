@@ -1,6 +1,7 @@
 docker:
   - image: "mbxci/linux-base:ebee268fbe3d078cdacefee679f09c609006cdf4"
 resource_class: small
+working_directory: ~/project/mapbox-maps-ios
 parameters:
     validation:
         default: false

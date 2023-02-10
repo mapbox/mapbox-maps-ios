@@ -1,5 +1,9 @@
-when:
-  not: << pipeline.parameters.run-tests >>
+filters:
+  branches:
+    ignore:
+      - main # ignore main branch
+  tags:
+    ignore: /.*/ # ignore all tags
 jobs:
   - build-benchmark:
       context:

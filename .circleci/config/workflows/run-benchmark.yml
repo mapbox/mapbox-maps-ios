@@ -1,4 +1,9 @@
-when: << pipeline.parameters.run-tests >>
+filters:
+  branches:
+    only:
+      - main
+  tags:
+    only: /.*/ # run for all tags
 jobs:
   - build-benchmark:
       context:

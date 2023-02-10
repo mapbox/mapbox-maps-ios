@@ -19,7 +19,15 @@ final class ExampleTableViewController: UITableViewController {
         searchController.obscuresBackgroundDuringPresentation = false
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
+        if #available(iOS 14.0, *) {
+            navigationItem.leftBarButtonItem = UIBarButtonItem(title: "SwiftUI", style: .plain, target: self, action: #selector(openSwiftUI))
+        }
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
+    }
+
+    @available(iOS 14.0, *)
+    @objc func openSwiftUI() {
+        present(createSwiftUIExamplesController(), animated: true)
     }
 }
 

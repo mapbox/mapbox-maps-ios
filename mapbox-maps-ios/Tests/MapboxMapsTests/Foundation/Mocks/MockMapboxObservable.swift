@@ -65,8 +65,8 @@ final class MockMapboxObservable: MapboxObservableProtocol {
 
     // not using Stub here since the block is not escaping
     var performWithoutNotifyingInvocationCount = 0
-    func performWithoutNotifying(_ block: () -> Void) {
+    func performWithoutNotifying(_ block: () throws -> Void) rethrows {
         performWithoutNotifyingInvocationCount += 1
-        block()
+        try block()
     }
 }

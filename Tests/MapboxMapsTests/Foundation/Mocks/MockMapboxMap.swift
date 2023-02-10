@@ -167,10 +167,10 @@ final class MockMapboxMap: MapboxMapProtocol {
     var performWithoutNotifyingInvocationCount = 0
     var performWithoutNotifyingWillInvokeBlock = {}
     var performWithoutNotifyingDidInvokeBlock = {}
-    func performWithoutNotifying(_ block: () -> Void) {
+    func performWithoutNotifying(_ block: () throws -> Void) rethrows {
         performWithoutNotifyingInvocationCount += 1
         performWithoutNotifyingWillInvokeBlock()
-        block()
+        try block()
         performWithoutNotifyingDidInvokeBlock()
     }
 }

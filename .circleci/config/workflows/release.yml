@@ -8,12 +8,6 @@ jobs:
           only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
         branches:
           ignore: /.*/
-  - trigger-metrics-v2:
-      context:
-        - Slack Orb
-        - Maps SDK/CircleCI API Token
-      requires:
-        - release-precheck
   - build-baseline-sdk:
       context:
         - Slack Orb

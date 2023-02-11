@@ -82,7 +82,7 @@ if __name__ == "__main__":
     # }
 
     # Git properties
-    repo = git.Repo(gitInfoPath)
+    repo = git.Repo(gitInfoPath, search_parent_directories=True)
 
     # Get project name (see https://stackoverflow.com/a/63352532)
     project = repo.remotes.origin.url.split('.git')[0].split('/')[-1]

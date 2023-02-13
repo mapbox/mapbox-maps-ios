@@ -28,6 +28,12 @@ final class BasicCameraAnimatorTests: XCTestCase {
         XCTAssertEqual(animator.owner, impl.owner)
     }
 
+    func testAnimationType() {
+        impl.animationType = .unspecified
+
+        XCTAssertEqual(animator.animationType, impl.animationType)
+    }
+
     func testTransition() {
         impl.transition = .random(CameraTransition(cameraState: .random(), initialAnchor: .random()))
 

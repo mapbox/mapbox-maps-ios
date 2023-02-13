@@ -478,7 +478,9 @@ final class MapViewTestsWithScene: XCTestCase {
             frame: CGRect(origin: .zero, size: mapViewSize),
             mapInitOptions: MapInitOptions(),
             dependencyProvider: dependencyProvider,
-            urlOpener: attributionURLOpener)
+            urlOpener: attributionURLOpener,
+            applicationStateProvider: applicationStateProvider,
+            preferredContentSizeCategoryProvider: preferredContentSizeCategoryProvider)
 
         let metalView = try XCTUnwrap(mapView.getMetalView(for: nil))
 
@@ -501,7 +503,9 @@ final class MapViewTestsWithScene: XCTestCase {
             frame: CGRect(origin: .zero, size: mapViewSize),
             mapInitOptions: MapInitOptions(),
             dependencyProvider: dependencyProvider,
-            urlOpener: attributionURLOpener)
+            urlOpener: attributionURLOpener,
+            applicationStateProvider: applicationStateProvider,
+            preferredContentSizeCategoryProvider: preferredContentSizeCategoryProvider)
 
         let metalView = mapView.getMetalView(for: nil)
 

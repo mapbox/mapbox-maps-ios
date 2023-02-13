@@ -37,6 +37,7 @@ final class MapViewSubclassingTests: XCTestCase {
             _ = MapViewSubclass(
                 frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
                 mapInitOptions: MapInitOptions(),
+                orientationProvider: orientationProvider,
                 urlOpener: attributionURLOpener,
                 applicationStateProvider: applicationStateProvider,
                 preferredContentSizeCategoryProvider: preferredContentSizeCategoryProvider)
@@ -59,8 +60,8 @@ private final class MapViewSubclass: MapView {
     }
 
     @available(iOS 13.0, *)
-    override init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions(), urlOpener: AttributionURLOpener) {
-        super.init(frame: frame, mapInitOptions: mapInitOptions, urlOpener: urlOpener)
+    override init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions(), urlOpener: AttributionURLOpener, applicationStateProvider: ApplicationStateProvider, preferredContentSizeCategoryProvider: PreferredContentSizeCategoryProvider) {
+        super.init(frame: frame, mapInitOptions: mapInitOptions, urlOpener: urlOpener, applicationStateProvider: applicationStateProvider, preferredContentSizeCategoryProvider: preferredContentSizeCategoryProvider)
     }
 
     override init(frame: CGRect,

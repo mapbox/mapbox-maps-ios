@@ -4,6 +4,6 @@ import Foundation
 final class MockPreferredContentSizeCategoryProvider: PreferredContentSizeCategoryProvider {
     let preferredContentSizeCategoryStub = Stub<Void, UIContentSizeCategory>(defaultReturnValue: .unspecified)
     var preferredContentSizeCategory: UIContentSizeCategory {
-        return preferredContentSizeCategory.call()
+        return preferredContentSizeCategoryStub.call()
     }
 }

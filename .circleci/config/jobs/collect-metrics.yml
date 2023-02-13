@@ -8,6 +8,8 @@ steps:
       command: pip3 install awscli requests
   - attach_workspace:
       at: workspace
+  - checkout-submodule:
+      at: mobile-metrics
   - run:
       name: Check DeviceFarm results
       command: |
@@ -31,8 +33,6 @@ steps:
       command: swift run xcparty failures "$CIRCLE_WORKING_DIRECTORY/workspace/metrics.xcresult"
       working_directory: mapbox-maps-ios/scripts/xcparty
       when: on_fail
-  - checkout-submodule:
-      at: mobile-metrics
   - run:
       name: Upload metrics to AWS
       command: |

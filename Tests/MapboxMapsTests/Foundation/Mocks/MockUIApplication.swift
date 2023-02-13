@@ -11,11 +11,11 @@ final class MockUIApplication: UIApplicationProtocol {
     func open(_ url: URL) {
         openURLStub.call(with: url)
     }
-    
+
     func updateApplicationState(_ applicationState: UIApplication.State) {
         self.applicationState = applicationState
     }
-    
+
     func updatePreferredContentSizeCategory(_ preferredContentSizeCategory: UIContentSizeCategory) {
         self.preferredContentSizeCategory = preferredContentSizeCategory
     }

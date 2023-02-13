@@ -1,0 +1,7 @@
+parameters:
+  name:
+    type: string
+steps:
+  - run:
+      name: Checkout << parameters.name >> repository
+      command: git submodule update --init << parameters.name >>

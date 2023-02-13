@@ -4,7 +4,8 @@ steps:
   - mapbox/add-mapbox-ssh-key
   - mapbox/install-mbx-ci:
       platform: linux
-  - checkout-mobile-metrics
+  - checkout-submodule:
+      name: mobile-metrics
   - attach_workspace:
       at: Products
   - run: ls -l Products/

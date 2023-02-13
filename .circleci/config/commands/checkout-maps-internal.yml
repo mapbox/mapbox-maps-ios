@@ -1,5 +1,0 @@
-steps:
-  - run:
-      name: Checkout Maps Internal repository
-      command: git submodule update --init mapbox-maps-internal
-

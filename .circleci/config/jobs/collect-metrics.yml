@@ -31,7 +31,8 @@ steps:
       command: swift run xcparty failures "$CIRCLE_WORKING_DIRECTORY/workspace/metrics.xcresult"
       working_directory: mapbox-maps-ios/scripts/xcparty
       when: on_fail
-  - checkout-mobile-metrics
+  - checkout-submodule:
+      name: mobile-metrics
   - run:
       name: Upload metrics to AWS
       command: |

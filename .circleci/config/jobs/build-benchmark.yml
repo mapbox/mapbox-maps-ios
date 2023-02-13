@@ -2,10 +2,10 @@ executor: xcode-min
 steps:
   - checkout
   - mapbox/add-mapbox-ssh-key
-  - checkout-maps-submodule
-  - checkout-maps-internal
+  - checkout-submodule:
+      at: mapbox-maps-internal
   - mapbox/github-commit-progress:
-      commit: $MAPS_COMMIT_HASH
+      commit: $CIRCLE_SHA1
       repository: mapbox-maps-ios
       token: $MAPBOXCI_GITHUB_USER_TOKEN
       steps:

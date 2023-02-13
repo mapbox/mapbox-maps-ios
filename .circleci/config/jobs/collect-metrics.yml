@@ -3,7 +3,6 @@ steps:
   - checkout
   - mapbox/add-mapbox-ssh-key
   - mapbox/install-mbx-ci
-  - checkout-maps-submodule
   - run:
       name: Install AWSCLI
       command: pip3 install awscli requests
@@ -32,7 +31,8 @@ steps:
       command: swift run xcparty failures "$CIRCLE_WORKING_DIRECTORY/workspace/metrics.xcresult"
       working_directory: mapbox-maps-ios/scripts/xcparty
       when: on_fail
-  - checkout-mobile-metrics
+  - checkout-submodule:
+      at: mobile-metrics
   - run:
       name: Upload metrics to AWS
       command: |

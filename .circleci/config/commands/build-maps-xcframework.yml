@@ -30,7 +30,7 @@ steps:
         mint install git@github.com:mapbox/ios-binary-size.git
         unzip MapboxMaps.zip "artifacts/MapboxMaps.xcframework/*"
   - checkout-submodule:
-      name: mobile-metrics
+      at: mobile-metrics
   - unless:
       condition: << parameters.upload-size-metrics >>
       steps:

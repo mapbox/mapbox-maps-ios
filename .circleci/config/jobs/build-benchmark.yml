@@ -3,7 +3,7 @@ steps:
   - checkout
   - mapbox/add-mapbox-ssh-key
   - checkout-submodule:
-      name: mapbox-maps-internal
+      at: mapbox-maps-internal
   - mapbox/github-commit-progress:
       commit: $CIRCLE_SHA1
       repository: mapbox-maps-ios

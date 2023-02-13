@@ -1,7 +1,7 @@
 parameters:
-  name:
+  at:
     type: string
 steps:
   - run:
-      name: Checkout << parameters.name >> repository
-      command: git submodule update --init << parameters.name >>
+      name: Checkout << parameters.at >> repository
+      command: git submodule update --init << parameters.at >>

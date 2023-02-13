@@ -32,7 +32,7 @@ steps:
       working_directory: mapbox-maps-ios/scripts/xcparty
       when: on_fail
   - checkout-submodule:
-      name: mobile-metrics
+      at: mobile-metrics
   - run:
       name: Upload metrics to AWS
       command: |

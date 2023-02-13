@@ -5,7 +5,7 @@ steps:
   - mapbox/install-mbx-ci:
       platform: linux
   - checkout-submodule:
-      name: mobile-metrics
+      at: mobile-metrics
   - attach_workspace:
       at: Products
   - run: ls -l Products/

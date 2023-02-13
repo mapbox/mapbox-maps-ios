@@ -3,7 +3,6 @@ steps:
   - checkout
   - mapbox/add-mapbox-ssh-key
   - mapbox/install-mbx-ci
-  - checkout-maps-submodule
   - run:
       name: Install AWSCLI
       command: pip3 install awscli requests

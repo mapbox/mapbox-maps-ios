@@ -6,6 +6,7 @@ steps:
       skip-dependencies: true
   - install-gh
   - run: brew install taiki-e/tap/parse-changelog
+  - install-python-dependencies
   - run:
       name: Create draft release on GitHub
       command: ./scripts/release/create-github-draft-release.sh "$VERSION"

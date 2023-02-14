@@ -20,7 +20,7 @@ VERBOSE_LOGGER=${VERBOSE_LOGGER:-/dev/null}
 main() {
     step "Checkout source code at $VERSION"
     local worktree_path="$TMP_ROOT/.docs-source-code"
-    local worktree_script_dir="$worktree_path/scripts/doc-generation"
+    local worktree_script_dir="$worktree_path/mapbox-maps-ios/scripts/doc-generation"
     checkout_source_code "$worktree_path" "$VERSION"
 
 
@@ -31,7 +31,7 @@ main() {
 
     info "Build and parse"
     local jazzy_config_path="$worktree_script_dir/.jazzy.yaml"
-    run_jazzy "$gemfile_path" "$jazzy_config_path" "$worktree_path" "$DOCS_OUTPUT"
+    run_jazzy "$gemfile_path" "$jazzy_config_path" "$worktree_path/mapbox-maps-ios" "$DOCS_OUTPUT"
 
 
     step "Patch documentation to include external references"

@@ -15,18 +15,3 @@ public struct AnimationOwner: RawRepresentable, Equatable {
 
     internal static let defaultViewportTransition = AnimationOwner(rawValue: "com.mapbox.maps.viewport.defaultTransition")
 }
-
-/// Declares type of animations. Can be used to fine-grain cancellation filtering.
-public struct AnimationType: RawRepresentable, Equatable {
-
-    public let rawValue: String
-
-    public init(rawValue: String) {
-        self.rawValue = rawValue
-    }
-
-    public static let unspecified = AnimationType(rawValue: "com.mapbox.maps.animation.type.unspecified")
-
-    public static let deceleration = AnimationType(rawValue: "com.mapbox.maps.animation.type.deceleration")
-
-}

@@ -48,7 +48,7 @@ final class InterruptDecelerationGestureHandlerTests: XCTestCase {
         XCTAssertEqual(cameraAnimationsManager.cancelAnimationsOwnersTypesStub.invocations.count, 0)
     }
 
-    func testSimGes() {
+    func testSimultaniousGesturesRecognition() {
         let anotherRecognizer = MockTapGestureRecognizer()
 
         XCTAssertTrue(gestureHandler.gestureRecognizer(gestureRecognizer,

@@ -5,6 +5,7 @@ internal protocol CameraAnimatorsRunnerProtocol: AnyObject {
     func update()
     func cancelAnimations()
     func cancelAnimations(withOwners owners: [AnimationOwner])
+    func cancelAnimations(withOwners owners: [AnimationOwner], andTypes: [AnimationType])
     func add(_ animator: CameraAnimatorProtocol)
 }
 
@@ -53,6 +54,13 @@ internal final class CameraAnimatorsRunner: CameraAnimatorsRunnerProtocol {
 
     internal func cancelAnimations(withOwners owners: [AnimationOwner]) {
         for animator in allCameraAnimators.allObjects where owners.contains(animator.owner) {
+            animator.stopAnimation()
+        }
+    }
+
+    func cancelAnimations(withOwners owners: [AnimationOwner], andTypes types: [AnimationType]) {
+        for animator in allCameraAnimators.allObjects
+        where owners.contains(animator.owner) && types.contains(animator.animationType) {
             animator.stopAnimation()
         }
     }

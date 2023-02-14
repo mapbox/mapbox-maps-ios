@@ -3,9 +3,9 @@ import XCTest
 import Foundation
 
 final class MockAttributionDataSource: AttributionDataSource {
-
-    let attributionsStub = Stub<Void, [Attribution]>(defaultReturnValue: [])
-    func attributions() -> [Attribution] {
-        attributionsStub.call()
+    let loadAttributionsStub = Stub<(([Attribution]) -> Void), Void>()
+    func loadAttributions(completion: @escaping ([MapboxMaps.Attribution]) -> Void) {
+        loadAttributionsStub.call(with: completion)
+        completion([])
     }
 }

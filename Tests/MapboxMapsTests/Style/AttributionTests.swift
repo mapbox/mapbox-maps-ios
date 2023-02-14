@@ -10,20 +10,26 @@ class AttributionTests: XCTestCase {
   <a href=\"https://www.mapbox.com/about/maps/\" target=\"_blank\" title=\"Mapbox\" aria-label=\"Mapbox\" role=\"listitem\">&copy; Mapbox</a>
 <a href=\"https://www.openstreetmap.org/about/\" target=\"_blank\" title=\"OpenStreetMap\" aria-label=\"OpenStreetMap\" role=\"listitem\">&copy; OpenStreetMap</a>
 """
-        let attributions = Attribution.parse([attributionsHTML])
+        let parseExpectation = expectation(description: "Attributions are parsed")
 
-        guard attributions.count == 2 else {
-            XCTFail("Parsing should return 2 attributions")
-            return
+        Attribution.parse([attributionsHTML]) { attributions in
+            guard attributions.count == 2 else {
+                XCTFail("Parsing should return 2 attributions")
+                return
+            }
+
+            let attribution0 = attributions[0]
+            XCTAssertEqual(attribution0.title, "Mapbox")
+            XCTAssertEqual(attribution0.kind, .actionable(URL(string: "https://www.mapbox.com/about/maps/")!))
+
+            let attribution1 = attributions[1]
+            XCTAssertEqual(attribution1.title, "OpenStreetMap")
+            XCTAssertEqual(attribution1.kind, .actionable(URL(string: "https://www.openstreetmap.org/about/")!))
+
+            parseExpectation.fulfill()
         }
 
-        let attribution0 = attributions[0]
-        XCTAssertEqual(attribution0.title, "Mapbox")
-        XCTAssertEqual(attribution0.kind, .actionable(URL(string: "https://www.mapbox.com/about/maps/")!))
-
-        let attribution1 = attributions[1]
-        XCTAssertEqual(attribution1.title, "OpenStreetMap")
-        XCTAssertEqual(attribution1.kind, .actionable(URL(string: "https://www.openstreetmap.org/about/")!))
+        wait(for: [parseExpectation], timeout: 1)
     }
 
     func testFeedbackAttributionParsing() throws {
@@ -33,39 +39,54 @@ class AttributionTests: XCTestCase {
 <a class=\"mapbox-improve-map\" href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\" title=\"Attribution 2\" aria-label=\"Attribution 2\" role=\"listitem\">Attribution 2</a>
 <a class=\"mapbox-improve-map\" href=\"https://apps.mapbox.com/feedback/\" target=\"_blank\" title=\"Attribution 3\" aria-label=\"Attribution 3\" role=\"listitem\">Attribution 3</a>
 """
+        let parseExpectation = expectation(description: "Attributions are parsed")
 
-        let attributions = Attribution.parse([attributionsHTML])
+        Attribution.parse([attributionsHTML]) { attributions in
 
-        guard attributions.count == 4 else {
-            XCTFail("Parsing should return 4 attributions")
-            return
+            guard attributions.count == 4 else {
+                XCTFail("Parsing should return 4 attributions")
+                return
+            }
+
+            let attribution0 = attributions[0]
+            XCTAssertEqual(attribution0.title, "Improve this map")
+            XCTAssertEqual(attribution0.kind, .feedback)
+
+            let attribution1 = attributions[1]
+            XCTAssertEqual(attribution1.title, "Attribution 1")
+            XCTAssertEqual(attribution1.kind, .feedback)
+
+            let attribution2 = attributions[2]
+            XCTAssertEqual(attribution2.title, "Attribution 2")
+            XCTAssertEqual(attribution2.kind, .feedback)
+
+            let attribution3 = attributions[3]
+            XCTAssertEqual(attribution3.title, "Attribution 3")
+            XCTAssertEqual(attribution3.kind, .feedback)
+
+            parseExpectation.fulfill()
         }
 
-        let attribution0 = attributions[0]
-        XCTAssertEqual(attribution0.title, "Improve this map")
-        XCTAssertEqual(attribution0.kind, .feedback)
-
-        let attribution1 = attributions[1]
-        XCTAssertEqual(attribution1.title, "Attribution 1")
-        XCTAssertEqual(attribution1.kind, .feedback)
-
-        let attribution2 = attributions[2]
-        XCTAssertEqual(attribution2.title, "Attribution 2")
-        XCTAssertEqual(attribution2.kind, .feedback)
-
-        let attribution3 = attributions[3]
-        XCTAssertEqual(attribution3.title, "Attribution 3")
-        XCTAssertEqual(attribution3.kind, .feedback)
+        wait(for: [parseExpectation], timeout: 1)
     }
 
     func testPlainTextAttributionParsing() throws {
         let attributionString = String.randomAlphanumeric(withLength: 10).trimmingCharacters(in: .whitespacesAndNewlines)
+        let parseExpectation = expectation(description: "Attributions are parsed")
 
-        let attributions = Attribution.parse([attributionString])
+        Attribution.parse([attributionString]) { attributions in
 
-        let attribution = try XCTUnwrap(attributions.first)
-        XCTAssertEqual(attribution.title, attributionString)
-        XCTAssertEqual(attribution.kind, .nonActionable)
+            do {
+                let attribution = try XCTUnwrap(attributions.first)
+                XCTAssertEqual(attribution.title, attributionString)
+                XCTAssertEqual(attribution.kind, .nonActionable)
+            } catch {
+                XCTFail("Parsing should result in an attribution")
+            }
+            parseExpectation.fulfill()
+        }
+
+        wait(for: [parseExpectation], timeout: 1)
     }
 
     func testDuplicateAttributionParsing() {
@@ -73,34 +94,48 @@ class AttributionTests: XCTestCase {
   <a href=\"https://www.mapbox.com/about/maps/\" target=\"_blank\" title=\"Mapbox\" aria-label=\"Mapbox\" role=\"listitem\">&copy; Mapbox</a>
   <a href=\"https://www.mapbox.com/about/maps/\" target=\"_blank\" title=\"Mapbox\" aria-label=\"Mapbox\" role=\"listitem\">&copy; Mapbox</a>
 """
-        let attributions = Attribution.parse([attributionsHTML])
+        let parseExpectation = expectation(description: "Attributions are parsed")
 
-        guard attributions.count == 1 else {
-            XCTFail("Parsing should return 1 attribution")
-            return
+        Attribution.parse([attributionsHTML]) { attributions in
+
+            guard attributions.count == 1 else {
+                XCTFail("Parsing should return 1 attribution")
+                return
+            }
+
+            let attribution0 = attributions[0]
+            XCTAssertEqual(attribution0.title, "Mapbox")
+            XCTAssertEqual(attribution0.kind, .actionable(URL(string: "https://www.mapbox.com/about/maps/")!))
+
+            parseExpectation.fulfill()
         }
 
-        let attribution0 = attributions[0]
-        XCTAssertEqual(attribution0.title, "Mapbox")
-        XCTAssertEqual(attribution0.kind, .actionable(URL(string: "https://www.mapbox.com/about/maps/")!))
+        wait(for: [parseExpectation], timeout: 1)
     }
 
     func testAttributionAbbreviation() {
         let attributionsHTML = """
   <a href=\"https://www.mapbox.com/about/maps/\" target=\"_blank\" title=\"Mapbox\" aria-label=\"Mapbox\" role=\"listitem\">&copy; Mapbox</a> <a href=\"https://www.openstreetmap.org/about/\" target=\"_blank\" title=\"OpenStreetMap\" aria-label=\"OpenStreetMap\" role=\"listitem\">&copy; OpenStreetMap</a>
 """
-        let attributions = Attribution.parse([attributionsHTML])
+        let parseExpectation = expectation(description: "Attributions are parsed")
 
-        guard attributions.count == 2 else {
-            XCTFail("Parsing should return 2 attributions")
-            return
+        Attribution.parse([attributionsHTML]) { attributions in
+
+            guard attributions.count == 2 else {
+                XCTFail("Parsing should return 2 attributions")
+                return
+            }
+
+            let attribution0 = attributions[0]
+            XCTAssertEqual(attribution0.titleAbbreviation, "Mapbox")
+
+            let attribution1 = attributions[1]
+            XCTAssertEqual(attribution1.titleAbbreviation, "OSM")
+
+            parseExpectation.fulfill()
         }
 
-        let attribution0 = attributions[0]
-        XCTAssertEqual(attribution0.titleAbbreviation, "Mapbox")
-
-        let attribution1 = attributions[1]
-        XCTAssertEqual(attribution1.titleAbbreviation, "OSM")
+        wait(for: [parseExpectation], timeout: 1)
     }
 
     func testFeedbackSnapshotTitle() {

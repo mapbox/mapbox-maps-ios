@@ -58,6 +58,7 @@ public struct FillExtrusionLayer: Layer {
     public var fillExtrusionPattern: Value<ResolvedImage>?
 
     /// Transition options for `fillExtrusionPattern`.
+    @available(*, deprecated, message: "This property is deprecated and will be removed in the future. Setting this will have no effect.")
     public var fillExtrusionPatternTransition: StyleTransition?
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up (on the flat plane), respectively.
@@ -102,7 +103,6 @@ public struct FillExtrusionLayer: Layer {
         try paintContainer.encodeIfPresent(fillExtrusionOpacity, forKey: .fillExtrusionOpacity)
         try paintContainer.encodeIfPresent(fillExtrusionOpacityTransition, forKey: .fillExtrusionOpacityTransition)
         try paintContainer.encodeIfPresent(fillExtrusionPattern, forKey: .fillExtrusionPattern)
-        try paintContainer.encodeIfPresent(fillExtrusionPatternTransition, forKey: .fillExtrusionPatternTransition)
         try paintContainer.encodeIfPresent(fillExtrusionTranslate, forKey: .fillExtrusionTranslate)
         try paintContainer.encodeIfPresent(fillExtrusionTranslateTransition, forKey: .fillExtrusionTranslateTransition)
         try paintContainer.encodeIfPresent(fillExtrusionTranslateAnchor, forKey: .fillExtrusionTranslateAnchor)
@@ -136,7 +136,6 @@ public struct FillExtrusionLayer: Layer {
             fillExtrusionOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionOpacity)
             fillExtrusionOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionOpacityTransition)
             fillExtrusionPattern = try paintContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .fillExtrusionPattern)
-            fillExtrusionPatternTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionPatternTransition)
             fillExtrusionTranslate = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .fillExtrusionTranslate)
             fillExtrusionTranslateTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionTranslateTransition)
             fillExtrusionTranslateAnchor = try paintContainer.decodeIfPresent(Value<FillExtrusionTranslateAnchor>.self, forKey: .fillExtrusionTranslateAnchor)
@@ -178,7 +177,6 @@ public struct FillExtrusionLayer: Layer {
         case fillExtrusionOpacity = "fill-extrusion-opacity"
         case fillExtrusionOpacityTransition = "fill-extrusion-opacity-transition"
         case fillExtrusionPattern = "fill-extrusion-pattern"
-        case fillExtrusionPatternTransition = "fill-extrusion-pattern-transition"
         case fillExtrusionTranslate = "fill-extrusion-translate"
         case fillExtrusionTranslateTransition = "fill-extrusion-translate-transition"
         case fillExtrusionTranslateAnchor = "fill-extrusion-translate-anchor"

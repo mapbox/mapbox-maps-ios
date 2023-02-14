@@ -14,7 +14,8 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
         dataPathURL = try temporaryCacheDirectory()
 
         guard let root = rootViewController?.view else {
-            throw XCTSkip("No valid UIWindow or root view controller")
+            XCTFail("No valid UIWindow or root view controller")
+            return
         }
 
         rootView = root

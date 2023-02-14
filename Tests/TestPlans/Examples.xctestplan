@@ -18,7 +18,8 @@
       "containerPath" : "container:Examples.xcodeproj",
       "identifier" : "077C4EE9252F7E88007636F1",
       "name" : "Examples"
-    }
+    },
+    "testRepetitionMode" : "retryOnFailure"
   },
   "testTargets" : [
     {

@@ -34,6 +34,7 @@ public struct BackgroundLayer: Layer {
     public var backgroundPattern: Value<ResolvedImage>?
 
     /// Transition options for `backgroundPattern`.
+    @available(*, deprecated, message: "This property is deprecated and will be removed in the future. Setting this will have no effect.")
     public var backgroundPatternTransition: StyleTransition?
 
     public init(id: String) {
@@ -58,7 +59,6 @@ public struct BackgroundLayer: Layer {
         try paintContainer.encodeIfPresent(backgroundOpacity, forKey: .backgroundOpacity)
         try paintContainer.encodeIfPresent(backgroundOpacityTransition, forKey: .backgroundOpacityTransition)
         try paintContainer.encodeIfPresent(backgroundPattern, forKey: .backgroundPattern)
-        try paintContainer.encodeIfPresent(backgroundPatternTransition, forKey: .backgroundPatternTransition)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
         try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
@@ -80,7 +80,6 @@ public struct BackgroundLayer: Layer {
             backgroundOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .backgroundOpacity)
             backgroundOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .backgroundOpacityTransition)
             backgroundPattern = try paintContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .backgroundPattern)
-            backgroundPatternTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .backgroundPatternTransition)
         }
 
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
@@ -110,7 +109,6 @@ public struct BackgroundLayer: Layer {
         case backgroundOpacity = "background-opacity"
         case backgroundOpacityTransition = "background-opacity-transition"
         case backgroundPattern = "background-pattern"
-        case backgroundPatternTransition = "background-pattern-transition"
     }
 }
 

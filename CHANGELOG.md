@@ -4,6 +4,21 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Added basic signposts for performance profiling. To enable them, use `MAPBOX_MAPS_SIGNPOSTS_ENABLED` environment variable. ([#1818](https://github.com/mapbox/mapbox-maps-ios/pull/1818))
+* Fix build erros appearing when SDK distributed as a static library through Cocoapods. ([#1888](https://github.com/mapbox/mapbox-maps-ios/pull/1888))
+
+## 10.11.0 - February 8, 2023
+* Update to MapboxCoreMaps 10.11.1 and MapboxCommon 23.3.1. ([#1899](https://github.com/mapbox/mapbox-maps-ios/pull/1899))
+
+## 10.11.0-rc.1 - January 26, 2023
+
+* Improve stability of attribution parsing. ([#1849](https://github.com/mapbox/mapbox-maps-ios/pull/1849))
+* Enable `Expression` to be created without an operator so `clusterProperties` can support advanced use cases. ([#1855](https://github.com/mapbox/mapbox-maps-ios/pull/1855))
+* Update CoreMaps `10.11.0-rc.1` and CommonSDK `23.3.0-rc.1`. ([#1856](https://github.com/mapbox/mapbox-maps-ios/pull/1875))
+* Angle normalization function was improved to prevent map spinning on close angles. ([#1828](https://github.com/mapbox/mapbox-maps-ios/pull/1828))
+
+## 10.11.0-beta.1 - January 12, 2023
+
 * Reduce CPU usage/energy consumption whem map idling while showing user location. ([#1789](https://github.com/mapbox/mapbox-maps-ios/pull/1789))
 * Fix loading errors appearing when providing custom endpoint for `ResourceOptions.baseURL`. ([#1749](https://github.com/mapbox/mapbox-maps-ios/pull/1749))
 * Remove delegate requirement for annotation interaction. ([#1750](https://github.com/mapbox/mapbox-maps-ios/pull/1750))
@@ -16,7 +31,8 @@ Mapbox welcomes participation and contributions from everyone.
 * Update to MapboxCoreMaps 10.11.0-beta.1 and MapboxCommon 23.3.0-beta.1. ([#1842](https://github.com/mapbox/mapbox-maps-ios/pull/1842))
 
 ## 10.10.1 - December 20, 2022
-* [CarPlay] Fix map view permanently pausing when moving to window on foreground ([#1808])(https://github.com/mapbox/mapbox-maps-ios/pull/1808)
+
+* [CarPlay] Fix map view permanently pausing when moving to window on foreground ([#1808](https://github.com/mapbox/mapbox-maps-ios/pull/1808))
 
 ## 10.10.0 - December 8, 2022
 

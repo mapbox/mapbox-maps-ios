@@ -21,8 +21,15 @@
         }
       ]
     },
+    "environmentVariableEntries" : [
+      {
+        "key" : "MAPBOX_MAPS_SIGNPOSTS_ENABLED",
+        "value" : ""
+      }
+    ],
     "language" : "en",
-    "testExecutionOrdering" : "random"
+    "testExecutionOrdering" : "random",
+    "testRepetitionMode" : "retryOnFailure"
   },
   "testTargets" : [
     {
@@ -34,6 +41,7 @@
         "CircleLayerIntegrationTests",
         "DidIdleFailureIntegrationTest",
         "ExampleIntegrationTest",
+        "FeatureQueryingTest",
         "FeatureStateIntegrationTests",
         "FillExtrusionLayerIntegrationTests",
         "FillLayerIntegrationTests",
@@ -49,6 +57,7 @@
         "MapViewIntegrationTests",
         "MapViewRenderedSnapshotIntegrationTests",
         "MapboxMapIntegrationTests",
+        "MapboxMapsSnapshotTests",
         "MigrationGuideIntegrationTests",
         "ModelLayerIntegrationTests",
         "ObservableIntegrationTests",
@@ -63,6 +72,7 @@
         "SkyLayerIntegrationTests",
         "StyleIntegrationTests",
         "StyleLoadIntegrationTests",
+        "StyleLocalizationTests",
         "SymbolLayerIntegrationTests",
         "VectorSourceIntegrationTests"
       ],

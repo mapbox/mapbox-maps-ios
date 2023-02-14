@@ -161,7 +161,9 @@ class AttributionDialogTests: XCTestCase {
         let attribution = Attribution(title: String.randomASCII(withLength: 10), url: nil)
         window.rootViewController = viewController
         window.makeKeyAndVisible()
-        mockDataSource.attributionsStub.defaultReturnValue = [attribution]
+        mockDataSource.loadAttributionsStub.defaultSideEffect = { invocation in
+            invocation.parameters([attribution])
+        }
         mockDelegate.viewControllerForPresentingStub.defaultReturnValue = viewController
 
         attributionDialogManager.didTap(InfoButtonOrnament())
@@ -191,7 +193,9 @@ class AttributionDialogTests: XCTestCase {
 
         window.rootViewController = viewController
         window.makeKeyAndVisible()
-        mockDataSource.attributionsStub.defaultReturnValue = [attribution0, attribution1]
+        mockDataSource.loadAttributionsStub.defaultSideEffect = { invocation in
+            invocation.parameters([attribution0, attribution1])
+        }
         mockDelegate.viewControllerForPresentingStub.defaultReturnValue = viewController
 
         attributionDialogManager.didTap(InfoButtonOrnament())

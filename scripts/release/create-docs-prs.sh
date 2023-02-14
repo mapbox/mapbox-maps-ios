@@ -7,6 +7,8 @@ CLA_SIGNED_GITHUB_EMAIL="it-admin+mapboxci@mapbox.com"
 
 TMP_ROOT=$(mktemp -d)
 WORKTREE_TO_REMOVE=""
+STAGING_ONLY=false
+EXTRA_EMPTY_COMMIT=false
 cleanup() {
     if [[ -d $WORKTREE_TO_REMOVE ]]
     then
@@ -25,10 +27,13 @@ main() {
     # Check that version env exists
     [ -n "$VERSION" ]
     brew_install_if_needed jq
-    brew_install_if_needed gh
 
     step "Update mapbox/maps-ios@publisher-staging"
     maps_ios_upload_docs
+
+    # if STAGING_ONLY is set to true, then exit
+    [ "$STAGING_ONLY" = true ] && exit 0
+    brew_install_if_needed gh
 
     step "Open mapbox/maps-ios@publisher-production PR"
     maps_ios_production_docs_pr
@@ -43,9 +48,10 @@ main() {
 }
 
 maps_ios_upload_docs() {
-    info "Checkout publisher-staging worktree"
+    STAGING_BRANCH_NAME="publisher-staging"
+    info "Checkout $STAGING_BRANCH_NAME worktree"
     local staging_docs_path="$TMP_ROOT/docs-staging"
-    git worktree add "$staging_docs_path" "publisher-staging" --quiet
+    git worktree add "$staging_docs_path" "$STAGING_BRANCH_NAME" --quiet
     WORKTREE_TO_REMOVE="$staging_docs_path"
 
     git -C "$staging_docs_path" reset --hard origin/publisher-production --quiet
@@ -66,9 +72,20 @@ maps_ios_upload_docs() {
     info "Push"
     git push --force --quiet
 
-    VERSION_BRANCH_NAME="docs/$VERSION"
-    git checkout -b "$VERSION_BRANCH_NAME"
-    git push --set-upstream origin "$VERSION_BRANCH_NAME" --force --quiet
+    if [ "$STAGING_ONLY" = true ]; then
+        git push --force
+    else
+        VERSION_BRANCH_NAME="docs/$VERSION"
+        git checkout -b "$VERSION_BRANCH_NAME"
+        git push --set-upstream origin "$VERSION_BRANCH_NAME" --force --quiet
+    fi
+
+    if [ "$EXTRA_EMPTY_COMMIT" = true ]; then
+        info "Add empty commit to trigger CI"
+        sleep 10 # Avoid CI sometimes cancelling the "Trigger CI" build
+        git commit --allow-empty -m "Trigger CI" --quiet
+        git push --force --quiet
+    fi
 
     popd > /dev/null
 }
@@ -162,15 +179,21 @@ Usage:
         $0 -p docs_path
 
     -p  Path to the generated docs to upload
+    -s  To upload docs to staging only
+    -e  Push an extra empty commit to trigger CI
 HELP_USAGE
 }
 
-while getopts 'p:' flag; do
+while getopts 'p:se' flag; do
 case "${flag}" in
     p)  DOCS_PATH="$OPTARG"
-        if [[ -d $DOCS_PATH ]]; then
-            main
+        if [[ ! -d $DOCS_PATH ]]; then
+            exit 1
         fi
+        ;;
+    s)  STAGING_ONLY=true
+        ;;
+    e)  EXTRA_EMPTY_COMMIT=true
         ;;
     *) print_usage ;;
 esac
@@ -178,6 +201,7 @@ done
 
 if [ $OPTIND -eq 1 ]; then
     print_usage
+else
+    main
 fi
-
 exit 1

@@ -9,7 +9,8 @@ public final class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimator
         impl.owner
     }
 
-    public var animationType: AnimationType {
+    /// Type of the embeded animation
+    internal var animationType: AnimationType {
         impl.animationType
     }
 

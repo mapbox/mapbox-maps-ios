@@ -20,7 +20,7 @@ public final class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimator
     public let owner: AnimationOwner
 
     /// Type of the embeded animation
-    public let animationType: AnimationType
+    internal let animationType: AnimationType
 
     /// The animator's duration
     public let duration: TimeInterval

@@ -17,8 +17,6 @@ internal class InterruptDecelerationGestureHandler: GestureHandler {
 
         cameraAnimationsManager.cancelAnimations(withOwners: [.cameraAnimationsManager],
                                                  andTypes: [.deceleration])
-        delegate?.gestureBegan(for: .singleTap)
-        delegate?.gestureEnded(for: .singleTap, willAnimate: false)
     }
 }
 

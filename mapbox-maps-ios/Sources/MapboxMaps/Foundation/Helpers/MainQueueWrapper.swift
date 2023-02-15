@@ -1,10 +1,13 @@
 import Foundation
 import Dispatch
 
-internal protocol MainQueueProtocol: DispatchQueueProtocol { }
+@_spi(Package)
+public protocol MainQueueProtocol: DispatchQueueProtocol { }
 
-internal final class MainQueueWrapper: MainQueueProtocol {
-    func async(
+@_spi(Package)
+public final class MainQueueWrapper: MainQueueProtocol {
+    public init() {}
+    public func async(
         group: DispatchGroup?,
         qos: DispatchQoS,
         flags: DispatchWorkItemFlags,
@@ -13,7 +16,7 @@ internal final class MainQueueWrapper: MainQueueProtocol {
         DispatchQueue.main.async(group: group, qos: qos, flags: flags, execute: work)
     }
 
-    func async(execute workItem: DispatchWorkItem) {
+    public func async(execute workItem: DispatchWorkItem) {
         DispatchQueue.main.async(execute: workItem)
     }
 }

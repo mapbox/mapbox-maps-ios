@@ -1,6 +1,7 @@
-@testable import MapboxMaps
+@_spi(Package) @testable import MapboxMaps
 
 final class MockStyle: StyleProtocol {
+    @Stubbed var uri: StyleURI? = .streets
 
     struct AddLayerParams {
         var layer: Layer

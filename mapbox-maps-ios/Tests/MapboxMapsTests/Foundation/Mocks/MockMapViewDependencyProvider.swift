@@ -1,5 +1,5 @@
 import Foundation
-@testable import MapboxMaps
+@_spi(Package) @testable import MapboxMaps
 
 final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
     @Stubbed var notificationCenter: NotificationCenterProtocol = MockNotificationCenter()

@@ -1,0 +1,1 @@
+../../MapboxMapsTests/Foundation/Mocks/MockCancelable.swift

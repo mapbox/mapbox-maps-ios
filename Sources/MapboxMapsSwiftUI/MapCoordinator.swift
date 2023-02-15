@@ -1,7 +1,7 @@
 @_spi(Package) import MapboxMaps
 import SwiftUI
+import UIKit
 
-@_spi(Experimental)
 @available(iOS 13.0, *)
 public final class MapCoordinator {
     typealias CameraSetter = (CameraState) -> Void
@@ -11,41 +11,41 @@ public final class MapCoordinator {
     private var bag = Bag()
     private var queriesBag = Bag()
     private var setCamera: CameraSetter?
+    private var mapView: MapViewFacade?
+    private let mainQueue: MainQueueProtocol
 
-    init(setCamera: CameraSetter?) {
+    init(setCamera: CameraSetter?, mainQueue: MainQueueProtocol = MainQueueWrapper()) {
         self.setCamera = setCamera
+        self.mainQueue = mainQueue
     }
 
-    var mapView: MapView! {
-        didSet {
-            guard mapView != oldValue else {
-                return
-            }
-            bag.cancel()
+    func setMapView(_ mapView: MapViewFacade) {
+        guard self.mapView == nil else { return }
+        self.mapView = mapView
 
-            addGestureHandler(mapView.gestures.singleTapGestureRecognizer) { [weak self] gesture in
-                self?.onTapGesure(gesture)
-            }.addTo(bag)
+        addGestureHandler(mapView.gestures.singleTapGestureRecognizer) { [weak self] gesture in
+            self?.onTapGesure(gesture)
+        }.addTo(bag)
 
-            if let setCamera = setCamera {
-                mapView.mapboxMap.onEvery(event: .cameraChanged) { [weak self] _ in
-                    guard let self = self else { return }
-                    setCamera(self.mapView.cameraState)
-                }.addTo(bag)
-            }
-
-            mapView.mapboxMap.onEvery(event: .mapLoaded) { [weak self] _ in
-                guard let self = self else { return }
-                self.actions?.onMapLoaded?(self.mapView.mapboxMap)
+        if setCamera != nil {
+            mapView.mapboxMap.onEvery(event: .cameraChanged) { [weak self] _ in
+                self?.syncCamera()
             }.addTo(bag)
         }
+
+        mapView.mapboxMap.onEvery(event: .mapLoaded) { [weak self] _ in
+            guard let self = self,
+                  let mapboxMap = self.mapView?.mapboxMap as? MapboxMap else { return }
+            self.actions?.onMapLoaded?(mapboxMap)
+        }.addTo(bag)
     }
 
     func update(camera: CameraState?, deps: MapDependencies, colorScheme: ColorScheme) {
-        let mapboxMap = mapView.mapboxMap!
+        guard var mapView = mapView else { return }
+        let mapboxMap = mapView.mapboxMap
 
-        // This is camera state which is inspected after current update loop.
-        // It camera changed by method other than setCamera, we will propogate that change
+        // This is camera state which is expected after current update loop.
+        // If the camera changed by method other than setCamera, we will propogate that change
         // to the source of truth (user's State).
         var expectedCamera: CameraState?
 
@@ -56,6 +56,8 @@ public final class MapCoordinator {
             }
 
             wrapError {
+                // The camera bounds update is known to change camera if
+                // the current camera state is out of desired bounds.
                 try mapboxMap.setCameraBounds(with: deps.cameraBounds)
             }
 
@@ -65,29 +67,30 @@ public final class MapCoordinator {
             assign(mapOptions.orientation, mapboxMap.setNorthOrientation, value: deps.orientation)
         }
 
-        assign(mapView, \.mapboxMap.style.uri, value: deps.styleURIs.effectiveURI(with: colorScheme))
-        assign(mapView, \.gestures.options, value: deps.getstureOptions)
+        assign(&mapView, \.style.uri, value: deps.styleURIs.effectiveURI(with: colorScheme))
+        assign(&mapView, \.gestures.options, value: deps.getstureOptions)
 
         actions = deps.actions
 
         if let expectedCamera = expectedCamera, expectedCamera != mapboxMap.cameraState {
             // The camera state has changed after setting the expected state.
-            DispatchQueue.main.async { [weak self] in
+            mainQueue.async { [weak self] in
                 self?.syncCamera()
             }
         }
     }
 
     private func syncCamera() {
+        guard let mapView = mapView else { return }
         setCamera?(mapView.mapboxMap.cameraState)
     }
 
     private func onTapGesure(_ gesture: UIGestureRecognizer) {
         queriesBag.cancel()
-        guard let actions = actions else {
+        guard let mapView = mapView, let actions = actions else {
             return
         }
-        let point = gesture.location(in: mapView)
+        let point = mapView.locationForGesture(gesture)
         let coordinate = mapView.mapboxMap.coordinate(for: point)
         actions.onMapTapGesture?(point)
 
@@ -123,6 +126,6 @@ private func assign<T: Equatable>(_ oldValue: T, _ setter: (T) throws -> Void, v
     }
 }
 
-private func assign<U: AnyObject, T: Equatable>(_ object: U, _ keyPath: ReferenceWritableKeyPath<U, T>, value: T) {
+private func assign<U, T: Equatable>(_ object: inout U, _ keyPath: WritableKeyPath<U, T>, value: T) {
     assign(object[keyPath: keyPath], { object[keyPath: keyPath] = $0 }, value: value)
 }

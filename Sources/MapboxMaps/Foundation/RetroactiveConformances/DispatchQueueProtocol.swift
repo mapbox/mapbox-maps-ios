@@ -15,10 +15,12 @@ public protocol DispatchQueueProtocol: AnyObject {
 
 @_spi(Package)
 extension DispatchQueueProtocol {
+    /// :nodoc:
     public func async(execute work: @escaping @convention(block) () -> Void) {
         async(group: nil, qos: .unspecified, flags: [], execute: work)
     }
 
+    /// :nodoc:
     public func async(
         qos: DispatchQoS,
         execute work: @escaping @convention(block) () -> Void

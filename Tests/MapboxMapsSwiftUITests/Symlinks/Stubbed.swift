@@ -1,0 +1,1 @@
+../../MapboxMapsTests/Helpers/Stubbed.swift

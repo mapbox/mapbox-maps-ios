@@ -51,6 +51,7 @@ public final class Style {
 
     private let sourceManager: StyleSourceManagerProtocol
     private let _styleManager: StyleManagerProtocol
+    /// :nodoc:
     public weak var styleManager: StyleManager! {
         _styleManager.asStyleManager()
     }

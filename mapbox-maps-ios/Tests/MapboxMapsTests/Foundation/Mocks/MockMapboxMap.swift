@@ -81,6 +81,7 @@ final class MockMapboxMap: MapboxMapProtocol {
             handler(MapEvent<Payload>(event: Event(type: event.name, data: data)))
         }
     }
+
     func simulateEvent(event: MapEvents.Event<NoPayload>) {
         simulateEvent(event: event, data: Void())
     }
@@ -105,9 +106,14 @@ final class MockMapboxMap: MapboxMapProtocol {
         endGestureStub.call()
     }
 
-    let setViewAnnotationPositionsUpdateListenerStub = Stub<ViewAnnotationPositionsUpdateListener?, Void>()
-    func setViewAnnotationPositionsUpdateListener(_ listener: ViewAnnotationPositionsUpdateListener?) {
-        setViewAnnotationPositionsUpdateListenerStub.call(with: listener)
+    let setViewAnnotationPositionsUpdateCallbackStub = Stub<ViewAnnotationPositionsUpdateCallback?, Void>()
+
+    func setViewAnnotationPositionsUpdateCallback(_ callback: ViewAnnotationPositionsUpdateCallback?) {
+        setViewAnnotationPositionsUpdateCallbackStub.call(with: callback)
+    }
+
+    func simulateAnnotationPositionsUpdate(_ positions: [ViewAnnotationPositionDescriptor]) {
+        setViewAnnotationPositionsUpdateCallbackStub.invocations.last?.parameters?(positions)
     }
 
     struct ViewAnnotationModificationOptions: Equatable {

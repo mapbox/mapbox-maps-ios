@@ -1,0 +1,1 @@
+../../MapboxMapsTests/Helpers/Random/CLLocationCoordinate2D+Random.swift

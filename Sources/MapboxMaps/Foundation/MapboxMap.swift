@@ -29,7 +29,7 @@ public protocol MapboxMapProtocol: AnyObject {
     @discardableResult
     func queryRenderedFeatures(with point: CGPoint, options: RenderedQueryOptions?, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) -> Cancelable
     // View annotation management
-    func setViewAnnotationPositionsUpdateListener(_ listener: ViewAnnotationPositionsUpdateListener?)
+    func setViewAnnotationPositionsUpdateCallback(_ callback: ViewAnnotationPositionsUpdateCallback?)
     func addViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws
     func updateViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws
     func removeViewAnnotation(withId id: String) throws
@@ -336,6 +336,7 @@ public final class MapboxMap {
     /// Set the map north orientation
     ///
     /// - Parameter northOrientation: The map north orientation to set
+    @_spi(Package)
     public func setNorthOrientation(northOrientation: NorthOrientation) {
         __map.setNorthOrientationFor(northOrientation)
     }
@@ -343,6 +344,7 @@ public final class MapboxMap {
     /// Set the map constrain mode
     ///
     /// - Parameter constrainMode: The map constraint mode to set
+    @_spi(Package)
     public func setConstrainMode(_ constrainMode: ConstrainMode) {
         __map.setConstrainModeFor(constrainMode)
     }
@@ -350,6 +352,7 @@ public final class MapboxMap {
     /// Set the map viewport mode
     ///
     /// - Parameter viewportMode: The map viewport mode to set
+    @_spi(Package)
     public func setViewportMode(_ viewportMode: ViewportMode) {
         __map.setViewportModeFor(viewportMode)
     }
@@ -1124,8 +1127,10 @@ extension MapboxMap {
 
     /// :nodoc:
     @_spi(Package)
-    public func setViewAnnotationPositionsUpdateListener(_ listener: ViewAnnotationPositionsUpdateListener?) {
-        __map.setViewAnnotationPositionsUpdateListenerFor(listener)
+    public func setViewAnnotationPositionsUpdateCallback(_ callback: ViewAnnotationPositionsUpdateCallback?) {
+        __map.setViewAnnotationPositionsUpdateListenerFor(callback.map {
+            ViewAnnotationPositionsUpdateListenerImpl(callback: $0)
+        })
     }
 
     /// :nodoc:

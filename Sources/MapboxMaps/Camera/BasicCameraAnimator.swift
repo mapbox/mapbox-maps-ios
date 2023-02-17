@@ -9,6 +9,11 @@ public final class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimator
         impl.owner
     }
 
+    /// Type of the embeded animation
+    internal var animationType: AnimationType {
+        impl.animationType
+    }
+
     internal weak var delegate: CameraAnimatorDelegate?
 
     /// Defines the transition that will occur to the `CameraOptions` of the renderer due to this animator

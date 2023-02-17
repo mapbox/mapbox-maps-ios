@@ -122,6 +122,7 @@ public final class GestureManager: GestureHandlerDelegate {
     private let quickZoomGestureHandler: FocusableGestureHandlerProtocol
     private let singleTapGestureHandler: GestureHandler
     private let anyTouchGestureHandler: GestureHandler
+    private let interruptDecelerationGestureHandler: GestureHandler
     private let mapboxMap: MapboxMapProtocol
 
     internal init(panGestureHandler: PanGestureHandlerProtocol,
@@ -133,6 +134,7 @@ public final class GestureManager: GestureHandlerDelegate {
                   quickZoomGestureHandler: FocusableGestureHandlerProtocol,
                   singleTapGestureHandler: GestureHandler,
                   anyTouchGestureHandler: GestureHandler,
+                  interruptDecelerationGestureHandler: GestureHandler,
                   mapboxMap: MapboxMapProtocol) {
         self.panGestureHandler = panGestureHandler
         self.pinchGestureHandler = pinchGestureHandler
@@ -143,6 +145,7 @@ public final class GestureManager: GestureHandlerDelegate {
         self.singleTapGestureHandler = singleTapGestureHandler
         self.anyTouchGestureHandler = anyTouchGestureHandler
         self.rotateGestureHandler = rotateGestureHandler
+        self.interruptDecelerationGestureHandler = interruptDecelerationGestureHandler
         self.mapboxMap = mapboxMap
 
         panGestureHandler.delegate = self

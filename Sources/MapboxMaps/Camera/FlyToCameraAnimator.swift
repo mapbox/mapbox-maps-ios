@@ -19,6 +19,9 @@ public final class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimator
     /// The animator's owner
     public let owner: AnimationOwner
 
+    /// Type of the embeded animation
+    internal let animationType: AnimationType
+
     /// The animator's duration
     public let duration: TimeInterval
 
@@ -63,6 +66,7 @@ public final class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimator
 
     internal init(toCamera: CameraOptions,
                   owner: AnimationOwner,
+                  type: AnimationType = .unspecified,
                   duration: TimeInterval? = nil,
                   mapboxMap: MapboxMapProtocol,
                   mainQueue: MainQueueProtocol,
@@ -79,6 +83,7 @@ public final class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimator
         self.mapboxMap = mapboxMap
         self.mainQueue = mainQueue
         self.owner = owner
+        self.animationType = type
         self.finalCameraOptions = toCamera
         self.duration = duration ?? flyToInterpolator.duration()
         self.dateProvider = dateProvider

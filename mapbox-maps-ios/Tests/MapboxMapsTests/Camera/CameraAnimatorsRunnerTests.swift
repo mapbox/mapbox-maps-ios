@@ -155,11 +155,9 @@ final class CameraAnimatorsRunnerTests: XCTestCase {
     }
 
     func testCancelAnimationWithSingleOwnerAndSingleType() {
-        let owner = AnimationOwner.random()
-        let anotherOwner = AnimationOwner.random()
-        let thirdOwner = AnimationOwner.random()
-        XCTAssertNotEqual(owner, anotherOwner)
-        XCTAssertNotEqual(owner, thirdOwner)
+        let owner = AnimationOwner(rawValue: "first-owner")
+        let anotherOwner = AnimationOwner(rawValue: "second-owner")
+        let thirdOwner = AnimationOwner(rawValue: "third-owner")
 
         let makeAnimator = { (owner: AnimationOwner, animationType: AnimationType) -> MockCameraAnimator in
             let decelerationAnimator = MockCameraAnimator()
@@ -186,11 +184,9 @@ final class CameraAnimatorsRunnerTests: XCTestCase {
     }
 
     func testCancelAnimationWithMultipleOwnerAndMultipleType() {
-        let owner = AnimationOwner.random()
-        let anotherOwner = AnimationOwner.random()
-        let thirdOwner = AnimationOwner.random()
-        XCTAssertNotEqual(owner, anotherOwner)
-        XCTAssertNotEqual(owner, thirdOwner)
+        let owner = AnimationOwner(rawValue: "first-owner")
+        let anotherOwner = AnimationOwner(rawValue: "second-owner")
+        let thirdOwner = AnimationOwner(rawValue: "third-owner")
 
         let makeAnimator = { (owner: AnimationOwner, animationType: AnimationType) -> MockCameraAnimator in
             let decelerationAnimator = MockCameraAnimator()

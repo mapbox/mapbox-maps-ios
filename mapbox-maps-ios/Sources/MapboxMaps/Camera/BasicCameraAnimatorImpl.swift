@@ -8,6 +8,7 @@ internal protocol BasicCameraAnimatorDelegate: AnyObject {
 internal protocol BasicCameraAnimatorProtocol: AnyObject {
     var delegate: BasicCameraAnimatorDelegate? { get set }
     var owner: AnimationOwner { get }
+    var animationType: AnimationType { get }
     var transition: CameraTransition? { get }
     var state: UIViewAnimatingState { get }
     var isRunning: Bool { get }
@@ -37,6 +38,9 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
 
     /// The animator's owner.
     internal let owner: AnimationOwner
+
+    /// Type of the embeded animation
+    internal var animationType: AnimationType
 
     /// The `CameraView` owned by this animator
     private let cameraView: CameraView
@@ -110,11 +114,13 @@ internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
     // MARK: Initializer
     internal init(propertyAnimator: UIViewPropertyAnimator,
                   owner: AnimationOwner,
+                  type: AnimationType = .unspecified,
                   mapboxMap: MapboxMapProtocol,
                   mainQueue: MainQueueProtocol,
                   cameraView: CameraView) {
         self.propertyAnimator = propertyAnimator
         self.owner = owner
+        self.animationType = type
         self.mapboxMap = mapboxMap
         self.mainQueue = mainQueue
         self.cameraView = cameraView

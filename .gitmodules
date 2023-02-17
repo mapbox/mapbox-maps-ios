@@ -10,3 +10,6 @@
 [submodule "mapbox-maps-ios-private"]
 	path = mapbox-maps-ios-private
 	url = git@github.com:mapbox/mapbox-maps-ios-private.git
+[submodule "mapbox-maps-ios/scripts/doc-generation/jazzy-theme"]
+	path = mapbox-maps-ios/scripts/doc-generation/jazzy-theme
+	url = https://github.com/mapbox/jazzy-theme.git

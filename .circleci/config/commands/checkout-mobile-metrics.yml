@@ -1,4 +1,0 @@
-steps:
-  - run:
-      name: Checkout Mobile Metrics repository
-      command: git submodule update --init mobile-metrics

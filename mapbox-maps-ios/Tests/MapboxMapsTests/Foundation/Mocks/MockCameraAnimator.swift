@@ -16,6 +16,8 @@ final class MockCameraAnimator: NSObject, CameraAnimatorProtocol {
 
     @Stubbed var owner: AnimationOwner = .random()
 
+    @Stubbed var animationType: AnimationType = .unspecified
+
     @Stubbed var delegate: CameraAnimatorDelegate?
 
     let addCompletionStub = Stub<AnimationCompletion, Void>()

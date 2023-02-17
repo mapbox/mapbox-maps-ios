@@ -63,6 +63,7 @@ targets:
     platform: iOS
     settings:
       SKIP_INSTALL: NO
+      INFOPLIST_FILE: "build/${PROJECT}/Apps/Examples/Examples/Info.plist"
     scheme:
       testTargets:
         - ExamplesTests
@@ -133,6 +134,7 @@ targetTemplates:
       MACH_O_TYPE: mh_dylib
       DEFINES_MODULE: "YES"
       PRODUCT_NAME: $(TARGET_NAME:c99extidentifier)
+      INFOPLIST_FILE: "build/${PROJECT}/Sources/${target_name}/Info.plist"
     sources:
       - path: "build/${PROJECT}/Sources/${target_name}/"
 projectReferences:

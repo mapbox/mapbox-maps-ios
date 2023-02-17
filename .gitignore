@@ -1,5 +1,9 @@
-xcuserdata
 .DS_Store
+/build
+.build
+/Packages
+xcuserdata
+developer.xcconfig
 
 codegen/annotation-generator/generate-annotation-code.list
 codegen/style-generator/generate-style-code.list

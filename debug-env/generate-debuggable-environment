@@ -10,8 +10,6 @@ def print_phase(phase: str):
 
 def main():
     parser = argparse.ArgumentParser(description='Generate project to build Maps SDK dependencies from sources.')
-    parser.add_argument('--commit', default="main", type=str,
-                        help='commit to use for Mapbox Maps iOS')
     parser.add_argument('--gl-native-commit', default=None,
                         type=str, help='commit to use for GL Native Internal')
     parser.add_argument('--common-commit', default=None,
@@ -24,28 +22,29 @@ def main():
     parser.add_argument('--stable', action='store_true',
                         help='use dependencies from the last release')
     parser.add_argument('--private-commit', type=str,
-                        help='commit to use for private version of Mapbox Maps iOS')
+                        help='commit to use for private version of Mapbox Maps iOS. If specified, the private repo will be checked out instead of local public subtree.')
 
     parser.add_argument('--force-relative-paths', action='store_true', help="Replace absolute paths with relative paths in the generated project file. Experimental.")
 
     args = parser.parse_args()
-    project = "mapbox-maps-ios-private" if args.private_commit else "mapbox-maps-ios"
-    project_commit = args.private_commit if args.private_commit else args.commit
 
-    # Enter script folder
+    # Enter the script folder
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
-
+    # Enter the build folder
     if not os.path.exists("build"):
         os.mkdir("build")
     os.chdir("build")
 
-
-    print_phase(f"Checkout Mapbox Maps iOS ({project}@{project_commit})")
-
-    checkout_repo(project, project_commit)
+    if args.private_commit:
+        maps_path = "mapbox-maps-ios-private"
+        print_phase(f"Checkout Private Mapbox Maps iOS ({maps_path}@{args.private_commit})")
+        checkout_repo(maps_path, args.private_commit)
+    else:
+        maps_path = "../../mapbox-maps-ios"
+        print_phase(f"Using Public Mapbox Maps iOS from subtree")
 
     if args.stable:
-        with open(f"{project}/scripts/release/packager/versions.json") as f:
+        with open(f"{maps_path}/scripts/release/packager/versions.json") as f:
             versions = json.load(f)
 
         if args.gl_native_commit is None:
@@ -128,13 +127,13 @@ def main():
 
     os.system(f"swift run --package-path tools/PatchGLNativeXCProject patch-cmake-xcproject build/mapbox-gl-native-internal/build/ios/Mapbox\ GL\ Native.xcodeproj {patch_flags}")
 
-    print_phase(f"Create {project}/developer.xcconfig")
-    with open(f"build/{project}/developer.xcconfig", "w") as f:
+    print_phase(f"Create {maps_path}/developer.xcconfig")
+    with open(f"build/{maps_path}/developer.xcconfig", "w") as f:
         f.write("SWIFT_TREAT_WARNINGS_AS_ERRORS[config=Release] = NO")
 
     # Generate Xcode projects
     print_phase("Generate Xcode projects")
-    os.system(f"PROJECT={project} xcodegen")
+    os.system(f"PROJECT={maps_path} xcodegen")
 
 #   # Open the resulting project
     print_phase("Open Xcode project")

@@ -154,6 +154,68 @@ final class CameraAnimatorsRunnerTests: XCTestCase {
         XCTAssertEqual(animators[10].cancelStub.invocations.count, 0)
     }
 
+    func testCancelAnimationWithSingleOwnerAndSingleType() {
+        let owner = AnimationOwner.random()
+        let anotherOwner = AnimationOwner.random()
+        let thirdOwner = AnimationOwner.random()
+        XCTAssertNotEqual(owner, anotherOwner)
+        XCTAssertNotEqual(owner, thirdOwner)
+
+        let makeAnimator = { (owner: AnimationOwner, animationType: AnimationType) -> MockCameraAnimator in
+            let decelerationAnimator = MockCameraAnimator()
+            decelerationAnimator.state = .random()
+            decelerationAnimator.animationType = animationType
+            decelerationAnimator.owner = owner
+            return decelerationAnimator
+        }
+
+        let decelerationAnimator = makeAnimator(owner, .deceleration)
+        let decelerationAnimatorOtherOwner = makeAnimator(anotherOwner, .deceleration)
+        let unspecifiedAnimator = makeAnimator(owner, .unspecified)
+        let unspecifiedAnimatorThirdOwner = makeAnimator(thirdOwner, .unspecified)
+
+        [decelerationAnimator, decelerationAnimatorOtherOwner, unspecifiedAnimator, unspecifiedAnimatorThirdOwner]
+            .forEach(cameraAnimatorsRunner.add)
+
+        cameraAnimatorsRunner.cancelAnimations(withOwners: [owner], andTypes: [.deceleration])
+
+        XCTAssertEqual(decelerationAnimator.stopAnimationStub.invocations.count, 1)
+        XCTAssertEqual(decelerationAnimatorOtherOwner.stopAnimationStub.invocations.count, 0)
+        XCTAssertEqual(unspecifiedAnimator.stopAnimationStub.invocations.count, 0)
+        XCTAssertEqual(unspecifiedAnimatorThirdOwner.stopAnimationStub.invocations.count, 0)
+    }
+
+    func testCancelAnimationWithMultipleOwnerAndMultipleType() {
+        let owner = AnimationOwner.random()
+        let anotherOwner = AnimationOwner.random()
+        let thirdOwner = AnimationOwner.random()
+        XCTAssertNotEqual(owner, anotherOwner)
+        XCTAssertNotEqual(owner, thirdOwner)
+
+        let makeAnimator = { (owner: AnimationOwner, animationType: AnimationType) -> MockCameraAnimator in
+            let decelerationAnimator = MockCameraAnimator()
+            decelerationAnimator.state = .random()
+            decelerationAnimator.animationType = animationType
+            decelerationAnimator.owner = owner
+            return decelerationAnimator
+        }
+
+        let decelerationAnimator = makeAnimator(owner, .deceleration)
+        let decelerationAnimatorOtherOwner = makeAnimator(anotherOwner, .deceleration)
+        let unspecifiedAnimator = makeAnimator(owner, .unspecified)
+        let unspecifiedAnimatorThirdOwner = makeAnimator(thirdOwner, .unspecified)
+
+        [decelerationAnimator, decelerationAnimatorOtherOwner, unspecifiedAnimator, unspecifiedAnimatorThirdOwner]
+            .forEach(cameraAnimatorsRunner.add)
+
+        cameraAnimatorsRunner.cancelAnimations(withOwners: [owner, anotherOwner], andTypes: [.deceleration, .unspecified])
+
+        XCTAssertEqual(decelerationAnimator.stopAnimationStub.invocations.count, 1)
+        XCTAssertEqual(decelerationAnimatorOtherOwner.stopAnimationStub.invocations.count, 1)
+        XCTAssertEqual(unspecifiedAnimator.stopAnimationStub.invocations.count, 1)
+        XCTAssertEqual(unspecifiedAnimatorThirdOwner.stopAnimationStub.invocations.count, 0)
+    }
+
     func testCameraAnimatorDelegate() {
         let animator1 = MockCameraAnimator()
         let animator2 = MockCameraAnimator()

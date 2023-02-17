@@ -194,6 +194,17 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             cameraAnimatorsRunnerEnablable: gesturesCameraAnimatorsRunnerEnablable)
     }
 
+    private func makeInterruptDecelerationGestureHandler(view: UIView,
+                                                         cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
+        let gestureRecognizer = TouchBeganGestureRecognizer()
+        gestureRecognizer.cancelsTouchesInView = false
+        gestureRecognizer.delaysTouchesEnded = false
+        view.addGestureRecognizer(gestureRecognizer)
+
+        return InterruptDecelerationGestureHandler(gestureRecognizer: gestureRecognizer,
+                                                   cameraAnimationsManager: cameraAnimationsManager)
+    }
+
     internal func makeGestureManager(view: UIView,
                                      mapboxMap: MapboxMapProtocol,
                                      cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager {
@@ -224,6 +235,9 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                 view: view,
                 cameraAnimationsManager: cameraAnimationsManager),
             anyTouchGestureHandler: makeAnyTouchGestureHandler(view: view),
+            interruptDecelerationGestureHandler: makeInterruptDecelerationGestureHandler(
+                view: view,
+                cameraAnimationsManager: cameraAnimationsManager),
             mapboxMap: mapboxMap)
     }
 

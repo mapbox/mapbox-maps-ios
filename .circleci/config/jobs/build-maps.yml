@@ -8,6 +8,5 @@ steps:
   - mapbox/add-mapbox-netrc
   - mapbox/add-mapbox-filetoken
   - mapbox/install-mbx-ci
-  - checkout-maps-submodule
   - build-maps-xcframework:
       upload-size-metrics: << parameters.upload-size-metrics >>

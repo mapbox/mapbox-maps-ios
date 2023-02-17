@@ -107,14 +107,23 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
             "sum": sumExpression
         ]
 
+        // If a feature has the point_count property then prepend "Count:" and display the sum of hydrants in the cluster
+        // The sum property is added here for demonstration, you can use the built-in "point_count"
+        // property instead: Exp(.get) {"point_count"}
+        let textFieldExpression = Exp(.switchCase) {
+            Exp(.has) { "point_count" }
+            Exp(.concat) {
+                Exp(.string) { "Count:\n" }
+                Exp(.get) {"sum"}
+            }
+            Exp(.string) { "" }
+        }
+
         // Select the options for clustering and pass them to the PointAnnotationManager to display
         let clusterOptions = ClusterOptions(circleRadius: .expression(circleRadiusExpression),
                                             circleColor: .expression(circleColorExpression),
                                             textColor: .constant(StyleColor(.black)),
-                                            textField: .expression(Exp(.concat) {
-                                                Exp(.string) { "Count:\n" }
-                                                Exp(.get) {"sum"} // alternatively, you can use the built-in "point_count" property: Exp(.get) {"point_count"}
-                                            }),
+                                            textField: .expression(textFieldExpression),
                                             clusterRadius: 75,
                                             clusterProperties: clusterProperties)
         let pointAnnotationManager = mapView.annotations.makePointAnnotationManager(id: clusterLayerID, clusterOptions: clusterOptions)

@@ -42,6 +42,9 @@ final class PolygonAnnotationExample: UIViewController, ExampleProtocol {
         polygonAnnotation.fillColor = StyleColor(.red)
         polygonAnnotation.fillOpacity = 0.8
 
+        // Enable the polygon annotation to be dragged
+        polygonAnnotation.isDraggable = true
+
         // Add the polygon annotation to the manager
         polygonAnnotationManager.annotations = [polygonAnnotation]
     }

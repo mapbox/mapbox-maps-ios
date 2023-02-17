@@ -44,7 +44,6 @@ jobs:
       requires:
         - build-baseline-sdk
         - build-dynamic
-        - release-precheck
   - create-registry-pr:
       context:
         - Slack Orb
@@ -53,11 +52,9 @@ jobs:
         - build-docs
         - build-studio-preview
         - check-api-compatibility
-        - release-precheck
   - wait-registry-pr:
       requires:
         - create-registry-pr
-        - release-precheck
       type: approval
   - check-registry:
       context:
@@ -65,13 +62,11 @@ jobs:
         - SDK Registry Token
       requires:
         - wait-registry-pr
-        - release-precheck
   - create-docs-prs:
       context:
         - Slack Orb
       requires:
         - check-registry
-        - release-precheck
   - update-examples:
       context:
         - Slack Orb
@@ -81,21 +76,18 @@ jobs:
         - Maps SDK/Public Mapbox Token
       requires:
         - check-registry
-        - release-precheck
   - publish-podspec:
       context:
         - Slack Orb
         - CocoaPods trunk token
       requires:
         - check-registry
-        - release-precheck
   - validate-integrations:
       context:
         - Slack Orb
         - SDK Registry Token
       requires:
         - publish-podspec
-        - release-precheck
   - create-draft-release:
       context:
         - Slack Orb
@@ -103,4 +95,3 @@ jobs:
         - create-docs-prs
         - update-examples
         - validate-integrations
-        - release-precheck

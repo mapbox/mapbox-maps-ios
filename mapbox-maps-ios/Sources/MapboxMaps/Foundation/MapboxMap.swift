@@ -5,12 +5,18 @@ import UIKit
 @_implementationOnly import MapboxCoreMaps_Private
 import Turf
 
-internal protocol MapboxMapProtocol: AnyObject {
-    var size: CGSize { get }
+@_spi(Package)
+public protocol MapboxMapProtocol: AnyObject {
     var cameraBounds: CameraBounds { get }
     var cameraState: CameraState { get }
+    var size: CGSize { get }
     var anchor: CGPoint { get }
+    var options: MapOptions { get }
     func setCamera(to cameraOptions: CameraOptions)
+    func setCameraBounds(with options: CameraBoundsOptions) throws
+    func setNorthOrientation(northOrientation: NorthOrientation)
+    func setConstrainMode(_ constrainMode: ConstrainMode)
+    func setViewportMode(_ viewportMode: ViewportMode)
     func dragStart(for point: CGPoint)
     func dragCameraOptions(from: CGPoint, to: CGPoint) -> CameraOptions
     func dragEnd()
@@ -20,8 +26,10 @@ internal protocol MapboxMapProtocol: AnyObject {
     func endGesture()
     @discardableResult
     func onEvery<Payload>(event eventType: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable
+    @discardableResult
+    func queryRenderedFeatures(with point: CGPoint, options: RenderedQueryOptions?, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) -> Cancelable
     // View annotation management
-    func setViewAnnotationPositionsUpdateListener(_ listener: ViewAnnotationPositionsUpdateListener?)
+    func setViewAnnotationPositionsUpdateCallback(_ callback: ViewAnnotationPositionsUpdateCallback?)
     func addViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws
     func updateViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws
     func removeViewAnnotation(withId id: String) throws
@@ -40,7 +48,7 @@ internal protocol MapboxMapProtocol: AnyObject {
 /// and querying rendered features. Obtain the MapboxMap instance for a `MapView` via MapView.mapboxMap.
 ///
 /// - Important: MapboxMap should only be used from the main thread.
-public final class MapboxMap: MapboxMapProtocol {
+public final class MapboxMap {
     /// The underlying renderer object responsible for rendering the map
     private let __map: Map
 
@@ -287,7 +295,8 @@ public final class MapboxMap: MapboxMapProtocol {
     }
 
     /// Gets the size of the map in points
-    internal var size: CGSize {
+    @_spi(Package)
+    public var size: CGSize {
         get {
             CGSize(__map.getSize())
         }
@@ -572,7 +581,8 @@ public final class MapboxMap: MapboxMapProtocol {
     }
 
     /// The map's current anchor, calculated after applying padding (if it exists)
-    internal var anchor: CGPoint {
+    @_spi(Package)
+    public var anchor: CGPoint {
         let rect = CGRect(origin: .zero, size: size).inset(by: cameraState.padding)
         return CGPoint(x: rect.midX, y: rect.midY)
     }
@@ -646,7 +656,9 @@ public final class MapboxMap: MapboxMapProtocol {
         __map.dragEnd()
     }
 
-    internal func pointIsAboveHorizon(_ point: CGPoint) -> Bool {
+    /// :nodoc:
+    @_spi(Package)
+    public func pointIsAboveHorizon(_ point: CGPoint) -> Bool {
         guard style.projection.name == .mercator else {
             return false
         }
@@ -703,6 +715,9 @@ public final class MapboxMap: MapboxMapProtocol {
         }
     }
 }
+
+@_spi(Package)
+extension MapboxMap: MapboxMapProtocol {}
 
 // swiftlint:enable type_body_length
 
@@ -1110,32 +1125,44 @@ extension MapboxMap {
 
 extension MapboxMap {
 
-    internal func setViewAnnotationPositionsUpdateListener(_ listener: ViewAnnotationPositionsUpdateListener?) {
-        __map.setViewAnnotationPositionsUpdateListenerFor(listener)
+    /// :nodoc:
+    @_spi(Package)
+    public func setViewAnnotationPositionsUpdateCallback(_ callback: ViewAnnotationPositionsUpdateCallback?) {
+        __map.setViewAnnotationPositionsUpdateListenerFor(callback.map {
+            ViewAnnotationPositionsUpdateListenerImpl(callback: $0)
+        })
     }
 
-    internal func addViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws {
+    /// :nodoc:
+    @_spi(Package)
+    public func addViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws {
         let expected = __map.addViewAnnotation(forIdentifier: id, options: MapboxCoreMaps.ViewAnnotationOptions(options))
         if expected.isError(), let reason = expected.error {
             throw MapError(coreError: reason)
         }
     }
 
-    internal func updateViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws {
+    /// :nodoc:
+    @_spi(Package)
+    public func updateViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws {
         let expected = __map.updateViewAnnotation(forIdentifier: id, options: MapboxCoreMaps.ViewAnnotationOptions(options))
         if expected.isError(), let reason = expected.error {
             throw MapError(coreError: reason)
         }
     }
 
-    internal func removeViewAnnotation(withId id: String) throws {
+    /// :nodoc:
+    @_spi(Package)
+    public func removeViewAnnotation(withId id: String) throws {
         let expected = __map.removeViewAnnotation(forIdentifier: id)
         if expected.isError(), let reason = expected.error {
             throw MapError(coreError: reason)
         }
     }
 
-    internal func options(forViewAnnotationWithId id: String) throws -> ViewAnnotationOptions {
+    /// :nodoc:
+    @_spi(Package)
+    public func options(forViewAnnotationWithId id: String) throws -> ViewAnnotationOptions {
         let expected = __map.getViewAnnotationOptions(forIdentifier: id)
         if expected.isError(), let reason = expected.error {
             throw MapError(coreError: reason)

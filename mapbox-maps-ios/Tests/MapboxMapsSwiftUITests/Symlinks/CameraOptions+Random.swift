@@ -1,0 +1,1 @@
+../../MapboxMapsTests/Foundation/Random/CameraOptions+Random.swift

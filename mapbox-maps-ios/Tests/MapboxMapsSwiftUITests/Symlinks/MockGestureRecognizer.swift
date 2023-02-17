@@ -1,0 +1,1 @@
+../../MapboxMapsTests/Gestures/Mocks/MockGestureRecognizer.swift

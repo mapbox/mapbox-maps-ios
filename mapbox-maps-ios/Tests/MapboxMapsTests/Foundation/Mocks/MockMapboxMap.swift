@@ -1,9 +1,9 @@
-@testable import MapboxMaps
+@_spi(Package) @testable import MapboxMaps
 @_implementationOnly import MapboxCoreMaps_Private
 import CoreLocation
 
 final class MockMapboxMap: MapboxMapProtocol {
-
+    var options = MapOptions()
     var size: CGSize = .zero
 
     var cameraBounds = MapboxMaps.CameraBounds(
@@ -74,6 +74,18 @@ final class MockMapboxMap: MapboxMapProtocol {
         onEveryStub.call(with: OnEveryParams(eventName: event.name, handler: { handler($0 as! MapEvent<Payload>)}))
     }
 
+    func simulateEvent<Payload: Decodable>(event: MapEvents.Event<Payload>, data: Any) {
+        let invocations = onEveryStub.invocations.filter { $0.parameters.eventName == event.name }
+        for invocation in invocations {
+            let handler = invocation.parameters.handler
+            handler(MapEvent<Payload>(event: Event(type: event.name, data: data)))
+        }
+    }
+
+    func simulateEvent(event: MapEvents.Event<NoPayload>) {
+        simulateEvent(event: event, data: Void())
+    }
+
     let beginAnimationStub = Stub<Void, Void>()
     func beginAnimation() {
         beginAnimationStub.call()
@@ -94,9 +106,14 @@ final class MockMapboxMap: MapboxMapProtocol {
         endGestureStub.call()
     }
 
-    let setViewAnnotationPositionsUpdateListenerStub = Stub<ViewAnnotationPositionsUpdateListener?, Void>()
-    func setViewAnnotationPositionsUpdateListener(_ listener: ViewAnnotationPositionsUpdateListener?) {
-        setViewAnnotationPositionsUpdateListenerStub.call(with: listener)
+    let setViewAnnotationPositionsUpdateCallbackStub = Stub<ViewAnnotationPositionsUpdateCallback?, Void>()
+
+    func setViewAnnotationPositionsUpdateCallback(_ callback: ViewAnnotationPositionsUpdateCallback?) {
+        setViewAnnotationPositionsUpdateCallbackStub.call(with: callback)
+    }
+
+    func simulateAnnotationPositionsUpdate(_ positions: [ViewAnnotationPositionDescriptor]) {
+        setViewAnnotationPositionsUpdateCallbackStub.invocations.last?.parameters?(positions)
     }
 
     struct ViewAnnotationModificationOptions: Equatable {
@@ -172,5 +189,35 @@ final class MockMapboxMap: MapboxMapProtocol {
         performWithoutNotifyingWillInvokeBlock()
         try block()
         performWithoutNotifyingDidInvokeBlock()
+    }
+
+    let setCameraBoundsStub = Stub<MapboxMaps.CameraBoundsOptions, Void>()
+    func setCameraBounds(with options: MapboxMaps.CameraBoundsOptions) throws {
+        setCameraBoundsStub.call(with: options)
+    }
+
+    let northOrientationStub = Stub<NorthOrientation, Void>()
+    func setNorthOrientation(northOrientation: NorthOrientation) {
+        northOrientationStub.call(with: northOrientation)
+    }
+
+    let setConstraintModeStub = Stub<ConstrainMode, Void>()
+    func setConstrainMode(_ constrainMode: ConstrainMode) {
+        setConstraintModeStub.call(with: constrainMode)
+    }
+
+    let setViewportModeStub = Stub<ViewportMode, Void>()
+    func setViewportMode(_ viewportMode: ViewportMode) {
+        setViewportModeStub.call(with: viewportMode)
+    }
+
+    struct QRFParameters {
+        var point: CGPoint
+        var options: RenderedQueryOptions?
+        var completion: (Result<[QueriedFeature], Error>) -> Void
+    }
+    let qrfStub = Stub<QRFParameters, Cancelable>(defaultReturnValue: MockCancelable())
+    func queryRenderedFeatures(with point: CGPoint, options: RenderedQueryOptions?, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) -> Cancelable {
+        qrfStub.call(with: QRFParameters(point: point, options: options, completion: completion))
     }
 }

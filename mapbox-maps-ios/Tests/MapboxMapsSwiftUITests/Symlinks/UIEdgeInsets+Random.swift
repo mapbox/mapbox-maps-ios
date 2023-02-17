@@ -1,0 +1,1 @@
+../../MapboxMapsTests/Helpers/Random/UIEdgeInsets+Random.swift

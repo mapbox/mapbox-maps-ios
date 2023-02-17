@@ -3,7 +3,9 @@
 @_implementationOnly import MapboxCoreMaps_Private
 import UIKit
 
-internal protocol StyleProtocol: AnyObject {
+@_spi(Package)
+public protocol StyleProtocol: AnyObject {
+    var uri: StyleURI? { get set }
     func addLayer(_ layer: Layer, layerPosition: LayerPosition?) throws
     func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition?) throws
     func addPersistentLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws
@@ -45,10 +47,11 @@ internal extension StyleProtocol {
 /// via MapView.mapboxMap.style.
 ///
 /// - Important: Style should only be used from the main thread.
-public final class Style: StyleProtocol {
+public final class Style {
 
     private let sourceManager: StyleSourceManagerProtocol
     private let _styleManager: StyleManagerProtocol
+    /// :nodoc:
     public weak var styleManager: StyleManager! {
         _styleManager.asStyleManager()
     }
@@ -1176,3 +1179,6 @@ public struct StyleTransition: Codable {
         try container.encode(delay * 1000, forKey: .delay)
     }
 }
+
+@_spi(Package)
+extension Style: StyleProtocol {}

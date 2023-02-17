@@ -14,6 +14,12 @@ public protocol GestureManagerDelegate: AnyObject {
     func gestureManager(_ gestureManager: GestureManager, didEndAnimatingFor gestureType: GestureType)
 }
 
+@_spi(Package)
+public protocol GestureManagerProtocol: AnyObject {
+    var options: GestureOptions { get set }
+    var singleTapGestureRecognizer: UIGestureRecognizer { get }
+}
+
 public final class GestureManager: GestureHandlerDelegate {
 
     /// Configuration options for the built-in gestures
@@ -204,3 +210,6 @@ extension GestureManager: PinchGestureHandlerDelegate {
         rotateGestureHandler.scheduleRotationUpdateIfNeeded()
     }
 }
+
+@_spi(Package)
+extension GestureManager: GestureManagerProtocol {}

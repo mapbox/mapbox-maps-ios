@@ -8,7 +8,7 @@ parameters:
 
 orbs:
   # https://circleci.com/orbs/registry/orb/circleci/slack
-  slack: circleci/slack@4.5
+  slack: circleci/slack@4
 
 
 ### Shared anchors
@@ -45,9 +45,16 @@ workflows:
               only:
                 - main
     jobs:
-      - swiftlint
-      - depsvalidator
+      - swiftlint:
+          context:
+            - Slack Orb
+      - depsvalidator:
+          context:
+            - Slack Orb
       - build-sdk:
+          context:
+            - Slack Orb
+            - SDK Registry Token
           name: Build SDK
           configuration: "Release"
           report_failure: true
@@ -55,9 +62,15 @@ workflows:
             parameters:
               xcode: ["13.1.0", "13.2.1"]
       - build-unit-tests:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+            - Maps SDK/Public Mapbox Token
           configuration: "Release"
           report_failure: true
       - run-unit-tests:
+          context:
+            - Slack Orb
           xcode: 14.1.0
           matrix:
             parameters:
@@ -65,6 +78,8 @@ workflows:
           requires:
             - build-unit-tests
       - run-unit-tests:
+          context:
+            - Slack Orb
           xcode: 12.5.1
           matrix:
             parameters:
@@ -72,20 +87,41 @@ workflows:
           requires:
             - build-unit-tests
       - build-tests:
+          context:
+            - Slack Orb
+            - Fastlane Match
+            - SDK Registry Token
+            - Apple Machine account
+            - Maps SDK/Public Mapbox Token
           name: Build MapboxTestHost tests
       - run-tests:
+          context:
+            - Slack Orb
+            - Maps SDK/Google Cloud credentials
           name: Run MapboxTestHost tests
           scheme: MapboxTestHost
           requires:
             - Build MapboxTestHost tests
       - build-examples-tests:
+          context:
+            - Slack Orb
+            - Fastlane Match
+            - SDK Registry Token
+            - Apple Machine account
+            - Maps SDK/Public Mapbox Token
           name: Build Examples tests
       - run-tests:
+          context:
+            - Slack Orb
+            - Maps SDK/Google Cloud credentials
           name: Run Examples tests
           scheme: Examples
           requires:
             - Build Examples tests
       - create-xcframework:
+          context:
+            - Slack Orb
+            - SDK Registry Token
           create-xcframework-always-run: true
           report_failure: true
           xcode: "13.1.0"
@@ -99,10 +135,19 @@ workflows:
             branches:
               ignore: main
       - build-tests:
+          context:
+            - Slack Orb
+            - Fastlane Match
+            - SDK Registry Token
+            - Apple Machine account
+            - Maps SDK/Public Mapbox Token
           name: Build MapboxTestHost tests [non-main]
           requires:
             - run-tests?
       - run-tests:
+          context:
+            - Slack Orb
+            - Maps SDK/Google Cloud credentials
           name: Run MapboxTestHost tests [non-main]
           scheme: MapboxTestHost
           requires:
@@ -115,10 +160,19 @@ workflows:
             branches:
               ignore: main
       - build-examples-tests:
+          context:
+            - Slack Orb
+            - Fastlane Match
+            - SDK Registry Token
+            - Apple Machine account
+            - Maps SDK/Public Mapbox Token
           name: Build Examples tests [non-main]
           requires:
             - run-examples-tests?
       - run-tests:
+          context:
+            - Slack Orb
+            - Maps SDK/Google Cloud credentials
           name: Run Examples tests [non-main]
           scheme: Examples
           requires:
@@ -128,33 +182,68 @@ workflows:
   steve:
     unless: << pipeline.parameters.turf-revision >>
     jobs:
-      - sanity-check
-      - swiftlint
+      - sanity-check:
+          context:
+            - Slack Orb
+      - swiftlint:
+          context:
+            - Slack Orb
       - depsvalidator:
+          context:
+            - Slack Orb
           name: Check dependencies versions
       - build-sdk:
+          context:
+            - Slack Orb
+            - SDK Registry Token
           name: Build SDK
           xcode: "13.1.0"
           configuration: "Release"
 
-      - build-sdk-for-api-compatibility-check
-      - build-baseline-sdk
+      - build-sdk-for-api-compatibility-check:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+      - build-baseline-sdk:
+          context:
+            - Slack Orb
+            - SDK Registry Token
       - check-api-compatibility:
+          context:
+            - Slack Orb
           requires:
             - build-sdk-for-api-compatibility-check
             - build-baseline-sdk
-      - create-xcframework
-      - validate-integrations-for-branch
+      - create-xcframework:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+      - validate-integrations-for-branch:
+          context:
+            - Slack Orb
+            - SDK Registry Token
 
       # Trigger mobile-metrics workflows
-      - trigger-metrics-v2
+      - trigger-metrics-v2:
+          context:
+            - Slack Orb
+            - Maps SDK/CircleCI API Token
       - trigger-binary-size:
+          context:
+            - Slack Orb
+            - Maps SDK/CircleCI API Token
           requires:
             - Build SDK
       - trigger-metrics-build:
+          context:
+            - Slack Orb
+            - Maps SDK/CircleCI API Token
           requires:
             - Build SDK
       - trigger-metrics-collection:
+          context:
+            - Slack Orb
+            - Maps SDK/CircleCI API Token
           requires:
             - Build SDK
           filters:
@@ -163,8 +252,14 @@ workflows:
 
       # Run unit tests on CI simulator
       - build-unit-tests:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+            - Maps SDK/Public Mapbox Token
           name: Build unit tests
       - run-unit-tests:
+          context:
+            - Slack Orb
           xcode: 14.1.0
           codecoverage: true
           matrix:
@@ -173,6 +268,8 @@ workflows:
           requires:
             - Build unit tests
       - run-unit-tests:
+          context:
+            - Slack Orb
           xcode: 12.5.1
           matrix:
             parameters:
@@ -181,10 +278,16 @@ workflows:
             - Build unit tests
 
       - build-unit-tests:
+          context:
+            - Slack Orb
+            - SDK Registry Token
+            - Maps SDK/Public Mapbox Token
           name: build-unit-tests-min-turf
           turf-revision: v2.0.0
 
       - run-unit-tests:
+          context:
+            - Slack Orb
           name: run-unit-tests-min-turf
           xcode: 13.1.0
           destination: OS=15.0,name=iPhone 12
@@ -195,8 +298,17 @@ workflows:
       # Run on main by default
       # Can be approved to run on other branches
       - build-tests:
+          context:
+            - Slack Orb
+            - Fastlane Match
+            - SDK Registry Token
+            - Apple Machine account
+            - Maps SDK/Public Mapbox Token
           name: Build MapboxTestHost tests
       - run-tests:
+          context:
+            - Slack Orb
+            - Maps SDK/Google Cloud credentials
           name: Run MapboxTestHost tests
           scheme: MapboxTestHost
           requires:
@@ -209,8 +321,17 @@ workflows:
       # Enabled by-default on 'main' branch
       # Can be approved on purpose for others
       - build-examples-tests:
+          context:
+            - Slack Orb
+            - Fastlane Match
+            - SDK Registry Token
+            - Apple Machine account
+            - Maps SDK/Public Mapbox Token
           name: Build Examples tests
       - run-tests:
+          context:
+            - Slack Orb
+            - Maps SDK/Google Cloud credentials
           name: Run Examples tests
           scheme: Examples
           requires:
@@ -221,6 +342,9 @@ workflows:
 
       # Notify internal CI about main and release branch updates
       - trigger-internal-ci-sync:
+          context:
+            - Slack Orb
+            - Maps SDK/CircleCI API Token
           filters:
             branches:
               only:
@@ -229,12 +353,18 @@ workflows:
 
       # Configure triggering end-to-end verification
       - sdk-e2e-test:
+          context:
+            - Slack Orb
+            - Maps SDK/CircleCI API Token
           filters:
               branches:
                   ignore:
                       - main
           name: run-sdk-e2e-test-devel
       - sdk-e2e-test:
+          context:
+            - Slack Orb
+            - Maps SDK/CircleCI API Token
           filters:
               branches:
                   only:
@@ -247,19 +377,39 @@ workflows:
   release:
     jobs:
       - release-precheck:
+          context:
+            - Slack Orb
+            - SDK Registry Token
           <<: *release-anchor
           requires: []
       - trigger-metrics-v2:
+          context:
+            - Slack Orb
+            - Maps SDK/CircleCI API Token
           <<: *release-anchor
       - build-dynamic:
+          context:
+            - Slack Orb
+            - SDK Registry Token
           <<: *release-anchor
       - build-static:
+          context:
+            - Slack Orb
+            - SDK Registry Token
           <<: *release-anchor
       - build-docs:
+          context:
+            - Slack Orb
+            - SDK Registry Token
           <<: *release-anchor
       - build-studio-preview:
+          context:
+            - Slack Orb
+            - SDK Registry Token
           <<: *release-anchor
       - create-registry-pr:
+          context:
+            - Slack Orb
           <<: *release-anchor
           requires:
             - build-static
@@ -272,26 +422,45 @@ workflows:
             - create-registry-pr
           type: approval
       - check-registry:
+          context:
+            - Slack Orb
+            - SDK Registry Token
           <<: *release-anchor
           requires:
             - wait-registry-pr
       - create-docs-prs:
+          context:
+            - Slack Orb
           <<: *release-anchor
           requires:
             - check-registry
       - update-examples:
+          context:
+            - Slack Orb
+            - Fastlane Match
+            - SDK Registry Token
+            - Apple Machine account
           <<: *release-anchor
           requires:
             - check-registry
       - publish-podspec:
+          context:
+            - Slack Orb
+            - CocoaPods trunk token
+            - SDK Registry Token
           <<: *release-anchor
           requires:
             - check-registry
       - validate-integrations:
+          context:
+            - Slack Orb
+            - SDK Registry Token
           <<: *release-anchor
           requires:
             - publish-podspec
       - create-draft-release:
+          context:
+            - Slack Orb
           <<: *release-anchor
           requires:
             - create-docs-prs
@@ -301,7 +470,10 @@ workflows:
   turf-integration:
     when: << pipeline.parameters.turf-revision >>
     jobs:
-      - turf-integration:
+      - turf-integration-job:
+          context:
+            - Slack Orb
+            - SDK Registry Token
           name: "Run Unit Tests"
           turf-revision: << pipeline.parameters.turf-revision >>
 
@@ -423,14 +595,14 @@ jobs:
       - run:
           name: Trigger binary size test
           command: |
-            if [ -n "${CIRCLECI_API_TOKEN_MOBILE_METRICS}" ]; then
+            if [ -n "${CIRCLECI_API_TOKEN}" ]; then
               if [[ $CIRCLE_BRANCH == main ]]; then
-                curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_API_TOKEN_MOBILE_METRICS}
+                curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_API_TOKEN}
               else
-                curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\",\"SOURCE_COMPARE_BASELINE\":\"YES\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_API_TOKEN_MOBILE_METRICS}
+                curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\",\"SOURCE_COMPARE_BASELINE\":\"YES\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_API_TOKEN}
               fi
             else
-              echo "CIRCLECI_API_TOKEN_MOBILE_METRICS not provided"
+              echo "CIRCLECI_API_TOKEN not provided"
             fi
 
   trigger-metrics-build:
@@ -439,18 +611,18 @@ jobs:
       - run:
           name: Build metrics tests
           command: |
-            if [ -n "${CIRCLECI_API_TOKEN_MOBILE_METRICS}" ]; then
+            if [ -n "${CIRCLECI_API_TOKEN}" ]; then
               if [[ $CIRCLE_BRANCH == main ]]; then
-                curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_API_TOKEN_MOBILE_METRICS}
+                curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_API_TOKEN}
               else
                 echo "Trying $CIRCLE_BRANCH first:"
-                if ! curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/$CIRCLE_BRANCH?circle-token=${CIRCLECI_API_TOKEN_MOBILE_METRICS}; then
+                if ! curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/$CIRCLE_BRANCH?circle-token=${CIRCLECI_API_TOKEN}; then
                   echo "Falling back to `master` branch:"
-                  curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_API_TOKEN_MOBILE_METRICS}
+                  curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_API_TOKEN}
                 fi
               fi
             else
-              echo "CIRCLECI_API_TOKEN_MOBILE_METRICS not provided"
+              echo "CIRCLECI_API_TOKEN not provided"
             fi
 
   trigger-metrics-v2:
@@ -468,7 +640,7 @@ jobs:
 
             curl -X POST "https://circleci.com/api/v2/project/github/mapbox/mapbox-maps-ios-internal/pipeline" \
                   -H 'Content-Type: application/json' \
-                  -H "Circle-Token: $CIRCLECI_API_TOKEN_MAPBOX_MAPS_IOS_INTERNAL" \
+                  -H "Circle-Token: $CIRCLECI_API_TOKEN" \
                   -d $'{
                 "branch": "main",
                 "parameters": {
@@ -488,10 +660,10 @@ jobs:
           # TODO: main by default (this is set as a filter), other commits on-demand
           name: Trigger metrics
           command: |
-            if [ -n "${CIRCLECI_API_TOKEN_MOBILE_METRICS}" ]; then
-              curl --fail -X POST --header "Content-Type: application/json" --data "{\"parameters\":{\"run_ios_maps_v10_benchmark\":true,\"ci_ref\":${CIRCLE_BUILD_NUM},\"mapbox_hash\":\"${CIRCLE_SHA1}\",\"target_branch\":\"${CIRCLE_BRANCH}\"},\"branch\":\"master\"}" https://circleci.com/api/v2/project/github/mapbox/mobile-metrics/pipeline?circle-token=${CIRCLECI_API_TOKEN_MOBILE_METRICS}
+            if [ -n "${CIRCLECI_API_TOKEN}" ]; then
+              curl --fail -X POST --header "Content-Type: application/json" --data "{\"parameters\":{\"run_ios_maps_v10_benchmark\":true,\"ci_ref\":${CIRCLE_BUILD_NUM},\"mapbox_hash\":\"${CIRCLE_SHA1}\",\"target_branch\":\"${CIRCLE_BRANCH}\"},\"branch\":\"master\"}" https://circleci.com/api/v2/project/github/mapbox/mobile-metrics/pipeline?circle-token=${CIRCLECI_API_TOKEN}
             else
-              echo "CIRCLECI_API_TOKEN_MOBILE_METRICS not provided"
+              echo "CIRCLECI_API_TOKEN not provided"
             fi
       - report-failure:
           report_failure: << parameters.report_failure >>
@@ -506,9 +678,7 @@ jobs:
               default: false
               type: boolean
       steps:
-          - add_ssh_keys:
-              fingerprints:
-                  - 3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e
+          - add-mapbox-submodules-key
           - checkout
           - install-mbx-ci:
               platform: linux
@@ -518,7 +688,7 @@ jobs:
                   echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
                   sudo apt update && sudo apt install gh -y
                   sudo pip3 install gitpython
-                  echo "export CIRCLE_API_TOKEN=$CIRCLECI_API_TOKEN_MAPBOX_MAPS_IOS_INTERNAL" >> $BASH_ENV
+                  echo "export CIRCLE_API_TOKEN=$CIRCLECI_API_TOKEN" >> $BASH_ENV
                   source $BASH_ENV
               name: Install dependency
           - when:
@@ -1085,20 +1255,7 @@ jobs:
           event: pass
           template: success_tagged_deploy_1
 
-  wait-for-binaries:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - parse-release-version-if-available
-      - inject-netrc-credentials
-      - run:
-          name: Wait binaries public access
-          command: |
-            echo $VERSION
-            timeout 1800 bash -c 'while [[ "$(curl -n -s -o /dev/null -w ''%{http_code}'' https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/$VERSION/MapboxMaps.zip)" != "200" ]]; do sleep 5; done' || false
-          no_output_timeout: 30m
-
-  turf-integration:
+  turf-integration-job:
     parameters:
       turf-revision:
         type: string
@@ -1155,7 +1312,7 @@ jobs:
           command: |
             curl -X POST "https://circleci.com/api/v2/project/github/mapbox/mapbox-maps-ios-private/pipeline" \
                 -H 'Content-Type: application/json' \
-                -H "Circle-Token: $CIRCLECI_API_TOKEN_MAPBOX_MAPS_IOS_INTERNAL" \
+                -H "Circle-Token: $CIRCLECI_API_TOKEN" \
                 -d $'{
                         "branch": "internal",
                         "parameters": {
@@ -1214,7 +1371,7 @@ commands:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
+            - 9d:db:07:0b:62:81:11:c3:46:21:8e:fa:51:99:80:2d
 
   install-mbx-ci:
     parameters:

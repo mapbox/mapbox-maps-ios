@@ -216,7 +216,7 @@ open class MapView: UIView {
                 urlOpener: AttributionURLOpener) {
         dependencyProvider = MapViewDependencyProvider(interfaceOrientationProvider: orientationProvider)
         attributionUrlOpener = urlOpener
-        self.applicationStateProvider = .global
+        self.applicationStateProvider = nil
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable

@@ -3,6 +3,8 @@ import UIKit
 
 internal protocol UIApplicationProtocol: AnyObject {
     var statusBarOrientation: UIInterfaceOrientation { get set }
+    var applicationState: UIApplication.State { get }
+    var preferredContentSizeCategory: UIContentSizeCategory { get }
 
     func open(_ url: URL)
 }

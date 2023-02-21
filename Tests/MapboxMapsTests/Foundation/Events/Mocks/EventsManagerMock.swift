@@ -10,7 +10,7 @@ class EventsManagerMock: EventsManagerProtocol {
     }
 
     let sendMapLoadEventStub = Stub<Void, Void>()
-    func sendMapLoadEvent() {
+    func sendMapLoadEvent(preferredContentSizeCategoryProvider: PreferredContentSizeCategoryProvider) {
         sendMapLoadEventStub.call()
     }
 

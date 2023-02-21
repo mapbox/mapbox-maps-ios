@@ -488,6 +488,7 @@ workflows:
           context:
             - Slack Orb
             - CocoaPods trunk token
+            - SDK Registry Token
           <<: *release-anchor
           requires:
             - check-registry

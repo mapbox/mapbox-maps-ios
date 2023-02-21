@@ -490,6 +490,7 @@ workflows:
           context:
             - Slack Orb
             - CocoaPods trunk token
+            - SDK Registry Token
           <<: *release-anchor
           requires:
             - check-registry
@@ -1283,9 +1284,7 @@ jobs:
           skip-dependencies: true
       - run:
           name: Publish CocoaPods Podspec
-          command: |
-            pod repo add-cdn trunk https://cdn.cocoapods.org/
-            pod trunk push --allow-warnings
+          command: pod trunk push --allow-warnings
       - slack-notify-failure-if-any
 
   create-draft-release:

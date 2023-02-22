@@ -4,8 +4,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 10.11.0-beta.1 - February 22, 2023
+
 * Added basic signposts for performance profiling. To enable them, use `MAPBOX_MAPS_SIGNPOSTS_ENABLED` environment variable. ([#1818](https://github.com/mapbox/mapbox-maps-ios/pull/1818))
 * Fix build erros appearing when SDK distributed as a static library through Cocoapods. ([#1888](https://github.com/mapbox/mapbox-maps-ios/pull/1888))
+* Update MapboxCoreMaps to `v10.12.0-beta.1` and MapboxCommon to `v23.4.0-beta.1`
 
 ## 10.11.0 - February 8, 2023
 * Update to MapboxCoreMaps 10.11.1 and MapboxCommon 23.3.1. ([#1899](https://github.com/mapbox/mapbox-maps-ios/pull/1899))

@@ -1069,7 +1069,6 @@ For more information, please refer to <http://unlicense.org/>
       reproduction, and distribution of the Work otherwise complies with
       the conditions stated in this License.
 
-
    5. Submission of Contributions. Unless You explicitly state otherwise,
       any Contribution intentionally submitted for inclusion in the Work
       by You to the Licensor shall be under the terms and conditions of
@@ -1329,7 +1328,7 @@ JSON_checker
 Copyright (c) 2002 JSON.org
 All Rights Reserved.
 
-    
+	
 Terms of the JSON License:
 ---------------------------------------------------
 

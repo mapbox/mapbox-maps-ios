@@ -262,6 +262,20 @@ final class StyleTests: XCTestCase {
         XCTAssertEqual(params.geoJSON, geoJSONObject)
     }
 
+    func testUpdateGeoJSONSourceWithDataID() throws {
+        let id = "TestSourceID"
+        let geoJSONObject = GeoJSONObject.featureCollection(FeatureCollection(features: []))
+        let dataId = "TestdataId"
+
+        try style.updateGeoJSONSource(withId: id, geoJSON: geoJSONObject, dataId: dataId)
+
+        XCTAssertEqual(sourceManager.updateGeoJSONSourceStub.invocations.count, 1)
+        let params = try XCTUnwrap(sourceManager.updateGeoJSONSourceStub.invocations.first?.parameters)
+        XCTAssertEqual(params.id, id)
+        XCTAssertEqual(params.geoJSON, geoJSONObject)
+        XCTAssertEqual(params.dataId, dataId)
+    }
+
     func testGetSourceProperty() throws {
         let id = String.randomASCII(withLength: 10)
         let property = String.randomASCII(withLength: 10)

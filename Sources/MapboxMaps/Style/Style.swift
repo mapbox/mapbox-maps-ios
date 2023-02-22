@@ -13,12 +13,12 @@ internal protocol StyleProtocol: AnyObject {
     func setLayerProperties(for layerId: String, properties: [String: Any]) throws
     func setLayerProperty(for layerId: String, property: String, value: Any) throws
 
-    func addSource(_ source: Source, id: String) throws
+    func addSource(_ source: Source, id: String, dataId: String?) throws
     func removeSource(withId id: String) throws
     func sourceExists(withId id: String) -> Bool
     func setSourceProperty(for sourceId: String, property: String, value: Any) throws
     func setSourceProperties(for sourceId: String, properties: [String: Any]) throws
-    func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject) throws
+    func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject, dataId: String?) throws
 
     //swiftlint:disable function_parameter_count
     func addImage(_ image: UIImage,
@@ -35,6 +35,12 @@ internal protocol StyleProtocol: AnyObject {
 internal extension StyleProtocol {
     func addImage(_ image: UIImage, id: String, sdf: Bool = false, contentInsets: UIEdgeInsets = .zero) throws {
         try addImage(image, id: id, sdf: sdf, contentInsets: contentInsets)
+    }
+    func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject, dataId: String? = nil) throws {
+        try updateGeoJSONSource(withId: id, geoJSON: geoJSON, dataId: dataId)
+    }
+    func addSource(_ source: Source, id: String, dataId: String? = nil)  throws {
+        try addSource(source, id: id, dataId: dataId)
     }
 }
 
@@ -198,11 +204,13 @@ public final class Style: StyleProtocol {
      Adds a `source` to the map
      - Parameter source: The source to add to the map.
      - Parameter identifier: A unique source identifier.
+     - Parameter dataId: An optional data ID to filter ``MapEvents.sourceDataLoaded`` to only the specified data source.
+     /// Applies only to GeoJSONSources
 
      - Throws: ``StyleError`` if there is a problem adding the `source`.
      */
-    public func addSource(_ source: Source, id: String) throws {
-        try sourceManager.addSource(source, id: id)
+    public func addSource(_ source: Source, id: String, dataId: String? = nil) throws {
+        try sourceManager.addSource(source, id: id, dataId: dataId)
     }
 
     /**
@@ -240,13 +248,14 @@ public final class Style: StyleProtocol {
     ///   - id: The identifier representing the GeoJSON source.
     ///   - geoJSON: The new GeoJSON to be associated with the source data. i.e.
     ///   a feature or feature collection.
+    ///   - dataId: An optional data ID to filter ``MapEvents.sourceDataLoaded`` to only the specified data source
     ///
     /// - Throws: ``StyleError`` if there is a problem when updating GeoJSON source.
     ///
     /// - Attention: This method is only effective with sources of `GeoJSONSource`
     /// type, and cannot be used to update other source types.
-    public func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject) throws {
-        try sourceManager.updateGeoJSONSource(withId: id, geoJSON: geoJSON)
+    public func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject, dataId: String? = nil) throws {
+        try sourceManager.updateGeoJSONSource(withId: id, geoJSON: geoJSON, dataId: dataId)
     }
 
     /// `true` if and only if the style JSON contents, the style specified sprite,

@@ -604,4 +604,34 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         // style sources’ identifiers count remains at 1, excluding custom vector sources
         XCTAssertEqual(self.style.allSourceIdentifiers.map(\.id), [sourceId])
     }
+
+    func testOnlyAddeddataIdReturned() {
+        let sourceID = "Source"
+        let sourceID2 = "Source2"
+        var source = GeoJSONSource()
+        var source2 = GeoJSONSource()
+        source.data = .empty
+        source2.data = .empty
+        let geometry = Geometry.point(Point.init(LocationCoordinate2D(latitude: 0, longitude: 0)))
+        let dataId = "TestdataId"
+        let expectation = XCTestExpectation(description: "dataId returned when source updated")
+        expectation.expectedFulfillmentCount = 1
+        expectation.assertForOverFulfill = true
+
+        var returnedSourceDataId: String?
+
+        try! self.style.addSource(source, id: sourceID)
+        try! self.style.addSource(source2, id: sourceID2)
+
+        mapView.mapboxMap.onEvery(event: .sourceDataLoaded) { event in
+            returnedSourceDataId = event.payload.dataId
+            XCTAssertEqual(returnedSourceDataId, dataId)
+
+            expectation.fulfill()
+        }
+
+        try! mapView.mapboxMap.style.updateGeoJSONSource(withId: sourceID, geoJSON: .geometry(geometry), dataId: dataId)
+
+        wait(for: [expectation], timeout: 3.0)
+    }
 }

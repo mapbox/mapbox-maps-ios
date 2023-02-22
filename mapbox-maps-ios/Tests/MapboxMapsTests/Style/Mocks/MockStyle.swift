@@ -83,10 +83,11 @@ final class MockStyle: StyleProtocol {
     struct AddSourceParams {
         var source: Source
         var id: String
+        var dataId: String?
     }
     let addSourceStub = Stub<AddSourceParams, Void>()
-    func addSource(_ source: Source, id: String) throws {
-        addSourceStub.call(with: .init(source: source, id: id))
+    func addSource(_ source: Source, id: String, dataId: String? = nil) throws {
+        addSourceStub.call(with: .init(source: source, id: id, dataId: dataId))
     }
 
     let removeSourceStub = Stub<String, Void>()
@@ -152,9 +153,10 @@ final class MockStyle: StyleProtocol {
     struct UpdateGeoJSONSourceParams {
         let id: String
         let geojson: GeoJSONObject
+        let dataId: String?
     }
     let updateGeoJSONSourceStub = Stub<UpdateGeoJSONSourceParams, Void>()
-    func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject) throws {
-        updateGeoJSONSourceStub.call(with: UpdateGeoJSONSourceParams(id: id, geojson: geoJSON))
+    func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject, dataId: String? = nil) throws {
+        updateGeoJSONSourceStub.call(with: UpdateGeoJSONSourceParams(id: id, geojson: geoJSON, dataId: dataId))
     }
 }

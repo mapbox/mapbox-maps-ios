@@ -7,6 +7,7 @@ public struct SourceDataLoadedPayload: Decodable {
     public var tileId: CanonicalTileID? {
         return decodedTileId?.tileID
     }
+    public let dataId: String?
 
     internal let decodedTileId: DecodableCanonicalTileID?
 }

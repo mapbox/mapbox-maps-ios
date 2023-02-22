@@ -370,6 +370,7 @@ property of their respective owners.
  #  binary form must reproduce the above copyright notice, this list of
  #  conditions and the following disclaimer in the documentation and/or
  #  other materials provided with the distribution.
+
  #
  #
  # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -1049,6 +1050,7 @@ For more information, please refer to <http://unlicense.org/>
           distribution, then any Derivative Works that You distribute must
           include a readable copy of the attribution notices contained
           within such NOTICE file, excluding those notices that do not
+
           pertain to any part of the Derivative Works, in at least one
           of the following places: within a NOTICE text file distributed
           as part of the Derivative Works within the Source form or

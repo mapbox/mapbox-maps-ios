@@ -1,4 +1,5 @@
 import Foundation
+@_implementationOnly import MapboxCommon_Private
 
 internal protocol StyleSourceManagerProtocol: AnyObject {
     static func sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue
@@ -6,8 +7,8 @@ internal protocol StyleSourceManagerProtocol: AnyObject {
     var allSourceIdentifiers: [SourceInfo] { get }
     func source<T>(withId id: String, type: T.Type) throws -> T where T: Source
     func source(withId id: String) throws -> Source
-    func addSource(_ source: Source, id: String) throws
-    func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject) throws
+    func addSource(_ source: Source, id: String, dataId: String?) throws
+    func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject, dataId: String?) throws
     func addSource(withId id: String, properties: [String: Any]) throws
     func removeSource(withId id: String) throws
     func sourceExists(withId id: String) -> Bool
@@ -71,9 +72,9 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
         return try type.sourceType.init(jsonObject: sourceProps)
     }
 
-    internal func addSource(_ source: Source, id: String) throws {
+    internal func addSource(_ source: Source, id: String, dataId: String? = nil) throws {
         if let geoJSONSource = source as? GeoJSONSource {
-            try addGeoJSONSource(geoJSONSource, id: id)
+            try addGeoJSONSource(geoJSONSource, id: id, dataId: dataId)
         } else {
             try addSourceInternal(source, id: id)
         }
@@ -89,13 +90,13 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
         try setSourceProperties(for: id, properties: volatileProperties)
     }
 
-    internal func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject) throws {
+    internal func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject, dataId: String? = nil) throws {
         guard let sourceInfo = allSourceIdentifiers.first(where: { $0.id == id }),
               sourceInfo.type == .geoJson else {
             throw StyleError(message: "Source with id '\(id)' is not found or not a GeoJSONSource.")
         }
 
-        applyGeoJSON(data: geoJSON.sourceData, sourceId: id)
+        applyGeoJSON(data: geoJSON.sourceData, sourceId: id, dataId: dataId)
     }
 
     // MARK: - Untyped API
@@ -140,15 +141,19 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
         }
     }
 
-    private func setStyleGeoJSONSourceDataForSourceId(_ id: String, data: MapboxCoreMaps.GeoJSONSourceData) throws {
-        try handleExpected {
-            return styleManager.__setStyleGeoJSONSourceDataForSourceId(id, data: data)
+    private func setStyleGeoJSONSourceDataForSourceId(_ id: String, dataId: String? = nil, data: MapboxCoreMaps.GeoJSONSourceData) throws {
+        try handleExpected { () -> Expected<NSNull, NSString> in
+            if let dataId = dataId {
+                return styleManager.__setStyleGeoJSONSourceDataForSourceId(id, dataId: dataId, data: data)
+            } else {
+                return styleManager.__setStyleGeoJSONSourceDataForSourceId(id, data: data)
+            }
         }
     }
 
     // MARK: - Async GeoJSON source data parsing
 
-    private func addGeoJSONSource(_ source: GeoJSONSource, id: String) throws {
+    private func addGeoJSONSource(_ source: GeoJSONSource, id: String, dataId: String? = nil) throws {
         let data = source.data
 
         var emptySource = source
@@ -161,10 +166,10 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
         guard let data = data else { return }
         if case GeoJSONSourceData.empty = data { return }
 
-        applyGeoJSON(data: data, sourceId: id)
+        applyGeoJSON(data: data, sourceId: id, dataId: dataId)
     }
 
-    private func applyGeoJSON(data: GeoJSONSourceData, sourceId id: String) {
+    private func applyGeoJSON(data: GeoJSONSourceData, sourceId id: String, dataId: String? = nil) {
         workItems.removeValue(forKey: id)?.cancel()
 
         // This implementation favors the first submitted task and the last, in case of many work items queuing up -
@@ -172,10 +177,9 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
         // and the last item will be left waiting in the queue.
         let item = DispatchWorkItem { [weak self] in
             if self == nil { return } // not capturing self here as conversion below can take some time
-
             let data = data.coreData
             do {
-                try self?.setStyleGeoJSONSourceDataForSourceId(id, data: data)
+                try self?.setStyleGeoJSONSourceDataForSourceId(id, dataId: dataId, data: data)
             } catch {
                 Log.error(forMessage: "Failed to set data for source with id: \(id), error: \(error)")
             }

@@ -9,9 +9,9 @@ class EventsManagerMock: EventsManagerProtocol {
         self.accessToken = accessToken
     }
 
-    let sendMapLoadEventStub = Stub<Void, Void>()
-    func sendMapLoadEvent() {
-        sendMapLoadEventStub.call()
+    let sendMapLoadEventStub = Stub<UITraitCollection, Void>()
+    func sendMapLoadEvent(with tratis: UITraitCollection) {
+        sendMapLoadEventStub.call(with: tratis)
     }
 
     let sendTurnstileStub = Stub<Void, Void>()

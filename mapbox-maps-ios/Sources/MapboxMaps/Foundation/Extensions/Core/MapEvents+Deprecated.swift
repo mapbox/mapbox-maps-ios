@@ -98,6 +98,7 @@ public extension MapEvents {
          *
          * The `loaded` property will be set to `true` if all source's data required for visible viewport of the map, are loaded.
          * The `tile-id` property defines the tile id if the `type` field equals `tile`.
+         * The `data-id` property will be returned if it has been set for this source.
          *
          * ``` text
          * Event data format (Object):
@@ -106,9 +107,10 @@ public extension MapEvents {
          * ├── type - String ("metadata" | "tile")
          * ├── loaded - optional Boolean
          * └── tile-id - optional Object
-         *     ├── z Number (zoom level)
-         *     ├── x Number (x coordinate)
-         *     └── y Number (y coordinate)
+         * │   ├── z Number (zoom level)
+         * │   ├── x Number (x coordinate)
+         * │   └── y Number (y coordinate)
+         * └── data-id - optional String
          * ```
          */
         case sourceDataLoaded

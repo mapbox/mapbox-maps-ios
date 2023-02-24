@@ -14,36 +14,66 @@ jobs:
         - SDK Registry Token
       requires:
         - release-precheck
+      filters:
+        tags:
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+        branches:
+          ignore: /.*/
   - build-dynamic:
       context:
         - Slack Orb
         - SDK Registry Token
       requires:
         - release-precheck
+      filters:
+        tags:
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+        branches:
+          ignore: /.*/
   - build-static:
       context:
         - Slack Orb
         - SDK Registry Token
       requires:
         - release-precheck
+      filters:
+        tags:
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+        branches:
+          ignore: /.*/
   - build-docs:
       context:
         - Slack Orb
         - SDK Registry Token
       requires:
         - release-precheck
+      filters:
+        tags:
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+        branches:
+          ignore: /.*/
   - build-studio-preview:
       context:
         - Slack Orb
         - SDK Registry Token
       requires:
         - release-precheck
+      filters:
+        tags:
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+        branches:
+          ignore: /.*/
   - check-api-compatibility:
       context:
         - Slack Orb
       requires:
         - build-baseline-sdk
         - build-dynamic
+      filters:
+        tags:
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+        branches:
+          ignore: /.*/
   - create-registry-pr:
       context:
         - Slack Orb
@@ -52,21 +82,41 @@ jobs:
         - build-docs
         - build-studio-preview
         - check-api-compatibility
+      filters:
+        tags:
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+        branches:
+          ignore: /.*/
   - wait-registry-pr:
       requires:
         - create-registry-pr
       type: approval
+      filters:
+        tags:
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+        branches:
+          ignore: /.*/
   - check-registry:
       context:
         - Slack Orb
         - SDK Registry Token
       requires:
         - wait-registry-pr
+      filters:
+        tags:
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+        branches:
+          ignore: /.*/
   - create-docs-prs:
       context:
         - Slack Orb
       requires:
         - check-registry
+      filters:
+        tags:
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+        branches:
+          ignore: /.*/
   - update-examples:
       context:
         - Slack Orb
@@ -76,18 +126,34 @@ jobs:
         - Maps SDK/Public Mapbox Token
       requires:
         - check-registry
+      filters:
+        tags:
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+        branches:
+          ignore: /.*/
   - publish-podspec:
       context:
         - Slack Orb
         - CocoaPods trunk token
+        - SDK Registry Token
       requires:
         - check-registry
+      filters:
+        tags:
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+        branches:
+          ignore: /.*/
   - validate-integrations:
       context:
         - Slack Orb
         - SDK Registry Token
       requires:
         - publish-podspec
+      filters:
+        tags:
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+        branches:
+          ignore: /.*/
   - create-draft-release:
       context:
         - Slack Orb
@@ -95,3 +161,8 @@ jobs:
         - create-docs-prs
         - update-examples
         - validate-integrations
+      filters:
+        tags:
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+        branches:
+          ignore: /.*/

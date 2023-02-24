@@ -465,6 +465,18 @@ class MockStyleManager: StyleManagerProtocol {
     func __setStyleGeoJSONSourceDataForSourceId(_ sourceId: String, data: MapboxCoreMaps.GeoJSONSourceData) -> Expected<NSNull, NSString> {
         setStyleGeoJSONSourceDataForSourceIdStub.call(with: .init(sourceId: sourceId, data: data))
     }
+
+    struct SetStyleGeoJSONSourceDataForSourceIdDataIDParams {
+        let sourceId: String
+        let dataId: String
+        let data: MapboxCoreMaps.GeoJSONSourceData
+    }
+    let setStyleGeoJSONSourceDataForSourceIdDataIDStub = Stub<SetStyleGeoJSONSourceDataForSourceIdDataIDParams, Expected<NSNull, NSString>>(
+        defaultReturnValue: .init(value: .init())
+    )
+    func __setStyleGeoJSONSourceDataForSourceId(_ sourceId: String, dataId: String, data: MapboxCoreMaps.GeoJSONSourceData) -> Expected<NSNull, NSString> {
+        setStyleGeoJSONSourceDataForSourceIdDataIDStub.call(with: .init(sourceId: sourceId, dataId: dataId, data: data))
+    }
 }
 
 struct NonEncodableLayer: Layer {

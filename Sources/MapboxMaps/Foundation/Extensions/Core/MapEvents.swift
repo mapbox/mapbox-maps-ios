@@ -122,6 +122,7 @@ public extension MapEvents {
         ///
         /// The `loaded` property will be set to `true` if all source's data required for visible viewport of the map, are loaded.
         /// The `tile-id` property defines the tile id if the `type` field equals `tile`.
+        /// The `data-id` property will be returned if it has been set for this source.
         public static var sourceDataLoaded: Event<SourceDataLoadedPayload> { .init(name: MapEvents.sourceDataLoaded) }
 
         /// The source has been added with ``Style/addSource(_:id:)`` or ``Style/addSource(withId:properties:)``.

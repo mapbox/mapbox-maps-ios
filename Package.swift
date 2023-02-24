@@ -16,10 +16,10 @@ let package = Package(
             targets: ["MapboxMapsSwiftUI"])
     ],
     dependencies: [
-        .package(name: "MapboxCoreMaps", url: "https://github.com/mapbox/mapbox-core-maps-ios.git", .exact("10.11.1")),
+        .package(name: "MapboxCoreMaps", url: "https://github.com/mapbox/mapbox-core-maps-ios.git", .exact("10.12.0-beta.1")),
         // We keep MME dependency for compatibility reasons
         .package(name: "MapboxMobileEvents", url: "https://github.com/mapbox/mapbox-events-ios.git", .exact("1.0.10")),
-        .package(name: "MapboxCommon", url: "https://github.com/mapbox/mapbox-common-ios.git", .exact("23.3.1")),
+        .package(name: "MapboxCommon", url: "https://github.com/mapbox/mapbox-common-ios.git", .exact("23.4.0-beta.1")),
         .package(name: "Turf", url: "https://github.com/mapbox/turf-swift.git", from: "2.0.0"),
         .package(name: "CocoaImageHashing", url: "https://github.com/ameingast/cocoaimagehashing", .exact("1.9.0"))
     ],

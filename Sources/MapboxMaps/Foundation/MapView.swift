@@ -173,6 +173,8 @@ open class MapView: UIView {
 
     internal let attributionUrlOpener: AttributionURLOpener
 
+    internal let applicationStateProvider: Provider<UIApplication.State>?
+
     internal let eventsManager: EventsManagerProtocol
 
     /// Initialize a MapView
@@ -193,6 +195,7 @@ open class MapView: UIView {
 
         dependencyProvider = MapViewDependencyProvider(interfaceOrientationProvider: orientationProvider)
         attributionUrlOpener = DefaultAttributionURLOpener()
+        applicationStateProvider = .global
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
@@ -218,6 +221,7 @@ open class MapView: UIView {
         defer { trace.end() }
         dependencyProvider = MapViewDependencyProvider(interfaceOrientationProvider: orientationProvider)
         attributionUrlOpener = urlOpener
+        self.applicationStateProvider = nil
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
@@ -243,6 +247,7 @@ open class MapView: UIView {
             interfaceOrientationProvider: DefaultInterfaceOrientationProvider()
         )
         attributionUrlOpener = urlOpener
+        self.applicationStateProvider = nil
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
@@ -268,6 +273,7 @@ open class MapView: UIView {
         bundle = dependencyProvider.bundle
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
         attributionUrlOpener = DefaultAttributionURLOpener()
+        applicationStateProvider = .global
         resourceOptions = ResourceOptionsManager.default.resourceOptions
         eventsManager = dependencyProvider.makeEventsManager(accessToken: resourceOptions.accessToken)
         super.init(coder: coder)
@@ -276,11 +282,13 @@ open class MapView: UIView {
     internal init(frame: CGRect,
                   mapInitOptions: MapInitOptions,
                   dependencyProvider: MapViewDependencyProviderProtocol,
-                  urlOpener: AttributionURLOpener) {
+                  urlOpener: AttributionURLOpener,
+                  applicationStateProvider: Provider<UIApplication.State>?) {
         let trace = OSLog.platform.beginInterval("MapView.init")
         defer { trace.end() }
         self.dependencyProvider = dependencyProvider
         attributionUrlOpener = urlOpener
+        self.applicationStateProvider = applicationStateProvider
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
@@ -379,7 +387,7 @@ open class MapView: UIView {
 
     internal func sendInitialTelemetryEvents() {
         eventsManager.sendTurnstile()
-        eventsManager.sendMapLoadEvent()
+        eventsManager.sendMapLoadEvent(with: traitCollection)
     }
 
     internal func setupManagers() {
@@ -665,7 +673,7 @@ open class MapView: UIView {
     }
 
     private func shouldDisplayLinkBePaused(window: UIWindow) -> Bool {
-        if UIApplication.shared.applicationState != .active {
+        if let state = applicationStateProvider?.value, state != .active {
             return true
         }
 

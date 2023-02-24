@@ -17,8 +17,9 @@ cleanup() {
 
     git -C "$SCRIPT_DIR" worktree prune
     rm -rf "$TMP_ROOT"
+    exit "$1"
 }
-trap cleanup INT TERM HUP EXIT
+trap 'cleanup $?' INT TERM HUP EXIT
 
 # shellcheck source=../utils.sh
 source "$UTILS_PATH"

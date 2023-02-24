@@ -160,17 +160,6 @@ jobs:
         branches:
           only: main
 
-  # Notify internal CI about main and release branch updates
-  - trigger-internal-ci-sync:
-      context:
-        - Slack Orb
-        - Maps SDK/CircleCI API Token
-      filters:
-        branches:
-          only:
-            - main
-            - /^release/v10.*/
-
   # Configure triggering end-to-end verification
   - sdk-e2e-test:
       context:

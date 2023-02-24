@@ -29,9 +29,38 @@ extension View {
         closure()
         return self
     }
+
+    /// Utility for printing body changes reasons.
+    ///
+    /// Example:
+    ///
+    ///     var body: some View {
+    ///         debugPrintChanges()
+    ///         Text("Hello world!")
+    ///     }
+    ///
+    /// More info: https://twitter.com/luka_bernardi/status/1402045202714435585
+    ///
+    func debugPrintChanges() -> some View {
+        if #available(iOS 15.0, *) {
+            Self._printChanges()
+        }
+        return EmptyView()
+    }
 }
 
 @available(iOS 14.0, *)
 extension Font {
     static let safeMonospaced: Font = .system(.footnote, design: .monospaced)
+}
+
+@available(iOS 13.0, *)
+extension Color {
+    /// Utility helper for visually debug SwiftUI's draw calls.
+    ///
+    /// Simply add `.background(Color.random)` to see when SwiftUI executes
+    /// the body of a view.
+    static var random: Color {
+        Color(red: .random(in: 0...1), green: .random(in: 0...1), blue: .random(in: 0...1))
+    }
 }

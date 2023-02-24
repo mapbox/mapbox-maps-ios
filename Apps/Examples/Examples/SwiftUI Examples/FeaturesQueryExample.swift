@@ -7,21 +7,38 @@ struct FeaturesQueryExample: View {
     @StateObject private var model = Model()
     var body: some View {
         MapReader { proxy in
-            Map()
-                .onMapTapGesture { point in
-                    model.mapTapped(at: point, map: proxy.map)
+            Map(annotationItems: model.queryResult.asArray) { queryRes in
+                // Annotations that shows tap location.
+                ViewAnnotation(queryRes.coordinate, size: CGSize(width: 8, height: 8)) {
+                    Circle()
+                        .fill(.red)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-                .ignoresSafeArea()
-                .sheet(item: $model.queryResult, onDismiss: { model.queryResult = nil }) {
-                    ResultView(result: $0)
-                        .defaultDetents()
+            }
+            .onMapTapGesture { point in
+                model.mapTapped(at: point, map: proxy.map)
+            }
+            .ignoresSafeArea()
+            .sheet(item: $model.queryResult, onDismiss: { model.queryResult = nil }) {
+                ResultView(result: $0)
+                    .defaultDetents()
+            }
+            .onChange(of: model.queryResult?.coordinate) { coordinate in
+                if let coordinate = coordinate, let camera = proxy.camera {
+                    let options = CameraOptions(center: coordinate)
+                    camera.ease(to: options, duration: 0.5, curve: .easeOut)
                 }
+            }
         }
     }
 }
 
 @available(iOS 14.0, *)
 private class Model: ObservableObject {
+    struct Location: Identifiable {
+        var id = UUID()
+        var coordinate: CLLocationCoordinate2D
+    }
     @Published
     var queryResult: QueryResult? = nil
 

@@ -5,36 +5,45 @@ import MapboxMaps
 struct InternalMap: UIViewRepresentable {
     var camera: Binding<CameraState>?
     var mapDependencies: MapDependencies
-    private var mapInitOptions: Map.InitOptionsProvider?
+    var annotationsOptions: [AnyHashable: ViewAnnotationOptions]
+    var mapInitOptions: Map.InitOptionsProvider?
+    var onAnnotationLayoutUpdate: (AnnotationLayouts) -> Void
 
     @Environment(\.colorScheme) var colorScheme
 
-    init(
-        camera: Binding<CameraState>?,
-        mapDependencies: MapDependencies,
-        mapInitOptions: Map.InitOptionsProvider?
-    ) {
-        self.camera = camera
-        self.mapDependencies = mapDependencies
-        self.mapInitOptions = mapInitOptions
-    }
-
-    func makeCoordinator() -> MapCoordinator {
-        MapCoordinator(setCamera: camera.map(\.setter))
+    func makeCoordinator() -> Coordinator {
+        Coordinator(
+            basic: MapBasicCoordinator(setCamera: camera.map(\.setter)),
+            viewAnnotation: ViewAnnotationCoordinator())
     }
 
     func makeUIView(context: Context) -> MapView {
         let mapView = MapView(frame: .zero, mapInitOptions: mapInitOptions?() ?? MapInitOptions())
         context.environment.mapViewProvider?.mapView = mapView
-        context.coordinator.setMapView(MapViewFacade(from: mapView))
+        context.coordinator.basic.setMapView(MapViewFacade(from: mapView))
+        context.coordinator.viewAnnotation.setup(with: .init(map: mapView.mapboxMap, onLayoutUpdate: onAnnotationLayoutUpdate))
         return mapView
     }
 
     func updateUIView(_ mapView: MapView, context: Context) {
-        context.coordinator.update(
+        context.coordinator.basic.update(
             camera: camera?.wrappedValue,
             deps: mapDependencies,
             colorScheme: colorScheme)
+        context.coordinator.viewAnnotation.annotations = annotationsOptions
+    }
+}
+
+@available(iOS 13.0, *)
+extension InternalMap {
+    final class Coordinator {
+        let basic: MapBasicCoordinator
+        let viewAnnotation: ViewAnnotationCoordinator
+
+        init(basic: MapBasicCoordinator, viewAnnotation: ViewAnnotationCoordinator) {
+            self.basic = basic
+            self.viewAnnotation = viewAnnotation
+        }
     }
 }
 

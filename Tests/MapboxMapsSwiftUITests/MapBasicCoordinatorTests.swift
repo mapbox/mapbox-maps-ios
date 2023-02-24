@@ -5,15 +5,15 @@ import CoreLocation
 import XCTest
 
 @available(iOS 13.0, *)
-final class MapCoordinatorTests: XCTestCase {
+final class MapBasicCoordinatorTests: XCTestCase {
     var mapView: MockMapView!
     var setCameraStub: Stub<CameraState, Void>!
-    var me: MapCoordinator!
+    var me: MapBasicCoordinator!
 
     override func setUpWithError() throws {
         mapView = MockMapView()
         setCameraStub = Stub()
-        me = MapCoordinator(setCamera: setCameraStub.call(with:))
+        me = MapBasicCoordinator(setCamera: setCameraStub.call(with:))
         me.setMapView(mapView.facade)
     }
 
@@ -165,13 +165,12 @@ final class MapCoordinatorTests: XCTestCase {
         mapView.mapboxMap.qrfStub.invocations[1].parameters.completion(.failure(MapError(coreError: "foo")))
         XCTAssertEqual(mockActions.onLayerTapAction.invocations.count, 0)
     }
-
 }
 
 @available(iOS 13.0, *)
 struct MockActions {
     var onMapTapGesture = Stub<CGPoint, Void>()
-    var onLayerTapAction = Stub<MapboxMapsSwiftUI.Map.LayerTapPayload, Void>()
+    var onLayerTapAction = Stub<MapLayerTapPayload, Void>()
 
     var actions: MapDependencies.Actions {
         .init(

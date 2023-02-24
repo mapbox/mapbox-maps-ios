@@ -74,3 +74,21 @@ func addGestureHandler<T: UIGestureRecognizer>(_ gesture: T, handler: @escaping 
     let objcHandler = Handler(gesture) { handler(gesture) }
     return BlockCancelable(block: objcHandler.cancel)
 }
+
+@available(iOS 13.0, *)
+extension CollectionDifference.Change {
+
+    var element: ChangeElement {
+        switch self {
+        case .insert(_, let element, _), .remove(_, let element, _): return element
+        }
+    }
+}
+
+func wrapAssignError(_ body: () throws -> Void) {
+    do {
+        try body()
+    } catch {
+        print("error: \(error)") // TODO: Logger
+    }
+}

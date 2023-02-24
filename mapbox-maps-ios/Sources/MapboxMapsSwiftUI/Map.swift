@@ -10,29 +10,94 @@ public extension CameraState {
     }
 }
 
-/// The action that is called when the map is loaded.
+/// Represents location and rendered feaures of the tap.
+@_spi(Experimental)
+@available(iOS 13.0, *)
+public struct MapLayerTapPayload {
+    public var point: CGPoint
+    public var coordinate: CLLocationCoordinate2D
+    public var features: [QueriedFeature]
+}
+
+/// An action called when the map is loaded.
 @_spi(Experimental)
 @available(iOS 13.0, *)
 public typealias MapLoadedAction = (MapboxMap) -> Void
 
+/// An action called when the map is tapped.
 @_spi(Experimental)
 @available(iOS 13.0, *)
-public struct Map: View {
-    public typealias InitOptionsProvider = () -> MapInitOptions
-    public typealias TapAction = (CGPoint) -> Void
-    public typealias LayerTapAction = (LayerTapPayload) -> Void
+public typealias MapTapAction = (CGPoint) -> Void
 
-    public struct LayerTapPayload {
-        public var point: CGPoint
-        public var coordinate: CLLocationCoordinate2D
-        public var features: [QueriedFeature]
-    }
+/// An action called when the specified layer is tapped.
+@_spi(Experimental)
+@available(iOS 13.0, *)
+public typealias MapLayerTapAction = (MapLayerTapPayload) -> Void
+
+/// A view that displays Mapbox Map.
+@_spi(Experimental)
+@available(iOS 13.0, *)
+public struct Map<Content: View>: View {
+    public typealias InitOptionsProvider = () -> MapInitOptions
 
     var camera: Binding<CameraState>?
     private var mapDependencies = MapDependencies()
-    private let mapInitOptions: InitOptionsProvider?
+    private var mapInitOptions: InitOptionsProvider?
+    private var annotationOptions = [AnyHashable: ViewAnnotationOptions]()
+    private var annotationContents = [(AnyHashable, () -> Content)]()
 
-    /// Creates an instance showing scpecisif region.
+    @State private var annotationsLayouts = AnnotationLayouts()
+
+    /// Creates a map that displays annotations.
+    ///
+    /// - Parameters:
+    ///     - camera: The camera state to display. If not specified, the default camera options from style will be used. See [center](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-center), [zoom](https://docs.mapbox.com/mapbox-gl-js/style-spec/root/#zoom), [bearing](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-bearing), [pitch](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-pitch).
+    ///     - mapInitOptions: A closure to provide initial map parameters. It gets called only once when `Map` is created.
+    ///     - annotationItems: The collection of data that the view uses to display annotations.
+    ///     - annotationContent: A closure that produces the annotation content.
+    public init<Items>(
+        camera: Binding<CameraState>? = nil,
+        mapInitOptions: InitOptionsProvider? = nil,
+        annotationItems: Items,
+        annotationContent: @escaping (Items.Element) -> ViewAnnotation<Content>
+    ) where Items: RandomAccessCollection, Items.Element: Identifiable {
+        self.camera = camera
+        self.mapInitOptions = mapInitOptions
+
+        for item in annotationItems {
+            let result = annotationContent(item)
+            annotationOptions[item.id] = result.options
+            annotationContents.append((item.id, result.content))
+        }
+    }
+
+    var annotations: some View {
+        ForEach(annotationContents, id: \.0) { (id: AnyHashable, content: () -> Content) in
+            if let frame = annotationsLayouts[id] {
+                content()
+                    .frame(width: frame.width, height: frame.height)
+                    .offset(x: frame.minX, y: frame.minY)
+            }
+        }
+    }
+
+    public var body: some View {
+        ZStack(alignment: .topLeading) {
+            InternalMap(
+                camera: camera,
+                mapDependencies: mapDependencies,
+                annotationsOptions: annotationOptions,
+                mapInitOptions: mapInitOptions) {
+                    annotationsLayouts = $0
+                }
+            annotations
+        }
+    }
+}
+
+@available(iOS 13.0, *)
+extension Map where Content == Never {
+    /// Creates a map.
     ///
     /// - Parameters:
     ///     - camera: The camera state to display. If not specified, the default camera options from style will be used. See [center](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-center), [zoom](https://docs.mapbox.com/mapbox-gl-js/style-spec/root/#zoom), [bearing](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-bearing), [pitch](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-pitch).
@@ -43,12 +108,6 @@ public struct Map: View {
     ) {
         self.camera = camera
         self.mapInitOptions = mapInitOptions
-    }
-
-    public var body: some View {
-        ZStack {
-            InternalMap(camera: camera, mapDependencies: mapDependencies, mapInitOptions: mapInitOptions)
-        }
     }
 }
 
@@ -91,7 +150,7 @@ extension Map {
     ///
     /// - Parameters:
     ///  - action: The action to perform.
-    public func onMapTapGesture(perform action: @escaping TapAction) -> Self {
+    public func onMapTapGesture(perform action: @escaping MapTapAction) -> Self {
         set(\.mapDependencies.actions.onMapTapGesture, action)
     }
 
@@ -102,7 +161,7 @@ extension Map {
     /// - Parameters:
     ///  - layerIds: The identifiers of layers where to perform features lookup.
     ///  - action: The action to perform.
-    public func onLayerTapGesture(_ layerIds: String..., perform action: @escaping LayerTapAction) -> Self {
+    public func onLayerTapGesture(_ layerIds: String..., perform action: @escaping MapLayerTapAction) -> Self {
         var updated = self
         updated.mapDependencies.actions.layerTapActions.append((layerIds, action))
         return updated

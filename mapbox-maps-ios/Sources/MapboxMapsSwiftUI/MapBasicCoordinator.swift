@@ -3,7 +3,7 @@ import SwiftUI
 import UIKit
 
 @available(iOS 13.0, *)
-public final class MapCoordinator {
+public final class MapBasicCoordinator {
     typealias CameraSetter = (CameraState) -> Void
 
     var actions: MapDependencies.Actions?
@@ -12,6 +12,7 @@ public final class MapCoordinator {
     private var queriesBag = Bag()
     private var setCamera: CameraSetter?
     private var mapView: MapViewFacade?
+
     private let mainQueue: MainQueueProtocol
 
     init(setCamera: CameraSetter?, mainQueue: MainQueueProtocol = MainQueueWrapper()) {
@@ -55,7 +56,7 @@ public final class MapCoordinator {
                 expectedCamera = mapboxMap.cameraState
             }
 
-            wrapError {
+            wrapAssignError {
                 // The camera bounds update is known to change camera if
                 // the current camera state is out of desired bounds.
                 try mapboxMap.setCameraBounds(with: deps.cameraBounds)
@@ -99,7 +100,7 @@ public final class MapCoordinator {
             return mapView.mapboxMap.queryRenderedFeatures(with: point, options: options) { result in
                 if let features = try? result.get(),
                    !features.isEmpty {
-                    let payload = Map.LayerTapPayload(
+                    let payload = MapLayerTapPayload(
                         point: point,
                         coordinate: coordinate,
                         features: features)
@@ -110,16 +111,8 @@ public final class MapCoordinator {
     }
 }
 
-private func wrapError(_ body: () throws -> Void) {
-    do {
-        try body()
-    } catch {
-        print("error: \(error)") // TODO: Logger
-    }
-}
-
 private func assign<T: Equatable>(_ oldValue: T, _ setter: (T) throws -> Void, value: T) {
-    wrapError {
+    wrapAssignError {
         if oldValue != value {
             try setter(value)
         }

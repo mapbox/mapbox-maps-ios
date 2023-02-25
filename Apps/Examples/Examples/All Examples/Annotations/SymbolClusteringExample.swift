@@ -45,6 +45,7 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
 
         // Create a GeoJSONSource using the previously specified URL.
         var source = GeoJSONSource()
+        source.generateId = true
         source.data = .url(url)
 
         // Enable clustering for this source.
@@ -117,38 +118,41 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
 
         // Set the color of the icons based on the number of points within
         // a given cluster. The first value is a default value.
-        clusteredLayer.circleColor = .expression(Exp(.step) {
-            Exp(.get) { "point_count" }
-            UIColor.systemGreen
-            50
-            UIColor.systemBlue
-            100
-            UIColor.systemRed
-        })
+        clusteredLayer.circleColor = .expression(
+            Exp(.switchCase) {
+                Exp(.boolean) {
+                    Exp(.featureState) { "selected" }
+                    false
+                }
+                UIColor.systemGreen
+                UIColor.systemBlue
+            }
+        )
 
         clusteredLayer.circleRadius = .constant(25)
 
         return clusteredLayer
     }
 
-    func createUnclusteredLayer() -> SymbolLayer {
+    func createUnclusteredLayer() -> CircleLayer {
         // Create a symbol layer to represent the points that aren't clustered.
-        var unclusteredLayer = SymbolLayer(id: "unclustered-point-layer")
+        var unclusteredLayer = CircleLayer(id: "unclustered-point-layer")
 
         // Filter out clusters by checking for `point_count`.
         unclusteredLayer.filter = Exp(.not) {
             Exp(.has) { "point_count" }
         }
-        unclusteredLayer.iconImage = .constant(.name("fire-station-icon"))
-        unclusteredLayer.iconColor = .constant(StyleColor(.white))
+        unclusteredLayer.circleColor = .expression(
+            Exp(.switchCase) {
+                Exp(.boolean) {
+                    Exp(.featureState) { "selected" }
+                    false
+                }
+                UIColor.systemGreen
+                UIColor.systemBlue
+            }
+        )
 
-        // Rotate the icon image based on the recorded water flow.
-        // The `mod` operator allows you to use the remainder after dividing
-        // the specified values.
-        unclusteredLayer.iconRotate = .expression(Exp(.mod) {
-            Exp(.get) { "FLOW" }
-            360
-        })
 
         return unclusteredLayer
     }
@@ -175,24 +179,12 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
                                                 filter: nil)) { [weak self] result in
             switch result {
             case .success(let queriedFeatures):
-                // Return the first feature at that location, then pass attributes to the alert controller.
-                // Check whether the feature has values for `ASSETNUM` and `LOCATIONDETAIL`. These properties
-                // come from the fire hydrant dataset and indicate that the selected feature is not clustered.
-                if let selectedFeatureProperties = queriedFeatures.first?.feature.properties,
-                   case let .string(featureInformation) = selectedFeatureProperties["ASSETNUM"],
-                   case let .string(location) = selectedFeatureProperties["LOCATIONDETAIL"] {
-                    self?.showAlert(withTitle: "Hydrant \(featureInformation)", and: "\(location)")
-                // If the feature is a cluster, it will have `point_count` and `cluster_id` properties. These are assigned
-                // when the cluster is created.
-                } else if let selectedFeatureProperties = queriedFeatures.first?.feature.properties,
-                  case let .number(pointCount) = selectedFeatureProperties["point_count"],
-                  case let .number(clusterId) = selectedFeatureProperties["cluster_id"],
-                  case let .number(maxFlow) = selectedFeatureProperties["max"],
-                  case let .number(sum) = selectedFeatureProperties["sum"],
-                  case let .boolean(in_e9) = selectedFeatureProperties["in_e9"] {
-                // If the tap landed on a cluster, pass the cluster ID and point count to the alert.
-                    let inEngineNine = in_e9 ? "Some hydrants belong to Engine 9." : "No hydrants belong to Engine 9."
-                    self?.showAlert(withTitle: "Cluster ID \(Int(clusterId))", and: "There are \(Int(pointCount)) hydrants in this cluster. The highest water flow is \(Int(maxFlow)) and the collective flow is \(Int(sum)). \(inEngineNine)")
+
+                if case .number(let featureId) = queriedFeatures.first?.feature.identifier {            
+                    self!.mapView.mapboxMap.setFeatureState(
+                        sourceId: "fire-hydrant-source",
+                        featureId: Int(featureId).description,
+                        state: ["selected": true])
                 }
             case .failure(let error):
                 self?.showAlert(withTitle: "An error occurred: \(error.localizedDescription)", and: "Please try another hydrant")

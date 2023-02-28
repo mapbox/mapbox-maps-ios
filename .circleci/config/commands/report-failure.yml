@@ -15,7 +15,7 @@ steps:
         fi
       when: on_fail
   - slack/notify:
-      branch_pattern: main
+      branch_pattern: main,develop
       event: fail
       custom: |
         {

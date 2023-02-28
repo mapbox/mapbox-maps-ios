@@ -62,7 +62,9 @@ jobs:
         - Build SDK
       filters:
         branches:
-          only: main
+          only:
+            - main
+            - develop
 
   # Run unit tests on CI simulator
   - build-tests:
@@ -135,7 +137,9 @@ jobs:
         - Build MapboxTestHost tests
       filters:
         branches:
-          only: main
+          only:
+            - main
+            - develop
 
   # Build and Run tests on Examples scheme.
   # Enabled by-default on 'main' branch
@@ -158,7 +162,9 @@ jobs:
         - Build Examples tests
       filters:
         branches:
-          only: main
+          only:
+            - main
+            - develop
 
   # Configure triggering end-to-end verification
   - sdk-e2e-test:
@@ -169,6 +175,7 @@ jobs:
           branches:
               ignore:
                   - main
+                  - develop
       name: run-sdk-e2e-test-devel
   - sdk-e2e-test:
       context:
@@ -178,6 +185,7 @@ jobs:
           branches:
               only:
                   - main
+                  - develop
           tags:
               only: /^v.*/
       name: run-sdk-e2e-test-validation
@@ -189,7 +197,9 @@ jobs:
         - Maps SDK/Public Mapbox Token
       filters:
         branches:
-          only: main
+          only:
+            - main
+            - develop
   - upload-docc:
       context:
         - Slack Orb
@@ -197,4 +207,6 @@ jobs:
         - generate-docc
       filters:
         branches:
-          only: main
+          only:
+            - main
+            - develop

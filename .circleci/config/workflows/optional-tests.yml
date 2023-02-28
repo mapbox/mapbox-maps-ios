@@ -4,7 +4,9 @@ jobs:
       type: approval
       filters:
         branches:
-          ignore: main
+          ignore:
+            - main
+            - develop
   - build-host-tests:
       context:
         - Slack Orb
@@ -29,7 +31,9 @@ jobs:
       type: approval
       filters:
         branches:
-          ignore: main
+          ignore:
+            - main
+            - develop
   - build-examples-tests:
       context:
         - Slack Orb

@@ -6,6 +6,7 @@ triggers:
         branches:
           only:
             - main
+            - develop
 jobs:
   - swiftlint:
       context:

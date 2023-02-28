@@ -9,6 +9,11 @@ settings:
   DEVELOPMENT_TEAM: GJZR2MEM28
   TARGETED_DEVICE_FAMILY: 1,2
 targets:
+  MapboxMapsSwiftUI:
+    templates:
+      - dynamicFramework
+    dependencies:
+      - target: MapboxMaps
   MapboxMaps:
     templates:
       - dynamicFramework
@@ -117,6 +122,7 @@ targetTemplates:
       - target: Turf/Turf
       - target: MME/MapboxMobileEvents
       - target: MapboxMaps
+      - target: MapboxMapsSwiftUI
   unitTest:
       type: bundle.unit-test
       platform: iOS

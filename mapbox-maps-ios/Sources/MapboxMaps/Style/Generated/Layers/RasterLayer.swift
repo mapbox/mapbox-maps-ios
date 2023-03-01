@@ -30,6 +30,21 @@ public struct RasterLayer: Layer {
     /// Transition options for `rasterBrightnessMin`.
     public var rasterBrightnessMinTransition: StyleTransition?
 
+    /// Defines a color map by which to colorize a raster layer, parameterized by the `["raster-value"]` expression and evaluated at 1024 uniformly spaced steps over the range specified by `raster-color-range`.
+    public var rasterColor: Value<StyleColor>?
+
+    /// When `raster-color` is active, specifies the combination of source RGB channels used to compute the raster value. Computed using the equation `mix.r * src.r + mix.g * src.g + mix.b * src.b + mix.a`. The first three components specify the mix of source red, green, and blue channels, respectively. The fourth component serves as a constant offset and is *not* multipled by source alpha. Source alpha is instead carried through and applied as opacity to the colorized result. Default value corresponds to RGB luminosity.
+    public var rasterColorMix: Value<[Double]>?
+
+    /// Transition options for `rasterColorMix`.
+    public var rasterColorMixTransition: StyleTransition?
+
+    /// When `raster-color` is active, specifies the range over which `raster-color` is tabulated. Units correspond to the computed raster value via `raster-color-mix`.
+    public var rasterColorRange: Value<[Double]>?
+
+    /// Transition options for `rasterColorRange`.
+    public var rasterColorRangeTransition: StyleTransition?
+
     /// Increase or reduce the contrast of the image.
     public var rasterContrast: Value<Double>?
 
@@ -81,6 +96,11 @@ public struct RasterLayer: Layer {
         try paintContainer.encodeIfPresent(rasterBrightnessMaxTransition, forKey: .rasterBrightnessMaxTransition)
         try paintContainer.encodeIfPresent(rasterBrightnessMin, forKey: .rasterBrightnessMin)
         try paintContainer.encodeIfPresent(rasterBrightnessMinTransition, forKey: .rasterBrightnessMinTransition)
+        try paintContainer.encodeIfPresent(rasterColor, forKey: .rasterColor)
+        try paintContainer.encodeIfPresent(rasterColorMix, forKey: .rasterColorMix)
+        try paintContainer.encodeIfPresent(rasterColorMixTransition, forKey: .rasterColorMixTransition)
+        try paintContainer.encodeIfPresent(rasterColorRange, forKey: .rasterColorRange)
+        try paintContainer.encodeIfPresent(rasterColorRangeTransition, forKey: .rasterColorRangeTransition)
         try paintContainer.encodeIfPresent(rasterContrast, forKey: .rasterContrast)
         try paintContainer.encodeIfPresent(rasterContrastTransition, forKey: .rasterContrastTransition)
         try paintContainer.encodeIfPresent(rasterFadeDuration, forKey: .rasterFadeDuration)
@@ -111,6 +131,11 @@ public struct RasterLayer: Layer {
             rasterBrightnessMaxTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterBrightnessMaxTransition)
             rasterBrightnessMin = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .rasterBrightnessMin)
             rasterBrightnessMinTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterBrightnessMinTransition)
+            rasterColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .rasterColor)
+            rasterColorMix = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .rasterColorMix)
+            rasterColorMixTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterColorMixTransition)
+            rasterColorRange = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .rasterColorRange)
+            rasterColorRangeTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterColorRangeTransition)
             rasterContrast = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .rasterContrast)
             rasterContrastTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterContrastTransition)
             rasterFadeDuration = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .rasterFadeDuration)
@@ -149,6 +174,11 @@ public struct RasterLayer: Layer {
         case rasterBrightnessMaxTransition = "raster-brightness-max-transition"
         case rasterBrightnessMin = "raster-brightness-min"
         case rasterBrightnessMinTransition = "raster-brightness-min-transition"
+        case rasterColor = "raster-color"
+        case rasterColorMix = "raster-color-mix"
+        case rasterColorMixTransition = "raster-color-mix-transition"
+        case rasterColorRange = "raster-color-range"
+        case rasterColorRangeTransition = "raster-color-range-transition"
         case rasterContrast = "raster-contrast"
         case rasterContrastTransition = "raster-contrast-transition"
         case rasterFadeDuration = "raster-fade-duration"

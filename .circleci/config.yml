@@ -16,6 +16,9 @@ jobs:
       - run:
           name: Generate config
           command: circleci config pack .circleci/config > circle.yml
+      - run:
+          name: Validate config
+          command: circleci config validate circle.yml
       - continuation/continue:
           configuration_path: circle.yml
 

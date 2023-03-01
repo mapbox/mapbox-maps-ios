@@ -7,9 +7,10 @@ manifests:
   - type: Podspec
   - type: packager
 dependencies:
-  - name: MapboxCoreMaps
-    variations:
-      Package.swift: mapbox-core-maps-ios
+  # Temporary disabled since we use .binaryTarget instead of SPM dependency for MapboxCoreMaps
+  # - name: MapboxCoreMaps
+  #   variations:
+  #     Package.swift: mapbox-core-maps-ios
   - name: MapboxCommon
     variations:
       Package.swift: mapbox-common-ios

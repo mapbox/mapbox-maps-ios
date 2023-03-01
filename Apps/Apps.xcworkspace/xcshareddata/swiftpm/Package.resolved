@@ -20,15 +20,6 @@
         }
       },
       {
-        "package": "MapboxCoreMaps",
-        "repositoryURL": "https://github.com/mapbox/mapbox-core-maps-ios.git",
-        "state": {
-          "branch": null,
-          "revision": "81b929488b5bbc467df4cf294ceffa0ae98ef0e0",
-          "version": "10.12.0-beta.1"
-        }
-      },
-      {
         "package": "MapboxMobileEvents",
         "repositoryURL": "https://github.com/mapbox/mapbox-events-ios.git",
         "state": {

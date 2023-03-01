@@ -206,6 +206,9 @@ public extension Expression {
         /// Returns the feature properties object.  Note that in some cases, it may be more efficient to use `["get", "property_name"]` directly.
         case properties = "properties"
 
+        /// Returns the raster value of a pixel computed via `raster-color-mix`. Can only be used in the `raster-color` property.
+        case rasterValue = "raster-value"
+
         /// Returns the IETF language tag of the locale being used by the provided `collator`. This can be used to determine the default system locale, or to determine if a requested locale was successfully loaded.
         case resolvedLocale = "resolved-locale"
 

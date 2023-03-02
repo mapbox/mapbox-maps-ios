@@ -51,17 +51,8 @@ public struct OrnamentOptions: Equatable {
     }
 }
 
-/// :nodoc:
-/// Deprecated. This protocol will be removed in a future major version.
-public protocol OrnamentOptionsProtocol {
-    /// :nodoc:
-    var position: OrnamentPosition { get set }
-    /// :nodoc:
-    var margins: CGPoint { get set }
-}
-
 /// Used to configure position, margin, and visibility for the map's scale bar view.
-public struct ScaleBarViewOptions: OrnamentOptionsProtocol, Equatable {
+public struct ScaleBarViewOptions: Equatable {
 
     /// The position of the scale bar view.
     ///
@@ -104,7 +95,7 @@ public struct ScaleBarViewOptions: OrnamentOptionsProtocol, Equatable {
 }
 
 /// Used to configure position, margin, image, and visibility for the map's compass view.
-public struct CompassViewOptions: OrnamentOptionsProtocol, Equatable {
+public struct CompassViewOptions: Equatable {
 
     /// The position of the compass view.
     ///
@@ -146,7 +137,7 @@ public struct CompassViewOptions: OrnamentOptionsProtocol, Equatable {
 }
 
 /// Used to configure position, margin, and visibility for the map's attribution button.
-public struct AttributionButtonOptions: OrnamentOptionsProtocol, Equatable {
+public struct AttributionButtonOptions: Equatable {
 
     /// The position of the attribution button.
     ///
@@ -179,7 +170,7 @@ public struct AttributionButtonOptions: OrnamentOptionsProtocol, Equatable {
 }
 
 /// Used to configure position, margin, and visibility for the map's logo view.
-public struct LogoViewOptions: OrnamentOptionsProtocol, Equatable {
+public struct LogoViewOptions: Equatable {
 
     /// The position of the logo view.
     ///

@@ -37,31 +37,6 @@ public enum LayerType: String, Codable {
     /// Layer representing the sky
     case sky
 
-    @available(*, deprecated, message: "Unsupported layer type")
-    case model
-
-    public init?(rawValue: String) {
-        let supportedTypes: [LayerType] = [
-            .fill,
-            .line,
-            .symbol,
-            .circle,
-            .heatmap,
-            .fillExtrusion,
-            .raster,
-            .hillshade,
-            .background,
-            .locationIndicator,
-            .sky
-        ]
-
-        guard let matchingCase = supportedTypes.first(where: { $0.rawValue == rawValue }) else {
-            return nil
-        }
-
-        self = matchingCase
-    }
-
     /// The associated Swift struct type
     public var layerType: Layer.Type {
         switch self {
@@ -87,8 +62,6 @@ public enum LayerType: String, Codable {
             return LocationIndicatorLayer.self
         case .sky:
             return SkyLayer.self
-        case .model:
-            fatalError("Not supported")
         }
     }
 }

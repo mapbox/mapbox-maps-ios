@@ -5,7 +5,8 @@ jobs:
         - SDK Registry Token
       filters:
         tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+          # Matches any release vX.Y.Z, but ignores -alpha releases
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+(?!-alpha).*/
         branches:
           ignore: /.*/
   - build-baseline-sdk:
@@ -16,10 +17,12 @@ jobs:
         - release-precheck
       filters:
         tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+(?!-alpha).*/
         branches:
           ignore: /.*/
   - build-dynamic:
+      check-api-breakage: true
+      project-name: mobile-maps-ios
       context:
         - Slack Orb
         - SDK Registry Token
@@ -27,7 +30,7 @@ jobs:
         - release-precheck
       filters:
         tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+(?!-alpha).*/
         branches:
           ignore: /.*/
   - build-static:
@@ -38,7 +41,7 @@ jobs:
         - release-precheck
       filters:
         tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+(?!-alpha).*/
         branches:
           ignore: /.*/
   - build-docs:
@@ -49,7 +52,7 @@ jobs:
         - release-precheck
       filters:
         tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+(?!-alpha).*/
         branches:
           ignore: /.*/
   - build-studio-preview:
@@ -60,7 +63,7 @@ jobs:
         - release-precheck
       filters:
         tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+(?!-alpha).*/
         branches:
           ignore: /.*/
   - check-api-compatibility:
@@ -71,10 +74,11 @@ jobs:
         - build-dynamic
       filters:
         tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+(?!-alpha).*/
         branches:
           ignore: /.*/
   - create-registry-pr:
+      project-name: mobile-maps-ios
       context:
         - Slack Orb
       requires:
@@ -84,7 +88,7 @@ jobs:
         - check-api-compatibility
       filters:
         tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+(?!-alpha).*/
         branches:
           ignore: /.*/
   - wait-registry-pr:
@@ -93,10 +97,11 @@ jobs:
       type: approval
       filters:
         tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+(?!-alpha).*/
         branches:
           ignore: /.*/
   - check-registry:
+      project-name: mobile-maps-ios
       context:
         - Slack Orb
         - SDK Registry Token
@@ -104,7 +109,7 @@ jobs:
         - wait-registry-pr
       filters:
         tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+(?!-alpha).*/
         branches:
           ignore: /.*/
   - create-docs-prs:
@@ -114,7 +119,7 @@ jobs:
         - check-registry
       filters:
         tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+(?!-alpha).*/
         branches:
           ignore: /.*/
   - update-examples:
@@ -128,7 +133,7 @@ jobs:
         - check-registry
       filters:
         tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+(?!-alpha).*/
         branches:
           ignore: /.*/
   - publish-podspec:
@@ -140,7 +145,7 @@ jobs:
         - check-registry
       filters:
         tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+(?!-alpha).*/
         branches:
           ignore: /.*/
   - validate-integrations:
@@ -151,7 +156,7 @@ jobs:
         - publish-podspec
       filters:
         tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+(?!-alpha).*/
         branches:
           ignore: /.*/
   - create-draft-release:
@@ -163,6 +168,6 @@ jobs:
         - validate-integrations
       filters:
         tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+(?!-alpha).*/
         branches:
           ignore: /.*/

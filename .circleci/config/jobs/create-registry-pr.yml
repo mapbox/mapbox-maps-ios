@@ -1,3 +1,7 @@
+parameters:
+  project-name:
+    description: Project name in SDK Registry.
+    type: string
 executor: xcode-latest
 steps:
   - checkout-root
@@ -8,5 +12,5 @@ steps:
   - run: ls -lGA workspace
   - run:
       name: Create SDK Registry PR
-      command: scripts/release/create-api-downloads-pr.sh mobile-maps-ios "$VERSION"
+      command: scripts/release/create-api-downloads-pr.sh << parameters.project-name >> "$VERSION"
   - slack-notify-failure-if-any

@@ -944,7 +944,7 @@ extension MapboxMap {
 
 // MARK: - Map Event handling
 
-extension MapboxMap: MapEventsObservable {
+extension MapboxMap {
 
     /// Listen to a single occurrence of a Map event.
     ///
@@ -965,43 +965,6 @@ extension MapboxMap: MapEventsObservable {
     @discardableResult
     public func onNext<Payload>(event eventType: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable {
         return observable.onNext(event: eventType, handler: handler)
-    }
-
-    /// Listen to a single occurrence of a Map event.
-    ///
-    /// This will observe the next (and only the next) event of the specified
-    /// type. After observation, the underlying subscriber will unsubscribe from
-    /// the map or snapshotter.
-    ///
-    /// If you need to unsubscribe before the event fires, call `cancel()` on
-    /// the returned `Cancelable` object.
-    ///
-    /// - Parameters:
-    ///   - eventType: The event type to listen to.
-    ///   - handler: The closure to execute when the event occurs.
-    ///
-    /// - Returns: A `Cancelable` object that you can use to stop listening for
-    ///     the event. This is especially important if you have a retain cycle in
-    ///     the handler.
-    @available(*, deprecated, renamed: "onNext(event:handler:)")
-    @discardableResult
-    public func onNext(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
-        return observable.onNext([eventType], handler: handler)
-    }
-
-    /// Listen to multiple occurrences of a Map event.
-    ///
-    /// - Parameters:
-    ///   - eventType: The event type to listen to.
-    ///   - handler: The closure to execute when the event occurs.
-    ///
-    /// - Returns: A `Cancelable` object that you can use to stop listening for
-    ///     events. This is especially important if you have a retain cycle in
-    ///     the handler.
-    @available(*, deprecated, renamed: "onEvery(event:handler:)")
-    @discardableResult
-    public func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
-        return observable.onEvery([eventType], handler: handler)
     }
 
     /// Listen to multiple occurrences of a Map event.

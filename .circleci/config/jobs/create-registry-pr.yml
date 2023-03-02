@@ -7,6 +7,9 @@ steps:
       at: workspace
   - run: ls -lGA workspace
   - run:
-      name: Create SDK Registry PR
+      name: Create SDK Registry PR for public
       command: scripts/release/create-api-downloads-pr.sh mobile-maps-ios "$VERSION"
+  - run:
+      name: Create SDK Registry PR for private preview
+      command: scripts/release/create-api-downloads-pr.sh mobile-maps-ios-privatepreview "$VERSION"-private
   - slack-notify-failure-if-any

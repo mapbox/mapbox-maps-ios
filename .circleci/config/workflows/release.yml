@@ -30,6 +30,17 @@ jobs:
           only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
         branches:
           ignore: /.*/
+  - build-private-preview:
+      context:
+        - Slack Orb
+        - SDK Registry Token
+      requires:
+        - release-precheck
+      filters:
+        tags:
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+        branches:
+          ignore: /.*/
   - build-static:
       context:
         - Slack Orb
@@ -69,6 +80,7 @@ jobs:
       requires:
         - build-baseline-sdk
         - build-dynamic
+        - build-private-preview
       filters:
         tags:
           only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/

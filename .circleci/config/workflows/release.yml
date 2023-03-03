@@ -33,6 +33,17 @@ jobs:
           only: /^v[0-9]+\.[0-9]+\.[0-9]+(?!-alpha).*/
         branches:
           ignore: /.*/
+  - build-private-preview:
+      context:
+        - Slack Orb
+        - SDK Registry Token
+      requires:
+        - release-precheck
+      filters:
+        tags:
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+(?!-alpha).*/
+        branches:
+          ignore: /.*/
   - build-static:
       context:
         - Slack Orb
@@ -72,6 +83,7 @@ jobs:
       requires:
         - build-baseline-sdk
         - build-dynamic
+        - build-private-preview
       filters:
         tags:
           only: /^v[0-9]+\.[0-9]+\.[0-9]+(?!-alpha).*/
@@ -79,6 +91,7 @@ jobs:
           ignore: /.*/
   - create-registry-pr:
       project-name: mobile-maps-ios
+      include-private-sdk: true
       context:
         - Slack Orb
       requires:

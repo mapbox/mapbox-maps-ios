@@ -27,15 +27,6 @@ public struct GestureOptions: Equatable {
     /// Defaults to `true`.
     public var pinchEnabled: Bool
 
-    /// Whether rotation is enabled for the pinch gesture.
-    ///
-    /// Defaults to `true`.
-    @available(*, deprecated, renamed: "rotateEnabled")
-    public var pinchRotateEnabled: Bool {
-        get { rotateEnabled }
-        set { rotateEnabled = newValue }
-    }
-
     /// Whether rotation gesture is enabled.
     ///
     /// Defaults to `true`.

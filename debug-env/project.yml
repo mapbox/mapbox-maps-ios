@@ -16,7 +16,6 @@ targets:
       - target: MapboxCoreMaps/MapboxCommon
       - target: MapboxCoreMaps/MapboxCoreMaps
       - target: Turf/Turf
-      - target: MME/MapboxMobileEvents
     scheme:
       testTargets:
         - MapboxMapsTests
@@ -115,7 +114,6 @@ targetTemplates:
       - target: MapboxCoreMaps/MapboxCommon
       - target: MapboxCoreMaps/MapboxCoreMaps
       - target: Turf/Turf
-      - target: MME/MapboxMobileEvents
       - target: MapboxMaps
   unitTest:
       type: bundle.unit-test
@@ -140,8 +138,6 @@ targetTemplates:
 projectReferences:
   Turf:
     path: "build/turf-swift/Turf.xcodeproj"
-  MME:
-    path: "build/mapbox-events-ios/MapboxMobileEvents.xcodeproj"
   MapboxCoreMaps:
     path: "build/mapbox-gl-native-internal/build/ios/Mapbox GL Native.xcodeproj"
   CocoaImageHashing:

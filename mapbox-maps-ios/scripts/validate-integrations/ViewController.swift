@@ -9,11 +9,11 @@ class ViewController: UIViewController {
         super.viewDidLoad()
 
         view.addSubview(mapView)
-        mapView.mapboxMap.onNext(.mapLoaded) { _ in
+        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
             self.showAlert(text: "Loaded")
         }
 
-        mapView.mapboxMap.onNext(.mapLoadingError) { _ in
+        mapView.mapboxMap.onNext(event: .mapLoadingError) { _ in
             self.showAlert(text: "Failed")
         }
     }

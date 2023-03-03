@@ -2,17 +2,15 @@ import Foundation
 import CoreGraphics
 import CoreLocation
 
-/// :nodoc:
-/// Deprecated. These extensions will be removed from the public API in a future major version.
 extension NSNumber {
 
     /// Converts an `NSNumber` to a `CGFloat` value from its `Double` representation.
-    public var CGFloat: CGFloat {
+    internal var CGFloat: CGFloat {
         CoreGraphics.CGFloat(doubleValue)
     }
 
     /// Converts the `Float` value of an `NSNumber` to a `CLLocationDirection` representation.
-    public var CLLocationDirection: CLLocationDirection {
+    internal var CLLocationDirection: CLLocationDirection {
         CoreLocation.CLLocationDirection(doubleValue)
     }
 

@@ -2,6 +2,9 @@ parameters:
   project-name:
     description: Project name in SDK Registry.
     type: string
+  include-private-sdk:
+    description: Whether to include private flavor of SDK to release.
+    type: boolean
 executor: xcode-latest
 steps:
   - checkout-root
@@ -13,4 +16,10 @@ steps:
   - run:
       name: Create SDK Registry PR
       command: scripts/release/create-api-downloads-pr.sh << parameters.project-name >> "$VERSION"
+  - when:
+      condition: << parameters.include-private-sdk >>
+      steps:
+        - run:
+            name: Create SDK Registry PR for private SDK
+            command: scripts/release/create-api-downloads-pr.sh << parameters.project-name >>-private "$VERSION"-private
   - slack-notify-failure-if-any

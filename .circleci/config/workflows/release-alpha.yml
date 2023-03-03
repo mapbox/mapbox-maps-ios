@@ -12,9 +12,10 @@ jobs:
         branches:
           ignore: /.*/
   - create-registry-pr:
+      project-name: mobile-maps-ios-preview
+      include-private-sdk: false
       context:
         - Slack Orb
-      project-name: mobile-maps-ios-preview
       requires:
         - build-dynamic
       filters:

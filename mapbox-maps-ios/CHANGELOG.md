@@ -10,6 +10,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Remove experimental `MapboxMap.setRenderCache(_:)` method.
 * Remove deprecated `GestureOptions.pinchRotateEnabled`.
 * Remove deprecated `Location` initializer.
+* Remove deprecated transition properties from layers.
 
 ## 10.12.0-beta.1 - February 22, 2023
 

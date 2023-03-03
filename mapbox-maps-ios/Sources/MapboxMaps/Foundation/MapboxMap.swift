@@ -784,49 +784,6 @@ extension MapboxMap: MapFeatureQueryable {
                                                                   concreteErrorType: MapError.self))
     }
 
-    /// Queries for feature extension values in a GeoJSON source.
-    ///
-    /// - Parameters:
-    ///   - sourceId: The identifier of the source to query.
-    ///   - feature: Feature to look for in the query.
-    ///   - extension: Currently supports keyword `supercluster`.
-    ///   - extensionField: Currently supports following three extensions:
-    ///
-    ///       1. `children`: returns the children of a cluster (on the next zoom
-    ///         level).
-    ///       2. `leaves`: returns all the leaves of a cluster (given its cluster_id)
-    ///       3. `expansion-zoom`: returns the zoom on which the cluster expands
-    ///         into several children (useful for "click to zoom" feature).
-    ///
-    ///   - args: Used for further query specification when using 'leaves'
-    ///         extensionField. Now only support following two args:
-    ///
-    ///       1. `limit`: the number of points to return from the query (must
-    ///             use type 'UInt64', set to maximum for all points)
-    ///       2. `offset`: the amount of points to skip (for pagination, must
-    ///             use type 'UInt64')
-    ///
-    ///   - completion: The result could be a feature extension value containing
-    ///         either a value (expansion-zoom) or a feature collection (children
-    ///         or leaves). An error is passed if the operation was not successful.
-    /// Deprecated. Use getGeoJsonClusterLeaves/getGeoJsonClusterChildren/getGeoJsonClusterExpansionZoom to instead.
-    public func queryFeatureExtension(for sourceId: String,
-                                      feature: Feature,
-                                      extension: String,
-                                      extensionField: String,
-                                      args: [String: Any]? = nil,
-                                      completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void) {
-
-        __map.queryFeatureExtensions(forSourceIdentifier: sourceId,
-                                     feature: MapboxCommon.Feature(feature),
-                                     extension: `extension`,
-                                     extensionField: extensionField,
-                                     args: args,
-                                     callback: coreAPIClosureAdapter(for: completion,
-                                                                     type: FeatureExtensionValue.self,
-                                                                     concreteErrorType: MapError.self))
-    }
-
     /// Returns all the leaves (original points) of a cluster (given its cluster_id) from a GeoJSON source, with pagination support: limit is the number of leaves
     /// to return (set to Infinity for all points), and offset is the amount of points to skip (for pagination).
     ///

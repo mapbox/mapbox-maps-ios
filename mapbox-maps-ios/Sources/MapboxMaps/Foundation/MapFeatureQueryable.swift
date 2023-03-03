@@ -17,14 +17,6 @@ internal protocol MapFeatureQueryable: AnyObject {
                              options: SourceQueryOptions,
                              completion: @escaping (Result<[QueriedFeature], Error>) -> Void)
 
-    //swiftlint:disable:next function_parameter_count
-    func queryFeatureExtension(for sourceId: String,
-                               feature: Feature,
-                               extension: String,
-                               extensionField: String,
-                               args: [String: Any]?,
-                               completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void)
-
     func getGeoJsonClusterLeaves(forSourceId sourceId: String,
                                  feature: Feature,
                                  limit: UInt64,

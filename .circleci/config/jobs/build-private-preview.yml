@@ -6,7 +6,7 @@ steps:
       skip-dependencies: true
   - install-xcodegen
   - install-python-dependencies
-  - run: 
+  - run:
       name: Apply private changes
       command: cp -R ../private/Sources/MapboxMaps Sources
   - run:
@@ -28,5 +28,5 @@ steps:
         - latest.private.api.json
   - run:
       name: Upload to S3
-      command: scripts/release/upload-to-registry.sh scripts/release/packager/MapboxMaps.zip mobile-maps-ios-privatepreview "$VERSION"-private MapboxMaps.zip
+      command: scripts/release/upload-to-registry.sh scripts/release/packager/MapboxMaps.zip mobile-maps-ios-private "$VERSION"-private MapboxMaps.zip
   - slack-notify-failure-if-any

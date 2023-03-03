@@ -1,3 +1,11 @@
+parameters:
+  check-api-breakage:
+    description: Whether api breakage check is needed.
+    type: boolean
+    default: true
+  project-name:
+    description: Project name in SDK Registry.
+    type: string
 executor: xcode-sdk-min
 resource_class: macos.x86.medium.gen2
 steps:
@@ -16,14 +24,17 @@ steps:
       root: scripts/release/packager
       paths:
         - MapboxMaps.zip
-  - run:
-      name: Dump the SDK to a JSON file
-      command: scripts/api-compatibility-check/breaking-api-check.py dump scripts/release/packager/MapboxMaps.zip --module MapboxMaps -o latest.api.json
-  - persist_to_workspace:
-      root: .
-      paths:
-        - latest.api.json
+  - when:
+      condition: << parameters.check-api-breakage >>
+      steps:
+        - run:
+            name: Dump the SDK to a JSON file
+            command: scripts/api-compatibility-check/breaking-api-check.py dump scripts/release/packager/MapboxMaps.zip --module MapboxMaps -o latest.api.json
+        - persist_to_workspace:
+            root: .
+            paths:
+                - latest.api.json
   - run:
       name: Upload to S3
-      command: scripts/release/upload-to-registry.sh scripts/release/packager/MapboxMaps.zip mobile-maps-ios "$VERSION" MapboxMaps.zip
+      command: scripts/release/upload-to-registry.sh scripts/release/packager/MapboxMaps.zip << parameters.project-name >> "$VERSION" MapboxMaps.zip
   - slack-notify-failure-if-any

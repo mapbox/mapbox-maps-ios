@@ -4,6 +4,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Remove deprecated `GestureOptions.pinchRotateEnabled`.
 * Remove deprecated `Location` initializer.
 
 ## 10.12.0-beta.1 - February 22, 2023

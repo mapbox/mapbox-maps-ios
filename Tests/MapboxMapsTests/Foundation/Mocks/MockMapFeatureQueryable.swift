@@ -59,27 +59,6 @@ final class MockMapFeatureQueryable: MapFeatureQueryable {
         querySourceFeaturesForStub.call(with: .init(sourceId: sourceId, options: options, completion: completion))
     }
 
-    struct QueryFeatureExtensionParams {
-        let sourceId: String
-        let feature: Feature
-        let `extension`: String
-        let extensionField: String
-        let args: [String: Any]?
-        let completion: (Result<FeatureExtensionValue, Error>) -> Void
-    }
-    let queryFeatureExtensionStub = Stub<QueryFeatureExtensionParams, Void>()
-    // swiftlint:disable:next function_parameter_count
-    func queryFeatureExtension(
-        for sourceId: String,
-        feature: Feature,
-        extension: String,
-        extensionField: String,
-        args: [String: Any]?,
-        completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void
-    ) {
-        queryFeatureExtensionStub.call(with: .init(sourceId: sourceId, feature: feature, extension: `extension`, extensionField: extensionField, args: args, completion: completion))
-    }
-
     struct GetGeoJsonClusterLeavesParams {
         let sourceId: String
         let feature: Feature

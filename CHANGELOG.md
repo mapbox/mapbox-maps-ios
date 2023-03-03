@@ -11,6 +11,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Remove deprecated `GestureOptions.pinchRotateEnabled`.
 * Remove deprecated `Location` initializer.
 * Remove deprecated transition properties from layers.
+* Remove deprecated `queryFeatureExtension()` method. Use `getGeoJsonClusterLeaves()`/`getGeoJsonClusterChildren()`/`getGeoJsonClusterExpansionZoom()` instead. 
 
 ## 10.12.0-beta.1 - February 22, 2023
 

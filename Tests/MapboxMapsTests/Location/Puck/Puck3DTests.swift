@@ -228,7 +228,7 @@ final class Puck3DTests: XCTestCase {
         recreatePuck()
 
         interpolatedLocationProducer.location = InterpolatedLocation(
-            location: Location(with: CLLocation(latitude: 0, longitude: 0))
+            location: Location(location: CLLocation(latitude: 0, longitude: 0), accuracyAuthorization: .fullAccuracy)
         )
         style.layerExistsStub.defaultReturnValue = false
         puck3D.isActive = true

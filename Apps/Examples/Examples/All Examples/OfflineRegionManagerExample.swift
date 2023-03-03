@@ -46,7 +46,7 @@ final class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
             progressView.rightAnchor.constraint(equalTo: mapView.rightAnchor, constant: -20),
         ])
 
-        mapView.mapboxMap.onNext(.mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
             self?.setupExample()
         }
     }

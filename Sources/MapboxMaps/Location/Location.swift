@@ -35,17 +35,9 @@ import CoreLocation
     /// An accuracy authorization value.
     public let accuracyAuthorization: CLAccuracyAuthorization
 
-    /// :nodoc:
-    /// Deprecated. Initialize a `Location`. Use `init(location:heading:accuracyAuthorization:)` instead.
-    public init(with location: CLLocation, heading: CLHeading? = nil) {
-        self.location = location
-        self.heading = heading
-        self.accuracyAuthorization = .fullAccuracy
-    }
-
     /// Initialize a `Location`
     public init(location: CLLocation,
-                heading: CLHeading?,
+                heading: CLHeading? = nil,
                 accuracyAuthorization: CLAccuracyAuthorization) {
         self.location = location
         self.heading = heading

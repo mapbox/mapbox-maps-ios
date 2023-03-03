@@ -12,7 +12,6 @@ extension LayerType {
          .hillshade,
          .background,
          .locationIndicator,
-         .sky,
-         .model].randomElement()!
+         .sky].randomElement()!
     }
 }

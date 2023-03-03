@@ -167,7 +167,6 @@ final class MapboxMapTests: XCTestCase {
     func testProtocolConformance() {
         // Compilation check only
         _ = mapboxMap as MapFeatureQueryable
-        _ = mapboxMap as MapEventsObservable
     }
 
     func testBeginAndEndAnimation() {
@@ -281,26 +280,6 @@ final class MapboxMapTests: XCTestCase {
         waitForExpectations(timeout: 0.3)
     }
 
-    @available(*, deprecated)
-    func testOnNext() throws {
-        let handlerStub = Stub<Event, Void>()
-        let eventType = MapEvents.EventKind.allCases.randomElement()!
-        let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
-
-        mapboxMap.onNext(eventType, handler: handlerStub.call(with:))
-
-        XCTAssertEqual(mapboxObservable.onNextStub.invocations.count, 1)
-        XCTAssertEqual(mapboxObservable.onNextStub.invocations.first?.parameters.eventTypes, [eventType])
-        // To verify that the handler passed to MapboxMap is effectively the same as the one received by MapboxObservable,
-        // we exercise the received handler and verify that the passed one is invoked. If blocks were identifiable, maybe
-        // we'd just write this as `passedHandler === receivedHandler`.
-        let handler = try XCTUnwrap(mapboxObservable.onNextStub.invocations.first?.parameters.handler)
-        let event = Event(type: "", data: 0)
-        handler(event)
-        XCTAssertEqual(handlerStub.invocations.count, 1)
-        XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
-    }
-
     func testOnTypedNext() throws {
         func verifyInvocation<Payload>(
             eventType: MapEvents.Event<Payload>,
@@ -342,26 +321,6 @@ final class MapboxMapTests: XCTestCase {
         // swiftlint:enable opening_brace
 
         try eventInvocations.randomElement()!()
-    }
-
-    @available(*, deprecated)
-    func testOnEvery() throws {
-        let handlerStub = Stub<Event, Void>()
-        let eventType = MapEvents.EventKind.allCases.randomElement()!
-        let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
-
-        mapboxMap.onEvery(eventType, handler: handlerStub.call(with:))
-
-        XCTAssertEqual(mapboxObservable.onEveryStub.invocations.count, 1)
-        XCTAssertEqual(mapboxObservable.onEveryStub.invocations.first?.parameters.eventTypes, [eventType])
-        // To verify that the handler passed to MapboxMap is effectively the same as the one received by MapboxObservable,
-        // we exercise the received handler and verify that the passed one is invoked. If blocks were identifiable, maybe
-        // we'd just write this as `passedHandler === receivedHandler`.
-        let handler = try XCTUnwrap(mapboxObservable.onEveryStub.invocations.first?.parameters.handler)
-        let event = Event(type: "", data: 0)
-        handler(event)
-        XCTAssertEqual(handlerStub.invocations.count, 1)
-        XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
     }
 
     func testOnTypedEvery() throws {

@@ -4,6 +4,9 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Remove deprecated `GestureOptions.pinchRotateEnabled`.
+* Remove deprecated `Location` initializer.
+
 ## 10.12.0-beta.1 - February 22, 2023
 
 * Added basic signposts for performance profiling. To enable them, use `MAPBOX_MAPS_SIGNPOSTS_ENABLED` environment variable. ([#1818](https://github.com/mapbox/mapbox-maps-ios/pull/1818))

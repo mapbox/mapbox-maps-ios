@@ -168,18 +168,6 @@ public final class MapboxMap: MapboxMapProtocol {
         __map.__setMemoryBudgetFor(memoryBudget)
     }
 
-    /// Enables or disables the experimental render cache feature.
-    ///
-    /// Render cache is an experimental feature aiming to reduce resource usage of map rendering
-    /// by caching intermediate rendering results of tiles into specific cache textures for reuse between frames.
-    /// Performance benefit of the cache depends on the style as not all layers are cacheable due to e.g. viewport aligned features.
-    /// Render cache always prefers quality over performance.
-    ///
-    /// - Parameter cacheOptions: The cache options to be set to the Map.
-    @_spi(Experimental) public func setRenderCache(_ cacheOptions: RenderCacheOptions) {
-        __map.setRenderCacheOptionsFor(cacheOptions)
-    }
-
     /// Defines whether multiple copies of the world will be rendered side by side beyond -180 and 180 degrees longitude.
     ///
     /// If disabled, when the map is zoomed out far enough that a single representation of the world does not fill the map's entire container,

@@ -4,6 +4,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Remove experimental `MapboxMap.setRenderCache(_:)` method.
 * Remove deprecated `GestureOptions.pinchRotateEnabled`.
 * Remove deprecated `Location` initializer.
 

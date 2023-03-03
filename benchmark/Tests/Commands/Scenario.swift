@@ -63,7 +63,6 @@ struct Scenario {
         case playSequence = "PlaySequence"
         case addRoute = "AddRoute"
         case setMemoryBudget = "SetMemoryBudget"
-        case setRenderCache = "SetRenderCache"
         case enableTerrain = "EnableTerrain"
         case takeSnapshot = "TakeSnapshot"
     }
@@ -101,8 +100,6 @@ struct Scenario {
                     command = try commandContainer.decode(AddRouteCommand.self)
                 case .setMemoryBudget:
                     command = try commandContainer.decode(SetMemoryBudgetCommand.self)
-                case .setRenderCache:
-                    command = try commandContainer.decode(SetRenderCacheCommand.self)
                 case .enableTerrain:
                     command = try commandContainer.decode(EnableTerrainCommand.self)
                 case .takeSnapshot:

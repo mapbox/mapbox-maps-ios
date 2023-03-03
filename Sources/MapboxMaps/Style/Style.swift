@@ -327,11 +327,11 @@ public final class Style: StyleProtocol {
     ///
     /// Overridden transitions are reset once a new style has been loaded.
     /// To customize the transition used when switching styles, set this
-    /// property after `MapEvents.EventKind.styleDataLoaded` where
-    /// `Event.type == "style"` and before
-    /// `MapEvents.EventKind.styleDataLoaded` where `Event.type == "sprite"`
-    /// and where `Event.type == "sources"`.
-    /// - SeeAlso: ``MapboxMap/onNext(_:handler:)``
+    /// property after `MapEvents.Event.styleDataLoaded` where
+    /// `payload type == "style"` and before
+    /// `MapEvents.Event.styleDataLoaded` where `payload type == "sprite"`
+    /// and where `payload type == "sources"`.
+    /// - SeeAlso: ``MapboxMap/onNext(event:handler:)``
     public var transition: TransitionOptions {
         get {
             _styleManager.getStyleTransition()

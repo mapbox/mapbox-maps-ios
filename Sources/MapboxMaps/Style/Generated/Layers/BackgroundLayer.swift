@@ -33,10 +33,6 @@ public struct BackgroundLayer: Layer {
     /// Name of image in sprite to use for drawing an image background. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public var backgroundPattern: Value<ResolvedImage>?
 
-    /// Transition options for `backgroundPattern`.
-    @available(*, deprecated, message: "This property is deprecated and will be removed in the future. Setting this will have no effect.")
-    public var backgroundPatternTransition: StyleTransition?
-
     public init(id: String) {
         self.id = id
         self.type = LayerType.background

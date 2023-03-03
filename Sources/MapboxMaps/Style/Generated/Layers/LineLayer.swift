@@ -48,10 +48,6 @@ public struct LineLayer: Layer {
     /// Specifies the lengths of the alternating dashes and gaps that form the dash pattern. The lengths are later scaled by the line width. To convert a dash length to pixels, multiply the length by the current line width. Note that GeoJSON sources with `lineMetrics: true` specified won't render dashed lines to the expected scale. Also note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public var lineDasharray: Value<[Double]>?
 
-    /// Transition options for `lineDasharray`.
-    @available(*, deprecated, message: "This property is deprecated and will be removed in the future. Setting this will have no effect.")
-    public var lineDasharrayTransition: StyleTransition?
-
     /// Draws a line casing outside of a line's actual path. Value indicates the width of the inner gap.
     public var lineGapWidth: Value<Double>?
 
@@ -75,10 +71,6 @@ public struct LineLayer: Layer {
 
     /// Name of image in sprite to use for drawing image lines. For seamless patterns, image width must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public var linePattern: Value<ResolvedImage>?
-
-    /// Transition options for `linePattern`.
-    @available(*, deprecated, message: "This property is deprecated and will be removed in the future. Setting this will have no effect.")
-    public var linePatternTransition: StyleTransition?
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     public var lineTranslate: Value<[Double]>?

@@ -57,10 +57,6 @@ public struct FillExtrusionLayer: Layer {
     /// Name of image in sprite to use for drawing images on extruded fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public var fillExtrusionPattern: Value<ResolvedImage>?
 
-    /// Transition options for `fillExtrusionPattern`.
-    @available(*, deprecated, message: "This property is deprecated and will be removed in the future. Setting this will have no effect.")
-    public var fillExtrusionPatternTransition: StyleTransition?
-
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up (on the flat plane), respectively.
     public var fillExtrusionTranslate: Value<[Double]>?
 

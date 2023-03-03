@@ -45,10 +45,6 @@ public struct FillLayer: Layer {
     /// Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public var fillPattern: Value<ResolvedImage>?
 
-    /// Transition options for `fillPattern`.
-    @available(*, deprecated, message: "This property is deprecated and will be removed in the future. Setting this will have no effect.")
-    public var fillPatternTransition: StyleTransition?
-
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     public var fillTranslate: Value<[Double]>?
 

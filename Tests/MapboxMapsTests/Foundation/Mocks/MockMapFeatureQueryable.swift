@@ -8,12 +8,12 @@ final class MockMapFeatureQueryable: MapFeatureQueryable {
         let options: RenderedQueryOptions?
         let completion: Completion
     }
-    let queryRenderedFeaturesForStub = Stub<QueryRenderedFeaturesForParams, Void>()
+    let queryRenderedFeaturesForStub = Stub<QueryRenderedFeaturesForParams, Cancelable>(defaultReturnValue: MockCancelable())
     func queryRenderedFeatures(
-        for shape: [CGPoint],
+        with shape: [CGPoint],
         options: RenderedQueryOptions?,
         completion: @escaping (Result<[QueriedFeature], Error>) -> Void
-    ) {
+    ) -> Cancelable {
         queryRenderedFeaturesForStub.call(with: .init(shape: shape, options: options, completion: completion))
     }
 
@@ -22,12 +22,12 @@ final class MockMapFeatureQueryable: MapFeatureQueryable {
         let options: RenderedQueryOptions?
         let completion: Completion
     }
-    let queryRenderedFeaturesInStub = Stub<QueryRenderedFeaturesInParams, Void>()
+    let queryRenderedFeaturesInStub = Stub<QueryRenderedFeaturesInParams, Cancelable>(defaultReturnValue: MockCancelable())
     func queryRenderedFeatures(
-        in rect: CGRect,
+        with rect: CGRect,
         options: RenderedQueryOptions?,
         completion: @escaping (Result<[QueriedFeature], Error>) -> Void
-    ) {
+    ) -> Cancelable {
         queryRenderedFeaturesInStub.call(with: .init(rect: rect, options: options, completion: completion))
     }
 
@@ -36,12 +36,12 @@ final class MockMapFeatureQueryable: MapFeatureQueryable {
         let options: RenderedQueryOptions?
         let completion: Completion
     }
-    let queryRenderedFeaturesAtStub = Stub<QueryRenderedFeaturesAtParams, Void>()
+    let queryRenderedFeaturesAtStub = Stub<QueryRenderedFeaturesAtParams, Cancelable>(defaultReturnValue: MockCancelable())
     func queryRenderedFeatures(
-        at point: CGPoint,
+        with point: CGPoint,
         options: RenderedQueryOptions?,
         completion: @escaping (Result<[QueriedFeature], Error>) -> Void
-    ) {
+    ) -> Cancelable {
         queryRenderedFeaturesAtStub.call(with: .init(point: point, options: options, completion: completion))
     }
 

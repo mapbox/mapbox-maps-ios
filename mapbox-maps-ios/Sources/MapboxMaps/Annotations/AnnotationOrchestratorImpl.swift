@@ -155,7 +155,7 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
         let layerIds = managers.map(\.layerId)
         let options = RenderedQueryOptions(layerIds: layerIds, filter: nil)
         mapFeatureQueryable.queryRenderedFeatures(
-            at: tap.location(in: tap.view),
+            with: tap.location(in: tap.view),
             options: options) { (result) in
 
                 switch result {
@@ -190,7 +190,7 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
             let layerIdentifiers = managers.map(\.layerId)
             let options = RenderedQueryOptions(layerIds: layerIdentifiers, filter: nil)
             let gestureLocation = recognizer.location(in: recognizer.view)
-            mapFeatureQueryable.queryRenderedFeatures(at: gestureLocation, options: options) { result in
+            mapFeatureQueryable.queryRenderedFeatures(with: gestureLocation, options: options) { result in
 
                 switch result {
                 case .success(let queriedFeatures):

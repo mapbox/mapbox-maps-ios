@@ -702,15 +702,6 @@ extension MapboxMap: MapFeatureQueryable {
     ///         for rendered features.
     ///   - options: Options for querying rendered features.
     ///   - completion: Callback called when the query completes
-    @available(*, deprecated, renamed: "queryRenderedFeatures(with:options:completion:)")
-    public func queryRenderedFeatures(for shape: [CGPoint], options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
-        __map.queryRenderedFeatures(forShape: shape.map { $0.screenCoordinate },
-                                    options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
-                                    callback: coreAPIClosureAdapter(for: completion,
-                                                                    type: NSArray.self,
-                                                                    concreteErrorType: MapError.self))
-    }
-
     @discardableResult
     public func queryRenderedFeatures(with shape: [CGPoint], options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) -> Cancelable {
         return __map.__queryRenderedFeatures(for: .fromNSArray(shape.map {$0.screenCoordinate}),
@@ -726,15 +717,6 @@ extension MapboxMap: MapFeatureQueryable {
     ///   - rect: Screen rect to query for rendered features.
     ///   - options: Options for querying rendered features.
     ///   - completion: Callback called when the query completes
-    @available(*, deprecated, renamed: "queryRenderedFeatures(with:options:completion:)")
-    public func queryRenderedFeatures(in rect: CGRect, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
-        __map.queryRenderedFeatures(for: ScreenBox(rect),
-                                    options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
-                                    callback: coreAPIClosureAdapter(for: completion,
-                                                                    type: NSArray.self,
-                                                                    concreteErrorType: MapError.self))
-    }
-
     @discardableResult
     public func queryRenderedFeatures(with rect: CGRect, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) -> Cancelable {
         return __map.__queryRenderedFeatures(for: .fromScreenBox(.init(rect)),
@@ -750,15 +732,6 @@ extension MapboxMap: MapFeatureQueryable {
     ///   - point: Screen point at which to query for rendered features.
     ///   - options: Options for querying rendered features.
     ///   - completion: Callback called when the query completes
-    @available(*, deprecated, renamed: "queryRenderedFeatures(with:options:completion:)")
-    public func queryRenderedFeatures(at point: CGPoint, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
-        __map.queryRenderedFeatures(forPixel: point.screenCoordinate,
-                                    options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
-                                    callback: coreAPIClosureAdapter(for: completion,
-                                                                    type: NSArray.self,
-                                                                    concreteErrorType: MapError.self))
-    }
-
     @discardableResult
     public func queryRenderedFeatures(with point: CGPoint, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) -> Cancelable {
         return __map.__queryRenderedFeatures(for: .fromScreenCoordinate(point.screenCoordinate),

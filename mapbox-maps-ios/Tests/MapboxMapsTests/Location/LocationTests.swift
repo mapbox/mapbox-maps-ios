@@ -16,27 +16,6 @@ final class LocationTests: XCTestCase {
             timestamp: Date())
     }
 
-    func testInitWithLocationAndHeading() {
-        let clLocation = makeCLLocation()
-        let heading = CLHeading()
-
-        let location = Location(with: clLocation, heading: heading)
-
-        XCTAssertTrue(location.location === clLocation)
-        XCTAssertTrue(location.heading === heading)
-        XCTAssertEqual(location.accuracyAuthorization, .fullAccuracy)
-    }
-
-    func testInitWithLocationAndNilHeading() {
-        let clLocation = makeCLLocation()
-
-        let location = Location(with: clLocation, heading: nil)
-
-        XCTAssertTrue(location.location === clLocation)
-        XCTAssertNil(location.heading)
-        XCTAssertEqual(location.accuracyAuthorization, .fullAccuracy)
-    }
-
     func testInitWithLocationHeadingAndAccuracyAuthorization() {
         let clLocation = makeCLLocation()
         let heading = CLHeading()

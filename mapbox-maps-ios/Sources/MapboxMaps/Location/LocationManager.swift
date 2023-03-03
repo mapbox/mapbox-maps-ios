@@ -85,11 +85,6 @@ public final class LocationManager: NSObject {
         locationProvider.requestTemporaryFullAccuracyAuthorization(withPurposeKey: purposeKey)
     }
 
-    /// :nodoc:
-    /// Deprecated. Calling this method is unnecessary and no longer has any effect.
-    public func updateHeadingForCurrentDeviceOrientation() {
-    }
-
     private func syncOptions() {
         // workaround to avoid calling LocationProducer.locationProvider's didSet
         // when locationProvider is a class. In next major version, we should constrain

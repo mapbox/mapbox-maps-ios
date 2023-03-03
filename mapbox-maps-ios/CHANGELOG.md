@@ -4,6 +4,9 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Remove deprecated `LocationManager.updateHeadingForCurrentDeviceOrientation()` method.
+* Remove deprecated `MapEvents.EventKind`.
+* Make NSNumber extension internal.
 * Remove experimental `MapboxMap.setRenderCache(_:)` method.
 * Remove deprecated `GestureOptions.pinchRotateEnabled`.
 * Remove deprecated `Location` initializer.

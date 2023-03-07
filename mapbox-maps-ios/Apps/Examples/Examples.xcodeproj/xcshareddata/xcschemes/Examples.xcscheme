@@ -92,6 +92,11 @@
             value = ""
             isEnabled = "YES">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "MAPBOX_REOPEN_EXAMPLE"
+            value = "1"
+            isEnabled = "YES">
+         </EnvironmentVariable>
       </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction

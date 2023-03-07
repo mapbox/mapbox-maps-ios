@@ -648,7 +648,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         self.annotationBeingDragged = nil
 
         // avoid blinking annotation by waiting
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.125) {
             self.removeDragSourceAndLayer()
         }
     }

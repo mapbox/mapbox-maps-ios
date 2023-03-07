@@ -4,6 +4,12 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 10.12.0-rc.1 - March 8, 2023
+
+* Correct user-agent fragment sent to events/telemetry service.
+* Bump MapboxCoreMaps to 10.12.0-rc.1 and MapboxCommon to 23.4.0-rc.1.
+* Change annotation end-of-drag delay to 0.125 to minimize lagging.
+
 ## 10.12.0-beta.1 - February 22, 2023
 
 * Added basic signposts for performance profiling. To enable them, use `MAPBOX_MAPS_SIGNPOSTS_ENABLED` environment variable. ([#1818](https://github.com/mapbox/mapbox-maps-ios/pull/1818))

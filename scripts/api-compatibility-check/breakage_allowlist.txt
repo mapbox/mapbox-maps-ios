@@ -9,3 +9,6 @@ Constructor PointAnnotation.init(id:point:) has been removed
 Constructor PolygonAnnotation.init(id:polygon:) has been removed
 Constructor PolylineAnnotation.init(id:lineCoordinates:) has been removed
 Constructor PolylineAnnotation.init(id:lineString:) has been removed
+// Allow filtering sourceDataLoaded events by dataID
+Func Style.addSource(_:id:) has been renamed to Func addSource(_:id:dataId:)
+Func Style.updateGeoJSONSource(withId:geoJSON:) has been renamed to Func updateGeoJSONSource(withId:geoJSON:dataId:)

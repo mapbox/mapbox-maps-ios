@@ -9,3 +9,26 @@ Constructor PointAnnotation.init(id:point:) has been removed
 Constructor PolygonAnnotation.init(id:polygon:) has been removed
 Constructor PolylineAnnotation.init(id:lineCoordinates:) has been removed
 Constructor PolylineAnnotation.init(id:lineString:) has been removed
+// Allow filtering sourceDataLoaded events by dataID
+Func Style.addSource(_:id:) has been renamed to Func addSource(_:id:dataId:)
+Func Style.updateGeoJSONSource(withId:geoJSON:) has been renamed to Func updateGeoJSONSource(withId:geoJSON:dataId:)
+// v11 Cnahges
+Constructor Location.init(with:heading:) has been removed
+Func LocationManager.locationProvider(_:didFailWithError:) has been removed
+Func LocationManager.locationProvider(_:didUpdateHeading:) has been removed
+Func LocationManager.locationProvider(_:didUpdateLocations:) has been removed
+Func LocationManager.locationProviderDidChangeAuthorization(_:) has been removed
+Func LocationManager.updateHeadingForCurrentDeviceOrientation() has been removed
+Func MapboxMap.queryFeatureExtension(for:feature:extension:extensionField:args:completion:) has been removed
+Func MapboxMap.setRenderCache(_:) has been removed
+Protocol MapEventsObservable has been removed
+Protocol OrnamentOptionsProtocol has been removed
+Var NSNumber.CGFloat has been removed
+Var NSNumber.CLLocationDirection has been removed
+Class LocationManager has removed conformance to LocationProviderDelegate
+Class MapboxMap has removed conformance to MapEventsObservable
+Class Snapshotter has removed conformance to MapEventsObservable
+Struct AttributionButtonOptions has removed conformance to OrnamentOptionsProtocol
+Struct CompassViewOptions has removed conformance to OrnamentOptionsProtocol
+Struct LogoViewOptions has removed conformance to OrnamentOptionsProtocol
+Struct ScaleBarViewOptions has removed conformance to OrnamentOptionsProtocol

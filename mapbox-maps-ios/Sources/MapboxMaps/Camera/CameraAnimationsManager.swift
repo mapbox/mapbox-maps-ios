@@ -37,9 +37,11 @@ public final class CameraAnimationsManager {
     ///   - completion: Completion handler called when the animation stops
     /// - Returns: An instance of `Cancelable` which can be canceled if necessary
     @discardableResult
-    public func fly(to: CameraOptions,
-                    duration: TimeInterval? = nil,
-                    completion: AnimationCompletion? = nil) -> Cancelable? {
+    public func fly(
+        to: CameraOptions,
+        duration: TimeInterval? = nil,
+        completion: AnimationCompletion? = nil
+    ) -> Cancelable {
         return impl.fly(to: to, duration: duration, completion: completion)
     }
 
@@ -54,10 +56,12 @@ public final class CameraAnimationsManager {
     ///   - completion: completion to be called after animation
     /// - Returns: An instance of `Cancelable` which can be canceled if necessary
     @discardableResult
-    public func ease(to: CameraOptions,
-                     duration: TimeInterval,
-                     curve: UIView.AnimationCurve = .easeOut,
-                     completion: AnimationCompletion? = nil) -> Cancelable? {
+    public func ease(
+        to: CameraOptions,
+        duration: TimeInterval,
+        curve: UIView.AnimationCurve = .easeOut,
+        completion: AnimationCompletion? = nil
+    ) -> Cancelable {
         return impl.ease(
             to: to,
             duration: duration,

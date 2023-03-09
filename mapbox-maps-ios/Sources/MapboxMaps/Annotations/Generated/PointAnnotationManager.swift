@@ -548,17 +548,6 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    /// Text leading value for multi-line text.
-    @available(*, deprecated, message: "text-line-height property is now data driven, use `PointAnnotation.textLineHeight` instead.")
-    public var textLineHeight: Double? {
-        get {
-            return layerProperties["text-line-height"] as? Double
-        }
-        set {
-            layerProperties["text-line-height"] = newValue
-        }
-    }
-
     // MARK: - User interaction handling
 
     internal func handleQueriedFeatureIds(_ queriedFeatureIds: [String]) {
@@ -648,7 +637,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         self.annotationBeingDragged = nil
 
         // avoid blinking annotation by waiting
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.125) {
             self.removeDragSourceAndLayer()
         }
     }

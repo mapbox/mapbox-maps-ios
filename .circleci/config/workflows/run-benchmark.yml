@@ -1,6 +1,7 @@
 when:
   or:
     - equal: [main, << pipeline.git.branch >>]
+    - equal: [develop, << pipeline.git.branch >>]
     - << pipeline.git.tag >> # run for all tags
 jobs:
   - build-benchmark:

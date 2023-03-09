@@ -3,6 +3,7 @@ import ObjectiveC
 
 //swiftlint:disable force_cast
 final class ExampleTableViewController: UITableViewController {
+    let startingExampleTitleKey = "com.mapbox.startingExampleTitle"
 
     let allExamples = Examples.all
     var filteredExamples = [Example]()
@@ -23,6 +24,31 @@ final class ExampleTableViewController: UITableViewController {
             navigationItem.leftBarButtonItem = UIBarButtonItem(title: "SwiftUI", style: .plain, target: self, action: #selector(openSwiftUI))
         }
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
+
+        navigationController?.delegate = self
+
+        let shouldReopenLastExample = ProcessInfo.processInfo.environment["MAPBOX_REOPEN_EXAMPLE"] == "1"
+
+        if let exampleTitleToStart = UserDefaults.standard.value(forKey: startingExampleTitleKey) as? String, shouldReopenLastExample {
+
+            let initialExample = allExamples
+                .compactMap({ $0["examples"] as? [Example] })
+                .flatMap({ $0 })
+                .first(where: { $0.title == exampleTitleToStart })
+            if let initialExample = initialExample {
+                open(example: initialExample, animated: false)
+            } else {
+                removeExampleForReopening()
+            }
+        }
+    }
+
+    func storeExampleForReopening(_ example: Example) {
+        UserDefaults.standard.set(example.title, forKey: startingExampleTitleKey)
+    }
+
+    func removeExampleForReopening() {
+        UserDefaults.standard.removeObject(forKey: startingExampleTitleKey)
     }
 
     @available(iOS 14.0, *)
@@ -101,8 +127,7 @@ extension ExampleTableViewController {
           example = examples[indexPath.row]
         }
 
-        let exampleViewController = example.makeViewController()
-        navigationController?.pushViewController(exampleViewController, animated: true)
+        open(example: example)
     }
 
     func filterContentForSearchText(_ searchText: String) {
@@ -113,6 +138,22 @@ extension ExampleTableViewController {
             filteredExamples = flatExamples.filter { $0.title.lowercased().contains(searchText.lowercased()) }
         }
 
-      tableView.reloadData()
+        tableView.reloadData()
+    }
+
+    func open(example: Example, animated: Bool = true) {
+        storeExampleForReopening(example)
+        let exampleViewController = example.makeViewController()
+        navigationController?.pushViewController(exampleViewController, animated: animated)
+    }
+}
+
+extension ExampleTableViewController: UINavigationControllerDelegate {
+    func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+
+        // Remove stored example if we are back to the list
+        if self == viewController {
+            removeExampleForReopening()
+        }
     }
 }

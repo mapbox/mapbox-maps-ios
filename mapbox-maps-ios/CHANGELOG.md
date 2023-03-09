@@ -4,6 +4,17 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Remove deprecated `LocationManager.updateHeadingForCurrentDeviceOrientation()` method.
+* Remove deprecated `MapEvents.EventKind`.
+* Make NSNumber extension internal.
+* Remove experimental `MapboxMap.setRenderCache(_:)` method.
+* Remove deprecated `GestureOptions.pinchRotateEnabled`.
+* Remove deprecated `Location` initializer.
+* Remove deprecated transition properties from layers.
+* Remove deprecated `queryFeatureExtension()` method. Use `getGeoJsonClusterLeaves()`/`getGeoJsonClusterChildren()`/`getGeoJsonClusterExpansionZoom()` instead. 
+* Remove deprecated queryRenderedFeatures methods. Use `queryRenderedFeatures(with:options:completion:)` instead. 
+* Make `easeTo/flyTo` return non-optional cancelable token.
+
 ## 10.12.0-beta.1 - February 22, 2023
 
 * Added basic signposts for performance profiling. To enable them, use `MAPBOX_MAPS_SIGNPOSTS_ENABLED` environment variable. ([#1818](https://github.com/mapbox/mapbox-maps-ios/pull/1818))

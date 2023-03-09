@@ -2,6 +2,7 @@ when:
   not:
     or:
       - equal: [main, << pipeline.git.branch >>]
+      - equal: [develop, << pipeline.git.branch >>]
       - << pipeline.git.tag >> # ignore all tags
 jobs:
   - build-benchmark:

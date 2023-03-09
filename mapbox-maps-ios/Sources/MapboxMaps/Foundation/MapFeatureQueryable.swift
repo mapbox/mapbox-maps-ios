@@ -1,29 +1,24 @@
 @_implementationOnly import MapboxCoreMaps_Private
 
 internal protocol MapFeatureQueryable: AnyObject {
-    func queryRenderedFeatures(for shape: [CGPoint],
+    @discardableResult
+    func queryRenderedFeatures(with shape: [CGPoint],
                                options: RenderedQueryOptions?,
-                               completion: @escaping (Result<[QueriedFeature], Error>) -> Void)
+                               completion: @escaping (Result<[QueriedFeature], Error>) -> Void) -> Cancelable
 
-    func queryRenderedFeatures(in rect: CGRect,
+    @discardableResult
+    func queryRenderedFeatures(with rect: CGRect,
                                options: RenderedQueryOptions?,
-                               completion: @escaping (Result<[QueriedFeature], Error>) -> Void)
+                               completion: @escaping (Result<[QueriedFeature], Error>) -> Void) -> Cancelable
 
-    func queryRenderedFeatures(at point: CGPoint,
+    @discardableResult
+    func queryRenderedFeatures(with point: CGPoint,
                                options: RenderedQueryOptions?,
-                               completion: @escaping (Result<[QueriedFeature], Error>) -> Void)
+                               completion: @escaping (Result<[QueriedFeature], Error>) -> Void) -> Cancelable
 
     func querySourceFeatures(for sourceId: String,
                              options: SourceQueryOptions,
                              completion: @escaping (Result<[QueriedFeature], Error>) -> Void)
-
-    //swiftlint:disable:next function_parameter_count
-    func queryFeatureExtension(for sourceId: String,
-                               feature: Feature,
-                               extension: String,
-                               extensionField: String,
-                               args: [String: Any]?,
-                               completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void)
 
     func getGeoJsonClusterLeaves(forSourceId sourceId: String,
                                  feature: Feature,

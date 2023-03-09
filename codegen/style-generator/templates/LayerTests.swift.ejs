@@ -6,7 +6,6 @@
   const doc = locals.doc
   const isExperimental = locals.experimental
   const containsExperimentalApi = properties.some((property) => property.experimental === true) || isExperimental
-  const deprecatedTransitionProperties = ["line-dasharray", "line-pattern", "fill-extrusion-pattern", "fill-pattern", "background-pattern"]
 -%>
 // This file is generated
 import XCTest
@@ -101,7 +100,7 @@ final class <%- camelize(type) %>LayerTests: XCTestCase {
        var layer = <%- camelize(type) %>Layer(id: "test-id")
        <%_ for (const property of paintProperties) { -%>
        layer.<%- camelizeWithLeadingLowercase(property.name) %> = <%- propertySwiftValueType(property) %>.testConstantValue()
-       <%_ if (property.transition && !deprecatedTransitionProperties.includes(property.name)) { -%>
+       <%_ if (property.transition) { -%>
        layer.<%- camelizeWithLeadingLowercase(property.name) %>Transition = StyleTransition(duration: 10.0, delay: 10.0)
        <%_ } -%>
        <%_ } -%>

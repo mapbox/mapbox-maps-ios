@@ -16,8 +16,6 @@ def main():
                         type=str, help='commit to use for Common SDK')
     parser.add_argument('--turf-commit', default=None,
                         type=str, help='commit to use for Turf')
-    parser.add_argument('--mme-commit', default=None,
-                        type=str, help='commit to use for Mapbox Mobile Events')
 
     parser.add_argument('--stable', action='store_true',
                         help='use dependencies from the last release')
@@ -53,18 +51,12 @@ def main():
         if args.turf_commit is None:
             args.turf_commit = versions["Turf"]
 
-        if args.mme_commit is None:
-            args.mme_commit = versions["MapboxMobileEvents"]
-
     # Apply default branches of nothing was set
     if args.gl_native_commit is None:
         args.gl_native_commit = "internal"
 
     if args.turf_commit is None:
         args.turf_commit = "main"
-
-    if args.mme_commit is None:
-        args.mme_commit = "main"
 
     # Convert args to human-readable string
     args_str = ""
@@ -110,9 +102,6 @@ def main():
 
     print_phase(f"Checkout Turf (@{args.turf_commit})")
     checkout_repo("turf-swift", args.turf_commit)
-
-    print_phase(f"Checkout Mapbox Mobile Events (@{args.mme_commit})")
-    checkout_repo("mapbox-events-ios", args.mme_commit)
 
     checkout_repo("cocoaimagehashing", "master", org="ameingast")
 

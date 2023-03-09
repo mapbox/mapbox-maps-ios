@@ -18,9 +18,9 @@ final class MapBasicCoordinatorTests: XCTestCase {
     }
 
     override func tearDownWithError() throws {
+        mapView = nil
         me = nil
         setCameraStub = nil
-        mapView = nil
     }
 
     func testUpstreamCameraUpdate() {
@@ -164,6 +164,32 @@ final class MapBasicCoordinatorTests: XCTestCase {
 
         mapView.mapboxMap.qrfStub.invocations[1].parameters.completion(.failure(MapError(coreError: "foo")))
         XCTAssertEqual(mockActions.onLayerTapAction.invocations.count, 0)
+    }
+
+    func testObserveMapEvents() throws {
+        let observer = MapEventObserver(event: .mapLoaded) {}
+        let deps = MapDependencies(mapEventObservers: [observer])
+
+        me.update(camera: nil, deps: deps, colorScheme: .light)
+        let invocation = try XCTUnwrap(mapView.mapboxMap.subscribeStub.invocations.last)
+        XCTAssertIdentical(invocation.parameters.observer, me)
+        XCTAssertTrue(invocation.parameters.events.contains(observer.eventName))
+    }
+
+    func testNotifyMapEventsToObservers() {
+        var mapLoadedIsInvoked = false
+        let mapLoadedObserver = MapEventObserver(event: .mapLoaded) {
+            mapLoadedIsInvoked = true
+        }
+        let mapIdleObserver = MapEventObserver(event: .mapIdle) {
+            XCTFail("Unexpected mapIdle event is received")
+        }
+
+        let deps = MapDependencies(mapEventObservers: [mapLoadedObserver, mapIdleObserver])
+        me.update(camera: nil, deps: deps, colorScheme: .light)
+        mapView.mapboxMap.simulateEvent(event: .mapLoaded)
+
+        XCTAssertTrue(mapLoadedIsInvoked)
     }
 }
 

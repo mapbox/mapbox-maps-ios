@@ -19,19 +19,22 @@ struct ClusteringExample : View {
     @State var details: Detail?
 
     var body: some View {
-        Map(camera: $camera)
-            .styleURI(.dark)
-            .onMapLoaded { map in
-                // This example uses direct modification of Style. It's not SwiftUI-way, yet possible.
-                try! setupClusteringLayer(map.style)
-            }
-            .onLayerTapGesture(LayerId.clusterCircle, LayerId.point) {
-                details = Detail(features: $0.features)
-            }
-            .ignoresSafeArea()
-            .alert(item: $details) {
-                Alert(title: Text($0.title), message: Text($0.message))
-            }
+        MapReader { proxy in
+            Map(camera: $camera)
+                .styleURI(.dark)
+                .onStyleLoaded {
+                    // This example uses direct modification of Style. It's not SwiftUI-way, yet possible.
+                    guard let map = proxy.map else { return }
+                    try! setupClusteringLayer(map.style)
+                }
+                .onLayerTapGesture(LayerId.clusterCircle, LayerId.point) {
+                    details = Detail(features: $0.features)
+                }
+                .ignoresSafeArea()
+                .alert(item: $details) {
+                    Alert(title: Text($0.title), message: Text($0.message))
+                }
+        }
     }
 }
 

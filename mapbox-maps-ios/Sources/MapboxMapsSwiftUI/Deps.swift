@@ -10,6 +10,7 @@ struct MapDependencies {
     var constrainMode = ConstrainMode.heightOnly
     var viewportMode = ViewportMode.default
     var orientation = NorthOrientation.upwards
+    var mapEventObservers: [MapEventObserver] = []
 }
 
 @available(iOS 13.0, *)
@@ -21,7 +22,6 @@ extension MapDependencies {
     }
 
     struct Actions {
-        var onMapLoaded: MapLoadedAction?
         var onMapTapGesture: MapTapAction?
         var layerTapActions = [([String], MapLayerTapAction)]()
     }

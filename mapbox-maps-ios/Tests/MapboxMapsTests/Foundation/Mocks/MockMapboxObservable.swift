@@ -1,4 +1,4 @@
-@testable import MapboxMaps
+@_spi(Package) @testable import MapboxMaps
 
 final class MockMapboxObservable: MapboxObservableProtocol {
     struct SubscribeParams {

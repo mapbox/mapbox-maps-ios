@@ -40,6 +40,8 @@ public protocol MapboxMapProtocol: AnyObject {
     func coordinate(for point: CGPoint) -> CLLocationCoordinate2D
     func point(for coordinate: CLLocationCoordinate2D) -> CGPoint
     func performWithoutNotifying(_ block: () throws -> Void) rethrows
+    func subscribe(_ observer: Observer, events: [String])
+    func unsubscribe(_ observer: Observer, events: [String])
 }
 
 // swiftlint:disable type_body_length

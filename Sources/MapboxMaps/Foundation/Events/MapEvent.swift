@@ -13,7 +13,9 @@ public class MapEvent<Payload: Decodable> {
 
     internal let event: Event
 
-    internal init(event: Event) {
+    /// :nodoc:
+    @_spi(Package)
+    public init(event: Event) {
         self.event = event
     }
 }

@@ -3,8 +3,9 @@ import SwiftUI
 import UIKit
 
 @available(iOS 13.0, *)
-public final class MapBasicCoordinator {
+final class MapBasicCoordinator {
     typealias CameraSetter = (CameraState) -> Void
+    typealias MapEventHandler = (Event) -> Void
 
     var actions: MapDependencies.Actions?
 
@@ -12,8 +13,14 @@ public final class MapBasicCoordinator {
     private var queriesBag = Bag()
     private var setCamera: CameraSetter?
     private var mapView: MapViewFacade?
+    private var mapEventHandlers: [String: [MapEventHandler]] = [:]
+    private var isSubscribed = false
 
     private let mainQueue: MainQueueProtocol
+
+    deinit {
+        mapView?.mapboxMap.unsubscribe(self, events: [])
+    }
 
     init(setCamera: CameraSetter?, mainQueue: MainQueueProtocol = MainQueueWrapper()) {
         self.setCamera = setCamera
@@ -33,12 +40,6 @@ public final class MapBasicCoordinator {
                 self?.syncCamera()
             }.addTo(bag)
         }
-
-        mapView.mapboxMap.onEvery(event: .mapLoaded) { [weak self] _ in
-            guard let self = self,
-                  let mapboxMap = self.mapView?.mapboxMap as? MapboxMap else { return }
-            self.actions?.onMapLoaded?(mapboxMap)
-        }.addTo(bag)
     }
 
     func update(camera: CameraState?, deps: MapDependencies, colorScheme: ColorScheme) {
@@ -79,6 +80,14 @@ public final class MapBasicCoordinator {
                 self?.syncCamera()
             }
         }
+
+        if !isSubscribed {
+            isSubscribed = true
+            mapEventHandlers = deps.mapEventObservers.reduce(into: [:]) { partialResult, observer in
+                partialResult[observer.eventName, default: []].append(observer.action)
+            }
+            mapView.mapboxMap.subscribe(self, events: Array(mapEventHandlers.keys))
+        }
     }
 
     private func syncCamera() {
@@ -110,6 +119,20 @@ public final class MapBasicCoordinator {
         }.addTo(queriesBag)
     }
 }
+
+// MARK: Observer
+
+@available(iOS 13.0, *)
+extension MapBasicCoordinator: Observer {
+
+    func notify(for event: Event) {
+        mapEventHandlers[event.type]?.forEach { handler in
+            handler(event)
+        }
+    }
+}
+
+// MARK: Assign
 
 private func assign<T: Equatable>(_ oldValue: T, _ setter: (T) throws -> Void, value: T) {
     wrapAssignError {

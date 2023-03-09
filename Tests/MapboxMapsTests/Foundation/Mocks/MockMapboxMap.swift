@@ -80,6 +80,16 @@ final class MockMapboxMap: MapboxMapProtocol {
             let handler = invocation.parameters.handler
             handler(MapEvent<Payload>(event: Event(type: event.name, data: data)))
         }
+
+        let observers: [Observer] = subscribeStub.invocations.compactMap { invocation in
+            let parameters = invocation.parameters
+            guard parameters.events.contains(event.name) else { return nil }
+
+            return parameters.observer
+        }
+        for observer in observers {
+            observer.notify(for: Event(type: event.name, data: data))
+        }
     }
 
     func simulateEvent(event: MapEvents.Event<NoPayload>) {
@@ -219,5 +229,19 @@ final class MockMapboxMap: MapboxMapProtocol {
     let qrfStub = Stub<QRFParameters, Cancelable>(defaultReturnValue: MockCancelable())
     func queryRenderedFeatures(with point: CGPoint, options: RenderedQueryOptions?, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) -> Cancelable {
         qrfStub.call(with: QRFParameters(point: point, options: options, completion: completion))
+    }
+
+    struct SubscribeParameters {
+        let observer: Observer
+        let events: [String]
+    }
+    let subscribeStub = Stub<SubscribeParameters, Void>()
+    func subscribe(_ observer: Observer, events: [String]) {
+        subscribeStub.call(with: SubscribeParameters(observer: observer, events: events))
+    }
+
+    let unsubscribeStub = Stub<SubscribeParameters, Void>()
+    func unsubscribe(_ observer: Observer, events: [String]) {
+        unsubscribeStub.call(with: SubscribeParameters(observer: observer, events: events))
     }
 }

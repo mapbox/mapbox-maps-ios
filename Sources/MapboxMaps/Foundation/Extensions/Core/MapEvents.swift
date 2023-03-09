@@ -135,16 +135,13 @@ public extension MapEvents {
         /// in sync when the observer receives the notification.
         public static var sourceRemoved: Event<SourceRemovedPayload> { .init(name: MapEvents.sourceRemoved) }
 
+        /// The map started rendering a frame.
+        public static var renderFrameStarted: Event<NoPayload> { .init(name: MapEvents.renderFrameStarted) }
+
         /// The map finished rendering a frame.
         /// The `render-mode` property tells whether the map has all data (`full`) required to render the visible viewport.
         /// The `needs-repaint` property provides information about ongoing transitions that trigger map repaint.
         /// The `placement-changed` property tells if the symbol placement has been changed in the visible viewport.
-        public static var renderFrameStarted: Event<NoPayload> { .init(name: MapEvents.renderFrameStarted) }
-
-        /// The camera has changed. This event is emitted whenever the visible viewport
-        /// changes due to the MapView's size changing or when the camera
-        /// is modified by calling camera methods. The event is emitted synchronously,
-        /// so that an updated camera state can be fetched immediately.
         public static var renderFrameFinished: Event<RenderFrameFinishedPayload> { .init(name: MapEvents.renderFrameFinished) }
 
         /// The camera has changed. This event is emitted whenever the visible viewport
@@ -157,7 +154,9 @@ public extension MapEvents {
         /// map or snapshotter.
         public static var resourceRequest: Event<ResourceRequestPayload> { .init(name: MapEvents.resourceRequest) }
 
-        internal let name: String
+        /// The unique name of the map event.
+        @_spi(Package)
+        public let name: String
 
         private init(name: String) {
             self.name = name

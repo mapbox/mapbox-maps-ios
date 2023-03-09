@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Package) @testable import MapboxMaps
 
 final class MapboxObservableTests: XCTestCase {
 

@@ -3,6 +3,9 @@
 
 import PackageDescription
 
+let coreVersion = "11.0.0-alpha.1"
+let coreChecksum = "0986947ca95277ea081248c4b55974d60ab3238bb36f5ff97cdf4ae6cfc23804"
+
 let package = Package(
     name: "MapboxMaps",
     defaultLocalization: "en",
@@ -16,22 +19,24 @@ let package = Package(
             targets: ["MapboxMapsSwiftUI"])
     ],
     dependencies: [
-        .package(name: "MapboxCoreMaps", url: "https://github.com/mapbox/mapbox-core-maps-ios.git", .exact("10.12.0-beta.1")),
-        // We keep MME dependency for compatibility reasons
-        .package(name: "MapboxMobileEvents", url: "https://github.com/mapbox/mapbox-events-ios.git", .exact("1.0.10")),
         .package(name: "MapboxCommon", url: "https://github.com/mapbox/mapbox-common-ios.git", .exact("23.4.0-beta.1")),
         .package(name: "Turf", url: "https://github.com/mapbox/turf-swift.git", from: "2.0.0"),
-        .package(name: "CocoaImageHashing", url: "https://github.com/ameingast/cocoaimagehashing", .exact("1.9.0"))
+        .package(name: "CocoaImageHashing", url: "https://github.com/ameingast/cocoaimagehashing", .exact("1.9.0")),
     ],
     targets: [
+        .binaryTarget(
+            name: "MapboxCoreMaps",
+            url: "https://api.mapbox.com/downloads/v2/mobile-maps-core-internal/releases/ios/packages/\(coreVersion)/MapboxCoreMaps.xcframework-dynamic.zip",
+            checksum: coreChecksum
+        ),
         .target(
             name: "MapboxMaps",
             dependencies: ["MapboxCoreMaps", "Turf", "MapboxCommon"],
             exclude: [
-                "Info.plist"
+                "Info.plist",
             ],
             resources: [
-                .copy("MapboxMaps.json")
+                .copy("MapboxMaps.json"),
             ]
         ),
         .target(

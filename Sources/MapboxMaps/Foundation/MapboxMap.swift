@@ -178,18 +178,6 @@ public final class MapboxMap {
         __map.__setMemoryBudgetFor(memoryBudget)
     }
 
-    /// Enables or disables the experimental render cache feature.
-    ///
-    /// Render cache is an experimental feature aiming to reduce resource usage of map rendering
-    /// by caching intermediate rendering results of tiles into specific cache textures for reuse between frames.
-    /// Performance benefit of the cache depends on the style as not all layers are cacheable due to e.g. viewport aligned features.
-    /// Render cache always prefers quality over performance.
-    ///
-    /// - Parameter cacheOptions: The cache options to be set to the Map.
-    @_spi(Experimental) public func setRenderCache(_ cacheOptions: RenderCacheOptions) {
-        __map.setRenderCacheOptionsFor(cacheOptions)
-    }
-
     /// Defines whether multiple copies of the world will be rendered side by side beyond -180 and 180 degrees longitude.
     ///
     /// If disabled, when the map is zoomed out far enough that a single representation of the world does not fill the map's entire container,
@@ -734,15 +722,6 @@ extension MapboxMap: MapFeatureQueryable {
     ///         for rendered features.
     ///   - options: Options for querying rendered features.
     ///   - completion: Callback called when the query completes
-    @available(*, deprecated, renamed: "queryRenderedFeatures(with:options:completion:)")
-    public func queryRenderedFeatures(for shape: [CGPoint], options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
-        __map.queryRenderedFeatures(forShape: shape.map { $0.screenCoordinate },
-                                    options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
-                                    callback: coreAPIClosureAdapter(for: completion,
-                                                                    type: NSArray.self,
-                                                                    concreteErrorType: MapError.self))
-    }
-
     @discardableResult
     public func queryRenderedFeatures(with shape: [CGPoint], options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) -> Cancelable {
         return __map.__queryRenderedFeatures(for: .fromNSArray(shape.map {$0.screenCoordinate}),
@@ -758,15 +737,6 @@ extension MapboxMap: MapFeatureQueryable {
     ///   - rect: Screen rect to query for rendered features.
     ///   - options: Options for querying rendered features.
     ///   - completion: Callback called when the query completes
-    @available(*, deprecated, renamed: "queryRenderedFeatures(with:options:completion:)")
-    public func queryRenderedFeatures(in rect: CGRect, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
-        __map.queryRenderedFeatures(for: ScreenBox(rect),
-                                    options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
-                                    callback: coreAPIClosureAdapter(for: completion,
-                                                                    type: NSArray.self,
-                                                                    concreteErrorType: MapError.self))
-    }
-
     @discardableResult
     public func queryRenderedFeatures(with rect: CGRect, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) -> Cancelable {
         return __map.__queryRenderedFeatures(for: .fromScreenBox(.init(rect)),
@@ -782,15 +752,6 @@ extension MapboxMap: MapFeatureQueryable {
     ///   - point: Screen point at which to query for rendered features.
     ///   - options: Options for querying rendered features.
     ///   - completion: Callback called when the query completes
-    @available(*, deprecated, renamed: "queryRenderedFeatures(with:options:completion:)")
-    public func queryRenderedFeatures(at point: CGPoint, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
-        __map.queryRenderedFeatures(forPixel: point.screenCoordinate,
-                                    options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
-                                    callback: coreAPIClosureAdapter(for: completion,
-                                                                    type: NSArray.self,
-                                                                    concreteErrorType: MapError.self))
-    }
-
     @discardableResult
     public func queryRenderedFeatures(with point: CGPoint, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) -> Cancelable {
         return __map.__queryRenderedFeatures(for: .fromScreenCoordinate(point.screenCoordinate),
@@ -814,49 +775,6 @@ extension MapboxMap: MapFeatureQueryable {
                                   callback: coreAPIClosureAdapter(for: completion,
                                                                   type: NSArray.self,
                                                                   concreteErrorType: MapError.self))
-    }
-
-    /// Queries for feature extension values in a GeoJSON source.
-    ///
-    /// - Parameters:
-    ///   - sourceId: The identifier of the source to query.
-    ///   - feature: Feature to look for in the query.
-    ///   - extension: Currently supports keyword `supercluster`.
-    ///   - extensionField: Currently supports following three extensions:
-    ///
-    ///       1. `children`: returns the children of a cluster (on the next zoom
-    ///         level).
-    ///       2. `leaves`: returns all the leaves of a cluster (given its cluster_id)
-    ///       3. `expansion-zoom`: returns the zoom on which the cluster expands
-    ///         into several children (useful for "click to zoom" feature).
-    ///
-    ///   - args: Used for further query specification when using 'leaves'
-    ///         extensionField. Now only support following two args:
-    ///
-    ///       1. `limit`: the number of points to return from the query (must
-    ///             use type 'UInt64', set to maximum for all points)
-    ///       2. `offset`: the amount of points to skip (for pagination, must
-    ///             use type 'UInt64')
-    ///
-    ///   - completion: The result could be a feature extension value containing
-    ///         either a value (expansion-zoom) or a feature collection (children
-    ///         or leaves). An error is passed if the operation was not successful.
-    /// Deprecated. Use getGeoJsonClusterLeaves/getGeoJsonClusterChildren/getGeoJsonClusterExpansionZoom to instead.
-    public func queryFeatureExtension(for sourceId: String,
-                                      feature: Feature,
-                                      extension: String,
-                                      extensionField: String,
-                                      args: [String: Any]? = nil,
-                                      completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void) {
-
-        __map.queryFeatureExtensions(forSourceIdentifier: sourceId,
-                                     feature: MapboxCommon.Feature(feature),
-                                     extension: `extension`,
-                                     extensionField: extensionField,
-                                     args: args,
-                                     callback: coreAPIClosureAdapter(for: completion,
-                                                                     type: FeatureExtensionValue.self,
-                                                                     concreteErrorType: MapError.self))
     }
 
     /// Returns all the leaves (original points) of a cluster (given its cluster_id) from a GeoJSON source, with pagination support: limit is the number of leaves
@@ -964,7 +882,7 @@ extension MapboxMap {
 
 // MARK: - Map Event handling
 
-extension MapboxMap: MapEventsObservable {
+extension MapboxMap {
 
     /// Listen to a single occurrence of a Map event.
     ///
@@ -985,43 +903,6 @@ extension MapboxMap: MapEventsObservable {
     @discardableResult
     public func onNext<Payload>(event eventType: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable {
         return observable.onNext(event: eventType, handler: handler)
-    }
-
-    /// Listen to a single occurrence of a Map event.
-    ///
-    /// This will observe the next (and only the next) event of the specified
-    /// type. After observation, the underlying subscriber will unsubscribe from
-    /// the map or snapshotter.
-    ///
-    /// If you need to unsubscribe before the event fires, call `cancel()` on
-    /// the returned `Cancelable` object.
-    ///
-    /// - Parameters:
-    ///   - eventType: The event type to listen to.
-    ///   - handler: The closure to execute when the event occurs.
-    ///
-    /// - Returns: A `Cancelable` object that you can use to stop listening for
-    ///     the event. This is especially important if you have a retain cycle in
-    ///     the handler.
-    @available(*, deprecated, renamed: "onNext(event:handler:)")
-    @discardableResult
-    public func onNext(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
-        return observable.onNext([eventType], handler: handler)
-    }
-
-    /// Listen to multiple occurrences of a Map event.
-    ///
-    /// - Parameters:
-    ///   - eventType: The event type to listen to.
-    ///   - handler: The closure to execute when the event occurs.
-    ///
-    /// - Returns: A `Cancelable` object that you can use to stop listening for
-    ///     events. This is especially important if you have a retain cycle in
-    ///     the handler.
-    @available(*, deprecated, renamed: "onEvery(event:handler:)")
-    @discardableResult
-    public func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
-        return observable.onEvery([eventType], handler: handler)
     }
 
     /// Listen to multiple occurrences of a Map event.

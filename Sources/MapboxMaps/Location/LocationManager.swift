@@ -85,11 +85,6 @@ public final class LocationManager: NSObject {
         locationProvider.requestTemporaryFullAccuracyAuthorization(withPurposeKey: purposeKey)
     }
 
-    /// :nodoc:
-    /// Deprecated. Calling this method is unnecessary and no longer has any effect.
-    public func updateHeadingForCurrentDeviceOrientation() {
-    }
-
     private func syncOptions() {
         // workaround to avoid calling LocationProducer.locationProvider's didSet
         // when locationProvider is a class. In next major version, we should constrain
@@ -106,27 +101,6 @@ public final class LocationManager: NSObject {
 
         interpolatedLocationProducer.isEnabled = options.puckType != nil
     }
-}
-
-// These methods must remain to avoid breaking the API, but their implementation has been moved
-// to `LocationProducer`. They should be fully removed in the next major version.
-extension LocationManager: LocationProviderDelegate {
-
-    /// :nodoc:
-    /// Deprecated. This method no longer has any effect.
-    public func locationProvider(_ provider: LocationProvider, didUpdateLocations locations: [CLLocation]) {}
-
-    /// :nodoc:
-    /// Deprecated. This method no longer has any effect.
-    public func locationProvider(_ provider: LocationProvider, didUpdateHeading newHeading: CLHeading) {}
-
-    /// :nodoc:
-    /// Deprecated. This method no longer has any effect.
-    public func locationProvider(_ provider: LocationProvider, didFailWithError error: Error) {}
-
-    /// :nodoc:
-    /// Deprecated. This method no longer has any effect.
-    public func locationProviderDidChangeAuthorization(_ provider: LocationProvider) {}
 }
 
 extension LocationManager: LocationProducerDelegate {

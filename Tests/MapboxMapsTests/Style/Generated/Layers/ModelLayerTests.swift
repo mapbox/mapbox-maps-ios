@@ -13,7 +13,6 @@ final class ModelLayerTests: XCTestCase {
         layer.maxZoom = 20.0
 
         XCTAssert(layer.id == "test-id")
-        XCTAssert(layer.type == LayerType.model)
         XCTAssert(layer.filter == nil)
         XCTAssert(layer.source == "some-source")
         XCTAssertNil(layer.sourceLayer)
@@ -43,7 +42,6 @@ final class ModelLayerTests: XCTestCase {
         do {
             let decodedLayer = try JSONDecoder().decode(ModelLayer.self, from: validData)
             XCTAssert(decodedLayer.id == "test-id")
-            XCTAssert(decodedLayer.type == LayerType.model)
             XCTAssert(decodedLayer.filter == nil)
             XCTAssert(decodedLayer.source == "some-source")
             XCTAssertNil(decodedLayer.sourceLayer)
@@ -52,6 +50,18 @@ final class ModelLayerTests: XCTestCase {
         } catch {
             XCTFail("Failed to decode ModelLayer")
         }
+    }
+
+    func testTypeEncoding() throws {
+        var layer = ModelLayer(id: "test-id")
+        layer.source = "some-source"
+        layer.sourceLayer = nil
+        layer.minZoom = 10.0
+        layer.maxZoom = 20.0
+
+        let json = try layer.jsonObject()
+
+        XCTAssertEqual(json["type"] as? String, "model")
     }
 
     func testEncodingAndDecodingOfLayoutProperties() {

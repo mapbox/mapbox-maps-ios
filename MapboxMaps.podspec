@@ -1,6 +1,6 @@
 Pod::Spec.new do |m|
 
-  maps_version = '10.12.0-beta.1'
+  maps_version = '11.0.0-alpha.1'
 
   m.name = 'MapboxMaps'
   m.version = maps_version
@@ -26,7 +26,6 @@ Pod::Spec.new do |m|
   m.pod_target_xcconfig = { 'CODE_SIGNING_ALLOWED' => 'NO' }
 
   m.dependency 'MapboxCoreMaps', '10.12.0-beta.1'
-  m.dependency 'MapboxMobileEvents', '1.0.10'
   m.dependency 'MapboxCommon', '23.4.0-beta.1'
   m.dependency 'Turf', '~> 2.0'
 

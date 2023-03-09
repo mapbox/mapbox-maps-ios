@@ -16,7 +16,8 @@ internal struct ModelLayer: Layer {
 
     // MARK: - Conformance to `Layer` protocol
     public var id: String
-    public let type: LayerType
+    @available(*, deprecated, message: "Using this will lead to runtime crashes.")
+    public var type: LayerType { fatalError("Not available") }
     public var filter: Expression?
     public var source: String?
     public var sourceLayer: String?
@@ -76,14 +77,13 @@ internal struct ModelLayer: Layer {
 
     public init(id: String) {
         self.id = id
-        self.type = LayerType.model
         self.visibility = .constant(.visible)
     }
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: RootCodingKeys.self)
         try container.encode(id, forKey: .id)
-        try container.encode(type, forKey: .type)
+        try container.encode("model", forKey: .type)
         try container.encodeIfPresent(filter, forKey: .filter)
         try container.encodeIfPresent(source, forKey: .source)
         try container.encodeIfPresent(sourceLayer, forKey: .sourceLayer)
@@ -115,7 +115,6 @@ internal struct ModelLayer: Layer {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: RootCodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
-        type = .model
         filter = try container.decodeIfPresent(Expression.self, forKey: .filter)
         source = try container.decodeIfPresent(String.self, forKey: .source)
         sourceLayer = try container.decodeIfPresent(String.self, forKey: .sourceLayer)

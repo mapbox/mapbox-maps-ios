@@ -19,30 +19,6 @@ final class MockMapboxObservable: MapboxObservableProtocol {
         unsubscribeStub.call(with: .init(observer: observer, events: events))
     }
 
-    @available(*, deprecated)
-    struct OnNextParams {
-        var eventTypes: [MapEvents.EventKind]
-        var handler: (Event) -> Void
-    }
-    @available(*, deprecated)
-    let onNextStub = Stub<OnNextParams, Cancelable>(defaultReturnValue: MockCancelable())
-    @available(*, deprecated)
-    func onNext(_ eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable {
-        onNextStub.call(with: .init(eventTypes: eventTypes, handler: handler))
-    }
-
-    @available(*, deprecated)
-    struct OnEveryParams {
-        var eventTypes: [MapEvents.EventKind]
-        var handler: (Event) -> Void
-    }
-    @available(*, deprecated)
-    let onEveryStub = Stub<OnEveryParams, Cancelable>(defaultReturnValue: MockCancelable())
-    @available(*, deprecated)
-    func onEvery(_ eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable {
-        onEveryStub.call(with: .init(eventTypes: eventTypes, handler: handler))
-    }
-
     struct OnTypedNextParams {
         var eventName: String
         var handler: (Any) -> Void

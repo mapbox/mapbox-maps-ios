@@ -13,6 +13,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Remove deprecated transition properties from layers.
 * Remove deprecated `queryFeatureExtension()` method. Use `getGeoJsonClusterLeaves()`/`getGeoJsonClusterChildren()`/`getGeoJsonClusterExpansionZoom()` instead. 
 * Remove deprecated queryRenderedFeatures methods. Use `queryRenderedFeatures(with:options:completion:)` instead. 
+* Make `easeTo/flyTo` return non-optional cancelable token.
 
 ## 10.12.0-beta.1 - February 22, 2023
 

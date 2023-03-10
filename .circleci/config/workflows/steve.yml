@@ -41,29 +41,6 @@ jobs:
         - Slack Orb
         - SDK Registry Token
 
-  # Trigger mobile-metrics workflows
-  - trigger-binary-size:
-      context:
-        - Slack Orb
-        - Maps SDK/CircleCI API Token
-      requires:
-        - Build SDK
-  - trigger-metrics-build:
-      context:
-        - Slack Orb
-        - Maps SDK/CircleCI API Token
-      requires:
-        - Build SDK
-  - trigger-metrics-collection:
-      context:
-        - Slack Orb
-        - Maps SDK/CircleCI API Token
-      requires:
-        - Build SDK
-      filters:
-        branches:
-          only: main
-
   # Run unit tests on CI simulator
   - build-tests:
       context:

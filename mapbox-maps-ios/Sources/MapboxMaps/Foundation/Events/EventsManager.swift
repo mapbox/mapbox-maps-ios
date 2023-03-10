@@ -38,9 +38,10 @@ internal final class EventsManager: EventsManagerProtocol {
     private let metricsEnabledObservation: NSKeyValueObservation
 
     internal init(accessToken: String) {
-        let eventsServerOptions = EventsServerOptions(token: accessToken,
-                                                      userAgentFragment: Constants.MGLAPIClientUserAgentBase,
-                                                      deferredDeliveryServiceOptions: nil)
+        let eventsServerOptions = EventsServerOptions(
+            token: accessToken,
+            userAgentFragment: Constants.UserAgent,
+            deferredDeliveryServiceOptions: nil)
         eventsService = EventsService.getOrCreate(for: eventsServerOptions)
         telemetryService = TelemetryService.getOrCreate(for: eventsServerOptions)
 

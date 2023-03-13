@@ -86,7 +86,8 @@ XCODE_BUILD_SIM_SDK = set -o pipefail && xcodebuild \
 	-sdk iphonesimulator \
 	-configuration $(CONFIGURATION) \
 	-jobs $(JOBS) \
-	COMPILER_INDEX_STORE_ENABLE=NO
+	COMPILER_INDEX_STORE_ENABLE=NO \
+	APPLICATION_EXTENSION_API_ONLY=YES
 
 .PHONY: build-sdk-for-simulator
 build-sdk-for-simulator:
@@ -140,7 +141,8 @@ XCODE_BUILD_DEVICE = xcodebuild \
 	-derivedDataPath $(BUILD_DIR) \
 	-jobs $(JOBS) \
 	$(CODE_SIGNING) \
-	COMPILER_INDEX_STORE_ENABLE=NO
+	COMPILER_INDEX_STORE_ENABLE=NO \
+	APPLICATION_EXTENSION_API_ONLY=YES
 
 .PHONY: build-sdk-for-device
 build-sdk-for-device:

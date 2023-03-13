@@ -14,6 +14,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Remove deprecated `queryFeatureExtension()` method. Use `getGeoJsonClusterLeaves()`/`getGeoJsonClusterChildren()`/`getGeoJsonClusterExpansionZoom()` instead. 
 * Remove deprecated queryRenderedFeatures methods. Use `queryRenderedFeatures(with:options:completion:)` instead. 
 * Make `easeTo/flyTo` return non-optional cancelable token.
+* Add `rotation` case to `GestureType` to be able to detect rotation separately from other gestures.
 
 ## 10.12.0-beta.1 - February 22, 2023
 

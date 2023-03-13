@@ -160,36 +160,13 @@ public final class GestureManager: GestureHandlerDelegate {
         self.options = GestureOptions()
     }
 
-    private var pinchBeganCallCount = 0
-
     internal func gestureBegan(for gestureType: GestureType) {
-        // filter out duplicate pinch events coming from pinch and rotate handlers
-        // TODO: Remove this once GestureType.rotate is added
-        if gestureType == .pinch {
-            pinchBeganCallCount += 1
-
-            guard pinchBeganCallCount == 1 else {
-                return
-            }
-        }
-
         OSLog.poi.signpostEvent("Gesture began", message: "type: \(gestureType)")
         mapboxMap.beginGesture()
         delegate?.gestureManager(self, didBegin: gestureType)
     }
 
     internal func gestureEnded(for gestureType: GestureType, willAnimate: Bool) {
-        // filter out duplicate pinch events coming from pinch and rotate handlers
-        // TODO: Remove this once GestureType.rotate is added
-        if gestureType == .pinch {
-            assert(pinchBeganCallCount > 0)
-            pinchBeganCallCount -= 1
-
-            guard pinchBeganCallCount == 0 else {
-                return
-            }
-        }
-
         OSLog.poi.signpostEvent("Gesture ended", message: "type: \(gestureType)")
         mapboxMap.endGesture()
         delegate?.gestureManager(self, didEnd: gestureType, willAnimate: willAnimate)

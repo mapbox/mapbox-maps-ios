@@ -70,6 +70,18 @@ targets:
         - MapboxMapsHTTPTests
     sources:
       - path: build/${PROJECT}/Apps/Examples/Examples/
+  DebugApp:
+    templates:
+      - installTokenScript
+      - assetCatalog
+      - application
+    type: application
+    platform: iOS
+    settings:
+      SKIP_INSTALL: NO
+      INFOPLIST_FILE: "build/${PROJECT}/Apps/DebugApp/DebugApp/Info.plist"
+    sources:
+      - path: build/${PROJECT}/Apps/DebugApp/DebugApp/
 
   ExamplesTests:
     templates:

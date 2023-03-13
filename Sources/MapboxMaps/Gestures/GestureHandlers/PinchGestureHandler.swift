@@ -123,8 +123,17 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
 extension PinchGestureHandler: UIGestureRecognizerDelegate {
     internal func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
                                     shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return self.gestureRecognizer === gestureRecognizer &&
-        otherGestureRecognizer is UIRotationGestureRecognizer &&
-        simultaneousRotateAndPinchZoomEnabled
+        guard gestureRecognizer === self.gestureRecognizer else { return true }
+
+        switch otherGestureRecognizer {
+        case is UIRotationGestureRecognizer:
+            return simultaneousRotateAndPinchZoomEnabled
+        case is UIScreenEdgePanGestureRecognizer:
+            return false
+        case is UIPanGestureRecognizer:
+            return panEnabled
+        default:
+            return false
+        }
     }
 }

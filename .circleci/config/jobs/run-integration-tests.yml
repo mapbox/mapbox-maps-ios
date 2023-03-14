@@ -4,7 +4,7 @@ parameters:
     default: "name=iPhone 14"
   xcode:
     type: string
-    default: "14.0.1"
+    default: "14.2.0"
   resource_class:
     type: string
     default: macos.m1.large.gen1
@@ -13,6 +13,9 @@ macos:
 resource_class: << parameters.resource_class >>
 steps:
   - checkout-root
+  - macos/install-rosetta
+  - install-mbx-ci:
+      arch: arm64
   - attach_workspace:
       at: build
   - run:

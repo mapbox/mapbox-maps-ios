@@ -102,7 +102,7 @@ final class RotateGestureHandlerTests: XCTestCase {
         gestureRecognizer.getRotationStub.defaultReturnValue = 30.toRadians()
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(delegate.gestureBeganStub.invocations.first?.parameters, .pinch)
+        XCTAssertEqual(delegate.gestureBeganStub.invocations.first?.parameters, .rotation)
     }
 
     func testDelegateGetsNotifiedAboutPinchGestureEnded() {
@@ -114,7 +114,7 @@ final class RotateGestureHandlerTests: XCTestCase {
         gestureRecognizer.getStateStub.defaultReturnValue = .ended
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(delegate.gestureEndedStub.invocations.first?.parameters.gestureType, .pinch)
+        XCTAssertEqual(delegate.gestureEndedStub.invocations.first?.parameters.gestureType, .rotation)
     }
 
     func testDelegateGetsNotifiedAboutPinchGestureCancelled() {
@@ -126,7 +126,7 @@ final class RotateGestureHandlerTests: XCTestCase {
         gestureRecognizer.getStateStub.defaultReturnValue = .cancelled
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(delegate.gestureEndedStub.invocations.first?.parameters.gestureType, .pinch)
+        XCTAssertEqual(delegate.gestureEndedStub.invocations.first?.parameters.gestureType, .rotation)
     }
 
     func testRotationIsAppliedAroundTouchMidpoint() {

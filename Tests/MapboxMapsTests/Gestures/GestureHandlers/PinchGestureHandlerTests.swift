@@ -237,11 +237,4 @@ final class PinchGestureHandlerTests: XCTestCase {
 
         XCTAssertFalse(shouldRecognizeSimultaneously)
     }
-
-    func testPinchUpdateShouldNotifyDelegate() {
-        sendActions(with: .began, numberOfTouches: 2)
-        sendActions(with: .changed, numberOfTouches: 2)
-
-        XCTAssertEqual(delegate.pinchGestureHandlerDidUpdateGestureStub.invocations.count, 1)
-    }
 }

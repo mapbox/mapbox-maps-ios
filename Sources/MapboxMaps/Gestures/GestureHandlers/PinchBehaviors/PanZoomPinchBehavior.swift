@@ -2,28 +2,22 @@ import CoreGraphics
 
 internal final class PanZoomPinchBehavior: PinchBehavior {
     private let initialCameraState: CameraState
-    private let initialPinchMidpoint: CGPoint
+    private var currentPinchMidpoint: CGPoint
     private let mapboxMap: MapboxMapProtocol
 
     internal init(initialCameraState: CameraState,
                   initialPinchMidpoint: CGPoint,
                   mapboxMap: MapboxMapProtocol) {
         self.initialCameraState = initialCameraState
-        self.initialPinchMidpoint = initialPinchMidpoint
+        self.currentPinchMidpoint = initialPinchMidpoint
         self.mapboxMap = mapboxMap
     }
 
     internal func update(pinchMidpoint: CGPoint, pinchScale: CGFloat) {
         mapboxMap.performWithoutNotifying {
-            mapboxMap.setCamera(
-                to: CameraOptions(
-                    center: initialCameraState.center,
-                    zoom: initialCameraState.zoom,
-                    bearing: initialCameraState.bearing))
-
-            mapboxMap.dragStart(for: initialPinchMidpoint)
+            mapboxMap.dragStart(for: currentPinchMidpoint)
             let dragOptions = mapboxMap.dragCameraOptions(
-                from: initialPinchMidpoint,
+                from: currentPinchMidpoint,
                 to: pinchMidpoint)
             mapboxMap.setCamera(to: dragOptions)
             mapboxMap.dragEnd()
@@ -33,5 +27,6 @@ internal final class PanZoomPinchBehavior: PinchBehavior {
         mapboxMap.setCamera(to: CameraOptions(
             anchor: pinchMidpoint,
             zoom: initialCameraState.zoom + zoomIncrement))
+        currentPinchMidpoint = pinchMidpoint
     }
 }

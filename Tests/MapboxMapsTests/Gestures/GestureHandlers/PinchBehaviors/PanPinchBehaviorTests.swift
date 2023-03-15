@@ -5,7 +5,6 @@ final class PanPinchBehaviorTests: BasePinchBehaviorTests {
     override func setUp() {
         super.setUp()
         behavior = PanPinchBehavior(
-            initialCameraState: initialCameraState,
             initialPinchMidpoint: initialPinchMidpoint,
             mapboxMap: mapboxMap)
     }
@@ -17,16 +16,11 @@ final class PanPinchBehaviorTests: BasePinchBehaviorTests {
 
         behavior.update(pinchMidpoint: pinchMidpoint, pinchScale: .random(in: 0..<2))
 
-        // verify camera gets set twice
-        guard mapboxMap.setCameraStub.invocations.count == 2 else {
+        // verify camera gets set once
+        guard mapboxMap.setCameraStub.invocations.count == 1 else {
             XCTFail("Did not receive the expected number of setCamera invocations.")
             return
         }
-
-        // verify that the first set camera invocation resets the center
-        XCTAssertEqual(
-            mapboxMap.setCameraStub.invocations[0].parameters,
-            CameraOptions(center: initialCameraState.center, bearing: initialCameraState.bearing))
 
         // verify that dragStart is called once with initial midpoint
         XCTAssertEqual(
@@ -41,7 +35,7 @@ final class PanPinchBehaviorTests: BasePinchBehaviorTests {
         // verify that setCamera is invoked a second time with the return value
         // from dragCameraOptions
         XCTAssertEqual(
-            mapboxMap.setCameraStub.invocations[1].parameters,
+            mapboxMap.setCameraStub.invocations[0].parameters,
             dragCameraOptions)
 
         // verify drag end is invoked once

@@ -919,6 +919,7 @@ extension MapboxMap {
         return observable.onEvery(event: event, handler: handler)
     }
 
+    /// :nodoc:
     @_spi(Package)
     public func performWithoutNotifying(_ block: () throws -> Void) rethrows {
         try observable.performWithoutNotifying(block)

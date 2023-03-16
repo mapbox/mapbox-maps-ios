@@ -2,12 +2,23 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-## main
+## 10.12.2 - April 6, 2023
+
+* Enable zoom during a drag gesture.
+* Fix bearing value is fluctuating between initial value and correct value during a rotation gesture.
+* Allows animation during any ongoing gestures.
+* Sync map size to the size of the metal view.
 
 ## 10.12.1 - March 29, 2023
 
 * Bump MapboxCoreMaps to 10.12.1
+* Fix missing feature properties for `nil`/`null` values.
+* Added experimental `tileCover` method to `MapboxMap` that returns tile ids covering the map.
 
+## 10.12.0 - March 22, 2023
+
+* Deprecate `Snapshotter.tileMode`.
+* Bump MapboxCoreMaps to 10.12.0 and MapboxCommon to 23.4.0
 ## 10.12.0 - March 22, 2023
 
 * Deprecate `Snapshotter.tileMode`.

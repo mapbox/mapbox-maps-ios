@@ -1,6 +1,6 @@
 @testable import MapboxMaps
 
-final class MockGestureHandlerDelegate: GestureHandlerDelegate, PinchGestureHandlerDelegate {
+final class MockGestureHandlerDelegate: GestureHandlerDelegate {
     let gestureBeganStub = Stub<GestureType, Void>()
     func gestureBegan(for gestureType: GestureType) {
         gestureBeganStub.call(with: gestureType)
@@ -18,10 +18,5 @@ final class MockGestureHandlerDelegate: GestureHandlerDelegate, PinchGestureHand
     let animationEndedStub = Stub<GestureType, Void>()
     func animationEnded(for gestureType: GestureType) {
         animationEndedStub.call(with: gestureType)
-    }
-
-    let pinchGestureHandlerDidUpdateGestureStub = Stub<PinchGestureHandlerProtocol, Void>()
-    func pinchGestureHandlerDidUpdateGesture(_ handler: PinchGestureHandlerProtocol) {
-        pinchGestureHandlerDidUpdateGestureStub.call(with: handler)
     }
 }

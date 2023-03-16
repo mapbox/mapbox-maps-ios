@@ -521,10 +521,4 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertFalse(rotateGestureHandler.simultaneousRotateAndPinchZoomEnabled)
         XCTAssertFalse(pinchGestureHandler.simultaneousRotateAndPinchZoomEnabled)
     }
-
-    func testRotationUpdateScheduledAfterPinchUpdate() {
-        gestureManager.pinchGestureHandlerDidUpdateGesture(pinchGestureHandler)
-
-        XCTAssertEqual(rotateGestureHandler.scheduleRotationUpdateIfNeededStub.invocations.count, 1)
-    }
 }

@@ -48,6 +48,9 @@ public enum MapLoadingError: LocalizedError {
 
     /// Glyphs could not be loaded
     case glyphs(String)
+    
+    /// Unknown error, use it as fallback if unknown 'type' is passed instead of crashing app via `fatalError()`
+    case unknown(String)
 
     internal init(data: Any) {
         guard let dictionary = data as? [String: Any],
@@ -72,7 +75,7 @@ public enum MapLoadingError: LocalizedError {
         case "glyphs":
             self = .glyphs(message)
         default:
-            fatalError("Unknown map load error \(type):\(message)")
+            self = .unknown("\(type):\(message)")
         }
     }
 
@@ -89,6 +92,8 @@ public enum MapLoadingError: LocalizedError {
         case let .tile(message):
             return message
         case let .glyphs(message):
+            return message
+        case let .unknown(message):
             return message
         }
     }

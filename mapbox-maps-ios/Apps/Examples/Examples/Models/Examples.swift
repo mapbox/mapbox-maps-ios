@@ -321,6 +321,9 @@ struct Examples {
         Example(title: "Add an interactive clustered layer",
                 description: "Display an alert controller after selecting a feature.",
                 type: SymbolClusteringExample.self),
+        Example(title: "Long tap animation",
+                description: "Animate camera upon a long tap",
+                type: LongTapAnimationExample.self)
     ]
 
     // Examples that show map accessibility features

@@ -44,14 +44,20 @@ public struct StyleColor: Codable, Equatable {
         var green: CGFloat = 0.0
         var blue: CGFloat = 0.0
         var alpha: CGFloat = 0.0
-        guard color.getRed(&red, green: &green, blue: &blue, alpha: &alpha),
-              [red, green, blue, alpha].allSatisfy((0.0...1.0).contains) else {
-            fatalError("Please use a color in the sRGB color space")
+        if !color.getRed(&red, green: &green, blue: &blue, alpha: &alpha) {
+            assertionFailure("Invalid color")
         }
-        self.red = Double(red * 255)
-        self.green = Double(green * 255)
-        self.blue = Double(blue * 255)
-        self.alpha = Double(alpha)
+        func clamped(_ value: CGFloat, multiplier: Double = 1) -> Double {
+            var value = Double(value)
+            if value.clamp(to: 0...1) {
+                assertionFailure("Please use a color in the sRGB color space")
+            }
+            return value * multiplier
+        }
+        self.red = clamped(red, multiplier: 255)
+        self.green = clamped(green, multiplier: 255)
+        self.blue = clamped(blue, multiplier: 255)
+        self.alpha = clamped(alpha)
     }
 
     // MARK: - Expression

@@ -281,10 +281,7 @@ public final class Style: StyleProtocol {
                 return nil
             }
 
-            guard let styleURI = StyleURI(rawValue: uriString) else {
-                fatalError()
-            }
-            return styleURI
+            return StyleURI(rawValue: uriString)
         }
         set {
             if let uriString = newValue?.rawValue {

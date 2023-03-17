@@ -364,7 +364,10 @@ public final class ViewAnnotationManager {
         let annotationsToHide = Set<String>(viewsById.keys).subtracting(visibleAnnotationIds)
 
         for id in annotationsToHide {
-            guard let view = viewsById[id] else { fatalError() }
+            guard let view = viewsById[id] else {
+                assertionFailure("Couldn't find annotation view, id: \(id)")
+                continue
+            }
             validate(view)
             if !view.isHidden {
                 viewsWithUpdatedVisibility.insert(view)

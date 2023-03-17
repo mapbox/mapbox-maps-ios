@@ -1,4 +1,9 @@
-unless: << pipeline.parameters.turf-revision >>
+unless:
+  or:
+    - << pipeline.parameters.turf-revision >>
+    - or:
+        - equal: [ << pipeline.git.branch >>, "main" ]
+        - equal: [ << pipeline.git.branch >>, "develop" ]
 jobs:
   - run-tests?:
       type: approval

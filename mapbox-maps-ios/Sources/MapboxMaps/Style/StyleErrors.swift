@@ -49,16 +49,6 @@ public enum MapLoadingError: LocalizedError {
     /// Glyphs could not be loaded
     case glyphs(String)
 
-    internal init(data: Any) {
-        guard let dictionary = data as? [String: Any],
-              let type = dictionary["type"] as? String,
-              let message = dictionary["message"] as? String else {
-            fatalError("Invalid event data format")
-        }
-
-        self.init(type: type, message: message)
-    }
-
     internal init(type: String, message: String) {
         switch type {
         case "style":
@@ -72,7 +62,9 @@ public enum MapLoadingError: LocalizedError {
         case "glyphs":
             self = .glyphs(message)
         default:
-            fatalError("Unknown map load error \(type):\(message)")
+            let error = "Unknown map load error \(type):\(message)"
+            assertionFailure(error)
+            self = .style(error)
         }
     }
 

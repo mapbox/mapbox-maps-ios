@@ -129,8 +129,8 @@ internal final class CameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
             owner: animationOwner,
             mapboxMap: mapboxMap,
             mainQueue: mainQueue,
-            cameraView: cameraView)
-        cameraAnimator.addAnimations(animations)
+            cameraView: cameraView,
+            animation: animations)
         return cameraAnimator
     }
 

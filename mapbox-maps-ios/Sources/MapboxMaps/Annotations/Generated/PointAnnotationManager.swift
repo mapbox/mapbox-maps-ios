@@ -67,7 +67,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     internal init(id: String,
                   style: StyleProtocol,
                   layerPosition: LayerPosition?,
-                  displayLinkCoordinator: DisplayLinkCoordinator,
+                  displayLinkCoordinator: DisplayLinkCoordinator?,
                   clusterOptions: ClusterOptions? = nil,
                   imagesManager: AnnotationImagesManagerProtocol,
                   offsetPointCalculator: OffsetPointCalculator) {
@@ -121,7 +121,8 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
         self.displayLinkParticipant.delegate = self
 
-        displayLinkCoordinator.add(displayLinkParticipant)
+        assert(displayLinkCoordinator != nil, "DisplayLinkCoordinator must be present")
+        displayLinkCoordinator?.add(displayLinkParticipant)
     }
 
     private func createClusterLayers(clusterOptions: ClusterOptions) {

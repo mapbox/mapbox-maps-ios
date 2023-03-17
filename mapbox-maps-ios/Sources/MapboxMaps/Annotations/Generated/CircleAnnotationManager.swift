@@ -63,7 +63,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
     internal init(id: String,
                   style: StyleProtocol,
                   layerPosition: LayerPosition?,
-                  displayLinkCoordinator: DisplayLinkCoordinator,
+                  displayLinkCoordinator: DisplayLinkCoordinator?,
                   offsetPointCalculator: OffsetPointCalculator) {
         self.id = id
         self.sourceId = id
@@ -92,7 +92,8 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
 
         self.displayLinkParticipant.delegate = self
 
-        displayLinkCoordinator.add(displayLinkParticipant)
+        assert(displayLinkCoordinator != nil, "DisplayLinkCoordinator must be present")
+        displayLinkCoordinator?.add(displayLinkParticipant)
     }
 
     internal func destroy() {

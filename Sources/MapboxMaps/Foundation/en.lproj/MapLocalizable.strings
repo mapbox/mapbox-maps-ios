@@ -1,0 +1,5 @@
+/* Accessibility hint */
+"MAP_A11Y_HINT" = "Showing a Map created with Mapbox. Scroll by dragging two fingers. Zoom by pinching two fingers.";
+
+/* Accessibility label */
+"MAP_A11Y_LABEL" = "Map View";

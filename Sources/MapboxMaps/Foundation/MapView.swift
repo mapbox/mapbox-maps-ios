@@ -10,6 +10,9 @@ import os
 
 // swiftlint:disable type_body_length
 open class MapView: UIView {
+    private enum Constants {
+        static let localizableTableName = "MapLocalizable"
+    }
 
     // `mapboxMap` depends on `MapInitOptions`, which is not available until
     // awakeFromNib() when instantiating MapView from a xib or storyboard.
@@ -383,6 +386,20 @@ open class MapView: UIView {
 
         // Set up managers
         setupManagers()
+
+        // Accessibility
+        let bundle = Bundle.mapboxMaps
+        isAccessibilityElement = true
+        accessibilityLabel = NSLocalizedString("MAP_A11Y_LABEL",
+                                               tableName: Constants.localizableTableName,
+                                               bundle: bundle,
+                                               value: "Map View",
+                                               comment: "MapInfo Accessibility label")
+        accessibilityHint = NSLocalizedString("MAP_A11Y_HINT",
+                                              tableName: Constants.localizableTableName,
+                                              bundle: bundle,
+                                              value: "Showing a Map created with Mapbox. Scroll by dragging two fingers. Zoom by pinching two fingers.",
+                                              comment: "MapInfo Accessibility hint")
     }
 
     internal func sendInitialTelemetryEvents() {

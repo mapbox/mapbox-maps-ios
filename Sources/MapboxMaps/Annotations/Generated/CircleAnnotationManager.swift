@@ -1,5 +1,6 @@
 // This file is generated.
 import Foundation
+import os
 @_implementationOnly import MapboxCommon_Private
 
 /// An instance of `CircleAnnotationManager` is responsible for a collection of `CircleAnnotation`s.
@@ -311,7 +312,10 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
 
 extension CircleAnnotationManager: DelegatingDisplayLinkParticipantDelegate {
     func participate(for participant: DelegatingDisplayLinkParticipant) {
-        syncSourceAndLayerIfNeeded()
+        OSLog.platform.withIntervalSignpost(SignpostName.mapViewDisplayLink,
+                                            "Participant: CircleAnnotationManager") {
+            syncSourceAndLayerIfNeeded()
+        }
     }
 }
 

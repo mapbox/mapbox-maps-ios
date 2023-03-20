@@ -1,5 +1,6 @@
 // This file is generated.
 import Foundation
+import os
 @_implementationOnly import MapboxCommon_Private
 
 /// An instance of `PolylineAnnotationManager` is responsible for a collection of `PolylineAnnotation`s.
@@ -341,7 +342,10 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
 extension PolylineAnnotationManager: DelegatingDisplayLinkParticipantDelegate {
     func participate(for participant: DelegatingDisplayLinkParticipant) {
-        syncSourceAndLayerIfNeeded()
+        OSLog.platform.withIntervalSignpost(SignpostName.mapViewDisplayLink,
+                                            "Participant: PolylineAnnotationManager") {
+            syncSourceAndLayerIfNeeded()
+        }
     }
 }
 

@@ -4,6 +4,10 @@ import MapboxCommon
 
 private let subsystem = "com.mapbox.maps"
 
+internal enum SignpostName {
+    static let mapViewDisplayLink: StaticString = "MapView.displayLink"
+}
+
 internal extension OSLog {
     @available(iOS 12, *)
     private static let _poi = OSLog(subsystem: subsystem, category: .pointsOfInterest)
@@ -19,71 +23,109 @@ internal extension OSLog {
         }
     }()
 
-    /// Begins signpost interval. The returned `SignpostInterval` must be ended, preferably in `defer` block.
-    func beginInterval(_ name: StaticString, beginMessage: String? = nil) -> SignpostInterval {
-        let interval = SignpostInterval(log: self, name: name)
-        interval.begin(message: beginMessage)
-        return interval
-    }
-
     /// Adds signpost event out of scope of any signpost interval. Usable to mark any points of interests, such as gestures.
     func signpostEvent(_ name: StaticString, message: String? = nil) {
-        if #available(iOS 12, *) {
-            signpost(.event, log: self, name: name, message: message)
+        if #available(iOS 15, *) {
+            OSSignposter(logHandle: self).emitEvent(name)
+        } else if #available(iOS 12, *) {
+            signpost(.event, log: self, name: name, message)
+        }
+    }
+
+    func beginInterval(_ name: StaticString, beginMessage: String? = nil) -> SignpostInterval? {
+        guard OSLog.tracingEnabled else { return nil }
+
+        guard let intervalType = classForSignpostInterval() else { return nil }
+        return intervalType.init(log: self,
+                                 intervalName: name,
+                                 message: beginMessage)
+    }
+
+    func withIntervalSignpost<T>(_ name: StaticString, _ message: String? = nil, around task: () throws -> T) rethrows -> T {
+        let interval = beginInterval(name, beginMessage: message)
+        defer { interval?.end() }
+
+        return try task()
+    }
+
+    private func classForSignpostInterval() -> SignpostInterval.Type? {
+        if #available(iOS 15, *) {
+            return SignpostIntervalV15.self
+        } else if #available(iOS 12, *) {
+            return SignpostIntervalV12.self
+        } else {
+            return nil
         }
     }
 }
 
 /// Provides easy-to-use API for signposting intervals.
 /// `SignpostInterval` can be seamlesly used from any iOS version, but will be reported only on iOS 12+.
-internal struct SignpostInterval {
-    private enum SignpostType {
-        case begin
-        case end
-        case event
+internal protocol SignpostInterval {
+    init(log: OSLog, intervalName: StaticString, message: String?)
+    func end()
+    func end(message: String?)
+}
 
-        @available(iOS 12, *)
-        var asOSType: OSSignpostType {
-            switch self {
-            case .begin: return .begin
-            case .end: return .end
-            case .event: return .event
-            }
-        }
+extension SignpostInterval {
+    func end() {
+        end(message: nil)
     }
-    private typealias Call = (SignpostType, String?) -> Void
-    private let call: Call?
+}
 
-    init(log: OSLog, name: StaticString) {
-        if #available(iOS 12, *), log.signpostsEnabled {
-            let id = OSSignpostID(log: log)
-            call = {
-                signpost($0.asOSType, log: log, name: name, signpostID: id, message: $1)
-            }
-        } else {
-            call = nil
-        }
+@available(iOS 12.0, *)
+internal struct SignpostIntervalV12: SignpostInterval {
+    let log: OSLog
+    let intervalName: StaticString
+    let signpostID: OSSignpostID
+
+    init(log: OSLog, intervalName: StaticString, message: String?) {
+        self.log = log
+        self.intervalName = intervalName
+        self.signpostID = OSSignpostID(log: log)
+
+        signpost(.begin, log: log, name: intervalName, signpostID: signpostID, message)
     }
 
-    fileprivate func begin(message: String? = nil) {
-        call?(.begin, message)
-    }
-
-    func end(message: String? = nil) {
-        call?(.end, message)
-    }
-
-    func event(message: String? = nil) {
-        call?(.event, message)
+    func end(message: String?) {
+        signpost(.end, log: log, name: intervalName, signpostID: signpostID, message)
     }
 }
 
 @available(iOS 12, *)
-private func signpost(_ type: OSSignpostType, log: OSLog, name: StaticString, signpostID: OSSignpostID = .exclusive, message: String? = nil) {
+private func signpost(_ type: OSSignpostType, log: OSLog, name: StaticString, signpostID: OSSignpostID = .exclusive, _ message: String? = nil) {
     if let message = message {
         os_signpost(type, log: log, name: name, signpostID: signpostID, "%s", message)
     } else {
         os_signpost(type, log: log, name: name, signpostID: signpostID)
+    }
+}
+
+@available(iOS 15.0, *)
+internal struct SignpostIntervalV15: SignpostInterval {
+    let signposter: OSSignposter
+    let intervalName: StaticString
+    let intervalState: OSSignpostIntervalState
+
+    init(log: OSLog, intervalName: StaticString, message: String?) {
+        signposter = OSSignposter(logHandle: log)
+        let signpostID = OSSignpostID(log: log)
+        self.intervalName = intervalName
+
+        if let message = message {
+            intervalState = signposter.beginInterval(intervalName, id: signpostID,
+                                                     "\(message)")
+        } else {
+            intervalState = signposter.beginInterval(intervalName, id: signpostID)
+        }
+    }
+
+    func end(message: String?) {
+        if let message = message {
+            signposter.endInterval(intervalName, intervalState, "\(message)")
+        } else {
+            signposter.endInterval(intervalName, intervalState)
+        }
     }
 }
 

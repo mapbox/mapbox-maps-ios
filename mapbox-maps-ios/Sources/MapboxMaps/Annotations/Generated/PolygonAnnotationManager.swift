@@ -1,5 +1,6 @@
 // This file is generated.
 import Foundation
+import os
 @_implementationOnly import MapboxCommon_Private
 
 /// An instance of `PolygonAnnotationManager` is responsible for a collection of `PolygonAnnotation`s.
@@ -301,7 +302,10 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
 
 extension PolygonAnnotationManager: DelegatingDisplayLinkParticipantDelegate {
     func participate(for participant: DelegatingDisplayLinkParticipant) {
-        syncSourceAndLayerIfNeeded()
+        OSLog.platform.withIntervalSignpost(SignpostName.mapViewDisplayLink,
+                                            "Participant: PolygonAnnotationManager") {
+            syncSourceAndLayerIfNeeded()
+        }
     }
 }
 

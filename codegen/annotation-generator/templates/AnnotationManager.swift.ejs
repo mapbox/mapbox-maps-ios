@@ -11,6 +11,7 @@
 _%>
 // This file is generated.
 import Foundation
+import os
 @_implementationOnly import MapboxCommon_Private
 
 /// An instance of `<%- camelize(type) %>AnnotationManager` is responsible for a collection of `<%- camelize(type) %>Annotation`s.
@@ -474,7 +475,10 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
 
 extension <%- camelize(type) %>AnnotationManager: DelegatingDisplayLinkParticipantDelegate {
     func participate(for participant: DelegatingDisplayLinkParticipant) {
-        syncSourceAndLayerIfNeeded()
+        OSLog.platform.withIntervalSignpost(SignpostName.mapViewDisplayLink,
+                                            "Participant: <%- camelize(type) %>AnnotationManager") {
+            syncSourceAndLayerIfNeeded()
+        }
     }
 }
 

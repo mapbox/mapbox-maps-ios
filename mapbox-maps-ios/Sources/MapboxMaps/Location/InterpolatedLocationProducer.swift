@@ -1,4 +1,5 @@
 import CoreLocation
+import os
 
 internal protocol InterpolatedLocationProducerProtocol: AnyObject {
     var isEnabled: Bool { get set }
@@ -142,8 +143,11 @@ extension InterpolatedLocationProducer: LocationConsumer {
 
 extension InterpolatedLocationProducer: DisplayLinkParticipant {
     internal func participate() {
-        if let location = interpolatedLocation(with: dateProvider.now) {
-            observableInterpolatedLocation.notify(with: location)
+        OSLog.platform.withIntervalSignpost(SignpostName.mapViewDisplayLink,
+                                            "Participant: InterpolatedLocationProducer") {
+            if let location = interpolatedLocation(with: dateProvider.now) {
+                observableInterpolatedLocation.notify(with: location)
+            }
         }
     }
 }

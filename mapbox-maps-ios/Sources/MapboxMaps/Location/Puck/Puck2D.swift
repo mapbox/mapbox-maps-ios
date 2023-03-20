@@ -1,6 +1,7 @@
 @_implementationOnly import MapboxCommon_Private
 import CoreGraphics
 import UIKit
+import os
 
 internal final class Puck2D: Puck {
     private static let layerID = "puck"
@@ -291,6 +292,10 @@ internal final class Puck2D: Puck {
 
 extension Puck2D: DisplayLinkParticipant {
     func participate() {
+        let participantTrace = OSLog.platform.beginInterval(SignpostName.mapViewDisplayLink,
+                                                            beginMessage: "Participant: Puck2D")
+        defer { participantTrace?.end() }
+
         guard style.layerExists(withId: Self.layerID),
               let location = latestLocation,
               let pulsing = configuration.pulsing else {

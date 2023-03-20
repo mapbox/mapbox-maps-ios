@@ -185,7 +185,7 @@ open class MapView: UIView {
     @available(iOSApplicationExtension, unavailable)
     public init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions()) {
         let trace = OSLog.platform.beginInterval("MapView.init")
-        defer { trace.end() }
+        defer { trace?.end() }
         let orientationProvider: InterfaceOrientationProvider
         if #available(iOS 13, *) {
             orientationProvider = DefaultInterfaceOrientationProvider()
@@ -218,7 +218,7 @@ open class MapView: UIView {
                 orientationProvider: InterfaceOrientationProvider,
                 urlOpener: AttributionURLOpener) {
         let trace = OSLog.platform.beginInterval("MapView.init")
-        defer { trace.end() }
+        defer { trace?.end() }
         dependencyProvider = MapViewDependencyProvider(interfaceOrientationProvider: orientationProvider)
         attributionUrlOpener = urlOpener
         self.applicationStateProvider = nil
@@ -242,7 +242,7 @@ open class MapView: UIView {
                 mapInitOptions: MapInitOptions = MapInitOptions(),
                 urlOpener: AttributionURLOpener) {
         let trace = OSLog.platform.beginInterval("MapView.init")
-        defer { trace.end() }
+        defer { trace?.end() }
         dependencyProvider = MapViewDependencyProvider(
             interfaceOrientationProvider: DefaultInterfaceOrientationProvider()
         )
@@ -260,7 +260,7 @@ open class MapView: UIView {
     @available(iOSApplicationExtension, unavailable)
     required public init?(coder: NSCoder) {
         let trace = OSLog.platform.beginInterval("MapView.init")
-        defer { trace.end() }
+        defer { trace?.end() }
         let orientationProvider: InterfaceOrientationProvider
         if #available(iOS 13, *) {
             orientationProvider = DefaultInterfaceOrientationProvider()
@@ -285,7 +285,7 @@ open class MapView: UIView {
                   urlOpener: AttributionURLOpener,
                   applicationStateProvider: Provider<UIApplication.State>?) {
         let trace = OSLog.platform.beginInterval("MapView.init")
-        defer { trace.end() }
+        defer { trace?.end() }
         self.dependencyProvider = dependencyProvider
         attributionUrlOpener = urlOpener
         self.applicationStateProvider = applicationStateProvider
@@ -590,8 +590,11 @@ open class MapView: UIView {
 
     @_spi(Metrics) public var metricsReporter: MapViewMetricsReporter?
     private func updateFromDisplayLink(displayLink: CADisplayLink) {
-        let trace = OSLog.platform.beginInterval("MapView.displayLink")
-        defer { trace.end() }
+        let displayLinkTrace = OSLog.platform.beginInterval(SignpostName.mapViewDisplayLink,
+                                                            beginMessage: "CADisplayLink update")
+        defer {
+            displayLinkTrace?.end()
+        }
 
         metricsReporter?.beforeDisplayLinkCallback(displayLink: displayLink)
         defer { metricsReporter?.afterDisplayLinkCallback(displayLink: displayLink) }
@@ -600,18 +603,23 @@ open class MapView: UIView {
             return
         }
 
-        for participant in displayLinkParticipants.allObjects {
-            participant.participate()
+        OSLog.platform.withIntervalSignpost(SignpostName.mapViewDisplayLink, "DisplayLink participants") {
+            for participant in displayLinkParticipants.allObjects {
+                participant.participate()
+            }
         }
-        trace.event(message: "Participants")
 
-        cameraAnimatorsRunner.update()
-        trace.event(message: "Camera animations")
+        OSLog.platform.withIntervalSignpost(SignpostName.mapViewDisplayLink, "Camera animator runner") {
+            cameraAnimatorsRunner.update()
+        }
 
         if needsDisplayRefresh {
             needsDisplayRefresh = false
-            let trace = OSLog.platform.beginInterval("MetalView.draw")
-            defer { trace.end() }
+            let drawTrace = OSLog.platform.beginInterval(SignpostName.mapViewDisplayLink,
+                                                         beginMessage: "Draw")
+            defer {
+                drawTrace?.end()
+            }
             metricsReporter?.beforeMetalViewDrawCallback(metalView: metalView)
             metalView?.draw()
             metricsReporter?.afterMetalViewDrawCallback(metalView: metalView)

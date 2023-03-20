@@ -61,6 +61,25 @@ xcodebuild archive \
 # Create XCFramework
 step "Creating $PRODUCT.xcframework"
 
+inject_build_info() {
+  local archive_path="$1"
+
+  plist_path="$archive_path/Info.plist"
+
+  /usr/libexec/PlistBuddy -c "Add :MBXBuildInfo dict" "$plist_path"
+  plutil -insert "MBXBuildInfo.BuildDate" -string "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" "$plist_path"
+  plutil -insert "MBXBuildInfo.Git SHA" -string "$(git rev-parse HEAD)" "$plist_path"
+  plutil -insert "MBXBuildInfo.Git Branch" -string "$(git rev-parse --abbrev-ref HEAD)" "$plist_path"
+  plutil -insert "MBXBuildInfo.Swift version" -string "$(swift --version 2>&1 | grep -o "version .*" | cut -d ' ' -f2)" "$plist_path"
+  plutil -insert "MBXBuildInfo.Xcode version" -string "$(xcodebuild -version | head -n 1 | cut -d ' ' -f2)" "$plist_path"
+  plutil -insert "MBXBuildInfo.SDK version" -string "$(jq -r .version ../../../../Sources/MapboxMaps/MapboxMaps.json)" "$plist_path"
+
+  if [[ -n "${CIRCLE_BUILD_NUM:-}" ]]; then
+    echo "Injecting CI build info into info.plist"
+    plutil -insert "MBXBuildInfo.CI Build Number" -string "$CIRCLE_BUILD_NUM" "$plist_path"
+  fi
+}
+
 BUILD_XCFRAMEWORK_COMMAND="xcodebuild -create-xcframework -output '$PRODUCT.xcframework'"
 
 BREAK=$'\n\t'
@@ -69,6 +88,7 @@ for archive in "$DEVICE_ARCHIVE_PATH" "$SIMULATOR_ARCHIVE_PATH"
 do
   FRAMEWORK_PATH=$(find "$archive" -name "$PRODUCT.framework")
   BUILD_XCFRAMEWORK_COMMAND+=" \\${BREAK} -framework '$FRAMEWORK_PATH'"
+  inject_build_info "$FRAMEWORK_PATH"
 
   for dSYM_NAME in $DSYM_NAMES
   do

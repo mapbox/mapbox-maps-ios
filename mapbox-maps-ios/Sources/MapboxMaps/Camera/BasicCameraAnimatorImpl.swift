@@ -27,6 +27,7 @@ internal protocol BasicCameraAnimatorProtocol: AnyObject {
 
 internal final class BasicCameraAnimatorImpl: BasicCameraAnimatorProtocol {
     typealias Animation = (inout CameraTransition) -> Void
+
     private enum InternalState: Equatable {
         case initial
         case running(CameraTransition)

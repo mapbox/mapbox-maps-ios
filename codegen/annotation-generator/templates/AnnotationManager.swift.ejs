@@ -94,7 +94,7 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
     internal init(id: String,
                   style: StyleProtocol,
                   layerPosition: LayerPosition?,
-                  displayLinkCoordinator: DisplayLinkCoordinator<%_ if (isPointAnnotationManager) { _%>,
+                  displayLinkCoordinator: DisplayLinkCoordinator?<%_ if (isPointAnnotationManager) { _%>,
                   clusterOptions: ClusterOptions? = nil,
                   imagesManager: AnnotationImagesManagerProtocol<%_ } _%>,
                   <%_ if (type === circle || type === symbol) { _%>
@@ -168,7 +168,8 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
 
         self.displayLinkParticipant.delegate = self
 
-        displayLinkCoordinator.add(displayLinkParticipant)
+        assert(displayLinkCoordinator != nil, "DisplayLinkCoordinator must be present")
+        displayLinkCoordinator?.add(displayLinkParticipant)
     }
 
     <%_ if (isPointAnnotationManager) { _%>

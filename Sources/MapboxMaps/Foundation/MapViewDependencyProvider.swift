@@ -46,6 +46,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     internal let mapboxObservableProvider: (ObservableProtocol) -> MapboxObservableProtocol = MapboxObservable.init
 
     internal let cameraAnimatorsRunnerEnablable: MutableEnablableProtocol = Enablable()
+    private let gesturesCameraAnimatorsRunnerEnablable = Enablable()
     private let mainQueue: MainQueueProtocol = MainQueueWrapper()
     private let interfaceOrientationProvider: InterfaceOrientationProvider
 
@@ -64,7 +65,10 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     internal func makeCameraAnimatorsRunner(mapboxMap: MapboxMapProtocol) -> CameraAnimatorsRunnerProtocol {
         CameraAnimatorsRunner(
             mapboxMap: mapboxMap,
-            enablable: cameraAnimatorsRunnerEnablable)
+            enablable: CompositeEnablable(
+                enablables: [
+                    cameraAnimatorsRunnerEnablable,
+                    gesturesCameraAnimatorsRunnerEnablable]))
     }
 
     internal func makeCameraAnimationsManagerImpl(cameraViewContainerView: UIView,
@@ -174,9 +178,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             cameraAnimationsManager: cameraAnimationsManager)
     }
 
-    private func makeAnyTouchGestureHandler(
-        view: UIView,
-        cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
+    private func makeAnyTouchGestureHandler(view: UIView) -> GestureHandler {
         // 0.15 seconds is a sufficient delay to avoid interrupting animations
         // in between a rapid succession of double tap or double touch gestures.
         // It's also not so long as to feel unnatural when touching the map to
@@ -189,7 +191,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
         view.addGestureRecognizer(gestureRecognizer)
         return AnyTouchGestureHandler(
             gestureRecognizer: gestureRecognizer,
-            cameraAnimationsManager: cameraAnimationsManager)
+            cameraAnimatorsRunnerEnablable: gesturesCameraAnimatorsRunnerEnablable)
     }
 
     private func makeInterruptDecelerationGestureHandler(view: UIView,
@@ -232,8 +234,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             singleTapGestureHandler: makeSingleTapGestureHandler(
                 view: view,
                 cameraAnimationsManager: cameraAnimationsManager),
-            anyTouchGestureHandler: makeAnyTouchGestureHandler(view: view,
-                                                               cameraAnimationsManager: cameraAnimationsManager),
+            anyTouchGestureHandler: makeAnyTouchGestureHandler(view: view),
             interruptDecelerationGestureHandler: makeInterruptDecelerationGestureHandler(
                 view: view,
                 cameraAnimationsManager: cameraAnimationsManager),

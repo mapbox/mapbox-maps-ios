@@ -103,6 +103,7 @@ public class Snapshotter {
     }
 
     /// In the tile mode, the snapshotter fetches the still image of a single tile.
+    @available(*, deprecated, message: "This property will be removed in a future major version")
     public var tileMode: Bool {
         get {
             return mapSnapshotter.isInTileMode()

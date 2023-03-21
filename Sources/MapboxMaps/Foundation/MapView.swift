@@ -585,7 +585,13 @@ open class MapView: UIView {
 
     open override func layoutSubviews() {
         super.layoutSubviews()
-        mapboxMap.size = bounds.size
+
+        // metal view is created by invoking `MapboxMap.createRenderer()`
+        // which is currently invoked in the init of the `MapboxMap`
+        // making metal view always available here
+        if let metalView = metalView {
+            mapboxMap.size = metalView.bounds.size
+        }
     }
 
     @_spi(Metrics) public var metricsReporter: MapViewMetricsReporter?

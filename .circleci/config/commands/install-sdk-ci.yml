@@ -1,0 +1,10 @@
+parameters:
+  version:
+    type: string
+    default: "develop"
+steps:
+  - run:
+      name: Install sdk-ci
+      command: |
+        GITHUB_ACCESS_TOKEN=$(mbx-ci github reader token)
+        pip3 --disable-pip-version-check install https://x-access-token:${GITHUB_ACCESS_TOKEN}@api.github.com/repos/mapbox/sdk-cicd/tarball/<< parameters.version >>

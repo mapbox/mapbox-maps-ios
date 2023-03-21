@@ -10,17 +10,49 @@ orbs:
 jobs:
   setup:
     docker:
-      - image: circleci/circleci-cli:latest
+      - image: cimg/python:3.11
     steps:
       - checkout
       - run:
+          name: Install mbx-ci
+          command: |
+            curl -Ls https://mapbox-release-engineering.s3.amazonaws.com/mbx-ci/latest/mbx-ci-linux-amd64 > mbx-ci
+            chmod 755 ./mbx-ci
+            ./mbx-ci --version
+            ./mbx-ci --help
+      - run:
+          name: Install sdk-ci
+          command: |
+            GITHUB_ACCESS_TOKEN=$(./mbx-ci github reader token)
+            pip3 --disable-pip-version-check install https://x-access-token:${GITHUB_ACCESS_TOKEN}@api.github.com/repos/mapbox/sdk-cicd/tarball/develop
+            sdk-ci --version
+            sdk-ci --help
+      - run:
+          name: Install CircleCI CLI
+          command: |
+            curl -fLSs https://raw.githubusercontent.com/CircleCI-Public/circleci-cli/master/install.sh | sudo bash
+      - run:
+          name: Compute SDK CI parameters
+          command: |
+            sdk-ci circleci generate-dynamic-parameters
+            cat sdk_ci_parameters.json
+            echo ""
+            cat sdk_ci_parameters.yml
+      - run:
           name: Generate config
-          command: circleci config pack .circleci/config > circle.yml
+          command: |
+            circleci config pack .circleci/config > circle.yml
+            cat circle.yml
+      - run:
+          name: Merge parameters configuration
+          command: |
+            sdk-ci yaml merge circle.yml sdk_ci_parameters.yml -o circle.yml
       - run:
           name: Validate config
           command: circleci config validate circle.yml
       - continuation/continue:
           configuration_path: circle.yml
+          parameters: sdk_ci_parameters.json
 
 workflows:
   setup:

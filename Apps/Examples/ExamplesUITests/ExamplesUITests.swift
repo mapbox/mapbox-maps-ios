@@ -1,7 +1,13 @@
 import XCTest
 
 final class ExamplesUITests: XCTestCase {
-    private var locationAuthorizationAlertMonitor: NSObjectProtocol?
+
+    override class func setUp() {
+        // This is the setUp() class method.
+        // XCTest calls it before calling the first test method.
+        // Set up any overall initial state here.
+        dismissEditHomeScreenAlert(timeout: 5)
+    }
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -56,5 +62,15 @@ extension XCTestCase {
         XCTAssertTrue(allowButton.waitForExistence(timeout: timeout), "Can't find the allow button")
 
         allowButton.tap()
+    }
+
+    /// Query Springboard for "Edit Home Screen" alert to dismis it.
+    static func dismissEditHomeScreenAlert(timeout: TimeInterval) {
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+
+        let editHomeScreenAlert = springboard.alerts["Edit Home Screen"]
+        if editHomeScreenAlert.waitForExistence(timeout: timeout) {
+            editHomeScreenAlert.buttons["Dismiss"].tap()
+        }
     }
 }

@@ -4,6 +4,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 10.12.0 - March 22, 2023
+
+* Deprecate `Snapshotter.tileMode`.
+* Bump MapboxCoreMaps to 10.12.0 and MapboxCommon to 23.4.0
+
 ## 10.12.0-rc.1 - March 8, 2023
 
 * Correct user-agent fragment sent to events/telemetry service.

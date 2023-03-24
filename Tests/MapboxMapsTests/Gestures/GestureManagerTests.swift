@@ -143,14 +143,6 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertTrue(quickZoomGestureHandler.delegate === gestureManager)
     }
 
-    func testPinchGestureRecognizerRequiresPanGestureRecognizerToFail() throws {
-        let pinchGestureRecognizer = try XCTUnwrap(pinchGestureHandler.gestureRecognizer as? MockGestureRecognizer)
-
-        XCTAssertEqual(pinchGestureRecognizer.requireToFailStub.invocations.count, 1)
-        XCTAssertTrue(pinchGestureRecognizer.requireToFailStub.invocations.first?.parameters
-                        === panGestureHandler.gestureRecognizer)
-    }
-
     func testPitchGestureRecognizerRequiresPanGestureRecognizerToFail() throws {
         let pitchGestureRecognizer = try XCTUnwrap(pitchGestureHandler.gestureRecognizer as? MockGestureRecognizer)
 
@@ -551,11 +543,5 @@ final class GestureManagerTests: XCTestCase {
         gestureManager.gestureEnded(for: .pinch, willAnimate: false)
         gestureManager.gestureEnded(for: .pinch, willAnimate: false)
         XCTAssertEqual(delegate.gestureDidEndStub.invocations.count, 1)
-    }
-
-    func testRotationUpdateScheduledAfterPinchUpdate() {
-        gestureManager.pinchGestureHandlerDidUpdateGesture(pinchGestureHandler)
-
-        XCTAssertEqual(rotateGestureHandler.scheduleRotationUpdateIfNeededStub.invocations.count, 1)
     }
 }

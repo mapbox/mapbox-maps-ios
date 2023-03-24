@@ -1,10 +1,6 @@
 import UIKit
 @_implementationOnly import MapboxCommon_Private
 
-internal protocol PinchGestureHandlerDelegate: GestureHandlerDelegate {
-    func pinchGestureHandlerDidUpdateGesture(_ handler: PinchGestureHandlerProtocol)
-}
-
 internal protocol PinchGestureHandlerProtocol: FocusableGestureHandlerProtocol {
     var zoomEnabled: Bool { get set }
     var panEnabled: Bool { get set }
@@ -76,10 +72,6 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
                 pinchBehavior.update(
                     pinchMidpoint: gestureRecognizer.location(in: view),
                     pinchScale: gestureRecognizer.scale)
-
-                if let pinchDelegate = (delegate as? PinchGestureHandlerDelegate) {
-                    pinchDelegate.pinchGestureHandlerDidUpdateGesture(self)
-                }
             } else {
                 start(with: gestureRecognizer)
             }
@@ -123,8 +115,17 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
 extension PinchGestureHandler: UIGestureRecognizerDelegate {
     internal func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
                                     shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return self.gestureRecognizer === gestureRecognizer &&
-        otherGestureRecognizer is UIRotationGestureRecognizer &&
-        simultaneousRotateAndPinchZoomEnabled
+        guard gestureRecognizer === self.gestureRecognizer else { return true }
+
+        switch otherGestureRecognizer {
+        case is UIRotationGestureRecognizer:
+            return simultaneousRotateAndPinchZoomEnabled
+        case is UIScreenEdgePanGestureRecognizer:
+            return false
+        case is UIPanGestureRecognizer:
+            return panEnabled
+        default:
+            return false
+        }
     }
 }

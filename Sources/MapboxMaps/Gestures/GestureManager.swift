@@ -151,7 +151,6 @@ public final class GestureManager: GestureHandlerDelegate {
         quickZoomGestureHandler.delegate = self
         singleTapGestureHandler.delegate = self
 
-        pinchGestureHandler.gestureRecognizer.require(toFail: panGestureHandler.gestureRecognizer)
         pitchGestureHandler.gestureRecognizer.require(toFail: panGestureHandler.gestureRecognizer)
         quickZoomGestureHandler.gestureRecognizer.require(toFail: doubleTapToZoomInGestureHandler.gestureRecognizer)
         singleTapGestureHandler.gestureRecognizer.require(toFail: doubleTapToZoomInGestureHandler.gestureRecognizer)
@@ -197,13 +196,5 @@ public final class GestureManager: GestureHandlerDelegate {
 
     internal func animationEnded(for gestureType: GestureType) {
         delegate?.gestureManager(self, didEndAnimatingFor: gestureType)
-    }
-}
-
-extension GestureManager: PinchGestureHandlerDelegate {
-    func pinchGestureHandlerDidUpdateGesture(_ handler: PinchGestureHandlerProtocol) {
-        // Because of a bug in core maps camera state has to be reset before updating pinch drag.
-        // This call will make sure that bearing is set to correct value after pinch dragging.
-        rotateGestureHandler.scheduleRotationUpdateIfNeeded()
     }
 }

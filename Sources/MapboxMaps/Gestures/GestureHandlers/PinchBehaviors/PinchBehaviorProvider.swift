@@ -30,7 +30,6 @@ internal final class PinchBehaviorProvider: PinchBehaviorProviderProtocol {
                 mapboxMap: mapboxMap)
         case (true, false):
             return PanPinchBehavior(
-                initialCameraState: initialCameraState,
                 initialPinchMidpoint: initialPinchMidpoint,
                 mapboxMap: mapboxMap)
         case (false, true):

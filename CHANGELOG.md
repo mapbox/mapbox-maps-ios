@@ -15,6 +15,21 @@ Mapbox welcomes participation and contributions from everyone.
 * Remove deprecated queryRenderedFeatures methods. Use `queryRenderedFeatures(with:options:completion:)` instead. 
 * Make `easeTo/flyTo` return non-optional cancelable token.
 * Add `rotation` case to `GestureType` to be able to detect rotation separately from other gestures.
+* Enable zoom during a drag gesture.
+* Fix bearing value is fluctuating between initial value and correct value during a rotation gesture.
+* Allows animation during any ongoing gestures.
+* Sync map size to the size of the metal view.
+
+## 10.12.0 - March 22, 2023
+
+* Deprecate `Snapshotter.tileMode`.
+* Bump MapboxCoreMaps to 10.12.0 and MapboxCommon to 23.4.0
+
+## 10.12.0-rc.1 - March 8, 2023
+
+* Correct user-agent fragment sent to events/telemetry service.
+* Bump MapboxCoreMaps to 10.12.0-rc.1 and MapboxCommon to 23.4.0-rc.1.
+* Change annotation end-of-drag delay to 0.125 to minimize lagging.
 
 ## 10.12.0-beta.1 - February 22, 2023
 
@@ -23,6 +38,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Update MapboxCoreMaps to `v10.12.0-beta.1` and MapboxCommon to `v23.4.0-beta.1`
 * Fix app extension support. ([#1916](https://github.com/mapbox/mapbox-maps-ios/pull/1916))
 * Allow pass `dataId` to `sourceDataLoaded` event.
+* Add a dedicated GestureRecognizer (and Handler) to interrupt deceleration animation on tap on the map.
 
 ## 10.11.0 - February 8, 2023
 * Update to MapboxCoreMaps 10.11.1 and MapboxCommon 23.3.1. ([#1899](https://github.com/mapbox/mapbox-maps-ios/pull/1899))

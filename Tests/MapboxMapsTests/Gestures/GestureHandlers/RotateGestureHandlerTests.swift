@@ -217,66 +217,6 @@ final class RotateGestureHandlerTests: XCTestCase {
 
         XCTAssertFalse(shouldRecognizeSimultaneously)
     }
-
-    func testSheduleRotationUpdateIsIgnoredWhenNotRotating() {
-        let expectation = expectation(description: "Scheduled rotation update ignored")
-        expectation.isInverted = true
-        rotateGestureHandler.scheduleRotationUpdateIfNeeded()
-        DispatchQueue.main.async {
-            if !self.mapboxMap.setCameraStub.invocations.isEmpty {
-                expectation.fulfill()
-            }
-        }
-
-        wait(for: [expectation], timeout: 0.1)
-    }
-
-    func testScheduledRotationUpdateIsPerformed() {
-        let expectation = expectation(description: "Scheduled rotation update performed")
-
-        gestureRecognizer.getStateStub.defaultReturnValue = .began
-        gestureRecognizer.sendActions()
-
-        gestureRecognizer.getStateStub.defaultReturnValue = .changed
-        gestureRecognizer.getVelocityStub.defaultReturnValue = 1.radiansPerSecond
-        gestureRecognizer.getRotationStub.defaultReturnValue = 30.toRadians()
-        gestureRecognizer.sendActions()
-        mapboxMap.setCameraStub.reset()
-
-        rotateGestureHandler.scheduleRotationUpdateIfNeeded()
-        DispatchQueue.main.async {
-            if !self.mapboxMap.setCameraStub.invocations.isEmpty {
-                expectation.fulfill()
-            }
-        }
-        wait(for: [expectation], timeout: 0.1)
-    }
-
-    func testScheduledRotationUpdateIsIgnoredAfterGestureUpdate() {
-        let expectation = expectation(description: "Scheduled rotation update performed")
-        expectation.isInverted = true
-
-        gestureRecognizer.getStateStub.defaultReturnValue = .began
-        gestureRecognizer.sendActions()
-
-        gestureRecognizer.getStateStub.defaultReturnValue = .changed
-        gestureRecognizer.getVelocityStub.defaultReturnValue = 1.radiansPerSecond
-        gestureRecognizer.getRotationStub.defaultReturnValue = 30.toRadians()
-        gestureRecognizer.sendActions()
-
-        mapboxMap.setCameraStub.reset()
-
-        rotateGestureHandler.scheduleRotationUpdateIfNeeded()
-        DispatchQueue.main.async {
-            // camera should be set only once after gesture recognizer sends its update,
-            // the scheduled bearing update should be ignored after that
-            if self.mapboxMap.setCameraStub.invocations.count > 1 {
-                expectation.fulfill()
-            }
-        }
-        gestureRecognizer.sendActions()
-        wait(for: [expectation], timeout: 0.1)
-    }
 }
 
 fileprivate extension Double {

@@ -3,7 +3,6 @@ import CoreLocation
 
 internal protocol RotateGestureHandlerProtocol: FocusableGestureHandlerProtocol {
     var simultaneousRotateAndPinchZoomEnabled: Bool { get set }
-    func scheduleRotationUpdateIfNeeded()
 }
 
  /// `RotateGestureHandler` updates the map camera in response to 2-touch rotate gestures
@@ -58,30 +57,10 @@ internal protocol RotateGestureHandlerProtocol: FocusableGestureHandlerProtocol 
          }
      }
 
-     private var rotationUpdateNeeded = false
-
-     /// Appends bearing update to the end of the main queue.
-     /// The update will be performed only if no other bearing update precedes it.
-     func scheduleRotationUpdateIfNeeded() {
-         guard isMapRotating else {
-             return
-         }
-         rotationUpdateNeeded = true
-         DispatchQueue.main.async {
-             guard self.rotationUpdateNeeded else {
-                 return
-             }
-
-             self.updateBearing()
-         }
-     }
-
      private func updateBearing() {
          guard let view = gestureRecognizer.view else {
              return
          }
-
-         rotationUpdateNeeded = false
 
          // flip the sign since the UIKit coordinate system is flipped
           // relative to the coordinate system used for bearing.

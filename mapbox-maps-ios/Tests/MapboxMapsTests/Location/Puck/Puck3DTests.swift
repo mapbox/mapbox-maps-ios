@@ -108,13 +108,13 @@ final class Puck3DTests: XCTestCase {
         XCTAssertEqual(actualSource.models, ["puck-model": expectedModel])
         XCTAssertEqual(style.addSourceStub.invocations.first?.parameters.id, "puck-model-source")
 
-        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
-        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 1)
-        let actualLayer = try XCTUnwrap(style.addPersistentLayerStub.invocations.first?.parameters.layer as? ModelLayer)
-        XCTAssertEqual(actualLayer.id, "puck-model-layer")
-        XCTAssertEqual(actualLayer.modelType, .constant(.locationIndicator))
-        XCTAssertEqual(actualLayer.source, "puck-model-source")
-        XCTAssertEqual(style.addPersistentLayerStub.invocations.first?.parameters.layerPosition, nil)
+        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
+        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 1)
+        let actualLayer = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
+        XCTAssertEqual(actualLayer["id"] as? String, "puck-model-layer")
+        XCTAssertEqual(actualLayer["model-type"] as? String, "location-indicator")
+        XCTAssertEqual(actualLayer["source"] as? String, "puck-model-source")
+        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.layerPosition, nil)
     }
 
     func testModelOrientationBasedOnHeading() throws {
@@ -205,8 +205,8 @@ final class Puck3DTests: XCTestCase {
 
         puck3D.isActive = true
 
-        let actualLayer = try XCTUnwrap(style.addPersistentLayerStub.invocations.first?.parameters.layer as? ModelLayer)
-        XCTAssertEqual(actualLayer.modelRotation, configuration.modelRotation)
+        let actualLayer = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
+        XCTAssertEqual(actualLayer["model-rotation"] as? String, try? configuration.modelRotation?.toJSON() as? String)
     }
 
     func testModelOpacity() throws {
@@ -217,8 +217,8 @@ final class Puck3DTests: XCTestCase {
 
         puck3D.isActive = true
 
-        let actualLayer = try XCTUnwrap(style.addPersistentLayerStub.invocations.first?.parameters.layer as? ModelLayer)
-        XCTAssertEqual(actualLayer.modelOpacity, configuration.modelOpacity)
+        let actualLayer = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
+        XCTAssertEqual(actualLayer["model-opacity"] as? String, try? configuration.modelOpacity?.toJSON() as? String)
     }
 
     func testDefaultModelScale() throws {
@@ -233,8 +233,9 @@ final class Puck3DTests: XCTestCase {
         style.layerExistsStub.defaultReturnValue = false
         puck3D.isActive = true
 
-        let modelLayer = try XCTUnwrap(style.addPersistentLayerStub.invocations.first?.parameters.layer as? ModelLayer)
-        let modelScaleString = try XCTUnwrap(try modelLayer.modelScale?.jsonString())
+        let modelLayer = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
+        let modelScale = try XCTUnwrap(modelLayer["model-scale"] as? [Any])
+        let modelScaleString = try XCTUnwrap(String(data: JSONSerialization.data(withJSONObject: modelScale), encoding: .utf8))
 
         let modelScalePattern =
             #"^\["interpolate","# +
@@ -293,7 +294,7 @@ final class Puck3DTests: XCTestCase {
         style.layerExistsStub.defaultReturnValue = true
         style.addSourceStub.reset()
         style.setSourcePropertiesStub.reset()
-        style.addPersistentLayerStub.reset()
+        style.addPersistentLayerWithPropertiesStub.reset()
 
         puck3D.puckBearingSource = [.heading, .course].randomElement()!
 
@@ -310,7 +311,7 @@ final class Puck3DTests: XCTestCase {
         style.layerExistsStub.defaultReturnValue = true
         style.addSourceStub.reset()
         style.setSourcePropertiesStub.reset()
-        style.addPersistentLayerStub.reset()
+        style.addPersistentLayerWithPropertiesStub.reset()
         let handler = try XCTUnwrap(interpolatedLocationProducer.observeStub.invocations.first?.parameters)
 
         let wantsMoreUpdates = handler(interpolatedLocationProducer.location!)

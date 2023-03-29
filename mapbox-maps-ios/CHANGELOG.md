@@ -4,6 +4,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Remove unnecessary check before updating a geo json source.
 * Remove deprecated `LocationManager.updateHeadingForCurrentDeviceOrientation()` method.
 * Remove deprecated `MapEvents.EventKind`.
 * Make NSNumber extension internal.

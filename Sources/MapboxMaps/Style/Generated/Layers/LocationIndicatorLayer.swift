@@ -16,7 +16,7 @@ public struct LocationIndicatorLayer: Layer {
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
-    public var visibility: Value<Visibility>?
+    public var visibility: Visibility
 
     /// Name of image in sprite to use as the middle of the location indicator.
     public var bearingImage: Value<ResolvedImage>?
@@ -102,7 +102,7 @@ public struct LocationIndicatorLayer: Layer {
     public init(id: String) {
         self.id = id
         self.type = LayerType.locationIndicator
-        self.visibility = .constant(.visible)
+        self.visibility = .visible
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -185,12 +185,14 @@ public struct LocationIndicatorLayer: Layer {
             topImageSizeTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .topImageSizeTransition)
         }
 
+        var visibilityEncoded: Visibility?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
-            visibility = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
+            visibilityEncoded = try layoutContainer.decodeIfPresent(Visibility.self, forKey: .visibility)
             bearingImage = try layoutContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .bearingImage)
             shadowImage = try layoutContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .shadowImage)
             topImage = try layoutContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .topImage)
         }
+        visibility = visibilityEncoded  ?? .visible
     }
 
     enum RootCodingKeys: String, CodingKey {

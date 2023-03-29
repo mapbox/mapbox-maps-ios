@@ -16,7 +16,7 @@ public struct FillLayer: Layer {
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
-    public var visibility: Value<Visibility>?
+    public var visibility: Visibility
 
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public var fillSortKey: Value<Double>?
@@ -57,7 +57,7 @@ public struct FillLayer: Layer {
     public init(id: String) {
         self.id = id
         self.type = LayerType.fill
-        self.visibility = .constant(.visible)
+        self.visibility = .visible
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -112,10 +112,12 @@ public struct FillLayer: Layer {
             fillTranslateAnchor = try paintContainer.decodeIfPresent(Value<FillTranslateAnchor>.self, forKey: .fillTranslateAnchor)
         }
 
+        var visibilityEncoded: Visibility?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
-            visibility = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
+            visibilityEncoded = try layoutContainer.decodeIfPresent(Visibility.self, forKey: .visibility)
             fillSortKey = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .fillSortKey)
         }
+        visibility = visibilityEncoded  ?? .visible
     }
 
     enum RootCodingKeys: String, CodingKey {

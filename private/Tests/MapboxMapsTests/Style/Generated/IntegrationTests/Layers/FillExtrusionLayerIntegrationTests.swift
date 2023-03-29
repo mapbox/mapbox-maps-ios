@@ -42,7 +42,6 @@ final class FillExtrusionLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.fillExtrusionOpacity = Value<Double>.testConstantValue()
             layer.fillExtrusionOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillExtrusionPattern = Value<ResolvedImage>.testConstantValue()
-            layer.fillExtrusionPatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillExtrusionRoundedRoof = Value<Bool>.testConstantValue()
             layer.fillExtrusionTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillExtrusionTranslateAnchor = Value<FillExtrusionTranslateAnchor>.testConstantValue()

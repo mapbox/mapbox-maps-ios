@@ -1,27 +1,28 @@
 ###
 ### Codegen targets
 ###
+regenerate-code: delete-code generate-code
 
-.PHONY: generate-style-code
-generate-style-code:
-	cd codegen && npm install && node style-generator/generate-style-code.js
+npm-install:
+	cd codegen && npm install
 
-.PHONY: generate-annotation-code
-generate-annotation-code:
-	cd codegen && npm install && node annotation-generator/generate-annotations.js
+generate-style-code: npm-install
+	cd codegen && node style-generator/generate-style-code.js
 
-.PHONY: generate-style-code-private
-generate-style-code-private:
-	cd codegen && npm install && node style-generator/generate-style-code --private-api
+generate-annotation-code: npm-install
+	cd codegen && node annotation-generator/generate-annotations.js
 
-.PHONY: generate-annotation-code-private
-generate-annotation-code-private:
-	cd codegen && npm install && node annotation-generator/generate-annotations.js --private-api
+generate-annotation-code-private: npm-install
+	cd codegen && node annotation-generator/generate-annotations.js --private-api
 
-.PHONY: generate-private-code
-generate-private-code:
-	make generate-style-code-private && make generate-annotation-code-private
+generate-public-code: generate-style-code generate-annotation-code
 
-.PHONY: generate-public-code
-generate-public-code:
-	make generate-style-code && make generate-annotation-code
+generate-code: generate-style-code generate-annotation-code
+
+delete-code:
+	@echo "Deleting generated code"
+	@find {mapbox-maps-ios,private}/Sources/MapboxMaps/{Annotations,Style}/Generated \
+		-not -name ".swiftlint.yml" -delete 2>/dev/null || true
+
+.PHONY: generate-style-code generate-annotation-code generate-annotation-code-private generate-private-code generate-public-code generate-code
+.PHONY: delete-code regenerate-code

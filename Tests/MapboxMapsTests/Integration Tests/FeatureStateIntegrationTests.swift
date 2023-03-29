@@ -5,7 +5,8 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
 
     internal func testSetFeatureState() {
         style?.uri = .streets
-        let featureStateExpectation = XCTestExpectation(description: "Wait for feature state  map to be updated.")
+        let featureStateExpectation = XCTestExpectation(description: "Wait for feature state map to be updated and returned.")
+        featureStateExpectation.assertForOverFulfill = true
 
         didFinishLoadingStyle = { mapView in
 
@@ -22,13 +23,18 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
         }
 
         didBecomeIdle = { mapView in
-            mapView.mapboxMap.setFeatureState(sourceId: "test-source", featureId: "0", state: ["testKey": true])
-
-            mapView.mapboxMap.getFeatureState(sourceId: "test-source", featureId: "0") { result in
+            mapView.mapboxMap.setFeatureState(sourceId: "test-source", featureId: "0", state: ["testKey": true]) { result in
                 switch result {
-                case .success(let map):
-                    XCTAssertEqual(map["testKey"] as? Bool, true)
-                    featureStateExpectation.fulfill()
+                case .success:
+                    mapView.mapboxMap.getFeatureState(sourceId: "test-source", featureId: "0") { result in
+                        switch result {
+                        case .success(let map):
+                            XCTAssertEqual(map["testKey"] as? Bool, true)
+                            featureStateExpectation.fulfill()
+                        case .failure(let error):
+                            XCTFail("Could not retrieve feature state: \(error)")
+                        }
+                    }
                 case .failure(let error):
                     XCTFail("Could not retrieve feature state: \(error)")
                 }
@@ -40,7 +46,8 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
 
     internal func testRemoveFeatureState() {
         style?.uri = .streets
-        let featureStateExpectation = XCTestExpectation(description: "Wait for feature state map to be updated.")
+        let featureStateRemovedExpectation = XCTestExpectation(description: "Wait for feature state map to be updated and removed.")
+        let featureStateKeptExpectation = XCTestExpectation(description: "Wait for feature state map to be kept.")
 
         didFinishLoadingStyle = { mapView in
             do {
@@ -55,26 +62,113 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
         }
 
         didBecomeIdle = { mapView in
-            mapView.mapboxMap.setFeatureState(sourceId: "test-source", featureId: "0", state: ["testKey": true])
-
-            mapView.mapboxMap.removeFeatureState(sourceId: "test-source", featureId: "0")
-
-            mapView.mapboxMap.getFeatureState(
-                sourceId: "test-source",
-                featureId: "0") { result in
-
-                switch result {
-                case .success(let map):
-                    XCTAssert(map.isEmpty)
-                    featureStateExpectation.fulfill()
-                case .failure(let error):
+            mapView.mapboxMap.setFeatureState(sourceId: "test-source", featureId: "0", state: ["testKey": true]) { result in
+                if case .failure(let error) = result {
                     XCTFail("Could not retrieve feature state: \(error)")
                 }
             }
 
+            mapView.mapboxMap.setFeatureState(sourceId: "test-source", featureId: "1", state: ["testKey": true]) { result in
+                if case .failure(let error) = result {
+                    XCTFail("Could not retrieve feature state: \(error)")
+                }
+            }
+
+            mapView.mapboxMap.removeFeatureState(sourceId: "test-source", featureId: "0") { result in
+                switch result {
+                case .success:
+                    mapView.mapboxMap.getFeatureState(
+                        sourceId: "test-source",
+                        featureId: "0") { result in
+
+                            switch result {
+                            case .success(let map):
+                                XCTAssert(map.isEmpty)
+                                featureStateRemovedExpectation.fulfill()
+                            case .failure(let error):
+                                XCTFail("Could not retrieve feature state: \(error)")
+                            }
+                        }
+
+                    // Removal should only affect the feature with the passed featureId
+                    mapView.mapboxMap.getFeatureState(sourceId: "test-source", featureId: "1") { result in
+                        switch result {
+                        case .success(let map):
+                            XCTAssertEqual(map["testKey"] as? Bool, true)
+                            featureStateKeptExpectation.fulfill()
+                        case .failure(let error):
+                            XCTFail("Could not retrieve feature state: \(error)")
+                        }
+                    }
+                case .failure(let error):
+                    XCTFail("Could not retrieve feature state: \(error)")
+                }
+            }
         }
 
-        wait(for: [featureStateExpectation], timeout: 5.0)
+        wait(for: [featureStateRemovedExpectation, featureStateKeptExpectation], timeout: 5.0)
+    }
+
+    internal func testResetFeatureStates() {
+        style?.uri = .streets
+        let featureStateRemovedExpectation = XCTestExpectation(description: "Wait for feature state map to be updated and removed.")
+        featureStateRemovedExpectation.expectedFulfillmentCount = 2
+
+        didFinishLoadingStyle = { mapView in
+            do {
+                try mapView.mapboxMap.style.addSource(
+                    self.makeGeoJSONSource(),
+                    id: "test-source")
+                try mapView.mapboxMap.style.addLayer(
+                    self.makeLayer())
+            } catch {
+                XCTFail("Failed to add geojson source / layer due to error: \(error)")
+            }
+        }
+
+        didBecomeIdle = { mapView in
+            mapView.mapboxMap.setFeatureState(sourceId: "test-source", featureId: "0", state: ["testKey": true]) { result in
+                if case .failure(let error) = result {
+                    XCTFail("Could not retrieve feature state: \(error)")
+                }
+            }
+
+            mapView.mapboxMap.setFeatureState(sourceId: "test-source", featureId: "1", state: ["testKey": true]) { result in
+                if case .failure(let error) = result {
+                    XCTFail("Could not retrieve feature state: \(error)")
+                }
+            }
+
+            mapView.mapboxMap.resetFeatureStates(sourceId: "test-source") { result in
+                switch result {
+                case .success:
+                    // Reset should remove feature states of all features
+                    mapView.mapboxMap.getFeatureState(sourceId: "test-source", featureId: "0") { result in
+                        switch result {
+                        case .success(let map):
+                            XCTAssert(map.isEmpty)
+                            featureStateRemovedExpectation.fulfill()
+                        case .failure(let error):
+                            XCTFail("Could not retrieve feature state: \(error)")
+                        }
+                    }
+
+                    mapView.mapboxMap.getFeatureState(sourceId: "test-source", featureId: "1") { result in
+                        switch result {
+                        case .success(let map):
+                            XCTAssert(map.isEmpty)
+                            featureStateRemovedExpectation.fulfill()
+                        case .failure(let error):
+                            XCTFail("Could not retrieve feature state: \(error)")
+                        }
+                    }
+                case .failure(let error):
+                    XCTFail("Could not retrieve feature state: \(error)")
+                }
+            }
+        }
+
+        wait(for: [featureStateRemovedExpectation], timeout: 5.0)
     }
 
     // MARK: - Helper

@@ -191,7 +191,7 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
             case .success(let queriedfeatures):
 
                 // Extract the earthquake feature from the queried features
-                if let earthquakeFeature = queriedfeatures.first?.feature,
+                if let earthquakeFeature = queriedfeatures.first?.queriedFeature.feature,
                    case .number(let earthquakeIdDouble) = earthquakeFeature.identifier,
                    case .point(let point) = earthquakeFeature.geometry,
                    case let .number(magnitude) = earthquakeFeature.properties?["mag"],
@@ -233,7 +233,14 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
         self.mapView.mapboxMap.setFeatureState(sourceId: Self.earthquakeSourceId,
                                                sourceLayerId: nil,
                                                featureId: earthquakeId,
-                                               state: ["selected": true])
+                                               state: ["selected": true]) { result in
+            switch result {
+            case .failure(let error):
+                print("Could not retrieve feature state: \(error).")
+            case .success(_):
+                print("Succesfully set feature state.")
+            }
+        }
     }
 
     // Resets the previously selected earthquake to be "unselected" if needed.
@@ -245,7 +252,14 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
             self.mapView.mapboxMap.setFeatureState(sourceId: Self.earthquakeSourceId,
                                                     sourceLayerId: nil,
                                                     featureId: self.previouslyTappedEarthquakeId,
-                                                    state: ["selected": false])
+                                                   state: ["selected": false]) { result in
+                switch result {
+                case .failure(let error):
+                    print("Could not retrieve feature state: \(error).")
+                case .success(_):
+                    print("Succesfully set feature state.")
+                }
+            }
         }
     }
 

@@ -26,7 +26,7 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.visibility = .constant(.visible)
+            layer.visibility = .visible
             layer.lineCap = Value<LineCap>.testConstantValue()
             layer.lineJoin = Value<LineJoin>.testConstantValue()
             layer.lineMiterLimit = Value<Double>.testConstantValue()

@@ -26,7 +26,7 @@ final class FillLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.visibility = .constant(.visible)
+            layer.visibility = .visible
             layer.fillSortKey = Value<Double>.testConstantValue()
 
             layer.fillAntialias = Value<Bool>.testConstantValue()

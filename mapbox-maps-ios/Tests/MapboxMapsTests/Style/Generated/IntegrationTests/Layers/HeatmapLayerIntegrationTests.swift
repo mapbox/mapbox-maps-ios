@@ -26,7 +26,7 @@ final class HeatmapLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.visibility = .constant(.visible)
+            layer.visibility = .visible
 
             layer.heatmapColor = Value<StyleColor>.testConstantValue()
             layer.heatmapIntensity = Value<Double>.testConstantValue()

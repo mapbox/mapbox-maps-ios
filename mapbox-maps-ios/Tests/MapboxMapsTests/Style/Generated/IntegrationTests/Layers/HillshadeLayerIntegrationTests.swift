@@ -26,7 +26,7 @@ final class HillshadeLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.visibility = .constant(.visible)
+            layer.visibility = .visible
 
             layer.hillshadeAccentColor = Value<StyleColor>.testConstantValue()
             layer.hillshadeAccentColorTransition = StyleTransition(duration: 10.0, delay: 10.0)

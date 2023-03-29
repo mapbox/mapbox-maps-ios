@@ -17,7 +17,7 @@ public struct SkyLayer: Layer {
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
-    public var visibility: Value<Visibility>?
+    public var visibility: Visibility
 
     /// A color used to tweak the main atmospheric scattering coefficients. Using white applies the default coefficients giving the natural blue color to the atmosphere. This color affects how heavily the corresponding wavelength is represented during scattering. The alpha channel describes the density of the atmosphere, with 1 maximum density and 0 no density.
     public var skyAtmosphereColor: Value<StyleColor>?
@@ -52,7 +52,7 @@ public struct SkyLayer: Layer {
     public init(id: String) {
         self.id = id
         self.type = LayerType.sky
-        self.visibility = .constant(.visible)
+        self.visibility = .visible
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -104,9 +104,11 @@ public struct SkyLayer: Layer {
             skyType = try paintContainer.decodeIfPresent(Value<SkyType>.self, forKey: .skyType)
         }
 
+        var visibilityEncoded: Visibility?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
-            visibility = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
+            visibilityEncoded = try layoutContainer.decodeIfPresent(Visibility.self, forKey: .visibility)
         }
+        visibility = visibilityEncoded  ?? .visible
     }
 
     enum RootCodingKeys: String, CodingKey {

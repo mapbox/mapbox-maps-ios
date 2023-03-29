@@ -16,7 +16,7 @@ public struct LineLayer: Layer {
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
-    public var visibility: Value<Visibility>?
+    public var visibility: Visibility
 
     /// The display of line endings.
     public var lineCap: Value<LineCap>?
@@ -99,7 +99,7 @@ public struct LineLayer: Layer {
     public init(id: String) {
         self.id = id
         self.type = LayerType.line
-        self.visibility = .constant(.visible)
+        self.visibility = .visible
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -178,14 +178,16 @@ public struct LineLayer: Layer {
             lineWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineWidthTransition)
         }
 
+        var visibilityEncoded: Visibility?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
-            visibility = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
+            visibilityEncoded = try layoutContainer.decodeIfPresent(Visibility.self, forKey: .visibility)
             lineCap = try layoutContainer.decodeIfPresent(Value<LineCap>.self, forKey: .lineCap)
             lineJoin = try layoutContainer.decodeIfPresent(Value<LineJoin>.self, forKey: .lineJoin)
             lineMiterLimit = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .lineMiterLimit)
             lineRoundLimit = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .lineRoundLimit)
             lineSortKey = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .lineSortKey)
         }
+        visibility = visibilityEncoded  ?? .visible
     }
 
     enum RootCodingKeys: String, CodingKey {

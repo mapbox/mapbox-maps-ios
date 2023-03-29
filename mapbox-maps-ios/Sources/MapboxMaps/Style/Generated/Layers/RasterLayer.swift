@@ -16,7 +16,7 @@ public struct RasterLayer: Layer {
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
-    public var visibility: Value<Visibility>?
+    public var visibility: Visibility
 
     /// Increase or reduce the brightness of the image. The value is the maximum brightness.
     public var rasterBrightnessMax: Value<Double>?
@@ -78,7 +78,7 @@ public struct RasterLayer: Layer {
     public init(id: String) {
         self.id = id
         self.type = LayerType.raster
-        self.visibility = .constant(.visible)
+        self.visibility = .visible
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -148,9 +148,11 @@ public struct RasterLayer: Layer {
             rasterSaturationTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterSaturationTransition)
         }
 
+        var visibilityEncoded: Visibility?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
-            visibility = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
+            visibilityEncoded = try layoutContainer.decodeIfPresent(Visibility.self, forKey: .visibility)
         }
+        visibility = visibilityEncoded  ?? .visible
     }
 
     enum RootCodingKeys: String, CodingKey {

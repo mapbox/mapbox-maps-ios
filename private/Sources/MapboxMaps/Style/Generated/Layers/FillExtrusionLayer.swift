@@ -16,7 +16,7 @@ public struct FillExtrusionLayer: Layer {
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
-    public var visibility: Value<Visibility>?
+    public var visibility: Visibility
 
     /// Radius of a fill extrusion edge in meters. If not zero, rounds extrusion edges for a smoother appearance.
     @_spi(Experimental) public var fillExtrusionEdgeRadius: Value<Double>?
@@ -78,7 +78,7 @@ public struct FillExtrusionLayer: Layer {
     public init(id: String) {
         self.id = id
         self.type = LayerType.fillExtrusion
-        self.visibility = .constant(.visible)
+        self.visibility = .visible
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -147,10 +147,12 @@ public struct FillExtrusionLayer: Layer {
             fillExtrusionVerticalGradient = try paintContainer.decodeIfPresent(Value<Bool>.self, forKey: .fillExtrusionVerticalGradient)
         }
 
+        var visibilityEncoded: Visibility?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
-            visibility = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
+            visibilityEncoded = try layoutContainer.decodeIfPresent(Visibility.self, forKey: .visibility)
             fillExtrusionEdgeRadius = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionEdgeRadius)
         }
+        visibility = visibilityEncoded  ?? .visible
     }
 
     enum RootCodingKeys: String, CodingKey {

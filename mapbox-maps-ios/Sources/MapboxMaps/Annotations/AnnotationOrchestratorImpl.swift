@@ -164,7 +164,7 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
 
                     // Get the identifiers of all the queried features
                     let queriedFeatureIds: [String] = queriedFeatures.compactMap {
-                        guard case let .string(featureId) = $0.feature.identifier else {
+                        guard case let .string(featureId) = $0.queriedFeature.feature.identifier else {
                             return nil
                         }
                         return featureId
@@ -195,7 +195,7 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
                 switch result {
                 case .success(let queriedFeatures):
                     let queriedFeatureIds: [String] = queriedFeatures.compactMap {
-                        guard case let .string(featureId) = $0.feature.identifier else {
+                        guard case let .string(featureId) = $0.queriedFeature.feature.identifier else {
                             return nil
                         }
                         return featureId

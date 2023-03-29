@@ -12,8 +12,6 @@ Mapbox welcomes participation and contributions from everyone.
 * Remove deprecated `GestureOptions.pinchRotateEnabled`.
 * Remove deprecated `Location` initializer.
 * Remove deprecated transition properties from layers.
-* Remove deprecated `queryFeatureExtension()` method. Use `getGeoJsonClusterLeaves()`/`getGeoJsonClusterChildren()`/`getGeoJsonClusterExpansionZoom()` instead. 
-* Remove deprecated queryRenderedFeatures methods. Use `queryRenderedFeatures(with:options:completion:)` instead. 
 * Make `easeTo/flyTo` return non-optional cancelable token.
 * Add `rotation` case to `GestureType` to be able to detect rotation separately from other gestures.
 * Enable zoom during a drag gesture.
@@ -31,6 +29,12 @@ Mapbox welcomes participation and contributions from everyone.
 * Correct user-agent fragment sent to events/telemetry service.
 * Bump MapboxCoreMaps to 10.12.0-rc.1 and MapboxCommon to 23.4.0-rc.1.
 * Change annotation end-of-drag delay to 0.125 to minimize lagging.
+* Different data types are now used for `querySourceFeatures` and `queryRenderedFeatures`: `QueriedSourceFeature` and `QueriedRenderedFeature`. `QueriedRenderedFeature` has a new field `layer` which contains the queried feature's layer id.
+* Remove deprecated `queryRenderedFeatures()` methods. Use `queryRenderedFeatures(with:options:completion:)` instead. 
+* Remove deprecated `queryFeatureExtension()` method. Use `getGeoJsonClusterLeaves()`/`getGeoJsonClusterChildren()`/`getGeoJsonClusterExpansionZoom()` instead. 
+* Add the `MapboxMap.resetFeatureState` method.
+* Add `callback` argument to the `MapboxMap` methods `getFeatureState`, `setFeatureState`, `removeFeatureState`.
+* Return `cancelable` from the `MapboxMap` methods : `getFeatureState`, `setFeatureState`, `removeFeatureState`, `querySourceFeatures`, `getGeoJsonClusterLeaves`, `getGeoJsonClusterChildren`, `getGeoJsonClusterExpansionZoom`.
 
 ## 10.12.0-beta.1 - February 22, 2023
 

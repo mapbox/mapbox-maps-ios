@@ -38,6 +38,18 @@ Struct ScaleBarViewOptions has removed conformance to OrnamentOptionsProtocol
 Func CameraAnimationsManager.ease(to:duration:curve:completion:) has return type change from MapboxMaps.Cancelable? to MapboxMaps.Cancelable
 Func CameraAnimationsManager.fly(to:duration:completion:) has return type change from MapboxMaps.Cancelable? to MapboxMaps.Cancelable
 
+Var Snapshotter.tileMode has been removed
+Func MapboxMap.removeFeatureState(sourceId:sourceLayerId:featureId:stateKey:) has been renamed to Func removeFeatureState(sourceId:sourceLayerId:featureId:stateKey:callback:)
+Func MapboxMap.setFeatureState(sourceId:sourceLayerId:featureId:state:) has been renamed to Func setFeatureState(sourceId:sourceLayerId:featureId:state:callback:)
+Func MapboxMap.getFeatureState(sourceId:sourceLayerId:featureId:callback:) has return type change from () to MapboxMaps.Cancelable
+Func MapboxMap.getGeoJsonClusterChildren(forSourceId:feature:completion:) has return type change from () to MapboxMaps.Cancelable
+Func MapboxMap.getGeoJsonClusterExpansionZoom(forSourceId:feature:completion:) has return type change from () to MapboxMaps.Cancelable
+Func MapboxMap.getGeoJsonClusterLeaves(forSourceId:feature:limit:offset:completion:) has return type change from () to MapboxMaps.Cancelable
+Func MapboxMap.queryRenderedFeatures(with:options:completion:) has parameter 2 type change from (Swift.Result<[MapboxCoreMaps.QueriedFeature], Swift.Error>) -> Swift.Void to (Swift.Result<[MapboxCoreMaps.QueriedRenderedFeature], Swift.Error>) -> Swift.Void
+Func MapboxMap.querySourceFeatures(for:options:completion:) has parameter 2 type change from (Swift.Result<[MapboxCoreMaps.QueriedFeature], Swift.Error>) -> Swift.Void to (Swift.Result<[MapboxCoreMaps.QueriedSourceFeature], Swift.Error>) -> Swift.Void
+Func MapboxMap.querySourceFeatures(for:options:completion:) has return type change from () to MapboxMaps.Cancelable
+Func MapboxMap.removeFeatureState(sourceId:sourceLayerId:featureId:stateKey:) has return type change from () to MapboxMaps.Cancelable
+Func MapboxMap.setFeatureState(sourceId:sourceLayerId:featureId:state:) has return type change from () to MapboxMaps.Cancelable
 
 // Making Layer.visibility a required variable with no Expression support
 Accessor BackgroundLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility

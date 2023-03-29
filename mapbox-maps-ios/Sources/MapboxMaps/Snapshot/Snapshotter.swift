@@ -11,10 +11,6 @@ internal protocol MapSnapshotterProtocol: StyleManagerProtocol, ObservableProtoc
 
     func getSize() -> Size
 
-    func isInTileMode() -> Bool
-
-    func setTileModeForSet(_ set: Bool)
-
     func getCameraState() -> MapboxCoreMaps.CameraState
 
     func setCameraFor(_ cameraOptions: MapboxCoreMaps.CameraOptions)
@@ -100,15 +96,6 @@ public class Snapshotter {
     /// - Parameter cameraOptions: The target camera options
     public func setCamera(to cameraOptions: CameraOptions) {
         mapSnapshotter.setCameraFor(MapboxCoreMaps.CameraOptions(cameraOptions))
-    }
-
-    /// In the tile mode, the snapshotter fetches the still image of a single tile.
-    public var tileMode: Bool {
-        get {
-            return mapSnapshotter.isInTileMode()
-        } set(newValue) {
-            mapSnapshotter.setTileModeForSet(newValue)
-        }
     }
 
     /**

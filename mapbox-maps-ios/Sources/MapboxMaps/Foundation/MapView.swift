@@ -708,10 +708,6 @@ extension MapView: DelegatingMapClientDelegate {
         needsDisplayRefresh = true
     }
 
-    internal func scheduleTask(forTask task: @escaping Task) {
-        fatalError("scheduleTask is not supported")
-    }
-
     internal func getMetalView(for metalDevice: MTLDevice?) -> MTKView? {
         let minSize = CGRect(x: 0, y: 0, width: 1, height: 1)
         let metalView = dependencyProvider.makeMetalView(frame: minSize.union(bounds), device: metalDevice)

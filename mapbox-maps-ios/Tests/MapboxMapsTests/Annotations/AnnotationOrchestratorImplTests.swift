@@ -403,7 +403,7 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
                 state: "feature-state"
             )
 
-            qrfCompletions(.success([QueriedRenderedFeature(__queriedFeature: feature, layer: "layer")]))
+            qrfCompletions(.success([QueriedRenderedFeature(__queriedFeature: feature, layers: ["layer"])]))
 
         }
 

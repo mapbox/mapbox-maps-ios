@@ -47,13 +47,13 @@ final class MockMapSnapshotter: MockStyleManager, MapSnapshotterProtocol {
 
     struct CameraForCoordinatesParams: Equatable {
         var coordinates: [CLLocation]
-        var padding: EdgeInsets
+        var padding: EdgeInsets?
         var bearing: NSNumber?
         var pitch: NSNumber?
     }
 
     var cameraForCoordinatesStub = Stub<CameraForCoordinatesParams, MapboxCoreMaps.CameraOptions>(defaultReturnValue: .init(.random()))
-    func cameraForCoordinates(forCoordinates coordinates: [CLLocation], padding: EdgeInsets, bearing: NSNumber?, pitch: NSNumber?) -> MapboxCoreMaps.CameraOptions {
+    func cameraForCoordinates(forCoordinates coordinates: [CLLocation], padding: EdgeInsets?, bearing: NSNumber?, pitch: NSNumber?) -> MapboxCoreMaps.CameraOptions {
         cameraForCoordinatesStub.call(with: CameraForCoordinatesParams(coordinates: coordinates, padding: padding, bearing: bearing, pitch: pitch))
     }
 

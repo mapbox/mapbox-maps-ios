@@ -35,7 +35,7 @@ else
     exit 1
 fi
 
-../download-dependency.sh mapbox-common "$COMMON_ARTIFACT" "$COMMON_VERSION" releases
+../download-dependency.sh mapbox-common "$COMMON_ARTIFACT" "$COMMON_VERSION" snapshots
 ../download-dependency.sh mobile-maps-core-internal "$CORE_ARTIFACT" "$CORE_VERSION" snapshots
 ../build-dependency.sh Turf 'https://github.com/mapbox/turf-swift.git' "$TURF_VERSION" "$LINK_TYPE"
 

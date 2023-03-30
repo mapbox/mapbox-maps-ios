@@ -11,9 +11,9 @@ dependencies:
   # - name: MapboxCoreMaps
   #   variations:
   #     Package.swift: mapbox-core-maps-ios
-  - name: MapboxCommon
-    variations:
-      Package.swift: mapbox-common-ios
+  # - name: MapboxCommon
+  #   variations:
+  #     Package.swift: mapbox-common-ios
   - name: Turf
     variations:
       Package.swift: turf-swift

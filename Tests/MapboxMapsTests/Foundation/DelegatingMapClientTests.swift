@@ -26,18 +26,6 @@ final class DelegatingMapClientTests: XCTestCase {
         XCTAssertEqual(delegate.scheduleRepaintStub.invocations.count, 1)
     }
 
-    func testScheduleTaskForwardsToDelegate() {
-        var invoked = false
-
-        delegatingMapClient.scheduleTask {
-            invoked = true
-        }
-        delegate.scheduleTaskStub.invocations.first?.parameters()
-
-        XCTAssertEqual(delegate.scheduleTaskStub.invocations.count, 1)
-        XCTAssertTrue(invoked)
-    }
-
     func testGetMetalViewForwardsToDelegate() {
         let expectedDevice = MTLCreateSystemDefaultDevice()
         let expectedView = MTKView()

@@ -85,3 +85,7 @@ Var LocationIndicatorLayer.visibility has declared type change from MapboxMaps.V
 Var RasterLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
 Var SkyLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
 Var SymbolLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+
+// Make Padding argument optional
+Func MapboxMap.camera(for:padding:bearing:pitch:) has parameter 1 type change from UIKit.UIEdgeInsets to UIKit.UIEdgeInsets?
+Func Snapshotter.camera(for:padding:bearing:pitch:) has parameter 1 type change from UIKit.UIEdgeInsets to UIKit.UIEdgeInsets?

@@ -168,8 +168,8 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
                         }
                     }
                 }
-                if let layer = queriedFeatures.first?.layer {
-                    print("Selected a cluster in layer named: \(layer)")
+                if let layers = queriedFeatures.first?.layers {
+                    print("Selected a cluster in layers: \(layers)")
                 }
             case .failure(let error):
                 print("An error occurred: \(error.localizedDescription). Please try another cluster.")

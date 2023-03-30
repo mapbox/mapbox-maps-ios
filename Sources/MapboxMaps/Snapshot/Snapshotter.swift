@@ -21,7 +21,7 @@ internal protocol MapSnapshotterProtocol: StyleManagerProtocol, ObservableProtoc
 
     func cameraForCoordinates(forCoordinates
                               coordinates: [CLLocation],
-                              padding: EdgeInsets,
+                              padding: EdgeInsets?,
                               bearing: NSNumber?,
                               pitch: NSNumber?) -> MapboxCoreMaps.CameraOptions
 
@@ -289,12 +289,12 @@ public class Snapshotter {
     ///   - pitch: The new pitch to be used by the camera.
     /// - Returns: A `CameraOptions` that fits the provided constraints
     public func camera(for coordinates: [CLLocationCoordinate2D],
-                       padding: UIEdgeInsets,
+                       padding: UIEdgeInsets?,
                        bearing: Double?,
                        pitch: Double?) -> CameraOptions {
         return CameraOptions(mapSnapshotter.cameraForCoordinates(
             forCoordinates: coordinates.map(\.location),
-            padding: padding.toMBXEdgeInsetsValue(),
+            padding: padding?.toMBXEdgeInsetsValue(),
             bearing: bearing?.NSNumber,
             pitch: pitch?.NSNumber))
     }

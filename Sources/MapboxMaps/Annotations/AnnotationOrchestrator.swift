@@ -26,6 +26,7 @@ public protocol AnnotationManager: AnyObject {
 }
 
 internal protocol AnnotationManagerInternal: AnnotationManager {
+    var allLayerIds: [String] { get }
 
     func destroy()
 

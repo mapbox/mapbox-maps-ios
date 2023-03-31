@@ -345,7 +345,7 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
         // given
         let annotationManagerLayerId = "managerId"
         let annotationManager = MockAnnotationManager()
-        annotationManager.$layerId.getStub.defaultReturnValue = annotationManagerLayerId
+        annotationManager.$allLayerIds.getStub.defaultReturnValue = [annotationManagerLayerId]
         factory.makePolygonAnnotationManagerStub.defaultReturnValue = annotationManager
         factory.makeCircleAnnotationManagerStub.defaultReturnValue = annotationManager
         factory.makePolylineAnnotationManagerStub.defaultReturnValue = annotationManager

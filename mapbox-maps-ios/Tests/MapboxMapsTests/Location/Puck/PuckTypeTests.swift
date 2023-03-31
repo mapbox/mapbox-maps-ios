@@ -193,4 +193,14 @@ internal class PuckTypeTests: XCTestCase {
         XCTAssertNotNil(puck2D.bearingImage)
         XCTAssertEqual(puck2D.shadowImage, UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!)
     }
+
+    func testDefaultPucksAreEqual() {
+        let puck1 = Puck2DConfiguration.makeDefault(showBearing: true)
+        let puck2 = Puck2DConfiguration.makeDefault(showBearing: true)
+        XCTAssertEqual(puck1, puck2)
+
+        let puck3 = Puck2DConfiguration.makeDefault(showBearing: false)
+        let puck4 = Puck2DConfiguration.makeDefault(showBearing: false)
+        XCTAssertEqual(puck3, puck4)
+    }
 }

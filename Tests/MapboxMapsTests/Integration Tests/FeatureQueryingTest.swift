@@ -19,7 +19,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
     internal func testQueryAtPoint() {
         style?.uri = .streets
 
-        let featureQueryExpectation = XCTestExpectation(description: "Wait for features to be queried.")
+        let featureQueryExpectation = XCTestExpectation(description: "Wait for features to be queried and at least one feature to be returned with a layer.")
 
         didFinishLoadingStyle = { mapView in
 
@@ -37,7 +37,8 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
             mapView.mapboxMap.queryRenderedFeatures(with: centerPoint) { result in
                 switch result {
                 case .success(let features):
-                    if features.count > 0 {
+                    if let firstFeature = features.first,
+                       firstFeature.layers.count > 0 {
                         featureQueryExpectation.fulfill()
                     } else {
                         XCTFail("No features found")

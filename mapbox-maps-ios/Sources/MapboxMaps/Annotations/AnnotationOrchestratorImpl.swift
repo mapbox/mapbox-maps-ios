@@ -187,7 +187,7 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
 
         switch recognizer.state {
         case .began:
-            let layerIdentifiers = managers.map(\.layerId)
+            let layerIdentifiers = managers.flatMap(\.allLayerIds)
             let options = RenderedQueryOptions(layerIds: layerIdentifiers, filter: nil)
             let gestureLocation = recognizer.location(in: recognizer.view)
             mapFeatureQueryable.queryRenderedFeatures(at: gestureLocation, options: options) { result in

@@ -9,6 +9,10 @@ Mapbox welcomes participation and contributions from everyone.
 * Allows animation during any ongoing gestures.
 * Sync map size to the size of the metal view.
 
+## 10.12.1 - March 29, 2023
+
+* Bump MapboxCoreMaps to 10.12.1
+
 ## 10.12.0 - March 22, 2023
 
 * Deprecate `Snapshotter.tileMode`.

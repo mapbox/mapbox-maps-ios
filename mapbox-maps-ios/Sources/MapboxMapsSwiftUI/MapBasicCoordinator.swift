@@ -70,7 +70,7 @@ final class MapBasicCoordinator {
         }
 
         assign(&mapView, \.style.uri, value: deps.styleURIs.effectiveURI(with: colorScheme))
-        assign(&mapView, \.gestures.options, value: deps.getstureOptions)
+        assign(&mapView, \.gestures.options, value: deps.gestureOptions)
 
         actions = deps.actions
 

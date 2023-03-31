@@ -4,6 +4,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Remove unnecessary check before updating a geo json source.
 * Enable zoom during a drag gesture.
 * Fix bearing value is fluctuating between initial value and correct value during a rotation gesture.
 * Allows animation during any ongoing gestures.

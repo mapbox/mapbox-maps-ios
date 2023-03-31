@@ -8,14 +8,34 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
 
     // MARK: - Annotations
 
-    /// The collection of CircleAnnotations being managed
-    public var annotations = [CircleAnnotation]() {
+    /// The collection of ``CircleAnnotation`` being managed.
+    public var annotations: [CircleAnnotation] {
+        get {
+            let allAnnotations = mainAnnotations.merging(draggedAnnotations) { $1 }
+            return Array(allAnnotations.values)
+        }
+        set {
+            mainAnnotations = newValue.reduce(into: [:]) { partialResult, annotation in
+                partialResult[annotation.id] = annotation
+            }
+
+            draggedAnnotations = [:]
+            annotationBeingDragged = nil
+            needsSyncDragSource = true
+        }
+    }
+
+    /// The collection of ``CircleAnnotation`` that has been dragged.
+    private var draggedAnnotations: [String: CircleAnnotation] = [:]
+    /// The collection of ``CircleAnnotation`` in the main source.
+    private var mainAnnotations: [String: CircleAnnotation] = [:] {
         didSet {
             needsSyncSourceAndLayer = true
         }
     }
 
     private var needsSyncSourceAndLayer = false
+    private var needsSyncDragSource = false
 
     // MARK: - Interaction
 
@@ -60,6 +80,8 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
     private let dragLayerId: String
     private let dragSourceId: String
 
+    var allLayerIds: [String] { [layerId, dragLayerId] }
+
     internal init(id: String,
                   style: StyleProtocol,
                   layerPosition: LayerPosition?,
@@ -102,6 +124,8 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
         }
         isDestroyed = true
 
+        removeDragSourceAndLayer()
+
         do {
             try style.removeLayer(withId: layerId)
         } catch {
@@ -130,9 +154,10 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
             return
         }
         needsSyncSourceAndLayer = false
+        let allAnnotations = annotations
 
         // Construct the properties dictionary from the annotations
-        let dataDrivenLayerPropertyKeys = Set(annotations.flatMap { $0.layerProperties.keys })
+        let dataDrivenLayerPropertyKeys = Set(allAnnotations.flatMap(\.layerProperties.keys))
         let dataDrivenProperties = Dictionary(
             uniqueKeysWithValues: dataDrivenLayerPropertyKeys
                 .map { (key) -> (String, Any) in
@@ -164,13 +189,22 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
         }
 
         // build and update the source data
-        let featureCollection = FeatureCollection(features: annotations.map(\.feature))
         do {
+            let featureCollection = FeatureCollection(features: mainAnnotations.values.map(\.feature))
             try style.updateGeoJSONSource(withId: sourceId, geoJSON: .featureCollection(featureCollection))
         } catch {
             Log.error(
                 forMessage: "Could not update annotations in CircleAnnotationManager due to error: \(error)",
                 category: "Annotations")
+        }
+    }
+
+    private func syncDragSourceIfNeeded() {
+        guard !isDestroyed, needsSyncDragSource else { return }
+
+        needsSyncDragSource = false
+        if style.sourceExists(withId: dragSourceId) {
+            updateDragSource()
         }
     }
 
@@ -218,6 +252,16 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
 
     // MARK: - User interaction handling
 
+    /// Returns the first annotation matching the set of given `featureIdentifiers`.
+    private func findAnnotation(from featureIdentifiers: [String], where predicate: (CircleAnnotation) -> Bool) -> CircleAnnotation? {
+        for featureIdentifier in featureIdentifiers {
+            if let annotation = mainAnnotations[featureIdentifier] ?? draggedAnnotations[featureIdentifier], predicate(annotation) {
+                return annotation
+            }
+        }
+        return nil
+    }
+
     internal func handleQueriedFeatureIds(_ queriedFeatureIds: [String]) {
         guard annotations.map(\.id).contains(where: queriedFeatureIds.contains(_:)) else {
             return
@@ -241,24 +285,31 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
             didDetectTappedAnnotations: tappedAnnotations)
     }
 
-    private func createDragSourceAndLayer() {
-        var dragSource = GeoJSONSource()
-        dragSource.data = .empty
+    private func updateDragSource() {
         do {
-            try style.addSource(dragSource, id: dragSourceId)
+            if let annotationBeingDragged = annotationBeingDragged {
+                draggedAnnotations[annotationBeingDragged.id] = annotationBeingDragged
+            }
+            try style.updateGeoJSONSource(withId: dragSourceId, geoJSON: .featureCollection(.init(features: draggedAnnotations.values.map(\.feature))))
         } catch {
-            Log.error(forMessage: "Failed to add the source to style. Error: \(error)")
+            Log.error(forMessage: "Failed to update drag source. Error: \(error)")
         }
+    }
 
+    private func updateDragLayer() {
         do {
             // copy the existing layer as the drag layer
             var properties = try style.layerProperties(for: layerId)
             properties[SymbolLayer.RootCodingKeys.id.rawValue] = dragLayerId
             properties[SymbolLayer.RootCodingKeys.source.rawValue] = dragSourceId
 
-            try style.addPersistentLayer(with: properties, layerPosition: .above(layerId))
+            if style.layerExists(withId: dragLayerId) {
+                try style.setLayerProperties(for: dragLayerId, properties: properties)
+            } else {
+                try style.addPersistentLayer(with: properties, layerPosition: .above(layerId))
+            }
         } catch {
-            Log.error(forMessage: "Failed to add the layer to style. Error: \(error)")
+            Log.error(forMessage: "Failed to update the layer to style. Error: \(error)")
         }
     }
 
@@ -272,16 +323,22 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
     }
 
     internal func handleDragBegin(with featureIdentifiers: [String]) {
-        guard let annotation = annotations.first(where: { featureIdentifiers.contains($0.id) && $0.isDraggable }) else { return }
-        createDragSourceAndLayer()
-
-        annotationBeingDragged = annotation
-        annotations.removeAll(where: { $0.id == annotation.id })
+        guard let annotation = findAnnotation(from: featureIdentifiers, where: { $0.isDraggable }) else { return }
 
         do {
-            try style.updateGeoJSONSource(withId: dragSourceId, geoJSON: .feature(annotation.feature))
+            if !style.sourceExists(withId: dragSourceId) {
+                var dragSource = GeoJSONSource()
+                dragSource.data = .empty
+                try style.addSource(dragSource, id: dragSourceId)
+            }
+
+            annotationBeingDragged = annotation
+            mainAnnotations[annotation.id] = nil
+
+            updateDragSource()
+            updateDragLayer()
         } catch {
-            Log.error(forMessage: "Failed to update drag source. Error: \(error)")
+            Log.error(forMessage: "Failed to create the drag source to style. Error: \(error)")
         }
     }
 
@@ -292,22 +349,11 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
         }
 
         self.annotationBeingDragged?.point = offsetPoint
-        do {
-            try style.updateGeoJSONSource(withId: dragSourceId, geoJSON: .feature(annotationBeingDragged.feature))
-        } catch {
-            Log.error(forMessage: "Failed to update drag source. Error: \(error)")
-        }
+        updateDragSource()
     }
 
     internal func handleDragEnded() {
-        guard let annotationBeingDragged = annotationBeingDragged else { return }
-        annotations.append(annotationBeingDragged)
-        self.annotationBeingDragged = nil
-
-        // avoid blinking annotation by waiting
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.125) {
-            self.removeDragSourceAndLayer()
-        }
+        annotationBeingDragged = nil
     }
 }
 
@@ -316,6 +362,7 @@ extension CircleAnnotationManager: DelegatingDisplayLinkParticipantDelegate {
         OSLog.platform.withIntervalSignpost(SignpostName.mapViewDisplayLink,
                                             "Participant: CircleAnnotationManager") {
             syncSourceAndLayerIfNeeded()
+            syncDragSourceIfNeeded()
         }
     }
 }

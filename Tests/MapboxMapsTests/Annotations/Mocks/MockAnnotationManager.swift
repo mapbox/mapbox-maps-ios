@@ -9,6 +9,8 @@ internal final class MockAnnotationManager: AnnotationManagerInternal {
 
     @Stubbed var layerId: String = ""
 
+    @Stubbed var allLayerIds: [String] = []
+
     let destroyStub = Stub<Void, Void>()
     func destroy() {
         destroyStub.call()

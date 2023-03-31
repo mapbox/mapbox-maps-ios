@@ -7,14 +7,34 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
     // MARK: - Annotations
 
-    /// The collection of PointAnnotations being managed
-    public var annotations = [PointAnnotation]() {
+    /// The collection of ``PointAnnotation`` being managed.
+    public var annotations: [PointAnnotation] {
+        get {
+            let allAnnotations = mainAnnotations.merging(draggedAnnotations) { $1 }
+            return Array(allAnnotations.values)
+        }
+        set {
+            mainAnnotations = newValue.reduce(into: [:]) { partialResult, annotation in
+                partialResult[annotation.id] = annotation
+            }
+
+            draggedAnnotations = [:]
+            annotationBeingDragged = nil
+            needsSyncDragSource = true
+        }
+    }
+
+    /// The collection of ``PointAnnotation`` that has been dragged.
+    private var draggedAnnotations: [String: PointAnnotation] = [:]
+    /// The collection of ``PointAnnotation`` in the main source.
+    private var mainAnnotations: [String: PointAnnotation] = [:] {
         didSet {
             needsSyncSourceAndLayer = true
         }
     }
 
     private var needsSyncSourceAndLayer = false
+    private var needsSyncDragSource = false
     /// List of images used by this ``PointAnnotationManager``.
     private(set) internal var allImages = Set<String>()
     private let imagesManager: AnnotationImagesManagerProtocol
@@ -62,6 +82,8 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     private var isDestroyed = false
     private let dragLayerId: String
     private let dragSourceId: String
+
+    var allLayerIds: [String] { [layerId, dragLayerId] }
 
     internal init(id: String,
                   style: StyleProtocol,
@@ -184,6 +206,8 @@ public class PointAnnotationManager: AnnotationManagerInternal {
             destroyClusterLayers()
         }
 
+        removeDragSourceAndLayer()
+
         do {
             try style.removeLayer(withId: layerId)
         } catch {
@@ -213,8 +237,9 @@ public class PointAnnotationManager: AnnotationManagerInternal {
             return
         }
         needsSyncSourceAndLayer = false
+        let allAnnotations = annotations
 
-        let newImages = Set(annotations.compactMap(\.image) + [annotationBeingDragged].compactMap(\.?.image))
+        let newImages = Set(allAnnotations.compactMap(\.image))
         let newImageNames = Set(newImages.map(\.name))
         let unusedImages = allImages.subtracting(newImageNames)
 
@@ -224,7 +249,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         removeImages(unusedImages)
 
         // Construct the properties dictionary from the annotations
-        let dataDrivenLayerPropertyKeys = Set(annotations.flatMap { $0.layerProperties.keys })
+        let dataDrivenLayerPropertyKeys = Set(allAnnotations.flatMap(\.layerProperties.keys))
         let dataDrivenProperties = Dictionary(
             uniqueKeysWithValues: dataDrivenLayerPropertyKeys
                 .map { (key) -> (String, Any) in
@@ -256,13 +281,22 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
 
         // build and update the source data
-        let featureCollection = FeatureCollection(features: annotations.map(\.feature))
         do {
+            let featureCollection = FeatureCollection(features: mainAnnotations.values.map(\.feature))
             try style.updateGeoJSONSource(withId: sourceId, geoJSON: .featureCollection(featureCollection))
         } catch {
             Log.error(
                 forMessage: "Could not update annotations in PointAnnotationManager due to error: \(error)",
                 category: "Annotations")
+        }
+    }
+
+    private func syncDragSourceIfNeeded() {
+        guard !isDestroyed, needsSyncDragSource else { return }
+
+        needsSyncDragSource = false
+        if style.sourceExists(withId: dragSourceId) {
+            updateDragSource()
         }
     }
 
@@ -561,6 +595,16 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
     // MARK: - User interaction handling
 
+    /// Returns the first annotation matching the set of given `featureIdentifiers`.
+    private func findAnnotation(from featureIdentifiers: [String], where predicate: (PointAnnotation) -> Bool) -> PointAnnotation? {
+        for featureIdentifier in featureIdentifiers {
+            if let annotation = mainAnnotations[featureIdentifier] ?? draggedAnnotations[featureIdentifier], predicate(annotation) {
+                return annotation
+            }
+        }
+        return nil
+    }
+
     internal func handleQueriedFeatureIds(_ queriedFeatureIds: [String]) {
         guard annotations.map(\.id).contains(where: queriedFeatureIds.contains(_:)) else {
             return
@@ -584,24 +628,31 @@ public class PointAnnotationManager: AnnotationManagerInternal {
             didDetectTappedAnnotations: tappedAnnotations)
     }
 
-    private func createDragSourceAndLayer() {
-        var dragSource = GeoJSONSource()
-        dragSource.data = .empty
+    private func updateDragSource() {
         do {
-            try style.addSource(dragSource, id: dragSourceId)
+            if let annotationBeingDragged = annotationBeingDragged {
+                draggedAnnotations[annotationBeingDragged.id] = annotationBeingDragged
+            }
+            try style.updateGeoJSONSource(withId: dragSourceId, geoJSON: .featureCollection(.init(features: draggedAnnotations.values.map(\.feature))))
         } catch {
-            Log.error(forMessage: "Failed to add the source to style. Error: \(error)")
+            Log.error(forMessage: "Failed to update drag source. Error: \(error)")
         }
+    }
 
+    private func updateDragLayer() {
         do {
             // copy the existing layer as the drag layer
             var properties = try style.layerProperties(for: layerId)
             properties[SymbolLayer.RootCodingKeys.id.rawValue] = dragLayerId
             properties[SymbolLayer.RootCodingKeys.source.rawValue] = dragSourceId
 
-            try style.addPersistentLayer(with: properties, layerPosition: .above(layerId))
+            if style.layerExists(withId: dragLayerId) {
+                try style.setLayerProperties(for: dragLayerId, properties: properties)
+            } else {
+                try style.addPersistentLayer(with: properties, layerPosition: .above(layerId))
+            }
         } catch {
-            Log.error(forMessage: "Failed to add the layer to style. Error: \(error)")
+            Log.error(forMessage: "Failed to update the layer to style. Error: \(error)")
         }
     }
 
@@ -615,16 +666,22 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     }
 
     internal func handleDragBegin(with featureIdentifiers: [String]) {
-        guard let annotation = annotations.first(where: { featureIdentifiers.contains($0.id) && $0.isDraggable }) else { return }
-        createDragSourceAndLayer()
-
-        annotationBeingDragged = annotation
-        annotations.removeAll(where: { $0.id == annotation.id })
+        guard let annotation = findAnnotation(from: featureIdentifiers, where: { $0.isDraggable }) else { return }
 
         do {
-            try style.updateGeoJSONSource(withId: dragSourceId, geoJSON: .feature(annotation.feature))
+            if !style.sourceExists(withId: dragSourceId) {
+                var dragSource = GeoJSONSource()
+                dragSource.data = .empty
+                try style.addSource(dragSource, id: dragSourceId)
+            }
+
+            annotationBeingDragged = annotation
+            mainAnnotations[annotation.id] = nil
+
+            updateDragSource()
+            updateDragLayer()
         } catch {
-            Log.error(forMessage: "Failed to update drag source. Error: \(error)")
+            Log.error(forMessage: "Failed to create the drag source to style. Error: \(error)")
         }
     }
 
@@ -635,28 +692,18 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
 
         self.annotationBeingDragged?.point = offsetPoint
-        do {
-            try style.updateGeoJSONSource(withId: dragSourceId, geoJSON: .feature(annotationBeingDragged.feature))
-        } catch {
-            Log.error(forMessage: "Failed to update drag source. Error: \(error)")
-        }
+        updateDragSource()
     }
 
     internal func handleDragEnded() {
-        guard let annotationBeingDragged = annotationBeingDragged else { return }
-        annotations.append(annotationBeingDragged)
-        self.annotationBeingDragged = nil
-
-        // avoid blinking annotation by waiting
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.125) {
-            self.removeDragSourceAndLayer()
-        }
+        annotationBeingDragged = nil
     }
 }
 
 extension PointAnnotationManager: DelegatingDisplayLinkParticipantDelegate {
     func participate(for participant: DelegatingDisplayLinkParticipant) {
         syncSourceAndLayerIfNeeded()
+        syncDragSourceIfNeeded()
     }
 }
 

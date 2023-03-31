@@ -16,8 +16,8 @@ export GITHUB_TOKEN=$(mbx-ci github reader token)
 
 IS_BRANCH_PROTECTED=$(gh api repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/branches/$CIRCLE_BRANCH --jq .protected)
 if [ $IS_BRANCH_PROTECTED != "false" ]; then
-    echo "We are on protected branch, trigger all the bots."
-    exit 0
+    echo "We are on protected branch, don't trigger the bots."
+    exit 1
 fi
 
 if [ -z "$CIRCLE_PULL_REQUEST" ]; then

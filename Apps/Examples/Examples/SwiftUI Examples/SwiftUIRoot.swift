@@ -23,6 +23,11 @@ struct SwiftUIRoot: View {
                 Section {
                     ExampleLink("Basic View annotations example", note: "Add/remove view annotation on tap", destination: ViewAnnotationsExample())
                 } header: { Text("View Annotations") }
+
+                Section {
+                    ExampleLink("Show user location", note: "Display user location using default 2D puck", destination: Puck2DExample())
+                    ExampleLink("Show user location with 3D puck", note: "Display user location using 3D puck", destination: Puck3DExample())
+                } header: { Text("Location") }
             }
             .listStyle(.plain)
             .navigationTitle(title)

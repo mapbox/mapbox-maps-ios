@@ -5,7 +5,7 @@ import MapboxMaps
 struct MapDependencies {
     var cameraBounds = CameraBoundsOptions()
     var styleURIs = StyleURIs(default: .streets, darkMode: nil)
-    var getstureOptions = GestureOptions()
+    var gestureOptions = GestureOptions()
     var actions = Actions()
     var constrainMode = ConstrainMode.heightOnly
     var viewportMode = ViewportMode.default

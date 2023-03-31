@@ -7,6 +7,7 @@ struct InternalMap: UIViewRepresentable {
     var mapDependencies: MapDependencies
     var annotationsOptions: [AnyHashable: ViewAnnotationOptions]
     var mapInitOptions: Map.InitOptionsProvider?
+    var locationDependencies: LocationDependencies
     var onAnnotationLayoutUpdate: (AnnotationLayouts) -> Void
 
     @Environment(\.colorScheme) var colorScheme
@@ -14,7 +15,8 @@ struct InternalMap: UIViewRepresentable {
     func makeCoordinator() -> Coordinator {
         Coordinator(
             basic: MapBasicCoordinator(setCamera: camera.map(\.setter)),
-            viewAnnotation: ViewAnnotationCoordinator())
+            viewAnnotation: ViewAnnotationCoordinator(),
+            location: LocationCoordinator())
     }
 
     func makeUIView(context: Context) -> MapView {
@@ -22,6 +24,7 @@ struct InternalMap: UIViewRepresentable {
         context.environment.mapViewProvider?.mapView = mapView
         context.coordinator.basic.setMapView(MapViewFacade(from: mapView))
         context.coordinator.viewAnnotation.setup(with: .init(map: mapView.mapboxMap, onLayoutUpdate: onAnnotationLayoutUpdate))
+        context.coordinator.location.setup(with: mapView.location)
         return mapView
     }
 
@@ -31,6 +34,7 @@ struct InternalMap: UIViewRepresentable {
             deps: mapDependencies,
             colorScheme: colorScheme)
         context.coordinator.viewAnnotation.annotations = annotationsOptions
+        context.coordinator.location.update(deps: locationDependencies)
     }
 }
 
@@ -39,10 +43,12 @@ extension InternalMap {
     final class Coordinator {
         let basic: MapBasicCoordinator
         let viewAnnotation: ViewAnnotationCoordinator
+        let location: LocationCoordinator
 
-        init(basic: MapBasicCoordinator, viewAnnotation: ViewAnnotationCoordinator) {
+        init(basic: MapBasicCoordinator, viewAnnotation: ViewAnnotationCoordinator, location: LocationCoordinator) {
             self.basic = basic
             self.viewAnnotation = viewAnnotation
+            self.location = location
         }
     }
 }

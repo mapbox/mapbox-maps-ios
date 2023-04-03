@@ -1,12 +1,27 @@
 #!/usr/bin/env python3
 
 import os
-import sys
 import argparse
 import json
+import re
+
+SNAPSHOT_RE = r'\d+\.\d+\.\d+-SNAPSHOT\.[^.]+\.([\w\d]+)'
 
 def print_phase(phase: str):
     print('\033[93m' + f"{phase}" + '\033[0m')
+
+
+def get_snapshot_commit(version):
+    match = re.search(SNAPSHOT_RE, version)
+    if match:
+        return match.group(1)
+    return None
+
+
+def resolve_version(version, tag_prefix):
+    shapshot_commit = get_snapshot_commit(version)
+    return shapshot_commit if shapshot_commit else tag_prefix + version
+
 
 def main():
     parser = argparse.ArgumentParser(description='Generate project to build Maps SDK dependencies from sources.')
@@ -46,10 +61,10 @@ def main():
             versions = json.load(f)
 
         if args.gl_native_commit is None:
-            args.gl_native_commit = "maps-v" + versions["MapboxCoreMaps"]
+            args.gl_native_commit = resolve_version(versions["MapboxCoreMaps"], "maps-v")
 
         if args.turf_commit is None:
-            args.turf_commit = versions["Turf"]
+            args.turf_commit = resolve_version(versions["Turf"], "")
 
     # Apply default branches of nothing was set
     if args.gl_native_commit is None:

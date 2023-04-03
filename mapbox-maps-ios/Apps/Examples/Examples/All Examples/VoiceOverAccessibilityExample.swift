@@ -154,15 +154,15 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
                 switch result {
                 case .success(let queriedFeatures):
                     self.annotationAccessibilityElements = queriedFeatures.compactMap { queriedFeature -> UIAccessibilityElement? in
-                        guard case .point(let point) = queriedFeature.feature.geometry,
+                        guard case .point(let point) = queriedFeature.queriedFeature.feature.geometry,
                               let accessibilityFrame = mapView.accessibilityFrame(for: point.coordinates),
-                              let properties = queriedFeature.feature.properties?.rawValue as? [String: Any],
+                              let properties = queriedFeature.queriedFeature.feature.properties?.rawValue as? [String: Any],
                               let userInfo = properties["userInfo"] as? [String: Any],
                               let name = userInfo["name"] as? String else {
                             return nil
                         }
                         let element = UIAccessibilityElement(accessibilityContainer: mapView)
-                        element.accessibilityIdentifier = queriedFeature.feature.identifier?.description
+                        element.accessibilityIdentifier = queriedFeature.queriedFeature.feature.identifier?.description
                         element.accessibilityFrame = accessibilityFrame
                         element.accessibilityLabel = name
                         return element
@@ -192,9 +192,9 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
                 case .success(let queriedFeatures):
                     // create the UIAccessibility element for each route shield in the map view.
                     self.routeShieldAccessibilityElements = queriedFeatures.compactMap { queriedFeature -> UIAccessibilityElement? in
-                        guard case .point(let point) = queriedFeature.feature.geometry,
+                        guard case .point(let point) = queriedFeature.queriedFeature.feature.geometry,
                               let accessibilityFrame = mapView.accessibilityFrame(for: point.coordinates),
-                              let properties = queriedFeature.feature.properties?.rawValue as? [String: Any],
+                              let properties = queriedFeature.queriedFeature.feature.properties?.rawValue as? [String: Any],
                               let shieldNumber = properties["ref"] as? String else {
                             return nil
                         }

@@ -14,5 +14,5 @@ steps:
       path: scripts/release/packager/MapboxMaps-static.zip
   - run:
       name: Upload to S3
-      command: scripts/release/upload-to-registry.sh scripts/release/packager/MapboxMaps-static.zip mobile-maps-ios-static "$VERSION" MapboxMaps-static.zip
+      command: scripts/release/upload-to-registry.sh scripts/release/packager/MapboxMaps-static.zip mobile-maps-ios-static "$VERSION" MapboxMaps-static.zip releases
   - slack-notify-failure-if-any

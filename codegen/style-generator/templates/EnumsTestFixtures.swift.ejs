@@ -1,16 +1,10 @@
 <%
-  const properties = locals.properties
+  const properties = locals
 -%>
 // This file is generated.
 // swiftlint:disable file_length
 import Foundation
 @testable import MapboxMaps
-
-extension Value where T == Visibility {
-    static func testConstantValue() -> Value<Visibility> {
-        return .constant(Visibility.testConstantValue())
-    }
-}
 
 extension Visibility {
     static func testConstantValue() -> Visibility {

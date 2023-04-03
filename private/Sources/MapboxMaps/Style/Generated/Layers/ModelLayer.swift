@@ -14,7 +14,7 @@ import Foundation
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
-    public var visibility: Value<Visibility>?
+    public var visibility: Visibility
 
     /// Model to render.
     public var modelId: Value<String>?
@@ -76,7 +76,7 @@ import Foundation
     public init(id: String) {
         self.id = id
         self.type = LayerType.model
-        self.visibility = .constant(.visible)
+        self.visibility = .visible
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -145,10 +145,12 @@ import Foundation
             modelType = try paintContainer.decodeIfPresent(Value<ModelType>.self, forKey: .modelType)
         }
 
+        var visibilityEncoded: Visibility?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
-            visibility = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
+            visibilityEncoded = try layoutContainer.decodeIfPresent(Visibility.self, forKey: .visibility)
             modelId = try layoutContainer.decodeIfPresent(Value<String>.self, forKey: .modelId)
         }
+        visibility = visibilityEncoded  ?? .visible
     }
 
     enum RootCodingKeys: String, CodingKey {

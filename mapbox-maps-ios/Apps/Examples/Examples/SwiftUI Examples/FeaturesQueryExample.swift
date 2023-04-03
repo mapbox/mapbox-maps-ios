@@ -64,7 +64,8 @@ struct QueryResult: Identifiable {
         var id = UUID()
         var props: String
 
-        init(feature: QueriedFeature) {
+        init(feature: QueriedRenderedFeature) {
+            let feature = feature.queriedFeature
             var json = JSONObject()
             json["source"] = .string(feature.source)
             if let sourceLayer = feature.sourceLayer {
@@ -81,7 +82,7 @@ struct QueryResult: Identifiable {
     var coordinate: CLLocationCoordinate2D
     var features: [Feature]
 
-    init(features: [QueriedFeature], coordinate: CLLocationCoordinate2D) {
+    init(features: [QueriedRenderedFeature], coordinate: CLLocationCoordinate2D) {
         self.features = features.map {
             Feature(feature: $0)
         }

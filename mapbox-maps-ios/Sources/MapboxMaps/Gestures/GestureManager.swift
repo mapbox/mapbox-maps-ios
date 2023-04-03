@@ -183,13 +183,5 @@ public final class GestureManager: GestureHandlerDelegate {
     }
 }
 
-extension GestureManager: PinchGestureHandlerDelegate {
-    func pinchGestureHandlerDidUpdateGesture(_ handler: PinchGestureHandlerProtocol) {
-        // Because of a bug in core maps camera state has to be reset before updating pinch drag.
-        // This call will make sure that bearing is set to correct value after pinch dragging.
-        rotateGestureHandler.scheduleRotationUpdateIfNeeded()
-    }
-}
-
 @_spi(Package)
 extension GestureManager: GestureManagerProtocol {}

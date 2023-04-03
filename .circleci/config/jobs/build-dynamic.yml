@@ -6,6 +6,13 @@ parameters:
   project-name:
     description: Project name in SDK Registry.
     type: string
+  upload-type:
+    description: SDK Registry upload type.
+    type: enum
+    enum:
+        - releases
+        - snapshots
+    default: releases
 executor: xcode-sdk-min
 resource_class: macos.x86.medium.gen2
 steps:
@@ -14,6 +21,18 @@ steps:
       skip-dependencies: true
   - install-xcodegen
   - install-python-dependencies
+  - when:
+      condition:
+        and:
+          - equal: [ snapshots, << parameters.upload-type >>]
+      steps:
+        - install-sdk-ci
+        - run:
+            name: Compute snapshot version
+            command: |
+              VERSION=$(sdk-ci semver compute-snapshot-version)
+              echo "Snapshot version $VERSION"
+              echo "export VERSION=${VERSION}" >> $BASH_ENV
   - run:
       name: Build dynamic SDK
       command: ./package-mapbox-maps.sh dynamic
@@ -36,5 +55,5 @@ steps:
                 - latest.api.json
   - run:
       name: Upload to S3
-      command: scripts/release/upload-to-registry.sh scripts/release/packager/MapboxMaps.zip << parameters.project-name >> "$VERSION" MapboxMaps.zip
+      command: scripts/release/upload-to-registry.sh scripts/release/packager/MapboxMaps.zip << parameters.project-name >> "$VERSION" MapboxMaps.zip << parameters.upload-type >>
   - slack-notify-failure-if-any

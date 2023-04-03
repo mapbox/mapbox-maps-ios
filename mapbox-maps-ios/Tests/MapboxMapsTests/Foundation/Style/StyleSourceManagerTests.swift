@@ -100,42 +100,6 @@ final class StyleSourceManagerTests: XCTestCase {
         XCTAssertEqual(styleManager.styleSourceExistsStub.invocations.count, 2)
     }
 
-    func testUpdateGeoJSONSourceThrowsForNotFoundSource() {
-        let id = String.randomASCII(withLength: 10)
-        let geoJSONObject = GeoJSONObject.featureCollection(FeatureCollection(features: []))
-
-        XCTAssertThrowsError(try sourceManager.updateGeoJSONSource(withId: id, geoJSON: geoJSONObject))
-    }
-
-    func testUpdateGeoJSONSourceWithDataIDThrowsForNotFoundSource() {
-        let id = "TestSourceID"
-        let geoJSONObject = GeoJSONObject.featureCollection(FeatureCollection(features: []))
-        let dataId = "TestdataId"
-
-        XCTAssertThrowsError(try sourceManager.updateGeoJSONSource(withId: id, geoJSON: geoJSONObject, dataId: dataId))
-    }
-
-    func testUpdateGeoJSONSourceThrowsForNotGeoJSONSource() {
-        let id = String.randomASCII(withLength: 10)
-        let geoJSONObject = GeoJSONObject.featureCollection(FeatureCollection(features: []))
-        let type = SourceType.raster
-        let info = StyleObjectInfo(id: id, type: type.rawValue)
-        styleManager.getStyleSourcesStub.defaultReturnValue = [info]
-
-        XCTAssertThrowsError(try sourceManager.updateGeoJSONSource(withId: id, geoJSON: geoJSONObject))
-    }
-
-    func testUpdateGeoJSONSourceWithDataIDThrowsForNotGeoJSONSource() {
-        let id = "TestSourceID"
-        let geoJSONObject = GeoJSONObject.featureCollection(FeatureCollection(features: []))
-        let dataId = "TestdataId"
-        let type = SourceType.raster
-        let info = StyleObjectInfo(id: id, type: type.rawValue)
-        styleManager.getStyleSourcesStub.defaultReturnValue = [info]
-
-        XCTAssertThrowsError(try sourceManager.updateGeoJSONSource(withId: id, geoJSON: geoJSONObject, dataId: dataId))
-    }
-
     func testUpdateGeoJSONSourceDispatchesParsingOnABackgroundThread() throws {
         let id = String.randomASCII(withLength: 10)
         let geoJSONObject = GeoJSONObject.featureCollection(FeatureCollection(features: []))

@@ -34,6 +34,8 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     // swiftlint:disable:next weak_delegate
     var delegate: MockBasicCameraAnimatorDelegate!
 
+    var animationImpl: BasicCameraAnimatorImpl.Animation?
+
     override func setUp() {
         super.setUp()
         propertyAnimator = MockPropertyAnimator()
@@ -46,7 +48,10 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
             owner: owner,
             mapboxMap: mapboxMap,
             mainQueue: mainQueue,
-            cameraView: cameraView)
+            cameraView: cameraView,
+            animation: { transition in
+                self.animationImpl?(&transition)
+            })
         delegate = MockBasicCameraAnimatorDelegate()
         animator.delegate = delegate
     }
@@ -54,6 +59,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     override func tearDown() {
         delegate = nil
         animator = nil
+        animationImpl = nil
         mainQueue = nil
         mapboxMap = nil
         cameraView = nil
@@ -84,7 +90,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testStartAndStopAnimation() {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
 
@@ -107,7 +113,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testStartAndStopAnimationAfterDelay() throws {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
         let randomInterval: TimeInterval = .random(in: 0...10)
@@ -125,7 +131,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testCompletionBlockCalledForStartAndStopAfterDelay() {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
 
@@ -141,7 +147,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testAddCompletionToRunningAnimator() {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
         animator.startAnimation()
@@ -155,7 +161,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testAddCompletionToPausedAnimator() {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
         animator.startAnimation()
@@ -170,7 +176,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testAddCompletionToCanceledAnimator() throws {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
         animator.startAnimation()
@@ -188,7 +194,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testAddCompletionToCompletedAnimator() throws {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
         animator.startAnimation()
@@ -243,7 +249,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testStartAndStartAnimationAfterDelay() {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
         animator.startAnimation()
@@ -270,7 +276,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testStartandPauseAnimationAfterDelay() throws {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
 
@@ -283,7 +289,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testStartAnimationAfterDelayIsRunning() {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
         XCTAssertFalse(propertyAnimator.isRunning)
@@ -293,7 +299,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testStartAndPauseAnimationAfterDelayIsNotRunning() {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
         XCTAssertFalse(propertyAnimator.isRunning)
@@ -306,7 +312,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testStartAndStopAnimationAfterDelayIsNotRunning() {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
         XCTAssertFalse(propertyAnimator.isRunning)
@@ -320,7 +326,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testStartAnimationAfterDelayStateActive() {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
         XCTAssertEqual(animator.state, .inactive, "The animator's state should be inactive (0) since it hasn't started. Got \(animator.state.NSNumber).")
@@ -330,7 +336,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testStartAndPauseAnimationAfterDelayStateActive() {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
         animator.startAnimation(afterDelay: 1)
@@ -340,7 +346,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testStartAndStopAnimationAfterDelayStateInactive() {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
         animator.startAnimation(afterDelay: 1)
@@ -350,7 +356,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testStartAnimationAfterDelayTransitionNotNil() {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
         animator.startAnimation(afterDelay: 1)
@@ -358,7 +364,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testStartandPauseAnimationAfterDelayTransitionNotNil() {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
         animator.startAnimation(afterDelay: 1)
@@ -368,7 +374,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testInformsDelegateWhenPausingAndStarting() {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
         animator.pauseAnimation()
@@ -380,7 +386,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testInformsDelegateWhenStartingAfterDelay() {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
         animator.startAnimation(afterDelay: 1)
@@ -389,7 +395,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testInformsDelegateWhenStartingPausingAndStarting() {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
         animator.startAnimation()
@@ -406,7 +412,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testInformsDelegateWhenPausingAndContinuing() {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
         animator.pauseAnimation()
@@ -418,7 +424,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testInformsDelegateWhenStartingPausingAndContinuing() {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
         animator.startAnimation()
@@ -435,7 +441,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testInformsDelegateWhenPausingAndStopping() {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
         animator.pauseAnimation()
@@ -448,7 +454,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testAnimatorCompletionUpdatesCameraIfAnimationCompletedAtEnd() throws {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
         animator.startAnimation()
@@ -460,7 +466,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testAnimatorCompletionUpdatesCameraIfAnimationCompletedAtStart() throws {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
         animator.startAnimation()
@@ -472,7 +478,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testAnimatorCompletionDoesNotUpdateCameraIfAnimationCompletedAtCurrent() throws {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
         animator.startAnimation()
@@ -484,7 +490,7 @@ final class BasicCameraAnimatorImplTests: XCTestCase {
     }
 
     func testAnimatorCompletionInformsDelegate() throws {
-        animator.addAnimations { (transition) in
+        animationImpl = { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
         animator.startAnimation()

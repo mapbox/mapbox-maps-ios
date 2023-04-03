@@ -3,8 +3,12 @@
 
 import PackageDescription
 
-let coreVersion = "11.0.0-alpha.1"
-let coreChecksum = "0986947ca95277ea081248c4b55974d60ab3238bb36f5ff97cdf4ae6cfc23804"
+let coreVersion = "11.0.0-SNAPSHOT.0322T1320Z.ae46035"
+let coreChecksum = "5eee9732f78a9cec9b85cc83eeac8db440bb161a04aff879bbe52607567cc8f5"
+let commonVersion = "23.5.0-SNAPSHOT.0321T1613Z.cc81dc2"
+let commonChecksum = "34e96f7c3b1eeab4c9257d3fdd91a2b353defa6a7c17099c0dd848b3fcb5c468"
+
+func folder(_ version: String) -> String { version.contains("SNAPSHOT") ? "snapshots" : "releases" }
 
 let package = Package(
     name: "MapboxMaps",
@@ -19,15 +23,19 @@ let package = Package(
             targets: ["MapboxMapsSwiftUI"])
     ],
     dependencies: [
-        .package(name: "MapboxCommon", url: "https://github.com/mapbox/mapbox-common-ios.git", .exact("23.4.0-beta.1")),
         .package(name: "Turf", url: "https://github.com/mapbox/turf-swift.git", from: "2.0.0"),
         .package(name: "CocoaImageHashing", url: "https://github.com/ameingast/cocoaimagehashing", .exact("1.9.0")),
     ],
     targets: [
         .binaryTarget(
             name: "MapboxCoreMaps",
-            url: "https://api.mapbox.com/downloads/v2/mobile-maps-core-internal/releases/ios/packages/\(coreVersion)/MapboxCoreMaps.xcframework-dynamic.zip",
+            url: "https://api.mapbox.com/downloads/v2/mobile-maps-core-internal/\(folder(coreVersion))/ios/packages/\(coreVersion)/MapboxCoreMaps.xcframework-dynamic.zip",
             checksum: coreChecksum
+        ),
+        .binaryTarget(
+            name: "MapboxCommon",
+            url: "https://api.mapbox.com/downloads/v2/mapbox-common/\(folder(commonVersion))/ios/packages/\(commonVersion)/MapboxCommon.zip",
+            checksum: commonChecksum
         ),
         .target(
             name: "MapboxMaps",

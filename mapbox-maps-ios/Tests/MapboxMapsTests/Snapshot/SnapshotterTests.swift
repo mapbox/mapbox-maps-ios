@@ -67,14 +67,6 @@ final class SnapshotterTests: XCTestCase {
         XCTAssertEqual(mockMapSnapshotter.setSizeStub.invocations[0].parameters, Size(size))
     }
 
-    func testSnapshotterTileMode() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
-        snapshotter.tileMode = true
-
-        XCTAssertEqual(mockMapSnapshotter.setTileModeStub.invocations.count, 1)
-        XCTAssertEqual(snapshotter.tileMode, mockMapSnapshotter.isInTileMode())
-    }
-
     func testSnapshotterSetCamera() throws {
         throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         let center = CLLocationCoordinate2D(latitude: 38, longitude: -76)
@@ -148,7 +140,7 @@ final class SnapshotterTests: XCTestCase {
         let mockParameters = mockMapSnapshotter.cameraForCoordinatesStub.invocations[0].parameters
 
         XCTAssertEqual(mockParameters.coordinates.map(\.coordinate), coordinates)
-        XCTAssertEqual(mockParameters.padding.toUIEdgeInsetsValue(), padding.toUIEdgeInsetsValue())
+        XCTAssertEqual(mockParameters.padding?.toUIEdgeInsetsValue(), padding.toUIEdgeInsetsValue())
         XCTAssertEqual(mockParameters.bearing, bearing.NSNumber)
         XCTAssertEqual(mockParameters.pitch, pitch.NSNumber)
         XCTAssertEqual(returnedOptions, cameraOptions)

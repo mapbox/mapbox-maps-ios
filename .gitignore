@@ -5,7 +5,7 @@
 xcuserdata
 developer.xcconfig
 
-codegen/annotation-generator/generate-annotation-code.list
+codegen/annotation-generator/generate-annotations.list
 codegen/style-generator/generate-style-code.list
 codegen/node_modules
 

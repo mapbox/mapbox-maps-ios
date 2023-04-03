@@ -40,8 +40,8 @@ struct ClusteringExample : View {
 
 @available(iOS 14.0, *)
 extension ClusteringExample.Detail {
-    init?(features: [QueriedFeature]) {
-        guard let properties = features.first?.feature.properties else {
+    init?(features: [QueriedRenderedFeature]) {
+        guard let properties = features.first?.queriedFeature.feature.properties else {
             return nil
         }
         if case let .string(assetnum) = properties["ASSETNUM"],

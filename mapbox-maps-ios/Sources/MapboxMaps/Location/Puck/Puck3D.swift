@@ -98,13 +98,17 @@ internal final class Puck3D: Puck {
 
         // create the layer if needed
         if !style.layerExists(withId: Self.layerID) {
-            var modelLayer = ModelLayer(id: Self.layerID)
-            modelLayer.source = Self.sourceID
-            modelLayer.modelScale = modelScale
-            modelLayer.modelType = .constant(.locationIndicator)
-            modelLayer.modelRotation = configuration.modelRotation
-            modelLayer.modelOpacity = configuration.modelOpacity
-            try! style.addPersistentLayer(modelLayer, layerPosition: nil)
+            var modelLayer: [String: Any] = [
+                "id": Self.layerID,
+                "type": "model",
+                "source": Self.sourceID,
+                "model-type": "location-indicator"
+            ]
+            modelLayer["model-scale"] = try? modelScale?.toJSON()
+            modelLayer["model-rotation"] = try? configuration.modelRotation?.toJSON()
+            modelLayer["model-opacity"] = try? configuration.modelOpacity?.toJSON()
+
+            try! style.addPersistentLayer(with: modelLayer, layerPosition: nil)
         } else if needsUpdateModelScale {
             try? style.setLayerProperty(
                 for: Self.layerID,

@@ -84,6 +84,7 @@
 		95B589C02982C04000BF4F31 /* CameraDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B589BB2982C04000BF4F31 /* CameraDebugView.swift */; };
 		95B589C12982C04000BF4F31 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B589BC2982C04000BF4F31 /* ViewExtensions.swift */; };
 		95B589C22982C04000BF4F31 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B589BD2982C04000BF4F31 /* Constants.swift */; };
+		95857AC229B7A1A2005D238C /* LongTapAnimationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95857AC129B7A1A2005D238C /* LongTapAnimationExample.swift */; };
 		A41E58342654593500D8B946 /* SwitchStylesExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E58332654593500D8B946 /* SwitchStylesExample.swift */; };
 		A41E584C26555A3400D8B946 /* PointClusteringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E584B26555A3400D8B946 /* PointClusteringExample.swift */; };
 		A41E58F4265C005300D8B946 /* blueprint_style.json in Resources */ = {isa = PBXBuildFile; fileRef = A41E58F3265C005300D8B946 /* blueprint_style.json */; };
@@ -255,6 +256,7 @@
 		95B589BB2982C04000BF4F31 /* CameraDebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraDebugView.swift; sourceTree = "<group>"; };
 		95B589BC2982C04000BF4F31 /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
 		95B589BD2982C04000BF4F31 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		95857AC129B7A1A2005D238C /* LongTapAnimationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongTapAnimationExample.swift; sourceTree = "<group>"; };
 		A41E58332654593500D8B946 /* SwitchStylesExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchStylesExample.swift; sourceTree = "<group>"; };
 		A41E584B26555A3400D8B946 /* PointClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointClusteringExample.swift; sourceTree = "<group>"; };
 		A41E58F3265C005300D8B946 /* blueprint_style.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = blueprint_style.json; sourceTree = "<group>"; };
@@ -362,6 +364,7 @@
 				17B48066268A4E9300CF0D5E /* DistanceExpressionExample.swift */,
 				077E3B2B2581810600564A3E /* ExternalVectorSourceExample.swift */,
 				07B0715F254789D6007F2865 /* FeaturesAtPointExample.swift */,
+				95857AC129B7A1A2005D238C /* LongTapAnimationExample.swift */,
 				0C784D1026D002DC004AE7D0 /* FeatureStateExample.swift */,
 				077E3B8F2581966300564A3E /* FitCameraToGeometryExample.swift */,
 				58A28B5A2869F69B006F7D93 /* GlobeExample.swift */,
@@ -770,6 +773,7 @@
 				5812B55127C5A0E500E10063 /* CustomLocationProviderExample.swift in Sources */,
 				CADCF71D2584990E0065C51B /* CustomPointAnnotationExample.swift in Sources */,
 				17B4806B268BD91000CF0D5E /* RasterTileSourceExample.swift in Sources */,
+				95857AC229B7A1A2005D238C /* LongTapAnimationExample.swift in Sources */,
 				3A7CE98B282AB0DE00C3A0B8 /* NavigationSimulator.swift in Sources */,
 				CADCF7212584990E0065C51B /* PolygonAnnotationExample.swift in Sources */,
 				9532A13D29A0094300784062 /* SwiftExtensions.swift in Sources */,

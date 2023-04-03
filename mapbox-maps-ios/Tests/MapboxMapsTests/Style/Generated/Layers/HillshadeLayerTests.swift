@@ -56,7 +56,7 @@ final class HillshadeLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfLayoutProperties() {
         var layer = HillshadeLayer(id: "test-id")
-        layer.visibility = .constant(.visible)
+        layer.visibility = .visible
 
         var data: Data?
         do {
@@ -72,7 +72,7 @@ final class HillshadeLayerTests: XCTestCase {
 
         do {
             let decodedLayer = try JSONDecoder().decode(HillshadeLayer.self, from: validData)
-            XCTAssert(decodedLayer.visibility == .constant(.visible))
+            XCTAssert(decodedLayer.visibility == .visible)
         } catch {
             XCTFail("Failed to decode HillshadeLayer")
         }
@@ -105,7 +105,7 @@ final class HillshadeLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(HillshadeLayer.self, from: validData)
-           XCTAssert(decodedLayer.visibility == .constant(.visible))
+           XCTAssert(decodedLayer.visibility == .visible)
            XCTAssert(layer.hillshadeAccentColor == Value<StyleColor>.testConstantValue())
            XCTAssert(layer.hillshadeExaggeration == Value<Double>.testConstantValue())
            XCTAssert(layer.hillshadeHighlightColor == Value<StyleColor>.testConstantValue())

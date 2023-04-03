@@ -3,12 +3,6 @@
 import Foundation
 @testable import MapboxMaps
 
-extension Value where T == Visibility {
-    static func testConstantValue() -> Value<Visibility> {
-        return .constant(Visibility.testConstantValue())
-    }
-}
-
 extension Visibility {
     static func testConstantValue() -> Visibility {
         return .visible
@@ -348,34 +342,6 @@ extension Value where T == SkyType {
 extension SkyType {
     static func testConstantValue() -> SkyType {
         return SkyType(rawValue: "gradient")!
-    }
-}
-
-// MARK: MODEL_SCALE_MODE
-
-extension Value where T == ModelScaleMode {
-    static func testConstantValue() -> Value<ModelScaleMode> {
-        return .constant(ModelScaleMode.testConstantValue())
-    }
-}
-
-extension ModelScaleMode {
-    static func testConstantValue() -> ModelScaleMode {
-        return ModelScaleMode(rawValue: "map")!
-    }
-}
-
-// MARK: MODEL_TYPE
-
-extension Value where T == ModelType {
-    static func testConstantValue() -> Value<ModelType> {
-        return .constant(ModelType.testConstantValue())
-    }
-}
-
-extension ModelType {
-    static func testConstantValue() -> ModelType {
-        return ModelType(rawValue: "common-3d")!
     }
 }
 

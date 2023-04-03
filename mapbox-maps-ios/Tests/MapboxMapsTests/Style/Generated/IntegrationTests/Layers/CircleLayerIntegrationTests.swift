@@ -26,7 +26,7 @@ final class CircleLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.visibility = .constant(.visible)
+            layer.visibility = .visible
             layer.circleSortKey = Value<Double>.testConstantValue()
 
             layer.circleBlur = Value<Double>.testConstantValue()

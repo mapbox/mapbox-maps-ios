@@ -1,8 +1,5 @@
 unless: << pipeline.parameters.turf-revision >>
 jobs:
-  - sanity-check:
-      context:
-        - Slack Orb
   - swiftlint:
       context:
         - Slack Orb
@@ -33,10 +30,6 @@ jobs:
         - build-sdk-for-api-compatibility-check
         - build-baseline-sdk
   - create-xcframework:
-      context:
-        - Slack Orb
-        - SDK Registry Token
-  - validate-integrations-for-branch:
       context:
         - Slack Orb
         - SDK Registry Token

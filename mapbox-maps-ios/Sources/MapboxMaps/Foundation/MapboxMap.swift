@@ -27,7 +27,7 @@ public protocol MapboxMapProtocol: AnyObject {
     @discardableResult
     func onEvery<Payload>(event eventType: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable
     @discardableResult
-    func queryRenderedFeatures(with point: CGPoint, options: RenderedQueryOptions?, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) -> Cancelable
+    func queryRenderedFeatures(with point: CGPoint, options: RenderedQueryOptions?, completion: @escaping (Result<[QueriedRenderedFeature], Error>) -> Void) -> Cancelable
     // View annotation management
     func setViewAnnotationPositionsUpdateCallback(_ callback: ViewAnnotationPositionsUpdateCallback?)
     func addViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws
@@ -380,13 +380,13 @@ public final class MapboxMap {
     ///   - pitch: The new pitch to be used by the camera.
     /// - Returns: A `CameraOptions` that fits the provided constraints
     public func camera(for coordinates: [CLLocationCoordinate2D],
-                       padding: UIEdgeInsets,
+                       padding: UIEdgeInsets?,
                        bearing: Double?,
                        pitch: Double?) -> CameraOptions {
         return CameraOptions(
             __map.cameraForCoordinates(
                 forCoordinates: coordinates.map(\.location),
-                padding: padding.toMBXEdgeInsetsValue(),
+                padding: padding?.toMBXEdgeInsetsValue(),
                 bearing: bearing?.NSNumber,
                 pitch: pitch?.NSNumber))
     }
@@ -721,9 +721,9 @@ extension MapboxMap: MapFeatureQueryable {
     ///   - shape: Screen point coordinates (point, line string or box) to query
     ///         for rendered features.
     ///   - options: Options for querying rendered features.
-    ///   - completion: Callback called when the query completes
+    ///   - completion: Callback called when the query completes.
     @discardableResult
-    public func queryRenderedFeatures(with shape: [CGPoint], options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) -> Cancelable {
+    public func queryRenderedFeatures(with shape: [CGPoint], options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedRenderedFeature], Error>) -> Void) -> Cancelable {
         return __map.__queryRenderedFeatures(for: .fromNSArray(shape.map {$0.screenCoordinate}),
                                        options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
                                        callback: coreAPIClosureAdapter(for: completion,
@@ -736,24 +736,23 @@ extension MapboxMap: MapFeatureQueryable {
     /// - Parameters:
     ///   - rect: Screen rect to query for rendered features.
     ///   - options: Options for querying rendered features.
-    ///   - completion: Callback called when the query completes
+    ///   - completion: Callback called when the query completes.
     @discardableResult
-    public func queryRenderedFeatures(with rect: CGRect, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) -> Cancelable {
+    public func queryRenderedFeatures(with rect: CGRect, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedRenderedFeature], Error>) -> Void) -> Cancelable {
         return __map.__queryRenderedFeatures(for: .fromScreenBox(.init(rect)),
                                        options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
                                        callback: coreAPIClosureAdapter(for: completion,
                                                                        type: NSArray.self,
                                                                        concreteErrorType: MapError.self)).asCancelable()
     }
-
     /// Queries the map for rendered features.
     ///
     /// - Parameters:
     ///   - point: Screen point at which to query for rendered features.
     ///   - options: Options for querying rendered features.
-    ///   - completion: Callback called when the query completes
+    ///   - completion: Callback called when the query completes.
     @discardableResult
-    public func queryRenderedFeatures(with point: CGPoint, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) -> Cancelable {
+    public func queryRenderedFeatures(with point: CGPoint, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedRenderedFeature], Error>) -> Void) -> Cancelable {
         return __map.__queryRenderedFeatures(for: .fromScreenCoordinate(point.screenCoordinate),
                                              options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
                                              callback: coreAPIClosureAdapter(for: completion,
@@ -766,15 +765,16 @@ extension MapboxMap: MapFeatureQueryable {
     /// - Parameters:
     ///   - sourceId: Style source identifier used to query for source features.
     ///   - options: Options for querying source features.
-    ///   - completion: Callback called when the query completes
+    ///   - completion: Callback called when the query completes.
+    @discardableResult
     public func querySourceFeatures(for sourceId: String,
                                     options: SourceQueryOptions,
-                                    completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
-        __map.querySourceFeatures(forSourceId: sourceId,
+                                    completion: @escaping (Result<[QueriedSourceFeature], Error>) -> Void) -> Cancelable {
+        return __map.__querySourceFeatures(forSourceId: sourceId,
                                   options: options,
                                   callback: coreAPIClosureAdapter(for: completion,
                                                                   type: NSArray.self,
-                                                                  concreteErrorType: MapError.self))
+                                                                  concreteErrorType: MapError.self)).asCancelable()
     }
 
     /// Returns all the leaves (original points) of a cluster (given its cluster_id) from a GeoJSON source, with pagination support: limit is the number of leaves
@@ -788,19 +788,20 @@ extension MapboxMap: MapFeatureQueryable {
     ///   - completion: The result could be a feature extension value containing
     ///         either a value (expansion-zoom) or a feature collection (children
     ///         or leaves). An error is passed if the operation was not successful.
+    @discardableResult
     public func getGeoJsonClusterLeaves(forSourceId sourceId: String,
                                         feature: Feature,
                                         limit: UInt64 = 10,
                                         offset: UInt64 = 0,
-                                        completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void) {
-        __map.queryFeatureExtensions(forSourceIdentifier: sourceId,
+                                        completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void) -> Cancelable {
+        return __map.__queryFeatureExtensions(forSourceIdentifier: sourceId,
                                      feature: MapboxCommon.Feature(feature),
                                      extension: "supercluster",
                                      extensionField: "leaves",
                                      args: ["limit": limit, "offset": offset],
                                      callback: coreAPIClosureAdapter(for: completion,
                                                                      type: FeatureExtensionValue.self,
-                                                                     concreteErrorType: MapError.self))
+                                                                     concreteErrorType: MapError.self)).asCancelable()
     }
 
     /// Returns the children (original points or clusters) of a cluster (on the next zoom level)
@@ -812,17 +813,18 @@ extension MapboxMap: MapFeatureQueryable {
     ///   - completion: The result could be a feature extension value containing
     ///         either a value (expansion-zoom) or a feature collection (children
     ///         or leaves). An error is passed if the operation was not successful.
+    @discardableResult
     public func getGeoJsonClusterChildren(forSourceId sourceId: String,
                                           feature: Feature,
-                                          completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void) {
-        __map.queryFeatureExtensions(forSourceIdentifier: sourceId,
+                                          completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void) -> Cancelable {
+        return __map.__queryFeatureExtensions(forSourceIdentifier: sourceId,
                                      feature: MapboxCommon.Feature(feature),
                                      extension: "supercluster",
                                      extensionField: "children",
                                      args: nil,
                                      callback: coreAPIClosureAdapter(for: completion,
                                                                      type: FeatureExtensionValue.self,
-                                                                     concreteErrorType: MapError.self))
+                                                                     concreteErrorType: MapError.self)).asCancelable()
     }
 
     /// Returns the zoom on which the cluster expands into several children (useful for "click to zoom" feature)
@@ -834,17 +836,18 @@ extension MapboxMap: MapFeatureQueryable {
     ///   - completion: The result could be a feature extension value containing
     ///         either a value (expansion-zoom) or a feature collection (children
     ///         or leaves). An error is passed if the operation was not successful.
+    @discardableResult
     public func getGeoJsonClusterExpansionZoom(forSourceId sourceId: String,
                                                feature: Feature,
-                                               completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void) {
-        __map.queryFeatureExtensions(forSourceIdentifier: sourceId,
+                                               completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void) -> Cancelable {
+        __map.__queryFeatureExtensions(forSourceIdentifier: sourceId,
                                      feature: MapboxCommon.Feature(feature),
                                      extension: "supercluster",
                                      extensionField: "expansion-zoom",
                                      args: nil,
                                      callback: coreAPIClosureAdapter(for: completion,
                                                                      type: FeatureExtensionValue.self,
-                                                                     concreteErrorType: MapError.self))
+                                                                     concreteErrorType: MapError.self)).asCancelable()
     }
 }
 
@@ -965,11 +968,18 @@ extension MapboxMap {
     ///   - sourceLayerId: Style source layer identifier (for multi-layer sources such as vector sources). Defaults to `nil`.
     ///   - featureId: Identifier of the feature whose state should be updated
     ///   - state: Map of entries to update with their respective new values
-    public func setFeatureState(sourceId: String, sourceLayerId: String? = nil, featureId: String, state: [String: Any]) {
-        __map.setFeatureStateForSourceId(sourceId,
+    ///   - callback: The `feature state operation callback` called when the operation completes or ends.
+    ///
+    /// - Returns: A `Cancelable` object  that could be used to cancel the pending operation.
+    @discardableResult
+    public func setFeatureState(sourceId: String, sourceLayerId: String? = nil, featureId: String, state: [String: Any], callback: @escaping (Result<NSNull, Error>) -> Void) -> Cancelable {
+        return __map.__setFeatureStateForSourceId(sourceId,
                                          sourceLayerId: sourceLayerId,
                                          featureId: featureId,
-                                         state: state)
+                                                  state: state,
+                                                  callback: coreAPIClosureAdapter(for: callback,
+                                                                                  type: NSNull.self,
+                                                                                  concreteErrorType: MapError.self)).asCancelable()
     }
 
     /// Get the state map of a feature within a style source.
@@ -979,13 +989,16 @@ extension MapboxMap {
     ///   - sourceLayerId: Style source layer identifier (for multi-layer sources such as vector sources).
     ///   - featureId: Identifier of the feature whose state should be queried.
     ///   - callback: Feature's state map or an empty map if the feature could not be found.
-    public func getFeatureState(sourceId: String, sourceLayerId: String? = nil, featureId: String, callback: @escaping (Result<[String: Any], Error>) -> Void) {
-        __map.getFeatureState(forSourceId: sourceId,
+    ///
+    /// - Returns: A `Cancelable` object that could be used to cancel the pending query.
+    @discardableResult
+    public func getFeatureState(sourceId: String, sourceLayerId: String? = nil, featureId: String, callback: @escaping (Result<[String: Any], Error>) -> Void) -> Cancelable {
+        return __map.__getFeatureState(forSourceId: sourceId,
                               sourceLayerId: sourceLayerId,
                               featureId: featureId,
                               callback: coreAPIClosureAdapter(for: callback,
                                                               type: AnyObject.self,
-                                                              concreteErrorType: MapError.self))
+                                                              concreteErrorType: MapError.self)).asCancelable()
     }
 
     /// Removes entries from a feature state object.
@@ -996,13 +1009,39 @@ extension MapboxMap {
     ///   - sourceLayerId: The style source layer identifier (for multi-layer sources such as vector sources). Defaults to `nil`.
     ///   - featureId: The feature identifier of the feature whose state should be removed.
     ///   - stateKey: The key of the property to remove. If `nil`, all feature's state object properties are removed. Defaults to `nil`.
-    public func removeFeatureState(sourceId: String, sourceLayerId: String? = nil, featureId: String, stateKey: String? = nil) {
-        __map.removeFeatureState(forSourceId: sourceId,
+    ///   - callback: The `feature state operation callback` called when the operation completes or ends.
+    ///
+    /// - Returns: A `cancelable` object that could be used to cancel the pending operation.
+    @discardableResult
+    public func removeFeatureState(sourceId: String, sourceLayerId: String? = nil, featureId: String, stateKey: String? = nil, callback: @escaping (Result<NSNull, Error>) -> Void) -> Cancelable {
+        return __map.__removeFeatureState(forSourceId: sourceId,
                                  sourceLayerId: sourceLayerId,
                                  featureId: featureId,
-                                 stateKey: stateKey)
+                                  stateKey: stateKey,
+                                callback: coreAPIClosureAdapter(for: callback,
+                                                                type: NSNull.self,
+                                                                  concreteErrorType: MapError.self)).asCancelable()
     }
 
+    /// Reset all the feature states within a style source.
+    /// Remove all feature state entries from the specified style source or source layer.
+    /// Note that updates to feature state are asynchronous, so changes made by this method might not be
+    /// immediately visible using `getStateFeature`.
+    ///
+    /// - Parameters:
+    ///   - sourceId: The style source identifier
+    ///   - sourceLayerId: The style source layer identifier (for multi-layer sources such as vector sources). Defaults to `nil`.
+    ///   - callback: The `feature state operation callback` called when the operation completes or ends.
+    ///
+    /// - Returns: A `cancelable` object that could be used to cancel the pending operation.
+    @discardableResult
+    public func resetFeatureStates(sourceId: String, sourceLayerId: String? = nil, callback: @escaping (Result<NSNull, Error>) -> Void) -> Cancelable {
+        return __map.__resetFeatureStates(forSourceId: sourceId,
+                                          sourceLayerId: sourceLayerId,
+                                          callback: coreAPIClosureAdapter(for: callback,
+                                                                          type: NSNull.self,
+                                                                          concreteErrorType: MapError.self)).asCancelable()
+    }
 }
 
 // MARK: - View Annotations

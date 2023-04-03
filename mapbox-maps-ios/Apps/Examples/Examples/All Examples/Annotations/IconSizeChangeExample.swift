@@ -116,7 +116,7 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
                     return
                 }
 
-                if let geometry = features.first?.feature.geometry {
+                if let geometry = features.first?.queriedFeature.feature.geometry {
                     try? self.mapView.mapboxMap.style.updateGeoJSONSource(withId: Constants.selectedMarkerSourceId,
                                                                           geoJSON: .geometry(geometry))
                 }

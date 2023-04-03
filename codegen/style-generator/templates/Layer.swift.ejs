@@ -30,7 +30,7 @@ import Foundation
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
-    public var visibility: Value<Visibility>?
+    public var visibility: Visibility
     <%_ for (const property of layoutProperties) { -%>
 
     /// <%- markdownFriendlyDoc(property) %>
@@ -55,7 +55,7 @@ import Foundation
     public init(id: String) {
         self.id = id
         self.type = LayerType.<%- camelizeWithLeadingLowercase(type) %>
-        self.visibility = .constant(.visible)
+        self.visibility = .visible
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -105,8 +105,9 @@ import Foundation
             <%_ } -%>
         }
 
+        var visibilityEncoded: Visibility?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
-            visibility = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
+            visibilityEncoded = try layoutContainer.decodeIfPresent(Visibility.self, forKey: .visibility)
             <%_ for (const property of layoutProperties) { -%>
             <%- camelizeWithLeadingLowercase(property.name) %> = try layoutContainer.decodeIfPresent(<%- propertySwiftValueType(property) %>.self, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>)
             <%_ if (property.transition) { -%>
@@ -114,6 +115,7 @@ import Foundation
             <%_ } -%>
             <%_ } -%>
         }
+        visibility = visibilityEncoded  ?? .visible
     }
 
     enum RootCodingKeys: String, CodingKey {

@@ -1,0 +1,17 @@
+when:
+  and:
+    - << pipeline.parameters.sdk_ci_pull_request_id >>
+    - equal: [ << pipeline.parameters.sdk_ci_pull_request_target_branch_name >>, << pipeline.parameters.sdk_ci_repo_default_branch >> ]
+jobs:
+  - trigger-build-snapshot:
+      type: approval
+  - build-dynamic:
+      name: build-snapshot
+      context:
+        - Slack Orb
+        - SDK Registry Token
+      check-api-breakage: false
+      upload-type: snapshots
+      project-name: mobile-maps-ios-preview
+      requires: 
+        - trigger-build-snapshot

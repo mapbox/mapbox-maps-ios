@@ -82,7 +82,7 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
         mapView.mapboxMap.queryRenderedFeatures(with: screenPoint, options: queryOptions) { [weak self] result in
             if case let .success(queriedFeatures) = result,
                let self = self,
-               let feature = queriedFeatures.first?.feature,
+               let feature = queriedFeatures.first?.queriedFeature.feature,
                let id = feature.identifier,
                case let .string(idString) = id,
                let viewAnnotations = self.mapView.viewAnnotations {

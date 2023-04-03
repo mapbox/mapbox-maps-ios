@@ -26,7 +26,7 @@ final class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.visibility = .constant(.visible)
+            layer.visibility = .visible
             layer.iconAllowOverlap = Value<Bool>.testConstantValue()
             layer.iconAnchor = Value<IconAnchor>.testConstantValue()
             layer.iconIgnorePlacement = Value<Bool>.testConstantValue()

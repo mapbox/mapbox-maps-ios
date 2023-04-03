@@ -123,18 +123,20 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     func testDestroyManager() {
         manager.destroy()
 
-        XCTAssertEqual(style.removeLayerStub.invocations.count, 1)
-        XCTAssertEqual(style.removeLayerStub.invocations.last?.parameters, manager.id)
-        XCTAssertEqual(style.removeSourceStub.invocations.count, 1)
-        XCTAssertEqual(style.removeSourceStub.invocations.last?.parameters, manager.id)
+        XCTAssertEqual(style.removeLayerStub.invocations.map(\.parameters), [id + "_drag-layer", id])
+        XCTAssertEqual(style.removeSourceStub.invocations.map(\.parameters), [id + "_drag-source", id])
     }
 
     func testDestroyManagerTwice() {
         manager.destroy()
-        manager.destroy()
+        XCTAssertEqual(style.removeLayerStub.invocations.map(\.parameters), [id + "_drag-layer", id])
+        XCTAssertEqual(style.removeSourceStub.invocations.map(\.parameters), [id + "_drag-source", id])
+        style.removeLayerStub.reset()
+        style.removeSourceStub.reset()
 
-        XCTAssertEqual(style.removeLayerStub.invocations.count, 1)
-        XCTAssertEqual(style.removeSourceStub.invocations.count, 1)
+        manager.destroy()
+        XCTAssertTrue(style.removeLayerStub.invocations.isEmpty)
+        XCTAssertTrue(style.removeSourceStub.invocations.isEmpty)
     }
 
     func testSyncSourceAndLayer() {
@@ -163,20 +165,24 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(displayLinkCoordinator.removeStub.invocations.count, 1)
     }
 
-    func testfeatureCollectionPassedtoGeoJSON() {
+    func testFeatureCollectionPassedtoGeoJSON() {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
-        let featureCollection = FeatureCollection(features: annotations.map(\.feature))
+        let expectedFeatureCollection = FeatureCollection(features: annotations.map(\.feature))
 
         manager.annotations = annotations
         manager.syncSourceAndLayerIfNeeded()
 
         XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.last?.parameters.id, manager.id)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.last?.parameters.geojson, .featureCollection(featureCollection))
+        if case .featureCollection(let collection) = style.updateGeoJSONSourceStub.invocations[0].parameters.geojson {
+            XCTAssertTrue(collection.features.allSatisfy(expectedFeatureCollection.features.contains(_:)))
+        } else {
+            XCTFail("GeoJSON object should be a feature collection")
+        }
     }
 
     func testHandleQueriedFeatureIdsPassesNotificationToDelegate() throws {
@@ -3115,10 +3121,24 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let removeLayerInvocations = style.removeLayerStub.invocations
 
         // then
-        XCTAssertEqual(style.removeLayerStub.invocations.count, 3)
-        XCTAssertEqual(removeLayerInvocations[0].parameters, "mapbox-iOS-cluster-circle-layer-manager-" + id)
-        XCTAssertEqual(removeLayerInvocations[1].parameters, "mapbox-iOS-cluster-text-layer-manager-" + id)
-        XCTAssertEqual(removeLayerInvocations[2].parameters, id)
+        XCTAssertEqual(removeLayerInvocations.map(\.parameters), [
+            "mapbox-iOS-cluster-circle-layer-manager-" + id,
+            "mapbox-iOS-cluster-text-layer-manager-" + id,
+            id + "_drag-layer",
+            id,
+        ])
+    }
+
+    func testGetAnnotations() {
+        let annotations = Array.random(withLength: 10) {
+            PointAnnotation(coordinate: .random(), isSelected: false, isDraggable: true)
+        }
+        manager.annotations = annotations
+
+        // Dragged annotation will be added to internal list of dragged annotations.
+        let annotationToDrag = annotations.randomElement()!
+        manager.handleDragBegin(with: [annotationToDrag.id])
+        XCTAssertTrue(manager.annotations.contains(where: { $0.id == annotationToDrag.id }))
     }
 
     func testHandleDragBeginIsDraggableFalse() throws {
@@ -3175,7 +3195,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(addLayerParameters.properties["source"] as? String, addSourceParameters.id)
         XCTAssertNotEqual(addLayerParameters.properties["id"] as? String, manager.layerId)
 
-        XCTAssertFalse(manager.annotations.contains(where: { $0.id == "point1" }))
         XCTAssertTrue(updateSourceParameters.id == addSourceParameters.id)
     }
 
@@ -3184,9 +3203,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         mapboxMap.coordinateForPointStub.defaultReturnValue = .random()
         mapboxMap.cameraState.zoom = 1
 
-        manager.annotations = [
-            PointAnnotation(id: "point1", coordinate: .init(latitude: 0, longitude: 0), isSelected: false, isDraggable: true)
-        ]
+        let annotation = PointAnnotation(id: "point1", coordinate: .init(latitude: 0, longitude: 0), isSelected: false, isDraggable: true)
+        manager.annotations = [annotation]
 
         manager.handleDragChanged(with: .random())
         XCTAssertTrue(style.updateGeoJSONSourceStub.invocations.isEmpty)
@@ -3197,33 +3215,10 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         manager.handleDragChanged(with: .random())
         let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
         XCTAssertTrue(updateSourceParameters.id == addSourceParameters.id)
-        guard case .feature = updateSourceParameters.geojson.geoJSONObject else {
-            XCTFail("GeoJSONObject should be a feature")
-            return
-        }
-    }
-
-    func testHandleDragEnded() throws {
-        manager.annotations = [
-            PointAnnotation(id: "point1", coordinate: .init(latitude: 0, longitude: 0), isSelected: false, isDraggable: true)
-        ]
-
-        manager.handleDragEnded()
-        eventually(timeout: 0.2) {
-            XCTAssertTrue(self.style.removeLayerStub.invocations.isEmpty)
-            XCTAssertTrue(self.style.removeSourceStub.invocations.isEmpty)
-        }
-
-        manager.handleDragBegin(with: ["point1"])
-        manager.handleDragEnded()
-
-        XCTAssertTrue(manager.annotations.contains(where: { $0.id == "point1" }))
-        eventually(timeout: 0.2) {
-            let removeSourceParameters = self.style.removeSourceStub.invocations.last!.parameters
-            let removeLayerParameters = self.style.removeLayerStub.invocations.last!.parameters
-
-            XCTAssertNotEqual(removeLayerParameters, self.manager.layerId)
-            XCTAssertNotEqual(removeSourceParameters, self.manager.sourceId)
+        if case .featureCollection(let collection) = updateSourceParameters.geojson {
+            XCTAssertTrue(collection.features.contains(where: { $0.identifier?.rawValue as? String == annotation.id }))
+        } else {
+            XCTFail("GeoJSONObject should be a feature collection")
         }
     }
 }

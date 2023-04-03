@@ -155,7 +155,7 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
                                                                               filter: nil)) { [weak self] result in
             switch result {
             case .success(let queriedFeatures):
-                if let cluster = queriedFeatures.first?.feature,
+                if let cluster = queriedFeatures.first?.queriedFeature.feature,
                    let sourceID = self?.clusterLayerID,
                    case let .point(clusterCenter) = cluster.geometry {
                     self?.mapView.mapboxMap.getGeoJsonClusterExpansionZoom(forSourceId: sourceID, feature: cluster) { result in
@@ -167,6 +167,9 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
                             print("An error occurred: \(error.localizedDescription). Please try another cluster.")
                         }
                     }
+                }
+                if let layers = queriedFeatures.first?.layers {
+                    print("Selected a cluster in layers: \(layers)")
                 }
             case .failure(let error):
                 print("An error occurred: \(error.localizedDescription). Please try another cluster.")

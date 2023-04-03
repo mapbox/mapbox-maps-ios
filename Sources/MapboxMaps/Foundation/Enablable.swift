@@ -9,15 +9,3 @@ internal protocol MutableEnablableProtocol: EnablableProtocol {
 internal final class Enablable: MutableEnablableProtocol {
     internal var isEnabled = true
 }
-
-internal final class CompositeEnablable: EnablableProtocol {
-    internal var isEnabled: Bool {
-        enablables.allSatisfy(\.isEnabled)
-    }
-
-    private let enablables: [EnablableProtocol]
-
-    internal init(enablables: [EnablableProtocol]) {
-        self.enablables = enablables
-    }
-}

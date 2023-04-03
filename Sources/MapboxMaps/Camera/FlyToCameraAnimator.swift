@@ -76,8 +76,10 @@ public final class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimator
             to: toCamera,
             cameraBounds: mapboxMap.cameraBounds,
             size: mapboxMap.size)
-        if let duration = duration {
-            precondition(duration >= 0)
+        var duration = duration ?? flyToInterpolator.duration()
+        if duration < 0 {
+            assertionFailure("Duration can't be negative.")
+            duration = 0
         }
         self.interpolator = flyToInterpolator
         self.mapboxMap = mapboxMap
@@ -85,7 +87,7 @@ public final class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimator
         self.owner = owner
         self.animationType = type
         self.finalCameraOptions = toCamera
-        self.duration = duration ?? flyToInterpolator.duration()
+        self.duration = duration
         self.dateProvider = dateProvider
     }
 

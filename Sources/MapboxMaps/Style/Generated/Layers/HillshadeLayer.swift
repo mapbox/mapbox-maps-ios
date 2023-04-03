@@ -16,7 +16,7 @@ public struct HillshadeLayer: Layer {
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
-    public var visibility: Value<Visibility>?
+    public var visibility: Visibility
 
     /// The shading color used to accentuate rugged terrain like sharp cliffs and gorges.
     public var hillshadeAccentColor: Value<StyleColor>?
@@ -51,7 +51,7 @@ public struct HillshadeLayer: Layer {
     public init(id: String) {
         self.id = id
         self.type = LayerType.hillshade
-        self.visibility = .constant(.visible)
+        self.visibility = .visible
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -103,9 +103,11 @@ public struct HillshadeLayer: Layer {
             hillshadeShadowColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .hillshadeShadowColorTransition)
         }
 
+        var visibilityEncoded: Visibility?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
-            visibility = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
+            visibilityEncoded = try layoutContainer.decodeIfPresent(Visibility.self, forKey: .visibility)
         }
+        visibility = visibilityEncoded  ?? .visible
     }
 
     enum RootCodingKeys: String, CodingKey {

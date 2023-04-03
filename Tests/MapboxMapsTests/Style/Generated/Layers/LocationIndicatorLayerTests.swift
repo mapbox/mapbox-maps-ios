@@ -56,7 +56,7 @@ final class LocationIndicatorLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfLayoutProperties() {
         var layer = LocationIndicatorLayer(id: "test-id")
-        layer.visibility = .constant(.visible)
+        layer.visibility = .visible
         layer.bearingImage = Value<ResolvedImage>.testConstantValue()
         layer.shadowImage = Value<ResolvedImage>.testConstantValue()
         layer.topImage = Value<ResolvedImage>.testConstantValue()
@@ -75,7 +75,7 @@ final class LocationIndicatorLayerTests: XCTestCase {
 
         do {
             let decodedLayer = try JSONDecoder().decode(LocationIndicatorLayer.self, from: validData)
-            XCTAssert(decodedLayer.visibility == .constant(.visible))
+            XCTAssert(decodedLayer.visibility == .visible)
             XCTAssert(layer.bearingImage == Value<ResolvedImage>.testConstantValue())
             XCTAssert(layer.shadowImage == Value<ResolvedImage>.testConstantValue())
             XCTAssert(layer.topImage == Value<ResolvedImage>.testConstantValue())
@@ -125,7 +125,7 @@ final class LocationIndicatorLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(LocationIndicatorLayer.self, from: validData)
-           XCTAssert(decodedLayer.visibility == .constant(.visible))
+           XCTAssert(decodedLayer.visibility == .visible)
            XCTAssert(layer.accuracyRadius == Value<Double>.testConstantValue())
            XCTAssert(layer.accuracyRadiusBorderColor == Value<StyleColor>.testConstantValue())
            XCTAssert(layer.accuracyRadiusColor == Value<StyleColor>.testConstantValue())

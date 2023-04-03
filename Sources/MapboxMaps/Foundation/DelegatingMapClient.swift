@@ -3,7 +3,6 @@ import MapboxCoreMaps
 
 internal protocol DelegatingMapClientDelegate: AnyObject {
     func scheduleRepaint()
-    func scheduleTask(forTask task: @escaping Task)
     func getMetalView(for metalDevice: MTLDevice?) -> MTKView?
 }
 
@@ -12,10 +11,6 @@ internal final class DelegatingMapClient: MapClient, MBMMetalViewProvider {
 
     internal func scheduleRepaint() {
         delegate?.scheduleRepaint()
-    }
-
-    internal func scheduleTask(forTask task: @escaping Task) {
-        delegate?.scheduleTask(forTask: task)
     }
 
     internal func getMetalView(for metalDevice: MTLDevice?) -> MTKView? {

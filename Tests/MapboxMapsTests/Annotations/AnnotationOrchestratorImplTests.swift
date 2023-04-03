@@ -345,7 +345,7 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
         // given
         let annotationManagerLayerId = "managerId"
         let annotationManager = MockAnnotationManager()
-        annotationManager.$layerId.getStub.defaultReturnValue = annotationManagerLayerId
+        annotationManager.$allLayerIds.getStub.defaultReturnValue = [annotationManagerLayerId]
         factory.makePolygonAnnotationManagerStub.defaultReturnValue = annotationManager
         factory.makeCircleAnnotationManagerStub.defaultReturnValue = annotationManager
         factory.makePolylineAnnotationManagerStub.defaultReturnValue = annotationManager
@@ -392,7 +392,7 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
 
             // when
             longPressGestureRecognizer.sendActions()
-            let qrfCompletions: (Result<[QueriedFeature], Error>) -> Void = try! XCTUnwrap(mapFeatureQueryable.queryRenderedFeaturesAtStub.invocations.first?.parameters.completion)
+            let qrfCompletions: (Result<[QueriedRenderedFeature], Error>) -> Void = try! XCTUnwrap(mapFeatureQueryable.queryRenderedFeaturesAtStub.invocations.first?.parameters.completion)
             let feature = QueriedFeature.init(
                 __feature: MapboxCommon.Feature.init(
                     identifier: featureIdentifier as NSObject,
@@ -403,7 +403,7 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
                 state: "feature-state"
             )
 
-            qrfCompletions(.success([feature]))
+            qrfCompletions(.success([QueriedRenderedFeature(__queriedFeature: feature, layers: ["layer"])]))
 
         }
 
@@ -436,7 +436,7 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
 
             // when
             longPressGestureRecognizer.sendActions()
-            let qrfCompletions: (Result<[QueriedFeature], Error>) -> Void = (mapFeatureQueryable.queryRenderedFeaturesAtStub.invocations.first?.parameters.completion)!
+            let qrfCompletions: (Result<[QueriedRenderedFeature], Error>) -> Void = (mapFeatureQueryable.queryRenderedFeaturesAtStub.invocations.first?.parameters.completion)!
 
             qrfCompletions(.failure(TestError.test))
 

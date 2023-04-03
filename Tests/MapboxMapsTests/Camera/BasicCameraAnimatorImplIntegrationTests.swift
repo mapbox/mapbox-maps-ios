@@ -24,17 +24,16 @@ final class BasicCameraAnimatorImplIntegrationTests: XCTestCase {
             owner: .unspecified,
             mapboxMap: mapboxMap,
             mainQueue: mainQueue,
-            cameraView: cameraView)
+            cameraView: cameraView) { (transition) in
+                transition.zoom.toValue = cameraOptionsTestValue.zoom!
+                transition.center.toValue = cameraOptionsTestValue.center!
+                transition.bearing.toValue = cameraOptionsTestValue.bearing!
+                transition.anchor.toValue = cameraOptionsTestValue.anchor!
+                transition.pitch.toValue = cameraOptionsTestValue.pitch!
+                transition.padding.toValue = cameraOptionsTestValue.padding!
+            }
         delegate = MockBasicCameraAnimatorDelegate()
         animator.delegate = delegate
-        animator.addAnimations { (transition) in
-            transition.zoom.toValue = cameraOptionsTestValue.zoom!
-            transition.center.toValue = cameraOptionsTestValue.center!
-            transition.bearing.toValue = cameraOptionsTestValue.bearing!
-            transition.anchor.toValue = cameraOptionsTestValue.anchor!
-            transition.pitch.toValue = cameraOptionsTestValue.pitch!
-            transition.padding.toValue = cameraOptionsTestValue.padding!
-        }
     }
 
     override func tearDown() {

@@ -16,7 +16,7 @@ public extension CameraState {
 public struct MapLayerTapPayload {
     public var point: CGPoint
     public var coordinate: CLLocationCoordinate2D
-    public var features: [QueriedFeature]
+    public var features: [QueriedRenderedFeature]
 }
 
 /// An action called when the map is tapped.

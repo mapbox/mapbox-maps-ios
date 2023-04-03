@@ -28,4 +28,23 @@ final class Comparable_ClampedTests: XCTestCase {
 
         XCTAssertEqual(actual, value)
     }
+
+    func testClamp() {
+        var value: Double = 5
+
+        // No clamping
+        XCTAssertFalse(value.clamp(to: 0...6))
+        XCTAssertFalse(value.clamp(to: 0...5))
+
+        // Clamps by upper bound to 4
+        XCTAssertTrue(value.clamp(to: 0...4))
+        XCTAssertEqual(value, 4)
+
+        // No clamping
+        XCTAssertFalse(value.clamp(to: 4...5))
+
+        // Clamps by lower bound to 4.5
+        XCTAssertTrue(value.clamp(to: 4.5...5))
+        XCTAssertEqual(value, 4.5)
+    }
 }

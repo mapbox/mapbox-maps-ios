@@ -48,9 +48,6 @@ internal final class AnnotationManagerFactory: AnnotationManagerFactoryProtocol 
         id: String,
         layerPosition: LayerPosition?,
         clusterOptions: ClusterOptions?) -> AnnotationManagerInternal {
-            guard let displayLinkCoordinator = displayLinkCoordinator else {
-                fatalError("DisplayLinkCoordinator must be present when creating an annotation manager")
-            }
             return PointAnnotationManager(
                 id: id,
                 style: style,
@@ -64,9 +61,6 @@ internal final class AnnotationManagerFactory: AnnotationManagerFactoryProtocol 
     internal func makePolygonAnnotationManager(
         id: String,
         layerPosition: LayerPosition?) -> AnnotationManagerInternal {
-            guard let displayLinkCoordinator = displayLinkCoordinator else {
-                fatalError("DisplayLinkCoordinator must be present when creating an annotation manager")
-            }
             return PolygonAnnotationManager(
                 id: id,
                 style: style,
@@ -78,9 +72,6 @@ internal final class AnnotationManagerFactory: AnnotationManagerFactoryProtocol 
     internal func makePolylineAnnotationManager(
         id: String,
         layerPosition: LayerPosition?) -> AnnotationManagerInternal {
-            guard let displayLinkCoordinator = displayLinkCoordinator else {
-                fatalError("DisplayLinkCoordinator must be present when creating an annotation manager")
-            }
             return PolylineAnnotationManager(
                 id: id,
                 style: style,
@@ -92,9 +83,6 @@ internal final class AnnotationManagerFactory: AnnotationManagerFactoryProtocol 
     internal func makeCircleAnnotationManager(
         id: String,
         layerPosition: LayerPosition?) -> AnnotationManagerInternal {
-            guard let displayLinkCoordinator = displayLinkCoordinator else {
-                fatalError("DisplayLinkCoordinator must be present when creating an annotation manager")
-            }
             return CircleAnnotationManager(
                 id: id,
                 style: style,

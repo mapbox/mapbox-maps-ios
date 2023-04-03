@@ -11,10 +11,6 @@ internal protocol MapSnapshotterProtocol: StyleManagerProtocol, ObservableProtoc
 
     func getSize() -> Size
 
-    func isInTileMode() -> Bool
-
-    func setTileModeForSet(_ set: Bool)
-
     func getCameraState() -> MapboxCoreMaps.CameraState
 
     func setCameraFor(_ cameraOptions: MapboxCoreMaps.CameraOptions)
@@ -25,7 +21,7 @@ internal protocol MapSnapshotterProtocol: StyleManagerProtocol, ObservableProtoc
 
     func cameraForCoordinates(forCoordinates
                               coordinates: [CLLocation],
-                              padding: EdgeInsets,
+                              padding: EdgeInsets?,
                               bearing: NSNumber?,
                               pitch: NSNumber?) -> MapboxCoreMaps.CameraOptions
 
@@ -100,15 +96,6 @@ public class Snapshotter {
     /// - Parameter cameraOptions: The target camera options
     public func setCamera(to cameraOptions: CameraOptions) {
         mapSnapshotter.setCameraFor(MapboxCoreMaps.CameraOptions(cameraOptions))
-    }
-
-    /// In the tile mode, the snapshotter fetches the still image of a single tile.
-    public var tileMode: Bool {
-        get {
-            return mapSnapshotter.isInTileMode()
-        } set(newValue) {
-            mapSnapshotter.setTileModeForSet(newValue)
-        }
     }
 
     /**
@@ -302,12 +289,12 @@ public class Snapshotter {
     ///   - pitch: The new pitch to be used by the camera.
     /// - Returns: A `CameraOptions` that fits the provided constraints
     public func camera(for coordinates: [CLLocationCoordinate2D],
-                       padding: UIEdgeInsets,
+                       padding: UIEdgeInsets?,
                        bearing: Double?,
                        pitch: Double?) -> CameraOptions {
         return CameraOptions(mapSnapshotter.cameraForCoordinates(
             forCoordinates: coordinates.map(\.location),
-            padding: padding.toMBXEdgeInsetsValue(),
+            padding: padding?.toMBXEdgeInsetsValue(),
             bearing: bearing?.NSNumber,
             pitch: pitch?.NSNumber))
     }

@@ -16,7 +16,7 @@ public struct SymbolLayer: Layer {
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
-    public var visibility: Value<Visibility>?
+    public var visibility: Visibility
 
     /// If true, the icon will be visible even if it collides with other previously drawn symbols.
     public var iconAllowOverlap: Value<Bool>?
@@ -222,7 +222,7 @@ public struct SymbolLayer: Layer {
     public init(id: String) {
         self.id = id
         self.type = LayerType.symbol
-        self.visibility = .constant(.visible)
+        self.visibility = .visible
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -347,8 +347,9 @@ public struct SymbolLayer: Layer {
             textTranslateAnchor = try paintContainer.decodeIfPresent(Value<TextTranslateAnchor>.self, forKey: .textTranslateAnchor)
         }
 
+        var visibilityEncoded: Visibility?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
-            visibility = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
+            visibilityEncoded = try layoutContainer.decodeIfPresent(Visibility.self, forKey: .visibility)
             iconAllowOverlap = try layoutContainer.decodeIfPresent(Value<Bool>.self, forKey: .iconAllowOverlap)
             iconAnchor = try layoutContainer.decodeIfPresent(Value<IconAnchor>.self, forKey: .iconAnchor)
             iconIgnorePlacement = try layoutContainer.decodeIfPresent(Value<Bool>.self, forKey: .iconIgnorePlacement)
@@ -391,6 +392,7 @@ public struct SymbolLayer: Layer {
             textVariableAnchor = try layoutContainer.decodeIfPresent(Value<[TextAnchor]>.self, forKey: .textVariableAnchor)
             textWritingMode = try layoutContainer.decodeIfPresent(Value<[TextWritingMode]>.self, forKey: .textWritingMode)
         }
+        visibility = visibilityEncoded  ?? .visible
     }
 
     enum RootCodingKeys: String, CodingKey {

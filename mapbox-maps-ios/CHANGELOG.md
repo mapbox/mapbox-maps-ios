@@ -9,6 +9,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Fix bearing value is fluctuating between initial value and correct value during a rotation gesture.
 * Allows animation during any ongoing gestures.
 * Sync map size to the size of the metal view.
+* Fix visual jitter when an annotation dragging ends.
 
 ## 10.12.1 - March 29, 2023
 

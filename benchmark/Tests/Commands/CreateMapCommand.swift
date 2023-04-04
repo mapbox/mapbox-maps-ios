@@ -1,12 +1,36 @@
 import Foundation
 import MapboxMaps
 
-public struct CreateMapCommand: AsyncCommand, Decodable {
+struct CreateMapCommand: AsyncCommand, Decodable {
     let style: StyleURI
     let camera: CameraOptions
+    let tileStoreUsageMode: TileStoreUsageMode
 
     enum Error: Swift.Error {
         case cannotLoadMap
+    }
+
+    enum CodingKeys: CodingKey {
+        case style
+        case camera
+        case tileStoreUsage
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.style = try container.decode(StyleURI.self, forKey: .style)
+        self.camera = try container.decode(CameraOptions.self, forKey: .camera)
+        if try container.decodeIfPresent(Bool.self, forKey: .tileStoreUsage) == true {
+            self.tileStoreUsageMode = .readOnly
+        } else {
+            self.tileStoreUsageMode = .disabled
+        }
+    }
+
+    init(style: StyleURI, camera: CameraOptions, tileStoreUsageMode: TileStoreUsageMode = .disabled) {
+        self.style = style
+        self.camera = camera
+        self.tileStoreUsageMode = tileStoreUsageMode
     }
 
     var mapView: MapView? {
@@ -19,7 +43,12 @@ public struct CreateMapCommand: AsyncCommand, Decodable {
     @MainActor
     func execute() async throws {
         let viewController = UIViewController.rootController!
-        let mapInitOptions = MapInitOptions(cameraOptions: camera, styleURI: style)
+
+        let mapInitOptions = MapInitOptions(
+            resourceOptions: ResourceOptionsManager.default.resourceOptions.tileStoreUsageMode(tileStoreUsageMode),
+            cameraOptions: camera,
+            styleURI: style
+        )
         let mapView = MapView(frame: viewController.view.frame, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 

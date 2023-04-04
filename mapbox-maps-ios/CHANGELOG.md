@@ -14,6 +14,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## 10.12.1 - March 29, 2023
 
 * Bump MapboxCoreMaps to 10.12.1
+* Fix missing feature properties for `nil`/`null` values.
 
 ## 10.12.0 - March 22, 2023
 

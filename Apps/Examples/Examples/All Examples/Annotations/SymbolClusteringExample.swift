@@ -199,15 +199,4 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
             }
         }
     }
-
-    // Present an alert with a given title and message.
-    func showAlert(withTitle title: String, and message: String) {
-        let alertController = UIAlertController(title: title,
-                                                message: message,
-                                                preferredStyle: .alert)
-
-        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-
-        present(alertController, animated: true, completion: nil)
-    }
 }

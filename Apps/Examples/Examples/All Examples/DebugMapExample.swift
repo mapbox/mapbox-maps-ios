@@ -1,5 +1,5 @@
 import UIKit
-import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 
 private protocol DebugOptionSettingsDelegate: AnyObject {
     func debugOptionSettingsDidChange(_ controller: SettingsViewController)
@@ -36,7 +36,12 @@ final class DebugMapExample: UIViewController, ExampleProtocol, DebugOptionSetti
             barButtonSystemItem: .edit,
             target: self,
             action: #selector(openDebugOptionsMenu(_:)))
-        navigationItem.rightBarButtonItem = debugOptionsBarItem
+        let tileCover = UIBarButtonItem(
+            title: "Tiles",
+            style: .plain,
+            target: self,
+            action: #selector(tileCover))
+        navigationItem.rightBarButtonItems = [debugOptionsBarItem, tileCover]
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -54,6 +59,12 @@ final class DebugMapExample: UIViewController, ExampleProtocol, DebugOptionSetti
         navigationController.popoverPresentationController?.barButtonItem = sender
 
         present(navigationController, animated: true, completion: nil)
+    }
+
+    @objc private func tileCover() {
+        let tileIds = mapView.mapboxMap.tileCover(for: TileCoverOptions(tileSize: 512, minZoom: 0, maxZoom: 22, roundZoom: false))
+        let message = tileIds.map { "\($0.z)/\($0.x)/\($0.y)" }.joined(separator: "\n")
+        showAlert(withTitle: "Displayed tiles", and: message)
     }
 
     fileprivate func debugOptionSettingsDidChange(_ controller: SettingsViewController) {

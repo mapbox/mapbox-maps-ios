@@ -1144,6 +1144,22 @@ extension MapboxMap {
 
 }
 
+// MARK: - TileCover
+
+extension MapboxMap {
+
+    /// Returns array of tile identifiers that cover current map camera.
+    ///
+    /// - Parameters:
+    ///  - options: Options for the tile cover method.
+    @_spi(Experimental)
+    public func tileCover(for options: TileCoverOptions) -> [CanonicalTileID] {
+        __map.__tileCover(
+            for: MapboxCoreMaps.TileCoverOptions(options),
+            cameraOptions: nil)
+    }
+}
+
 // MARK: - Map Recorder
 
 extension MapboxMap {

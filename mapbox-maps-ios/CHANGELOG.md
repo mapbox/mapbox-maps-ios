@@ -15,6 +15,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Bump MapboxCoreMaps to 10.12.1
 * Fix missing feature properties for `nil`/`null` values.
+* Added experimental `tileCover` method to `MapboxMap` that returns tile ids covering the map.
 
 ## 10.12.0 - March 22, 2023
 

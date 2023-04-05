@@ -10,12 +10,12 @@ Mapbox welcomes participation and contributions from everyone.
 * Allows animation during any ongoing gestures.
 * Sync map size to the size of the metal view.
 * Fix visual jitter when an annotation dragging ends.
+* Fix missing feature properties for `nil`/`null` values.
+* Added experimental `tileCover` method to `MapboxMap` that returns tile ids covering the map.
 
 ## 10.12.1 - March 29, 2023
 
 * Bump MapboxCoreMaps to 10.12.1
-* Fix missing feature properties for `nil`/`null` values.
-* Added experimental `tileCover` method to `MapboxMap` that returns tile ids covering the map.
 
 ## 10.12.0 - March 22, 2023
 

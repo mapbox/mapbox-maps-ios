@@ -5,11 +5,13 @@ struct MapEventObserver {
     let eventName: String
     let action: (Event) -> Void
 
-    init<Payload: Decodable>(event: MapEvents.Event<Payload>, action: @escaping (MapEvent<Payload>) -> Void) {
+    init<Payload: Decodable>(event: MapEvents.Event<Payload>, action: @escaping (Payload) -> Void) {
         self.eventName = event.name
         self.action = { coreEvent in
             guard coreEvent.type == event.name else { return }
-            action(MapEvent(event: coreEvent))
+
+            let mapEvent = MapEvent<Payload>(event: coreEvent)
+            action(mapEvent.payload)
         }
     }
 

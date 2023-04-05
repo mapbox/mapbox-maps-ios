@@ -93,7 +93,7 @@ final class MockMapboxMap: MapboxMapProtocol {
     }
 
     func simulateEvent(event: MapEvents.Event<NoPayload>) {
-        simulateEvent(event: event, data: Void())
+        simulateEvent(event: event, data: [:])
     }
 
     let beginAnimationStub = Stub<Void, Void>()
@@ -224,10 +224,10 @@ final class MockMapboxMap: MapboxMapProtocol {
     struct QRFParameters {
         var point: CGPoint
         var options: RenderedQueryOptions?
-        var completion: (Result<[QueriedFeature], Error>) -> Void
+        var completion: (Result<[QueriedRenderedFeature], Error>) -> Void
     }
     let qrfStub = Stub<QRFParameters, Cancelable>(defaultReturnValue: MockCancelable())
-    func queryRenderedFeatures(with point: CGPoint, options: RenderedQueryOptions?, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) -> Cancelable {
+    func queryRenderedFeatures(with point: CGPoint, options: RenderedQueryOptions?, completion: @escaping (Result<[QueriedRenderedFeature], Error>) -> Void) -> Cancelable {
         qrfStub.call(with: QRFParameters(point: point, options: options, completion: completion))
     }
 

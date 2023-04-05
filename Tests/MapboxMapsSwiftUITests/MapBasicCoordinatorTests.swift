@@ -138,15 +138,17 @@ final class MapBasicCoordinatorTests: XCTestCase {
         XCTAssertEqual(qrfStub.invocations.first?.parameters.options?.layerIds, ["layer-foo"])
 
         let feature = Feature(geometry: Point(coordinate))
-        let queriedFeature = QueriedFeature(
-            __feature: MapboxCommon.Feature(feature),
-            source: "src",
-            sourceLayer: "src-layer",
-            state: [String: Any]())
-        qrfStub.invocations.first?.parameters.completion(.success([queriedFeature]))
+        let queriedRenderedFeature = QueriedRenderedFeature(
+            __queriedFeature: QueriedFeature(
+                __feature: MapboxCommon.Feature(feature),
+                source: "src",
+                sourceLayer: "src-layer",
+                state: [String: Any]()),
+            layers: [])
+        qrfStub.invocations.first?.parameters.completion(.success([queriedRenderedFeature]))
         XCTAssertEqual(mockActions.onLayerTapAction.invocations.count, 1)
         XCTAssertEqual(mockActions.onLayerTapAction.invocations.first?.parameters.point, point)
-        XCTAssertEqual(mockActions.onLayerTapAction.invocations.first?.parameters.features, [queriedFeature])
+        XCTAssertEqual(mockActions.onLayerTapAction.invocations.first?.parameters.features, [queriedRenderedFeature])
         XCTAssertEqual(mockActions.onLayerTapAction.invocations.first?.parameters.coordinate, coordinate)
     }
 

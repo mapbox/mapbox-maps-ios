@@ -18,6 +18,7 @@ struct ClearOfflineDataCommand: AsyncCommand, Decodable {
 
         let tileStore = TileStore.default
         tileStore.setOptionForKey(TileStoreOptions.diskQuota, value: 0)
+        tileStore.setOptionForKey(TileStoreOptions.diskQuotaCooldownDuration, value: 0)
         let regions = try await tileStore.allTileRegions()
 
         for region in regions {
@@ -28,3 +29,6 @@ struct ClearOfflineDataCommand: AsyncCommand, Decodable {
     }
 }
 
+extension TileStoreOptions {
+    fileprivate static let diskQuotaCooldownDuration = "disk-quota-enforcement-cooldown-duration"
+}

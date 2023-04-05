@@ -13,6 +13,7 @@
 		3A011CBD286343E9004713DA /* munich-animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 3A011CBA286343E9004713DA /* munich-animation.json */; };
 		3A23E3ED28E42B3A00ADC2AD /* 1tap-munich-recording-ios.json.gz in Resources */ = {isa = PBXBuildFile; fileRef = 3A23E3EC28E42B3900ADC2AD /* 1tap-munich-recording-ios.json.gz */; };
 		3A23E3EF28E42D8800ADC2AD /* 1tap-munich.json in Resources */ = {isa = PBXBuildFile; fileRef = 3A23E3EE28E42D8800ADC2AD /* 1tap-munich.json */; };
+		3A4D635729DC28E70053FEFC /* ResouceOptions+Update.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4D635629DC28E70053FEFC /* ResouceOptions+Update.swift */; };
 		3A56266C286436C400107E56 /* ExecutionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A56266B286436C400107E56 /* ExecutionError.swift */; };
 		3A56266E28645AE200107E56 /* OnDemandLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A56266D28645AE200107E56 /* OnDemandLocationProvider.swift */; };
 		3A60782F28BE1EA80000BF7A /* EnableTerrainCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A60782E28BE1EA80000BF7A /* EnableTerrainCommand.swift */; };
@@ -77,6 +78,8 @@
 		3A011CBA286343E9004713DA /* munich-animation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "munich-animation.json"; sourceTree = "<group>"; };
 		3A23E3EC28E42B3900ADC2AD /* 1tap-munich-recording-ios.json.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = "1tap-munich-recording-ios.json.gz"; sourceTree = "<group>"; };
 		3A23E3EE28E42D8800ADC2AD /* 1tap-munich.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "1tap-munich.json"; sourceTree = "<group>"; };
+		3A33396828B8C0480095E8D0 /* SetRenderCacheCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetRenderCacheCommand.swift; sourceTree = "<group>"; };
+		3A4D635629DC28E70053FEFC /* ResouceOptions+Update.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResouceOptions+Update.swift"; sourceTree = "<group>"; };
 		3A56266B286436C400107E56 /* ExecutionError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecutionError.swift; sourceTree = "<group>"; };
 		3A56266D28645AE200107E56 /* OnDemandLocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDemandLocationProvider.swift; sourceTree = "<group>"; };
 		3A60782E28BE1EA80000BF7A /* EnableTerrainCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnableTerrainCommand.swift; sourceTree = "<group>"; };
@@ -276,6 +279,7 @@
 				FE18AEE12840ED4D001B9E6F /* StyleURI+Decodable.swift */,
 				FE18AEEC2844F47B001B9E6F /* MapRecorder+Async.swift */,
 				FE79318428E2F6F800C08371 /* URL+Suffix.swift */,
+				3A4D635629DC28E70053FEFC /* ResouceOptions+Update.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -451,6 +455,7 @@
 				7412CF5E27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift in Sources */,
 				FE555B7E283774EF002751C7 /* SetOnlineStateCommand.swift in Sources */,
 				FE18AEE22840ED4D001B9E6F /* StyleURI+Decodable.swift in Sources */,
+				3A4D635729DC28E70053FEFC /* ResouceOptions+Update.swift in Sources */,
 				74F2381327E3730C009F304C /* WarmCacheBenchmark.swift in Sources */,
 				FE555B80283775F3002751C7 /* CameraOptions+Decodable.swift in Sources */,
 				74F237F127E3326E009F304C /* InitSDKBenchmark.swift in Sources */,

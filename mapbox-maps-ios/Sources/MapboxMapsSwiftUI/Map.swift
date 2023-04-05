@@ -224,7 +224,7 @@ extension Map {
     }
 
     /// Adds an action to perform when there is an error occured while loading the map.
-    public func onMapLoadingError(perform action: @escaping (MapEvent<MapLoadingErrorPayload>) -> Void) -> Self {
+    public func onMapLoadingError(perform action: @escaping (MapLoadingErrorPayload) -> Void) -> Self {
         append(\.mapDependencies.mapEventObservers, MapEventObserver(event: .mapLoadingError, action: action))
     }
 
@@ -239,17 +239,17 @@ extension Map {
     }
 
     /// Adds an action to perform when the requested style data is loaded.
-    public func onStyleDataLoaded(perform action: @escaping (MapEvent<StyleDataLoadedPayload>) -> Void) -> Self {
+    public func onStyleDataLoaded(perform action: @escaping (StyleDataLoadedPayload) -> Void) -> Self {
         append(\.mapDependencies.mapEventObservers, MapEventObserver(event: .styleDataLoaded, action: action))
     }
 
     /// Adds an action to perform when a source has been added with ``Style/addSource(_:id:)`` or ``Style/addSource(withId:properties:)``.
-    public func onSourceAdded(perform action: @escaping (MapEvent<SourceAddedPayload>) -> Void) -> Self {
+    public func onSourceAdded(perform action: @escaping (SourceAddedPayload) -> Void) -> Self {
         append(\.mapDependencies.mapEventObservers, MapEventObserver(event: .sourceAdded, action: action))
     }
 
     /// Adds an action to perform when a source has been removed with ``Style/removeSource(withId:)``.
-    public func onSourceRemoved(perform action: @escaping (MapEvent<SourceRemovedPayload>) -> Void) -> Self {
+    public func onSourceRemoved(perform action: @escaping (SourceRemovedPayload) -> Void) -> Self {
         append(\.mapDependencies.mapEventObservers, MapEventObserver(event: .sourceRemoved, action: action))
     }
 
@@ -259,11 +259,11 @@ extension Map {
     }
 
     /// Adds an action to perform when the map finished rendering a frame
-    public func onRenderFrameFinished(perform action: @escaping (MapEvent<RenderFrameFinishedPayload>) -> Void) -> Self {
+    public func onRenderFrameFinished(perform action: @escaping (RenderFrameFinishedPayload) -> Void) -> Self {
         append(\.mapDependencies.mapEventObservers, MapEventObserver(event: .renderFrameFinished, action: action))
     }
 
-    public func onResourceRequest(perform action: @escaping (MapEvent<ResourceRequestPayload>) -> Void) -> Self {
+    public func onResourceRequest(perform action: @escaping (ResourceRequestPayload) -> Void) -> Self {
         append(\.mapDependencies.mapEventObservers, MapEventObserver(event: .resourceRequest, action: action))
     }
 }

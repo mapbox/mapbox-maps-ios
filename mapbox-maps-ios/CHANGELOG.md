@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 10.13.0-beta.0 - April 5, 2023
+
 * Remove unnecessary check before updating a geo json source.
 * Enable zoom during a drag gesture.
 * Fix bearing value is fluctuating between initial value and correct value during a rotation gesture.
@@ -12,6 +14,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Fix visual jitter when an annotation dragging ends.
 * Fix missing feature properties for `nil`/`null` values.
 * Added experimental `tileCover` method to `MapboxMap` that returns tile ids covering the map.
+* Update MapboxCoreMaps to 10.13.0-beta.1 and MapboxCommon to 23.5.0-beta.1.
 
 ## 10.12.1 - March 29, 2023
 

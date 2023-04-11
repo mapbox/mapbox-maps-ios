@@ -32,6 +32,8 @@ targets:
     dependencies:
       - target: Examples
       - target: "CocoaImageHashing/CocoaImageHashing (iOS Framework)"
+    settings:
+      INFOPLIST_FILE: "build/${PROJECT}/Tests/MapboxMapsTests/Info.plist"
 
   MapboxMapsHTTPTests:
     templates:
@@ -92,6 +94,8 @@ targets:
       - path: build/${PROJECT}/Apps/Examples/ExamplesTests/
     dependencies:
       - target: Examples
+    settings:
+      INFOPLIST_FILE: "build/${PROJECT}/Apps/Examples/ExamplesTests/Info.plist"
 
   StressTestApp:
     deploymentTarget: 13.0

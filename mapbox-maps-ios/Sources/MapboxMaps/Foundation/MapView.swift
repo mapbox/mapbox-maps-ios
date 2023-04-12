@@ -706,6 +706,7 @@ extension MapView: DelegatingMapClientDelegate {
         }
 
         needsDisplayRefresh = true
+        OSLog.platform.signpostEvent("Set needs redraw")
     }
 
     internal func getMetalView(for metalDevice: MTLDevice?) -> MTKView? {

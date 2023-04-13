@@ -95,3 +95,4 @@ jobs:
       create-xcframework-always-run: true
       report_failure: true
       xcode: "13.1.0"
+  - sync-subtree

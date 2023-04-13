@@ -1,0 +1,6 @@
+when:
+  matches:
+    pattern: "release/v10.*"
+    value: << pipeline.git.branch >>
+jobs:
+  - sync-subtree

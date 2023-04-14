@@ -1,8 +1,10 @@
 when:
-  or:
-    - equal: [main, << pipeline.git.branch >>]
-    - equal: [develop, << pipeline.git.branch >>]
-    - << pipeline.git.tag >> # run for all tags
+  and:
+    - equal: [webhook, << pipeline.trigger_source >>] # Run only on git push
+    - or:
+        - equal: [main, << pipeline.git.branch >>]
+        - equal: [develop, << pipeline.git.branch >>]
+        - << pipeline.git.tag >> # run for all tags
 jobs:
   - build-benchmark:
       context:

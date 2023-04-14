@@ -1,4 +1,8 @@
-unless: << pipeline.parameters.turf-revision >>
+unless:
+  or:
+    - << pipeline.parameters.turf-revision >>
+    - equal: [scheduled_pipeline, << pipeline.trigger_source >>]
+
 jobs:
   - swiftlint:
       context:

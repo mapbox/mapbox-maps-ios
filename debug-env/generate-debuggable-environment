@@ -151,15 +151,17 @@ def checkout_repo(repo_name: str, repo_branch: str, org: str = "mapbox", checkou
         print("Cloning " + repo_name + "...")
         command = f"git clone --branch {repo_branch} git@github.com:{org}/{repo_name}.git {repo_name}"
         print(command)
-        os.system(command)
+        if os.system(command) != 0:
+            print("Failed to clone repo with branch rule. Trying again with clone & checkout...")
+            command = f"git clone git@github.com:{org}/{repo_name}.git {repo_name} && git -C {repo_name} checkout {repo_branch}"
+            print(command)
+            os.system(command)
     else:
         print("Fetching latest changes for " + repo_name + "...")
-        os.chdir(repo_name)
-        os.system("git reset --hard && git clean -dffx")
-        os.system("git fetch")
-        os.system("git checkout -f " + repo_branch + " --")
-        os.system("git pull origin " + repo_branch)
-        os.chdir("..")
+        os.system(f"git -C {repo_name} reset --hard && git -C {repo_name} clean -dffx")
+        os.system(f"git -C {repo_name} fetch")
+        os.system(f"git -C {repo_name} checkout -f {repo_branch} --")
+        os.system(f"git -C {repo_name} pull origin {repo_branch}")
 
     if checkout_submodules:
         print("Checkout submodules for " + repo_name + "...")

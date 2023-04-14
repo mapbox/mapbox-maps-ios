@@ -70,6 +70,13 @@ targets:
         - ExamplesTests
         - MapboxMapsTests
         - MapboxMapsHTTPTests
+      environmentVariables:
+        - variable: MAPBOX_MAPS_SIGNPOSTS_ENABLED
+          value: 1
+          isEnabled: false
+        - variable: MAPBOX_REOPEN_EXAMPLE
+          value: 1
+          isEnabled: true
     sources:
       - path: build/${PROJECT}/Apps/Examples/Examples/
   DebugApp:

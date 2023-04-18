@@ -8,8 +8,6 @@ steps:
       at: workspace
   - run:
       name: Create documentation pull requests
-      command: |
-        unzip workspace/api-docs.zip -d .
-        scripts/release/create-docs-prs.sh -p api-docs
+      command: scripts/release/create-docs-prs.sh
   - store-default-artifacts
   - slack-notify-failure-if-any

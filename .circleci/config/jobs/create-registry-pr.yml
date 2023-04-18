@@ -3,10 +3,23 @@ steps:
   - checkout-root
   - configure-environment:
       skip-dependencies: true
+  - install-gh
   - attach_workspace:
       at: workspace
-  - run: ls -lGA workspace
+  - run:
+      name: List workspace
+      command: ls -lGA workspace
+  - run:
+      name: Upload API docs
+      command: |
+        unzip -q workspace/api-docs.zip -d .
+        python3 -m pip install gitpython
+        scripts/release/upload-docs --jazzy-docs api-docs --docc-docs workspace/docc --version "$VERSION"
   - run:
       name: Create SDK Registry PR
-      command: scripts/release/create-api-downloads-pr.sh mobile-maps-ios "$VERSION"
+      command: SKIP_PRIVATE=true scripts/release/create-api-downloads-pr.sh mobile-maps-ios "$VERSION"
+  - persist_to_workspace:
+      root: .
+      paths:
+        - api-downloads-pr.txt
   - slack-notify-failure-if-any

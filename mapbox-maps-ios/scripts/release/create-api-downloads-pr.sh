@@ -10,78 +10,80 @@ set -euo pipefail
 PROJECT_ROOT=$1
 VERSION=$2
 
+SKIP_PRIVATE=${SKIP_PRIVATE:-false}
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+UTILS_PATH="$SCRIPT_DIR/../utils.sh"
+
+# shellcheck source=../utils.sh
+source "$UTILS_PATH"
+
 # Variables needed for github actions
 BRANCH_NAME="$PROJECT_ROOT/$VERSION"
-GITHUB_TOKEN=$(mbx-ci github writer private token)
-
 TMPDIR=$(mktemp -d)
 
-git clone "https://x-access-token:$GITHUB_TOKEN@github.com/mapbox/api-downloads.git" "$TMPDIR"
-cd "$TMPDIR" || exit 1
+git clone "https://x-access-token:$(mbx-ci github writer private token)@github.com/mapbox/api-downloads.git" "$TMPDIR"
+pushd "$TMPDIR" || exit 1
 echo "Checking out to $TMPDIR"
 git checkout -b "$BRANCH_NAME"
 
 #
 # Add config file for dynamic
 #
+generate_config() {
+  local project=$1
+  local version=$2
+  local suffix=$3
 
-cat << EOF > "config/$PROJECT_ROOT/$VERSION.yaml"
-api-downloads: v2
+  if [ -d "$HOME" ]; then
+    cat <<- EOF > "config/$project$suffix/$version.yaml"
+		api-downloads: v2
 
-bundles:
-  ios: MapboxMaps
-EOF
+		bundles:
+		  ios: MapboxMaps$suffix
+		EOF
+  fi
+}
 
-#
-# Add config file for static
-#
-
-if [ -d "config/$PROJECT_ROOT-static" ]; then
-	cat <<- EOF > config/"$PROJECT_ROOT-static/$VERSION.yaml"
-	api-downloads: v2
-
-	bundles:
-	  ios: MapboxMaps-static
-	EOF
+generate_config "$PROJECT_ROOT" "$VERSION" ""
+generate_config "$PROJECT_ROOT" "$VERSION" "-static"
+if [ "$SKIP_PRIVATE" = false ]; then
+  generate_config "$PROJECT_ROOT-private" "$VERSION-private" ""
 fi
 
 #
 # Commit to branch
 #
+
+git config --global user.email "maps_sdk_ios@mapbox.com"
+git config --global user.name "Release SDK bot for Maps SDK team"
+
 git add -A
 git commit -m "[maps-ios] Add config for $PROJECT_ROOT @ $VERSION"
 git push --set-upstream origin "$BRANCH_NAME"
 
 #
 # Create PR
-# Requires that GITHUB_TOKEN environment variable is set, which is done on line 17
 #
 
-git config --global user.email "maps_sdk_ios@mapbox.com"
-git config --global user.name "Release SDK bot for Maps SDK team"
+body="Bump maps version to ${VERSION}"
+GITHUB_TOKEN_WRITER=$(mbx-ci github writer private token)
 
-TITLE="Update config for $PROJECT_ROOT @ $VERSION"
-BODY_TEXT="Bump maps version"
-URL="https://api.github.com/repos/mapbox/api-downloads/pulls"
-BODY="{\"head\":\"$BRANCH_NAME\",\"base\":\"main\",\"title\":\"$TITLE\",\"body\":\"$BODY_TEXT\"}"
+PR_URL=$(GITHUB_TOKEN=$GITHUB_TOKEN_WRITER \
+    gh pr create \
+        --repo mapbox/api-downloads \
+        --base main \
+        --head "$BRANCH_NAME" \
+        --title "[maps, ios] Update config for $PROJECT_ROOT @ $VERSION" \
+        --body "$body")
+GITHUB_TOKEN="$GITHUB_TOKEN_WRITER" gh pr merge --auto --squash "$PR_URL"
+approve_pr() {
+  GITHUB_TOKEN=$(mbx-ci github writer private token) gh pr review "$PR_URL" --approve
+}
 
-CURL_RESULT=0
-HTTP_CODE=$(curl $URL \
-    --write-out %{http_code} \
-    --silent \
-    --output /dev/null \
-    -H "Authorization: token $GITHUB_TOKEN" \
-    -H "Accept: application/vnd.github.v3+json" \
-    -d "$BODY" -w "%{response_code}") || CURL_RESULT=$?
+echo "New PR: $PR_URL"
+repeat_command_until_it_fails "approve_pr" 15 20
 
-cd -
-rm -rf "$TMPDIR"
-
-if [[ $CURL_RESULT != 0 ]]; then
-    echo "Failed to create PR (curl error: $CURL_RESULT)"
-    exit $CURL_RESULT
-fi
-if [[ $HTTP_CODE != "201" ]]; then
-    echo "Failed to create PR (http code: $HTTP_CODE)"
-    exit 1
-fi
+pwd
+popd
+echo "$PR_URL" > "api-downloads-pr.txt"

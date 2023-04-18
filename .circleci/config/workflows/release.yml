@@ -3,7 +3,7 @@ jobs:
       context:
         - Slack Orb
         - SDK Registry Token
-      filters:
+      filters: &release-filters
         tags:
           only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
         branches:
@@ -14,109 +14,73 @@ jobs:
         - SDK Registry Token
       requires:
         - release-precheck
-      filters:
-        tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
-        branches:
-          ignore: /.*/
+      filters: *release-filters
   - build-dynamic:
       context:
         - Slack Orb
         - SDK Registry Token
       requires:
         - release-precheck
-      filters:
-        tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
-        branches:
-          ignore: /.*/
+      filters: *release-filters
   - build-static:
       context:
         - Slack Orb
         - SDK Registry Token
       requires:
         - release-precheck
-      filters:
-        tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
-        branches:
-          ignore: /.*/
+      filters: *release-filters
   - build-docs:
       context:
         - Slack Orb
         - SDK Registry Token
       requires:
         - release-precheck
-      filters:
-        tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
-        branches:
-          ignore: /.*/
+      filters: *release-filters
+  - generate-docc:
+      version: ${CIRCLE_TAG#v}-docc
+      context:
+        - Slack Orb
+        - SDK Registry Token
+      requires:
+        - release-precheck
+      filters: *release-filters
   - build-studio-preview:
       context:
         - Slack Orb
         - SDK Registry Token
       requires:
         - release-precheck
-      filters:
-        tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
-        branches:
-          ignore: /.*/
+      filters: *release-filters
   - check-api-compatibility:
       context:
         - Slack Orb
       requires:
         - build-baseline-sdk
         - build-dynamic
-      filters:
-        tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
-        branches:
-          ignore: /.*/
+      filters: *release-filters
   - create-registry-pr:
       context:
         - Slack Orb
       requires:
         - build-static
         - build-docs
+        - generate-docc
         - build-studio-preview
         - check-api-compatibility
-      filters:
-        tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
-        branches:
-          ignore: /.*/
-  - wait-registry-pr:
-      requires:
-        - create-registry-pr
-      type: approval
-      filters:
-        tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
-        branches:
-          ignore: /.*/
+      filters: *release-filters
   - check-registry:
       context:
         - Slack Orb
         - SDK Registry Token
       requires:
-        - wait-registry-pr
-      filters:
-        tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
-        branches:
-          ignore: /.*/
+        - create-registry-pr
+      filters: *release-filters
   - create-docs-prs:
       context:
         - Slack Orb
       requires:
         - check-registry
-      filters:
-        tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
-        branches:
-          ignore: /.*/
+      filters: *release-filters
   - update-examples:
       context:
         - Slack Orb
@@ -126,11 +90,7 @@ jobs:
         - Maps SDK/Public Mapbox Token
       requires:
         - check-registry
-      filters:
-        tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
-        branches:
-          ignore: /.*/
+      filters: *release-filters
   - publish-podspec:
       context:
         - Slack Orb
@@ -138,22 +98,14 @@ jobs:
         - SDK Registry Token
       requires:
         - check-registry
-      filters:
-        tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
-        branches:
-          ignore: /.*/
+      filters: *release-filters
   - validate-integrations:
       context:
         - Slack Orb
         - SDK Registry Token
       requires:
         - publish-podspec
-      filters:
-        tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
-        branches:
-          ignore: /.*/
+      filters: *release-filters
   - create-draft-release:
       context:
         - Slack Orb
@@ -161,8 +113,4 @@ jobs:
         - create-docs-prs
         - update-examples
         - validate-integrations
-      filters:
-        tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
-        branches:
-          ignore: /.*/
+      filters: *release-filters

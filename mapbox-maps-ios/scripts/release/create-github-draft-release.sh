@@ -40,8 +40,8 @@ main() {
 $CHANGELOG
 
 ### Dependencies
-* Update to MapboxCommon to \`$MAPBOX_COMMON_VERSION\` (PR link).
-* Update to MapboxCoreMaps to \`$MAPBOX_COREMAPS_VERSION\` (RP link):
+* Update MapboxCommon to \`$MAPBOX_COMMON_VERSION\`.
+* Update MapboxCoreMaps to \`$MAPBOX_COREMAPS_VERSION\`:
   * <details> <summary>Changelog </summary>
     $GL_NATIVE_PUBLIC_MARKDOWN_CHANGELOG
 </details>

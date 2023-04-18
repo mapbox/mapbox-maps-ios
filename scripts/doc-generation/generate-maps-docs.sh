@@ -78,7 +78,7 @@ checkout_source_code() {
         git worktree add "$new_worktree_path" "$git_ref"
         # shellcheck disable=SC2064
         trap "git worktree remove $new_worktree_path --force" INT TERM HUP EXIT
-        git -C "$new_worktree_path" submodule update --init
+        git -C "$new_worktree_path" submodule update --init mapbox-maps-ios/scripts/doc-generation/jazzy-theme
     } &> "$VERBOSE_LOGGER"
 }
 

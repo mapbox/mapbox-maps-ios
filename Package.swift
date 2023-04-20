@@ -3,10 +3,10 @@
 
 import PackageDescription
 
-let coreVersion = "11.0.0-SNAPSHOT.0322T1320Z.ae46035"
-let coreChecksum = "5eee9732f78a9cec9b85cc83eeac8db440bb161a04aff879bbe52607567cc8f5"
-let commonVersion = "23.5.0-SNAPSHOT.0321T1613Z.cc81dc2"
-let commonChecksum = "34e96f7c3b1eeab4c9257d3fdd91a2b353defa6a7c17099c0dd848b3fcb5c468"
+let coreVersion = "11.0.0-SNAPSHOT.0418T1856Z.c0107ce"
+let coreChecksum = "2b0b07d0f343eaa7338024496b00b4a0e0dfb6d013b7124ae31c1fd37d82e4bc"
+let commonVersion = "23.5.0-SNAPSHOT.0406T1327Z.57bf717"
+let commonChecksum = "38f4900c26a30aa944b059c5a8c7f38d692cec01fd1c10bee1b11afc35518bba"
 
 func folder(_ version: String) -> String { version.contains("SNAPSHOT") ? "snapshots" : "releases" }
 

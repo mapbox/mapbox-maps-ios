@@ -22,6 +22,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Added experimental `tileCover` method to `MapboxMap` that returns tile ids covering the map.
 * Expose `owner` property for `CameraAnimator` protocol
 * Updated core styles to the latest versions.
+* Merge `TilesetDescriptorOptions` and `TilesetDescriptorOptionsForTilesets`. To enable tileset descriptor creation for a list of tilesets that are not part of the original style use `TilesetDescriptorOptions`. 
 
 ## 10.12.0 - March 22, 2023
 

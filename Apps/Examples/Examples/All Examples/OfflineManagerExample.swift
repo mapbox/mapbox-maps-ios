@@ -120,7 +120,7 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
 
         // 2. Create an offline region with tiles for the outdoors style
         let outdoorsOptions = TilesetDescriptorOptions(styleURI: .outdoors,
-                                                       zoomRange: 0...16)
+                                                       zoomRange: 0...16, tilesets: nil)
 
         let outdoorsDescriptor = offlineManager.createTilesetDescriptor(for: outdoorsOptions)
 

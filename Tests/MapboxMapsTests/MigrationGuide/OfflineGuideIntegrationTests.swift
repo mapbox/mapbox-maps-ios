@@ -60,7 +60,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
                                                                              tileStore: tileStore))
 
         // 1. Create the tile set descriptor
-        let options = TilesetDescriptorOptions(styleURI: .outdoors, zoomRange: 0...16)
+        let options = TilesetDescriptorOptions(styleURI: .outdoors, zoomRange: 0...16, tilesets: nil)
         let tilesetDescriptor = offlineManager.createTilesetDescriptor(for: options)
 
         // 2. Create the TileRegionLoadOptions
@@ -164,7 +164,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
                                                                              tileStore: tileStore))
 
         // Create the tile set descriptor
-        let options = TilesetDescriptorOptions(styleURI: .outdoors, zoomRange: 0...16)
+        let options = TilesetDescriptorOptions(styleURI: .outdoors, zoomRange: 0...16, tilesets: nil)
         let tilesetDescriptor = offlineManager.createTilesetDescriptor(for: options)
 
         let handleCancelation = {

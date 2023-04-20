@@ -37,7 +37,7 @@ final class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
         // Setup TileRegionLoadOptions
         let outdoorsOptions = TilesetDescriptorOptions(styleURI: .outdoors,
-                                                       zoomRange: 0...16)
+                                                       zoomRange: 0...16, tilesets: nil)
 
         let outdoorsDescriptor = offlineManager.createTilesetDescriptor(for: outdoorsOptions)
 

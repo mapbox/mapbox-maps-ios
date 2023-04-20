@@ -92,3 +92,7 @@ Func Snapshotter.camera(for:padding:bearing:pitch:) has parameter 1 type change 
 
 // Expose CameraAnimator.owner
 Var CameraAnimator.owner has been added as a protocol requirement
+
+// Merge TilesetDescriptorOptions and TilesetDescriptorOptionsForTilesets
+Constructor TilesetDescriptorOptions.init(styleURI:zoomRange:pixelRatio:stylePackOptions:) has been removed
+Constructor TilesetDescriptorOptionsForTilesets.init(tilesets:zoomRange:pixelRatio:) has been removed

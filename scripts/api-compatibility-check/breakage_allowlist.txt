@@ -89,3 +89,6 @@ Var SymbolLayer.visibility has declared type change from MapboxMaps.Value<Mapbox
 // Make Padding argument optional
 Func MapboxMap.camera(for:padding:bearing:pitch:) has parameter 1 type change from UIKit.UIEdgeInsets to UIKit.UIEdgeInsets?
 Func Snapshotter.camera(for:padding:bearing:pitch:) has parameter 1 type change from UIKit.UIEdgeInsets to UIKit.UIEdgeInsets?
+
+// Expose CameraAnimator.owner
+Var CameraAnimator.owner has been added as a protocol requirement

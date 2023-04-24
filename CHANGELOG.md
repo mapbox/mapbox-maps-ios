@@ -20,6 +20,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Sync map size to the size of the metal view.
 * Fix missing feature properties for `nil`/`null` values.
 * Added experimental `tileCover` method to `MapboxMap` that returns tile ids covering the map.
+* Updated core styles to the latest versions.
 
 ## 10.12.0 - March 22, 2023
 

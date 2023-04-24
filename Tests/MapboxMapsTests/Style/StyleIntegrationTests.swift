@@ -163,7 +163,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             XCTFail("There should be valid MapView and Style objects created by setUp.")
             return
         }
-        let expectedLayerCount = 111 // The current number of layers
+        let expectedLayerCount = 134 // The current number of layers
 
         let expectation = XCTestExpectation(description: "Getting style layers succeeded")
         expectation.expectedFulfillmentCount = expectedLayerCount

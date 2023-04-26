@@ -114,6 +114,7 @@ internal final class Puck2D: Puck {
             content: nil)
     }
 
+    // swiftlint:disable:next function_body_length
     private func updateLayer() {
         guard isActive, let location = latestLocation else {
             return

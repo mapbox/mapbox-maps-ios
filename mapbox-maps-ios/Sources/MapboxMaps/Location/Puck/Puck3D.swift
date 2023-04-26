@@ -52,6 +52,7 @@ internal final class Puck3D: Puck {
         self.interpolatedLocationProducer = interpolatedLocationProducer
     }
 
+    // swiftlint:disable:next function_body_length
     private func updateSourceAndLayer() {
         guard isActive, let location = interpolatedLocationProducer.location else {
             return

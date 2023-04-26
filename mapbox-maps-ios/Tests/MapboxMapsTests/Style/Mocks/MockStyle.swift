@@ -118,7 +118,8 @@ final class MockStyle: StyleProtocol {
         var content: ImageContent?
     }
     let addImageStub = Stub<AddImageParams, Void>()
-    //swiftlint:disable function_parameter_count
+
+    // swiftlint:disable:next function_parameter_count
     func addImage(_ image: UIImage,
                   id: String,
                   sdf: Bool,

@@ -1,8 +1,16 @@
 executor: xcode-latest
 steps:
   - checkout-root
-  - run: brew install swiftlint
-  - run: swiftlint lint --strict --reporter junit | tee result.xml
+  - install-gh
+  - install-mbx-ci
+  - run:
+        name: Install SwiftLint
+        command: |
+            GITHUB_TOKEN="$(mbx-ci github reader token)" gh -R realm/SwiftLint release download --pattern "SwiftLint.pkg"
+            sudo installer -pkg SwiftLint.pkg -target /
+  - run:
+        name: Run swiftlint
+        command: scripts/run_swiftlint.sh --strict --reporter junit | tee result.xml
   - store_artifacts:
       path: result.xml
   - store_test_results:

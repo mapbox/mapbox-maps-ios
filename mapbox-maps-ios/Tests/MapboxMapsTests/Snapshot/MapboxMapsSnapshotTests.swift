@@ -3,8 +3,6 @@ import MapboxMaps
 import Foundation
 import UIKit
 
-//swiftlint:disable explicit_top_level_acl explicit_acl
-
 class MapboxMapsSnapshotTests: XCTestCase {
 
     var newAttachment: XCTAttachment!

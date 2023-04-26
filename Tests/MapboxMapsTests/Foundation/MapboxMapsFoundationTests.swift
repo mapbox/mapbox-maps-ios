@@ -3,7 +3,6 @@ import CoreLocation
 import UIKit
 @testable import MapboxMaps
 
-// swiftlint:disable explicit_top_level_acl explicit_acl
 class MapboxMapsFoundationTests: XCTestCase {
 
     var mapView: MapView!

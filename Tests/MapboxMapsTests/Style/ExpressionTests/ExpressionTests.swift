@@ -15,7 +15,6 @@ final class ExpressionTests: XCTestCase {
         XCTAssertEqual(sumExp.arguments[0], .number(10))
         XCTAssertEqual(sumExp.arguments[1], .number(12))
     }
-    //swiftlint:enable statement_position
 
     // Validates basic expression semantics
     func expressionValidator(exp: Exp) {

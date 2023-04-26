@@ -162,6 +162,7 @@ public class Snapshotter {
         }
     }
 
+    // swiftlint:disable:next function_body_length
     private func overlaySnapshotWith(
         attributions: [Attribution],
         snapshotImage uiImage: UIImage,

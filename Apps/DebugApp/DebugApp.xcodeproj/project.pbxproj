@@ -122,8 +122,9 @@
 		35F08DD02347987700768B9F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1100;
-				LastUpgradeCheck = 1340;
+				LastUpgradeCheck = 1430;
 				ORGANIZATIONNAME = "Mapbox Inc";
 				TargetAttributes = {
 					35F08DD72347987700768B9F = {
@@ -165,6 +166,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		1F61E3E423AC170100FAE7C2 /* Insert Mapbox Token */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);

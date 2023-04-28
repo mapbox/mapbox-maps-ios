@@ -81,21 +81,28 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         }
     }
 
-    private enum PuckImage {
+    private enum PuckImage: CaseIterable {
         case star
+        case jpegSquare
         case blueDot
 
         var image: UIImage? {
             switch self {
             case .star:
                 return UIImage(named: "star")
+            case .jpegSquare:
+                return UIImage(named: "jpeg-image")
             case .blueDot:
                 return .none
             }
         }
 
         mutating func toggle() {
-            self = self == .blueDot ? .star : .blueDot
+            var idx = Self.allCases.firstIndex(of: self)! + 1
+            if idx == Self.allCases.count {
+                idx = 0
+            }
+            self = Self.allCases[idx]
         }
     }
 

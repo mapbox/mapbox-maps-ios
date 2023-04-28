@@ -4,31 +4,30 @@ import UIKit
 
 extension UIImage {
 
-    /// Initialize a `UIImage` with an internal `Image` type, using a givens scale.
+    /// Initialize a `UIImage` with an internal `Image` type, using a given scale.
     /// - Parameters:
-    ///   - mbxImage: The internal `Image` type to use for the `UIImage`.
+    ///   - mbmImage: The internal `Image` type to use for the `UIImage`.
     ///   - scale: The scale of the new `UIImage`.
-    internal convenience init?(mbxImage: Image, scale: CGFloat = UIScreen.main.scale) {
-        let cgImage = mbxImage.cgImage().takeRetainedValue()
-
-        let size = CGSize(width: CGFloat(CGFloat(mbxImage.width) / scale),
-                          height: CGFloat(CGFloat(mbxImage.height) / scale))
-
-        let format = UIGraphicsImageRendererFormat()
-        format.scale = scale
-        format.opaque = false
-
-        let rect = CGRect(origin: .zero, size: size)
-
-        let renderer = UIGraphicsImageRenderer(bounds: rect, format: format)
-
-        let generated = renderer.image { ( rendererContext )  in
-            let context = rendererContext.cgContext
-            context.draw(cgImage, in: rect)
+    internal convenience init?(mbmImage: Image, scale: CGFloat = UIScreen.main.scale) {
+        guard let dataProvider = CGDataProvider(data: mbmImage.data.data as CFData) else {
+            return nil
         }
 
-        guard let generatedImage = generated.cgImage else { return nil }
-
-        self.init(cgImage: generatedImage, scale: scale, orientation: .downMirrored)
+        let bitmapInfo = CGImageByteOrderInfo.orderDefault.rawValue |
+            // TODO: should be .premultipliedLast, headless metal backend returns non-premultiplied image
+            CGImageAlphaInfo.last.rawValue
+        let cgImage = CGImage(width: Int(mbmImage.width),
+                              height: Int(mbmImage.height),
+                              bitsPerComponent: 8,
+                              bitsPerPixel: 32,
+                              bytesPerRow: Int(mbmImage.width) * 4,
+                              space: CGColorSpaceCreateDeviceRGB(),
+                              bitmapInfo: CGBitmapInfo(rawValue: bitmapInfo),
+                              provider: dataProvider,
+                              decode: nil,
+                              shouldInterpolate: false,
+                              intent: .defaultIntent)
+        guard let image = cgImage else { return nil }
+        self.init(cgImage: image, scale: scale, orientation: .up)
     }
 }

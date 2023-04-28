@@ -813,7 +813,7 @@ public final class Style: StyleProtocol {
             return nil
         }
 
-        return UIImage(mbxImage: mbmImage)
+        return UIImage(mbmImage: mbmImage)
     }
 
     // MARK: - Light

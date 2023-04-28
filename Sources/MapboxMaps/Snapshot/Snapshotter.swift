@@ -127,7 +127,7 @@ public class Snapshotter {
                 return
             }
 
-            let mbxImage = snapshot.image()
+            let mbmImage = snapshot.moveImage()
             let pointForCoordinate = { (coordinate: CLLocationCoordinate2D) -> CGPoint in
                 return snapshot.screenCoordinate(for: coordinate).point
             }
@@ -140,7 +140,8 @@ public class Snapshotter {
                 pointForCoordinate: pointForCoordinate,
                 coordinateForPoint: coordinateForPoint
             )
-            guard let uiImage = UIImage(mbxImage: mbxImage, scale: scale) else {
+            guard let mbmImage = mbmImage,
+                let uiImage = UIImage(mbmImage: mbmImage, scale: scale) else {
                 completion(.failure(.snapshotFailed(reason: "Could not convert internal Image type to UIImage.")))
                 return
             }
@@ -220,6 +221,10 @@ public class Snapshotter {
 
                 // First draw the snaphot image into the context
                 let context = rendererContext.cgContext
+
+                // image needs to be flipped vertically
+                context.translateBy(x: 0, y: uiImage.size.height)
+                context.scaleBy(x: 1, y: -1)
 
                 if let cgImage = uiImage.cgImage {
                     context.draw(cgImage, in: rect)
@@ -400,9 +405,8 @@ extension Snapshotter {
 
             let scale = image.scale
 
-            // Image from mbxImage is flipped vertically
             let scaledCropRect = CGRect(x: rect.origin.x * scale,
-                                        y: (image.size.height - rect.origin.y - rect.height) * scale,
+                                        y: rect.origin.y * scale,
                                         width: rect.width * scale,
                                         height: rect.height * scale)
 
@@ -427,7 +431,7 @@ extension Snapshotter {
                 ciImage = filter.outputImage!
             }
 
-            ciImage = ciImage.oriented(.downMirrored)
+            ciImage = ciImage.oriented(.up)
 
             let cicontext = CIContext(options: nil)
             blurredImage = cicontext.createCGImage(ciImage, from: extent)
@@ -445,7 +449,10 @@ extension Snapshotter {
             context.restoreGState()
         }
 
-        context.translateBy(x: logoView.frame.origin.x, y: logoView.frame.origin.y)
+        // image needs to be flipped vertically
+        context.translateBy(x: logoView.frame.origin.x, y: -(CGFloat(context.height) - logoView.frame.height))
+        context.scaleBy(x: 1, y: -1)
+
         logoView.layer.render(in: context)
     }
 
@@ -455,7 +462,9 @@ extension Snapshotter {
             context.restoreGState()
         }
 
-        context.translateBy(x: attributionView.frame.origin.x, y: attributionView.frame.origin.y)
+        // image needs to be flipped vertically
+        context.translateBy(x: attributionView.frame.origin.x, y: -(CGFloat(context.height) - attributionView.frame.height))
+        context.scaleBy(x: 1, y: -1)
         attributionView.layer.contents = blurredImage
         attributionView.layer.render(in: context)
     }

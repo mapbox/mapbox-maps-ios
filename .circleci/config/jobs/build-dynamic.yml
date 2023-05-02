@@ -33,6 +33,11 @@ steps:
               VERSION=$(sdk-ci semver compute-snapshot-version)
               echo "Snapshot version $VERSION"
               echo "export VERSION=${VERSION}" >> $BASH_ENV
+              echo "export VERSION=${VERSION}" > snapshot-version
+        - persist_to_workspace:
+            root: .
+            paths:
+              - snapshot-version
   - run:
       name: Build dynamic SDK
       command: ./package-mapbox-maps.sh dynamic

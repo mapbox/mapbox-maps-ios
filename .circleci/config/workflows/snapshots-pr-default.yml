@@ -16,3 +16,9 @@ jobs:
       project-name: mobile-maps-ios-preview
       requires: 
         - trigger-build-snapshot
+  - validate-integrations-for-branch:
+      context:
+        - Slack Orb
+        - SDK Registry Token
+      requires:
+        - build-snapshot

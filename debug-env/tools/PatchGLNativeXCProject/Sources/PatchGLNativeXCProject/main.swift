@@ -64,7 +64,8 @@ class GLNativeProject {
                     "LLVM_LTO",
                     "CLANG_DEBUG_INFORMATION_LEVEL",
                     "EXECUTABLE_PREFIX",
-                    "FRAMEWORK_VERSION"
+                    "FRAMEWORK_VERSION",
+                    "TARGET_TEMP_DIR",
                 ]
                 for buildSetting in buildSettingsToNil {
                     buildConfiguration.buildSettings[buildSetting] = nil

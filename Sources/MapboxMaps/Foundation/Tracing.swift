@@ -9,14 +9,13 @@ internal enum SignpostName {
 }
 
 internal extension OSLog {
-    @available(iOS 12, *)
     private static let _poi = OSLog(subsystem: subsystem, category: .pointsOfInterest)
     private static let _platform = OSLog(subsystem: subsystem, category: "platform")
     private static let tracingEnabled = setupTracing()
 
     static let platform: OSLog = tracingEnabled ? _platform : .disabled
     static let poi: OSLog = {
-        if #available(iOS 12, *), tracingEnabled {
+        if tracingEnabled {
             return ._poi
         } else {
             return .disabled
@@ -27,7 +26,7 @@ internal extension OSLog {
     func signpostEvent(_ name: StaticString, message: String? = nil) {
         if #available(iOS 15, *) {
             OSSignposter(logHandle: self).emitEvent(name)
-        } else if #available(iOS 12, *) {
+        } else {
             signpost(.event, log: self, name: name, message)
         }
     }
@@ -35,7 +34,7 @@ internal extension OSLog {
     func beginInterval(_ name: StaticString, beginMessage: String? = nil) -> SignpostInterval? {
         guard OSLog.tracingEnabled else { return nil }
 
-        guard let intervalType = classForSignpostInterval() else { return nil }
+        let intervalType = classForSignpostInterval()
         return intervalType.init(log: self,
                                  intervalName: name,
                                  message: beginMessage)
@@ -48,19 +47,15 @@ internal extension OSLog {
         return try task()
     }
 
-    private func classForSignpostInterval() -> SignpostInterval.Type? {
+    private func classForSignpostInterval() -> SignpostInterval.Type {
         if #available(iOS 15, *) {
             return SignpostIntervalV15.self
-        } else if #available(iOS 12, *) {
-            return SignpostIntervalV12.self
-        } else {
-            return nil
         }
+        return SignpostIntervalV12.self
     }
 }
 
 /// Provides easy-to-use API for signposting intervals.
-/// `SignpostInterval` can be seamlesly used from any iOS version, but will be reported only on iOS 12+.
 internal protocol SignpostInterval {
     init(log: OSLog, intervalName: StaticString, message: String?)
     func end()
@@ -73,7 +68,6 @@ extension SignpostInterval {
     }
 }
 
-@available(iOS 12.0, *)
 internal struct SignpostIntervalV12: SignpostInterval {
     let log: OSLog
     let intervalName: StaticString
@@ -92,7 +86,6 @@ internal struct SignpostIntervalV12: SignpostInterval {
     }
 }
 
-@available(iOS 12, *)
 private func signpost(_ type: OSSignpostType, log: OSLog, name: StaticString, signpostID: OSSignpostID = .exclusive, _ message: String? = nil) {
     if let message = message {
         os_signpost(type, log: log, name: name, signpostID: signpostID, "%s", message)

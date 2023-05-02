@@ -96,7 +96,7 @@ targets:
   MapboxTestHost:
     type: application
     platform: iOS
-    deploymentTarget: "11.0"
+    deploymentTarget: "12.0"
     settings:
       base:
         ENABLE_BITCODE: "NO"

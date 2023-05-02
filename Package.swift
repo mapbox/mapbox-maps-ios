@@ -13,7 +13,7 @@ func folder(_ version: String) -> String { version.contains("SNAPSHOT") ? "snaps
 let package = Package(
     name: "MapboxMaps",
     defaultLocalization: "en",
-    platforms: [.iOS(.v11)],
+    platforms: [.iOS(.v12)],
     products: [
         .library(
             name: "MapboxMaps",

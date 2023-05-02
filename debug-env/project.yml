@@ -4,7 +4,7 @@ options:
   bundleIdPrefix: com.mapbox
   settingPresets: project
   deploymentTarget:
-    iOS: 11.0
+    iOS: 12.0
 settings:
   DEVELOPMENT_TEAM: GJZR2MEM28
   TARGETED_DEVICE_FAMILY: 1,2

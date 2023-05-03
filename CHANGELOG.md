@@ -4,11 +4,16 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
-## 10.13.0-rc.0 - April 19, 2023
+## 10.13.0 - May 3, 2023
 
-* Update MapboxCoreMaps to 10.13.0-rc.1 and MapboxCommon to 23.5.0-rc.1.
+* Remove XCFramework binary dependency on MapboxMobileEvents.
+* Update MapboxCoreMaos to 10.13.0 and MapboxCommon to 23.5.0
 
-## 10.13.0-beta.0 - April 5, 2023
+## 10.13.0-rc.1 - April 19, 2023
+
+* Update MapboxCoreMaps to 10.13.0-rc.1 and MapboxCommon to 23.5.0-rc.1. 
+
+## 10.13.0-beta.1 - April 5, 2023
 
 * Remove unnecessary check before updating a geo json source.
 * Enable zoom during a drag gesture.

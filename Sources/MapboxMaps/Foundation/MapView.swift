@@ -516,21 +516,21 @@ open class MapView: UIView {
 
     @available(iOS 13.0, *)
     @objc private func sceneDidActivate(_ notification: Notification) {
-        guard notification.object as? UIScene == window?.parentScene else { return }
+        guard let scene = notification.object as? UIScene, let window = window, scene.allWindows.contains(window) else { return }
 
         displayLink?.isPaused = false
     }
 
     @available(iOS 13, *)
     @objc private func sceneWillDeactivate(_ notification: Notification) {
-        guard notification.object as? UIScene == window?.parentScene else { return }
+        guard let scene = notification.object as? UIScene, let window = window, scene.allWindows.contains(window) else { return }
 
         displayLink?.isPaused = true
     }
 
     @available(iOS 13, *)
     @objc private func sceneDidEnterBackground(_ notification: Notification) {
-        guard notification.object as? UIScene == window?.parentScene else { return }
+        guard let scene = notification.object as? UIScene, let window = window, scene.allWindows.contains(window) else { return }
 
         displayLink?.isPaused = true
         reduceMemoryUse()

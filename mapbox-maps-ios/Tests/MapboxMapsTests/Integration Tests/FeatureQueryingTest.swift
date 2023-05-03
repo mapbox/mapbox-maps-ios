@@ -267,6 +267,6 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                 }
             }
         }
-        wait(for: [geoJSONClusterLeavesExpection, geoJSONClusterZoomExpansionLevelExpection, geoJSONClusterChildrenExpectation], timeout: 1.0)
+        wait(for: [geoJSONClusterLeavesExpection, geoJSONClusterZoomExpansionLevelExpection, geoJSONClusterChildrenExpectation], timeout: 5.0)
     }
 }

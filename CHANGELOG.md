@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Remove XCFramework binary dependency on MapboxMobileEvents.
+
 ## 10.13.0-rc.1 - April 19, 2023
 
 * Update MapboxCoreMaps to 10.13.0-rc.1 and MapboxCommon to 23.5.0-rc.1. 

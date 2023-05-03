@@ -41,4 +41,3 @@ targets:
       - framework: "../MapboxCoreMaps.xcframework"
       - framework: "../Turf.xcframework"
       - framework: "../MapboxCommon.xcframework"
-      - framework: "../MapboxMobileEvents.xcframework"

@@ -4,10 +4,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
-## 10.13.0 - May 3, 2023
+## 10.13.1 - May 5, 2023
 
 * Remove XCFramework binary dependency on MapboxMobileEvents.
-* Update MapboxCoreMaos to 10.13.1 and MapboxCommon to 23.5.0
+* Update MapboxCoreMaps to 10.13.1 and MapboxCommon to 23.5.0
+* [CarPlay] Fix display link is not correctly paused/resumed when map is added to a CarPlay dashboard scene.
 
 ## 10.13.0-rc.1 - April 19, 2023
 

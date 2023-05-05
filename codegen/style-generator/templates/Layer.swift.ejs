@@ -55,6 +55,9 @@ import Foundation
     <%if (!isExperimental && property.experimental) { -%>@_spi(Experimental) <% } -%>public var <%- camelizeWithLeadingLowercase(property.name) _%>Transition: StyleTransition?
     <%_ } -%>
     <%_ } -%>
+    <%_ if (type == 'model' && !paintProperties.includes('model-opacity')) { %>
+    internal var modelOpacity: Value<Double>?
+    <%_ } -%>
 
     public init(id: String) {
         self.id = id
@@ -78,6 +81,9 @@ import Foundation
         <%_ if (property.transition && !deprecatedTransitionProperties.includes(property.name)) { -%>
         try paintContainer.encodeIfPresent(<%- camelizeWithLeadingLowercase(property.name) %>Transition, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>Transition)
         <%_ } -%>
+        <%_ } -%>
+        <%_ if (type == 'model' && !paintProperties.includes('model-opacity')) { %>
+        try paintContainer.encodeIfPresent(modelOpacity, forKey: .modelOpacity)
         <%_ } -%>
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
@@ -148,6 +154,9 @@ import Foundation
         <%_ if (property.transition && !deprecatedTransitionProperties.includes(property.name)) { -%>
         case <%- camelizeWithLeadingLowercase(property.name) %>Transition = "<%- property.name %>-transition"
         <%_ } -%>
+        <%_ } -%>
+        <%_ if (type == 'model' && !paintProperties.includes('model-opacity')) { %>
+        case modelOpacity = "model-opacity"
         <%_ } -%>
     }
 }

@@ -82,6 +82,8 @@ final class ModelLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfPaintProperties() {
        var layer = ModelLayer(id: "test-id")
+       layer.modelAmbientOcclusionIntensity = Value<Double>.testConstantValue()
+       layer.modelAmbientOcclusionIntensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.modelCastShadows = Value<Bool>.testConstantValue()
        layer.modelColor = Value<StyleColor>.testConstantValue()
        layer.modelColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -94,9 +96,10 @@ final class ModelLayerTests: XCTestCase {
        layer.modelRotationTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.modelScale = Value<[Double]>.testConstantValue()
        layer.modelScaleTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.modelScaleMode = Value<ModelScaleMode>.testConstantValue()
        layer.modelTranslation = Value<[Double]>.testConstantValue()
        layer.modelTranslationTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.modelType = .constant(.common3d)
+       layer.modelType = Value<ModelType>.testConstantValue()
 
        var data: Data?
        do {
@@ -113,6 +116,7 @@ final class ModelLayerTests: XCTestCase {
        do {
            let decodedLayer = try JSONDecoder().decode(ModelLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
+           XCTAssert(layer.modelAmbientOcclusionIntensity == Value<Double>.testConstantValue())
            XCTAssert(layer.modelCastShadows == Value<Bool>.testConstantValue())
            XCTAssert(layer.modelColor == Value<StyleColor>.testConstantValue())
            XCTAssert(layer.modelColorMixIntensity == Value<Double>.testConstantValue())
@@ -120,8 +124,9 @@ final class ModelLayerTests: XCTestCase {
            XCTAssert(layer.modelReceiveShadows == Value<Bool>.testConstantValue())
            XCTAssert(layer.modelRotation == Value<[Double]>.testConstantValue())
            XCTAssert(layer.modelScale == Value<[Double]>.testConstantValue())
+           XCTAssert(layer.modelScaleMode == Value<ModelScaleMode>.testConstantValue())
            XCTAssert(layer.modelTranslation == Value<[Double]>.testConstantValue())
-           XCTAssert(layer.modelType == .constant(.common3d))
+           XCTAssert(layer.modelType == Value<ModelType>.testConstantValue())
        } catch {
            XCTFail("Failed to decode ModelLayer")
        }

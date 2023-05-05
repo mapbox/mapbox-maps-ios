@@ -52,7 +52,8 @@ public enum LayerType: String, Codable {
             .hillshade,
             .background,
             .locationIndicator,
-            .sky
+            .sky,
+            .model,
         ]
 
         guard let matchingCase = supportedTypes.first(where: { $0.rawValue == rawValue }) else {
@@ -88,7 +89,7 @@ public enum LayerType: String, Codable {
         case .sky:
             return SkyLayer.self
         case .model:
-            fatalError("Not supported")
+            return ModelLayer.self
         }
     }
 }

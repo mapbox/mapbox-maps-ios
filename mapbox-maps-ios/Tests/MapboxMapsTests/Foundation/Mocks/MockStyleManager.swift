@@ -477,6 +477,14 @@ class MockStyleManager: StyleManagerProtocol {
     func __setStyleGeoJSONSourceDataForSourceId(_ sourceId: String, dataId: String, data: MapboxCoreMaps.GeoJSONSourceData) -> Expected<NSNull, NSString> {
         setStyleGeoJSONSourceDataForSourceIdDataIDStub.call(with: .init(sourceId: sourceId, dataId: dataId, data: data))
     }
+
+    struct AddStyleModelParams {
+        let modelId, modelUri: String
+    }
+    let addStyleModelStub = Stub<AddStyleModelParams, Expected<NSNull, NSString>>(defaultReturnValue: .init(value: NSNull()))
+    func addStyleModel(forModelId modelId: String, modelUri: String) -> Expected<NSNull, NSString> {
+        addStyleModelStub.call(with: AddStyleModelParams(modelId: modelId, modelUri: modelUri))
+    }
 }
 
 struct NonEncodableLayer: Layer {

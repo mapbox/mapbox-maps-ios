@@ -351,20 +351,6 @@ extension SkyType {
     }
 }
 
-// MARK: MODEL_SCALE_MODE
-
-extension Value where T == ModelScaleMode {
-    static func testConstantValue() -> Value<ModelScaleMode> {
-        return .constant(ModelScaleMode.testConstantValue())
-    }
-}
-
-extension ModelScaleMode {
-    static func testConstantValue() -> ModelScaleMode {
-        return ModelScaleMode(rawValue: "map")!
-    }
-}
-
 // MARK: MODEL_TYPE
 
 extension Value where T == ModelType {

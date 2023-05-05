@@ -29,18 +29,9 @@ final class ModelLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.visibility = .constant(.visible)
             layer.modelId = Value<String>.testConstantValue()
 
-            layer.modelCastShadows = Value<Bool>.testConstantValue()
-            layer.modelColor = Value<StyleColor>.testConstantValue()
-            layer.modelColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.modelColorMixIntensity = Value<Double>.testConstantValue()
-            layer.modelColorMixIntensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.modelOpacity = Value<Double>.testConstantValue()
-            layer.modelOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.modelReceiveShadows = Value<Bool>.testConstantValue()
             layer.modelRotationTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.modelScaleTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.modelTranslationTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.modelType = .constant(.common3d)
+            layer.modelType = Value<ModelType>.testConstantValue()
 
             // Add the layer
             do {

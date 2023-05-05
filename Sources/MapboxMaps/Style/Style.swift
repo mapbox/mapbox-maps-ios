@@ -1008,6 +1008,15 @@ public final class Style: StyleProtocol {
         return styleManager.getStyleAtmosphereProperty(forProperty: property)
     }
 
+    // MARK: Model
+
+    /// :nodoc:
+    @_spi(Experimental) public func addStyleModel(modelId: String, modelUri: String) throws {
+        try handleExpected {
+            _styleManager.addStyleModel(forModelId: modelId, modelUri: modelUri)
+        }
+    }
+
     // MARK: - Custom geometry
 
     /// Adds a custom geometry to be used in the style.

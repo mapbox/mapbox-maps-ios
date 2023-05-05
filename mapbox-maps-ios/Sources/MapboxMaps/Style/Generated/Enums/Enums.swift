@@ -403,6 +403,32 @@ public enum SkyType: String, Codable, CaseIterable {
 
 }
 
+// MARK: MODEL_SCALE_MODE
+
+/// Defines scaling mode. Only applies to location-indicator type layers.
+public enum ModelScaleMode: String, Codable, CaseIterable {
+
+    /// Model is scaled so that it's always the same size relative to other map features. The property model-scale specifies how many meters each unit in the model file should cover.
+    case map = "map"
+
+    /// Model is scaled so that it's always the same size on the screen. The property model-scale specifies how many pixels each unit in model file should cover.
+    case viewport = "viewport"
+
+}
+
+// MARK: MODEL_TYPE
+
+/// Defines rendering behavior of model in respect to other 3D scene objects.
+public enum ModelType: String, Codable, CaseIterable {
+
+    /// Integrated to 3D scene, using depth testing, along with terrain, fill-extrusions and custom layer.
+    case common3d = "common-3d"
+
+    /// Displayed over other 3D content, occluded by terrain.
+    case locationIndicator = "location-indicator"
+
+}
+
 // MARK: ANCHOR
 
 /// Whether extruded geometries are lit relative to the map or viewport.

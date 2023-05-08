@@ -1,7 +1,7 @@
 import UIKit
 @_implementationOnly import MapboxCommon_Private
 
-// swiftlint:disable function_body_length file_length type_body_length
+// swiftlint:disable:next type_body_length
 internal class LogoView: UIView {
 
     internal enum LogoSize: Equatable {
@@ -80,6 +80,7 @@ internal class LogoView: UIView {
     private let fillColor2 = UIColor(red: 0.000, green: 0.000, blue: 0.000, alpha: 0.350)
 
     // Drawing methods generated from PaintCode
+    // swiftlint:disable:next function_body_length
     internal func drawMapboxLogoOrnamentViewFullCanvas(frame targetFrame: CGRect,
                                                        resizing: ResizingBehavior = .aspectFit) {
         // General declarations
@@ -219,6 +220,7 @@ internal class LogoView: UIView {
 
     }
 
+    // swiftlint:disable:next function_body_length
     private func drawMapboxWordmark() {
         // Bezier #1
         let bezierPath = UIBezierPath()
@@ -1168,3 +1170,5 @@ internal class LogoView: UIView {
         }
     }
 }
+
+// swiftlint:disable:this file_length

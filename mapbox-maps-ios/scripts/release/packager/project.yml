@@ -1,7 +1,5 @@
 ---
 name: MapboxMaps
-options:
-  xcodeVersion: 1250
 targets:
   MapboxMaps:
     type: framework
@@ -20,6 +18,7 @@ targets:
         CODE_SIGN_STYLE: Automatic
         SWIFT_TREAT_WARNINGS_AS_ERRORS: "NO"
         SWIFT_EMIT_PRIVATE_MODULE_INTERFACE: "YES"
+        ENABLE_BITCODE: "YES"
       configs:
         Debug:
           SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) USING_TURF_WITH_LIBRARY_EVOLUTION

@@ -15,7 +15,6 @@ jobs:
         - Slack Orb
         - SDK Registry Token
       name: Build SDK
-      xcode: "13.1.0"
       configuration: "Release"
 
   - build-sdk-for-api-compatibility-check:

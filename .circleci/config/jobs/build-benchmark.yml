@@ -1,4 +1,4 @@
-executor: xcode-min
+executor: xcode-sdk-min
 steps:
   - checkout
   - mapbox/add-mapbox-ssh-key

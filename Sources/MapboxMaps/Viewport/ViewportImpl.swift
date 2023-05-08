@@ -123,7 +123,7 @@ internal final class ViewportImpl: ViewportImplProtocol {
     // transitioning to state x when status equals .transition(_, _, x) just
     // invokes completion synchronously with `false` and does not modify status
     internal func transition(to toState: ViewportState, transition: ViewportTransition?, completion: ((Bool) -> Void)?) {
-
+        // swiftlint:disable:previous function_body_length
         switch status {
         case .idle:
             break

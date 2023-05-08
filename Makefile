@@ -91,14 +91,14 @@ XCODE_BUILD_SIM_SDK = set -o pipefail && xcodebuild \
 .PHONY: build-sdk-for-simulator
 build-sdk-for-simulator:
 	$(XCODE_BUILD_SIM_SDK) \
-		-destination 'platform=iOS Simulator,OS=latest,name=iPhone 11' \
+		-destination 'platform=iOS Simulator,OS=latest,name=iPhone 14' \
 		build \
 		ONLY_ACTIVE_ARCH=NO
 
 .PHONY: build-sdk-for-testing-simulator
 build-sdk-for-testing-simulator:
 	$(XCODE_BUILD_SIM_SDK) \
-		-destination 'platform=iOS Simulator,OS=latest,name=iPhone 11' \
+		-destination 'platform=iOS Simulator,OS=latest,name=iPhone 14' \
 		-enableCodeCoverage YES \
 		build-for-testing \
 		ONLY_ACTIVE_ARCH=YES
@@ -106,7 +106,7 @@ build-sdk-for-testing-simulator:
 .PHONY: test-sdk-without-building-simulator
 test-sdk-without-building-simulator:
 	$(XCODE_BUILD_SIM_SDK) \
-		-destination 'platform=iOS Simulator,OS=latest,name=iPhone 11' \
+		-destination 'platform=iOS Simulator,OS=latest,name=iPhone 14' \
 		-enableCodeCoverage YES \
 		test-without-building \
 		-resultBundlePath MapboxMapsTests.xcresult \
@@ -121,7 +121,7 @@ build-app-for-simulator:
 		-workspace Apps/Apps.xcworkspace \
 		-scheme '$(SCHEME)' \
 		-sdk iphonesimulator \
-		-destination 'platform=iOS Simulator,OS=latest,name=iPhone 11' \
+		-destination 'platform=iOS Simulator,OS=latest,name=iPhone 14' \
 		-configuration $(CONFIGURATION) \
 		-jobs $(JOBS) \
 		build \

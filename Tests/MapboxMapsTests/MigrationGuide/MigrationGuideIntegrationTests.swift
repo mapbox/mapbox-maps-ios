@@ -1,7 +1,6 @@
 import XCTest
 @testable import MapboxMaps
 
-// swiftlint:disable orphaned_doc_comment
 class MigrationGuideIntegrationTests: IntegrationTestCase {
 
     var view: UIView?

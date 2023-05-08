@@ -1,7 +1,7 @@
 import UIKit
 import CoreLocation
 
-//swiftlint:disable type_body_length
+//swiftlint:disable:next type_body_length
 internal class MapboxScaleBarOrnamentView: UIView {
 
     internal typealias Row = (distance: CLLocationDistance, numberOfBars: UInt)

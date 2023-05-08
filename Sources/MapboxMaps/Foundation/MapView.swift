@@ -8,7 +8,7 @@
 import UIKit
 import os
 
-// swiftlint:disable type_body_length
+// swiftlint:disable:next type_body_length
 open class MapView: UIView {
 
     // `mapboxMap` depends on `MapInitOptions`, which is not available until
@@ -305,6 +305,7 @@ open class MapView: UIView {
         fatalError("This initializer should not be called.")
     }
 
+    // swiftlint:disable:next function_body_length
     private func commonInit(mapInitOptions: MapInitOptions, overridingStyleURI: URL?) {
         checkForMetalSupport()
 
@@ -390,6 +391,7 @@ open class MapView: UIView {
         eventsManager.sendMapLoadEvent(with: traitCollection)
     }
 
+    // swiftlint:disable:next function_body_length
     internal func setupManagers() {
         // Initialize/Configure camera manager first since Gestures needs it as dependency
         cameraAnimatorsRunner = dependencyProvider.makeCameraAnimatorsRunner(

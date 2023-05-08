@@ -1,6 +1,5 @@
 import Foundation
 
-// swiftlint:disable force_cast
 internal class WeakSet<T> {
     private let hashTable = NSHashTable<AnyObject>.weakObjects()
 
@@ -17,6 +16,7 @@ internal class WeakSet<T> {
     }
 
     internal var allObjects: [T] {
+        // swiftlint:disable:next force_cast
         hashTable.allObjects.map { $0 as! T }
     }
 }

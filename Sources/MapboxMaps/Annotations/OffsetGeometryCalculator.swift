@@ -98,6 +98,7 @@ internal struct OffsetPolygonCalculator: OffsetGeometryCalculator {
         self.mapboxMap = mapboxMap
     }
 
+    // swiftlint:disable:next function_body_length
     func geometry(for translation: CGPoint, from geometry: Polygon) -> Polygon? {
         var outerRing = [CLLocationCoordinate2D]()
         var innerRing: [CLLocationCoordinate2D]?

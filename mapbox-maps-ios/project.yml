@@ -6,7 +6,6 @@ configFiles:
 options:
   defaultConfig: Release
   parallelizeBuild: false
-  xcodeVersion: "1300"
 packages:
   MapboxMaps:
     path: ./

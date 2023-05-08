@@ -1,20 +1,3 @@
-// Converted parametreless constructors into a parametrized one
-Constructor GestureOptions.init() has been removed
-Constructor LocationOptions.init() has been removed
-
-// Annotation initializers changed to incorporate isSelected and isDraggable
-Constructor CircleAnnotation.init(id:centerCoordinate:) has been removed
-Constructor CircleAnnotation.init(id:point:) has been removed
-Constructor PointAnnotation.init(id:coordinate:) has been removed
-Constructor PointAnnotation.init(id:point:) has been removed
-Constructor PolygonAnnotation.init(id:polygon:) has been removed
-Constructor PolylineAnnotation.init(id:lineCoordinates:) has been removed
-Constructor PolylineAnnotation.init(id:lineString:) has been removed
-
-// Allow filtering sourceDataLoaded events by dataID
-Func Style.addSource(_:id:) has been renamed to Func addSource(_:id:dataId:)
-Func Style.updateGeoJSONSource(withId:geoJSON:) has been renamed to Func updateGeoJSONSource(withId:geoJSON:dataId:)
-
 // v11 Changes
 Constructor Location.init(with:heading:) has been removed
 Func LocationManager.locationProvider(_:didFailWithError:) has been removed
@@ -96,3 +79,21 @@ Var CameraAnimator.owner has been added as a protocol requirement
 // Merge TilesetDescriptorOptions and TilesetDescriptorOptionsForTilesets
 Constructor TilesetDescriptorOptions.init(styleURI:zoomRange:pixelRatio:stylePackOptions:) has been removed
 Constructor TilesetDescriptorOptionsForTilesets.init(tilesets:zoomRange:pixelRatio:) has been removed
+
+// New detections by Xcode 14.1
+Enum MapEvents.EventKind has been removed
+EnumElement LayerType.model has been removed
+Func MapboxMap.onEvery(_:handler:) has been removed
+Func MapboxMap.onNext(_:handler:) has been removed
+Func MapboxMap.queryRenderedFeatures(at:options:completion:) has been removed
+Func MapboxMap.queryRenderedFeatures(for:options:completion:) has been removed
+Func MapboxMap.queryRenderedFeatures(in:options:completion:) has been removed
+Func Snapshotter.onEvery(_:handler:) has been removed
+Func Snapshotter.onNext(_:handler:) has been removed
+Var BackgroundLayer.backgroundPatternTransition has been removed
+Var FillExtrusionLayer.fillExtrusionPatternTransition has been removed
+Var FillLayer.fillPatternTransition has been removed
+Var GestureOptions.pinchRotateEnabled has been removed
+Var LineLayer.lineDasharrayTransition has been removed
+Var LineLayer.linePatternTransition has been removed
+Var PointAnnotationManager.textLineHeight has been removed

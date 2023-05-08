@@ -18,7 +18,7 @@ steps:
   - store_artifacts:
       path: MapboxMaps.zip
   - persist_to_workspace:
-      root: .
+      root: ~/project/
       paths:
         - MapboxMaps.zip
   - run:
@@ -28,7 +28,7 @@ steps:
         pip3 install gitpython awscli
         echo "export PATH=\"$HOME/.mint/bin:$PATH\"" >> $BASH_ENV
         mint install git@github.com:mapbox/ios-binary-size.git
-        unzip MapboxMaps.zip "artifacts/MapboxMaps.xcframework/*"
+        unzip ~/project/MapboxMaps.zip "artifacts/MapboxMaps.xcframework/*"
   - checkout-submodule:
       at: mobile-metrics
   - unless:

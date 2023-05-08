@@ -38,6 +38,7 @@ xcodebuild archive \
   ARCHS='x86_64 arm64' \
   EXCLUDED_ARCHS= \
   MACH_O_TYPE="$MACH_O_TYPE" \
+  ENABLE_BITCODE=YES \
   LLVM_LTO=NO
 
 # Create iOS Device Framework
@@ -56,6 +57,7 @@ xcodebuild archive \
   ARCHS='arm64' \
   EXCLUDED_ARCHS= \
   MACH_O_TYPE="$MACH_O_TYPE" \
+  ENABLE_BITCODE=YES \
   LLVM_LTO=NO
 
 # Create XCFramework

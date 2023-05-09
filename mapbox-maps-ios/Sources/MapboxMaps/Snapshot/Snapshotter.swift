@@ -230,6 +230,10 @@ public class Snapshotter {
                     context.draw(cgImage, in: rect)
                 }
 
+                // un-flip after adding the image
+                context.translateBy(x: 0, y: uiImage.size.height)
+                context.scaleBy(x: 1, y: -1)
+
                 if let overlayDescriptor = overlayDescriptor {
                     // Apply the overlay, if provided.
                     let overlay = SnapshotOverlay(from: context, scale: options.pixelRatio, descriptor: overlayDescriptor)
@@ -449,10 +453,7 @@ extension Snapshotter {
             context.restoreGState()
         }
 
-        // image needs to be flipped vertically
-        context.translateBy(x: logoView.frame.origin.x, y: -(CGFloat(context.height) - logoView.frame.height))
-        context.scaleBy(x: 1, y: -1)
-
+        context.translateBy(x: logoView.frame.origin.x, y: logoView.frame.origin.y)
         logoView.layer.render(in: context)
     }
 
@@ -462,9 +463,7 @@ extension Snapshotter {
             context.restoreGState()
         }
 
-        // image needs to be flipped vertically
-        context.translateBy(x: attributionView.frame.origin.x, y: -(CGFloat(context.height) - attributionView.frame.height))
-        context.scaleBy(x: 1, y: -1)
+        context.translateBy(x: attributionView.frame.origin.x, y: attributionView.frame.origin.y)
         attributionView.layer.contents = blurredImage
         attributionView.layer.render(in: context)
     }

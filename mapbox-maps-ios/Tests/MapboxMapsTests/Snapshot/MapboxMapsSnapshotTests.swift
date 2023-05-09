@@ -61,7 +61,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
 
     // Testing creating the snapshot
     func testSnapshotCancellation() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         weak var weakSnapshotter: Snapshotter?
         let options = try snapshotterOptions()
         let expectation = self.expectation(description: "snapshot")
@@ -80,7 +79,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
     }
 
     func testCapturingSnapshotterInSnapshotCompletion() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         weak var weakSnapshotter: Snapshotter?
         try autoreleasepool {
             let expectation = self.expectation(description: "snapshot")
@@ -101,7 +99,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
 
     // Testing snapshot overlay
     func testSnapshotOverlay() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         let options = try snapshotterOptions()
         let snapshotter = Snapshotter(options: options)
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
@@ -143,7 +140,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
     }
 
     func testSnapshotLogoVisibility() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         let options = try snapshotterOptions()
         let snapshotterNew = Snapshotter(options: options)
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
@@ -168,7 +164,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
     }
 
     func testDataClearing() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         let options = try snapshotterOptions()
         let snapshotter = Snapshotter(options: options)
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
@@ -191,7 +186,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
     }
 
     func testSnapshotAttribution() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         // Test range of widths
         for imageWidth in stride(from: 50, through: 300, by: 50) {
 
@@ -223,13 +217,11 @@ class MapboxMapsSnapshotTests: XCTestCase {
     }
 
     func testShowsLogoAndAttribution() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         let options = try snapshotterOptions()
         showLogoAttributionHelper(options: options, fileName: "\(#function)")
     }
 
     func testDoesNotShowLogo() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         var options = try snapshotterOptions()
         options.showsLogo = false
 
@@ -237,7 +229,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
     }
 
     func testDoesNotShowAttribution() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         var options = try snapshotterOptions()
         options.showsAttribution = false
 
@@ -245,7 +236,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
     }
 
     func testDoesNotShowLogoAndAttribution() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         var options = try snapshotterOptions()
         options.showsLogo = false
         options.showsAttribution = false

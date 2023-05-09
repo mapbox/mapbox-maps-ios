@@ -25,6 +25,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Merge `TilesetDescriptorOptions` and `TilesetDescriptorOptionsForTilesets`. To enable tileset descriptor creation for a list of tilesets that are not part of the original style use `TilesetDescriptorOptions`. 
 * Use `DataRef` to pass snapshot and style image data by reference, improving performance
 * Bumped min iOS version to 12.0
+* Expose a subset of ModelLayer APIs.
 
 ## 10.12.0 - March 22, 2023
 

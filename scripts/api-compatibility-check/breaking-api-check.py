@@ -163,20 +163,22 @@ class APIDigester:
             print(proc.stderr)
             raise Exception("swift-api-digester failed")
 
-        # Workaround: sometime swift-api-digester cannot skip some lines of the allow list
-        # For example: 'Protocol LocationProvider has generic signature change from  to <Self : AnyObject>'
         if breakage_allow_list_path:
-            with open(output_path, "r") as f:
-                output = f.read()
-            with open(breakage_allow_list_path, "r") as f:
-                allow_list = f.read()
-                for line in allow_list.splitlines(keepends=True):
-                    if len(line) > 1:
-                        output = output.replace(line, "")
-                with open(output_path, "w") as f:
-                    f.write(output)
+            self.apply_breakage_allow_list_workaround(breakage_allow_list_path, output_path)
 
         return APIDigester.BreakageReport(output_path)
+
+    # Workaround: sometime swift-api-digester cannot skip some lines of the allow list
+    # For example: 'Protocol LocationProvider has generic signature change from  to <Self : AnyObject>'
+    def apply_breakage_allow_list_workaround(self, allowlist_path, report_path):
+        with open(report_path, "r") as f:
+            report_list = f.readlines()
+        with open(allowlist_path, "r") as f:
+            allow_list = [line.strip() for line in f.readlines() if line.strip() != ""]
+
+        report_list = [line for line in report_list if line.strip() not in allow_list or line.startswith("/* ")]
+        with open(report_path, "w") as f:
+            f.write("".join(report_list))
 
     def dump_sdk(self, modules_path: str, module_name: str, triplet_target: str, output_path: str, abi: bool):
         arguments = ["xcrun", "--sdk", "iphoneos", "swift-api-digester",

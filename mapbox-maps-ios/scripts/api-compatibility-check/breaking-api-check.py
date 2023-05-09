@@ -163,6 +163,19 @@ class APIDigester:
             print(proc.stderr)
             raise Exception("swift-api-digester failed")
 
+        # Workaround: sometime swift-api-digester cannot skip some lines of the allow list
+        # For example: 'Protocol LocationProvider has generic signature change from  to <Self : AnyObject>'
+        if breakage_allow_list_path:
+            with open(output_path, "r") as f:
+                output = f.read()
+            with open(breakage_allow_list_path, "r") as f:
+                allow_list = f.read()
+                for line in allow_list.splitlines(keepends=True):
+                    if len(line) > 1:
+                        output = output.replace(line, "")
+                with open(output_path, "w") as f:
+                    f.write(output)
+
         return APIDigester.BreakageReport(output_path)
 
     def dump_sdk(self, modules_path: str, module_name: str, triplet_target: str, output_path: str, abi: bool):

@@ -31,7 +31,6 @@ final class SnapshotterTests: XCTestCase {
     }
 
     func testSnapshotterCompletionInvocationFailed() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         let options = MapSnapshotOptions(size: CGSize.init(width: 300, height: 300), pixelRatio: 2)
 
         let resultString = "FAILED"
@@ -50,13 +49,11 @@ final class SnapshotterTests: XCTestCase {
     }
 
     func testSnapshotterCancel() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         snapshotter.cancel()
         XCTAssertEqual(mockMapSnapshotter.cancelSnapshotterStub.invocations.count, 1)
     }
 
     func testSnapshotterSize() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         let size = CGSize(width: 200, height: 200)
 
         snapshotter.snapshotSize = size
@@ -68,7 +65,6 @@ final class SnapshotterTests: XCTestCase {
     }
 
     func testSnapshotterSetCamera() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         let center = CLLocationCoordinate2D(latitude: 38, longitude: -76)
         let padding = UIEdgeInsets.zero
         let anchor = CGPoint.zero
@@ -91,7 +87,6 @@ final class SnapshotterTests: XCTestCase {
 
     //Test snapshot coordinate bounds for camera match those of mock
     func testSnapshotterCoordinateBoundsForCamera() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         let center = CLLocationCoordinate2D(latitude: 38, longitude: -76)
         let padding = UIEdgeInsets.zero
         let anchor = CGPoint.zero
@@ -114,7 +109,6 @@ final class SnapshotterTests: XCTestCase {
     }
 
     func testSnapshotterCameraforCoordinateBounds() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         // verify that return value for snapshotter matches return value for mock: coordinateBounds
         let coordinates = [
             CLLocationCoordinate2D(latitude: 44.9753911881, longitude: -124.3348229758),
@@ -147,13 +141,11 @@ final class SnapshotterTests: XCTestCase {
     }
 
     func testInitializationMapboxObservable() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         XCTAssertEqual(mapboxObservableProviderStub.invocations.count, 1)
         XCTAssertIdentical(mapboxObservableProviderStub.invocations.first?.parameters, snapshotter.mapSnapshotter)
     }
 
     func testSubscribe() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         let observer = MockObserver()
         let events: [String] = .random()
         let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
@@ -166,7 +158,6 @@ final class SnapshotterTests: XCTestCase {
     }
 
     func testUnsubscribe() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         let observer = MockObserver()
         let events: [String] = .random()
         let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
@@ -179,7 +170,6 @@ final class SnapshotterTests: XCTestCase {
     }
 
     func testOnTypedNext() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         func verifyInvocation<Payload>(
             eventType: MapEvents.Event<Payload>,
             event: MapEvent<Payload> = .init(event: Event(type: "", data: 0)),
@@ -222,7 +212,6 @@ final class SnapshotterTests: XCTestCase {
     }
 
     func testOnTypedEvery() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         func verifyInvocation<Payload>(
             eventType: MapEvents.Event<Payload>,
             event: MapEvent<Payload> = .init(event: Event(type: "", data: 0)),

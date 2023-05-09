@@ -3,6 +3,13 @@ name: MapboxMaps
 options:
   bundleIdPrefix: com.mapbox
   settingPresets: project
+  groupOrdering:
+    - order:
+      - General
+      - Examples
+      - DebugApp
+      - MapboxMaps
+      - MapboxMapsTests
   deploymentTarget:
     iOS: 12.0
 settings:
@@ -19,6 +26,20 @@ targets:
     scheme:
       testTargets:
         - MapboxMapsTests
+    sources:
+      - path: build/${PROJECT}
+        includes:
+          - CHANGELOG.md
+          - Package.swift
+          - Makefile
+          - LICENSE.md
+        buildPhase: none
+        group: General
+      - path: .
+        includes:
+          - generate-debuggable-environment
+          - project.yml
+        group: General
 
   MapboxMapsTests:
     templates:

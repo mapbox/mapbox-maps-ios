@@ -34,10 +34,12 @@ def main():
 
     parser.add_argument('--stable', action='store_true',
                         help='use dependencies from the last release')
+    parser.add_argument('--clean', action=argparse.BooleanOptionalAction, default=False,
+                        help='clean repositories before checkout')
     parser.add_argument('--private-commit', type=str,
                         help='commit to use for private version of Mapbox Maps iOS. If specified, the private repo will be checked out instead of local public subtree.')
 
-    parser.add_argument('--force-relative-paths', action='store_true', help="Replace absolute paths with relative paths in the generated project file. Experimental.")
+    parser.add_argument('--force-relative-paths', action=argparse.BooleanOptionalAction, help="Replace absolute paths with relative paths in the generated project file. Experimental.")
 
     args = parser.parse_args()
 
@@ -51,7 +53,7 @@ def main():
     if args.private_commit:
         maps_path = "mapbox-maps-ios-private"
         print_phase(f"Checkout Private Mapbox Maps iOS ({maps_path}@{args.private_commit})")
-        checkout_repo(maps_path, args.private_commit)
+        checkout_repo(maps_path, args.private_commit, clean=args.clean)
     else:
         maps_path = "../../mapbox-maps-ios"
         print_phase(f"Using Public Mapbox Maps iOS from subtree")
@@ -83,7 +85,7 @@ def main():
 
     print_phase(f"Checkout GL Native (@{args.gl_native_commit})")
     checkout_repo("mapbox-gl-native-internal",
-                  args.gl_native_commit, checkout_submodules=True, submodules_path="vendor")
+                  args.gl_native_commit, checkout_submodules=True, submodules_path="vendor", clean=args.clean)
     # configure project
     os.chdir("mapbox-gl-native-internal")
     if args.common_commit is not None:
@@ -116,9 +118,9 @@ def main():
     os.chdir("..")
 
     print_phase(f"Checkout Turf (@{args.turf_commit})")
-    checkout_repo("turf-swift", args.turf_commit)
+    checkout_repo("turf-swift", args.turf_commit, clean=args.clean)
 
-    checkout_repo("cocoaimagehashing", "master", org="ameingast")
+    checkout_repo("cocoaimagehashing", "master", org="ameingast", clean=args.clean)
 
     # leave build directory
     os.chdir("..")
@@ -144,7 +146,7 @@ def main():
     os.system("xed MapboxMaps.xcodeproj")
 
 
-def checkout_repo(repo_name: str, repo_branch: str, org: str = "mapbox", checkout_submodules=False, submodules_path=None):
+def checkout_repo(repo_name: str, repo_branch: str, org: str = "mapbox", checkout_submodules=False, submodules_path=None, clean=False):
     # checkout the repo if folder doesn't exist. Otherwise, fetch the latest changes
     os.system("pwd")
     if not os.path.exists(repo_name):
@@ -158,16 +160,18 @@ def checkout_repo(repo_name: str, repo_branch: str, org: str = "mapbox", checkou
             os.system(command)
     else:
         print("Fetching latest changes for " + repo_name + "...")
-        os.system(f"git -C {repo_name} reset --hard && git -C {repo_name} clean -dffx")
+        if clean:
+            os.system(f"git -C {repo_name} reset --hard && git -C {repo_name} clean -dffx")
         os.system(f"git -C {repo_name} fetch")
         os.system(f"git -C {repo_name} checkout -f {repo_branch} --")
-        os.system(f"git -C {repo_name} pull origin {repo_branch}")
+        os.system(f"git -C {repo_name} pull origin {repo_branch} --rebase --autostash")
 
     if checkout_submodules:
         print("Checkout submodules for " + repo_name + "...")
         os.chdir(repo_name)
         print("Cleaning submodules...")
-        os.system("git submodule foreach --recursive 'git reset --hard && git clean -dffx' > /dev/null")
+        if clean:
+            os.system("git submodule foreach --recursive 'git reset --hard && git clean -dffx' > /dev/null")
         if submodules_path is None:
             os.system("git submodule update --init --recursive")
         else:

@@ -26,6 +26,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Use `DataRef` to pass snapshot and style image data by reference, improving performance
 * Bumped min iOS version to 12.0
 * Expose a subset of ModelLayer APIs.
+* Protocol `LocationProvider` now requires class semantic for implementation.
 
 ## 10.12.0 - March 22, 2023
 

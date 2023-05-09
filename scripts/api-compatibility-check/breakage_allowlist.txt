@@ -80,6 +80,9 @@ Var CameraAnimator.owner has been added as a protocol requirement
 Constructor TilesetDescriptorOptions.init(styleURI:zoomRange:pixelRatio:stylePackOptions:) has been removed
 Constructor TilesetDescriptorOptionsForTilesets.init(tilesets:zoomRange:pixelRatio:) has been removed
 
+// Make LocationProvider require AnyObject
+Protocol LocationProvider has generic signature change from  to <Self : AnyObject>
+
 // New detections by Xcode 14.1
 Enum MapEvents.EventKind has been removed
 EnumElement LayerType.model has been removed

@@ -16,7 +16,7 @@ parameters:
     default: ""
 
 jobs:
-  setup:
+  setupci:
     docker:
       - image: cimg/python:3.11
     resource_class: small
@@ -82,7 +82,7 @@ jobs:
 workflows:
   setup:
     jobs:
-      - setup:
+      - setupci:
           filters:
             tags:
               only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/

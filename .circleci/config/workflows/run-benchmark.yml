@@ -8,14 +8,20 @@ jobs:
         - SDK Registry Token
         - MapboxCI GitHub UserToken
         - Maps SDK/Public Mapbox Token
+      filters: &benchmark-filters
+        tags:
+          only: /.*/
   - run-benchmark:
       requires:
         - build-benchmark
+      filters: *benchmark-filters
   - collect-metrics:
       requires:
         - run-benchmark
+      filters: *benchmark-filters
 
   - build-maps:
       context:
         - SDK Registry Token
       upload-size-metrics: true
+      filters: *benchmark-filters

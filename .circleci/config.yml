@@ -8,22 +8,30 @@ orbs:
   continuation: circleci/continuation@0.3.1
 
 jobs:
-  setup:
+  setupci:
     docker:
-      - image: circleci/circleci-cli:latest
+      - image: cimg/base:current
     steps:
       - checkout
       - run:
+          name: Install CircleCI CLI
+          command: |
+            curl -fLSs https://raw.githubusercontent.com/CircleCI-Public/circleci-cli/v0.1.26255/install.sh | sudo VERSION=0.1.26255 bash
+            circleci version
+            circleci --help
+      - run:
           name: Generate config
           command: circleci config pack .circleci/config > circle.yml
+      - run:
+          name: Print generated CircleCI config
+          command: cat circle.yml
       - continuation/continue:
           configuration_path: circle.yml
 
 workflows:
   setup:
     jobs:
-      - setup:
+      - setupci:
           filters:
             tags:
               only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
-

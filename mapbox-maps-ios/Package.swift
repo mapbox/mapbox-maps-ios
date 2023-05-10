@@ -1,4 +1,4 @@
-// swift-tools-version:5.5
+// swift-tools-version:5.7
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -21,8 +21,8 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(name: "Turf", url: "https://github.com/mapbox/turf-swift.git", from: "2.0.0"),
-        .package(name: "CocoaImageHashing", url: "https://github.com/ameingast/cocoaimagehashing", .exact("1.9.0")),
+        .package(url: "https://github.com/mapbox/turf-swift.git", from: "2.0.0"),
+        .package(url: "https://github.com/ameingast/cocoaimagehashing", exact: "1.9.0")
     ],
     targets: [
         .binaryTarget(
@@ -37,7 +37,11 @@ let package = Package(
         ),
         .target(
             name: "MapboxMaps",
-            dependencies: ["MapboxCoreMaps", "Turf", "MapboxCommon"],
+            dependencies: [
+                "MapboxCoreMaps",
+                .product(name: "Turf", package: "turf-swift"),
+                "MapboxCommon",
+            ],
             exclude: [
                 "Info.plist",
             ],
@@ -47,7 +51,10 @@ let package = Package(
         ),
         .testTarget(
             name: "MapboxMapsTests",
-            dependencies: ["MapboxMaps", "CocoaImageHashing"],
+            dependencies: [
+                "MapboxMaps",
+                .product(name: "CocoaImageHashing", package: "cocoaimagehashing"),
+            ],
             exclude: [
                 "Info.plist",
                 "Integration Tests/HTTP/HTTPIntegrationTests.swift",

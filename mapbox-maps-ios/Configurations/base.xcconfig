@@ -24,7 +24,7 @@ SUPPORTS_MACCATALYST = NO
 // -----------------------------------------------------------------------------
 // Swift
 
-SWIFT_VERSION = 5.3
+SWIFT_VERSION = 5.7
 
 SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Debug] = DEBUG
 SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Release] = RELEASE

@@ -146,11 +146,6 @@ internal protocol StyleManagerProtocol {
 
     func __setStyleGeoJSONSourceDataForSourceId(
         _ sourceId: String,
-        data: MapboxCoreMaps.GeoJSONSourceData
-    ) -> Expected<NSNull, NSString>
-
-    func __setStyleGeoJSONSourceDataForSourceId(
-        _ sourceId: String,
         dataId: String,
         data: MapboxCoreMaps.GeoJSONSourceData
     ) -> Expected<NSNull, NSString>

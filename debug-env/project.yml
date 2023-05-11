@@ -52,7 +52,6 @@ targets:
           - "Integration Tests/HTTP/HTTPIntegrationTests.swift"
     dependencies:
       - target: Examples
-      - target: "CocoaImageHashing/CocoaImageHashing (iOS Framework)"
     settings:
       INFOPLIST_FILE: "build/${PROJECT}/Tests/MapboxMapsTests/Info.plist"
 
@@ -74,7 +73,6 @@ targets:
           - Helpers/XCTestCase+TemporaryCacheDirectory.swift
     dependencies:
       - target: Examples
-      - target: "CocoaImageHashing/CocoaImageHashing (iOS Framework)"
 
   Examples:
     templates:
@@ -184,5 +182,3 @@ projectReferences:
     path: "build/turf-swift/Turf.xcodeproj"
   MapboxCoreMaps:
     path: "build/mapbox-gl-native-internal/build/ios/Mapbox GL Native.xcodeproj"
-  CocoaImageHashing:
-    path: "build/cocoaimagehashing/CocoaImageHashing.xcodeproj"

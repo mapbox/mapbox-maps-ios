@@ -22,7 +22,6 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/mapbox/turf-swift.git", from: "2.0.0"),
-        .package(url: "https://github.com/ameingast/cocoaimagehashing", exact: "1.9.0")
     ],
     targets: [
         .binaryTarget(
@@ -53,7 +52,6 @@ let package = Package(
             name: "MapboxMapsTests",
             dependencies: [
                 "MapboxMaps",
-                .product(name: "CocoaImageHashing", package: "cocoaimagehashing"),
             ],
             exclude: [
                 "Info.plist",

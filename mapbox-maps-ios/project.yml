@@ -112,8 +112,6 @@ targets:
     dependencies:
       - package: MapboxMaps
         product: MapboxMaps
-      - package: MapboxMaps
-        product: CocoaImageHashing
     scheme:
       testTargets:
           - MapboxMapsHTTPTestsWithHost

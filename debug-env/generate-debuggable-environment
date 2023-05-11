@@ -120,8 +120,6 @@ def main():
     print_phase(f"Checkout Turf (@{args.turf_commit})")
     checkout_repo("turf-swift", args.turf_commit, clean=args.clean)
 
-    checkout_repo("cocoaimagehashing", "master", org="ameingast", clean=args.clean)
-
     # leave build directory
     os.chdir("..")
 

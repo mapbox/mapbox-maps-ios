@@ -3,7 +3,6 @@ import UIKit
 internal protocol MapViewDependencyProviderProtocol: AnyObject {
     var notificationCenter: NotificationCenterProtocol { get }
     var bundle: BundleProtocol { get }
-    var cameraAnimatorsRunnerEnablable: MutableEnablableProtocol { get }
     func makeMetalView(frame: CGRect, device: MTLDevice?) -> MTKView
     func makeDisplayLink(window: UIWindow, target: Any, selector: Selector) -> DisplayLinkProtocol?
     func makeCameraAnimatorsRunner(mapboxMap: MapboxMapProtocol) -> CameraAnimatorsRunnerProtocol
@@ -42,7 +41,6 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
 
     internal let bundle: BundleProtocol = Bundle.main
 
-    internal let cameraAnimatorsRunnerEnablable: MutableEnablableProtocol = Enablable()
     private let mainQueue: MainQueueProtocol = MainQueueWrapper()
     private let interfaceOrientationProvider: InterfaceOrientationProvider
 
@@ -59,9 +57,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     }
 
     internal func makeCameraAnimatorsRunner(mapboxMap: MapboxMapProtocol) -> CameraAnimatorsRunnerProtocol {
-        CameraAnimatorsRunner(
-            mapboxMap: mapboxMap,
-            enablable: cameraAnimatorsRunnerEnablable)
+        CameraAnimatorsRunner(mapboxMap: mapboxMap)
     }
 
     internal func makeCameraAnimationsManagerImpl(cameraViewContainerView: UIView,

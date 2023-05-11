@@ -5,10 +5,10 @@ final class MapViewTests: XCTestCase {
 
     var notificationCenter: MockNotificationCenter!
     var bundle: MockBundle!
-    var cameraAnimatorsRunnerEnablable: MockMutableEnablable!
     var displayLink: MockDisplayLink!
     var locationProducer: MockLocationProducer!
     var dependencyProvider: MockMapViewDependencyProvider!
+    var cameraAnimatorsRunner: MockCameraAnimatorsRunner!
     var attributionURLOpener: MockAttributionURLOpener!
     @MutableRef var applicationState: UIApplication.State = .active
     var mapView: MapView!
@@ -19,15 +19,15 @@ final class MapViewTests: XCTestCase {
         try super.setUpWithError()
         notificationCenter = MockNotificationCenter()
         bundle = MockBundle()
-        cameraAnimatorsRunnerEnablable = MockMutableEnablable()
         displayLink = MockDisplayLink()
         locationProducer = MockLocationProducer()
+        cameraAnimatorsRunner = MockCameraAnimatorsRunner()
         dependencyProvider = MockMapViewDependencyProvider()
         dependencyProvider.notificationCenter = notificationCenter
         dependencyProvider.bundle = bundle
-        dependencyProvider.cameraAnimatorsRunnerEnablable = cameraAnimatorsRunnerEnablable
         dependencyProvider.makeDisplayLinkStub.defaultReturnValue = displayLink
         dependencyProvider.makeLocationProducerStub.defaultReturnValue = locationProducer
+        dependencyProvider.makeCameraAnimatorsRunnerStub.defaultReturnValue = cameraAnimatorsRunner
         attributionURLOpener = MockAttributionURLOpener()
         applicationState = .active
         mapView = buildMapView()
@@ -46,8 +46,8 @@ final class MapViewTests: XCTestCase {
         attributionURLOpener = nil
         dependencyProvider = nil
         locationProducer = nil
+        cameraAnimatorsRunner = nil
         displayLink = nil
-        cameraAnimatorsRunnerEnablable = nil
         bundle = nil
         notificationCenter = nil
         super.tearDown()
@@ -96,34 +96,32 @@ final class MapViewTests: XCTestCase {
         }
     }
 
-    func testCameraAnimatorsRunnerEnablableIsDisabledPriorToJoiningAWindow() {
-        cameraAnimatorsRunnerEnablable.$isEnabled.reset()
+    func testCameraAnimatorsRunnerIsDisabledPriorToJoiningAWindow() {
+        // Create a separate runner, to not share it with the other default MapView for this test.
+        let cameraAnimatorsRunner = MockCameraAnimatorsRunner()
+        dependencyProvider.makeCameraAnimatorsRunnerStub.defaultReturnValue = cameraAnimatorsRunner
         mapView = MapView(
             frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
             mapInitOptions: MapInitOptions(),
             dependencyProvider: dependencyProvider,
             urlOpener: attributionURLOpener,
             applicationStateProvider: $applicationState)
-
-        XCTAssertEqual(cameraAnimatorsRunnerEnablable.$isEnabled.setStub.invocations.map(\.parameters), [false])
+        XCTAssertEqual(cameraAnimatorsRunner.isEnabled, false)
 
         window.addSubview(mapView)
 
-        XCTAssertEqual(cameraAnimatorsRunnerEnablable.$isEnabled.setStub.invocations.map(\.parameters), [false, true])
+        XCTAssertEqual(cameraAnimatorsRunner.isEnabled, true)
     }
 
-    func testCancelsAndDisablesAnimationsWhenRemovedFromWindow() throws {
-        let runner = try XCTUnwrap(dependencyProvider.makeCameraAnimatorsRunnerStub.invocations.first?.returnValue as? MockCameraAnimatorsRunner)
-        runner.cancelAnimationsStub.reset()
-        cameraAnimatorsRunnerEnablable.$isEnabled.reset()
+    func testDisablesAnimationsWhenRemovedFromWindow() throws {
+        cameraAnimatorsRunner.$isEnabled.reset()
 
         mapView.removeFromSuperview()
 
-        XCTAssertEqual(runner.cancelAnimationsStub.invocations.count, 1)
-        XCTAssertEqual(cameraAnimatorsRunnerEnablable.$isEnabled.setStub.invocations.map(\.parameters), [false])
+        XCTAssertEqual(cameraAnimatorsRunner.$isEnabled.setStub.invocations.map(\.parameters), [false])
     }
 
-    func testCancelsAndDisablesAnimationsWhenUnableToCreateDisplayLink() throws {
+    func testDisablesAnimationsWhenUnableToCreateDisplayLink() throws {
         mapView = MapView(
             frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
             mapInitOptions: MapInitOptions(),
@@ -131,15 +129,12 @@ final class MapViewTests: XCTestCase {
             urlOpener: attributionURLOpener,
             applicationStateProvider: $applicationState)
 
-        let runner = try XCTUnwrap(dependencyProvider.makeCameraAnimatorsRunnerStub.invocations.first?.returnValue as? MockCameraAnimatorsRunner)
-        runner.cancelAnimationsStub.reset()
-        cameraAnimatorsRunnerEnablable.$isEnabled.reset()
+        cameraAnimatorsRunner.$isEnabled.reset()
         dependencyProvider.makeDisplayLinkStub.defaultReturnValue = nil
 
         window.addSubview(mapView)
 
-        XCTAssertEqual(runner.cancelAnimationsStub.invocations.count, 1)
-        XCTAssertEqual(cameraAnimatorsRunnerEnablable.$isEnabled.setStub.invocations.map(\.parameters), [false])
+        XCTAssertEqual(cameraAnimatorsRunner.$isEnabled.setStub.invocations.map(\.parameters), [false])
     }
 
     func testPreferredFramesPerSecondIsInitiallyZero() {
@@ -406,7 +401,6 @@ final class MapViewTestsWithScene: XCTestCase {
 
     var notificationCenter: MockNotificationCenter!
     var bundle: MockBundle!
-    var cameraAnimatorsRunnerEnablable: MockMutableEnablable!
     var displayLink: MockDisplayLink!
     var locationProducer: MockLocationProducer!
     var dependencyProvider: MockMapViewDependencyProvider!
@@ -423,13 +417,11 @@ final class MapViewTestsWithScene: XCTestCase {
         notificationCenter = MockNotificationCenter()
         bundle = MockBundle()
         bundle.infoDictionaryStub.defaultReturnValue = ["UIApplicationSceneManifest": []]
-        cameraAnimatorsRunnerEnablable = MockMutableEnablable()
         displayLink = MockDisplayLink()
         locationProducer = MockLocationProducer()
         dependencyProvider = MockMapViewDependencyProvider()
         dependencyProvider.notificationCenter = notificationCenter
         dependencyProvider.bundle = bundle
-        dependencyProvider.cameraAnimatorsRunnerEnablable = cameraAnimatorsRunnerEnablable
         dependencyProvider.makeDisplayLinkStub.defaultReturnValue = displayLink
         dependencyProvider.makeLocationProducerStub.defaultReturnValue = locationProducer
         orientationProvider = MockInterfaceOrientationProvider()
@@ -461,7 +453,7 @@ final class MapViewTestsWithScene: XCTestCase {
         dependencyProvider = nil
         locationProducer = nil
         displayLink = nil
-        cameraAnimatorsRunnerEnablable = nil
+
         bundle = nil
         notificationCenter = nil
         super.tearDown()

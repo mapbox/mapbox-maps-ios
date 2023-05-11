@@ -6,8 +6,6 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
 
     @Stubbed var bundle: BundleProtocol = MockBundle()
 
-    @Stubbed var cameraAnimatorsRunnerEnablable: MutableEnablableProtocol = Enablable()
-
     // MARK: - Metal view
     struct MakeMetalViewParams {
         var frame: CGRect

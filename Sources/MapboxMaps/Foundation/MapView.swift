@@ -30,7 +30,6 @@ open class MapView: UIView {
     /// The `camera` object manages a camera's view lifecycle.
     public private(set) var camera: CameraAnimationsManager!
     private var cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol!
-    private let cameraAnimatorsRunnerEnablable: MutableEnablableProtocol
 
     /// The `location`object handles location events of the map.
     public private(set) var location: LocationManager!
@@ -198,7 +197,6 @@ open class MapView: UIView {
         applicationStateProvider = .global
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
-        cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
         resourceOptions = mapInitOptions.resourceOptions
         eventsManager = dependencyProvider.makeEventsManager(accessToken: resourceOptions.accessToken)
         super.init(frame: frame)
@@ -224,7 +222,6 @@ open class MapView: UIView {
         self.applicationStateProvider = nil
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
-        cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
         resourceOptions = mapInitOptions.resourceOptions
         eventsManager = dependencyProvider.makeEventsManager(accessToken: resourceOptions.accessToken)
         super.init(frame: frame)
@@ -250,7 +247,6 @@ open class MapView: UIView {
         self.applicationStateProvider = nil
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
-        cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
         resourceOptions = mapInitOptions.resourceOptions
         eventsManager = dependencyProvider.makeEventsManager(accessToken: resourceOptions.accessToken)
         super.init(frame: frame)
@@ -271,7 +267,6 @@ open class MapView: UIView {
         dependencyProvider = MapViewDependencyProvider(interfaceOrientationProvider: orientationProvider)
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
-        cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
         attributionUrlOpener = DefaultAttributionURLOpener()
         applicationStateProvider = .global
         resourceOptions = ResourceOptionsManager.default.resourceOptions
@@ -291,7 +286,6 @@ open class MapView: UIView {
         self.applicationStateProvider = applicationStateProvider
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
-        cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
         resourceOptions = mapInitOptions.resourceOptions
         eventsManager = dependencyProvider.makeEventsManager(accessToken: resourceOptions.accessToken)
         super.init(frame: frame)
@@ -377,9 +371,6 @@ open class MapView: UIView {
         addSubview(cameraViewContainerView)
 
         sendInitialTelemetryEvents()
-
-        // false until added to a window and display link is created
-        cameraAnimatorsRunnerEnablable.isEnabled = false
 
         // Set up managers
         setupManagers()
@@ -467,8 +458,7 @@ open class MapView: UIView {
 
     deinit {
         displayLink?.invalidate()
-        cameraAnimatorsRunner.cancelAnimations()
-        cameraAnimatorsRunnerEnablable.isEnabled = false
+        cameraAnimatorsRunner.isEnabled = false
     }
 
     private func subscribeToLifecycleNotifications() {
@@ -656,8 +646,7 @@ open class MapView: UIView {
         displayLink = nil
 
         guard let window = window else {
-            cameraAnimatorsRunner.cancelAnimations()
-            cameraAnimatorsRunnerEnablable.isEnabled = false
+            cameraAnimatorsRunner.isEnabled = false
             return
         }
 
@@ -669,12 +658,11 @@ open class MapView: UIView {
             selector: #selector(ForwardingDisplayLinkTarget.update(with:)))
 
         guard let displayLink = displayLink else {
-            cameraAnimatorsRunner.cancelAnimations()
-            cameraAnimatorsRunnerEnablable.isEnabled = false
+            cameraAnimatorsRunner.isEnabled = false
             return
         }
 
-        cameraAnimatorsRunnerEnablable.isEnabled = true
+        cameraAnimatorsRunner.isEnabled = true
 
         updateDisplayLinkPreferredFramesPerSecond()
 

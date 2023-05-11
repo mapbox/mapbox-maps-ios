@@ -74,6 +74,34 @@ final class PointAnnotationTests: XCTestCase {
         XCTAssertEqual(iconSize, annotation.iconSize)
     }
 
+    func testIconTextFit() {
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+        annotation.iconTextFit =  IconTextFit.testConstantValue()
+
+        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
+            return
+        }
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .string(iconTextFit) = layerProperties["icon-text-fit"] else {
+            return XCTFail("Layer property icon-text-fit should be set to a string.")
+        }
+        XCTAssertEqual(iconTextFit, annotation.iconTextFit?.rawValue)
+    }
+
+    func testIconTextFitPadding() {
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+        annotation.iconTextFitPadding =  [Double].testConstantValue()
+
+        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
+            return
+        }
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .array(iconTextFitPadding) = layerProperties["icon-text-fit-padding"] else {
+            return XCTFail("Layer property icon-text-fit-padding should be set to a array of Doubles.")
+        }
+        XCTAssertEqual(iconTextFitPadding.compactMap { $0?.rawValue } as? [Double], annotation.iconTextFitPadding)
+    }
+
     func testSymbolSortKey() {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.symbolSortKey =  Double.testConstantValue()

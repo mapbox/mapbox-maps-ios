@@ -374,26 +374,6 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    /// Scales the icon to fit around the associated text.
-    public var iconTextFit: IconTextFit? {
-        get {
-            return layerProperties["icon-text-fit"].flatMap { $0 as? String }.flatMap(IconTextFit.init(rawValue:))
-        }
-        set {
-            layerProperties["icon-text-fit"] = newValue?.rawValue
-        }
-    }
-
-    /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
-    public var iconTextFitPadding: [Double]? {
-        get {
-            return layerProperties["icon-text-fit-padding"] as? [Double]
-        }
-        set {
-            layerProperties["icon-text-fit-padding"] = newValue
-        }
-    }
-
     /// If true, the symbols will not cross tile edges to avoid mutual collisions. Recommended in layers that don't have enough padding in the vector tile to prevent collisions, or if it is a point symbol layer placed after a line symbol layer. When using a client that supports global collision detection, like Mapbox GL JS version 0.42.0 or greater, enabling this property is not needed to prevent clipped labels at tile boundaries.
     public var symbolAvoidEdges: Bool? {
         get {
@@ -450,7 +430,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
             return (layerProperties["text-font"] as? [Any])?[1] as? [String]
         }
         set {
-            layerProperties["text-font"] = newValue.map { ["literal", $0] }
+            layerProperties["text-font"] = newValue.map { ["literal", $0] as [Any] }
         }
     }
 
@@ -584,6 +564,28 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
     }
 
+    /// Scales the icon to fit around the associated text.
+    @available(*, deprecated, message: "icon-text-fit property is now data driven, use `PointAnnotation.iconTextFit` instead.")
+    public var iconTextFit: IconTextFit? {
+        get {
+            return layerProperties["icon-text-fit"].flatMap { $0 as? String }.flatMap(IconTextFit.init(rawValue:))
+        }
+        set {
+            layerProperties["icon-text-fit"] = newValue?.rawValue
+        }
+    }
+
+    /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
+    @available(*, deprecated, message: "icon-text-fit-padding property is now data driven, use `PointAnnotation.iconTextFitPadding` instead.")
+    public var iconTextFitPadding: [Double]? {
+        get {
+            return layerProperties["icon-text-fit-padding"] as? [Double]
+        }
+        set {
+            layerProperties["icon-text-fit-padding"] = newValue
+        }
+    }
+    
     // MARK: - User interaction handling
 
     /// Returns the first annotation matching the set of given `featureIdentifiers`.

@@ -258,6 +258,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -348,6 +350,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -438,6 +442,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -528,6 +534,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -618,6 +626,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -708,6 +718,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -798,6 +810,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -847,186 +861,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-rotation-alignment"] as! String, defaultValue)
     }
 
-    func testInitialIconTextFit() {
-        let initialValue = manager.iconTextFit
-        XCTAssertNil(initialValue)
-    }
-
-    func testSetIconTextFit() {
-        let value = IconTextFit.allCases.randomElement()!
-        manager.iconTextFit = value
-        XCTAssertEqual(manager.iconTextFit, value)
-
-        // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-text-fit"] as! String, value.rawValue)
-    }
-
-    func testIconTextFitAnnotationPropertiesAddedWithoutDuplicate() {
-        let newIconTextFitProperty = IconTextFit.allCases.randomElement()!
-        let secondIconTextFitProperty = IconTextFit.allCases.randomElement()!
-
-        manager.iconTextFit = newIconTextFitProperty
-        manager.syncSourceAndLayerIfNeeded()
-        manager.iconTextFit = secondIconTextFitProperty
-        manager.syncSourceAndLayerIfNeeded()
-
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-text-fit"] as! String, secondIconTextFitProperty.rawValue)
-    }
-
-    func testNewIconTextFitPropertyMergedWithAnnotationProperties() {
-        var annotations = [PointAnnotation]()
-        for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
-            annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-            annotation.iconRotate = Double.random(in: -100000...100000)
-            annotation.iconSize = Double.random(in: 0...100000)
-            annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
-            annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
-            annotation.textLetterSpacing = Double.random(in: -100000...100000)
-            annotation.textLineHeight = Double.random(in: -100000...100000)
-            annotation.textMaxWidth = Double.random(in: 0...100000)
-            annotation.textOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-            annotation.textRadialOffset = Double.random(in: -100000...100000)
-            annotation.textRotate = Double.random(in: -100000...100000)
-            annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
-            annotation.iconColor = StyleColor.random()
-            annotation.iconHaloBlur = Double.random(in: 0...100000)
-            annotation.iconHaloColor = StyleColor.random()
-            annotation.iconHaloWidth = Double.random(in: 0...100000)
-            annotation.iconOpacity = Double.random(in: 0...1)
-            annotation.textColor = StyleColor.random()
-            annotation.textHaloBlur = Double.random(in: 0...100000)
-            annotation.textHaloColor = StyleColor.random()
-            annotation.textHaloWidth = Double.random(in: 0...100000)
-            annotation.textOpacity = Double.random(in: 0...1)
-            annotations.append(annotation)
-        }
-        let newIconTextFitProperty = IconTextFit.allCases.randomElement()!
-
-        manager.annotations = annotations
-        manager.iconTextFit = newIconTextFitProperty
-        manager.syncSourceAndLayerIfNeeded()
-
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
-        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-text-fit"])
-    }
-
-    func testSetToNilIconTextFit() {
-        let newIconTextFitProperty = IconTextFit.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "icon-text-fit").value as! String
-        manager.iconTextFit = newIconTextFitProperty
-        manager.syncSourceAndLayerIfNeeded()
-        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-text-fit"])
-
-        manager.iconTextFit = nil
-        manager.syncSourceAndLayerIfNeeded()
-        XCTAssertNil(manager.iconTextFit)
-
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-text-fit"] as! String, defaultValue)
-    }
-
-    func testInitialIconTextFitPadding() {
-        let initialValue = manager.iconTextFitPadding
-        XCTAssertNil(initialValue)
-    }
-
-    func testSetIconTextFitPadding() {
-        let value = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-        manager.iconTextFitPadding = value
-        XCTAssertEqual(manager.iconTextFitPadding, value)
-
-        // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-text-fit-padding"] as! [Double], value)
-    }
-
-    func testIconTextFitPaddingAnnotationPropertiesAddedWithoutDuplicate() {
-        let newIconTextFitPaddingProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-        let secondIconTextFitPaddingProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-
-        manager.iconTextFitPadding = newIconTextFitPaddingProperty
-        manager.syncSourceAndLayerIfNeeded()
-        manager.iconTextFitPadding = secondIconTextFitPaddingProperty
-        manager.syncSourceAndLayerIfNeeded()
-
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-text-fit-padding"] as! [Double], secondIconTextFitPaddingProperty)
-    }
-
-    func testNewIconTextFitPaddingPropertyMergedWithAnnotationProperties() {
-        var annotations = [PointAnnotation]()
-        for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
-            annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-            annotation.iconRotate = Double.random(in: -100000...100000)
-            annotation.iconSize = Double.random(in: 0...100000)
-            annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
-            annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
-            annotation.textLetterSpacing = Double.random(in: -100000...100000)
-            annotation.textLineHeight = Double.random(in: -100000...100000)
-            annotation.textMaxWidth = Double.random(in: 0...100000)
-            annotation.textOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-            annotation.textRadialOffset = Double.random(in: -100000...100000)
-            annotation.textRotate = Double.random(in: -100000...100000)
-            annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
-            annotation.iconColor = StyleColor.random()
-            annotation.iconHaloBlur = Double.random(in: 0...100000)
-            annotation.iconHaloColor = StyleColor.random()
-            annotation.iconHaloWidth = Double.random(in: 0...100000)
-            annotation.iconOpacity = Double.random(in: 0...1)
-            annotation.textColor = StyleColor.random()
-            annotation.textHaloBlur = Double.random(in: 0...100000)
-            annotation.textHaloColor = StyleColor.random()
-            annotation.textHaloWidth = Double.random(in: 0...100000)
-            annotation.textOpacity = Double.random(in: 0...1)
-            annotations.append(annotation)
-        }
-        let newIconTextFitPaddingProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-
-        manager.annotations = annotations
-        manager.iconTextFitPadding = newIconTextFitPaddingProperty
-        manager.syncSourceAndLayerIfNeeded()
-
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
-        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-text-fit-padding"])
-    }
-
-    func testSetToNilIconTextFitPadding() {
-        let newIconTextFitPaddingProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "icon-text-fit-padding").value as! [Double]
-        manager.iconTextFitPadding = newIconTextFitPaddingProperty
-        manager.syncSourceAndLayerIfNeeded()
-        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-text-fit-padding"])
-
-        manager.iconTextFitPadding = nil
-        manager.syncSourceAndLayerIfNeeded()
-        XCTAssertNil(manager.iconTextFitPadding)
-
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-text-fit-padding"] as! [Double], defaultValue)
-    }
-
     func testInitialSymbolAvoidEdges() {
         let initialValue = manager.symbolAvoidEdges
         XCTAssertNil(initialValue)
@@ -1068,6 +902,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -1158,6 +994,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -1248,6 +1086,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -1338,6 +1178,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -1428,6 +1270,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -1518,6 +1362,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -1608,6 +1454,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -1698,6 +1546,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -1788,6 +1638,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -1878,6 +1730,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -1968,6 +1822,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -2058,6 +1914,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -2148,6 +2006,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -2240,6 +2100,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -2332,6 +2194,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -2422,6 +2286,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -2512,6 +2378,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -2602,6 +2470,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -2692,6 +2562,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))

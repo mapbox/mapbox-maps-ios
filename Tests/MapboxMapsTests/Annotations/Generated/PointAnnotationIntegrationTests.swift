@@ -243,60 +243,6 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(layer.iconRotationAlignment, .constant(IconRotationAlignment(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "icon-rotation-alignment").value as! String)!))
     }
 
-    func testIconTextFit() throws {
-        // Test that the setter and getter work
-        let value = IconTextFit.allCases.randomElement()!
-        manager.iconTextFit = value
-        XCTAssertEqual(manager.iconTextFit, value)
-
-        // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
-        var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        if case .constant(let actualValue) = layer.iconTextFit {
-            XCTAssertEqual(actualValue, value)
-        } else {
-            XCTFail("Expected constant")
-        }
-
-        // Test that the property can be reset to nil
-        manager.iconTextFit = nil
-        XCTAssertNil(manager.iconTextFit)
-
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
-        layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconTextFit, .constant(IconTextFit(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "icon-text-fit").value as! String)!))
-    }
-
-    func testIconTextFitPadding() throws {
-        // Test that the setter and getter work
-        let value = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-        manager.iconTextFitPadding = value
-        XCTAssertEqual(manager.iconTextFitPadding, value)
-
-        // Test that the value is synced to the layer
-        manager.syncSourceAndLayerIfNeeded()
-        var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        if case .constant(let actualValue) = layer.iconTextFitPadding {
-            for (actual, expected) in zip(actualValue, value) {
-                XCTAssertEqual(actual, expected, accuracy: 0.1)
-            }
-        } else {
-            XCTFail("Expected constant")
-        }
-
-        // Test that the property can be reset to nil
-        manager.iconTextFitPadding = nil
-        XCTAssertNil(manager.iconTextFitPadding)
-
-        // Verify that when the property is reset to nil,
-        // the layer is returned to the default value
-        manager.syncSourceAndLayerIfNeeded()
-        layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconTextFitPadding, .constant(Style.layerPropertyDefaultValue(for: .symbol, property: "icon-text-fit-padding").value as! [Double]))
-    }
-
     func testSymbolAvoidEdges() throws {
         // Test that the setter and getter work
         let value = Bool.random()
@@ -975,6 +921,80 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.syncSourceAndLayerIfNeeded()
         layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
         XCTAssertEqual(layer.iconSize, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "icon-size").value as! NSNumber).doubleValue))
+    }
+
+    func testIconTextFit() throws {
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+        // Test that the setter and getter work
+        let value = IconTextFit.allCases.randomElement()!
+        annotation.iconTextFit = value
+        XCTAssertEqual(annotation.iconTextFit, value)
+
+        manager.annotations = [annotation]
+
+        // Test that the value is synced to the layer
+        manager.syncSourceAndLayerIfNeeded()
+        var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        XCTAssertEqual(layer.iconTextFit, .expression(Exp(.toString) {
+                Exp(.get) {
+                    "icon-text-fit"
+                    Exp(.objectExpression) {
+                        Exp(.get) {
+                            "layerProperties"
+                        }
+                    }
+                }
+            }))
+
+        // Test that the property can be reset to nil
+        annotation.iconTextFit = nil
+        XCTAssertNil(annotation.iconTextFit)
+
+        manager.annotations = [annotation]
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.syncSourceAndLayerIfNeeded()
+        layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        XCTAssertEqual(layer.iconTextFit, .constant(IconTextFit(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "icon-text-fit").value as! String)!))
+    }
+
+    func testIconTextFitPadding() throws {
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+        // Test that the setter and getter work
+        let value = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+        annotation.iconTextFitPadding = value
+        XCTAssertEqual(annotation.iconTextFitPadding, value)
+
+        manager.annotations = [annotation]
+
+        // Test that the value is synced to the layer
+        manager.syncSourceAndLayerIfNeeded()
+        var layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        XCTAssertEqual(layer.iconTextFitPadding, .expression(Exp(.array) {
+                "number"
+                4
+                Exp(.get) {
+                    "icon-text-fit-padding"
+                    Exp(.objectExpression) {
+                        Exp(.get) {
+                            "layerProperties"
+                        }
+                    }
+                }
+            }))
+
+        // Test that the property can be reset to nil
+        annotation.iconTextFitPadding = nil
+        XCTAssertNil(annotation.iconTextFitPadding)
+
+        manager.annotations = [annotation]
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.syncSourceAndLayerIfNeeded()
+        layer = try style.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        XCTAssertEqual(layer.iconTextFitPadding, .constant(Style.layerPropertyDefaultValue(for: .symbol, property: "icon-text-fit-padding").value as! [Double]))
     }
 
     func testSymbolSortKey() throws {

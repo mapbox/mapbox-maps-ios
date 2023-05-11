@@ -74,10 +74,11 @@ public class OrnamentsManager: NSObject {
     private let _attributionButton: InfoButtonOrnament
 
     private var constraints = [NSLayoutConstraint]()
+    private var cancellables = Set<AnyCancelable>()
 
     internal init(options: OrnamentOptions,
                   view: UIView,
-                  mapboxMap: MapboxMapProtocol,
+                  onCameraChanged: Signal<CameraChanged>,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol,
                   infoButtonOrnamentDelegate: InfoButtonOrnamentDelegate,
                   logoView: LogoView,
@@ -123,17 +124,12 @@ public class OrnamentsManager: NSObject {
 
         updateOrnaments()
 
-        // Subscribe to updates for scalebar and compass
-        // MapboxMap should not be allowed to own a strong ref to compassView
-        // since compassView owns a tapAction that captures a strong ref to
-        // cameraAnimationsManager which has a strong ref to mapboxMap.
-        mapboxMap.onEvery(event: .cameraChanged) { [weak mapboxMap, weak scaleBarView, weak compassView] _ in
-            guard let mapboxMap = mapboxMap,
-                  let scaleBarView = scaleBarView,
+        onCameraChanged.observe { [weak scaleBarView, weak compassView] event in
+            guard let scaleBarView = scaleBarView,
                   let compassView = compassView else {
                 return
             }
-            let cameraState = mapboxMap.cameraState
+            let cameraState = event.cameraState
 
             // Update the scale bar
             scaleBarView.metersPerPoint = Projection.metersPerPoint(
@@ -142,7 +138,7 @@ public class OrnamentsManager: NSObject {
 
             // Update the compass
             compassView.currentBearing = Double(cameraState.bearing)
-        }
+        }.store(in: &cancellables)
     }
 
     private func updateOrnaments() {

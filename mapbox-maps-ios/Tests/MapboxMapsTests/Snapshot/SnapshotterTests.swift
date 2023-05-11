@@ -5,8 +5,7 @@ import XCTest
 import CoreLocation
 
 final class SnapshotterTests: XCTestCase {
-
-    var mapboxObservableProviderStub: Stub<ObservableProtocol, MapboxObservableProtocol>!
+    var mapEventsSource: MapEventsSource!
     var snapshotter: Snapshotter!
     var mockMapSnapshotter: MockMapSnapshotter!
 
@@ -15,17 +14,17 @@ final class SnapshotterTests: XCTestCase {
         let options = MapSnapshotOptions(
             size: CGSize(width: 100, height: 100),
             pixelRatio: .random(in: 1...3))
-        mapboxObservableProviderStub = Stub(defaultReturnValue: MockMapboxObservable())
+        mapEventsSource = MapEventsSource(makeGenericSubject: { _ in .init() })
         mockMapSnapshotter = MockMapSnapshotter()
         snapshotter = Snapshotter(
             options: options,
-            mapboxObservableProvider: mapboxObservableProviderStub.call(with:),
-            mapSnapshotter: mockMapSnapshotter)
+            mapSnapshotter: mockMapSnapshotter,
+            style: Style(with: mockMapSnapshotter),
+            events: MapEvents(source: mapEventsSource))
     }
 
     override func tearDown() {
         snapshotter = nil
-        mapboxObservableProviderStub = nil
         mockMapSnapshotter = nil
         super.tearDown()
     }
@@ -140,116 +139,58 @@ final class SnapshotterTests: XCTestCase {
         XCTAssertEqual(returnedOptions, cameraOptions)
     }
 
-    func testInitializationMapboxObservable() throws {
-        XCTAssertEqual(mapboxObservableProviderStub.invocations.count, 1)
-        XCTAssertIdentical(mapboxObservableProviderStub.invocations.first?.parameters, snapshotter.mapSnapshotter)
-    }
-
-    func testSubscribe() throws {
-        let observer = MockObserver()
-        let events: [String] = .random()
-        let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
-
-        snapshotter.subscribe(observer, events: events)
-
-        XCTAssertEqual(mapboxObservable.subscribeStub.invocations.count, 1)
-        XCTAssertIdentical(mapboxObservable.subscribeStub.invocations.first?.parameters.observer, observer)
-        XCTAssertEqual(mapboxObservable.subscribeStub.invocations.first?.parameters.events, events)
-    }
-
-    func testUnsubscribe() throws {
-        let observer = MockObserver()
-        let events: [String] = .random()
-        let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
-
-        snapshotter.unsubscribe(observer, events: events)
-
-        XCTAssertEqual(mapboxObservable.unsubscribeStub.invocations.count, 1)
-        XCTAssertIdentical(mapboxObservable.unsubscribeStub.invocations.first?.parameters.observer, observer)
-        XCTAssertEqual(mapboxObservable.unsubscribeStub.invocations.first?.parameters.events, events)
-    }
-
+    @available(*, deprecated)
     func testOnTypedNext() throws {
-        func verifyInvocation<Payload>(
-            eventType: MapEvents.Event<Payload>,
-            event: MapEvent<Payload> = .init(event: Event(type: "", data: 0)),
-            handlerStub: Stub<MapEvent<Payload>, Void> = .init()
-        ) throws {
-            let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
+        let mapLoadedStub = Stub<MapLoaded, Void>()
+        let token = snapshotter.onNext(event: .mapLoaded, handler: mapLoadedStub.call(with:))
+        defer { token.cancel() }
 
-            snapshotter.onNext(event: eventType, handler: handlerStub.call(with:))
+        let mapLoaded1 = MapLoaded(timeInterval: EventTimeInterval(begin: Date(), end: Date()))
+        let mapLoaded2 = MapLoaded(timeInterval: EventTimeInterval(begin: Date(), end: Date()))
+        mapEventsSource.onMapLoaded.send(mapLoaded1)
+        mapEventsSource.onMapLoaded.send(mapLoaded2)
 
-            XCTAssertEqual(mapboxObservable.onTypedNextStub.invocations.count, 1)
-            XCTAssertEqual(mapboxObservable.onTypedNextStub.invocations.first?.parameters.eventName, eventType.name)
-            // To verify that the handler passed to Snapshotter is effectively the same as the one received by MapboxObservable,
-            // we exercise the received handler and verify that the passed one is invoked. If blocks were identifiable, maybe
-            // we'd just write this as `passedHandler === receivedHandler`.
-            let handler = try XCTUnwrap(mapboxObservable.onTypedNextStub.invocations.first?.parameters.handler)
-            handler(event)
-            XCTAssertEqual(handlerStub.invocations.count, 1)
-            XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
-        }
+        XCTAssertEqual(mapLoadedStub.invocations.count, 1)
+        XCTAssertIdentical(mapLoadedStub.invocations[0].parameters, mapLoaded1)
 
-        // swiftlint:disable opening_brace
-        let eventInvocations = [
-            { try verifyInvocation(eventType: .mapLoaded) },
-            { try verifyInvocation(eventType: .mapLoadingError) },
-            { try verifyInvocation(eventType: .mapIdle) },
-            { try verifyInvocation(eventType: .styleDataLoaded) },
-            { try verifyInvocation(eventType: .styleLoaded) },
-            { try verifyInvocation(eventType: .styleImageMissing) },
-            { try verifyInvocation(eventType: .styleImageRemoveUnused) },
-            { try verifyInvocation(eventType: .sourceDataLoaded) },
-            { try verifyInvocation(eventType: .sourceAdded) },
-            { try verifyInvocation(eventType: .sourceRemoved) },
-            { try verifyInvocation(eventType: .renderFrameStarted) },
-            { try verifyInvocation(eventType: .renderFrameFinished) },
-            { try verifyInvocation(eventType: .cameraChanged) },
-            { try verifyInvocation(eventType: .resourceRequest) }
-        ]
-        // swiftlint:enable opening_brace
-        try eventInvocations.randomElement()!()
+        // ignored cancellable
+        let sourceAddedStub = Stub<SourceAdded, Void>()
+        snapshotter.onNext(event: .sourceAdded, handler: sourceAddedStub.call(with:))
+
+        let sourceAdded1 = SourceAdded(sourceID: "source-id-1", timestamp: Date())
+        let sourceAdded2 = SourceAdded(sourceID: "source-id-2", timestamp: Date())
+        mapEventsSource.onSourceAdded.send(sourceAdded1)
+        mapEventsSource.onSourceAdded.send(sourceAdded2)
+        mapEventsSource.onSourceAdded.send(sourceAdded2)
+
+        XCTAssertEqual(sourceAddedStub.invocations.count, 1)
+        XCTAssertIdentical(sourceAddedStub.invocations[0].parameters, sourceAdded1)
     }
 
+    @available(*, deprecated)
     func testOnTypedEvery() throws {
-        func verifyInvocation<Payload>(
-            eventType: MapEvents.Event<Payload>,
-            event: MapEvent<Payload> = .init(event: Event(type: "", data: 0)),
-            handlerStub: Stub<MapEvent<Payload>, Void> = .init()
-        ) throws {
-            let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
+        let mapLoadedStub = Stub<MapLoaded, Void>()
+        let token = snapshotter.onEvery(event: .mapLoaded, handler: mapLoadedStub.call(with:))
+        defer { token.cancel() }
 
-            snapshotter.onEvery(event: eventType, handler: handlerStub.call(with:))
+        let mapLoaded1 = MapLoaded(timeInterval: EventTimeInterval(begin: Date(), end: Date()))
+        let mapLoaded2 = MapLoaded(timeInterval: EventTimeInterval(begin: Date(), end: Date()))
+        mapEventsSource.onMapLoaded.send(mapLoaded1)
+        mapEventsSource.onMapLoaded.send(mapLoaded2)
 
-            XCTAssertEqual(mapboxObservable.onTypedEveryStub.invocations.count, 1)
-            XCTAssertEqual(mapboxObservable.onTypedEveryStub.invocations.first?.parameters.eventName, eventType.name)
-            // To verify that the handler passed to Snapshotter is effectively the same as the one received by MapboxObservable,
-            // we exercise the received handler and verify that the passed one is invoked. If blocks were identifiable, maybe
-            // we'd just write this as `passedHandler === receivedHandler`.
-            let handler = try XCTUnwrap(mapboxObservable.onTypedEveryStub.invocations.first?.parameters.handler)
-            handler(event)
-            XCTAssertEqual(handlerStub.invocations.count, 1)
-            XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
-        }
+        XCTAssertIdentical(mapLoadedStub.invocations[0].parameters, mapLoaded1)
+        XCTAssertIdentical(mapLoadedStub.invocations[1].parameters, mapLoaded2)
 
-        // swiftlint:disable opening_brace
-        let eventInvocations = [
-            { try verifyInvocation(eventType: .mapLoaded) },
-            { try verifyInvocation(eventType: .mapLoadingError) },
-            { try verifyInvocation(eventType: .mapIdle) },
-            { try verifyInvocation(eventType: .styleDataLoaded) },
-            { try verifyInvocation(eventType: .styleLoaded) },
-            { try verifyInvocation(eventType: .styleImageMissing) },
-            { try verifyInvocation(eventType: .styleImageRemoveUnused) },
-            { try verifyInvocation(eventType: .sourceDataLoaded) },
-            { try verifyInvocation(eventType: .sourceAdded) },
-            { try verifyInvocation(eventType: .sourceRemoved) },
-            { try verifyInvocation(eventType: .renderFrameStarted) },
-            { try verifyInvocation(eventType: .renderFrameFinished) },
-            { try verifyInvocation(eventType: .cameraChanged) },
-            { try verifyInvocation(eventType: .resourceRequest) }
-        ]
-        // swiftlint:enable opening_brace
-        try eventInvocations.randomElement()!()
+        // ignored cancellable
+        let sourceAddedStub = Stub<SourceAdded, Void>()
+        snapshotter.onEvery(event: .sourceAdded, handler: sourceAddedStub.call(with:))
+
+        let sourceAdded1 = SourceAdded(sourceID: "source-id-1", timestamp: Date())
+        let sourceAdded2 = SourceAdded(sourceID: "source-id-2", timestamp: Date())
+        mapEventsSource.onSourceAdded.send(sourceAdded1)
+        mapEventsSource.onSourceAdded.send(sourceAdded2)
+
+        XCTAssertIdentical(sourceAddedStub.invocations[0].parameters, sourceAdded1)
+        XCTAssertIdentical(sourceAddedStub.invocations[1].parameters, sourceAdded2)
     }
 }

@@ -1,4 +1,5 @@
 import XCTest
+@testable import MapboxMaps
 
 internal class IntegrationTestCase: XCTestCase {
 
@@ -6,13 +7,16 @@ internal class IntegrationTestCase: XCTestCase {
     internal var rootViewController: UIViewController?
     internal var accessToken: String!
     internal var createdWindow = false
+    internal var cancelables = Set<AnyCancelable>()
 
     internal override func setUpWithError() throws {
+        cancelables.removeAll()
         try setupScreenAndWindow()
         accessToken = try mapboxAccessToken()
     }
 
     internal override func tearDownWithError() throws {
+        cancelables.removeAll()
         if createdWindow {
             rootViewController?.viewWillDisappear(false)
             rootViewController?.viewDidDisappear(false)

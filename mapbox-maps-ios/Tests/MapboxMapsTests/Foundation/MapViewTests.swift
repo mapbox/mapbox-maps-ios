@@ -11,7 +11,7 @@ final class MapViewTests: XCTestCase {
     var dependencyProvider: MockMapViewDependencyProvider!
     var attributionURLOpener: MockAttributionURLOpener!
     var applicationState: UIApplication.State!
-    var applicationStateProvider: Provider<UIApplication.State>?
+    var applicationStateProvider: Ref<UIApplication.State>?
     var mapView: MapView!
     var window: UIWindow!
     var metalView: MockMetalView!
@@ -31,7 +31,7 @@ final class MapViewTests: XCTestCase {
         dependencyProvider.makeLocationProducerStub.defaultReturnValue = locationProducer
         attributionURLOpener = MockAttributionURLOpener()
         applicationState = .active
-        applicationStateProvider = Provider { self.applicationState }
+        applicationStateProvider = Ref { self.applicationState }
         mapView = buildMapView()
         window = UIWindow()
         window.addSubview(mapView)
@@ -418,7 +418,7 @@ final class MapViewTestsWithScene: XCTestCase {
     var orientationProvider: MockInterfaceOrientationProvider!
     var attributionURLOpener: MockAttributionURLOpener!
     var applicationState: UIApplication.State!
-    var applicationStateProvider: Provider<UIApplication.State>?
+    var applicationStateProvider: Ref<UIApplication.State>?
     var mapView: MapView!
     var window: UIWindow!
     var metalView: MockMetalView!
@@ -440,7 +440,7 @@ final class MapViewTestsWithScene: XCTestCase {
         orientationProvider = MockInterfaceOrientationProvider()
         attributionURLOpener = MockAttributionURLOpener()
         applicationState = .active
-        applicationStateProvider = Provider { self.applicationState }
+        applicationStateProvider = Ref { self.applicationState }
         mapView = MapView(
             frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
             mapInitOptions: MapInitOptions(),

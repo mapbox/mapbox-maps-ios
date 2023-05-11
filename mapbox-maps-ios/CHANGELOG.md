@@ -22,11 +22,23 @@ Mapbox welcomes participation and contributions from everyone.
 * Added experimental `tileCover` method to `MapboxMap` that returns tile ids covering the map.
 * Expose `owner` property for `CameraAnimator` protocol
 * Updated core styles to the latest versions.
-* Merge `TilesetDescriptorOptions` and `TilesetDescriptorOptionsForTilesets`. To enable tileset descriptor creation for a list of tilesets that are not part of the original style use `TilesetDescriptorOptions`. 
+* Merge `TilesetDescriptorOptions` and `TilesetDescriptorOptionsForTilesets`. To enable tileset descriptor creation for a list of tilesets that are not part of the original style use `TilesetDescriptorOptions`.
 * Use `DataRef` to pass snapshot and style image data by reference, improving performance
 * Bumped min iOS version to 12.0
 * Expose a subset of ModelLayer APIs.
 * Protocol `LocationProvider` now requires class semantic for implementation.
+* The Map events have been reworked:
+  - Now all event payloads are serialize-free, which brings more type safety and eliminates possible deserialization errors;
+  - `MapboxMap` and `Snapshotter` now have the `events` object which allows you to subscribe to map events via `observe` and `observeNext` methods:
+    ```swift
+      mapboxMap.onMapLoaded.observe { [weak self] event in
+        self?.camera = event.cameraState
+      }.store(in: &cancelables)
+    ```
+  - The `Cancelable` object returned from `observe` and `observeNext` should be stored, otherwise the subscription will be immediately canceled;
+  - Old methods `MapboxMap.onEvery`, `MapboxMap.onNext`, `Snapshotter.onEvery`, `Snapshotter.onNext` have been deprecated;
+  - Old API `MapboxMap.observe` and `Snapshotter.observe` have been removed.
+
 
 ## 10.12.0 - March 22, 2023
 

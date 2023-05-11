@@ -18,8 +18,7 @@ internal protocol MapboxMapProtocol: AnyObject {
     func endAnimation()
     func beginGesture()
     func endGesture()
-    @discardableResult
-    func onEvery<Payload>(event eventType: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable
+
     // View annotation management
     func setViewAnnotationPositionsUpdateListener(_ listener: ViewAnnotationPositionsUpdateListener?)
     func addViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws
@@ -41,32 +40,38 @@ internal protocol MapboxMapProtocol: AnyObject {
 ///
 /// - Important: MapboxMap should only be used from the main thread.
 public final class MapboxMap: MapboxMapProtocol {
-    /// The underlying renderer object responsible for rendering the map
+    /// The underlying renderer object responsible for rendering the map.
     private let __map: Map
+    private var cancelables = Set<AnyCancelable>()
 
     /// The `style` object supports run time styling.
     public let style: Style
 
-    private let observable: MapboxObservableProtocol
+    /// Provides access to events triggered during Map lifecycle.
+    public let events: MapEvents
 
     deinit {
         __map.destroyRenderer()
     }
 
-    internal init(mapClient: MapClient,
-                  mapInitOptions: MapInitOptions,
-                  mapboxObservableProvider: (ObservableProtocol) -> MapboxObservableProtocol) {
-        let coreOptions = MapboxCoreMaps.ResourceOptions(mapInitOptions.resourceOptions)
+    internal init(map: Map, events: MapEvents, style: Style) {
+        self.__map = map
+        self.events = events
+        self.style = style
 
-        __map = Map(
+        __map.createRenderer()
+    }
+
+    internal convenience init(mapClient: MapClient, mapInitOptions: MapInitOptions) {
+        let coreOptions = MapboxCoreMaps.ResourceOptions(mapInitOptions.resourceOptions)
+        let map = Map(
             client: mapClient,
             mapOptions: mapInitOptions.mapOptions,
             resourceOptions: coreOptions)
-        __map.createRenderer()
-
-        observable = mapboxObservableProvider(__map)
-
-        style = Style(with: __map)
+        self.init(
+            map: map,
+            events: MapEvents(observable: map),
+            style: Style(with: map))
     }
 
     // MARK: - Render loop
@@ -80,23 +85,22 @@ public final class MapboxMap: MapboxMapProtocol {
 
     // MARK: - Style loading
 
-    private func observeStyleLoad(_ completion: @escaping (Result<Style, Error>) -> Void) {
-        let cancellable = CompositeCancelable()
-
-        cancellable.add(onNext(event: .styleLoaded) { [style] _ in
-            if !style.isLoaded {
-                Log.warning(forMessage: "style.isLoaded == false, was this an empty style?", category: "Style")
+    private func observeStyleLoad(_ completion: @escaping (Result<Style, MapLoadingError>) -> Void) {
+        weak var weakToken: AnyCancelable?
+        let token = events.onStyleLoaded
+            .combine(withError: events.onMapLoadingError)
+            .observeNext { [style, weak self] result in
+                if !style.isLoaded {
+                    Log.warning(forMessage: "style.isLoaded == false, was this an empty style?", category: "Style")
+                }
+                let result = result.map { _ in style }
+                completion(result)
+                if let token = weakToken, let self = self {
+                    self.cancelables.remove(token)
+                }
             }
-            completion(.success(style))
-            cancellable.cancel()
-        })
-
-        cancellable.add(onEvery(event: .mapLoadingError) { event in
-            guard case .style = event.payload.error else { return }
-
-            completion(.failure(event.payload.error))
-            cancellable.cancel()
-        })
+        weakToken = token
+        token.store(in: &cancelables)
     }
 
     /// Loads a `style` from a StyleURI, calling a completion closure when the
@@ -107,7 +111,7 @@ public final class MapboxMap: MapboxMapProtocol {
     ///   - completion: Closure called when the style has been fully loaded. The
     ///     `Result` type encapsulates the `Style` or error that occurred. See
     ///     `MapLoadingError`
-    public func loadStyleURI(_ styleURI: StyleURI, completion: ((Result<Style, Error>) -> Void)? = nil) {
+    public func loadStyleURI(_ styleURI: StyleURI, completion: ((Result<Style, MapLoadingError>) -> Void)? = nil) {
         if let completion = completion {
             observeStyleLoad(completion)
         }
@@ -122,7 +126,7 @@ public final class MapboxMap: MapboxMapProtocol {
     ///   - completion: Closure called when the style has been fully loaded. The
     ///     `Result` type encapsulates the `Style` or error that occurred. See
     ///     `MapLoadingError`
-    public func loadStyleJSON(_ JSON: String, completion: ((Result<Style, Error>) -> Void)? = nil) {
+    public func loadStyleJSON(_ JSON: String, completion: ((Result<Style, MapLoadingError>) -> Void)? = nil) {
         if let completion = completion {
             observeStyleLoad(completion)
         }
@@ -832,38 +836,6 @@ extension MapboxMap: MapFeatureQueryable {
     }
 }
 
-extension MapboxMap {
-    /// Subscribes an observer to a list of events.
-    ///
-    /// `MapboxMap` holds a strong reference to `observer` while it is subscribed. To stop receiving
-    /// notifications, pass the same `observer` to `unsubscribe(_:events:)`.
-    ///
-    /// - Parameters:
-    ///   - observer: An object that will receive events of the types specified by `events`
-    ///   - events: Array of event types to deliver to `observer`
-    ///
-    /// - Note:
-    ///     Prefer `onNext(eventTypes:handler:)`, `onNext(_:handler:)`, and
-    ///     `onEvery(_:handler:)` to using this lower-level APIs
-    public func subscribe(_ observer: Observer, events: [String]) {
-        observable.subscribe(observer, events: events)
-    }
-
-    /// Unsubscribes an observer from a provided list of event types.
-    ///
-    /// `MapboxMap` holds a strong reference to `observer` while it is subscribed. To stop receiving
-    /// notifications, pass the same `observer` to this method as was passed to
-    /// `subscribe(_:events:)`.
-    ///
-    /// - Parameters:
-    ///   - observer: The object to unsubscribe
-    ///   - events: Array of event types to unsubscribe from. Pass an
-    ///     empty array (the default) to unsubscribe from all events.
-    public func unsubscribe(_ observer: Observer, events: [String] = []) {
-        observable.unsubscribe(observer, events: events)
-    }
-}
-
 // MARK: - Map Event handling
 
 extension MapboxMap {
@@ -884,9 +856,10 @@ extension MapboxMap {
     /// - Returns: A `Cancelable` object that you can use to stop listening for
     ///     the event. This is especially important if you have a retain cycle in
     ///     the handler.
+    @available(*, deprecated, message: "Use mapboxMap.events.on<eventType>.observeNext instead.")
     @discardableResult
-    public func onNext<Payload>(event eventType: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable {
-        return observable.onNext(event: eventType, handler: handler)
+    public func onNext<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (Payload) -> Void) -> Cancelable {
+        events.onNext(event: event, handler: handler)
     }
 
     /// Listen to multiple occurrences of a Map event.
@@ -898,13 +871,14 @@ extension MapboxMap {
     /// - Returns: A `Cancelable` object that you can use to stop listening for
     ///     events. This is especially important if you have a retain cycle in
     ///     the handler.
+    @available(*, deprecated, message: "Use mapboxMap.events.on<eventType>.observe instead.")
     @discardableResult
-    public func onEvery<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable {
-        return observable.onEvery(event: event, handler: handler)
+    public func onEvery<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (Payload) -> Void) -> Cancelable {
+        events.onEvery(event: event, handler: handler)
     }
 
     internal func performWithoutNotifying(_ block: () -> Void) {
-        observable.performWithoutNotifying(block)
+        events.performWithoutNotifying(block)
     }
 }
 

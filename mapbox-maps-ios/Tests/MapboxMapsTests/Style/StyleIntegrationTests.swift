@@ -624,7 +624,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         try! self.style.addSource(source2, id: sourceID2)
 
         mapView.mapboxMap.onEvery(event: .sourceDataLoaded) { event in
-            returnedSourceDataId = event.payload.dataId
+            returnedSourceDataId = event.dataID
             XCTAssertEqual(returnedSourceDataId, dataId)
 
             expectation.fulfill()

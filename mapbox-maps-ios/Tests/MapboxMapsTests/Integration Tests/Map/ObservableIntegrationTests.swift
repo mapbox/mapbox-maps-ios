@@ -1,17 +1,5 @@
 import XCTest
-import MapboxMaps
-
-class ObservableIntegrationTestsObserver: Observer {
-    var notificationHandler: (MapboxCoreMaps.Event) -> Void
-
-    init(with notificationHandler: @escaping (MapboxCoreMaps.Event) -> Void) {
-        self.notificationHandler = notificationHandler
-    }
-
-    func notify(for event: MapboxCoreMaps.Event) {
-        notificationHandler(event)
-    }
-}
+@testable import MapboxMaps
 
 class ObservableIntegrationTests: MapViewIntegrationTestCase {
 
@@ -26,26 +14,11 @@ class ObservableIntegrationTests: MapViewIntegrationTestCase {
         let eventExpectation = XCTestExpectation(description: "Event should have been received")
         eventExpectation.assertForOverFulfill = false
 
-        let observer = ObservableIntegrationTestsObserver { (event) in
-            XCTAssertEqual(event.type, "resource-request")
-
-            guard let info = event.data as? [String: Any] else {
-                XCTFail("Invalid data format")
-                return
-            }
-
-            guard let dataSource = info["data-source"] as? String else {
-                XCTFail("dataSource should be a String")
-                return
-            }
-
-            let validDatasources = ["resource-loader", "network", "database", "asset", "file-system"]
-            XCTAssert(validDatasources.contains(dataSource))
-
+        mapView.mapboxMap.events.onResourceRequest.observe { req in
+            let validDataSources = [RequestDataSourceType.resourceLoader, .network, .database, .asset, .fileSystem]
+            XCTAssert(validDataSources.contains(req.source))
             eventExpectation.fulfill()
-        }
-
-        mapView.mapboxMap.subscribe(observer, events: ["resource-request"])
+        }.store(in: &cancelables)
 
         style.uri = .streets
 
@@ -56,7 +29,5 @@ class ObservableIntegrationTests: MapViewIntegrationTestCase {
         }
 
         wait(for: [styleLoadExpectation, eventExpectation], timeout: 5.0)
-
-        mapView.mapboxMap.unsubscribe(observer)
     }
 }

@@ -3,7 +3,6 @@ import UIKit
 internal protocol MapViewDependencyProviderProtocol: AnyObject {
     var notificationCenter: NotificationCenterProtocol { get }
     var bundle: BundleProtocol { get }
-    var mapboxObservableProvider: (ObservableProtocol) -> MapboxObservableProtocol { get }
     var cameraAnimatorsRunnerEnablable: MutableEnablableProtocol { get }
     func makeMetalView(frame: CGRect, device: MTLDevice?) -> MTKView
     func makeDisplayLink(window: UIWindow, target: Any, selector: Selector) -> DisplayLinkProtocol?
@@ -42,8 +41,6 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     internal let notificationCenter: NotificationCenterProtocol = NotificationCenter.default
 
     internal let bundle: BundleProtocol = Bundle.main
-
-    internal let mapboxObservableProvider: (ObservableProtocol) -> MapboxObservableProtocol = MapboxObservable.init
 
     internal let cameraAnimatorsRunnerEnablable: MutableEnablableProtocol = Enablable()
     private let mainQueue: MainQueueProtocol = MainQueueWrapper()

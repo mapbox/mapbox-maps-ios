@@ -19,14 +19,13 @@ internal final class Puck2D: Puck {
                     .observe { [weak self] (location) in
                         self?.latestLocation = location
                         return true
-                    }
-                    .add(to: cancelables)
+                    }.erased.store(in: &cancelables)
                 if configuration.pulsing?.isEnabled == true {
                     displayLinkCoordinator?.add(self)
                 }
             } else {
                 displayLinkCoordinator?.remove(self)
-                cancelables.cancelAll()
+                cancelables.removeAll()
                 try? style.removeLayer(withId: Self.layerID)
                 try? style.removeImage(withId: Self.topImageId)
                 try? style.removeImage(withId: Self.bearingImageId)
@@ -59,7 +58,7 @@ internal final class Puck2D: Puck {
     private let style: StyleProtocol
     private let interpolatedLocationProducer: InterpolatedLocationProducerProtocol
     private let mapboxMap: MapboxMapProtocol
-    private let cancelables = CancelableContainer()
+    private var cancelables = Set<AnyCancelable>()
     private let timeProvider: TimeProvider
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
     // cache the encoded configuration.resolvedScale to avoid work at every location update

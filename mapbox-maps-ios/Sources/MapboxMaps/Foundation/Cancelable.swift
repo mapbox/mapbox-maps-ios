@@ -1,9 +1,15 @@
-/// A type that conforms to ``Cancelable`` typically represents a long
-/// running operation that can be canceled. Custom implementations
-/// must behave correctly if ``Cancelable/cancel()`` is invoked
-/// more than once.
+/// A protocol that indicates that activity supports cancellation.
+///
+/// This class has similar meaning as `Combine.Cancellable`, but doesn't require iOS 13.
 public protocol Cancelable: AnyObject {
+    /// Cancels activity.
     func cancel()
+}
+
+extension Cancelable {
+    internal var erased: AnyCancelable {
+        return AnyCancelable(self)
+    }
 }
 
 internal final class CommonCancelableWrapper: Cancelable {
@@ -17,6 +23,8 @@ internal final class CommonCancelableWrapper: Cancelable {
         cancelable.cancel()
     }
 }
+
+extension MapboxCommon.Cancelable: Cancelable {}
 
 extension MapboxCommon.Cancelable {
     internal func asCancelable() -> Cancelable {

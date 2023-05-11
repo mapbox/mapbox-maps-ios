@@ -14,11 +14,10 @@ internal final class Puck3D: Puck {
                     .observe { [weak self] _ in
                         self?.updateSourceAndLayer()
                         return true
-                    }
-                    .add(to: cancelables)
+                    }.erased.store(in: &cancelables)
                 updateSourceAndLayer()
             } else {
-                cancelables.cancelAll()
+                cancelables.removeAll()
                 if style.layerExists(withId: Self.layerID) {
                     try! style.removeLayer(withId: Self.layerID)
                 }
@@ -42,7 +41,7 @@ internal final class Puck3D: Puck {
     private let style: StyleProtocol
     private let interpolatedLocationProducer: InterpolatedLocationProducerProtocol
 
-    private let cancelables = CancelableContainer()
+    private var cancelables = Set<AnyCancelable>()
 
     internal init(configuration: Puck3DConfiguration,
                   style: StyleProtocol,

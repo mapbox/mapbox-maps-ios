@@ -176,7 +176,10 @@ struct Examples {
                 type: ResizableImageExample.self),
         Example(title: "Geojson performance",
                 description: "Display long route as large geojson",
-                type: LargeGeoJSONPerformanceExample.self)
+                type: LargeGeoJSONPerformanceExample.self),
+        Example(title: "Map Events",
+                description: "Print out map events and data",
+                type: MapEventsExample.self)
     ]
 
     // Examples that focus on displaying the user's location.

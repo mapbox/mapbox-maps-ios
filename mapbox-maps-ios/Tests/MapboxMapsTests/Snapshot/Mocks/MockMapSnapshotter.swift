@@ -61,18 +61,4 @@ final class MockMapSnapshotter: MockStyleManager, MapSnapshotterProtocol {
     func coordinateBoundsForCamera(forCamera camera: MapboxCoreMaps.CameraOptions) -> CoordinateBounds {
         coordinateBoundsForCameraStub.call(with: camera)
     }
-
-    struct SubscribeParams {
-        var observer: Observer
-        var events: [String]
-    }
-    var subscribeStub = Stub<SubscribeParams, Void>()
-    func subscribe(for observer: Observer, events: [String]) {
-        subscribeStub.call(with: SubscribeParams(observer: observer, events: events))
-    }
-
-    var unsubscribeStub = Stub<Observer, Void>()
-    func unsubscribe(for observer: Observer) {
-        unsubscribeStub.call(with: observer)
-    }
 }

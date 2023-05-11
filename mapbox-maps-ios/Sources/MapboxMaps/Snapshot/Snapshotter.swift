@@ -6,7 +6,7 @@ import CoreImage.CIFilterBuiltins
 @_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
 
-internal protocol MapSnapshotterProtocol: StyleManagerProtocol, ObservableProtocol {
+internal protocol MapSnapshotterProtocol: StyleManagerProtocol {
     func setSizeFor(_ size: Size)
 
     func getSize() -> Size
@@ -41,30 +41,32 @@ public class Snapshotter {
     /// A `style` object that can be manipulated to set different styles for a snapshot
     public let style: Style
 
-    private let options: MapSnapshotOptions
+    /// Provides access to events triggered during Snapshotter lifecycle.
+    public let events: MapEvents
 
-    private let observable: MapboxObservableProtocol
+    private let options: MapSnapshotOptions
 
     /// Initialize a `Snapshotter` instance
     /// - Parameters:
     ///   - options: Options describing an intended snapshot
-    public init(options: MapSnapshotOptions) {
-        self.options = options
-        mapSnapshotter = MapSnapshotter(options: MapboxCoreMaps.MapSnapshotOptions(options))
-        style = Style(with: mapSnapshotter)
-        observable = MapboxObservable(observable: mapSnapshotter)
-
-        sendTurnstileEvent(accessToken: options.resourceOptions.accessToken)
+    convenience public init(options: MapSnapshotOptions) {
+        let impl = MapSnapshotter(options: MapboxCoreMaps.MapSnapshotOptions(options))
+        self.init(
+            options: options,
+            mapSnapshotter: impl,
+            style: Style(with: impl),
+            events: MapEvents(observable: impl.asStyleManager()))
     }
 
     /// Enables injecting mocks when unit testing
     internal init(options: MapSnapshotOptions,
-                  mapboxObservableProvider: (ObservableProtocol) -> MapboxObservableProtocol,
-                  mapSnapshotter: MapSnapshotterProtocol) {
+                  mapSnapshotter: MapSnapshotterProtocol,
+                  style: Style,
+                  events: MapEvents) {
         self.options = options
         self.mapSnapshotter = mapSnapshotter
-        style = Style(with: mapSnapshotter)
-        observable = mapboxObservableProvider(mapSnapshotter)
+        self.style = style
+        self.events = events
 
         sendTurnstileEvent(accessToken: options.resourceOptions.accessToken)
     }
@@ -311,37 +313,6 @@ public class Snapshotter {
 }
 
 extension Snapshotter {
-    /// Subscribes an observer to a list of events.
-    ///
-    /// `Snapshotter` holds a strong reference to `observer` while it is subscribed. To stop receiving
-    /// notifications, pass the same `observer` to `unsubscribe(_:events:)`.
-    ///
-    /// - Parameters:
-    ///   - observer: An object that will receive events of the types specified by `events`
-    ///   - events: Array of event types to deliver to `observer`
-    ///
-    /// - Note:
-    ///     Prefer `onNext(_:handler:)` and `onEvery(_:handler:)` to using this lower-level APIs
-    public func subscribe(_ observer: Observer, events: [String]) {
-        observable.subscribe(observer, events: events)
-    }
-
-    /// Unsubscribes an observer from a list of events.
-    ///
-    /// `Snapshotter` holds a strong reference to `observer` while it is subscribed. To stop receiving
-    /// notifications, pass the same `observer` to this method as was passed to
-    /// `subscribe(_:events:)`.
-    ///
-    /// - Parameters:
-    ///   - observer: The object to unsubscribe
-    ///   - events: Array of event types to unsubscribe from. Pass an
-    ///     empty array (the default) to unsubscribe from all events.
-    public func unsubscribe(_ observer: Observer, events: [String] = []) {
-        observable.unsubscribe(observer, events: events)
-    }
-}
-
-extension Snapshotter {
     /// Listen to a single occurrence of a Map event.
     ///
     /// This will observe the next (and only the next) event of the specified
@@ -358,9 +329,10 @@ extension Snapshotter {
     /// - Returns: A `Cancelable` object that you can use to stop listening for
     ///     the event. This is especially important if you have a retain cycle in
     ///     the handler.
+    @available(*, deprecated)
     @discardableResult
-    public func onNext<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable {
-        return observable.onNext(event: event, handler: handler)
+    public func onNext<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (Payload) -> Void) -> Cancelable {
+        events.onNext(event: event, handler: handler)
     }
 
     /// Listen to multiple occurrences of a Map event.
@@ -372,9 +344,10 @@ extension Snapshotter {
     /// - Returns: A `Cancelable` object that you can use to stop listening for
     ///     events. This is especially important if you have a retain cycle in
     ///     the handler.
+    @available(*, deprecated)
     @discardableResult
-    public func onEvery<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable {
-        return observable.onEvery(event: event, handler: handler)
+    public func onEvery<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (Payload) -> Void) -> Cancelable {
+        events.onEvery(event: event, handler: handler)
     }
 }
 

@@ -97,7 +97,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                         return
                     }
 
-                    print("The map has finished loading style data of type = \(event.payload.type)")
+                    print("The map has finished loading style data of type = \(event.type)")
                     handler()
                 }
 
@@ -155,8 +155,8 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                  You can use the associated error message to notify the user that map
                  data is unavailable.
                  */
-                mapView.mapboxMap.onNext(event: .mapLoadingError) { (event) in
-                    print("The map failed to load.. \(event.payload.error)")
+                mapView.mapboxMap.onNext(event: .mapLoadingError) { error in
+                    print("The map failed to load.. \(error)")
                 }
             }
         }

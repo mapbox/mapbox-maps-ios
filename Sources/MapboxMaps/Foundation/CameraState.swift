@@ -26,14 +26,6 @@ public struct CameraState: Hashable {
         self.pitch = pitch
     }
 
-    internal init(_ objcValue: MapboxCoreMaps.CameraState) {
-        self.center = objcValue.center
-        self.padding = objcValue.padding.toUIEdgeInsetsValue()
-        self.zoom = CGFloat(objcValue.zoom)
-        self.bearing = CLLocationDirection(objcValue.bearing)
-        self.pitch = CGFloat(objcValue.pitch)
-    }
-
     public static func == (lhs: CameraState, rhs: CameraState) -> Bool {
         return lhs.center.latitude == rhs.center.latitude
             && lhs.center.longitude == rhs.center.longitude
@@ -53,5 +45,26 @@ public struct CameraState: Hashable {
         hasher.combine(zoom)
         hasher.combine(bearing)
         hasher.combine(pitch)
+    }
+}
+
+extension CameraState {
+    internal init(_ objcValue: MapboxCoreMaps.CameraState) {
+        self.center = objcValue.center
+        self.padding = objcValue.padding.toUIEdgeInsetsValue()
+        self.zoom = CGFloat(objcValue.zoom)
+        self.bearing = CLLocationDirection(objcValue.bearing)
+        self.pitch = CGFloat(objcValue.pitch)
+    }
+}
+
+extension MapboxCoreMaps.CameraState {
+    internal convenience init(_ swiftValue: CameraState) {
+        self.init(
+            center: swiftValue.center,
+            padding: swiftValue.padding.toMBXEdgeInsetsValue(),
+            zoom: swiftValue.zoom,
+            bearing: swiftValue.bearing,
+            pitch: swiftValue.pitch)
     }
 }

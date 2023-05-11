@@ -204,8 +204,7 @@ public final class Style: StyleProtocol {
      Adds a `source` to the map
      - Parameter source: The source to add to the map.
      - Parameter identifier: A unique source identifier.
-     - Parameter dataId: An optional data ID to filter ``MapEvents.sourceDataLoaded`` to only the specified data source.
-     /// Applies only to GeoJSONSources
+     - Parameter dataId: An optional data ID to filter ``MapEvents/onSourceDataLoaded`` to only the specified data source. Applies only to ``GeoJSONSource``s.
 
      - Throws: ``StyleError`` if there is a problem adding the `source`.
      */

@@ -173,7 +173,7 @@ open class MapView: UIView {
 
     internal let attributionUrlOpener: AttributionURLOpener
 
-    internal let applicationStateProvider: Provider<UIApplication.State>?
+    internal let applicationStateProvider: Ref<UIApplication.State>?
 
     internal let eventsManager: EventsManagerProtocol
 
@@ -283,7 +283,7 @@ open class MapView: UIView {
                   mapInitOptions: MapInitOptions,
                   dependencyProvider: MapViewDependencyProviderProtocol,
                   urlOpener: AttributionURLOpener,
-                  applicationStateProvider: Provider<UIApplication.State>?) {
+                  applicationStateProvider: Ref<UIApplication.State>?) {
         let trace = OSLog.platform.beginInterval("MapView.init")
         defer { trace?.end() }
         self.dependencyProvider = dependencyProvider
@@ -339,8 +339,7 @@ open class MapView: UIView {
         mapClient.delegate = self
         mapboxMap = MapboxMap(
             mapClient: mapClient,
-            mapInitOptions: resolvedMapInitOptions,
-            mapboxObservableProvider: dependencyProvider.mapboxObservableProvider)
+            mapInitOptions: resolvedMapInitOptions)
 
         subscribeToLifecycleNotifications()
         notificationCenter.addObserver(self,
@@ -417,7 +416,7 @@ open class MapView: UIView {
         ornaments = OrnamentsManager(
             options: OrnamentOptions(),
             view: self,
-            mapboxMap: mapboxMap,
+            onCameraChanged: mapboxMap.events.onCameraChanged,
             cameraAnimationsManager: internalCamera,
             infoButtonOrnamentDelegate: attributionDialogManager,
             logoView: LogoView(logoSize: .regular()),

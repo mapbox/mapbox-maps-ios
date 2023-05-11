@@ -19,18 +19,7 @@ final class MockMapboxMap: MapboxMapProtocol {
         maxPitch: 50,
         minPitch: 0)
 
-    var cameraState = CameraState(
-        center: CLLocationCoordinate2D(
-            latitude: 0,
-            longitude: 0),
-        padding: UIEdgeInsets(
-            top: 0,
-            left: 0,
-            bottom: 0,
-            right: 0),
-        zoom: 0,
-        bearing: 0,
-        pitch: 0)
+    var cameraState = CameraState.zero
 
     var anchor = CGPoint.zero
 
@@ -61,17 +50,6 @@ final class MockMapboxMap: MapboxMapProtocol {
     let dragEndStub = Stub<Void, Void>()
     func dragEnd() {
         dragEndStub.call()
-    }
-
-    struct OnEveryParams {
-        var eventName: String
-        var handler: (Any) -> Void
-    }
-    let onEveryStub = Stub<OnEveryParams, Cancelable>(defaultReturnValue: MockCancelable())
-    @discardableResult
-    func onEvery<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable {
-        // swiftlint:disable:next force_cast
-        onEveryStub.call(with: OnEveryParams(eventName: event.name, handler: { handler($0 as! MapEvent<Payload>)}))
     }
 
     let beginAnimationStub = Stub<Void, Void>()

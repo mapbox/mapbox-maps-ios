@@ -6,8 +6,6 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
 
     @Stubbed var bundle: BundleProtocol = MockBundle()
 
-    @Stubbed var mapboxObservableProvider: (ObservableProtocol) -> MapboxObservableProtocol = { _ in MockMapboxObservable() }
-
     @Stubbed var cameraAnimatorsRunnerEnablable: MutableEnablableProtocol = Enablable()
 
     // MARK: - Metal view

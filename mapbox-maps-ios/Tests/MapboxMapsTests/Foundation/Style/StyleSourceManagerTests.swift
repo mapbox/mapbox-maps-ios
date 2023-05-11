@@ -130,8 +130,8 @@ final class StyleSourceManagerTests: XCTestCase {
         try sourceManager.updateGeoJSONSource(withId: id, geoJSON: geoJSONObject)
 
         XCTAssertEqual(backgroundQueue.asyncWorkItemStub.invocations.count, 1)
-        XCTAssertEqual(styleManager.setStyleGeoJSONSourceDataForSourceIdStub.invocations.count, 1)
-        let setGeoJSONParams = try XCTUnwrap(styleManager.setStyleGeoJSONSourceDataForSourceIdStub.invocations.first?.parameters)
+        XCTAssertEqual(styleManager.setStyleGeoJSONSourceDataForSourceIdDataIDStub.invocations.count, 1)
+        let setGeoJSONParams = try XCTUnwrap(styleManager.setStyleGeoJSONSourceDataForSourceIdDataIDStub.invocations.first?.parameters)
         XCTAssertEqual(setGeoJSONParams.sourceId, id)
         // swiftlint:disable:next force_cast
         XCTAssertTrue((setGeoJSONParams.data.value as! [Any]).isEmpty)
@@ -217,7 +217,7 @@ final class StyleSourceManagerTests: XCTestCase {
         backgroundQueue.asyncWorkItemStub.invocations.forEach { $0.parameters.perform() }
 
         XCTAssertEqual(backgroundQueue.asyncWorkItemStub.invocations.count, iterations)
-        XCTAssertEqual(styleManager.setStyleGeoJSONSourceDataForSourceIdStub.invocations.count, 1)
+        XCTAssertEqual(styleManager.setStyleGeoJSONSourceDataForSourceIdDataIDStub.invocations.count, 1)
     }
 
     func testMultipleDistinctDirectAsyncGeoJSONUpdateDoNotCancelEachOtherOutWithDataID() throws {
@@ -408,8 +408,9 @@ final class StyleSourceManagerTests: XCTestCase {
         XCTAssertEqual(params.sourceId, id)
         XCTAssertEqual(params.properties as? NSDictionary, ["type": "geojson", "data": ""] as? NSDictionary)
         XCTAssertEqual(backgroundQueue.asyncWorkItemStub.invocations.count, 1)
-        XCTAssertEqual(styleManager.setStyleGeoJSONSourceDataForSourceIdStub.invocations.count, 1)
-        let setStyleGeoJSONSourceDataForSourceIdParams = try XCTUnwrap(styleManager.setStyleGeoJSONSourceDataForSourceIdStub.invocations.first?.parameters)
+        XCTAssertEqual(styleManager.setStyleGeoJSONSourceDataForSourceIdDataIDStub.invocations.count, 1)
+        XCTAssertEqual(styleManager.setStyleGeoJSONSourceDataForSourceIdDataIDStub.invocations.count, 1)
+        let setStyleGeoJSONSourceDataForSourceIdParams = try XCTUnwrap(styleManager.setStyleGeoJSONSourceDataForSourceIdDataIDStub.invocations.first?.parameters)
         XCTAssertEqual(setStyleGeoJSONSourceDataForSourceIdParams.sourceId, id)
         XCTAssertEqual(setStyleGeoJSONSourceDataForSourceIdParams.data.value as? String, url.absoluteString)
     }

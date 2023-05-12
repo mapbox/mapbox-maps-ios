@@ -28,7 +28,7 @@ internal final class Puck3D: Puck {
         }
     }
 
-    internal var puckBearingSource: PuckBearingSource = .heading {
+    internal var puckBearing: PuckBearing = .heading {
         didSet {
             updateSourceAndLayer()
         }
@@ -72,7 +72,7 @@ internal final class Puck3D: Puck {
             } ?? [0, 0, 0]
 
         if puckBearingEnabled {
-            switch puckBearingSource {
+            switch puckBearing {
             case .heading:
                 if let validHeadingDirection = location.heading {
                     model.orientation?[2] += validHeadingDirection

@@ -39,6 +39,7 @@ Mapbox welcomes participation and contributions from everyone.
   - Old methods `MapboxMap.onEvery`, `MapboxMap.onNext`, `Snapshotter.onEvery`, `Snapshotter.onNext` have been deprecated;
   - Old API `MapboxMap.observe` and `Snapshotter.observe` have been removed.
 * Deprecate `PointAnnotationManager.iconTextFit` and `PointAnnotationManager.iconTextFitPadding` in favor of `PointAnnotation.iconTextFit` and `PointAnnotation.iconTextFitPadding`.
+* Remove deprecated `PuckBearingSource`and related APIs.
 * Experimental API `MapboxMap/setMemoryBudget` was renamed to `MapboxMaps/setTileCacheBudget` and promoted to stable.
 
 

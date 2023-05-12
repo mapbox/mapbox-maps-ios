@@ -245,5 +245,17 @@ EnumElement MapLoadingError.source has declared type change from (MapboxMaps.Map
 EnumElement MapLoadingError.tile has declared type change from (MapboxMaps.MapLoadingError.Type) -> (Swift.String) -> MapboxMaps.MapLoadingError to MapboxCoreMaps.CanonicalTileID?
 Struct ResourceRequest has removed conformance to Decodable
 
+// Add renamed flag for PuckBearingSource
+Constructor LocationOptions.init(distanceFilter:desiredAccuracy:activityType:puckType:puckBearingSource:puckBearingEnabled:) has been removed
+Enum PuckBearingSource has been renamed to Enum PuckBearing
+Var LocationOptions.puckBearingSource has been renamed to Var puckBearing
+EnumElement PuckBearingSource.course has declared type change from (MapboxMaps.PuckBearingSource.Type) -> MapboxMaps.PuckBearingSource to (MapboxMaps.PuckBearing.Type) -> MapboxMaps.PuckBearing
+EnumElement PuckBearingSource.heading has declared type change from (MapboxMaps.PuckBearingSource.Type) -> MapboxMaps.PuckBearingSource to (MapboxMaps.PuckBearing.Type) -> MapboxMaps.PuckBearing
+Func PuckBearingSource.==(_:_:) has parameter 0 type change from MapboxMaps.PuckBearingSource to MapboxMaps.PuckBearing
+Func PuckBearingSource.==(_:_:) has parameter 1 type change from MapboxMaps.PuckBearingSource to MapboxMaps.PuckBearing
+Var LocationOptions.puckBearingSource has declared type change from MapboxMaps.PuckBearingSource to MapboxMaps.PuckBearing
+Accessor LocationOptions.puckBearingSource.Get() has return type change from MapboxMaps.PuckBearingSource to MapboxMaps.PuckBearing
+Accessor LocationOptions.puckBearingSource.Set() has parameter 0 type change from MapboxMaps.PuckBearingSource to MapboxMaps.PuckBearing
+
 // Rename MemoryBudget API
 Func MapboxMap.setMemoryBudget(_:) has been removed

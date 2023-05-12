@@ -3,7 +3,7 @@
 final class MockPuckManager: PuckManagerProtocol {
     var puckType: PuckType?
 
-    var puckBearingSource: PuckBearingSource = .heading
+    var puckBearing: PuckBearing = .heading
 
     var puckBearingEnabled: Bool = true
 }

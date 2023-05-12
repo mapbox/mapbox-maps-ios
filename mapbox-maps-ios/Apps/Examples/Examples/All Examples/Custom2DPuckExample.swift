@@ -30,9 +30,9 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         }
     }
 
-    private var bearingSource: PuckBearingSource = .heading {
+    private var puckBearing: PuckBearing = .heading {
         didSet {
-            mapView.location.options.puckBearingSource = bearingSource
+            mapView.location.options.puckBearing = puckBearing
         }
     }
 
@@ -165,7 +165,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
 
         // Granularly configure the location puck with a `Puck2DConfiguration`
         mapView.location.options.puckType = .puck2D(puckConfiguration)
-        mapView.location.options.puckBearingSource = .heading
+        mapView.location.options.puckBearing = .heading
 
         // Center map over the user's current location
         mapView.mapboxMap.onNext(event: .mapLoaded, handler: { [weak self] _ in
@@ -231,7 +231,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         })
 
         alert.addAction(UIAlertAction(title: "Toggle bearing source", style: .default) { _ in
-            self.bearingSource.toggle()
+            self.puckBearing.toggle()
         })
 
         alert.addAction(UIAlertAction(title: "Toggle Map Style", style: .default) { _ in
@@ -269,7 +269,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
     }
 }
 
-extension PuckBearingSource {
+extension PuckBearing {
     mutating func toggle() {
         self = self == .heading ? .course : .heading
     }

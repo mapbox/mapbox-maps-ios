@@ -1,7 +1,7 @@
 /// Expresses the different ways that ``FollowPuckViewportState`` can obtain values to use when
 /// setting ``CameraOptions/bearing``.
 ///
-/// - SeeAlso: ``LocationOptions/puckBearingSource``
+/// - SeeAlso: ``LocationOptions/puckBearing``
 public enum FollowPuckViewportStateBearing: Hashable {
 
     /// ``FollowPuckViewportState`` sets ``CameraOptions/bearing`` to a constant value.

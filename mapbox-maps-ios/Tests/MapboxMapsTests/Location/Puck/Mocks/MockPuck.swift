@@ -2,6 +2,6 @@
 
 final class MockPuck: Puck {
     @Stubbed var isActive: Bool = false
-    @Stubbed var puckBearingSource: PuckBearingSource = .heading
+    @Stubbed var puckBearing: PuckBearing = .heading
     @Stubbed var puckBearingEnabled: Bool = true
 }

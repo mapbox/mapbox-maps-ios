@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Add a renamed flag to `PuckBearingSource` and related APIs.
+
 ## 10.13.1 - May 5, 2023
 
 * Remove XCFramework binary dependency on MapboxMobileEvents.

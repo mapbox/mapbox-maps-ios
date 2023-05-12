@@ -22,9 +22,9 @@ final class LocationOptionsTests: XCTestCase {
         XCTAssertEqual(locationOptions.activityType, .other)
     }
 
-    func testLocationOptionsPuckBearingSourceDefault() {
+    func testLocationOptionsPuckBearingDefault() {
         let locationOptions = LocationOptions()
-        XCTAssertEqual(locationOptions.puckBearingSource, .heading)
+        XCTAssertEqual(locationOptions.puckBearing, .heading)
     }
 
     func testLocationOptionsPuckBearingEnableDefault() {

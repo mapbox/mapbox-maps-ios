@@ -36,7 +36,7 @@ final class ViewportExample: UIViewController, ExampleProtocol {
         mapView.mapboxMap.setCamera(to: CameraOptions(center: cupertino, zoom: 14))
 
         mapView.location.options.puckType = .puck2D(.makeDefault(showBearing: true))
-        mapView.location.options.puckBearingSource = .heading
+        mapView.location.options.puckBearing = .heading
 
         followPuckViewportState = mapView.viewport.makeFollowPuckViewportState(
             options: FollowPuckViewportStateOptions(

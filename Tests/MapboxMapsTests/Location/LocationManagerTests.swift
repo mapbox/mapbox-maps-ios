@@ -31,7 +31,7 @@ final class LocationManagerTests: XCTestCase {
         XCTAssertNil(locationManager.delegate)
         XCTAssertEqual(locationProducer.locationProvider.locationProviderOptions, locationManager.options)
         XCTAssertEqual(puckManager.puckType, locationManager.options.puckType)
-        XCTAssertEqual(puckManager.puckBearingSource, locationManager.options.puckBearingSource)
+        XCTAssertEqual(puckManager.puckBearing, locationManager.options.puckBearing)
     }
 
     func testLatestLocationWhenLocationProducerLatestLocationIsNil() {
@@ -65,13 +65,13 @@ final class LocationManagerTests: XCTestCase {
         options.desiredAccuracy = .random(in: 0..<100)
         options.activityType = [.automotiveNavigation, .fitness, .other, .otherNavigation].randomElement()!
         options.puckType = [.puck2D(), .puck3D(Puck3DConfiguration(model: Model()))].randomElement()!
-        options.puckBearingSource = [.heading, .course].randomElement()!
+        options.puckBearing = [.heading, .course].randomElement()!
         options.puckBearingEnabled = .random()
         locationManager.options = options
 
         XCTAssertEqual(locationProducer.locationProvider.locationProviderOptions, options)
         XCTAssertEqual(puckManager.puckType, options.puckType)
-        XCTAssertEqual(puckManager.puckBearingSource, options.puckBearingSource)
+        XCTAssertEqual(puckManager.puckBearing, options.puckBearing)
         XCTAssertEqual(puckManager.puckBearingEnabled, options.puckBearingEnabled)
     }
 

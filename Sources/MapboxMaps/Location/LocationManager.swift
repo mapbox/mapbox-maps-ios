@@ -101,7 +101,7 @@ public final class LocationManager: NSObject {
             locationProducer.locationProvider.locationProviderOptions = options
         }
         puckManager.puckType = options.puckType
-        puckManager.puckBearingSource = options.puckBearingSource
+        puckManager.puckBearing = options.puckBearing
         puckManager.puckBearingEnabled = options.puckBearingEnabled
 
         interpolatedLocationProducer.isEnabled = options.puckType != nil

@@ -4,7 +4,7 @@ import UIKit
 
 internal protocol PuckManagerProtocol: AnyObject {
     var puckType: PuckType? { get set }
-    var puckBearingSource: PuckBearingSource { get set }
+    var puckBearing: PuckBearing { get set }
     var puckBearingEnabled: Bool { get set }
 }
 
@@ -29,15 +29,15 @@ internal final class PuckManager: PuckManagerProtocol {
             case .puck3D(let configuration):
                 puck = puck3DProvider(configuration)
             }
-            puck.puckBearingSource = puckBearingSource
+            puck.puckBearing = puckBearing
             puck.puckBearingEnabled = puckBearingEnabled
             self.puck = puck
         }
     }
 
-    internal var puckBearingSource: PuckBearingSource = .heading {
+    internal var puckBearing: PuckBearing = .heading {
         didSet {
-            puck?.puckBearingSource = puckBearingSource
+            puck?.puckBearing = puckBearing
         }
     }
 

@@ -127,7 +127,7 @@ final class SwiftUIMapViewCoordinator {
 
             /// The coordinator observes the `.cameraChanged` event, and
             /// whenever the camera changes, it updates the camera binding.
-            cancelable = mapView.mapboxMap.onEvery(event: .cameraChanged) { [unowned self] _ in
+            cancelable = mapView.mapboxMap.events.onCameraChanged.observe { [unowned self] event in
                 guard !ignoreNotifications else {
                     return
                 }
@@ -135,8 +135,8 @@ final class SwiftUIMapViewCoordinator {
                 /// As the camera changes, we update the binding. SwiftUI
                 /// will propagate this change to any other UI elements connected
                 /// to the same binding.
-                camera.center = mapView.cameraState.center
-                camera.zoom = mapView.cameraState.zoom
+                camera.center = event.cameraState.center
+                camera.zoom = event.cameraState.zoom
             }
 
             pointAnnotationManager = mapView.annotations.makePointAnnotationManager()

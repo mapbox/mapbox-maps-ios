@@ -3,6 +3,7 @@ import MapboxMaps
 @objc(PolygonAnnotationExample)
 final class PolygonAnnotationExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -15,12 +16,12 @@ final class PolygonAnnotationExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allows the delegate to receive information about map events.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
             self.setupExample()
 
             // The below line is used for internal testing purposes only.
             self.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     // Wait for the map to load before adding an annotation.

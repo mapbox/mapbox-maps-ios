@@ -6,6 +6,7 @@ import MapboxMaps
 public class LocalizationExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -17,9 +18,9 @@ public class LocalizationExample: UIViewController, ExampleProtocol {
         configureLanguageButton()
 
         // Allows the delegate to receive information about map events.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
             self.finish() // Needed for internal testing purposes.
-        }
+        }.store(in: &cancelables)
     }
 
     private func configureLanguageButton() {

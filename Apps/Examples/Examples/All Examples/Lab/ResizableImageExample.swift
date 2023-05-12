@@ -17,6 +17,7 @@ final class ResizableImageExample: UIViewController, ExampleProtocol {
         return mapView
     }()
     private var style: Style { mapView.mapboxMap.style }
+    private var cancelables = Set<AnyCancelable>()
 
     private var appendTextCounter = 1
     private var symbolLayer: SymbolLayer!
@@ -31,10 +32,10 @@ final class ResizableImageExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
             self?.setupExample()
             self?.startUpdatingIconText()
-        }
+        }.store(in: &cancelables)
     }
 
     override func viewDidAppear(_ animated: Bool) {

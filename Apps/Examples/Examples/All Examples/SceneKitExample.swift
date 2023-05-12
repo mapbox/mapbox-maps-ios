@@ -7,6 +7,7 @@ final class SceneKitExample: UIViewController, ExampleProtocol {
 
     var mapView: MapView!
     let modelOrigin = CLLocationCoordinate2D(latitude: -35.39847, longitude: 148.9819)
+    private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,11 +22,11 @@ final class SceneKitExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
+        mapView.mapboxMap.events.onStyleLoaded.observeNext { _ in
             self.addModelAndTerrain()
             // The following line is just for testing purposes.
             self.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     func addModelAndTerrain() {

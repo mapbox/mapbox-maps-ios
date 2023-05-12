@@ -5,6 +5,7 @@ import MapboxMaps
 class SymbolClusteringExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -19,9 +20,9 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Add the source and style layers once the map has loaded.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
             self.addSymbolClusteringLayers()
-        }
+        }.store(in: &cancelables)
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(gestureRecognizer:)))
         mapView.addGestureRecognizer(tapGestureRecognizer)

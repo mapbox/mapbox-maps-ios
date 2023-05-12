@@ -4,6 +4,7 @@ import MapboxMaps
 @objc(FeaturesAtPointExample)
 
 public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
+    private var cancelables = Set<AnyCancelable>()
 
     internal var mapView: MapView!
 
@@ -20,12 +21,12 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allows the view controller to receive information about map events.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
             self.setupExample()
 
             // The following line is just for testing purposes.
             self.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     public func setupExample() {

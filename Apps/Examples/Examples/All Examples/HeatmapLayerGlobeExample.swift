@@ -11,6 +11,7 @@ public class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
     internal let heatmapLayerSource = "earthquakes"
     internal let circleLayerId = "earthquakes-circle"
     internal let earthquakeURL = URL(string: "https://www.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson")!
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -26,12 +27,12 @@ public class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
         try! self.mapView.mapboxMap.style.setProjection(StyleProjection(name: .globe))
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
             try! self.mapView.mapboxMap.style.setAtmosphere(Atmosphere())
             self.addRuntimeLayers()
             self.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     func addRuntimeLayers() {

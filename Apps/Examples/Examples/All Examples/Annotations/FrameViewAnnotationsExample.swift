@@ -2,6 +2,7 @@ import UIKit
 import MapboxMaps
 
 final class FrameViewAnnotationsExample: UIViewController, ExampleProtocol {
+    private var cancelables = Set<AnyCancelable>()
 
     private enum Animator {
         case flyTo, easeTo, viewport
@@ -46,10 +47,10 @@ final class FrameViewAnnotationsExample: UIViewController, ExampleProtocol {
 
         addAnnotations()
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
             // The below line is used for internal testing purposes only.
             self?.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     private func makeButtonsView() -> UIView {

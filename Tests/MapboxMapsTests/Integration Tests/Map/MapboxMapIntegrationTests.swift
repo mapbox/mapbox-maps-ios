@@ -94,10 +94,10 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
         rootView.addSubview(mapView)
 
         let completionCalled = expectation(description: "Map is loaded")
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [mapView] _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { [mapView] _ in
             XCTAssertEqual(styleJSON, mapView?.mapboxMap.style.JSON)
             completionCalled.fulfill()
-        }
+        }.store(in: &cancelables)
 
         wait(for: [completionCalled], timeout: 2.0)
 
@@ -122,9 +122,9 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
 
     private func waitForNextIdle() {
         let waitForIdle = expectation(description: "Wait for idle")
-        mapView.mapboxMap.onNext(event: .mapIdle) { _ in
+        mapView.mapboxMap.events.onMapIdle.observeNext { _ in
             waitForIdle.fulfill()
-        }
+        }.store(in: &cancelables)
         wait(for: [waitForIdle], timeout: 30)
     }
 }

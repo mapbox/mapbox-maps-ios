@@ -7,6 +7,7 @@ public class SnapshotterCoreGraphicsExample: UIViewController, NonMapViewExample
     internal var mapView: MapView!
     public var snapshotter: Snapshotter!
     public var snapshotView: UIImageView!
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -30,9 +31,9 @@ public class SnapshotterCoreGraphicsExample: UIViewController, NonMapViewExample
         snapshotter = Snapshotter(options: options)
         snapshotter.style.uri = .dark
 
-        snapshotter.onNext(event: .styleLoaded) { [weak self] _ in
+        snapshotter.events.onStyleLoaded.observeNext { [weak self] _ in
             self?.startSnapshot()
-        }
+        }.store(in: &cancelables)
     }
 
     public func startSnapshot() {

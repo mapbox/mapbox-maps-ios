@@ -7,6 +7,7 @@ final class LiveDataExample: UIViewController, ExampleProtocol {
     let sourceId = "ISS-source"
     var mapView: MapView!
     var issTimer: Timer?
+    private var cancelables = Set<AnyCancelable>()
 
     struct Coordinates: Codable {
         let longitude: Double
@@ -27,12 +28,12 @@ final class LiveDataExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Add the live data layer once the map has finished loading.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
             self.addStyleLayer()
 
             // The following line is just for testing purposes.
             self.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     func addStyleLayer() {

@@ -6,6 +6,7 @@ import MapboxMaps
 public class PointClusteringExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -21,9 +22,9 @@ public class PointClusteringExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
-            self.addPointClusters()
-        }
+        mapView.mapboxMap.events.onStyleLoaded.observeNext { [weak self] _ in
+            self?.addPointClusters()
+        }.store(in: &cancelables)
     }
 
     func addPointClusters() {

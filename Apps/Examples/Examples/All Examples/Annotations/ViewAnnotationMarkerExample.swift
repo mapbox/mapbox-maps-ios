@@ -21,6 +21,7 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
 
     private let image = UIImage(named: "blue_marker_view")!
     private lazy var markerHeight: CGFloat = image.size.height
+    private var cancelables = Set<AnyCancelable>()
 
     lazy var styleChangeButton: UIButton = {
         let button = UIButton(type: .system)
@@ -48,14 +49,14 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
 
         addMarkerAndAnnotation(at: mapView.mapboxMap.coordinate(for: mapView.center))
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
             self.finish()
-        }
+        }.store(in: &cancelables)
 
-        mapView.mapboxMap.onEvery(event: .styleLoaded) { [weak self] _ in
+        mapView.mapboxMap.events.onStyleLoaded.observe { [weak self] _ in
             self?.prepareStyle()
-        }
+        }.store(in: &cancelables)
 
         mapView.mapboxMap.style.uri = .streets
 

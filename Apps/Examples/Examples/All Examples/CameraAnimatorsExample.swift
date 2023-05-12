@@ -5,6 +5,7 @@ import MapboxMaps
 class CameraAnimatorsExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     // Coordinate in New York City
     let newYork = CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060)
@@ -16,17 +17,17 @@ class CameraAnimatorsExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
+        mapView.mapboxMap.events.onStyleLoaded.observeNext { _ in
             // Center the map over New York City.
             self.mapView.mapboxMap.setCamera(to: CameraOptions(center: self.newYork))
-        }
+        }.store(in: &cancelables)
 
         // Allows the delegate to receive information about map events.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
             print("Animating zoom from zoom lvl 3 -> zoom lvl 14")
             self.startCameraAnimations()
             self.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     // Start a chain of camera animations

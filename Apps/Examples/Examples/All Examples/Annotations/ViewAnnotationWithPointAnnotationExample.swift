@@ -12,6 +12,7 @@ final class ViewAnnotationWithPointAnnotationExample: UIViewController, ExampleP
 
     private var mapView: MapView!
     private var pointAnnotationManager: PointAnnotationManager!
+    private var cancelables = Set<AnyCancelable>()
 
     private let image = UIImage(named: "blue_marker_view")!
     private lazy var markerHeight: CGFloat = image.size.height
@@ -28,7 +29,7 @@ final class ViewAnnotationWithPointAnnotationExample: UIViewController, ExampleP
 
         pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
 
             try? self.mapView.mapboxMap.style.addImage(self.image, id: Constants.blueIconId)
@@ -36,7 +37,7 @@ final class ViewAnnotationWithPointAnnotationExample: UIViewController, ExampleP
 
             // The below line is used for internal testing purposes only.
             self.finish()
-        }
+        }.store(in: &cancelables)
 
         mapView.mapboxMap.style.uri = .streets
 

@@ -4,11 +4,13 @@ import XCTest
 class MapInitOptionsIntegrationTests: XCTestCase {
 
     private var providerReturnValue: MapInitOptions!
+    private var cancelables = Set<AnyCancelable>()
 
     override func tearDown() {
         super.tearDown()
         providerReturnValue = nil
         ResourceOptionsManager.destroyDefault()
+        cancelables.removeAll()
     }
 
     func testOptionsWithCustomResourceOptionsManager() {
@@ -114,9 +116,9 @@ class MapInitOptionsIntegrationTests: XCTestCase {
         let view = MapView(frame: .zero, mapInitOptions: mapInitOptions)
 
         let expectation = self.expectation(description: "Wait for style to load")
-        view.mapboxMap.onNext(event: .styleLoaded) { _ in
+        view.mapboxMap.events.onStyleLoaded.observeNext { _ in
             expectation.fulfill()
-        }
+        }.store(in: &cancelables)
 
         wait(for: [expectation], timeout: 1.0)
 
@@ -146,9 +148,9 @@ class MapInitOptionsIntegrationTests: XCTestCase {
         let view = MapView(frame: .zero, mapInitOptions: mapInitOptions)
 
         let expectation = self.expectation(description: "Wait for style to load")
-        view.mapboxMap.onNext(event: .styleLoaded) { _ in
+        view.mapboxMap.events.onStyleLoaded.observeNext { _ in
             expectation.fulfill()
-        }
+        }.store(in: &cancelables)
 
         wait(for: [expectation], timeout: 1.0)
 

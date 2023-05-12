@@ -6,6 +6,7 @@ final class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
 
     private var mapView: MapView!
     private let customImage = UIImage(named: "star")!
+    private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,13 +21,13 @@ final class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allows the delegate to receive information about map events.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
             self.setupExample()
 
             // The following line is just for testing purposes.
             self.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     private func setupExample() {

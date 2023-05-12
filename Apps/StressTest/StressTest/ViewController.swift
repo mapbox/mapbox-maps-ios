@@ -23,6 +23,7 @@ extension CLLocationCoordinate2D {
 
 class ViewController: UIViewController {
     var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     lazy var pointAnnotationManager: PointAnnotationManager? = {
         mapView?.annotations.makePointAnnotationManager()
@@ -104,9 +105,9 @@ class ViewController: UIViewController {
         super.viewDidAppear(animated)
 
         // Set initial conditions
-        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
+        mapView.mapboxMap.events.onStyleLoaded.observeNext { _ in
             self.flyToNextCoordinate()
-        }
+        }.store(in: &cancelables)
 
         mapView.mapboxMap.style.uri = styles[styleStep].0
     }
@@ -302,7 +303,7 @@ class ViewController: UIViewController {
         snapshotter.style.uri = .light
         snapshotter.setCamera(to: CameraOptions(cameraState: mapView.cameraState))
 
-        snapshotter.onNext(event: .styleLoaded) { [weak self] _ in
+        snapshotter.events.onStyleLoaded.observeNext { [weak self] _ in
             guard let snapshotter = self?.snapshotter else {
                 assertionFailure("Snapshotter does not exist")
                 completion()
@@ -312,7 +313,7 @@ class ViewController: UIViewController {
             snapshotter.start(overlayHandler: nil) { _ in
                 completion()
             }
-        }
+        }.store(in: &cancelables)
 
         self.snapshotter = snapshotter
     }

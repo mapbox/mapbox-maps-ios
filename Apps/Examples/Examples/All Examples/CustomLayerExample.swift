@@ -5,6 +5,7 @@ import MapboxMaps
 final class CustomLayerExample: UIViewController, ExampleProtocol {
 
     var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -13,9 +14,9 @@ final class CustomLayerExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
+        mapView.mapboxMap.events.onStyleLoaded.observeNext { _ in
             self.addCustomLayer()
-        }
+        }.store(in: &cancelables)
     }
 
     override func viewDidAppear(_ animated: Bool) {

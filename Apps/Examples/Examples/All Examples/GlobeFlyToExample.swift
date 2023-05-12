@@ -7,6 +7,7 @@ class GlobeFlyToExample: UIViewController, ExampleProtocol {
     internal var mapView: MapView!
     internal var isAtStart = true
     var instuctionLabel = UILabel(frame: CGRect.zero)
+    private var cancelables = Set<AnyCancelable>()
 
     private var cameraStart = CameraOptions(
         center: CLLocationCoordinate2D(latitude: 36, longitude: 80),
@@ -28,11 +29,11 @@ class GlobeFlyToExample: UIViewController, ExampleProtocol {
         mapView.mapboxMap.setCamera(to: .init(center: CLLocationCoordinate2D(latitude: 40, longitude: -78), zoom: 1.0))
         try! self.mapView.mapboxMap.style.setProjection(StyleProjection(name: .globe))
 
-        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
+        mapView.mapboxMap.events.onStyleLoaded.observeNext { _ in
             try! self.mapView.mapboxMap.style.setAtmosphere(Atmosphere())
             self.addTerrain()
             self.finish()
-        }
+        }.store(in: &cancelables)
 
         let tap = UITapGestureRecognizer(target: self, action: #selector(animateCameraOnClick))
         mapView.addGestureRecognizer(tap)

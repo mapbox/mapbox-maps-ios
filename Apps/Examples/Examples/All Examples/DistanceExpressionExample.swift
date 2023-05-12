@@ -4,6 +4,7 @@ import MapboxMaps
 class DistanceExpressionExample: UIViewController, ExampleProtocol {
     var mapView: MapView!
     var point: Turf.Feature!
+    private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -15,12 +16,12 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
             self.addCircleLayer()
 
             // The following line is just for testing purposes.
             self.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     func addCircleLayer() {

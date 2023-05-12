@@ -1,7 +1,6 @@
 import MapboxMaps
 import Foundation
 
-@objc(DataJoinExample)
 final class DataJoinExample: UIViewController, ExampleProtocol {
     var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()

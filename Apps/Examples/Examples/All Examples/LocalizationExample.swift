@@ -1,8 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(LocalizationExample)
-
 public class LocalizationExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!

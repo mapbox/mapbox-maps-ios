@@ -1,7 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(LineAnnotationExample)
 final class LineAnnotationExample: UIViewController, ExampleProtocol {
 
     private var mapView: MapView!

@@ -1,8 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(DataDrivenSymbolsExample)
-
 public class DataDrivenSymbolsExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()
 

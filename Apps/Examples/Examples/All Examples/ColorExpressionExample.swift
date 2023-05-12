@@ -1,8 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(ColorExpressionExample)
-
 public class ColorExpressionExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!

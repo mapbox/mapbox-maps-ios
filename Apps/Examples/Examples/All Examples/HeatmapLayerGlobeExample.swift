@@ -1,7 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(HeatmapLayerGlobeExample)
 public class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!

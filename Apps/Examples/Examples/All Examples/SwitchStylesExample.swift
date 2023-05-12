@@ -1,8 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(SwitchStylesExample)
-
 public class SwitchStylesExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!

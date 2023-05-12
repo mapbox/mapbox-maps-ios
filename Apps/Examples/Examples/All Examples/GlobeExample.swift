@@ -2,7 +2,6 @@ import Foundation
 import UIKit
 import MapboxMaps
 
-@objc(GlobeExample)
 class GlobeExample: UIViewController, ExampleProtocol {
     internal var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()

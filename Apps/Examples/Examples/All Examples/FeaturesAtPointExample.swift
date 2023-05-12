@@ -1,8 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(FeaturesAtPointExample)
-
 public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()
 

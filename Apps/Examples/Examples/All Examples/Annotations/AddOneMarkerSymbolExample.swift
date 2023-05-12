@@ -1,7 +1,6 @@
 import Foundation
 import MapboxMaps
 
-@objc(AddOneMarkerSymbolExample)
 final class AddOneMarkerSymbolExample: UIViewController, ExampleProtocol {
     private enum Constants {
         static let BLUE_ICON_ID = "blue"

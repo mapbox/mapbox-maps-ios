@@ -1,6 +1,5 @@
 import MapboxMaps
 
-@objc(PolygonAnnotationExample)
 final class PolygonAnnotationExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()

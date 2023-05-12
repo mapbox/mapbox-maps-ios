@@ -1,7 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(TrackingModeExample)
 public class TrackingModeExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()
 

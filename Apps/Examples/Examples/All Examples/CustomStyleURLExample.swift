@@ -1,7 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(CustomStyleURLExample)
 internal class CustomStyleURLExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!

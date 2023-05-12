@@ -1,7 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(AnimateGeoJSONLine)
 public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!

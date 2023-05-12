@@ -1,7 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(FitCameraToGeometryExample)
 public class FitCameraToGeometryExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!

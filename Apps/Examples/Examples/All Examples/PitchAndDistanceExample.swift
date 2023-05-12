@@ -5,7 +5,6 @@
 import Foundation
 import MapboxMaps
 
-@objc(PitchAndDistanceExample)
 final class PitchAndDistanceExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()

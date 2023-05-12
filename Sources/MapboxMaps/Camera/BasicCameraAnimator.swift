@@ -1,6 +1,6 @@
 import UIKit
 
-public final class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorProtocol {
+public final class BasicCameraAnimator: CameraAnimator, CameraAnimatorProtocol {
 
     private let impl: BasicCameraAnimatorProtocol
 
@@ -51,7 +51,6 @@ public final class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimator
 
     internal init(impl: BasicCameraAnimatorProtocol) {
         self.impl = impl
-        super.init()
         impl.delegate = self
     }
 

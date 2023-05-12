@@ -1,7 +1,6 @@
 import MapboxMaps
 import UIKit
 
-@objc(RasterTileSourceExample)
 class RasterTileSourceExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()
     var mapView: MapView!
@@ -39,8 +38,7 @@ class RasterTileSourceExample: UIViewController, ExampleProtocol {
         button.addTarget(self, action: #selector(toggleTileRequestDelay), for: .touchUpInside)
     }
 
-    @objc
-    func toggleTileRequestDelay() {
+    @objc func toggleTileRequestDelay() {
         isTileRequestDelayEnabled.toggle()
         try? mapView.mapboxMap.style.setSourceProperty(for: sourceId, property: "tile-requests-delay", value: isTileRequestDelayEnabled ? 5000 : 0)
         button.setTitle(isTileRequestDelayEnabled ? "Disable tile request delay" : "Enable tile request delay", for: .normal)

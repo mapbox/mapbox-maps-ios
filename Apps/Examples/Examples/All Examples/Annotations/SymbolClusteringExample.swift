@@ -1,7 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(SymbolClusteringExample)
 class SymbolClusteringExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!

@@ -1,7 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(Custom2DPuckExample)
 public class Custom2DPuckExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()
 

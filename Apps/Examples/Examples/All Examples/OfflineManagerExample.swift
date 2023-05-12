@@ -11,7 +11,6 @@ import MapboxMaps
 /// will fail until excess regions are deleted. This limit is subject
 /// to change. Please contact Mapbox if you require a higher limit.
 /// Additional charges may apply.
-@objc(OfflineManagerExample)
 final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
     // This example uses a Storyboard to setup the following views
     @IBOutlet private var mapViewContainer: UIView!

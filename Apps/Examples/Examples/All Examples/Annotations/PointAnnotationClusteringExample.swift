@@ -1,7 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(PointAnnotationClusteringExample)
 class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!

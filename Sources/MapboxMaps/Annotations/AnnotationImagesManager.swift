@@ -7,7 +7,7 @@ internal protocol AnnotationImagesManagerProtocol: AnyObject {
     func unregister(imagesConsumer: AnnotationImagesConsumer)
 }
 
-@objc internal protocol AnnotationImagesConsumer {
+internal protocol AnnotationImagesConsumer: AnyObject {
     func isUsingStyleImage(_ imageName: String) -> Bool
 }
 
@@ -33,7 +33,7 @@ extension PointAnnotationManager: AnnotationImagesConsumer {
 internal final class AnnotationImagesManager: AnnotationImagesManagerProtocol {
 
     private let style: StyleProtocol
-    private var imagesConsumers = NSHashTable<AnnotationImagesConsumer>.weakObjects()
+    private var imagesConsumers = WeakSet<AnnotationImagesConsumer>()
     private var addedAnnotationImages = Set<String>()
 
     init(style: StyleProtocol) {

@@ -1,8 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(SkyLayerExample)
-
 public class SkyLayerExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!

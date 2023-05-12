@@ -2,7 +2,6 @@ import UIKit
 import MapboxMaps
 import CoreLocation
 
-@objc(ViewAnnotationMarkerExample)
 final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
 
     private enum Constants {

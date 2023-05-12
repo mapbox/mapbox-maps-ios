@@ -78,7 +78,7 @@ final class Puck2DTests: XCTestCase {
 
     func testDefaultPropertyValues() {
         XCTAssertFalse(puck2D.isActive)
-        XCTAssertEqual(puck2D.puckBearingSource, .heading)
+        XCTAssertEqual(puck2D.puckBearing, .heading)
         XCTAssertEqual(puck2D.puckBearingEnabled, true)
     }
 
@@ -373,10 +373,10 @@ final class Puck2DTests: XCTestCase {
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
 
-    func testActivatingPuckWithPuckBearingSourceSetToCourse() throws {
+    func testActivatingPuckWithPuckBearingSetToCourse() throws {
         let location = updateLocation(with: .fullAccuracy, course: .random(in: 0..<360))
         style.layerExistsStub.defaultReturnValue = false
-        puck2D.puckBearingSource = .course
+        puck2D.puckBearing = .course
 
         puck2D.isActive = true
 
@@ -386,10 +386,10 @@ final class Puck2DTests: XCTestCase {
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
 
-    func testActivatingPuckWithPuckBearingSourceSetToCourseWithNilCourse() throws {
+    func testActivatingPuckWithPuckBearingSetToCourseWithNilCourse() throws {
         updateLocation(with: .fullAccuracy, course: .random(in: 0..<360))
         style.layerExistsStub.defaultReturnValue = false
-        puck2D.puckBearingSource = .course
+        puck2D.puckBearing = .course
 
         puck2D.isActive = true
         let location = updateLocation(with: .fullAccuracy, course: nil)
@@ -406,10 +406,10 @@ final class Puck2DTests: XCTestCase {
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties.mapKeys(\.rawValue) as NSDictionary)
     }
 
-    func testActivatingPuckWithPuckBearingSourceSetToHeadingWithNilHeading() throws {
+    func testActivatingPuckWithPuckBearingSetToHeadingWithNilHeading() throws {
         updateLocation(with: .fullAccuracy, heading: .random(in: 0..<360))
         style.layerExistsStub.defaultReturnValue = false
-        puck2D.puckBearingSource = .heading
+        puck2D.puckBearing = .heading
 
         puck2D.isActive = true
         let location = updateLocation(with: .fullAccuracy, heading: nil)
@@ -569,22 +569,22 @@ final class Puck2DTests: XCTestCase {
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
 
-    func testSettingPuckBearingSourceWhenInactive() {
+    func testSettingPuckBearingWhenInactive() {
         updateLocation()
         style.layerExistsStub.defaultReturnValue = false
         puck2D.isActive = false
 
-        puck2D.puckBearingSource = [.heading, .course].randomElement()!
+        puck2D.puckBearing = [.heading, .course].randomElement()!
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 0)
     }
 
-    func testSettingPuckBearingSourceWhenActive() {
+    func testSettingPuckBearingWhenActive() {
         updateLocation()
         puck2D.isActive = true
         style.layerExistsStub.defaultReturnValue = true
 
-        puck2D.puckBearingSource = [.heading, .course].randomElement()!
+        puck2D.puckBearing = [.heading, .course].randomElement()!
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
     }
@@ -602,7 +602,7 @@ final class Puck2DTests: XCTestCase {
     func testFastPathFullAccuracyWithAccuracyRingNilHeading() throws {
         configuration.showsAccuracyRing = true
         recreatePuck()
-        puck2D.puckBearingSource = .heading
+        puck2D.puckBearing = .heading
         puck2D.isActive = true
         updateLocation(with: .fullAccuracy)
 
@@ -627,7 +627,7 @@ final class Puck2DTests: XCTestCase {
     func testFastPathFullAccuracyWithoutAccuracyRingNilHeading() throws {
         configuration.showsAccuracyRing = false
         recreatePuck()
-        puck2D.puckBearingSource = .heading
+        puck2D.puckBearing = .heading
         puck2D.isActive = true
         updateLocation(with: .fullAccuracy)
 
@@ -651,7 +651,7 @@ final class Puck2DTests: XCTestCase {
     func testFastPathFullAccuracyWithoutAccuracyRingNonNilHeading() throws {
         configuration.showsAccuracyRing = false
         recreatePuck()
-        puck2D.puckBearingSource = .heading
+        puck2D.puckBearing = .heading
         puck2D.isActive = true
         updateLocation(with: .fullAccuracy)
 
@@ -676,7 +676,7 @@ final class Puck2DTests: XCTestCase {
     func testFastPathFullAccuracyWithoutAccuracyRingUsingCourse() throws {
         configuration.showsAccuracyRing = false
         recreatePuck()
-        puck2D.puckBearingSource = .course
+        puck2D.puckBearing = .course
         puck2D.isActive = true
         updateLocation(with: .fullAccuracy)
 

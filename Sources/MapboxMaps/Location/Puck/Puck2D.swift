@@ -36,7 +36,7 @@ internal final class Puck2D: Puck {
         }
     }
 
-    internal var puckBearingSource: PuckBearingSource = .heading {
+    internal var puckBearing: PuckBearing = .heading {
         didSet {
             updateLayer()
         }
@@ -153,7 +153,7 @@ internal final class Puck2D: Puck {
             }
 
             if puckBearingEnabled {
-                switch puckBearingSource {
+                switch puckBearing {
                 case .heading:
                     newLayerPaintProperties[.bearing] = location.heading ?? 0
                 case .course:
@@ -273,7 +273,7 @@ internal final class Puck2D: Puck {
                 layerProperties[LocationIndicatorLayer.PaintCodingKeys.accuracyRadius.rawValue] = location.horizontalAccuracy
             }
             if puckBearingEnabled {
-                switch puckBearingSource {
+                switch puckBearing {
                 case .heading:
                     layerProperties[LocationIndicatorLayer.PaintCodingKeys.bearing.rawValue] = location.heading ?? 0
                 case .course:

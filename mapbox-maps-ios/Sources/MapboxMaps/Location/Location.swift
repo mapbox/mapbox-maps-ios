@@ -1,9 +1,9 @@
 import Foundation
 import CoreLocation
 
-/// Instances of this class are delivered to `LocationConsumer`s by `LocationManager` whenever
+/// Instances of this stuct are delivered to `LocationConsumer`s by `LocationManager` whenever
 /// the heading, location, or accuracy authorization change.
-@objc public class Location: NSObject {
+public struct Location {
 
     /// A heading value. May be used directly or via the higher-level `headingDirection` property.
     public let heading: CLHeading?

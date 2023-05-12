@@ -7,7 +7,7 @@ final class MockLocationProducer: LocationProducerProtocol {
 
     var headingOrientation: CLDeviceOrientation = .portrait
 
-    var consumers = NSHashTable<LocationConsumer>.weakObjects()
+    var consumers = [LocationConsumer]()
 
     let didSetLocationProviderStub = Stub<LocationProvider, Void>()
     var locationProvider: LocationProvider = MockLocationProvider() {

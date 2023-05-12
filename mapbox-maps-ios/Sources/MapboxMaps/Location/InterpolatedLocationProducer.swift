@@ -19,7 +19,7 @@ internal final class InterpolatedLocationProducer: InterpolatedLocationProducerP
     private let locationInterpolator: LocationInterpolatorProtocol
     private let dateProvider: DateProvider
 
-    private let consumers = NSHashTable<PuckLocationConsumer>.weakObjects()
+    private let consumers = WeakSet<PuckLocationConsumer>()
     private var cancelableToken: Cancelable?
 
     internal var location: InterpolatedLocation? {

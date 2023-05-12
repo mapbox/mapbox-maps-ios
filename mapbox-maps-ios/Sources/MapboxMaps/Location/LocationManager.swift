@@ -57,12 +57,12 @@ public final class LocationManager {
     }
 
     /// The location manager holds weak references to consumers, client code should retain these references.
-    public func addLocationConsumer(newConsumer consumer: LocationConsumer) {
+    public func addLocationConsumer(_ consumer: LocationConsumer) {
         locationProducer.add(consumer)
     }
 
     /// Removes a location consumer from the location manager.
-    public func removeLocationConsumer(consumer: LocationConsumer) {
+    public func removeLocationConsumer(_ consumer: LocationConsumer) {
         locationProducer.remove(consumer)
     }
 

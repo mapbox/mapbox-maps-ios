@@ -99,7 +99,7 @@ final class LocationManagerTests: XCTestCase {
     func testAddLocationConsumer() {
         let consumer = MockLocationConsumer()
 
-        locationManager.addLocationConsumer(newConsumer: consumer)
+        locationManager.addLocationConsumer(consumer)
 
         XCTAssertEqual(locationProducer.addStub.invocations.count, 1)
         XCTAssertTrue(locationProducer.addStub.invocations.first?.parameters === consumer)
@@ -108,7 +108,7 @@ final class LocationManagerTests: XCTestCase {
     func testRemoveLocationConsumer() {
         let consumer = MockLocationConsumer()
 
-        locationManager.removeLocationConsumer(consumer: consumer)
+        locationManager.removeLocationConsumer(consumer)
 
         XCTAssertEqual(locationProducer.removeStub.invocations.count, 1)
         XCTAssertTrue(locationProducer.removeStub.invocations.first?.parameters === consumer)

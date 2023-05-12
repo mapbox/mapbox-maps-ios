@@ -41,7 +41,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Deprecate `PointAnnotationManager.iconTextFit` and `PointAnnotationManager.iconTextFitPadding` in favor of `PointAnnotation.iconTextFit` and `PointAnnotation.iconTextFitPadding`.
 * Remove deprecated `PuckBearingSource`and related APIs.
 * Experimental API `MapboxMap/setMemoryBudget` was renamed to `MapboxMaps/setTileCacheBudget` and promoted to stable.
-
+* Location consumer methods have been renamed to align with Swift API Design Guidelines. Use `addLocationConsumer(_:)` and `removeLocationConsumer(_:)` rather than `addLocationConsumer(newConsumer:)` and `removeLocationConsumer(consumer:)`.
 
 ## 10.12.0 - March 22, 2023
 

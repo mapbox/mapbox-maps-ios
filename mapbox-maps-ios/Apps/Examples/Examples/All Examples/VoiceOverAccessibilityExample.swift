@@ -94,7 +94,7 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
             }
         }.store(in: &cancelables)
         mapView.gestures.delegate = self
-        mapView.location.addLocationConsumer(newConsumer: self)
+        mapView.location.addLocationConsumer(self)
     }
 
     @objc private func voiceOverStatusDidChange() {

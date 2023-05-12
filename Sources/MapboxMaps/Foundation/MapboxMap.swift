@@ -157,19 +157,19 @@ public final class MapboxMap: MapboxMapProtocol {
         __map.reduceMemoryUse()
     }
 
-    /// The memory budget hint to be used by the map. The budget can be given in
-    /// tile units or in megabytes. A Map will do its best to keep the memory
-    /// allocations for non-essential resources within the budget.
+    /// The tile cache budget hint to be used by the map.
     ///
-    /// The memory budget distribution and resource
-    /// eviction logic is subject to change. Current implementation sets a memory budget
-    /// hint per data source.
+    /// The budget can be given in tile units or in megabytes. A Map will do the best effort to keep memory
+    /// allocations for a non essential resources within the budget.
     ///
-    /// If nil is set, the memory budget in tile units will be dynamically calculated based on
+    /// If tile cache budget in megabytes is set, the engine will try to use ETC1 texture compression
+    /// for raster layers, therefore, raster images with alpha channel will be rendered incorrectly.
+    ///
+    /// If null is set, the tile cache budget in tile units will be dynamically calculated based on
     /// the current viewport size.
-    /// - Parameter memoryBudget: The memory budget hint to be used by the Map.
-    @_spi(Experimental) public func setMemoryBudget(_ memoryBudget: MapMemoryBudget?) {
-        __map.__setMemoryBudgetFor(memoryBudget)
+    /// - Parameter tileCacheBudget: The tile cache budget hint to be used by the Map.
+    public func setTileCacheBudget(_ tileCacheBudget: TileCacheBudget?) {
+        __map.__setTileCacheBudgetFor(tileCacheBudget)
     }
 
     /// Defines whether multiple copies of the world will be rendered side by side beyond -180 and 180 degrees longitude.

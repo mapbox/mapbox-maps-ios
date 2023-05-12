@@ -231,3 +231,7 @@ Struct ResourceRequest has ObjC name change from  to MBMResourceRequest
 EnumElement MapLoadingError.source has declared type change from (MapboxMaps.MapLoadingError.Type) -> (Swift.String) -> MapboxMaps.MapLoadingError to Swift.String?
 EnumElement MapLoadingError.tile has declared type change from (MapboxMaps.MapLoadingError.Type) -> (Swift.String) -> MapboxMaps.MapLoadingError to MapboxCoreMaps.CanonicalTileID?
 Struct ResourceRequest has removed conformance to Decodable
+
+// Rename MemoryBudget API
+Func MapboxMap.setMemoryBudget(_:) has been removed
+

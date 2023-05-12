@@ -1,4 +1,4 @@
-# Changelog for Mapbox Maps SDK v10 for iOS
+# Changelog for Mapbox Maps SDK v11 for iOS
 
 Mapbox welcomes participation and contributions from everyone.
 
@@ -39,6 +39,8 @@ Mapbox welcomes participation and contributions from everyone.
   - Old methods `MapboxMap.onEvery`, `MapboxMap.onNext`, `Snapshotter.onEvery`, `Snapshotter.onNext` have been deprecated;
   - Old API `MapboxMap.observe` and `Snapshotter.observe` have been removed.
 * Deprecate `PointAnnotationManager.iconTextFit` and `PointAnnotationManager.iconTextFitPadding` in favor of `PointAnnotation.iconTextFit` and `PointAnnotation.iconTextFitPadding`.
+* Experimental API `MapboxMap/setMemoryBudget` was renamed to `MapboxMaps/setTileCacheBudget` and promoted to stable.
+
 
 ## 10.12.0 - March 22, 2023
 

@@ -5,7 +5,7 @@ import UIKit
 /// traversing a great distance.
 ///
 /// - SeeAlso: ``CameraAnimationsManager/fly(to:duration:completion:)``
-public final class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorProtocol {
+public final class FlyToCameraAnimator: CameraAnimator, CameraAnimatorProtocol {
     private enum InternalState: Equatable {
         case initial
         case running(startDate: Date)

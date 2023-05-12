@@ -1,7 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(CustomLayerExample)
 final class CustomLayerExample: UIViewController, ExampleProtocol {
 
     var mapView: MapView!

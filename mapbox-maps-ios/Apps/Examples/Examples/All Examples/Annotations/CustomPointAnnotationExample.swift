@@ -1,7 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(CustomPointAnnotationExample)
 final class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
 
     private var mapView: MapView!

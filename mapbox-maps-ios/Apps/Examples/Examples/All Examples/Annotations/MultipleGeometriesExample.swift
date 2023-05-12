@@ -1,7 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(MultipleGeometriesExample)
 public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
     enum Constants {
         static let geoJSONDataSourceIdentifier = "geoJSON-data-source"

@@ -1,7 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(ExternalVectorSourceExample)
 public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
     internal var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()

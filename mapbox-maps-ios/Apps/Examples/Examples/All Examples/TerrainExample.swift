@@ -1,7 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(TerrainExample)
 public class TerrainExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!

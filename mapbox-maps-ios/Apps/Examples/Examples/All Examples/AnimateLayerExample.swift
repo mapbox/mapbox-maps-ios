@@ -1,7 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(AnimateLayerExample)
 public class AnimateLayerExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()
 

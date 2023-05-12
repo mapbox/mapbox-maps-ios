@@ -3,7 +3,7 @@ import UIKit
 
 /// An object responsible for notifying the map view about location-related events,
 /// such as a change in the device’s location.
-public final class LocationManager: NSObject {
+public final class LocationManager {
 
     /// Represents the latest location received from the location provider.
     public var latestLocation: Location? {
@@ -46,11 +46,12 @@ public final class LocationManager: NSObject {
         self.locationProducer = locationProducer
         self.interpolatedLocationProducer = interpolatedLocationProducer
         self.puckManager = puckManager
-        super.init()
         locationProducer.delegate = self
         syncOptions()
     }
 
+    /// Overrides the default(CoreLocation-based) location provider with the supplied one.
+    /// - Parameter customLocationProvider: The location provider to be used for location-related things.
     public func overrideLocationProvider(with customLocationProvider: LocationProvider) {
         locationProducer.locationProvider = customLocationProvider
     }
@@ -98,15 +99,15 @@ public final class LocationManager: NSObject {
 extension LocationManager: LocationProducerDelegate {
     internal func locationProducer(_ locationProducer: LocationProducerProtocol,
                                    didFailWithError error: Error) {
-        delegate?.locationManager?(self, didFailToLocateUserWithError: error)
+        delegate?.locationManager(self, didFailToLocateUserWithError: error)
     }
 
     internal func locationProducer(_ locationProducer: LocationProducerProtocol,
                                    didChangeAccuracyAuthorization accuracyAuthorization: CLAccuracyAuthorization) {
-        delegate?.locationManager?(self, didChangeAccuracyAuthorization: accuracyAuthorization)
+        delegate?.locationManager(self, didChangeAccuracyAuthorization: accuracyAuthorization)
     }
 
     func locationProducerShouldDisplayHeadingCalibration(_ locationProducer: LocationProducerProtocol) -> Bool {
-        return delegate?.locationManagerShouldDisplayHeadingCalibration?(self) ?? false
+        return delegate?.locationManagerShouldDisplayHeadingCalibration(self) ?? false
     }
 }

@@ -1,8 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(StoryboardMapViewExample)
-
 public class StoryboardMapViewExample: UIViewController, MapInitOptionsProvider, ExampleProtocol {
 
     public func mapInitOptions() -> MapInitOptions {

@@ -1,7 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(Custom3DPuckExample)
 final class Custom3DPuckExample: UIViewController, ExampleProtocol, LocationConsumer {
     private var cancelables = Set<AnyCancelable>()
 

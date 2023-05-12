@@ -234,7 +234,6 @@ struct ContentView: View {
 }
 
 /// The rest of this example is just some boilerplate to present the ContentView and show the example
-@objc(SwiftUIExample)
 final class SwiftUIExample: UIViewController, NonMapViewExampleProtocol {
 
     override func viewDidLoad() {

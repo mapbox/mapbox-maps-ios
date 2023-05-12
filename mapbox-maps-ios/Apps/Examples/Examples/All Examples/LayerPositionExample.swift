@@ -1,8 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(LayerPositionExample)
-
 public class LayerPositionExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!

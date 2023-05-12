@@ -1,7 +1,6 @@
 import Foundation
 import MapboxMaps
 
-@objc(BuildingExtrusionsExample)
 public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()
 

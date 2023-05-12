@@ -1,6 +1,5 @@
 import MapboxMaps
 
-@objc(LiveDataExample)
 final class LiveDataExample: UIViewController, ExampleProtocol {
     // Display the current location of the International Space Station (ISS)
     let url = URL(string: "https://api.wheretheiss.at/v1/satellites/25544")!

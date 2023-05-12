@@ -2,7 +2,6 @@ import UIKit
 import MapboxMaps
 import MapboxCoreMaps
 
-@objc(RestrictCoordinateBoundsExample)
 final class RestrictCoordinateBoundsExample: UIViewController, ExampleProtocol {
 
     override func viewDidLoad() {

@@ -1,6 +1,5 @@
 import MapboxMaps
 
-@objc(AnimateImageLayerExample)
 class AnimateImageLayerExample: UIViewController, ExampleProtocol {
     var mapView: MapView!
     var sourceId = "radar-source"

@@ -4,7 +4,6 @@ import MapboxMaps
 
 /// An example showcasing of adding a resizable image to the style
 /// and demonstrating how the image is stretched
-@objc(ResizableImageExample)
 final class ResizableImageExample: UIViewController, ExampleProtocol {
     private static let center = CLLocationCoordinate2DMake(55.70651, 12.554729)
     private static let layerId = "layer_id"

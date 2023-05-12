@@ -2,7 +2,6 @@ import UIKit
 import CoreLocation
 import MapboxMaps
 
-@objc(VoiceOverAccessibilityExample)
 final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
     struct MyData {
         var id: Int

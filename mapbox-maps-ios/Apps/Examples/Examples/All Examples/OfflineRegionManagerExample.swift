@@ -5,7 +5,6 @@ import MapboxMaps
 #if DEBUG
 
 @available(*, deprecated)
-@objc(OfflineRegionManagerExample)
 final class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
 
     private var mapView: MapView!

@@ -2,7 +2,6 @@ import UIKit
 import SceneKit
 import MapboxMaps
 
-@objc(SceneKitExample)
 final class SceneKitExample: UIViewController, ExampleProtocol {
 
     var mapView: MapView!

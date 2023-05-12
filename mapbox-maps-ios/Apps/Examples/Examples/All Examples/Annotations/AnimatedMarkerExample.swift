@@ -2,7 +2,6 @@ import Foundation
 import MapboxMaps
 import UIKit
 
-@objc(AnimatedMarkerExample)
 final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
     enum Constants {
         static let markerIconId = "marker_icon"

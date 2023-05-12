@@ -2,7 +2,6 @@ import UIKit
 import MapboxMaps
 import CoreLocation
 
-@objc(ViewAnnotationBasicExample)
 final class ViewAnnotationBasicExample: UIViewController, ExampleProtocol {
 
     private var mapView: MapView!

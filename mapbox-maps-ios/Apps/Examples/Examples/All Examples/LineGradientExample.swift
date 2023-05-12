@@ -1,7 +1,6 @@
 import Foundation
 import MapboxMaps
 
-@objc(LineGradientExample)
 public class LineGradientExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
@@ -35,8 +34,7 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
         button.addTarget(self, action: #selector(increaseTrimOffset), for: .touchUpInside)
     }
 
-    @objc
-    func increaseTrimOffset() {
+    @objc func increaseTrimOffset() {
         lastTrimOffset += 0.05
         let trimOffset = Double.minimum(lastTrimOffset, 1.0)
         try? mapView.mapboxMap.style.setLayerProperty(for: "line-layer", property: "line-trim-offset", value: [0.0, trimOffset])

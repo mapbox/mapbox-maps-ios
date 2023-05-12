@@ -64,11 +64,11 @@ final class MapViewTests: XCTestCase {
 
     func invokeDisplayLinkCallback() throws {
         let makeDisplayLinkParams = try XCTUnwrap(dependencyProvider.makeDisplayLinkStub.invocations.first?.parameters)
-        let target = try XCTUnwrap(makeDisplayLinkParams.target as? NSObject)
+        let target = try XCTUnwrap(makeDisplayLinkParams.target as? ForwardingDisplayLinkTarget)
 
         // Invoke the display link callback while there's an animator; verify that this alone does
         // not invoke setNeedsDisplay() on the MTKView
-        target.perform(makeDisplayLinkParams.selector, with: displayLink)
+        target.update(with: displayLink)
     }
 
     // test that map view is deinited
@@ -176,7 +176,7 @@ final class MapViewTests: XCTestCase {
     }
 
     func testDisplayLinkTimestampWhenDisplayLinkIsNonNil() {
-        displayLink.timestamp = .random(in: 0..<CFTimeInterval.greatestFiniteMagnitude)
+        displayLink._timestamp = .random(in: 0..<CFTimeInterval.greatestFiniteMagnitude)
 
         XCTAssertEqual(mapView.displayLinkTimestamp, displayLink.timestamp)
     }
@@ -188,7 +188,7 @@ final class MapViewTests: XCTestCase {
     }
 
     func testDisplayLinkDurationWhenDisplayLinkIsNonNil() {
-        displayLink.duration = .random(in: 0..<CFTimeInterval.greatestFiniteMagnitude)
+        displayLink._duration = .random(in: 0..<CFTimeInterval.greatestFiniteMagnitude)
 
         XCTAssertEqual(mapView.displayLinkDuration, displayLink.duration)
     }
@@ -257,19 +257,19 @@ final class MapViewTests: XCTestCase {
     }
 
     func testDisplayLinkPausedWhenAppWillResignActive() {
-        displayLink.$isPaused.setStub.reset()
+        displayLink.$isPausedStub.setStub.reset()
 
         notificationCenter.post(name: UIApplication.willResignActiveNotification, object: nil)
 
-        XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
+        XCTAssertEqual(displayLink.$isPausedStub.setStub.invocations.map(\.parameters), [true])
     }
 
     func testDisplayLinkPausedWhenAppDidEnterBackground() {
-        displayLink.$isPaused.setStub.reset()
+        displayLink.$isPausedStub.setStub.reset()
 
         notificationCenter.post(name: UIApplication.didEnterBackgroundNotification, object: nil)
 
-        XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
+        XCTAssertEqual(displayLink.$isPausedStub.setStub.invocations.map(\.parameters), [true])
     }
 
     func testDisplayLinkPausedWhenDidMoveToWindowIfAppStateIsInactive() {
@@ -331,7 +331,7 @@ final class MapViewTests: XCTestCase {
 
         notificationCenter.post(name: UIApplication.didBecomeActiveNotification, object: nil)
 
-        XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [false])
+        XCTAssertEqual(displayLink.$isPausedStub.setStub.invocations.map(\.parameters), [false])
     }
 
     func testSubscribesToCorrectNotificationsOniOS12() throws {
@@ -463,33 +463,33 @@ final class MapViewTestsWithScene: XCTestCase {
         guard #available(iOS 13.0, *) else {
             throw XCTSkip("Test requires iOS 13 or higher.")
         }
-        displayLink.$isPaused.setStub.reset()
+        displayLink.$isPausedStub.setStub.reset()
 
         notificationCenter.post(name: UIScene.didActivateNotification, object: window.parentScene)
 
-        XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [false])
+        XCTAssertEqual(displayLink.$isPausedStub.setStub.invocations.map(\.parameters), [false])
     }
 
     func testDisplayLinkPausedWhenSceneWillDeactivate() throws {
         guard #available(iOS 13.0, *) else {
             throw XCTSkip("Test requires iOS 13 or higher.")
         }
-        displayLink.$isPaused.setStub.reset()
+        displayLink.$isPausedStub.setStub.reset()
 
         notificationCenter.post(name: UIScene.willDeactivateNotification, object: window.parentScene)
 
-        XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
+        XCTAssertEqual(displayLink.$isPausedStub.setStub.invocations.map(\.parameters), [true])
     }
 
     func testDisplayLinkPausedWhenSceneDidEnterBackground() throws {
         guard #available(iOS 13.0, *) else {
             throw XCTSkip("Test requires iOS 13 or higher.")
         }
-        displayLink.$isPaused.setStub.reset()
+        displayLink.$isPausedStub.setStub.reset()
 
         notificationCenter.post(name: UIScene.didEnterBackgroundNotification, object: window.parentScene)
 
-        XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
+        XCTAssertEqual(displayLink.$isPausedStub.setStub.invocations.map(\.parameters), [true])
     }
 
     func testReleaseDrawablesInvokedWhenSceneMovingToBackground() throws {

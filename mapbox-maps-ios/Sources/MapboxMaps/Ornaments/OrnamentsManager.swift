@@ -30,7 +30,7 @@ internal struct Ornaments {
 }
 
 /// APIs for managing map ornaments
-public class OrnamentsManager: NSObject {
+public final class OrnamentsManager {
 
     /// The ``OrnamentOptions`` object that is used to set up and update the required ornaments on the map.
     public var options: OrnamentOptions {
@@ -117,8 +117,6 @@ public class OrnamentsManager: NSObject {
         attributionButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(attributionButton)
         self._attributionButton = attributionButton
-
-        super.init()
 
         _attributionButton.delegate = infoButtonOrnamentDelegate
 

@@ -1,6 +1,5 @@
 import MapboxMaps
 
-@objc(DistanceExpressionExample)
 class DistanceExpressionExample: UIViewController, ExampleProtocol {
     var mapView: MapView!
     var point: Turf.Feature!

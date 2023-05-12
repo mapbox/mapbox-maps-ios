@@ -101,6 +101,42 @@ Var LineLayer.lineDasharrayTransition has been removed
 Var LineLayer.linePatternTransition has been removed
 Var PointAnnotationManager.textLineHeight has been removed
 
+// Remove unnecessary NSObject inheritances and @objc attributes
+Class BasicCameraAnimator has removed conformance to CVarArg
+Class BasicCameraAnimator has removed conformance to CustomDebugStringConvertible
+Class BasicCameraAnimator has removed conformance to CustomStringConvertible
+Class BasicCameraAnimator has removed conformance to Equatable
+Class BasicCameraAnimator has removed conformance to Hashable
+Class BasicCameraAnimator has removed conformance to NSObjectProtocol
+Class FlyToCameraAnimator has removed conformance to CVarArg
+Class FlyToCameraAnimator has removed conformance to CustomDebugStringConvertible
+Class FlyToCameraAnimator has removed conformance to CustomStringConvertible
+Class FlyToCameraAnimator has removed conformance to Equatable
+Class FlyToCameraAnimator has removed conformance to Hashable
+Class FlyToCameraAnimator has removed conformance to NSObjectProtocol
+Class LocationManager has removed conformance to CVarArg
+Class LocationManager has removed conformance to CustomDebugStringConvertible
+Class LocationManager has removed conformance to CustomStringConvertible
+Class LocationManager has removed conformance to Equatable
+Class LocationManager has removed conformance to Hashable
+Class LocationManager has removed conformance to NSObjectProtocol
+Class OrnamentsManager has removed conformance to CVarArg
+Class OrnamentsManager has removed conformance to CustomDebugStringConvertible
+Class OrnamentsManager has removed conformance to CustomStringConvertible
+Class OrnamentsManager has removed conformance to Equatable
+Class OrnamentsManager has removed conformance to Hashable
+Class OrnamentsManager has removed conformance to NSObjectProtocol
+Func LocationPermissionsDelegate.locationManager(_:didChangeAccuracyAuthorization:) is no longer an optional requirement
+Func LocationPermissionsDelegate.locationManager(_:didFailToLocateUserWithError:) is no longer an optional requirement
+Func LocationPermissionsDelegate.locationManagerShouldDisplayHeadingCalibration(_:) is no longer an optional requirement
+Class BasicCameraAnimator has removed its super class ObjectiveC.NSObject
+Class BasicCameraAnimator no longer inherits convenience inits from its superclass
+Class FlyToCameraAnimator has removed its super class ObjectiveC.NSObject
+Class LocationManager has removed its super class ObjectiveC.NSObject
+Class LocationManager no longer inherits convenience inits from its superclass
+Class OrnamentsManager has removed its super class ObjectiveC.NSObject
+Class OrnamentsManager no longer inherits convenience inits from its superclass
+
 // Typesafe Events
 Func MapboxMap.onEvery(event:handler:) has generic signature change from <Payload where Payload : Swift.Decodable> to <Payload>
 Func MapboxMap.onNext(event:handler:) has generic signature change from <Payload where Payload : Swift.Decodable> to <Payload>

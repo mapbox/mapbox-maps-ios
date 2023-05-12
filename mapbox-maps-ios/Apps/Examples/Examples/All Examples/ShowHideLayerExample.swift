@@ -1,7 +1,5 @@
 import MapboxMaps
 
-@objc(ShowHideLayerExample)
-
 class ShowHideLayerExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!

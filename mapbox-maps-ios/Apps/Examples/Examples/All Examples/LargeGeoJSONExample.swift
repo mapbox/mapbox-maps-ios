@@ -7,6 +7,7 @@ final class LargeGeoJSONPerformanceExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
     private var routePoints: Feature!
     private var jsonUpdateCounter = 0
+    private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,16 +21,16 @@ final class LargeGeoJSONPerformanceExample: UIViewController, ExampleProtocol {
         let lineStringAsset = NSDataAsset(name: "long_route")
         routePoints = try! JSONDecoder().decode(Feature.self, from: lineStringAsset!.data)
 
-        mapView.mapboxMap.onNext(event: .styleLoaded) { [weak self] _ in
+        mapView.mapboxMap.events.onStyleLoaded.observeNext { [weak self] _ in
             try! self?.setupExample()
-        }
+        }.store(in: &cancelables)
 
         // Print updates when sources with added dataIds are updated
-        mapView.mapboxMap.onEvery(event: .sourceDataLoaded) { event in
-            if let dataId = event.payload.dataId {
+        mapView.mapboxMap.events.onSourceDataLoaded.observe { event in
+            if let dataId = event.dataID {
                 print("GeoJsonSource was updated, data-id: \(dataId)")
             }
-        }
+        }.store(in: &cancelables)
     }
 
     private func setupExample() throws {

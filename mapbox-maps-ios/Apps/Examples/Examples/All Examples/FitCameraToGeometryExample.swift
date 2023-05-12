@@ -5,6 +5,7 @@ import MapboxMaps
 public class FitCameraToGeometryExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -14,9 +15,9 @@ public class FitCameraToGeometryExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allows the view controller to receive information about map events.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
             self.fitToCameraToGeometry()
-        }
+        }.store(in: &cancelables)
 
     }
 

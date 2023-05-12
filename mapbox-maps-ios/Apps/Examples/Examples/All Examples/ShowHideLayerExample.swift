@@ -5,6 +5,7 @@ import MapboxMaps
 class ShowHideLayerExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     let museumLayerId = "museum-circle-layer"
     let contourLayerId = "contour-line-layer"
@@ -24,13 +25,13 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
 
         // Once the map has finished loading, add the museum and contour layers to the map's style,
         // then add switches that toggle the visibility for those two layers.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
-            self.addStyleLayers()
-            self.addVisibilitySwitches()
+        mapView.mapboxMap.events.onStyleLoaded.observeNext { [weak self] _ in
+            self?.addStyleLayers()
+            self?.addVisibilitySwitches()
 
             // The following line is just for testing purposes.
-            self.finish()
-        }
+            self?.finish()
+        }.store(in: &cancelables)
     }
 
     func addStyleLayers() {

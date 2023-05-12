@@ -27,7 +27,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                                     zoom: 15.0))
         }
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
             guard let mapView = self?.mapView else { return }
 
             // Given
@@ -47,7 +47,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                     XCTFail("Feature querying failed")
                 }
             }
-        }
+        }.store(in: &cancelables)
 
         wait(for: [featureQueryExpectation], timeout: 5.0)
     }
@@ -116,7 +116,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                                     zoom: 15.0))
         }
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
             guard let mapView = self?.mapView else { return }
 
             // Given
@@ -141,7 +141,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                     XCTFail("Feature querying failed")
                 }
             }
-        }
+        }.store(in: &cancelables)
 
         wait(for: [featureQueryExpectation], timeout: 5.0)
     }
@@ -157,7 +157,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                                                           zoom: 15.0))
         }
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
             guard let mapView = self?.mapView else { return }
 
             // Given
@@ -180,7 +180,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                     XCTFail("Source feature querying failed")
                 }
             }
-        }
+        }.store(in: &cancelables)
 
         wait(for: [featureQueryExpectation], timeout: 5.0)
     }
@@ -227,7 +227,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                 XCTFail("Failed to add cluster source and layer.")
             }
         }
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
             guard let mapView = self?.mapView else { return }
             mapView.mapboxMap.querySourceFeatures(for: clusterSourceID, options: SourceQueryOptions(sourceLayerIds: [clusterSourceID], filter: ["has", "point_count"])) { result
                 in
@@ -266,7 +266,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                     XCTFail("Failed to return any features from a cluster.")
                 }
             }
-        }
+        }.store(in: &cancelables)
         wait(for: [geoJSONClusterLeavesExpection, geoJSONClusterZoomExpansionLevelExpection, geoJSONClusterChildrenExpectation], timeout: 5.0)
     }
 }

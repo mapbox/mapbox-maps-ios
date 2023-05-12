@@ -24,6 +24,7 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
     private var mapView: MapView?
     private var tileStore: TileStore?
     private var logger: OfflineManagerLogWriter!
+    private var cancelables = Set<AnyCancelable>()
 
     // Default MapInitOptions. If you use a custom path for a TileStore, you would
     // need to create a custom MapInitOptions to reference that TileStore.
@@ -329,7 +330,7 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
 
         // Add a point annotation that shows the point geometry that were passed
         // to the tile region API.
-        mapView.mapboxMap.onNext(event: .styleLoaded) { [weak self] _ in
+        mapView.mapboxMap.events.onStyleLoaded.observeNext { [weak self] _ in
             guard let self = self,
                   let mapView = self.mapView else {
                 return
@@ -340,7 +341,7 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
 
             let pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
             pointAnnotationManager.annotations = [pointAnnotation]
-        }
+        }.store(in: &cancelables)
 
         self.mapView = mapView
     }

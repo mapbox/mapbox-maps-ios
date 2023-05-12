@@ -289,9 +289,9 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
         mapLoadingErrorExpectation.assertForOverFulfill = false
 
-        mapView.mapboxMap.onNext(event: .mapLoadingError, handler: { _ in
+        mapView.mapboxMap.events.onMapLoadingError.observeNext { _ in
             mapLoadingErrorExpectation.fulfill()
-        })
+        }.store(in: &cancelables)
 
         mapView.mapboxMap.loadStyleJSON(styleJSON)
 
@@ -432,9 +432,9 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
         mapLoadingErrorExpectation.assertForOverFulfill = false
 
-        mapView.mapboxMap.onNext(event: .mapLoadingError, handler: { _ in
+        mapView.mapboxMap.events.onMapLoadingError.observeNext { _ in
             mapLoadingErrorExpectation.fulfill()
-        })
+        }.store(in: &cancelables)
 
         mapView.mapboxMap.loadStyleJSON(styleJSON)
 
@@ -623,12 +623,12 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         try! self.style.addSource(source, id: sourceID)
         try! self.style.addSource(source2, id: sourceID2)
 
-        mapView.mapboxMap.onEvery(event: .sourceDataLoaded) { event in
+        mapView.mapboxMap.events.onSourceDataLoaded.observe { event in
             returnedSourceDataId = event.dataID
             XCTAssertEqual(returnedSourceDataId, dataId)
 
             expectation.fulfill()
-        }
+        }.store(in: &cancelables)
 
         try! mapView.mapboxMap.style.updateGeoJSONSource(withId: sourceID, geoJSON: .geometry(geometry), dataId: dataId)
 

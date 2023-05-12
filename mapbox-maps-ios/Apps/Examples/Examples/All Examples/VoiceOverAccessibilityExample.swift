@@ -38,6 +38,8 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
         }
     }
 
+    private var cancelables = Set<AnyCancelable>()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         let centerCoordinate = CLLocationCoordinate2D(latitude: 40.7131854, longitude: -74.0165265)
@@ -87,11 +89,11 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
             object: nil)
 
         // Observe events that require recomputing accessibility elements
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
             self?.updateAllAccessibilityElements {
                 self?.finish()
             }
-        }
+        }.store(in: &cancelables)
         mapView.gestures.delegate = self
         mapView.location.addLocationConsumer(newConsumer: self)
     }

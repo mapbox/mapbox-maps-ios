@@ -4,6 +4,7 @@ import CoreLocation
 
 final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     private lazy var route: LineString = {
         let routeURL = Bundle.main.url(forResource: "sf_airport_route", withExtension: "geojson")!
@@ -32,11 +33,11 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .styleLoaded) { [weak self] _ in
+        mapView.mapboxMap.events.onStyleLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
 
             self.setupExample()
-        }
+        }.store(in: &cancelables)
     }
 
     private func setupExample() {
@@ -68,9 +69,9 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
         if mapView.mapboxMap.style.isLoaded {
             startAnimation()
         } else {
-            mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+            mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
                 self.startAnimation()
-            }
+            }.store(in: &cancelables)
         }
     }
 

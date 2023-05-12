@@ -4,6 +4,7 @@ import MapboxMaps
 @objc(ExternalVectorSourceExample)
 public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
     internal var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -17,11 +18,11 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allow the view controller to receive information about map events.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
             self?.drawLineLayer()
             // The following line is just for testing purposes.
             self?.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     public func drawLineLayer() {

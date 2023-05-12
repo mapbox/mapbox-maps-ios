@@ -7,6 +7,7 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
     internal var mapView: MapView!
     internal var lastTrimOffset = 0.0
     let button = UIButton(type: .system)
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -16,15 +17,15 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
-
+        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
             self.setupExample()
 
             // Set the center coordinate and zoom level.
             let centerCoordinate = CLLocationCoordinate2D(latitude: 38.875, longitude: -77.035)
             let camera = CameraOptions(center: centerCoordinate, zoom: 12.0)
             self.mapView.mapboxMap.setCamera(to: camera)
-        }
+        }.store(in: &cancelables)
+
         button.setTitle("Increase trim offset", for: .normal)
         button.backgroundColor = .white
         button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)

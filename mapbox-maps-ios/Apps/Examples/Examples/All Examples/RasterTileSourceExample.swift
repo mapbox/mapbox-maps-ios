@@ -3,6 +3,7 @@ import UIKit
 
 @objc(RasterTileSourceExample)
 class RasterTileSourceExample: UIViewController, ExampleProtocol {
+    private var cancelables = Set<AnyCancelable>()
     var mapView: MapView!
     var isTileRequestDelayEnabled = false
 
@@ -22,12 +23,12 @@ class RasterTileSourceExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Once the map has finished loading, add the `RasterSource` and `RasterLayer` to the map's style.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
             self.addRasterSource()
 
             // The following line is just for testing purposes.
             self.finish()
-        }
+        }.store(in: &cancelables)
 
         button.setTitle("Enable tile request delay", for: .normal)
         button.backgroundColor = .white

@@ -3,6 +3,7 @@ import MapboxMaps
 
 @objc(BuildingExtrusionsExample)
 public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
+    private var cancelables = Set<AnyCancelable>()
 
     private lazy var lightPositionButton: UIButton = {
         let button = UIButton(type: .system)
@@ -50,9 +51,9 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
+        mapView.mapboxMap.events.onStyleLoaded.observeNext { _ in
             self.setupExample()
-        }
+        }.store(in: &cancelables)
 
         view.addSubview(lightPositionButton)
         view.addSubview(lightColorButton)

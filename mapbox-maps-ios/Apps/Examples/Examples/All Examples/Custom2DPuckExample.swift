@@ -3,6 +3,7 @@ import MapboxMaps
 
 @objc(Custom2DPuckExample)
 public class Custom2DPuckExample: UIViewController, ExampleProtocol {
+    private var cancelables = Set<AnyCancelable>()
 
     private var mapView: MapView!
     internal var puckConfiguration = Puck2DConfiguration.makeDefault(showBearing: true)
@@ -175,14 +176,14 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         mapView.location.options.puckBearingSource = .heading
 
         // Center map over the user's current location
-        mapView.mapboxMap.onNext(event: .mapLoaded, handler: { [weak self] _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
 
             if let currentLocation = self.mapView.location.latestLocation {
                 let cameraOptions = CameraOptions(center: currentLocation.coordinate, zoom: 20.0)
                 self.mapView.camera.ease(to: cameraOptions, duration: 2.0)
             }
-        })
+        }.store(in: &cancelables)
     }
 
     override public func viewDidAppear(_ animated: Bool) {

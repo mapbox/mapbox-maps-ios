@@ -7,6 +7,7 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
         static let geoJSONDataSourceIdentifier = "geoJSON-data-source"
     }
     internal var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -20,7 +21,8 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allow the view controller to receive information about map events.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
+            guard let self = self else { return }
             self.addGeoJSONSource()
             self.addPolygonLayer()
             self.addLineStringLayer()
@@ -28,7 +30,7 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
 
             // The below line is used for internal testing purposes only.
             self.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     // Load GeoJSON file from local bundle and decode into a `FeatureCollection`.

@@ -8,6 +8,7 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
     internal let sourceIdentifier = "route-source-identifier"
     internal var routeLineSource: GeoJSONSource!
     var currentIndex = 0
+    private var cancelables = Set<AnyCancelable>()
 
     public var geoJSONLine = (identifier: "routeLine", source: GeoJSONSource())
 
@@ -23,14 +24,14 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Wait for the map to load its style before adding data.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
 
             self.addLine()
             self.animatePolyline()
 
             // The below line is used for internal testing purposes only.
             self.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     func addLine() {

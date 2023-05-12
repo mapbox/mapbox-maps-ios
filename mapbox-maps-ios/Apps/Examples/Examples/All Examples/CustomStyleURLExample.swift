@@ -5,6 +5,7 @@ import MapboxMaps
 internal class CustomStyleURLExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -19,9 +20,9 @@ internal class CustomStyleURLExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .styleLoaded) { [weak self] _ in
+        mapView.mapboxMap.events.onStyleLoaded.observeNext { [weak self] _ in
             // The below line is used for internal testing purposes only.
             self?.finish()
-        }
+        }.store(in: &cancelables)
     }
 }

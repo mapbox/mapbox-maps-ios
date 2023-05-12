@@ -14,6 +14,7 @@ final class AddMarkersSymbolExample: UIViewController, ExampleProtocol {
     }
 
     private var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,13 +26,13 @@ final class AddMarkersSymbolExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
             self.prepareStyle()
 
             // The following line is just for testing purposes.
             self.finish()
-        }
+        }.store(in: &cancelables)
 
         mapView.mapboxMap.style.uri = .streets
     }

@@ -6,6 +6,7 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
     let clusterLayerID = "fireHydrantClusters"
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -23,9 +24,9 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
         mapView.gestures.singleTapGestureRecognizer.addTarget(self, action: #selector(handleTap(gestureRecognizer:)))
 
         // Add the source and style layers once the map has loaded.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
             self.addPointAnnotations()
-        }
+        }.store(in: &cancelables)
     }
 
     func addPointAnnotations() {
@@ -140,7 +141,7 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
         } catch {
             print("Updating the layer failed: \(error.localizedDescription)")
         }
-        
+
         finish()
     }
 

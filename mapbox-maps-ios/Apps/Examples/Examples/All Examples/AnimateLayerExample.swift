@@ -3,6 +3,7 @@ import MapboxMaps
 
 @objc(AnimateLayerExample)
 public class AnimateLayerExample: UIViewController, ExampleProtocol {
+    private var cancelables = Set<AnyCancelable>()
 
     internal var mapView: MapView!
 
@@ -24,9 +25,9 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allows the view controller to receive information about map events.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
             self?.setupExample()
-        }
+        }.store(in: &cancelables)
     }
 
     public func setupExample() {

@@ -3,6 +3,7 @@ import MapboxMaps
 
 @objc(Custom3DPuckExample)
 final class Custom3DPuckExample: UIViewController, ExampleProtocol, LocationConsumer {
+    private var cancelables = Set<AnyCancelable>()
 
     private var mapView: MapView!
 
@@ -13,9 +14,9 @@ final class Custom3DPuckExample: UIViewController, ExampleProtocol, LocationCons
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
+        mapView.mapboxMap.events.onStyleLoaded.observeNext { _ in
             self.setupExample()
-        }
+        }.store(in: &cancelables)
     }
 
     override func viewDidAppear(_ animated: Bool) {

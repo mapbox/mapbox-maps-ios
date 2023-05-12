@@ -18,6 +18,7 @@ final class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
         latitude: 60.17195694011002,
         longitude: 24.945389069265598)
     private let zoom: CGFloat = 16
+    private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,9 +47,9 @@ final class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
             progressView.rightAnchor.constraint(equalTo: mapView.rightAnchor, constant: -20),
         ])
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
             self?.setupExample()
-        }
+        }.store(in: &cancelables)
     }
 
     private func setupExample() {

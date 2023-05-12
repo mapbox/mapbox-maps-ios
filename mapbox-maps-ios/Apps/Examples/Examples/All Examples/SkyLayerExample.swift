@@ -8,6 +8,7 @@ public class SkyLayerExample: UIViewController, ExampleProtocol {
     internal var mapView: MapView!
     internal var skyLayer: SkyLayer!
     internal var segmentedControl = UISegmentedControl()
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -30,14 +31,14 @@ public class SkyLayerExample: UIViewController, ExampleProtocol {
         addSegmentedControl()
 
         // Add a custom `SkyLayer` once the map's style is finished loading.
-        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
+        mapView.mapboxMap.events.onStyleLoaded.observeNext { _ in
             self.addSkyLayer()
 
             // Add a terrain layer.
             self.addTerrainLayer()
 
             self.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     func addSkyLayer() {

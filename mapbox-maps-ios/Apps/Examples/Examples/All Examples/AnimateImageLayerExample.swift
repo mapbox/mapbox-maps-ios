@@ -6,6 +6,7 @@ class AnimateImageLayerExample: UIViewController, ExampleProtocol {
     var sourceId = "radar-source"
     var timer: Timer?
     var imageNumber = 0
+    private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,12 +28,12 @@ class AnimateImageLayerExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
             self.addImageLayer()
 
             // The following line is just for testing purposes.
             self.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     func addImageLayer() {

@@ -4,6 +4,7 @@ import MapboxMaps
 @objc(DataDrivenSymbolsExample)
 
 public class DataDrivenSymbolsExample: UIViewController, ExampleProtocol {
+    private var cancelables = Set<AnyCancelable>()
 
     internal var mapView: MapView!
 
@@ -19,9 +20,9 @@ public class DataDrivenSymbolsExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allows the delegate to receive information about map events.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
             self?.setupExample()
-        }
+        }.store(in: &cancelables)
     }
 
     public func setupExample() {

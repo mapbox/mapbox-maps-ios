@@ -4,6 +4,7 @@ import Foundation
 @objc(DataJoinExample)
 final class DataJoinExample: UIViewController, ExampleProtocol {
     var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,12 +20,12 @@ final class DataJoinExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Add the data layer once the map has finished loading.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
             self.addJSONDataLayer()
 
             // The following line is just for testing purposes.
             self.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     func addJSONDataLayer() {

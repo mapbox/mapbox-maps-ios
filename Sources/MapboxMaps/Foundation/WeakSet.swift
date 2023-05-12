@@ -3,6 +3,9 @@ import Foundation
 internal class WeakSet<T> {
     private let hashTable = NSHashTable<AnyObject>.weakObjects()
 
+    internal var count: Int { hashTable.count }
+    internal var anyObject: T? { hashTable.anyObject as? T }
+
     internal func add(_ object: T) {
         hashTable.add((object as AnyObject))
     }

@@ -101,6 +101,19 @@ Var LineLayer.lineDasharrayTransition has been removed
 Var LineLayer.linePatternTransition has been removed
 Var PointAnnotationManager.textLineHeight has been removed
 
+// Convert location to a struct
+Class Location has been changed to a Struct
+Func LocationConsumer.locationUpdate(newLocation:) has ObjC name change from locationUpdateWithNewLocation: to 
+Func PuckLocationConsumer.puckLocationUpdate(newLocation:) has ObjC name change from puckLocationUpdateWithNewLocation: to 
+Accessor LocationManager.consumers.Get() has return type change from Foundation.NSHashTable<MapboxMaps.LocationConsumer> to [MapboxMaps.LocationConsumer]
+Var LocationManager.consumers has declared type change from Foundation.NSHashTable<MapboxMaps.LocationConsumer> to [MapboxMaps.LocationConsumer]
+Class Location has removed conformance to CVarArg
+Class Location has removed conformance to CustomDebugStringConvertible
+Class Location has removed conformance to CustomStringConvertible
+Class Location has removed conformance to Hashable
+Class Location has removed conformance to NSObjectProtocol
+Class Location has removed conformance to Equatable
+
 // Remove unnecessary NSObject inheritances and @objc attributes
 Class BasicCameraAnimator has removed conformance to CVarArg
 Class BasicCameraAnimator has removed conformance to CustomDebugStringConvertible
@@ -234,4 +247,3 @@ Struct ResourceRequest has removed conformance to Decodable
 
 // Rename MemoryBudget API
 Func MapboxMap.setMemoryBudget(_:) has been removed
-

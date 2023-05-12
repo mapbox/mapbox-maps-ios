@@ -43,7 +43,9 @@ final class LocationManagerTests: XCTestCase {
     func testLatestLocationWhenLocationProducerLatestLocationIsNonNil() {
         locationProducer.latestLocation = Location(location: CLLocation(), heading: nil, accuracyAuthorization: .fullAccuracy)
 
-        XCTAssertTrue(locationManager.latestLocation === locationProducer.latestLocation)
+        XCTAssertIdentical(locationManager.latestLocation?.location, locationProducer.latestLocation?.location)
+        XCTAssertEqual(locationManager.latestLocation?.heading, locationManager.latestLocation?.heading)
+        XCTAssertEqual(locationManager.latestLocation?.accuracyAuthorization, locationManager.latestLocation?.accuracyAuthorization)
     }
 
     func testLocationProvider() throws {
@@ -56,7 +58,7 @@ final class LocationManagerTests: XCTestCase {
     }
 
     func testConsumers() {
-        XCTAssertTrue(locationManager.consumers === locationProducer.consumers)
+        XCTAssertTrue(locationManager.consumers.elementsEqual(locationProducer.consumers) { $0 === $1 })
     }
 
     func testOptionsArePropagatedToLocationProducerAndPuckManager() {

@@ -22,7 +22,7 @@ public final class LocationManager {
 
     /// The set of objects that are currently consuming location updates.
     /// The returned object is a copy of the underlying one, so mutating it will have no effect.
-    public var consumers: NSHashTable<LocationConsumer> {
+    public var consumers: [LocationConsumer] {
         return locationProducer.consumers
     }
 

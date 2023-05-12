@@ -38,7 +38,7 @@ Mapbox welcomes participation and contributions from everyone.
   - The `Cancelable` object returned from `observe` and `observeNext` should be stored, otherwise the subscription will be immediately canceled;
   - Old methods `MapboxMap.onEvery`, `MapboxMap.onNext`, `Snapshotter.onEvery`, `Snapshotter.onNext` have been deprecated;
   - Old API `MapboxMap.observe` and `Snapshotter.observe` have been removed.
-
+* Deprecate `PointAnnotationManager.iconTextFit` and `PointAnnotationManager.iconTextFitPadding` in favor of `PointAnnotation.iconTextFit` and `PointAnnotation.iconTextFitPadding`.
 
 ## 10.12.0 - March 22, 2023
 

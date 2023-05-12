@@ -90,12 +90,13 @@ targets:
         - MapboxMapsTests
         - MapboxMapsHTTPTests
       environmentVariables:
+        - variable: MTL_HUD_ENABLED
+          value: 1
         - variable: MAPBOX_MAPS_SIGNPOSTS_ENABLED
           value: 1
           isEnabled: false
         - variable: MAPBOX_REOPEN_EXAMPLE
           value: 1
-          isEnabled: true
     sources:
       - path: build/${PROJECT}/Apps/Examples/Examples/
   DebugApp:
@@ -108,8 +109,18 @@ targets:
     settings:
       SKIP_INSTALL: NO
       INFOPLIST_FILE: "build/${PROJECT}/Apps/DebugApp/DebugApp/Info.plist"
+      IPHONEOS_DEPLOYMENT_TARGET: 13.0
     sources:
       - path: build/${PROJECT}/Apps/DebugApp/DebugApp/
+    scheme:
+      environmentVariables:
+        - variable: MTL_HUD_ENABLED
+          value: 1
+        - variable: MAPBOX_MAPS_SIGNPOSTS_ENABLED
+          value: 1
+          isEnabled: false
+        - variable: MAPBOX_REOPEN_EXAMPLE
+          value: 1
 
   ExamplesTests:
     templates:

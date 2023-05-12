@@ -171,9 +171,9 @@ def checkout_repo(repo_name: str, repo_branch: str, org: str = "mapbox", checkou
         if clean:
             os.system("git submodule foreach --recursive 'git reset --hard && git clean -dffx' > /dev/null")
         if submodules_path is None:
-            os.system("git submodule update --init --recursive")
+            os.system("git submodule update --jobs $(sysctl -n hw.logicalcpu) --init --recursive")
         else:
-            os.system("git submodule update --init --recursive " + submodules_path)
+            os.system("git submodule update --jobs $(sysctl -n hw.logicalcpu) --init --recursive " + submodules_path)
         os.chdir("..")
 
 

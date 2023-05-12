@@ -67,7 +67,7 @@ final class Custom3DPuckExample: UIViewController, ExampleProtocol, LocationCons
         mapView.location.options.puckType = .puck3D(configuration)
         mapView.location.options.puckBearing = .course
 
-        mapView.location.addLocationConsumer(newConsumer: self)
+        mapView.location.addLocationConsumer(self)
     }
 
     internal func locationUpdate(newLocation: Location) {

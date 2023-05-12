@@ -33,6 +33,8 @@ Func MapboxMap.querySourceFeatures(for:options:completion:) has parameter 2 type
 Func MapboxMap.querySourceFeatures(for:options:completion:) has return type change from () to MapboxMaps.Cancelable
 Func MapboxMap.removeFeatureState(sourceId:sourceLayerId:featureId:stateKey:) has return type change from () to MapboxMaps.Cancelable
 Func MapboxMap.setFeatureState(sourceId:sourceLayerId:featureId:state:) has return type change from () to MapboxMaps.Cancelable
+Func LocationManager.addLocationConsumer(newConsumer:) has been renamed to Func addLocationConsumer(_:)
+Func LocationManager.removeLocationConsumer(consumer:) has been renamed to Func removeLocationConsumer(_:)
 
 // Making Layer.visibility a required variable with no Expression support
 Accessor BackgroundLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility

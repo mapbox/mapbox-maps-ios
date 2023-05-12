@@ -73,7 +73,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
             guard let self = self else { return }
             // Register the location consumer with the map
             // Note that the location manager holds weak references to consumers, which should be retained
-            self.mapView.location.addLocationConsumer(newConsumer: self.cameraLocationConsumer)
+            self.mapView.location.addLocationConsumer(self.cameraLocationConsumer)
         }.store(in: &cancelables)
     }
 

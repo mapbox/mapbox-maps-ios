@@ -10,6 +10,8 @@ internal class IntegrationTestCase: XCTestCase {
     internal var cancelables = Set<AnyCancelable>()
 
     internal override func setUpWithError() throws {
+        try super.setUpWithError()
+
         cancelables.removeAll()
         try setupScreenAndWindow()
         accessToken = try mapboxAccessToken()
@@ -23,6 +25,8 @@ internal class IntegrationTestCase: XCTestCase {
         }
         rootViewController = nil
         window = nil
+
+        try super.tearDownWithError()
     }
 
     internal override func invokeTest() {

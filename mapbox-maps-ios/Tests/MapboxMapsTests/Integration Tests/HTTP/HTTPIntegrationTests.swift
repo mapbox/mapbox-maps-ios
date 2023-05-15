@@ -137,13 +137,12 @@ class HTTPIntegrationTests: MapViewIntegrationTestCase {
         }
 
         mapView.mapboxMap.loadStyleURI(.streets) { result in
-            guard case let .failure(error) = result,
-                  let localizedError = error as? LocalizedError else {
+            guard case let .failure(error) = result else {
                 XCTFail("Expecting a forced failure")
                 return
             }
 
-            if let description = localizedError.errorDescription {
+            if let description = error.errorDescription {
                 XCTAssert(description.contains(errorMessage))
             } else {
                 XCTFail("No error message")

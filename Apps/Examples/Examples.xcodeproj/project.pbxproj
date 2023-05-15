@@ -111,6 +111,7 @@
 		CADCF73C258499200065C51B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077C4EED252F7E88007636F1 /* AppDelegate.swift */; };
 		CADCF743258499570065C51B /* BasicMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADCF742258499570065C51B /* BasicMapExample.swift */; };
 		CAF9A9812583E49B007EF9EC /* TestableExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF9A9802583E49B007EF9EC /* TestableExampleTests.swift */; };
+		FE2755D52A12230B00EEC95F /* Fingertips in Frameworks */ = {isa = PBXBuildFile; productRef = FE2755D42A12230B00EEC95F /* Fingertips */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -263,6 +264,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B5327E9D260124C00095B6BD /* MapboxMaps in Frameworks */,
+				FE2755D52A12230B00EEC95F /* Fingertips in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -534,6 +536,7 @@
 			name = Examples;
 			packageProductDependencies = (
 				B5327E9C260124C00095B6BD /* MapboxMaps */,
+				FE2755D42A12230B00EEC95F /* Fingertips */,
 			);
 			productName = Examples;
 			productReference = 077C4EEA252F7E88007636F1 /* Examples.app */;
@@ -607,6 +610,9 @@
 				Base,
 			);
 			mainGroup = 077C4EE1252F7E88007636F1;
+			packageReferences = (
+				FE2755D32A12230B00EEC95F /* XCRemoteSwiftPackageReference "Fingertips" */,
+			);
 			productRefGroup = 077C4EEB252F7E88007636F1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1127,10 +1133,26 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		FE2755D32A12230B00EEC95F /* XCRemoteSwiftPackageReference "Fingertips" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:mapbox/Fingertips.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		B5327E9C260124C00095B6BD /* MapboxMaps */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MapboxMaps;
+		};
+		FE2755D42A12230B00EEC95F /* Fingertips */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FE2755D32A12230B00EEC95F /* XCRemoteSwiftPackageReference "Fingertips" */;
+			productName = Fingertips;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

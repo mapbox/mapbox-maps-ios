@@ -261,3 +261,6 @@ Accessor LocationOptions.puckBearingSource.Set() has parameter 0 type change fro
 
 // Rename MemoryBudget API
 Func MapboxMap.setMemoryBudget(_:) has been removed
+
+// Remove public access to the internal StyleManager
+Var Style.styleManager has been removed

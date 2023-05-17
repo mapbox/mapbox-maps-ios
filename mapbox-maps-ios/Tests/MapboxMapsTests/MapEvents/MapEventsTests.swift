@@ -62,8 +62,8 @@ final class MapEventsTests: XCTestCase {
         let mapLoadingError = MapLoadingError(
             type: .source,
             message: "message",
-            sourceID: nil,
-            tileID: nil,
+            sourceId: nil,
+            tileId: nil,
             timestamp: Date())
         let cameraChanged = CameraChanged(
             cameraState: CameraState(center: .random(), padding: .random(), zoom: 0, bearing: 0, pitch: 0),
@@ -75,10 +75,10 @@ final class MapEventsTests: XCTestCase {
         checkEvent(\.onStyleDataLoaded, \.onStyleDataLoaded, value: StyleDataLoaded(type: .style, timeInterval: timeInterval))
         checkEvent(\.onMapLoadingError, \.onMapLoadingError, value: mapLoadingError)
         checkEvent(\.onCameraChanged, \.onCameraChanged, value: cameraChanged)
-        checkEvent(\.onSourceAdded, \.onSourceAdded, value: SourceAdded(sourceID: "foo", timestamp: Date()))
-        checkEvent(\.onSourceRemoved, \.onSourceRemoved, value: SourceRemoved(sourceID: "foo", timestamp: Date()))
-        checkEvent(\.onStyleImageMissing, \.onStyleImageMissing, value: StyleImageMissing(imageID: "bar", timestamp: Date()))
-        checkEvent(\.onStyleImageRemoveUnused, \.onStyleImageRemoveUnused, value: StyleImageRemoveUnused(imageID: "bar", timestamp: Date()))
+        checkEvent(\.onSourceAdded, \.onSourceAdded, value: SourceAdded(sourceId: "foo", timestamp: Date()))
+        checkEvent(\.onSourceRemoved, \.onSourceRemoved, value: SourceRemoved(sourceId: "foo", timestamp: Date()))
+        checkEvent(\.onStyleImageMissing, \.onStyleImageMissing, value: StyleImageMissing(imageId: "bar", timestamp: Date()))
+        checkEvent(\.onStyleImageRemoveUnused, \.onStyleImageRemoveUnused, value: StyleImageRemoveUnused(imageId: "bar", timestamp: Date()))
         checkEvent(\.onRenderFrameStarted, \.onRenderFrameStarted, value: RenderFrameStarted(timestamp: Date()))
         checkEvent(\.onRenderFrameFinished, \.onRenderFrameFinished, value: RenderFrameFinished(renderMode: .full, needsRepaint: true, placementChanged: true, timeInterval: timeInterval))
 

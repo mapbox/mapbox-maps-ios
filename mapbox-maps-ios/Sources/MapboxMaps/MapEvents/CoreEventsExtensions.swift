@@ -27,18 +27,18 @@ extension SourceDataLoaded {
 
     /// Creates `SourceDataLoaded` event.
     public convenience init(
-        sourceID: String,
+        sourceId: String,
         type: SourceDataLoadedType,
         loaded: Bool?,
-        tileID: CanonicalTileID,
-        dataID: String?,
+        tileId: CanonicalTileID,
+        dataId: String?,
         timeInterval: EventTimeInterval) {
         self.init(
-            __sourceID: sourceID,
+            __sourceId: sourceId,
             type: type,
             loaded: loaded.map(NSNumber.init(value:)),
-            tileID: tileID,
-            dataID: dataID,
+            tileId: tileId,
+            dataId: dataId,
             timeInterval: timeInterval)
     }
 }

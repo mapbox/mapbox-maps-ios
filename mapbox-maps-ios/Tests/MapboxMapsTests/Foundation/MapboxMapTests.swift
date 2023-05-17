@@ -258,8 +258,8 @@ final class MapboxMapTests: XCTestCase {
         let sourceAddedStub = Stub<SourceAdded, Void>()
         mapboxMap.onNext(event: .sourceAdded, handler: sourceAddedStub.call(with:))
 
-        let sourceAdded1 = SourceAdded(sourceID: "source-id-1", timestamp: Date())
-        let sourceAdded2 = SourceAdded(sourceID: "source-id-2", timestamp: Date())
+        let sourceAdded1 = SourceAdded(sourceId: "source-id-1", timestamp: Date())
+        let sourceAdded2 = SourceAdded(sourceId: "source-id-2", timestamp: Date())
         mapEventsSource.onSourceAdded.send(sourceAdded1)
         mapEventsSource.onSourceAdded.send(sourceAdded2)
         mapEventsSource.onSourceAdded.send(sourceAdded2)
@@ -286,8 +286,8 @@ final class MapboxMapTests: XCTestCase {
         let sourceAddedStub = Stub<SourceAdded, Void>()
         mapboxMap.onEvery(event: .sourceAdded, handler: sourceAddedStub.call(with:))
 
-        let sourceAdded1 = SourceAdded(sourceID: "source-id-1", timestamp: Date())
-        let sourceAdded2 = SourceAdded(sourceID: "source-id-2", timestamp: Date())
+        let sourceAdded1 = SourceAdded(sourceId: "source-id-1", timestamp: Date())
+        let sourceAdded2 = SourceAdded(sourceId: "source-id-2", timestamp: Date())
         mapEventsSource.onSourceAdded.send(sourceAdded1)
         mapEventsSource.onSourceAdded.send(sourceAdded2)
 

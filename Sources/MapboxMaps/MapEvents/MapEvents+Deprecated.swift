@@ -79,14 +79,6 @@ extension MapLoadingError {
     public var payload: MapLoadingError { self }
 
     /// :nodoc:
-    @available(*, deprecated, renamed: "tileID")
-    public var tileId: CanonicalTileID? { tileID }
-
-    /// :nodoc:
-    @available(*, deprecated, renamed: "sourceID")
-    public var sourceId: String? { sourceID }
-
-    /// :nodoc:
     @available(*, deprecated, renamed: "type")
     public var error: MapLoadingErrorType { type }
 }
@@ -103,8 +95,8 @@ extension SourceAdded {
     public var payload: SourceAdded { self }
 
     /// :nodoc:
-    @available(*, deprecated, renamed: "sourceID")
-    public var id: String { sourceID }
+    @available(*, deprecated, renamed: "sourceId")
+    public var id: String { sourceId }
 }
 
 extension SourceRemoved {
@@ -113,8 +105,8 @@ extension SourceRemoved {
     public var payload: SourceRemoved { self }
 
     /// :nodoc:
-    @available(*, deprecated, renamed: "sourceID")
-    public var id: String { sourceID }
+    @available(*, deprecated, renamed: "sourceId")
+    public var id: String { sourceId }
 }
 
 extension SourceDataLoaded {
@@ -123,16 +115,8 @@ extension SourceDataLoaded {
     public var payload: SourceDataLoaded { self }
 
     /// :nodoc:
-    @available(*, deprecated, renamed: "sourceID")
-    public var id: String? { sourceID }
-
-    /// :nodoc:
-    @available(*, deprecated, renamed: "dataID")
-    public var dataId: String? { dataID }
-
-    /// :nodoc:
-    @available(*, deprecated, renamed: "tileID")
-    public var tileId: CanonicalTileID? { tileID }
+    @available(*, deprecated, renamed: "sourceId")
+    public var id: String? { sourceId }
 }
 
 extension StyleImageMissing {
@@ -141,8 +125,8 @@ extension StyleImageMissing {
     public var payload: StyleImageMissing { self }
 
     /// :nodoc:
-    @available(*, deprecated, renamed: "imageID")
-    public var id: String { imageID }
+    @available(*, deprecated, renamed: "imageId")
+    public var id: String { imageId }
 }
 
 extension StyleImageRemoveUnused {
@@ -151,8 +135,8 @@ extension StyleImageRemoveUnused {
     public var payload: StyleImageRemoveUnused { self }
 
     /// :nodoc:
-    @available(*, deprecated, renamed: "imageID")
-    public var id: String { imageID }
+    @available(*, deprecated, renamed: "imageId")
+    public var id: String { imageId }
 }
 
 extension RenderFrameFinished {

@@ -190,7 +190,7 @@ extension MapIdle: LogableEvent {
 
 extension MapLoadingError: LogableEvent {
     var name: String { "MapLoadingError" }
-    var info: String { "ts: \(timestamp), type: \(type), message: \(message), sourceID: \(String(describing: sourceID)), tileID: \(tileID?.log ?? "nil")" }
+    var info: String { "ts: \(timestamp), type: \(type), message: \(message), sourceId: \(String(describing: sourceId)), tileId: \(tileId?.log ?? "nil")" }
 }
 
 extension StyleLoaded: LogableEvent {
@@ -205,27 +205,27 @@ extension StyleDataLoaded: LogableEvent {
 
 extension SourceAdded: LogableEvent {
     var name: String { "SourceAdded" }
-    var info: String { "ts: \(timestamp), sourceID: \(sourceID)" }
+    var info: String { "ts: \(timestamp), sourceId: \(sourceId)" }
 }
 
 extension SourceRemoved: LogableEvent {
     var name: String { "SourceRemoved" }
-    var info: String { "ts: \(timestamp), sourceID: \(sourceID)" }
+    var info: String { "ts: \(timestamp), sourceId: \(sourceId)" }
 }
 
 extension SourceDataLoaded: LogableEvent {
     var name: String { "SourceDataLoaded" }
-    var info: String { "ti: \(timeInterval.log), sourceId: \(sourceID), tileId: \(tileID?.log ?? "nil"), dataID: \(dataID ?? "nil"), loaded: \(loaded.log)" }
+    var info: String { "ti: \(timeInterval.log), sourceId: \(sourceId), tileId: \(tileId?.log ?? "nil"), dataId: \(dataId ?? "nil"), loaded: \(loaded.log)" }
 }
 
 extension StyleImageMissing: LogableEvent {
     var name: String { "StyleImageMissing" }
-    var info: String { "ts: \(timestamp), imageID: \(imageID)" }
+    var info: String { "ts: \(timestamp), imageId: \(imageId)" }
 }
 
 extension StyleImageRemoveUnused: LogableEvent {
     var name: String { "StyleImageRemoveUnused" }
-    var info: String { "ts: \(timestamp), imageID: \(imageID)" }
+    var info: String { "ts: \(timestamp), imageId: \(imageId)" }
 }
 
 extension ResourceRequest: LogableEvent {

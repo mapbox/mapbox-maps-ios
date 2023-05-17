@@ -605,7 +605,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(self.style.allSourceIdentifiers.map(\.id), [sourceId])
     }
 
-    func testOnlyAddeddataIdReturned() {
+    func testOnlyAddedDataIdReturned() {
         let sourceID = "Source"
         let sourceID2 = "Source2"
         var source = GeoJSONSource()
@@ -624,7 +624,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         try! self.style.addSource(source2, id: sourceID2)
 
         mapView.mapboxMap.events.onSourceDataLoaded.observe { event in
-            returnedSourceDataId = event.dataID
+            returnedSourceDataId = event.dataId
             XCTAssertEqual(returnedSourceDataId, dataId)
 
             expectation.fulfill()

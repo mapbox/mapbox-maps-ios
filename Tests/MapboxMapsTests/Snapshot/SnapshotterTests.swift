@@ -30,8 +30,6 @@ final class SnapshotterTests: XCTestCase {
     }
 
     func testSnapshotterCompletionInvocationFailed() throws {
-        let options = MapSnapshotOptions(size: CGSize.init(width: 300, height: 300), pixelRatio: 2)
-
         let resultString = "FAILED"
         mockMapSnapshotter.startStub.defaultSideEffect = { invocation in
             invocation.parameters(Expected(error: resultString as NSString))
@@ -157,8 +155,8 @@ final class SnapshotterTests: XCTestCase {
         let sourceAddedStub = Stub<SourceAdded, Void>()
         snapshotter.onNext(event: .sourceAdded, handler: sourceAddedStub.call(with:))
 
-        let sourceAdded1 = SourceAdded(sourceID: "source-id-1", timestamp: Date())
-        let sourceAdded2 = SourceAdded(sourceID: "source-id-2", timestamp: Date())
+        let sourceAdded1 = SourceAdded(sourceId: "source-id-1", timestamp: Date())
+        let sourceAdded2 = SourceAdded(sourceId: "source-id-2", timestamp: Date())
         mapEventsSource.onSourceAdded.send(sourceAdded1)
         mapEventsSource.onSourceAdded.send(sourceAdded2)
         mapEventsSource.onSourceAdded.send(sourceAdded2)
@@ -185,8 +183,8 @@ final class SnapshotterTests: XCTestCase {
         let sourceAddedStub = Stub<SourceAdded, Void>()
         snapshotter.onEvery(event: .sourceAdded, handler: sourceAddedStub.call(with:))
 
-        let sourceAdded1 = SourceAdded(sourceID: "source-id-1", timestamp: Date())
-        let sourceAdded2 = SourceAdded(sourceID: "source-id-2", timestamp: Date())
+        let sourceAdded1 = SourceAdded(sourceId: "source-id-1", timestamp: Date())
+        let sourceAdded2 = SourceAdded(sourceId: "source-id-2", timestamp: Date())
         mapEventsSource.onSourceAdded.send(sourceAdded1)
         mapEventsSource.onSourceAdded.send(sourceAdded2)
 

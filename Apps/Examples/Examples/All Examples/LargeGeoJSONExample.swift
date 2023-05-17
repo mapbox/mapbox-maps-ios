@@ -27,7 +27,7 @@ final class LargeGeoJSONPerformanceExample: UIViewController, ExampleProtocol {
 
         // Print updates when sources with added dataIds are updated
         mapView.mapboxMap.events.onSourceDataLoaded.observe { event in
-            if let dataId = event.dataID {
+            if let dataId = event.dataId {
                 print("GeoJsonSource was updated, data-id: \(dataId)")
             }
         }.store(in: &cancelables)

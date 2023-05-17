@@ -3,7 +3,6 @@ import Foundation
 @_implementationOnly import MapboxCommon_Private
 
 class MockStyleManager: StyleManagerProtocol {
-
     func asStyleManager() -> StyleManager {
         fatalError()
     }
@@ -473,6 +472,25 @@ class MockStyleManager: StyleManagerProtocol {
     let addStyleModelStub = Stub<AddStyleModelParams, Expected<NSNull, NSString>>(defaultReturnValue: .init(value: NSNull()))
     func addStyleModel(forModelId modelId: String, modelUri: String) -> Expected<NSNull, NSString> {
         addStyleModelStub.call(with: AddStyleModelParams(modelId: modelId, modelUri: modelUri))
+    }
+
+    let getStyleAtmospherePropertyStub = Stub<String, MapboxCoreMaps.StylePropertyValue>(
+        defaultReturnValue: .init(value: "stub", kind: .undefined)
+    )
+    func getStyleAtmosphereProperty(forProperty property: String) -> StylePropertyValue {
+        getStyleAtmospherePropertyStub.call(with: property)
+    }
+
+    let setStyleAtmosphereForPropertiesStub = Stub<Any, Expected<NSNull, NSString>>(defaultReturnValue: .init(value: NSNull()))
+    func setStyleAtmosphereForProperties(_ properties: Any) -> Expected<NSNull, NSString> {
+        setStyleAtmosphereForPropertiesStub.call(with: properties)
+    }
+
+    let setStyleAtmospherePropertyStub = Stub<SetStylePropertyParameters, Expected<NSNull, NSString>>(
+        defaultReturnValue: .init(value: NSNull())
+    )
+    func setStyleAtmospherePropertyForProperty(_ property: String, value: Any) -> Expected<NSNull, NSString> {
+        setStyleAtmospherePropertyStub.call(with: SetStylePropertyParameters(property: property, value: value))
     }
 }
 

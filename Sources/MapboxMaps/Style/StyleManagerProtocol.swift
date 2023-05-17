@@ -149,6 +149,12 @@ internal protocol StyleManagerProtocol {
         dataId: String,
         data: MapboxCoreMaps.GeoJSONSourceData
     ) -> Expected<NSNull, NSString>
+
+    func setStyleAtmosphereForProperties(_ properties: Any) -> Expected<NSNull, NSString>
+
+    func setStyleAtmospherePropertyForProperty(_ property: String, value: Any) -> Expected<NSNull, NSString>
+
+    func getStyleAtmosphereProperty(forProperty: String) -> StylePropertyValue
 }
 
 // MARK: Conformance

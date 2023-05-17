@@ -1,16 +1,14 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "Turf",
-        "repositoryURL": "https://github.com/mapbox/turf-swift.git",
-        "state": {
-          "branch": null,
-          "revision": "87b5b37108ba9f37f0885b586d8f6355d8240dd8",
-          "version": "2.6.1"
-        }
+  "pins" : [
+    {
+      "identity" : "turf-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mapbox/turf-swift.git",
+      "state" : {
+        "revision" : "87b5b37108ba9f37f0885b586d8f6355d8240dd8",
+        "version" : "2.6.1"
       }
-    ]
-  },
-  "version": 1
+    }
+  ],
+  "version" : 2
 }

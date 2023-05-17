@@ -2,9 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-## main
+## 10.14.0-beta.1 - May 17, 2023
 
 * Add a renamed flag to `PuckBearingSource` and related APIs.
+* Update MapboxCoreMaps to 10.14.0-beta.1 and MapboxCommon to 23.6.0-beta.1. 
 
 ## 10.13.1 - May 5, 2023
 

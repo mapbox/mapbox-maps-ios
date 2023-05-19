@@ -277,9 +277,9 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
                     "source": "composite",
                     "source-layer": "place",
                     "layout": [
-                        "text-field": ["coalesce", ["get", "name_en"], ["get", "name"]],
+                        "text-field": ["coalesce", ["get", "name_en"], ["get", "name"]] as [Any],
                     ],
-                ],
+                ] as [String: Any],
             ],
         ]
 
@@ -420,9 +420,9 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
                     "source": "composite",
                     "source-layer": "place",
                     "layout": [
-                        "text-field": ["coalesce", ["get", "name_en"], ["get", "name"]],
+                        "text-field": ["coalesce", ["get", "name_en"], ["get", "name"]] as [Any],
                     ],
-                ],
+                ] as [String: Any],
             ],
         ]
 

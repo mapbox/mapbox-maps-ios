@@ -190,25 +190,25 @@ internal final class Puck2D: Puck {
                 minPuckRadiusInMeters,
                 cutoffZoomLevel + 1,
                 location.horizontalAccuracy
-            ]
+            ] as [Any]
             newLayerPaintProperties[.accuracyRadiusColor] = [
                 Expression.Operator.step.rawValue,
                 [Expression.Operator.zoom.rawValue],
                 StyleColor(UIColor.clear).rgbaString,
                 cutoffZoomLevel,
-                StyleColor(configuration.accuracyRingColor).rgbaString]
+                StyleColor(configuration.accuracyRingColor).rgbaString] as [Any]
             newLayerPaintProperties[.accuracyRadiusBorderColor] = [
                 Expression.Operator.step.rawValue,
                 [Expression.Operator.zoom.rawValue],
                 StyleColor(UIColor.clear).rgbaString,
                 cutoffZoomLevel,
-                StyleColor(configuration.accuracyRingBorderColor).rgbaString]
+                StyleColor(configuration.accuracyRingBorderColor).rgbaString] as [Any]
             newLayerPaintProperties[.emphasisCircleColor] = [
                 Expression.Operator.step.rawValue,
                 [Expression.Operator.zoom.rawValue],
                 StyleColor(configuration.accuracyRingColor).rgbaString,
                 cutoffZoomLevel,
-                StyleColor(UIColor.clear).rgbaString]
+                StyleColor(UIColor.clear).rgbaString] as [Any]
             newLayerPaintProperties[.emphasisCircleRadius] = minPuckRadiusInPoints
         }
 

@@ -8,7 +8,7 @@ import MapboxMaps
 
 // swiftlint:disable:next type_body_length
 struct Examples {
-    static let all = [
+    static let all: [[String : Any]] = [
         [
             "title": "Getting started",
             "examples": gettingStartedExamples

@@ -67,7 +67,9 @@ class GLNativeProject {
                     "EXECUTABLE_PREFIX",
                     "FRAMEWORK_VERSION",
                     "TARGET_TEMP_DIR",
-                    "DEBUG_INFORMATION_FORMAT"
+                    "DEBUG_INFORMATION_FORMAT",
+                    "ENABLE_BITCODE",
+                    "BITCODE_GENERATION_MODE",
                 ]
                 for buildSetting in buildSettingsToNil {
                     buildConfiguration.buildSettings[buildSetting] = nil

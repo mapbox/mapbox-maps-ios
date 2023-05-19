@@ -264,3 +264,49 @@ Func MapboxMap.setMemoryBudget(_:) has been removed
 
 // Remove public access to the internal StyleManager
 Var Style.styleManager has been removed
+
+// `SourceType` and `LayerType` are now Structs with static variables instead of Enums
+Constructor LayerType.init(rawValue:) has return type change from MapboxMaps.LayerType? to MapboxMaps.LayerType 
+Constructor SourceType.init(rawValue:) has return type change from MapboxMaps.SourceType? to MapboxMaps.SourceType
+Enum LayerType has been changed to a Struct
+Enum SourceType has been changed to a Struct
+EnumElement LayerType.background has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.circle has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.fill has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.fillExtrusion has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.heatmap has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.hillshade has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.line has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.locationIndicator has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.model has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.raster has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.sky has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.symbol has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement SourceType.geoJson has declared type change from (MapboxMaps.SourceType.Type) -> MapboxMaps.SourceType to MapboxMaps.SourceType
+EnumElement SourceType.image has declared type change from (MapboxMaps.SourceType.Type) -> MapboxMaps.SourceType to MapboxMaps.SourceType
+EnumElement SourceType.model has declared type change from (MapboxMaps.SourceType.Type) -> MapboxMaps.SourceType to MapboxMaps.SourceType
+EnumElement SourceType.raster has declared type change from (MapboxMaps.SourceType.Type) -> MapboxMaps.SourceType to MapboxMaps.SourceType
+EnumElement SourceType.rasterDem has declared type change from (MapboxMaps.SourceType.Type) -> MapboxMaps.SourceType to MapboxMaps.SourceType
+EnumElement SourceType.vector has declared type change from (MapboxMaps.SourceType.Type) -> MapboxMaps.SourceType to MapboxMaps.SourceType
+Accessor LayerType.layerType.Get() has return type change from MapboxMaps.Layer.Type to MapboxMaps.Layer.Type? 
+Accessor SourceType.sourceType.Get() has return type change from MapboxMaps.Source.Type to MapboxMaps.Source.Type? 
+Var LayerType.layerType has declared type change from MapboxMaps.Layer.Type to MapboxMaps.Layer.Type? 
+Var SourceType.sourceType has declared type change from MapboxMaps.Source.Type to MapboxMaps.Source.Type? 
+EnumElement LayerType.background is now static
+EnumElement LayerType.circle is now static
+EnumElement LayerType.fill is now static
+EnumElement LayerType.fillExtrusion is now static
+EnumElement LayerType.heatmap is now static
+EnumElement LayerType.hillshade is now static
+EnumElement LayerType.line is now static
+EnumElement LayerType.locationIndicator is now static
+EnumElement LayerType.model is now static
+EnumElement LayerType.raster is now static
+EnumElement LayerType.sky is now static
+EnumElement LayerType.symbol is now static
+EnumElement SourceType.geoJson is now static
+EnumElement SourceType.image is now static
+EnumElement SourceType.model is now static
+EnumElement SourceType.raster is now static
+EnumElement SourceType.rasterDem is now static
+EnumElement SourceType.vector is now static

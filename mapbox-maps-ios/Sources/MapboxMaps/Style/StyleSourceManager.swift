@@ -31,12 +31,8 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
     private var workItems = [SourceId: Cancelable]()
 
     internal var allSourceIdentifiers: [SourceInfo] {
-        return styleManager.getStyleSources().compactMap { info in
-            guard let sourceType = SourceType(rawValue: info.type) else {
-                Log.error(forMessage: "Failed to create SourceType from \(info.type)", category: "Example")
-                return nil
-            }
-            return SourceInfo(id: info.id, type: sourceType)
+        return styleManager.getStyleSources().map { info in
+            SourceInfo(id: info.id, type: SourceType(stringLiteral: info.type))
         }
     }
 
@@ -66,10 +62,11 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
         let sourceProps = try sourceProperties(for: id)
 
         guard let typeString = sourceProps["type"] as? String,
-              let type = SourceType(rawValue: typeString) else {
+              let type = SourceType(rawValue: typeString).sourceType else {
             throw TypeConversionError.invalidObject
         }
-        return try type.sourceType.init(jsonObject: sourceProps)
+
+        return try type.init(jsonObject: sourceProps)
     }
 
     internal func addSource(_ source: Source, id: String, dataId: String? = nil) throws {

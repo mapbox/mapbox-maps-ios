@@ -43,8 +43,8 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
         41.8781
         ],
         "zoom": 12,
-        "sources": [],
-        "layers": []
+        "sources": [Any](),
+        "layers": [Any]()
     ]
 
     func testLoadStyleURICompletionIsCalled() {

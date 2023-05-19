@@ -459,28 +459,28 @@ final class Puck2DTests: XCTestCase {
             cutoffZoomLevel,
             minPuckRadiusInMeters,
             cutoffZoomLevel + 1,
-            accuracy]
+            accuracy] as [Any]
         expectedProperties["accuracy-radius-color"] = [
             "step",
             ["zoom"],
             StyleColor(UIColor.clear).rgbaString,
             cutoffZoomLevel,
             StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
-        ]
+        ] as [Any]
         expectedProperties["accuracy-radius-border-color"] = [
             "step",
             ["zoom"],
             StyleColor(UIColor.clear).rgbaString,
             cutoffZoomLevel,
             StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
-        ]
+        ] as [Any]
         expectedProperties["emphasis-circle-color"] = [
             "step",
             ["zoom"],
             StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString,
             cutoffZoomLevel,
             StyleColor(UIColor.clear).rgbaString
-        ]
+        ] as [Any]
         expectedProperties["emphasis-circle-radius"] = 11
         expectedProperties["emphasis-circle-color"] = [
             "step",
@@ -488,7 +488,7 @@ final class Puck2DTests: XCTestCase {
             StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString,
             cutoffZoomLevel,
             StyleColor(UIColor.clear).rgbaString
-        ]
+        ] as [Any]
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
@@ -531,28 +531,28 @@ final class Puck2DTests: XCTestCase {
             cutoffZoomLevel,
             minPuckRadiusInMeters,
             cutoffZoomLevel + 1,
-            accuracy]
+            accuracy] as [Any]
         expectedProperties["accuracy-radius-color"] = [
             "step",
             ["zoom"],
             StyleColor(UIColor.clear).rgbaString,
             cutoffZoomLevel,
             StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
-        ]
+        ] as [Any]
         expectedProperties["accuracy-radius-border-color"] = [
             "step",
             ["zoom"],
             StyleColor(UIColor.clear).rgbaString,
             cutoffZoomLevel,
             StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
-        ]
+        ] as [Any]
         expectedProperties["emphasis-circle-color"] = [
             "step",
             ["zoom"],
             StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString,
             cutoffZoomLevel,
             StyleColor(UIColor.clear).rgbaString
-        ]
+        ] as [Any]
         expectedProperties["emphasis-circle-radius"] = 11
         expectedProperties["emphasis-circle-color"] = [
             "step",
@@ -560,7 +560,7 @@ final class Puck2DTests: XCTestCase {
             StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString,
             cutoffZoomLevel,
             StyleColor(UIColor.clear).rgbaString
-        ]
+        ] as [Any]
         for key in originalKeys where expectedProperties[key] == nil {
             expectedProperties[key] = Style.layerPropertyDefaultValue(for: .locationIndicator, property: key).value
         }

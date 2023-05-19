@@ -161,7 +161,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         let dataDrivenProperties = Dictionary(
             uniqueKeysWithValues: dataDrivenLayerPropertyKeys
                 .map { (key) -> (String, Any) in
-                    (key, ["get", key, ["get", "layerProperties"]])
+                    (key, ["get", key, ["get", "layerProperties"]] as [Any])
                 })
 
         // Merge the common layer properties

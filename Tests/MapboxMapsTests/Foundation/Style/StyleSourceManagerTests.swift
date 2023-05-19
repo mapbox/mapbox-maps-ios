@@ -64,9 +64,12 @@ final class StyleSourceManagerTests: XCTestCase {
     func testAddNonGeoJSONDataSourceDoesNotTriggerAsyncParsing() throws {
         let id = String.randomASCII(withLength: 10)
         let types: [SourceType] = [.raster, .image, .rasterDem, .vector]
-        let type = types.randomElement()!
+        let type = try XCTUnwrap(types.randomElement())
         let json = ["type": type.rawValue]
-        let source = try types.randomElement()!.sourceType.init(jsonObject: json)
+        guard let source = try type.sourceType?.init(jsonObject: json) else {
+            XCTFail("Expected to return a valid source")
+            return
+        }
 
         try sourceManager.addSource(source, id: id)
 

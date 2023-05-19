@@ -141,11 +141,11 @@ public final class Style: StyleProtocol {
         let properties = try layerProperties(for: id)
 
         guard let typeString = properties["type"] as? String,
-              let type = LayerType(rawValue: typeString) else {
+              let type = LayerType(rawValue: typeString).layerType else {
             throw TypeConversionError.invalidObject
         }
 
-        return try type.layerType.init(jsonObject: properties)
+        return try type.init(jsonObject: properties)
     }
 
     /// Updates a `layer` that exists in the `style` already
@@ -447,14 +447,8 @@ public final class Style: StyleProtocol {
 
     /// The ordered list of the current style layers' identifiers and types
     public var allLayerIdentifiers: [LayerInfo] {
-        return styleManager.getStyleLayers().compactMap { info in
-            if info.is3DPuckLayer { return nil }
-
-            guard let layerType = LayerType(rawValue: info.type) else {
-                assertionFailure("Failed to create LayerType from \(info.type)")
-                return nil
-            }
-            return LayerInfo(id: info.id, type: layerType)
+        return styleManager.getStyleLayers().map { info in
+            LayerInfo(id: info.id, type: LayerType(rawValue: info.type))
         }
     }
 
@@ -583,8 +577,7 @@ public final class Style: StyleProtocol {
         return sourceManager.sourceExists(withId: id)
     }
 
-    /// The ordered list of the current style sources' identifiers and types. Identifiers for custom vector
-    /// sources will not be included
+    /// The ordered list of the current style sources' identifiers and types.
     public var allSourceIdentifiers: [SourceInfo] {
         return sourceManager.allSourceIdentifiers
     }

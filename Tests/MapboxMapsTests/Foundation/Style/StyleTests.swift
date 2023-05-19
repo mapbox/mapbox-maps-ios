@@ -120,13 +120,6 @@ final class StyleTests: XCTestCase {
         })
     }
 
-    func testGetAllLayerIdentifiersDoesNotTriggerAssertFor3DPuckLayer() {
-        styleManager.getStyleLayersStub.defaultReturnValue = [StyleObjectInfo(id: Puck3D.layerID, type: "model")]
-
-        // test should fail in debug configuration because of an assertion being triggered in `allLayerIdentifiers`
-        XCTAssertTrue(style.allLayerIdentifiers.allSatisfy { $0.id != Puck3D.layerID })
-    }
-
     func testStyleCanAddLayer() {
         XCTAssertThrowsError(try style.addLayer(NonEncodableLayer()))
 
@@ -219,7 +212,10 @@ final class StyleTests: XCTestCase {
     func testStyleCanAddTypedStyleSource() throws {
         let id = "dummy-source-id"
         let type = SourceType.random()
-        let source = try type.sourceType.init(jsonObject: ["type": type.rawValue])
+        guard let source = try type.sourceType?.init(jsonObject: ["type": type.rawValue]) else {
+            XCTFail("Expected to return a valid source")
+            return
+        }
 
         try style.addSource(source, id: id)
 

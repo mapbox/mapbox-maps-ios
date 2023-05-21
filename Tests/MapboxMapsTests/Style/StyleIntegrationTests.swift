@@ -289,7 +289,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
         mapLoadingErrorExpectation.assertForOverFulfill = false
 
-        mapView.mapboxMap.events.onMapLoadingError.observeNext { _ in
+        mapView.mapboxMap.onMapLoadingError.observeNext { _ in
             mapLoadingErrorExpectation.fulfill()
         }.store(in: &cancelables)
 
@@ -432,7 +432,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
         mapLoadingErrorExpectation.assertForOverFulfill = false
 
-        mapView.mapboxMap.events.onMapLoadingError.observeNext { _ in
+        mapView.mapboxMap.onMapLoadingError.observeNext { _ in
             mapLoadingErrorExpectation.fulfill()
         }.store(in: &cancelables)
 
@@ -596,7 +596,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         try! self.style.addSource(source, id: sourceID)
         try! self.style.addSource(source2, id: sourceID2)
 
-        mapView.mapboxMap.events.onSourceDataLoaded.observe { event in
+        mapView.mapboxMap.onSourceDataLoaded.observe { event in
             returnedSourceDataId = event.dataId
             XCTAssertEqual(returnedSourceDataId, dataId)
 

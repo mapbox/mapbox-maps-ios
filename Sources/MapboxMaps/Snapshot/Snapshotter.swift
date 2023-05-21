@@ -30,23 +30,23 @@ internal protocol MapSnapshotterProtocol: StyleManagerProtocol {
 
 extension MapSnapshotter: MapSnapshotterProtocol {}
 
-// MARK: - Snapshotter
-///  A high-level component responsible for taking map snapshots with given ``MapSnapshotOptions``.
+/// A utility class for capturing styled map snapshots.
+///
+/// Use a `MapSnapshotter` when you need to capture a static snapshot of a map without using the actual ``MapView``.
+/// You can configure the final result via ``MapSnapshotOptions`` upon construction time and take.
 public class Snapshotter {
 
     /// Internal `MapboxCoreMaps.MBXMapSnapshotter` object that takes care of
     /// rendering a snapshot.
     internal let mapSnapshotter: MapSnapshotterProtocol
 
-    /// A `style` object that can be manipulated to set different styles for a snapshot
+    /// A `style` object that can be manipulated to set different styles for a snapshot.
     public let style: Style
 
-    /// Provides access to events triggered during Snapshotter lifecycle.
-    public let events: MapEvents
-
+    private let events: MapEvents
     private let options: MapSnapshotOptions
 
-    /// Initialize a `Snapshotter` instance
+    /// Initializes a `Snapshotter` instance.
     /// - Parameters:
     ///   - options: Options describing an intended snapshot
     convenience public init(options: MapSnapshotOptions) {
@@ -58,7 +58,7 @@ public class Snapshotter {
             events: MapEvents(observable: impl.asStyleManager()))
     }
 
-    /// Enables injecting mocks when unit testing
+    /// Enables injecting mocks for unit testing.
     internal init(options: MapSnapshotOptions,
                   mapSnapshotter: MapSnapshotterProtocol,
                   style: Style,
@@ -221,7 +221,7 @@ public class Snapshotter {
             let renderer = UIGraphicsImageRenderer(size: uiImage.size, format: format)
             let compositeImage = renderer.image { rendererContext in
 
-                // First draw the snaphot image into the context
+                // First draw the snapshot image into the context
                 let context = rendererContext.cgContext
 
                 // image needs to be flipped vertically
@@ -312,7 +312,35 @@ public class Snapshotter {
     }
 }
 
+// MARK: - Snapshotter Event handling
+
 extension Snapshotter {
+    /// An error that has occurred while loading the Map. The `type` property defines what resource could
+    /// not be loaded and the `message` property will contain a descriptive error message.
+    /// In case of `source` or `tile` loading errors, `sourceID` or `tileID` will contain the identifier of the source failing.
+    public var onMapLoadingError: Signal<MapLoadingError> { events.signal(for: \.onMapLoadingError) }
+
+    /// The requested style has been fully loaded, including the style, specified sprite and sources' metadata.
+    ///
+    /// The style specified sprite would be marked as loaded even with sprite loading error (an error will be emitted via ``MapboxMap/onMapLoadingError``).
+    /// Sprite loading error is not fatal and we don't want it to block the map rendering, thus this event will still be emitted if style and sources are fully loaded.
+    public var onStyleLoaded: Signal<StyleLoaded> { events.signal(for: \.onStyleLoaded) }
+
+    /// The requested style data has been loaded. The `type` property defines what kind of style data has been loaded.
+    /// Event may be emitted synchronously, for example, when ``MapboxMap/loadStyleJSON(_:completion:)`` is used to load style.
+    ///
+    /// Based on an event data `type` property value, following use-cases may be implemented:
+    /// - `style`: Style is parsed, style layer properties could be read and modified, style layers and sources could be
+    /// added or removed before rendering is started.
+    /// - `sprite`: Style's sprite sheet is parsed and it is possible to add or update images.
+    /// - `sources`: All sources defined by the style are loaded and their properties could be read and updated if needed.
+    public var onStyleDataLoaded: Signal<StyleDataLoaded> { events.signal(for: \.onStyleDataLoaded) }
+
+    /// A style has a missing image. This event is emitted when the map renders visible tiles and
+    /// one of the required images is missing in the sprite sheet. Subscriber has to provide the missing image
+    /// by calling ``Style/addImage(_:id:sdf:contentInsets:)``.
+    public var onStyleImageMissing: Signal<StyleImageMissing> { events.signal(for: \.onStyleImageMissing) }
+
     /// Listen to a single occurrence of a Map event.
     ///
     /// This will observe the next (and only the next) event of the specified
@@ -329,9 +357,9 @@ extension Snapshotter {
     /// - Returns: A `Cancelable` object that you can use to stop listening for
     ///     the event. This is especially important if you have a retain cycle in
     ///     the handler.
-    @available(*, deprecated)
+    @available(*, deprecated, message: "Use snapshotter.on<eventType>.observeNext instead.")
     @discardableResult
-    public func onNext<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (Payload) -> Void) -> Cancelable {
+    public func onNext<Payload>(event: MapEventType<Payload>, handler: @escaping (Payload) -> Void) -> Cancelable {
         events.onNext(event: event, handler: handler)
     }
 
@@ -344,9 +372,9 @@ extension Snapshotter {
     /// - Returns: A `Cancelable` object that you can use to stop listening for
     ///     events. This is especially important if you have a retain cycle in
     ///     the handler.
-    @available(*, deprecated)
+    @available(*, deprecated, message: "Use snapshotter.on<eventType>.observe instead.")
     @discardableResult
-    public func onEvery<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (Payload) -> Void) -> Cancelable {
+    public func onEvery<Payload>(event: MapEventType<Payload>, handler: @escaping (Payload) -> Void) -> Cancelable {
         events.onEvery(event: event, handler: handler)
     }
 }

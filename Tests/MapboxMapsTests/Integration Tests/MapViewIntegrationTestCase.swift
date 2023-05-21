@@ -6,7 +6,7 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
     internal var style: Style!
     internal var dataPathURL: URL!
 
-    /// Closures for map view delegate 
+    /// Closures for map view delegate
     internal var didFinishLoadingStyle: ((MapView) -> Void)?
     internal var didBecomeIdle: ((MapView) -> Void)?
 
@@ -29,12 +29,12 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
                                             styleURI: nil)
         let view = MapView(frame: window.bounds, mapInitOptions: mapInitOptions)
 
-        view.mapboxMap.events.onStyleLoaded.observeNext { [weak self] _ in
+        view.mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
             guard let self = self, let mapView = self.mapView else { return }
             self.didFinishLoadingStyle?(mapView)
         }.store(in: &cancelables)
 
-        view.mapboxMap.events.onMapIdle.observe { [weak self] _ in
+        view.mapboxMap.onMapIdle.observe { [weak self] _ in
             guard let self = self, let mapView = self.mapView else { return }
             self.didBecomeIdle?(mapView)
         }.store(in: &cancelables)

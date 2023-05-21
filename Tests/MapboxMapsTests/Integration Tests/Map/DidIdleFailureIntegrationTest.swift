@@ -30,7 +30,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
         let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions)
         let view = MapView(frame: window.bounds, mapInitOptions: mapInitOptions)
 
-        view.mapboxMap.events.onResourceRequest.observe { [weak self, weak view] req in
+        view.mapboxMap.onResourceRequest.observe { [weak self, weak view] req in
             if let error = req.response?.error, let view = view {
                 self?.hadResourceEventError?(view, error)
             }
@@ -82,15 +82,15 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
 
         style.uri = .streets
 
-        mapView.mapboxMap.events.onMapLoadingError.observeNext { error in
+        mapView.mapboxMap.onMapLoadingError.observeNext { error in
             XCTFail("Failed to load map with \(String(describing: error))")
         }.store(in: &cancelables)
 
-        mapView.mapboxMap.events.onStyleLoaded.observe { _ in
+        mapView.mapboxMap.onStyleLoaded.observe { _ in
             expectation.fulfill()
         }.store(in: &cancelables)
 
-        mapView.mapboxMap.events.onMapIdle.observeNext { _ in
+        mapView.mapboxMap.onMapIdle.observeNext { _ in
             expectation.fulfill()
         }.store(in: &cancelables)
 

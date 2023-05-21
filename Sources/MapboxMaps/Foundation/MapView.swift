@@ -407,7 +407,7 @@ open class MapView: UIView {
         ornaments = OrnamentsManager(
             options: OrnamentOptions(),
             view: self,
-            onCameraChanged: mapboxMap.events.onCameraChanged,
+            onCameraChanged: mapboxMap.onCameraChanged,
             cameraAnimationsManager: internalCamera,
             infoButtonOrnamentDelegate: attributionDialogManager,
             logoView: LogoView(logoSize: .regular()),

@@ -14,7 +14,7 @@ class ObservableIntegrationTests: MapViewIntegrationTestCase {
         let eventExpectation = XCTestExpectation(description: "Event should have been received")
         eventExpectation.assertForOverFulfill = false
 
-        mapView.mapboxMap.events.onResourceRequest.observe { req in
+        mapView.mapboxMap.onResourceRequest.observe { req in
             let validDataSources = [RequestDataSourceType.resourceLoader, .network, .database, .asset, .fileSystem]
             XCTAssert(validDataSources.contains(req.source))
             eventExpectation.fulfill()

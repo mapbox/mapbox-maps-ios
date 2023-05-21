@@ -116,7 +116,7 @@ class MapInitOptionsIntegrationTests: XCTestCase {
         let view = MapView(frame: .zero, mapInitOptions: mapInitOptions)
 
         let expectation = self.expectation(description: "Wait for style to load")
-        view.mapboxMap.events.onStyleLoaded.observeNext { _ in
+        view.mapboxMap.onStyleLoaded.observeNext { _ in
             expectation.fulfill()
         }.store(in: &cancelables)
 
@@ -148,7 +148,7 @@ class MapInitOptionsIntegrationTests: XCTestCase {
         let view = MapView(frame: .zero, mapInitOptions: mapInitOptions)
 
         let expectation = self.expectation(description: "Wait for style to load")
-        view.mapboxMap.events.onStyleLoaded.observeNext { _ in
+        view.mapboxMap.onStyleLoaded.observeNext { _ in
             expectation.fulfill()
         }.store(in: &cancelables)
 

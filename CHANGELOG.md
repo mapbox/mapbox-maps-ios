@@ -28,16 +28,16 @@ Mapbox welcomes participation and contributions from everyone.
 * Expose a subset of ModelLayer APIs.
 * Protocol `LocationProvider` now requires class semantic for implementation.
 * The Map events have been reworked:
-  - Now all event payloads are serialize-free, which brings more type safety and eliminates possible deserialization errors;
-  - `MapboxMap` and `Snapshotter` now have the `events` object which allows you to subscribe to map events via `observe` and `observeNext` methods:
+  - Now all Map events payloads are serialize-free, which brings more type safety and eliminates possible deserialization errors;
+  - The `MapboxMap` and `Snapshotter` now expose `on`-prefixed properties that allows you to subscribe to map events via `observe` and `observeNext` methods:
     ```swift
       mapboxMap.onMapLoaded.observe { [weak self] event in
         self?.camera = event.cameraState
       }.store(in: &cancelables)
     ```
-  - The `Cancelable` object returned from `observe` and `observeNext` should be stored, otherwise the subscription will be immediately canceled;
-  - Old methods `MapboxMap.onEvery`, `MapboxMap.onNext`, `Snapshotter.onEvery`, `Snapshotter.onNext` have been deprecated;
-  - Old API `MapboxMap.observe` and `Snapshotter.observe` have been removed.
+  - The `AnyCancelable` object returned from `observe` and `observeNext` should be stored, otherwise the subscription will be immediately canceled;
+  - Methods `MapboxMap.onEvery`, `MapboxMap.onNext`, `Snapshotter.onEvery`, `Snapshotter.onNext` have been deprecated;
+  - Methods `MapboxMap.observe` and `Snapshotter.observe` have been removed.
 * Deprecate `PointAnnotationManager.iconTextFit` and `PointAnnotationManager.iconTextFitPadding` in favor of `PointAnnotation.iconTextFit` and `PointAnnotation.iconTextFitPadding`.
 * Remove deprecated `PuckBearingSource`and related APIs.
 * Experimental API `MapboxMap/setMemoryBudget` was renamed to `MapboxMaps/setTileCacheBudget` and promoted to stable.

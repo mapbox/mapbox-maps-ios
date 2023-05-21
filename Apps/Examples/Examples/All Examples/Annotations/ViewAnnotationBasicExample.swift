@@ -20,7 +20,7 @@ final class ViewAnnotationBasicExample: UIViewController, ExampleProtocol {
 
         addViewAnnotation(at: mapView.mapboxMap.coordinate(for: mapView.center))
 
-        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
             self.finish()
         }.store(in: &cancelables)

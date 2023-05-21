@@ -33,7 +33,7 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.events.onStyleLoaded.observeNext { [weak self] _ in
+        mapView.mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
 
             self.setupExample()
@@ -69,7 +69,7 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
         if mapView.mapboxMap.style.isLoaded {
             startAnimation()
         } else {
-            mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
+            mapView.mapboxMap.onMapLoaded.observeNext { _ in
                 self.startAnimation()
             }.store(in: &cancelables)
         }

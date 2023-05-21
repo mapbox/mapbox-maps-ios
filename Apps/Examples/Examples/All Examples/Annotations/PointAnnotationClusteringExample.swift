@@ -23,7 +23,7 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
         mapView.gestures.singleTapGestureRecognizer.addTarget(self, action: #selector(handleTap(gestureRecognizer:)))
 
         // Add the source and style layers once the map has loaded.
-        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { _ in
             self.addPointAnnotations()
         }.store(in: &cancelables)
     }

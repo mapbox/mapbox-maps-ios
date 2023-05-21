@@ -48,12 +48,12 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
 
         addMarkerAndAnnotation(at: mapView.mapboxMap.coordinate(for: mapView.center))
 
-        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
             self.finish()
         }.store(in: &cancelables)
 
-        mapView.mapboxMap.events.onStyleLoaded.observe { [weak self] _ in
+        mapView.mapboxMap.onStyleLoaded.observe { [weak self] _ in
             self?.prepareStyle()
         }.store(in: &cancelables)
 

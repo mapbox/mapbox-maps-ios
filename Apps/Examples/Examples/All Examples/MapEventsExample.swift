@@ -16,6 +16,12 @@ final class MapEventsExample: UIViewController, ExampleProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        if #available(iOS 13, *) {
+            view.backgroundColor = .systemBackground
+        } else {
+            view.backgroundColor = .white
+        }
+
         mapView = MapView(frame: view.bounds)
         mapView.ornaments.options.scaleBar.visibility = .visible
         view.addSubview(mapView)
@@ -34,23 +40,21 @@ final class MapEventsExample: UIViewController, ExampleProtocol {
         cameraStateLabel.backgroundColor = .white
         view.addSubview(cameraStateLabel)
 
-        let events = mapView.mapboxMap.events
-        logEvent(events.onMapLoaded)
-        logEvent(events.onMapLoadingError)
-        logEvent(events.onStyleLoaded)
-        logEvent(events.onStyleDataLoaded)
-        logEvent(events.onMapIdle)
-        logEvent(events.onSourceAdded)
-        logEvent(events.onSourceRemoved)
-        logEvent(events.onSourceDataLoaded)
-        logEvent(events.onStyleImageMissing)
-        logEvent(events.onStyleImageRemoveUnused)
-        // Uncomment if needed
-//        logEvent(mapView.mapboxMap.events.onRenderFrameStarted)
-//        logEvent(mapView.mapboxMap.events.onRenderFrameFinished)
-//        logEvent(mapView.mapboxMap.events.onResourceRequest)
+        let map = mapView.mapboxMap!
+        logEvent(map.onMapLoaded)
+        logEvent(map.onMapLoadingError)
+        logEvent(map.onStyleLoaded)
+        logEvent(map.onStyleDataLoaded)
+        logEvent(map.onMapIdle)
+        logEvent(map.onSourceAdded)
+        logEvent(map.onSourceRemoved)
+        logEvent(map.onSourceDataLoaded)
+        logEvent(map.onStyleImageMissing)
+        logEvent(map.onStyleImageRemoveUnused)
+        // onResourceRequest produces too much logs for demonstration, uncomment it if needed.
+        // logEvent(mapView.mapboxMap.onResourceRequest)
 
-        events.onCameraChanged.observe { [weak self] event in
+        map.onCameraChanged.observe { [weak self] event in
             self?.cameraStateLabel.attributedText = .formatted(cameraSate: event.cameraState)
             self?.view.setNeedsLayout()
         }.store(in: &cancelables)
@@ -75,25 +79,26 @@ final class MapEventsExample: UIViewController, ExampleProtocol {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let bounds = view.bounds
+        let bounds = view.bounds.inset(by: UIEdgeInsets(
+            top: view.safeAreaInsets.top, left: 0, bottom: 0, right: 0))
         let halfHeight = bounds.height / 2 + 100
 
-        mapView.frame = CGRect(x: 0, y: 0, width: bounds.width, height: halfHeight)
+        mapView.frame = CGRect(x: 0, y: bounds.minY, width: bounds.width, height: halfHeight)
 
-        tableView.frame = CGRect(x: 0, y: halfHeight, width: bounds.width, height: bounds.height - halfHeight)
+        tableView.frame = CGRect(x: 0, y: bounds.minY + halfHeight, width: bounds.width, height: bounds.height - halfHeight)
 
         let buttonSize = clearButton.sizeThatFits(bounds.size)
         clearButton.frame = CGRect(
             origin: CGPoint(
                 x: bounds.width - buttonSize.width - 10,
-                y: halfHeight + 10),
+                y: bounds.minY + halfHeight + 10),
             size: buttonSize)
 
         let labelSize = cameraStateLabel.sizeThatFits(bounds.size)
         cameraStateLabel.frame = CGRect(
             origin: CGPoint(
                 x: (bounds.width - labelSize.width) / 2,
-                y: halfHeight - labelSize.height - 10),
+                y: bounds.minY + halfHeight - labelSize.height - 10),
             size: labelSize)
     }
 }
@@ -215,7 +220,7 @@ extension SourceRemoved: LogableEvent {
 
 extension SourceDataLoaded: LogableEvent {
     var name: String { "SourceDataLoaded" }
-    var info: String { "ti: \(timeInterval.log), sourceId: \(sourceId), tileId: \(tileId?.log ?? "nil"), dataId: \(dataId ?? "nil"), loaded: \(loaded.log)" }
+    var info: String { "ti: \(timeInterval.log), sourceId: \(sourceId), tileId: \(tileId?.log ?? "nil"), dataID: \(dataId ?? "nil"), loaded: \(loaded.log)" }
 }
 
 extension StyleImageMissing: LogableEvent {

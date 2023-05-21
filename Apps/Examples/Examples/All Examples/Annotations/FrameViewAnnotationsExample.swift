@@ -47,7 +47,7 @@ final class FrameViewAnnotationsExample: UIViewController, ExampleProtocol {
 
         addAnnotations()
 
-        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             // The below line is used for internal testing purposes only.
             self?.finish()
         }.store(in: &cancelables)

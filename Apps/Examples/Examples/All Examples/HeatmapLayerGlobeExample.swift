@@ -26,7 +26,7 @@ public class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
         try! self.mapView.mapboxMap.style.setProjection(StyleProjection(name: .globe))
         view.addSubview(mapView)
 
-        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
             try! self.mapView.mapboxMap.style.setAtmosphere(Atmosphere())
             self.addRuntimeLayers()

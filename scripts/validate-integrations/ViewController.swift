@@ -10,11 +10,11 @@ class ViewController: UIViewController {
         super.viewDidLoad()
 
         view.addSubview(mapView)
-        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { _ in
             self.showAlert(text: "Loaded")
         }.store(in: &cancelables)
 
-        mapView.mapboxMap.events.onMapLoadingError.observeNext { _ in
+        mapView.mapboxMap.onMapLoadingError.observeNext { _ in
             self.showAlert(text: "Failed")
         }.store(in: &cancelables)
     }

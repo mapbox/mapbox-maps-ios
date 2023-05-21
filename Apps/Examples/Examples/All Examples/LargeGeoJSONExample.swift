@@ -21,12 +21,12 @@ final class LargeGeoJSONPerformanceExample: UIViewController, ExampleProtocol {
         let lineStringAsset = NSDataAsset(name: "long_route")
         routePoints = try! JSONDecoder().decode(Feature.self, from: lineStringAsset!.data)
 
-        mapView.mapboxMap.events.onStyleLoaded.observeNext { [weak self] _ in
+        mapView.mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
             try! self?.setupExample()
         }.store(in: &cancelables)
 
         // Print updates when sources with added dataIds are updated
-        mapView.mapboxMap.events.onSourceDataLoaded.observe { event in
+        mapView.mapboxMap.onSourceDataLoaded.observe { event in
             if let dataId = event.dataId {
                 print("GeoJsonSource was updated, data-id: \(dataId)")
             }

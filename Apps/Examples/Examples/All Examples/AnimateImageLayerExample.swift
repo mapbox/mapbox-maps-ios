@@ -27,7 +27,7 @@ class AnimateImageLayerExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
 
-        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { _ in
             self.addImageLayer()
 
             // The following line is just for testing purposes.

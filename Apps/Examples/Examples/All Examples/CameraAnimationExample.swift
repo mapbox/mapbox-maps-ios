@@ -14,7 +14,7 @@ public class CameraAnimationExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allows the delegate to receive information about map events.
-        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { _ in
 
             // Center the map camera over New York City.
             let centerCoordinate = CLLocationCoordinate2D(

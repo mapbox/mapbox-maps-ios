@@ -14,7 +14,7 @@ public class FitCameraToGeometryExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allows the view controller to receive information about map events.
-        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { _ in
             self.fitToCameraToGeometry()
         }.store(in: &cancelables)
 

@@ -105,8 +105,8 @@ Var PointAnnotationManager.textLineHeight has been removed
 
 // Convert location to a struct
 Class Location has been changed to a Struct
-Func LocationConsumer.locationUpdate(newLocation:) has ObjC name change from locationUpdateWithNewLocation: to 
-Func PuckLocationConsumer.puckLocationUpdate(newLocation:) has ObjC name change from puckLocationUpdateWithNewLocation: to 
+Func LocationConsumer.locationUpdate(newLocation:) has ObjC name change from locationUpdateWithNewLocation: to
+Func PuckLocationConsumer.puckLocationUpdate(newLocation:) has ObjC name change from puckLocationUpdateWithNewLocation: to
 Accessor LocationManager.consumers.Get() has return type change from Foundation.NSHashTable<MapboxMaps.LocationConsumer> to [MapboxMaps.LocationConsumer]
 Var LocationManager.consumers has declared type change from Foundation.NSHashTable<MapboxMaps.LocationConsumer> to [MapboxMaps.LocationConsumer]
 Class Location has removed conformance to CVarArg
@@ -153,10 +153,10 @@ Class OrnamentsManager has removed its super class ObjectiveC.NSObject
 Class OrnamentsManager no longer inherits convenience inits from its superclass
 
 // Typesafe Events
-Func MapboxMap.onEvery(event:handler:) has generic signature change from <Payload where Payload : Swift.Decodable> to <Payload>
-Func MapboxMap.onNext(event:handler:) has generic signature change from <Payload where Payload : Swift.Decodable> to <Payload>
-Func Snapshotter.onEvery(event:handler:) has generic signature change from <Payload where Payload : Swift.Decodable> to <Payload>
-Func Snapshotter.onNext(event:handler:) has generic signature change from <Payload where Payload : Swift.Decodable> to <Payload>
+Func MapboxMap.onEvery(event:handler:) has parameter 0 type change from MapboxCoreMaps.MapEvents.Event<Payload> to MapboxMaps.MapEventType<Payload>
+Func MapboxMap.onNext(event:handler:) has parameter 0 type change from MapboxCoreMaps.MapEvents.Event<Payload> to MapboxMaps.MapEventType<Payload>
+Func Snapshotter.onEvery(event:handler:) has parameter 0 type change from MapboxCoreMaps.MapEvents.Event<Payload> to MapboxMaps.MapEventType<Payload>
+Func Snapshotter.onNext(event:handler:) has parameter 0 type change from MapboxCoreMaps.MapEvents.Event<Payload> to MapboxMaps.MapEventType<Payload>
 Class MapEvent has been removed
 Enum RenderMode has been removed
 Enum ResourceDataSource has been removed
@@ -183,29 +183,20 @@ Struct SourceRemovedPayload has been removed
 Struct StyleDataLoadedPayload has been removed
 Struct StyleImageMissingPayload has been removed
 Struct StyleImageUnusedPayload has been removed
+Struct MapEvents.Event has been removed
 TypeAlias Event has been removed
 Enum MapLoadingError has been changed to a Class
 Enum MapLoadingError has ObjC name change from  to MBMMapLoadingError
-Accessor MapEvents.Event.cameraChanged.Get() has return type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.NoPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.CameraChanged>
-Accessor MapEvents.Event.mapIdle.Get() has return type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.NoPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.MapIdle>
-Accessor MapEvents.Event.mapLoaded.Get() has return type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.NoPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.MapLoaded>
-Accessor MapEvents.Event.mapLoadingError.Get() has return type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.MapLoadingErrorPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.MapLoadingError>
-Accessor MapEvents.Event.renderFrameFinished.Get() has return type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.RenderFrameFinishedPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.RenderFrameFinished>
-Accessor MapEvents.Event.renderFrameStarted.Get() has return type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.NoPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.RenderFrameStarted>
-Accessor MapEvents.Event.resourceRequest.Get() has return type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.ResourceRequestPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.ResourceRequest>
-Accessor MapEvents.Event.sourceAdded.Get() has return type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.SourceAddedPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.SourceAdded>
-Accessor MapEvents.Event.sourceDataLoaded.Get() has return type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.SourceDataLoadedPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.SourceDataLoaded>
-Accessor MapEvents.Event.sourceRemoved.Get() has return type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.SourceRemovedPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.SourceRemoved>
-Accessor MapEvents.Event.styleDataLoaded.Get() has return type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.StyleDataLoadedPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.StyleDataLoaded>
-Accessor MapEvents.Event.styleImageMissing.Get() has return type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.StyleImageMissingPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.StyleImageMissing>
-Accessor MapEvents.Event.styleImageRemoveUnused.Get() has return type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.StyleImageUnusedPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.StyleImageRemoveUnused>
-Accessor MapEvents.Event.styleLoaded.Get() has return type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.NoPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.StyleLoaded>
 Func MapboxMap.loadStyleJSON(_:completion:) has parameter 1 type change from ((Swift.Result<MapboxMaps.Style, Swift.Error>) -> Swift.Void)? to ((Swift.Result<MapboxMaps.Style, MapboxCoreMaps.MapLoadingError>) -> Swift.Void)?
 Func MapboxMap.loadStyleURI(_:completion:) has parameter 1 type change from ((Swift.Result<MapboxMaps.Style, Swift.Error>) -> Swift.Void)? to ((Swift.Result<MapboxMaps.Style, MapboxCoreMaps.MapLoadingError>) -> Swift.Void)?
 Func MapboxMap.onEvery(event:handler:) has parameter 1 type change from (MapboxMaps.MapEvent<Payload>) -> Swift.Void to (Payload) -> Swift.Void
 Func MapboxMap.onNext(event:handler:) has parameter 1 type change from (MapboxMaps.MapEvent<Payload>) -> Swift.Void to (Payload) -> Swift.Void
 Func Snapshotter.onEvery(event:handler:) has parameter 1 type change from (MapboxMaps.MapEvent<Payload>) -> Swift.Void to (Payload) -> Swift.Void
 Func Snapshotter.onNext(event:handler:) has parameter 1 type change from (MapboxMaps.MapEvent<Payload>) -> Swift.Void to (Payload) -> Swift.Void
+Func MapboxMap.onEvery(event:handler:) has generic signature change from <Payload where Payload : Swift.Decodable> to <Payload>
+Func MapboxMap.onNext(event:handler:) has generic signature change from <Payload where Payload : Swift.Decodable> to <Payload>
+Func Snapshotter.onEvery(event:handler:) has generic signature change from <Payload where Payload : Swift.Decodable> to <Payload>
+Func Snapshotter.onNext(event:handler:) has generic signature change from <Payload where Payload : Swift.Decodable> to <Payload>
 Var MapEvents.Event.cameraChanged has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.NoPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.CameraChanged>
 Var MapEvents.Event.mapIdle has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.NoPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.MapIdle>
 Var MapEvents.Event.mapLoaded has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.NoPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.MapLoaded>
@@ -266,7 +257,7 @@ Func MapboxMap.setMemoryBudget(_:) has been removed
 Var Style.styleManager has been removed
 
 // `SourceType` and `LayerType` are now Structs with static variables instead of Enums
-Constructor LayerType.init(rawValue:) has return type change from MapboxMaps.LayerType? to MapboxMaps.LayerType 
+Constructor LayerType.init(rawValue:) has return type change from MapboxMaps.LayerType? to MapboxMaps.LayerType
 Constructor SourceType.init(rawValue:) has return type change from MapboxMaps.SourceType? to MapboxMaps.SourceType
 Enum LayerType has been changed to a Struct
 Enum SourceType has been changed to a Struct
@@ -288,10 +279,10 @@ EnumElement SourceType.model has declared type change from (MapboxMaps.SourceTyp
 EnumElement SourceType.raster has declared type change from (MapboxMaps.SourceType.Type) -> MapboxMaps.SourceType to MapboxMaps.SourceType
 EnumElement SourceType.rasterDem has declared type change from (MapboxMaps.SourceType.Type) -> MapboxMaps.SourceType to MapboxMaps.SourceType
 EnumElement SourceType.vector has declared type change from (MapboxMaps.SourceType.Type) -> MapboxMaps.SourceType to MapboxMaps.SourceType
-Accessor LayerType.layerType.Get() has return type change from MapboxMaps.Layer.Type to MapboxMaps.Layer.Type? 
-Accessor SourceType.sourceType.Get() has return type change from MapboxMaps.Source.Type to MapboxMaps.Source.Type? 
-Var LayerType.layerType has declared type change from MapboxMaps.Layer.Type to MapboxMaps.Layer.Type? 
-Var SourceType.sourceType has declared type change from MapboxMaps.Source.Type to MapboxMaps.Source.Type? 
+Accessor LayerType.layerType.Get() has return type change from MapboxMaps.Layer.Type to MapboxMaps.Layer.Type?
+Accessor SourceType.sourceType.Get() has return type change from MapboxMaps.Source.Type to MapboxMaps.Source.Type?
+Var LayerType.layerType has declared type change from MapboxMaps.Layer.Type to MapboxMaps.Layer.Type?
+Var SourceType.sourceType has declared type change from MapboxMaps.Source.Type to MapboxMaps.Source.Type?
 EnumElement LayerType.background is now static
 EnumElement LayerType.circle is now static
 EnumElement LayerType.fill is now static

@@ -64,7 +64,7 @@ final class MapViewIntegrationTests: IntegrationTestCase {
 
             rootView.addSubview(mapView)
 
-            mapView.mapboxMap.events.onMapLoaded.observeNext { [weak mapView] _ in
+            mapView.mapboxMap.onMapLoaded.observeNext { [weak mapView] _ in
                 let dest = CameraOptions(center: CLLocationCoordinate2D(latitude: 10, longitude: 10), zoom: 10)
                 mapView?.camera.ease(to: dest, duration: 5) { (_) in
                     expectation.fulfill()
@@ -99,7 +99,7 @@ final class MapViewIntegrationTests: IntegrationTestCase {
 
             rootView.addSubview(mapView)
 
-            mapView.mapboxMap.events.onMapLoaded.observeNext { [weak mapView] _ in
+            mapView.mapboxMap.onMapLoaded.observeNext { [weak mapView] _ in
                 guard let mapView = mapView else { return }
                 let state = mapView.viewport.makeFollowPuckViewportState()
                 weakState = state

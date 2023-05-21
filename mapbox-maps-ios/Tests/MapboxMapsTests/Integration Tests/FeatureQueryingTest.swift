@@ -27,7 +27,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                                     zoom: 15.0))
         }
 
-        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             guard let mapView = self?.mapView else { return }
 
             // Given
@@ -116,7 +116,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                                     zoom: 15.0))
         }
 
-        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             guard let mapView = self?.mapView else { return }
 
             // Given
@@ -157,7 +157,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                                                           zoom: 15.0))
         }
 
-        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             guard let mapView = self?.mapView else { return }
 
             // Given
@@ -227,7 +227,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                 XCTFail("Failed to add cluster source and layer.")
             }
         }
-        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             guard let mapView = self?.mapView else { return }
             mapView.mapboxMap.querySourceFeatures(for: clusterSourceID, options: SourceQueryOptions(sourceLayerIds: [clusterSourceID], filter: ["has", "point_count"])) { result
                 in

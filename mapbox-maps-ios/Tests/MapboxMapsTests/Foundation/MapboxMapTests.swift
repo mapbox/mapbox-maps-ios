@@ -1,18 +1,32 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 @_implementationOnly import MapboxCoreMaps_Private
 
 final class MapboxMapTests: XCTestCase {
 
     var mapClient: MockMapClient!
     var mapInitOptions: MapInitOptions!
-    var mapEventsSource: MapEventsSource!
+    var events: MapEvents!
     var mapboxMap: MapboxMap!
+
+    // We don't store fooSubject strongly to test that MapEvents stores the subjects it created.
+    weak private var fooGenericSubject: SignalSubject<GenericEvent>?
 
     override func setUp() {
         super.setUp()
         let size = CGSize(width: 100, height: 200)
-        mapEventsSource = MapEventsSource(makeGenericSubject: { _ in .init() })
+        events = MapEvents(makeGenericSubject: { [weak self] eventName in
+            let s = SignalSubject<GenericEvent>()
+            if eventName == "foo" {
+                if let fooSubject = self?.fooGenericSubject {
+                    return fooSubject
+                } else {
+                    self?.fooGenericSubject = s
+                    return s
+                }
+            }
+            return s
+        })
         mapClient = MockMapClient()
         mapClient.getMetalViewStub.defaultReturnValue = MTKView(frame: CGRect(origin: .zero, size: size))
         mapInitOptions = MapInitOptions(mapOptions: MapOptions(size: size))
@@ -24,7 +38,7 @@ final class MapboxMapTests: XCTestCase {
                     resourceOptions: coreOptions)
         mapboxMap = MapboxMap(
             map: map,
-            events: MapEvents(source: mapEventsSource),
+            events: events,
             style: Style(with: map))
     }
 
@@ -32,7 +46,8 @@ final class MapboxMapTests: XCTestCase {
         mapboxMap = nil
         mapInitOptions = nil
         mapClient = nil
-        mapEventsSource = nil
+        events = nil
+        fooGenericSubject = nil
         super.tearDown()
     }
 
@@ -234,10 +249,92 @@ final class MapboxMapTests: XCTestCase {
             completionIsCalledOnce.fulfill()
         }
         let interval = EventTimeInterval(begin: .init(), end: .init())
-        mapEventsSource.onStyleLoaded.send(StyleLoaded(timeInterval: interval))
-        mapEventsSource.onStyleLoaded.send(StyleLoaded(timeInterval: interval))
+        events.onStyleLoaded.send(StyleLoaded(timeInterval: interval))
+        events.onStyleLoaded.send(StyleLoaded(timeInterval: interval))
 
         waitForExpectations(timeout: 0.3)
+    }
+
+    func testEvents() {
+        func checkEvent<T>(
+            _ subjectKeyPath: KeyPath<MapEvents, SignalSubject<T>>,
+            _ signalKeyPath: KeyPath<MapboxMap, Signal<T>>,
+            value: T) {
+                var count = 0
+                let cancelable = mapboxMap[keyPath: signalKeyPath].observe { _ in
+                    count += 1
+                }
+
+                mapboxMap.performWithoutNotifying {
+                    events[keyPath: subjectKeyPath].send(value)
+                }
+                XCTAssertEqual(count, 0, "event not sent due to mute")
+
+                events[keyPath: subjectKeyPath].send(value)
+                XCTAssertEqual(count, 1, "event sent")
+
+                cancelable.cancel()
+
+                events[keyPath: subjectKeyPath].send(value)
+                XCTAssertEqual(count, 1, "event not sent due to cancel")
+        }
+
+        let timeInterval = EventTimeInterval(begin: Date(), end: Date())
+        let mapLoaded = MapLoaded(timeInterval: timeInterval)
+        let mapLoadingError = MapLoadingError(
+            type: .source,
+            message: "message",
+            sourceId: nil,
+            tileId: nil,
+            timestamp: Date())
+        let cameraChanged = CameraChanged(
+            cameraState: CameraState(center: .random(), padding: .random(), zoom: 0, bearing: 0, pitch: 0),
+            timestamp: Date())
+
+        checkEvent(\.onMapIdle, \.onMapIdle, value: MapIdle(timestamp: Date()))
+        checkEvent(\.onMapLoaded, \.onMapLoaded, value: mapLoaded)
+        checkEvent(\.onStyleLoaded, \.onStyleLoaded, value: StyleLoaded(timeInterval: timeInterval))
+        checkEvent(\.onStyleDataLoaded, \.onStyleDataLoaded, value: StyleDataLoaded(type: .style, timeInterval: timeInterval))
+        checkEvent(\.onMapLoadingError, \.onMapLoadingError, value: mapLoadingError)
+        checkEvent(\.onCameraChanged, \.onCameraChanged, value: cameraChanged)
+        checkEvent(\.onSourceAdded, \.onSourceAdded, value: SourceAdded(sourceId: "foo", timestamp: Date()))
+        checkEvent(\.onSourceRemoved, \.onSourceRemoved, value: SourceRemoved(sourceId: "foo", timestamp: Date()))
+        checkEvent(\.onStyleImageMissing, \.onStyleImageMissing, value: StyleImageMissing(imageId: "bar", timestamp: Date()))
+        checkEvent(\.onStyleImageRemoveUnused, \.onStyleImageRemoveUnused, value: StyleImageRemoveUnused(imageId: "bar", timestamp: Date()))
+        checkEvent(\.onRenderFrameStarted, \.onRenderFrameStarted, value: RenderFrameStarted(timestamp: Date()))
+        checkEvent(\.onRenderFrameFinished, \.onRenderFrameFinished, value: RenderFrameFinished(renderMode: .full, needsRepaint: true, placementChanged: true, timeInterval: timeInterval))
+
+        let resourceRequest =  ResourceRequest(
+            source: .network,
+            request: RequestInfo(
+                url: "https://mapbox.com",
+                resource: .glyphs,
+                priority: .regular,
+                loadingMethod: [NSNumber(value: RequestLoadingMethodType.network.rawValue)]),
+            response: nil, cancelled: false, timeInterval: timeInterval)
+        checkEvent(\.onResourceRequest, \.onResourceRequest, value: resourceRequest)
+    }
+
+    func testGenericEvents() {
+        var cancelables = Set<AnyCancelable>()
+        var received = [GenericEvent]()
+        mapboxMap["foo"].observe { received.append($0) }.store(in: &cancelables)
+
+        let timeInterval = EventTimeInterval(begin: Date(), end: Date())
+        let e1 = GenericEvent(name: "foo", data: 0, timeInterval: timeInterval)
+        let e2 = GenericEvent(name: "foo", data: 0, timeInterval: timeInterval)
+
+        fooGenericSubject?.send(e1)
+        XCTAssertIdentical(received.last, e1)
+
+        mapboxMap.performWithoutNotifying {
+            fooGenericSubject?.send(e2)
+        }
+
+        XCTAssertIdentical(received.last, e1, "event not sent due to mute")
+
+        fooGenericSubject?.send(e2)
+        XCTAssertIdentical(received.last, e2)
     }
 
     @available(*, deprecated)
@@ -248,8 +345,8 @@ final class MapboxMapTests: XCTestCase {
 
         let mapLoaded1 = MapLoaded(timeInterval: EventTimeInterval(begin: Date(), end: Date()))
         let mapLoaded2 = MapLoaded(timeInterval: EventTimeInterval(begin: Date(), end: Date()))
-        mapEventsSource.onMapLoaded.send(mapLoaded1)
-        mapEventsSource.onMapLoaded.send(mapLoaded2)
+        events.onMapLoaded.send(mapLoaded1)
+        events.onMapLoaded.send(mapLoaded2)
 
         XCTAssertEqual(mapLoadedStub.invocations.count, 1)
         XCTAssertIdentical(mapLoadedStub.invocations[0].parameters, mapLoaded1)
@@ -260,9 +357,9 @@ final class MapboxMapTests: XCTestCase {
 
         let sourceAdded1 = SourceAdded(sourceId: "source-id-1", timestamp: Date())
         let sourceAdded2 = SourceAdded(sourceId: "source-id-2", timestamp: Date())
-        mapEventsSource.onSourceAdded.send(sourceAdded1)
-        mapEventsSource.onSourceAdded.send(sourceAdded2)
-        mapEventsSource.onSourceAdded.send(sourceAdded2)
+        events.onSourceAdded.send(sourceAdded1)
+        events.onSourceAdded.send(sourceAdded2)
+        events.onSourceAdded.send(sourceAdded2)
 
         XCTAssertEqual(mapLoadedStub.invocations.count, 1)
         XCTAssertIdentical(sourceAddedStub.invocations[0].parameters, sourceAdded1)
@@ -276,8 +373,8 @@ final class MapboxMapTests: XCTestCase {
 
         let mapLoaded1 = MapLoaded(timeInterval: EventTimeInterval(begin: Date(), end: Date()))
         let mapLoaded2 = MapLoaded(timeInterval: EventTimeInterval(begin: Date(), end: Date()))
-        mapEventsSource.onMapLoaded.send(mapLoaded1)
-        mapEventsSource.onMapLoaded.send(mapLoaded2)
+        events.onMapLoaded.send(mapLoaded1)
+        events.onMapLoaded.send(mapLoaded2)
 
         XCTAssertIdentical(mapLoadedStub.invocations[0].parameters, mapLoaded1)
         XCTAssertIdentical(mapLoadedStub.invocations[1].parameters, mapLoaded2)
@@ -288,8 +385,8 @@ final class MapboxMapTests: XCTestCase {
 
         let sourceAdded1 = SourceAdded(sourceId: "source-id-1", timestamp: Date())
         let sourceAdded2 = SourceAdded(sourceId: "source-id-2", timestamp: Date())
-        mapEventsSource.onSourceAdded.send(sourceAdded1)
-        mapEventsSource.onSourceAdded.send(sourceAdded2)
+        events.onSourceAdded.send(sourceAdded1)
+        events.onSourceAdded.send(sourceAdded2)
 
         XCTAssertIdentical(sourceAddedStub.invocations[0].parameters, sourceAdded1)
         XCTAssertIdentical(sourceAddedStub.invocations[1].parameters, sourceAdded2)
@@ -297,12 +394,12 @@ final class MapboxMapTests: XCTestCase {
 
     func testPerformWithoutNotifying() throws {
         let stub = Stub<MapIdle, Void>()
-        let token = mapboxMap.events.onMapIdle.observe(stub.call(with:))
+        let token = mapboxMap.onMapIdle.observe(stub.call(with:))
         defer { token.cancel() }
 
         let mapIdle1 = MapIdle(timestamp: Date())
         let mapIdle2 = MapIdle(timestamp: Date())
-        mapEventsSource.onMapIdle.send(mapIdle1)
+        events.onMapIdle.send(mapIdle1)
 
         // no block
         XCTAssertEqual(stub.invocations.count, 1)
@@ -310,12 +407,12 @@ final class MapboxMapTests: XCTestCase {
 
         // block
         mapboxMap.performWithoutNotifying {
-            mapEventsSource.onMapIdle.send(mapIdle2)
+            events.onMapIdle.send(mapIdle2)
         }
         XCTAssertEqual(stub.invocations.count, 1)
 
         // no block again
-        mapEventsSource.onMapIdle.send(mapIdle2)
+        events.onMapIdle.send(mapIdle2)
         XCTAssertEqual(stub.invocations.count, 2)
         XCTAssertIdentical(stub.invocations[1].parameters, mapIdle2)
     }

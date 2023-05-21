@@ -5,7 +5,7 @@ import XCTest
 import CoreLocation
 
 final class SnapshotterTests: XCTestCase {
-    var mapEventsSource: MapEventsSource!
+    var events: MapEvents!
     var snapshotter: Snapshotter!
     var mockMapSnapshotter: MockMapSnapshotter!
 
@@ -14,13 +14,13 @@ final class SnapshotterTests: XCTestCase {
         let options = MapSnapshotOptions(
             size: CGSize(width: 100, height: 100),
             pixelRatio: .random(in: 1...3))
-        mapEventsSource = MapEventsSource(makeGenericSubject: { _ in .init() })
+        events = MapEvents(makeGenericSubject: { _ in .init() })
         mockMapSnapshotter = MockMapSnapshotter()
         snapshotter = Snapshotter(
             options: options,
             mapSnapshotter: mockMapSnapshotter,
             style: Style(with: mockMapSnapshotter),
-            events: MapEvents(source: mapEventsSource))
+            events: events)
     }
 
     override func tearDown() {
@@ -137,6 +137,44 @@ final class SnapshotterTests: XCTestCase {
         XCTAssertEqual(returnedOptions, cameraOptions)
     }
 
+    func testEvents() {
+        func checkEvent<T>(
+            _ subjectKeyPath: KeyPath<MapEvents, SignalSubject<T>>,
+            _ signalKeyPath: KeyPath<Snapshotter, Signal<T>>,
+            value: T) {
+                var count = 0
+                let cancelable = snapshotter[keyPath: signalKeyPath].observe { _ in
+                    count += 1
+                }
+
+                events[keyPath: subjectKeyPath].send(value)
+                XCTAssertEqual(count, 1, "event sent")
+
+                cancelable.cancel()
+
+                events[keyPath: subjectKeyPath].send(value)
+                XCTAssertEqual(count, 1, "event not sent due to cancel")
+        }
+
+        let timeInterval = EventTimeInterval(begin: Date(), end: Date())
+        let mapLoaded = MapLoaded(timeInterval: timeInterval)
+        let mapLoadingError = MapLoadingError(
+            type: .source,
+            message: "message",
+            sourceId: nil,
+            tileId: nil,
+            timestamp: Date())
+        let cameraChanged = CameraChanged(
+            cameraState: CameraState(center: .random(), padding: .random(), zoom: 0, bearing: 0, pitch: 0),
+            timestamp: Date())
+
+        checkEvent(\.onStyleLoaded, \.onStyleLoaded, value: StyleLoaded(timeInterval: timeInterval))
+        checkEvent(\.onStyleDataLoaded, \.onStyleDataLoaded, value: StyleDataLoaded(type: .style, timeInterval: timeInterval))
+        checkEvent(\.onMapLoadingError, \.onMapLoadingError, value: mapLoadingError)
+
+        checkEvent(\.onStyleImageMissing, \.onStyleImageMissing, value: StyleImageMissing(imageId: "bar", timestamp: Date()))
+    }
+
     @available(*, deprecated)
     func testOnTypedNext() throws {
         let mapLoadedStub = Stub<MapLoaded, Void>()
@@ -145,8 +183,8 @@ final class SnapshotterTests: XCTestCase {
 
         let mapLoaded1 = MapLoaded(timeInterval: EventTimeInterval(begin: Date(), end: Date()))
         let mapLoaded2 = MapLoaded(timeInterval: EventTimeInterval(begin: Date(), end: Date()))
-        mapEventsSource.onMapLoaded.send(mapLoaded1)
-        mapEventsSource.onMapLoaded.send(mapLoaded2)
+        events.onMapLoaded.send(mapLoaded1)
+        events.onMapLoaded.send(mapLoaded2)
 
         XCTAssertEqual(mapLoadedStub.invocations.count, 1)
         XCTAssertIdentical(mapLoadedStub.invocations[0].parameters, mapLoaded1)
@@ -157,9 +195,9 @@ final class SnapshotterTests: XCTestCase {
 
         let sourceAdded1 = SourceAdded(sourceId: "source-id-1", timestamp: Date())
         let sourceAdded2 = SourceAdded(sourceId: "source-id-2", timestamp: Date())
-        mapEventsSource.onSourceAdded.send(sourceAdded1)
-        mapEventsSource.onSourceAdded.send(sourceAdded2)
-        mapEventsSource.onSourceAdded.send(sourceAdded2)
+        events.onSourceAdded.send(sourceAdded1)
+        events.onSourceAdded.send(sourceAdded2)
+        events.onSourceAdded.send(sourceAdded2)
 
         XCTAssertEqual(sourceAddedStub.invocations.count, 1)
         XCTAssertIdentical(sourceAddedStub.invocations[0].parameters, sourceAdded1)
@@ -173,8 +211,8 @@ final class SnapshotterTests: XCTestCase {
 
         let mapLoaded1 = MapLoaded(timeInterval: EventTimeInterval(begin: Date(), end: Date()))
         let mapLoaded2 = MapLoaded(timeInterval: EventTimeInterval(begin: Date(), end: Date()))
-        mapEventsSource.onMapLoaded.send(mapLoaded1)
-        mapEventsSource.onMapLoaded.send(mapLoaded2)
+        events.onMapLoaded.send(mapLoaded1)
+        events.onMapLoaded.send(mapLoaded2)
 
         XCTAssertIdentical(mapLoadedStub.invocations[0].parameters, mapLoaded1)
         XCTAssertIdentical(mapLoadedStub.invocations[1].parameters, mapLoaded2)
@@ -185,8 +223,8 @@ final class SnapshotterTests: XCTestCase {
 
         let sourceAdded1 = SourceAdded(sourceId: "source-id-1", timestamp: Date())
         let sourceAdded2 = SourceAdded(sourceId: "source-id-2", timestamp: Date())
-        mapEventsSource.onSourceAdded.send(sourceAdded1)
-        mapEventsSource.onSourceAdded.send(sourceAdded2)
+        events.onSourceAdded.send(sourceAdded1)
+        events.onSourceAdded.send(sourceAdded2)
 
         XCTAssertIdentical(sourceAddedStub.invocations[0].parameters, sourceAdded1)
         XCTAssertIdentical(sourceAddedStub.invocations[1].parameters, sourceAdded2)

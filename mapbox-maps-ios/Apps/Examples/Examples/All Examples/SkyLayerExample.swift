@@ -29,7 +29,7 @@ public class SkyLayerExample: UIViewController, ExampleProtocol {
         addSegmentedControl()
 
         // Add a custom `SkyLayer` once the map's style is finished loading.
-        mapView.mapboxMap.events.onStyleLoaded.observeNext { _ in
+        mapView.mapboxMap.onStyleLoaded.observeNext { _ in
             self.addSkyLayer()
 
             // Add a terrain layer.

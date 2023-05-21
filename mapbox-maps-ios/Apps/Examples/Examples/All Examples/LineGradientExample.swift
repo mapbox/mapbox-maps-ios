@@ -16,7 +16,7 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { _ in
             self.setupExample()
 
             // Set the center coordinate and zoom level.

@@ -20,7 +20,7 @@ public class PointClusteringExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
 
-        mapView.mapboxMap.events.onStyleLoaded.observeNext { [weak self] _ in
+        mapView.mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
             self?.addPointClusters()
         }.store(in: &cancelables)
     }

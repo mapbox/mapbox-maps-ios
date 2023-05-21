@@ -28,7 +28,7 @@ class RasterColorExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Once the map has finished loading, add the `RasterSource` and `RasterLayer` to the map's style.
-        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { _ in
             self.setupExample()
 
             // The following line is just for testing purposes.

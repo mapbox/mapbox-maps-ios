@@ -19,7 +19,7 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Add the source and style layers once the map has loaded.
-        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { _ in
             self.addSymbolClusteringLayers()
         }.store(in: &cancelables)
 

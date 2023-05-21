@@ -20,7 +20,7 @@ public class ColorExpressionExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allows the view controller to receive information about map events.
-        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             self?.setupExample()
         }.store(in: &cancelables)
 

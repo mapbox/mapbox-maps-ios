@@ -69,7 +69,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         mapView.location.options.puckType = .puck2D()
 
         // Allows the delegate to receive information about map events.
-        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
             // Register the location consumer with the map
             // Note that the location manager holds weak references to consumers, which should be retained

@@ -19,7 +19,7 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allows the view controller to receive information about map events.
-        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { _ in
             self.setupExample()
 
             // The following line is just for testing purposes.

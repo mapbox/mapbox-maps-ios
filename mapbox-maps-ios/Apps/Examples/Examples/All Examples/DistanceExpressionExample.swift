@@ -15,7 +15,7 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { _ in
             self.addCircleLayer()
 
             // The following line is just for testing purposes.

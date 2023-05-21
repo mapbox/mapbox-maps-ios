@@ -23,7 +23,7 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Wait for the map to load its style before adding data.
-        mapView.mapboxMap.events.onMapLoaded.observeNext { _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { _ in
 
             self.addLine()
             self.animatePolyline()

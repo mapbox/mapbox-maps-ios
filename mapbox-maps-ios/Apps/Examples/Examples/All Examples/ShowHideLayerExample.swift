@@ -23,7 +23,7 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
 
         // Once the map has finished loading, add the museum and contour layers to the map's style,
         // then add switches that toggle the visibility for those two layers.
-        mapView.mapboxMap.events.onStyleLoaded.observeNext { [weak self] _ in
+        mapView.mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
             self?.addStyleLayers()
             self?.addVisibilitySwitches()
 

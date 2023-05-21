@@ -175,7 +175,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         mapView.location.options.puckBearing = .heading
 
         // Center map over the user's current location
-        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
 
             if let currentLocation = self.mapView.location.latestLocation {

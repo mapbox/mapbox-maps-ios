@@ -25,7 +25,7 @@ final class AddMarkersSymbolExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.events.onMapLoaded.observeNext { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
             self.prepareStyle()
 

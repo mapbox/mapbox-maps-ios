@@ -105,7 +105,7 @@ class ViewController: UIViewController {
         super.viewDidAppear(animated)
 
         // Set initial conditions
-        mapView.mapboxMap.events.onStyleLoaded.observeNext { _ in
+        mapView.mapboxMap.onStyleLoaded.observeNext { _ in
             self.flyToNextCoordinate()
         }.store(in: &cancelables)
 
@@ -303,7 +303,7 @@ class ViewController: UIViewController {
         snapshotter.style.uri = .light
         snapshotter.setCamera(to: CameraOptions(cameraState: mapView.cameraState))
 
-        snapshotter.events.onStyleLoaded.observeNext { [weak self] _ in
+        snapshotter.onStyleLoaded.observeNext { [weak self] _ in
             guard let snapshotter = self?.snapshotter else {
                 assertionFailure("Snapshotter does not exist")
                 completion()

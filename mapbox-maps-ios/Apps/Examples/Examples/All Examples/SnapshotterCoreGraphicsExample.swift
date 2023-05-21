@@ -29,7 +29,7 @@ public class SnapshotterCoreGraphicsExample: UIViewController, NonMapViewExample
         snapshotter = Snapshotter(options: options)
         snapshotter.style.uri = .dark
 
-        snapshotter.events.onStyleLoaded.observeNext { [weak self] _ in
+        snapshotter.onStyleLoaded.observeNext { [weak self] _ in
             self?.startSnapshot()
         }.store(in: &cancelables)
     }

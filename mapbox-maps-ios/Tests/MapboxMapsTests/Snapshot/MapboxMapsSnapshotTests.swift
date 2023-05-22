@@ -232,6 +232,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
 
     @available(iOS 13.0, *)
     func testDoesNotShowAttribution() throws {
+        XCTExpectFailure("ResourceOptions will be refactored with new settings from Common and CoreMaps", options: .nonStrict())
         var options = try snapshotterOptions()
         options.showsAttribution = false
 

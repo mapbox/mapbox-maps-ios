@@ -256,6 +256,20 @@ Func MapboxMap.setMemoryBudget(_:) has been removed
 // Remove public access to the internal StyleManager
 Var Style.styleManager has been removed
 
+// Adopt MapboxCommon.Cancelable protocol
+Protocol CameraAnimator has generic signature change from <Self : MapboxMaps.Cancelable> to <Self : MapboxCommon.Cancelable>
+Protocol Cancelable has been removed
+Func BasicCameraAnimator.cancel() has ObjC name change from  to cancel
+Func FlyToCameraAnimator.cancel() has ObjC name change from  to cancel
+Func CameraAnimationsManager.ease(to:duration:curve:completion:) has return type change from MapboxMaps.Cancelable? to MapboxCommon.Cancelable
+Func CameraAnimationsManager.fly(to:duration:completion:) has return type change from MapboxMaps.Cancelable? to MapboxCommon.Cancelable
+Func MapboxMap.getFeatureState(sourceId:sourceLayerId:featureId:callback:) has return type change from () to MapboxCommon.Cancelable
+Func MapboxMap.getGeoJsonClusterChildren(forSourceId:feature:completion:) has return type change from () to MapboxCommon.Cancelable
+Func MapboxMap.getGeoJsonClusterExpansionZoom(forSourceId:feature:completion:) has return type change from () to MapboxCommon.Cancelable
+Func MapboxMap.getGeoJsonClusterLeaves(forSourceId:feature:limit:offset:completion:) has return type change from () to MapboxCommon.Cancelable
+Func MapboxMap.querySourceFeatures(for:options:completion:) has return type change from () to MapboxCommon.Cancelable
+Func MapboxMap.removeFeatureState(sourceId:sourceLayerId:featureId:stateKey:) has return type change from () to MapboxCommon.Cancelable
+Func MapboxMap.setFeatureState(sourceId:sourceLayerId:featureId:state:) has return type change from () to MapboxCommon.Cancelable
 // `SourceType` and `LayerType` are now Structs with static variables instead of Enums
 Constructor LayerType.init(rawValue:) has return type change from MapboxMaps.LayerType? to MapboxMaps.LayerType
 Constructor SourceType.init(rawValue:) has return type change from MapboxMaps.SourceType? to MapboxMaps.SourceType

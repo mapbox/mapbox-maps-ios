@@ -805,7 +805,7 @@ extension MapboxMap: MapFeatureQueryable {
                                        options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
                                        callback: coreAPIClosureAdapter(for: completion,
                                                                        type: NSArray.self,
-                                                                       concreteErrorType: MapError.self)).asCancelable()
+                                                                       concreteErrorType: MapError.self))
     }
 
     /// Queries the map for rendered features.
@@ -820,7 +820,7 @@ extension MapboxMap: MapFeatureQueryable {
                                        options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
                                        callback: coreAPIClosureAdapter(for: completion,
                                                                        type: NSArray.self,
-                                                                       concreteErrorType: MapError.self)).asCancelable()
+                                                                       concreteErrorType: MapError.self))
     }
 
     /// Queries the map for rendered features.
@@ -835,7 +835,7 @@ extension MapboxMap: MapFeatureQueryable {
                                              options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
                                              callback: coreAPIClosureAdapter(for: completion,
                                                                              type: NSArray.self,
-                                                                             concreteErrorType: MapError.self)).asCancelable()
+                                                                             concreteErrorType: MapError.self))
     }
 
     /// Queries the map for source features.
@@ -852,7 +852,7 @@ extension MapboxMap: MapFeatureQueryable {
                                   options: options,
                                   callback: coreAPIClosureAdapter(for: completion,
                                                                   type: NSArray.self,
-                                                                  concreteErrorType: MapError.self)).asCancelable()
+                                                                  concreteErrorType: MapError.self))
     }
 
     /// Returns all the leaves (original points) of a cluster (given its cluster_id) from a GeoJSON source, with pagination support: limit is the number of leaves
@@ -879,7 +879,7 @@ extension MapboxMap: MapFeatureQueryable {
                                      args: ["limit": limit, "offset": offset],
                                      callback: coreAPIClosureAdapter(for: completion,
                                                                      type: FeatureExtensionValue.self,
-                                                                     concreteErrorType: MapError.self)).asCancelable()
+                                                                     concreteErrorType: MapError.self))
     }
 
     /// Returns the children (original points or clusters) of a cluster (on the next zoom level)
@@ -902,7 +902,7 @@ extension MapboxMap: MapFeatureQueryable {
                                      args: nil,
                                      callback: coreAPIClosureAdapter(for: completion,
                                                                      type: FeatureExtensionValue.self,
-                                                                     concreteErrorType: MapError.self)).asCancelable()
+                                                                     concreteErrorType: MapError.self))
     }
 
     /// Returns the zoom on which the cluster expands into several children (useful for "click to zoom" feature)
@@ -925,7 +925,7 @@ extension MapboxMap: MapFeatureQueryable {
                                      args: nil,
                                      callback: coreAPIClosureAdapter(for: completion,
                                                                      type: FeatureExtensionValue.self,
-                                                                     concreteErrorType: MapError.self)).asCancelable()
+                                                                     concreteErrorType: MapError.self))
     }
 }
 
@@ -1112,7 +1112,7 @@ extension MapboxMap {
                                                   state: state,
                                                   callback: coreAPIClosureAdapter(for: callback,
                                                                                   type: NSNull.self,
-                                                                                  concreteErrorType: MapError.self)).asCancelable()
+                                                                                  concreteErrorType: MapError.self))
     }
 
     /// Get the state map of a feature within a style source.
@@ -1131,7 +1131,7 @@ extension MapboxMap {
                               featureId: featureId,
                               callback: coreAPIClosureAdapter(for: callback,
                                                               type: AnyObject.self,
-                                                              concreteErrorType: MapError.self)).asCancelable()
+                                                              concreteErrorType: MapError.self))
     }
 
     /// Removes entries from a feature state object.
@@ -1153,7 +1153,7 @@ extension MapboxMap {
                                   stateKey: stateKey,
                                 callback: coreAPIClosureAdapter(for: callback,
                                                                 type: NSNull.self,
-                                                                  concreteErrorType: MapError.self)).asCancelable()
+                                                                  concreteErrorType: MapError.self))
     }
 
     /// Reset all the feature states within a style source.
@@ -1173,7 +1173,7 @@ extension MapboxMap {
                                           sourceLayerId: sourceLayerId,
                                           callback: coreAPIClosureAdapter(for: callback,
                                                                           type: NSNull.self,
-                                                                          concreteErrorType: MapError.self)).asCancelable()
+                                                                          concreteErrorType: MapError.self))
     }
 }
 

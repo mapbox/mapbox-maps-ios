@@ -1,34 +1,8 @@
-/// A protocol that indicates that activity supports cancellation.
-///
-/// This class has similar meaning as `Combine.Cancellable`, but doesn't require iOS 13.
-public protocol Cancelable: AnyObject {
-    /// Cancels activity.
-    func cancel()
-}
+import MapboxCommon
 
 extension Cancelable {
     internal var erased: AnyCancelable {
         return AnyCancelable(self)
-    }
-}
-
-internal final class CommonCancelableWrapper: Cancelable {
-    private let cancelable: MapboxCommon.Cancelable
-
-    internal init(_ cancelable: MapboxCommon.Cancelable) {
-        self.cancelable = cancelable
-    }
-
-    internal func cancel() {
-        cancelable.cancel()
-    }
-}
-
-extension MapboxCommon.Cancelable: Cancelable {}
-
-extension MapboxCommon.Cancelable {
-    internal func asCancelable() -> Cancelable {
-        return CommonCancelableWrapper(self)
     }
 }
 

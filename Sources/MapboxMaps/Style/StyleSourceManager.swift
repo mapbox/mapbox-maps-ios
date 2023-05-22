@@ -28,7 +28,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
     private let styleManager: StyleManagerProtocol
     private let mainQueue: DispatchQueueProtocol
     private let backgroundQueue: DispatchQueueProtocol
-    private var workItems = [SourceId: Cancelable]()
+    private var workItems = [SourceId: AnyCancelable]()
 
     internal var allSourceIdentifiers: [SourceInfo] {
         return styleManager.getStyleSources().map { info in
@@ -175,7 +175,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
             }
         }
 
-        workItems[id] = item
+        workItems[id] = AnyCancelable(item.cancel)
         backgroundQueue.async(execute: item)
     }
 }

@@ -25,5 +25,4 @@ extension DispatchQueueProtocol {
     }
 }
 
-extension DispatchQueue: DispatchQueueProtocol { }
-extension DispatchWorkItem: Cancelable { }
+extension DispatchQueue: DispatchQueueProtocol {}

@@ -4,7 +4,7 @@ import XCTest
 
 struct ClearOfflineDataCommand: AsyncCommand, Decodable {
     @MainActor
-    func execute() async throws {
+    func execute(context: Context) async throws {
         let options = ResourceOptionsManager.default.resourceOptions
         let manager = OfflineManager(resourceOptions: options)
 

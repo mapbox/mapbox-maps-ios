@@ -12,8 +12,8 @@ struct AddRouteCommand: AsyncCommand {
     private var locationProvider = OnDemandLocationProvider()
 
     @MainActor
-    func execute() async throws {
-        guard let mapView = UIViewController.rootController?.findMapView() else {
+    func execute(context: Context) async throws {
+        guard let mapView = context.mapView else {
             throw ExecutionError.cannotFindMapboxMap
         }
 
@@ -31,7 +31,7 @@ struct AddRouteCommand: AsyncCommand {
         try mapView.mapboxMap.style.addPersistentLayer(makeCasingLayer())
         try mapView.mapboxMap.style.addPersistentLayer(makeLineLayer())
 
-        mapView.mapboxMap.onEvery(event: .cameraChanged) { [weak locationProvider] _ in
+        mapView.mapboxMap.onCameraChanged.observe { [weak locationProvider] _ in
             let newLocation = mapView.cameraState.center
             let traveledDistance = route.line.distance(to: newLocation) ?? 0
             let progess = traveledDistance / route.distance
@@ -45,7 +45,7 @@ struct AddRouteCommand: AsyncCommand {
                 for: ID.casingLineLayer,
                 property: "line-trim-offset",
                 value: [0, progess])
-        }
+        }.store(in: &context.cancellables)
     }
 
     private func makeLineLayer() -> LineLayer {

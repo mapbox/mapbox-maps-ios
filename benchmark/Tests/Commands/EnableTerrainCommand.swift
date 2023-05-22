@@ -5,8 +5,8 @@ struct EnableTerrainCommand: AsyncCommand {
     private let terrain: Terrain
 
     @MainActor
-    func execute() async throws {
-        guard let mapView = UIViewController.rootController?.findMapView() else {
+    func execute(context: Context) async throws {
+        guard let mapView = context.mapView else {
             throw ExecutionError.cannotFindMapboxMap
         }
 

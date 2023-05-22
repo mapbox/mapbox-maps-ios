@@ -136,12 +136,14 @@ class BaseBenchmark: XCTestCase {
                      handler: @escaping (MapView) -> (),
                      filePath: String = #file,
                      lineNumber: Int = #line) {
-        onStyleLoaded(cameraOptions: cameraOptions, filePath: filePath, lineNumber: lineNumber) { mapView, style in
-            mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        onStyleLoaded(cameraOptions: cameraOptions, filePath: filePath, lineNumber: lineNumber) { [self] mapView, style in
+            mapView.mapboxMap.onMapLoaded.observeNext { _ in
                 handler(mapView)
-            }
+            }.store(in: &cancellations)
         }
     }
+
+    var cancellations: Set<AnyCancelable> = []
 
     // MARK: - Private
 

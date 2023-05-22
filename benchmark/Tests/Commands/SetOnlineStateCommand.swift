@@ -4,7 +4,7 @@ import MapboxMaps
 struct SetOnlineStateCommand: AsyncCommand, Decodable {
     let connected: Bool
 
-    func execute() async throws {
+    func execute(context: Context) async throws {
         OfflineSwitch.shared.isMapboxStackConnected = connected
     }
 }

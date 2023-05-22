@@ -8,7 +8,7 @@ public struct CreateOfflinePacksCommand: AsyncCommand {
     let style: StyleURI
     let geometry: Polygon
 
-    func execute() async throws {
+    func execute(context: Context) async throws {
         let options = ResourceOptionsManager.default.resourceOptions
         let manager = OfflineManager(resourceOptions: options)
 

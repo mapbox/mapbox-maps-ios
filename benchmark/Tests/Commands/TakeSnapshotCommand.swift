@@ -4,8 +4,8 @@ import MapboxMaps
 struct TakeSnapshotCommand: AsyncCommand, Decodable {
 
     @MainActor
-    func execute() async throws {
-        guard let mapView = UIViewController.rootController?.findMapView() else {
+    func execute(context: Context) async throws {
+        guard let mapView = context.mapView else {
             throw ExecutionError.cannotFindMapboxMap
         }
 
@@ -13,15 +13,14 @@ struct TakeSnapshotCommand: AsyncCommand, Decodable {
         let renderer = UIGraphicsImageRenderer(size: size)
 
         // Wait for the map to draw everything before taking a snapshot
-        try await withCheckedThrowingContinuation { continuation in
-            mapView.mapboxMap.onNext(event: .mapIdle) { event in
-                let _ = renderer.image { context in
+        _ = try await withCheckedThrowingContinuation { continuation in
+            mapView.mapboxMap.onMapIdle.observeNext { event in
+                let image = renderer.image { context in
                     _ = mapView.drawHierarchy(in: CGRect(origin: .zero, size: size), afterScreenUpdates: true)
                 }
 
-                return continuation.resume(returning: ())
-            }
+                return continuation.resume(returning: image)
+            }.store(in: &context.cancellables)
         }
-        as Void // This cast is nessesary to help type checker find <T> for …Continuation func
     }
 }

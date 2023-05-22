@@ -33,44 +33,35 @@ struct CreateMapCommand: AsyncCommand, Decodable {
         self.tileStoreUsageMode = tileStoreUsageMode
     }
 
-    var mapView: MapView? {
-        let rootView = UIViewController.rootController?.view
-        let mapViews = rootView?.subviews.compactMap({ $0 as? MapView })
-        assert(mapViews?.count == 1)
-        return mapViews?.first
-    }
-
     @MainActor
-    func execute() async throws {
-        let viewController = UIViewController.rootController!
+    func execute(context: Context) async throws {
+        guard let viewController = UIViewController.rootController else {
+            throw ExecutionError.cannotFindRootViewController
+        }
 
         let mapInitOptions = MapInitOptions(
             resourceOptions: ResourceOptionsManager.default.resourceOptions.tileStoreUsageMode(tileStoreUsageMode),
             cameraOptions: camera,
             styleURI: style
         )
-        let mapView = MapView(frame: viewController.view.frame, mapInitOptions: mapInitOptions)
-        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        context.mapView = MapView(frame: viewController.view.frame, mapInitOptions: mapInitOptions)
+        context.mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
-        viewController.view.addSubview(mapView)
+        viewController.view.addSubview(context.mapView)
 
-        try await withCheckedThrowingContinuation { continuation in
-            mapView.mapboxMap.onNext(event: .mapLoaded) { event in
-                return continuation.resume(returning: ())
-            }
+        _ = try await withCheckedThrowingContinuation { continuation in
+                context.mapView.mapboxMap.onMapLoaded.observeNext { event in
+                    return continuation.resume(returning: event)
+                }.store(in: &context.cancellables)
 
-            mapView.mapboxMap.onNext(event: .mapLoadingError) { event in
-                if case .source = event.payload.error {
+                context.mapView.mapboxMap.onMapLoadingError.observeNext { event in
+                    guard event.type == .source else { return }
                     return continuation.resume(throwing: Error.cannotLoadMap)
-                }
-            }
+                }.store(in: &context.cancellables)
         }
-        as Void // This cast is nessesary to help type checker find <T> for …Continuation func
     }
 
-    func cleanup() {
-        UIViewController.rootController?.view.subviews.forEach {
-            $0.removeFromSuperview()
-        }
+    func cleanup(context: Context) {
+        context.mapView?.removeFromSuperview()
     }
 }

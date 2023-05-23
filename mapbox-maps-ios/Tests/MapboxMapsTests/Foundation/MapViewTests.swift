@@ -539,4 +539,16 @@ final class MapViewTestsWithScene: XCTestCase {
 
         XCTAssertEqual(metalView?.bounds.size, minimumMetalViewSize)
     }
+
+    func testOpacityIsPropagatedToMetalView() {
+        // given
+        let opaque = Bool.random()
+
+        // when
+        mapView.isOpaque = opaque
+
+        // then
+        XCTAssertEqual(opaque, metalView.isOpaque)
+        XCTAssertEqual(opaque, metalView.layer.isOpaque)
+    }
 }

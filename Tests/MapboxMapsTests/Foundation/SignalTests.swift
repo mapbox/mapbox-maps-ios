@@ -1,4 +1,5 @@
 import XCTest
+import Combine
 @testable import MapboxMaps
 
 final class SignalTests: XCTestCase {
@@ -164,11 +165,19 @@ final class SignalTests: XCTestCase {
         let errorSubj = SignalSubject<MyError> { observedError.append($0) }
 
         var received = [Result<Int, MyError>]()
-        succesSubj.signal
+        let combined = succesSubj.signal
             .join(withError: errorSubj.signal)
             .takeFirst()
+
+        XCTAssertEqual(observedSuccess, [], "operators don't lead to subscription")
+        XCTAssertEqual(observedError, [], "operators don't lead to subscription")
+
+        combined
             .observe { received.append($0) }
             .store(in: &cancellables)
+
+        XCTAssertEqual(observedSuccess, [true], "observing leads to subscription")
+        XCTAssertEqual(observedError, [true], "observing leads to subscription")
 
         succesSubj.send(0)
         errorSubj.send(.foo)
@@ -196,5 +205,97 @@ final class SignalTests: XCTestCase {
         XCTAssertEqual(received, [.failure(.foo)], "received only first failure")
         XCTAssertEqual(observedSuccess, [true, false], "unsubscribed from success signal")
         XCTAssertEqual(observedError, [true, false], "unsubscribed from error signal")
+    }
+
+    @available(iOS 13.0, *)
+    func testCombineSupport() {
+        var tokens = Set<AnyCancellable>()
+
+        var observedValues = [Bool]()
+        let subject = SignalSubject<Int> { observedValues.append($0) }
+
+        let signal = subject.signal
+
+        XCTAssertEqual(observedValues, [])
+
+        var values1 = [Int]()
+        signal.sink { value in
+            values1.append(value)
+        }.store(in: &tokens)
+
+        XCTAssertEqual(observedValues, [true], "onObserved is idempotent")
+
+        var values2 = [Int]()
+        signal.sink { value in
+            values2.append(value)
+        }.store(in: &tokens)
+
+        var values3 = [Int]()
+        signal.observe { value in // non-combine syntax
+            values3.append(value)
+        }.store(in: &tokens)
+
+        XCTAssertEqual(observedValues, [true], "onObserved is idempotent")
+
+        subject.send(0)
+
+        XCTAssertEqual(values1, [0])
+        XCTAssertEqual(values2, [0])
+        XCTAssertEqual(values3, [0])
+
+        subject.send(1)
+
+        XCTAssertEqual(values1, [0, 1])
+        XCTAssertEqual(values2, [0, 1])
+        XCTAssertEqual(values3, [0, 1])
+
+        tokens.removeAll()
+        XCTAssertEqual(observedValues, [true, false])
+
+        var values4 = [Int]()
+        signal.sink { value in
+            values4.append(value)
+        }.store(in: &tokens)
+
+        subject.send(2)
+        XCTAssertEqual(values1, [0, 1])
+        XCTAssertEqual(values2, [0, 1])
+        XCTAssertEqual(values3, [0, 1])
+        XCTAssertEqual(values4, [2])
+        XCTAssertEqual(observedValues, [true, false, true])
+
+        tokens.removeAll()
+        XCTAssertEqual(observedValues, [true, false, true, false])
+    }
+
+    @available(iOS 13.0, *)
+    func testCombineSupportWithOperators() {
+        var tokens = Set<AnyCancellable>()
+
+        var observedValues = [Bool]()
+        let subject = SignalSubject<Int> { observedValues.append($0) }
+
+        var values = [String]()
+        let mapped = subject.signal
+            .map { $0 * 2 }
+            .map { String($0) }
+
+        XCTAssertEqual(observedValues, [], "mapping doesn't lead to subscription")
+
+        mapped.prefix(2)
+            .sink { values.append($0) }
+            .store(in: &tokens)
+
+        XCTAssertEqual(observedValues, [true], "sink leads to subscription")
+
+        subject.send(1)
+        subject.send(2)
+
+        XCTAssertEqual(observedValues, [true, false], "prefixed publisher cancels itself")
+
+        subject.send(3)
+
+        XCTAssertEqual(values, ["2", "4"])
+
     }
 }

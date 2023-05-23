@@ -180,7 +180,17 @@ struct Examples {
         Example(title: "Map Events",
                 description: "Print out map events and data",
                 type: MapEventsExample.self)
-    ]
+    ] + {
+        if #available(iOS 13.0, *) {
+            return [
+                Example(title: "Combine",
+                    description: "Shows how to use map events with Combine framework",
+                    type: CombineExample.self)
+            ]
+        } else {
+            return []
+        }
+    }()
 
     // Examples that focus on displaying the user's location.
     public static let locationExamples = [

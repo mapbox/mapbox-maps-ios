@@ -72,6 +72,7 @@
 		955B69EF299AAE6700FD4A19 /* RasterColorExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955B69EE299AAE6700FD4A19 /* RasterColorExample.swift */; };
 		95857AC229B7A1A2005D238C /* LongTapAnimationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95857AC129B7A1A2005D238C /* LongTapAnimationExample.swift */; };
 		959EDE5229F5520500AEE16C /* MapEventsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959EDE5129F5520500AEE16C /* MapEventsExample.swift */; };
+		95A8C6A32A1A60E900D0FB48 /* CombineExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A8C6A22A1A60E900D0FB48 /* CombineExample.swift */; };
 		A41E58342654593500D8B946 /* SwitchStylesExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E58332654593500D8B946 /* SwitchStylesExample.swift */; };
 		A41E584C26555A3400D8B946 /* PointClusteringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E584B26555A3400D8B946 /* PointClusteringExample.swift */; };
 		A41E58F4265C005300D8B946 /* blueprint_style.json in Resources */ = {isa = PBXBuildFile; fileRef = A41E58F3265C005300D8B946 /* blueprint_style.json */; };
@@ -233,6 +234,7 @@
 		955B69EE299AAE6700FD4A19 /* RasterColorExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RasterColorExample.swift; sourceTree = "<group>"; };
 		95857AC129B7A1A2005D238C /* LongTapAnimationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongTapAnimationExample.swift; sourceTree = "<group>"; };
 		959EDE5129F5520500AEE16C /* MapEventsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapEventsExample.swift; sourceTree = "<group>"; };
+		95A8C6A22A1A60E900D0FB48 /* CombineExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineExample.swift; sourceTree = "<group>"; };
 		A41E58332654593500D8B946 /* SwitchStylesExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchStylesExample.swift; sourceTree = "<group>"; };
 		A41E584B26555A3400D8B946 /* PointClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointClusteringExample.swift; sourceTree = "<group>"; };
 		A41E58F3265C005300D8B946 /* blueprint_style.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = blueprint_style.json; sourceTree = "<group>"; };
@@ -374,7 +376,6 @@
 				587429BF27BBFDA100104CCA /* VoiceOverAccessibilityExample.swift */,
 				7471A4E028D0CEA400C7DFE5 /* LargeGeoJSONExample.swift */,
 				732A54FF28DA470E00CDBFB7 /* PitchAndDistanceExample.swift */,
-				959EDE5129F5520500AEE16C /* MapEventsExample.swift */,
 			);
 			path = "All Examples";
 			sourceTree = "<group>";
@@ -485,6 +486,8 @@
 		7406E36E2806B659002CC41F /* Lab */ = {
 			isa = PBXGroup;
 			children = (
+				959EDE5129F5520500AEE16C /* MapEventsExample.swift */,
+				95A8C6A22A1A60E900D0FB48 /* CombineExample.swift */,
 				7406E36F2806B66F002CC41F /* ResizableImageExample.swift */,
 			);
 			path = Lab;
@@ -713,6 +716,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				95A8C6A32A1A60E900D0FB48 /* CombineExample.swift in Sources */,
 				CA03F10F26268DF700673961 /* OfflineManagerExample.swift in Sources */,
 				CADCF73C258499200065C51B /* AppDelegate.swift in Sources */,
 				CADCF7392584991C0065C51B /* UIViewController+Extensions.swift in Sources */,

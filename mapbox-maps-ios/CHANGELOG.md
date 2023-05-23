@@ -31,11 +31,25 @@ Mapbox welcomes participation and contributions from everyone.
   - Now all Map events payloads are serialize-free, which brings more type safety and eliminates possible deserialization errors;
   - The `MapboxMap` and `Snapshotter` now expose `on`-prefixed properties that allows you to subscribe to map events via `observe` and `observeNext` methods:
     ```swift
-      mapboxMap.onMapLoaded.observe { [weak self] event in
-        self?.camera = event.cameraState
-      }.store(in: &cancelables)
+    mapboxMap.onCameraChanged.observe { [weak self] event in
+      self?.camera = event.cameraState
+    }.store(in: &cancelables)
+
+    mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
+      self?.configureStyle()
+    }.store(in: &cancelables)
     ```
   - The `AnyCancelable` object returned from `observe` and `observeNext` should be stored, otherwise the subscription will be immediately canceled;
+  - The same `on`-prefixed properties can now be used as `Combine.Publisher`:
+    ```swift
+    import Combine
+    mapboxMap.onCameraChanged
+      .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
+      .map(\.cameraState)
+      .sink { [weak self] cameraState in
+        self?.camera = cameraState
+      }.store(in: &cancellables)
+    ```
   - Methods `MapboxMap.onEvery`, `MapboxMap.onNext`, `Snapshotter.onEvery`, `Snapshotter.onNext` have been deprecated;
   - Methods `MapboxMap.observe` and `Snapshotter.observe` have been removed.
 * Deprecate `PointAnnotationManager.iconTextFit` and `PointAnnotationManager.iconTextFitPadding` in favor of `PointAnnotation.iconTextFit` and `PointAnnotation.iconTextFitPadding`.

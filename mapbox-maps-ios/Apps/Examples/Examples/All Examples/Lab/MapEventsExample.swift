@@ -4,7 +4,7 @@ import MapboxMaps
 final class MapEventsExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
     private let tableView = UITableView()
-    private let cameraStateLabel = UILabel()
+    private let cameraLabel = UILabel.makeCameraLabel()
     private var clearButton = UIButton(type: .system)
     private var cancelables = Set<AnyCancelable>()
     var entries = [NSAttributedString]() {
@@ -36,9 +36,7 @@ final class MapEventsExample: UIViewController, ExampleProtocol {
         clearButton.addTarget(self, action: #selector(clear), for: .touchUpInside)
         view.addSubview(clearButton)
 
-        cameraStateLabel.numberOfLines = 0
-        cameraStateLabel.backgroundColor = .white
-        view.addSubview(cameraStateLabel)
+        view.addSubview(cameraLabel)
 
         let map = mapView.mapboxMap!
         logEvent(map.onMapLoaded)
@@ -55,7 +53,7 @@ final class MapEventsExample: UIViewController, ExampleProtocol {
         // logEvent(mapView.mapboxMap.onResourceRequest)
 
         map.onCameraChanged.observe { [weak self] event in
-            self?.cameraStateLabel.attributedText = .formatted(cameraSate: event.cameraState)
+            self?.cameraLabel.attributedText = .formatted(cameraSate: event.cameraState)
             self?.view.setNeedsLayout()
         }.store(in: &cancelables)
     }
@@ -94,8 +92,8 @@ final class MapEventsExample: UIViewController, ExampleProtocol {
                 y: bounds.minY + halfHeight + 10),
             size: buttonSize)
 
-        let labelSize = cameraStateLabel.sizeThatFits(bounds.size)
-        cameraStateLabel.frame = CGRect(
+        let labelSize = cameraLabel.sizeThatFits(bounds.size)
+        cameraLabel.frame = CGRect(
             origin: CGPoint(
                 x: (bounds.width - labelSize.width) / 2,
                 y: bounds.minY + halfHeight - labelSize.height - 10),
@@ -290,5 +288,20 @@ extension RequestDataSourceType: CustomDebugStringConvertible {
         case .resourceLoader: return "resourceLoader"
         default: return "unknown"
         }
+    }
+}
+
+private extension UILabel {
+    static func makeCameraLabel() -> UILabel {
+        let label = UILabel()
+        label.numberOfLines = 0
+        if #available(iOS 13.0, *) {
+            label.backgroundColor = UIColor.systemBackground
+        } else {
+            label.backgroundColor = .white
+        }
+        label.layer.cornerRadius = 5
+        label.layer.masksToBounds = true
+        return label
     }
 }

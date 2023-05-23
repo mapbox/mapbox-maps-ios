@@ -66,6 +66,45 @@ final class SignalTests: XCTestCase {
         XCTAssertEqual(observedValues, [true, false, true, false])
     }
 
+    func testFilter() {
+        let subj = SignalSubject<Int>()
+
+        var received = [Int]()
+        subj.signal
+            .filter { $0 % 2 == 0 }
+            .observe { received.append($0) }
+            .store(in: &cancellables)
+
+        subj.send(0)
+        XCTAssertEqual(received, [0])
+
+        subj.send(1)
+        XCTAssertEqual(received, [0])
+
+        subj.send(2)
+        XCTAssertEqual(received, [0, 2])
+    }
+
+    func testFilterTakeFirst() {
+        let subj = SignalSubject<Int>()
+
+        var received = [Int]()
+        subj.signal
+            .filter { $0 % 2 == 0 }
+            .takeFirst()
+            .observe { received.append($0) }
+            .store(in: &cancellables)
+
+        subj.send(1)
+        XCTAssertEqual(received, [], "ignored")
+
+        subj.send(10)
+        XCTAssertEqual(received, [10])
+
+        subj.send(20)
+        XCTAssertEqual(received, [10], "self-canceled")
+    }
+
     func testConditional() {
         @MutableRef var condition = true
         let subj = SignalSubject<Int>()
@@ -88,31 +127,7 @@ final class SignalTests: XCTestCase {
         XCTAssertEqual(received, [0, 1])
     }
 
-    func testTakeFirstConditional() {
-        @MutableRef var condition = true
-        let subj = SignalSubject<Int>()
-
-        var received = [Int]()
-        subj.signal
-            .conditional($condition)
-            .takeFirst()
-            .observe { received.append($0) }
-            .store(in: &cancellables)
-
-        condition = false
-
-        subj.send(0)
-        XCTAssertEqual(received, [], "ignored")
-
-        condition = true
-        subj.send(0)
-        XCTAssertEqual(received, [0])
-
-        subj.send(1)
-        XCTAssertEqual(received, [0], "self-canceled")
-    }
-
-    func testCombineWithError() {
+    func testJoinWithError() {
         enum MyError: Error, Equatable {
             case foo
             case bar
@@ -122,7 +137,7 @@ final class SignalTests: XCTestCase {
 
         var received = [Result<Int, MyError>]()
         succesSubj.signal
-            .combine(withError: errorSubj.signal)
+            .join(withError: errorSubj.signal)
             .observe { received.append($0) }
             .store(in: &cancellables)
 
@@ -134,7 +149,7 @@ final class SignalTests: XCTestCase {
         XCTAssertEqual(received, [.success(0), .failure(.foo), .success(1), .failure(.bar)])
     }
 
-    func testCombineWithErrorTakeFirst() {
+    func testJoinWithErrorTakeFirst() {
         // This test checks that .combine(with error:).takeFirst() works like a future -
         // it combines two streams of events, handles the first, and properyly unsubscribed from
         // both streams.
@@ -150,7 +165,7 @@ final class SignalTests: XCTestCase {
 
         var received = [Result<Int, MyError>]()
         succesSubj.signal
-            .combine(withError: errorSubj.signal)
+            .join(withError: errorSubj.signal)
             .takeFirst()
             .observe { received.append($0) }
             .store(in: &cancellables)
@@ -169,7 +184,7 @@ final class SignalTests: XCTestCase {
         observedError.removeAll()
 
         succesSubj.signal
-            .combine(withError: errorSubj.signal)
+            .join(withError: errorSubj.signal)
             .takeFirst()
             .observe { received.append($0) }
             .store(in: &cancellables)

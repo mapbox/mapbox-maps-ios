@@ -180,8 +180,9 @@ public final class MapboxMap: MapboxMapProtocol {
 
     private func observeStyleLoad(_ completion: @escaping (Result<Style, MapLoadingError>) -> Void) {
         weak var weakToken: AnyCancelable?
+        let styleLoadingError = onMapLoadingError.filter { $0.type == .style }
         let token = onStyleLoaded
-            .combine(withError: onMapLoadingError)
+            .join(withError: styleLoadingError)
             .observeNext { [style, weak self] result in
                 if !style.isLoaded {
                     Log.warning(forMessage: "style.isLoaded == false, was this an empty style?", category: "Style")

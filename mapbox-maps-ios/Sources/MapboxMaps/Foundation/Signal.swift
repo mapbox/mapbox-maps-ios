@@ -53,19 +53,24 @@ extension Signal {
         }
     }
 
-    /// Creates a signal that is enabled only when isEnabled value is `true`.
-    internal func conditional(_ isEnabled: Ref<Bool>) -> Signal {
+    /// Creates a signal that triggers if `condition` is `true`.
+    internal func filter(_ condition: @escaping (Payload) -> Bool) -> Signal {
         Signal(observeImpl: { handle in
             observeImpl { payload in
-                if isEnabled.value {
-                    return handle(payload)
+                if condition(payload) {
+                    handle(payload)
                 }
             }
         })
     }
 
-    /// Creates  a Signal that combines values and errors signals into resulting signal.
-    internal func combine<E>(withError other: Signal<E>) -> Signal<Result<Payload, E>> {
+    /// Creates a signal that is enabled only when `isEnabled` value is `true`.
+    internal func conditional(_ isEnabled: Ref<Bool>) -> Signal {
+        filter { _ in isEnabled.value }
+    }
+
+    /// Creates  a Signal that joins values and errors signals into a resulting signal.
+    internal func join<E>(withError other: Signal<E>) -> Signal<Result<Payload, E>> {
         return Signal<Result<Payload, E>> { handler in
             AnyCancelable([
                 self.observe { payload in

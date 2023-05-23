@@ -70,6 +70,13 @@ open class MapView: UIView {
         }
     }
 
+    open override var isOpaque: Bool {
+        didSet {
+            metalView?.isOpaque = isOpaque
+            metalView?.layer.isOpaque = isOpaque
+        }
+    }
+
     /// The underlying metal view that is used to render the map
     internal private(set) var metalView: MTKView?
 

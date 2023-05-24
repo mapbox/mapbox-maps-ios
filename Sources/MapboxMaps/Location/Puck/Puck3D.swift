@@ -83,14 +83,14 @@ internal final class Puck3D: Puck {
                 }
             }
         }
-        var source = ModelSource()
+        var source = ModelSource(id: Self.sourceID)
         source.models = ["puck-model": model]
 
         // update or create the source
         if style.sourceExists(withId: Self.sourceID) {
             try! style.setSourceProperties(for: Self.sourceID, properties: source.jsonObject())
         } else {
-            try! style.addSource(source, id: Self.sourceID)
+            try! style.addSource(source)
         }
 
         // Mercator scale

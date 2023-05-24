@@ -1,12 +1,6 @@
 import MapboxMaps
 import UIKit
 
-private extension String {
-    static let rasterSourceId = "raster-source-id"
-    static let rasterLayerId = "raster-layer-id"
-    static let backgroundLayerId = "background-layer-id"
-}
-
 class RasterColorExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()
     var mapView: MapView!
@@ -40,15 +34,15 @@ class RasterColorExample: UIViewController, ExampleProtocol {
     func setupExample() {
         let style = mapView.mapboxMap.style
 
-        var rasterSource = RasterSource()
+        var rasterSource = RasterSource(id: "raster-source-id")
         rasterSource.url = "mapbox://mapbox.terrain-rgb"
         rasterSource.tileSize = 256
 
-        var backgroundLayer = BackgroundLayer(id: .backgroundLayerId)
+        var backgroundLayer = BackgroundLayer(id: "background-layer-id")
         backgroundLayer.backgroundColor = .constant(StyleColor(red: 4.0, green: 7.0, blue: 14.0, alpha: 1)!)
 
-        var rasterLayer = RasterLayer(id: .rasterLayerId)
-        rasterLayer.source = .rasterSourceId
+        var rasterLayer = RasterLayer(id: "raster-layer-id")
+        rasterLayer.source = rasterSource.id
         rasterLayer.rasterColor = .expression(Exp(.interpolate) {
             Exp(.linear)
             Exp(.rasterValue)
@@ -86,7 +80,7 @@ class RasterColorExample: UIViewController, ExampleProtocol {
         do {
             try style.addLayer(backgroundLayer)
             try style.addLayer(rasterLayer)
-            try style.addSource(rasterSource, id: .rasterSourceId)
+            try style.addSource(rasterSource)
         } catch {
             print(error)
         }

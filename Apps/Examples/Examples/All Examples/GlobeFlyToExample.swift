@@ -63,13 +63,13 @@ class GlobeFlyToExample: UIViewController, ExampleProtocol {
     }
 
     func addTerrain() {
-        var demSource = RasterDemSource()
+        var demSource = RasterDemSource(id: "mapbox-dem")
         demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
         // Setting the `tileSize` to 514 provides better performance and adds padding around the outside
         // of the tiles.
         demSource.tileSize = 514
         demSource.maxzoom = 14.0
-        try! mapView.mapboxMap.style.addSource(demSource, id: "mapbox-dem")
+        try! mapView.mapboxMap.style.addSource(demSource)
 
         var terrain = Terrain(sourceId: "mapbox-dem")
         terrain.exaggeration = .constant(1.5)

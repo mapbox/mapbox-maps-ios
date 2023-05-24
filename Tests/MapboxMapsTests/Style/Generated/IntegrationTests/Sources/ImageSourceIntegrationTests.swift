@@ -16,14 +16,14 @@ final class ImageSourceIntegrationTests: MapViewIntegrationTestCase {
         style.uri = .streets
 
         didFinishLoadingStyle = { _ in
-            var source = ImageSource()
+            var source = ImageSource(id: "test-source")
             source.url = String.testSourceValue()
             source.coordinates = [[Double]].testSourceValue()
             source.prefetchZoomDelta = Double.testSourceValue()
 
             // Add the source
             do {
-                try style.addSource(source, id: "test-source")
+                try style.addSource(source)
                 successfullyAddedSourceExpectation.fulfill()
             } catch {
                 XCTFail("Failed to add ImageSource because of error: \(error)")

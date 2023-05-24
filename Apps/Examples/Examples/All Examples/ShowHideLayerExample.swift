@@ -33,20 +33,15 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
     }
 
     func addStyleLayers() {
-        // Specify the source IDs. They will be assigned to their respective sources when we
-        // add the source to the map's style.
-        let museumSourceId = "museum-source"
-        let contourSourceId = "contour-source"
-
         // Create a custom vector tileset source. This source contains point features
         // that represent museums.
-        var museumsSource = VectorSource()
+        var museumsSource = VectorSource(id: "museum-source")
         museumsSource.url = "mapbox://mapbox.2opop9hr"
 
         var museumLayer = CircleLayer(id: museumLayerId)
 
         // Assign this layer's source.
-        museumLayer.source = museumSourceId
+        museumLayer.source = museumsSource.id
         // Specify the layer within the vector source to render on the map.
         museumLayer.sourceLayer = "museum-cusco"
 
@@ -56,7 +51,7 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         let museumColor = UIColor(red: 0.22, green: 0.58, blue: 0.70, alpha: 1.00)
         museumLayer.circleColor = .constant(StyleColor(museumColor))
 
-        var contourSource = VectorSource()
+        var contourSource = VectorSource(id: "contour-source")
         // Add the Mapbox Terrain v2 vector tileset. Documentation for this vector tileset
         // can be found at https://docs.mapbox.com/vector-tiles/reference/mapbox-terrain-v2/
         contourSource.url = "mapbox://mapbox.mapbox-terrain-v2"
@@ -64,7 +59,7 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         var contourLayer = LineLayer(id: contourLayerId)
 
         // Assign this layer's source and source layer ID.
-        contourLayer.source = contourSourceId
+        contourLayer.source = contourSource.id
         contourLayer.sourceLayer = "contour"
 
         // Style the contents of the source's contour layer.
@@ -78,8 +73,8 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
 
         // Add the sources and layers to the map's style.
         do {
-            try style.addSource(museumsSource, id: museumSourceId)
-            try style.addSource(contourSource, id: contourSourceId)
+            try style.addSource(museumsSource)
+            try style.addSource(contourSource)
             try style.addLayer(museumLayer)
             try style.addLayer(contourLayer)
         } catch {

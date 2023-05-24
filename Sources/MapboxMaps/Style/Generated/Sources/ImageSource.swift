@@ -7,6 +7,7 @@ import Foundation
 public struct ImageSource: Source {
 
     public let type: SourceType
+    public let id: String
 
     /// URL that points to an image.
     public var url: String?
@@ -17,13 +18,15 @@ public struct ImageSource: Source {
     /// When loading a map, if PrefetchZoomDelta is set to any number greater than 0, the map will first request a tile at zoom level lower than zoom - delta, but so that the zoom level is multiple of delta, in an attempt to display a full map at lower resolution as quick as possible. It will get clamped at the tile source minimum zoom. The default delta is 4.
     public var prefetchZoomDelta: Double?
 
-    public init() {
+    public init(id: String) {
+        self.id = id
         self.type = .image
     }
 }
 
 extension ImageSource {
     enum CodingKeys: String, CodingKey {
+        case id = "id"
         case type = "type"
         case url = "url"
         case coordinates = "coordinates"
@@ -48,6 +51,7 @@ extension ImageSource {
     }
 
     private func encodeNonVolatile(to encoder: Encoder, into container: inout KeyedEncodingContainer<CodingKeys>) throws {
+        try container.encodeIfPresent(id, forKey: .id)
         try container.encodeIfPresent(type, forKey: .type)
         try container.encodeIfPresent(url, forKey: .url)
         try container.encodeIfPresent(coordinates, forKey: .coordinates)

@@ -62,10 +62,10 @@ final class ResizableImageExample: UIViewController, ExampleProtocol {
         try? style.addImage(image, id: "circle")
 
         // add a GeoJSON source with a single point to the style
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: geoJSONSourceId)
         source.data = .feature(Feature(geometry: Point(Self.center)))
 
-        try? style.addSource(source, id: geoJSONSourceId)
+        try? style.addSource(source)
 
         // add a symbol layer with the resizable icon image
         symbolLayer = SymbolLayer(id: Self.layerId)

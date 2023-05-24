@@ -372,7 +372,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
     func testGeoJSONSource() {
         //-->
-        var myGeoJSONSource = GeoJSONSource()
+        var myGeoJSONSource = GeoJSONSource(id: "my-geojson-source")
         myGeoJSONSource.maxzoom = 14
         //<--
 
@@ -390,7 +390,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
     }
 
     func testAddGeoJSONSource() {
-        var myGeoJSONSource = GeoJSONSource()
+        var myGeoJSONSource = GeoJSONSource(id: "my-geojson-source")
         myGeoJSONSource.maxzoom = 14
         myGeoJSONSource.data = .url(geoJSONURL(from: "polygon")!)
 
@@ -399,7 +399,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         mapView.mapboxMap.onStyleLoaded.observeNext { _ in
             do {
                 //-->
-                try mapView.mapboxMap.style.addSource(myGeoJSONSource, id: "my-geojson-source")
+                try mapView.mapboxMap.style.addSource(myGeoJSONSource)
                 //<--
 
                 /*
@@ -484,11 +484,11 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
             do {
                 //-->
                 // Add terrain
-                var demSource = RasterDemSource()
+                var demSource = RasterDemSource(id: "mapbox-dem")
                 demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
                 demSource.tileSize = 512
                 demSource.maxzoom = 14.0
-                try mapView.mapboxMap.style.addSource(demSource, id: "mapbox-dem")
+                try mapView.mapboxMap.style.addSource(demSource)
 
                 var terrain = Terrain(sourceId: "mapbox-dem")
                 terrain.exaggeration = .constant(1.5)

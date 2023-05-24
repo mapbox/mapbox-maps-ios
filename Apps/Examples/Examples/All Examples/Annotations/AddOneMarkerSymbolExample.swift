@@ -33,9 +33,9 @@ final class AddOneMarkerSymbolExample: UIViewController, ExampleProtocol {
     private func addMarkerAnnotation(toStyle style: Style) {
         try? style.addImage(UIImage(named: "blue_marker_view")!, id: Constants.BLUE_ICON_ID)
 
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: Constants.SOURCE_ID)
         source.data = .geometry(Geometry.point(Point(Constants.coordinate)))
-        try? style.addSource(source, id: Constants.SOURCE_ID)
+        try? style.addSource(source)
 
         var layer = SymbolLayer(id: Constants.LAYER_ID)
         layer.source = Constants.SOURCE_ID

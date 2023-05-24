@@ -44,17 +44,16 @@ final class LargeGeoJSONPerformanceExample: UIViewController, ExampleProtocol {
         }
 
         for i in 0..<Self.largeSourceCount {
-            var source = GeoJSONSource()
+            var source = GeoJSONSource(id: "source_\(i)")
             source.data = .feature(routePoints)
-            let sourceId = "source_\(i)"
 
             var lineLayer = LineLayer(id: "line_layer_\(i)")
-            lineLayer.source = sourceId
+            lineLayer.source = source.id
             lineLayer.lineColor = .constant(StyleColor(.systemBlue))
             lineLayer.lineOffset = .constant(Double(5 * i))
 
             // Add the geoJSONSourceData with a dataId, which will be returned when that data source is updated
-            try mapView.mapboxMap.style.addSource(source, id: sourceId, dataId: String(jsonUpdateCounter))
+            try mapView.mapboxMap.style.addSource(source, dataId: String(jsonUpdateCounter))
             try mapView.mapboxMap.style.addLayer(lineLayer)
 
             jsonUpdateCounter += 1
@@ -62,16 +61,15 @@ final class LargeGeoJSONPerformanceExample: UIViewController, ExampleProtocol {
 
         try mapView.mapboxMap.style.addImage(UIImage(named: "blue_marker_view")!, id: "icon")
 
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: "source_marker")
         source.data = .feature(Feature(geometry: Point(cameraCenter).geometry))
-        let sourceId = "source_marker"
 
         // Add the geoJSONSourceData with a dataId, which will be returned when that data source is updated
-        try mapView.mapboxMap.style.addSource(source, id: sourceId, dataId: String(jsonUpdateCounter))
+        try mapView.mapboxMap.style.addSource(source, dataId: String(jsonUpdateCounter))
         jsonUpdateCounter += 1
 
         var symbolLayer = SymbolLayer(id: "layer_marker")
-        symbolLayer.source = sourceId
+        symbolLayer.source = source.id
         symbolLayer.iconImage = .constant(.name("icon"))
         symbolLayer.iconAnchor = .constant(.bottom)
 
@@ -81,16 +79,15 @@ final class LargeGeoJSONPerformanceExample: UIViewController, ExampleProtocol {
     }
 
     private func loadAdditionalGeoJSON() throws {
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: "source_\(Self.largeSourceCount)")
         source.data =  .feature(routePoints)
-        let sourceId = "source_\(Self.largeSourceCount)"
 
         // Add the geoJSONSourceData with a dataId, which will be returned when that data source is updated
-        try mapView.mapboxMap.style.addSource(source, id: sourceId, dataId: String(jsonUpdateCounter))
+        try mapView.mapboxMap.style.addSource(source, dataId: String(jsonUpdateCounter))
         jsonUpdateCounter += 1
 
         var lineLayer = LineLayer(id: "line_layer_\(Self.largeSourceCount)")
-        lineLayer.source = sourceId
+        lineLayer.source = source.id
         lineLayer.lineColor = .constant(StyleColor(.systemGreen))
         lineLayer.lineOffset = .constant(Double(5 * Self.largeSourceCount))
 

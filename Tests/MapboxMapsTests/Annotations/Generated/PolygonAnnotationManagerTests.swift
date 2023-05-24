@@ -64,7 +64,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.type, SourceType.geoJson)
-        XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.id, manager.id)
+        XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.id, manager.id)
     }
 
     func testAddLayer() {
@@ -554,10 +554,10 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         let addLayerParameters = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.last).parameters
         let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
 
-        XCTAssertEqual(addLayerParameters.properties["source"] as? String, addSourceParameters.id)
+        XCTAssertEqual(addLayerParameters.properties["source"] as? String, addSourceParameters.source.id)
         XCTAssertNotEqual(addLayerParameters.properties["id"] as? String, manager.layerId)
 
-        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.id)
+        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.source.id)
     }
 
     func testHandleDragChanged() throws {
@@ -586,7 +586,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
         manager.handleDragChanged(with: .random())
         let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
-        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.id)
+        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.source.id)
         if case .featureCollection(let collection) = updateSourceParameters.geojson {
             XCTAssertTrue(collection.features.contains(where: { $0.identifier?.rawValue as? String == annotation.id }))
         } else {

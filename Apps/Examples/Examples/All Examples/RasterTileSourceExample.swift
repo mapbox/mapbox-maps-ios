@@ -51,7 +51,7 @@ class RasterTileSourceExample: UIViewController, ExampleProtocol {
         let sourceUrl = "https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg"
 
         // Create a `RasterSource` and set the source's `tiles` to the Stamen watercolor raster tiles.
-        var rasterSource = RasterSource()
+        var rasterSource = RasterSource(id: sourceId)
         rasterSource.tiles = [sourceUrl]
 
         // Specify the tile size for the `RasterSource`.
@@ -65,7 +65,7 @@ class RasterTileSourceExample: UIViewController, ExampleProtocol {
         rasterLayer.source = sourceId
 
         do {
-            try style.addSource(rasterSource, id: sourceId)
+            try style.addSource(rasterSource)
             try style.addLayer(rasterLayer)
         } catch {
             print("Failed to update the style. Error: \(error)")

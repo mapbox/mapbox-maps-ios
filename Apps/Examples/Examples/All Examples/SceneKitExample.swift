@@ -36,14 +36,14 @@ final class SceneKitExample: UIViewController, ExampleProtocol {
                 renderingWillEndHandler: { [weak self] in self?.finish() }),
             layerPosition: .below("waterway-label"))
 
-        var demSource = RasterDemSource()
+        var demSource = RasterDemSource(id: "mapbox-dem")
         demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
         demSource.tileSize = 512
         demSource.maxzoom = 14.0
 
-        try! mapView.mapboxMap.style.addSource(demSource, id: "mapbox-dem")
+        try! mapView.mapboxMap.style.addSource(demSource)
 
-        let terrain = Terrain(sourceId: "mapbox-dem")
+        let terrain = Terrain(sourceId: demSource.id)
         try! mapView.mapboxMap.style.setTerrain(terrain)
 
         var skyLayer = SkyLayer(id: "sky-layer")
@@ -57,7 +57,7 @@ final class SceneKitExample: UIViewController, ExampleProtocol {
         let properties = [
             "id": "terrain_hillshade",
             "type": "hillshade",
-            "source": "mapbox-dem",
+            "source": demSource.id,
             "hillshade-illumination-anchor": "map"
         ] as [ String: Any ]
 

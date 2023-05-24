@@ -34,15 +34,13 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
             preconditionFailure("URL is not valid")
         }
 
-        let sourceIdentifier = "US-states-vector-source"
-
-        var geoJSONSource = GeoJSONSource()
+        var geoJSONSource = GeoJSONSource(id: "US-states-vector-source")
         geoJSONSource.data = .url(dataURL)
 
         // Create a new fill layer associated with the data source.
         var fillLayer = FillLayer(id: "US-states")
         fillLayer.sourceLayer = "state_county_population_2014_cen"
-        fillLayer.source = sourceIdentifier
+        fillLayer.source = geoJSONSource.id
 
         // Apply basic styling to the fill layer.
         fillLayer.fillColor = .constant(StyleColor(.blue))
@@ -50,7 +48,7 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
         fillLayer.fillOutlineColor = .constant(StyleColor(.black))
 
         // Add the data source and style layer to the map.
-        try! mapView.mapboxMap.style.addSource(geoJSONSource, id: sourceIdentifier)
+        try! mapView.mapboxMap.style.addSource(geoJSONSource)
         try! mapView.mapboxMap.style.addLayer(fillLayer, layerPosition: nil)
 
         // Set up the tap gesture

@@ -57,9 +57,9 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
         guard let featureCollection = try? decodeGeoJSON(from: "GeoJSONSourceExample") else { return }
 
         // Create a GeoJSON data source.
-        var geoJSONSource = GeoJSONSource()
+        var geoJSONSource = GeoJSONSource(id: Constants.geoJSONDataSourceIdentifier)
         geoJSONSource.data = .featureCollection(featureCollection)
-        try! mapView.mapboxMap.style.addSource(geoJSONSource, id: Constants.geoJSONDataSourceIdentifier)
+        try! mapView.mapboxMap.style.addSource(geoJSONSource)
     }
 
     /// Create and style a FillLayer that uses the Polygon Feature's coordinates in the GeoJSON data

@@ -75,6 +75,11 @@ Mapbox welcomes participation and contributions from everyone.
 * Add `callback` argument to the `MapboxMap` methods `getFeatureState`, `setFeatureState`, `removeFeatureState`.
 * Return `cancelable` from the `MapboxMap` methods : `getFeatureState`, `setFeatureState`, `removeFeatureState`, `querySourceFeatures`, `getGeoJsonClusterLeaves`, `getGeoJsonClusterChildren`, `getGeoJsonClusterExpansionZoom`.
 * The `CameraOptions/padding` field is now optional.
+* Add required `id` property to `Source`. After that change `id` should be specified for source upon creation:
+  ```swift
+  let terrainSource = RasterDemSource(id: "terrain-source")
+  mapView.mapboxMap.style.addSource(terrainSource)
+  ```
 
 ## 10.12.0-beta.1 - February 22, 2023
 

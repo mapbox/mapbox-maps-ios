@@ -41,13 +41,13 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
     }
 
     private func setupExample() {
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: "route-source")
         source.data = .geometry(route.geometry)
 
-        try! mapView.mapboxMap.style.addSource(source, id: "route-source")
+        try! mapView.mapboxMap.style.addSource(source)
 
         var layer = LineLayer(id: "route-layer")
-        layer.source = "route-source"
+        layer.source = source.id
         layer.lineColor = .constant(StyleColor(UIColor.systemPink))
         layer.lineWidth = .constant(4)
 

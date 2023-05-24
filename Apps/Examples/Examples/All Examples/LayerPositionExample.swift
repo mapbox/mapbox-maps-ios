@@ -98,7 +98,7 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
         layer.fillOutlineColor = .constant(StyleColor(#colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)))
 
         // Create a new GeoJSON data source which gets its data from a polygon.
-        source = GeoJSONSource()
+        source = GeoJSONSource(id: sourceIdentifier)
         source.data = .geometry(.polygon(.init([[
             CLLocationCoordinate2DMake(32.91648534731439, -114.43359375),
             CLLocationCoordinate2DMake(32.91648534731439, -81.298828125),
@@ -107,7 +107,7 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
             CLLocationCoordinate2DMake(32.91648534731439, -114.43359375)
         ]])))
 
-        try! mapView.mapboxMap.style.addSource(source, id: sourceIdentifier)
+        try! mapView.mapboxMap.style.addSource(source)
 
         // If a layer position is not supplied, the layer is added above all other layers by default.
         try! mapView.mapboxMap.style.addLayer(layer, layerPosition: nil)

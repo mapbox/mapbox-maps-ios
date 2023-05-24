@@ -81,13 +81,12 @@ final class DataJoinExample: UIViewController, ExampleProtocol {
         // Create the source for country polygons using the Mapbox Countries tileset
         // The polygons contain an ISO 3166 alpha-3 code which can be used to for joining the data
         // https://docs.mapbox.com/vector-tiles/reference/mapbox-countries-v1
-        let sourceID = "countries"
-        var source = VectorSource()
+        var source = VectorSource(id: "countries")
         source.url = "mapbox://mapbox.country-boundaries-v1"
 
         // Add layer from the vector tile source to create the choropleth
         var layer = FillLayer(id: "countries")
-        layer.source = sourceID
+        layer.source = source.id
         layer.sourceLayer = "country_boundaries"
 
         // Build a GL match expression that defines the color for every vector tile feature
@@ -129,7 +128,7 @@ final class DataJoinExample: UIViewController, ExampleProtocol {
         // Insert the vector layer below the 'admin-1-boundary-bg' layer in the style
         // Join data to the vector layer
         do {
-            try mapView.mapboxMap.style.addSource(source, id: sourceID)
+            try mapView.mapboxMap.style.addSource(source)
             try mapView.mapboxMap.style.addLayer(layer, layerPosition: .below("admin-1-boundary-bg"))
             if let expressionData = jsonExpression.data(using: .utf8) {
                 let expJSONObject = try JSONSerialization.jsonObject(with: expressionData, options: [])

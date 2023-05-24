@@ -16,7 +16,7 @@ final class VectorSourceIntegrationTests: MapViewIntegrationTestCase {
         style.uri = .streets
 
         didFinishLoadingStyle = { _ in
-            var source = VectorSource()
+            var source = VectorSource(id: "test-source")
             source.url = String.testSourceValue()
             source.tiles = [String].testSourceValue()
             source.bounds = [Double].testSourceValue()
@@ -34,7 +34,7 @@ final class VectorSourceIntegrationTests: MapViewIntegrationTestCase {
 
             // Add the source
             do {
-                try style.addSource(source, id: "test-source")
+                try style.addSource(source)
                 successfullyAddedSourceExpectation.fulfill()
             } catch {
                 XCTFail("Failed to add VectorSource because of error: \(error)")

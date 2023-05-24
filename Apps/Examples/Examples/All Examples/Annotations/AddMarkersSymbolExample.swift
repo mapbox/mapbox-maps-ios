@@ -52,9 +52,9 @@ final class AddMarkersSymbolExample: UIViewController, ExampleProtocol {
         feature1.properties = [Constants.ICON_KEY: .string(Constants.RED_MARKER_PROPERTY)]
         features.append(feature1)
 
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: Constants.SOURCE_ID)
         source.data = .featureCollection(FeatureCollection(features: features))
-        try? style.addSource(source, id: Constants.SOURCE_ID)
+        try? style.addSource(source)
 
         let rotateExpression = Exp(.match) {
             Exp(.get) { Constants.ICON_KEY }

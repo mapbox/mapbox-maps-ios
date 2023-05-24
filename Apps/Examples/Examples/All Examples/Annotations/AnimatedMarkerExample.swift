@@ -65,10 +65,10 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
         try? mapView.mapboxMap.style.addImage(UIImage(named: "red_marker")!, id: Constants.markerIconId)
 
         // Create a GeoJSON data source.
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: Constants.sourceId)
         source.data = .feature(Feature(geometry: Point(currentPosition)))
 
-        try? mapView.mapboxMap.style.addSource(source, id: Constants.sourceId)
+        try? mapView.mapboxMap.style.addSource(source)
 
         // Create a symbol layer
         var symbolLayer = SymbolLayer(id: "layer-id")

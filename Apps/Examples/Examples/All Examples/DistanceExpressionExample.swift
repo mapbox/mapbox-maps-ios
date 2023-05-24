@@ -28,7 +28,7 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
         let center = mapView.mapboxMap.cameraState.center
 
         // Create a `GeoJSONSource` from a Turf geometry.
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: "source-id")
         point = Feature(geometry: Point(center))
 
         // Filter out POI labels that are more than 150 meters from the point.
@@ -40,7 +40,7 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
         // Create a `CircleLayer` from the previously defined source. The source ID
         // will be set for the source once it is added to the map's style.
         var circleLayer = CircleLayer(id: "circle-layer")
-        circleLayer.source = "source-id"
+        circleLayer.source = source.id
 
         // This expression simulates a `CircleLayer` with a radius of 150 meters. For features that will be
         // visible at lower zoom levels, add more stops at the zoom levels where the feature will be more
@@ -87,7 +87,7 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
         circleLayer.circleOpacity = .constant(0.3)
 
         // Add the source and layer to the map's style.
-        try! style.addSource(source, id: "source-id")
+        try! style.addSource(source)
         try! style.addLayer(circleLayer)
     }
 

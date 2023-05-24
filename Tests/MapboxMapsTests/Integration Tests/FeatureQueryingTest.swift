@@ -208,7 +208,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
             Feature(geometry: Point(CLLocationCoordinate2D(latitude: 0, longitude: 0)))
         ]
 
-        var geoJSONClusterSource = GeoJSONSource()
+        var geoJSONClusterSource = GeoJSONSource(id: clusterSourceID)
         geoJSONClusterSource.data = .featureCollection(FeatureCollection(features: features))
         geoJSONClusterSource.cluster = true
 
@@ -221,7 +221,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                                                           zoom: 5.0))
 
             do {
-                try mapView.mapboxMap.style.addSource(geoJSONClusterSource, id: clusterSourceID)
+                try mapView.mapboxMap.style.addSource(geoJSONClusterSource)
                 try mapView.mapboxMap.style.addLayer(geoJSONLayer)
             } catch {
                 XCTFail("Failed to add cluster source and layer.")

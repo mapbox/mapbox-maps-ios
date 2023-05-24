@@ -106,7 +106,7 @@ final class Puck3DTests: XCTestCase {
         let actualSource = try XCTUnwrap(style.addSourceStub.invocations.first?.parameters.source as? ModelSource)
         XCTAssertEqual(actualSource.type, .model)
         XCTAssertEqual(actualSource.models, ["puck-model": expectedModel])
-        XCTAssertEqual(style.addSourceStub.invocations.first?.parameters.id, "puck-model-source")
+        XCTAssertEqual(style.addSourceStub.invocations.first?.parameters.source.id, "puck-model-source")
 
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 1)
@@ -260,7 +260,7 @@ final class Puck3DTests: XCTestCase {
             location.coordinate.longitude,
             location.coordinate.latitude]
         expectedModel.orientation = [0, 0, 0]
-        var expectedSource = ModelSource()
+        var expectedSource = ModelSource(id: "puck-model-source")
         expectedSource.models = ["puck-model": expectedModel]
         XCTAssertEqual(style.addSourceStub.invocations.count, 0)
         XCTAssertEqual(style.setSourcePropertiesStub.invocations.count, 1)

@@ -44,7 +44,7 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         let url = Bundle.main.url(forResource: "Fire_Hydrants", withExtension: "geojson")!
 
         // Create a GeoJSONSource using the previously specified URL.
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: "fire-hydrant-source")
         source.data = .url(url)
 
         // Enable clustering for this source.
@@ -82,20 +82,19 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         ]
         source.clusterProperties = clusterProperties
 
-        let sourceID = "fire-hydrant-source"
 
         var clusteredLayer = createClusteredLayer()
-        clusteredLayer.source = sourceID
+        clusteredLayer.source = source.id
 
         var unclusteredLayer = createUnclusteredLayer()
-        unclusteredLayer.source = sourceID
+        unclusteredLayer.source = source.id
 
         // `clusterCountLayer` is a `SymbolLayer` that represents the point count within individual clusters.
         var clusterCountLayer = createNumberLayer()
-        clusterCountLayer.source = sourceID
+        clusterCountLayer.source = source.id
 
         // Add the source and two layers to the map.
-        try! style.addSource(source, id: sourceID)
+        try! style.addSource(source)
         try! style.addLayer(clusteredLayer)
         try! style.addLayer(unclusteredLayer, layerPosition: .below(clusteredLayer.id))
         try! style.addLayer(clusterCountLayer)

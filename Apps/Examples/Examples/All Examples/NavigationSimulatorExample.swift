@@ -12,7 +12,7 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
     private var navigationSimulator: NavigationSimulator!
 
     private lazy var routeSource: Source = {
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: ID.routeSource)
         source.data = .geometry(Geometry(sampleRouteLine))
         source.lineMetrics = true
 
@@ -48,7 +48,7 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
         mapView.location.addPuckLocationConsumer(self)
 
         do {
-            try mapView.mapboxMap.style.addSource(routeSource, id: ID.routeSource)
+            try mapView.mapboxMap.style.addSource(routeSource)
             try mapView.mapboxMap.style.addPersistentLayer(makeCasingLayer())
             try mapView.mapboxMap.style.addPersistentLayer(makeRouteLineLayer())
 

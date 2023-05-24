@@ -64,10 +64,9 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
 
         // Attempt to decode GeoJSON from file bundled with application.
         guard let featureCollection = try? decodeGeoJSON(from: "GradientLine") else { return }
-        let geoJSONDataSourceIdentifier = "geoJSON-data-source"
 
         // Create a GeoJSON data source.
-        var geoJSONSource = GeoJSONSource()
+        var geoJSONSource = GeoJSONSource(id: "geoJSON-data-source")
         geoJSONSource.data = .featureCollection(featureCollection)
         geoJSONSource.lineMetrics = true // MUST be `true` in order to use `lineGradient` expression
 
@@ -79,7 +78,7 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
         }
 
         // Setting the source
-        lineLayer.source = geoJSONDataSourceIdentifier
+        lineLayer.source = geoJSONSource.id
 
         // Styling the line
         lineLayer.lineColor = .constant(StyleColor(.red))
@@ -118,7 +117,7 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
         lineLayer.lineJoin = .constant(.round)
 
         // Add the source and style layer to the map style.
-        try! mapView.mapboxMap.style.addSource(geoJSONSource, id: geoJSONDataSourceIdentifier)
+        try! mapView.mapboxMap.style.addSource(geoJSONSource)
         try! mapView.mapboxMap.style.addLayer(lineLayer, layerPosition: nil)
     }
 }

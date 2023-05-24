@@ -6,10 +6,6 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
 
-    // A tuple that associates the source with its identifier.
-    public var airplaneRoute = (identifier: "airplane-route", source: GeoJSONSource())
-    public var airplaneSymbol = (identifier: "airplane-symbol", source: GeoJSONSource())
-
     override public func viewDidLoad() {
         super.viewDidLoad()
 
@@ -63,22 +59,25 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
     }
 
     public func addLayers(for routeLine: LineString) {
-
         // Define the source data and style layer for the airplane's route line.
-        airplaneRoute.source.data = .feature(Feature(geometry: routeLine))
+        var airplaneRoute = GeoJSONSource(id: "airplane-route")
+        airplaneRoute.data = .feature(Feature(geometry: routeLine))
+
         var lineLayer = LineLayer(id: "line-layer")
-        lineLayer.source = airplaneRoute.identifier
+        lineLayer.source = airplaneRoute.id
         lineLayer.lineColor = .constant(StyleColor(.red))
         lineLayer.lineWidth = .constant(3.0)
         lineLayer.lineCap = .constant(.round)
 
         // Define the source data and style layer for the airplane symbol.
+        var airplaneSymbol = GeoJSONSource(id: "airplane-symbol")
         let point = Point(routeLine.coordinates[0])
-        airplaneSymbol.source.data = .feature(Feature(geometry: point))
+        airplaneSymbol.data = .feature(Feature(geometry: point))
+
         var airplaneSymbolLayer = SymbolLayer(id: "airplane")
-        airplaneSymbolLayer.source = airplaneSymbol.identifier
-        // "airport-15" is the name the image that belongs in the style's sprite by default.
-        airplaneSymbolLayer.iconImage = .constant(.name("airport-15"))
+        airplaneSymbolLayer.source = airplaneSymbol.id
+        // "airport" is the name the image that belongs in the style's sprite by default.
+        airplaneSymbolLayer.iconImage = .constant(.name("airport"))
         airplaneSymbolLayer.iconRotationAlignment = .constant(.map)
         airplaneSymbolLayer.iconAllowOverlap = .constant(true)
         airplaneSymbolLayer.iconIgnorePlacement = .constant(true)
@@ -89,10 +88,10 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
         })
 
         // Add the sources and layers to the map style.
-        try! mapView.mapboxMap.style.addSource(airplaneRoute.source, id: airplaneRoute.identifier)
+        try! mapView.mapboxMap.style.addSource(airplaneRoute)
         try! mapView.mapboxMap.style.addLayer(lineLayer)
 
-        try! mapView.mapboxMap.style.addSource(airplaneSymbol.source, id: airplaneSymbol.identifier)
+        try! mapView.mapboxMap.style.addSource(airplaneSymbol)
         try! mapView.mapboxMap.style.addLayer(airplaneSymbolLayer, layerPosition: nil)
     }
 
@@ -112,7 +111,7 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
             geoJSON.properties = ["bearing": .number(coordinate.direction(to: nextCoordinate))]
 
             // Update the airplane source layer with the new coordinate and bearing.
-            try! self.mapView.mapboxMap.style.updateGeoJSONSource(withId: self.airplaneSymbol.identifier,
+            try! self.mapView.mapboxMap.style.updateGeoJSONSource(withId: "airplane-symbol",
                                                                   geoJSON: .feature(geoJSON))
 
             runCount += 1

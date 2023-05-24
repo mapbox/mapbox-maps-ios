@@ -75,12 +75,12 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
             preconditionFailure("URL is not valid")
         }
 
-        var earthquakeSource = GeoJSONSource()
+        var earthquakeSource = GeoJSONSource(id: Self.earthquakeSourceId)
         earthquakeSource.data = .url(earthquakeURL)
         earthquakeSource.generateId = true
 
         do {
-            try mapView.mapboxMap.style.addSource(earthquakeSource, id: Self.earthquakeSourceId)
+            try mapView.mapboxMap.style.addSource(earthquakeSource)
         } catch {
             print("Ran into an error adding a source: \(error)")
         }

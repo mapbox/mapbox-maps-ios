@@ -6,7 +6,7 @@ class GeoJSONSourceDataTests: XCTestCase {
 
     func testGeoJSONSourceDataEncodingDecodingURL() throws {
         let data: GeoJSONSourceData = GeoJSONSourceData.url(URL(string: "./lines.geojson")!)
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: "test-source")
         source.data = data
 
         let sourceData = try? JSONEncoder().encode(source)
@@ -31,7 +31,7 @@ class GeoJSONSourceDataTests: XCTestCase {
         feature.identifier = FeatureIdentifier.string("id")
 
         let data: GeoJSONSourceData = GeoJSONSourceData.feature(feature)
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: "test-source")
         source.data = data
 
         let sourceData = try? JSONEncoder().encode(source)

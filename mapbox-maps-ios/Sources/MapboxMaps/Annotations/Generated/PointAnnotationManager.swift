@@ -108,7 +108,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
         do {
             // Add the source with empty `data` property
-            var source = GeoJSONSource()
+            var source = GeoJSONSource(id: sourceId)
             source.data = .empty
 
             // Set cluster options and create clusters if clustering is enabled
@@ -119,7 +119,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
                 source.clusterMaxZoom = clusterOptions.clusterMaxZoom
             }
 
-            try style.addSource(source, id: sourceId)
+            try style.addSource(source)
 
             if let clusterOptions = clusterOptions {
                 createClusterLayers(clusterOptions: clusterOptions)
@@ -585,7 +585,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
             layerProperties["icon-text-fit-padding"] = newValue
         }
     }
-    
+
     // MARK: - User interaction handling
 
     /// Returns the first annotation matching the set of given `featureIdentifiers`.
@@ -663,9 +663,9 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
         do {
             if !style.sourceExists(withId: dragSourceId) {
-                var dragSource = GeoJSONSource()
+                var dragSource = GeoJSONSource(id: dragSourceId)
                 dragSource.data = .empty
-                try style.addSource(dragSource, id: dragSourceId)
+                try style.addSource(dragSource)
             }
 
             annotationBeingDragged = annotation

@@ -209,9 +209,9 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testGetLocaleValueForCustomV8Style() {
-        var source = VectorSource()
+        var source = VectorSource(id: "v8-source")
         source.url = "https://mapbox.mapbox-streets-v8"
-        try! style!.addSource(source, id: "v8-source")
+        try! style!.addSource(source)
 
         let locale = Locale(identifier: "zh-Hant-TW")
         let localeValue = style!.getLocaleValue(locale: locale)
@@ -220,9 +220,9 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testGetLocaleValueForCustomV7Style() {
-        var source = VectorSource()
+        var source = VectorSource(id: "v7-source")
         source.url = "https://mapbox.mapbox-streets-v7"
-        try! style!.addSource(source, id: "v7-source")
+        try! style!.addSource(source)
 
         let locale = Locale(identifier: "zh-Hant")
         let localeValue = style!.getLocaleValue(locale: locale)
@@ -584,8 +584,8 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
     func testOnlyAddedDataIdReturned() {
         let sourceID = "Source"
         let sourceID2 = "Source2"
-        var source = GeoJSONSource()
-        var source2 = GeoJSONSource()
+        var source = GeoJSONSource(id: sourceID)
+        var source2 = GeoJSONSource(id: sourceID2)
         source.data = .empty
         source2.data = .empty
         let geometry = Geometry.point(Point.init(LocationCoordinate2D(latitude: 0, longitude: 0)))
@@ -596,8 +596,8 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
 
         var returnedSourceDataId: String?
 
-        try! self.style.addSource(source, id: sourceID)
-        try! self.style.addSource(source2, id: sourceID2)
+        try! self.style.addSource(source)
+        try! self.style.addSource(source2)
 
         mapView.mapboxMap.onSourceDataLoaded.observe { event in
             returnedSourceDataId = event.dataId

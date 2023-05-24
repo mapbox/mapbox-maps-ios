@@ -38,18 +38,18 @@ final class LiveDataExample: UIViewController, ExampleProtocol {
     func addStyleLayer() {
         // Create an empty geoJSON source to hold location data once
         // this information is received from the URL
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: sourceId)
         source.data = .empty
 
         var issLayer = SymbolLayer(id: "iss-layer")
         issLayer.source = sourceId
 
-        // Mapbox Streets contains an image named `rocket-15`. Use that image
+        // Mapbox Streets contains an image named `rocket`. Use that image
         // to represent the location of the ISS.
-        issLayer.iconImage = .constant(.name("rocket-15"))
+        issLayer.iconImage = .constant(.name("rocket"))
 
         do {
-            try mapView.mapboxMap.style.addSource(source, id: sourceId)
+            try mapView.mapboxMap.style.addSource(source)
             try mapView.mapboxMap.style.addLayer(issLayer)
 
             // Create a `Timer` that updates the `GeoJSONSource`.

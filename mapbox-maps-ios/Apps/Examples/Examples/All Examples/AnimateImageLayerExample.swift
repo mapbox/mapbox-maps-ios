@@ -40,7 +40,7 @@ class AnimateImageLayerExample: UIViewController, ExampleProtocol {
 
         // Create an `ImageSource`. This will manage the image displayed in the `RasterLayer` as well
         // as the location of that image on the map.
-        var imageSource = ImageSource()
+        var imageSource = ImageSource(id: sourceId)
 
         // Set the `coordinates` property to an array of longitude, latitude pairs.
         imageSource.coordinates = [
@@ -62,7 +62,7 @@ class AnimateImageLayerExample: UIViewController, ExampleProtocol {
         imageLayer.rasterFadeDuration = .constant(0)
 
         do {
-            try style.addSource(imageSource, id: sourceId)
+            try style.addSource(imageSource)
             try style.addLayer(imageLayer)
 
             // Add a tap gesture recognizer that will allow the animation to be stopped and started.

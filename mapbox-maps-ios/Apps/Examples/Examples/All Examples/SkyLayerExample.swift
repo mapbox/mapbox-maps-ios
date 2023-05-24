@@ -91,13 +91,13 @@ public class SkyLayerExample: UIViewController, ExampleProtocol {
 
     func addTerrainLayer() {
         // Add a `RasterDEMSource`. This will be used to create and add a terrain layer.
-        var demSource = RasterDemSource()
+        var demSource = RasterDemSource(id: "mapbox-dem")
         demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
         demSource.tileSize = 514
         demSource.maxzoom = 14.0
-        try! mapView.mapboxMap.style.addSource(demSource, id: "mapbox-dem")
+        try! mapView.mapboxMap.style.addSource(demSource)
 
-        var terrain = Terrain(sourceId: "mapbox-dem")
+        var terrain = Terrain(sourceId: demSource.id)
         terrain.exaggeration = .constant(1.5)
 
         do {

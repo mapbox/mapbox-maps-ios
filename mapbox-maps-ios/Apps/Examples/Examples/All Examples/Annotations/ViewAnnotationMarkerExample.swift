@@ -8,7 +8,6 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
         static let BLUE_ICON_ID = "blue"
         static let SOURCE_ID = "source_id"
         static let LAYER_ID = "layer_id"
-        static let TERRAIN_SOURCE = "TERRAIN_SOURCE"
         static let TERRAIN_URL_TILE_RESOURCE = "mapbox://mapbox.mapbox-terrain-dem-v1"
         static let MARKER_ID_PREFIX = "view_annotation_"
         static let SELECTED_ADD_COEF_PX: CGFloat = 50
@@ -112,15 +111,15 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
         let style = mapView.mapboxMap.style
         try? style.addImage(image, id: Constants.BLUE_ICON_ID)
 
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: Constants.SOURCE_ID)
         source.data = .featureCollection(FeatureCollection(features: pointList))
-        try? mapView.mapboxMap.style.addSource(source, id: Constants.SOURCE_ID)
+        try? mapView.mapboxMap.style.addSource(source)
 
         if style.uri == .satelliteStreets {
-            var demSource = RasterDemSource()
+            var demSource = RasterDemSource(id: "terrain-source")
             demSource.url = Constants.TERRAIN_URL_TILE_RESOURCE
-            try? mapView.mapboxMap.style.addSource(demSource, id: Constants.TERRAIN_SOURCE)
-            let terrain = Terrain(sourceId: Constants.TERRAIN_SOURCE)
+            try? mapView.mapboxMap.style.addSource(demSource)
+            let terrain = Terrain(sourceId: demSource.id)
             try? mapView.mapboxMap.style.setTerrain(terrain)
         }
 

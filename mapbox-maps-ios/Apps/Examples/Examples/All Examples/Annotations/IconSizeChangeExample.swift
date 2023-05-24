@@ -44,9 +44,9 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
         ].map({ Feature(geometry: Point($0)) })
 
         // Create a GeoJSON data source for markers
-        var markerSource = GeoJSONSource()
+        var markerSource = GeoJSONSource(id: Constants.markerSourceId)
         markerSource.data = .featureCollection(FeatureCollection(features: markerFeatures))
-        try? mapView.mapboxMap.style.addSource(markerSource, id: Constants.markerSourceId)
+        try? mapView.mapboxMap.style.addSource(markerSource)
 
         // Add marker image to the map
         try? mapView.mapboxMap.style.addImage(UIImage(named: "blue_marker_view")!, id: Constants.blueMarkerImageId)
@@ -63,9 +63,9 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
         try? mapView.mapboxMap.style.addLayer(markerLayer)
 
         // Create a GeoJSON source for the selected marker
-        var selectedMarkerSource = GeoJSONSource()
+        var selectedMarkerSource = GeoJSONSource(id: Constants.selectedMarkerSourceId)
         selectedMarkerSource.data = .geometry(.point(Point(CLLocationCoordinate2D())))
-        try? mapView.mapboxMap.style.addSource(selectedMarkerSource, id: Constants.selectedMarkerSourceId)
+        try? mapView.mapboxMap.style.addSource(selectedMarkerSource)
 
         // Create a symbol layer for the selected marker
         var selectedMarkerLayer = SymbolLayer(id: Constants.selectedMarkerLayerId)

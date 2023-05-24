@@ -24,10 +24,10 @@ struct AddRouteCommand: AsyncCommand {
         // Setup route.
         let route = try getRoute()
 
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: ID.routeSource)
         source.data = .geometry(Geometry(route.line))
         source.lineMetrics = true
-        try mapView.mapboxMap.style.addSource(source, id: ID.routeSource)
+        try mapView.mapboxMap.style.addSource(source)
         try mapView.mapboxMap.style.addPersistentLayer(makeCasingLayer())
         try mapView.mapboxMap.style.addPersistentLayer(makeLineLayer())
 

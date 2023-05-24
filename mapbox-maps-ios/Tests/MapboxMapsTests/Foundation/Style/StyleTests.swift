@@ -174,7 +174,7 @@ final class StyleTests: XCTestCase {
 
     func testStyleGetSource() throws {
         let id = "foo"
-        let source = GeoJSONSource()
+        let source = GeoJSONSource(id: id)
         sourceManager.sourceStub.defaultReturnValue = source
 
         let returnedSource = try style.source(withId: id)
@@ -186,7 +186,7 @@ final class StyleTests: XCTestCase {
 
     func testStyleTypedGetSource() throws {
         let id = "foo"
-        sourceManager.typedSourceStub.defaultReturnValue = GeoJSONSource()
+        sourceManager.typedSourceStub.defaultReturnValue = GeoJSONSource(id: id)
 
         let source = try style.source(withId: id, type: GeoJSONSource.self)
 
@@ -212,16 +212,16 @@ final class StyleTests: XCTestCase {
     func testStyleCanAddTypedStyleSource() throws {
         let id = "dummy-source-id"
         let type = SourceType.random()
-        guard let source = try type.sourceType?.init(jsonObject: ["type": type.rawValue]) else {
+        guard let source = try type.sourceType?.init(jsonObject: ["type": type.rawValue, "id": id]) else {
             XCTFail("Expected to return a valid source")
             return
         }
 
-        try style.addSource(source, id: id)
+        try style.addSource(source)
 
         XCTAssertEqual(sourceManager.addSourceStub.invocations.count, 1)
         let params = try XCTUnwrap(sourceManager.addSourceStub.invocations.first?.parameters)
-        XCTAssertEqual(params.id, id)
+        XCTAssertEqual(params.source.id, id)
         XCTAssertEqual(params.source.type, type)
     }
 

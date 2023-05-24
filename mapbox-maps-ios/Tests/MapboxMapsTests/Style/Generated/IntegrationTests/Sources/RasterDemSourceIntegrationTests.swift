@@ -16,7 +16,7 @@ final class RasterDemSourceIntegrationTests: MapViewIntegrationTestCase {
         style.uri = .streets
 
         didFinishLoadingStyle = { _ in
-            var source = RasterDemSource()
+            var source = RasterDemSource(id: "test-source")
             source.url = String.testSourceValue()
             source.tiles = [String].testSourceValue()
             source.bounds = [Double].testSourceValue()
@@ -34,7 +34,7 @@ final class RasterDemSourceIntegrationTests: MapViewIntegrationTestCase {
 
             // Add the source
             do {
-                try style.addSource(source, id: "test-source")
+                try style.addSource(source)
                 successfullyAddedSourceExpectation.fulfill()
             } catch {
                 XCTFail("Failed to add RasterDemSource because of error: \(error)")

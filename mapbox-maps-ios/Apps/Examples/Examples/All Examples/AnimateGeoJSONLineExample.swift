@@ -9,8 +9,6 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
     var currentIndex = 0
     private var cancelables = Set<AnyCancelable>()
 
-    public var geoJSONLine = (identifier: "routeLine", source: GeoJSONSource())
-
     override public func viewDidLoad() {
         super.viewDidLoad()
 
@@ -36,7 +34,7 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
     func addLine() {
 
         // Create a GeoJSON data source.
-        routeLineSource = GeoJSONSource()
+        routeLineSource = GeoJSONSource(id: sourceIdentifier)
         routeLineSource.data = .feature(Feature(geometry: LineString([allCoordinates[currentIndex]])))
 
         // Create a line layer
@@ -62,7 +60,7 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
         lineLayer.lineJoin = .constant(.round)
 
         // Add the lineLayer to the map.
-        try! mapView.mapboxMap.style.addSource(routeLineSource, id: sourceIdentifier)
+        try! mapView.mapboxMap.style.addSource(routeLineSource)
         try! mapView.mapboxMap.style.addLayer(lineLayer)
     }
 

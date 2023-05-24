@@ -16,7 +16,7 @@ final class GeoJSONSourceIntegrationTests: MapViewIntegrationTestCase {
         style.uri = .streets
 
         didFinishLoadingStyle = { _ in
-            var source = GeoJSONSource()
+            var source = GeoJSONSource(id: "test-source")
             source.data = GeoJSONSourceData.testSourceValue()
             source.maxzoom = Double.testSourceValue()
             source.attribution = String.testSourceValue()
@@ -32,7 +32,7 @@ final class GeoJSONSourceIntegrationTests: MapViewIntegrationTestCase {
 
             // Add the source
             do {
-                try style.addSource(source, id: "test-source")
+                try style.addSource(source)
                 successfullyAddedSourceExpectation.fulfill()
             } catch {
                 XCTFail("Failed to add GeoJSONSource because of error: \(error)")

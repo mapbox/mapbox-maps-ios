@@ -82,12 +82,11 @@ final class MockStyle: StyleProtocol {
 
     struct AddSourceParams {
         var source: Source
-        var id: String
         var dataId: String?
     }
     let addSourceStub = Stub<AddSourceParams, Void>()
-    func addSource(_ source: Source, id: String, dataId: String? = nil) throws {
-        addSourceStub.call(with: .init(source: source, id: id, dataId: dataId))
+    func addSource(_ source: Source, dataId: String? = nil) throws {
+        addSourceStub.call(with: .init(source: source, dataId: dataId))
     }
 
     let removeSourceStub = Stub<String, Void>()

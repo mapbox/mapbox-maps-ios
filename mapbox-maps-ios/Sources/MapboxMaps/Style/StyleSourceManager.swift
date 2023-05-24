@@ -7,7 +7,7 @@ internal protocol StyleSourceManagerProtocol: AnyObject {
     var allSourceIdentifiers: [SourceInfo] { get }
     func source<T>(withId id: String, type: T.Type) throws -> T where T: Source
     func source(withId id: String) throws -> Source
-    func addSource(_ source: Source, id: String, dataId: String?) throws
+    func addSource(_ source: Source, dataId: String?) throws
     func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject, dataId: String?) throws
     func addSource(withId id: String, properties: [String: Any]) throws
     func removeSource(withId id: String) throws
@@ -69,22 +69,22 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
         return try type.init(jsonObject: sourceProps)
     }
 
-    internal func addSource(_ source: Source, id: String, dataId: String? = nil) throws {
+    internal func addSource(_ source: Source, dataId: String? = nil) throws {
         if let geoJSONSource = source as? GeoJSONSource {
-            try addGeoJSONSource(geoJSONSource, id: id, dataId: dataId)
+            try addGeoJSONSource(geoJSONSource, dataId: dataId)
         } else {
-            try addSourceInternal(source, id: id)
+            try addSourceInternal(source)
         }
     }
 
-    private func addSourceInternal(_ source: Source, id: String) throws {
+    private func addSourceInternal(_ source: Source) throws {
         let sourceDictionary = try source.jsonObject(userInfo: [.nonVolatilePropertiesOnly: true])
-        try addSource(withId: id, properties: sourceDictionary)
+        try addSource(withId: source.id, properties: sourceDictionary)
 
         // volatile properties have to be set after the source has been added to the style
         let volatileProperties = try source.jsonObject(userInfo: [.volatilePropertiesOnly: true])
 
-        try setSourceProperties(for: id, properties: volatileProperties)
+        try setSourceProperties(for: source.id, properties: volatileProperties)
     }
 
     internal func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject, dataId: String? = nil) throws {
@@ -95,7 +95,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
 
     internal func addSource(withId id: String, properties: [String: Any]) throws {
         try handleExpected {
-            return styleManager.addStyleSource(forSourceId: id, properties: properties)
+            return styleManager.addStyleSource(forSourceId: id, properties: properties.removingId())
         }
     }
 
@@ -116,9 +116,15 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
     }
 
     internal func sourceProperties(for sourceId: String) throws -> [String: Any] {
-        return try handleExpected {
-            return styleManager.getStyleSourceProperties(forSourceId: sourceId)
+        let expected = styleManager.getStyleSourceProperties(forSourceId: sourceId)
+        if expected.isError() {
+            throw StyleError(message: expected.error as String)
         }
+        guard var dict = expected.value as? [String: Any] else {
+            throw TypeConversionError.unexpectedType
+        }
+        dict["id"] = sourceId
+        return dict
     }
 
     internal func setSourceProperty(for sourceId: String, property: String, value: Any) throws {
@@ -129,7 +135,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
 
     internal func setSourceProperties(for sourceId: String, properties: [String: Any]) throws {
         try handleExpected {
-            return styleManager.setStyleSourcePropertiesForSourceId(sourceId, properties: properties)
+            return styleManager.setStyleSourcePropertiesForSourceId(sourceId, properties: properties.removingId())
         }
     }
 
@@ -143,7 +149,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
 
     // MARK: - Async GeoJSON source data parsing
 
-    private func addGeoJSONSource(_ source: GeoJSONSource, id: String, dataId: String? = nil) throws {
+    private func addGeoJSONSource(_ source: GeoJSONSource, dataId: String? = nil) throws {
         let data = source.data
 
         var emptySource = source
@@ -151,12 +157,12 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
             emptySource.data = .empty
         }
 
-        try addSourceInternal(emptySource, id: id)
+        try addSourceInternal(emptySource)
 
         guard let data = data else { return }
         if case GeoJSONSourceData.empty = data { return }
 
-        applyGeoJSON(data: data, sourceId: id, dataId: dataId)
+        applyGeoJSON(data: data, sourceId: source.id, dataId: dataId)
     }
 
     private func applyGeoJSON(data: GeoJSONSourceData, sourceId id: String, dataId: String? = nil) {
@@ -177,5 +183,16 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
 
         workItems[id] = AnyCancelable(item.cancel)
         backgroundQueue.async(execute: item)
+    }
+}
+
+private extension Dictionary where Key == String {
+    func removingId() -> Self {
+        guard keys.contains("id") else {
+            return self
+        }
+        var copy = self
+        copy.removeValue(forKey: "id")
+        return copy
     }
 }

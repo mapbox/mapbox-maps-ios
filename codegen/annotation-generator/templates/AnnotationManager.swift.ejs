@@ -149,7 +149,7 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
         <%_ } %>
         do {
             // Add the source with empty `data` property
-            var source = GeoJSONSource()
+            var source = GeoJSONSource(id: sourceId)
             source.data = .empty
             <%_ if (isPointAnnotationManager) { _%>
 
@@ -162,7 +162,7 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
             }
 
             <%_ } _%>
-            try style.addSource(source, id: sourceId)
+            try style.addSource(source)
             <%_ if (isPointAnnotationManager) { _%>
 
             if let clusterOptions = clusterOptions {
@@ -395,8 +395,8 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
             layerProperties["icon-text-fit-padding"] = newValue
         }
     }
-    
-    <%_ } _%>   
+
+    <%_ } _%>
     // MARK: - User interaction handling
 
     /// Returns the first annotation matching the set of given `featureIdentifiers`.
@@ -485,9 +485,9 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
 
         do {
             if !style.sourceExists(withId: dragSourceId) {
-                var dragSource = GeoJSONSource()
+                var dragSource = GeoJSONSource(id: dragSourceId)
                 dragSource.data = .empty
-                try style.addSource(dragSource, id: dragSourceId)
+                try style.addSource(dragSource)
             }
 
             annotationBeingDragged = annotation

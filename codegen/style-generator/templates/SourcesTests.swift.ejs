@@ -12,7 +12,7 @@ import XCTest
 final class <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>SourceTests: XCTestCase {
 
     func testEncodingAndDecoding() {
-        var source = <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>Source()
+        var source = <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>Source(id: "test-source")
         <%_ for (const property of properties) { -%>
         <%_ if (property[`name`] !== '*' && property[`name`] !== 'type') { -%>
         source.<%- camelizeWithLeadingLowercase(property.name) %> = <%- propertySwiftType(property)%>.testSourceValue()

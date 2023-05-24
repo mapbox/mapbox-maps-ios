@@ -98,9 +98,9 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
         do {
             // Add the source with empty `data` property
-            var source = GeoJSONSource()
+            var source = GeoJSONSource(id: sourceId)
             source.data = .empty
-            try style.addSource(source, id: sourceId)
+            try style.addSource(source)
 
             // Add the correct backing layer for this annotation type
             var layer = LineLayer(id: layerId)
@@ -357,9 +357,9 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
         do {
             if !style.sourceExists(withId: dragSourceId) {
-                var dragSource = GeoJSONSource()
+                var dragSource = GeoJSONSource(id: dragSourceId)
                 dragSource.data = .empty
-                try style.addSource(dragSource, id: dragSourceId)
+                try style.addSource(dragSource)
             }
 
             annotationBeingDragged = annotation

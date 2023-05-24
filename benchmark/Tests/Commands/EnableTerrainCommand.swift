@@ -11,7 +11,7 @@ struct EnableTerrainCommand: AsyncCommand {
         }
 
         if let source = terrain.rasterDemSource {
-            try mapView.mapboxMap.style.addSource(source, id: terrain.source)
+            try mapView.mapboxMap.style.addSource(source)
         }
 
         try mapView.mapboxMap.style.setTerrain(terrain)
@@ -27,7 +27,7 @@ extension EnableTerrainCommand: Decodable {
 
 private extension Terrain {
     var rasterDemSource: RasterDemSource? {
-        var source = RasterDemSource()
+        var source = RasterDemSource(id: source)
         source.maxzoom = 14
 
         switch self.source {

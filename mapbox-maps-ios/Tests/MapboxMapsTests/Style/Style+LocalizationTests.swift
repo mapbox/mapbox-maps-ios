@@ -83,9 +83,9 @@ final class StyleLocalizationTests: MapViewIntegrationTestCase {
     }
 
     func testOnlyLocalizesFirstLocalization() throws {
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: "a")
         source.data = .feature(Feature(geometry: Point(CLLocationCoordinate2D(latitude: 0, longitude: 0))))
-        try style.addSource(source, id: "a")
+        try style.addSource(source)
 
         var symbolLayer = SymbolLayer(id: "a")
         symbolLayer.source = "a"
@@ -131,9 +131,9 @@ final class StyleLocalizationTests: MapViewIntegrationTestCase {
     }
 
     func testSkipsSymbolLayersWhereTextFieldIsNil() throws {
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: "a")
         source.data = .feature(Feature(geometry: Point(CLLocationCoordinate2D(latitude: 0, longitude: 0))))
-        try style.addSource(source, id: "a")
+        try style.addSource(source)
 
         var symbolLayer = SymbolLayer(id: "a")
         symbolLayer.source = "a"

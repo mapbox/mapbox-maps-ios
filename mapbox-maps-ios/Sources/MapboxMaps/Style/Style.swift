@@ -13,7 +13,7 @@ internal protocol StyleProtocol: AnyObject {
     func setLayerProperties(for layerId: String, properties: [String: Any]) throws
     func setLayerProperty(for layerId: String, property: String, value: Any) throws
 
-    func addSource(_ source: Source, id: String, dataId: String?) throws
+    func addSource(_ source: Source, dataId: String?) throws
     func removeSource(withId id: String) throws
     func sourceExists(withId id: String) -> Bool
     func setSourceProperty(for sourceId: String, property: String, value: Any) throws
@@ -39,8 +39,8 @@ internal extension StyleProtocol {
     func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject, dataId: String? = nil) throws {
         try updateGeoJSONSource(withId: id, geoJSON: geoJSON, dataId: dataId)
     }
-    func addSource(_ source: Source, id: String, dataId: String? = nil)  throws {
-        try addSource(source, id: id, dataId: dataId)
+    func addSource(_ source: Source, dataId: String? = nil)  throws {
+        try addSource(source, dataId: dataId)
     }
 }
 
@@ -205,8 +205,8 @@ public final class Style: StyleProtocol {
 
      - Throws: ``StyleError`` if there is a problem adding the `source`.
      */
-    public func addSource(_ source: Source, id: String, dataId: String? = nil) throws {
-        try sourceManager.addSource(source, id: id, dataId: dataId)
+    public func addSource(_ source: Source, dataId: String? = nil) throws {
+        try sourceManager.addSource(source, dataId: dataId)
     }
 
     /**

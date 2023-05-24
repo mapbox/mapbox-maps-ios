@@ -41,12 +41,12 @@ public class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
     }
 
     func createEarthquakeSource() {
-        var earthquakeSource = GeoJSONSource()
+        var earthquakeSource = GeoJSONSource(id: self.earthquakeSourceId)
         earthquakeSource.data = .url(self.earthquakeURL)
         earthquakeSource.generateId = true
 
         do {
-            try mapView.mapboxMap.style.addSource(earthquakeSource, id: self.earthquakeSourceId)
+            try mapView.mapboxMap.style.addSource(earthquakeSource)
         } catch {
             print("Ran into an error adding a source: \(error)")
         }
@@ -134,12 +134,12 @@ public class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
 
     public func createCircleLayer() {
 
-        var circleLayerSource = GeoJSONSource()
+        var circleLayerSource = GeoJSONSource(id: self.earthquakeSourceId)
         circleLayerSource.data = .url(self.earthquakeURL)
         circleLayerSource.generateId = true
 
         do {
-            try mapView.mapboxMap.style.addSource(circleLayerSource, id: self.earthquakeSourceId)
+            try mapView.mapboxMap.style.addSource(circleLayerSource)
         } catch {
             print("Ran into an error adding a source: \(error)")
         }

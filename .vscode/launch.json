@@ -1,0 +1,41 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Generate Style API",
+            "program": "${workspaceFolder}/codegen/style-generator/generate-style-code.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "cwd": "${workspaceFolder}/codegen",
+            "type": "node",
+            "preLaunchTask": "npm: install - codegen"
+        },
+        {
+            "name": "Generate private Annotations API",
+            "program": "${workspaceFolder}/codegen/annotation-generator/generate-annotations.js",
+            "args": [
+                "--private-api"
+            ],
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "cwd": "${workspaceFolder}/codegen",
+            "type": "node",
+            "preLaunchTask": "npm: install - codegen"
+        },
+        {
+            "name": "Generate public Annotations API",
+            "program": "${workspaceFolder}/codegen/annotation-generator/generate-annotations.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "cwd": "${workspaceFolder}/codegen",
+            "type": "node",
+            "preLaunchTask": "npm: install - codegen"
+        },
+    ],
+}

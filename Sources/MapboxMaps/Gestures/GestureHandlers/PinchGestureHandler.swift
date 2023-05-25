@@ -122,7 +122,7 @@ extension PinchGestureHandler: UIGestureRecognizerDelegate {
             return simultaneousRotateAndPinchZoomEnabled
         case is UIScreenEdgePanGestureRecognizer:
             return false
-        case is UIPanGestureRecognizer:
+        case let pan as UIPanGestureRecognizer where pan.maximumNumberOfTouches == 1:
             return panEnabled
         default:
             return false

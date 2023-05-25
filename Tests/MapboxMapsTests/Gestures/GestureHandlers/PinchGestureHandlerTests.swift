@@ -181,17 +181,26 @@ final class PinchGestureHandlerTests: XCTestCase {
         XCTAssertEqual(pinchGestureHandler.simultaneousRotateAndPinchZoomEnabled, true)
     }
 
-    func testPinchRecognizesSimultaneouslyWithRotation() {
-        let shouldRecognizeSimultaneously = pinchGestureHandler.gestureRecognizer(
-            gestureRecognizer,
-            shouldRecognizeSimultaneouslyWith: UIRotationGestureRecognizer()
-        )
+    func testPinchRecognizesSimultaneouslyWithRotationAndSingleTouchPan() {
+        let singleTouchPan = UIPanGestureRecognizer()
+        singleTouchPan.maximumNumberOfTouches = 1
+        pinchGestureHandler.panEnabled = true
+        let recognizers = [singleTouchPan, UIRotationGestureRecognizer()]
 
-        XCTAssertTrue(shouldRecognizeSimultaneously)
+        for recognizer in recognizers {
+            let shouldRecognizeSimultaneously = pinchGestureHandler.gestureRecognizer(
+                gestureRecognizer,
+                shouldRecognizeSimultaneouslyWith: recognizer
+            )
+            XCTAssertTrue(shouldRecognizeSimultaneously)
+        }
     }
 
     func testPinchShouldNotRecognizeSimultaneouslyWithNonRotation() {
-        let recognizers = [UILongPressGestureRecognizer(), UISwipeGestureRecognizer(), UIScreenEdgePanGestureRecognizer(), UITapGestureRecognizer()]
+        let multiTouchPan = UIPanGestureRecognizer()
+        multiTouchPan.maximumNumberOfTouches = .random(in: 2...1000)
+        pinchGestureHandler.panEnabled = true
+        let recognizers = [UILongPressGestureRecognizer(), UISwipeGestureRecognizer(), UIScreenEdgePanGestureRecognizer(), UITapGestureRecognizer(), multiTouchPan]
 
         for recognizer in recognizers {
             let shouldRecognizeSimultaneously = pinchGestureHandler.gestureRecognizer(
@@ -203,19 +212,25 @@ final class PinchGestureHandlerTests: XCTestCase {
         }
     }
 
-    func testPinchGestureRecognizerRecognizePanGestureRecognizerSimultaneouslyWhenPanningAllowed() {
+    func testPinchGestureRecognizerRecognizeSingleTouchPanGestureRecognizerSimultaneouslyWhenPanningAllowed() {
+        let panRecognizer = UIPanGestureRecognizer()
+        panRecognizer.maximumNumberOfTouches = 1
         pinchGestureHandler.panEnabled = true
+
         let shouldRecognize = pinchGestureHandler.gestureRecognizer(gestureRecognizer,
                                                                     shouldRecognizeSimultaneouslyWith:
-                                                                        UIPanGestureRecognizer())
+                                                                        panRecognizer)
         XCTAssertTrue(shouldRecognize)
     }
 
     func testPinchGestureRecognizerRecognizePanGestureRecognizerSimultaneouslyWhenPanningNotAllowed() {
+        let panRecognizer = UIPanGestureRecognizer()
+        panRecognizer.maximumNumberOfTouches = 1
+
         pinchGestureHandler.panEnabled = false
         let shouldRecognize = pinchGestureHandler.gestureRecognizer(gestureRecognizer,
                                                                     shouldRecognizeSimultaneouslyWith:
-                                                                        UIPanGestureRecognizer())
+                                                                        panRecognizer)
         XCTAssertFalse(shouldRecognize)
     }
 

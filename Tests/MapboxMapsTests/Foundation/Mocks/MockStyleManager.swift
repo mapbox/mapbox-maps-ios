@@ -496,6 +496,7 @@ class MockStyleManager: StyleManagerProtocol {
 
 struct NonEncodableLayer: Layer {
     var id: String = "dummy-non-encodable-layer-id"
+    var visibility: Visibility = .visible
     var type: LayerType = .random()
     var filter: Expression?
     var source: String?

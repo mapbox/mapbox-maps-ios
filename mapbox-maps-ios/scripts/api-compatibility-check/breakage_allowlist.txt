@@ -316,7 +316,7 @@ EnumElement SourceType.raster is now static
 EnumElement SourceType.rasterDem is now static
 EnumElement SourceType.vector is now static
 
-/* Add id field to Source */
+// Add id field to Source
 Constructor GeoJSONSource.init() has been removed
 Constructor ImageSource.init() has been removed
 Constructor RasterDemSource.init() has been removed
@@ -325,3 +325,5 @@ Constructor VectorSource.init() has been removed
 Func Style.addSource(_:id:dataId:) has been renamed to Func addSource(_:dataId:)
 Func Style.addSource(_:id:dataId:) has parameter 1 type change from Swift.String to Swift.String?
 Var Source.id has been added as a protocol requirement
+
+Var Layer.visibility has been added as a protocol requirement

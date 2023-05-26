@@ -479,8 +479,8 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     func testGetAnnotations() {
         let annotations = Array.random(withLength: 10) {
             PolygonAnnotation(
-                polygon: .init(outerRing: Ring(coordinates: .random(withLength: 5, generator: LocationCoordinate2D.random))), 
-                isSelected: false, 
+                polygon: .init(outerRing: Ring(coordinates: .random(withLength: 5, generator: LocationCoordinate2D.random))),
+                isSelected: false,
                 isDraggable: true)
         }
         manager.annotations = annotations
@@ -566,15 +566,15 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         mapboxMap.cameraState.zoom = 1
 
         let annotation = PolygonAnnotation(
-            id: "polygon1", 
+            id: "polygon1",
             polygon: .init([[
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
                 CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
                 CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
                 CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
-            ]]), 
-            isSelected: false, 
+            ]]),
+            isSelected: false,
             isDraggable: true)
         manager.annotations = [annotation]
 

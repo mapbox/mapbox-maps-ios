@@ -17,6 +17,7 @@ steps:
   - parse-release-version-if-available
   - install-mbx-ci
   - add-mapbox-submodules-key
+  - inject-xcodebuild-wrapper
   - unless:
       condition: << parameters.skip-dependencies >>
       steps:

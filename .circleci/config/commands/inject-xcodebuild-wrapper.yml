@@ -1,0 +1,24 @@
+steps:
+  - run:
+      name: Generate xcodebuild wrapper
+      command: |
+        cat > /usr/local/bin/xcodebuild \<<'EOF'
+        #!/usr/bin/env bash
+        echo "xcodebuild command: $(xcrun -f xcodebuild) $@"
+        $(xcrun -f xcodebuild) "$@" 2>&1 | tee xcodebuild.log
+        XCODEBUILD_PIPESTATUS=${PIPESTATUS[0]}
+        echo "xcodebuild exit code: $XCODEBUILD_PIPESTATUS"
+        echo -e "\n\nBuild result:"
+        grep ": note: " xcodebuild.log | sort | uniq | sed "s|^$(pwd)/||"
+        grep ": warning: " xcodebuild.log | sort | uniq | sed "s|^$(pwd)/||"
+        grep ": error: " xcodebuild.log | sort | uniq | sed "s|^$(pwd)/||"
+        exit $XCODEBUILD_PIPESTATUS
+
+        EOF
+
+        chmod +x /usr/local/bin/xcodebuild
+
+        echo "Generated xcodebuild wrapper:"
+        cat /usr/local/bin/xcodebuild
+        which -a xcodebuild
+        xcodebuild -version

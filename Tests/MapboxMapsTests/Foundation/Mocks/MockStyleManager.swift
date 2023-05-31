@@ -105,6 +105,37 @@ class MockStyleManager: StyleManagerProtocol {
         getStyleLightPropertyStub.call(with: property)
     }
 
+    let getStyleLightsStub = Stub<Void, [StyleObjectInfo]>(defaultReturnValue: [])
+    func getStyleLights() -> [StyleObjectInfo] {
+        getStyleLightsStub.call()
+    }
+
+    let setStyleLightsStub = Stub<Any, Expected<NSNull, NSString>>(defaultReturnValue: Expected(value: NSNull()))
+    func setStyleLightsForLights(_ lights: Any) -> Expected<NSNull, NSString> {
+        setStyleLightsStub.call(with: lights)
+    }
+
+    struct GetStyleLightPropertyForIdParameters {
+        let id, property: String
+    }
+    let getStyleLightPropertyForIdStub = Stub<GetStyleLightPropertyForIdParameters, StylePropertyValue>(
+        defaultReturnValue: .init(value: "stub", kind: .undefined)
+    )
+    func getStyleLightProperty(forId id: String, property: String) -> StylePropertyValue {
+        getStyleLightPropertyForIdStub.call(with: .init(id: id, property: property))
+    }
+
+    struct SetStyleLightPropertyForIdParameters {
+        let id, property: String
+        let value: Any
+    }
+    let setStyleLightPropertyForIdStub = Stub<SetStyleLightPropertyForIdParameters, Expected<NSNull, NSString>>(
+        defaultReturnValue: .init(value: NSNull())
+    )
+    func setStyleLightPropertyForId(_ id: String, property: String, value: Any) -> Expected<NSNull, NSString> {
+        setStyleLightPropertyForIdStub.call(with: .init(id: id, property: property, value: value))
+    }
+
     let getStyleTerrainPropertyStub = Stub<String, MapboxCoreMaps.StylePropertyValue>(
         defaultReturnValue: .init(value: "stub", kind: .undefined)
     )

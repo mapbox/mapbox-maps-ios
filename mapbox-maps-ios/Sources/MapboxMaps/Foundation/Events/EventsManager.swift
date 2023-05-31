@@ -50,11 +50,9 @@ internal final class EventsManager: EventsManagerProtocol {
         ])
 
         metricsEnabledObservation = UserDefaults.standard.observe(\.MGLMapboxMetricsEnabled, options: [.initial, .new]) { _, change in
-            DispatchQueue.main.async {
-                guard let metricsEnabled = change.newValue else { return }
+            guard let metricsEnabled = change.newValue else { return }
 
-                TelemetryUtils.setEventsCollectionStateForEnableCollection(metricsEnabled)
-            }
+            TelemetryUtils.setEventsCollectionStateForEnableCollection(metricsEnabled)
         }
     }
 

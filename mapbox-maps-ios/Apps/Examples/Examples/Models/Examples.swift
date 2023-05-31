@@ -179,7 +179,10 @@ struct Examples {
                 type: LargeGeoJSONPerformanceExample.self),
         Example(title: "Map Events",
                 description: "Print out map events and data",
-                type: MapEventsExample.self)
+                type: MapEventsExample.self),
+        Example(title: "Lights 3D",
+                description: "Configure lights in 3D environment",
+                type: Lights3DExample.self)
     ] + {
         if #available(iOS 13.0, *) {
             return [

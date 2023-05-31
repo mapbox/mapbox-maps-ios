@@ -100,6 +100,12 @@ internal protocol StyleManagerProtocol {
         _ property: String,
         value: Any) -> Expected<NSNull, NSString>
 
+    // 3D Light
+    func getStyleLights() -> [StyleObjectInfo]
+    func setStyleLightsForLights(_ lights: Any) -> Expected<NSNull, NSString>
+    func getStyleLightProperty(forId id: String, property: String) -> StylePropertyValue
+    func setStyleLightPropertyForId(_ id: String, property: String, value: Any) -> Expected<NSNull, NSString>
+
     @discardableResult
     func setStyleTerrainForProperties(_ properties: Any) -> Expected<NSNull, NSString>
 

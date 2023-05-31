@@ -1,6 +1,6 @@
 import Foundation
 import XCTest
-@testable import MapboxMaps
+@testable @_spi(Experimental) import MapboxMaps
 @_implementationOnly import MapboxCommon_Private
 
 final class StyleTests: XCTestCase {
@@ -478,5 +478,59 @@ final class StyleTests: XCTestCase {
         XCTAssertEqual(params.sdf, sdf)
         XCTAssertEqual(params.stretchX, [ImageStretches(first: 0, second: 1)])
         XCTAssertEqual(params.stretchY, [ImageStretches(first: 0, second: 1)])
+    }
+
+    func testSet3DLights() throws {
+        let ambientLight = AmbientLight(id: UUID().uuidString)
+        let directionalLight = DirectionalLight(id: UUID().uuidString)
+
+        styleManager.setStyleLightsStub.defaultReturnValue = Expected(value: NSNull())
+        XCTAssertNoThrow(try style.setLights3D(ambientLight: ambientLight, directionalLight: directionalLight))
+        let lights = try XCTUnwrap(styleManager.setStyleLightsStub.invocations.last?.parameters as? [[String: Any]])
+        XCTAssertTrue(lights.contains(where: { $0["id"] as? String == ambientLight.id && $0["type"] as? String == "ambient" }))
+        XCTAssertTrue(lights.contains(where: { $0["id"] as? String == directionalLight.id && $0["type"] as? String == "directional" }))
+
+        styleManager.setStyleLightsStub.reset()
+        styleManager.setStyleLightsStub.defaultReturnValue = Expected(error: "Cannot add 3D lights")
+        XCTAssertThrowsError(try style.setLights3D(ambientLight: ambientLight, directionalLight: directionalLight))
+    }
+
+    func testGet3DLights() {
+        styleManager.getStyleLightsStub.defaultReturnValue = [
+            .init(id: "default-directional-light", type: "directional"),
+            .init(id: "default-ambient-light", type: "ambient")
+        ]
+        let lights = style.lights3D()
+        XCTAssertEqual(styleManager.getStyleLightsStub.invocations.count, 1)
+        XCTAssertEqual(lights.map(\.id), ["default-directional-light", "default-ambient-light"])
+    }
+
+    func testSet3DLightProperty() throws {
+        let id = UUID().uuidString
+        let property = String.randomASCII(withLength: 19)
+        let value = String.randomASCII(withLength: 19)
+
+        styleManager.setStyleLightPropertyForIdStub.defaultReturnValue = Expected(value: NSNull())
+        XCTAssertNoThrow(try style.setLight3DProperty(id: id, property: property, value: value))
+        let invocation = try XCTUnwrap(styleManager.setStyleLightPropertyForIdStub.invocations.last)
+        XCTAssertEqual(invocation.parameters.id, id)
+        XCTAssertEqual(invocation.parameters.property, property)
+        XCTAssertEqual(invocation.parameters.value as? String, value)
+
+        styleManager.setStyleLightPropertyForIdStub.defaultReturnValue = Expected(error: "Cannot set property for 3D light")
+        XCTAssertThrowsError(try style.setLight3DProperty(id: id, property: property, value: value))
+    }
+
+    func testGet3DLightProperty() throws {
+        let id = UUID().uuidString
+        let property = String.randomASCII(withLength: 19)
+        let stringValue = String.randomASCII(withLength: 19)
+
+        styleManager.getStyleLightPropertyForIdStub.defaultReturnValue = .init(value: stringValue, kind: .constant)
+        let propertyValue = style.light3DProperty(id: id, property: property)
+        let invocation = try XCTUnwrap(styleManager.getStyleLightPropertyForIdStub.invocations.last)
+        XCTAssertEqual(invocation.parameters.id, id)
+        XCTAssertEqual(invocation.parameters.property, property)
+        XCTAssertEqual(propertyValue as? String, stringValue)
     }
 }

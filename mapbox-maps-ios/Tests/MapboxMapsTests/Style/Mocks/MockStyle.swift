@@ -156,7 +156,7 @@ final class MockStyle: StyleProtocol {
         let dataId: String?
     }
     let updateGeoJSONSourceStub = Stub<UpdateGeoJSONSourceParams, Void>()
-    func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject, dataId: String? = nil) throws {
+    func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject, dataId: String? = nil) {
         updateGeoJSONSourceStub.call(with: UpdateGeoJSONSourceParams(id: id, geojson: geoJSON, dataId: dataId))
     }
 }

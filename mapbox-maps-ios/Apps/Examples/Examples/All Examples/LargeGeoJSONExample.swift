@@ -5,7 +5,7 @@ final class LargeGeoJSONPerformanceExample: UIViewController, ExampleProtocol {
     private static let largeSourceCount = 5
 
     private var mapView: MapView!
-    private var routePoints: Feature!
+    private var geoJSON = ""
     private var jsonUpdateCounter = 0
     private var cancelables = Set<AnyCancelable>()
 
@@ -18,8 +18,8 @@ final class LargeGeoJSONPerformanceExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
 
-        let lineStringAsset = NSDataAsset(name: "long_route")
-        routePoints = try! JSONDecoder().decode(Feature.self, from: lineStringAsset!.data)
+        let asset = NSDataAsset(name: "long_route")
+        geoJSON = String(data: asset!.data, encoding: .utf8)!
 
         mapView.mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
             try! self?.setupExample()
@@ -45,7 +45,7 @@ final class LargeGeoJSONPerformanceExample: UIViewController, ExampleProtocol {
 
         for i in 0..<Self.largeSourceCount {
             var source = GeoJSONSource(id: "source_\(i)")
-            source.data = .feature(routePoints)
+            source.data = .string(geoJSON)
 
             var lineLayer = LineLayer(id: "line_layer_\(i)")
             lineLayer.source = source.id
@@ -80,7 +80,7 @@ final class LargeGeoJSONPerformanceExample: UIViewController, ExampleProtocol {
 
     private func loadAdditionalGeoJSON() throws {
         var source = GeoJSONSource(id: "source_\(Self.largeSourceCount)")
-        source.data =  .feature(routePoints)
+        source.data = .string(geoJSON)
 
         // Add the geoJSONSourceData with a dataId, which will be returned when that data source is updated
         try mapView.mapboxMap.style.addSource(source, dataId: String(jsonUpdateCounter))

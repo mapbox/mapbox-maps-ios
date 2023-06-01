@@ -109,7 +109,6 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         do {
             // Add the source with empty `data` property
             var source = GeoJSONSource(id: sourceId)
-            source.data = .empty
 
             // Set cluster options and create clusters if clustering is enabled
             if let clusterOptions = clusterOptions {
@@ -283,14 +282,8 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
 
         // build and update the source data
-        do {
-            let featureCollection = FeatureCollection(features: mainAnnotations.values.map(\.feature))
-            try style.updateGeoJSONSource(withId: sourceId, geoJSON: .featureCollection(featureCollection))
-        } catch {
-            Log.error(
-                forMessage: "Could not update annotations in PointAnnotationManager due to error: \(error)",
-                category: "Annotations")
-        }
+        let featureCollection = FeatureCollection(features: mainAnnotations.values.map(\.feature))
+        style.updateGeoJSONSource(withId: sourceId, geoJSON: .featureCollection(featureCollection))
     }
 
     private func syncDragSourceIfNeeded() {
@@ -622,14 +615,10 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     }
 
     private func updateDragSource() {
-        do {
-            if let annotationBeingDragged = annotationBeingDragged {
-                draggedAnnotations[annotationBeingDragged.id] = annotationBeingDragged
-            }
-            try style.updateGeoJSONSource(withId: dragSourceId, geoJSON: .featureCollection(.init(features: draggedAnnotations.values.map(\.feature))))
-        } catch {
-            Log.error(forMessage: "Failed to update drag source. Error: \(error)")
+        if let annotationBeingDragged = annotationBeingDragged {
+            draggedAnnotations[annotationBeingDragged.id] = annotationBeingDragged
         }
+        style.updateGeoJSONSource(withId: dragSourceId, geoJSON: .featureCollection(.init(features: draggedAnnotations.values.map(\.feature))))
     }
 
     private func updateDragLayer() {
@@ -663,9 +652,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
         do {
             if !style.sourceExists(withId: dragSourceId) {
-                var dragSource = GeoJSONSource(id: dragSourceId)
-                dragSource.data = .empty
-                try style.addSource(dragSource)
+                try style.addSource(GeoJSONSource(id: dragSourceId))
             }
 
             annotationBeingDragged = annotation

@@ -2,9 +2,7 @@ import UIKit
 import Fingertips
 
 @main
-//swiftlint:disable explicit_top_level_acl explicit_acl
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
     lazy var window: UIWindow? = {
         return FingerTipWindow(frame: UIScreen.main.bounds)
     }()
@@ -27,14 +25,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         return true
-    }
-
-    @available(iOS 13.0, *)
-    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-        let config = UISceneConfiguration(name: "Default configuration", sessionRole: connectingSceneSession.role)
-        config.delegateClass = SceneDelegate.self
-        config.sceneClass = UIWindowScene.self
-        return config
     }
 }
 

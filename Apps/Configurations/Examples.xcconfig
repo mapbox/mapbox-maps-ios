@@ -1,0 +1,3 @@
+// CarPlay. Uncomment to enable CarPlay signing
+
+//CODE_SIGN_ENTITLEMENTS = Examples/Examples_CarPlay.entitlements

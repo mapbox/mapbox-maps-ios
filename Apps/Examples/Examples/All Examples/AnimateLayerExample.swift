@@ -111,7 +111,7 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
             geoJSON.properties = ["bearing": .number(coordinate.direction(to: nextCoordinate))]
 
             // Update the airplane source layer with the new coordinate and bearing.
-            try! self.mapView.mapboxMap.style.updateGeoJSONSource(withId: "airplane-symbol",
+            self.mapView.mapboxMap.style.updateGeoJSONSource(withId: "airplane-symbol",
                                                                   geoJSON: .feature(geoJSON))
 
             runCount += 1

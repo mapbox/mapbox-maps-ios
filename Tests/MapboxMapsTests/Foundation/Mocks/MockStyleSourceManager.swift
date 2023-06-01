@@ -40,13 +40,13 @@ final class MockStyleSourceManager: StyleSourceManagerProtocol {
 
     struct UpdateGeoJSONSourceParams {
         let id: String
-        let geoJSON: GeoJSONObject
+        let data: GeoJSONSourceData
         let dataId: String?
     }
 
     let updateGeoJSONSourceStub = Stub<UpdateGeoJSONSourceParams, Void>()
-    func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject, dataId: String?) throws {
-        updateGeoJSONSourceStub.call(with: UpdateGeoJSONSourceParams(id: id, geoJSON: geoJSON, dataId: dataId))
+    func updateGeoJSONSource(withId id: String, data: GeoJSONSourceData, dataId: String?) {
+        updateGeoJSONSourceStub.call(with: UpdateGeoJSONSourceParams(id: id, data: data, dataId: dataId))
     }
 
     struct AddSourceUntypedParams {

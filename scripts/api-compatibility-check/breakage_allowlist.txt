@@ -327,3 +327,7 @@ Func Style.addSource(_:id:dataId:) has parameter 1 type change from Swift.String
 Var Source.id has been added as a protocol requirement
 
 Var Layer.visibility has been added as a protocol requirement
+
+// Support string option in GeoJSONSourceData
+EnumElement GeoJSONSourceData.empty has been removed
+EnumElement GeoJSONSourceData.url has been removed

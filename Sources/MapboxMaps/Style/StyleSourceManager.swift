@@ -8,7 +8,7 @@ internal protocol StyleSourceManagerProtocol: AnyObject {
     func source<T>(withId id: String, type: T.Type) throws -> T where T: Source
     func source(withId id: String) throws -> Source
     func addSource(_ source: Source, dataId: String?) throws
-    func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject, dataId: String?) throws
+    func updateGeoJSONSource(withId id: String, data: GeoJSONSourceData, dataId: String?)
     func addSource(withId id: String, properties: [String: Any]) throws
     func removeSource(withId id: String) throws
     func sourceExists(withId id: String) -> Bool
@@ -87,10 +87,6 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
         try setSourceProperties(for: source.id, properties: volatileProperties)
     }
 
-    internal func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject, dataId: String? = nil) throws {
-        applyGeoJSON(data: geoJSON.sourceData, sourceId: id, dataId: dataId)
-    }
-
     // MARK: - Untyped API
 
     internal func addSource(withId id: String, properties: [String: Any]) throws {
@@ -150,22 +146,22 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
     // MARK: - Async GeoJSON source data parsing
 
     private func addGeoJSONSource(_ source: GeoJSONSource, dataId: String? = nil) throws {
-        let data = source.data
+        // GeoJSON source is being added in two steps:
+        // 1. Add source metadata with empty data on main queue
+        // 2. Apply the data value on background worker queue
 
         var emptySource = source
-        if emptySource.data != nil {
-            emptySource.data = .empty
-        }
-
+        // Can't pass nil here, Core requires at least empty data for source to be added.
+        emptySource.data = .string("")
         try addSourceInternal(emptySource)
 
-        guard let data = data else { return }
-        if case GeoJSONSourceData.empty = data { return }
+        guard let data = source.data else { return }
+        if case GeoJSONSourceData.string("") = data { return }
 
-        applyGeoJSON(data: data, sourceId: source.id, dataId: dataId)
+        updateGeoJSONSource(withId: source.id, data: data, dataId: dataId)
     }
 
-    private func applyGeoJSON(data: GeoJSONSourceData, sourceId id: String, dataId: String? = nil) {
+    func updateGeoJSONSource(withId id: String, data: GeoJSONSourceData, dataId: String?) {
         workItems.removeValue(forKey: id)?.cancel()
 
         // This implementation favors the first submitted task and the last, in case of many work items queuing up -

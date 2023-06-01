@@ -98,8 +98,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
         do {
             // Add the source with empty `data` property
-            var source = GeoJSONSource(id: sourceId)
-            source.data = .empty
+            let source = GeoJSONSource(id: sourceId)
             try style.addSource(source)
 
             // Add the correct backing layer for this annotation type
@@ -189,14 +188,8 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         }
 
         // build and update the source data
-        do {
-            let featureCollection = FeatureCollection(features: mainAnnotations.values.map(\.feature))
-            try style.updateGeoJSONSource(withId: sourceId, geoJSON: .featureCollection(featureCollection))
-        } catch {
-            Log.error(
-                forMessage: "Could not update annotations in PolylineAnnotationManager due to error: \(error)",
-                category: "Annotations")
-        }
+        let featureCollection = FeatureCollection(features: mainAnnotations.values.map(\.feature))
+        style.updateGeoJSONSource(withId: sourceId, geoJSON: .featureCollection(featureCollection))
     }
 
     private func syncDragSourceIfNeeded() {
@@ -316,14 +309,10 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     }
 
     private func updateDragSource() {
-        do {
-            if let annotationBeingDragged = annotationBeingDragged {
-                draggedAnnotations[annotationBeingDragged.id] = annotationBeingDragged
-            }
-            try style.updateGeoJSONSource(withId: dragSourceId, geoJSON: .featureCollection(.init(features: draggedAnnotations.values.map(\.feature))))
-        } catch {
-            Log.error(forMessage: "Failed to update drag source. Error: \(error)")
+        if let annotationBeingDragged = annotationBeingDragged {
+            draggedAnnotations[annotationBeingDragged.id] = annotationBeingDragged
         }
+        style.updateGeoJSONSource(withId: dragSourceId, geoJSON: .featureCollection(.init(features: draggedAnnotations.values.map(\.feature))))
     }
 
     private func updateDragLayer() {
@@ -357,9 +346,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
         do {
             if !style.sourceExists(withId: dragSourceId) {
-                var dragSource = GeoJSONSource(id: dragSourceId)
-                dragSource.data = .empty
-                try style.addSource(dragSource)
+                try style.addSource(GeoJSONSource(id: dragSourceId))
             }
 
             annotationBeingDragged = annotation

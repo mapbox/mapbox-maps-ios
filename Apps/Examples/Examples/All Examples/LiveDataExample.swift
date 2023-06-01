@@ -3,7 +3,6 @@ import MapboxMaps
 final class LiveDataExample: UIViewController, ExampleProtocol {
     // Display the current location of the International Space Station (ISS)
     let url = URL(string: "https://api.wheretheiss.at/v1/satellites/25544")!
-    let sourceId = "ISS-source"
     var mapView: MapView!
     var issTimer: Timer?
     private var cancelables = Set<AnyCancelable>()
@@ -38,11 +37,10 @@ final class LiveDataExample: UIViewController, ExampleProtocol {
     func addStyleLayer() {
         // Create an empty geoJSON source to hold location data once
         // this information is received from the URL
-        var source = GeoJSONSource(id: sourceId)
-        source.data = .empty
+        let source = GeoJSONSource(id: "ISS-source")
 
         var issLayer = SymbolLayer(id: "iss-layer")
-        issLayer.source = sourceId
+        issLayer.source = source.id
 
         // Mapbox Streets contains an image named `rocket`. Use that image
         // to represent the location of the ISS.
@@ -64,7 +62,7 @@ final class LiveDataExample: UIViewController, ExampleProtocol {
                         // Update geoJSON source to display new location of ISS
                         let point = Point(locationCoordinates)
                         let pointFeature = Feature(geometry: point)
-                        try! self.mapView.mapboxMap.style.updateGeoJSONSource(withId: self.sourceId, geoJSON: .feature(pointFeature))
+                        self.mapView.mapboxMap.style.updateGeoJSONSource(withId: source.id, geoJSON: .feature(pointFeature))
 
                         // Update camera to follow ISS
                         let issCamera = CameraOptions(center: locationCoordinates, zoom: 3)

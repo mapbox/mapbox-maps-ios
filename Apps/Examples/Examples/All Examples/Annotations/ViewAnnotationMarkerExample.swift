@@ -149,7 +149,7 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
         feature.identifier = .string(currentId)
         pointList.append(feature)
         if (try? mapView.mapboxMap.style.source(withId: Constants.SOURCE_ID)) != nil {
-            try? mapView.mapboxMap.style.updateGeoJSONSource(withId: Constants.SOURCE_ID, geoJSON: .featureCollection(FeatureCollection(features: pointList)))
+            mapView.mapboxMap.style.updateGeoJSONSource(withId: Constants.SOURCE_ID, geoJSON: .featureCollection(FeatureCollection(features: pointList)))
         }
         return currentId
     }

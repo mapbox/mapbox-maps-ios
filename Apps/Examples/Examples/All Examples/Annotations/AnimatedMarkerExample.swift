@@ -108,7 +108,7 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
         self.currentPosition = coordinate
 
         // update source with the new marker location
-        try? self.mapView.mapboxMap.style.updateGeoJSONSource(withId: Constants.sourceId,
+        self.mapView.mapboxMap.style.updateGeoJSONSource(withId: Constants.sourceId,
                                                               geoJSON: .feature(Feature(geometry: Point(coordinate))))
 
     }

@@ -28,14 +28,9 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
     }
 
     public func setupExample() {
-
         // Create a new GeoJSON data source which gets its data from an external URL.
-        guard let dataURL = URL(string: "https://docs.mapbox.com/mapbox-gl-js/assets/us_states.geojson") else {
-            preconditionFailure("URL is not valid")
-        }
-
         var geoJSONSource = GeoJSONSource(id: "US-states-vector-source")
-        geoJSONSource.data = .url(dataURL)
+        geoJSONSource.data = .string("https://docs.mapbox.com/mapbox-gl-js/assets/us_states.geojson")
 
         // Create a new fill layer associated with the data source.
         var fillLayer = FillLayer(id: "US-states")

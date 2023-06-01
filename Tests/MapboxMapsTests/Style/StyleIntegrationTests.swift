@@ -582,12 +582,8 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testOnlyAddedDataIdReturned() {
-        let sourceID = "Source"
-        let sourceID2 = "Source2"
-        var source = GeoJSONSource(id: sourceID)
-        var source2 = GeoJSONSource(id: sourceID2)
-        source.data = .empty
-        source2.data = .empty
+        let source = GeoJSONSource(id: "Source")
+        let source2 = GeoJSONSource(id: "Source2")
         let geometry = Geometry.point(Point.init(LocationCoordinate2D(latitude: 0, longitude: 0)))
         let dataId = "TestdataId"
         let expectation = XCTestExpectation(description: "dataId returned when source updated")
@@ -606,7 +602,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             expectation.fulfill()
         }.store(in: &cancelables)
 
-        try! mapView.mapboxMap.style.updateGeoJSONSource(withId: sourceID, geoJSON: .geometry(geometry), dataId: dataId)
+        mapView.mapboxMap.style.updateGeoJSONSource(withId: source.id, geoJSON: .geometry(geometry), dataId: dataId)
 
         wait(for: [expectation], timeout: 3.0)
     }

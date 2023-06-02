@@ -57,6 +57,23 @@ Mapbox welcomes participation and contributions from everyone.
 * Experimental API `MapboxMap/setMemoryBudget` was renamed to `MapboxMaps/setTileCacheBudget` and promoted to stable.
 * Location consumer methods have been renamed to align with Swift API Design Guidelines. Use `addLocationConsumer(_:)` and `removeLocationConsumer(_:)` rather than `addLocationConsumer(newConsumer:)` and `removeLocationConsumer(consumer:)`.
 * `SourceType` and `LayerType` are now structs with static variables instead of enums
+* Remove `ResourceOptions` and `ResourceOptionsManager`. Introduce `MapboxOptions` and `MapboxMapsOptions` to handle application-level access token and other generic options.
+  - Mapbox's access token can now be set with `MapboxCommon.MapboxOptions`. By default, MapboxMaps SDK will try to read the access token from app bundle's property list or `MapboxAccessToken` file when Maps service are initialized; if you wish to set access token programmatically, it is highly recommended to set it before initializing a `MapView`.
+    ```swift
+    import MapboxMaps
+
+    MapboxOptions.accessToken = accessToken
+    ```
+  - Configurations for the external resources used by Maps API can now be set with `MapboxMapsOptions`:
+    ```swift
+    import MapboxMaps
+
+    MapboxMapsOptions.dataPath = customDataPathURL
+    MapboxMapsOptions.assetPath = customAssetPathURL
+    MapboxMapsOptions.tileStoreUsageMode = .readOnly
+    MapboxMapsOptions.tileStore = tileStore
+    ```
+  - To clear the temporary map data, you can use `MapboxMap.clearData(completion:)`
 * Expose new 3D Lights API: `AmbientLight` and `DirectionalLight`.
 * Extend `Layer` protocol with `visibility` property.
 * Add required `id` property to `Source`. After that change `id` should be specified for source upon creation:

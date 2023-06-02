@@ -90,10 +90,8 @@ class BaseBenchmark: XCTestCase {
     func onMapReady(cameraOptions: CameraOptions? = nil, handler: (MapView) -> ()) {
         let frame = viewController?.view.frame ?? .zero
 
-        let mapInitOptions = MapInitOptions(
-            resourceOptions: ResourceOptionsManager.default.resourceOptions.tileStoreUsageMode(.disabled),
-            cameraOptions: cameraOptions)
-        mapView = MapView(frame: frame, mapInitOptions: mapInitOptions)
+        MapboxMapsOptions.tileStoreUsageMode = .disabled
+        mapView = MapView(frame: frame, mapInitOptions: .init(cameraOptions: cameraOptions))
 
         viewController.view.addSubview(mapView)
         handler(mapView)

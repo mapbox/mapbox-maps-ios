@@ -39,8 +39,8 @@ struct CreateMapCommand: AsyncCommand, Decodable {
             throw ExecutionError.cannotFindRootViewController
         }
 
+        MapboxMapsOptions.tileStoreUsageMode = tileStoreUsageMode
         let mapInitOptions = MapInitOptions(
-            resourceOptions: ResourceOptionsManager.default.resourceOptions.tileStoreUsageMode(tileStoreUsageMode),
             cameraOptions: camera,
             styleURI: style
         )

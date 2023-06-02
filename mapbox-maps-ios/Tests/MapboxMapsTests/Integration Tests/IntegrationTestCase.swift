@@ -5,16 +5,20 @@ internal class IntegrationTestCase: XCTestCase {
 
     internal var window: UIWindow?
     internal var rootViewController: UIViewController?
-    internal var accessToken: String!
     internal var createdWindow = false
     internal var cancelables = Set<AnyCancelable>()
 
     internal override func setUpWithError() throws {
         try super.setUpWithError()
 
+        if let tokenFile = Bundle.mapboxMapsTests.path(forResource: "MapboxAccessToken", ofType: nil) {
+            MapboxOptions.accessToken = try String(contentsOfFile: tokenFile).trimmingCharacters(in: .newlines)
+        } else {
+            XCTFail("Missing access token in Test bundle")
+        }
+
         cancelables.removeAll()
         try setupScreenAndWindow()
-        accessToken = try mapboxAccessToken()
     }
 
     internal override func tearDownWithError() throws {

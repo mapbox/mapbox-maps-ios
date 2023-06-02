@@ -1,12 +1,10 @@
 import XCTest
-import MapboxMaps
-import Foundation
+@testable import MapboxMaps
 import UIKit
 
 class MapboxMapsSnapshotTests: XCTestCase {
 
     var newAttachment: XCTAttachment!
-    var resourceOptions: ResourceOptions!
     var dataPathURL: URL!
 
     let emptyBlueStyle =
@@ -37,13 +35,11 @@ class MapboxMapsSnapshotTests: XCTestCase {
     }
 
     override func tearDownWithError() throws {
-        if let resourceOptions = resourceOptions {
-            let expectation = self.expectation(description: "Clear map data")
-            MapboxMap.clearData(for: resourceOptions) { _ in
-                expectation.fulfill()
-            }
-            wait(for: [expectation], timeout: 10.0)
+        let expectation = self.expectation(description: "Clear map data")
+        MapboxMapsOptions.clearData { _ in
+            expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 10.0)
         try super.tearDownWithError()
     }
 
@@ -53,10 +49,8 @@ class MapboxMapsSnapshotTests: XCTestCase {
     // Create snapshot options
     private func snapshotterOptions(size: CGSize = MapboxMapsSnapshotTests.snapshotSize,
                                     scale: CGFloat = MapboxMapsSnapshotTests.snapshotScale) throws -> MapSnapshotOptions {
-        let accessToken = try mapboxAccessToken()
-        resourceOptions = ResourceOptions(accessToken: accessToken,
-                                          dataPathURL: dataPathURL)
-        return MapSnapshotOptions(size: size, pixelRatio: scale, resourceOptions: resourceOptions)
+        MapboxMapsOptions.dataPath = dataPathURL
+        return MapSnapshotOptions(size: size, pixelRatio: scale)
     }
 
     // Testing creating the snapshot
@@ -232,7 +226,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
 
     @available(iOS 13.0, *)
     func testDoesNotShowAttribution() throws {
-        XCTExpectFailure("ResourceOptions will be refactored with new settings from Common and CoreMaps", options: .nonStrict())
         var options = try snapshotterOptions()
         options.showsAttribution = false
 

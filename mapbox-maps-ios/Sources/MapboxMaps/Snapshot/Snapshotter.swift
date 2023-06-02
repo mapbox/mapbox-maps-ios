@@ -55,24 +55,23 @@ public class Snapshotter {
             options: options,
             mapSnapshotter: impl,
             style: Style(with: impl),
-            events: MapEvents(observable: impl.asStyleManager()))
+            events: MapEvents(observable: impl.asStyleManager()),
+            eventsManager: EventsManager())
     }
 
     /// Enables injecting mocks for unit testing.
-    internal init(options: MapSnapshotOptions,
-                  mapSnapshotter: MapSnapshotterProtocol,
-                  style: Style,
-                  events: MapEvents) {
+    internal init(
+        options: MapSnapshotOptions,
+        mapSnapshotter: MapSnapshotterProtocol,
+        style: Style,
+        events: MapEvents,
+        eventsManager: EventsManagerProtocol
+    ) {
         self.options = options
         self.mapSnapshotter = mapSnapshotter
         self.style = style
         self.events = events
 
-        sendTurnstileEvent(accessToken: options.resourceOptions.accessToken)
-    }
-
-    internal func sendTurnstileEvent(accessToken: String) {
-        let eventsManager = EventsManager(accessToken: accessToken)
         eventsManager.sendTurnstile()
     }
 
@@ -393,7 +392,7 @@ extension Snapshotter {
     ///
     /// - Parameter completion: Called once the request is complete
     public func clearData(completion: @escaping (Error?) -> Void) {
-        MapboxMap.clearData(for: options.resourceOptions, completion: completion)
+        MapboxMapsOptions.clearData(completion: completion)
     }
 
     // MARK: - Attribution

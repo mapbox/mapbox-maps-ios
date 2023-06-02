@@ -254,9 +254,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testLocalizeLabelsv7() {
-        let resourceOptions = ResourceOptions(accessToken: "")
-        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions)
-        let mapView = MapView(frame: UIScreen.main.bounds, mapInitOptions: mapInitOptions)
+        let mapView = MapView(frame: UIScreen.main.bounds)
 
         let styleJSONObject: [String: Any] = [
             "version": 7,
@@ -286,18 +284,12 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
         XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
 
-        let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
-        mapLoadingErrorExpectation.assertForOverFulfill = false
-
-        mapView.mapboxMap.onMapLoadingError.observeNext { _ in
-            mapLoadingErrorExpectation.fulfill()
-        }.store(in: &cancelables)
-
-        mapView.mapboxMap.loadStyleJSON(styleJSON)
-
-        XCTExpectFailure("ResourceOptions will be refactored with new settings from Common and CoreMaps", options: .nonStrict()) {
-            wait(for: [mapLoadingErrorExpectation], timeout: 10.0)
+        let styleJSONFinishedLoading = expectation(description: "Style JSON has finished loading")
+        mapView.mapboxMap.loadStyleJSON(styleJSON) { _ in
+            styleJSONFinishedLoading.fulfill()
         }
+
+        wait(for: [styleJSONFinishedLoading], timeout: 10.0)
 
         let style = mapView.mapboxMap.style
         XCTAssertEqual(style.allSourceIdentifiers.count, 1)
@@ -399,9 +391,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testLocalizeLabelsv8() {
-        let resourceOptions = ResourceOptions(accessToken: "")
-        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions)
-        let mapView = MapView(frame: UIScreen.main.bounds, mapInitOptions: mapInitOptions)
+        let mapView = MapView(frame: UIScreen.main.bounds)
 
         let styleJSONObject: [String: Any] = [
             "version": 8,
@@ -431,18 +421,13 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
         XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
 
-        let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
-        mapLoadingErrorExpectation.assertForOverFulfill = false
-
-        mapView.mapboxMap.onMapLoadingError.observeNext { _ in
-            mapLoadingErrorExpectation.fulfill()
-        }.store(in: &cancelables)
-
-        mapView.mapboxMap.loadStyleJSON(styleJSON)
-
-        XCTExpectFailure("ResourceOptions will be refactored with new settings from Common and CoreMaps", options: .nonStrict()) {
-            wait(for: [mapLoadingErrorExpectation], timeout: 10.0)
+        let styleJSONFinishedLoading = expectation(description: "Style JSON has finished loading")
+        mapView.mapboxMap.loadStyleJSON(styleJSON) { _ in
+            styleJSONFinishedLoading.fulfill()
         }
+
+        wait(for: [styleJSONFinishedLoading], timeout: 10.0)
+
         let style = mapView.mapboxMap.style
         XCTAssertEqual(style.allSourceIdentifiers.count, 1)
         XCTAssertEqual(style.allLayerIdentifiers.count, 1)

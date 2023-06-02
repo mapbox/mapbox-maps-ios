@@ -31,11 +31,7 @@ final class MapboxMapTests: XCTestCase {
         mapClient.getMetalViewStub.defaultReturnValue = MTKView(frame: CGRect(origin: .zero, size: size))
         mapInitOptions = MapInitOptions(mapOptions: MapOptions(size: size))
 
-        let coreOptions = MapboxCoreMaps.ResourceOptions(mapInitOptions.resourceOptions)
-        let map = Map(
-                    client: mapClient,
-                    mapOptions: mapInitOptions.mapOptions,
-                    resourceOptions: coreOptions)
+        let map = Map(client: mapClient, mapOptions: mapInitOptions.mapOptions)
         mapboxMap = MapboxMap(
             map: map,
             events: events,
@@ -49,14 +45,6 @@ final class MapboxMapTests: XCTestCase {
         events = nil
         fooGenericSubject = nil
         super.tearDown()
-    }
-
-    func testInitializationOfResourceOptions() {
-        let expectFailureOption = XCTExpectedFailure.Options()
-        expectFailureOption.isStrict = false
-        XCTExpectFailure("ResourceOptions will be refactored with new settings from Common and CoreMaps", options: expectFailureOption)
-        let actualResourceOptions = mapboxMap.resourceOptions
-        XCTAssertEqual(actualResourceOptions, mapInitOptions.resourceOptions)
     }
 
     func testInitializationOfMapOptions() {

@@ -9,8 +9,7 @@ public struct CreateOfflinePacksCommand: AsyncCommand {
     let geometry: Polygon
 
     func execute(context: Context) async throws {
-        let options = ResourceOptionsManager.default.resourceOptions
-        let manager = OfflineManager(resourceOptions: options)
+        let manager = OfflineManager()
 
         let loadOptions = StylePackLoadOptions(glyphsRasterizationMode: nil)!
         try await manager.loadStylePack(for: style, loadOptions: loadOptions)

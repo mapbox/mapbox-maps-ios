@@ -44,7 +44,8 @@ final class TileStoreObserverWrapperTests: XCTestCase {
             requiredResourceCount: 0,
             completedResourceCount: 0,
             completedResourceSize: 0,
-            expires: nil)
+            expires: nil,
+            extraData: nil)
         let expected = Expected<TileRegion, MapboxCommon.TileRegionError>(value: tileRegion)
 
         wrapper.onRegionLoadFinished(forId: id, region: expected)

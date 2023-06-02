@@ -1,5 +1,5 @@
 import XCTest
-import MapboxMaps
+@testable import MapboxMaps
 
 internal class MapViewIntegrationTestCase: IntegrationTestCase {
     internal var mapView: MapView!
@@ -23,10 +23,8 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
             return
         }
 
-        let resourceOptions = ResourceOptions(accessToken: accessToken,
-                                              dataPathURL: dataPathURL)
-        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions,
-                                            styleURI: nil)
+        MapboxMapsOptions.dataPath = dataPathURL
+        let mapInitOptions = MapInitOptions(styleURI: nil)
         let view = MapView(frame: window.bounds, mapInitOptions: mapInitOptions)
 
         view.mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
@@ -59,19 +57,15 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
     }
 
     internal override func tearDownWithError() throws {
-        let resourceOptions = mapView?.mapboxMap.resourceOptions
-
         mapView?.removeFromSuperview()
         mapView = nil
         style = nil
 
-        if let resourceOptions = resourceOptions {
-            let expectation = self.expectation(description: "Clear map data")
-            MapboxMap.clearData(for: resourceOptions) { _ in
-                expectation.fulfill()
-            }
-            wait(for: [expectation], timeout: 10.0)
+        let expectation = self.expectation(description: "Clear map data")
+        MapboxMapsOptions.clearData { _ in
+            expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 10.0)
 
         didFinishLoadingStyle = nil
         didBecomeIdle = nil

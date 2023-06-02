@@ -25,10 +25,8 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
 
         dataPathURL = try temporaryCacheDirectory()
 
-        let resourceOptions = ResourceOptions(accessToken: accessToken,
-                                              dataPathURL: dataPathURL)
-        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions)
-        let view = MapView(frame: window.bounds, mapInitOptions: mapInitOptions)
+        MapboxMapsOptions.dataPath = dataPathURL
+        let view = MapView(frame: window.bounds)
 
         view.mapboxMap.onResourceRequest.observe { [weak self, weak view] req in
             if let error = req.response?.error, let view = view {
@@ -49,19 +47,15 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
     }
 
     internal override func tearDownWithError() throws {
-
-        let resourceOptions = mapView?.mapboxMap.resourceOptions
         mapView?.removeFromSuperview()
         mapView = nil
         style = nil
 
-        if let resourceOptions = resourceOptions {
-            let expectation = self.expectation(description: "Clear map data")
-            MapboxMap.clearData(for: resourceOptions) { _ in
-                expectation.fulfill()
-            }
-            wait(for: [expectation], timeout: 10.0)
+        let expectation = self.expectation(description: "Clear map data")
+        MapboxMapsOptions.clearData { _ in
+            expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 10.0)
 
         rootViewController?.viewWillDisappear(false)
         rootViewController?.viewDidDisappear(false)

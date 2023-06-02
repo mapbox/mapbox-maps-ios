@@ -84,9 +84,6 @@ open class MapView: UIView {
     /// Holds ViewAnnotation views
     private let viewAnnotationContainerView = SubviewInteractionOnlyView()
 
-    /// Resource options for this map view
-    internal let resourceOptions: ResourceOptions
-
     private var needsDisplayRefresh: Bool = false
     private var displayLink: DisplayLinkProtocol?
 
@@ -186,8 +183,7 @@ open class MapView: UIView {
     /// Initialize a MapView
     /// - Parameters:
     ///   - frame: frame for the MapView.
-    ///   - mapInitOptions: `MapInitOptions`; default uses
-    ///    `ResourceOptionsManager.default` to retrieve a shared default resource option, including the access token.
+    ///   - mapInitOptions: The options to initialize the Maps API with.
     @available(iOSApplicationExtension, unavailable)
     public init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions()) {
         let trace = OSLog.platform.beginInterval("MapView.init")
@@ -204,8 +200,7 @@ open class MapView: UIView {
         applicationStateProvider = .global
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
-        resourceOptions = mapInitOptions.resourceOptions
-        eventsManager = dependencyProvider.makeEventsManager(accessToken: resourceOptions.accessToken)
+        eventsManager = dependencyProvider.makeEventsManager()
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
@@ -213,8 +208,7 @@ open class MapView: UIView {
     /// Initialize a MapView
     /// - Parameters:
     ///   - frame: frame for the MapView.
-    ///   - mapInitOptions: `MapInitOptions`; default uses
-    ///    `ResourceOptionsManager.default` to retrieve a shared default resource option, including the access token.
+    ///   - mapInitOptions: The options to initialize the Maps API with.
     ///   - orientationProvider: User interface orientation provider
     ///   - urlOpener: Attribution URL opener
     @available(iOS, deprecated: 13, message: "Use init(frame:mapInitOptions:urlOpener:) instead")
@@ -229,8 +223,7 @@ open class MapView: UIView {
         self.applicationStateProvider = nil
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
-        resourceOptions = mapInitOptions.resourceOptions
-        eventsManager = dependencyProvider.makeEventsManager(accessToken: resourceOptions.accessToken)
+        eventsManager = dependencyProvider.makeEventsManager()
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
@@ -238,8 +231,7 @@ open class MapView: UIView {
     /// Initialize a MapView
     /// - Parameters:
     ///   - frame: frame for the MapView.
-    ///   - mapInitOptions: `MapInitOptions`; default uses
-    ///    `ResourceOptionsManager.default` to retrieve a shared default resource option, including the access token.
+    ///   - mapInitOptions: The options to initialize the Maps API with.
     ///   - urlOpener: Attribution URL opener
     @available(iOS 13.0, *)
     public init(frame: CGRect,
@@ -254,8 +246,7 @@ open class MapView: UIView {
         self.applicationStateProvider = nil
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
-        resourceOptions = mapInitOptions.resourceOptions
-        eventsManager = dependencyProvider.makeEventsManager(accessToken: resourceOptions.accessToken)
+        eventsManager = dependencyProvider.makeEventsManager()
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
@@ -276,8 +267,7 @@ open class MapView: UIView {
         bundle = dependencyProvider.bundle
         attributionUrlOpener = DefaultAttributionURLOpener()
         applicationStateProvider = .global
-        resourceOptions = ResourceOptionsManager.default.resourceOptions
-        eventsManager = dependencyProvider.makeEventsManager(accessToken: resourceOptions.accessToken)
+        eventsManager = dependencyProvider.makeEventsManager()
         super.init(coder: coder)
     }
 
@@ -293,8 +283,7 @@ open class MapView: UIView {
         self.applicationStateProvider = applicationStateProvider
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
-        resourceOptions = mapInitOptions.resourceOptions
-        eventsManager = dependencyProvider.makeEventsManager(accessToken: resourceOptions.accessToken)
+        eventsManager = dependencyProvider.makeEventsManager()
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
@@ -325,7 +314,6 @@ open class MapView: UIView {
                 pixelRatio: original.pixelRatio,
                 glyphsRasterizationOptions: original.glyphsRasterizationOptions)
             resolvedMapInitOptions = MapInitOptions(
-                resourceOptions: mapInitOptions.resourceOptions,
                 mapOptions: resolvedMapOptions,
                 cameraOptions: mapInitOptions.cameraOptions,
                 styleURI: mapInitOptions.styleURI,

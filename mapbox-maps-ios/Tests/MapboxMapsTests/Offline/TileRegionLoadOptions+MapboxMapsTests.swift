@@ -33,7 +33,7 @@ final class TileRegionLoadOptions_MapboxMapsTests: XCTestCase {
             descriptors: []))
 
         XCTAssertNil(tileRegionLoadOptions.metadata)
-        XCTAssertFalse(tileRegionLoadOptions.isAcceptExpired)
+        XCTAssertFalse(tileRegionLoadOptions.acceptExpired)
         XCTAssertEqual(tileRegionLoadOptions.networkRestriction, .none)
         XCTAssertNil(tileRegionLoadOptions.averageBytesPerSecond)
         XCTAssertNil(tileRegionLoadOptions.__startLocation)
@@ -51,7 +51,7 @@ final class TileRegionLoadOptions_MapboxMapsTests: XCTestCase {
 
         XCTAssertNil(tileRegionLoadOptions.__geometry)
         XCTAssertNil(tileRegionLoadOptions.descriptors)
-        XCTAssertFalse(tileRegionLoadOptions.isAcceptExpired)
+        XCTAssertFalse(tileRegionLoadOptions.acceptExpired)
         XCTAssertEqual(tileRegionLoadOptions.networkRestriction, .none)
         XCTAssertNil(tileRegionLoadOptions.averageBytesPerSecond)
     }
@@ -75,7 +75,7 @@ final class TileRegionLoadOptions_MapboxMapsTests: XCTestCase {
 
         XCTAssertEqual(tileRegionLoadOptions.__geometry?.geometryType, GeometryType_Point)
         XCTAssertEqual(tileRegionLoadOptions.metadata as? [Int], metadata)
-        XCTAssertEqual(tileRegionLoadOptions.isAcceptExpired, acceptExpired)
+        XCTAssertEqual(tileRegionLoadOptions.acceptExpired, acceptExpired)
         XCTAssertEqual(tileRegionLoadOptions.networkRestriction, networkRestriction)
         XCTAssertEqual(tileRegionLoadOptions.__averageBytesPerSecond?.intValue, averageBytesPerSecond)
     }

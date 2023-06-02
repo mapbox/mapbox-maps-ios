@@ -10,12 +10,9 @@ import Foundation
 
 /// Options used when initializing `MapView`.
 ///
-/// Contains the `ResourceOptions`, `MapOptions` (including `GlyphsRasterizationOptions`)
+/// Contains the ``MapOptions`` (including ``GlyphsRasterizationOptions``)
 /// that are required to initialize a `MapView`.
 public final class MapInitOptions: NSObject {
-
-    /// Associated `ResourceOptions`
-    public let resourceOptions: ResourceOptions
 
     /// Associated `MapOptions`
     public let mapOptions: MapOptions
@@ -29,12 +26,9 @@ public final class MapInitOptions: NSObject {
     /// Camera options for initializing the map. CameraOptions default to 0.0 for each value.
     public let cameraOptions: CameraOptions?
 
-    /// Initializer. The default initializer, i.e. `MapInitOptions()` will use
-    /// the default `ResourceOptionsManager` to use the current shared access token.
+    /// Creates new instance of ``MapInitOptions``.
     ///
     /// - Parameters:
-    ///   - resourceOptions: `ResourceOptions`; default creates an instance
-    ///         using `ResourceOptionsManager.default`
     ///   - mapOptions: `MapOptions`; see `GlyphsRasterizationOptions` for the default
     ///         used for glyph rendering.
     ///   - cameraOptions: `CameraOptions` to be applied to the map, overriding
@@ -42,12 +36,12 @@ public final class MapInitOptions: NSObject {
     ///   - styleURI: Style URI for the map to load. Defaults to `.streets`, but
     ///         can be `nil`.
     ///   - styleJSON: Style JSON in String representation. Has precedence over ``styleURI``.
-    public init(resourceOptions: ResourceOptions = ResourceOptionsManager.default.resourceOptions,
-                mapOptions: MapOptions = MapOptions(),
-                cameraOptions: CameraOptions? = nil,
-                styleURI: StyleURI? = .streets,
-                styleJSON: String? = nil) {
-        self.resourceOptions = resourceOptions
+    public init(
+        mapOptions: MapOptions = MapOptions(),
+        cameraOptions: CameraOptions? = nil,
+        styleURI: StyleURI? = .streets,
+        styleJSON: String? = nil
+    ) {
         self.mapOptions      = mapOptions
         self.cameraOptions   = cameraOptions
         self.styleURI        = styleURI
@@ -66,16 +60,13 @@ public final class MapInitOptions: NSObject {
             return false
         }
 
-        return
-            (resourceOptions == other.resourceOptions) &&
-            (mapOptions == other.mapOptions) &&
-            (cameraOptions == other.cameraOptions) &&
-            (styleURI == other.styleURI)
+        return mapOptions == other.mapOptions &&
+            cameraOptions == other.cameraOptions &&
+            styleURI == other.styleURI
     }
 
     public override var hash: Int {
         var hasher = Hasher()
-        hasher.combine(resourceOptions)
         hasher.combine(mapOptions)
         hasher.combine(cameraOptions)
         hasher.combine(styleURI)

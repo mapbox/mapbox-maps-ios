@@ -32,7 +32,7 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
                                         style: StyleProtocol,
                                         displayLinkCoordinator: DisplayLinkCoordinator) -> AnnotationOrchestratorImplProtocol
 
-    func makeEventsManager(accessToken: String) -> EventsManagerProtocol
+    func makeEventsManager() -> EventsManagerProtocol
 }
 
 // swiftlint:disable:next type_body_length
@@ -355,7 +355,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             doubleTouchGestureRecognizer: doubleTouchGestureRecognizer)
     }
 
-    func makeEventsManager(accessToken: String) -> EventsManagerProtocol {
-        return EventsManager(accessToken: accessToken)
+    func makeEventsManager() -> EventsManagerProtocol {
+        return EventsManager()
     }
 }

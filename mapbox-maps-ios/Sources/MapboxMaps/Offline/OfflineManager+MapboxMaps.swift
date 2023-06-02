@@ -3,13 +3,6 @@ import Foundation
 
 extension OfflineManager {
 
-    /// Construct a new offline manager
-    ///
-    /// - Parameter resourceOptions: ResourceOptions the resource options to manage.
-    public convenience init(resourceOptions: ResourceOptions) {
-        self.init(resourceOptions: MapboxCoreMaps.ResourceOptions(resourceOptions))
-    }
-
     /// Loads a new style package or updates the existing one.
     ///
     /// - Parameters:

@@ -1,5 +1,5 @@
 import XCTest
-import MapboxMaps
+@testable import MapboxMaps
 
 class MapboxMapIntegrationTests: IntegrationTestCase {
     var rootView: UIView!
@@ -24,14 +24,11 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
     override func tearDownWithError() throws {
         try super.tearDownWithError()
 
-        if let mapView = mapView {
-            let resourceOptions = mapView.mapboxMap.resourceOptions
-            let expectation = self.expectation(description: "Clear map data")
-            MapboxMap.clearData(for: resourceOptions) { _ in
-                expectation.fulfill()
-            }
-            wait(for: [expectation], timeout: 10.0)
+        let expectation = self.expectation(description: "Clear map data")
+        MapboxMapsOptions.clearData { _ in
+            expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 10.0)
     }
 
     // MARK: - Tests
@@ -85,11 +82,8 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
         let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
         XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string")
 
-        let resourceOptions = ResourceOptions(accessToken: ";afjnjlgns",
-                                              dataPathURL: dataPathURL)
-        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions,
-                                            styleURI: .dark,
-                                            styleJSON: styleJSON)
+        MapboxMapsOptions.dataPath = dataPathURL
+        let mapInitOptions = MapInitOptions(styleURI: .dark, styleJSON: styleJSON)
         mapView = MapView(frame: rootView.bounds, mapInitOptions: mapInitOptions)
         rootView.addSubview(mapView)
 
@@ -107,10 +101,8 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
     // MARK: - Helpers
 
     private func setupMapView() {
-        let resourceOptions = ResourceOptions(accessToken: accessToken,
-                                              dataPathURL: dataPathURL)
-        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions)
-        mapView = MapView(frame: rootView.bounds, mapInitOptions: mapInitOptions)
+        MapboxMapsOptions.dataPath = dataPathURL
+        mapView = MapView(frame: rootView.bounds)
         rootView.addSubview(mapView)
     }
 

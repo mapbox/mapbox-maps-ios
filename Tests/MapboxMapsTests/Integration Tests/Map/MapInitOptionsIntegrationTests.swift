@@ -9,39 +9,12 @@ class MapInitOptionsIntegrationTests: XCTestCase {
     override func tearDown() {
         super.tearDown()
         providerReturnValue = nil
-        ResourceOptionsManager.destroyDefault()
         cancelables.removeAll()
     }
 
-    func testOptionsWithCustomResourceOptionsManager() {
-        ResourceOptionsManager.default.resourceOptions.accessToken = "pk.aaaaaa"
-
-        let rom = ResourceOptionsManager(accessToken: "pk.cccccc")
-
-        XCTAssert(rom !== ResourceOptionsManager.default)
-
-        let mapInitOptions = MapInitOptions(
-            resourceOptions: rom.resourceOptions,
-            styleURI: .outdoors)
-
-        let mapView = MapView(frame: .zero, mapInitOptions: mapInitOptions)
-        let resourceOptions = mapView.mapboxMap.resourceOptions
-
-        XCTAssertEqual(resourceOptions, mapInitOptions.resourceOptions)
-        XCTAssertEqual(resourceOptions.accessToken, rom.resourceOptions.accessToken)
-
-        XCTAssertEqual(mapView.mapboxMap.style.uri, .outdoors)
-    }
-
     func testOptionsAreSetFromNibProvider() {
-        ResourceOptionsManager.default.resourceOptions.accessToken = "pk.aaaaaa"
-
-        let rom = ResourceOptionsManager(accessToken: "pk.dddddd")
-
         // Provider should return a custom MapInitOptions
-        providerReturnValue = MapInitOptions(
-            resourceOptions: rom.resourceOptions,
-            styleURI: .satellite)
+        providerReturnValue = MapInitOptions(styleURI: .satellite)
 
         // Load views from a nib, where the map view's provider is the file's owner,
         // i.e. this test.
@@ -63,26 +36,14 @@ class MapInitOptionsIntegrationTests: XCTestCase {
         // expected options are returned
         XCTAssertEqual(optionsFromProvider, providerReturnValue)
 
-        // Now check the resource options from the initialized MapView
-        let resourceOptions = mapView.mapboxMap.resourceOptions
-
-        XCTExpectFailure("ResourceOptions will be refactored with new settings from Common and CoreMaps", options: .nonStrict()) {
-            XCTAssertEqual(resourceOptions, providerReturnValue.resourceOptions)
-            XCTAssertEqual(resourceOptions.accessToken, rom.resourceOptions.accessToken)
-        }
-
         XCTAssertEqual(mapView.mapboxMap.style.uri, .satellite)
     }
 
     func testDefaultOptionsAreUsedWhenNibDoesntSetProvider() {
-
-        ResourceOptionsManager.default.resourceOptions.accessToken = "pk.eeeeee"
-
         // Although this test checks that a MapView (#2) isn't connected to a
         // Provider, the first MapView will still be instantiated, so a return
         // value is still required.
-        providerReturnValue = MapInitOptions(
-            resourceOptions: ResourceOptions(accessToken: "do-not-use"))
+        providerReturnValue = MapInitOptions()
 
         // Load view from a nib, where the map view's provider is nil
         let nib = UINib(nibName: "MapInitOptionsTests", bundle: .mapboxMapsTests)
@@ -95,12 +56,6 @@ class MapInitOptionsIntegrationTests: XCTestCase {
         // Check MapView 2 -- Not connected in IB
         let mapView = objects.compactMap { $0 as? MapView }.first { $0.tag == 2 }!
         XCTAssertNil(mapView.mapInitOptionsProvider)
-
-        // Now check the resource options from the initialized MapView
-        let resourceOptions = mapView.mapboxMap.resourceOptions
-
-        // The map should use the default MapInitOptions
-        XCTAssertEqual(resourceOptions, ResourceOptionsManager.default.resourceOptions)
     }
 
     func testStyleDefaultCamera() throws {

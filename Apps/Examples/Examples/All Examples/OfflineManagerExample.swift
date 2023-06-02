@@ -33,7 +33,7 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
     }()
 
     private lazy var offlineManager: OfflineManager = {
-        return OfflineManager(resourceOptions: mapInitOptions.resourceOptions)
+        return OfflineManager()
     }()
 
     // Regions and style pack downloads
@@ -222,8 +222,7 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
         tileStore?.removeTileRegion(forId: tileRegionId)
 
         // Set the disk quota to zero, so that tile regions are fully evicted
-        // when removed. The TileStore is also used when `ResourceOptions.isLoadTilePacksFromNetwork`
-        // is `true`, and also by the Navigation SDK.
+        // when removed.
         // This removes the tiles from the predictive cache.
         tileStore?.setOptionForKey(TileStoreOptions.diskQuota, value: 0)
 
@@ -266,8 +265,7 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
                 resetUI()
 
                 let tileStore = TileStore.default
-                let accessToken = ResourceOptionsManager.default.resourceOptions.accessToken
-                tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken)
+                tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: MapboxOptions.accessToken)
 
                 self.tileStore = tileStore
 
@@ -321,8 +319,6 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
         button.setTitle("Show Downloads", for: .normal)
         progressContainer.isHidden = true
 
-        // It's important that the MapView use the same ResourceOptions as the
-        // OfflineManager
         let mapView = MapView(frame: mapViewContainer.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapViewContainer.addSubview(mapView)

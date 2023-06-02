@@ -37,13 +37,12 @@ internal final class EventsManager: EventsManagerProtocol {
 
     private let metricsEnabledObservation: NSKeyValueObservation
 
-    internal init(accessToken: String) {
+    internal init() {
         let eventsServerOptions = EventsServerOptions(
-            token: accessToken,
             userAgentFragment: Constants.UserAgent,
             deferredDeliveryServiceOptions: nil)
         eventsService = EventsService.getOrCreate(for: eventsServerOptions)
-        telemetryService = TelemetryService.getOrCreate(for: eventsServerOptions)
+        telemetryService = TelemetryService.getOrCreate()
 
         UserDefaults.standard.register(defaults: [
             #keyPath(UserDefaults.MGLMapboxMetricsEnabled): true

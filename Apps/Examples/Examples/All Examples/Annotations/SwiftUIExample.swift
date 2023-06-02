@@ -21,7 +21,7 @@ struct SwiftUIMapView: UIViewRepresentable {
     /// with the map. Here, we add a `camera` binding
     /// that represents a subset of the available camera functionality.
     /// Your app could customize this to your use case. In this example
-    /// the binding is set via `init(resourceOptions:camera:)`
+    /// the binding is set via `init(mapInitOptions:camera:)`
     @Binding private var camera: Camera
 
     /// Map attributes that can only be configured programmatically

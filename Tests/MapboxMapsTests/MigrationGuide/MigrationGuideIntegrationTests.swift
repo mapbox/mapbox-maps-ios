@@ -10,8 +10,6 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
         try guardForMetalDevice()
-
-        ResourceOptionsManager.default.resourceOptions.accessToken = self.accessToken
     }
 
     override func tearDownWithError() throws {
@@ -19,7 +17,6 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
         view?.removeFromSuperview()
         view = nil
-        ResourceOptionsManager.destroyDefault()
     }
 
     func geoJSONURL(from name: String) -> URL? {
@@ -37,13 +34,10 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         //-->
         class BasicMapViewController: UIViewController {
             var mapView: MapView!
-            var accessToken: String!
             var completion: (() -> Void)?
 
             override func viewDidLoad() {
                 super.viewDidLoad()
-
-                ResourceOptionsManager.default.resourceOptions.accessToken = self.accessToken
 
                 mapView = MapView(frame: view.bounds)
                 view.addSubview(mapView)
@@ -53,7 +47,6 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         //<--
 
         let vc = BasicMapViewController(nibName: nil, bundle: nil)
-        vc.accessToken = accessToken
         vc.completion = {
             expectation.fulfill()
         }
@@ -72,14 +65,11 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         //-->
         class BasicMapViewController: UIViewController {
             var mapView: MapView!
-            var accessToken: String!
             var handler: (() -> Void)?
             private var cancelables = Set<AnyCancelable>()
 
             override func viewDidLoad() {
                 super.viewDidLoad()
-
-                ResourceOptionsManager.default.resourceOptions.accessToken = self.accessToken
 
                 mapView = MapView(frame: view.bounds)
                 view.addSubview(mapView)
@@ -164,7 +154,6 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         //<--
 
         let vc = BasicMapViewController(nibName: nil, bundle: nil)
-        vc.accessToken = accessToken
         vc.handler = {
             expectation.fulfill()
         }

@@ -19,28 +19,21 @@ final class MapViewIntegrationTests: IntegrationTestCase {
 
         dataPathURL = try temporaryCacheDirectory()
 
-        let resourceOptions = ResourceOptions(accessToken: accessToken,
-                                              dataPathURL: dataPathURL)
-        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions)
-        mapView = MapView(frame: rootView.bounds, mapInitOptions: mapInitOptions)
+        MapboxMapsOptions.dataPath = dataPathURL
+        mapView = MapView(frame: rootView.bounds)
         rootView.addSubview(mapView)
     }
 
     override func tearDownWithError() throws {
-
-        let resourceOptions = mapView?.mapboxMap.resourceOptions
-
         mapView?.removeFromSuperview()
         mapView = nil
         rootView = nil
 
-        if let resourceOptions = resourceOptions {
-            let expectation = self.expectation(description: "Clear map data")
-            MapboxMap.clearData(for: resourceOptions) { _ in
-                expectation.fulfill()
-            }
-            wait(for: [expectation], timeout: 10.0)
+        let expectation = self.expectation(description: "Clear map data")
+        MapboxMapsOptions.clearData { _ in
+            expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 10.0)
 
         try super.tearDownWithError()
     }
@@ -56,10 +49,8 @@ final class MapViewIntegrationTests: IntegrationTestCase {
 
             let expectation = self.expectation(description: "wait for map")
 
-            let resourceOptions = ResourceOptions(accessToken: accessToken,
-                                                  dataPathURL: dataPathURL)
-            let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions)
-            let mapView = MapView(frame: rootView.bounds, mapInitOptions: mapInitOptions)
+            MapboxMapsOptions.dataPath = dataPathURL
+            let mapView = MapView(frame: rootView.bounds)
             weakMapView = mapView
 
             rootView.addSubview(mapView)
@@ -91,9 +82,8 @@ final class MapViewIntegrationTests: IntegrationTestCase {
 
             let expectation = self.expectation(description: "wait for map")
 
-            let resourceOptions = ResourceOptions(accessToken: accessToken, dataPathURL: dataPathURL)
-            let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions)
-            let mapView = MapView(frame: rootView.bounds, mapInitOptions: mapInitOptions)
+            MapboxMapsOptions.dataPath = dataPathURL
+            let mapView = MapView(frame: rootView.bounds)
             weakMapView = mapView
             weakViewport = mapView.viewport
 

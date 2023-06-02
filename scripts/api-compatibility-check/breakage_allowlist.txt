@@ -326,6 +326,20 @@ Func Style.addSource(_:id:dataId:) has been renamed to Func addSource(_:dataId:)
 Func Style.addSource(_:id:dataId:) has parameter 1 type change from Swift.String to Swift.String?
 Var Source.id has been added as a protocol requirement
 
+// New settings for Access token and Resource options
+Class ResourceOptionsManager has been removed
+Constructor MapInitOptions.init(resourceOptions:mapOptions:cameraOptions:styleURI:styleJSON:) has been removed
+Constructor MapSnapshotOptions.init(size:pixelRatio:glyphsRasterizationOptions:resourceOptions:showsLogo:showsAttribution:) has been removed
+Constructor OfflineManager.init(resourceOptions:) has been removed
+Constructor OfflineRegionManager.init(resourceOptions:) has been removed
+Func MapboxMap.clearData(for:completion:) has been removed
+Struct ResourceOptions has been removed
+Var MapInitOptions.resourceOptions has been removed
+Var MapSnapshotOptions.resourceOptions has been removed
+Var MapboxMap.resourceOptions has been removed
+Func MapboxMap.clearData(completion:) is now static
+
+// Add visibility to Layer protocol requirements.
 Var Layer.visibility has been added as a protocol requirement
 
 // Support string option in GeoJSONSourceData

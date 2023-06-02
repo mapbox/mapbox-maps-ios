@@ -20,7 +20,8 @@ final class SnapshotterTests: XCTestCase {
             options: options,
             mapSnapshotter: mockMapSnapshotter,
             style: Style(with: mockMapSnapshotter),
-            events: events)
+            events: events,
+            eventsManager: EventsManagerMock())
     }
 
     override func tearDown() {

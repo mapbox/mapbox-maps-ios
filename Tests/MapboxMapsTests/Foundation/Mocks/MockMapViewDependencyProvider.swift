@@ -150,8 +150,8 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
     }
 
     // MARK: - Events Manager
-    let makeEventsManagerStub = Stub<String, EventsManagerProtocol>(defaultReturnValue: EventsManagerMock())
-    func makeEventsManager(accessToken: String) -> EventsManagerProtocol {
-        makeEventsManagerStub.call(with: accessToken)
+    let makeEventsManagerStub = Stub<Void, EventsManagerProtocol>(defaultReturnValue: EventsManagerMock())
+    func makeEventsManager() -> EventsManagerProtocol {
+        makeEventsManagerStub.call()
     }
 }

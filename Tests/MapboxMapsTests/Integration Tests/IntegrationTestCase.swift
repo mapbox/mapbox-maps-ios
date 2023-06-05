@@ -11,12 +11,7 @@ internal class IntegrationTestCase: XCTestCase {
     internal override func setUpWithError() throws {
         try super.setUpWithError()
 
-        if let tokenFile = Bundle.mapboxMapsTests.path(forResource: "MapboxAccessToken", ofType: nil) {
-            MapboxOptions.accessToken = try String(contentsOfFile: tokenFile).trimmingCharacters(in: .newlines)
-        } else {
-            XCTFail("Missing access token in Test bundle")
-        }
-
+        try resolveAccessToken()
         cancelables.removeAll()
         try setupScreenAndWindow()
     }
@@ -66,5 +61,17 @@ internal class IntegrationTestCase: XCTestCase {
 
         XCTAssertNotNil(window)
         XCTAssertNotNil(rootViewController?.view)
+    }
+
+    private func resolveAccessToken() throws {
+        if let userDefaultsToken = UserDefaults.standard.string(forKey: "MBXAccessToken") {
+            MapboxOptions.accessToken = userDefaultsToken
+        } else if let tokenFromPlist = Bundle.mapboxMapsTests.infoDictionary?["MBXAccessToken"] as? String {
+            MapboxOptions.accessToken = tokenFromPlist
+        } else if let tokenFromFile = try Bundle.mapboxMapsTests.path(forResource: "MapboxAccessToken", ofType: nil).map(String.init(contentsOfFile:)) {
+            MapboxOptions.accessToken = tokenFromFile.trimmingCharacters(in: .newlines)
+        } else {
+            XCTFail("Missing access token in Test bundle")
+        }
     }
 }

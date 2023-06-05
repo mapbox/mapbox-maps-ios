@@ -75,6 +75,7 @@ Mapbox welcomes participation and contributions from everyone.
     ```
   - To clear the temporary map data, you can use `MapboxMap.clearData(completion:)`
 * Expose new 3D Lights API: `AmbientLight` and `DirectionalLight`.
+* `TypeConversionError`, `SnapshotError`, and `ViewAnnotationManagerError` are now structs with static variables instead of enums
 * Extend `Layer` protocol with `visibility` property.
 * Add required `id` property to `Source`. After that change `id` should be specified for source upon creation:
   ```swift

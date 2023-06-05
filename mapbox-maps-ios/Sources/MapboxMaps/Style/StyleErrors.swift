@@ -22,10 +22,21 @@ public struct StyleError: RawRepresentable, LocalizedError {
     }
 }
 
-public enum TypeConversionError: Error {
-    case invalidObject
-    case unexpectedType
-    case unsuccessfulConversion
+public struct TypeConversionError: Error, Equatable {
+    public let message: String
+
+    /// The object is invalid for this operation
+    public static let invalidObject = TypeConversionError(message: "Invalid object")
+
+    /// The type found is unexpected
+    public static let unexpectedType = TypeConversionError(message: "Unexpected type")
+
+    /// The conversion was not successful
+    public static let unsuccessfulConversion = TypeConversionError(message: "Unsuccessful conversion")
+
+    init(message: String) {
+        self.message = message
+    }
 }
 
 /// Type of errors thrown by the `MapboxMap` APIs.

@@ -4,11 +4,24 @@ import UIKit
 @_implementationOnly import MapboxCoreMaps_Private
 import Turf
 
-public enum ViewAnnotationManagerError: Error {
-    case viewIsAlreadyAdded
-    case associatedFeatureIdIsAlreadyInUse
-    case annotationNotFound
-    case geometryFieldMissing
+public struct ViewAnnotationManagerError: Error, Equatable {
+    public let message: String
+
+    /// This view has alread been added
+    public static let viewIsAlreadyAdded = ViewAnnotationManagerError(message: "View is already added")
+
+    /// The specified associated feature Id is already in use
+    public static let associatedFeatureIdIsAlreadyInUse = ViewAnnotationManagerError(message: "Associated feature ID is already in use")
+
+    /// The specified annotation was not found
+    public static let annotationNotFound = ViewAnnotationManagerError(message: "Annotation not found")
+
+    /// The required geometry field is missing
+    public static let geometryFieldMissing = ViewAnnotationManagerError(message: "Geometry field missing")
+
+    init(message: String) {
+        self.message = message
+    }
 }
 
 /// An interface you use to detect when the map view lays out or updates visibility of annotation views.

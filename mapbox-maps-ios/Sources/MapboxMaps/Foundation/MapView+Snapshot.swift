@@ -4,12 +4,18 @@ import UIKit
 extension MapView {
 
     /// Errors related to rendered snapshots
-    @_spi(Experimental) public enum SnapshotError: Error {
+    @_spi(Experimental) public struct SnapshotError: Error, Equatable {
+        public let message: String
+
         /// No metal view available. Catastrophic error.
-        case noMetalView
+        public static let noMetalView = SnapshotError(message: "No Metal view")
 
         /// Metal view or one of its subviews is missing image data.
-        case missingImageData
+        public static let missingImageData = SnapshotError(message: "Missing image data")
+
+        init(message: String) {
+            self.message = message
+        }
     }
 
     /// Synchronously captures the rendered map as a `UIImage`. The image does not include the

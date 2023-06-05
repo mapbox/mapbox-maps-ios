@@ -345,3 +345,35 @@ Var Layer.visibility has been added as a protocol requirement
 // Support string option in GeoJSONSourceData
 EnumElement GeoJSONSourceData.empty has been removed
 EnumElement GeoJSONSourceData.url has been removed
+
+// `TypeConversionError`, `SnapshotError`, and `ViewAnnotationManagerError` are now structs with static variables instead of enums
+Enum MapView.SnapshotError has been changed to a Struct 
+Enum TypeConversionError has been changed to a Struct 
+Enum ViewAnnotationManagerError has been changed to a Struct 
+EnumElement MapView.SnapshotError.missingImageData has declared type change from (MapboxMaps.MapView.SnapshotError.Type) -> MapboxMaps.MapView.SnapshotError to MapboxMaps.MapView.SnapshotError 
+EnumElement MapView.SnapshotError.noMetalView has declared type change from (MapboxMaps.MapView.SnapshotError.Type) -> MapboxMaps.MapView.SnapshotError to MapboxMaps.MapView.SnapshotError 
+EnumElement TypeConversionError.invalidObject has declared type change from (MapboxMaps.TypeConversionError.Type) -> MapboxMaps.TypeConversionError to MapboxMaps.TypeConversionError 
+EnumElement TypeConversionError.unexpectedType has declared type change from (MapboxMaps.TypeConversionError.Type) -> MapboxMaps.TypeConversionError to MapboxMaps.TypeConversionError 
+EnumElement TypeConversionError.unsuccessfulConversion has declared type change from (MapboxMaps.TypeConversionError.Type) -> MapboxMaps.TypeConversionError to MapboxMaps.TypeConversionError 
+EnumElement ViewAnnotationManagerError.annotationNotFound has declared type change from (MapboxMaps.ViewAnnotationManagerError.Type) -> MapboxMaps.ViewAnnotationManagerError to MapboxMaps.ViewAnnotationManagerError 
+EnumElement ViewAnnotationManagerError.associatedFeatureIdIsAlreadyInUse has declared type change from (MapboxMaps.ViewAnnotationManagerError.Type) -> MapboxMaps.ViewAnnotationManagerError to MapboxMaps.ViewAnnotationManagerError 
+EnumElement ViewAnnotationManagerError.geometryFieldMissing has declared type change from (MapboxMaps.ViewAnnotationManagerError.Type) -> MapboxMaps.ViewAnnotationManagerError to MapboxMaps.ViewAnnotationManagerError 
+EnumElement ViewAnnotationManagerError.viewIsAlreadyAdded has declared type change from (MapboxMaps.ViewAnnotationManagerError.Type) -> MapboxMaps.ViewAnnotationManagerError to MapboxMaps.ViewAnnotationManagerError 
+EnumElement MapView.SnapshotError.missingImageData is now static 
+EnumElement MapView.SnapshotError.noMetalView is now static 
+EnumElement TypeConversionError.invalidObject is now static 
+EnumElement TypeConversionError.unexpectedType is now static 
+EnumElement TypeConversionError.unsuccessfulConversion is now static 
+EnumElement ViewAnnotationManagerError.annotationNotFound is now static 
+EnumElement ViewAnnotationManagerError.associatedFeatureIdIsAlreadyInUse is now static 
+EnumElement ViewAnnotationManagerError.geometryFieldMissing is now static 
+EnumElement ViewAnnotationManagerError.viewIsAlreadyAdded is now static 
+Enum MapView.SnapshotError has removed conformance to Hashable 
+Enum TypeConversionError has removed conformance to Hashable 
+Enum ViewAnnotationManagerError has removed conformance to Hashable 
+Func MapView.SnapshotError.hash(into:) has been removed 
+Func TypeConversionError.hash(into:) has been removed 
+Func ViewAnnotationManagerError.hash(into:) has been removed 
+Var MapView.SnapshotError.hashValue has been removed 
+Var TypeConversionError.hashValue has been removed 
+Var ViewAnnotationManagerError.hashValue has been removed 

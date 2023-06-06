@@ -2,7 +2,6 @@ import UIKit
 import MapboxMaps
 
 public class SnapshotterCoreGraphicsExample: UIViewController, NonMapViewExampleProtocol {
-    internal var mapView: MapView!
     public var snapshotter: Snapshotter!
     public var snapshotView: UIImageView!
     private var cancelables = Set<AnyCancelable>()
@@ -28,6 +27,7 @@ public class SnapshotterCoreGraphicsExample: UIViewController, NonMapViewExample
                                          pixelRatio: 4)
         snapshotter = Snapshotter(options: options)
         snapshotter.style.uri = .dark
+        snapshotter.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 51.180885866921386, longitude: 16.26129435178828), zoom: 4))
 
         snapshotter.onStyleLoaded.observeNext { [weak self] _ in
             self?.startSnapshot()

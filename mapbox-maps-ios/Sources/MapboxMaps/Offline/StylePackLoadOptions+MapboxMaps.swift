@@ -25,7 +25,8 @@ extension StylePackLoadOptions {
         }
         self.init(__glyphsRasterizationMode: glyphsRasterizationMode?.NSNumber,
                   metadata: metadata,
-                  acceptExpired: acceptExpired)
+                  acceptExpired: acceptExpired,
+                  extraOptions: nil)
     }
 
     /// Specifies the glyphs rasterization mode.

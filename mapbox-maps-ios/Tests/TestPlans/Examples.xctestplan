@@ -13,7 +13,6 @@
       "detectStackUseAfterReturn" : true,
       "enabled" : true
     },
-    "codeCoverage" : false,
     "language" : "en",
     "targetForVariableExpansion" : {
       "containerPath" : "container:Examples.xcodeproj",

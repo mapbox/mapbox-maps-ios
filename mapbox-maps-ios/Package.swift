@@ -3,8 +3,8 @@
 
 import PackageDescription
 
-let coreVersion = "11.0.0-SNAPSHOT.0602T0803Z.27f34c8"
-let coreChecksum = "d1445bd25457e116626b2bec75c8fafe3c594d87e9a7dbadd9146b5608020187"
+let coreVersion = "11.0.0-SNAPSHOT.0607T0456Z.28b479d"
+let coreChecksum = "7f9df78f28252b7d18d4880c76490a5da0191b03d30f4f309fee9165e8eae495"
 let commonVersion = "23.6.0-SNAPSHOT.0601T0705Z.f7166cf"
 let commonChecksum = "a183d9d9ad2a88c5e6911f836eff6c87a8a162b259d4179d8a39244700737bdb"
 

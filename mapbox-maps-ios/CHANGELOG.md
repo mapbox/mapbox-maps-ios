@@ -83,6 +83,7 @@ Mapbox welcomes participation and contributions from everyone.
   mapView.mapboxMap.style.addSource(terrainSource)
   ```
 *  Support string option in `GeoJSONSourceData`.
+* Add a new experimental API to enable Tracing with `Tracing.status = .enabled`. Checkout `Tracing` reference to see more.
 
 ## 10.12.0 - March 22, 2023
 

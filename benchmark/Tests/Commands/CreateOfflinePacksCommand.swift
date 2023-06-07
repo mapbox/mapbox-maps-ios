@@ -20,7 +20,8 @@ public struct CreateOfflinePacksCommand: AsyncCommand {
                 minZoom: UInt8(minZoom),
                 maxZoom: UInt8(maxZoom),
                 tilesets: nil,
-                stylePack: nil
+                stylePack: nil,
+                extraOptions: nil
             )
         )
 

@@ -29,7 +29,7 @@ final class SceneKitExample: UIViewController, ExampleProtocol {
     }
 
     func addModelAndTerrain() {
-        try! mapView.mapboxMap.style.addCustomLayer(
+        try! mapView.mapboxMap.addCustomLayer(
             withId: "Custom",
             layerHost: SceneKitExampleCustomLayerHost(
                 modelOrigin: modelOrigin,
@@ -41,17 +41,17 @@ final class SceneKitExample: UIViewController, ExampleProtocol {
         demSource.tileSize = 512
         demSource.maxzoom = 14.0
 
-        try! mapView.mapboxMap.style.addSource(demSource)
+        try! mapView.mapboxMap.addSource(demSource)
 
         let terrain = Terrain(sourceId: demSource.id)
-        try! mapView.mapboxMap.style.setTerrain(terrain)
+        try! mapView.mapboxMap.setTerrain(terrain)
 
         var skyLayer = SkyLayer(id: "sky-layer")
         skyLayer.skyType = .constant(.atmosphere)
         skyLayer.skyAtmosphereSun = .constant([0, 0])
         skyLayer.skyAtmosphereSunIntensity = .constant(15.0)
 
-        try! mapView.mapboxMap.style.addLayer(skyLayer)
+        try! mapView.mapboxMap.addLayer(skyLayer)
 
         // Re-use terrain source for hillshade
         let properties = [
@@ -61,7 +61,7 @@ final class SceneKitExample: UIViewController, ExampleProtocol {
             "hillshade-illumination-anchor": "map"
         ] as [ String: Any ]
 
-        try! mapView.mapboxMap.style.addLayer(with: properties, layerPosition: .below("water"))
+        try! mapView.mapboxMap.addLayer(with: properties, layerPosition: .below("water"))
     }
 }
 

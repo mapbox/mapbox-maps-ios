@@ -36,8 +36,6 @@ class AnimateImageLayerExample: UIViewController, ExampleProtocol {
     }
 
     func addImageLayer() {
-        let style = mapView.mapboxMap.style
-
         // Create an `ImageSource`. This will manage the image displayed in the `RasterLayer` as well
         // as the location of that image on the map.
         var imageSource = ImageSource(id: sourceId)
@@ -62,8 +60,8 @@ class AnimateImageLayerExample: UIViewController, ExampleProtocol {
         imageLayer.rasterFadeDuration = .constant(0)
 
         do {
-            try style.addSource(imageSource)
-            try style.addLayer(imageLayer)
+            try mapView.mapboxMap.addSource(imageSource)
+            try mapView.mapboxMap.addLayer(imageLayer)
 
             // Add a tap gesture recognizer that will allow the animation to be stopped and started.
             let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(manageTimer))
@@ -92,7 +90,7 @@ class AnimateImageLayerExample: UIViewController, ExampleProtocol {
 
                 do {
                     // Update the image used by the `ImageSource`.
-                    try self.mapView.mapboxMap.style.updateImageSource(withId: self.sourceId, image: image!)
+                    try self.mapView.mapboxMap.updateImageSource(withId: self.sourceId, image: image!)
                 } catch {
                     print("Failed to update style image. Error: \(error)")
                 }

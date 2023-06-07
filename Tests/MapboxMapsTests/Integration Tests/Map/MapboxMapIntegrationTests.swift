@@ -89,7 +89,7 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
 
         let completionCalled = expectation(description: "Map is loaded")
         mapView.mapboxMap.onMapLoaded.observeNext { [mapView] _ in
-            XCTAssertEqual(styleJSON, mapView?.mapboxMap.style.JSON)
+            XCTAssertEqual(styleJSON, mapView?.mapboxMap.JSON)
             completionCalled.fulfill()
         }.store(in: &cancelables)
 

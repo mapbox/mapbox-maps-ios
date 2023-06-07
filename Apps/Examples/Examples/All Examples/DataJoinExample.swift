@@ -128,11 +128,11 @@ final class DataJoinExample: UIViewController, ExampleProtocol {
         // Insert the vector layer below the 'admin-1-boundary-bg' layer in the style
         // Join data to the vector layer
         do {
-            try mapView.mapboxMap.style.addSource(source)
-            try mapView.mapboxMap.style.addLayer(layer, layerPosition: .below("admin-1-boundary-bg"))
+            try mapView.mapboxMap.addSource(source)
+            try mapView.mapboxMap.addLayer(layer, layerPosition: .below("admin-1-boundary-bg"))
             if let expressionData = jsonExpression.data(using: .utf8) {
                 let expJSONObject = try JSONSerialization.jsonObject(with: expressionData, options: [])
-                try mapView.mapboxMap.style.setLayerProperty(for: "countries",
+                try mapView.mapboxMap.setLayerProperty(for: "countries",
                                                            property: "fill-color",
                                                            value: expJSONObject)
             }

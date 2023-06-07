@@ -40,12 +40,11 @@ class RasterTileSourceExample: UIViewController, ExampleProtocol {
 
     @objc func toggleTileRequestDelay() {
         isTileRequestDelayEnabled.toggle()
-        try? mapView.mapboxMap.style.setSourceProperty(for: sourceId, property: "tile-requests-delay", value: isTileRequestDelayEnabled ? 5000 : 0)
+        try? mapView.mapboxMap.setSourceProperty(for: sourceId, property: "tile-requests-delay", value: isTileRequestDelayEnabled ? 5000 : 0)
         button.setTitle(isTileRequestDelayEnabled ? "Disable tile request delay" : "Enable tile request delay", for: .normal)
     }
 
     func addRasterSource() {
-        let style = mapView.mapboxMap.style
 
         // This URL points to raster tiles designed by Stamen Design.
         let sourceUrl = "https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg"
@@ -65,8 +64,8 @@ class RasterTileSourceExample: UIViewController, ExampleProtocol {
         rasterLayer.source = sourceId
 
         do {
-            try style.addSource(rasterSource)
-            try style.addLayer(rasterLayer)
+            try mapView.mapboxMap.addSource(rasterSource)
+            try mapView.mapboxMap.addLayer(rasterLayer)
         } catch {
             print("Failed to update the style. Error: \(error)")
         }

@@ -47,8 +47,8 @@ final class LiveDataExample: UIViewController, ExampleProtocol {
         issLayer.iconImage = .constant(.name("rocket"))
 
         do {
-            try mapView.mapboxMap.style.addSource(source)
-            try mapView.mapboxMap.style.addLayer(issLayer)
+            try mapView.mapboxMap.addSource(source)
+            try mapView.mapboxMap.addLayer(issLayer)
 
             // Create a `Timer` that updates the `GeoJSONSource`.
             issTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
@@ -62,7 +62,7 @@ final class LiveDataExample: UIViewController, ExampleProtocol {
                         // Update geoJSON source to display new location of ISS
                         let point = Point(locationCoordinates)
                         let pointFeature = Feature(geometry: point)
-                        self.mapView.mapboxMap.style.updateGeoJSONSource(withId: source.id, geoJSON: .feature(pointFeature))
+                        self.mapView.mapboxMap.updateGeoJSONSource(withId: source.id, geoJSON: .feature(pointFeature))
 
                         // Update camera to follow ISS
                         let issCamera = CameraOptions(center: locationCoordinates, zoom: 3)

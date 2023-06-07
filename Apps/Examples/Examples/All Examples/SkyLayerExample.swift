@@ -64,7 +64,7 @@ public class SkyLayerExample: UIViewController, ExampleProtocol {
         skyLayer.skyAtmosphereHaloColor = .constant(StyleColor(.lightPink))
 
         do {
-            try mapView.mapboxMap.style.addLayer(skyLayer)
+            try mapView.mapboxMap.addLayer(skyLayer)
         } catch {
             print("Failed to add sky layer to the map's style.")
         }
@@ -81,7 +81,7 @@ public class SkyLayerExample: UIViewController, ExampleProtocol {
 
         // Update the sky layer based on the updated segmented control value.
         do {
-            try mapView.mapboxMap.style.updateLayer(withId: skyLayer.id, type: SkyLayer.self) { layer in
+            try mapView.mapboxMap.updateLayer(withId: skyLayer.id, type: SkyLayer.self) { layer in
                 layer.skyType = skyType
             }
         } catch {
@@ -95,13 +95,13 @@ public class SkyLayerExample: UIViewController, ExampleProtocol {
         demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
         demSource.tileSize = 514
         demSource.maxzoom = 14.0
-        try! mapView.mapboxMap.style.addSource(demSource)
+        try! mapView.mapboxMap.addSource(demSource)
 
         var terrain = Terrain(sourceId: demSource.id)
         terrain.exaggeration = .constant(1.5)
 
         do {
-            try mapView.mapboxMap.style.setTerrain(terrain)
+            try mapView.mapboxMap.setTerrain(terrain)
         } catch {
             print("Failed to add a terrain layer to the map's style.")
         }

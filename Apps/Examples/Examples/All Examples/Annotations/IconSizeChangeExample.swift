@@ -46,10 +46,10 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
         // Create a GeoJSON data source for markers
         var markerSource = GeoJSONSource(id: Constants.markerSourceId)
         markerSource.data = .featureCollection(FeatureCollection(features: markerFeatures))
-        try? mapView.mapboxMap.style.addSource(markerSource)
+        try? mapView.mapboxMap.addSource(markerSource)
 
         // Add marker image to the map
-        try? mapView.mapboxMap.style.addImage(UIImage(named: "blue_marker_view")!, id: Constants.blueMarkerImageId)
+        try? mapView.mapboxMap.addImage(UIImage(named: "blue_marker_view")!, id: Constants.blueMarkerImageId)
 
         // Create a symbol layer for markers
         var markerLayer = SymbolLayer(id: Constants.markerLayerId)
@@ -60,12 +60,12 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
         // middle of the icon being fixed to the coordinate point.
         markerLayer.iconOffset = .constant([0, -9])
 
-        try? mapView.mapboxMap.style.addLayer(markerLayer)
+        try? mapView.mapboxMap.addLayer(markerLayer)
 
         // Create a GeoJSON source for the selected marker
         var selectedMarkerSource = GeoJSONSource(id: Constants.selectedMarkerSourceId)
         selectedMarkerSource.data = .geometry(.point(Point(CLLocationCoordinate2D())))
-        try? mapView.mapboxMap.style.addSource(selectedMarkerSource)
+        try? mapView.mapboxMap.addSource(selectedMarkerSource)
 
         // Create a symbol layer for the selected marker
         var selectedMarkerLayer = SymbolLayer(id: Constants.selectedMarkerLayerId)
@@ -76,7 +76,7 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
         // middle of the icon being fixed to the coordinate point.
         selectedMarkerLayer.iconOffset = .constant([0, -9])
 
-        try? mapView.mapboxMap.style.addLayer(selectedMarkerLayer)
+        try? mapView.mapboxMap.addLayer(selectedMarkerLayer)
 
         // add a tap gesture recognizer to the map
         mapView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(mapTapped(_:))))
@@ -118,7 +118,7 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
                 }
 
                 if let geometry = features.first?.queriedFeature.feature.geometry {
-                    self.mapView.mapboxMap.style.updateGeoJSONSource(withId: Constants.selectedMarkerSourceId,
+                    self.mapView.mapboxMap.updateGeoJSONSource(withId: Constants.selectedMarkerSourceId,
                                                                           geoJSON: .geometry(geometry))
                 }
 
@@ -136,7 +136,7 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
     }
 
     private func updateMarker(selected: Bool) {
-        try? mapView.mapboxMap.style.updateLayer(
+        try? mapView.mapboxMap.updateLayer(
             withId: Constants.selectedMarkerLayerId,
             type: SymbolLayer.self,
             update: { (layer: inout SymbolLayer) throws in

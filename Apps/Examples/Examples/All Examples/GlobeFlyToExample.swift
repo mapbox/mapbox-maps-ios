@@ -27,10 +27,10 @@ class GlobeFlyToExample: UIViewController, ExampleProtocol {
         mapView = MapView(frame: view.bounds, mapInitOptions: .init(styleURI: .satelliteStreets))
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.mapboxMap.setCamera(to: .init(center: CLLocationCoordinate2D(latitude: 40, longitude: -78), zoom: 1.0))
-        try! self.mapView.mapboxMap.style.setProjection(StyleProjection(name: .globe))
+        try! self.mapView.mapboxMap.setProjection(StyleProjection(name: .globe))
 
         mapView.mapboxMap.onStyleLoaded.observeNext { _ in
-            try! self.mapView.mapboxMap.style.setAtmosphere(Atmosphere())
+            try! self.mapView.mapboxMap.setAtmosphere(Atmosphere())
             self.addTerrain()
             self.finish()
         }.store(in: &cancelables)
@@ -69,12 +69,12 @@ class GlobeFlyToExample: UIViewController, ExampleProtocol {
         // of the tiles.
         demSource.tileSize = 514
         demSource.maxzoom = 14.0
-        try! mapView.mapboxMap.style.addSource(demSource)
+        try! mapView.mapboxMap.addSource(demSource)
 
         var terrain = Terrain(sourceId: "mapbox-dem")
         terrain.exaggeration = .constant(1.5)
 
-        try! mapView.mapboxMap.style.setTerrain(terrain)
+        try! mapView.mapboxMap.setTerrain(terrain)
     }
 
     @objc func animateCameraOnClick() {

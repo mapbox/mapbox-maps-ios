@@ -8,7 +8,6 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
 
     internal var mapView: MapView?
     internal var dataPathURL: URL!
-    internal var style: Style?
 
     internal var hadResourceEventError: ((MapView, ResourceRequestError) -> Void)?
 
@@ -34,8 +33,6 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
             }
         }.store(in: &cancelables)
 
-        style = view.mapboxMap.style
-
         rootView.addSubview(view)
 
         view.topAnchor.constraint(equalTo: rootView.topAnchor).isActive = true
@@ -49,7 +46,6 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
     internal override func tearDownWithError() throws {
         mapView?.removeFromSuperview()
         mapView = nil
-        style = nil
 
         let expectation = self.expectation(description: "Clear map data")
         MapboxMapsOptions.clearData { _ in
@@ -64,17 +60,15 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
     }
 
     internal func testWaitForIdle() throws {
-        guard
-            let mapView = mapView,
-            let style = style else {
-            XCTFail("There should be valid MapView and Style objects created by setUp.")
+        guard let mapView = mapView else {
+            XCTFail("There should be valid MapView object created by setUp.")
             return
         }
 
         let expectation = XCTestExpectation(description: "Wait for map to idle")
         expectation.expectedFulfillmentCount = 2
 
-        style.uri = .streets
+        mapView.mapboxMap.uri = .streets
 
         mapView.mapboxMap.onMapLoadingError.observeNext { error in
             XCTFail("Failed to load map with \(String(describing: error))")

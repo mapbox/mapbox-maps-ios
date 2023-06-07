@@ -26,7 +26,6 @@ public class PointClusteringExample: UIViewController, ExampleProtocol {
     }
 
     func addPointClusters() {
-        let style = self.mapView.mapboxMap.style
         // Parse GeoJSON data. This example uses all M1.0+ earthquakes from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
         guard let url = URL(string: "https://www.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson") else { return }
 
@@ -55,10 +54,10 @@ public class PointClusteringExample: UIViewController, ExampleProtocol {
         clusterCountLayer.source = source.id
 
         // Add source and layers to the map view's style.
-        try! style.addSource(source)
-        try! style.addLayer(clusteredLayer)
-        try! style.addLayer(unclusteredLayer, layerPosition: .below(clusteredLayer.id))
-        try! style.addLayer(clusterCountLayer)
+        try! mapView.mapboxMap.addSource(source)
+        try! mapView.mapboxMap.addLayer(clusteredLayer)
+        try! mapView.mapboxMap.addLayer(unclusteredLayer, layerPosition: .below(clusteredLayer.id))
+        try! mapView.mapboxMap.addLayer(clusterCountLayer)
     }
 
     func createClusteredLayer() -> CircleLayer {

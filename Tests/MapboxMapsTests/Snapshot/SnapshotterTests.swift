@@ -19,7 +19,6 @@ final class SnapshotterTests: XCTestCase {
         snapshotter = Snapshotter(
             options: options,
             mapSnapshotter: mockMapSnapshotter,
-            style: Style(with: mockMapSnapshotter),
             events: events,
             eventsManager: EventsManagerMock())
     }

@@ -109,7 +109,7 @@ class ViewController: UIViewController {
             self.flyToNextCoordinate()
         }.store(in: &cancelables)
 
-        mapView.mapboxMap.style.uri = styles[styleStep].0
+        mapView.mapboxMap.uri = styles[styleStep].0
     }
 
     func flyToNextCoordinate() {
@@ -127,7 +127,7 @@ class ViewController: UIViewController {
             removeAnnotations()
 
             // Change the style
-            mapView.mapboxMap.style.uri = styles[styleStep].0
+            mapView.mapboxMap.uri = styles[styleStep].0
             print("Changing style to \(styles[styleStep].0)")
 
             return
@@ -258,12 +258,12 @@ class ViewController: UIViewController {
         do {
             let data = try JSONEncoder().encode(exp.self)
             let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
-            color = mapView.mapboxMap.style.layerProperty(
+            color = mapView.mapboxMap.layerProperty(
                 for: land,
                 property: "background-color")
 
             print("Setting background color expression")
-            try! mapView.mapboxMap.style.setLayerProperty(
+            try! mapView.mapboxMap.setLayerProperty(
                 for: land,
                 property: "background-color",
                 value: jsonObject)
@@ -279,7 +279,7 @@ class ViewController: UIViewController {
 
         if let color = color {
             print("Re-setting background color expression")
-            try! mapView.mapboxMap.style.setLayerProperty(
+            try! mapView.mapboxMap.setLayerProperty(
                 for: land,
                 property: "background-color",
                 value: color)
@@ -298,7 +298,7 @@ class ViewController: UIViewController {
 
         print("Creating snapshotter")
         let snapshotter = Snapshotter(options: options)
-        snapshotter.style.uri = .light
+        snapshotter.uri = .light
         snapshotter.setCamera(to: CameraOptions(cameraState: mapView.cameraState))
 
         snapshotter.onStyleLoaded.observeNext { [weak self] _ in

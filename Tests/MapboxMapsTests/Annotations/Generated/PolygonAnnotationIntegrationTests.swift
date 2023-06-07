@@ -17,17 +17,17 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
     }
 
     internal func testSourceAndLayerSetup() throws {
-        XCTAssertTrue(style.layerExists(withId: manager.layerId))
-        XCTAssertTrue(try style.isPersistentLayer(id: manager.layerId),
+        XCTAssertTrue(mapView.mapboxMap.layerExists(withId: manager.layerId))
+        XCTAssertTrue(try mapView.mapboxMap.isPersistentLayer(id: manager.layerId),
                       "The layer with id \(manager.layerId) should be persistent.")
-        XCTAssertTrue(style.sourceExists(withId: manager.sourceId))
+        XCTAssertTrue(mapView.mapboxMap.sourceExists(withId: manager.sourceId))
     }
 
     func testSourceAndLayerRemovedUponDestroy() {
         manager.destroy()
 
-        XCTAssertFalse(style.allLayerIdentifiers.map { $0.id }.contains(manager.layerId))
-        XCTAssertFalse(style.allSourceIdentifiers.map { $0.id }.contains(manager.sourceId))
+        XCTAssertFalse(mapView.mapboxMap.allLayerIdentifiers.map { $0.id }.contains(manager.layerId))
+        XCTAssertFalse(mapView.mapboxMap.allSourceIdentifiers.map { $0.id }.contains(manager.sourceId))
     }
 
     func testCreatingSecondAnnotationManagerWithTheSameId() throws {
@@ -50,7 +50,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.annotations.append(annotation)
 
         expectation(for: NSPredicate(block: { (_, _) in
-            guard let layer = try? self.style.layer(withId: self.manager.layerId, type: FillLayer.self) else {
+            guard let layer = try? self.mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self) else {
                 return false
             }
             return layer.fillOpacity == .expression(Exp(.number) {
@@ -76,7 +76,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer = try style.layer(withId: self.manager.layerId, type: FillLayer.self)
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
         if case .constant(let actualValue) = layer.fillAntialias {
             XCTAssertEqual(actualValue, value)
         } else {
@@ -90,7 +90,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try style.layer(withId: self.manager.layerId, type: FillLayer.self)
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
         XCTAssertEqual(layer.fillAntialias, .constant((Style.layerPropertyDefaultValue(for: .fill, property: "fill-antialias").value as! NSNumber).boolValue))
     }
 
@@ -102,7 +102,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer = try style.layer(withId: self.manager.layerId, type: FillLayer.self)
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
         if case .constant(let actualValue) = layer.fillTranslate {
             for (actual, expected) in zip(actualValue, value) {
                 XCTAssertEqual(actual, expected, accuracy: 0.1)
@@ -118,7 +118,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try style.layer(withId: self.manager.layerId, type: FillLayer.self)
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
         XCTAssertEqual(layer.fillTranslate, .constant(Style.layerPropertyDefaultValue(for: .fill, property: "fill-translate").value as! [Double]))
     }
 
@@ -130,7 +130,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer = try style.layer(withId: self.manager.layerId, type: FillLayer.self)
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
         if case .constant(let actualValue) = layer.fillTranslateAnchor {
             XCTAssertEqual(actualValue, value)
         } else {
@@ -144,7 +144,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try style.layer(withId: self.manager.layerId, type: FillLayer.self)
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
         XCTAssertEqual(layer.fillTranslateAnchor, .constant(FillTranslateAnchor(rawValue: Style.layerPropertyDefaultValue(for: .fill, property: "fill-translate-anchor").value as! String)!))
     }
 
@@ -166,7 +166,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer = try style.layer(withId: self.manager.layerId, type: FillLayer.self)
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
         XCTAssertEqual(layer.fillSortKey, .expression(Exp(.number) {
                 Exp(.get) {
                     "fill-sort-key"
@@ -187,7 +187,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try style.layer(withId: self.manager.layerId, type: FillLayer.self)
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
         XCTAssertEqual(layer.fillSortKey, .constant((Style.layerPropertyDefaultValue(for: .fill, property: "fill-sort-key").value as! NSNumber).doubleValue))
     }
 
@@ -209,7 +209,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer = try style.layer(withId: self.manager.layerId, type: FillLayer.self)
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
         XCTAssertEqual(layer.fillColor, .expression(Exp(.toColor) {
                 Exp(.get) {
                     "fill-color"
@@ -230,7 +230,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try style.layer(withId: self.manager.layerId, type: FillLayer.self)
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
         XCTAssertEqual(layer.fillColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: Style.layerPropertyDefaultValue(for: .fill, property: "fill-color").value as! [Any], options: []))))
     }
 
@@ -252,7 +252,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer = try style.layer(withId: self.manager.layerId, type: FillLayer.self)
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
         XCTAssertEqual(layer.fillOpacity, .expression(Exp(.number) {
                 Exp(.get) {
                     "fill-opacity"
@@ -273,7 +273,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try style.layer(withId: self.manager.layerId, type: FillLayer.self)
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
         XCTAssertEqual(layer.fillOpacity, .constant((Style.layerPropertyDefaultValue(for: .fill, property: "fill-opacity").value as! NSNumber).doubleValue))
     }
 
@@ -295,7 +295,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer = try style.layer(withId: self.manager.layerId, type: FillLayer.self)
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
         XCTAssertEqual(layer.fillOutlineColor, .expression(Exp(.toColor) {
                 Exp(.get) {
                     "fill-outline-color"
@@ -316,7 +316,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try style.layer(withId: self.manager.layerId, type: FillLayer.self)
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
         XCTAssertEqual(layer.fillOutlineColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: Style.layerPropertyDefaultValue(for: .fill, property: "fill-outline-color").value as! [Any], options: []))))
     }
 
@@ -338,7 +338,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer = try style.layer(withId: self.manager.layerId, type: FillLayer.self)
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
         XCTAssertEqual(layer.fillPattern, .expression(Exp(.image) {
                 Exp(.get) {
                     "fill-pattern"
@@ -359,7 +359,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try style.layer(withId: self.manager.layerId, type: FillLayer.self)
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
         XCTAssertEqual(layer.fillPattern, .constant(.name(Style.layerPropertyDefaultValue(for: .fill, property: "fill-pattern").value as! String)))
     }
 }

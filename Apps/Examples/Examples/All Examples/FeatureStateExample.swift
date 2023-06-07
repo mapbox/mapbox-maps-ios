@@ -80,7 +80,7 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
         earthquakeSource.generateId = true
 
         do {
-            try mapView.mapboxMap.style.addSource(earthquakeSource)
+            try mapView.mapboxMap.addSource(earthquakeSource)
         } catch {
             print("Ran into an error adding a source: \(error)")
         }
@@ -168,7 +168,7 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
         earthquakeVizLayer.circleColorTransition = StyleTransition(duration: 0.5, delay: 0)
 
         do {
-            try mapView.mapboxMap.style.addLayer(earthquakeVizLayer)
+            try mapView.mapboxMap.addLayer(earthquakeVizLayer)
         } catch {
             print("Ran into an error adding a layer: \(error)")
         }

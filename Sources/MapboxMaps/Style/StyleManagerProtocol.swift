@@ -5,8 +5,6 @@ import MapboxCoreMaps
 
 internal protocol StyleManagerProtocol {
 
-    func asStyleManager() -> StyleManager
-
     func getStyleURI() -> String
     func setStyleURIForUri(_ uri: String)
 
@@ -165,9 +163,4 @@ internal protocol StyleManagerProtocol {
 
 // MARK: Conformance
 
-extension StyleManager: StyleManagerProtocol {
-
-    func asStyleManager() -> StyleManager {
-        return self
-    }
-}
+extension StyleManager: StyleManagerProtocol {}

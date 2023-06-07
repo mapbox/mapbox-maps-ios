@@ -4,15 +4,15 @@ import XCTest
 internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
 
     internal func testSetFeatureState() {
-        style?.uri = .streets
+        mapView.mapboxMap.uri = .streets
         let featureStateExpectation = XCTestExpectation(description: "Wait for feature state map to be updated and returned.")
         featureStateExpectation.assertForOverFulfill = true
 
         didFinishLoadingStyle = { mapView in
 
             do {
-                try mapView.mapboxMap.style.addSource(self.makeGeoJSONSource())
-                try mapView.mapboxMap.style.addLayer(self.makeLayer())
+                try mapView.mapboxMap.addSource(self.makeGeoJSONSource())
+                try mapView.mapboxMap.addLayer(self.makeLayer())
 
             } catch {
                 XCTFail("Failed to add geojson source / layer due to error: \(error)")
@@ -42,14 +42,14 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
     }
 
     internal func testRemoveFeatureState() {
-        style?.uri = .streets
+        mapView.mapboxMap.uri = .streets
         let featureStateRemovedExpectation = XCTestExpectation(description: "Wait for feature state map to be updated and removed.")
         let featureStateKeptExpectation = XCTestExpectation(description: "Wait for feature state map to be kept.")
 
         didFinishLoadingStyle = { mapView in
             do {
-                try mapView.mapboxMap.style.addSource(self.makeGeoJSONSource())
-                try mapView.mapboxMap.style.addLayer(self.makeLayer())
+                try mapView.mapboxMap.addSource(self.makeGeoJSONSource())
+                try mapView.mapboxMap.addLayer(self.makeLayer())
             } catch {
                 XCTFail("Failed to add geojson source / layer due to error: \(error)")
             }
@@ -104,15 +104,15 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
     }
 
     internal func testResetFeatureStates() {
-        style?.uri = .streets
+        mapView.mapboxMap.uri = .streets
         let featureStateRemovedExpectation = XCTestExpectation(description: "Wait for feature state map to be updated and removed.")
         featureStateRemovedExpectation.expectedFulfillmentCount = 2
 
         didFinishLoadingStyle = { mapView in
             do {
-                try mapView.mapboxMap.style.addSource(
+                try mapView.mapboxMap.addSource(
                     self.makeGeoJSONSource())
-                try mapView.mapboxMap.style.addLayer(
+                try mapView.mapboxMap.addLayer(
                     self.makeLayer())
             } catch {
                 XCTFail("Failed to add geojson source / layer due to error: \(error)")

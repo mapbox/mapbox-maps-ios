@@ -15,10 +15,10 @@ final class SpinningGlobeExample: UIViewController, GestureManagerDelegate, Exam
         mapView = MapView(frame: view.bounds, mapInitOptions: .init(styleURI: .satellite))
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.mapboxMap.setCamera(to: .init(center: CLLocationCoordinate2D(latitude: 40, longitude: -90), zoom: 1.0))
-        try! self.mapView.mapboxMap.style.setProjection(StyleProjection(name: .globe))
+        try! self.mapView.mapboxMap.setProjection(StyleProjection(name: .globe))
 
         mapView.mapboxMap.onStyleLoaded.observeNext { _ in
-            try! self.mapView.mapboxMap.style.setAtmosphere(Atmosphere())
+            try! self.mapView.mapboxMap.setAtmosphere(Atmosphere())
             self.spinGlobe()
             self.finish()
         }.store(in: &cancelables)

@@ -37,7 +37,7 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
     @objc func increaseTrimOffset() {
         lastTrimOffset += 0.05
         let trimOffset = Double.minimum(lastTrimOffset, 1.0)
-        try? mapView.mapboxMap.style.setLayerProperty(for: "line-layer", property: "line-trim-offset", value: [0.0, trimOffset])
+        try? mapView.mapboxMap.setLayerProperty(for: "line-layer", property: "line-trim-offset", value: [0.0, trimOffset])
     }
 
     // Load GeoJSON file from local bundle and decode into a `FeatureCollection`.
@@ -117,7 +117,7 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
         lineLayer.lineJoin = .constant(.round)
 
         // Add the source and style layer to the map style.
-        try! mapView.mapboxMap.style.addSource(geoJSONSource)
-        try! mapView.mapboxMap.style.addLayer(lineLayer, layerPosition: nil)
+        try! mapView.mapboxMap.addSource(geoJSONSource)
+        try! mapView.mapboxMap.addLayer(lineLayer, layerPosition: nil)
     }
 }

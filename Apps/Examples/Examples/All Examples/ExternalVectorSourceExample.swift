@@ -43,7 +43,7 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
         lineLayer.lineCap = .constant(.round)
 
         do {
-            try mapView.mapboxMap.style.addSource(vectorSource)
+            try mapView.mapboxMap.addSource(vectorSource)
         } catch {
             showAlert(with: error.localizedDescription)
         }
@@ -51,7 +51,7 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
         // Define the layer's positioning within the layer stack so
         // that it doesn't obscure other important labels.
         do {
-            try mapView.mapboxMap.style.addLayer(lineLayer, layerPosition: .below("waterway-label"))
+            try mapView.mapboxMap.addLayer(lineLayer, layerPosition: .below("waterway-label"))
         } catch let layerError {
             showAlert(with: layerError.localizedDescription)
         }

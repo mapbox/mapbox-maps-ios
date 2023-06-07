@@ -48,9 +48,9 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
         mapView.location.addPuckLocationConsumer(self)
 
         do {
-            try mapView.mapboxMap.style.addSource(routeSource)
-            try mapView.mapboxMap.style.addPersistentLayer(makeCasingLayer())
-            try mapView.mapboxMap.style.addPersistentLayer(makeRouteLineLayer())
+            try mapView.mapboxMap.addSource(routeSource)
+            try mapView.mapboxMap.addPersistentLayer(makeCasingLayer())
+            try mapView.mapboxMap.addPersistentLayer(makeRouteLineLayer())
 
             navigationSimulator.start()
         } catch {
@@ -203,10 +203,9 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
 extension NavigationSimulatorExample: PuckLocationConsumer {
 
     func puckLocationUpdate(newLocation: Location) {
-        let style = mapView.mapboxMap.style
         let progress = navigationSimulator.progressFromStart(to: newLocation)
 
-        try? style.setLayerProperty(for: ID.routeLineLayer, property: "line-trim-offset", value: [0, progress])
-        try? style.setLayerProperty(for: ID.casingLineLayer, property: "line-trim-offset", value: [0, progress])
+        try? mapView.mapboxMap.setLayerProperty(for: ID.routeLineLayer, property: "line-trim-offset", value: [0, progress])
+        try? mapView.mapboxMap.setLayerProperty(for: ID.casingLineLayer, property: "line-trim-offset", value: [0, progress])
     }
 }

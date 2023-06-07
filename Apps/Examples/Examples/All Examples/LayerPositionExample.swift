@@ -58,29 +58,29 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
 
         alert.addAction(UIAlertAction(title: "Above state label", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            try? self.mapView.mapboxMap.style.removeLayer(withId: self.layer.id)
-            try? self.mapView.mapboxMap.style.addLayer(self.layer,
+            try? self.mapView.mapboxMap.removeLayer(withId: self.layer.id)
+            try? self.mapView.mapboxMap.addLayer(self.layer,
                                              layerPosition: .above("state-label"))
         }))
 
         alert.addAction(UIAlertAction(title: "Below state label", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            try? self.mapView.mapboxMap.style.removeLayer(withId: self.layer.id)
-            try? self.mapView.mapboxMap.style.addLayer(self.layer,
+            try? self.mapView.mapboxMap.removeLayer(withId: self.layer.id)
+            try? self.mapView.mapboxMap.addLayer(self.layer,
                                              layerPosition: .below("state-label"))
         }))
 
         alert.addAction(UIAlertAction(title: "Above all", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            try? self.mapView.mapboxMap.style.removeLayer(withId: self.layer.id)
-            try? self.mapView.mapboxMap.style.addLayer(self.layer,
+            try? self.mapView.mapboxMap.removeLayer(withId: self.layer.id)
+            try? self.mapView.mapboxMap.addLayer(self.layer,
                                              layerPosition: nil)
         }))
 
         alert.addAction(UIAlertAction(title: "Below all", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            try? self.mapView.mapboxMap.style.removeLayer(withId: self.layer.id)
-            try? self.mapView.mapboxMap.style.addLayer(self.layer,
+            try? self.mapView.mapboxMap.removeLayer(withId: self.layer.id)
+            try? self.mapView.mapboxMap.addLayer(self.layer,
                                              layerPosition: .at(0))
         }))
 
@@ -107,10 +107,10 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
             CLLocationCoordinate2DMake(32.91648534731439, -114.43359375)
         ]])))
 
-        try! mapView.mapboxMap.style.addSource(source)
+        try! mapView.mapboxMap.addSource(source)
 
         // If a layer position is not supplied, the layer is added above all other layers by default.
-        try! mapView.mapboxMap.style.addLayer(layer, layerPosition: nil)
+        try! mapView.mapboxMap.addLayer(layer, layerPosition: nil)
 
         // The below line is used for internal testing purposes only.
         finish()

@@ -57,15 +57,18 @@ class MapboxMapsSnapshotTests: XCTestCase {
     func testSnapshotCancellation() throws {
         weak var weakSnapshotter: Snapshotter?
         let options = try snapshotterOptions()
-        let expectation = self.expectation(description: "snapshot")
-        expectation.isInverted = true
-         autoreleasepool {
+        let expectation = self.expectation(description: "snapshot completion is called")
+        autoreleasepool {
             let snapshotter = Snapshotter(options: options)
             weakSnapshotter = snapshotter
-            weakSnapshotter?.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5))
-            weakSnapshotter?.style.JSON = emptyBlueStyle
-            weakSnapshotter?.start(overlayHandler: nil) { _ in
-                expectation.fulfill()
+            snapshotter.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5))
+            snapshotter.JSON = emptyBlueStyle
+            snapshotter.start(overlayHandler: nil) { result in
+                if case .failure = result {
+                    expectation.fulfill()
+                } else {
+                    XCTFail("Snapshot should be cancelled with a failure result")
+                }
             }
         }
         XCTAssertNil(weakSnapshotter)
@@ -80,7 +83,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
             let snapshotter = Snapshotter(options: options)
             weakSnapshotter = snapshotter
             weakSnapshotter?.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5))
-            weakSnapshotter?.style.JSON = emptyBlueStyle
+            weakSnapshotter?.JSON = emptyBlueStyle
             weakSnapshotter?.start(overlayHandler: nil) { (result) in
                 expectation.fulfill()
                 XCTAssertNotNil(result)
@@ -98,7 +101,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
         let snapshotter = Snapshotter(options: options)
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
         snapshotter.setCamera(to: cameraOptions)
-        snapshotter.style.JSON = emptyBlueStyle
+        snapshotter.JSON = emptyBlueStyle
         let expectation = self.expectation(description: "snapshot")
         expectation.expectedFulfillmentCount = 2
         snapshotter.start { overlayHandler in
@@ -139,7 +142,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
         let snapshotterNew = Snapshotter(options: options)
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
         snapshotterNew.setCamera(to: cameraOptions)
-        snapshotterNew.style.JSON = emptyBlueStyle
+        snapshotterNew.JSON = emptyBlueStyle
         let expectation2 = self.expectation(description: "snapshot logo")
         snapshotterNew.start(overlayHandler: nil) { [self] (result) in
             switch result {
@@ -162,7 +165,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
         let snapshotter = Snapshotter(options: options)
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
         snapshotter.setCamera(to: cameraOptions)
-        snapshotter.style.JSON = emptyBlueStyle
+        snapshotter.JSON = emptyBlueStyle
 
         let snapshotExpectation = self.expectation(description: "snapshot")
 
@@ -190,7 +193,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
             let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
 
             snapshotter.setCamera(to: cameraOptions)
-            snapshotter.style.JSON = emptyBlueStyle
+            snapshotter.JSON = emptyBlueStyle
             let expectation = self.expectation(description: "snapshot")
 
             snapshotter.start(overlayHandler: nil) { result in
@@ -246,7 +249,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
         let snapshotter = Snapshotter(options: options)
 
         // Adding a simple custom style
-        snapshotter.style.JSON = emptyBlueStyle
+        snapshotter.JSON = emptyBlueStyle
 
         let expectation = self.expectation(description: "snapshot")
         snapshotter.start(overlayHandler: nil, completion: { [weak self] result in

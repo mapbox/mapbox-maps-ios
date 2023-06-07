@@ -38,7 +38,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
 
     private var style: Style = .dark {
         didSet {
-            mapView.mapboxMap.style.uri = style.styleURL
+            mapView.mapboxMap.uri = style.styleURL
         }
     }
 
@@ -269,7 +269,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
 
     func updateProjection() {
         do {
-            try mapView.mapboxMap.style.setProjection(StyleProjection(name: projection))
+            try mapView.mapboxMap.setProjection(StyleProjection(name: projection))
         } catch {
             print(error)
         }

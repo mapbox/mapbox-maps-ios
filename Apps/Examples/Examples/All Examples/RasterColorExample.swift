@@ -32,7 +32,6 @@ class RasterColorExample: UIViewController, ExampleProtocol {
 
 
     func setupExample() {
-        let style = mapView.mapboxMap.style
 
         var rasterSource = RasterSource(id: "raster-source-id")
         rasterSource.url = "mapbox://mapbox.terrain-rgb"
@@ -78,9 +77,9 @@ class RasterColorExample: UIViewController, ExampleProtocol {
         rasterLayer.rasterColorRange = .constant([0, 8848])
 
         do {
-            try style.addLayer(backgroundLayer)
-            try style.addLayer(rasterLayer)
-            try style.addSource(rasterSource)
+            try mapView.mapboxMap.addLayer(backgroundLayer)
+            try mapView.mapboxMap.addLayer(rasterLayer)
+            try mapView.mapboxMap.addSource(rasterSource)
         } catch {
             print(error)
         }

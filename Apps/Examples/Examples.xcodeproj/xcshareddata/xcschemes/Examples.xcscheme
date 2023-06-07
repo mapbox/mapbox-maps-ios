@@ -89,8 +89,8 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "MAPBOX_MAPS_SIGNPOSTS_ENABLED"
-            value = ""
-            isEnabled = "YES">
+            value = "core,platform"
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "MTL_HUD_ENABLED"

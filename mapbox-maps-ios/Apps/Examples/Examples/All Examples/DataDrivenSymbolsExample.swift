@@ -29,15 +29,15 @@ public class DataDrivenSymbolsExample: UIViewController, ExampleProtocol {
 
         // Add icons from the U.S. National Parks Service to the map's style.
         // Icons are located in the asset catalog
-        try! mapView.mapboxMap.style.addImage(UIImage(named: "nps-restrooms")!, id: "restrooms")
-        try! mapView.mapboxMap.style.addImage(UIImage(named: "nps-trailhead")!, id: "trailhead")
-        try! mapView.mapboxMap.style.addImage(UIImage(named: "nps-picnic-area")!, id: "picnic-area")
+        try! mapView.mapboxMap.addImage(UIImage(named: "nps-restrooms")!, id: "restrooms")
+        try! mapView.mapboxMap.addImage(UIImage(named: "nps-trailhead")!, id: "trailhead")
+        try! mapView.mapboxMap.addImage(UIImage(named: "nps-picnic-area")!, id: "picnic-area")
 
         // Access a vector tileset that contains places of interest at Yosemite National Park.
         // This tileset was created by uploading NPS shapefiles to Mapbox Studio.
         var source = VectorSource(id: sourceLayerIdentifier)
         source.url = "mapbox://examples.ciuz0vpc"
-        try! mapView.mapboxMap.style.addSource(source)
+        try! mapView.mapboxMap.addSource(source)
 
         // Create a symbol layer and access the layer contained.
         var layer = SymbolLayer(id: sourceLayerIdentifier)
@@ -111,7 +111,7 @@ public class DataDrivenSymbolsExample: UIViewController, ExampleProtocol {
 
         layer.iconImage = .expression(expression)
 
-        try! mapView.mapboxMap.style.addLayer(layer, layerPosition: nil)
+        try! mapView.mapboxMap.addLayer(layer, layerPosition: nil)
 
         // The below line is used for internal testing purposes only.
         finish()

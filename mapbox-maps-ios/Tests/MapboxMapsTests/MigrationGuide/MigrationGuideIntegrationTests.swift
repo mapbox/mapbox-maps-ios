@@ -388,7 +388,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         mapView.mapboxMap.onStyleLoaded.observeNext { _ in
             do {
                 //-->
-                try mapView.mapboxMap.style.addSource(myGeoJSONSource)
+                try mapView.mapboxMap.addSource(myGeoJSONSource)
                 //<--
 
                 /*
@@ -406,7 +406,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                 Once a layer is created, add it to the map:
                 */
                 //-->
-                try mapView.mapboxMap.style.addLayer(myBackgroundLayer)
+                try mapView.mapboxMap.addLayer(myBackgroundLayer)
                 //<--
 
                 expectation.fulfill()
@@ -441,7 +441,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                 if let expressionData = expressionString.data(using: .utf8) {
                     let expJSONObject = try JSONSerialization.jsonObject(with: expressionData, options: [])
 
-                    try mapView.mapboxMap.style.setLayerProperty(for: "land",
+                    try mapView.mapboxMap.setLayerProperty(for: "land",
                                                                  property: "background-color",
                                                                  value: expJSONObject)
                 }
@@ -477,20 +477,20 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                 demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
                 demSource.tileSize = 512
                 demSource.maxzoom = 14.0
-                try mapView.mapboxMap.style.addSource(demSource)
+                try mapView.mapboxMap.addSource(demSource)
 
                 var terrain = Terrain(sourceId: "mapbox-dem")
                 terrain.exaggeration = .constant(1.5)
 
                 // Add sky layer
-                try mapView.mapboxMap.style.setTerrain(terrain)
+                try mapView.mapboxMap.setTerrain(terrain)
 
                 var skyLayer = SkyLayer(id: "sky-layer")
                 skyLayer.skyType = .constant(.atmosphere)
                 skyLayer.skyAtmosphereSun = .constant([0.0, 0.0])
                 skyLayer.skyAtmosphereSunIntensity = .constant(15.0)
 
-                try mapView.mapboxMap.style.addLayer(skyLayer)
+                try mapView.mapboxMap.addLayer(skyLayer)
                 //<--
 
                 expectation.fulfill()

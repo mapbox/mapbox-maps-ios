@@ -88,11 +88,11 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
         })
 
         // Add the sources and layers to the map style.
-        try! mapView.mapboxMap.style.addSource(airplaneRoute)
-        try! mapView.mapboxMap.style.addLayer(lineLayer)
+        try! mapView.mapboxMap.addSource(airplaneRoute)
+        try! mapView.mapboxMap.addLayer(lineLayer)
 
-        try! mapView.mapboxMap.style.addSource(airplaneSymbol)
-        try! mapView.mapboxMap.style.addLayer(airplaneSymbolLayer, layerPosition: nil)
+        try! mapView.mapboxMap.addSource(airplaneSymbol)
+        try! mapView.mapboxMap.addLayer(airplaneSymbolLayer, layerPosition: nil)
     }
 
     public func startAnimation(routeLine: LineString) {
@@ -111,7 +111,7 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
             geoJSON.properties = ["bearing": .number(coordinate.direction(to: nextCoordinate))]
 
             // Update the airplane source layer with the new coordinate and bearing.
-            self.mapView.mapboxMap.style.updateGeoJSONSource(withId: "airplane-symbol",
+            self.mapView.mapboxMap.updateGeoJSONSource(withId: "airplane-symbol",
                                                                   geoJSON: .feature(geoJSON))
 
             runCount += 1

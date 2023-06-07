@@ -9,17 +9,15 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
     }
 
     internal func testWaitForIdle() throws {
-        let style = try XCTUnwrap(self.style)
-
         let successfullyAddedLayerExpectation = XCTestExpectation(description: "Successfully added LineLayer to Map")
         successfullyAddedLayerExpectation.expectedFulfillmentCount = 1
 
         let successfullyRetrievedLayerExpectation = XCTestExpectation(description: "Successfully retrieved LineLayer from Map")
         successfullyRetrievedLayerExpectation.expectedFulfillmentCount = 1
 
-        style.uri = .streets
+        mapView.mapboxMap.uri = .streets
 
-        didFinishLoadingStyle = { _ in
+        didFinishLoadingStyle = { mapView in
 
             var layer = LineLayer(id: "test-id")
             layer.source = "some-source"
@@ -54,7 +52,7 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
 
             // Add the layer
             do {
-                try style.addLayer(layer)
+                try mapView.mapboxMap.addLayer(layer)
                 successfullyAddedLayerExpectation.fulfill()
             } catch {
                 XCTFail("Failed to add LineLayer because of error: \(error)")
@@ -62,7 +60,7 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the layer
             do {
-                _ = try style.layer(withId: "test-id", type: LineLayer.self)
+                _ = try mapView.mapboxMap.layer(withId: "test-id", type: LineLayer.self)
                 successfullyRetrievedLayerExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve LineLayer because of error: \(error)")

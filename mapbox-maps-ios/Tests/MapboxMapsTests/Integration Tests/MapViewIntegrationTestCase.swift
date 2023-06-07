@@ -3,7 +3,6 @@ import XCTest
 
 internal class MapViewIntegrationTestCase: IntegrationTestCase {
     internal var mapView: MapView!
-    internal var style: Style!
     internal var dataPathURL: URL!
 
     /// Closures for map view delegate
@@ -37,8 +36,6 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
             self.didBecomeIdle?(mapView)
         }.store(in: &cancelables)
 
-        style = view.mapboxMap.style
-
         rootView.addSubview(view)
 
         view.topAnchor.constraint(equalTo: rootView.topAnchor).isActive = true
@@ -59,7 +56,6 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
     internal override func tearDownWithError() throws {
         mapView?.removeFromSuperview()
         mapView = nil
-        style = nil
 
         let expectation = self.expectation(description: "Clear map data")
         MapboxMapsOptions.clearData { _ in

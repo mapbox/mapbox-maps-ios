@@ -62,13 +62,13 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
     }
 
     private func setupExample() {
-        try? mapView.mapboxMap.style.addImage(UIImage(named: "red_marker")!, id: Constants.markerIconId)
+        try? mapView.mapboxMap.addImage(UIImage(named: "red_marker")!, id: Constants.markerIconId)
 
         // Create a GeoJSON data source.
         var source = GeoJSONSource(id: Constants.sourceId)
         source.data = .feature(Feature(geometry: Point(currentPosition)))
 
-        try? mapView.mapboxMap.style.addSource(source)
+        try? mapView.mapboxMap.addSource(source)
 
         // Create a symbol layer
         var symbolLayer = SymbolLayer(id: "layer-id")
@@ -77,7 +77,7 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
         symbolLayer.iconIgnorePlacement = .constant(true)
         symbolLayer.iconAllowOverlap = .constant(true)
 
-        try? mapView.mapboxMap.style.addLayer(symbolLayer)
+        try? mapView.mapboxMap.addLayer(symbolLayer)
     }
 
     override func didMove(toParent parent: UIViewController?) {
@@ -108,7 +108,7 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
         self.currentPosition = coordinate
 
         // update source with the new marker location
-        self.mapView.mapboxMap.style.updateGeoJSONSource(withId: Constants.sourceId,
+        self.mapView.mapboxMap.updateGeoJSONSource(withId: Constants.sourceId,
                                                               geoJSON: .feature(Feature(geometry: Point(coordinate))))
 
     }

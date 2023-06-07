@@ -59,7 +59,7 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
         // Create a GeoJSON data source.
         var geoJSONSource = GeoJSONSource(id: Constants.geoJSONDataSourceIdentifier)
         geoJSONSource.data = .featureCollection(featureCollection)
-        try! mapView.mapboxMap.style.addSource(geoJSONSource)
+        try! mapView.mapboxMap.addSource(geoJSONSource)
     }
 
     /// Create and style a FillLayer that uses the Polygon Feature's coordinates in the GeoJSON data
@@ -72,7 +72,7 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
         polygonLayer.source = Constants.geoJSONDataSourceIdentifier
         polygonLayer.fillColor = .constant(StyleColor(red: 68, green: 105, blue: 247, alpha: 1)!)
         polygonLayer.fillOpacity = .constant(0.3)
-        try! mapView.mapboxMap.style.addLayer(polygonLayer)
+        try! mapView.mapboxMap.addLayer(polygonLayer)
     }
 
     private func addLineStringLayer() {
@@ -85,7 +85,7 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
         lineLayer.source = Constants.geoJSONDataSourceIdentifier
         lineLayer.lineColor = .constant(StyleColor(.red))
         lineLayer.lineWidth = .constant(2)
-        try! mapView.mapboxMap.style.addLayer(lineLayer)
+        try! mapView.mapboxMap.addLayer(lineLayer)
     }
 
     public func addPointLayer() {
@@ -102,6 +102,6 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
         circleLayer.circleRadius = .constant(6.0)
         circleLayer.circleStrokeWidth = .constant(2.0)
         circleLayer.circleStrokeColor = .constant(StyleColor(.black))
-        try! mapView.mapboxMap.style.addLayer(circleLayer)
+        try! mapView.mapboxMap.addLayer(circleLayer)
     }
 }

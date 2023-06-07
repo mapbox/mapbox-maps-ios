@@ -34,14 +34,15 @@ extension MapSnapshotter: MapSnapshotterProtocol {}
 ///
 /// Use a `MapSnapshotter` when you need to capture a static snapshot of a map without using the actual ``MapView``.
 /// You can configure the final result via ``MapSnapshotOptions`` upon construction time and take.
-public class Snapshotter {
+public class Snapshotter: Style {
 
     /// Internal `MapboxCoreMaps.MBXMapSnapshotter` object that takes care of
     /// rendering a snapshot.
     internal let mapSnapshotter: MapSnapshotterProtocol
 
     /// A `style` object that can be manipulated to set different styles for a snapshot.
-    public let style: Style
+    @available(*, deprecated, message: "Access style APIs directly from Snapshotter instance instead")
+    public var style: Style { return self }
 
     private let events: MapEvents
     private let options: MapSnapshotOptions
@@ -54,8 +55,7 @@ public class Snapshotter {
         self.init(
             options: options,
             mapSnapshotter: impl,
-            style: Style(with: impl),
-            events: MapEvents(observable: impl.asStyleManager()),
+            events: MapEvents(observable: impl),
             eventsManager: EventsManager())
     }
 
@@ -63,14 +63,14 @@ public class Snapshotter {
     internal init(
         options: MapSnapshotOptions,
         mapSnapshotter: MapSnapshotterProtocol,
-        style: Style,
         events: MapEvents,
         eventsManager: EventsManagerProtocol
     ) {
         self.options = options
         self.mapSnapshotter = mapSnapshotter
-        self.style = style
         self.events = events
+
+        super.init(with: mapSnapshotter, sourceManager: StyleSourceManager(styleManager: mapSnapshotter))
 
         eventsManager.sendTurnstile()
     }
@@ -114,7 +114,6 @@ public class Snapshotter {
 
         let scale = CGFloat(options.pixelRatio)
 
-        let style = self.style
         let options = self.options
 
         mapSnapshotter.start { [weak self] (expected) in
@@ -147,12 +146,10 @@ public class Snapshotter {
                 return
             }
 
-            let sourceAttributions = style.sourceAttributions()
-
             guard let self = self else { return }
 
             // Render attributions over the snapshot
-            Attribution.parse(sourceAttributions) { [weak self] attributions in
+            Attribution.parse(self.sourceAttributions()) { [weak self] attributions in
                 self?.overlaySnapshotWith(
                     attributions: attributions,
                     snapshotImage: uiImage,

@@ -33,15 +33,14 @@ final class AddMarkersSymbolExample: UIViewController, ExampleProtocol {
             self.finish()
         }.store(in: &cancelables)
 
-        mapView.mapboxMap.style.uri = .streets
+        mapView.mapboxMap.uri = .streets
     }
 
     // MARK: - Style management
 
     private func prepareStyle() {
-        let style = mapView.mapboxMap.style
-        try? style.addImage(UIImage(named: "blue_marker_view")!, id: Constants.BLUE_ICON_ID)
-        try? style.addImage(UIImage(named: "red_marker")!, id: Constants.RED_ICON_ID)
+        try? mapView.mapboxMap.addImage(UIImage(named: "blue_marker_view")!, id: Constants.BLUE_ICON_ID)
+        try? mapView.mapboxMap.addImage(UIImage(named: "red_marker")!, id: Constants.RED_ICON_ID)
 
         var features = [Feature]()
         var feature = Feature(geometry: Point(LocationCoordinate2D(latitude: 55.608166, longitude: 12.65147)))
@@ -54,7 +53,7 @@ final class AddMarkersSymbolExample: UIViewController, ExampleProtocol {
 
         var source = GeoJSONSource(id: Constants.SOURCE_ID)
         source.data = .featureCollection(FeatureCollection(features: features))
-        try? style.addSource(source)
+        try? mapView.mapboxMap.addSource(source)
 
         let rotateExpression = Exp(.match) {
             Exp(.get) { Constants.ICON_KEY }
@@ -76,6 +75,6 @@ final class AddMarkersSymbolExample: UIViewController, ExampleProtocol {
         layer.iconAnchor = .constant(.bottom)
         layer.iconAllowOverlap = .constant(false)
         layer.iconRotate = .expression(rotateExpression)
-        try? style.addLayer(layer)
+        try? mapView.mapboxMap.addLayer(layer)
     }
 }

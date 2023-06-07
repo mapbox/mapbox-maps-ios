@@ -49,34 +49,34 @@ public class LocalizationExample: UIViewController, ExampleProtocol {
 
         alert.addAction(UIAlertAction(title: "Device Locale", style: .default, handler: { [weak self] _ in
             do {
-                try self?.mapView.mapboxMap.style.localizeLabels(into: Locale.current)
+                try self?.mapView.mapboxMap.localizeLabels(into: Locale.current)
             } catch {
                 print(error)
             }
         }))
 
         alert.addAction(UIAlertAction(title: "Spanish", style: .default, handler: { [weak self] _ in
-            try! self?.mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "es"))
+            try! self?.mapView.mapboxMap.localizeLabels(into: Locale(identifier: "es"))
         }))
 
         alert.addAction(UIAlertAction(title: "French", style: .default, handler: { [weak self] _ in
-            try! self?.mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "fr"))
+            try! self?.mapView.mapboxMap.localizeLabels(into: Locale(identifier: "fr"))
         }))
 
         alert.addAction(UIAlertAction(title: "Traditional Chinese", style: .default, handler: { [weak self] _ in
-            try! self?.mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh-Hant"))
+            try! self?.mapView.mapboxMap.localizeLabels(into: Locale(identifier: "zh-Hant"))
         }))
 
         alert.addAction(UIAlertAction(title: "Arabic", style: .default, handler: { [weak self] _ in
-            try! self?.mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "ar"))
+            try! self?.mapView.mapboxMap.localizeLabels(into: Locale(identifier: "ar"))
         }))
 
         alert.addAction(UIAlertAction(title: "English", style: .default, handler: { [weak self] _ in
-            try! self?.mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "en"))
+            try! self?.mapView.mapboxMap.localizeLabels(into: Locale(identifier: "en"))
         }))
 
         alert.addAction(UIAlertAction(title: "Japanese - Countries Only", style: .default, handler: { [weak self] _ in
-            try! self?.mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "ja"), forLayerIds: ["country-label"])
+            try! self?.mapView.mapboxMap.localizeLabels(into: Locale(identifier: "ja"), forLayerIds: ["country-label"])
         }))
 
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))

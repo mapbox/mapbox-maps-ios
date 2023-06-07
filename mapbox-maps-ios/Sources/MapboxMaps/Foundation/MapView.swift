@@ -420,7 +420,7 @@ open class MapView: UIView {
         location = dependencyProvider.makeLocationManager(
             locationProducer: locationProducer,
             interpolatedLocationProducer: interpolatedLocationProducer,
-            style: mapboxMap.style,
+            style: mapboxMap,
             mapboxMap: mapboxMap,
             displayLinkCoordinator: self)
 
@@ -429,7 +429,7 @@ open class MapView: UIView {
                 in: self,
                 mapboxMap: mapboxMap,
                 mapFeatureQueryable: mapboxMap,
-                style: mapboxMap.style,
+                style: mapboxMap,
                 displayLinkCoordinator: self
             )
         )

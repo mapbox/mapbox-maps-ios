@@ -38,7 +38,7 @@ class InstrumentClusterCarPlaySceneDelegate: NSObject,
         default:
             style = .light
         }
-        carPlayController?.mapView.mapboxMap.style.uri = style
+        carPlayController?.mapView.mapboxMap.uri = style
     }
 
     func instrumentClusterController(_ instrumentClusterController: CPInstrumentClusterController,

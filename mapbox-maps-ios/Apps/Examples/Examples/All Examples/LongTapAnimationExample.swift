@@ -33,7 +33,7 @@ public class LongTapAnimationExample: UIViewController, ExampleProtocol {
     }
 
     func setupExample() {
-        try! mapView.mapboxMap.style.addImage(UIImage(named: "blue_marker_view")!, id: .blueMarker)
+        try! mapView.mapboxMap.addImage(UIImage(named: "blue_marker_view")!, id: .blueMarker)
         let tapGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPress))
         mapView.addGestureRecognizer(tapGesture)
     }

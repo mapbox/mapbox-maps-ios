@@ -69,25 +69,22 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         let contourLineColor = UIColor(red: 0.53, green: 0.48, blue: 0.35, alpha: 1.00)
         contourLayer.lineColor = .constant(StyleColor(contourLineColor))
 
-        let style = mapView.mapboxMap.style
-
         // Add the sources and layers to the map's style.
         do {
-            try style.addSource(museumsSource)
-            try style.addSource(contourSource)
-            try style.addLayer(museumLayer)
-            try style.addLayer(contourLayer)
+            try mapView.mapboxMap.addSource(museumsSource)
+            try mapView.mapboxMap.addSource(contourSource)
+            try mapView.mapboxMap.addLayer(museumLayer)
+            try mapView.mapboxMap.addLayer(contourLayer)
         } catch {
             print("Error when adding sources and layers: \(error.localizedDescription)")
         }
     }
 
     @objc func toggleMuseumLayerVisibility(sender: UISwitch) {
-        let style = mapView.mapboxMap.style
         // Update the museum layer's visibility based on whether the switch
         // is on. `visibility` is `nil` by default.
         do {
-            try style.updateLayer(withId: museumLayerId, type: CircleLayer.self) { layer in
+            try mapView.mapboxMap.updateLayer(withId: museumLayerId, type: CircleLayer.self) { layer in
                 layer.visibility = sender.isOn ? .visible : .none
             }
         } catch {
@@ -96,11 +93,10 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
     }
 
     @objc func toggleContourLayerVisibility(sender: UISwitch) {
-        let style = mapView.mapboxMap.style
         // Update the contour layer's visibility based on whether the switch
         // is on.
         do {
-            try style.updateLayer(withId: contourLayerId, type: CircleLayer.self) { layer in
+            try mapView.mapboxMap.updateLayer(withId: contourLayerId, type: CircleLayer.self) { layer in
                 layer.visibility = sender.isOn ? .visible : .none
             }
         } catch {

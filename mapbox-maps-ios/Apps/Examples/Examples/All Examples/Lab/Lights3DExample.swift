@@ -49,7 +49,7 @@ final class Lights3DExample: UIViewController, ExampleProtocol {
             ambientLight.color = .constant(.init(ambientColor))
             ambientLight.intensity = .constant(0.5)
 
-            try mapView.mapboxMap.style.setLights3D(ambientLight: ambientLight, directionalLight: directionalLight)
+            try mapView.mapboxMap.setLights3D(ambientLight: ambientLight, directionalLight: directionalLight)
 
             var atmosphere = Atmosphere()
             atmosphere.range = .constant([0, 12])
@@ -59,7 +59,7 @@ final class Lights3DExample: UIViewController, ExampleProtocol {
             atmosphere.highColor = .constant(StyleColor(red: 221, green: 209, blue: 197, alpha: 1)!)
             atmosphere.spaceColor = .constant(StyleColor(red: 153, green: 180, blue: 197, alpha: 1)!)
 
-            try mapView.mapboxMap.style.setAtmosphere(atmosphere)
+            try mapView.mapboxMap.setAtmosphere(atmosphere)
         } catch {
             print("Failed to set 3D light due to:", error)
         }
@@ -72,12 +72,12 @@ final class Lights3DExample: UIViewController, ExampleProtocol {
 
         do {
             let lightIntensity = generateLightIntensityValue(progress: animationProgress)
-            try mapView.mapboxMap.style.setLight3DProperty(
+            try mapView.mapboxMap.setLight3DProperty(
                 id: directionalLightId,
                 property: "direction",
                 value: [azimuth, polarAngle]
             )
-            try mapView.mapboxMap.style.setLight3DProperty(
+            try mapView.mapboxMap.setLight3DProperty(
                 id: directionalLightId,
                 property: "intensity",
                 value: lightIntensity
@@ -85,8 +85,8 @@ final class Lights3DExample: UIViewController, ExampleProtocol {
 
             let color = StyleColor(generateSunColor(progress: animationProgress))
             let colorValue = "rgba(\(color.red), \(color.green), \(color.blue), \(color.alpha))"
-            try mapView.mapboxMap.style.setLight3DProperty(id: ambientLightId, property: "color", value: colorValue)
-            try mapView.mapboxMap.style.setLight3DProperty(id: ambientLightId, property: "intensity", value: lightIntensity)
+            try mapView.mapboxMap.setLight3DProperty(id: ambientLightId, property: "color", value: colorValue)
+            try mapView.mapboxMap.setLight3DProperty(id: ambientLightId, property: "intensity", value: lightIntensity)
         } catch {
             print("Failed to update sun light due to:", error)
         }
@@ -145,7 +145,7 @@ final class Lights3DExample: UIViewController, ExampleProtocol {
 
         layer.fillExtrusionAmbientOcclusionRadius = .constant(3.0)
 
-        try! mapView.mapboxMap.style.addLayer(layer)
+        try! mapView.mapboxMap.addLayer(layer)
     }
 
     var animationProgress = 0.0 {

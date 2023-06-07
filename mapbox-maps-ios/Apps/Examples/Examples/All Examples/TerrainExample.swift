@@ -37,18 +37,18 @@ public class TerrainExample: UIViewController, ExampleProtocol {
         // of the tiles.
         demSource.tileSize = 514
         demSource.maxzoom = 14.0
-        try! mapView.mapboxMap.style.addSource(demSource)
+        try! mapView.mapboxMap.addSource(demSource)
 
         var terrain = Terrain(sourceId: demSource.id)
         terrain.exaggeration = .constant(1.5)
 
-        try! mapView.mapboxMap.style.setTerrain(terrain)
+        try! mapView.mapboxMap.setTerrain(terrain)
 
         var skyLayer = SkyLayer(id: "sky-layer")
         skyLayer.skyType = .constant(.atmosphere)
         skyLayer.skyAtmosphereSun = .constant([0.0, 0.0])
         skyLayer.skyAtmosphereSunIntensity = .constant(15.0)
 
-        try! mapView.mapboxMap.style.addLayer(skyLayer)
+        try! mapView.mapboxMap.addLayer(skyLayer)
     }
 }

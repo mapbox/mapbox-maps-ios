@@ -10,7 +10,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
     private lazy var styleToggle = UISegmentedControl(items: Style.allCases.map(\.name))
     private var style: Style = .satelliteStreets {
         didSet {
-            mapView.mapboxMap.style.uri = style.uri
+            mapView.mapboxMap.uri = style.uri
         }
     }
     private var showsBearingImage: Bool = false {

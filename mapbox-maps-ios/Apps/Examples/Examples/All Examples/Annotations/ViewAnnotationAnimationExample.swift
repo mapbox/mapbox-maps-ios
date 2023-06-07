@@ -44,14 +44,14 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
         var source = GeoJSONSource(id: "route-source")
         source.data = .geometry(route.geometry)
 
-        try! mapView.mapboxMap.style.addSource(source)
+        try! mapView.mapboxMap.addSource(source)
 
         var layer = LineLayer(id: "route-layer")
         layer.source = source.id
         layer.lineColor = .constant(StyleColor(UIColor.systemPink))
         layer.lineWidth = .constant(4)
 
-        try! mapView.mapboxMap.style.addLayer(layer)
+        try! mapView.mapboxMap.addLayer(layer)
 
         let options = ViewAnnotationOptions(
             geometry: Point(route.coordinates.first!),
@@ -66,7 +66,7 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        if mapView.mapboxMap.style.isLoaded {
+        if mapView.mapboxMap.isLoaded {
             startAnimation()
         } else {
             mapView.mapboxMap.onMapLoaded.observeNext { _ in

@@ -27,9 +27,9 @@ struct AddRouteCommand: AsyncCommand {
         var source = GeoJSONSource(id: ID.routeSource)
         source.data = .geometry(Geometry(route.line))
         source.lineMetrics = true
-        try mapView.mapboxMap.style.addSource(source)
-        try mapView.mapboxMap.style.addPersistentLayer(makeCasingLayer())
-        try mapView.mapboxMap.style.addPersistentLayer(makeLineLayer())
+        try mapView.mapboxMap.addSource(source)
+        try mapView.mapboxMap.addPersistentLayer(makeCasingLayer())
+        try mapView.mapboxMap.addPersistentLayer(makeLineLayer())
 
         mapView.mapboxMap.onCameraChanged.observe { [weak locationProvider] _ in
             let newLocation = mapView.cameraState.center
@@ -37,11 +37,11 @@ struct AddRouteCommand: AsyncCommand {
             let progess = traveledDistance / route.distance
 
             locationProvider?.currentCoordination = newLocation
-            try? mapView.mapboxMap.style.setLayerProperty(
+            try? mapView.mapboxMap.setLayerProperty(
                 for: ID.routeLineLayer,
                 property: "line-trim-offset",
                 value: [0, progess])
-            try? mapView.mapboxMap.style.setLayerProperty(
+            try? mapView.mapboxMap.setLayerProperty(
                 for: ID.casingLineLayer,
                 property: "line-trim-offset",
                 value: [0, progess])

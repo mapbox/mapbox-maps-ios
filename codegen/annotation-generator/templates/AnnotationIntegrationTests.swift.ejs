@@ -30,17 +30,17 @@ final class <%- camelize(type) %>AnnotationIntegrationTests: MapViewIntegrationT
     }
 
     internal func testSourceAndLayerSetup() throws {
-        XCTAssertTrue(style.layerExists(withId: manager.layerId))
-        XCTAssertTrue(try style.isPersistentLayer(id: manager.layerId),
+        XCTAssertTrue(mapView.mapboxMap.layerExists(withId: manager.layerId))
+        XCTAssertTrue(try mapView.mapboxMap.isPersistentLayer(id: manager.layerId),
                       "The layer with id \(manager.layerId) should be persistent.")
-        XCTAssertTrue(style.sourceExists(withId: manager.sourceId))
+        XCTAssertTrue(mapView.mapboxMap.sourceExists(withId: manager.sourceId))
     }
 
     func testSourceAndLayerRemovedUponDestroy() {
         manager.destroy()
 
-        XCTAssertFalse(style.allLayerIdentifiers.map { $0.id }.contains(manager.layerId))
-        XCTAssertFalse(style.allSourceIdentifiers.map { $0.id }.contains(manager.sourceId))
+        XCTAssertFalse(mapView.mapboxMap.allLayerIdentifiers.map { $0.id }.contains(manager.layerId))
+        XCTAssertFalse(mapView.mapboxMap.allSourceIdentifiers.map { $0.id }.contains(manager.sourceId))
     }
 
     func testCreatingSecondAnnotationManagerWithTheSameId() throws {
@@ -56,7 +56,7 @@ final class <%- camelize(type) %>AnnotationIntegrationTests: MapViewIntegrationT
         manager.annotations.append(annotation)
 
         expectation(for: NSPredicate(block: { (_, _) in
-            guard let layer = try? self.style.layer(withId: self.manager.layerId, type: <%- camelize(originalType) %>Layer.self) else {
+            guard let layer = try? self.mapView.mapboxMap.layer(withId: self.manager.layerId, type: <%- camelize(originalType) %>Layer.self) else {
                 return false
             }
             return layer.<%- camelizeWithLeadingLowercase(testPropertyForType(type).name) %> == <%- expectedExpressionValue(testPropertyForType(type), 12) %>
@@ -75,7 +75,7 @@ final class <%- camelize(type) %>AnnotationIntegrationTests: MapViewIntegrationT
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer = try style.layer(withId: self.manager.layerId, type: <%- camelize(originalType) %>Layer.self)
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: <%- camelize(originalType) %>Layer.self)
         if case .constant(let actualValue) = layer.<%- camelizeWithLeadingLowercase(property.name) -%> {
             <%- assertions(property) %>
         } else {
@@ -89,7 +89,7 @@ final class <%- camelize(type) %>AnnotationIntegrationTests: MapViewIntegrationT
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try style.layer(withId: self.manager.layerId, type: <%- camelize(originalType) %>Layer.self)
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: <%- camelize(originalType) %>Layer.self)
         XCTAssertEqual(layer.<%- camelizeWithLeadingLowercase(property.name) -%>, <%- defaultValueConstant(property, originalType) -%>)
     }
     <%_ } _%>
@@ -108,7 +108,7 @@ final class <%- camelize(type) %>AnnotationIntegrationTests: MapViewIntegrationT
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer = try style.layer(withId: self.manager.layerId, type: <%- camelize(originalType) %>Layer.self)
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: <%- camelize(originalType) %>Layer.self)
         XCTAssertEqual(layer.<%- camelizeWithLeadingLowercase(property.name) -%>, <%- expectedExpressionValue(property, 12) %>)
 
         // Test that the property can be reset to nil
@@ -120,7 +120,7 @@ final class <%- camelize(type) %>AnnotationIntegrationTests: MapViewIntegrationT
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try style.layer(withId: self.manager.layerId, type: <%- camelize(originalType) %>Layer.self)
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: <%- camelize(originalType) %>Layer.self)
         XCTAssertEqual(layer.<%- camelizeWithLeadingLowercase(property.name) -%>, <%- defaultValueConstant(property, originalType) -%>)
     }
     <%_ } _%>
@@ -128,7 +128,7 @@ final class <%- camelize(type) %>AnnotationIntegrationTests: MapViewIntegrationT
     <%_ if (type == "point") { %>
     func testImagesAddedToStyleIfNotExist() throws {
         let existingImage = PointAnnotation.Image(image: try XCTUnwrap(UIImage.emptyImage()), name: UUID().uuidString)
-        try style.addImage(existingImage.image, id: existingImage.name)
+        try mapView.mapboxMap.addImage(existingImage.image, id: existingImage.name)
 
         var annotation1 = PointAnnotation(coordinate: .random())
         annotation1.image = existingImage
@@ -137,15 +137,15 @@ final class <%- camelize(type) %>AnnotationIntegrationTests: MapViewIntegrationT
         manager.annotations = [annotation1, annotation2]
         manager.syncSourceAndLayerIfNeeded()
 
-        XCTAssertTrue(style.imageExists(withId: existingImage.name))
-        XCTAssertTrue(style.imageExists(withId: "test-image-2"))
+        XCTAssertTrue(mapView.mapboxMap.imageExists(withId: existingImage.name))
+        XCTAssertTrue(mapView.mapboxMap.imageExists(withId: "test-image-2"))
 
         manager.annotations = []
         manager.syncSourceAndLayerIfNeeded()
 
         // Images added externally will not be removed from Style when PointAnnotationManager is updated.
-        XCTAssertTrue(style.imageExists(withId: existingImage.name))
-        XCTAssertFalse(style.imageExists(withId: "test-image-2"))
+        XCTAssertTrue(mapView.mapboxMap.imageExists(withId: existingImage.name))
+        XCTAssertFalse(mapView.mapboxMap.imageExists(withId: "test-image-2"))
     }
 
     func testStyleImagesSharedBetweenMultipleManagers() throws {
@@ -165,21 +165,21 @@ final class <%- camelize(type) %>AnnotationIntegrationTests: MapViewIntegrationT
         manager.syncSourceAndLayerIfNeeded()
         otherManager.syncSourceAndLayerIfNeeded()
 
-        XCTAssertTrue(style.imageExists(withId: sharedImageID))
+        XCTAssertTrue(mapView.mapboxMap.imageExists(withId: sharedImageID))
         XCTAssertTrue(manager.isUsingStyleImage(sharedImageID))
         XCTAssertTrue(otherManager.isUsingStyleImage(sharedImageID))
 
         manager.annotations = []
         manager.syncSourceAndLayerIfNeeded()
 
-        XCTAssertTrue(style.imageExists(withId: sharedImageID))
+        XCTAssertTrue(mapView.mapboxMap.imageExists(withId: sharedImageID))
         XCTAssertFalse(manager.isUsingStyleImage(sharedImageID))
         XCTAssertTrue(otherManager.isUsingStyleImage(sharedImageID))
 
         otherManager.annotations = []
         otherManager.syncSourceAndLayerIfNeeded()
 
-        XCTAssertFalse(style.imageExists(withId: sharedImageID))
+        XCTAssertFalse(mapView.mapboxMap.imageExists(withId: sharedImageID))
         XCTAssertFalse(manager.isUsingStyleImage(sharedImageID))
         XCTAssertFalse(otherManager.isUsingStyleImage(sharedImageID))
     }

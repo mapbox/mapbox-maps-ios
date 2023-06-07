@@ -31,14 +31,14 @@ final class ViewAnnotationWithPointAnnotationExample: UIViewController, ExampleP
         mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
 
-            try? self.mapView.mapboxMap.style.addImage(self.image, id: Constants.blueIconId)
+            try? self.mapView.mapboxMap.addImage(self.image, id: Constants.blueIconId)
             self.addPointAndViewAnnotation(at: self.mapView.mapboxMap.coordinate(for: self.mapView.center))
 
             // The below line is used for internal testing purposes only.
             self.finish()
         }.store(in: &cancelables)
 
-        mapView.mapboxMap.style.uri = .streets
+        mapView.mapboxMap.uri = .streets
 
         mapView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onMapTapped(_:))))
     }

@@ -133,7 +133,7 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
         // Additional properties on the text and circle layers can be modified like this below
         // To modify the text layer use: "mapbox-iOS-cluster-text-layer-manager-" and SymbolLayer.self
         do {
-            try mapView.mapboxMap.style.updateLayer(withId: "mapbox-iOS-cluster-circle-layer-manager-" + clusterLayerID, type: CircleLayer.self) { layer in
+            try mapView.mapboxMap.updateLayer(withId: "mapbox-iOS-cluster-circle-layer-manager-" + clusterLayerID, type: CircleLayer.self) { layer in
                 layer.circleStrokeColor = .constant(StyleColor(.black))
                 layer.circleStrokeWidth = .constant(3)
             }

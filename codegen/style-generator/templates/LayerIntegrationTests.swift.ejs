@@ -18,17 +18,15 @@ final class <%- camelize(type) %>LayerIntegrationTests: MapViewIntegrationTestCa
     }
 
     internal func testWaitForIdle() throws {
-        let style = try XCTUnwrap(self.style)
-
         let successfullyAddedLayerExpectation = XCTestExpectation(description: "Successfully added <%- camelize(type) %>Layer to Map")
         successfullyAddedLayerExpectation.expectedFulfillmentCount = 1
 
         let successfullyRetrievedLayerExpectation = XCTestExpectation(description: "Successfully retrieved <%- camelize(type) %>Layer from Map")
         successfullyRetrievedLayerExpectation.expectedFulfillmentCount = 1
 
-        style.uri = .streets
+        mapView.mapboxMap.uri = .streets
 
-        didFinishLoadingStyle = { _ in
+        didFinishLoadingStyle = { mapView in
 
             var layer = <%- camelize(type) %>Layer(id: "test-id")
             layer.source = "some-source"
@@ -57,9 +55,9 @@ final class <%- camelize(type) %>LayerIntegrationTests: MapViewIntegrationTestCa
             // Add the layer
             do {
             <%_ if (type === 'location-indicator') { -%>
-                try style.addPersistentLayer(layer)
+                try mapView.mapboxMap.addPersistentLayer(layer)
             <%_ } else { -%>
-                try style.addLayer(layer)
+                try mapView.mapboxMap.addLayer(layer)
             <%_ } -%>
                 successfullyAddedLayerExpectation.fulfill()
             } catch {
@@ -68,7 +66,7 @@ final class <%- camelize(type) %>LayerIntegrationTests: MapViewIntegrationTestCa
 
             // Retrieve the layer
             do {
-                _ = try style.layer(withId: "test-id", type: <%- camelize(type) %>Layer.self)
+                _ = try mapView.mapboxMap.layer(withId: "test-id", type: <%- camelize(type) %>Layer.self)
                 successfullyRetrievedLayerExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve <%- camelize(type) %>Layer because of error: \(error)")

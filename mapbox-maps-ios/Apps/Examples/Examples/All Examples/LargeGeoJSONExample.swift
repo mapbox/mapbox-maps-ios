@@ -53,19 +53,19 @@ final class LargeGeoJSONPerformanceExample: UIViewController, ExampleProtocol {
             lineLayer.lineOffset = .constant(Double(5 * i))
 
             // Add the geoJSONSourceData with a dataId, which will be returned when that data source is updated
-            try mapView.mapboxMap.style.addSource(source, dataId: String(jsonUpdateCounter))
-            try mapView.mapboxMap.style.addLayer(lineLayer)
+            try mapView.mapboxMap.addSource(source, dataId: String(jsonUpdateCounter))
+            try mapView.mapboxMap.addLayer(lineLayer)
 
             jsonUpdateCounter += 1
         }
 
-        try mapView.mapboxMap.style.addImage(UIImage(named: "blue_marker_view")!, id: "icon")
+        try mapView.mapboxMap.addImage(UIImage(named: "blue_marker_view")!, id: "icon")
 
         var source = GeoJSONSource(id: "source_marker")
         source.data = .feature(Feature(geometry: Point(cameraCenter).geometry))
 
         // Add the geoJSONSourceData with a dataId, which will be returned when that data source is updated
-        try mapView.mapboxMap.style.addSource(source, dataId: String(jsonUpdateCounter))
+        try mapView.mapboxMap.addSource(source, dataId: String(jsonUpdateCounter))
         jsonUpdateCounter += 1
 
         var symbolLayer = SymbolLayer(id: "layer_marker")
@@ -73,7 +73,7 @@ final class LargeGeoJSONPerformanceExample: UIViewController, ExampleProtocol {
         symbolLayer.iconImage = .constant(.name("icon"))
         symbolLayer.iconAnchor = .constant(.bottom)
 
-        try mapView.mapboxMap.style.addLayer(symbolLayer)
+        try mapView.mapboxMap.addLayer(symbolLayer)
 
         try loadAdditionalGeoJSON()
     }
@@ -83,7 +83,7 @@ final class LargeGeoJSONPerformanceExample: UIViewController, ExampleProtocol {
         source.data = .string(geoJSON)
 
         // Add the geoJSONSourceData with a dataId, which will be returned when that data source is updated
-        try mapView.mapboxMap.style.addSource(source, dataId: String(jsonUpdateCounter))
+        try mapView.mapboxMap.addSource(source, dataId: String(jsonUpdateCounter))
         jsonUpdateCounter += 1
 
         var lineLayer = LineLayer(id: "line_layer_\(Self.largeSourceCount)")
@@ -91,6 +91,6 @@ final class LargeGeoJSONPerformanceExample: UIViewController, ExampleProtocol {
         lineLayer.lineColor = .constant(StyleColor(.systemGreen))
         lineLayer.lineOffset = .constant(Double(5 * Self.largeSourceCount))
 
-        try mapView.mapboxMap.style.addLayer(lineLayer)
+        try mapView.mapboxMap.addLayer(lineLayer)
     }
 }

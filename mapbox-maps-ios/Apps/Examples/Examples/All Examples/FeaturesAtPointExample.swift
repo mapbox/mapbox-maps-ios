@@ -43,8 +43,8 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
         fillLayer.fillOutlineColor = .constant(StyleColor(.black))
 
         // Add the data source and style layer to the map.
-        try! mapView.mapboxMap.style.addSource(geoJSONSource)
-        try! mapView.mapboxMap.style.addLayer(fillLayer, layerPosition: nil)
+        try! mapView.mapboxMap.addSource(geoJSONSource)
+        try! mapView.mapboxMap.addLayer(fillLayer, layerPosition: nil)
 
         // Set up the tap gesture
         addTapGesture(to: mapView)

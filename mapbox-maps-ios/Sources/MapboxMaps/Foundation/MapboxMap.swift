@@ -131,13 +131,14 @@ internal protocol MapboxMapProtocol: AnyObject {
 /// ```
 ///
 /// - Important: MapboxMap should only be used from the main thread.
-public final class MapboxMap: MapboxMapProtocol {
+public final class MapboxMap: Style, MapboxMapProtocol {
     /// The underlying renderer object responsible for rendering the map.
     private let __map: Map
     private var cancelables = Set<AnyCancelable>()
 
     /// The `style` object supports run time styling.
-    public let style: Style
+    @available(*, deprecated, message: "Access style APIs directly from MapboxMap instance instead")
+    public var style: Style { return self }
 
     /// Provides access to events triggered during Map lifecycle.
     private let events: MapEvents
@@ -146,22 +147,23 @@ public final class MapboxMap: MapboxMapProtocol {
         __map.destroyRenderer()
     }
 
-    internal init(map: Map, events: MapEvents, style: Style) {
+    internal init(map: Map, events: MapEvents, styleSourceManager: StyleSourceManagerProtocol) {
         self.__map = map
         self.events = events
-        self.style = style
+
+        super.init(with: map, sourceManager: styleSourceManager)
 
         __map.createRenderer()
     }
 
-    internal convenience init(mapClient: MapClient, mapInitOptions: MapInitOptions) {
+    internal convenience init(mapClient: MapClient, mapInitOptions: MapInitOptions, styleSourceManager: StyleSourceManagerProtocol? = nil) {
         let map = Map(
             client: mapClient,
             mapOptions: mapInitOptions.mapOptions)
         self.init(
             map: map,
             events: MapEvents(observable: map),
-            style: Style(with: map))
+            styleSourceManager: styleSourceManager ?? StyleSourceManager(styleManager: map))
     }
 
     // MARK: - Render loop
@@ -180,13 +182,14 @@ public final class MapboxMap: MapboxMapProtocol {
         let styleLoadingError = onMapLoadingError.filter { $0.type == .style }
         let token = onStyleLoaded
             .join(withError: styleLoadingError)
-            .observeNext { [style, weak self] result in
-                if !style.isLoaded {
+            .observeNext { [weak self] result in
+                guard let self else { return }
+                if !self.isLoaded {
                     Log.warning(forMessage: "style.isLoaded == false, was this an empty style?", category: "Style")
                 }
-                let result = result.map { _ in style }
+                let result = result.map { _ in self as Style }
                 completion(result)
-                if let token = weakToken, let self = self {
+                if let token = weakToken {
                     self.cancelables.remove(token)
                 }
             }
@@ -697,7 +700,7 @@ public final class MapboxMap: MapboxMapProtocol {
     }
 
     internal func pointIsAboveHorizon(_ point: CGPoint) -> Bool {
-        guard style.projection.name == .mercator else {
+        guard projection.name == .mercator else {
             return false
         }
         let topMargin = 0.04 * size.height
@@ -1053,7 +1056,7 @@ extension MapboxMap {
 
 extension MapboxMap: AttributionDataSource {
     internal func loadAttributions(completion: @escaping ([Attribution]) -> Void) {
-        Attribution.parse(style.sourceAttributions(), completion: completion)
+        Attribution.parse(sourceAttributions(), completion: completion)
     }
 }
 

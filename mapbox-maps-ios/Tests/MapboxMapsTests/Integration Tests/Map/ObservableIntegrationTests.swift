@@ -4,10 +4,8 @@ import XCTest
 class ObservableIntegrationTests: MapViewIntegrationTestCase {
 
     func testResourceRequestEvent() throws {
-        guard
-            let mapView = mapView,
-            let style = style else {
-            XCTFail("There should be valid MapView and Style objects created by setUp.")
+        guard let mapView = mapView else {
+            XCTFail("There should be valid MapView object created by setUp.")
             return
         }
 
@@ -20,7 +18,7 @@ class ObservableIntegrationTests: MapViewIntegrationTestCase {
             eventExpectation.fulfill()
         }.store(in: &cancelables)
 
-        style.uri = .streets
+        mapView.mapboxMap.uri = .streets
 
         let styleLoadExpectation = XCTestExpectation(description: "Style should have been loaded")
 

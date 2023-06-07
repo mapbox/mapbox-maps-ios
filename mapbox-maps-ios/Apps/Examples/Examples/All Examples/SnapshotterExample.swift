@@ -76,7 +76,7 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
             pixelRatio: UIScreen.main.scale)
 
         snapshotter = Snapshotter(options: options)
-        snapshotter.style.uri = .light
+        snapshotter.uri = .light
 
         // Set the camera of the snapshotter
 

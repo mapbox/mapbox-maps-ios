@@ -11,10 +11,10 @@ struct EnableTerrainCommand: AsyncCommand {
         }
 
         if let source = terrain.rasterDemSource {
-            try mapView.mapboxMap.style.addSource(source)
+            try mapView.mapboxMap.addSource(source)
         }
 
-        try mapView.mapboxMap.style.setTerrain(terrain)
+        try mapView.mapboxMap.setTerrain(terrain)
     }
 }
 

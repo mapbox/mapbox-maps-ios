@@ -38,7 +38,7 @@ extension MapView: AttributionDialogManagerDelegate {
 
         let sdkVersion = Bundle.mapboxMapsMetadata.version
 
-        if let styleURIString = mapboxMap.style.uri?.rawValue,
+        if let styleURIString = mapboxMap.uri?.rawValue,
            let styleURL = URL(string: styleURIString),
            styleURL.scheme == "mapbox",
            styleURL.host == "styles" {

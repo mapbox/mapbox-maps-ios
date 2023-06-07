@@ -80,8 +80,10 @@ Mapbox welcomes participation and contributions from everyone.
 * Add required `id` property to `Source`. After that change `id` should be specified for source upon creation:
   ```swift
   let terrainSource = RasterDemSource(id: "terrain-source")
-  mapView.mapboxMap.style.addSource(terrainSource)
+  mapView.mapboxMap.addSource(terrainSource)
   ```
+* Support string option in `GeoJSONSourceData`.
+* Deprecate `MapboxMap/style` and `Snapshotter/style`, from now on you can access Style APIs directly from `MapboxMap` and `Snapshotter` instance.
 *  Support string option in `GeoJSONSourceData`.
 * Add a new experimental API to enable Tracing with `Tracing.status = .enabled`. Checkout `Tracing` reference to see more.
 

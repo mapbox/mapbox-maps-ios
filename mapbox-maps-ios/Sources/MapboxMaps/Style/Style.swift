@@ -51,13 +51,9 @@ internal extension StyleProtocol {
 /// via MapView.mapboxMap.style.
 ///
 /// - Important: Style should only be used from the main thread.
-public final class Style: StyleProtocol {
+public class Style: StyleProtocol {
     private let sourceManager: StyleSourceManagerProtocol
     internal let styleManager: StyleManagerProtocol
-
-    internal convenience init(with styleManager: StyleManagerProtocol) {
-        self.init(with: styleManager, sourceManager: StyleSourceManager(styleManager: styleManager))
-    }
 
     internal init(with styleManager: StyleManagerProtocol, sourceManager: StyleSourceManagerProtocol) {
         self.styleManager = styleManager

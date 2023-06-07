@@ -28,7 +28,6 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
     }
 
     func addSymbolClusteringLayers() {
-        let style = mapView.mapboxMap.style
         // The image named `fire-station-11` is included in the app's Assets.xcassets bundle.
         // In order to recolor an image, you need to add a template image to the map's style.
         // The image's rendering mode can be set programmatically or in the asset catalogue.
@@ -37,7 +36,7 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         // Add the image tp the map's style. Set `sdf` to `true`. This allows the icon images to be recolored.
         // For more information about `SDF`, or Signed Distance Fields, see
         // https://docs.mapbox.com/help/troubleshooting/using-recolorable-images-in-mapbox-maps/#what-are-signed-distance-fields-sdf
-        try! style.addImage(image, id: "fire-station-icon", sdf: true)
+        try! mapView.mapboxMap.addImage(image, id: "fire-station-icon", sdf: true)
 
         // Fire_Hydrants.geojson contains information about fire hydrants in the District of Columbia.
         // It was downloaded on 6/10/21 from https://opendata.dc.gov/datasets/DCGIS::fire-hydrants/about
@@ -94,10 +93,10 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         clusterCountLayer.source = source.id
 
         // Add the source and two layers to the map.
-        try! style.addSource(source)
-        try! style.addLayer(clusteredLayer)
-        try! style.addLayer(unclusteredLayer, layerPosition: .below(clusteredLayer.id))
-        try! style.addLayer(clusterCountLayer)
+        try! mapView.mapboxMap.addSource(source)
+        try! mapView.mapboxMap.addLayer(clusteredLayer)
+        try! mapView.mapboxMap.addLayer(unclusteredLayer, layerPosition: .below(clusteredLayer.id))
+        try! mapView.mapboxMap.addLayer(clusterCountLayer)
 
         // This is used for internal testing purposes only and can be excluded
         // from your implementation.

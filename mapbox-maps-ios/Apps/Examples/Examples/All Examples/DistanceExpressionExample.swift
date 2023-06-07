@@ -24,7 +24,6 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
     }
 
     func addCircleLayer() {
-        let style = mapView.mapboxMap.style
         let center = mapView.mapboxMap.cameraState.center
 
         // Create a `GeoJSONSource` from a Turf geometry.
@@ -87,19 +86,17 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
         circleLayer.circleOpacity = .constant(0.3)
 
         // Add the source and layer to the map's style.
-        try! style.addSource(source)
-        try! style.addLayer(circleLayer)
+        try! mapView.mapboxMap.addSource(source)
+        try! mapView.mapboxMap.addLayer(circleLayer)
     }
 
     func filterPoiLabels() {
-        let style = mapView.mapboxMap.style
-
         do {
             // Update the `SymbolLayer` with id "poi-label". This layer is included in the Mapbox
             // Streets v11 style. In order to see all layers included with your style, either inspect
             // the style in Mapbox Studio or inspect the `style.allLayerIdentifiers` property once
             // the style has finished loading.
-            try style.updateLayer(withId: "poi-label", type: SymbolLayer.self) { (layer: inout SymbolLayer) throws in
+            try mapView.mapboxMap.updateLayer(withId: "poi-label", type: SymbolLayer.self) { (layer: inout SymbolLayer) throws in
                 // Filter the "poi-label" layer to only show points less than 150 meters away from the
                 // the specified feature.
                 layer.filter = Exp(.lt) {

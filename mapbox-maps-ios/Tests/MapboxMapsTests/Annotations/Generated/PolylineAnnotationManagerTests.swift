@@ -275,7 +275,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
     func testSetToNilLineCap() {
         let newLineCapProperty = LineCap.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .line, property: "line-cap").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-cap").value as! String
         manager.lineCap = newLineCapProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-cap"])
@@ -348,7 +348,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
     func testSetToNilLineMiterLimit() {
         let newLineMiterLimitProperty = Double.random(in: -100000...100000)
-        let defaultValue = Style.layerPropertyDefaultValue(for: .line, property: "line-miter-limit").value as! Double
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-miter-limit").value as! Double
         manager.lineMiterLimit = newLineMiterLimitProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-miter-limit"])
@@ -421,7 +421,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
     func testSetToNilLineRoundLimit() {
         let newLineRoundLimitProperty = Double.random(in: -100000...100000)
-        let defaultValue = Style.layerPropertyDefaultValue(for: .line, property: "line-round-limit").value as! Double
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-round-limit").value as! Double
         manager.lineRoundLimit = newLineRoundLimitProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-round-limit"])
@@ -494,7 +494,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
     func testSetToNilLineDasharray() {
         let newLineDasharrayProperty = Array.random(withLength: .random(in: 0...10), generator: { Double.random(in: -100000...100000) })
-        let defaultValue = Style.layerPropertyDefaultValue(for: .line, property: "line-dasharray").value as! [Double]
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-dasharray").value as! [Double]
         manager.lineDasharray = newLineDasharrayProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-dasharray"])
@@ -567,7 +567,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
     func testSetToNilLineTranslate() {
         let newLineTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-        let defaultValue = Style.layerPropertyDefaultValue(for: .line, property: "line-translate").value as! [Double]
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-translate").value as! [Double]
         manager.lineTranslate = newLineTranslateProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-translate"])
@@ -640,7 +640,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
     func testSetToNilLineTranslateAnchor() {
         let newLineTranslateAnchorProperty = LineTranslateAnchor.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .line, property: "line-translate-anchor").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-translate-anchor").value as! String
         manager.lineTranslateAnchor = newLineTranslateAnchorProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-translate-anchor"])
@@ -713,7 +713,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
     func testSetToNilLineTrimOffset() {
         let newLineTrimOffsetProperty = [Double.random(in: 0...1), Double.random(in: 0...1)].sorted()
-        let defaultValue = Style.layerPropertyDefaultValue(for: .line, property: "line-trim-offset").value as! [Double]
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-trim-offset").value as! [Double]
         manager.lineTrimOffset = newLineTrimOffsetProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-trim-offset"])

@@ -86,7 +86,7 @@ final class ResizableImageExample: UIViewController, ExampleProtocol {
 
     // Append some text to the layer's textField, stretching the icon image in both X and Y axes
     private func updateIconText() {
-        guard mapView.mapboxMap.isLoaded else {
+        guard mapView.mapboxMap.isStyleLoaded else {
             return
         }
 

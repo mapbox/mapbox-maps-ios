@@ -169,7 +169,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         // Construct the properties dictionary to reset any properties that are no longer used
         let unusedPropertyKeys = previouslySetLayerPropertyKeys.subtracting(newLayerProperties.keys)
         let unusedProperties = Dictionary(uniqueKeysWithValues: unusedPropertyKeys.map { (key) -> (String, Any) in
-            (key, Style.layerPropertyDefaultValue(for: .fill, property: key).value)
+            (key, StyleManager.layerPropertyDefaultValue(for: .fill, property: key).value)
         })
 
         // Store the new set of property keys

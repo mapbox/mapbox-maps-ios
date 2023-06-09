@@ -58,18 +58,15 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
     }
 
     func testLoadStyleJSONCompletionIsCalled() throws {
-        let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
+        let styleJSON = ValueConverter.toJson(forValue: styleJSONObject)
         XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string")
 
         setupMapView()
 
         let completionCalled = expectation(description: "Completion closure is called")
-        mapView.mapboxMap.loadStyleJSON(styleJSON) { result in
-            guard case let .success(style) = result else {
-                XCTFail("loadStyleJSON failed")
-                return
-            }
-            XCTAssertEqual(styleJSON, style.JSON)
+        mapView.mapboxMap.loadStyleJSON(styleJSON) { [mapboxMap = mapView.mapboxMap] error in
+            XCTAssertNil(error)
+            XCTAssertEqual(styleJSON, mapboxMap?.styleJSON)
             completionCalled.fulfill()
         }
         wait(for: [completionCalled], timeout: 5.0)
@@ -88,8 +85,8 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
         rootView.addSubview(mapView)
 
         let completionCalled = expectation(description: "Map is loaded")
-        mapView.mapboxMap.onMapLoaded.observeNext { [mapView] _ in
-            XCTAssertEqual(styleJSON, mapView?.mapboxMap.JSON)
+        mapView.mapboxMap.onMapLoaded.observeNext { [mapboxMap = mapView.mapboxMap] _ in
+            XCTAssertEqual(styleJSON, mapboxMap?.styleJSON)
             completionCalled.fulfill()
         }.store(in: &cancelables)
 

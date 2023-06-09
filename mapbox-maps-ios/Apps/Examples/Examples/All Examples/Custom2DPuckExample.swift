@@ -38,7 +38,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
 
     private var style: Style = .dark {
         didSet {
-            mapView.mapboxMap.uri = style.styleURL
+            mapView.mapboxMap.styleURI = style.styleURL
         }
     }
 

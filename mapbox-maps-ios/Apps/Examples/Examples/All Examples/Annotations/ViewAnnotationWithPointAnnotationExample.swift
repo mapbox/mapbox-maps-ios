@@ -38,7 +38,7 @@ final class ViewAnnotationWithPointAnnotationExample: UIViewController, ExampleP
             self.finish()
         }.store(in: &cancelables)
 
-        mapView.mapboxMap.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
         mapView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onMapTapped(_:))))
     }

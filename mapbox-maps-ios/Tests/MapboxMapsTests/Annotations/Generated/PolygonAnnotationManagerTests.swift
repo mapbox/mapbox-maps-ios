@@ -307,7 +307,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
     func testSetToNilFillAntialias() {
         let newFillAntialiasProperty = Bool.random()
-        let defaultValue = Style.layerPropertyDefaultValue(for: .fill, property: "fill-antialias").value as! Bool
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-antialias").value as! Bool
         manager.fillAntialias = newFillAntialiasProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-antialias"])
@@ -382,7 +382,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
     func testSetToNilFillTranslate() {
         let newFillTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-        let defaultValue = Style.layerPropertyDefaultValue(for: .fill, property: "fill-translate").value as! [Double]
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-translate").value as! [Double]
         manager.fillTranslate = newFillTranslateProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-translate"])
@@ -457,7 +457,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
     func testSetToNilFillTranslateAnchor() {
         let newFillTranslateAnchorProperty = FillTranslateAnchor.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .fill, property: "fill-translate-anchor").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-translate-anchor").value as! String
         manager.fillTranslateAnchor = newFillTranslateAnchorProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-translate-anchor"])

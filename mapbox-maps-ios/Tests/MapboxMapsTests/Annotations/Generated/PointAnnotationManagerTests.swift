@@ -297,7 +297,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilIconAllowOverlap() {
         let newIconAllowOverlapProperty = Bool.random()
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "icon-allow-overlap").value as! Bool
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-allow-overlap").value as! Bool
         manager.iconAllowOverlap = newIconAllowOverlapProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-allow-overlap"])
@@ -389,7 +389,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilIconIgnorePlacement() {
         let newIconIgnorePlacementProperty = Bool.random()
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "icon-ignore-placement").value as! Bool
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-ignore-placement").value as! Bool
         manager.iconIgnorePlacement = newIconIgnorePlacementProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-ignore-placement"])
@@ -481,7 +481,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilIconKeepUpright() {
         let newIconKeepUprightProperty = Bool.random()
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "icon-keep-upright").value as! Bool
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-keep-upright").value as! Bool
         manager.iconKeepUpright = newIconKeepUprightProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-keep-upright"])
@@ -573,7 +573,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilIconOptional() {
         let newIconOptionalProperty = Bool.random()
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "icon-optional").value as! Bool
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-optional").value as! Bool
         manager.iconOptional = newIconOptionalProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-optional"])
@@ -665,7 +665,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilIconPadding() {
         let newIconPaddingProperty = Double.random(in: 0...100000)
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "icon-padding").value as! Double
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-padding").value as! Double
         manager.iconPadding = newIconPaddingProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-padding"])
@@ -757,7 +757,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilIconPitchAlignment() {
         let newIconPitchAlignmentProperty = IconPitchAlignment.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "icon-pitch-alignment").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-pitch-alignment").value as! String
         manager.iconPitchAlignment = newIconPitchAlignmentProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-pitch-alignment"])
@@ -849,7 +849,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilIconRotationAlignment() {
         let newIconRotationAlignmentProperty = IconRotationAlignment.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "icon-rotation-alignment").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-rotation-alignment").value as! String
         manager.iconRotationAlignment = newIconRotationAlignmentProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-rotation-alignment"])
@@ -941,7 +941,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilSymbolAvoidEdges() {
         let newSymbolAvoidEdgesProperty = Bool.random()
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "symbol-avoid-edges").value as! Bool
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-avoid-edges").value as! Bool
         manager.symbolAvoidEdges = newSymbolAvoidEdgesProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-avoid-edges"])
@@ -1033,7 +1033,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilSymbolPlacement() {
         let newSymbolPlacementProperty = SymbolPlacement.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "symbol-placement").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-placement").value as! String
         manager.symbolPlacement = newSymbolPlacementProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-placement"])
@@ -1125,7 +1125,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilSymbolSpacing() {
         let newSymbolSpacingProperty = Double.random(in: 1...100000)
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "symbol-spacing").value as! Double
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-spacing").value as! Double
         manager.symbolSpacing = newSymbolSpacingProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-spacing"])
@@ -1217,7 +1217,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilSymbolZOrder() {
         let newSymbolZOrderProperty = SymbolZOrder.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "symbol-z-order").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-z-order").value as! String
         manager.symbolZOrder = newSymbolZOrderProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-z-order"])
@@ -1309,7 +1309,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextAllowOverlap() {
         let newTextAllowOverlapProperty = Bool.random()
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-allow-overlap").value as! Bool
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-allow-overlap").value as! Bool
         manager.textAllowOverlap = newTextAllowOverlapProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-allow-overlap"])
@@ -1401,7 +1401,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextFont() {
         let newTextFontProperty = Array.random(withLength: .random(in: 0...10), generator: { String.randomASCII(withLength: .random(in: 0...100)) })
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-font").value as! [String]
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-font").value as! [String]
         manager.textFont = newTextFontProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-font"])
@@ -1493,7 +1493,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextIgnorePlacement() {
         let newTextIgnorePlacementProperty = Bool.random()
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-ignore-placement").value as! Bool
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-ignore-placement").value as! Bool
         manager.textIgnorePlacement = newTextIgnorePlacementProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-ignore-placement"])
@@ -1585,7 +1585,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextKeepUpright() {
         let newTextKeepUprightProperty = Bool.random()
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-keep-upright").value as! Bool
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-keep-upright").value as! Bool
         manager.textKeepUpright = newTextKeepUprightProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-keep-upright"])
@@ -1677,7 +1677,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextMaxAngle() {
         let newTextMaxAngleProperty = Double.random(in: -100000...100000)
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-max-angle").value as! Double
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-max-angle").value as! Double
         manager.textMaxAngle = newTextMaxAngleProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-max-angle"])
@@ -1769,7 +1769,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextOptional() {
         let newTextOptionalProperty = Bool.random()
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-optional").value as! Bool
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-optional").value as! Bool
         manager.textOptional = newTextOptionalProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-optional"])
@@ -1861,7 +1861,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextPadding() {
         let newTextPaddingProperty = Double.random(in: 0...100000)
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-padding").value as! Double
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-padding").value as! Double
         manager.textPadding = newTextPaddingProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-padding"])
@@ -1953,7 +1953,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextPitchAlignment() {
         let newTextPitchAlignmentProperty = TextPitchAlignment.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-pitch-alignment").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-pitch-alignment").value as! String
         manager.textPitchAlignment = newTextPitchAlignmentProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-pitch-alignment"])
@@ -2045,7 +2045,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextRotationAlignment() {
         let newTextRotationAlignmentProperty = TextRotationAlignment.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-rotation-alignment").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-rotation-alignment").value as! String
         manager.textRotationAlignment = newTextRotationAlignmentProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-rotation-alignment"])
@@ -2139,7 +2139,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextVariableAnchor() {
         let newTextVariableAnchorProperty = Array.random(withLength: .random(in: 0...10), generator: { TextAnchor.allCases.randomElement()! })
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-variable-anchor").value as! [TextAnchor]
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-variable-anchor").value as! [TextAnchor]
         manager.textVariableAnchor = newTextVariableAnchorProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-variable-anchor"])
@@ -2233,7 +2233,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextWritingMode() {
         let newTextWritingModeProperty = Array.random(withLength: .random(in: 0...10), generator: { TextWritingMode.allCases.randomElement()! })
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-writing-mode").value as! [TextWritingMode]
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-writing-mode").value as! [TextWritingMode]
         manager.textWritingMode = newTextWritingModeProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-writing-mode"])
@@ -2325,7 +2325,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilIconTranslate() {
         let newIconTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "icon-translate").value as! [Double]
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-translate").value as! [Double]
         manager.iconTranslate = newIconTranslateProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-translate"])
@@ -2417,7 +2417,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilIconTranslateAnchor() {
         let newIconTranslateAnchorProperty = IconTranslateAnchor.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "icon-translate-anchor").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-translate-anchor").value as! String
         manager.iconTranslateAnchor = newIconTranslateAnchorProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-translate-anchor"])
@@ -2509,7 +2509,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextTranslate() {
         let newTextTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-translate").value as! [Double]
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-translate").value as! [Double]
         manager.textTranslate = newTextTranslateProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-translate"])
@@ -2601,7 +2601,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextTranslateAnchor() {
         let newTextTranslateAnchorProperty = TextTranslateAnchor.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-translate-anchor").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-translate-anchor").value as! String
         manager.textTranslateAnchor = newTextTranslateAnchorProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-translate-anchor"])

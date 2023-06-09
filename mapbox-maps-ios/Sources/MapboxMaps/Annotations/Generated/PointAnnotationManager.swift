@@ -263,7 +263,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         // Construct the properties dictionary to reset any properties that are no longer used
         let unusedPropertyKeys = previouslySetLayerPropertyKeys.subtracting(newLayerProperties.keys)
         let unusedProperties = Dictionary(uniqueKeysWithValues: unusedPropertyKeys.map { (key) -> (String, Any) in
-            (key, Style.layerPropertyDefaultValue(for: .symbol, property: key).value)
+            (key, StyleManager.layerPropertyDefaultValue(for: .symbol, property: key).value)
         })
 
         // Store the new set of property keys

@@ -34,7 +34,7 @@ extension MapSnapshotter: MapSnapshotterProtocol {}
 ///
 /// Use a `MapSnapshotter` when you need to capture a static snapshot of a map without using the actual ``MapView``.
 /// You can configure the final result via ``MapSnapshotOptions`` upon construction time and take.
-public class Snapshotter: Style {
+public class Snapshotter: StyleManager {
 
     /// Internal `MapboxCoreMaps.MBXMapSnapshotter` object that takes care of
     /// rendering a snapshot.
@@ -42,7 +42,7 @@ public class Snapshotter: Style {
 
     /// A `style` object that can be manipulated to set different styles for a snapshot.
     @available(*, deprecated, message: "Access style APIs directly from Snapshotter instance instead")
-    public var style: Style { return self }
+    public var style: StyleManager { return self }
 
     private let events: MapEvents
     private let options: MapSnapshotOptions

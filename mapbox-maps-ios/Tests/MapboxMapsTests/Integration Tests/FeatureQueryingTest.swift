@@ -17,7 +17,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                                                   longitude: -122.341647)
 
     internal func testQueryAtPoint() {
-        mapView.mapboxMap.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
         let featureQueryExpectation = XCTestExpectation(description: "Wait for features to be queried and at least one feature to be returned with a layer.")
 
@@ -53,7 +53,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
     }
 
     internal func testQueryInRectWithFilter() {
-        mapView.mapboxMap.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
         let featureQueryExpectation = XCTestExpectation(description: "Wait for features to be queried.")
 
@@ -106,7 +106,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
     }
 
     internal func testQueryForGeometry() {
-        mapView.mapboxMap.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
         let featureQueryExpectation = XCTestExpectation(description: "Wait for features to be queried.")
 
@@ -147,7 +147,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
     }
 
     internal func testQueryRenderedSource() {
-        mapView.mapboxMap.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
         let featureQueryExpectation = XCTestExpectation(description: "Wait for source features to be queried.")
 
@@ -186,7 +186,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
     }
 
     internal func testGeoJsonClusterFunctions() {
-        mapView.mapboxMap.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
         let clusterSourceID = "cluster-source"
         let geoJSONClusterLeavesExpection = XCTestExpectation(description: "Return 4 features as leaves of the cluster.")
         geoJSONClusterLeavesExpection.assertForOverFulfill = true

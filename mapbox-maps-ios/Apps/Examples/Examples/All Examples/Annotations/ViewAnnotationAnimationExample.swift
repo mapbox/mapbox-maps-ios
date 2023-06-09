@@ -66,7 +66,7 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        if mapView.mapboxMap.isLoaded {
+        if mapView.mapboxMap.isStyleLoaded {
             startAnimation()
         } else {
             mapView.mapboxMap.onMapLoaded.observeNext { _ in

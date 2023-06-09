@@ -68,7 +68,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
         let expectation = XCTestExpectation(description: "Wait for map to idle")
         expectation.expectedFulfillmentCount = 2
 
-        mapView.mapboxMap.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
         mapView.mapboxMap.onMapLoadingError.observeNext { error in
             XCTFail("Failed to load map with \(String(describing: error))")

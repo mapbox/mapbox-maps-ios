@@ -22,7 +22,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
     private typealias SourceId = String
 
     internal static func sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue {
-        return StyleManager.getStyleSourcePropertyDefaultValue(forSourceType: sourceType, property: property)
+        return MapboxCoreMaps.StyleManager.getStyleSourcePropertyDefaultValue(forSourceType: sourceType, property: property)
     }
 
     private let styleManager: StyleManagerProtocol

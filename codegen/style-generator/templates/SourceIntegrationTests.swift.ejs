@@ -18,7 +18,7 @@ final class <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : 
         let successfullyRetrievedSourceExpectation = XCTestExpectation(description: "Successfully retrieved <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>Source from Map")
         successfullyRetrievedSourceExpectation.expectedFulfillmentCount = 1
 
-        mapView.mapboxMap.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
         didFinishLoadingStyle = { mapView in
             var source = <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>Source(id: "test-source")

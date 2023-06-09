@@ -562,7 +562,7 @@ final class Puck2DTests: XCTestCase {
             StyleColor(UIColor.clear).rgbaString
         ] as [Any]
         for key in originalKeys where expectedProperties[key] == nil {
-            expectedProperties[key] = Style.layerPropertyDefaultValue(for: .locationIndicator, property: key).value
+            expectedProperties[key] = StyleManager.layerPropertyDefaultValue(for: .locationIndicator, property: key).value
         }
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         let actualProperties = try XCTUnwrap(style.setLayerPropertiesStub.invocations.first?.parameters.properties)

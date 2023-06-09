@@ -97,8 +97,8 @@ struct SwiftUIMapView: UIViewRepresentable {
         }
         /// Since setting the style causes some reloading to happen,
         /// we only call the setter if the value has changed.
-        if mapView.mapboxMap.uri != styleURI {
-            mapView.mapboxMap.uri = styleURI
+        if mapView.mapboxMap.styleURI != styleURI {
+            mapView.mapboxMap.styleURI = styleURI
         }
 
         /// The coordinator exposes the annotation manager so that we can sync the annotations

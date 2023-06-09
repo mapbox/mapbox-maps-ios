@@ -6,7 +6,7 @@ class StyleLoadIntegrationTests: MapViewIntegrationTestCase {
 
     // MARK: - Tests
     func testNilStyleDoesNotLoad() {
-        XCTAssertNil(mapView.mapboxMap.uri, "Current style should be nil.") // As set by setUp
+        XCTAssertNil(mapView.mapboxMap.styleURI, "Current style should be nil.") // As set by setUp
 
         let expectation = self.expectation(description: "Style should not load")
         expectation.expectedFulfillmentCount = 1
@@ -63,7 +63,7 @@ class StyleLoadIntegrationTests: MapViewIntegrationTestCase {
             expectation.fulfill()
         }
 
-        mapView.mapboxMap.uri = styleURI
+        mapView.mapboxMap.styleURI = styleURI
         wait(for: [expectation], timeout: 10)
     }
 }

@@ -4,7 +4,7 @@ import XCTest
 internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
 
     internal func testSetFeatureState() {
-        mapView.mapboxMap.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
         let featureStateExpectation = XCTestExpectation(description: "Wait for feature state map to be updated and returned.")
         featureStateExpectation.assertForOverFulfill = true
 
@@ -42,7 +42,7 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
     }
 
     internal func testRemoveFeatureState() {
-        mapView.mapboxMap.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
         let featureStateRemovedExpectation = XCTestExpectation(description: "Wait for feature state map to be updated and removed.")
         let featureStateKeptExpectation = XCTestExpectation(description: "Wait for feature state map to be kept.")
 
@@ -104,7 +104,7 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
     }
 
     internal func testResetFeatureStates() {
-        mapView.mapboxMap.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
         let featureStateRemovedExpectation = XCTestExpectation(description: "Wait for feature state map to be updated and removed.")
         featureStateRemovedExpectation.expectedFulfillmentCount = 2
 

@@ -84,7 +84,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circlePitchAlignment, .constant(CirclePitchAlignment(rawValue: Style.layerPropertyDefaultValue(for: .circle, property: "circle-pitch-alignment").value as! String)!))
+        XCTAssertEqual(layer.circlePitchAlignment, .constant(CirclePitchAlignment(rawValue: StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-pitch-alignment").value as! String)!))
     }
 
     func testCirclePitchScale() throws {
@@ -110,7 +110,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circlePitchScale, .constant(CirclePitchScale(rawValue: Style.layerPropertyDefaultValue(for: .circle, property: "circle-pitch-scale").value as! String)!))
+        XCTAssertEqual(layer.circlePitchScale, .constant(CirclePitchScale(rawValue: StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-pitch-scale").value as! String)!))
     }
 
     func testCircleTranslate() throws {
@@ -138,7 +138,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleTranslate, .constant(Style.layerPropertyDefaultValue(for: .circle, property: "circle-translate").value as! [Double]))
+        XCTAssertEqual(layer.circleTranslate, .constant(StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-translate").value as! [Double]))
     }
 
     func testCircleTranslateAnchor() throws {
@@ -164,7 +164,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleTranslateAnchor, .constant(CircleTranslateAnchor(rawValue: Style.layerPropertyDefaultValue(for: .circle, property: "circle-translate-anchor").value as! String)!))
+        XCTAssertEqual(layer.circleTranslateAnchor, .constant(CircleTranslateAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-translate-anchor").value as! String)!))
     }
 
     func testCircleSortKey() throws {
@@ -200,7 +200,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleSortKey, .constant((Style.layerPropertyDefaultValue(for: .circle, property: "circle-sort-key").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.circleSortKey, .constant((StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-sort-key").value as! NSNumber).doubleValue))
     }
 
     func testCircleBlur() throws {
@@ -236,7 +236,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleBlur, .constant((Style.layerPropertyDefaultValue(for: .circle, property: "circle-blur").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.circleBlur, .constant((StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-blur").value as! NSNumber).doubleValue))
     }
 
     func testCircleColor() throws {
@@ -272,7 +272,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: Style.layerPropertyDefaultValue(for: .circle, property: "circle-color").value as! [Any], options: []))))
+        XCTAssertEqual(layer.circleColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-color").value as! [Any], options: []))))
     }
 
     func testCircleOpacity() throws {
@@ -308,7 +308,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleOpacity, .constant((Style.layerPropertyDefaultValue(for: .circle, property: "circle-opacity").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.circleOpacity, .constant((StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-opacity").value as! NSNumber).doubleValue))
     }
 
     func testCircleRadius() throws {
@@ -344,7 +344,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleRadius, .constant((Style.layerPropertyDefaultValue(for: .circle, property: "circle-radius").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.circleRadius, .constant((StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-radius").value as! NSNumber).doubleValue))
     }
 
     func testCircleStrokeColor() throws {
@@ -380,7 +380,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleStrokeColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: Style.layerPropertyDefaultValue(for: .circle, property: "circle-stroke-color").value as! [Any], options: []))))
+        XCTAssertEqual(layer.circleStrokeColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-stroke-color").value as! [Any], options: []))))
     }
 
     func testCircleStrokeOpacity() throws {
@@ -416,7 +416,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleStrokeOpacity, .constant((Style.layerPropertyDefaultValue(for: .circle, property: "circle-stroke-opacity").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.circleStrokeOpacity, .constant((StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-stroke-opacity").value as! NSNumber).doubleValue))
     }
 
     func testCircleStrokeWidth() throws {
@@ -452,7 +452,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleStrokeWidth, .constant((Style.layerPropertyDefaultValue(for: .circle, property: "circle-stroke-width").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.circleStrokeWidth, .constant((StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-stroke-width").value as! NSNumber).doubleValue))
     }
 }
 

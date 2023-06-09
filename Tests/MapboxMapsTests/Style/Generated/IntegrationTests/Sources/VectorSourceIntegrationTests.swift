@@ -11,7 +11,7 @@ final class VectorSourceIntegrationTests: MapViewIntegrationTestCase {
         let successfullyRetrievedSourceExpectation = XCTestExpectation(description: "Successfully retrieved VectorSource from Map")
         successfullyRetrievedSourceExpectation.expectedFulfillmentCount = 1
 
-        mapView.mapboxMap.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
         didFinishLoadingStyle = { mapView in
             var source = VectorSource(id: "test-source")

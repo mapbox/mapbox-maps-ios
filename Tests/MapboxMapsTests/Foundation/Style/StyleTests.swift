@@ -4,14 +4,14 @@ import XCTest
 @_implementationOnly import MapboxCommon_Private
 
 final class StyleTests: XCTestCase {
-    var style: Style!
+    var style: MapboxMaps.StyleManager!
     var styleManager: MockStyleManager!
     var sourceManager: MockStyleSourceManager!
 
     override func setUp() {
         styleManager = MockStyleManager()
         sourceManager = MockStyleSourceManager()
-        style = Style(with: styleManager, sourceManager: sourceManager)
+        style = StyleManager(with: styleManager, sourceManager: sourceManager)
     }
 
     override func tearDown() {
@@ -50,33 +50,33 @@ final class StyleTests: XCTestCase {
     func testStyleIsLoaded() {
         let isStyleLoaded = Bool.random()
         styleManager.isStyleLoadedStub.defaultReturnValue = isStyleLoaded
-        XCTAssertEqual(style.isLoaded, isStyleLoaded)
+        XCTAssertEqual(style.isStyleLoaded, isStyleLoaded)
     }
 
     func testGetStyleURI() {
         // Empty URI
-        XCTAssertNil(style.uri)
+        XCTAssertNil(style.styleURI)
 
         // Valid URL
         styleManager.getStyleURIStub.defaultReturnValue = "test://testStyle"
-        XCTAssertNotNil(style.uri)
+        XCTAssertNotNil(style.styleURI)
     }
 
     func testSetStyleURI() {
         // Invalid (nil) URI -> will not update StyleURI
-        style.uri = StyleURI(rawValue: "Not A Valid Style URL")
-        XCTAssertNotEqual(style.uri?.rawValue, "Not A Valid Style URL")
+        style.styleURI = StyleURI(rawValue: "Not A Valid Style URL")
+        XCTAssertNotEqual(style.styleURI?.rawValue, "Not A Valid Style URL")
 
         // Valid URI
-        style.uri = StyleURI(rawValue: "test://newTestStyle")
+        style.styleURI = StyleURI(rawValue: "test://newTestStyle")
         XCTAssertEqual(styleManager.setStyleURIForUriStub.invocations.last!.parameters, "test://newTestStyle")
     }
 
     func testGetSetStyleJSON() {
         styleManager.getStyleJSONStub.defaultReturnValue = "{\"foo\":\"bar\"}"
-        XCTAssertEqual(style.JSON, "{\"foo\":\"bar\"}")
+        XCTAssertEqual(style.styleJSON, "{\"foo\":\"bar\"}")
 
-        style.JSON = "{\"foo\":\"foo\"}"
+        style.styleJSON = "{\"foo\":\"foo\"}"
         XCTAssertEqual(styleManager.setStyleJSONForJsonStub.invocations.last?.parameters, "{\"foo\":\"foo\"}")
     }
 
@@ -84,7 +84,7 @@ final class StyleTests: XCTestCase {
         let stubCamera = MapboxMaps.CameraOptions.random()
         styleManager.getStyleDefaultCameraStub.defaultReturnValue = MapboxCoreMaps.CameraOptions(stubCamera)
 
-        XCTAssertEqual(style.defaultCamera, stubCamera)
+        XCTAssertEqual(style.styleDefaultCamera, stubCamera)
     }
 
     func testGetStyleTransition() {
@@ -94,7 +94,7 @@ final class StyleTests: XCTestCase {
             enablePlacementTransitions: .random())
         styleManager.getStyleTransitionStub.defaultReturnValue = stubTransition
 
-        XCTAssertEqual(style.transition, stubTransition)
+        XCTAssertEqual(style.styleTransition, stubTransition)
     }
 
     func testSetStyleTransition() {
@@ -102,7 +102,7 @@ final class StyleTests: XCTestCase {
             duration: .random(in: 0...300),
             delay: .random(in: 0...300),
             enablePlacementTransitions: .random())
-        style.transition = stubTransition
+        style.styleTransition = stubTransition
 
         XCTAssertEqual(styleManager.setStyleTransitionStub.invocations.last?.parameters, stubTransition)
     }

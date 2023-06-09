@@ -91,7 +91,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
-        XCTAssertEqual(layer.fillAntialias, .constant((Style.layerPropertyDefaultValue(for: .fill, property: "fill-antialias").value as! NSNumber).boolValue))
+        XCTAssertEqual(layer.fillAntialias, .constant((StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-antialias").value as! NSNumber).boolValue))
     }
 
     func testFillTranslate() throws {
@@ -119,7 +119,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
-        XCTAssertEqual(layer.fillTranslate, .constant(Style.layerPropertyDefaultValue(for: .fill, property: "fill-translate").value as! [Double]))
+        XCTAssertEqual(layer.fillTranslate, .constant(StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-translate").value as! [Double]))
     }
 
     func testFillTranslateAnchor() throws {
@@ -145,7 +145,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
-        XCTAssertEqual(layer.fillTranslateAnchor, .constant(FillTranslateAnchor(rawValue: Style.layerPropertyDefaultValue(for: .fill, property: "fill-translate-anchor").value as! String)!))
+        XCTAssertEqual(layer.fillTranslateAnchor, .constant(FillTranslateAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-translate-anchor").value as! String)!))
     }
 
     func testFillSortKey() throws {
@@ -188,7 +188,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
-        XCTAssertEqual(layer.fillSortKey, .constant((Style.layerPropertyDefaultValue(for: .fill, property: "fill-sort-key").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.fillSortKey, .constant((StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-sort-key").value as! NSNumber).doubleValue))
     }
 
     func testFillColor() throws {
@@ -231,7 +231,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
-        XCTAssertEqual(layer.fillColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: Style.layerPropertyDefaultValue(for: .fill, property: "fill-color").value as! [Any], options: []))))
+        XCTAssertEqual(layer.fillColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-color").value as! [Any], options: []))))
     }
 
     func testFillOpacity() throws {
@@ -274,7 +274,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
-        XCTAssertEqual(layer.fillOpacity, .constant((Style.layerPropertyDefaultValue(for: .fill, property: "fill-opacity").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.fillOpacity, .constant((StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-opacity").value as! NSNumber).doubleValue))
     }
 
     func testFillOutlineColor() throws {
@@ -317,7 +317,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
-        XCTAssertEqual(layer.fillOutlineColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: Style.layerPropertyDefaultValue(for: .fill, property: "fill-outline-color").value as! [Any], options: []))))
+        XCTAssertEqual(layer.fillOutlineColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-outline-color").value as! [Any], options: []))))
     }
 
     func testFillPattern() throws {
@@ -360,7 +360,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
-        XCTAssertEqual(layer.fillPattern, .constant(.name(Style.layerPropertyDefaultValue(for: .fill, property: "fill-pattern").value as! String)))
+        XCTAssertEqual(layer.fillPattern, .constant(.name(StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-pattern").value as! String)))
     }
 }
 

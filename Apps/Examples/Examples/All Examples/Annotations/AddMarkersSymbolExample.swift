@@ -33,7 +33,7 @@ final class AddMarkersSymbolExample: UIViewController, ExampleProtocol {
             self.finish()
         }.store(in: &cancelables)
 
-        mapView.mapboxMap.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
     }
 
     // MARK: - Style management

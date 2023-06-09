@@ -1,5 +1,4 @@
 import Foundation
-import MapboxCoreMaps
 @_implementationOnly import MapboxCommon_Private
 @_implementationOnly import MapboxCoreMaps_Private
 
@@ -163,4 +162,4 @@ internal protocol StyleManagerProtocol {
 
 // MARK: Conformance
 
-extension StyleManager: StyleManagerProtocol {}
+extension MapboxCoreMaps.StyleManager: StyleManagerProtocol {}

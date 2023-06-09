@@ -377,3 +377,17 @@ Func ViewAnnotationManagerError.hash(into:) has been removed
 Var MapView.SnapshotError.hashValue has been removed 
 Var TypeConversionError.hashValue has been removed 
 Var ViewAnnotationManagerError.hashValue has been removed 
+
+// Style APIs
+Var Style.isLoaded has been removed
+Class Style has been renamed to Class StyleManager
+Var Style.JSON has been renamed to Var styleJSON
+Var Style.defaultCamera has been renamed to Var styleDefaultCamera
+Var Style.transition has been renamed to Var styleTransition
+Var Style.uri has been renamed to Var styleURI
+Accessor MapboxMap.style.Get() has return type change from MapboxMaps.Style to MapboxMaps.StyleManager
+Accessor Snapshotter.style.Get() has return type change from MapboxMaps.Style to MapboxMaps.StyleManager
+Func MapboxMap.loadStyleJSON(_:completion:) has parameter 1 type change from ((Swift.Result<MapboxMaps.Style, Swift.Error>) -> Swift.Void)? to ((MapboxCoreMaps.MapLoadingError?) -> Swift.Void)?
+Func MapboxMap.loadStyleURI(_:completion:) has parameter 1 type change from ((Swift.Result<MapboxMaps.Style, Swift.Error>) -> Swift.Void)? to ((MapboxCoreMaps.MapLoadingError?) -> Swift.Void)?
+Var MapboxMap.style has declared type change from MapboxMaps.Style to MapboxMaps.StyleManager
+Var Snapshotter.style has declared type change from MapboxMaps.Style to MapboxMaps.StyleManager

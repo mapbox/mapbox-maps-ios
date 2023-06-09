@@ -231,7 +231,7 @@ internal final class Puck2D: Puck {
         // Construct the properties dictionary to reset any properties that are no longer used
         let unusedPropertyKeys = previouslySetLayerPropertyKeys.subtracting(newLayerProperties.keys)
         let unusedProperties = Dictionary(uniqueKeysWithValues: unusedPropertyKeys.map { (key) -> (String, Any) in
-            (key, Style.layerPropertyDefaultValue(for: .locationIndicator, property: key).value)
+            (key, StyleManager.layerPropertyDefaultValue(for: .locationIndicator, property: key).value)
         })
         // Merge the new and unused properties
         var allLayerProperties = newLayerProperties.merging(

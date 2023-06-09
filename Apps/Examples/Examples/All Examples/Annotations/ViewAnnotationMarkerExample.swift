@@ -56,7 +56,7 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
             self?.prepareStyle()
         }.store(in: &cancelables)
 
-        mapView.mapboxMap.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
         view.addSubview(styleChangeButton)
 
@@ -102,7 +102,7 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
     }
 
     @objc private func styleChangePressed(sender: UIButton) {
-        mapView.mapboxMap.uri = mapView.mapboxMap.uri == .streets ? .satelliteStreets : .streets
+        mapView.mapboxMap.styleURI = mapView.mapboxMap.styleURI == .streets ? .satelliteStreets : .streets
     }
 
     // MARK: - Style management
@@ -114,7 +114,7 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
         source.data = .featureCollection(FeatureCollection(features: pointList))
         try? mapView.mapboxMap.addSource(source)
 
-        if mapView.mapboxMap.uri == .satelliteStreets {
+        if mapView.mapboxMap.styleURI == .satelliteStreets {
             var demSource = RasterDemSource(id: "terrain-source")
             demSource.url = Constants.TERRAIN_URL_TILE_RESOURCE
             try? mapView.mapboxMap.addSource(demSource)

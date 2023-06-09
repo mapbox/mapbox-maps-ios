@@ -15,7 +15,7 @@ final class SkyLayerIntegrationTests: MapViewIntegrationTestCase {
         let successfullyRetrievedLayerExpectation = XCTestExpectation(description: "Successfully retrieved SkyLayer from Map")
         successfullyRetrievedLayerExpectation.expectedFulfillmentCount = 1
 
-        mapView.mapboxMap.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
         didFinishLoadingStyle = { mapView in
 

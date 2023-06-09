@@ -268,7 +268,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
     func testSetToNilCirclePitchAlignment() {
         let newCirclePitchAlignmentProperty = CirclePitchAlignment.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .circle, property: "circle-pitch-alignment").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-pitch-alignment").value as! String
         manager.circlePitchAlignment = newCirclePitchAlignmentProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-pitch-alignment"])
@@ -339,7 +339,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
     func testSetToNilCirclePitchScale() {
         let newCirclePitchScaleProperty = CirclePitchScale.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .circle, property: "circle-pitch-scale").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-pitch-scale").value as! String
         manager.circlePitchScale = newCirclePitchScaleProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-pitch-scale"])
@@ -410,7 +410,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
     func testSetToNilCircleTranslate() {
         let newCircleTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-        let defaultValue = Style.layerPropertyDefaultValue(for: .circle, property: "circle-translate").value as! [Double]
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-translate").value as! [Double]
         manager.circleTranslate = newCircleTranslateProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-translate"])
@@ -481,7 +481,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
     func testSetToNilCircleTranslateAnchor() {
         let newCircleTranslateAnchorProperty = CircleTranslateAnchor.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .circle, property: "circle-translate-anchor").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-translate-anchor").value as! String
         manager.circleTranslateAnchor = newCircleTranslateAnchorProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-translate-anchor"])

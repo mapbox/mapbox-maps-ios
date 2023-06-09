@@ -51,16 +51,16 @@ internal extension StyleProtocol {
 /// via MapView.mapboxMap.style.
 ///
 /// - Important: Style should only be used from the main thread.
-public class Style: StyleProtocol {
+public class StyleManager: StyleProtocol {
     private let sourceManager: StyleSourceManagerProtocol
-    internal let styleManager: StyleManagerProtocol
+    private let styleManager: StyleManagerProtocol
 
     internal init(with styleManager: StyleManagerProtocol, sourceManager: StyleSourceManagerProtocol) {
         self.styleManager = styleManager
         self.sourceManager = sourceManager
 
         if let uri = StyleURI(rawValue: styleManager.getStyleURI()) {
-            self.uri = uri
+            self.styleURI = uri
         }
     }
 
@@ -166,7 +166,7 @@ public class Style: StyleProtocol {
             let (key, value) = element
             switch value {
             case Optional<Any>.none where result.keys.contains(key):
-                result[key] = Style.layerPropertyDefaultValue(for: layer.type, property: key).value
+                result[key] = Self.layerPropertyDefaultValue(for: layer.type, property: key).value
             // swiftlint:disable:next syntactic_sugar
             case Optional<Any>.some:
                 result[key] = value
@@ -261,7 +261,7 @@ public class Style: StyleProtocol {
 
     /// `true` if and only if the style JSON contents, the style specified sprite,
     /// and sources are all loaded, otherwise returns `false`.
-    public var isLoaded: Bool {
+    public var isStyleLoaded: Bool {
         return styleManager.isStyleLoaded()
     }
 
@@ -273,7 +273,7 @@ public class Style: StyleProtocol {
     /// - Attention:
     ///     This method should be called on the same thread where the MapboxMap
     ///     object is initialized.
-    public var uri: StyleURI? {
+    public var styleURI: StyleURI? {
         get {
             let uriString = styleManager.getStyleURI()
 
@@ -296,13 +296,9 @@ public class Style: StyleProtocol {
     /// - Attention:
     ///     This method should be called on the same thread where the MapboxMap
     ///     object is initialized.
-    public var JSON: String {
-        get {
-            styleManager.getStyleJSON()
-        }
-        set {
-            styleManager.setStyleJSONForJson(newValue)
-        }
+    public var styleJSON: String {
+        get { styleManager.getStyleJSON() }
+        set { styleManager.setStyleJSONForJson(newValue) }
     }
 
     /// The map `style`'s default camera, if any, or a default camera otherwise.
@@ -314,7 +310,7 @@ public class Style: StyleProtocol {
     /// - [pitch](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-pitch)
     ///
     /// The `style` default camera is re-evaluated when a new `style` is loaded. Values default to 0.0 if they are not defined in the `style`.
-    public var defaultCamera: CameraOptions {
+    public var styleDefaultCamera: CameraOptions {
         return CameraOptions(styleManager.getStyleDefaultCamera())
     }
 
@@ -330,7 +326,7 @@ public class Style: StyleProtocol {
     /// `MapEvents.Event.styleDataLoaded` where `payload type == "sprite"`
     /// and where `payload type == "sources"`.
     /// - SeeAlso: ``MapboxMap/onNext(event:handler:)``
-    public var transition: TransitionOptions {
+    public var styleTransition: TransitionOptions {
         get {
             styleManager.getStyleTransition()
         }
@@ -507,7 +503,7 @@ public class Style: StyleProtocol {
     /// - Returns:
     ///     The default value of the property for the layers with type layerType.
     public static func layerPropertyDefaultValue(for layerType: LayerType, property: String) -> StylePropertyValue {
-        return StyleManager.getStyleLayerPropertyDefaultValue(forLayerType: layerType.rawValue, property: property)
+        return MapboxCoreMaps.StyleManager.getStyleLayerPropertyDefaultValue(forLayerType: layerType.rawValue, property: property)
     }
 
     /// Gets the properties for a style layer.
@@ -1151,7 +1147,7 @@ internal func handleExpected<Value, Error, ReturnType>(closure: () -> (Expected<
 
 // MARK: - Attribution -
 
-extension Style {
+extension StyleManager {
     internal func sourceAttributions() -> [String] {
         return allSourceIdentifiers.compactMap {
             sourceProperty(for: $0.id, property: "attribution").value as? String
@@ -1161,7 +1157,7 @@ extension Style {
 
 // MARK: - StyleProjection
 
-extension Style {
+extension StyleManager {
     /// Sets the projection.
     ///
     /// - Parameter projection: The ``StyleProjection`` to apply to the style.

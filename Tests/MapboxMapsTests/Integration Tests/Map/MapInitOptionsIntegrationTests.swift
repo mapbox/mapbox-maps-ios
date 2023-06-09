@@ -36,7 +36,7 @@ class MapInitOptionsIntegrationTests: XCTestCase {
         // expected options are returned
         XCTAssertEqual(optionsFromProvider, providerReturnValue)
 
-        XCTAssertEqual(mapView.mapboxMap.uri, .satellite)
+        XCTAssertEqual(mapView.mapboxMap.styleURI, .satellite)
     }
 
     func testDefaultOptionsAreUsedWhenNibDoesntSetProvider() {

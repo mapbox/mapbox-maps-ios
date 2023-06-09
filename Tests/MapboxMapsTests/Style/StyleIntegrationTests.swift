@@ -7,7 +7,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         let expectation = XCTestExpectation(description: "Manipulating style succeeded")
         expectation.expectedFulfillmentCount = 3
 
-        mapView.mapboxMap.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
         didFinishLoadingStyle = { mapView in
 
@@ -41,7 +41,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
                 XCTAssert(retrievedLayer.backgroundColor == .constant(StyleColor(.blue)))
                 XCTAssertEqual(retrievedLayer.minZoom, 10)
 
-                let defaultBackgroundColorTransition = try XCTUnwrap(Style.layerPropertyDefaultValue(for: newBackgroundLayer.type, property: "background-color-transition").value as? [String: TimeInterval])
+                let defaultBackgroundColorTransition = try XCTUnwrap(StyleManager.layerPropertyDefaultValue(for: newBackgroundLayer.type, property: "background-color-transition").value as? [String: TimeInterval])
                 XCTAssertEqual(retrievedLayer.backgroundColorTransition!.duration * 1000.0, defaultBackgroundColorTransition["duration"])
                 XCTAssertEqual(retrievedLayer.backgroundColorTransition!.delay * 1000.0, defaultBackgroundColorTransition["delay"])
 
@@ -59,11 +59,11 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         let expectation = XCTestExpectation(description: "Move style layer succeeded")
         expectation.expectedFulfillmentCount = 2
 
-        mapView.mapboxMap.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
         didFinishLoadingStyle = { mapView in
 
-            let layers = mapView.mapboxMap.styleManager.getStyleLayers()
+            let layers = mapView.mapboxMap.allLayerIdentifiers
             let newBackgroundLayer = BackgroundLayer(id: "test-id")
 
             do {
@@ -101,7 +101,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         let persistenceExpectation = XCTestExpectation(description: "The layer should still be persistent after repeatedly moving.")
 
         let layerId = "test-id"
-        mapView.mapboxMap.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
         didFinishLoadingStyle = { mapView in
 
@@ -122,7 +122,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
                     try mapView.mapboxMap.moveLayer(withId: layerId, to: .at(step))
 
                     // Get layer position
-                    let layers = mapView.mapboxMap.styleManager.getStyleLayers()
+                    let layers = mapView.mapboxMap.allLayerIdentifiers
                     let layerIds = layers.map { $0.id }
 
                     let position = layerIds.firstIndex(of: layerId)
@@ -161,7 +161,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             }
         }
 
-        mapView.mapboxMap.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
         wait(for: [expectation], timeout: 5.0)
     }

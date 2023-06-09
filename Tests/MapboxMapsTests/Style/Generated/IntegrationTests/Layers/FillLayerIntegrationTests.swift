@@ -15,7 +15,7 @@ final class FillLayerIntegrationTests: MapViewIntegrationTestCase {
         let successfullyRetrievedLayerExpectation = XCTestExpectation(description: "Successfully retrieved FillLayer from Map")
         successfullyRetrievedLayerExpectation.expectedFulfillmentCount = 1
 
-        mapView.mapboxMap.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
         didFinishLoadingStyle = { mapView in
 

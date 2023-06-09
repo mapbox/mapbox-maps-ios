@@ -18,7 +18,7 @@ class ObservableIntegrationTests: MapViewIntegrationTestCase {
             eventExpectation.fulfill()
         }.store(in: &cancelables)
 
-        mapView.mapboxMap.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
         let styleLoadExpectation = XCTestExpectation(description: "Style should have been loaded")
 

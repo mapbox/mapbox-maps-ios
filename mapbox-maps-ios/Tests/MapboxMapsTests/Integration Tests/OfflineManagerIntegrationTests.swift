@@ -24,7 +24,6 @@ final class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
         // Cache the created tile store
         tileStore = TileStore.shared(for: tileStorePathURL)
-        tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: MapboxOptions.accessToken)
 
         MapboxMapsOptions.dataPath = tileStorePathURL
         MapboxMapsOptions.tileStore = tileStore

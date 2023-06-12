@@ -64,6 +64,7 @@ Mapbox welcomes participation and contributions from everyone.
 
     MapboxOptions.accessToken = accessToken
     ```
+  - `TileStore`no longer requires `TileStoreOptions.mapboxAccessToken` to be explicitly set.
   - Configurations for the external resources used by Maps API can now be set with `MapboxMapsOptions`:
     ```swift
     import MapboxMaps
@@ -83,6 +84,7 @@ Mapbox welcomes participation and contributions from everyone.
   mapView.mapboxMap.addSource(terrainSource)
   ```
 * Support string option in `GeoJSONSourceData`.
+* Allows passing `extraOptions` (which must be a valid JSON object) when creating `StylePackLoadOptions`and `TilesetDescriptorOptions`.
 * Deprecate `MapboxMap/style` and `Snapshotter/style`, from now on you can access Style APIs directly from `MapboxMap` and `Snapshotter` instance.
 *  Support string option in `GeoJSONSourceData`.
 * Add a new experimental API to enable Tracing with `Tracing.status = .enabled`. Checkout `Tracing` reference to see more.

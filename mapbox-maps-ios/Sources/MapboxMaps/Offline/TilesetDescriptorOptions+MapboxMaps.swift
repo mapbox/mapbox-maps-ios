@@ -13,6 +13,7 @@ extension TilesetDescriptorOptions {
     ///   - tilesets: The tilesets associated with the tileset descriptor. An array, each element of which must be either a URI to a TileJSON resource or a JSON string representing the inline tileset. The provided URIs must have "mapbox://" scheme, e.g. "mapbox://mapbox.mapbox-streets-v8".
     ///   - stylePackOptions: Style package load options, associated with the
     ///         tileset descriptor.
+    ///   - extraOptions: Extra tileset descriptor options. Must be a valid JSON object.
     ///
     /// - Note: The implementation loads and stores the loaded tiles in batches,
     ///     each batch has a pre-defined zoom range and it contains all child
@@ -42,19 +43,22 @@ extension TilesetDescriptorOptions {
     ///
     ///     Style package creation requires nonempty `styleURL`,
     ///     which will be the created style package identifier.
-    public convenience init(styleURI: StyleURI,
-                            zoomRange: ClosedRange<UInt8>,
-                            pixelRatio: Float = Float(UIScreen.main.scale),
-                            tilesets: [String]?,
-                            stylePackOptions: StylePackLoadOptions? = nil,
-                            extraOptions: Any? = nil
+    public convenience init(
+        styleURI: StyleURI,
+        zoomRange: ClosedRange<UInt8>,
+        pixelRatio: Float = Float(UIScreen.main.scale),
+        tilesets: [String]?,
+        stylePackOptions: StylePackLoadOptions? = nil,
+        extraOptions: Any? = nil
     ) {
-        self.init(styleURI: styleURI.rawValue,
-                  minZoom: zoomRange.lowerBound,
-                  maxZoom: zoomRange.upperBound,
-                  pixelRatio: pixelRatio,
-                  tilesets: tilesets,
-                  stylePack: stylePackOptions,
-                  extraOptions: extraOptions)
+        let extraOptions = extraOptions.flatMap { JSONSerialization.isValidJSONObject($0) ? $0 : nil }
+        self.init(
+            styleURI: styleURI.rawValue,
+            minZoom: zoomRange.lowerBound,
+            maxZoom: zoomRange.upperBound,
+            pixelRatio: pixelRatio,
+            tilesets: tilesets,
+            stylePack: stylePackOptions,
+            extraOptions: extraOptions)
     }
 }

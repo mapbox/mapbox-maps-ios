@@ -378,6 +378,10 @@ Var MapView.SnapshotError.hashValue has been removed
 Var TypeConversionError.hashValue has been removed 
 Var ViewAnnotationManagerError.hashValue has been removed 
 
+// Offline APIs - add extraOptions in load options
+Constructor StylePackLoadOptions.init(glyphsRasterizationMode:metadata:acceptExpired:) has been removed
+Constructor TileRegionLoadOptions.init(geometry:descriptors:metadata:acceptExpired:networkRestriction:averageBytesPerSecond:) has been removed
+
 // Style APIs
 Var Style.isLoaded has been removed
 Class Style has been renamed to Class StyleManager

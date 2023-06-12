@@ -264,10 +264,7 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
             case (_, .initial):
                 resetUI()
 
-                let tileStore = TileStore.default
-                tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: MapboxOptions.accessToken)
-
-                self.tileStore = tileStore
+                self.tileStore = TileStore.default
 
                 logger?.log(message: "Enabling HTTP stack network connection", category: "Example", color: .orange)
                 OfflineSwitch.shared.isMapboxStackConnected = true

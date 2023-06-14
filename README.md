@@ -22,7 +22,7 @@ Please use our [bug template](https://github.com/mapbox/mapbox-maps-ios/issues/n
 Please use our [feature template](https://github.com/mapbox/mapbox-maps-ios/issues/new?labels=feature%20%3Agreen_apple%3A&template=feature.md) to request new features or enhancements.
 
 #### Other questions
-Can't find the answer you're looking for? [Contact support](https://www.mapbox.com/contact)
+If you have any questions about how to use the SDK or if you need help with specific features, you can reach out to our support team [via our website](https://docs.mapbox.com/help/) or connect with our developer community by joining our [Discord channel](https://discord.gg/UshjQYyDFw). We kindly ask you to avoid using the issue tracker in this repository for questions and instead use our support channels.
 
 ## Historical Note
 This repository is a continuation of the Mapbox Maps SDK for iOS available at [mapbox/mapbox-gl-native-ios](https://github.com/mapbox/mapbox-gl-native-ios). 

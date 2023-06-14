@@ -2,6 +2,11 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## 10.14.0 - June 14, 2023
+
+* Added experimental `tileCover` method to the `Snapshotter` that returns tile ids covering the map.
+* Update MapboxCoreMaps to 10.14.0 and MapboxCommon to 23.6.0.
+
 ## 10.14.0-rc.1 - May 31, 2023
 
 * Fix the issue with simultaneous zooming/panning during the pitch gesture.

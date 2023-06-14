@@ -243,6 +243,16 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         }
     }
 
+    /// Decrease line layer opacity based on occlusion from 3D objects. Value 0 disables occlusion, value 1 means fully occluded.
+    public var lineDepthOcclusionFactor: Double? {
+        get {
+            return layerProperties["line-depth-occlusion-factor"] as? Double
+        }
+        set {
+            layerProperties["line-depth-occlusion-factor"] = newValue
+        }
+    }
+
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     public var lineTranslate: [Double]? {
         get {

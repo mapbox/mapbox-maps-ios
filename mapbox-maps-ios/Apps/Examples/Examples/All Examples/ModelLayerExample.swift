@@ -38,10 +38,10 @@ final class ModelLayerExample: UIViewController, ExampleProtocol {
     private func setupExample() {
         let style = mapView.mapboxMap.style
 
-        try! style.addModel(withId: Constants.duckModelId, modelURI: Constants.duck)
-        try! style.addModel(withId: Constants.carModelId, modelURI: Constants.car)
+        try! style.addStyleModel(modelId: Constants.duckModelId, modelUri: Constants.duck)
+        try! style.addStyleModel(modelId: Constants.carModelId, modelUri: Constants.car)
 
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: Constants.sourceId)
         var duckFeature = Feature(geometry: Constants.helsinki)
         duckFeature.properties = [Constants.modelIdKey: .string(Constants.duckModelId)]
         var carFeature = Feature(geometry: Constants.mapboxHelsinki)
@@ -49,7 +49,7 @@ final class ModelLayerExample: UIViewController, ExampleProtocol {
 
         source.data = .featureCollection(FeatureCollection(features: [duckFeature, carFeature]))
 
-        try! style.addSource(source, id: Constants.sourceId)
+        try! style.addSource(source)
 
         var layer = ModelLayer(id: "model-layer-id")
         layer.source = Constants.sourceId

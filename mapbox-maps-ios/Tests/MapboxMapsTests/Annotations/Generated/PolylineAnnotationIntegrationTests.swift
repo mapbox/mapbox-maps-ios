@@ -168,6 +168,32 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(layer.lineDasharray, .constant(StyleManager.layerPropertyDefaultValue(for: .line, property: "line-dasharray").value as! [Double]))
     }
 
+    func testLineDepthOcclusionFactor() throws {
+        // Test that the setter and getter work
+        let value = Double.random(in: 0...1)
+        manager.lineDepthOcclusionFactor = value
+        XCTAssertEqual(manager.lineDepthOcclusionFactor, value)
+
+        // Test that the value is synced to the layer
+        manager.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
+        if case .constant(let actualValue) = layer.lineDepthOcclusionFactor {
+            XCTAssertEqual(actualValue, value, accuracy: 0.1)
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.lineDepthOcclusionFactor = nil
+        XCTAssertNil(manager.lineDepthOcclusionFactor)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
+        XCTAssertEqual(layer.lineDepthOcclusionFactor, .constant((StyleManager.layerPropertyDefaultValue(for: .line, property: "line-depth-occlusion-factor").value as! NSNumber).doubleValue))
+    }
+
     func testLineTranslate() throws {
         // Test that the setter and getter work
         let value = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]

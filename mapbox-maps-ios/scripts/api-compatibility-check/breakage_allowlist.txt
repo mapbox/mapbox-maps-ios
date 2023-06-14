@@ -395,3 +395,6 @@ Func MapboxMap.loadStyleJSON(_:completion:) has parameter 1 type change from ((S
 Func MapboxMap.loadStyleURI(_:completion:) has parameter 1 type change from ((Swift.Result<MapboxMaps.Style, Swift.Error>) -> Swift.Void)? to ((MapboxCoreMaps.MapLoadingError?) -> Swift.Void)?
 Var MapboxMap.style has declared type change from MapboxMaps.Style to MapboxMaps.StyleManager
 Var Snapshotter.style has declared type change from MapboxMaps.Style to MapboxMaps.StyleManager
+
+// Expose Model layer as experimental
+EnumElement LayerType.model is now with @_spi

@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class FillExtrusionLayerIntegrationTests: MapViewIntegrationTestCase {
 
@@ -25,6 +25,7 @@ final class FillExtrusionLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
             layer.visibility = .visible
+            layer.fillExtrusionEdgeRadius = Value<Double>.testConstantValue()
 
             layer.fillExtrusionAmbientOcclusionIntensity = Value<Double>.testConstantValue()
             layer.fillExtrusionAmbientOcclusionIntensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -39,6 +40,7 @@ final class FillExtrusionLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.fillExtrusionOpacity = Value<Double>.testConstantValue()
             layer.fillExtrusionOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillExtrusionPattern = Value<ResolvedImage>.testConstantValue()
+            layer.fillExtrusionRoundedRoof = Value<Bool>.testConstantValue()
             layer.fillExtrusionTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillExtrusionTranslateAnchor = Value<FillExtrusionTranslateAnchor>.testConstantValue()
             layer.fillExtrusionVerticalGradient = Value<Bool>.testConstantValue()

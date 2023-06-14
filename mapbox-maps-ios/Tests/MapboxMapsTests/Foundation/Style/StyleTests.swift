@@ -535,4 +535,30 @@ final class StyleTests: XCTestCase {
         XCTAssertEqual(invocation.parameters.property, property)
         XCTAssertEqual(propertyValue as? String, stringValue)
     }
+
+    func testAddStyleModel() {
+        let modelId = UUID().uuidString
+        let modelUri = UUID().uuidString
+
+        XCTAssertNoThrow(try style.addStyleModel(modelId: modelId, modelUri: modelUri))
+        XCTAssertEqual(styleManager.addStyleModelStub.invocations.count, 1)
+        XCTAssertEqual(styleManager.addStyleModelStub.invocations.first?.parameters.modelId, modelId)
+        XCTAssertEqual(styleManager.addStyleModelStub.invocations.first?.parameters.modelUri, modelUri)
+    }
+
+    func testRemoveStyleModel() throws {
+        let modelId = UUID().uuidString
+
+        try style.removeStyleModel(modelId: modelId)
+        XCTAssertEqual(styleManager.removeStyleModelStub.invocations.count, 1)
+        XCTAssertEqual(styleManager.removeStyleModelStub.invocations.first?.parameters.modelId, modelId)
+    }
+
+    func testHasStyleModel() throws {
+        let modelId = UUID().uuidString
+
+        _ = style.hasStyleModel(modelId: modelId)
+        XCTAssertEqual(styleManager.hasStyleModelStub.invocations.count, 1)
+        XCTAssertEqual(styleManager.hasStyleModelStub.invocations.first?.parameters.modelId, modelId)
+    }
 }

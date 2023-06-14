@@ -30,6 +30,8 @@ internal protocol MapSnapshotterProtocol: StyleManagerProtocol, ObservableProtoc
                               pitch: NSNumber?) -> MapboxCoreMaps.CameraOptions
 
     func coordinateBoundsForCamera(forCamera camera: MapboxCoreMaps.CameraOptions) -> CoordinateBounds
+
+    func __tileCover(for options: MapboxCoreMaps.TileCoverOptions, cameraOptions: MapboxCoreMaps.CameraOptions?) -> [CanonicalTileID]
 }
 
 extension MapSnapshotter: MapSnapshotterProtocol {}
@@ -38,7 +40,7 @@ extension MapSnapshotter: MapSnapshotterProtocol {}
 ///  A high-level component responsible for taking map snapshots with given ``MapSnapshotOptions``.
 public class Snapshotter {
 
-    /// Internal `MapboxCoreMaps.MBXMapSnapshotter` object that takes care of
+    /// Internal `MapboxCoreMaps.MBMMapSnapshotter` object that takes care of
     /// rendering a snapshot.
     internal let mapSnapshotter: MapSnapshotterProtocol
 
@@ -312,6 +314,17 @@ public class Snapshotter {
             padding: padding.toMBXEdgeInsetsValue(),
             bearing: bearing?.NSNumber,
             pitch: pitch?.NSNumber))
+    }
+
+    /// Returns array of tile identifiers that cover current map camera.
+    ///
+    /// - Parameters:
+    ///  - options: Options for the tile cover method.
+    @_spi(Experimental)
+    public func tileCover(for options: TileCoverOptions) -> [CanonicalTileID] {
+        mapSnapshotter.__tileCover(
+            for: MapboxCoreMaps.TileCoverOptions(options),
+            cameraOptions: nil)
     }
 }
 

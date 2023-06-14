@@ -4,7 +4,7 @@ import Foundation
 protocol LocationManaging {
     var options: LocationOptions { get set }
     func addLocationConsumer(_ consumer: LocationConsumer)
-    func removeLocationConsumer(_ : LocationConsumer)
+    func removeLocationConsumer(_: LocationConsumer)
     func addPuckLocationConsumer(_ consumer: PuckLocationConsumer)
     func removePuckLocationConsumer(_ consumer: PuckLocationConsumer)
 }

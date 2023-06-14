@@ -75,4 +75,13 @@ final class MockMapSnapshotter: MockStyleManager, MapSnapshotterProtocol {
     func unsubscribe(for observer: Observer) {
         unsubscribeStub.call(with: observer)
     }
+
+    struct TileCoverParams {
+        var options: MapboxCoreMaps.TileCoverOptions
+        var cameraOptions: MapboxCoreMaps.CameraOptions?
+    }
+    var tileCoverStub = Stub<TileCoverParams, [CanonicalTileID]>(defaultReturnValue: [])
+    func __tileCover(for options: MapboxCoreMaps.TileCoverOptions, cameraOptions: MapboxCoreMaps.CameraOptions?) -> [CanonicalTileID] {
+        tileCoverStub.call(with: TileCoverParams(options: options, cameraOptions: cameraOptions))
+    }
 }

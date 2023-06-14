@@ -12,7 +12,6 @@ class TileCoverIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testTileCoverDefaultParameters() throws {
-        throw XCTSkip("Default value resolution will be fixed in MAPSNAT-1024")
         mapView.mapboxMap.setCamera(to: CameraOptions(zoom: 5.5))
         let tileIds = mapView.mapboxMap.tileCover(for: TileCoverOptions())
         XCTAssertFalse(tileIds.isEmpty)

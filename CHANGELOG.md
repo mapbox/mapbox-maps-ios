@@ -88,6 +88,10 @@ Mapbox welcomes participation and contributions from everyone.
 * Deprecate `MapboxMap/style` and `Snapshotter/style`, from now on you can access Style APIs directly from `MapboxMap` and `Snapshotter` instance.
 *  Support string option in `GeoJSONSourceData`.
 * Add a new experimental API to enable Tracing with `Tracing.status = .enabled`. Checkout `Tracing` reference to see more.
+* Introduce `FillExtrusionLayer.fillExtrusionRoundedRoof` , `FillExtrusionLayer.fillExtrusionEdgeRadius` API.
+* Introduce `line-depth-occlusion` API.
+* Introduce `FillExtrusionLayer/fillExtrusionRoundedRoof`, `FillExtrusionLayer/fillExtrusionEdgeRadius` API.
+* Introduce `lineDepthOcclusionFactor` API for `LineLayer`s and `PolylineAnnotiationManager`.
 
 ## 10.12.0 - March 22, 2023
 

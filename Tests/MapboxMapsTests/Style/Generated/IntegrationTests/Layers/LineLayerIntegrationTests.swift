@@ -35,6 +35,8 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.lineBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineColor = Value<StyleColor>.testConstantValue()
             layer.lineColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.lineDepthOcclusionFactor = Value<Double>.testConstantValue()
+            layer.lineDepthOcclusionFactorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineGapWidth = Value<Double>.testConstantValue()
             layer.lineGapWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineGradient = Value<StyleColor>.testConstantValue()

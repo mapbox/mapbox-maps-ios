@@ -41,7 +41,8 @@ public struct LayerType: ExpressibleByStringLiteral, RawRepresentable, Codable, 
     /// Layer representing the sky
     public static let sky: LayerType = "sky"
 
-    @available(*, deprecated, message: "Unsupported layer type")
+    /// Layer used for a 3D model
+    @_spi(Experimental)
     public static let model: LayerType = "model"
 
     public init(stringLiteral type: String) {

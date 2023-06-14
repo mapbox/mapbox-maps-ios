@@ -116,7 +116,10 @@ internal protocol StyleManagerProtocol {
         _ property: String,
         value: Any) -> Expected<NSNull, NSString>
 
+    // Style Model API
     func addStyleModel(forModelId modelId: String, modelUri: String) -> Expected<NSNull, NSString>
+    func removeStyleModel(forModelId modelId: String) -> Expected<NSNull, NSString>
+    func hasStyleModel(forModelId modelId: String) -> Bool
 
     // swiftlint:disable:next function_parameter_count
     func addStyleImage(

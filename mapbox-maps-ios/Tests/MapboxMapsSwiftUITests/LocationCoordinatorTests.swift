@@ -89,5 +89,4 @@ extension Location: Equatable {
         return lhs.coordinate == rhs.coordinate && lhs.accuracyAuthorization == rhs.accuracyAuthorization
     }
 
-
 }

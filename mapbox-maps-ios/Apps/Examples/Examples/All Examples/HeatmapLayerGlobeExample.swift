@@ -1,7 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(HeatmapLayerGlobeExample)
 public class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
@@ -11,6 +10,7 @@ public class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
     internal let heatmapLayerSource = "earthquakes"
     internal let circleLayerId = "earthquakes-circle"
     internal let earthquakeURL = URL(string: "https://www.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson")!
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -23,15 +23,15 @@ public class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.ornaments.options.scaleBar.visibility = .hidden
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        try! self.mapView.mapboxMap.style.setProjection(StyleProjection(name: .globe))
+        try! self.mapView.mapboxMap.setProjection(StyleProjection(name: .globe))
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
-            try! self.mapView.mapboxMap.style.setAtmosphere(Atmosphere())
+            try! self.mapView.mapboxMap.setAtmosphere(Atmosphere())
             self.addRuntimeLayers()
             self.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     func addRuntimeLayers() {
@@ -41,12 +41,12 @@ public class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
     }
 
     func createEarthquakeSource() {
-        var earthquakeSource = GeoJSONSource()
+        var earthquakeSource = GeoJSONSource(id: self.earthquakeSourceId)
         earthquakeSource.data = .url(self.earthquakeURL)
         earthquakeSource.generateId = true
 
         do {
-            try mapView.mapboxMap.style.addSource(earthquakeSource, id: self.earthquakeSourceId)
+            try mapView.mapboxMap.addSource(earthquakeSource)
         } catch {
             print("Ran into an error adding a source: \(error)")
         }
@@ -126,7 +126,7 @@ public class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
         )
 
         do {
-            try mapView.mapboxMap.style.addLayer(heatmapLayer, layerPosition: .above("waterway-label"))
+            try mapView.mapboxMap.addLayer(heatmapLayer, layerPosition: .above("waterway-label"))
         } catch {
             print("Ran into an error adding a layer: \(error)")
         }
@@ -134,12 +134,12 @@ public class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
 
     public func createCircleLayer() {
 
-        var circleLayerSource = GeoJSONSource()
+        var circleLayerSource = GeoJSONSource(id: self.earthquakeSourceId)
         circleLayerSource.data = .url(self.earthquakeURL)
         circleLayerSource.generateId = true
 
         do {
-            try mapView.mapboxMap.style.addSource(circleLayerSource, id: self.earthquakeSourceId)
+            try mapView.mapboxMap.addSource(circleLayerSource)
         } catch {
             print("Ran into an error adding a source: \(error)")
         }
@@ -217,7 +217,7 @@ public class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
         circleLayer.circleStrokeWidth = .constant(0.1)
 
         do {
-            try mapView.mapboxMap.style.addLayer(circleLayer, layerPosition: .below(self.heatmapLayerId))
+            try mapView.mapboxMap.addLayer(circleLayer, layerPosition: .below(self.heatmapLayerId))
         } catch {
             print("Ran into an error adding a layer: \(error)")
         }

@@ -1,12 +1,7 @@
 # Runs daily at midnight UTC
-triggers:
-  - schedule:
-      cron: "0 6 * * *"
-      filters:
-        branches:
-          only:
-            - main
-            - develop
+when:
+  equal: [ scheduled_pipeline, << pipeline.trigger_source >>]
+
 jobs:
   - swiftlint:
       context:
@@ -21,9 +16,6 @@ jobs:
       name: Build SDK
       configuration: "Release"
       report_failure: true
-      matrix:
-        parameters:
-          xcode: ["13.1.0", "13.2.1"]
   - build-tests:
       context:
         - Slack Orb
@@ -95,4 +87,3 @@ jobs:
         - SDK Registry Token
       create-xcframework-always-run: true
       report_failure: true
-      xcode: "13.1.0"

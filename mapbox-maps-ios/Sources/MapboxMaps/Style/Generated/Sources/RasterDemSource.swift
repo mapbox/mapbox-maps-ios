@@ -7,6 +7,7 @@ import Foundation
 public struct RasterDemSource: Source {
 
     public let type: SourceType
+    public let id: String
 
     /// A URL to a TileJSON resource. Supported protocols are `http:`, `https:`, and `mapbox://<Tileset ID>`.
     public var url: String?
@@ -50,13 +51,15 @@ public struct RasterDemSource: Source {
     /// For the tiled sources, this property sets the tile network requests delay. The given delay comes in action only during an ongoing animation or gestures. It helps to avoid loading the transient tiles from the network and thus to avoid redundant network requests. Note that tile-network-requests-delay value is superseded with tile-requests-delay property value, if both are provided.
     public var tileNetworkRequestsDelay: Double?
 
-    public init() {
+    public init(id: String) {
+        self.id = id
         self.type = .rasterDem
     }
 }
 
 extension RasterDemSource {
     enum CodingKeys: String, CodingKey {
+        case id = "id"
         case type = "type"
         case url = "url"
         case tiles = "tiles"
@@ -96,6 +99,7 @@ extension RasterDemSource {
     }
 
     private func encodeNonVolatile(to encoder: Encoder, into container: inout KeyedEncodingContainer<CodingKeys>) throws {
+        try container.encodeIfPresent(id, forKey: .id)
         try container.encodeIfPresent(type, forKey: .type)
         try container.encodeIfPresent(url, forKey: .url)
         try container.encodeIfPresent(tiles, forKey: .tiles)

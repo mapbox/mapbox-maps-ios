@@ -139,7 +139,7 @@ global.defaultValueConstant = function defaultValueConstant(property, originalTy
         })`;
   }
 
-  const layerPropertyDefaultValue = `Style.layerPropertyDefaultValue(for: .${originalType}, property: "${property.name}").value`
+  const layerPropertyDefaultValue = `StyleManager.layerPropertyDefaultValue(for: .${originalType}, property: "${property.name}").value`
   switch (property.type) {
     case 'boolean':
       return `.constant((${layerPropertyDefaultValue} as! NSNumber).boolValue)`;
@@ -170,7 +170,7 @@ global.defaultValue = function defaultValue(property, originalType) {
       })`;
   }
 
-  const layerPropertyDefaultValue = `Style.layerPropertyDefaultValue(for: .${originalType}, property: "${property.name}").value`
+  const layerPropertyDefaultValue = `StyleManager.layerPropertyDefaultValue(for: .${originalType}, property: "${property.name}").value`
   switch (property.type) {
     case 'boolean':
       return `${layerPropertyDefaultValue} as! Bool`;

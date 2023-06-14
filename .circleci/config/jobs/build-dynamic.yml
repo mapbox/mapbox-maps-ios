@@ -33,6 +33,11 @@ steps:
               VERSION=$(sdk-ci semver compute-snapshot-version)
               echo "Snapshot version $VERSION"
               echo "export VERSION=${VERSION}" >> $BASH_ENV
+              echo "export VERSION=${VERSION}" > snapshot-version
+        - persist_to_workspace:
+            root: .
+            paths:
+              - snapshot-version
   - run:
       name: Build dynamic SDK
       command: ./package-mapbox-maps.sh dynamic
@@ -56,4 +61,15 @@ steps:
   - run:
       name: Upload to S3
       command: scripts/release/upload-to-registry.sh scripts/release/packager/MapboxMaps.zip << parameters.project-name >> "$VERSION" MapboxMaps.zip << parameters.upload-type >>
-  - slack-notify-failure-if-any
+  - when:
+      condition:
+        and:
+          - equal: [ snapshots, << parameters.upload-type >>]
+      steps:
+          - sdk-cicd/slack-deployment-notification:
+                channel: maps-snapshot-releases
+                version: $VERSION
+                repository: << pipeline.parameters.sdk_ci_repo_name >>
+                author: << pipeline.parameters.sdk_ci_commit_author_name >>
+                commit-sha: << pipeline.parameters.sdk_ci_commit_short_sha >>
+                commit-message: << pipeline.parameters.sdk_ci_commit_message >>

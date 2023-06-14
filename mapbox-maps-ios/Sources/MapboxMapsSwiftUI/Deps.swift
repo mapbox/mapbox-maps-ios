@@ -1,5 +1,5 @@
 import SwiftUI
-import MapboxMaps
+@_spi(Package) import MapboxMaps
 
 @available(iOS 13.0, *)
 struct MapDependencies {
@@ -10,7 +10,7 @@ struct MapDependencies {
     var constrainMode = ConstrainMode.heightOnly
     var viewportMode = ViewportMode.default
     var orientation = NorthOrientation.upwards
-    var mapEventObservers: [MapEventObserver] = []
+    var eventsSubscriptions = [AnyEventSubscription]()
 }
 
 @available(iOS 13.0, *)
@@ -35,5 +35,20 @@ extension MapDependencies.StyleURIs {
             return dark
         }
         return `default`
+    }
+}
+
+struct AnyEventSubscription {
+    let observe: (MapboxMapProtocol) -> AnyCancelable
+
+    init<Payload>(
+        keyPath: KeyPath<MapboxMapProtocol, Signal<Payload>>,
+        perform action: @escaping (Payload) -> Void
+    ) {
+        observe = { map in
+            map[keyPath: keyPath].observe { payload in
+                action(payload)
+            }
+        }
     }
 }

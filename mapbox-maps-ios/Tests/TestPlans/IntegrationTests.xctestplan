@@ -62,6 +62,7 @@
         "StyleLoadIntegrationTests",
         "StyleLocalizationTests",
         "SymbolLayerIntegrationTests",
+        "TileCoverIntegrationTests\/testTileCover()",
         "VectorSourceIntegrationTests"
       ],
       "target" : {

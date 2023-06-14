@@ -1,22 +1,30 @@
 when:
-  or:
-    - equal: [main, << pipeline.git.branch >>]
-    - equal: [develop, << pipeline.git.branch >>]
-    - << pipeline.git.tag >> # run for all tags
+  and:
+    - equal: [webhook, << pipeline.trigger_source >>] # Run only on git push
+    - or:
+        - equal: [main, << pipeline.git.branch >>]
+        - equal: [develop, << pipeline.git.branch >>]
+        - << pipeline.git.tag >> # run for all tags
 jobs:
   - build-benchmark:
       context:
         - SDK Registry Token
         - MapboxCI GitHub UserToken
         - Maps SDK/Public Mapbox Token
+      filters: &benchmark-filters
+        tags:
+          only: /.*/
   - run-benchmark:
       requires:
         - build-benchmark
+      filters: *benchmark-filters
   - collect-metrics:
       requires:
         - run-benchmark
+      filters: *benchmark-filters
 
   - build-maps:
       context:
         - SDK Registry Token
       upload-size-metrics: true
+      filters: *benchmark-filters

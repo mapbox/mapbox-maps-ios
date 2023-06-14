@@ -41,7 +41,7 @@ public struct Map<Content: View>: View {
     public typealias InitOptionsProvider = () -> MapInitOptions
 
     var camera: Binding<CameraState>?
-    private var mapDependencies = MapDependencies()
+    var mapDependencies = MapDependencies()
     private var mapInitOptions: InitOptionsProvider?
     private var locationDependencies = LocationDependencies()
     private var annotationOptions = [AnyHashable: ViewAnnotationOptions]()
@@ -92,23 +92,24 @@ public struct Map<Content: View>: View {
                 mapDependencies: mapDependencies,
                 annotationsOptions: annotationOptions,
                 mapInitOptions: mapInitOptions,
-                locationDependencies: locationDependencies) {
-                    annotationsLayouts = $0
-                }
+                locationDependencies: locationDependencies
+            ) {
+                annotationsLayouts = $0
+            }
             annotations
         }
     }
 }
 
 @available(iOS 13.0, *)
-extension Map where Content == Never {
+public extension Map where Content == Never {
     /// Creates a map.
     ///
     /// - Parameters:
     ///     - camera: The camera state to display. If not specified, the default camera options from style will be used. See [center](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-center), [zoom](https://docs.mapbox.com/mapbox-gl-js/style-spec/root/#zoom), [bearing](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-bearing), [pitch](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-pitch).
     ///     - mapInitOptions: A closure to provide initial map parameters. It gets called only once when `Map` is created.
     ///     - locationOptions: The options to configure ``LocationManager``.
-    public init(
+    init(
         camera: Binding<CameraState>? = nil,
         mapInitOptions: InitOptionsProvider? = nil,
         locationOptions: LocationOptions = LocationOptions()
@@ -121,7 +122,6 @@ extension Map where Content == Never {
 
 @available(iOS 13.0, *)
 extension Map {
-
     func set<T>(_ keyPath: WritableKeyPath<Map, T>, _ value: T) -> Self {
         var updated = self
         updated[keyPath: keyPath] = value
@@ -136,10 +136,9 @@ extension Map {
 }
 
 @available(iOS 13.0, *)
-extension Map {
-
+public extension Map {
     /// Sets camera bounds.
-    public func cameraBounds(_ cameraBounds: CameraBoundsOptions) -> Self {
+    func cameraBounds(_ cameraBounds: CameraBoundsOptions) -> Self {
         set(\.mapDependencies.cameraBounds, cameraBounds)
     }
 
@@ -149,12 +148,12 @@ extension Map {
     ///     - default: A Style URI to be used by default.
     ///     - darkMode: A Style URI which will automaticaly be used for dark mode. If not specified,
     ///         the default option will continue to be used.
-    public func styleURI(_ default: StyleURI, darkMode: StyleURI? = nil) -> Self {
+    func styleURI(_ default: StyleURI, darkMode: StyleURI? = nil) -> Self {
         set(\.mapDependencies.styleURIs, .init(default: `default`, darkMode: darkMode))
     }
 
     /// Configures gestures options.
-    public func gestureOptions(_ options: GestureOptions) -> Self {
+    func gestureOptions(_ options: GestureOptions) -> Self {
         set(\.mapDependencies.gestureOptions, options)
     }
 
@@ -164,7 +163,7 @@ extension Map {
     ///
     /// - Parameters:
     ///  - action: The action to perform.
-    public func onMapTapGesture(perform action: @escaping MapTapAction) -> Self {
+    func onMapTapGesture(perform action: @escaping MapTapAction) -> Self {
         set(\.mapDependencies.actions.onMapTapGesture, action)
     }
 
@@ -175,24 +174,24 @@ extension Map {
     /// - Parameters:
     ///  - layerIds: The identifiers of layers where to perform features lookup.
     ///  - action: The action to perform.
-    public func onLayerTapGesture(_ layerIds: String..., perform action: @escaping MapLayerTapAction) -> Self {
+    func onLayerTapGesture(_ layerIds: String..., perform action: @escaping MapLayerTapAction) -> Self {
         var updated = self
         updated.mapDependencies.actions.layerTapActions.append((layerIds, action))
         return updated
     }
 
     /// Sets constraint mode to the map. If not set, `heightOnly` wil be in use.
-    public func constrainMode(_ constrainMode: ConstrainMode) -> Self {
+    func constrainMode(_ constrainMode: ConstrainMode) -> Self {
         set(\.mapDependencies.constrainMode, constrainMode)
     }
 
     /// Sets viewport mode to the map
-    public func viewportMode(_ viewportMode: ViewportMode) -> Self {
+    func viewportMode(_ viewportMode: ViewportMode) -> Self {
         set(\.mapDependencies.viewportMode, viewportMode)
     }
 
     /// Sets ``NorthOrientation`` to the map. If not set, `upwards` will be in use.
-    public func northOrientation(_ northOrientation: NorthOrientation) -> Self {
+    func northOrientation(_ northOrientation: NorthOrientation) -> Self {
         set(\.mapDependencies.orientation, northOrientation)
     }
 }
@@ -200,70 +199,14 @@ extension Map {
 // MARK: Location
 
 @available(iOS 13.0, *)
-extension Map {
-
+public extension Map {
     /// Adds an action to perform when a new location is emitted.
-    public func onLocationUpdated(perform action: @escaping LocationUpdateAction) -> Self {
+    func onLocationUpdated(perform action: @escaping LocationUpdateAction) -> Self {
         append(\.locationDependencies.locationUpdateHandlers, action)
     }
 
     /// Adds an action to perform when a new puck location (interpolated) is emitted.
-    public func onPuckLocationUpdated(perform action: @escaping LocationUpdateAction) -> Self {
+    func onPuckLocationUpdated(perform action: @escaping LocationUpdateAction) -> Self {
         append(\.locationDependencies.puckLocationUpdateHandlers, action)
-    }
-}
-
-// MARK: Map Events
-
-@available(iOS 13.0, *)
-extension Map {
-
-    /// Adds an action to perform when the map is loaded.
-    public func onMapLoaded(perform action: @escaping () -> Void) -> Self {
-        append(\.mapDependencies.mapEventObservers, MapEventObserver(event: .mapLoaded, action: action))
-    }
-
-    /// Adds an action to perform when there is an error occured while loading the map.
-    public func onMapLoadingError(perform action: @escaping (MapLoadingErrorPayload) -> Void) -> Self {
-        append(\.mapDependencies.mapEventObservers, MapEventObserver(event: .mapLoadingError, action: action))
-    }
-
-    /// Adds an action to perform when the map has entered the idle state.
-    public func onMapIdle(perform action: @escaping () -> Void) -> Self {
-        append(\.mapDependencies.mapEventObservers, MapEventObserver(event: .mapIdle, action: action))
-    }
-
-    /// Adds an action to perform when the requested style is fully loaded.
-    public func onStyleLoaded(perform action: @escaping () -> Void) -> Self {
-        append(\.mapDependencies.mapEventObservers, MapEventObserver(event: .styleLoaded, action: action))
-    }
-
-    /// Adds an action to perform when the requested style data is loaded.
-    public func onStyleDataLoaded(perform action: @escaping (StyleDataLoadedPayload) -> Void) -> Self {
-        append(\.mapDependencies.mapEventObservers, MapEventObserver(event: .styleDataLoaded, action: action))
-    }
-
-    /// Adds an action to perform when a source has been added with ``Style/addSource(_:id:)`` or ``Style/addSource(withId:properties:)``.
-    public func onSourceAdded(perform action: @escaping (SourceAddedPayload) -> Void) -> Self {
-        append(\.mapDependencies.mapEventObservers, MapEventObserver(event: .sourceAdded, action: action))
-    }
-
-    /// Adds an action to perform when a source has been removed with ``Style/removeSource(withId:)``.
-    public func onSourceRemoved(perform action: @escaping (SourceRemovedPayload) -> Void) -> Self {
-        append(\.mapDependencies.mapEventObservers, MapEventObserver(event: .sourceRemoved, action: action))
-    }
-
-    /// Adds an action to perform when the map started rendering a frame.
-    public func onRenderFrameStarted(perform action: @escaping () -> Void) -> Self {
-        append(\.mapDependencies.mapEventObservers, MapEventObserver(event: .renderFrameStarted, action: action))
-    }
-
-    /// Adds an action to perform when the map finished rendering a frame
-    public func onRenderFrameFinished(perform action: @escaping (RenderFrameFinishedPayload) -> Void) -> Self {
-        append(\.mapDependencies.mapEventObservers, MapEventObserver(event: .renderFrameFinished, action: action))
-    }
-
-    public func onResourceRequest(perform action: @escaping (ResourceRequestPayload) -> Void) -> Self {
-        append(\.mapDependencies.mapEventObservers, MapEventObserver(event: .resourceRequest, action: action))
     }
 }

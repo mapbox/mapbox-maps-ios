@@ -14,11 +14,10 @@ internal final class Puck3D: Puck {
                     .observe { [weak self] _ in
                         self?.updateSourceAndLayer()
                         return true
-                    }
-                    .add(to: cancelables)
+                    }.erased.store(in: &cancelables)
                 updateSourceAndLayer()
             } else {
-                cancelables.cancelAll()
+                cancelables.removeAll()
                 if style.layerExists(withId: Self.layerID) {
                     try! style.removeLayer(withId: Self.layerID)
                 }
@@ -29,7 +28,7 @@ internal final class Puck3D: Puck {
         }
     }
 
-    internal var puckBearingSource: PuckBearingSource = .heading {
+    internal var puckBearing: PuckBearing = .heading {
         didSet {
             updateSourceAndLayer()
         }
@@ -42,7 +41,7 @@ internal final class Puck3D: Puck {
     private let style: StyleProtocol
     private let interpolatedLocationProducer: InterpolatedLocationProducerProtocol
 
-    private let cancelables = CancelableContainer()
+    private var cancelables = Set<AnyCancelable>()
 
     internal init(configuration: Puck3DConfiguration,
                   style: StyleProtocol,
@@ -52,6 +51,7 @@ internal final class Puck3D: Puck {
         self.interpolatedLocationProducer = interpolatedLocationProducer
     }
 
+    // swiftlint:disable:next function_body_length
     private func updateSourceAndLayer() {
         guard isActive, let location = interpolatedLocationProducer.location else {
             return
@@ -72,7 +72,7 @@ internal final class Puck3D: Puck {
             } ?? [0, 0, 0]
 
         if puckBearingEnabled {
-            switch puckBearingSource {
+            switch puckBearing {
             case .heading:
                 if let validHeadingDirection = location.heading {
                     model.orientation?[2] += validHeadingDirection
@@ -83,14 +83,14 @@ internal final class Puck3D: Puck {
                 }
             }
         }
-        var source = ModelSource()
+        var source = ModelSource(id: Self.sourceID)
         source.models = ["puck-model": model]
 
         // update or create the source
         if style.sourceExists(withId: Self.sourceID) {
             try! style.setSourceProperties(for: Self.sourceID, properties: source.jsonObject())
         } else {
-            try! style.addSource(source, id: Self.sourceID)
+            try! style.addSource(source)
         }
 
         // Mercator scale

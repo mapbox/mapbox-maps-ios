@@ -8,7 +8,7 @@
 import UIKit
 import os
 
-// swiftlint:disable type_body_length
+// swiftlint:disable:next type_body_length
 open class MapView: UIView {
 
     // `mapboxMap` depends on `MapInitOptions`, which is not available until
@@ -30,7 +30,6 @@ open class MapView: UIView {
     /// The `camera` object manages a camera's view lifecycle.
     public private(set) var camera: CameraAnimationsManager!
     private var cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol!
-    private let cameraAnimatorsRunnerEnablable: MutableEnablableProtocol
 
     /// The `location`object handles location events of the map.
     public private(set) var location: LocationManager!
@@ -70,6 +69,13 @@ open class MapView: UIView {
         }
     }
 
+    open override var isOpaque: Bool {
+        didSet {
+            metalView?.isOpaque = isOpaque
+            metalView?.layer.isOpaque = isOpaque
+        }
+    }
+
     /// The underlying metal view that is used to render the map
     internal private(set) var metalView: MTKView?
 
@@ -77,9 +83,6 @@ open class MapView: UIView {
 
     /// Holds ViewAnnotation views
     private let viewAnnotationContainerView = SubviewInteractionOnlyView()
-
-    /// Resource options for this map view
-    internal let resourceOptions: ResourceOptions
 
     private var needsDisplayRefresh: Bool = false
     private var displayLink: DisplayLinkProtocol?
@@ -173,15 +176,14 @@ open class MapView: UIView {
 
     internal let attributionUrlOpener: AttributionURLOpener
 
-    internal let applicationStateProvider: Provider<UIApplication.State>?
+    internal let applicationStateProvider: Ref<UIApplication.State>?
 
     internal let eventsManager: EventsManagerProtocol
 
     /// Initialize a MapView
     /// - Parameters:
     ///   - frame: frame for the MapView.
-    ///   - mapInitOptions: `MapInitOptions`; default uses
-    ///    `ResourceOptionsManager.default` to retrieve a shared default resource option, including the access token.
+    ///   - mapInitOptions: The options to initialize the Maps API with.
     @available(iOSApplicationExtension, unavailable)
     public init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions()) {
         let trace = OSLog.platform.beginInterval("MapView.init")
@@ -198,9 +200,7 @@ open class MapView: UIView {
         applicationStateProvider = .global
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
-        cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
-        resourceOptions = mapInitOptions.resourceOptions
-        eventsManager = dependencyProvider.makeEventsManager(accessToken: resourceOptions.accessToken)
+        eventsManager = dependencyProvider.makeEventsManager()
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
@@ -208,8 +208,7 @@ open class MapView: UIView {
     /// Initialize a MapView
     /// - Parameters:
     ///   - frame: frame for the MapView.
-    ///   - mapInitOptions: `MapInitOptions`; default uses
-    ///    `ResourceOptionsManager.default` to retrieve a shared default resource option, including the access token.
+    ///   - mapInitOptions: The options to initialize the Maps API with.
     ///   - orientationProvider: User interface orientation provider
     ///   - urlOpener: Attribution URL opener
     @available(iOS, deprecated: 13, message: "Use init(frame:mapInitOptions:urlOpener:) instead")
@@ -224,9 +223,7 @@ open class MapView: UIView {
         self.applicationStateProvider = nil
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
-        cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
-        resourceOptions = mapInitOptions.resourceOptions
-        eventsManager = dependencyProvider.makeEventsManager(accessToken: resourceOptions.accessToken)
+        eventsManager = dependencyProvider.makeEventsManager()
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
@@ -234,8 +231,7 @@ open class MapView: UIView {
     /// Initialize a MapView
     /// - Parameters:
     ///   - frame: frame for the MapView.
-    ///   - mapInitOptions: `MapInitOptions`; default uses
-    ///    `ResourceOptionsManager.default` to retrieve a shared default resource option, including the access token.
+    ///   - mapInitOptions: The options to initialize the Maps API with.
     ///   - urlOpener: Attribution URL opener
     @available(iOS 13.0, *)
     public init(frame: CGRect,
@@ -250,9 +246,7 @@ open class MapView: UIView {
         self.applicationStateProvider = nil
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
-        cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
-        resourceOptions = mapInitOptions.resourceOptions
-        eventsManager = dependencyProvider.makeEventsManager(accessToken: resourceOptions.accessToken)
+        eventsManager = dependencyProvider.makeEventsManager()
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
@@ -271,11 +265,9 @@ open class MapView: UIView {
         dependencyProvider = MapViewDependencyProvider(interfaceOrientationProvider: orientationProvider)
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
-        cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
         attributionUrlOpener = DefaultAttributionURLOpener()
         applicationStateProvider = .global
-        resourceOptions = ResourceOptionsManager.default.resourceOptions
-        eventsManager = dependencyProvider.makeEventsManager(accessToken: resourceOptions.accessToken)
+        eventsManager = dependencyProvider.makeEventsManager()
         super.init(coder: coder)
     }
 
@@ -283,7 +275,7 @@ open class MapView: UIView {
                   mapInitOptions: MapInitOptions,
                   dependencyProvider: MapViewDependencyProviderProtocol,
                   urlOpener: AttributionURLOpener,
-                  applicationStateProvider: Provider<UIApplication.State>?) {
+                  applicationStateProvider: Ref<UIApplication.State>?) {
         let trace = OSLog.platform.beginInterval("MapView.init")
         defer { trace?.end() }
         self.dependencyProvider = dependencyProvider
@@ -291,9 +283,7 @@ open class MapView: UIView {
         self.applicationStateProvider = applicationStateProvider
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
-        cameraAnimatorsRunnerEnablable = dependencyProvider.cameraAnimatorsRunnerEnablable
-        resourceOptions = mapInitOptions.resourceOptions
-        eventsManager = dependencyProvider.makeEventsManager(accessToken: resourceOptions.accessToken)
+        eventsManager = dependencyProvider.makeEventsManager()
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
@@ -305,6 +295,7 @@ open class MapView: UIView {
         fatalError("This initializer should not be called.")
     }
 
+    // swiftlint:disable:next function_body_length
     private func commonInit(mapInitOptions: MapInitOptions, overridingStyleURI: URL?) {
         checkForMetalSupport()
 
@@ -323,7 +314,6 @@ open class MapView: UIView {
                 pixelRatio: original.pixelRatio,
                 glyphsRasterizationOptions: original.glyphsRasterizationOptions)
             resolvedMapInitOptions = MapInitOptions(
-                resourceOptions: mapInitOptions.resourceOptions,
                 mapOptions: resolvedMapOptions,
                 cameraOptions: mapInitOptions.cameraOptions,
                 styleURI: mapInitOptions.styleURI,
@@ -338,8 +328,7 @@ open class MapView: UIView {
         mapClient.delegate = self
         mapboxMap = MapboxMap(
             mapClient: mapClient,
-            mapInitOptions: resolvedMapInitOptions,
-            mapboxObservableProvider: dependencyProvider.mapboxObservableProvider)
+            mapInitOptions: resolvedMapInitOptions)
 
         subscribeToLifecycleNotifications()
         notificationCenter.addObserver(self,
@@ -378,9 +367,6 @@ open class MapView: UIView {
 
         sendInitialTelemetryEvents()
 
-        // false until added to a window and display link is created
-        cameraAnimatorsRunnerEnablable.isEnabled = false
-
         // Set up managers
         setupManagers()
     }
@@ -390,6 +376,7 @@ open class MapView: UIView {
         eventsManager.sendMapLoadEvent(with: traitCollection)
     }
 
+    // swiftlint:disable:next function_body_length
     internal func setupManagers() {
         // Initialize/Configure camera manager first since Gestures needs it as dependency
         cameraAnimatorsRunner = dependencyProvider.makeCameraAnimatorsRunner(
@@ -415,7 +402,7 @@ open class MapView: UIView {
         ornaments = OrnamentsManager(
             options: OrnamentOptions(),
             view: self,
-            mapboxMap: mapboxMap,
+            onCameraChanged: mapboxMap.onCameraChanged,
             cameraAnimationsManager: internalCamera,
             infoButtonOrnamentDelegate: attributionDialogManager,
             logoView: LogoView(logoSize: .regular()),
@@ -433,7 +420,7 @@ open class MapView: UIView {
         location = dependencyProvider.makeLocationManager(
             locationProducer: locationProducer,
             interpolatedLocationProducer: interpolatedLocationProducer,
-            style: mapboxMap.style,
+            style: mapboxMap,
             mapboxMap: mapboxMap,
             displayLinkCoordinator: self)
 
@@ -442,7 +429,7 @@ open class MapView: UIView {
                 in: self,
                 mapboxMap: mapboxMap,
                 mapFeatureQueryable: mapboxMap,
-                style: mapboxMap.style,
+                style: mapboxMap,
                 displayLinkCoordinator: self
             )
         )
@@ -466,8 +453,7 @@ open class MapView: UIView {
 
     deinit {
         displayLink?.invalidate()
-        cameraAnimatorsRunner.cancelAnimations()
-        cameraAnimatorsRunnerEnablable.isEnabled = false
+        cameraAnimatorsRunner.isEnabled = false
     }
 
     private func subscribeToLifecycleNotifications() {
@@ -516,21 +502,21 @@ open class MapView: UIView {
 
     @available(iOS 13.0, *)
     @objc private func sceneDidActivate(_ notification: Notification) {
-        guard notification.object as? UIScene == window?.parentScene else { return }
+        guard let scene = notification.object as? UIScene, let window = window, scene.allWindows.contains(window) else { return }
 
         displayLink?.isPaused = false
     }
 
     @available(iOS 13, *)
     @objc private func sceneWillDeactivate(_ notification: Notification) {
-        guard notification.object as? UIScene == window?.parentScene else { return }
+        guard let scene = notification.object as? UIScene, let window = window, scene.allWindows.contains(window) else { return }
 
         displayLink?.isPaused = true
     }
 
     @available(iOS 13, *)
     @objc private func sceneDidEnterBackground(_ notification: Notification) {
-        guard notification.object as? UIScene == window?.parentScene else { return }
+        guard let scene = notification.object as? UIScene, let window = window, scene.allWindows.contains(window) else { return }
 
         displayLink?.isPaused = true
         reduceMemoryUse()
@@ -655,8 +641,7 @@ open class MapView: UIView {
         displayLink = nil
 
         guard let window = window else {
-            cameraAnimatorsRunner.cancelAnimations()
-            cameraAnimatorsRunnerEnablable.isEnabled = false
+            cameraAnimatorsRunner.isEnabled = false
             return
         }
 
@@ -668,12 +653,11 @@ open class MapView: UIView {
             selector: #selector(ForwardingDisplayLinkTarget.update(with:)))
 
         guard let displayLink = displayLink else {
-            cameraAnimatorsRunner.cancelAnimations()
-            cameraAnimatorsRunnerEnablable.isEnabled = false
+            cameraAnimatorsRunner.isEnabled = false
             return
         }
 
-        cameraAnimatorsRunnerEnablable.isEnabled = true
+        cameraAnimatorsRunner.isEnabled = true
 
         updateDisplayLinkPreferredFramesPerSecond()
 
@@ -706,6 +690,7 @@ extension MapView: DelegatingMapClientDelegate {
         }
 
         needsDisplayRefresh = true
+        OSLog.platform.signpostEvent("Set needs redraw")
     }
 
     internal func getMetalView(for metalDevice: MTLDevice?) -> MTKView? {

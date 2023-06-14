@@ -12,18 +12,16 @@ import XCTest
 final class <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>SourceIntegrationTests: MapViewIntegrationTestCase {
 
     func testAdditionAndRemovalOfSource() throws {
-        let style = try XCTUnwrap(self.style)
-
         let successfullyAddedSourceExpectation = XCTestExpectation(description: "Successfully added <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>Source to Map")
         successfullyAddedSourceExpectation.expectedFulfillmentCount = 1
 
         let successfullyRetrievedSourceExpectation = XCTestExpectation(description: "Successfully retrieved <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>Source from Map")
         successfullyRetrievedSourceExpectation.expectedFulfillmentCount = 1
 
-        style.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
-        didFinishLoadingStyle = { _ in
-            var source = <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>Source()
+        didFinishLoadingStyle = { mapView in
+            var source = <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>Source(id: "test-source")
             <%_ for (const property of properties) { -%>
             <%_ if (property[`name`] !== '*' && property[`name`] !== 'type' && property[`name`] !== 'clusterProperties') { -%>
             source.<%- camelizeWithLeadingLowercase(property.name) %> = <%- propertySwiftType(property)%>.testSourceValue()
@@ -32,7 +30,7 @@ final class <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : 
 
             // Add the source
             do {
-                try style.addSource(source, id: "test-source")
+                try mapView.mapboxMap.addSource(source)
                 successfullyAddedSourceExpectation.fulfill()
             } catch {
                 XCTFail("Failed to add <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>Source because of error: \(error)")
@@ -40,7 +38,7 @@ final class <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : 
 
             // Retrieve the source
             do {
-                _ = try style.source(withId: "test-source", type: <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>Source.self)
+                _ = try mapView.mapboxMap.source(withId: "test-source", type: <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>Source.self)
                 successfullyRetrievedSourceExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve <%- (camelizeWithUndercoreRemoved(name) === "GeoJson")? 'GeoJSON' : camelizeWithUndercoreRemoved(name) %>Source because of error: \(error)")

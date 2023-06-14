@@ -1,3 +1,4 @@
 macos:
-  xcode: 14.1.0
+  xcode: 14.3.0
+resource_class: macos.x86.medium.gen2
 working_directory: ~/project/mapbox-maps-ios

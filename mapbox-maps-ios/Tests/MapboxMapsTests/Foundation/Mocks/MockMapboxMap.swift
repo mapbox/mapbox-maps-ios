@@ -1,9 +1,29 @@
-@_spi(Package) @testable import MapboxMaps
+@testable @_spi(Package) import MapboxMaps
 @_implementationOnly import MapboxCoreMaps_Private
 import CoreLocation
 
 final class MockMapboxMap: MapboxMapProtocol {
-    var options = MapOptions()
+    var options: MapOptions = MapOptions()
+
+    let events = MapEvents(makeGenericSubject: { _ in
+        return SignalSubject<GenericEvent>()
+    })
+
+    var onMapLoaded: Signal<MapLoaded> { events.signal(for: \.onMapLoaded) }
+    var onMapLoadingError: Signal<MapLoadingError> { events.signal(for: \.onMapLoadingError) }
+    var onStyleLoaded: Signal<StyleLoaded> { events.signal(for: \.onStyleLoaded) }
+    var onStyleDataLoaded: Signal<StyleDataLoaded> { events.signal(for: \.onStyleDataLoaded) }
+    var onCameraChanged: Signal<CameraChanged> { events.signal(for: \.onCameraChanged) }
+    var onMapIdle: Signal<MapIdle> { events.signal(for: \.onMapIdle) }
+    var onSourceAdded: Signal<SourceAdded> { events.signal(for: \.onSourceAdded) }
+    var onSourceRemoved: Signal<SourceRemoved> { events.signal(for: \.onSourceRemoved) }
+    var onSourceDataLoaded: Signal<SourceDataLoaded> { events.signal(for: \.onSourceDataLoaded) }
+    var onStyleImageMissing: Signal<StyleImageMissing> { events.signal(for: \.onStyleImageMissing) }
+    var onStyleImageRemoveUnused: Signal<StyleImageRemoveUnused> { events.signal(for: \.onStyleImageRemoveUnused) }
+    var onRenderFrameStarted: Signal<RenderFrameStarted> { events.signal(for: \.onRenderFrameStarted) }
+    var onRenderFrameFinished: Signal<RenderFrameFinished> { events.signal(for: \.onRenderFrameFinished) }
+    var onResourceRequest: Signal<ResourceRequest> { events.signal(for: \.onResourceRequest) }
+
     var size: CGSize = .zero
 
     var cameraBounds = MapboxMaps.CameraBounds(
@@ -19,18 +39,7 @@ final class MockMapboxMap: MapboxMapProtocol {
         maxPitch: 50,
         minPitch: 0)
 
-    var cameraState = CameraState(
-        center: CLLocationCoordinate2D(
-            latitude: 0,
-            longitude: 0),
-        padding: UIEdgeInsets(
-            top: 0,
-            left: 0,
-            bottom: 0,
-            right: 0),
-        zoom: 0,
-        bearing: 0,
-        pitch: 0)
+    var cameraState = CameraState.zero
 
     var anchor = CGPoint.zero
 
@@ -61,39 +70,6 @@ final class MockMapboxMap: MapboxMapProtocol {
     let dragEndStub = Stub<Void, Void>()
     func dragEnd() {
         dragEndStub.call()
-    }
-
-    struct OnEveryParams {
-        var eventName: String
-        var handler: (Any) -> Void
-    }
-    let onEveryStub = Stub<OnEveryParams, Cancelable>(defaultReturnValue: MockCancelable())
-    @discardableResult
-    func onEvery<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable {
-        // swiftlint:disable:next force_cast
-        onEveryStub.call(with: OnEveryParams(eventName: event.name, handler: { handler($0 as! MapEvent<Payload>)}))
-    }
-
-    func simulateEvent<Payload: Decodable>(event: MapEvents.Event<Payload>, data: Any) {
-        let invocations = onEveryStub.invocations.filter { $0.parameters.eventName == event.name }
-        for invocation in invocations {
-            let handler = invocation.parameters.handler
-            handler(MapEvent<Payload>(event: Event(type: event.name, data: data)))
-        }
-
-        let observers: [Observer] = subscribeStub.invocations.compactMap { invocation in
-            let parameters = invocation.parameters
-            guard parameters.events.contains(event.name) else { return nil }
-
-            return parameters.observer
-        }
-        for observer in observers {
-            observer.notify(for: Event(type: event.name, data: data))
-        }
-    }
-
-    func simulateEvent(event: MapEvents.Event<NoPayload>) {
-        simulateEvent(event: event, data: [:])
     }
 
     let beginAnimationStub = Stub<Void, Void>()
@@ -229,19 +205,5 @@ final class MockMapboxMap: MapboxMapProtocol {
     let qrfStub = Stub<QRFParameters, Cancelable>(defaultReturnValue: MockCancelable())
     func queryRenderedFeatures(with point: CGPoint, options: RenderedQueryOptions?, completion: @escaping (Result<[QueriedRenderedFeature], Error>) -> Void) -> Cancelable {
         qrfStub.call(with: QRFParameters(point: point, options: options, completion: completion))
-    }
-
-    struct SubscribeParameters {
-        let observer: Observer
-        let events: [String]
-    }
-    let subscribeStub = Stub<SubscribeParameters, Void>()
-    func subscribe(_ observer: Observer, events: [String]) {
-        subscribeStub.call(with: SubscribeParameters(observer: observer, events: events))
-    }
-
-    let unsubscribeStub = Stub<SubscribeParameters, Void>()
-    func unsubscribe(_ observer: Observer, events: [String]) {
-        unsubscribeStub.call(with: SubscribeParameters(observer: observer, events: events))
     }
 }

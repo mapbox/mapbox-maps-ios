@@ -9,11 +9,11 @@ final class MapViewRenderedSnapshotIntegrationTests: MapViewIntegrationTestCase 
             throw XCTSkip("Requires a host application")
         }
 
-        style.uri = .dark
+        mapView.mapboxMap.styleURI = .dark
 
         let snapshotExpectation = expectation(description: "Take snapshot")
 
-        didBecomeIdle = { [mapView = mapView!] _ in
+        didBecomeIdle = { mapView in
             defer { snapshotExpectation.fulfill() }
             do {
                 _ = try mapView.snapshot()

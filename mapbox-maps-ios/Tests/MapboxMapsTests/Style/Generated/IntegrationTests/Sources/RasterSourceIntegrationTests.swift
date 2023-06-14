@@ -5,18 +5,16 @@ import XCTest
 final class RasterSourceIntegrationTests: MapViewIntegrationTestCase {
 
     func testAdditionAndRemovalOfSource() throws {
-        let style = try XCTUnwrap(self.style)
-
         let successfullyAddedSourceExpectation = XCTestExpectation(description: "Successfully added RasterSource to Map")
         successfullyAddedSourceExpectation.expectedFulfillmentCount = 1
 
         let successfullyRetrievedSourceExpectation = XCTestExpectation(description: "Successfully retrieved RasterSource from Map")
         successfullyRetrievedSourceExpectation.expectedFulfillmentCount = 1
 
-        style.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
-        didFinishLoadingStyle = { _ in
-            var source = RasterSource()
+        didFinishLoadingStyle = { mapView in
+            var source = RasterSource(id: "test-source")
             source.url = String.testSourceValue()
             source.tiles = [String].testSourceValue()
             source.bounds = [Double].testSourceValue()
@@ -34,7 +32,7 @@ final class RasterSourceIntegrationTests: MapViewIntegrationTestCase {
 
             // Add the source
             do {
-                try style.addSource(source, id: "test-source")
+                try mapView.mapboxMap.addSource(source)
                 successfullyAddedSourceExpectation.fulfill()
             } catch {
                 XCTFail("Failed to add RasterSource because of error: \(error)")
@@ -42,7 +40,7 @@ final class RasterSourceIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the source
             do {
-                _ = try style.source(withId: "test-source", type: RasterSource.self)
+                _ = try mapView.mapboxMap.source(withId: "test-source", type: RasterSource.self)
                 successfullyRetrievedSourceExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve RasterSource because of error: \(error)")

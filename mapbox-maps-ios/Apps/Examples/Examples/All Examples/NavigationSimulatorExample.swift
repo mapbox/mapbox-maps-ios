@@ -12,7 +12,7 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
     private var navigationSimulator: NavigationSimulator!
 
     private lazy var routeSource: Source = {
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: ID.routeSource)
         source.data = .geometry(Geometry(sampleRouteLine))
         source.lineMetrics = true
 
@@ -43,14 +43,14 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
 
         let configuration = Puck2DConfiguration(topImage: UIImage(named: "user_puck_icon")!)
         mapView.location.options.puckType = .puck2D(configuration)
-        mapView.location.options.puckBearingSource = .course
+        mapView.location.options.puckBearing = .course
         mapView.location.overrideLocationProvider(with: navigationSimulator)
         mapView.location.addPuckLocationConsumer(self)
 
         do {
-            try mapView.mapboxMap.style.addSource(routeSource, id: ID.routeSource)
-            try mapView.mapboxMap.style.addPersistentLayer(makeCasingLayer())
-            try mapView.mapboxMap.style.addPersistentLayer(makeRouteLineLayer())
+            try mapView.mapboxMap.addSource(routeSource)
+            try mapView.mapboxMap.addPersistentLayer(makeCasingLayer())
+            try mapView.mapboxMap.addPersistentLayer(makeRouteLineLayer())
 
             navigationSimulator.start()
         } catch {
@@ -203,10 +203,9 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
 extension NavigationSimulatorExample: PuckLocationConsumer {
 
     func puckLocationUpdate(newLocation: Location) {
-        let style = mapView.mapboxMap.style
         let progress = navigationSimulator.progressFromStart(to: newLocation)
 
-        try? style.setLayerProperty(for: ID.routeLineLayer, property: "line-trim-offset", value: [0, progress])
-        try? style.setLayerProperty(for: ID.casingLineLayer, property: "line-trim-offset", value: [0, progress])
+        try? mapView.mapboxMap.setLayerProperty(for: ID.routeLineLayer, property: "line-trim-offset", value: [0, progress])
+        try? mapView.mapboxMap.setLayerProperty(for: ID.casingLineLayer, property: "line-trim-offset", value: [0, progress])
     }
 }

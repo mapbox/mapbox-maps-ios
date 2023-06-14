@@ -1,14 +1,10 @@
 import XCTest
-import MapboxMaps
-import Foundation
+@testable import MapboxMaps
 import UIKit
-
-//swiftlint:disable explicit_top_level_acl explicit_acl
 
 class MapboxMapsSnapshotTests: XCTestCase {
 
     var newAttachment: XCTAttachment!
-    var resourceOptions: ResourceOptions!
     var dataPathURL: URL!
 
     let emptyBlueStyle =
@@ -39,13 +35,11 @@ class MapboxMapsSnapshotTests: XCTestCase {
     }
 
     override func tearDownWithError() throws {
-        if let resourceOptions = resourceOptions {
-            let expectation = self.expectation(description: "Clear map data")
-            MapboxMap.clearData(for: resourceOptions) { _ in
-                expectation.fulfill()
-            }
-            wait(for: [expectation], timeout: 10.0)
+        let expectation = self.expectation(description: "Clear map data")
+        MapboxMapsOptions.clearData { _ in
+            expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 10.0)
         try super.tearDownWithError()
     }
 
@@ -55,26 +49,26 @@ class MapboxMapsSnapshotTests: XCTestCase {
     // Create snapshot options
     private func snapshotterOptions(size: CGSize = MapboxMapsSnapshotTests.snapshotSize,
                                     scale: CGFloat = MapboxMapsSnapshotTests.snapshotScale) throws -> MapSnapshotOptions {
-        let accessToken = try mapboxAccessToken()
-        resourceOptions = ResourceOptions(accessToken: accessToken,
-                                          dataPathURL: dataPathURL)
-        return MapSnapshotOptions(size: size, pixelRatio: scale, resourceOptions: resourceOptions)
+        MapboxMapsOptions.dataPath = dataPathURL
+        return MapSnapshotOptions(size: size, pixelRatio: scale)
     }
 
     // Testing creating the snapshot
     func testSnapshotCancellation() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         weak var weakSnapshotter: Snapshotter?
         let options = try snapshotterOptions()
-        let expectation = self.expectation(description: "snapshot")
-        expectation.isInverted = true
-         autoreleasepool {
+        let expectation = self.expectation(description: "snapshot completion is called")
+        autoreleasepool {
             let snapshotter = Snapshotter(options: options)
             weakSnapshotter = snapshotter
-            weakSnapshotter?.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5))
-            weakSnapshotter?.style.JSON = emptyBlueStyle
-            weakSnapshotter?.start(overlayHandler: nil) { _ in
-                expectation.fulfill()
+            snapshotter.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5))
+            snapshotter.styleJSON = emptyBlueStyle
+            snapshotter.start(overlayHandler: nil) { result in
+                if case .failure = result {
+                    expectation.fulfill()
+                } else {
+                    XCTFail("Snapshot should be cancelled with a failure result")
+                }
             }
         }
         XCTAssertNil(weakSnapshotter)
@@ -82,7 +76,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
     }
 
     func testCapturingSnapshotterInSnapshotCompletion() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         weak var weakSnapshotter: Snapshotter?
         try autoreleasepool {
             let expectation = self.expectation(description: "snapshot")
@@ -90,7 +83,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
             let snapshotter = Snapshotter(options: options)
             weakSnapshotter = snapshotter
             weakSnapshotter?.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5))
-            weakSnapshotter?.style.JSON = emptyBlueStyle
+            weakSnapshotter?.styleJSON = emptyBlueStyle
             weakSnapshotter?.start(overlayHandler: nil) { (result) in
                 expectation.fulfill()
                 XCTAssertNotNil(result)
@@ -102,13 +95,13 @@ class MapboxMapsSnapshotTests: XCTestCase {
     }
 
     // Testing snapshot overlay
+    @available(iOS 13.0, *)
     func testSnapshotOverlay() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         let options = try snapshotterOptions()
         let snapshotter = Snapshotter(options: options)
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
         snapshotter.setCamera(to: cameraOptions)
-        snapshotter.style.JSON = emptyBlueStyle
+        snapshotter.styleJSON = emptyBlueStyle
         let expectation = self.expectation(description: "snapshot")
         expectation.expectedFulfillmentCount = 2
         snapshotter.start { overlayHandler in
@@ -127,11 +120,10 @@ class MapboxMapsSnapshotTests: XCTestCase {
         } completion: { (result) in
             switch result {
             case let .success(image):
-                let imageEqual = self.compare(observedImage: image,
-                                              expectedImageNamed: "testSnapshotOverlay",
-                                              expectedImageScale: MapboxMapsSnapshotTests.snapshotScale,
-                                              attachmentName: "testSnapshotOverlay")
-                XCTAssert(imageEqual, "Snapshot does not match expected image")
+                self.compare(observedImage: image,
+                             expectedImageNamed: "testSnapshotOverlay",
+                             expectedImageScale: MapboxMapsSnapshotTests.snapshotScale,
+                             attachmentName: "testSnapshotOverlay")
 
                 XCTAssertEqual(image.size, options.size)
                 XCTAssertEqual(image.scale, CGFloat(options.pixelRatio))
@@ -144,22 +136,21 @@ class MapboxMapsSnapshotTests: XCTestCase {
         wait(for: [expectation], timeout: 10)
     }
 
+    @available(iOS 13.0, *)
     func testSnapshotLogoVisibility() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         let options = try snapshotterOptions()
         let snapshotterNew = Snapshotter(options: options)
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
         snapshotterNew.setCamera(to: cameraOptions)
-        snapshotterNew.style.JSON = emptyBlueStyle
+        snapshotterNew.styleJSON = emptyBlueStyle
         let expectation2 = self.expectation(description: "snapshot logo")
         snapshotterNew.start(overlayHandler: nil) { [self] (result) in
             switch result {
             case let .success(image):
-                let imageEqual = self.compare(observedImage: image,
-                                              expectedImageNamed: "testSnapshotLogoVisibility",
-                                              expectedImageScale: MapboxMapsSnapshotTests.snapshotScale,
-                                              attachmentName: self.name)
-                XCTAssert(imageEqual, "Snapshot does not match expected image")
+                self.compare(observedImage: image,
+                             expectedImageNamed: "testSnapshotLogoVisibility",
+                             expectedImageScale: MapboxMapsSnapshotTests.snapshotScale,
+                             attachmentName: self.name)
 
             case.failure:
                 XCTFail("snapshot asset and snapshot image do not match")
@@ -170,12 +161,11 @@ class MapboxMapsSnapshotTests: XCTestCase {
     }
 
     func testDataClearing() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         let options = try snapshotterOptions()
         let snapshotter = Snapshotter(options: options)
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
         snapshotter.setCamera(to: cameraOptions)
-        snapshotter.style.JSON = emptyBlueStyle
+        snapshotter.styleJSON = emptyBlueStyle
 
         let snapshotExpectation = self.expectation(description: "snapshot")
 
@@ -192,8 +182,8 @@ class MapboxMapsSnapshotTests: XCTestCase {
         wait(for: [expectation], timeout: 10.0)
     }
 
+    @available(iOS 13.0, *)
     func testSnapshotAttribution() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         // Test range of widths
         for imageWidth in stride(from: 50, through: 300, by: 50) {
 
@@ -203,17 +193,16 @@ class MapboxMapsSnapshotTests: XCTestCase {
             let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
 
             snapshotter.setCamera(to: cameraOptions)
-            snapshotter.style.JSON = emptyBlueStyle
+            snapshotter.styleJSON = emptyBlueStyle
             let expectation = self.expectation(description: "snapshot")
 
             snapshotter.start(overlayHandler: nil) { result in
                 switch result {
                 case let .success(image):
-                    let imageEqual = self.compare(observedImage: image,
+                    self.compare(observedImage: image,
                                                   expectedImageNamed: "testSnapshotAttribution-\(imageWidth)",
                                                   expectedImageScale: 2,
                                                   attachmentName: "testSnapshotAttribution-\(imageWidth)")
-                    XCTAssert(imageEqual, "Snapshot does not match expected image")
 
                 case.failure:
                     XCTFail("snapshot asset and snapshot image do not match")
@@ -224,30 +213,30 @@ class MapboxMapsSnapshotTests: XCTestCase {
         }
     }
 
+    @available(iOS 13.0, *)
     func testShowsLogoAndAttribution() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         let options = try snapshotterOptions()
         showLogoAttributionHelper(options: options, fileName: "\(#function)")
     }
 
+    @available(iOS 13.0, *)
     func testDoesNotShowLogo() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         var options = try snapshotterOptions()
         options.showsLogo = false
 
         showLogoAttributionHelper(options: options, fileName: "\(#function)")
     }
 
+    @available(iOS 13.0, *)
     func testDoesNotShowAttribution() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         var options = try snapshotterOptions()
         options.showsAttribution = false
 
         showLogoAttributionHelper(options: options, fileName: "\(#function)")
     }
 
+    @available(iOS 13.0, *)
     func testDoesNotShowLogoAndAttribution() throws {
-        throw XCTSkip("Temporarily disabled due to a regression in 10.12.0-beta.1")
         var options = try snapshotterOptions()
         options.showsLogo = false
         options.showsAttribution = false
@@ -255,11 +244,12 @@ class MapboxMapsSnapshotTests: XCTestCase {
         showLogoAttributionHelper(options: options, fileName: "\(#function)")
     }
 
-    private func showLogoAttributionHelper(options: MapSnapshotOptions, fileName: String) {
+    @available(iOS 13.0, *)
+    private func showLogoAttributionHelper(options: MapSnapshotOptions, fileName: String, file: StaticString = #filePath, line: UInt = #line) {
         let snapshotter = Snapshotter(options: options)
 
         // Adding a simple custom style
-        snapshotter.style.JSON = emptyBlueStyle
+        snapshotter.styleJSON = emptyBlueStyle
 
         let expectation = self.expectation(description: "snapshot")
         snapshotter.start(overlayHandler: nil, completion: { [weak self] result in
@@ -267,11 +257,10 @@ class MapboxMapsSnapshotTests: XCTestCase {
 
             switch result {
             case let .success(image):
-                let result = self.compare(observedImage: image,
-                                          expectedImageNamed: fileName,
-                                          expectedImageScale: MapboxMapsSnapshotTests.snapshotScale,
-                                          attachmentName: fileName)
-                XCTAssert(result)
+                self.compare(observedImage: image,
+                             expectedImageNamed: fileName,
+                             expectedImageScale: MapboxMapsSnapshotTests.snapshotScale,
+                             attachmentName: fileName, file: file, line: line)
 
             case.failure:
                 XCTFail("Failure: snapshot asset and snapshot image do not match")

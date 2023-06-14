@@ -4,7 +4,7 @@ import UIKit
 internal protocol LocationProducerProtocol: AnyObject {
     var delegate: LocationProducerDelegate? { get set }
     var latestLocation: Location? { get }
-    var consumers: NSHashTable<LocationConsumer> { get }
+    var consumers: [LocationConsumer] { get }
     var locationProvider: LocationProvider { get set }
     func add(_ consumer: LocationConsumer)
     func remove(_ consumer: LocationConsumer)
@@ -55,11 +55,8 @@ internal final class LocationProducer: LocationProducerProtocol {
         }
     }
 
-    private let _consumers = NSHashTable<LocationConsumer>.weakObjects()
-    internal var consumers: NSHashTable<LocationConsumer> {
-        // swiftlint:disable:next force_cast
-        return _consumers.copy() as! NSHashTable<LocationConsumer>
-    }
+    private let _consumers = WeakSet<LocationConsumer>()
+    internal var consumers: [LocationConsumer] { _consumers.allObjects }
 
     private var isUpdating = false {
         didSet {

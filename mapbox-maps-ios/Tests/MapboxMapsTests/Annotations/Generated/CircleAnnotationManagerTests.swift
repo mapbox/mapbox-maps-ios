@@ -57,7 +57,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.type, SourceType.geoJson)
-        XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.id, manager.id)
+        XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.id, manager.id)
     }
 
     func testAddLayer() {
@@ -268,7 +268,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
     func testSetToNilCirclePitchAlignment() {
         let newCirclePitchAlignmentProperty = CirclePitchAlignment.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .circle, property: "circle-pitch-alignment").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-pitch-alignment").value as! String
         manager.circlePitchAlignment = newCirclePitchAlignmentProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-pitch-alignment"])
@@ -339,7 +339,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
     func testSetToNilCirclePitchScale() {
         let newCirclePitchScaleProperty = CirclePitchScale.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .circle, property: "circle-pitch-scale").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-pitch-scale").value as! String
         manager.circlePitchScale = newCirclePitchScaleProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-pitch-scale"])
@@ -410,7 +410,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
     func testSetToNilCircleTranslate() {
         let newCircleTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-        let defaultValue = Style.layerPropertyDefaultValue(for: .circle, property: "circle-translate").value as! [Double]
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-translate").value as! [Double]
         manager.circleTranslate = newCircleTranslateProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-translate"])
@@ -481,7 +481,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
     func testSetToNilCircleTranslateAnchor() {
         let newCircleTranslateAnchorProperty = CircleTranslateAnchor.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .circle, property: "circle-translate-anchor").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-translate-anchor").value as! String
         manager.circleTranslateAnchor = newCircleTranslateAnchorProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-translate-anchor"])
@@ -563,10 +563,10 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         let addLayerParameters = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.last).parameters
         let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
 
-        XCTAssertEqual(addLayerParameters.properties["source"] as? String, addSourceParameters.id)
+        XCTAssertEqual(addLayerParameters.properties["source"] as? String, addSourceParameters.source.id)
         XCTAssertNotEqual(addLayerParameters.properties["id"] as? String, manager.layerId)
 
-        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.id)
+        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.source.id)
     }
 
     func testHandleDragChanged() throws {
@@ -585,7 +585,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
         manager.handleDragChanged(with: .random())
         let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
-        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.id)
+        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.source.id)
         if case .featureCollection(let collection) = updateSourceParameters.geojson {
             XCTAssertTrue(collection.features.contains(where: { $0.identifier?.rawValue as? String == annotation.id }))
         } else {

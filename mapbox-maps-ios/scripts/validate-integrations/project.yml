@@ -43,7 +43,7 @@ targetTemplates:
     sources: [ViewController.swift]
     platform: iOS
     deploymentTarget:
-      iOS: 11.0
+      iOS: 12.0
     type: application
     info:
       path: Info.plist

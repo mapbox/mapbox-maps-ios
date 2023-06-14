@@ -15,7 +15,7 @@ internal final class FollowPuckViewportStateDataSource: FollowPuckViewportStateD
 
     private let interpolatedLocationProducer: InterpolatedLocationProducerProtocol
     private let observableCameraOptions: ObservableCameraOptionsProtocol
-    private let cancelables = CancelableContainer()
+    private var cancelables = Set<AnyCancelable>()
 
     // MARK: - Initialization
 
@@ -29,8 +29,7 @@ internal final class FollowPuckViewportStateDataSource: FollowPuckViewportStateD
             .observe { [weak self] _ in
                 self?.processUpdatedCamera()
                 return true
-            }
-            .add(to: cancelables)
+            }.erased.store(in: &cancelables)
     }
 
     // MARK: - Observation

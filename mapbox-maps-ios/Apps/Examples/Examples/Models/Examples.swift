@@ -8,7 +8,7 @@ import MapboxMaps
 
 // swiftlint:disable:next type_body_length
 struct Examples {
-    static let all = [
+    static let all: [[String : Any]] = [
         [
             "title": "Getting started",
             "examples": gettingStartedExamples
@@ -176,8 +176,24 @@ struct Examples {
                 type: ResizableImageExample.self),
         Example(title: "Geojson performance",
                 description: "Display long route as large geojson",
-                type: LargeGeoJSONPerformanceExample.self)
-    ]
+                type: LargeGeoJSONPerformanceExample.self),
+        Example(title: "Map Events",
+                description: "Print out map events and data",
+                type: MapEventsExample.self),
+        Example(title: "Lights 3D",
+                description: "Configure lights in 3D environment",
+                type: Lights3DExample.self)
+    ] + {
+        if #available(iOS 13.0, *) {
+            return [
+                Example(title: "Combine",
+                    description: "Shows how to use map events with Combine framework",
+                    type: CombineExample.self)
+            ]
+        } else {
+            return []
+        }
+    }()
 
     // Examples that focus on displaying the user's location.
     public static let locationExamples = [

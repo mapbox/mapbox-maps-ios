@@ -3,7 +3,7 @@ import UIKit
 
 /// An object responsible for notifying the map view about location-related events,
 /// such as a change in the device’s location.
-public final class LocationManager: NSObject {
+public final class LocationManager {
 
     /// Represents the latest location received from the location provider.
     public var latestLocation: Location? {
@@ -22,7 +22,7 @@ public final class LocationManager: NSObject {
 
     /// The set of objects that are currently consuming location updates.
     /// The returned object is a copy of the underlying one, so mutating it will have no effect.
-    public var consumers: NSHashTable<LocationConsumer> {
+    public var consumers: [LocationConsumer] {
         return locationProducer.consumers
     }
 
@@ -46,22 +46,23 @@ public final class LocationManager: NSObject {
         self.locationProducer = locationProducer
         self.interpolatedLocationProducer = interpolatedLocationProducer
         self.puckManager = puckManager
-        super.init()
         locationProducer.delegate = self
         syncOptions()
     }
 
+    /// Overrides the default(CoreLocation-based) location provider with the supplied one.
+    /// - Parameter customLocationProvider: The location provider to be used for location-related things.
     public func overrideLocationProvider(with customLocationProvider: LocationProvider) {
         locationProducer.locationProvider = customLocationProvider
     }
 
     /// The location manager holds weak references to consumers, client code should retain these references.
-    public func addLocationConsumer(newConsumer consumer: LocationConsumer) {
+    public func addLocationConsumer(_ consumer: LocationConsumer) {
         locationProducer.add(consumer)
     }
 
     /// Removes a location consumer from the location manager.
-    public func removeLocationConsumer(consumer: LocationConsumer) {
+    public func removeLocationConsumer(_ consumer: LocationConsumer) {
         locationProducer.remove(consumer)
     }
 
@@ -86,17 +87,9 @@ public final class LocationManager: NSObject {
     }
 
     private func syncOptions() {
-        // workaround to avoid calling LocationProducer.locationProvider's didSet
-        // when locationProvider is a class. In next major version, we should constrain
-        // LocationProvider to always be a class.
-        if type(of: locationProducer.locationProvider) is AnyClass {
-            var provider = locationProducer.locationProvider
-            provider.locationProviderOptions = options
-        } else {
-            locationProducer.locationProvider.locationProviderOptions = options
-        }
+        locationProducer.locationProvider.locationProviderOptions = options
         puckManager.puckType = options.puckType
-        puckManager.puckBearingSource = options.puckBearingSource
+        puckManager.puckBearing = options.puckBearing
         puckManager.puckBearingEnabled = options.puckBearingEnabled
 
         interpolatedLocationProducer.isEnabled = options.puckType != nil
@@ -106,15 +99,15 @@ public final class LocationManager: NSObject {
 extension LocationManager: LocationProducerDelegate {
     internal func locationProducer(_ locationProducer: LocationProducerProtocol,
                                    didFailWithError error: Error) {
-        delegate?.locationManager?(self, didFailToLocateUserWithError: error)
+        delegate?.locationManager(self, didFailToLocateUserWithError: error)
     }
 
     internal func locationProducer(_ locationProducer: LocationProducerProtocol,
                                    didChangeAccuracyAuthorization accuracyAuthorization: CLAccuracyAuthorization) {
-        delegate?.locationManager?(self, didChangeAccuracyAuthorization: accuracyAuthorization)
+        delegate?.locationManager(self, didChangeAccuracyAuthorization: accuracyAuthorization)
     }
 
     func locationProducerShouldDisplayHeadingCalibration(_ locationProducer: LocationProducerProtocol) -> Bool {
-        return delegate?.locationManagerShouldDisplayHeadingCalibration?(self) ?? false
+        return delegate?.locationManagerShouldDisplayHeadingCalibration(self) ?? false
     }
 }

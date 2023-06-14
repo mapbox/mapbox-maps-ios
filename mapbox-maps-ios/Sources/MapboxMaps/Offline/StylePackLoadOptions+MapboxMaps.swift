@@ -12,20 +12,24 @@ extension StylePackLoadOptions {
     ///         associated with a style package.
     ///   - acceptExpired: Accepts expired data when loading style resources. Default
     ///         is `false`.
+    ///   - extraOptions: Extra style package load options. Must be a valid JSON object.
     ///
-    /// If `metadata` is not a valid JSON object, then this initializer returns
+    /// If `metadata`  is not a valid JSON object, then this initializer returns.
     /// `nil`.
-    public convenience init?(glyphsRasterizationMode: GlyphsRasterizationMode?,
-                             metadata: Any? = nil,
-                             acceptExpired: Bool = false) {
-        if let metadata = metadata {
-            guard JSONSerialization.isValidJSONObject(metadata) else {
-                return nil
-            }
-        }
-        self.init(__glyphsRasterizationMode: glyphsRasterizationMode?.NSNumber,
-                  metadata: metadata,
-                  acceptExpired: acceptExpired)
+    public convenience init?(
+        glyphsRasterizationMode: GlyphsRasterizationMode?,
+        metadata: Any? = nil,
+        acceptExpired: Bool = false,
+        extraOptions: Any? = nil
+    ) {
+        guard metadata.map(JSONSerialization.isValidJSONObject(_:)) != false else { return nil }
+        let extraOptions = extraOptions.flatMap { JSONSerialization.isValidJSONObject($0) ? $0 : nil }
+
+        self.init(
+            __glyphsRasterizationMode: glyphsRasterizationMode?.NSNumber,
+            metadata: metadata,
+            acceptExpired: acceptExpired,
+            extraOptions: extraOptions)
     }
 
     /// Specifies the glyphs rasterization mode.

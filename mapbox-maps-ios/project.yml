@@ -6,10 +6,15 @@ configFiles:
 options:
   defaultConfig: Release
   parallelizeBuild: false
-  xcodeVersion: "1300"
 packages:
   MapboxMaps:
     path: ./
+  Fingertips:
+    url: git@github.com:mapbox/Fingertips.git
+    from: 0.6.0
+  Hammer:
+    url: git@github.com:lyft/Hammer.git
+    from: 0.14.3
 settings:
   base:
     VALIDATE_WORKSPACE: "NO"
@@ -51,12 +56,12 @@ targets:
       - path: "Tests/MapboxMapsTests"
         excludes:
           - "Integration Tests/HTTP/HTTPIntegrationTests.swift"
-          - "MigrationGuide/MigrationGuideIntegrationTests.swift"
     dependencies:
       - target: MapboxTestHost
     postBuildScripts:
       - path: scripts/insert_access_token.sh
         name: Insert Mapbox Token
+        basedOnDependencyAnalysis: false
         inputFiles:
           - $(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)
   MapboxMapsHTTPTestsWithHost:
@@ -90,16 +95,55 @@ targets:
     postBuildScripts:
       - path: scripts/insert_access_token.sh
         name: Insert Mapbox Token
+        basedOnDependencyAnalysis: false
         inputFiles:
           - $(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)
+  GestureTests:
+    type: bundle.unit-test
+    platform: iOS
+    settings:
+      base:
+        ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: "YES"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        INFOPLIST_FILE: "Tests/MapboxMapsTests/Info.plist"
+        PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxTests"
+        PRODUCT_NAME: "$(TARGET_NAME)"
+        IPHONEOS_DEPLOYMENT_TARGET: "13.0"
+    configFiles:
+      Debug: Configurations/unitTests.xcconfig
+      Release: Configurations/unitTests.xcconfig
+    sources:
+      - path: "Tests/MapboxMapsTests"
+        includes:
+          - "Integration Tests/MapViewIntegrationTestCase.swift"
+          - "Integration Tests/IntegrationTestCase.swift"
+          - "Helpers/Bundle+MapboxMapsTests.swift"
+          - "Helpers/String+FileSystemSafe.swift"
+          - "Helpers/XCTestCase+GuardForMetalDevice.swift"
+          - "Helpers/XCTestCase+MapboxAccessToken.swift"
+          - "Helpers/XCTestCase+TemporaryCacheDirectory.swift"
+      - path: Tests/GestureTests
+    dependencies:
+      - target: MapboxTestHost
+      - package: Hammer
+    postBuildScripts:
+      - path: scripts/insert_access_token.sh
+        name: Insert Mapbox Token
+        basedOnDependencyAnalysis: false
+        showEnvVars: false
+        inputFiles:
+          - $(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)
+      - script: scripts/run_swiftlint.sh
+        name: Run swiftlint
+        basedOnDependencyAnalysis: false
+        showEnvVars: false
 
   MapboxTestHost:
     type: application
     platform: iOS
-    deploymentTarget: "11.0"
+    deploymentTarget: "12.0"
     settings:
       base:
-        ENABLE_BITCODE: "NO"
         TARGETED_DEVICE_FAMILY: "1,2"
         LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks"
         INFOPLIST_FILE: "MapboxTestHost/Info.plist"
@@ -114,10 +158,10 @@ targets:
     dependencies:
       - package: MapboxMaps
         product: MapboxMaps
-      - package: MapboxMaps
-        product: CocoaImageHashing
+      - package: Fingertips
     scheme:
       testTargets:
           - MapboxMapsHTTPTestsWithHost
           - MapboxMapsTestsWithHost
+          - GestureTests
       gatherCoverageData: true

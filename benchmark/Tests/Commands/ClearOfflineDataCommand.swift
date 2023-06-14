@@ -4,9 +4,8 @@ import XCTest
 
 struct ClearOfflineDataCommand: AsyncCommand, Decodable {
     @MainActor
-    func execute() async throws {
-        let options = ResourceOptionsManager.default.resourceOptions
-        let manager = OfflineManager(resourceOptions: options)
+    func execute(context: Context) async throws {
+        let manager = OfflineManager()
 
         let packs = try await manager.allStylePacks()
 
@@ -14,10 +13,11 @@ struct ClearOfflineDataCommand: AsyncCommand, Decodable {
             manager.removeStylePack(for: StyleURI(rawValue: pack.styleURI)!)
         }
 
-        try await MapboxMap.clearData(for: options)
+        try await MapboxMap.clearData()
 
         let tileStore = TileStore.default
         tileStore.setOptionForKey(TileStoreOptions.diskQuota, value: 0)
+        tileStore.setOptionForKey(TileStoreOptions.diskQuotaCooldownDuration, value: 0)
         let regions = try await tileStore.allTileRegions()
 
         for region in regions {
@@ -28,3 +28,6 @@ struct ClearOfflineDataCommand: AsyncCommand, Decodable {
     }
 }
 
+extension TileStoreOptions {
+    fileprivate static let diskQuotaCooldownDuration = "disk-quota-enforcement-cooldown-duration"
+}

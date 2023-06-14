@@ -3,8 +3,8 @@ import Foundation
 
 protocol LocationManaging {
     var options: LocationOptions { get set }
-    func addLocationConsumer(newConsumer consumer: LocationConsumer)
-    func removeLocationConsumer(consumer: LocationConsumer)
+    func addLocationConsumer(_ consumer: LocationConsumer)
+    func removeLocationConsumer(_ : LocationConsumer)
     func addPuckLocationConsumer(_ consumer: PuckLocationConsumer)
     func removePuckLocationConsumer(_ consumer: PuckLocationConsumer)
 }
@@ -29,7 +29,7 @@ final class LocationCoordinator {
     private var subscribeToPuckLocationUpdates = Once()
 
     deinit {
-        locationManager?.removeLocationConsumer(consumer: self)
+        locationManager?.removeLocationConsumer(self)
         locationManager?.removePuckLocationConsumer(self)
     }
 
@@ -48,10 +48,10 @@ final class LocationCoordinator {
 
         if !locationUpdateHandlers.isEmpty {
             subscribeToLocationUpdates {
-                locationManager?.addLocationConsumer(newConsumer: self)
+                locationManager?.addLocationConsumer(_: self)
             }
         } else {
-            locationManager?.removeLocationConsumer(consumer: self)
+            locationManager?.removeLocationConsumer(_: self)
             subscribeToLocationUpdates.reset()
         }
 

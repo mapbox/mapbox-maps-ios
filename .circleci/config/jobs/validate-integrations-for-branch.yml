@@ -9,7 +9,12 @@ steps:
   - configure-environment:
       skip-dependencies: true
   - install-xcodegen
+  - attach_workspace:
+      at: .
   - run:
       name: Validate SPM and CocoaPods integrations for current branch
-      command: scripts/validate-integrations/validate-integrations.sh -b $CIRCLE_BRANCH
+      command: |
+          source snapshot-version
+          echo $VERSION
+          scripts/validate-integrations/validate-integrations.sh -v $VERSION -ds 
   - store-default-artifacts

@@ -6,7 +6,6 @@ import MapboxMaps
 //
 // When trying this example in the simulator, choose Features > Location > Freeway Drive
 // to get a good sense of the resulting user experience.
-@objc(ViewportExample)
 final class ViewportExample: UIViewController, ExampleProtocol {
 
     private enum State {
@@ -36,7 +35,7 @@ final class ViewportExample: UIViewController, ExampleProtocol {
         mapView.mapboxMap.setCamera(to: CameraOptions(center: cupertino, zoom: 14))
 
         mapView.location.options.puckType = .puck2D(.makeDefault(showBearing: true))
-        mapView.location.options.puckBearingSource = .heading
+        mapView.location.options.puckBearing = .heading
 
         followPuckViewportState = mapView.viewport.makeFollowPuckViewportState(
             options: FollowPuckViewportStateOptions(

@@ -12,40 +12,40 @@ struct AddRouteCommand: AsyncCommand {
     private var locationProvider = OnDemandLocationProvider()
 
     @MainActor
-    func execute() async throws {
-        guard let mapView = UIViewController.rootController?.findMapView() else {
+    func execute(context: Context) async throws {
+        guard let mapView = context.mapView else {
             throw ExecutionError.cannotFindMapboxMap
         }
 
         mapView.location.options.puckType = .puck2D(.makeDefault(showBearing: false))
-        mapView.location.options.puckBearingSource = .course
+        mapView.location.options.puckBearing = .course
         mapView.location.overrideLocationProvider(with: locationProvider)
 
         // Setup route.
         let route = try getRoute()
 
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: ID.routeSource)
         source.data = .geometry(Geometry(route.line))
         source.lineMetrics = true
-        try mapView.mapboxMap.style.addSource(source, id: ID.routeSource)
-        try mapView.mapboxMap.style.addPersistentLayer(makeCasingLayer())
-        try mapView.mapboxMap.style.addPersistentLayer(makeLineLayer())
+        try mapView.mapboxMap.addSource(source)
+        try mapView.mapboxMap.addPersistentLayer(makeCasingLayer())
+        try mapView.mapboxMap.addPersistentLayer(makeLineLayer())
 
-        mapView.mapboxMap.onEvery(event: .cameraChanged) { [weak locationProvider] _ in
+        mapView.mapboxMap.onCameraChanged.observe { [weak locationProvider] _ in
             let newLocation = mapView.cameraState.center
             let traveledDistance = route.line.distance(to: newLocation) ?? 0
             let progess = traveledDistance / route.distance
 
             locationProvider?.currentCoordination = newLocation
-            try? mapView.mapboxMap.style.setLayerProperty(
+            try? mapView.mapboxMap.setLayerProperty(
                 for: ID.routeLineLayer,
                 property: "line-trim-offset",
                 value: [0, progess])
-            try? mapView.mapboxMap.style.setLayerProperty(
+            try? mapView.mapboxMap.setLayerProperty(
                 for: ID.casingLineLayer,
                 property: "line-trim-offset",
                 value: [0, progess])
-        }
+        }.store(in: &context.cancellables)
     }
 
     private func makeLineLayer() -> LineLayer {

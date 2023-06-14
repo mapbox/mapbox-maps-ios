@@ -30,6 +30,4 @@ extension DispatchQueueProtocol {
 }
 
 @_spi(Package)
-extension DispatchQueue: DispatchQueueProtocol { }
-@_spi(Package)
-extension DispatchWorkItem: Cancelable { }
+extension DispatchQueue: DispatchQueueProtocol {}

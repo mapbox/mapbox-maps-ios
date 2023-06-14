@@ -4,6 +4,8 @@ unless:
     - or:
         - equal: [ << pipeline.git.branch >>, "main" ]
         - equal: [ << pipeline.git.branch >>, "develop" ]
+    - equal: [scheduled_pipeline, << pipeline.trigger_source >>]
+
 jobs:
   - run-tests?:
       type: approval

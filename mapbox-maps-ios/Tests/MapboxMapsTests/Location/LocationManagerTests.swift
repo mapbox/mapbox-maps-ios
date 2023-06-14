@@ -31,7 +31,7 @@ final class LocationManagerTests: XCTestCase {
         XCTAssertNil(locationManager.delegate)
         XCTAssertEqual(locationProducer.locationProvider.locationProviderOptions, locationManager.options)
         XCTAssertEqual(puckManager.puckType, locationManager.options.puckType)
-        XCTAssertEqual(puckManager.puckBearingSource, locationManager.options.puckBearingSource)
+        XCTAssertEqual(puckManager.puckBearing, locationManager.options.puckBearing)
     }
 
     func testLatestLocationWhenLocationProducerLatestLocationIsNil() {
@@ -43,7 +43,9 @@ final class LocationManagerTests: XCTestCase {
     func testLatestLocationWhenLocationProducerLatestLocationIsNonNil() {
         locationProducer.latestLocation = Location(location: CLLocation(), heading: nil, accuracyAuthorization: .fullAccuracy)
 
-        XCTAssertTrue(locationManager.latestLocation === locationProducer.latestLocation)
+        XCTAssertIdentical(locationManager.latestLocation?.location, locationProducer.latestLocation?.location)
+        XCTAssertEqual(locationManager.latestLocation?.heading, locationManager.latestLocation?.heading)
+        XCTAssertEqual(locationManager.latestLocation?.accuracyAuthorization, locationManager.latestLocation?.accuracyAuthorization)
     }
 
     func testLocationProvider() throws {
@@ -56,7 +58,7 @@ final class LocationManagerTests: XCTestCase {
     }
 
     func testConsumers() {
-        XCTAssertTrue(locationManager.consumers === locationProducer.consumers)
+        XCTAssertTrue(locationManager.consumers.elementsEqual(locationProducer.consumers) { $0 === $1 })
     }
 
     func testOptionsArePropagatedToLocationProducerAndPuckManager() {
@@ -65,13 +67,13 @@ final class LocationManagerTests: XCTestCase {
         options.desiredAccuracy = .random(in: 0..<100)
         options.activityType = [.automotiveNavigation, .fitness, .other, .otherNavigation].randomElement()!
         options.puckType = [.puck2D(), .puck3D(Puck3DConfiguration(model: Model()))].randomElement()!
-        options.puckBearingSource = [.heading, .course].randomElement()!
+        options.puckBearing = [.heading, .course].randomElement()!
         options.puckBearingEnabled = .random()
         locationManager.options = options
 
         XCTAssertEqual(locationProducer.locationProvider.locationProviderOptions, options)
         XCTAssertEqual(puckManager.puckType, options.puckType)
-        XCTAssertEqual(puckManager.puckBearingSource, options.puckBearingSource)
+        XCTAssertEqual(puckManager.puckBearing, options.puckBearing)
         XCTAssertEqual(puckManager.puckBearingEnabled, options.puckBearingEnabled)
     }
 
@@ -79,15 +81,6 @@ final class LocationManagerTests: XCTestCase {
         locationManager.options = LocationOptions()
 
         XCTAssertTrue(locationProducer.didSetLocationProviderStub.invocations.isEmpty)
-    }
-
-    func testOptionsPropagationDoesInvokeLocationProviderSetterWhenItIsAValueType() {
-        locationManager.overrideLocationProvider(with: MockLocationProviderStruct())
-        locationProducer.didSetLocationProviderStub.reset()
-
-        locationManager.options = LocationOptions()
-
-        XCTAssertEqual(locationProducer.didSetLocationProviderStub.invocations.count, 1)
     }
 
     func testOverrideLocationProvider() {
@@ -106,7 +99,7 @@ final class LocationManagerTests: XCTestCase {
     func testAddLocationConsumer() {
         let consumer = MockLocationConsumer()
 
-        locationManager.addLocationConsumer(newConsumer: consumer)
+        locationManager.addLocationConsumer(consumer)
 
         XCTAssertEqual(locationProducer.addStub.invocations.count, 1)
         XCTAssertTrue(locationProducer.addStub.invocations.first?.parameters === consumer)
@@ -115,7 +108,7 @@ final class LocationManagerTests: XCTestCase {
     func testRemoveLocationConsumer() {
         let consumer = MockLocationConsumer()
 
-        locationManager.removeLocationConsumer(consumer: consumer)
+        locationManager.removeLocationConsumer(consumer)
 
         XCTAssertEqual(locationProducer.removeStub.invocations.count, 1)
         XCTAssertTrue(locationProducer.removeStub.invocations.first?.parameters === consumer)

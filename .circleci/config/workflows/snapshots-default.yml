@@ -1,6 +1,6 @@
 when:
   and:
-    - equal: [ << pipeline.trigger_source >>, webhook ]
+    - equal: [ << pipeline.trigger_source >>, webhook ] # Webhook from Github that contains push event
     - equal: [ << pipeline.git.branch >>, << pipeline.parameters.sdk_ci_repo_default_branch >> ]
 jobs:
   - build-dynamic:

@@ -8,9 +8,8 @@ public struct CreateOfflinePacksCommand: AsyncCommand {
     let style: StyleURI
     let geometry: Polygon
 
-    func execute() async throws {
-        let options = ResourceOptionsManager.default.resourceOptions
-        let manager = OfflineManager(resourceOptions: options)
+    func execute(context: Context) async throws {
+        let manager = OfflineManager()
 
         let loadOptions = StylePackLoadOptions(glyphsRasterizationMode: nil)!
         try await manager.loadStylePack(for: style, loadOptions: loadOptions)
@@ -20,7 +19,9 @@ public struct CreateOfflinePacksCommand: AsyncCommand {
                 styleURI: style.rawValue,
                 minZoom: UInt8(minZoom),
                 maxZoom: UInt8(maxZoom),
-                stylePack: nil
+                tilesets: nil,
+                stylePack: nil,
+                extraOptions: nil
             )
         )
 

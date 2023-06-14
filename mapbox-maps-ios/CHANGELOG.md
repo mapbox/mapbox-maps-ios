@@ -1,4 +1,4 @@
-# Changelog for Mapbox Maps SDK v10 for iOS
+# Changelog for Mapbox Maps SDK v11 for iOS
 
 Mapbox welcomes participation and contributions from everyone.
 
@@ -18,6 +18,76 @@ Mapbox welcomes participation and contributions from everyone.
 * Fix bearing value is fluctuating between initial value and correct value during a rotation gesture.
 * Allows animation during any ongoing gestures.
 * Sync map size to the size of the metal view.
+* Fix missing feature properties for `nil`/`null` values.
+* Added experimental `tileCover` method to `MapboxMap` that returns tile ids covering the map.
+* Expose `owner` property for `CameraAnimator` protocol
+* Updated core styles to the latest versions.
+* Merge `TilesetDescriptorOptions` and `TilesetDescriptorOptionsForTilesets`. To enable tileset descriptor creation for a list of tilesets that are not part of the original style use `TilesetDescriptorOptions`.
+* Use `DataRef` to pass snapshot and style image data by reference, improving performance
+* Bumped min iOS version to 12.0
+* Expose a subset of ModelLayer APIs.
+* Protocol `LocationProvider` now requires class semantic for implementation.
+* The Map events have been reworked:
+  - Now all Map events payloads are serialize-free, which brings more type safety and eliminates possible deserialization errors;
+  - The `MapboxMap` and `Snapshotter` now expose `on`-prefixed properties that allows you to subscribe to map events via `observe` and `observeNext` methods:
+    ```swift
+    mapboxMap.onCameraChanged.observe { [weak self] event in
+      self?.camera = event.cameraState
+    }.store(in: &cancelables)
+
+    mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
+      self?.configureStyle()
+    }.store(in: &cancelables)
+    ```
+  - The `AnyCancelable` object returned from `observe` and `observeNext` should be stored, otherwise the subscription will be immediately canceled;
+  - The same `on`-prefixed properties can now be used as `Combine.Publisher`:
+    ```swift
+    import Combine
+    mapboxMap.onCameraChanged
+      .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
+      .map(\.cameraState)
+      .sink { [weak self] cameraState in
+        self?.camera = cameraState
+      }.store(in: &cancellables)
+    ```
+  - Methods `MapboxMap.onEvery`, `MapboxMap.onNext`, `Snapshotter.onEvery`, `Snapshotter.onNext` have been deprecated;
+  - Methods `MapboxMap.observe` and `Snapshotter.observe` have been removed.
+* Deprecate `PointAnnotationManager.iconTextFit` and `PointAnnotationManager.iconTextFitPadding` in favor of `PointAnnotation.iconTextFit` and `PointAnnotation.iconTextFitPadding`.
+* Remove deprecated `PuckBearingSource`and related APIs.
+* Experimental API `MapboxMap/setMemoryBudget` was renamed to `MapboxMaps/setTileCacheBudget` and promoted to stable.
+* Location consumer methods have been renamed to align with Swift API Design Guidelines. Use `addLocationConsumer(_:)` and `removeLocationConsumer(_:)` rather than `addLocationConsumer(newConsumer:)` and `removeLocationConsumer(consumer:)`.
+* `SourceType` and `LayerType` are now structs with static variables instead of enums
+* Remove `ResourceOptions` and `ResourceOptionsManager`. Introduce `MapboxOptions` and `MapboxMapsOptions` to handle application-level access token and other generic options.
+  - Mapbox's access token can now be set with `MapboxCommon.MapboxOptions`. By default, MapboxMaps SDK will try to read the access token from app bundle's property list or `MapboxAccessToken` file when Maps service are initialized; if you wish to set access token programmatically, it is highly recommended to set it before initializing a `MapView`.
+    ```swift
+    import MapboxMaps
+
+    MapboxOptions.accessToken = accessToken
+    ```
+  - `TileStore`no longer requires `TileStoreOptions.mapboxAccessToken` to be explicitly set.
+  - Configurations for the external resources used by Maps API can now be set with `MapboxMapsOptions`:
+    ```swift
+    import MapboxMaps
+
+    MapboxMapsOptions.dataPath = customDataPathURL
+    MapboxMapsOptions.assetPath = customAssetPathURL
+    MapboxMapsOptions.tileStoreUsageMode = .readOnly
+    MapboxMapsOptions.tileStore = tileStore
+    ```
+  - To clear the temporary map data, you can use `MapboxMap.clearData(completion:)`
+* Expose new 3D Lights API: `AmbientLight` and `DirectionalLight`.
+* `TypeConversionError`, `SnapshotError`, and `ViewAnnotationManagerError` are now structs with static variables instead of enums
+* Extend `Layer` protocol with `visibility` property.
+* Add required `id` property to `Source`. After that change `id` should be specified for source upon creation:
+  ```swift
+  let terrainSource = RasterDemSource(id: "terrain-source")
+  mapView.mapboxMap.addSource(terrainSource)
+  ```
+* Support string option in `GeoJSONSourceData`.
+* Allows passing `extraOptions` (which must be a valid JSON object) when creating `StylePackLoadOptions`and `TilesetDescriptorOptions`.
+* Deprecate `MapboxMap/style` and `Snapshotter/style`, from now on you can access Style APIs directly from `MapboxMap` and `Snapshotter` instance.
+*  Support string option in `GeoJSONSourceData`.
+* Add a new experimental API to enable Tracing with `Tracing.status = .enabled`. Checkout `Tracing` reference to see more.
 
 ## 10.12.0 - March 22, 2023
 

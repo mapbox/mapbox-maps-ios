@@ -1,6 +1,7 @@
 import Foundation
 import os
 import MapboxCommon
+@_implementationOnly import MapboxCoreMaps_Private
 
 private let subsystem = "com.mapbox.maps"
 
@@ -8,34 +9,118 @@ internal enum SignpostName {
     static let mapViewDisplayLink: StaticString = "MapView.displayLink"
 }
 
-internal extension OSLog {
-    @available(iOS 12, *)
-    private static let _poi = OSLog(subsystem: subsystem, category: .pointsOfInterest)
-    private static let _platform = OSLog(subsystem: subsystem, category: "platform")
-    private static let tracingEnabled = setupTracing()
+/// Enable `os_signpost` generation in some components
+///
+/// By default, signpost generation is disabled. It's possible to enable some components with ``Tracing.status`` API.
+///
+/// The `MAPBOX_MAPS_SIGNPOSTS_ENABLED` environment variable can be used to manipulate the initial value of the tracing status
+/// There are a few rules for environment variable:
+/// 1. The empty value will enable all components tracing. Equals to ``enabled``.
+/// 2. The value of `0` or `disabled` will set a default value to ``disabled``.
+/// 3. All other values will be processed as a component names and be enabled accordingly.
+/// The comma `,` delimiter has to be used to pass multiple components (e.g. `"core,platform"`).
+/// 4. Value is case-insensitive.
+#if swift(>=5.8)
+@_documentation(visibility: public)
+#endif
+@_spi(Experimental) public struct Tracing: OptionSet {
+    /// No tracing logs will be generated
+    public static let disabled = Tracing([])
 
-    static let platform: OSLog = tracingEnabled ? _platform : .disabled
-    static let poi: OSLog = {
-        if #available(iOS 12, *), tracingEnabled {
-            return ._poi
-        } else {
+    /// Traces related to Maps SDK will be generated
+    public static let platform = Tracing(rawValue: 1 << 0)
+
+    /// Traces related to the rendering engine will be generated
+    public static let core = Tracing(rawValue: 1 << 1)
+
+    /// Enable all known components to generate traces.
+    public static let enabled: Tracing = [.core, .platform]
+
+    /// Environment variable name to change the default tracing value
+    public static let environmentVariableName = "MAPBOX_MAPS_SIGNPOSTS_ENABLED"
+
+    #if swift(>=5.8)
+    @_documentation(visibility: public)
+    #endif
+    /// Change tracing generation logic in runtime.
+    @_spi(Experimental) public static var status: Tracing = .runtimeValue() {
+        didSet {
+            Tracing.updateCore(tracing: status)
+        }
+    }
+
+    public let rawValue: Int
+
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+
+    internal typealias EnvironmentVariableProvider = (String) -> String?
+
+    internal static let disableTracingKeys = ["0", "disabled"]
+
+    internal static func runtimeValue(
+        provider: EnvironmentVariableProvider = { ProcessInfo.processInfo.environment[$0] }
+    ) -> Tracing {
+        let value = calculateRuntimeValue(provider: provider)
+        Tracing.updateCore(tracing: value)
+        return value
+    }
+
+    internal static func calculateRuntimeValue(provider: EnvironmentVariableProvider) -> Tracing {
+        guard let envValue = provider(environmentVariableName)?.lowercased(),
+              !disableTracingKeys.contains(envValue) else {
             return .disabled
         }
-    }()
+
+        guard !envValue.isEmpty else { return .enabled }
+
+        return envValue.split(separator: ",")
+            .map({ $0.trimmingCharacters(in: .whitespaces) }).filter({ !$0.isEmpty })
+            .reduce(into: Tracing(), { tracing, component in
+                switch component {
+                case "core": tracing.insert(.core)
+                case "platform": tracing.insert(.platform)
+                default: Log.info(forMessage: "Unrecognized tracing option: \(component)", category: "Tracing")
+                }
+            })
+    }
+
+    internal static func updateCore(tracing: Tracing) {
+        MapboxCoreMaps_Private.Tracing.setTracingBackendTypeFor(tracing.contains(.core) ? .platform : .noop)
+    }
+}
+
+internal extension OSLog {
+    private static let _poi = OSLog(subsystem: subsystem, category: .pointsOfInterest)
+    private static let _platform = OSLog(subsystem: subsystem, category: "platform")
+
+    static var platform: OSLog {
+        Tracing.status.contains(.platform) ? _platform : .disabled
+    }
+
+    static var poi: OSLog {
+        Tracing.status.contains(.platform) ? _poi : .disabled
+    }
 
     /// Adds signpost event out of scope of any signpost interval. Usable to mark any points of interests, such as gestures.
     func signpostEvent(_ name: StaticString, message: String? = nil) {
         if #available(iOS 15, *) {
-            OSSignposter(logHandle: self).emitEvent(name)
-        } else if #available(iOS 12, *) {
+            let signposter = OSSignposter(logHandle: self)
+            if let message = message {
+                signposter.emitEvent(name, "\(message)")
+            } else {
+                signposter.emitEvent(name, "\(name)")
+            }
+        } else {
             signpost(.event, log: self, name: name, message)
         }
     }
 
     func beginInterval(_ name: StaticString, beginMessage: String? = nil) -> SignpostInterval? {
-        guard OSLog.tracingEnabled else { return nil }
+        guard Tracing.status.contains(.platform) else { return nil }
 
-        guard let intervalType = classForSignpostInterval() else { return nil }
+        let intervalType = classForSignpostInterval()
         return intervalType.init(log: self,
                                  intervalName: name,
                                  message: beginMessage)
@@ -48,19 +133,15 @@ internal extension OSLog {
         return try task()
     }
 
-    private func classForSignpostInterval() -> SignpostInterval.Type? {
+    private func classForSignpostInterval() -> SignpostInterval.Type {
         if #available(iOS 15, *) {
             return SignpostIntervalV15.self
-        } else if #available(iOS 12, *) {
-            return SignpostIntervalV12.self
-        } else {
-            return nil
         }
+        return SignpostIntervalV12.self
     }
 }
 
 /// Provides easy-to-use API for signposting intervals.
-/// `SignpostInterval` can be seamlesly used from any iOS version, but will be reported only on iOS 12+.
 internal protocol SignpostInterval {
     init(log: OSLog, intervalName: StaticString, message: String?)
     func end()
@@ -73,7 +154,6 @@ extension SignpostInterval {
     }
 }
 
-@available(iOS 12.0, *)
 internal struct SignpostIntervalV12: SignpostInterval {
     let log: OSLog
     let intervalName: StaticString
@@ -92,12 +172,11 @@ internal struct SignpostIntervalV12: SignpostInterval {
     }
 }
 
-@available(iOS 12, *)
 private func signpost(_ type: OSSignpostType, log: OSLog, name: StaticString, signpostID: OSSignpostID = .exclusive, _ message: String? = nil) {
     if let message = message {
         os_signpost(type, log: log, name: name, signpostID: signpostID, "%s", message)
     } else {
-        os_signpost(type, log: log, name: name, signpostID: signpostID)
+        os_signpost(type, log: log, name: name, signpostID: signpostID, name)
     }
 }
 
@@ -127,14 +206,4 @@ internal struct SignpostIntervalV15: SignpostInterval {
             signposter.endInterval(intervalName, intervalState)
         }
     }
-}
-
-private func setupTracing() -> Bool {
-    let isEnabled = ProcessInfo.processInfo.environment.keys.contains("MAPBOX_MAPS_SIGNPOSTS_ENABLED")
-    if isEnabled {
-        // Enable tracing in Core
-        let settings = SettingsServiceFactory.getInstance(storageType: .nonPersistent)
-        _ = settings.set(key: "com.mapbox.tracing", value: [subsystem: "platform"])
-    }
-    return isEnabled
 }

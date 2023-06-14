@@ -1,8 +1,8 @@
 import Foundation
 import MapboxMaps
 
-@objc(BuildingExtrusionsExample)
 public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
+    private var cancelables = Set<AnyCancelable>()
 
     private lazy var lightPositionButton: UIButton = {
         let button = UIButton(type: .system)
@@ -50,9 +50,9 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
+        mapView.mapboxMap.onStyleLoaded.observeNext { _ in
             self.setupExample()
-        }
+        }.store(in: &cancelables)
 
         view.addSubview(lightPositionButton)
         view.addSubview(lightColorButton)
@@ -127,7 +127,7 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
 
         layer.fillExtrusionAmbientOcclusionRadius = .constant(3.0)
 
-        try! mapView.mapboxMap.style.addLayer(layer)
+        try! mapView.mapboxMap.addLayer(layer)
     }
 
     // MARK: - Actions
@@ -141,7 +141,7 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
             sender.tintColor = .red
         }
 
-        try? mapView.mapboxMap.style.setLight(light)
+        try? mapView.mapboxMap.setLight(light)
     }
 
     @objc private func lightPositionButtonTapped(_ sender: UIButton) {
@@ -156,6 +156,6 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
             sender.imageView?.transform = CGAffineTransform(rotationAngle: 2.0 * .pi / 3.0)
         }
 
-        try? mapView.mapboxMap.style.setLight(light)
+        try? mapView.mapboxMap.setLight(light)
     }
 }

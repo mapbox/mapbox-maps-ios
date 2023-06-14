@@ -5,7 +5,7 @@ import XCTest
 final class GeoJSONSourceTests: XCTestCase {
 
     func testEncodingAndDecoding() {
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: "test-source")
         source.data = GeoJSONSourceData.testSourceValue()
         source.maxzoom = Double.testSourceValue()
         source.attribution = String.testSourceValue()

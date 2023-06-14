@@ -5,9 +5,9 @@
 import Foundation
 import MapboxMaps
 
-@objc(PitchAndDistanceExample)
 final class PitchAndDistanceExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,12 +26,12 @@ final class PitchAndDistanceExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
         // Wait for the map to load its style before setting the filter.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             self?.setPitchDistanceFilter()
 
             // The below line is used for internal testing purposes only.
             self?.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     // Add an additional condition to the current filter
@@ -65,7 +65,7 @@ final class PitchAndDistanceExample: UIViewController, ExampleProtocol {
 
         for layerID in poiLayers {
             do {
-                try mapView.mapboxMap.style.updateLayer(withId: layerID, type: SymbolLayer.self, update: { (layer: inout SymbolLayer) in
+                try mapView.mapboxMap.updateLayer(withId: layerID, type: SymbolLayer.self, update: { (layer: inout SymbolLayer) in
                     layer.filter = layer.filter.map(updateFilter(currentFilter: ))
                 })
             } catch {

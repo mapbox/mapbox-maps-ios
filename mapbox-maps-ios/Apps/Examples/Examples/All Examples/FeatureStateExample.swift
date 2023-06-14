@@ -1,7 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(FeatureStateExample)
 public class FeatureStateExample: UIViewController, ExampleProtocol {
 
     private var mapView: MapView!
@@ -9,6 +8,7 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
     static let earthquakeSourceId: String = "earthquakes"
     static let earthquakeLayerId: String = "earthquake-viz"
     private var previouslyTappedEarthquakeId: String = ""
+    private var cancelables = Set<AnyCancelable>()
 
     private lazy var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -42,7 +42,7 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
         descriptionView.widthAnchor.constraint(equalToConstant: 200).isActive = true
         descriptionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2.0).isActive = true
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
 
             self.setupSourceAndLayer()
@@ -55,7 +55,7 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
             DispatchQueue.main.asyncAfter(deadline: .now()+3.0) { [weak self] in
                 self?.finish()
             }
-        }
+        }.store(in: &cancelables)
     }
 
     public func setupSourceAndLayer() {
@@ -75,12 +75,12 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
             preconditionFailure("URL is not valid")
         }
 
-        var earthquakeSource = GeoJSONSource()
+        var earthquakeSource = GeoJSONSource(id: Self.earthquakeSourceId)
         earthquakeSource.data = .url(earthquakeURL)
         earthquakeSource.generateId = true
 
         do {
-            try mapView.mapboxMap.style.addSource(earthquakeSource, id: Self.earthquakeSourceId)
+            try mapView.mapboxMap.addSource(earthquakeSource)
         } catch {
             print("Ran into an error adding a source: \(error)")
         }
@@ -168,7 +168,7 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
         earthquakeVizLayer.circleColorTransition = StyleTransition(duration: 0.5, delay: 0)
 
         do {
-            try mapView.mapboxMap.style.addLayer(earthquakeVizLayer)
+            try mapView.mapboxMap.addLayer(earthquakeVizLayer)
         } catch {
             print("Ran into an error adding a layer: \(error)")
         }

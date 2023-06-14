@@ -1,12 +1,10 @@
 import UIKit
 import MapboxMaps
 
-@objc(SnapshotterCoreGraphicsExample)
-
 public class SnapshotterCoreGraphicsExample: UIViewController, NonMapViewExampleProtocol {
-    internal var mapView: MapView!
     public var snapshotter: Snapshotter!
     public var snapshotView: UIImageView!
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -28,11 +26,12 @@ public class SnapshotterCoreGraphicsExample: UIViewController, NonMapViewExample
                                                       height: view.bounds.height),
                                          pixelRatio: 4)
         snapshotter = Snapshotter(options: options)
-        snapshotter.style.uri = .dark
+        snapshotter.styleURI = .dark
+        snapshotter.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 51.180885866921386, longitude: 16.26129435178828), zoom: 4))
 
-        snapshotter.onNext(event: .styleLoaded) { [weak self] _ in
+        snapshotter.onStyleLoaded.observeNext { [weak self] _ in
             self?.startSnapshot()
-        }
+        }.store(in: &cancelables)
     }
 
     public func startSnapshot() {

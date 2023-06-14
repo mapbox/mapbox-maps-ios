@@ -5,7 +5,7 @@ import XCTest
 final class VectorSourceTests: XCTestCase {
 
     func testEncodingAndDecoding() {
-        var source = VectorSource()
+        var source = VectorSource(id: "test-source")
         source.url = String.testSourceValue()
         source.tiles = [String].testSourceValue()
         source.bounds = [Double].testSourceValue()

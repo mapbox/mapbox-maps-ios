@@ -3,8 +3,19 @@ name: MapboxMaps
 options:
   bundleIdPrefix: com.mapbox
   settingPresets: project
+  groupOrdering:
+    - order:
+      - General
+      - Examples
+      - DebugApp
+      - MapboxMaps
+      - MapboxMapsTests
   deploymentTarget:
-    iOS: 11.0
+    iOS: 12.0
+packages:
+  Fingertips:
+    url: git@github.com:mapbox/Fingertips.git
+    from: 0.6.0
 settings:
   DEVELOPMENT_TEAM: GJZR2MEM28
   TARGETED_DEVICE_FAMILY: 1,2
@@ -24,6 +35,20 @@ targets:
     scheme:
       testTargets:
         - MapboxMapsTests
+    sources:
+      - path: build/${PROJECT}
+        includes:
+          - CHANGELOG.md
+          - Package.swift
+          - Makefile
+          - LICENSE.md
+        buildPhase: none
+        group: General
+      - path: .
+        includes:
+          - generate-debuggable-environment
+          - project.yml
+        group: General
 
   MapboxMapsTests:
     templates:
@@ -36,7 +61,8 @@ targets:
           - "Integration Tests/HTTP/HTTPIntegrationTests.swift"
     dependencies:
       - target: Examples
-      - target: "CocoaImageHashing/CocoaImageHashing (iOS Framework)"
+    settings:
+      INFOPLIST_FILE: "build/${PROJECT}/Tests/MapboxMapsTests/Info.plist"
 
   MapboxMapsHTTPTests:
     templates:
@@ -56,7 +82,6 @@ targets:
           - Helpers/XCTestCase+TemporaryCacheDirectory.swift
     dependencies:
       - target: Examples
-      - target: "CocoaImageHashing/CocoaImageHashing (iOS Framework)"
 
   Examples:
     templates:
@@ -73,6 +98,14 @@ targets:
         - ExamplesTests
         - MapboxMapsTests
         - MapboxMapsHTTPTests
+      environmentVariables:
+        - variable: MTL_HUD_ENABLED
+          value: 1
+        - variable: MAPBOX_MAPS_SIGNPOSTS_ENABLED
+          value: 1
+          isEnabled: false
+        - variable: MAPBOX_REOPEN_EXAMPLE
+          value: 1
     sources:
       - path: build/${PROJECT}/Apps/Examples/Examples/
   DebugApp:
@@ -85,8 +118,18 @@ targets:
     settings:
       SKIP_INSTALL: NO
       INFOPLIST_FILE: "build/${PROJECT}/Apps/DebugApp/DebugApp/Info.plist"
+      IPHONEOS_DEPLOYMENT_TARGET: 13.0
     sources:
       - path: build/${PROJECT}/Apps/DebugApp/DebugApp/
+    scheme:
+      environmentVariables:
+        - variable: MTL_HUD_ENABLED
+          value: 1
+        - variable: MAPBOX_MAPS_SIGNPOSTS_ENABLED
+          value: 1
+          isEnabled: false
+        - variable: MAPBOX_REOPEN_EXAMPLE
+          value: 1
 
   ExamplesTests:
     templates:
@@ -97,6 +140,8 @@ targets:
       - path: build/${PROJECT}/Apps/Examples/ExamplesTests/
     dependencies:
       - target: Examples
+    settings:
+      INFOPLIST_FILE: "build/${PROJECT}/Apps/Examples/ExamplesTests/Info.plist"
 
   StressTestApp:
     deploymentTarget: 13.0
@@ -132,7 +177,12 @@ targetTemplates:
       - target: MapboxCoreMaps/MapboxCoreMaps
       - target: Turf/Turf
       - target: MapboxMaps
+<<<<<<< HEAD
       - target: MapboxMapsSwiftUI
+=======
+      - package: Fingertips
+
+>>>>>>> develop
   unitTest:
       type: bundle.unit-test
       platform: iOS
@@ -158,5 +208,3 @@ projectReferences:
     path: "build/turf-swift/Turf.xcodeproj"
   MapboxCoreMaps:
     path: "build/mapbox-gl-native-internal/build/ios/Mapbox GL Native.xcodeproj"
-  CocoaImageHashing:
-    path: "build/cocoaimagehashing/CocoaImageHashing.xcodeproj"

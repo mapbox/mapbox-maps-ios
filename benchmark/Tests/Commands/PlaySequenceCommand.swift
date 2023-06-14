@@ -36,13 +36,8 @@ struct PlaySequenceCommand: AsyncCommand, Decodable {
     }
 
     @MainActor
-    func execute() async throws {
-        let subviews = UIViewController.rootController!.view.subviews
-        guard let mapView = subviews.lazy.compactMap({ $0 as? MapView }).first else {
-            throw ExecutionError.cannotFindMapboxMap
-        }
-
-        let recorder = mapView.mapboxMap.makeRecorder()
+    func execute(context: Context) async throws {
+        let recorder = context.mapView.mapboxMap.makeRecorder()
         await recorder.replay(content: playbackContent.content, playbackCount: playbackCount)
     }
 }

@@ -1,0 +1,24 @@
+parameters:
+  version:
+    type: string
+  docc_archive_name:
+    type: string
+    default: MapboxMaps.doccarchive.zip
+  output_path:
+    type: string
+steps:
+  - run:
+      name: Generate docc for << parameters.version >> version
+      command: |
+        if [[ ! -d MapboxMaps.doccarchive ]]; then
+          echo "Building docc for version: << parameters.version >>"
+          xcodebuild docbuild -config Release -scheme MapboxMaps -destination "generic/platform=iOS"
+          DOCCARCHIVE_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "MapboxMaps.doccarchive" | head -1)
+          echo "Found DocC archive at: $DOCCARCHIVE_PATH"
+          cp -r $DOCCARCHIVE_PATH MapboxMaps.doccarchive
+          zip -r << parameters.docc_archive_name >> MapboxMaps.doccarchive --quiet
+        fi
+
+        xcrun docc process-archive transform-for-static-hosting MapboxMaps.doccarchive \
+          --output-path << parameters.output_path >> \
+          --hosting-base-path "ios/maps/api/<< parameters.version >>/"

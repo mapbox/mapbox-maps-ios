@@ -86,7 +86,8 @@ final class FeatureTests: XCTestCase {
             "a": 123,
             "b": "c",
             "d": [1, 2, 3],
-            "e": ["f": "g"]]
+            "e": ["f": "g"],
+            "h": nil]
 
         let commonFeature = MapboxCommon.Feature(feature)
 
@@ -97,5 +98,6 @@ final class FeatureTests: XCTestCase {
                 "b": NSString(string: "c"),
                 "d": NSArray(array: [1, 2, 3]),
                 "e": NSDictionary(dictionary: ["f": "g"])])
+        XCTAssertFalse(commonFeature.properties.keys.contains("h"))
     }
 }

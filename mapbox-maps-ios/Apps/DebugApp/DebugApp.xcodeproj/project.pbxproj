@@ -13,6 +13,7 @@
 		35F08DE82347987900768B9F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35F08DE62347987900768B9F /* LaunchScreen.storyboard */; };
 		7473C3BA288995B40022279E /* DebugViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7473C3B9288995B40022279E /* DebugViewController.xib */; };
 		B569C20125FEBC2E008B0D92 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = B569C20025FEBC2E008B0D92 /* MapboxMaps */; };
+		FE2755DF2A1241AB00EEC95F /* Fingertips in Frameworks */ = {isa = PBXBuildFile; productRef = FE2755DE2A1241AB00EEC95F /* Fingertips */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -45,6 +46,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B569C20125FEBC2E008B0D92 /* MapboxMaps in Frameworks */,
+				FE2755DF2A1241AB00EEC95F /* Fingertips in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -57,6 +59,7 @@
 				CA5665212447A658006F392C /* Configurations */,
 				35F08DDA2347987700768B9F /* DebugApp */,
 				35F08DD92347987700768B9F /* Products */,
+				FE2755DA2A12363C00EEC95F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -90,6 +93,13 @@
 			path = ../Configurations;
 			sourceTree = "<group>";
 		};
+		FE2755DA2A12363C00EEC95F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -111,6 +121,7 @@
 			name = DebugApp;
 			packageProductDependencies = (
 				B569C20025FEBC2E008B0D92 /* MapboxMaps */,
+				FE2755DE2A1241AB00EEC95F /* Fingertips */,
 			);
 			productName = DebugApp;
 			productReference = 35F08DD82347987700768B9F /* DebugApp.app */;
@@ -122,8 +133,9 @@
 		35F08DD02347987700768B9F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1100;
-				LastUpgradeCheck = 1340;
+				LastUpgradeCheck = 1430;
 				ORGANIZATIONNAME = "Mapbox Inc";
 				TargetAttributes = {
 					35F08DD72347987700768B9F = {
@@ -140,6 +152,9 @@
 				Base,
 			);
 			mainGroup = 35F08DCF2347987700768B9F;
+			packageReferences = (
+				FE2755DD2A1241AB00EEC95F /* XCRemoteSwiftPackageReference "Fingertips" */,
+			);
 			productRefGroup = 35F08DD92347987700768B9F /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -165,6 +180,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		1F61E3E423AC170100FAE7C2 /* Insert Mapbox Token */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -313,10 +329,26 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		FE2755DD2A1241AB00EEC95F /* XCRemoteSwiftPackageReference "Fingertips" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mapbox/Fingertips.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		B569C20025FEBC2E008B0D92 /* MapboxMaps */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MapboxMaps;
+		};
+		FE2755DE2A1241AB00EEC95F /* Fingertips */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FE2755DD2A1241AB00EEC95F /* XCRemoteSwiftPackageReference "Fingertips" */;
+			productName = Fingertips;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

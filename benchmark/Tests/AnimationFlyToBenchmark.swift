@@ -9,7 +9,7 @@ final class AnimationFlyToBenchmark: BaseBenchmark {
     func test_sla_AnimationFlyWarmCacheBenchmark() throws {
         try XCTSkipIf(true)
         benchmark(timeout: 61) {
-            onStyleLoaded { mapView, _ in
+            onStyleLoaded { mapView in
                 self.visit(.tokyo, .minsk, .helsinki, .tokyo, .helsinki, .minsk) {
                     self.stopBenchmark()
                 }

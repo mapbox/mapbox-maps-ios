@@ -1,7 +1,6 @@
 import XCTest
 @testable import MapboxMaps
 
-// swiftlint:disable orphaned_doc_comment
 class MigrationGuideIntegrationTests: IntegrationTestCase {
 
     var view: UIView?
@@ -11,8 +10,6 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
         try guardForMetalDevice()
-
-        ResourceOptionsManager.default.resourceOptions.accessToken = self.accessToken
     }
 
     override func tearDownWithError() throws {
@@ -20,7 +17,6 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
         view?.removeFromSuperview()
         view = nil
-        ResourceOptionsManager.destroyDefault()
     }
 
     func geoJSONURL(from name: String) -> URL? {
@@ -38,13 +34,10 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         //-->
         class BasicMapViewController: UIViewController {
             var mapView: MapView!
-            var accessToken: String!
             var completion: (() -> Void)?
 
             override func viewDidLoad() {
                 super.viewDidLoad()
-
-                ResourceOptionsManager.default.resourceOptions.accessToken = self.accessToken
 
                 mapView = MapView(frame: view.bounds)
                 view.addSubview(mapView)
@@ -54,7 +47,6 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         //<--
 
         let vc = BasicMapViewController(nibName: nil, bundle: nil)
-        vc.accessToken = accessToken
         vc.completion = {
             expectation.fulfill()
         }
@@ -73,13 +65,11 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         //-->
         class BasicMapViewController: UIViewController {
             var mapView: MapView!
-            var accessToken: String!
             var handler: (() -> Void)?
+            private var cancelables = Set<AnyCancelable>()
 
             override func viewDidLoad() {
                 super.viewDidLoad()
-
-                ResourceOptionsManager.default.resourceOptions.accessToken = self.accessToken
 
                 mapView = MapView(frame: view.bounds)
                 view.addSubview(mapView)
@@ -93,14 +83,14 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                  `-[MGLMapViewDelegate mapView:didFinishLoadingStyle:]` in SDK versions
                  prior to v10.
                  */
-                mapView.mapboxMap.onEvery(event: .styleDataLoaded) { [weak self] (event) in
+                mapView.mapboxMap.onStyleDataLoaded.observe { [weak self] event in
                     guard let handler = self?.handler else {
                         return
                     }
 
-                    print("The map has finished loading style data of type = \(event.payload.type)")
+                    print("The map has finished loading style data of type = \(event.type)")
                     handler()
-                }
+                }.store(in: &cancelables)
 
                 /**
                  The closure is called during the initialization of the map view and
@@ -116,10 +106,10 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                  Changes to sources or layers of the current style do not cause this
                  event to be emitted.
                  */
-                mapView.mapboxMap.onNext(event: .styleLoaded) { (event) in
+                mapView.mapboxMap.onStyleLoaded.observeNext { event in
                     print("The map has finished loading style ... Event = \(event)")
                     self.handler?()
-                }
+                }.store(in: &cancelables)
 
                 /**
                  The closure is called whenever the map finishes loading and the map has
@@ -130,10 +120,10 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                  map and ensures that these layers would only be shown after the map has
                  been fully rendered.
                  */
-                mapView.mapboxMap.onNext(event: .mapLoaded) { (event) in
+                mapView.mapboxMap.onMapLoaded.observeNext { (event) in
                     print("The map has finished loading... Event = \(event)")
                     self.handler?()
-                }
+                }.store(in: &cancelables)
 
                 /**
                  The closure is called whenever the map view is entering an idle state,
@@ -143,10 +133,10 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                  - All currently requested tiles have been rendered
                  - All fade/transition animations have completed
                  */
-                mapView.mapboxMap.onNext(event: .mapIdle) { (event) in
+                mapView.mapboxMap.onMapIdle.observeNext { event in
                     print("The map is idle... Event = \(event)")
                     self.handler?()
-                }
+                }.store(in: &cancelables)
 
                 /**
                  The closure is called whenever the map has failed to load. This could
@@ -156,15 +146,14 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                  You can use the associated error message to notify the user that map
                  data is unavailable.
                  */
-                mapView.mapboxMap.onNext(event: .mapLoadingError) { (event) in
-                    print("The map failed to load.. \(event.payload.error)")
-                }
+                mapView.mapboxMap.onMapLoadingError.observeNext { error in
+                    print("The map failed to load.. \(error)")
+                }.store(in: &cancelables)
             }
         }
         //<--
 
         let vc = BasicMapViewController(nibName: nil, bundle: nil)
-        vc.accessToken = accessToken
         vc.handler = {
             expectation.fulfill()
         }
@@ -372,7 +361,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
     func testGeoJSONSource() {
         //-->
-        var myGeoJSONSource = GeoJSONSource()
+        var myGeoJSONSource = GeoJSONSource(id: "my-geojson-source")
         myGeoJSONSource.maxzoom = 14
         //<--
 
@@ -390,16 +379,16 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
     }
 
     func testAddGeoJSONSource() {
-        var myGeoJSONSource = GeoJSONSource()
+        var myGeoJSONSource = GeoJSONSource(id: "my-geojson-source")
         myGeoJSONSource.maxzoom = 14
         myGeoJSONSource.data = .url(geoJSONURL(from: "polygon")!)
 
         let mapView = MapView(frame: testRect)
         let expectation = self.expectation(description: "Source was added")
-        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
+        mapView.mapboxMap.onStyleLoaded.observeNext { _ in
             do {
                 //-->
-                try mapView.mapboxMap.style.addSource(myGeoJSONSource, id: "my-geojson-source")
+                try mapView.mapboxMap.addSource(myGeoJSONSource)
                 //<--
 
                 /*
@@ -417,14 +406,14 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                 Once a layer is created, add it to the map:
                 */
                 //-->
-                try mapView.mapboxMap.style.addLayer(myBackgroundLayer)
+                try mapView.mapboxMap.addLayer(myBackgroundLayer)
                 //<--
 
                 expectation.fulfill()
             } catch {
                 XCTFail("Failed to add source: \(error)")
             }
-        }
+        }.store(in: &cancelables)
 
         wait(for: [expectation], timeout: 5.0)
     }
@@ -432,7 +421,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
     func testExpression() throws {
         let mapView = MapView(frame: testRect)
         let expectation = self.expectation(description: "layer updated")
-        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
+        mapView.mapboxMap.onStyleLoaded.observeNext { _ in
             do {
 
                 //-->
@@ -452,7 +441,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                 if let expressionData = expressionString.data(using: .utf8) {
                     let expJSONObject = try JSONSerialization.jsonObject(with: expressionData, options: [])
 
-                    try mapView.mapboxMap.style.setLayerProperty(for: "land",
+                    try mapView.mapboxMap.setLayerProperty(for: "land",
                                                                  property: "background-color",
                                                                  value: expJSONObject)
                 }
@@ -461,7 +450,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
             } catch {
                 XCTFail("Failed with \(error)")
             }
-        }
+        }.store(in: &cancelables)
         wait(for: [expectation], timeout: 10.0)
     }
 
@@ -480,35 +469,35 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
     func testAdd3DTerrain() {
         let mapView = MapView(frame: testRect)
         let expectation = self.expectation(description: "Source was added")
-        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
+        mapView.mapboxMap.onStyleLoaded.observeNext { _ in
             do {
                 //-->
                 // Add terrain
-                var demSource = RasterDemSource()
+                var demSource = RasterDemSource(id: "mapbox-dem")
                 demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
                 demSource.tileSize = 512
                 demSource.maxzoom = 14.0
-                try mapView.mapboxMap.style.addSource(demSource, id: "mapbox-dem")
+                try mapView.mapboxMap.addSource(demSource)
 
                 var terrain = Terrain(sourceId: "mapbox-dem")
                 terrain.exaggeration = .constant(1.5)
 
                 // Add sky layer
-                try mapView.mapboxMap.style.setTerrain(terrain)
+                try mapView.mapboxMap.setTerrain(terrain)
 
                 var skyLayer = SkyLayer(id: "sky-layer")
                 skyLayer.skyType = .constant(.atmosphere)
                 skyLayer.skyAtmosphereSun = .constant([0.0, 0.0])
                 skyLayer.skyAtmosphereSunIntensity = .constant(15.0)
 
-                try mapView.mapboxMap.style.addLayer(skyLayer)
+                try mapView.mapboxMap.addLayer(skyLayer)
                 //<--
 
                 expectation.fulfill()
             } catch {
                 XCTFail("Failed to add source: \(error)")
             }
-        }
+        }.store(in: &cancelables)
 
         wait(for: [expectation], timeout: 5.0)
     }

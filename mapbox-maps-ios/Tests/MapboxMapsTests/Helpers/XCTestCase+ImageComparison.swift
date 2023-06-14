@@ -1,53 +1,64 @@
 import XCTest
-import CocoaImageHashing
+import Vision
 
 extension XCTestCase {
-    private var imageComparisonHashDistanceMax: OSHashDistanceType {
-        return 3
+    private var imageComparisonHashDistanceMax: Float {
+        return 5
     }
 
-    func compare(observedImage: UIImage, expectedImageNamed expectedImageName: String, expectedImageScale: CGFloat, attachmentName: String? = nil) -> Bool {
+    @available(iOS 13.0, *)
+    func compare(observedImage: UIImage, expectedImageNamed expectedImageName: String, expectedImageScale: CGFloat, attachmentName: String? = nil, file: StaticString = #filePath, line: UInt = #line) {
+        do {
+            let attachment = XCTAttachment(image: observedImage, quality: .original)
+            attachment.name = attachmentName ?? "observedImage"
+            add(attachment)
 
-        var equal = false
+            guard
+                let bundleImage = UIImage(named: expectedImageName, in: .mapboxMapsTests, compatibleWith: nil),
+                let bundleCGImage = bundleImage.cgImage else {
+                return XCTFail("Missing expected image from bundle", file: file, line: line)
+            }
 
-        defer {
-            if !equal {
-                let attachment = XCTAttachment(image: observedImage, quality: .original)
-                attachment.name = attachmentName ?? "observedImage"
-                attachment.lifetime = .keepAlways
-                add(attachment)
-             }
+            let expectedImage = UIImage(cgImage: bundleCGImage,
+                                        scale: expectedImageScale,
+                                        orientation: bundleImage.imageOrientation)
+
+            let expectedImageAttachment = XCTAttachment(image: expectedImage, quality: .original)
+            expectedImageAttachment.name = "Expected image"
+            add(attachment)
+
+            guard observedImage.scale == expectedImage.scale,
+                  observedImage.imageOrientation == expectedImage.imageOrientation,
+                  observedImage.size == expectedImage.size else {
+                return XCTFail("Observed image traits are not equal to expected one", file: file, line: line)
+            }
+
+            let observedHash = try observedImage.visionImageFeaturePrint()
+            let expectedHash = try expectedImage.visionImageFeaturePrint()
+
+            var imageDistance: Float = 0
+            try expectedHash.computeDistance(&imageDistance, to: observedHash)
+            print("Image comparison distance = \(imageDistance)")
+
+            XCTAssertLessThan(imageDistance, imageComparisonHashDistanceMax, file: file, line: line)
+        } catch {
+            XCTFail("Error during image comparison: \(error)", file: file, line: line)
         }
+    }
+}
 
-        guard
-            let bundleImage = UIImage(named: expectedImageName, in: .mapboxMapsTests, compatibleWith: nil),
-            let bundleCGImage = bundleImage.cgImage else {
-            print("warning: Missing expected image from bundle")
-            return false
-        }
+extension UIImage {
+    @available(iOS 13.0, *)
+    func visionImageFeaturePrint() throws -> VNFeaturePrintObservation {
+        let imageRequestHandler = VNImageRequestHandler(cgImage: try XCTUnwrap(cgImage),
+                                                                options: [:])
+        let imageRequest = VNGenerateImageFeaturePrintRequest()
+        // Run requests on the [CI] iOS simulators with no access to the GPU
+        imageRequest.preferBackgroundProcessing = false
+        imageRequest.usesCPUOnly = true
 
-        let expectedImage = UIImage(cgImage: bundleCGImage,
-                                    scale: expectedImageScale,
-                                    orientation: bundleImage.imageOrientation)
-
-        guard observedImage.scale == expectedImage.scale,
-              observedImage.imageOrientation == expectedImage.imageOrientation,
-              observedImage.size == expectedImage.size else {
-            return false
-        }
-
-        // See https://github.com/ameingast/cocoaimagehashing, http://phash.org
-        // and https://github.com/aetilius/pHash
-        let imageHashing = OSImageHashing.sharedInstance()
-        let observedHash = imageHashing.hashImage(observedImage, with: .pHash)
-        let expectedHash = imageHashing.hashImage(expectedImage, with: .pHash)
-        let imageDistance = imageHashing.hashDistance(observedHash, to: expectedHash, with: .pHash)
-
-        equal = (imageDistance <= imageComparisonHashDistanceMax)
-
-        print("Image comparison distance = \(imageDistance)")
-
-        return equal
+        try imageRequestHandler.perform([imageRequest])
+        return try XCTUnwrap(imageRequest.results?.first as? VNFeaturePrintObservation)
     }
 }
 

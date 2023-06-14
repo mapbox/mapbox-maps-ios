@@ -20,5 +20,6 @@ public enum GestureType: Hashable, CaseIterable {
     /// The single tap gesture
     case singleTap
 
+    /// The rotation gesture
     case rotation
 }

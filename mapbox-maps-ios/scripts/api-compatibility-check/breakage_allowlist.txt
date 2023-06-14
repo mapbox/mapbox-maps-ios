@@ -1,20 +1,3 @@
-// Converted parametreless constructors into a parametrized one
-Constructor GestureOptions.init() has been removed
-Constructor LocationOptions.init() has been removed
-
-// Annotation initializers changed to incorporate isSelected and isDraggable
-Constructor CircleAnnotation.init(id:centerCoordinate:) has been removed
-Constructor CircleAnnotation.init(id:point:) has been removed
-Constructor PointAnnotation.init(id:coordinate:) has been removed
-Constructor PointAnnotation.init(id:point:) has been removed
-Constructor PolygonAnnotation.init(id:polygon:) has been removed
-Constructor PolylineAnnotation.init(id:lineCoordinates:) has been removed
-Constructor PolylineAnnotation.init(id:lineString:) has been removed
-
-// Allow filtering sourceDataLoaded events by dataID
-Func Style.addSource(_:id:) has been renamed to Func addSource(_:id:dataId:)
-Func Style.updateGeoJSONSource(withId:geoJSON:) has been renamed to Func updateGeoJSONSource(withId:geoJSON:dataId:)
-
 // v11 Changes
 Constructor Location.init(with:heading:) has been removed
 Func LocationManager.locationProvider(_:didFailWithError:) has been removed
@@ -50,6 +33,8 @@ Func MapboxMap.querySourceFeatures(for:options:completion:) has parameter 2 type
 Func MapboxMap.querySourceFeatures(for:options:completion:) has return type change from () to MapboxMaps.Cancelable
 Func MapboxMap.removeFeatureState(sourceId:sourceLayerId:featureId:stateKey:) has return type change from () to MapboxMaps.Cancelable
 Func MapboxMap.setFeatureState(sourceId:sourceLayerId:featureId:state:) has return type change from () to MapboxMaps.Cancelable
+Func LocationManager.addLocationConsumer(newConsumer:) has been renamed to Func addLocationConsumer(_:)
+Func LocationManager.removeLocationConsumer(consumer:) has been renamed to Func removeLocationConsumer(_:)
 
 // Making Layer.visibility a required variable with no Expression support
 Accessor BackgroundLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
@@ -89,3 +74,324 @@ Var SymbolLayer.visibility has declared type change from MapboxMaps.Value<Mapbox
 // Make Padding argument optional
 Func MapboxMap.camera(for:padding:bearing:pitch:) has parameter 1 type change from UIKit.UIEdgeInsets to UIKit.UIEdgeInsets?
 Func Snapshotter.camera(for:padding:bearing:pitch:) has parameter 1 type change from UIKit.UIEdgeInsets to UIKit.UIEdgeInsets?
+
+// Expose CameraAnimator.owner
+Var CameraAnimator.owner has been added as a protocol requirement
+
+// Merge TilesetDescriptorOptions and TilesetDescriptorOptionsForTilesets
+Constructor TilesetDescriptorOptions.init(styleURI:zoomRange:pixelRatio:stylePackOptions:) has been removed
+Constructor TilesetDescriptorOptionsForTilesets.init(tilesets:zoomRange:pixelRatio:) has been removed
+
+// Make LocationProvider require AnyObject
+Protocol LocationProvider has generic signature change from  to <Self : AnyObject>
+
+// New detections by Xcode 14.1
+Enum MapEvents.EventKind has been removed
+EnumElement LayerType.model has been removed
+Func MapboxMap.onEvery(_:handler:) has been removed
+Func MapboxMap.onNext(_:handler:) has been removed
+Func MapboxMap.queryRenderedFeatures(at:options:completion:) has been removed
+Func MapboxMap.queryRenderedFeatures(for:options:completion:) has been removed
+Func MapboxMap.queryRenderedFeatures(in:options:completion:) has been removed
+Func Snapshotter.onEvery(_:handler:) has been removed
+Func Snapshotter.onNext(_:handler:) has been removed
+Var BackgroundLayer.backgroundPatternTransition has been removed
+Var FillExtrusionLayer.fillExtrusionPatternTransition has been removed
+Var FillLayer.fillPatternTransition has been removed
+Var GestureOptions.pinchRotateEnabled has been removed
+Var LineLayer.lineDasharrayTransition has been removed
+Var LineLayer.linePatternTransition has been removed
+Var PointAnnotationManager.textLineHeight has been removed
+
+// Convert location to a struct
+Class Location has been changed to a Struct
+Func LocationConsumer.locationUpdate(newLocation:) has ObjC name change from locationUpdateWithNewLocation: to
+Func PuckLocationConsumer.puckLocationUpdate(newLocation:) has ObjC name change from puckLocationUpdateWithNewLocation: to
+Accessor LocationManager.consumers.Get() has return type change from Foundation.NSHashTable<MapboxMaps.LocationConsumer> to [MapboxMaps.LocationConsumer]
+Var LocationManager.consumers has declared type change from Foundation.NSHashTable<MapboxMaps.LocationConsumer> to [MapboxMaps.LocationConsumer]
+Class Location has removed conformance to CVarArg
+Class Location has removed conformance to CustomDebugStringConvertible
+Class Location has removed conformance to CustomStringConvertible
+Class Location has removed conformance to Hashable
+Class Location has removed conformance to NSObjectProtocol
+Class Location has removed conformance to Equatable
+
+// Remove unnecessary NSObject inheritances and @objc attributes
+Class BasicCameraAnimator has removed conformance to CVarArg
+Class BasicCameraAnimator has removed conformance to CustomDebugStringConvertible
+Class BasicCameraAnimator has removed conformance to CustomStringConvertible
+Class BasicCameraAnimator has removed conformance to Equatable
+Class BasicCameraAnimator has removed conformance to Hashable
+Class BasicCameraAnimator has removed conformance to NSObjectProtocol
+Class FlyToCameraAnimator has removed conformance to CVarArg
+Class FlyToCameraAnimator has removed conformance to CustomDebugStringConvertible
+Class FlyToCameraAnimator has removed conformance to CustomStringConvertible
+Class FlyToCameraAnimator has removed conformance to Equatable
+Class FlyToCameraAnimator has removed conformance to Hashable
+Class FlyToCameraAnimator has removed conformance to NSObjectProtocol
+Class LocationManager has removed conformance to CVarArg
+Class LocationManager has removed conformance to CustomDebugStringConvertible
+Class LocationManager has removed conformance to CustomStringConvertible
+Class LocationManager has removed conformance to Equatable
+Class LocationManager has removed conformance to Hashable
+Class LocationManager has removed conformance to NSObjectProtocol
+Class OrnamentsManager has removed conformance to CVarArg
+Class OrnamentsManager has removed conformance to CustomDebugStringConvertible
+Class OrnamentsManager has removed conformance to CustomStringConvertible
+Class OrnamentsManager has removed conformance to Equatable
+Class OrnamentsManager has removed conformance to Hashable
+Class OrnamentsManager has removed conformance to NSObjectProtocol
+Func LocationPermissionsDelegate.locationManager(_:didChangeAccuracyAuthorization:) is no longer an optional requirement
+Func LocationPermissionsDelegate.locationManager(_:didFailToLocateUserWithError:) is no longer an optional requirement
+Func LocationPermissionsDelegate.locationManagerShouldDisplayHeadingCalibration(_:) is no longer an optional requirement
+Class BasicCameraAnimator has removed its super class ObjectiveC.NSObject
+Class BasicCameraAnimator no longer inherits convenience inits from its superclass
+Class FlyToCameraAnimator has removed its super class ObjectiveC.NSObject
+Class LocationManager has removed its super class ObjectiveC.NSObject
+Class LocationManager no longer inherits convenience inits from its superclass
+Class OrnamentsManager has removed its super class ObjectiveC.NSObject
+Class OrnamentsManager no longer inherits convenience inits from its superclass
+
+// Typesafe Events
+Func MapboxMap.onEvery(event:handler:) has parameter 0 type change from MapboxCoreMaps.MapEvents.Event<Payload> to MapboxMaps.MapEventType<Payload>
+Func MapboxMap.onNext(event:handler:) has parameter 0 type change from MapboxCoreMaps.MapEvents.Event<Payload> to MapboxMaps.MapEventType<Payload>
+Func Snapshotter.onEvery(event:handler:) has parameter 0 type change from MapboxCoreMaps.MapEvents.Event<Payload> to MapboxMaps.MapEventType<Payload>
+Func Snapshotter.onNext(event:handler:) has parameter 0 type change from MapboxCoreMaps.MapEvents.Event<Payload> to MapboxMaps.MapEventType<Payload>
+Class MapEvent has been removed
+Enum RenderMode has been removed
+Enum ResourceDataSource has been removed
+Enum SourceDataType has been removed
+Enum StyleDataType has been removed
+EnumElement MapLoadingError.glyphs has been removed
+EnumElement MapLoadingError.source has been removed
+EnumElement MapLoadingError.sprite has been removed
+EnumElement MapLoadingError.style has been removed
+EnumElement MapLoadingError.tile has been removed
+Func MapboxMap.subscribe(_:events:) has been removed
+Func MapboxMap.unsubscribe(_:events:) has been removed
+Func Snapshotter.subscribe(_:events:) has been removed
+Func Snapshotter.unsubscribe(_:events:) has been removed
+Struct MapLoadingErrorPayload has been removed
+Struct NoPayload has been removed
+Struct RenderFrameFinishedPayload has been removed
+Struct ResourceRequest has been removed
+Struct ResourceRequestPayload has been removed
+Struct ResourceResponse has been removed
+Struct SourceAddedPayload has been removed
+Struct SourceDataLoadedPayload has been removed
+Struct SourceRemovedPayload has been removed
+Struct StyleDataLoadedPayload has been removed
+Struct StyleImageMissingPayload has been removed
+Struct StyleImageUnusedPayload has been removed
+Struct MapEvents.Event has been removed
+TypeAlias Event has been removed
+Enum MapLoadingError has been changed to a Class
+Enum MapLoadingError has ObjC name change from  to MBMMapLoadingError
+Func MapboxMap.loadStyleJSON(_:completion:) has parameter 1 type change from ((Swift.Result<MapboxMaps.Style, Swift.Error>) -> Swift.Void)? to ((Swift.Result<MapboxMaps.Style, MapboxCoreMaps.MapLoadingError>) -> Swift.Void)?
+Func MapboxMap.loadStyleURI(_:completion:) has parameter 1 type change from ((Swift.Result<MapboxMaps.Style, Swift.Error>) -> Swift.Void)? to ((Swift.Result<MapboxMaps.Style, MapboxCoreMaps.MapLoadingError>) -> Swift.Void)?
+Func MapboxMap.onEvery(event:handler:) has parameter 1 type change from (MapboxMaps.MapEvent<Payload>) -> Swift.Void to (Payload) -> Swift.Void
+Func MapboxMap.onNext(event:handler:) has parameter 1 type change from (MapboxMaps.MapEvent<Payload>) -> Swift.Void to (Payload) -> Swift.Void
+Func Snapshotter.onEvery(event:handler:) has parameter 1 type change from (MapboxMaps.MapEvent<Payload>) -> Swift.Void to (Payload) -> Swift.Void
+Func Snapshotter.onNext(event:handler:) has parameter 1 type change from (MapboxMaps.MapEvent<Payload>) -> Swift.Void to (Payload) -> Swift.Void
+Func MapboxMap.onEvery(event:handler:) has generic signature change from <Payload where Payload : Swift.Decodable> to <Payload>
+Func MapboxMap.onNext(event:handler:) has generic signature change from <Payload where Payload : Swift.Decodable> to <Payload>
+Func Snapshotter.onEvery(event:handler:) has generic signature change from <Payload where Payload : Swift.Decodable> to <Payload>
+Func Snapshotter.onNext(event:handler:) has generic signature change from <Payload where Payload : Swift.Decodable> to <Payload>
+Var MapEvents.Event.cameraChanged has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.NoPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.CameraChanged>
+Var MapEvents.Event.mapIdle has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.NoPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.MapIdle>
+Var MapEvents.Event.mapLoaded has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.NoPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.MapLoaded>
+Var MapEvents.Event.mapLoadingError has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.MapLoadingErrorPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.MapLoadingError>
+Var MapEvents.Event.renderFrameFinished has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.RenderFrameFinishedPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.RenderFrameFinished>
+Var MapEvents.Event.renderFrameStarted has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.NoPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.RenderFrameStarted>
+Var MapEvents.Event.resourceRequest has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.ResourceRequestPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.ResourceRequest>
+Var MapEvents.Event.sourceAdded has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.SourceAddedPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.SourceAdded>
+Var MapEvents.Event.sourceDataLoaded has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.SourceDataLoadedPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.SourceDataLoaded>
+Var MapEvents.Event.sourceRemoved has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.SourceRemovedPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.SourceRemoved>
+Var MapEvents.Event.styleDataLoaded has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.StyleDataLoadedPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.StyleDataLoaded>
+Var MapEvents.Event.styleImageMissing has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.StyleImageMissingPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.StyleImageMissing>
+Var MapEvents.Event.styleImageRemoveUnused has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.StyleImageUnusedPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.StyleImageRemoveUnused>
+Var MapEvents.Event.styleLoaded has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.NoPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.StyleLoaded>
+Extension MapEvents has ObjC name change from MBMMapEvents to
+Extension MapEvents has removed conformance to CVarArg
+Extension MapEvents has removed conformance to CustomDebugStringConvertible
+Extension MapEvents has removed conformance to CustomStringConvertible
+Extension MapEvents has removed conformance to Equatable
+Extension MapEvents has removed conformance to Hashable
+Extension MapEvents has removed conformance to NSObjectProtocol
+Class MapEvents no longer inherits convenience inits from its superclass
+Extension MapEvents has removed its super class ObjectiveC.NSObject
+Extension MapEvents is no longer open for subclassing
+Constructor ResourceRequest.init(from:) has been removed
+Enum ResourceRequest.Kind has been removed
+Enum ResourceRequest.LoadingMethod has been removed
+Enum ResourceRequest.Priority has been removed
+Var ResourceRequest.kind has been removed
+Var ResourceRequest.loadingMethod has been removed
+Var ResourceRequest.priority has been removed
+Var ResourceRequest.url has been removed
+Struct ResourceRequest has been changed to a Class
+EnumElement MapLoadingError.source has been renamed to EnumElement sourceId
+EnumElement MapLoadingError.tile has been renamed to EnumElement tileId
+Extension MapEvents has ObjC name change from MBMMapEvents to
+Struct ResourceRequest has ObjC name change from  to MBMResourceRequest
+EnumElement MapLoadingError.source has declared type change from (MapboxMaps.MapLoadingError.Type) -> (Swift.String) -> MapboxMaps.MapLoadingError to Swift.String?
+EnumElement MapLoadingError.tile has declared type change from (MapboxMaps.MapLoadingError.Type) -> (Swift.String) -> MapboxMaps.MapLoadingError to MapboxCoreMaps.CanonicalTileID?
+Struct ResourceRequest has removed conformance to Decodable
+
+// Add renamed flag for PuckBearingSource
+Constructor LocationOptions.init(distanceFilter:desiredAccuracy:activityType:puckType:puckBearingSource:puckBearingEnabled:) has been removed
+Enum PuckBearingSource has been renamed to Enum PuckBearing
+Var LocationOptions.puckBearingSource has been renamed to Var puckBearing
+EnumElement PuckBearingSource.course has declared type change from (MapboxMaps.PuckBearingSource.Type) -> MapboxMaps.PuckBearingSource to (MapboxMaps.PuckBearing.Type) -> MapboxMaps.PuckBearing
+EnumElement PuckBearingSource.heading has declared type change from (MapboxMaps.PuckBearingSource.Type) -> MapboxMaps.PuckBearingSource to (MapboxMaps.PuckBearing.Type) -> MapboxMaps.PuckBearing
+Func PuckBearingSource.==(_:_:) has parameter 0 type change from MapboxMaps.PuckBearingSource to MapboxMaps.PuckBearing
+Func PuckBearingSource.==(_:_:) has parameter 1 type change from MapboxMaps.PuckBearingSource to MapboxMaps.PuckBearing
+Var LocationOptions.puckBearingSource has declared type change from MapboxMaps.PuckBearingSource to MapboxMaps.PuckBearing
+Accessor LocationOptions.puckBearingSource.Get() has return type change from MapboxMaps.PuckBearingSource to MapboxMaps.PuckBearing
+Accessor LocationOptions.puckBearingSource.Set() has parameter 0 type change from MapboxMaps.PuckBearingSource to MapboxMaps.PuckBearing
+
+// Rename MemoryBudget API
+Func MapboxMap.setMemoryBudget(_:) has been removed
+
+// Remove public access to the internal StyleManager
+Var Style.styleManager has been removed
+
+// Adopt MapboxCommon.Cancelable protocol
+Protocol CameraAnimator has generic signature change from <Self : MapboxMaps.Cancelable> to <Self : MapboxCommon.Cancelable>
+Protocol Cancelable has been removed
+Func BasicCameraAnimator.cancel() has ObjC name change from  to cancel
+Func FlyToCameraAnimator.cancel() has ObjC name change from  to cancel
+Func CameraAnimationsManager.ease(to:duration:curve:completion:) has return type change from MapboxMaps.Cancelable? to MapboxCommon.Cancelable
+Func CameraAnimationsManager.fly(to:duration:completion:) has return type change from MapboxMaps.Cancelable? to MapboxCommon.Cancelable
+Func MapboxMap.getFeatureState(sourceId:sourceLayerId:featureId:callback:) has return type change from () to MapboxCommon.Cancelable
+Func MapboxMap.getGeoJsonClusterChildren(forSourceId:feature:completion:) has return type change from () to MapboxCommon.Cancelable
+Func MapboxMap.getGeoJsonClusterExpansionZoom(forSourceId:feature:completion:) has return type change from () to MapboxCommon.Cancelable
+Func MapboxMap.getGeoJsonClusterLeaves(forSourceId:feature:limit:offset:completion:) has return type change from () to MapboxCommon.Cancelable
+Func MapboxMap.querySourceFeatures(for:options:completion:) has return type change from () to MapboxCommon.Cancelable
+Func MapboxMap.removeFeatureState(sourceId:sourceLayerId:featureId:stateKey:) has return type change from () to MapboxCommon.Cancelable
+Func MapboxMap.setFeatureState(sourceId:sourceLayerId:featureId:state:) has return type change from () to MapboxCommon.Cancelable
+// `SourceType` and `LayerType` are now Structs with static variables instead of Enums
+Constructor LayerType.init(rawValue:) has return type change from MapboxMaps.LayerType? to MapboxMaps.LayerType
+Constructor SourceType.init(rawValue:) has return type change from MapboxMaps.SourceType? to MapboxMaps.SourceType
+Enum LayerType has been changed to a Struct
+Enum SourceType has been changed to a Struct
+EnumElement LayerType.background has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.circle has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.fill has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.fillExtrusion has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.heatmap has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.hillshade has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.line has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.locationIndicator has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.model has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.raster has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.sky has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.symbol has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement SourceType.geoJson has declared type change from (MapboxMaps.SourceType.Type) -> MapboxMaps.SourceType to MapboxMaps.SourceType
+EnumElement SourceType.image has declared type change from (MapboxMaps.SourceType.Type) -> MapboxMaps.SourceType to MapboxMaps.SourceType
+EnumElement SourceType.model has declared type change from (MapboxMaps.SourceType.Type) -> MapboxMaps.SourceType to MapboxMaps.SourceType
+EnumElement SourceType.raster has declared type change from (MapboxMaps.SourceType.Type) -> MapboxMaps.SourceType to MapboxMaps.SourceType
+EnumElement SourceType.rasterDem has declared type change from (MapboxMaps.SourceType.Type) -> MapboxMaps.SourceType to MapboxMaps.SourceType
+EnumElement SourceType.vector has declared type change from (MapboxMaps.SourceType.Type) -> MapboxMaps.SourceType to MapboxMaps.SourceType
+Accessor LayerType.layerType.Get() has return type change from MapboxMaps.Layer.Type to MapboxMaps.Layer.Type?
+Accessor SourceType.sourceType.Get() has return type change from MapboxMaps.Source.Type to MapboxMaps.Source.Type?
+Var LayerType.layerType has declared type change from MapboxMaps.Layer.Type to MapboxMaps.Layer.Type?
+Var SourceType.sourceType has declared type change from MapboxMaps.Source.Type to MapboxMaps.Source.Type?
+EnumElement LayerType.background is now static
+EnumElement LayerType.circle is now static
+EnumElement LayerType.fill is now static
+EnumElement LayerType.fillExtrusion is now static
+EnumElement LayerType.heatmap is now static
+EnumElement LayerType.hillshade is now static
+EnumElement LayerType.line is now static
+EnumElement LayerType.locationIndicator is now static
+EnumElement LayerType.model is now static
+EnumElement LayerType.raster is now static
+EnumElement LayerType.sky is now static
+EnumElement LayerType.symbol is now static
+EnumElement SourceType.geoJson is now static
+EnumElement SourceType.image is now static
+EnumElement SourceType.model is now static
+EnumElement SourceType.raster is now static
+EnumElement SourceType.rasterDem is now static
+EnumElement SourceType.vector is now static
+
+// Add id field to Source
+Constructor GeoJSONSource.init() has been removed
+Constructor ImageSource.init() has been removed
+Constructor RasterDemSource.init() has been removed
+Constructor RasterSource.init() has been removed
+Constructor VectorSource.init() has been removed
+Func Style.addSource(_:id:dataId:) has been renamed to Func addSource(_:dataId:)
+Func Style.addSource(_:id:dataId:) has parameter 1 type change from Swift.String to Swift.String?
+Var Source.id has been added as a protocol requirement
+
+// New settings for Access token and Resource options
+Class ResourceOptionsManager has been removed
+Constructor MapInitOptions.init(resourceOptions:mapOptions:cameraOptions:styleURI:styleJSON:) has been removed
+Constructor MapSnapshotOptions.init(size:pixelRatio:glyphsRasterizationOptions:resourceOptions:showsLogo:showsAttribution:) has been removed
+Constructor OfflineManager.init(resourceOptions:) has been removed
+Constructor OfflineRegionManager.init(resourceOptions:) has been removed
+Func MapboxMap.clearData(for:completion:) has been removed
+Struct ResourceOptions has been removed
+Var MapInitOptions.resourceOptions has been removed
+Var MapSnapshotOptions.resourceOptions has been removed
+Var MapboxMap.resourceOptions has been removed
+Func MapboxMap.clearData(completion:) is now static
+
+// Add visibility to Layer protocol requirements.
+Var Layer.visibility has been added as a protocol requirement
+
+// Support string option in GeoJSONSourceData
+EnumElement GeoJSONSourceData.empty has been removed
+EnumElement GeoJSONSourceData.url has been removed
+
+// `TypeConversionError`, `SnapshotError`, and `ViewAnnotationManagerError` are now structs with static variables instead of enums
+Enum MapView.SnapshotError has been changed to a Struct 
+Enum TypeConversionError has been changed to a Struct 
+Enum ViewAnnotationManagerError has been changed to a Struct 
+EnumElement MapView.SnapshotError.missingImageData has declared type change from (MapboxMaps.MapView.SnapshotError.Type) -> MapboxMaps.MapView.SnapshotError to MapboxMaps.MapView.SnapshotError 
+EnumElement MapView.SnapshotError.noMetalView has declared type change from (MapboxMaps.MapView.SnapshotError.Type) -> MapboxMaps.MapView.SnapshotError to MapboxMaps.MapView.SnapshotError 
+EnumElement TypeConversionError.invalidObject has declared type change from (MapboxMaps.TypeConversionError.Type) -> MapboxMaps.TypeConversionError to MapboxMaps.TypeConversionError 
+EnumElement TypeConversionError.unexpectedType has declared type change from (MapboxMaps.TypeConversionError.Type) -> MapboxMaps.TypeConversionError to MapboxMaps.TypeConversionError 
+EnumElement TypeConversionError.unsuccessfulConversion has declared type change from (MapboxMaps.TypeConversionError.Type) -> MapboxMaps.TypeConversionError to MapboxMaps.TypeConversionError 
+EnumElement ViewAnnotationManagerError.annotationNotFound has declared type change from (MapboxMaps.ViewAnnotationManagerError.Type) -> MapboxMaps.ViewAnnotationManagerError to MapboxMaps.ViewAnnotationManagerError 
+EnumElement ViewAnnotationManagerError.associatedFeatureIdIsAlreadyInUse has declared type change from (MapboxMaps.ViewAnnotationManagerError.Type) -> MapboxMaps.ViewAnnotationManagerError to MapboxMaps.ViewAnnotationManagerError 
+EnumElement ViewAnnotationManagerError.geometryFieldMissing has declared type change from (MapboxMaps.ViewAnnotationManagerError.Type) -> MapboxMaps.ViewAnnotationManagerError to MapboxMaps.ViewAnnotationManagerError 
+EnumElement ViewAnnotationManagerError.viewIsAlreadyAdded has declared type change from (MapboxMaps.ViewAnnotationManagerError.Type) -> MapboxMaps.ViewAnnotationManagerError to MapboxMaps.ViewAnnotationManagerError 
+EnumElement MapView.SnapshotError.missingImageData is now static 
+EnumElement MapView.SnapshotError.noMetalView is now static 
+EnumElement TypeConversionError.invalidObject is now static 
+EnumElement TypeConversionError.unexpectedType is now static 
+EnumElement TypeConversionError.unsuccessfulConversion is now static 
+EnumElement ViewAnnotationManagerError.annotationNotFound is now static 
+EnumElement ViewAnnotationManagerError.associatedFeatureIdIsAlreadyInUse is now static 
+EnumElement ViewAnnotationManagerError.geometryFieldMissing is now static 
+EnumElement ViewAnnotationManagerError.viewIsAlreadyAdded is now static 
+Enum MapView.SnapshotError has removed conformance to Hashable 
+Enum TypeConversionError has removed conformance to Hashable 
+Enum ViewAnnotationManagerError has removed conformance to Hashable 
+Func MapView.SnapshotError.hash(into:) has been removed 
+Func TypeConversionError.hash(into:) has been removed 
+Func ViewAnnotationManagerError.hash(into:) has been removed 
+Var MapView.SnapshotError.hashValue has been removed 
+Var TypeConversionError.hashValue has been removed 
+Var ViewAnnotationManagerError.hashValue has been removed 
+
+// Offline APIs - add extraOptions in load options
+Constructor StylePackLoadOptions.init(glyphsRasterizationMode:metadata:acceptExpired:) has been removed
+Constructor TileRegionLoadOptions.init(geometry:descriptors:metadata:acceptExpired:networkRestriction:averageBytesPerSecond:) has been removed
+
+// Style APIs
+Var Style.isLoaded has been removed
+Class Style has been renamed to Class StyleManager
+Var Style.JSON has been renamed to Var styleJSON
+Var Style.defaultCamera has been renamed to Var styleDefaultCamera
+Var Style.transition has been renamed to Var styleTransition
+Var Style.uri has been renamed to Var styleURI
+Accessor MapboxMap.style.Get() has return type change from MapboxMaps.Style to MapboxMaps.StyleManager
+Accessor Snapshotter.style.Get() has return type change from MapboxMaps.Style to MapboxMaps.StyleManager
+Func MapboxMap.loadStyleJSON(_:completion:) has parameter 1 type change from ((Swift.Result<MapboxMaps.Style, Swift.Error>) -> Swift.Void)? to ((MapboxCoreMaps.MapLoadingError?) -> Swift.Void)?
+Func MapboxMap.loadStyleURI(_:completion:) has parameter 1 type change from ((Swift.Result<MapboxMaps.Style, Swift.Error>) -> Swift.Void)? to ((MapboxCoreMaps.MapLoadingError?) -> Swift.Void)?
+Var MapboxMap.style has declared type change from MapboxMaps.Style to MapboxMaps.StyleManager
+Var Snapshotter.style has declared type change from MapboxMaps.Style to MapboxMaps.StyleManager

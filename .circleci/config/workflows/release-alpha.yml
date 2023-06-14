@@ -5,7 +5,7 @@ jobs:
         - SDK Registry Token
       check-api-breakage: false
       project-name: mobile-maps-ios-preview
-      filters:
+      filters: &release-filters
         tags:
           # matches v11.0.0-alpha
           only: /^v[0-9]+\.[0-9]+\.[0-9]+-alpha.*/
@@ -13,25 +13,17 @@ jobs:
           ignore: /.*/
   - create-registry-pr:
       project-name: mobile-maps-ios-preview
-      include-private-sdk: false
+      skip-private-sdk: true
       context:
         - Slack Orb
       requires:
         - build-dynamic
-      filters:
-        tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+-alpha.*/
-        branches:
-          ignore: /.*/
+      filters: *release-filters
   - wait-registry-pr:
       requires:
         - create-registry-pr
       type: approval
-      filters:
-        tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+-alpha.*/
-        branches:
-          ignore: /.*/
+      filters: *release-filters
   - check-registry:
       project-name: mobile-maps-ios-preview
       context:
@@ -39,8 +31,4 @@ jobs:
         - SDK Registry Token
       requires:
         - wait-registry-pr
-      filters:
-        tags:
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+-alpha.*/
-        branches:
-          ignore: /.*/
+      filters: *release-filters

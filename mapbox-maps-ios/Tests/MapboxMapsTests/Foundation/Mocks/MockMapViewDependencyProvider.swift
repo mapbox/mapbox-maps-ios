@@ -6,10 +6,6 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
 
     @Stubbed var bundle: BundleProtocol = MockBundle()
 
-    @Stubbed var mapboxObservableProvider: (ObservableProtocol) -> MapboxObservableProtocol = { _ in MockMapboxObservable() }
-
-    @Stubbed var cameraAnimatorsRunnerEnablable: MutableEnablableProtocol = Enablable()
-
     // MARK: - Metal view
     struct MakeMetalViewParams {
         var frame: CGRect
@@ -154,8 +150,8 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
     }
 
     // MARK: - Events Manager
-    let makeEventsManagerStub = Stub<String, EventsManagerProtocol>(defaultReturnValue: EventsManagerMock())
-    func makeEventsManager(accessToken: String) -> EventsManagerProtocol {
-        makeEventsManagerStub.call(with: accessToken)
+    let makeEventsManagerStub = Stub<Void, EventsManagerProtocol>(defaultReturnValue: EventsManagerMock())
+    func makeEventsManager() -> EventsManagerProtocol {
+        makeEventsManagerStub.call()
     }
 }

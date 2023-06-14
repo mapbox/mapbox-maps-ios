@@ -3,7 +3,6 @@ import CoreLocation
 import UIKit
 @testable import MapboxMaps
 
-// swiftlint:disable explicit_top_level_acl explicit_acl
 class MapboxMapsFoundationTests: XCTestCase {
 
     var mapView: MapView!
@@ -19,8 +18,7 @@ class MapboxMapsFoundationTests: XCTestCase {
         /**
          Test with offset bounds
          */
-        let mapInitOptions = MapInitOptions(resourceOptions: ResourceOptions(accessToken: "a1b2c3"),
-                                            styleURI: nil)
+        let mapInitOptions = MapInitOptions(styleURI: nil)
 
         mapView = MapView(frame: CGRect(x: 10, y: 10, width: 100, height: 100),
                               mapInitOptions: mapInitOptions)
@@ -239,21 +237,57 @@ class MapboxMapsFoundationTests: XCTestCase {
 
     func testImageConversion() {
         guard let original = UIImage(named: "green-star", in: .mapboxMapsTests, compatibleWith: nil) else {
-            XCTFail("Could not load test image from bundle")
+            XCTFail("Couldn't not load test image from bundle")
             return
         }
 
-        guard let mbxImage = Image(uiImage: original) else {
-            XCTFail("Could generate Image (\"MBXImage\") from UIImage")
+        guard let mbmImage = Image(uiImage: original) else {
+            XCTFail("Couldn't generate Image (\"MBMImage\") from UIImage")
             return
         }
 
-        guard let roundtripped = UIImage(mbxImage: mbxImage) else {
-            XCTFail("Could generate UIImage from Image (\"MBXImage\")")
+        guard let roundtripped = UIImage(mbmImage: mbmImage) else {
+            XCTFail("Couldn't generate UIImage from Image (\"MBMImage\")")
             return
         }
 
-         XCTAssertEqual(original.size, roundtripped.size)
+        XCTAssertEqual(original.size, roundtripped.size)
+        XCTAssertEqual(original.imageOrientation, roundtripped.imageOrientation)
+        XCTAssertEqual(original.ciImage, roundtripped.ciImage)
+        XCTAssertEqual(original.cgImage?.width, roundtripped.cgImage?.width)
+        XCTAssertEqual(original.cgImage?.height, roundtripped.cgImage?.height)
+        XCTAssertEqual(original.cgImage?.bytesPerRow, roundtripped.cgImage?.bytesPerRow)
+        XCTAssertEqual(original.cgImage?.dataProvider?.data, roundtripped.cgImage?.dataProvider?.data)
+        XCTAssertNotNil(original.cgImage?.dataProvider?.data)
+    }
+
+    func testImageConversionPNG() {
+        guard let original = UIImage(named: "mapbox-icon", in: .mapboxMapsTests, compatibleWith: nil) else {
+            XCTFail("Couldn't not load test image from bundle")
+            return
+        }
+
+        guard let mbmImage =  Image(uiImage: original) else {
+            XCTFail("Couldn't generate Image (\"MBMImage\") from UIImage")
+            return
+        }
+
+        guard let roundtripped = UIImage(mbmImage: mbmImage, scale: 2) else { // Original asset is 2x scale
+            XCTFail("Couldn't generate UIImage from Image (\"MBMImage\")")
+            return
+        }
+
+        let w = roundtripped.cgImage?.dataProvider?.data
+        let wo = original.cgImage?.dataProvider?.data
+
+        XCTAssertEqual(original.size, roundtripped.size)
+        XCTAssertEqual(original.imageOrientation, roundtripped.imageOrientation)
+        XCTAssertEqual(original.ciImage, roundtripped.ciImage)
+        XCTAssertEqual(original.cgImage?.width, roundtripped.cgImage?.width)
+        XCTAssertEqual(original.cgImage?.height, roundtripped.cgImage?.height)
+        XCTAssertEqual(original.cgImage?.bytesPerRow, roundtripped.cgImage?.bytesPerRow)
+        XCTAssertEqual(original.cgImage?.dataProvider?.data, roundtripped.cgImage?.dataProvider?.data)
+        XCTAssertNotNil(original.cgImage?.dataProvider?.data)
     }
 
 // MARK: Debug options

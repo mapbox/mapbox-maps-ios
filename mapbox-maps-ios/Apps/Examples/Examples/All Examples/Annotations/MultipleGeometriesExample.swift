@@ -1,12 +1,12 @@
 import UIKit
 import MapboxMaps
 
-@objc(MultipleGeometriesExample)
 public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
     enum Constants {
         static let geoJSONDataSourceIdentifier = "geoJSON-data-source"
     }
     internal var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -20,7 +20,8 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allow the view controller to receive information about map events.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
+            guard let self = self else { return }
             self.addGeoJSONSource()
             self.addPolygonLayer()
             self.addLineStringLayer()
@@ -28,7 +29,7 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
 
             // The below line is used for internal testing purposes only.
             self.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     // Load GeoJSON file from local bundle and decode into a `FeatureCollection`.
@@ -56,9 +57,9 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
         guard let featureCollection = try? decodeGeoJSON(from: "GeoJSONSourceExample") else { return }
 
         // Create a GeoJSON data source.
-        var geoJSONSource = GeoJSONSource()
+        var geoJSONSource = GeoJSONSource(id: Constants.geoJSONDataSourceIdentifier)
         geoJSONSource.data = .featureCollection(featureCollection)
-        try! mapView.mapboxMap.style.addSource(geoJSONSource, id: Constants.geoJSONDataSourceIdentifier)
+        try! mapView.mapboxMap.addSource(geoJSONSource)
     }
 
     /// Create and style a FillLayer that uses the Polygon Feature's coordinates in the GeoJSON data
@@ -71,7 +72,7 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
         polygonLayer.source = Constants.geoJSONDataSourceIdentifier
         polygonLayer.fillColor = .constant(StyleColor(red: 68, green: 105, blue: 247, alpha: 1)!)
         polygonLayer.fillOpacity = .constant(0.3)
-        try! mapView.mapboxMap.style.addLayer(polygonLayer)
+        try! mapView.mapboxMap.addLayer(polygonLayer)
     }
 
     private func addLineStringLayer() {
@@ -84,7 +85,7 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
         lineLayer.source = Constants.geoJSONDataSourceIdentifier
         lineLayer.lineColor = .constant(StyleColor(.red))
         lineLayer.lineWidth = .constant(2)
-        try! mapView.mapboxMap.style.addLayer(lineLayer)
+        try! mapView.mapboxMap.addLayer(lineLayer)
     }
 
     public func addPointLayer() {
@@ -101,6 +102,6 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
         circleLayer.circleRadius = .constant(6.0)
         circleLayer.circleStrokeWidth = .constant(2.0)
         circleLayer.circleStrokeColor = .constant(StyleColor(.black))
-        try! mapView.mapboxMap.style.addLayer(circleLayer)
+        try! mapView.mapboxMap.addLayer(circleLayer)
     }
 }

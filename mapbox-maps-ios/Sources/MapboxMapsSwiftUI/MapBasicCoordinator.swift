@@ -1,11 +1,11 @@
 @_spi(Package) import MapboxMaps
 import SwiftUI
 import UIKit
+import Combine
 
 @available(iOS 13.0, *)
 final class MapBasicCoordinator {
     typealias CameraSetter = (CameraState) -> Void
-    typealias MapEventHandler = (Event) -> Void
 
     var actions: MapDependencies.Actions?
 
@@ -13,14 +13,10 @@ final class MapBasicCoordinator {
     private var queriesBag = Bag()
     private var setCamera: CameraSetter?
     private var mapView: MapViewFacade?
-    private var mapEventHandlers: [String: [MapEventHandler]] = [:]
     private var isSubscribed = false
+    private var cancellables = Set<AnyCancellable>()
 
     private let mainQueue: MainQueueProtocol
-
-    deinit {
-        mapView?.mapboxMap.unsubscribe(self, events: [])
-    }
 
     init(setCamera: CameraSetter?, mainQueue: MainQueueProtocol = MainQueueWrapper()) {
         self.setCamera = setCamera
@@ -36,9 +32,9 @@ final class MapBasicCoordinator {
         }.addTo(bag)
 
         if setCamera != nil {
-            mapView.mapboxMap.onEvery(event: .cameraChanged) { [weak self] _ in
+            mapView.mapboxMap.onCameraChanged.observe { [weak self] _ in
                 self?.syncCamera()
-            }.addTo(bag)
+            }.store(in: &cancellables)
         }
     }
 
@@ -83,10 +79,9 @@ final class MapBasicCoordinator {
 
         if !isSubscribed {
             isSubscribed = true
-            mapEventHandlers = deps.mapEventObservers.reduce(into: [:]) { partialResult, observer in
-                partialResult[observer.eventName, default: []].append(observer.action)
+            for subscription in deps.eventsSubscriptions {
+                subscription.observe(mapboxMap).store(in: &cancellables)
             }
-            mapView.mapboxMap.subscribe(self, events: Array(mapEventHandlers.keys))
         }
     }
 
@@ -117,18 +112,6 @@ final class MapBasicCoordinator {
                 }
             }
         }.addTo(queriesBag)
-    }
-}
-
-// MARK: Observer
-
-@available(iOS 13.0, *)
-extension MapBasicCoordinator: Observer {
-
-    func notify(for event: Event) {
-        mapEventHandlers[event.type]?.forEach { handler in
-            handler(event)
-        }
     }
 }
 

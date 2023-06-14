@@ -4,14 +4,12 @@ import XCTest
 final class AnyTouchGestureHandlerTests: XCTestCase {
 
     var gestureRecognizer: MockGestureRecognizer!
-    var cameraAnimatorsRunnerEnablable: MockMutableEnablable!
     var gestureHandler: AnyTouchGestureHandler!
     var cameraAnimationsManager: MockCameraAnimationsManager!
 
     override func setUp() {
         super.setUp()
         gestureRecognizer = MockGestureRecognizer()
-        cameraAnimatorsRunnerEnablable = MockMutableEnablable()
         cameraAnimationsManager = MockCameraAnimationsManager()
         gestureHandler = AnyTouchGestureHandler(
             gestureRecognizer: gestureRecognizer,
@@ -20,7 +18,6 @@ final class AnyTouchGestureHandlerTests: XCTestCase {
 
     override func tearDown() {
         gestureHandler = nil
-        cameraAnimatorsRunnerEnablable = nil
         gestureRecognizer = nil
         super.tearDown()
     }

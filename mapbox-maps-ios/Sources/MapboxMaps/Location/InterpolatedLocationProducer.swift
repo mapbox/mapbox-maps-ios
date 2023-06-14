@@ -9,7 +9,7 @@ internal protocol InterpolatedLocationProducerProtocol: AnyObject {
     func removePuckLocationConsumer(_ consumer: PuckLocationConsumer)
 }
 
-internal final class InterpolatedLocationProducer: NSObject, InterpolatedLocationProducerProtocol {
+internal final class InterpolatedLocationProducer: InterpolatedLocationProducerProtocol {
     private var startDate: Date?
     private var endDate: Date?
     private var startLocation: InterpolatedLocation?
@@ -19,7 +19,7 @@ internal final class InterpolatedLocationProducer: NSObject, InterpolatedLocatio
     private let locationInterpolator: LocationInterpolatorProtocol
     private let dateProvider: DateProvider
 
-    private let consumers = NSHashTable<PuckLocationConsumer>.weakObjects()
+    private let consumers = WeakSet<PuckLocationConsumer>()
     private var cancelableToken: Cancelable?
 
     internal var location: InterpolatedLocation? {
@@ -44,7 +44,6 @@ internal final class InterpolatedLocationProducer: NSObject, InterpolatedLocatio
         self.observableInterpolatedLocation = observableInterpolatedLocation
         self.locationInterpolator = locationInterpolator
         self.dateProvider = dateProvider
-        super.init()
         observableInterpolatedLocation.onFirstSubscribe = { [weak self, weak displayLinkCoordinator] in
             guard let self = self else { return }
             locationProducer.add(self)

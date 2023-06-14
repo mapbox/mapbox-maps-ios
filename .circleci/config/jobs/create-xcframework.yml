@@ -1,7 +1,4 @@
 parameters:
-  xcode:
-    type: string
-    default: "13.1.0"
   create-xcframework-always-run:
     type: boolean
     default: false
@@ -11,8 +8,7 @@ parameters:
   report_failure:
     type: boolean
     default: false
-macos:
-  xcode: << parameters.xcode >>
+executor: xcode-sdk-min
 environment:
   HOMEBREW_NO_AUTO_UPDATE: 1
   HOMEBREW_NO_INSTALL_CLEANUP: 1
@@ -30,10 +26,10 @@ steps:
       bundle_style: "dynamic"
   - store_artifacts:
       path: MapboxMaps.zip
-  - make-xcframework-bundle:
-      bundle_style: "static"
-  - store_artifacts:
-      path: MapboxMaps-static.zip
+  # - make-xcframework-bundle:
+  #     bundle_style: "static"
+  # - store_artifacts:
+  #     path: MapboxMaps-static.zip
   - report-failure:
       report_failure: << parameters.report_failure >>
       message: "create-xcframework"

@@ -24,7 +24,7 @@ final class LocationCoordinatorTests: XCTestCase {
         let locationOptions = LocationOptions(
             distanceFilter: .random(in: 0...10),
             puckType: .puck2D(),
-            puckBearingSource: [.course, .heading].randomElement()!,
+            puckBearing: [.course, .heading].randomElement()!,
             puckBearingEnabled: .random()
         )
         me.update(deps: LocationDependencies(locationOptions: locationOptions))
@@ -82,4 +82,12 @@ final class LocationCoordinatorTests: XCTestCase {
         locationManager.simulateLocationUpdate(location: location, isInterpolated: true)
         XCTAssertEqual(receivedLocation, location)
     }
+}
+
+extension Location: Equatable {
+    public static func == (lhs: Location, rhs: Location) -> Bool {
+        return lhs.coordinate == rhs.coordinate && lhs.accuracyAuthorization == rhs.accuracyAuthorization
+    }
+
+
 }

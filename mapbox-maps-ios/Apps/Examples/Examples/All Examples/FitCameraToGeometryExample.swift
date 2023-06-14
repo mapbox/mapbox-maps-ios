@@ -1,10 +1,10 @@
 import UIKit
 import MapboxMaps
 
-@objc(FitCameraToGeometryExample)
 public class FitCameraToGeometryExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -14,9 +14,9 @@ public class FitCameraToGeometryExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allows the view controller to receive information about map events.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { _ in
             self.fitToCameraToGeometry()
-        }
+        }.store(in: &cancelables)
 
     }
 
@@ -31,23 +31,22 @@ public class FitCameraToGeometryExample: UIViewController, ExampleProtocol {
         let polygon = Geometry.polygon(Polygon([triangleCoordinates]))
         let polygonFeature = Feature(geometry: polygon)
 
-        let sourceIdentifier = "triangle-source"
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: "triangle-source")
         source.data = .feature(polygonFeature)
 
         var polygonLayer = FillLayer(id: "triangle-style")
         polygonLayer.fillOpacity = .constant(0.5)
         polygonLayer.fillColor = .constant(StyleColor(.gray))
-        polygonLayer.source = sourceIdentifier
+        polygonLayer.source = source.id
 
         do {
-            try mapView.mapboxMap.style.addSource(source, id: sourceIdentifier)
+            try mapView.mapboxMap.addSource(source)
         } catch {
             displayAlert(message: error.localizedDescription)
         }
 
         do {
-            try mapView.mapboxMap.style.addLayer(polygonLayer, layerPosition: nil)
+            try mapView.mapboxMap.addLayer(polygonLayer, layerPosition: nil)
         } catch {
             displayAlert(message: error.localizedDescription)
         }

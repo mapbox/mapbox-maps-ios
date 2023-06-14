@@ -8,7 +8,7 @@ final class EventsManagerTests: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        eventsManager = try EventsManager(accessToken: mapboxAccessToken())
+        eventsManager = EventsManager()
     }
 
     override func tearDown() {
@@ -37,36 +37,21 @@ final class EventsManagerTests: XCTestCase {
 
         UserDefaults.standard.MGLMapboxMetricsEnabled.toggle()
 
-        let exp = expectation(description: "Wait for one runloop run")
-        DispatchQueue.main.async {
-            XCTAssertEqual(UserDefaults.standard.MGLMapboxMetricsEnabled, !initialValue)
-            XCTAssertEqual(TelemetryUtils.getEventsCollectionState(), !initialValue)
-            exp.fulfill()
-        }
-        waitForExpectations(timeout: 1)
+        XCTAssertEqual(UserDefaults.standard.MGLMapboxMetricsEnabled, !initialValue)
+        XCTAssertEqual(TelemetryUtils.getEventsCollectionState(), !initialValue)
     }
 
-    func testMGLMapboxMetricsModifiesMMECollectionDisabled() {
+    func testMGLMapboxMetricsModifiesTelemetryCollectionState() {
         UserDefaults.standard.MGLMapboxMetricsEnabled = false
 
-        DispatchQueue.main.async {
-            XCTAssertFalse(TelemetryUtils.getEventsCollectionState())
-        }
+        XCTAssertFalse(TelemetryUtils.getEventsCollectionState())
 
         UserDefaults.standard.MGLMapboxMetricsEnabled = true
-        DispatchQueue.main.async {
-            XCTAssertTrue(TelemetryUtils.getEventsCollectionState())
-        }
 
-        // Wait for a one run in RunLoop to process inner DispatchQueue.main.async closures
-        // There is no reason to wait for previous async's since MainQueue is serial
-        let exp = expectation(description: "Wait for one runloop run")
+        XCTAssertTrue(TelemetryUtils.getEventsCollectionState())
+
         UserDefaults.standard.MGLMapboxMetricsEnabled = false
-        DispatchQueue.main.async {
-            XCTAssertFalse(TelemetryUtils.getEventsCollectionState())
-            exp.fulfill()
-        }
 
-        waitForExpectations(timeout: 1)
+        XCTAssertFalse(TelemetryUtils.getEventsCollectionState())
     }
 }

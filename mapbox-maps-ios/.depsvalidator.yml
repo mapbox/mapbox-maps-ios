@@ -17,6 +17,7 @@ dependencies:
   - name: Turf
     variations:
       Package.swift: turf-swift
+      Package.resolved: turf-swift
 manifest_definitions:
   - name: packager
     type: SemanticVersion

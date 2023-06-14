@@ -4,7 +4,6 @@ import XCTest
 final class OrnamentManagerTests: XCTestCase {
     var options: OrnamentOptions!
     var view: UIView!
-    var mapboxMap: MockMapboxMap!
     var cameraAnimationsManager: MockCameraAnimationsManager!
     // swiftlint:disable:next weak_delegate
     var infoButtonOrnamentDelegate: MockInfoButtonOrnamentDelegate!
@@ -13,22 +12,24 @@ final class OrnamentManagerTests: XCTestCase {
     var compassView: MapboxCompassOrnamentView!
     var attributionButton: InfoButtonOrnament!
     var ornamentsManager: OrnamentsManager!
+    var onCameraChanged: SignalSubject<CameraChanged>!
 
     override func setUp() {
         super.setUp()
         options = OrnamentOptions()
         view = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
-        mapboxMap = MockMapboxMap()
+        onCameraChanged = SignalSubject()
         cameraAnimationsManager = MockCameraAnimationsManager()
         infoButtonOrnamentDelegate = MockInfoButtonOrnamentDelegate()
         logoView = LogoView(logoSize: .regular())
         scaleBarView = MapboxScaleBarOrnamentView()
         compassView = MapboxCompassOrnamentView()
         attributionButton = InfoButtonOrnament()
+
         ornamentsManager = OrnamentsManager(
             options: options,
             view: view,
-            mapboxMap: mapboxMap,
+            onCameraChanged: onCameraChanged.signal,
             cameraAnimationsManager: cameraAnimationsManager,
             infoButtonOrnamentDelegate: infoButtonOrnamentDelegate,
             logoView: logoView,
@@ -45,7 +46,7 @@ final class OrnamentManagerTests: XCTestCase {
         logoView = nil
         infoButtonOrnamentDelegate = nil
         cameraAnimationsManager = nil
-        mapboxMap = nil
+        onCameraChanged = nil
         view = nil
         options = nil
         super.tearDown()
@@ -109,25 +110,20 @@ final class OrnamentManagerTests: XCTestCase {
     func testUpdateMapBearing() throws {
         let compass = try XCTUnwrap(view.subviews.compactMap { $0 as? MapboxCompassOrnamentView }.first)
 
-        XCTAssertEqual(mapboxMap.onEveryStub.invocations.count, 1)
-        XCTAssertEqual(mapboxMap.onEveryStub.invocations.first?.parameters.eventName, MapEvents.cameraChanged)
-        let onEveryCameraChangeHandler = try XCTUnwrap(mapboxMap.onEveryStub.invocations.first?.parameters.handler)
-
-        XCTAssertEqual(mapboxMap.cameraState.bearing, 0)
         XCTAssertTrue(compass.containerView.isHidden, "The compass should be hidden initially")
-        XCTAssertEqual(mapboxMap.cameraState.bearing, compass.currentBearing)
 
-        mapboxMap.cameraState.bearing += .random(in: (.leastNonzeroMagnitude)..<360)
-        onEveryCameraChangeHandler(MapEvent<NoPayload>(event: Event(type: "", data: 0)))
+        var cameraState = CameraState.zero
+        cameraState.bearing += .random(in: (.leastNonzeroMagnitude)..<360)
+        onCameraChanged.send(CameraChanged(cameraState: cameraState, timestamp: Date()))
 
         XCTAssertFalse(compass.containerView.isHidden, "The compass should not be hidden when the bearing is non-zero.")
-        XCTAssertEqual(mapboxMap.cameraState.bearing, compass.currentBearing)
+        XCTAssertEqual(cameraState.bearing, compass.currentBearing)
 
-        mapboxMap.cameraState.bearing = 0
-        onEveryCameraChangeHandler(MapEvent<NoPayload>(event: Event(type: "", data: 0)))
+        cameraState.bearing = 0
+        onCameraChanged.send(CameraChanged(cameraState: cameraState, timestamp: Date()))
 
         XCTAssertTrue(compass.containerView.isHidden)
-        XCTAssertEqual(mapboxMap.cameraState.bearing, compass.currentBearing)
+        XCTAssertEqual(cameraState.bearing, compass.currentBearing)
     }
 
     func testCompassVisibility() throws {

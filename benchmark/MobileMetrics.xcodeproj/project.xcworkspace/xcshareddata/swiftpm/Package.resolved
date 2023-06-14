@@ -1,52 +1,23 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "CocoaImageHashing",
-        "repositoryURL": "https://github.com/ameingast/cocoaimagehashing",
-        "state": {
-          "branch": null,
-          "revision": "ad01eee3c3f91bd181f7f4eba7f48f7cb211b51c",
-          "version": "1.9.0"
-        }
-      },
-      {
-        "package": "DataCompression",
-        "repositoryURL": "https://github.com/mw99/DataCompression.git",
-        "state": {
-          "branch": null,
-          "revision": "4ac2c9c108d80b690a74252a4ec48f47e9995e00",
-          "version": "3.7.0"
-        }
-      },
-      {
-        "package": "MapboxCommon",
-        "repositoryURL": "https://github.com/mapbox/mapbox-common-ios.git",
-        "state": {
-          "branch": null,
-          "revision": "185d791e7478cc5da7cc2b4756ecd0d0bd387eac",
-          "version": "23.4.0-beta.1"
-        }
-      },
-      {
-        "package": "MapboxMobileEvents",
-        "repositoryURL": "https://github.com/mapbox/mapbox-events-ios.git",
-        "state": {
-          "branch": null,
-          "revision": "91ae071c0232c144251dfe0d0724525deaf293d4",
-          "version": "1.0.10"
-        }
-      },
-      {
-        "package": "Turf",
-        "repositoryURL": "https://github.com/mapbox/turf-swift.git",
-        "state": {
-          "branch": null,
-          "revision": "87b5b37108ba9f37f0885b586d8f6355d8240dd8",
-          "version": "2.6.1"
-        }
+  "pins" : [
+    {
+      "identity" : "datacompression",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mw99/DataCompression.git",
+      "state" : {
+        "revision" : "4ac2c9c108d80b690a74252a4ec48f47e9995e00",
+        "version" : "3.7.0"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "turf-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mapbox/turf-swift.git",
+      "state" : {
+        "revision" : "87b5b37108ba9f37f0885b586d8f6355d8240dd8",
+        "version" : "2.6.1"
+      }
+    }
+  ],
+  "version" : 2
 }

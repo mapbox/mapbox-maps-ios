@@ -7,6 +7,7 @@ internal final class LowZoomToHighZoomAnimationSpecProvider: DefaultViewportTran
         self.mapboxMap = mapboxMap
     }
 
+    // swiftlint:disable:next function_body_length
     internal func makeAnimationSpecs(cameraOptions: CameraOptions) -> [DefaultViewportTransitionAnimationSpec] {
         var animationSpecs = [DefaultViewportTransitionAnimationSpec]()
 

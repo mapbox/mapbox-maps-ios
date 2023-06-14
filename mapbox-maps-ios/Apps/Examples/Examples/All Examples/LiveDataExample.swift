@@ -1,12 +1,11 @@
 import MapboxMaps
 
-@objc(LiveDataExample)
 final class LiveDataExample: UIViewController, ExampleProtocol {
     // Display the current location of the International Space Station (ISS)
     let url = URL(string: "https://api.wheretheiss.at/v1/satellites/25544")!
-    let sourceId = "ISS-source"
     var mapView: MapView!
     var issTimer: Timer?
+    private var cancelables = Set<AnyCancelable>()
 
     struct Coordinates: Codable {
         let longitude: Double
@@ -27,30 +26,29 @@ final class LiveDataExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Add the live data layer once the map has finished loading.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { _ in
             self.addStyleLayer()
 
             // The following line is just for testing purposes.
             self.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     func addStyleLayer() {
         // Create an empty geoJSON source to hold location data once
         // this information is received from the URL
-        var source = GeoJSONSource()
-        source.data = .empty
+        let source = GeoJSONSource(id: "ISS-source")
 
         var issLayer = SymbolLayer(id: "iss-layer")
-        issLayer.source = sourceId
+        issLayer.source = source.id
 
-        // Mapbox Streets contains an image named `rocket-15`. Use that image
+        // Mapbox Streets contains an image named `rocket`. Use that image
         // to represent the location of the ISS.
-        issLayer.iconImage = .constant(.name("rocket-15"))
+        issLayer.iconImage = .constant(.name("rocket"))
 
         do {
-            try mapView.mapboxMap.style.addSource(source, id: sourceId)
-            try mapView.mapboxMap.style.addLayer(issLayer)
+            try mapView.mapboxMap.addSource(source)
+            try mapView.mapboxMap.addLayer(issLayer)
 
             // Create a `Timer` that updates the `GeoJSONSource`.
             issTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
@@ -64,7 +62,7 @@ final class LiveDataExample: UIViewController, ExampleProtocol {
                         // Update geoJSON source to display new location of ISS
                         let point = Point(locationCoordinates)
                         let pointFeature = Feature(geometry: point)
-                        try! self.mapView.mapboxMap.style.updateGeoJSONSource(withId: self.sourceId, geoJSON: .feature(pointFeature))
+                        self.mapView.mapboxMap.updateGeoJSONSource(withId: source.id, geoJSON: .feature(pointFeature))
 
                         // Update camera to follow ISS
                         let issCamera = CameraOptions(center: locationCoordinates, zoom: 3)

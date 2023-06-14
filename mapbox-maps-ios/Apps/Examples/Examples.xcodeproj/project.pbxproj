@@ -72,19 +72,21 @@
 		74A2313C27EDCE7F0065FB7D /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A2313B27EDCE7F0065FB7D /* AnnotationView.swift */; };
 		74A2313E27EE1C640065FB7D /* ViewAnnotationWithPointAnnotationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A2313D27EE1C630065FB7D /* ViewAnnotationWithPointAnnotationExample.swift */; };
 		74D0803A28A13916008EB69C /* BasicLocationPulsingExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D0803928A13916008EB69C /* BasicLocationPulsingExample.swift */; };
+		9501A5A42A38830B00F2AF92 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9501A59F2A38830B00F2AF92 /* ViewExtensions.swift */; };
+		9501A5A52A38830B00F2AF92 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9501A5A02A38830B00F2AF92 /* Constants.swift */; };
+		9501A5A62A38830B00F2AF92 /* ButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9501A5A12A38830B00F2AF92 /* ButtonStyle.swift */; };
+		9501A5A72A38830B00F2AF92 /* CameraDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9501A5A22A38830B00F2AF92 /* CameraDebugView.swift */; };
+		9501A5A82A38830B00F2AF92 /* SwiftExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9501A5A32A38830B00F2AF92 /* SwiftExtensions.swift */; };
 		953290572982C681005E1FE1 /* MapboxMapsSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 953290562982C681005E1FE1 /* MapboxMapsSwiftUI */; };
-		9532A13D29A0094300784062 /* SwiftExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9532A13C29A0094300784062 /* SwiftExtensions.swift */; };
 		954AF549298A821E00365B6C /* ClusteringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954AF548298A821E00365B6C /* ClusteringExample.swift */; };
 		955B69EF299AAE6700FD4A19 /* RasterColorExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955B69EE299AAE6700FD4A19 /* RasterColorExample.swift */; };
-		95ABB68E2984564400028F0E /* ButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95ABB68D2984564400028F0E /* ButtonStyle.swift */; };
+		95857AC229B7A1A2005D238C /* LongTapAnimationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95857AC129B7A1A2005D238C /* LongTapAnimationExample.swift */; };
+		959EDE5229F5520500AEE16C /* MapEventsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959EDE5129F5520500AEE16C /* MapEventsExample.swift */; };
+		95A8C6A32A1A60E900D0FB48 /* CombineExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A8C6A22A1A60E900D0FB48 /* CombineExample.swift */; };
 		95B589B62982BFE800BF4F31 /* SimpleMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B589B02982BFE800BF4F31 /* SimpleMapExample.swift */; };
 		95B589B82982BFE800BF4F31 /* SwiftUIRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B589B22982BFE800BF4F31 /* SwiftUIRoot.swift */; };
 		95B589B92982BFE800BF4F31 /* FeaturesQueryExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B589B32982BFE800BF4F31 /* FeaturesQueryExample.swift */; };
 		95B589BA2982BFE800BF4F31 /* MapSettingsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B589B42982BFE800BF4F31 /* MapSettingsExample.swift */; };
-		95B589C02982C04000BF4F31 /* CameraDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B589BB2982C04000BF4F31 /* CameraDebugView.swift */; };
-		95B589C12982C04000BF4F31 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B589BC2982C04000BF4F31 /* ViewExtensions.swift */; };
-		95B589C22982C04000BF4F31 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B589BD2982C04000BF4F31 /* Constants.swift */; };
-		95857AC229B7A1A2005D238C /* LongTapAnimationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95857AC129B7A1A2005D238C /* LongTapAnimationExample.swift */; };
 		A41E58342654593500D8B946 /* SwitchStylesExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E58332654593500D8B946 /* SwitchStylesExample.swift */; };
 		A41E584C26555A3400D8B946 /* PointClusteringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E584B26555A3400D8B946 /* PointClusteringExample.swift */; };
 		A41E58F4265C005300D8B946 /* blueprint_style.json in Resources */ = {isa = PBXBuildFile; fileRef = A41E58F3265C005300D8B946 /* blueprint_style.json */; };
@@ -120,10 +122,16 @@
 		CADCF7302584990E0065C51B /* LayerPositionExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666E0D4925664EE7000B8AF5 /* LayerPositionExample.swift */; };
 		CADCF733258499130065C51B /* Examples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0746C14D252FA9D4001638BD /* Examples.swift */; };
 		CADCF736258499170065C51B /* ExampleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0746C15F252FADE4001638BD /* ExampleTableViewController.swift */; };
-		CADCF7392584991C0065C51B /* UIViewController+Children.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0746C152252FAA03001638BD /* UIViewController+Children.swift */; };
+		CADCF7392584991C0065C51B /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0746C152252FAA03001638BD /* UIViewController+Extensions.swift */; };
 		CADCF73C258499200065C51B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077C4EED252F7E88007636F1 /* AppDelegate.swift */; };
 		CADCF743258499570065C51B /* BasicMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADCF742258499570065C51B /* BasicMapExample.swift */; };
 		CAF9A9812583E49B007EF9EC /* TestableExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF9A9802583E49B007EF9EC /* TestableExampleTests.swift */; };
+		FE2755D52A12230B00EEC95F /* Fingertips in Frameworks */ = {isa = PBXBuildFile; productRef = FE2755D42A12230B00EEC95F /* Fingertips */; };
+		FE99952B2A1E05200068AB12 /* Lights3DExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE99952A2A1E05200068AB12 /* Lights3DExample.swift */; };
+		FEA410F02A2630EF002F1816 /* ApplicationCarPlaySceneDelegage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA410EF2A2630EF002F1816 /* ApplicationCarPlaySceneDelegage.swift */; };
+		FEA410F22A263109002F1816 /* DashboardCarPlaySceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA410F12A263109002F1816 /* DashboardCarPlaySceneDelegate.swift */; };
+		FEA410F42A263126002F1816 /* InstrumentClusterCarPlaySceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA410F32A263126002F1816 /* InstrumentClusterCarPlaySceneDelegate.swift */; };
+		FEA410F62A26314A002F1816 /* CarPlayMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA410F52A26314A002F1816 /* CarPlayMapViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -163,7 +171,7 @@
 		072C79EA25685D23006E47A7 /* SnapshotterExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotterExample.swift; sourceTree = "<group>"; };
 		073475D625AFAE520049B0B8 /* CustomLayerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLayerExample.swift; sourceTree = "<group>"; };
 		0746C14D252FA9D4001638BD /* Examples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Examples.swift; sourceTree = "<group>"; };
-		0746C152252FAA03001638BD /* UIViewController+Children.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Children.swift"; sourceTree = "<group>"; };
+		0746C152252FAA03001638BD /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		0746C15F252FADE4001638BD /* ExampleTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleTableViewController.swift; sourceTree = "<group>"; };
 		077C4EEA252F7E88007636F1 /* Examples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Examples.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		077C4EED252F7E88007636F1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -245,18 +253,20 @@
 		74A2313D27EE1C630065FB7D /* ViewAnnotationWithPointAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAnnotationWithPointAnnotationExample.swift; sourceTree = "<group>"; };
 		74A2313F27EE243B0065FB7D /* annotations.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = annotations.json; sourceTree = "<group>"; };
 		74D0803928A13916008EB69C /* BasicLocationPulsingExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicLocationPulsingExample.swift; sourceTree = "<group>"; };
-		9532A13C29A0094300784062 /* SwiftExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftExtensions.swift; sourceTree = "<group>"; };
+		9501A59F2A38830B00F2AF92 /* ViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
+		9501A5A02A38830B00F2AF92 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		9501A5A12A38830B00F2AF92 /* ButtonStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonStyle.swift; sourceTree = "<group>"; };
+		9501A5A22A38830B00F2AF92 /* CameraDebugView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraDebugView.swift; sourceTree = "<group>"; };
+		9501A5A32A38830B00F2AF92 /* SwiftExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftExtensions.swift; sourceTree = "<group>"; };
 		954AF548298A821E00365B6C /* ClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClusteringExample.swift; sourceTree = "<group>"; };
 		955B69EE299AAE6700FD4A19 /* RasterColorExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RasterColorExample.swift; sourceTree = "<group>"; };
-		95ABB68D2984564400028F0E /* ButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyle.swift; sourceTree = "<group>"; };
+		95857AC129B7A1A2005D238C /* LongTapAnimationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongTapAnimationExample.swift; sourceTree = "<group>"; };
+		959EDE5129F5520500AEE16C /* MapEventsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapEventsExample.swift; sourceTree = "<group>"; };
+		95A8C6A22A1A60E900D0FB48 /* CombineExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineExample.swift; sourceTree = "<group>"; };
 		95B589B02982BFE800BF4F31 /* SimpleMapExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleMapExample.swift; sourceTree = "<group>"; };
 		95B589B22982BFE800BF4F31 /* SwiftUIRoot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftUIRoot.swift; sourceTree = "<group>"; };
 		95B589B32982BFE800BF4F31 /* FeaturesQueryExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeaturesQueryExample.swift; sourceTree = "<group>"; };
 		95B589B42982BFE800BF4F31 /* MapSettingsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapSettingsExample.swift; sourceTree = "<group>"; };
-		95B589BB2982C04000BF4F31 /* CameraDebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraDebugView.swift; sourceTree = "<group>"; };
-		95B589BC2982C04000BF4F31 /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
-		95B589BD2982C04000BF4F31 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		95857AC129B7A1A2005D238C /* LongTapAnimationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongTapAnimationExample.swift; sourceTree = "<group>"; };
 		A41E58332654593500D8B946 /* SwitchStylesExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchStylesExample.swift; sourceTree = "<group>"; };
 		A41E584B26555A3400D8B946 /* PointClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointClusteringExample.swift; sourceTree = "<group>"; };
 		A41E58F3265C005300D8B946 /* blueprint_style.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = blueprint_style.json; sourceTree = "<group>"; };
@@ -280,6 +290,13 @@
 		CAC195B625AC098A00F69FEA /* CameraAnimatorsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraAnimatorsExample.swift; sourceTree = "<group>"; };
 		CADCF742258499570065C51B /* BasicMapExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicMapExample.swift; sourceTree = "<group>"; };
 		CAF9A9802583E49B007EF9EC /* TestableExampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestableExampleTests.swift; sourceTree = "<group>"; };
+		FE355DAD2A275377003AC5DF /* Examples_CarPlay.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Examples_CarPlay.entitlements; sourceTree = "<group>"; };
+		FE355DAF2A275DB4003AC5DF /* Examples.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Examples.xcconfig; sourceTree = "<group>"; };
+		FE99952A2A1E05200068AB12 /* Lights3DExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lights3DExample.swift; sourceTree = "<group>"; };
+		FEA410EF2A2630EF002F1816 /* ApplicationCarPlaySceneDelegage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationCarPlaySceneDelegage.swift; sourceTree = "<group>"; };
+		FEA410F12A263109002F1816 /* DashboardCarPlaySceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardCarPlaySceneDelegate.swift; sourceTree = "<group>"; };
+		FEA410F32A263126002F1816 /* InstrumentClusterCarPlaySceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstrumentClusterCarPlaySceneDelegate.swift; sourceTree = "<group>"; };
+		FEA410F52A26314A002F1816 /* CarPlayMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayMapViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -289,6 +306,7 @@
 			files = (
 				953290572982C681005E1FE1 /* MapboxMapsSwiftUI in Frameworks */,
 				B5327E9D260124C00095B6BD /* MapboxMaps in Frameworks */,
+				FE2755D52A12230B00EEC95F /* Fingertips in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -331,7 +349,7 @@
 		0746C151252FA9E1001638BD /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				0746C152252FAA03001638BD /* UIViewController+Children.swift */,
+				0746C152252FAA03001638BD /* UIViewController+Extensions.swift */,
 				7412CF6527E9A7FF00F03B1C /* CLLocationCoordinate2D+Random.swift */,
 				7412CF6727E9A8D600F03B1C /* UIColor+Random.swift */,
 				74A2313027EB306F0065FB7D /* Array+Split.swift */,
@@ -342,6 +360,7 @@
 		0746C182252FB0F4001638BD /* All Examples */ = {
 			isa = PBXGroup;
 			children = (
+				FE355DB02A276C1F003AC5DF /* CarPlay */,
 				B58E470827BABE0E00D87FD6 /* AdvancedViewportGesturesExample.swift */,
 				58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */,
 				17B480592684FB2300CF0D5E /* AnimateImageLayerExample.swift */,
@@ -435,6 +454,7 @@
 				07DC84412538B1F100F4AF14 /* Assets.xcassets */,
 				077C4EF8252F7E89007636F1 /* LaunchScreen.storyboard */,
 				077C4EFB252F7E89007636F1 /* Info.plist */,
+				FE355DAD2A275377003AC5DF /* Examples_CarPlay.entitlements */,
 				58882E5C26962A7200E5C1C6 /* StoryboardMapViewExample.storyboard */,
 			);
 			path = Examples;
@@ -462,6 +482,7 @@
 		077C4F4A252FA7A5007636F1 /* Configurations */ = {
 			isa = PBXGroup;
 			children = (
+				FE355DAF2A275DB4003AC5DF /* Examples.xcconfig */,
 				077C4F4B252FA7CD007636F1 /* base.xcconfig */,
 			);
 			name = Configurations;
@@ -509,7 +530,10 @@
 		7406E36E2806B659002CC41F /* Lab */ = {
 			isa = PBXGroup;
 			children = (
+				959EDE5129F5520500AEE16C /* MapEventsExample.swift */,
+				95A8C6A22A1A60E900D0FB48 /* CombineExample.swift */,
 				7406E36F2806B66F002CC41F /* ResizableImageExample.swift */,
+				FE99952A2A1E05200068AB12 /* Lights3DExample.swift */,
 			);
 			path = Lab;
 			sourceTree = "<group>";
@@ -539,6 +563,18 @@
 			path = Annotations;
 			sourceTree = "<group>";
 		};
+		9501A5942A3882D800F2AF92 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				9501A5A12A38830B00F2AF92 /* ButtonStyle.swift */,
+				9501A5A22A38830B00F2AF92 /* CameraDebugView.swift */,
+				9501A5A02A38830B00F2AF92 /* Constants.swift */,
+				9501A5A32A38830B00F2AF92 /* SwiftExtensions.swift */,
+				9501A59F2A38830B00F2AF92 /* ViewExtensions.swift */,
+			);
+			path = Util;
+			sourceTree = "<group>";
+		};
 		95B5898E2982BF4900BF4F31 /* SwiftUI Examples */ = {
 			isa = PBXGroup;
 			children = (
@@ -550,21 +586,20 @@
 				3AA5FAF229BF132800758AC0 /* Puck2DExample.swift */,
 				3AA5FAF429C0786A00758AC0 /* Puck3DExample.swift */,
 				3ADF96012992787A00819649 /* ViewAnnotationsExample.swift */,
-				95B589C32982C07900BF4F31 /* Util */,
+				9501A5942A3882D800F2AF92 /* Util */,
 			);
 			path = "SwiftUI Examples";
 			sourceTree = "<group>";
 		};
-		95B589C32982C07900BF4F31 /* Util */ = {
+		FE355DB02A276C1F003AC5DF /* CarPlay */ = {
 			isa = PBXGroup;
 			children = (
-				95B589BD2982C04000BF4F31 /* Constants.swift */,
-				95B589BB2982C04000BF4F31 /* CameraDebugView.swift */,
-				95B589BC2982C04000BF4F31 /* ViewExtensions.swift */,
-				95ABB68D2984564400028F0E /* ButtonStyle.swift */,
-				9532A13C29A0094300784062 /* SwiftExtensions.swift */,
+				FEA410EF2A2630EF002F1816 /* ApplicationCarPlaySceneDelegage.swift */,
+				FEA410F12A263109002F1816 /* DashboardCarPlaySceneDelegate.swift */,
+				FEA410F32A263126002F1816 /* InstrumentClusterCarPlaySceneDelegate.swift */,
+				FEA410F52A26314A002F1816 /* CarPlayMapViewController.swift */,
 			);
-			path = Util;
+			path = CarPlay;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -589,6 +624,7 @@
 			packageProductDependencies = (
 				B5327E9C260124C00095B6BD /* MapboxMaps */,
 				953290562982C681005E1FE1 /* MapboxMapsSwiftUI */,
+				FE2755D42A12230B00EEC95F /* Fingertips */,
 			);
 			productName = Examples;
 			productReference = 077C4EEA252F7E88007636F1 /* Examples.app */;
@@ -636,8 +672,9 @@
 		077C4EE2252F7E88007636F1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1400;
-				LastUpgradeCheck = 1410;
+				BuildIndependentTargetsInParallel = YES;
+				LastSwiftUpdateCheck = 1200;
+				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					077C4EE9252F7E88007636F1 = {
 						CreatedOnToolsVersion = 12.0;
@@ -661,6 +698,9 @@
 				Base,
 			);
 			mainGroup = 077C4EE1252F7E88007636F1;
+			packageReferences = (
+				FE2755D32A12230B00EEC95F /* XCRemoteSwiftPackageReference "Fingertips" */,
+			);
 			productRefGroup = 077C4EEB252F7E88007636F1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -761,13 +801,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				95A8C6A32A1A60E900D0FB48 /* CombineExample.swift in Sources */,
 				CA03F10F26268DF700673961 /* OfflineManagerExample.swift in Sources */,
 				CADCF73C258499200065C51B /* AppDelegate.swift in Sources */,
 				95B589B92982BFE800BF4F31 /* FeaturesQueryExample.swift in Sources */,
-				CADCF7392584991C0065C51B /* UIViewController+Children.swift in Sources */,
+				CADCF7392584991C0065C51B /* UIViewController+Extensions.swift in Sources */,
+				CADCF7392584991C0065C51B /* UIViewController+Extensions.swift in Sources */,
 				58248C2F2695FF24009AC598 /* StoryboardMapViewExample.swift in Sources */,
 				74A2313827EC6B360065FB7D /* IconSizeChangeExample.swift in Sources */,
 				B58E470927BABE0E00D87FD6 /* AdvancedViewportGesturesExample.swift in Sources */,
+				9501A5A72A38830B00F2AF92 /* CameraDebugView.swift in Sources */,
 				A495049B2667D64F00130A8F /* SkyLayerExample.swift in Sources */,
 				CADCF7262584990E0065C51B /* SnapshotterExample.swift in Sources */,
 				5812B55127C5A0E500E10063 /* CustomLocationProviderExample.swift in Sources */,
@@ -776,12 +819,12 @@
 				95857AC229B7A1A2005D238C /* LongTapAnimationExample.swift in Sources */,
 				3A7CE98B282AB0DE00C3A0B8 /* NavigationSimulator.swift in Sources */,
 				CADCF7212584990E0065C51B /* PolygonAnnotationExample.swift in Sources */,
-				9532A13D29A0094300784062 /* SwiftExtensions.swift in Sources */,
 				A41E58342654593500D8B946 /* SwitchStylesExample.swift in Sources */,
 				CADCF7272584990E0065C51B /* FitCameraToGeometryExample.swift in Sources */,
 				B5327EC3260277AC0095B6BD /* ExampleProtocol.swift in Sources */,
 				955B69EF299AAE6700FD4A19 /* RasterColorExample.swift in Sources */,
 				7412CF6427E8EA2A00F03B1C /* CircleAnnotationExample.swift in Sources */,
+				9501A5A42A38830B00F2AF92 /* ViewExtensions.swift in Sources */,
 				7471A4E128D0CEA400C7DFE5 /* LargeGeoJSONExample.swift in Sources */,
 				58A28B602869F728006F7D93 /* SpinningGlobeExample.swift in Sources */,
 				A41E584C26555A3400D8B946 /* PointClusteringExample.swift in Sources */,
@@ -796,9 +839,9 @@
 				0C784D1126D002DC004AE7D0 /* FeatureStateExample.swift in Sources */,
 				74797C1A28F5B72F0008BBB9 /* ViewAnnotationAnimationExample.swift in Sources */,
 				95B589B82982BFE800BF4F31 /* SwiftUIRoot.swift in Sources */,
+				FEA410F42A263126002F1816 /* InstrumentClusterCarPlaySceneDelegate.swift in Sources */,
 				CADCF7222584990E0065C51B /* ColorExpressionExample.swift in Sources */,
 				58A28B5B2869F69C006F7D93 /* HeatmapLayerGlobeExample.swift in Sources */,
-				95B589C22982C04000BF4F31 /* Constants.swift in Sources */,
 				74A2313C27EDCE7F0065FB7D /* AnnotationView.swift in Sources */,
 				7412CF6C27E9D48700F03B1C /* AddMarkersSymbolExample.swift in Sources */,
 				17E28C5C2672A1160033DF0F /* SymbolClusteringExample.swift in Sources */,
@@ -807,35 +850,38 @@
 				CADCF743258499570065C51B /* BasicMapExample.swift in Sources */,
 				7406E3702806B66F002CC41F /* ResizableImageExample.swift in Sources */,
 				17B40D2426A85500000887EF /* LiveDataExample.swift in Sources */,
-				95B589C02982C04000BF4F31 /* CameraDebugView.swift in Sources */,
 				95B589B62982BFE800BF4F31 /* SimpleMapExample.swift in Sources */,
 				CADCF7242584990E0065C51B /* AnimateLayerExample.swift in Sources */,
-				95ABB68E2984564400028F0E /* ButtonStyle.swift in Sources */,
 				3AA5FAF329BF132800758AC0 /* Puck2DExample.swift in Sources */,
 				073475D725AFAE520049B0B8 /* CustomLayerExample.swift in Sources */,
 				7412CF6827E9A8D600F03B1C /* UIColor+Random.swift in Sources */,
 				0CC4ECEA25B8AD3000F998B8 /* Custom2DPuckExample.swift in Sources */,
 				CADCF71F2584990E0065C51B /* DataDrivenSymbolsExample.swift in Sources */,
 				CADCF7302584990E0065C51B /* LayerPositionExample.swift in Sources */,
+				FEA410F02A2630EF002F1816 /* ApplicationCarPlaySceneDelegage.swift in Sources */,
 				CA86E81825BE7C2300E5A1D9 /* BuildingExtrusionsExample.swift in Sources */,
 				7395C38828FEDFCF00071A33 /* PointAnnotationClusteringExample.swift in Sources */,
 				C608C107267BC5B1003C86C3 /* LocalizationExample.swift in Sources */,
-				95B589C12982C04000BF4F31 /* ViewExtensions.swift in Sources */,
 				0706C4A625B1181A008733C0 /* TerrainExample.swift in Sources */,
 				CADCF7282584990E0065C51B /* LineAnnotationExample.swift in Sources */,
 				74D0803A28A13916008EB69C /* BasicLocationPulsingExample.swift in Sources */,
 				CADCF72F2584990E0065C51B /* SnapshotterCoreGraphicsExample.swift in Sources */,
 				B5E6397C28066BDD00F95094 /* SimulatedLocationProvider.swift in Sources */,
+				FEA410F62A26314A002F1816 /* CarPlayMapViewController.swift in Sources */,
 				304AB3B527439287005B6D09 /* ViewAnnotationMarkerExample.swift in Sources */,
 				CA4F1F7225E815CF00822D2A /* SwiftUIExample.swift in Sources */,
+				9501A5A62A38830B00F2AF92 /* ButtonStyle.swift in Sources */,
 				CAC195B725AC098A00F69FEA /* CameraAnimatorsExample.swift in Sources */,
 				3ADF96022992787A00819649 /* ViewAnnotationsExample.swift in Sources */,
 				732A550028DA470E00CDBFB7 /* PitchAndDistanceExample.swift in Sources */,
 				587429C027BBFDA100104CCA /* VoiceOverAccessibilityExample.swift in Sources */,
+				FE99952B2A1E05200068AB12 /* Lights3DExample.swift in Sources */,
 				73E27C2627AF024C0067F277 /* DataJoinExample.swift in Sources */,
 				74A2313127EB306F0065FB7D /* Array+Split.swift in Sources */,
+				9501A5A52A38830B00F2AF92 /* Constants.swift in Sources */,
 				0C78AC2925BF70E40057F570 /* LineGradientExample.swift in Sources */,
 				17B48067268A4E9300CF0D5E /* DistanceExpressionExample.swift in Sources */,
+				959EDE5229F5520500AEE16C /* MapEventsExample.swift in Sources */,
 				0333B84F25ED942600D667C9 /* SceneKitExample.swift in Sources */,
 				CADCF72D2584990E0065C51B /* MultipleGeometriesExample.swift in Sources */,
 				30517C6A274BD4D300B706E5 /* ViewAnnotationBasicExample.swift in Sources */,
@@ -843,6 +889,7 @@
 				74A2313627EB37EE0065FB7D /* AnimatedMarkerExample.swift in Sources */,
 				95B589BA2982BFE800BF4F31 /* MapSettingsExample.swift in Sources */,
 				58A3C0C925C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift in Sources */,
+				9501A5A82A38830B00F2AF92 /* SwiftExtensions.swift in Sources */,
 				B5327EBF260277930095B6BD /* Example.swift in Sources */,
 				CADCF736258499170065C51B /* ExampleTableViewController.swift in Sources */,
 				17B4805A2684FB2300CF0D5E /* AnimateImageLayerExample.swift in Sources */,
@@ -856,6 +903,7 @@
 				7412CF6227E8DD1E00F03B1C /* AddOneMarkerSymbolExample.swift in Sources */,
 				74A2313E27EE1C640065FB7D /* ViewAnnotationWithPointAnnotationExample.swift in Sources */,
 				73694BD325D4B2CE0064F636 /* TrackingModeExample.swift in Sources */,
+				FEA410F22A263109002F1816 /* DashboardCarPlaySceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1022,6 +1070,7 @@
 		};
 		077C4F15252F7E89007636F1 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FE355DAF2A275DB4003AC5DF /* Examples.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1034,6 +1083,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.examples;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
@@ -1045,6 +1095,7 @@
 		};
 		077C4F16252F7E89007636F1 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FE355DAF2A275DB4003AC5DF /* Examples.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1057,6 +1108,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.examples;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
@@ -1079,6 +1131,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				PRODUCT_BUNDLE_IDENTIFIER = mapbox.ExamplesTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1100,6 +1153,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				PRODUCT_BUNDLE_IDENTIFIER = mapbox.ExamplesTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1120,6 +1174,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				PRODUCT_BUNDLE_IDENTIFIER = mapbox.ExamplesUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1140,6 +1195,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				PRODUCT_BUNDLE_IDENTIFIER = mapbox.ExamplesUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1189,6 +1245,17 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		FE2755D32A12230B00EEC95F /* XCRemoteSwiftPackageReference "Fingertips" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:mapbox/Fingertips.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		953290562982C681005E1FE1 /* MapboxMapsSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1197,6 +1264,11 @@
 		B5327E9C260124C00095B6BD /* MapboxMaps */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MapboxMaps;
+		};
+		FE2755D42A12230B00EEC95F /* Fingertips */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FE2755D32A12230B00EEC95F /* XCRemoteSwiftPackageReference "Fingertips" */;
+			productName = Fingertips;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

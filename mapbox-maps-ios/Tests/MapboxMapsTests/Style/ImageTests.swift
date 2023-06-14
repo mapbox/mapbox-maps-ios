@@ -1,5 +1,6 @@
 import XCTest
 import MapboxCoreMaps
+@testable import MapboxMaps
 
 final class ImageTests: XCTestCase {
 
@@ -51,10 +52,10 @@ final class ImageTests: XCTestCase {
         let mbmImage = try XCTUnwrap(Image(uiImage: image))
 
         XCTAssertEqual(CGFloat(mbmImage.width), image.scale)
-        XCTAssertEqual(mbmImage.data[0], 128)
-        XCTAssertEqual(mbmImage.data[1], 0)
-        XCTAssertEqual(mbmImage.data[2], 0)
-        XCTAssertEqual(mbmImage.data[3], 128)
+        XCTAssertEqual(mbmImage.data.data[0], 128)
+        XCTAssertEqual(mbmImage.data.data[1], 0)
+        XCTAssertEqual(mbmImage.data.data[2], 0)
+        XCTAssertEqual(mbmImage.data.data[3], 128)
     }
 
     func testConvertGeneratedRGBAUIImage() throws {
@@ -66,10 +67,10 @@ final class ImageTests: XCTestCase {
         let mbmImage = try XCTUnwrap(Image(uiImage: image))
 
         XCTAssertEqual(CGFloat(mbmImage.width), image.scale)
-        XCTAssertEqual(mbmImage.data[0], 0)
-        XCTAssertEqual(mbmImage.data[1], 128)
-        XCTAssertEqual(mbmImage.data[2], 0)
-        XCTAssertEqual(mbmImage.data[3], 128)
+        XCTAssertEqual(mbmImage.data.data[0], 0)
+        XCTAssertEqual(mbmImage.data.data[1], 128)
+        XCTAssertEqual(mbmImage.data.data[2], 0)
+        XCTAssertEqual(mbmImage.data.data[3], 128)
     }
 
     func testConvertGeneratedRGBXUIImage() throws {
@@ -82,10 +83,10 @@ final class ImageTests: XCTestCase {
         let mbmImage = try XCTUnwrap(Image(uiImage: image))
 
         XCTAssertEqual(CGFloat(mbmImage.width), image.scale)
-        XCTAssertEqual(mbmImage.data[0], 0)
-        XCTAssertEqual(mbmImage.data[1], 128)
-        XCTAssertEqual(mbmImage.data[2], 0)
-        XCTAssertEqual(mbmImage.data[3], 255)
+        XCTAssertEqual(mbmImage.data.data[0], 0)
+        XCTAssertEqual(mbmImage.data.data[1], 128)
+        XCTAssertEqual(mbmImage.data.data[2], 0)
+        XCTAssertEqual(mbmImage.data.data[3], 255)
     }
 
     func testConvertGeneratedXRGBUIImage() throws {
@@ -98,10 +99,10 @@ final class ImageTests: XCTestCase {
         let mbmImage = try XCTUnwrap(Image(uiImage: image))
 
         XCTAssertEqual(CGFloat(mbmImage.width), image.scale)
-        XCTAssertEqual(mbmImage.data[0], 0)
-        XCTAssertEqual(mbmImage.data[1], 128)
-        XCTAssertEqual(mbmImage.data[2], 0)
-        XCTAssertEqual(mbmImage.data[3], 255)
+        XCTAssertEqual(mbmImage.data.data[0], 0)
+        XCTAssertEqual(mbmImage.data.data[1], 128)
+        XCTAssertEqual(mbmImage.data.data[2], 0)
+        XCTAssertEqual(mbmImage.data.data[3], 255)
     }
 
     func testConvertImageWithPaddedRows() throws {
@@ -130,12 +131,12 @@ final class ImageTests: XCTestCase {
         let mbmImage = try XCTUnwrap(Image(uiImage: image))
 
         XCTAssertEqual(Int(mbmImage.width), width)
-        XCTAssertEqual(mbmImage.data[0], 0)
-        XCTAssertEqual(mbmImage.data[1], 128)
-        XCTAssertEqual(mbmImage.data[2], 0)
-        XCTAssertEqual(mbmImage.data[3], 128)
+        XCTAssertEqual(mbmImage.data.data[0], 0)
+        XCTAssertEqual(mbmImage.data.data[1], 128)
+        XCTAssertEqual(mbmImage.data.data[2], 0)
+        XCTAssertEqual(mbmImage.data.data[3], 128)
 
         // The resulting image should not have padded rows.
-        XCTAssertEqual(Int(mbmImage.width * mbmImage.height) * bytesPerPixel, mbmImage.data.count)
+        XCTAssertEqual(Int(mbmImage.width * mbmImage.height) * bytesPerPixel, mbmImage.data.data.count)
     }
 }

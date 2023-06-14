@@ -7,6 +7,7 @@ class GlobeFlyToExample: UIViewController, ExampleProtocol {
     internal var mapView: MapView!
     internal var isAtStart = true
     var instuctionLabel = UILabel(frame: CGRect.zero)
+    private var cancelables = Set<AnyCancelable>()
 
     private var cameraStart = CameraOptions(
         center: CLLocationCoordinate2D(latitude: 36, longitude: 80),
@@ -26,13 +27,13 @@ class GlobeFlyToExample: UIViewController, ExampleProtocol {
         mapView = MapView(frame: view.bounds, mapInitOptions: .init(styleURI: .satelliteStreets))
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.mapboxMap.setCamera(to: .init(center: CLLocationCoordinate2D(latitude: 40, longitude: -78), zoom: 1.0))
-        try! self.mapView.mapboxMap.style.setProjection(StyleProjection(name: .globe))
+        try! self.mapView.mapboxMap.setProjection(StyleProjection(name: .globe))
 
-        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
-            try! self.mapView.mapboxMap.style.setAtmosphere(Atmosphere())
+        mapView.mapboxMap.onStyleLoaded.observeNext { _ in
+            try! self.mapView.mapboxMap.setAtmosphere(Atmosphere())
             self.addTerrain()
             self.finish()
-        }
+        }.store(in: &cancelables)
 
         let tap = UITapGestureRecognizer(target: self, action: #selector(animateCameraOnClick))
         mapView.addGestureRecognizer(tap)
@@ -62,18 +63,18 @@ class GlobeFlyToExample: UIViewController, ExampleProtocol {
     }
 
     func addTerrain() {
-        var demSource = RasterDemSource()
+        var demSource = RasterDemSource(id: "mapbox-dem")
         demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
         // Setting the `tileSize` to 514 provides better performance and adds padding around the outside
         // of the tiles.
         demSource.tileSize = 514
         demSource.maxzoom = 14.0
-        try! mapView.mapboxMap.style.addSource(demSource, id: "mapbox-dem")
+        try! mapView.mapboxMap.addSource(demSource)
 
         var terrain = Terrain(sourceId: "mapbox-dem")
         terrain.exaggeration = .constant(1.5)
 
-        try! mapView.mapboxMap.style.setTerrain(terrain)
+        try! mapView.mapboxMap.setTerrain(terrain)
     }
 
     @objc func animateCameraOnClick() {

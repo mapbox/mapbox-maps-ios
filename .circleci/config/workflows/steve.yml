@@ -1,5 +1,12 @@
-unless: << pipeline.parameters.turf-revision >>
+unless:
+  or:
+    - << pipeline.parameters.turf-revision >>
+    - equal: [scheduled_pipeline, << pipeline.trigger_source >>]
+
 jobs:
+  - sanity-check:
+      context:
+        - Slack Orb
   - swiftlint:
       context:
         - Slack Orb
@@ -12,7 +19,6 @@ jobs:
         - Slack Orb
         - SDK Registry Token
       name: Build SDK
-      xcode: "13.1.0"
       configuration: "Release"
 
   - build-sdk-for-api-compatibility-check:
@@ -178,3 +184,10 @@ jobs:
           only:
             - main
             - develop
+
+  - generate-docc:
+      name: Generate Doc (development)
+      version: docc
+      context:
+        - Slack Orb
+        - SDK Registry Token

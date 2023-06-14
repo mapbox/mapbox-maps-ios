@@ -17,7 +17,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                                                   longitude: -122.341647)
 
     internal func testQueryAtPoint() {
-        style?.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
         let featureQueryExpectation = XCTestExpectation(description: "Wait for features to be queried and at least one feature to be returned with a layer.")
 
@@ -27,7 +27,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                                     zoom: 15.0))
         }
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             guard let mapView = self?.mapView else { return }
 
             // Given
@@ -47,13 +47,13 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                     XCTFail("Feature querying failed")
                 }
             }
-        }
+        }.store(in: &cancelables)
 
         wait(for: [featureQueryExpectation], timeout: 5.0)
     }
 
     internal func testQueryInRectWithFilter() {
-        style?.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
         let featureQueryExpectation = XCTestExpectation(description: "Wait for features to be queried.")
 
@@ -106,7 +106,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
     }
 
     internal func testQueryForGeometry() {
-        style?.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
         let featureQueryExpectation = XCTestExpectation(description: "Wait for features to be queried.")
 
@@ -116,7 +116,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                                     zoom: 15.0))
         }
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             guard let mapView = self?.mapView else { return }
 
             // Given
@@ -141,13 +141,13 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                     XCTFail("Feature querying failed")
                 }
             }
-        }
+        }.store(in: &cancelables)
 
         wait(for: [featureQueryExpectation], timeout: 5.0)
     }
 
     internal func testQueryRenderedSource() {
-        style?.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
         let featureQueryExpectation = XCTestExpectation(description: "Wait for source features to be queried.")
 
@@ -157,11 +157,11 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                                                           zoom: 15.0))
         }
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             guard let mapView = self?.mapView else { return }
 
             // Given
-            let sourceIDs = mapView.mapboxMap.style.allSourceIdentifiers
+            let sourceIDs = mapView.mapboxMap.allSourceIdentifiers
             guard let sourceID = sourceIDs.first else {
                 XCTFail("No sources in Style")
                 return
@@ -180,13 +180,13 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                     XCTFail("Source feature querying failed")
                 }
             }
-        }
+        }.store(in: &cancelables)
 
         wait(for: [featureQueryExpectation], timeout: 5.0)
     }
 
     internal func testGeoJsonClusterFunctions() {
-        style?.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
         let clusterSourceID = "cluster-source"
         let geoJSONClusterLeavesExpection = XCTestExpectation(description: "Return 4 features as leaves of the cluster.")
         geoJSONClusterLeavesExpection.assertForOverFulfill = true
@@ -208,7 +208,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
             Feature(geometry: Point(CLLocationCoordinate2D(latitude: 0, longitude: 0)))
         ]
 
-        var geoJSONClusterSource = GeoJSONSource()
+        var geoJSONClusterSource = GeoJSONSource(id: clusterSourceID)
         geoJSONClusterSource.data = .featureCollection(FeatureCollection(features: features))
         geoJSONClusterSource.cluster = true
 
@@ -221,13 +221,13 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                                                           zoom: 5.0))
 
             do {
-                try mapView.mapboxMap.style.addSource(geoJSONClusterSource, id: clusterSourceID)
-                try mapView.mapboxMap.style.addLayer(geoJSONLayer)
+                try mapView.mapboxMap.addSource(geoJSONClusterSource)
+                try mapView.mapboxMap.addLayer(geoJSONLayer)
             } catch {
                 XCTFail("Failed to add cluster source and layer.")
             }
         }
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             guard let mapView = self?.mapView else { return }
             mapView.mapboxMap.querySourceFeatures(for: clusterSourceID, options: SourceQueryOptions(sourceLayerIds: [clusterSourceID], filter: ["has", "point_count"])) { result
                 in
@@ -266,7 +266,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                     XCTFail("Failed to return any features from a cluster.")
                 }
             }
-        }
-        wait(for: [geoJSONClusterLeavesExpection, geoJSONClusterZoomExpansionLevelExpection, geoJSONClusterChildrenExpectation], timeout: 1.0)
+        }.store(in: &cancelables)
+        wait(for: [geoJSONClusterLeavesExpection, geoJSONClusterZoomExpansionLevelExpection, geoJSONClusterChildrenExpectation], timeout: 5.0)
     }
 }

@@ -21,7 +21,7 @@ generate-code: generate-style-code generate-annotation-code
 
 delete-code:
 	@echo "Deleting generated code"
-	@find {mapbox-maps-ios,private}/Sources/MapboxMaps/{Annotations,Style}/Generated \
+	@find {mapbox-maps-ios,private}/{Sources,Tests}/MapboxMaps{,Tests}/{Annotations,Style}/Generated \
 		-not -name ".swiftlint.yml" -delete 2>/dev/null || true
 
 .PHONY: generate-style-code generate-annotation-code generate-annotation-code-private generate-private-code generate-public-code generate-code

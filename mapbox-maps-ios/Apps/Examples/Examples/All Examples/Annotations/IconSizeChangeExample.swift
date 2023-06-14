@@ -11,6 +11,7 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
     }
     private var mapView: MapView!
     private var markerSelected = false
+    private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,14 +24,14 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allows the delegate to receive information about map events.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
 
             // Set up the example
             self?.setupExample()
 
             // The below line is used for internal testing purposes only.
             self?.finish()
-        }
+        }.store(in: &cancelables)
 
         mapView.mapboxMap.loadStyleURI(.dark)
     }
@@ -43,12 +44,12 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
         ].map({ Feature(geometry: Point($0)) })
 
         // Create a GeoJSON data source for markers
-        var markerSource = GeoJSONSource()
+        var markerSource = GeoJSONSource(id: Constants.markerSourceId)
         markerSource.data = .featureCollection(FeatureCollection(features: markerFeatures))
-        try? mapView.mapboxMap.style.addSource(markerSource, id: Constants.markerSourceId)
+        try? mapView.mapboxMap.addSource(markerSource)
 
         // Add marker image to the map
-        try? mapView.mapboxMap.style.addImage(UIImage(named: "blue_marker_view")!, id: Constants.blueMarkerImageId)
+        try? mapView.mapboxMap.addImage(UIImage(named: "blue_marker_view")!, id: Constants.blueMarkerImageId)
 
         // Create a symbol layer for markers
         var markerLayer = SymbolLayer(id: Constants.markerLayerId)
@@ -59,12 +60,12 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
         // middle of the icon being fixed to the coordinate point.
         markerLayer.iconOffset = .constant([0, -9])
 
-        try? mapView.mapboxMap.style.addLayer(markerLayer)
+        try? mapView.mapboxMap.addLayer(markerLayer)
 
         // Create a GeoJSON source for the selected marker
-        var selectedMarkerSource = GeoJSONSource()
+        var selectedMarkerSource = GeoJSONSource(id: Constants.selectedMarkerSourceId)
         selectedMarkerSource.data = .geometry(.point(Point(CLLocationCoordinate2D())))
-        try? mapView.mapboxMap.style.addSource(selectedMarkerSource, id: Constants.selectedMarkerSourceId)
+        try? mapView.mapboxMap.addSource(selectedMarkerSource)
 
         // Create a symbol layer for the selected marker
         var selectedMarkerLayer = SymbolLayer(id: Constants.selectedMarkerLayerId)
@@ -75,7 +76,7 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
         // middle of the icon being fixed to the coordinate point.
         selectedMarkerLayer.iconOffset = .constant([0, -9])
 
-        try? mapView.mapboxMap.style.addLayer(selectedMarkerLayer)
+        try? mapView.mapboxMap.addLayer(selectedMarkerLayer)
 
         // add a tap gesture recognizer to the map
         mapView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(mapTapped(_:))))
@@ -117,7 +118,7 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
                 }
 
                 if let geometry = features.first?.queriedFeature.feature.geometry {
-                    try? self.mapView.mapboxMap.style.updateGeoJSONSource(withId: Constants.selectedMarkerSourceId,
+                    self.mapView.mapboxMap.updateGeoJSONSource(withId: Constants.selectedMarkerSourceId,
                                                                           geoJSON: .geometry(geometry))
                 }
 
@@ -135,7 +136,7 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
     }
 
     private func updateMarker(selected: Bool) {
-        try? mapView.mapboxMap.style.updateLayer(
+        try? mapView.mapboxMap.updateLayer(
             withId: Constants.selectedMarkerLayerId,
             type: SymbolLayer.self,
             update: { (layer: inout SymbolLayer) throws in

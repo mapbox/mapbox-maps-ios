@@ -1,7 +1,6 @@
 import XCTest
 @testable import MapboxMaps
 
-// swiftlint:disable explicit_top_level_acl explicit_acl
 class GlyphsRasterizationOptionsTests: XCTestCase {
 
     func testDefaults() {

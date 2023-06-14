@@ -1,5 +1,6 @@
 when:
   and:
+    - equal: [ << pipeline.trigger_source >>, webhook ] # Webhook from Github that contains push event
     - << pipeline.parameters.sdk_ci_pull_request_id >>
     - equal: [ << pipeline.parameters.sdk_ci_pull_request_target_branch_name >>, << pipeline.parameters.sdk_ci_repo_default_branch >> ]
 jobs:
@@ -15,3 +16,9 @@ jobs:
       project-name: mobile-maps-ios-preview
       requires: 
         - trigger-build-snapshot
+  - validate-integrations-for-branch:
+      context:
+        - Slack Orb
+        - SDK Registry Token
+      requires:
+        - build-snapshot

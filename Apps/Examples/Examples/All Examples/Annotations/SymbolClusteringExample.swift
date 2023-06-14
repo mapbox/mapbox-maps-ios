@@ -1,10 +1,10 @@
 import UIKit
 import MapboxMaps
 
-@objc(SymbolClusteringExample)
 class SymbolClusteringExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -19,16 +19,15 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Add the source and style layers once the map has loaded.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { _ in
             self.addSymbolClusteringLayers()
-        }
+        }.store(in: &cancelables)
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(gestureRecognizer:)))
         mapView.addGestureRecognizer(tapGestureRecognizer)
     }
 
     func addSymbolClusteringLayers() {
-        let style = mapView.mapboxMap.style
         // The image named `fire-station-11` is included in the app's Assets.xcassets bundle.
         // In order to recolor an image, you need to add a template image to the map's style.
         // The image's rendering mode can be set programmatically or in the asset catalogue.
@@ -37,14 +36,14 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         // Add the image tp the map's style. Set `sdf` to `true`. This allows the icon images to be recolored.
         // For more information about `SDF`, or Signed Distance Fields, see
         // https://docs.mapbox.com/help/troubleshooting/using-recolorable-images-in-mapbox-maps/#what-are-signed-distance-fields-sdf
-        try! style.addImage(image, id: "fire-station-icon", sdf: true)
+        try! mapView.mapboxMap.addImage(image, id: "fire-station-icon", sdf: true)
 
         // Fire_Hydrants.geojson contains information about fire hydrants in the District of Columbia.
         // It was downloaded on 6/10/21 from https://opendata.dc.gov/datasets/DCGIS::fire-hydrants/about
         let url = Bundle.main.url(forResource: "Fire_Hydrants", withExtension: "geojson")!
 
         // Create a GeoJSONSource using the previously specified URL.
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: "fire-hydrant-source")
         source.data = .url(url)
 
         // Enable clustering for this source.
@@ -82,23 +81,22 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         ]
         source.clusterProperties = clusterProperties
 
-        let sourceID = "fire-hydrant-source"
 
         var clusteredLayer = createClusteredLayer()
-        clusteredLayer.source = sourceID
+        clusteredLayer.source = source.id
 
         var unclusteredLayer = createUnclusteredLayer()
-        unclusteredLayer.source = sourceID
+        unclusteredLayer.source = source.id
 
         // `clusterCountLayer` is a `SymbolLayer` that represents the point count within individual clusters.
         var clusterCountLayer = createNumberLayer()
-        clusterCountLayer.source = sourceID
+        clusterCountLayer.source = source.id
 
         // Add the source and two layers to the map.
-        try! style.addSource(source, id: sourceID)
-        try! style.addLayer(clusteredLayer)
-        try! style.addLayer(unclusteredLayer, layerPosition: .below(clusteredLayer.id))
-        try! style.addLayer(clusterCountLayer)
+        try! mapView.mapboxMap.addSource(source)
+        try! mapView.mapboxMap.addLayer(clusteredLayer)
+        try! mapView.mapboxMap.addLayer(unclusteredLayer, layerPosition: .below(clusteredLayer.id))
+        try! mapView.mapboxMap.addLayer(clusterCountLayer)
 
         // This is used for internal testing purposes only and can be excluded
         // from your implementation.
@@ -198,16 +196,5 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
                 self?.showAlert(withTitle: "An error occurred: \(error.localizedDescription)", and: "Please try another hydrant")
             }
         }
-    }
-
-    // Present an alert with a given title and message.
-    func showAlert(withTitle title: String, and message: String) {
-        let alertController = UIAlertController(title: title,
-                                                message: message,
-                                                preferredStyle: .alert)
-
-        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-
-        present(alertController, animated: true, completion: nil)
     }
 }

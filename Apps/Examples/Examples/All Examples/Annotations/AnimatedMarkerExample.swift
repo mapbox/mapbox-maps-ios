@@ -2,7 +2,6 @@ import Foundation
 import MapboxMaps
 import UIKit
 
-@objc(AnimatedMarkerExample)
 final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
     enum Constants {
         static let markerIconId = "marker_icon"
@@ -19,6 +18,7 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
     private var displayLink: CADisplayLink? {
         didSet { oldValue?.invalidate() }
     }
+    private var cancelables = Set<AnyCancelable>()
 
     deinit {
         displayLink?.invalidate()
@@ -34,14 +34,14 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allows the delegate to receive information about map events.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
 
             // Set up the example
             self?.setupExample()
 
             // The below line is used for internal testing purposes only.
             self?.finish()
-        }
+        }.store(in: &cancelables)
 
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -62,13 +62,13 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
     }
 
     private func setupExample() {
-        try? mapView.mapboxMap.style.addImage(UIImage(named: "red_marker")!, id: Constants.markerIconId)
+        try? mapView.mapboxMap.addImage(UIImage(named: "red_marker")!, id: Constants.markerIconId)
 
         // Create a GeoJSON data source.
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: Constants.sourceId)
         source.data = .feature(Feature(geometry: Point(currentPosition)))
 
-        try? mapView.mapboxMap.style.addSource(source, id: Constants.sourceId)
+        try? mapView.mapboxMap.addSource(source)
 
         // Create a symbol layer
         var symbolLayer = SymbolLayer(id: "layer-id")
@@ -77,7 +77,7 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
         symbolLayer.iconIgnorePlacement = .constant(true)
         symbolLayer.iconAllowOverlap = .constant(true)
 
-        try? mapView.mapboxMap.style.addLayer(symbolLayer)
+        try? mapView.mapboxMap.addLayer(symbolLayer)
     }
 
     override func didMove(toParent parent: UIViewController?) {
@@ -108,7 +108,7 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
         self.currentPosition = coordinate
 
         // update source with the new marker location
-        try? self.mapView.mapboxMap.style.updateGeoJSONSource(withId: Constants.sourceId,
+        self.mapView.mapboxMap.updateGeoJSONSource(withId: Constants.sourceId,
                                                               geoJSON: .feature(Feature(geometry: Point(coordinate))))
 
     }

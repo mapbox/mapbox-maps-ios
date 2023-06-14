@@ -6,12 +6,12 @@ final class MockLocationManager: LocationManaging {
     @Stubbed var options = LocationOptions()
 
     let addLocationConsumerStub = Stub<LocationConsumer, Void>()
-    func addLocationConsumer(newConsumer consumer: LocationConsumer) {
+    func addLocationConsumer(_ consumer: LocationConsumer) {
         addLocationConsumerStub.call(with: consumer)
     }
 
     let removeLocationConsumerStub = Stub<LocationConsumer, Void>()
-    func removeLocationConsumer(consumer: LocationConsumer) {
+    func removeLocationConsumer(_ consumer: LocationConsumer) {
         removeLocationConsumerStub.call(with: consumer)
     }
 

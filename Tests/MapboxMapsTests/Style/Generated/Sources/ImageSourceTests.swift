@@ -5,7 +5,7 @@ import XCTest
 final class ImageSourceTests: XCTestCase {
 
     func testEncodingAndDecoding() {
-        var source = ImageSource()
+        var source = ImageSource(id: "test-source")
         source.url = String.testSourceValue()
         source.coordinates = [[Double]].testSourceValue()
         source.prefetchZoomDelta = Double.testSourceValue()

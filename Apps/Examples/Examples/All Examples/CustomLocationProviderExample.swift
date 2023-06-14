@@ -1,7 +1,6 @@
 import UIKit
 import MapboxMaps
 
-@objc(CustomLocationProviderExample)
 final class CustomLocationProviderExample: UIViewController, ExampleProtocol {
 
     var mapView: MapView!

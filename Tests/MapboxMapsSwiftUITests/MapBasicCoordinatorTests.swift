@@ -1,5 +1,5 @@
 import CoreLocation
-@testable import MapboxMaps
+@_spi(Package) @testable import MapboxMaps
 @_spi(Experimental) @testable import MapboxMapsSwiftUI
 
 import XCTest
@@ -24,11 +24,12 @@ final class MapBasicCoordinatorTests: XCTestCase {
     }
 
     func testUpstreamCameraUpdate() {
-        mapView.mapboxMap.simulateEvent(event: .cameraChanged)
+        let event = CameraChanged(cameraState: .random(), timestamp: Date())
+        mapView.mapboxMap.events.onCameraChanged.send(event)
         XCTAssertEqual(setCameraStub.invocations.count, 1)
 
-        mapView.mapboxMap.simulateEvent(event: .cameraChanged)
-        mapView.mapboxMap.simulateEvent(event: .cameraChanged)
+        mapView.mapboxMap.events.onCameraChanged.send(event)
+        mapView.mapboxMap.events.onCameraChanged.send(event)
         XCTAssertEqual(setCameraStub.invocations.count, 3)
     }
 
@@ -168,30 +169,18 @@ final class MapBasicCoordinatorTests: XCTestCase {
         XCTAssertEqual(mockActions.onLayerTapAction.invocations.count, 0)
     }
 
-    func testObserveMapEvents() throws {
-        let observer = MapEventObserver(event: .mapLoaded) {}
-        let deps = MapDependencies(mapEventObservers: [observer])
-
-        me.update(camera: nil, deps: deps, colorScheme: .light)
-        let invocation = try XCTUnwrap(mapView.mapboxMap.subscribeStub.invocations.last)
-        XCTAssertIdentical(invocation.parameters.observer, me)
-        XCTAssertTrue(invocation.parameters.events.contains(observer.eventName))
-    }
-
     func testNotifyMapEventsToObservers() {
-        var mapLoadedIsInvoked = false
-        let mapLoadedObserver = MapEventObserver(event: .mapLoaded) {
-            mapLoadedIsInvoked = true
+        var observedMapLoaded: MapLoaded?
+        let subscription = AnyEventSubscription(keyPath: \.onMapLoaded) { event in
+            observedMapLoaded = event
         }
-        let mapIdleObserver = MapEventObserver(event: .mapIdle) {
-            XCTFail("Unexpected mapIdle event is received")
-        }
+        let deps = MapDependencies(eventsSubscriptions: [subscription])
 
-        let deps = MapDependencies(mapEventObservers: [mapLoadedObserver, mapIdleObserver])
         me.update(camera: nil, deps: deps, colorScheme: .light)
-        mapView.mapboxMap.simulateEvent(event: .mapLoaded)
+        let mapLoaded = MapLoaded(timeInterval: EventTimeInterval(begin: Date(), end: Date()))
 
-        XCTAssertTrue(mapLoadedIsInvoked)
+        mapView.mapboxMap.events.onMapLoaded.send(mapLoaded)
+        XCTAssertEqual(mapLoaded, observedMapLoaded)
     }
 }
 

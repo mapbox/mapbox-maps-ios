@@ -3,13 +3,6 @@ import Foundation
 
 extension OfflineManager {
 
-    /// Construct a new offline manager
-    ///
-    /// - Parameter resourceOptions: ResourceOptions the resource options to manage.
-    public convenience init(resourceOptions: ResourceOptions) {
-        self.init(resourceOptions: MapboxCoreMaps.ResourceOptions(resourceOptions))
-    }
-
     /// Loads a new style package or updates the existing one.
     ///
     /// - Parameters:
@@ -52,13 +45,13 @@ extension OfflineManager {
             return __loadStylePack(forStyleURI: styleURI.rawValue,
                                    loadOptions: loadOptions,
                                    onProgress: progress,
-                                   onFinished: offlineManagerClosureAdapter(for: completion, type: StylePack.self)).asCancelable()
+                                   onFinished: offlineManagerClosureAdapter(for: completion, type: StylePack.self))
         }
         // An overloaded version that does not report progess of the loading operation.
         else {
             return __loadStylePack(forStyleURI: styleURI.rawValue,
                                    loadOptions: loadOptions,
-                                   onFinished: offlineManagerClosureAdapter(for: completion, type: StylePack.self)).asCancelable()
+                                   onFinished: offlineManagerClosureAdapter(for: completion, type: StylePack.self))
         }
     }
 

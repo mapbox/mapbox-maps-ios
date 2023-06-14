@@ -1,19 +1,19 @@
-// swift-tools-version:5.5
+// swift-tools-version:5.7
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
-let coreVersion = "11.0.0-SNAPSHOT.0322T1320Z.ae46035"
-let coreChecksum = "5eee9732f78a9cec9b85cc83eeac8db440bb161a04aff879bbe52607567cc8f5"
-let commonVersion = "23.5.0-SNAPSHOT.0321T1613Z.cc81dc2"
-let commonChecksum = "34e96f7c3b1eeab4c9257d3fdd91a2b353defa6a7c17099c0dd848b3fcb5c468"
+let coreVersion = "11.0.0-SNAPSHOT.0608T0508Z.a85336d"
+let coreChecksum = "fdd1e1617dadd8a3423d6214d7bfb1d9bbb1a72229d3590d6526b3cfb8821d3c"
+let commonVersion = "23.6.0-SNAPSHOT.0607T1326Z.8674e41"
+let commonChecksum = "c95d679bdc5a9ffe706772cea3af184de8f365f11c389b2f4b938cb7e819fbf7"
 
 func folder(_ version: String) -> String { version.contains("SNAPSHOT") ? "snapshots" : "releases" }
 
 let package = Package(
     name: "MapboxMaps",
     defaultLocalization: "en",
-    platforms: [.iOS(.v11)],
+    platforms: [.iOS(.v12)],
     products: [
         .library(
             name: "MapboxMaps",
@@ -23,8 +23,7 @@ let package = Package(
             targets: ["MapboxMapsSwiftUI"])
     ],
     dependencies: [
-        .package(name: "Turf", url: "https://github.com/mapbox/turf-swift.git", from: "2.0.0"),
-        .package(name: "CocoaImageHashing", url: "https://github.com/ameingast/cocoaimagehashing", .exact("1.9.0")),
+        .package(url: "https://github.com/mapbox/turf-swift.git", from: "2.0.0"),
     ],
     targets: [
         .binaryTarget(
@@ -39,7 +38,11 @@ let package = Package(
         ),
         .target(
             name: "MapboxMaps",
-            dependencies: ["MapboxCoreMaps", "Turf", "MapboxCommon"],
+            dependencies: [
+                "MapboxCoreMaps",
+                .product(name: "Turf", package: "turf-swift"),
+                "MapboxCommon",
+            ],
             exclude: [
                 "Info.plist",
             ],
@@ -53,7 +56,9 @@ let package = Package(
         ),
         .testTarget(
             name: "MapboxMapsTests",
-            dependencies: ["MapboxMaps", "CocoaImageHashing"],
+            dependencies: [
+                "MapboxMaps",
+            ],
             exclude: [
                 "Info.plist",
                 "Integration Tests/HTTP/HTTPIntegrationTests.swift",

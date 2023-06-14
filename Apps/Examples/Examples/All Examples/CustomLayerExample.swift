@@ -1,10 +1,10 @@
 import UIKit
 import MapboxMaps
 
-@objc(CustomLayerExample)
 final class CustomLayerExample: UIViewController, ExampleProtocol {
 
     var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -13,9 +13,9 @@ final class CustomLayerExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
+        mapView.mapboxMap.onStyleLoaded.observeNext { _ in
             self.addCustomLayer()
-        }
+        }.store(in: &cancelables)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -26,7 +26,7 @@ final class CustomLayerExample: UIViewController, ExampleProtocol {
 
     func addCustomLayer() {
         // Position the custom layer above the water layer and below all other layers.
-        try! mapView.mapboxMap.style.addCustomLayer(
+        try! mapView.mapboxMap.addCustomLayer(
             withId: "Custom",
             layerHost: CustomLayerExampleCustomLayerHost(),
             layerPosition: .above("water"))

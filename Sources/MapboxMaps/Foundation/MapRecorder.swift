@@ -12,7 +12,7 @@ import Foundation
     // MARK: Recording
 
     public func start() {
-        recorder.startRecording()
+        recorder.startRecording(for: MapRecorderOptions(timeWindow: nil))
     }
 
     public func stop() -> String {

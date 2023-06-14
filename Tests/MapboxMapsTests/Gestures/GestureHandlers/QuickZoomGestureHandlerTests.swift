@@ -6,7 +6,6 @@ final class QuickZoomGestureHandlerTest: XCTestCase {
     var gestureRecognizer: MockLongPressGestureRecognizer!
     var mapboxMap: MockMapboxMap!
     var quickZoomHandler: QuickZoomGestureHandler!
-    // swiftlint:disable weak_delegate
     var delegate: MockGestureHandlerDelegate!
 
     override func setUp() {

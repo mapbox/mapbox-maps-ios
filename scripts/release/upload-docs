@@ -1,0 +1,62 @@
+#!/usr/bin/env python3
+
+import os, argparse, subprocess, tempfile, logging, shutil
+import git
+from pathlib import Path
+logging.basicConfig(level=logging.INFO)
+
+def main():
+    parser = argparse.ArgumentParser(description='Upload documentation.')
+    parser.add_argument('--jazzy-docs', required=True,
+                        type=dir_path, help='Path to jazzy docs')
+    parser.add_argument('--docc-docs', default=None,
+                        type=dir_path, help='Path to DocC docs')
+    parser.add_argument('--version', default=None, required=True,
+                        type=version_no_prefix, help='Version to upload')
+    args = parser.parse_args()
+
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        writer_token_result = subprocess.run(['mbx-ci', 'github', 'writer', 'public', 'token'], capture_output=True, text=True)
+
+        print(f"Checkout publisher-production branch at {tmpdirname}/mapbox-maps-ios")
+        repo = checkout_repo(f"https://x-access-token:{writer_token_result.stdout}@github.com/mapbox/mapbox-maps-ios.git", "publisher-production", tmpdirname)
+
+        if os.getenv('CI'):
+            repo.config_writer().set_value("user", "name", "Release SDK bot").set_value("user", "email", "it-admin+mapboxci@mapbox.com").release()
+
+        if args.docc_docs and args.docc_docs.exists() and args.docc_docs.is_dir():
+            print(f"Copy DocC docs from {args.docc_docs} to {repo.working_dir}/{args.version}-docc")
+
+            shutil.copytree(args.docc_docs, Path(repo.working_dir) / f"{args.version}-docc", dirs_exist_ok=True)
+            repo.index.add([f"{args.version}-docc"])
+            repo.index.commit(f"Add DocC documentation for {args.version} version")
+
+            repo.remote().push()
+
+        if args.jazzy_docs and args.jazzy_docs.exists() and args.jazzy_docs.is_dir():
+            print(f"Copy jazzy docs from {args.jazzy_docs} to {repo.working_dir}/{args.version}")
+            shutil.copytree(args.jazzy_docs, Path(repo.working_dir) / args.version, dirs_exist_ok=True)
+            repo.index.add([args.version])
+            repo.index.commit(f"Add jazzy documentation for {args.version} version")
+
+            repo.remote().push()
+
+def checkout_repo(repo: str, branch: str, folder) -> git.Repo:
+    repo_name = Path(repo).stem
+    repo_path = Path(folder) / repo_name
+    if repo_path.exists():
+        logging.info(f"Repo {repo_name} already exists at {repo_path}")
+        return git.Repo(repo_path)
+    return git.Repo.clone_from(repo, repo_path, branch=branch, depth="1")
+
+def dir_path(string):
+    path = Path(string).expanduser().resolve()
+    if path.is_dir():
+        return path
+    else:
+        raise NotADirectoryError(string)
+
+def version_no_prefix(version: str):
+    return version.lstrip("v")
+
+main()

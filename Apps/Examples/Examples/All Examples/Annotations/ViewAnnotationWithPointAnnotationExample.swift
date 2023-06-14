@@ -2,7 +2,6 @@ import UIKit
 import MapboxMaps
 import CoreLocation
 
-@objc(ViewAnnotationWithPointAnnotationExample)
 final class ViewAnnotationWithPointAnnotationExample: UIViewController, ExampleProtocol {
     private enum Constants {
         static let blueIconId = "blue"
@@ -12,6 +11,7 @@ final class ViewAnnotationWithPointAnnotationExample: UIViewController, ExampleP
 
     private var mapView: MapView!
     private var pointAnnotationManager: PointAnnotationManager!
+    private var cancelables = Set<AnyCancelable>()
 
     private let image = UIImage(named: "blue_marker_view")!
     private lazy var markerHeight: CGFloat = image.size.height
@@ -28,17 +28,17 @@ final class ViewAnnotationWithPointAnnotationExample: UIViewController, ExampleP
 
         pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
 
-            try? self.mapView.mapboxMap.style.addImage(self.image, id: Constants.blueIconId)
+            try? self.mapView.mapboxMap.addImage(self.image, id: Constants.blueIconId)
             self.addPointAndViewAnnotation(at: self.mapView.mapboxMap.coordinate(for: self.mapView.center))
 
             // The below line is used for internal testing purposes only.
             self.finish()
-        }
+        }.store(in: &cancelables)
 
-        mapView.mapboxMap.style.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
         mapView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onMapTapped(_:))))
     }

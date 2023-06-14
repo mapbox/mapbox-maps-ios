@@ -12,7 +12,7 @@ internal protocol SimpleCameraAnimatorProtocol: CameraAnimatorProtocol {
 /// This animator has some overlap in functionality with ``BasicCameraAnimator``; however, since it
 /// uses direct interpolation rather than interpolation via ``CameraView``, it has a simpler implementation
 /// and enables more advanced use cases like dynamically updating ``SimpleCameraAnimator/to``.
-internal final class SimpleCameraAnimator: NSObject, SimpleCameraAnimatorProtocol {
+internal final class SimpleCameraAnimator: SimpleCameraAnimatorProtocol {
     private enum InternalState: Equatable {
         case initial
         case running(startDate: Date)
@@ -120,7 +120,6 @@ internal final class SimpleCameraAnimator: NSObject, SimpleCameraAnimatorProtoco
         self.mainQueue = mainQueue
         self.cameraOptionsInterpolator = cameraOptionsInterpolator
         self.dateProvider = dateProvider
-        super.init()
     }
 
     internal func startAnimation() {

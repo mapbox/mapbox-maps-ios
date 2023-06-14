@@ -3,7 +3,6 @@ import Foundation
 @_implementationOnly import MapboxCommon_Private
 
 class MockStyleManager: StyleManagerProtocol {
-
     func asStyleManager() -> StyleManager {
         fatalError()
     }
@@ -104,6 +103,37 @@ class MockStyleManager: StyleManagerProtocol {
     )
     func getStyleLightProperty(forProperty property: String) -> MapboxCoreMaps.StylePropertyValue {
         getStyleLightPropertyStub.call(with: property)
+    }
+
+    let getStyleLightsStub = Stub<Void, [StyleObjectInfo]>(defaultReturnValue: [])
+    func getStyleLights() -> [StyleObjectInfo] {
+        getStyleLightsStub.call()
+    }
+
+    let setStyleLightsStub = Stub<Any, Expected<NSNull, NSString>>(defaultReturnValue: Expected(value: NSNull()))
+    func setStyleLightsForLights(_ lights: Any) -> Expected<NSNull, NSString> {
+        setStyleLightsStub.call(with: lights)
+    }
+
+    struct GetStyleLightPropertyForIdParameters {
+        let id, property: String
+    }
+    let getStyleLightPropertyForIdStub = Stub<GetStyleLightPropertyForIdParameters, StylePropertyValue>(
+        defaultReturnValue: .init(value: "stub", kind: .undefined)
+    )
+    func getStyleLightProperty(forId id: String, property: String) -> StylePropertyValue {
+        getStyleLightPropertyForIdStub.call(with: .init(id: id, property: property))
+    }
+
+    struct SetStyleLightPropertyForIdParameters {
+        let id, property: String
+        let value: Any
+    }
+    let setStyleLightPropertyForIdStub = Stub<SetStyleLightPropertyForIdParameters, Expected<NSNull, NSString>>(
+        defaultReturnValue: .init(value: NSNull())
+    )
+    func setStyleLightPropertyForId(_ id: String, property: String, value: Any) -> Expected<NSNull, NSString> {
+        setStyleLightPropertyForIdStub.call(with: .init(id: id, property: property, value: value))
     }
 
     let getStyleTerrainPropertyStub = Stub<String, MapboxCoreMaps.StylePropertyValue>(
@@ -455,20 +485,9 @@ class MockStyleManager: StyleManagerProtocol {
         invalidateStyleCustomGeometrySourceRegionStub.call(with: .init(sourceId: sourceId, bounds: bounds))
     }
 
-    struct SetStyleGeoJSONSourceDataForSourceIdParams {
-        let sourceId: String
-        let data: MapboxCoreMaps.GeoJSONSourceData
-    }
-    let setStyleGeoJSONSourceDataForSourceIdStub = Stub<SetStyleGeoJSONSourceDataForSourceIdParams, Expected<NSNull, NSString>>(
-        defaultReturnValue: .init(value: .init())
-    )
-    func __setStyleGeoJSONSourceDataForSourceId(_ sourceId: String, data: MapboxCoreMaps.GeoJSONSourceData) -> Expected<NSNull, NSString> {
-        setStyleGeoJSONSourceDataForSourceIdStub.call(with: .init(sourceId: sourceId, data: data))
-    }
-
     struct SetStyleGeoJSONSourceDataForSourceIdDataIDParams {
         let sourceId: String
-        let dataId: String
+        let dataId: String?
         let data: MapboxCoreMaps.GeoJSONSourceData
     }
     let setStyleGeoJSONSourceDataForSourceIdDataIDStub = Stub<SetStyleGeoJSONSourceDataForSourceIdDataIDParams, Expected<NSNull, NSString>>(
@@ -477,10 +496,38 @@ class MockStyleManager: StyleManagerProtocol {
     func __setStyleGeoJSONSourceDataForSourceId(_ sourceId: String, dataId: String, data: MapboxCoreMaps.GeoJSONSourceData) -> Expected<NSNull, NSString> {
         setStyleGeoJSONSourceDataForSourceIdDataIDStub.call(with: .init(sourceId: sourceId, dataId: dataId, data: data))
     }
+
+    struct AddStyleModelParams {
+        let modelId, modelUri: String
+    }
+    let addStyleModelStub = Stub<AddStyleModelParams, Expected<NSNull, NSString>>(defaultReturnValue: .init(value: NSNull()))
+    func addStyleModel(forModelId modelId: String, modelUri: String) -> Expected<NSNull, NSString> {
+        addStyleModelStub.call(with: AddStyleModelParams(modelId: modelId, modelUri: modelUri))
+    }
+
+    let getStyleAtmospherePropertyStub = Stub<String, MapboxCoreMaps.StylePropertyValue>(
+        defaultReturnValue: .init(value: "stub", kind: .undefined)
+    )
+    func getStyleAtmosphereProperty(forProperty property: String) -> StylePropertyValue {
+        getStyleAtmospherePropertyStub.call(with: property)
+    }
+
+    let setStyleAtmosphereForPropertiesStub = Stub<Any, Expected<NSNull, NSString>>(defaultReturnValue: .init(value: NSNull()))
+    func setStyleAtmosphereForProperties(_ properties: Any) -> Expected<NSNull, NSString> {
+        setStyleAtmosphereForPropertiesStub.call(with: properties)
+    }
+
+    let setStyleAtmospherePropertyStub = Stub<SetStylePropertyParameters, Expected<NSNull, NSString>>(
+        defaultReturnValue: .init(value: NSNull())
+    )
+    func setStyleAtmospherePropertyForProperty(_ property: String, value: Any) -> Expected<NSNull, NSString> {
+        setStyleAtmospherePropertyStub.call(with: SetStylePropertyParameters(property: property, value: value))
+    }
 }
 
 struct NonEncodableLayer: Layer {
     var id: String = "dummy-non-encodable-layer-id"
+    var visibility: Visibility = .visible
     var type: LayerType = .random()
     var filter: Expression?
     var source: String?

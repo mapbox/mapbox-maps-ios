@@ -29,21 +29,21 @@ public struct StyleURI: Hashable, RawRepresentable {
     }
 
     /// Mapbox Streets is a general-purpose style with detailed road and transit networks.
-    public static let streets = StyleURI(rawValue: "mapbox://styles/mapbox/streets-v11")!
+    public static let streets = StyleURI(rawValue: "mapbox://styles/mapbox/streets-v12")!
 
     /// Mapbox Outdoors is a general-purpose style tailored to outdoor activities.
-    public static let outdoors = StyleURI(rawValue: "mapbox://styles/mapbox/outdoors-v11")!
+    public static let outdoors = StyleURI(rawValue: "mapbox://styles/mapbox/outdoors-v12")!
 
     /// Mapbox Light is a subtle, light-colored backdrop for data visualizations.
-    public static let light = StyleURI(rawValue: "mapbox://styles/mapbox/light-v10")!
+    public static let light = StyleURI(rawValue: "mapbox://styles/mapbox/light-v11")!
 
     /// Mapbox Dark is a subtle, dark-colored backdrop for data visualizations.
-    public static let dark = StyleURI(rawValue: "mapbox://styles/mapbox/dark-v10")!
+    public static let dark = StyleURI(rawValue: "mapbox://styles/mapbox/dark-v11")!
 
     /// The Mapbox Satellite style is a base-map of high-resolution satellite and aerial imagery.
     public static let satellite = StyleURI(rawValue: "mapbox://styles/mapbox/satellite-v9")!
 
     /// The Mapbox Satellite Streets style combines the high-resolution satellite and aerial imagery
     /// of Mapbox Satellite with unobtrusive labels and translucent roads from Mapbox Streets.
-    public static let satelliteStreets = StyleURI(rawValue: "mapbox://styles/mapbox/satellite-streets-v11")!
+    public static let satelliteStreets = StyleURI(rawValue: "mapbox://styles/mapbox/satellite-streets-v12")!
 }

@@ -6,7 +6,7 @@ import CoreImage.CIFilterBuiltins
 @_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
 
-internal protocol MapSnapshotterProtocol: StyleManagerProtocol, ObservableProtocol {
+internal protocol MapSnapshotterProtocol: StyleManagerProtocol {
     func setSizeFor(_ size: Size)
 
     func getSize() -> Size
@@ -30,47 +30,48 @@ internal protocol MapSnapshotterProtocol: StyleManagerProtocol, ObservableProtoc
 
 extension MapSnapshotter: MapSnapshotterProtocol {}
 
-// MARK: - Snapshotter
-///  A high-level component responsible for taking map snapshots with given ``MapSnapshotOptions``.
-public class Snapshotter {
+/// A utility class for capturing styled map snapshots.
+///
+/// Use a `MapSnapshotter` when you need to capture a static snapshot of a map without using the actual ``MapView``.
+/// You can configure the final result via ``MapSnapshotOptions`` upon construction time and take.
+public class Snapshotter: StyleManager {
 
     /// Internal `MapboxCoreMaps.MBXMapSnapshotter` object that takes care of
     /// rendering a snapshot.
     internal let mapSnapshotter: MapSnapshotterProtocol
 
-    /// A `style` object that can be manipulated to set different styles for a snapshot
-    public let style: Style
+    /// A `style` object that can be manipulated to set different styles for a snapshot.
+    @available(*, deprecated, message: "Access style APIs directly from Snapshotter instance instead")
+    public var style: StyleManager { return self }
 
+    private let events: MapEvents
     private let options: MapSnapshotOptions
 
-    private let observable: MapboxObservableProtocol
-
-    /// Initialize a `Snapshotter` instance
+    /// Initializes a `Snapshotter` instance.
     /// - Parameters:
     ///   - options: Options describing an intended snapshot
-    public init(options: MapSnapshotOptions) {
-        self.options = options
-        mapSnapshotter = MapSnapshotter(options: MapboxCoreMaps.MapSnapshotOptions(options))
-        style = Style(with: mapSnapshotter)
-        observable = MapboxObservable(observable: mapSnapshotter)
-
-        sendTurnstileEvent(accessToken: options.resourceOptions.accessToken)
+    convenience public init(options: MapSnapshotOptions) {
+        let impl = MapSnapshotter(options: MapboxCoreMaps.MapSnapshotOptions(options))
+        self.init(
+            options: options,
+            mapSnapshotter: impl,
+            events: MapEvents(observable: impl),
+            eventsManager: EventsManager())
     }
 
-    /// Enables injecting mocks when unit testing
-    internal init(options: MapSnapshotOptions,
-                  mapboxObservableProvider: (ObservableProtocol) -> MapboxObservableProtocol,
-                  mapSnapshotter: MapSnapshotterProtocol) {
+    /// Enables injecting mocks for unit testing.
+    internal init(
+        options: MapSnapshotOptions,
+        mapSnapshotter: MapSnapshotterProtocol,
+        events: MapEvents,
+        eventsManager: EventsManagerProtocol
+    ) {
         self.options = options
         self.mapSnapshotter = mapSnapshotter
-        style = Style(with: mapSnapshotter)
-        observable = mapboxObservableProvider(mapSnapshotter)
+        self.events = events
 
-        sendTurnstileEvent(accessToken: options.resourceOptions.accessToken)
-    }
+        super.init(with: mapSnapshotter, sourceManager: StyleSourceManager(styleManager: mapSnapshotter))
 
-    internal func sendTurnstileEvent(accessToken: String) {
-        let eventsManager = EventsManager(accessToken: accessToken)
         eventsManager.sendTurnstile()
     }
 
@@ -113,7 +114,6 @@ public class Snapshotter {
 
         let scale = CGFloat(options.pixelRatio)
 
-        let style = self.style
         let options = self.options
 
         mapSnapshotter.start { [weak self] (expected) in
@@ -127,7 +127,7 @@ public class Snapshotter {
                 return
             }
 
-            let mbxImage = snapshot.image()
+            let mbmImage = snapshot.moveImage()
             let pointForCoordinate = { (coordinate: CLLocationCoordinate2D) -> CGPoint in
                 return snapshot.screenCoordinate(for: coordinate).point
             }
@@ -140,17 +140,16 @@ public class Snapshotter {
                 pointForCoordinate: pointForCoordinate,
                 coordinateForPoint: coordinateForPoint
             )
-            guard let uiImage = UIImage(mbxImage: mbxImage, scale: scale) else {
+            guard let mbmImage = mbmImage,
+                let uiImage = UIImage(mbmImage: mbmImage, scale: scale) else {
                 completion(.failure(.snapshotFailed(reason: "Could not convert internal Image type to UIImage.")))
                 return
             }
 
-            let sourceAttributions = style.sourceAttributions()
-
             guard let self = self else { return }
 
             // Render attributions over the snapshot
-            Attribution.parse(sourceAttributions) { [weak self] attributions in
+            Attribution.parse(self.sourceAttributions()) { [weak self] attributions in
                 self?.overlaySnapshotWith(
                     attributions: attributions,
                     snapshotImage: uiImage,
@@ -162,6 +161,7 @@ public class Snapshotter {
         }
     }
 
+    // swiftlint:disable:next function_body_length
     private func overlaySnapshotWith(
         attributions: [Attribution],
         snapshotImage uiImage: UIImage,
@@ -217,12 +217,20 @@ public class Snapshotter {
             let renderer = UIGraphicsImageRenderer(size: uiImage.size, format: format)
             let compositeImage = renderer.image { rendererContext in
 
-                // First draw the snaphot image into the context
+                // First draw the snapshot image into the context
                 let context = rendererContext.cgContext
+
+                // image needs to be flipped vertically
+                context.translateBy(x: 0, y: uiImage.size.height)
+                context.scaleBy(x: 1, y: -1)
 
                 if let cgImage = uiImage.cgImage {
                     context.draw(cgImage, in: rect)
                 }
+
+                // un-flip after adding the image
+                context.translateBy(x: 0, y: uiImage.size.height)
+                context.scaleBy(x: 1, y: -1)
 
                 if let overlayDescriptor = overlayDescriptor {
                     // Apply the overlay, if provided.
@@ -300,38 +308,35 @@ public class Snapshotter {
     }
 }
 
-extension Snapshotter {
-    /// Subscribes an observer to a list of events.
-    ///
-    /// `Snapshotter` holds a strong reference to `observer` while it is subscribed. To stop receiving
-    /// notifications, pass the same `observer` to `unsubscribe(_:events:)`.
-    ///
-    /// - Parameters:
-    ///   - observer: An object that will receive events of the types specified by `events`
-    ///   - events: Array of event types to deliver to `observer`
-    ///
-    /// - Note:
-    ///     Prefer `onNext(_:handler:)` and `onEvery(_:handler:)` to using this lower-level APIs
-    public func subscribe(_ observer: Observer, events: [String]) {
-        observable.subscribe(observer, events: events)
-    }
-
-    /// Unsubscribes an observer from a list of events.
-    ///
-    /// `Snapshotter` holds a strong reference to `observer` while it is subscribed. To stop receiving
-    /// notifications, pass the same `observer` to this method as was passed to
-    /// `subscribe(_:events:)`.
-    ///
-    /// - Parameters:
-    ///   - observer: The object to unsubscribe
-    ///   - events: Array of event types to unsubscribe from. Pass an
-    ///     empty array (the default) to unsubscribe from all events.
-    public func unsubscribe(_ observer: Observer, events: [String] = []) {
-        observable.unsubscribe(observer, events: events)
-    }
-}
+// MARK: - Snapshotter Event handling
 
 extension Snapshotter {
+    /// An error that has occurred while loading the Map. The `type` property defines what resource could
+    /// not be loaded and the `message` property will contain a descriptive error message.
+    /// In case of `source` or `tile` loading errors, `sourceID` or `tileID` will contain the identifier of the source failing.
+    public var onMapLoadingError: Signal<MapLoadingError> { events.signal(for: \.onMapLoadingError) }
+
+    /// The requested style has been fully loaded, including the style, specified sprite and sources' metadata.
+    ///
+    /// The style specified sprite would be marked as loaded even with sprite loading error (an error will be emitted via ``MapboxMap/onMapLoadingError``).
+    /// Sprite loading error is not fatal and we don't want it to block the map rendering, thus this event will still be emitted if style and sources are fully loaded.
+    public var onStyleLoaded: Signal<StyleLoaded> { events.signal(for: \.onStyleLoaded) }
+
+    /// The requested style data has been loaded. The `type` property defines what kind of style data has been loaded.
+    /// Event may be emitted synchronously, for example, when ``MapboxMap/loadStyleJSON(_:completion:)`` is used to load style.
+    ///
+    /// Based on an event data `type` property value, following use-cases may be implemented:
+    /// - `style`: Style is parsed, style layer properties could be read and modified, style layers and sources could be
+    /// added or removed before rendering is started.
+    /// - `sprite`: Style's sprite sheet is parsed and it is possible to add or update images.
+    /// - `sources`: All sources defined by the style are loaded and their properties could be read and updated if needed.
+    public var onStyleDataLoaded: Signal<StyleDataLoaded> { events.signal(for: \.onStyleDataLoaded) }
+
+    /// A style has a missing image. This event is emitted when the map renders visible tiles and
+    /// one of the required images is missing in the sprite sheet. Subscriber has to provide the missing image
+    /// by calling ``Style/addImage(_:id:sdf:contentInsets:)``.
+    public var onStyleImageMissing: Signal<StyleImageMissing> { events.signal(for: \.onStyleImageMissing) }
+
     /// Listen to a single occurrence of a Map event.
     ///
     /// This will observe the next (and only the next) event of the specified
@@ -348,9 +353,10 @@ extension Snapshotter {
     /// - Returns: A `Cancelable` object that you can use to stop listening for
     ///     the event. This is especially important if you have a retain cycle in
     ///     the handler.
+    @available(*, deprecated, message: "Use snapshotter.on<eventType>.observeNext instead.")
     @discardableResult
-    public func onNext<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable {
-        return observable.onNext(event: event, handler: handler)
+    public func onNext<Payload>(event: MapEventType<Payload>, handler: @escaping (Payload) -> Void) -> Cancelable {
+        events.onNext(event: event, handler: handler)
     }
 
     /// Listen to multiple occurrences of a Map event.
@@ -362,9 +368,10 @@ extension Snapshotter {
     /// - Returns: A `Cancelable` object that you can use to stop listening for
     ///     events. This is especially important if you have a retain cycle in
     ///     the handler.
+    @available(*, deprecated, message: "Use snapshotter.on<eventType>.observe instead.")
     @discardableResult
-    public func onEvery<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable {
-        return observable.onEvery(event: event, handler: handler)
+    public func onEvery<Payload>(event: MapEventType<Payload>, handler: @escaping (Payload) -> Void) -> Cancelable {
+        events.onEvery(event: event, handler: handler)
     }
 }
 
@@ -382,7 +389,7 @@ extension Snapshotter {
     ///
     /// - Parameter completion: Called once the request is complete
     public func clearData(completion: @escaping (Error?) -> Void) {
-        MapboxMap.clearData(for: options.resourceOptions, completion: completion)
+        MapboxMapsOptions.clearData(completion: completion)
     }
 
     // MARK: - Attribution
@@ -399,9 +406,8 @@ extension Snapshotter {
 
             let scale = image.scale
 
-            // Image from mbxImage is flipped vertically
             let scaledCropRect = CGRect(x: rect.origin.x * scale,
-                                        y: (image.size.height - rect.origin.y - rect.height) * scale,
+                                        y: rect.origin.y * scale,
                                         width: rect.width * scale,
                                         height: rect.height * scale)
 
@@ -426,7 +432,7 @@ extension Snapshotter {
                 ciImage = filter.outputImage!
             }
 
-            ciImage = ciImage.oriented(.downMirrored)
+            ciImage = ciImage.oriented(.up)
 
             let cicontext = CIContext(options: nil)
             blurredImage = cicontext.createCGImage(ciImage, from: extent)

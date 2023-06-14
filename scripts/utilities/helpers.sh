@@ -39,3 +39,27 @@ replace_regex_in_file() {
 
     "$replace_text_script_path" --old "$oldText"  --new "$newText" "$filepath"
 }
+
+repeat_command_until_it_fails() {
+    local command=$1
+    local max_attempts=$2
+    local sleep_time=$3
+
+    local attempt=1
+
+    while true; do
+        if [[ $attempt -gt $max_attempts ]]; then
+            echo "Command '$command' failed after $max_attempts attempts"
+            return 1
+        fi
+
+        if eval "$command"; then
+            echo "Command '$command' succeeded"
+            break
+        else
+            echo "Command '$command' failed"
+            attempt=$((attempt + 1))
+            sleep "$sleep_time"
+        fi
+    done
+}

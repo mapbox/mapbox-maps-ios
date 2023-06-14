@@ -1,6 +1,8 @@
 public protocol Source: Codable, StyleEncodable, StyleDecodable {
     /// Rendering type of this source.
     var type: SourceType { get }
+
+    var id: String { get }
 }
 
 public extension Source {

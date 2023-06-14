@@ -4,6 +4,7 @@ import CoreLocation
 
 final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     private lazy var route: LineString = {
         let routeURL = Bundle.main.url(forResource: "sf_airport_route", withExtension: "geojson")!
@@ -32,25 +33,25 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .styleLoaded) { [weak self] _ in
+        mapView.mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
 
             self.setupExample()
-        }
+        }.store(in: &cancelables)
     }
 
     private func setupExample() {
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: "route-source")
         source.data = .geometry(route.geometry)
 
-        try! mapView.mapboxMap.style.addSource(source, id: "route-source")
+        try! mapView.mapboxMap.addSource(source)
 
         var layer = LineLayer(id: "route-layer")
-        layer.source = "route-source"
+        layer.source = source.id
         layer.lineColor = .constant(StyleColor(UIColor.systemPink))
         layer.lineWidth = .constant(4)
 
-        try! mapView.mapboxMap.style.addLayer(layer)
+        try! mapView.mapboxMap.addLayer(layer)
 
         let options = ViewAnnotationOptions(
             geometry: Point(route.coordinates.first!),
@@ -65,12 +66,12 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        if mapView.mapboxMap.style.isLoaded {
+        if mapView.mapboxMap.isStyleLoaded {
             startAnimation()
         } else {
-            mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+            mapView.mapboxMap.onMapLoaded.observeNext { _ in
                 self.startAnimation()
-            }
+            }.store(in: &cancelables)
         }
     }
 

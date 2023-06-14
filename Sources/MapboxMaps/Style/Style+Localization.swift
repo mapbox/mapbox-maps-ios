@@ -1,7 +1,7 @@
 @_implementationOnly import MapboxCommon_Private
 
 /// Support for localization of labels
-extension Style {
+extension StyleManager {
 
     /// This function creates an expression that will localize the `textField` property of a `SymbolLayer`
     /// - Parameter locale: The`Locale` to update the map to

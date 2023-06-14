@@ -19,14 +19,13 @@ internal final class Puck2D: Puck {
                     .observe { [weak self] (location) in
                         self?.latestLocation = location
                         return true
-                    }
-                    .add(to: cancelables)
+                    }.erased.store(in: &cancelables)
                 if configuration.pulsing?.isEnabled == true {
                     displayLinkCoordinator?.add(self)
                 }
             } else {
                 displayLinkCoordinator?.remove(self)
-                cancelables.cancelAll()
+                cancelables.removeAll()
                 try? style.removeLayer(withId: Self.layerID)
                 try? style.removeImage(withId: Self.topImageId)
                 try? style.removeImage(withId: Self.bearingImageId)
@@ -37,7 +36,7 @@ internal final class Puck2D: Puck {
         }
     }
 
-    internal var puckBearingSource: PuckBearingSource = .heading {
+    internal var puckBearing: PuckBearing = .heading {
         didSet {
             updateLayer()
         }
@@ -59,7 +58,7 @@ internal final class Puck2D: Puck {
     private let style: StyleProtocol
     private let interpolatedLocationProducer: InterpolatedLocationProducerProtocol
     private let mapboxMap: MapboxMapProtocol
-    private let cancelables = CancelableContainer()
+    private var cancelables = Set<AnyCancelable>()
     private let timeProvider: TimeProvider
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
     // cache the encoded configuration.resolvedScale to avoid work at every location update
@@ -114,6 +113,7 @@ internal final class Puck2D: Puck {
             content: nil)
     }
 
+    // swiftlint:disable:next function_body_length
     private func updateLayer() {
         guard isActive, let location = latestLocation else {
             return
@@ -153,7 +153,7 @@ internal final class Puck2D: Puck {
             }
 
             if puckBearingEnabled {
-                switch puckBearingSource {
+                switch puckBearing {
                 case .heading:
                     newLayerPaintProperties[.bearing] = location.heading ?? 0
                 case .course:
@@ -190,25 +190,25 @@ internal final class Puck2D: Puck {
                 minPuckRadiusInMeters,
                 cutoffZoomLevel + 1,
                 location.horizontalAccuracy
-            ]
+            ] as [Any]
             newLayerPaintProperties[.accuracyRadiusColor] = [
                 Expression.Operator.step.rawValue,
                 [Expression.Operator.zoom.rawValue],
                 StyleColor(UIColor.clear).rgbaString,
                 cutoffZoomLevel,
-                StyleColor(configuration.accuracyRingColor).rgbaString]
+                StyleColor(configuration.accuracyRingColor).rgbaString] as [Any]
             newLayerPaintProperties[.accuracyRadiusBorderColor] = [
                 Expression.Operator.step.rawValue,
                 [Expression.Operator.zoom.rawValue],
                 StyleColor(UIColor.clear).rgbaString,
                 cutoffZoomLevel,
-                StyleColor(configuration.accuracyRingBorderColor).rgbaString]
+                StyleColor(configuration.accuracyRingBorderColor).rgbaString] as [Any]
             newLayerPaintProperties[.emphasisCircleColor] = [
                 Expression.Operator.step.rawValue,
                 [Expression.Operator.zoom.rawValue],
                 StyleColor(configuration.accuracyRingColor).rgbaString,
                 cutoffZoomLevel,
-                StyleColor(UIColor.clear).rgbaString]
+                StyleColor(UIColor.clear).rgbaString] as [Any]
             newLayerPaintProperties[.emphasisCircleRadius] = minPuckRadiusInPoints
         }
 
@@ -231,7 +231,7 @@ internal final class Puck2D: Puck {
         // Construct the properties dictionary to reset any properties that are no longer used
         let unusedPropertyKeys = previouslySetLayerPropertyKeys.subtracting(newLayerProperties.keys)
         let unusedProperties = Dictionary(uniqueKeysWithValues: unusedPropertyKeys.map { (key) -> (String, Any) in
-            (key, Style.layerPropertyDefaultValue(for: .locationIndicator, property: key).value)
+            (key, StyleManager.layerPropertyDefaultValue(for: .locationIndicator, property: key).value)
         })
         // Merge the new and unused properties
         var allLayerProperties = newLayerProperties.merging(
@@ -273,7 +273,7 @@ internal final class Puck2D: Puck {
                 layerProperties[LocationIndicatorLayer.PaintCodingKeys.accuracyRadius.rawValue] = location.horizontalAccuracy
             }
             if puckBearingEnabled {
-                switch puckBearingSource {
+                switch puckBearing {
                 case .heading:
                     layerProperties[LocationIndicatorLayer.PaintCodingKeys.bearing.rawValue] = location.heading ?? 0
                 case .course:

@@ -2,7 +2,6 @@ import UIKit
 import CoreLocation
 import MapboxMaps
 
-@objc(VoiceOverAccessibilityExample)
 final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
     struct MyData {
         var id: Int
@@ -37,6 +36,8 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
             accessibilityElementsDidChange()
         }
     }
+
+    private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,13 +88,13 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
             object: nil)
 
         // Observe events that require recomputing accessibility elements
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             self?.updateAllAccessibilityElements {
                 self?.finish()
             }
-        }
+        }.store(in: &cancelables)
         mapView.gestures.delegate = self
-        mapView.location.addLocationConsumer(newConsumer: self)
+        mapView.location.addLocationConsumer(self)
     }
 
     @objc private func voiceOverStatusDidChange() {

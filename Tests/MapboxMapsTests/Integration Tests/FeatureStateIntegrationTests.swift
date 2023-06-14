@@ -4,18 +4,15 @@ import XCTest
 internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
 
     internal func testSetFeatureState() {
-        style?.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
         let featureStateExpectation = XCTestExpectation(description: "Wait for feature state map to be updated and returned.")
         featureStateExpectation.assertForOverFulfill = true
 
         didFinishLoadingStyle = { mapView in
 
             do {
-                try mapView.mapboxMap.style.addSource(
-                    self.makeGeoJSONSource(),
-                    id: "test-source")
-                try mapView.mapboxMap.style.addLayer(
-                    self.makeLayer())
+                try mapView.mapboxMap.addSource(self.makeGeoJSONSource())
+                try mapView.mapboxMap.addLayer(self.makeLayer())
 
             } catch {
                 XCTFail("Failed to add geojson source / layer due to error: \(error)")
@@ -23,10 +20,10 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
         }
 
         didBecomeIdle = { mapView in
-            mapView.mapboxMap.setFeatureState(sourceId: "test-source", featureId: "0", state: ["testKey": true]) { result in
+            mapView.mapboxMap.setFeatureState(sourceId: .testSource, featureId: "0", state: ["testKey": true]) { result in
                 switch result {
                 case .success:
-                    mapView.mapboxMap.getFeatureState(sourceId: "test-source", featureId: "0") { result in
+                    mapView.mapboxMap.getFeatureState(sourceId: .testSource, featureId: "0") { result in
                         switch result {
                         case .success(let map):
                             XCTAssertEqual(map["testKey"] as? Bool, true)
@@ -45,40 +42,37 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
     }
 
     internal func testRemoveFeatureState() {
-        style?.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
         let featureStateRemovedExpectation = XCTestExpectation(description: "Wait for feature state map to be updated and removed.")
         let featureStateKeptExpectation = XCTestExpectation(description: "Wait for feature state map to be kept.")
 
         didFinishLoadingStyle = { mapView in
             do {
-                try mapView.mapboxMap.style.addSource(
-                    self.makeGeoJSONSource(),
-                    id: "test-source")
-                try mapView.mapboxMap.style.addLayer(
-                    self.makeLayer())
+                try mapView.mapboxMap.addSource(self.makeGeoJSONSource())
+                try mapView.mapboxMap.addLayer(self.makeLayer())
             } catch {
                 XCTFail("Failed to add geojson source / layer due to error: \(error)")
             }
         }
 
         didBecomeIdle = { mapView in
-            mapView.mapboxMap.setFeatureState(sourceId: "test-source", featureId: "0", state: ["testKey": true]) { result in
+            mapView.mapboxMap.setFeatureState(sourceId: .testSource, featureId: "0", state: ["testKey": true]) { result in
                 if case .failure(let error) = result {
                     XCTFail("Could not retrieve feature state: \(error)")
                 }
             }
 
-            mapView.mapboxMap.setFeatureState(sourceId: "test-source", featureId: "1", state: ["testKey": true]) { result in
+            mapView.mapboxMap.setFeatureState(sourceId: .testSource, featureId: "1", state: ["testKey": true]) { result in
                 if case .failure(let error) = result {
                     XCTFail("Could not retrieve feature state: \(error)")
                 }
             }
 
-            mapView.mapboxMap.removeFeatureState(sourceId: "test-source", featureId: "0") { result in
+            mapView.mapboxMap.removeFeatureState(sourceId: .testSource, featureId: "0") { result in
                 switch result {
                 case .success:
                     mapView.mapboxMap.getFeatureState(
-                        sourceId: "test-source",
+                        sourceId: .testSource,
                         featureId: "0") { result in
 
                             switch result {
@@ -91,7 +85,7 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
                         }
 
                     // Removal should only affect the feature with the passed featureId
-                    mapView.mapboxMap.getFeatureState(sourceId: "test-source", featureId: "1") { result in
+                    mapView.mapboxMap.getFeatureState(sourceId: .testSource, featureId: "1") { result in
                         switch result {
                         case .success(let map):
                             XCTAssertEqual(map["testKey"] as? Bool, true)
@@ -110,16 +104,15 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
     }
 
     internal func testResetFeatureStates() {
-        style?.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
         let featureStateRemovedExpectation = XCTestExpectation(description: "Wait for feature state map to be updated and removed.")
         featureStateRemovedExpectation.expectedFulfillmentCount = 2
 
         didFinishLoadingStyle = { mapView in
             do {
-                try mapView.mapboxMap.style.addSource(
-                    self.makeGeoJSONSource(),
-                    id: "test-source")
-                try mapView.mapboxMap.style.addLayer(
+                try mapView.mapboxMap.addSource(
+                    self.makeGeoJSONSource())
+                try mapView.mapboxMap.addLayer(
                     self.makeLayer())
             } catch {
                 XCTFail("Failed to add geojson source / layer due to error: \(error)")
@@ -127,23 +120,23 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
         }
 
         didBecomeIdle = { mapView in
-            mapView.mapboxMap.setFeatureState(sourceId: "test-source", featureId: "0", state: ["testKey": true]) { result in
+            mapView.mapboxMap.setFeatureState(sourceId: .testSource, featureId: "0", state: ["testKey": true]) { result in
                 if case .failure(let error) = result {
                     XCTFail("Could not retrieve feature state: \(error)")
                 }
             }
 
-            mapView.mapboxMap.setFeatureState(sourceId: "test-source", featureId: "1", state: ["testKey": true]) { result in
+            mapView.mapboxMap.setFeatureState(sourceId: .testSource, featureId: "1", state: ["testKey": true]) { result in
                 if case .failure(let error) = result {
                     XCTFail("Could not retrieve feature state: \(error)")
                 }
             }
 
-            mapView.mapboxMap.resetFeatureStates(sourceId: "test-source") { result in
+            mapView.mapboxMap.resetFeatureStates(sourceId: .testSource) { result in
                 switch result {
                 case .success:
                     // Reset should remove feature states of all features
-                    mapView.mapboxMap.getFeatureState(sourceId: "test-source", featureId: "0") { result in
+                    mapView.mapboxMap.getFeatureState(sourceId: .testSource, featureId: "0") { result in
                         switch result {
                         case .success(let map):
                             XCTAssert(map.isEmpty)
@@ -153,7 +146,7 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
                         }
                     }
 
-                    mapView.mapboxMap.getFeatureState(sourceId: "test-source", featureId: "1") { result in
+                    mapView.mapboxMap.getFeatureState(sourceId: .testSource, featureId: "1") { result in
                         switch result {
                         case .success(let map):
                             XCTAssert(map.isEmpty)
@@ -180,7 +173,7 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
         let point = Point(coord)
         let feature = Feature(geometry: point)
 
-        var geojsonSource = GeoJSONSource()
+        var geojsonSource = GeoJSONSource(id: .testSource)
         geojsonSource.generateId = true
         geojsonSource.data = .feature(feature)
 
@@ -189,9 +182,13 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
 
     fileprivate func makeLayer() -> SymbolLayer {
         var symbolLayer = SymbolLayer(id: "test-layer")
-        symbolLayer.source = "test-source"
+        symbolLayer.source = .testSource
         symbolLayer.textField = .constant("test")
 
         return symbolLayer
     }
+}
+
+private extension String {
+    static let testSource = "test-source"
 }

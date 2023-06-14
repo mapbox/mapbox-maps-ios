@@ -4,7 +4,6 @@ import MapboxMaps
 
 /// An example showcasing of adding a resizable image to the style
 /// and demonstrating how the image is stretched
-@objc(ResizableImageExample)
 final class ResizableImageExample: UIViewController, ExampleProtocol {
     private static let center = CLLocationCoordinate2DMake(55.70651, 12.554729)
     private static let layerId = "layer_id"
@@ -16,7 +15,7 @@ final class ResizableImageExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         return mapView
     }()
-    private var style: Style { mapView.mapboxMap.style }
+    private var cancelables = Set<AnyCancelable>()
 
     private var appendTextCounter = 1
     private var symbolLayer: SymbolLayer!
@@ -31,10 +30,10 @@ final class ResizableImageExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             self?.setupExample()
             self?.startUpdatingIconText()
-        }
+        }.store(in: &cancelables)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -59,13 +58,13 @@ final class ResizableImageExample: UIViewController, ExampleProtocol {
         // create an image of a circle and specify the corners that should remain unchanged
         let image = UIImage(named: "circle")!
             .resizableImage(withCapInsets: UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12))
-        try? style.addImage(image, id: "circle")
+        try? mapView.mapboxMap.addImage(image, id: "circle")
 
         // add a GeoJSON source with a single point to the style
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: geoJSONSourceId)
         source.data = .feature(Feature(geometry: Point(Self.center)))
 
-        try? style.addSource(source, id: geoJSONSourceId)
+        try? mapView.mapboxMap.addSource(source)
 
         // add a symbol layer with the resizable icon image
         symbolLayer = SymbolLayer(id: Self.layerId)
@@ -76,7 +75,7 @@ final class ResizableImageExample: UIViewController, ExampleProtocol {
         symbolLayer.iconTextFitPadding = .constant([10, 10, 10, 10])
         symbolLayer.textField = .constant(Self.textBase)
 
-        try? style.addLayer(symbolLayer, layerPosition: .default)
+        try? mapView.mapboxMap.addLayer(symbolLayer, layerPosition: .default)
     }
 
     private func startUpdatingIconText() {
@@ -87,11 +86,11 @@ final class ResizableImageExample: UIViewController, ExampleProtocol {
 
     // Append some text to the layer's textField, stretching the icon image in both X and Y axes
     private func updateIconText() {
-        guard style.isLoaded else {
+        guard mapView.mapboxMap.isStyleLoaded else {
             return
         }
 
-        let layer = try? style.layer(withId: Self.layerId, type: SymbolLayer.self)
+        let layer = try? mapView.mapboxMap.layer(withId: Self.layerId, type: SymbolLayer.self)
 
         guard case .expression(let expression) = layer?.textField else {
             return
@@ -105,7 +104,7 @@ final class ResizableImageExample: UIViewController, ExampleProtocol {
             return
         }
 
-        try? style.updateLayer(withId: Self.layerId, type: SymbolLayer.self) { layer in
+        try? mapView.mapboxMap.updateLayer(withId: Self.layerId, type: SymbolLayer.self) { layer in
             layer.textField = .constant(textLabel)
         }
     }

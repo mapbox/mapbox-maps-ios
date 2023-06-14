@@ -4,18 +4,19 @@ import MapboxMaps
 
 class ViewController: UIViewController {
     let mapView = MapView(frame: .zero)
+    private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.addSubview(mapView)
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { _ in
             self.showAlert(text: "Loaded")
-        }
+        }.store(in: &cancelables)
 
-        mapView.mapboxMap.onNext(event: .mapLoadingError) { _ in
+        mapView.mapboxMap.onMapLoadingError.observeNext { _ in
             self.showAlert(text: "Failed")
-        }
+        }.store(in: &cancelables)
     }
 
     func showAlert(text: String) {

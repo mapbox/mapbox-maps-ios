@@ -1,11 +1,10 @@
 import UIKit
 import MapboxMaps
 
-@objc(ColorExpressionExample)
-
 public class ColorExpressionExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -21,9 +20,9 @@ public class ColorExpressionExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allows the view controller to receive information about map events.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             self?.setupExample()
-        }
+        }.store(in: &cancelables)
 
     }
 
@@ -55,7 +54,7 @@ public class ColorExpressionExample: UIViewController, ExampleProtocol {
 
         if let data = try? JSONEncoder().encode(exp.self),
            let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []) {
-            try! mapView.mapboxMap.style.setLayerProperty(for: "land",
+            try! mapView.mapboxMap.setLayerProperty(for: "land",
                                                           property: "background-color",
                                                           value: jsonObject)
         }

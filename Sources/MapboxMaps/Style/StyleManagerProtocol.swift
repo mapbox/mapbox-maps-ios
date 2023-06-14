@@ -1,11 +1,8 @@
 import Foundation
-import MapboxCoreMaps
 @_implementationOnly import MapboxCommon_Private
 @_implementationOnly import MapboxCoreMaps_Private
 
 internal protocol StyleManagerProtocol {
-
-    func asStyleManager() -> StyleManager
 
     func getStyleURI() -> String
     func setStyleURIForUri(_ uri: String)
@@ -100,6 +97,12 @@ internal protocol StyleManagerProtocol {
         _ property: String,
         value: Any) -> Expected<NSNull, NSString>
 
+    // 3D Light
+    func getStyleLights() -> [StyleObjectInfo]
+    func setStyleLightsForLights(_ lights: Any) -> Expected<NSNull, NSString>
+    func getStyleLightProperty(forId id: String, property: String) -> StylePropertyValue
+    func setStyleLightPropertyForId(_ id: String, property: String, value: Any) -> Expected<NSNull, NSString>
+
     @discardableResult
     func setStyleTerrainForProperties(_ properties: Any) -> Expected<NSNull, NSString>
 
@@ -112,6 +115,8 @@ internal protocol StyleManagerProtocol {
     func setStyleProjectionPropertyForProperty(
         _ property: String,
         value: Any) -> Expected<NSNull, NSString>
+
+    func addStyleModel(forModelId modelId: String, modelUri: String) -> Expected<NSNull, NSString>
 
     // swiftlint:disable:next function_parameter_count
     func addStyleImage(
@@ -144,21 +149,17 @@ internal protocol StyleManagerProtocol {
 
     func __setStyleGeoJSONSourceDataForSourceId(
         _ sourceId: String,
-        data: MapboxCoreMaps.GeoJSONSourceData
-    ) -> Expected<NSNull, NSString>
-
-    func __setStyleGeoJSONSourceDataForSourceId(
-        _ sourceId: String,
         dataId: String,
         data: MapboxCoreMaps.GeoJSONSourceData
     ) -> Expected<NSNull, NSString>
+
+    func setStyleAtmosphereForProperties(_ properties: Any) -> Expected<NSNull, NSString>
+
+    func setStyleAtmospherePropertyForProperty(_ property: String, value: Any) -> Expected<NSNull, NSString>
+
+    func getStyleAtmosphereProperty(forProperty: String) -> StylePropertyValue
 }
 
 // MARK: Conformance
 
-extension StyleManager: StyleManagerProtocol {
-
-    func asStyleManager() -> StyleManager {
-        return self
-    }
-}
+extension MapboxCoreMaps.StyleManager: StyleManagerProtocol {}

@@ -83,12 +83,11 @@ final class MockStyle: StyleProtocol {
 
     struct AddSourceParams {
         var source: Source
-        var id: String
         var dataId: String?
     }
     let addSourceStub = Stub<AddSourceParams, Void>()
-    func addSource(_ source: Source, id: String, dataId: String? = nil) throws {
-        addSourceStub.call(with: .init(source: source, id: id, dataId: dataId))
+    func addSource(_ source: Source, dataId: String? = nil) throws {
+        addSourceStub.call(with: .init(source: source, dataId: dataId))
     }
 
     let removeSourceStub = Stub<String, Void>()
@@ -119,7 +118,8 @@ final class MockStyle: StyleProtocol {
         var content: ImageContent?
     }
     let addImageStub = Stub<AddImageParams, Void>()
-    //swiftlint:disable function_parameter_count
+
+    // swiftlint:disable:next function_parameter_count
     func addImage(_ image: UIImage,
                   id: String,
                   sdf: Bool,
@@ -157,7 +157,7 @@ final class MockStyle: StyleProtocol {
         let dataId: String?
     }
     let updateGeoJSONSourceStub = Stub<UpdateGeoJSONSourceParams, Void>()
-    func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject, dataId: String? = nil) throws {
+    func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject, dataId: String? = nil) {
         updateGeoJSONSourceStub.call(with: UpdateGeoJSONSourceParams(id: id, geojson: geoJSON, dataId: dataId))
     }
 }

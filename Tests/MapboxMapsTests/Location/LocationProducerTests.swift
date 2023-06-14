@@ -208,21 +208,18 @@ final class LocationProducerTests: XCTestCase {
 
         let consumers = locationProducer.consumers
 
-        XCTAssertTrue(consumers.contains(consumer))
+        XCTAssertTrue(consumers.contains(where: { $0 === consumer }))
 
         locationProducer.remove(consumer)
 
         let consumers2 = locationProducer.consumers
 
-        XCTAssertTrue(consumers.contains(consumer))
-        XCTAssertFalse(consumers2.contains(consumer))
+        XCTAssertTrue(consumers.contains(where: { $0 === consumer }))
+        XCTAssertFalse(consumers2.contains(where: { $0 === consumer }))
 
         locationProducer.add(consumer)
 
-        // this just removes from the returned copy
-        locationProducer.consumers.remove(consumer)
-
-        XCTAssertTrue(locationProducer.consumers.contains(consumer))
+        XCTAssertTrue(locationProducer.consumers.contains(where: { $0 === consumer }))
     }
 
     func testSetLocationProviderWithNoConsumers() throws {

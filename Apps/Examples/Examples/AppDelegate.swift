@@ -1,11 +1,10 @@
 import UIKit
+import Fingertips
 
 @main
-//swiftlint:disable explicit_top_level_acl explicit_acl
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
     lazy var window: UIWindow? = {
-        return UIWindow(frame: UIScreen.main.bounds)
+        return FingerTipWindow(frame: UIScreen.main.bounds)
     }()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -27,14 +26,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         return true
     }
-
-    @available(iOS 13.0, *)
-    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-        let config = UISceneConfiguration(name: "Default configuration", sessionRole: connectingSceneSession.role)
-        config.delegateClass = SceneDelegate.self
-        config.sceneClass = UIWindowScene.self
-        return config
-    }
 }
 
 @available(iOS 13.0, *)
@@ -44,7 +35,7 @@ final class SceneDelegate: NSObject, UISceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = scene as? UIWindowScene else { return }
 
-        let window = UIWindow(windowScene: windowScene)
+        let window = FingerTipWindow(windowScene: windowScene)
 
         let examplesTableViewController = ExampleTableViewController()
         let navigationController = UINavigationController(rootViewController: examplesTableViewController)

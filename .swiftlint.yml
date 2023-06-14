@@ -9,7 +9,6 @@ disabled_rules:
   - comment_spacing
   - computed_accessors_order
   - force_try
-  - function_body_length
   - identifier_name
   - line_length
   - shorthand_operator

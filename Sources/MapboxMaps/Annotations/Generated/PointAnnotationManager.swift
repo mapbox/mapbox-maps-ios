@@ -108,8 +108,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
         do {
             // Add the source with empty `data` property
-            var source = GeoJSONSource()
-            source.data = .empty
+            var source = GeoJSONSource(id: sourceId)
 
             // Set cluster options and create clusters if clustering is enabled
             if let clusterOptions = clusterOptions {
@@ -119,7 +118,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
                 source.clusterMaxZoom = clusterOptions.clusterMaxZoom
             }
 
-            try style.addSource(source, id: sourceId)
+            try style.addSource(source)
 
             if let clusterOptions = clusterOptions {
                 createClusterLayers(clusterOptions: clusterOptions)
@@ -255,7 +254,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         let dataDrivenProperties = Dictionary(
             uniqueKeysWithValues: dataDrivenLayerPropertyKeys
                 .map { (key) -> (String, Any) in
-                    (key, ["get", key, ["get", "layerProperties"]])
+                    (key, ["get", key, ["get", "layerProperties"]] as [Any])
                 })
 
         // Merge the common layer properties
@@ -264,7 +263,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         // Construct the properties dictionary to reset any properties that are no longer used
         let unusedPropertyKeys = previouslySetLayerPropertyKeys.subtracting(newLayerProperties.keys)
         let unusedProperties = Dictionary(uniqueKeysWithValues: unusedPropertyKeys.map { (key) -> (String, Any) in
-            (key, Style.layerPropertyDefaultValue(for: .symbol, property: key).value)
+            (key, StyleManager.layerPropertyDefaultValue(for: .symbol, property: key).value)
         })
 
         // Store the new set of property keys
@@ -283,14 +282,8 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
 
         // build and update the source data
-        do {
-            let featureCollection = FeatureCollection(features: mainAnnotations.values.map(\.feature))
-            try style.updateGeoJSONSource(withId: sourceId, geoJSON: .featureCollection(featureCollection))
-        } catch {
-            Log.error(
-                forMessage: "Could not update annotations in PointAnnotationManager due to error: \(error)",
-                category: "Annotations")
-        }
+        let featureCollection = FeatureCollection(features: mainAnnotations.values.map(\.feature))
+        style.updateGeoJSONSource(withId: sourceId, geoJSON: .featureCollection(featureCollection))
     }
 
     private func syncDragSourceIfNeeded() {
@@ -374,26 +367,6 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    /// Scales the icon to fit around the associated text.
-    public var iconTextFit: IconTextFit? {
-        get {
-            return layerProperties["icon-text-fit"].flatMap { $0 as? String }.flatMap(IconTextFit.init(rawValue:))
-        }
-        set {
-            layerProperties["icon-text-fit"] = newValue?.rawValue
-        }
-    }
-
-    /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
-    public var iconTextFitPadding: [Double]? {
-        get {
-            return layerProperties["icon-text-fit-padding"] as? [Double]
-        }
-        set {
-            layerProperties["icon-text-fit-padding"] = newValue
-        }
-    }
-
     /// If true, the symbols will not cross tile edges to avoid mutual collisions. Recommended in layers that don't have enough padding in the vector tile to prevent collisions, or if it is a point symbol layer placed after a line symbol layer. When using a client that supports global collision detection, like Mapbox GL JS version 0.42.0 or greater, enabling this property is not needed to prevent clipped labels at tile boundaries.
     public var symbolAvoidEdges: Bool? {
         get {
@@ -450,7 +423,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
             return (layerProperties["text-font"] as? [Any])?[1] as? [String]
         }
         set {
-            layerProperties["text-font"] = newValue.map { ["literal", $0] }
+            layerProperties["text-font"] = newValue.map { ["literal", $0] as [Any] }
         }
     }
 
@@ -584,6 +557,28 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
     }
 
+    /// Scales the icon to fit around the associated text.
+    @available(*, deprecated, message: "icon-text-fit property is now data driven, use `PointAnnotation.iconTextFit` instead.")
+    public var iconTextFit: IconTextFit? {
+        get {
+            return layerProperties["icon-text-fit"].flatMap { $0 as? String }.flatMap(IconTextFit.init(rawValue:))
+        }
+        set {
+            layerProperties["icon-text-fit"] = newValue?.rawValue
+        }
+    }
+
+    /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
+    @available(*, deprecated, message: "icon-text-fit-padding property is now data driven, use `PointAnnotation.iconTextFitPadding` instead.")
+    public var iconTextFitPadding: [Double]? {
+        get {
+            return layerProperties["icon-text-fit-padding"] as? [Double]
+        }
+        set {
+            layerProperties["icon-text-fit-padding"] = newValue
+        }
+    }
+
     // MARK: - User interaction handling
 
     /// Returns the first annotation matching the set of given `featureIdentifiers`.
@@ -620,14 +615,10 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     }
 
     private func updateDragSource() {
-        do {
-            if let annotationBeingDragged = annotationBeingDragged {
-                draggedAnnotations[annotationBeingDragged.id] = annotationBeingDragged
-            }
-            try style.updateGeoJSONSource(withId: dragSourceId, geoJSON: .featureCollection(.init(features: draggedAnnotations.values.map(\.feature))))
-        } catch {
-            Log.error(forMessage: "Failed to update drag source. Error: \(error)")
+        if let annotationBeingDragged = annotationBeingDragged {
+            draggedAnnotations[annotationBeingDragged.id] = annotationBeingDragged
         }
+        style.updateGeoJSONSource(withId: dragSourceId, geoJSON: .featureCollection(.init(features: draggedAnnotations.values.map(\.feature))))
     }
 
     private func updateDragLayer() {
@@ -661,9 +652,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
         do {
             if !style.sourceExists(withId: dragSourceId) {
-                var dragSource = GeoJSONSource()
-                dragSource.data = .empty
-                try style.addSource(dragSource, id: dragSourceId)
+                try style.addSource(GeoJSONSource(id: dragSourceId))
             }
 
             annotationBeingDragged = annotation

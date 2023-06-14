@@ -5,7 +5,6 @@ import MapboxMaps
 #if DEBUG
 
 @available(*, deprecated)
-@objc(OfflineRegionManagerExample)
 final class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
 
     private var mapView: MapView!
@@ -18,6 +17,7 @@ final class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
         latitude: 60.17195694011002,
         longitude: 24.945389069265598)
     private let zoom: CGFloat = 16
+    private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,13 +46,13 @@ final class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
             progressView.rightAnchor.constraint(equalTo: mapView.rightAnchor, constant: -20),
         ])
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             self?.setupExample()
-        }
+        }.store(in: &cancelables)
     }
 
     private func setupExample() {
-        let uriString = mapView.mapboxMap.style.uri!.rawValue
+        let uriString = mapView.mapboxMap.styleURI!.rawValue
         let offlineRegionDef = OfflineRegionGeometryDefinition(
             styleURL: uriString,
             geometry: .point(Point(center)),
@@ -62,7 +62,7 @@ final class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
             glyphsRasterizationMode: .noGlyphsRasterizedLocally)
 
         // Please note: this uses a deprecated API and will be removed in the future.
-        offlineManager = OfflineRegionManager(resourceOptions: resourceOptions())
+        offlineManager = OfflineRegionManager()
 
         offlineManager.createOfflineRegion(for: offlineRegionDef) { [weak self] result in
             switch result {
@@ -85,7 +85,7 @@ final class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
 
             let sentences = [
                 "Downloaded \(status.completedResourceCount)/\(status.requiredResourceCount) resources and \(status.completedResourceSize) bytes.",
-                "Required resource count is \(status.isRequiredResourceCountIsPrecise ? "precise" : "a lower bound").",
+                "Required resource count is \(status.requiredResourceCountIsPrecise ? "precise" : "a lower bound").",
                 "Download state is \(status.downloadState == .active ? "active" : "inactive").",
             ]
             print(sentences.joined(separator: " "))
@@ -94,7 +94,7 @@ final class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
                 print("Download complete.")
 
                 // A download that was completely successful should meet the following criteria:
-                if status.isRequiredResourceCountIsPrecise, status.completedResourceCount == status.requiredResourceCount {
+                if status.requiredResourceCountIsPrecise, status.completedResourceCount == status.requiredResourceCount {
                     print("Success")
                 } else {
                     print("Some resources failed to download. Resources that did download will be available offline.")
@@ -127,9 +127,13 @@ final class OfflineRegionExampleObserver: OfflineRegionObserver {
         statusChanged(status)
     }
 
-    func responseError(forError error: ResponseError) {
+    func errorOccurred(forError error: OfflineRegionError) {
         // Some errors are considered recoverable and will be retried
-        print("Offline resource download error: \(error.reason), \(error.message)")
+        if error.isFatal {
+            print("Offline resource download fatal error: The region cannot proceed downloading of any resources and it will be put to inactive state.")
+        } else {
+            print("Offline resource download error: \(error.type), \(error.message)")
+        }
     }
 
     func mapboxTileCountLimitExceeded(forLimit limit: UInt64) {

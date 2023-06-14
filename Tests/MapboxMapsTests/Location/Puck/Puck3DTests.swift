@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class Puck3DTests: XCTestCase {
 
@@ -33,7 +33,7 @@ final class Puck3DTests: XCTestCase {
 
     func testDefaultPropertyValues() {
         XCTAssertFalse(puck3D.isActive)
-        XCTAssertEqual(puck3D.puckBearingSource, .heading)
+        XCTAssertEqual(puck3D.puckBearing, .heading)
         XCTAssertEqual(puck3D.puckBearingEnabled, true)
     }
 
@@ -106,7 +106,7 @@ final class Puck3DTests: XCTestCase {
         let actualSource = try XCTUnwrap(style.addSourceStub.invocations.first?.parameters.source as? ModelSource)
         XCTAssertEqual(actualSource.type, .model)
         XCTAssertEqual(actualSource.models, ["puck-model": expectedModel])
-        XCTAssertEqual(style.addSourceStub.invocations.first?.parameters.id, "puck-model-source")
+        XCTAssertEqual(style.addSourceStub.invocations.first?.parameters.source.id, "puck-model-source")
 
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 1)
@@ -128,7 +128,7 @@ final class Puck3DTests: XCTestCase {
         location.heading = heading
         interpolatedLocationProducer.location = location
         style.sourceExistsStub.defaultReturnValue = false
-        puck3D.puckBearingSource = .heading
+        puck3D.puckBearing = .heading
 
         puck3D.isActive = true
 
@@ -148,7 +148,7 @@ final class Puck3DTests: XCTestCase {
         location.course = .random(in: 0..<360)
         interpolatedLocationProducer.location = location
         style.sourceExistsStub.defaultReturnValue = false
-        puck3D.puckBearingSource = .course
+        puck3D.puckBearing = .course
 
         puck3D.isActive = true
 
@@ -169,7 +169,7 @@ final class Puck3DTests: XCTestCase {
         location.heading = heading
         interpolatedLocationProducer.location = location
         style.sourceExistsStub.defaultReturnValue = false
-        puck3D.puckBearingSource = .heading
+        puck3D.puckBearing = .heading
         puck3D.puckBearingEnabled = false
         puck3D.isActive = true
 
@@ -188,7 +188,7 @@ final class Puck3DTests: XCTestCase {
         location.course = .random(in: 0..<360)
         interpolatedLocationProducer.location = location
         style.sourceExistsStub.defaultReturnValue = false
-        puck3D.puckBearingSource = .course
+        puck3D.puckBearing = .course
         puck3D.puckBearingEnabled = false
         puck3D.isActive = true
 
@@ -260,7 +260,7 @@ final class Puck3DTests: XCTestCase {
             location.coordinate.longitude,
             location.coordinate.latitude]
         expectedModel.orientation = [0, 0, 0]
-        var expectedSource = ModelSource()
+        var expectedSource = ModelSource(id: "puck-model-source")
         expectedSource.models = ["puck-model": expectedModel]
         XCTAssertEqual(style.addSourceStub.invocations.count, 0)
         XCTAssertEqual(style.setSourcePropertiesStub.invocations.count, 1)
@@ -274,20 +274,20 @@ final class Puck3DTests: XCTestCase {
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 0)
     }
 
-    func testSettingPuckBearingSourceWhenInactive() {
+    func testSettingPuckBearingWhenInactive() {
         interpolatedLocationProducer.location = .random()
         style.sourceExistsStub.defaultReturnValue = false
         style.layerExistsStub.defaultReturnValue = false
         puck3D.isActive = false
 
-        puck3D.puckBearingSource = [.heading, .course].randomElement()!
+        puck3D.puckBearing = [.heading, .course].randomElement()!
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
     }
 
-    func testSettingPuckBearingSourceWhenActive() {
+    func testSettingPuckBearingWhenActive() {
         interpolatedLocationProducer.location = .random()
         puck3D.isActive = true
         style.sourceExistsStub.defaultReturnValue = true
@@ -296,7 +296,7 @@ final class Puck3DTests: XCTestCase {
         style.setSourcePropertiesStub.reset()
         style.addPersistentLayerWithPropertiesStub.reset()
 
-        puck3D.puckBearingSource = [.heading, .course].randomElement()!
+        puck3D.puckBearing = [.heading, .course].randomElement()!
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 0)
         XCTAssertEqual(style.setSourcePropertiesStub.invocations.count, 1)

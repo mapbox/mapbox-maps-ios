@@ -165,7 +165,7 @@ public struct Puck3DConfiguration: Equatable {
 }
 
 extension UIImage {
-    static let bearingImage = Provider {
+    static let bearingImage = Ref {
         makeBearingImage(size: CGSize(width: 22, height: 22))
     }.weaklyCached()
 

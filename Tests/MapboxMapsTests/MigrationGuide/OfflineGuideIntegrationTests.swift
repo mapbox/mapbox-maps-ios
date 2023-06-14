@@ -11,22 +11,12 @@ class OfflineGuideIntegrationTests: XCTestCase {
 
     var tileStorePathURL: URL!
     var tileStore: TileStore!
-    var accessToken: String!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
 
-        do {
-            accessToken = try mapboxAccessToken()
-        } catch {
-            XCTFail("Mapbox access token not found")
-            return
-        }
-
         tileStorePathURL = try temporaryCacheDirectory()
         tileStore = TileStore.shared(for: tileStorePathURL)
-
-        tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken!)
     }
 
     override func tearDownWithError() throws {
@@ -49,18 +39,13 @@ class OfflineGuideIntegrationTests: XCTestCase {
     // Test TileRegionLoadOptions
     func testDefineATileRegion() throws {
         //-->
-        // When providing a `TileStore` to `ResourceOptions`, you must ensure that
-        // the `TileStore` is correctly initialized using `setOptionForKey(_:value:)`.
-        // This includes providing an access token, if you are not using a default
-        // from the application's Info.plist
-        tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken!)
 
-        let offlineManager = OfflineManager(resourceOptions: ResourceOptions(accessToken: accessToken,
-                                                                             dataPathURL: tileStorePathURL,
-                                                                             tileStore: tileStore))
+        MapboxMapsOptions.dataPath = tileStorePathURL
+        MapboxMapsOptions.tileStore = tileStore
+        let offlineManager = OfflineManager()
 
         // 1. Create the tile set descriptor
-        let options = TilesetDescriptorOptions(styleURI: .outdoors, zoomRange: 0...16)
+        let options = TilesetDescriptorOptions(styleURI: .outdoors, zoomRange: 0...16, tilesets: nil)
         let tilesetDescriptor = offlineManager.createTilesetDescriptor(for: options)
 
         // 2. Create the TileRegionLoadOptions
@@ -109,9 +94,9 @@ class OfflineGuideIntegrationTests: XCTestCase {
 
         let expectation = self.expectation(description: "style pack should be canceled")
 
-        let offlineManager = OfflineManager(resourceOptions: ResourceOptions(accessToken: accessToken,
-                                                                             dataPathURL: tileStorePathURL,
-                                                                             tileStore: tileStore))
+        MapboxMapsOptions.dataPath = tileStorePathURL
+        MapboxMapsOptions.tileStore = tileStore
+        let offlineManager = OfflineManager()
         let stylePackLoadOptions = StylePackLoadOptions(glyphsRasterizationMode: .ideographsRasterizedLocally)!
 
         let handleCancelation = {
@@ -159,12 +144,13 @@ class OfflineGuideIntegrationTests: XCTestCase {
 
     func testLoadAndCancelTileRegion() throws {
         let expectation = self.expectation(description: "Tile region download should be canceled")
-        let offlineManager = OfflineManager(resourceOptions: ResourceOptions(accessToken: accessToken,
-                                                                             dataPathURL: tileStorePathURL,
-                                                                             tileStore: tileStore))
+
+        MapboxMapsOptions.dataPath = tileStorePathURL
+        MapboxMapsOptions.tileStore = tileStore
+        let offlineManager = OfflineManager()
 
         // Create the tile set descriptor
-        let options = TilesetDescriptorOptions(styleURI: .outdoors, zoomRange: 0...16)
+        let options = TilesetDescriptorOptions(styleURI: .outdoors, zoomRange: 0...16, tilesets: nil)
         let tilesetDescriptor = offlineManager.createTilesetDescriptor(for: options)
 
         let handleCancelation = {
@@ -218,9 +204,9 @@ class OfflineGuideIntegrationTests: XCTestCase {
     func testFetchingAllStylePacks() throws {
         let expectation = self.expectation(description: "Style packs should be fetched without error")
 
-        let offlineManager = OfflineManager(resourceOptions: ResourceOptions(accessToken: accessToken,
-                                                                             dataPathURL: tileStorePathURL,
-                                                                             tileStore: tileStore))
+        MapboxMapsOptions.dataPath = tileStorePathURL
+        MapboxMapsOptions.tileStore = tileStore
+        let offlineManager = OfflineManager()
 
         let handleStylePacks = { (stylePacks: [StylePack]) in
             // During testing there should be no style packs
@@ -296,10 +282,9 @@ class OfflineGuideIntegrationTests: XCTestCase {
     }
 
     func testDeleteStylePack() throws {
-        let resourceOptions = ResourceOptions(accessToken: accessToken,
-                                              dataPathURL: tileStorePathURL,
-                                              tileStore: tileStore)
-        let offlineManager = OfflineManager(resourceOptions: resourceOptions)
+        MapboxMapsOptions.dataPath = tileStorePathURL
+        MapboxMapsOptions.tileStore = tileStore
+        let offlineManager = OfflineManager()
 
         //-->
         offlineManager.removeStylePack(for: .outdoors)

@@ -3,8 +3,6 @@ import UIKit
 internal protocol MapViewDependencyProviderProtocol: AnyObject {
     var notificationCenter: NotificationCenterProtocol { get }
     var bundle: BundleProtocol { get }
-    var mapboxObservableProvider: (ObservableProtocol) -> MapboxObservableProtocol { get }
-    var cameraAnimatorsRunnerEnablable: MutableEnablableProtocol { get }
     func makeMetalView(frame: CGRect, device: MTLDevice?) -> MTKView
     func makeDisplayLink(window: UIWindow, target: Any, selector: Selector) -> DisplayLinkProtocol?
     func makeCameraAnimatorsRunner(mapboxMap: MapboxMapProtocol) -> CameraAnimatorsRunnerProtocol
@@ -34,7 +32,7 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
                                         style: StyleProtocol,
                                         displayLinkCoordinator: DisplayLinkCoordinator) -> AnnotationOrchestratorImplProtocol
 
-    func makeEventsManager(accessToken: String) -> EventsManagerProtocol
+    func makeEventsManager() -> EventsManagerProtocol
 }
 
 // swiftlint:disable:next type_body_length
@@ -43,9 +41,6 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
 
     internal let bundle: BundleProtocol = Bundle.main
 
-    internal let mapboxObservableProvider: (ObservableProtocol) -> MapboxObservableProtocol = MapboxObservable.init
-
-    internal let cameraAnimatorsRunnerEnablable: MutableEnablableProtocol = Enablable()
     private let mainQueue: MainQueueProtocol = MainQueueWrapper()
     private let interfaceOrientationProvider: InterfaceOrientationProvider
 
@@ -62,9 +57,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     }
 
     internal func makeCameraAnimatorsRunner(mapboxMap: MapboxMapProtocol) -> CameraAnimatorsRunnerProtocol {
-        CameraAnimatorsRunner(
-            mapboxMap: mapboxMap,
-            enablable: cameraAnimatorsRunnerEnablable)
+        CameraAnimatorsRunner(mapboxMap: mapboxMap)
     }
 
     internal func makeCameraAnimationsManagerImpl(cameraViewContainerView: UIView,
@@ -362,7 +355,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             doubleTouchGestureRecognizer: doubleTouchGestureRecognizer)
     }
 
-    func makeEventsManager(accessToken: String) -> EventsManagerProtocol {
-        return EventsManager(accessToken: accessToken)
+    func makeEventsManager() -> EventsManagerProtocol {
+        return EventsManager()
     }
 }

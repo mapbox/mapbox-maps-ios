@@ -1,9 +1,8 @@
 import UIKit
 import MapboxMaps
 
-@objc(SnapshotterExample)
-
 public class SnapshotterExample: UIViewController, ExampleProtocol {
+    private var cancelables = Set<AnyCancelable>()
 
     internal var mapView: MapView!
     public var snapshotter: Snapshotter!
@@ -74,15 +73,14 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
             height: (view.safeAreaLayoutGuide.layoutFrame.height - stackView.spacing) / 2)
         let options = MapSnapshotOptions(
             size: size,
-            pixelRatio: UIScreen.main.scale,
-            resourceOptions: ResourceOptionsManager.default.resourceOptions)
+            pixelRatio: UIScreen.main.scale)
 
         snapshotter = Snapshotter(options: options)
-        snapshotter.style.uri = .light
+        snapshotter.styleURI = .light
 
         // Set the camera of the snapshotter
 
-        mapView.mapboxMap.onEvery(event: .mapIdle) { [weak self] _ in
+        mapView.mapboxMap.onMapIdle.observe { [weak self] _ in
             // Allow the previous snapshot to complete before starting a new one.
             guard let self = self, !self.snapshotting else {
                 return
@@ -91,7 +89,7 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
             let snapshotterCameraOptions = CameraOptions(cameraState: self.mapView.cameraState)
             self.snapshotter.setCamera(to: snapshotterCameraOptions)
             self.startSnapshot()
-        }
+        }.store(in: &cancelables)
     }
 
     public func startSnapshot() {

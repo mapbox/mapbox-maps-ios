@@ -1,10 +1,10 @@
 import UIKit
 import MapboxMaps
 
-@objc(TerrainExample)
 public class TerrainExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -23,32 +23,32 @@ public class TerrainExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
+        mapView.mapboxMap.onStyleLoaded.observeNext { _ in
             self.addTerrain()
             // The following line is just for testing purposes.
             self.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     func addTerrain() {
-        var demSource = RasterDemSource()
+        var demSource = RasterDemSource(id: "mapbox-dem")
         demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
         // Setting the `tileSize` to 514 provides better performance and adds padding around the outside
         // of the tiles.
         demSource.tileSize = 514
         demSource.maxzoom = 14.0
-        try! mapView.mapboxMap.style.addSource(demSource, id: "mapbox-dem")
+        try! mapView.mapboxMap.addSource(demSource)
 
-        var terrain = Terrain(sourceId: "mapbox-dem")
+        var terrain = Terrain(sourceId: demSource.id)
         terrain.exaggeration = .constant(1.5)
 
-        try! mapView.mapboxMap.style.setTerrain(terrain)
+        try! mapView.mapboxMap.setTerrain(terrain)
 
         var skyLayer = SkyLayer(id: "sky-layer")
         skyLayer.skyType = .constant(.atmosphere)
         skyLayer.skyAtmosphereSun = .constant([0.0, 0.0])
         skyLayer.skyAtmosphereSunIntensity = .constant(15.0)
 
-        try! mapView.mapboxMap.style.addLayer(skyLayer)
+        try! mapView.mapboxMap.addLayer(skyLayer)
     }
 }

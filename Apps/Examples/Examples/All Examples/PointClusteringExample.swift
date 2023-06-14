@@ -1,11 +1,10 @@
 import UIKit
 import MapboxMaps
 
-@objc(PointClusteringExample)
-
 public class PointClusteringExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -21,18 +20,17 @@ public class PointClusteringExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
-            self.addPointClusters()
-        }
+        mapView.mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
+            self?.addPointClusters()
+        }.store(in: &cancelables)
     }
 
     func addPointClusters() {
-        let style = self.mapView.mapboxMap.style
         // Parse GeoJSON data. This example uses all M1.0+ earthquakes from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
         guard let url = URL(string: "https://www.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson") else { return }
 
         // Create a GeoJSONSource from the earthquake data URL.
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: "earthquake-source")
         source.data = .url(url)
 
         // Set the clustering properties directly on the source.
@@ -41,26 +39,25 @@ public class PointClusteringExample: UIViewController, ExampleProtocol {
 
         // The maximum zoom level where points will be clustered.
         source.clusterMaxZoom = 14
-        let sourceID = "earthquake-source"
 
         // Create three separate layers from the same source.
         // `clusteredLayer` contains clustered point features.
         var clusteredLayer = createClusteredLayer()
-        clusteredLayer.source = sourceID
+        clusteredLayer.source = source.id
 
         // `unclusteredLayer` contains individual point features that do not represent clusters.
         var unclusteredLayer = createUnclusteredLayer()
-        unclusteredLayer.source = sourceID
+        unclusteredLayer.source = source.id
 
         // `clusterCountLayer` is a `SymbolLayer` that represents the point count within individual clusters.
         var clusterCountLayer = createNumberLayer()
-        clusterCountLayer.source = sourceID
+        clusterCountLayer.source = source.id
 
         // Add source and layers to the map view's style.
-        try! style.addSource(source, id: sourceID)
-        try! style.addLayer(clusteredLayer)
-        try! style.addLayer(unclusteredLayer, layerPosition: .below(clusteredLayer.id))
-        try! style.addLayer(clusterCountLayer)
+        try! mapView.mapboxMap.addSource(source)
+        try! mapView.mapboxMap.addLayer(clusteredLayer)
+        try! mapView.mapboxMap.addLayer(unclusteredLayer, layerPosition: .below(clusteredLayer.id))
+        try! mapView.mapboxMap.addLayer(clusterCountLayer)
     }
 
     func createClusteredLayer() -> CircleLayer {

@@ -9,17 +9,15 @@ final class FillExtrusionLayerIntegrationTests: MapViewIntegrationTestCase {
     }
 
     internal func testWaitForIdle() throws {
-        let style = try XCTUnwrap(self.style)
-
         let successfullyAddedLayerExpectation = XCTestExpectation(description: "Successfully added FillExtrusionLayer to Map")
         successfullyAddedLayerExpectation.expectedFulfillmentCount = 1
 
         let successfullyRetrievedLayerExpectation = XCTestExpectation(description: "Successfully retrieved FillExtrusionLayer from Map")
         successfullyRetrievedLayerExpectation.expectedFulfillmentCount = 1
 
-        style.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
-        didFinishLoadingStyle = { _ in
+        didFinishLoadingStyle = { mapView in
 
             var layer = FillExtrusionLayer(id: "test-id")
             layer.source = "some-source"
@@ -47,7 +45,7 @@ final class FillExtrusionLayerIntegrationTests: MapViewIntegrationTestCase {
 
             // Add the layer
             do {
-                try style.addLayer(layer)
+                try mapView.mapboxMap.addLayer(layer)
                 successfullyAddedLayerExpectation.fulfill()
             } catch {
                 XCTFail("Failed to add FillExtrusionLayer because of error: \(error)")
@@ -55,7 +53,7 @@ final class FillExtrusionLayerIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the layer
             do {
-                _ = try style.layer(withId: "test-id", type: FillExtrusionLayer.self)
+                _ = try mapView.mapboxMap.layer(withId: "test-id", type: FillExtrusionLayer.self)
                 successfullyRetrievedLayerExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve FillExtrusionLayer because of error: \(error)")

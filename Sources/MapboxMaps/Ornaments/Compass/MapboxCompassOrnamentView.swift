@@ -98,7 +98,7 @@ internal class MapboxCompassOrnamentView: UIButton {
         }
     }
 
-    // swiftlint:disable function_body_length
+    // swiftlint:disable:next function_body_length
     private func createCompassImage() -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(Constants.compassSize, false, UIScreen.main.scale)
 

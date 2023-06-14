@@ -1,44 +1,59 @@
 import Foundation
 import MapboxCoreMaps
 
-/// Layer rendering types
-public enum LayerType: String, Codable {
+/// Struct of supported Layer rendering types
+public struct LayerType: ExpressibleByStringLiteral, RawRepresentable, Codable, Hashable {
+
+    /// The raw value of the layer type.
+    public let rawValue: String
+
     /// A filled polygon with an optional stroked border.
-    case fill
+    public static let fill: LayerType = "fill"
 
     /// A stroked line.
-    case line
+    public static let line: LayerType = "line"
 
     /// An icon or a text label.
-    case symbol
+    public static let symbol: LayerType = "symbol"
 
     /// A filled circle.
-    case circle
+    public static let circle: LayerType = "circle"
 
     /// A heatmap.
-    case heatmap
+    public static let heatmap: LayerType = "heatmap"
 
     /// An extruded (3D) polygon.
-    case fillExtrusion = "fill-extrusion"
+    public static let fillExtrusion: LayerType = "fill-extrusion"
 
     /// Raster map textures such as satellite imagery.
-    case raster
+    public static let raster: LayerType = "raster"
 
     /// Client-side hillshading visualization based on DEM data.
     /// Currently, the implementation only supports Mapbox Terrain RGB and Mapzen Terrarium tiles.
-    case hillshade
+    public static let hillshade: LayerType = "hillshade"
 
     /// The background color or pattern of the map.
-    case background
+    public static let background: LayerType = "background"
 
     /// Layer representing the location indicator
-    case locationIndicator = "location-indicator"
+    public static let locationIndicator: LayerType = "location-indicator"
 
     /// Layer representing the sky
-    case sky
+    public static let sky: LayerType = "sky"
+
+    @available(*, deprecated, message: "Unsupported layer type")
+    public static let model: LayerType = "model"
+
+    public init(stringLiteral type: String) {
+        self.rawValue = type
+    }
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
 
     /// The associated Swift struct type
-    public var layerType: Layer.Type {
+    public var layerType: Layer.Type? {
         switch self {
         case .fill:
             return FillLayer.self
@@ -62,6 +77,10 @@ public enum LayerType: String, Codable {
             return LocationIndicatorLayer.self
         case .sky:
             return SkyLayer.self
+        case .model:
+            return ModelLayer.self
+        default:
+            return nil
         }
     }
 }

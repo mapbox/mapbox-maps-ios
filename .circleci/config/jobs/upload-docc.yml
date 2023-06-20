@@ -17,7 +17,7 @@ steps:
         GIT_TRACE_PERFORMANCE: 2
         GIT_TRACE_PACK_ACCESS: 2
         GIT_TRACE_PACKET: 2
-        GIT_TRACE_PACKFILE: 2
+        GIT_TRACE_PACKFILE: 0
         GIT_TRACE_SETUP: 2
         GIT_TRACE_SHALLOW: 2
   - report-failure:

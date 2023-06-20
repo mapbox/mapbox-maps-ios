@@ -5,8 +5,7 @@ jobs:
         - SDK Registry Token
       filters: &release-filters
         tags:
-          # Matches any release vX.Y.Z, but ignores -alpha releases
-          only: /^v[0-9]+\.[0-9]+\.[0-9]+(?!-alpha).*/
+          only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
         branches:
           ignore: /.*/
   - build-baseline-sdk:
@@ -19,13 +18,6 @@ jobs:
   - build-dynamic:
       check-api-breakage: true
       project-name: mobile-maps-ios
-      context:
-        - Slack Orb
-        - SDK Registry Token
-      requires:
-        - release-precheck
-      filters: *release-filters
-  - build-private-preview:
       context:
         - Slack Orb
         - SDK Registry Token
@@ -67,11 +59,9 @@ jobs:
       requires:
         - build-baseline-sdk
         - build-dynamic
-        - build-private-preview
       filters: *release-filters
   - create-registry-pr:
       project-name: mobile-maps-ios
-      skip-private-sdk: false
       context:
         - Slack Orb
       requires:

@@ -16,5 +16,5 @@ steps:
       command: |
           source snapshot-version
           echo $VERSION
-          scripts/validate-integrations/validate-integrations.sh -v $VERSION -ds 
+          scripts/validate-integrations/validate-integrations.sh -v $VERSION -ds
   - store-default-artifacts

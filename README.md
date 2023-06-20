@@ -18,7 +18,6 @@ In the latest internal refactor, we have moved the template files from mapbox-ma
 4. Review and merge the public PR in `mapbox-maps-ios`.
 5. Update submodule pin to `mapbox-maps-ios` in `mapbox-maps-ios-internal`, review and merge the internal PR in `mapbox-maps-ios-internal`.
 
-**Note**: If your changes are related to premium features (i.e. `mapbox-maps-ios-private`) repeat above steps but use the `make generate-style-code-private`/`make generate-annotation-code-private` make targets instead.
 
 ## Release management
 
@@ -37,8 +36,8 @@ We finalize the scope of the beta release during week 4 of the cadence. We norma
 
 ### What type of versioning does Maps Mobile use?
 We use the standard semantic version scheme ([SEMVER](https://semver.org/)) x.y.z to differentiate between major, minor, or patch releases. We treat stable release as a new major or minor release and not patch release.
-Where “x” represents the major releases where incompatible API changes occur “breaking changes”.  
-“y” represents minor releases where we add functionality in a backward-compatible manner.  
+Where “x” represents the major releases where incompatible API changes occur “breaking changes”.
+“y” represents minor releases where we add functionality in a backward-compatible manner.
 And “z” represents patch releases where we make backward-compatible bug fixes.
 
 ### Understanding release management in Git terms
@@ -55,8 +54,8 @@ Preparing patch checklist:
 - cut patch branch from `v[major].[minor]` branch.
 - add patch bug fixes / features, updated the changelog.
 - merge the patch branch to `v[major].[minor]`, delete the patch branch, and start patch release process by creating `v[major].[minor].[patch]` tag on `v[major].[minor]` branch.
-- backport PR to `main` branch with changes for the patch release. 
-  We have helper script for this step at [git-port-pr-to-release.sh](scripts/git-port-pr-to-release.sh). 
+- backport PR to `main` branch with changes for the patch release.
+  We have helper script for this step at [git-port-pr-to-release.sh](scripts/git-port-pr-to-release.sh).
 
 ### Release management visual representation
 

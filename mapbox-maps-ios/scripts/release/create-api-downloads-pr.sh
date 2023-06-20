@@ -10,8 +10,6 @@ set -euo pipefail
 PROJECT_ROOT=$1
 VERSION=$2
 
-SKIP_PRIVATE=${SKIP_PRIVATE:-false}
-
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 UTILS_PATH="$SCRIPT_DIR/../utils.sh"
 
@@ -47,9 +45,6 @@ generate_config() {
 
 generate_config "$PROJECT_ROOT" "$VERSION" ""
 generate_config "$PROJECT_ROOT" "$VERSION" "-static"
-if [ "$SKIP_PRIVATE" = false ]; then
-  generate_config "$PROJECT_ROOT-private" "$VERSION-private" ""
-fi
 
 #
 # Commit to branch

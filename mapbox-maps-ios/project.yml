@@ -36,6 +36,8 @@ settings:
       MTL_ENABLE_DEBUG_INFO: "NO"
 targets:
   MapboxMapsTestsWithHost:
+    templates:
+      - installTokenScript
     type: bundle.unit-test
     platform: iOS
     settings:
@@ -58,13 +60,9 @@ targets:
           - "Integration Tests/HTTP/HTTPIntegrationTests.swift"
     dependencies:
       - target: MapboxTestHost
-    postBuildScripts:
-      - path: scripts/insert_access_token.sh
-        name: Insert Mapbox Token
-        basedOnDependencyAnalysis: false
-        inputFiles:
-          - $(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)
   MapboxMapsHTTPTestsWithHost:
+    templates:
+      - installTokenScript
     type: bundle.unit-test
     platform: iOS
     settings:
@@ -92,13 +90,9 @@ targets:
           - "Helpers/XCTestCase+TemporaryCacheDirectory.swift"
     dependencies:
       - target: MapboxTestHost
-    postBuildScripts:
-      - path: scripts/insert_access_token.sh
-        name: Insert Mapbox Token
-        basedOnDependencyAnalysis: false
-        inputFiles:
-          - $(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)
   GestureTests:
+    templates:
+      - installTokenScript
     type: bundle.unit-test
     platform: iOS
     settings:
@@ -127,12 +121,6 @@ targets:
       - target: MapboxTestHost
       - package: Hammer
     postBuildScripts:
-      - path: scripts/insert_access_token.sh
-        name: Insert Mapbox Token
-        basedOnDependencyAnalysis: false
-        showEnvVars: false
-        inputFiles:
-          - $(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)
       - script: scripts/run_swiftlint.sh
         name: Run swiftlint
         basedOnDependencyAnalysis: false
@@ -165,3 +153,16 @@ targets:
           - MapboxMapsTestsWithHost
           - GestureTests
       gatherCoverageData: true
+targetTemplates:
+  installTokenScript:
+    settings:
+      base:
+        INFOPLIST_PREFIX_HEADER: $(DERIVED_FILE_DIR)/InfoPlist.Prefix.h
+        INFOPLIST_PREPROCESS: YES
+    preBuildScripts:
+      - path: scripts/insert_access_token.sh
+        name: Insert Mapbox Access Token
+        showEnvVars: false
+        basedOnDependencyAnalysis: false
+        outputFiles:
+          - $(INFOPLIST_PREFIX_HEADER)

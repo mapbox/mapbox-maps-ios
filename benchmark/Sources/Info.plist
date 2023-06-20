@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>MBXAccessToken</key>
-	<string></string>
+	<string>MAPBOX_ACCESS_TOKEN</string>
 	<key>UIFileSharingEnabled</key>
 	<true/>
 </dict>

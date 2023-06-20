@@ -287,10 +287,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7499662827C64ECE00DA186A /* Build configuration list for PBXNativeTarget "MobileMetrics" */;
 			buildPhases = (
+				7499663B27C7AD4100DA186A /* Insert Mapbox Access Token */,
 				7499661027C64ECD00DA186A /* Sources */,
 				7499661127C64ECD00DA186A /* Frameworks */,
 				7499661227C64ECD00DA186A /* Resources */,
-				7499663B27C7AD4100DA186A /* Insert access token */,
 			);
 			buildRules = (
 			);
@@ -400,7 +400,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		7499663B27C7AD4100DA186A /* Insert access token */ = {
+		7499663B27C7AD4100DA186A /* Insert Mapbox Access Token */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -409,16 +409,16 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
 			);
-			name = "Insert access token";
+			name = "Insert Mapbox Access Token";
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"$(INFOPLIST_PREFIX_HEADER)",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/insert_access_token.sh\n";
+			shellScript = "$SRCROOT/../mapbox-maps-ios/scripts/insert_access_token.sh\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -635,6 +635,8 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_PREFIX_HEADER = "$(DERIVED_FILE_DIR)/InfoPlist.Prefix.h";
+				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -667,6 +669,8 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_PREFIX_HEADER = "$(DERIVED_FILE_DIR)/InfoPlist.Prefix.h";
+				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

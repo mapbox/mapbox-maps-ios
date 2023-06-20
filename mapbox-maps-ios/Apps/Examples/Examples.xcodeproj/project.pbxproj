@@ -555,12 +555,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 077C4F14252F7E89007636F1 /* Build configuration list for PBXNativeTarget "Examples" */;
 			buildPhases = (
+				95478AED2A3C930200EF31F6 /* Insert Mapbox Access Token */,
 				077C4EE6252F7E88007636F1 /* Sources */,
 				077C4EE7252F7E88007636F1 /* Frameworks */,
 				077C4EE8252F7E88007636F1 /* Resources */,
 				077C4F3E252F7F9C007636F1 /* Embed Frameworks */,
 				FE9223362881673C006A7B2A /* Run swiftlint */,
-				0746C187252FB153001638BD /* Insert Mapbox access token */,
 			);
 			buildRules = (
 			);
@@ -699,7 +699,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0746C187252FB153001638BD /* Insert Mapbox access token */ = {
+		95478AED2A3C930200EF31F6 /* Insert Mapbox Access Token */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -708,12 +708,12 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
 			);
-			name = "Insert Mapbox access token";
+			name = "Insert Mapbox Access Token";
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"$(INFOPLIST_PREFIX_HEADER)",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1010,6 +1010,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				INFOPLIST_FILE = Examples/Info.plist;
+				INFOPLIST_PREFIX_HEADER = "$(DERIVED_FILE_DIR)/InfoPlist.Prefix.h";
+				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1034,6 +1036,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				INFOPLIST_FILE = Examples/Info.plist;
+				INFOPLIST_PREFIX_HEADER = "$(DERIVED_FILE_DIR)/InfoPlist.Prefix.h";
+				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

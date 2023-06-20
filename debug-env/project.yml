@@ -149,11 +149,15 @@ targets:
 
 targetTemplates:
   installTokenScript:
-    postBuildScripts:
+    settings:
+      base:
+        INFOPLIST_PREFIX_HEADER: $(DERIVED_FILE_DIR)/InfoPlist.Prefix.h
+        INFOPLIST_PREPROCESS: YES
+    preBuildScripts:
       - path: build/${PROJECT}/scripts/insert_access_token.sh
-        name: Insert Mapbox Token
-        inputFiles:
-          - $(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)
+        name: Insert Mapbox Access Token
+        outputFiles:
+          - $(INFOPLIST_PREFIX_HEADER)
   assetCatalog:
     settings:
       ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon

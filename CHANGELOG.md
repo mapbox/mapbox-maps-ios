@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## 10.12.3 - June 20, 2023
+
+* Update to MapboxCoreMaps 10.12.3 
+
 ## 10.12.2 - April 6, 2023
 
 * Enable zoom during a drag gesture.

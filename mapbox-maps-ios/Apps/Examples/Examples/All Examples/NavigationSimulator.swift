@@ -11,19 +11,18 @@ final class NavigationSimulator: LocationProvider {
         options: FollowPuckViewportStateOptions(bearing: .course)
     )
 
-    var locationProviderOptions = LocationOptions()
-    var authorizationStatus: CLAuthorizationStatus = .authorizedAlways
-    var accuracyAuthorization: CLAccuracyAuthorization = .fullAccuracy
-
-    var heading: CLHeading?
-    var headingOrientation: CLDeviceOrientation = .portrait
-
-    private weak var delegate: LocationProviderDelegate?
-
+    private let locationConsumers = NSHashTable<AnyObject>.weakObjects()
     private var isStarted = false
     private let routeLength: LocationDistance
     private var routePointsToTravel: [LocationCoordinate2D]
 
+    var latestLocation: Location? {
+        return Location(location:
+                            CLLocation(latitude: currentLocation.latitude, longitude: currentLocation.longitude),
+                        accuracyAuthorization: .fullAccuracy
+        )
+    }
+    
     private var direction: LocationDirection
     private var currentLocation: LocationCoordinate2D {
         didSet {
@@ -57,23 +56,15 @@ final class NavigationSimulator: LocationProvider {
                 }
             }
         }
+
+        startUpdatingLocation()
     }
 
     func progressFromStart(to location: Location) -> Double {
         route.distance(to: location.coordinate)! / routeLength
     }
 
-    // MARK: LocationProvider
-
-    func setDelegate(_ delegate: LocationProviderDelegate) {
-        self.delegate = delegate
-    }
-
-    func requestAlwaysAuthorization() {}
-    func requestWhenInUseAuthorization() {}
-    func requestTemporaryFullAccuracyAuthorization(withPurposeKey purposeKey: String) {}
-
-    func startUpdatingLocation() {
+    private func startUpdatingLocation() {
         let location = CLLocation(
             coordinate: currentLocation,
             altitude: 0,
@@ -85,14 +76,17 @@ final class NavigationSimulator: LocationProvider {
             speed: 0,
             timestamp: Date()
         )
-        delegate?.locationProvider(
-            self,
-            didUpdateLocations: [location]
-        )
-    }
-    func stopUpdatingLocation() {}
 
-    func startUpdatingHeading() {}
-    func stopUpdatingHeading() {}
-    func dismissHeadingCalibrationDisplay() {}
+        for consumer in locationConsumers.allObjects {
+            (consumer as? LocationConsumer)?.locationUpdate(newLocation: .init(location: location, accuracyAuthorization: .fullAccuracy))
+        }
+    }
+
+    func add(consumer: LocationConsumer) {
+        locationConsumers.add(consumer)
+    }
+
+    func remove(consumer: LocationConsumer) {
+        locationConsumers.remove(consumer)
+    }
 }

@@ -188,14 +188,8 @@ open class MapView: UIView {
     public init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions()) {
         let trace = OSLog.platform.beginInterval("MapView.init")
         defer { trace?.end() }
-        let orientationProvider: InterfaceOrientationProvider
-        if #available(iOS 13, *) {
-            orientationProvider = DefaultInterfaceOrientationProvider()
-        } else {
-            orientationProvider = UIApplicationInterfaceOrientationProvider()
-        }
 
-        dependencyProvider = MapViewDependencyProvider(interfaceOrientationProvider: orientationProvider)
+        dependencyProvider = MapViewDependencyProvider()
         attributionUrlOpener = DefaultAttributionURLOpener()
         applicationStateProvider = .global
         notificationCenter = dependencyProvider.notificationCenter
@@ -211,37 +205,23 @@ open class MapView: UIView {
     ///   - mapInitOptions: The options to initialize the Maps API with.
     ///   - orientationProvider: User interface orientation provider
     ///   - urlOpener: Attribution URL opener
-    @available(iOS, deprecated: 13, message: "Use init(frame:mapInitOptions:urlOpener:) instead")
+    @available(iOS, unavailable, message: "Use init(frame:mapInitOptions:urlOpener:) instead")
     public init(frame: CGRect,
                 mapInitOptions: MapInitOptions = MapInitOptions(),
                 orientationProvider: InterfaceOrientationProvider,
-                urlOpener: AttributionURLOpener) {
-        let trace = OSLog.platform.beginInterval("MapView.init")
-        defer { trace?.end() }
-        dependencyProvider = MapViewDependencyProvider(interfaceOrientationProvider: orientationProvider)
-        attributionUrlOpener = urlOpener
-        self.applicationStateProvider = nil
-        notificationCenter = dependencyProvider.notificationCenter
-        bundle = dependencyProvider.bundle
-        eventsManager = dependencyProvider.makeEventsManager()
-        super.init(frame: frame)
-        commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
-    }
+                urlOpener: AttributionURLOpener) { fatalError("Shouldn't be called") }
 
     /// Initialize a MapView
     /// - Parameters:
     ///   - frame: frame for the MapView.
     ///   - mapInitOptions: The options to initialize the Maps API with.
     ///   - urlOpener: Attribution URL opener
-    @available(iOS 13.0, *)
     public init(frame: CGRect,
                 mapInitOptions: MapInitOptions = MapInitOptions(),
                 urlOpener: AttributionURLOpener) {
         let trace = OSLog.platform.beginInterval("MapView.init")
         defer { trace?.end() }
-        dependencyProvider = MapViewDependencyProvider(
-            interfaceOrientationProvider: DefaultInterfaceOrientationProvider()
-        )
+        dependencyProvider = MapViewDependencyProvider()
         attributionUrlOpener = urlOpener
         self.applicationStateProvider = nil
         notificationCenter = dependencyProvider.notificationCenter
@@ -255,14 +235,8 @@ open class MapView: UIView {
     required public init?(coder: NSCoder) {
         let trace = OSLog.platform.beginInterval("MapView.init")
         defer { trace?.end() }
-        let orientationProvider: InterfaceOrientationProvider
-        if #available(iOS 13, *) {
-            orientationProvider = DefaultInterfaceOrientationProvider()
-        } else {
-            orientationProvider = UIApplicationInterfaceOrientationProvider()
-        }
 
-        dependencyProvider = MapViewDependencyProvider(interfaceOrientationProvider: orientationProvider)
+        dependencyProvider = MapViewDependencyProvider()
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         attributionUrlOpener = DefaultAttributionURLOpener()
@@ -378,6 +352,7 @@ open class MapView: UIView {
 
     // swiftlint:disable:next function_body_length
     internal func setupManagers() {
+
         // Initialize/Configure camera manager first since Gestures needs it as dependency
         cameraAnimatorsRunner = dependencyProvider.makeCameraAnimatorsRunner(
             mapboxMap: mapboxMap)
@@ -411,18 +386,17 @@ open class MapView: UIView {
             attributionButton: InfoButtonOrnament())
 
         // Initialize/Configure location source and location manager
-        let locationProducer = dependencyProvider.makeLocationProducer(
-            mayRequestWhenInUseAuthorization: bundle.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil,
-            userInterfaceOrientationView: self)
+        let locationProvider = dependencyProvider.makeLocationProvider(userInterfaceOrientationView: self)
         let interpolatedLocationProducer = dependencyProvider.makeInterpolatedLocationProducer(
-            locationProducer: locationProducer,
+            locationProvider: locationProvider,
             displayLinkCoordinator: self)
         location = dependencyProvider.makeLocationManager(
-            locationProducer: locationProducer,
+            locationProvider: locationProvider,
             interpolatedLocationProducer: interpolatedLocationProducer,
             style: mapboxMap,
             mapboxMap: mapboxMap,
-            displayLinkCoordinator: self)
+            displayLinkCoordinator: self,
+            userInterfaceOrientationView: self)
 
         annotations = AnnotationOrchestrator(
             impl: dependencyProvider.makeAnnotationOrchestratorImpl(

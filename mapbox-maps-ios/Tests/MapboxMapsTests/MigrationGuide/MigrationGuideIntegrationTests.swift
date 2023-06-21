@@ -462,7 +462,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
         let customLocationProvider = MockLocationProvider()
         //-->
-        mapView.location.overrideLocationProvider(with: customLocationProvider)
+        mapView.location.provider = customLocationProvider
         //<--
     }
 

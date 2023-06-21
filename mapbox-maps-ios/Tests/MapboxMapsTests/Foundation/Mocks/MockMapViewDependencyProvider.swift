@@ -75,34 +75,27 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
     }
 
     // MARK: - Location
-    struct MakeLocationProducerParameteres {
-        let mayRequestWhenInUseAuthorization: Bool
-        let userInterfaceOrientationView: UIView
+    let makeLocationProviderStub = Stub<UIView, MockLocationProvider>(defaultReturnValue: MockLocationProvider())
+    func makeLocationProvider(userInterfaceOrientationView: UIView) -> LocationProvider {
+        return makeLocationProviderStub.call(with: userInterfaceOrientationView)
     }
-    let makeLocationProducerStub = Stub<MakeLocationProducerParameteres, MockLocationProducer>(defaultReturnValue: MockLocationProducer())
-    func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool, userInterfaceOrientationView: UIView) -> MapboxMaps.LocationProducerProtocol {
-        return makeLocationProducerStub.call(with:
-                .init(
-                    mayRequestWhenInUseAuthorization: mayRequestWhenInUseAuthorization,
-                    userInterfaceOrientationView: userInterfaceOrientationView
-                )
-        )
-    }
-
-    func makeInterpolatedLocationProducer(locationProducer: LocationProducerProtocol,
+    func makeInterpolatedLocationProducer(locationProvider: LocationProvider,
                                           displayLinkCoordinator: DisplayLinkCoordinator) -> InterpolatedLocationProducerProtocol {
         return MockInterpolatedLocationProducer()
     }
 
-    func makeLocationManager(locationProducer: LocationProducerProtocol,
+    // swiftlint:disable:next function_parameter_count
+    func makeLocationManager(locationProvider: LocationProvider,
                              interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
                              style: StyleProtocol,
                              mapboxMap: MapboxMapProtocol,
-                             displayLinkCoordinator: DisplayLinkCoordinator) -> LocationManager {
+                             displayLinkCoordinator: DisplayLinkCoordinator,
+                             userInterfaceOrientationView: UIView) -> LocationManager {
         return LocationManager(
-            locationProducer: locationProducer,
+            locationProvider: locationProvider,
             interpolatedLocationProducer: interpolatedLocationProducer,
-            puckManager: MockPuckManager())
+            puckManager: MockPuckManager(),
+            userInterfaceOrientationView: userInterfaceOrientationView)
     }
 
     // MARK: - Viewport

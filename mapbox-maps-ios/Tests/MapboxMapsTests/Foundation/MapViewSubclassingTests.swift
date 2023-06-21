@@ -3,18 +3,15 @@ import MapboxMaps
 
 final class MapViewSubclassingTests: XCTestCase {
 
-    var orientationProvider: MockInterfaceOrientationProvider!
     var attributionURLOpener: MockAttributionURLOpener!
 
     override func setUp() {
         super.setUp()
 
-        orientationProvider = MockInterfaceOrientationProvider()
         attributionURLOpener = MockAttributionURLOpener()
     }
 
     override func tearDown() {
-        orientationProvider = nil
         attributionURLOpener = nil
         super.tearDown()
     }
@@ -37,7 +34,6 @@ final class MapViewSubclassingTests: XCTestCase {
         _ = MapViewSubclass(
             frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
             mapInitOptions: MapInitOptions(),
-            orientationProvider: orientationProvider,
             urlOpener: attributionURLOpener)
     }
 }
@@ -48,19 +44,8 @@ private final class MapViewSubclass: MapView {
         super.init(frame: frame, mapInitOptions: mapInitOptions)
     }
 
-    @available(iOS 13.0, *)
     override init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions(), urlOpener: AttributionURLOpener) {
         super.init(frame: frame, mapInitOptions: mapInitOptions, urlOpener: urlOpener)
-    }
-
-    override init(frame: CGRect,
-                  mapInitOptions: MapInitOptions = MapInitOptions(),
-                  orientationProvider: InterfaceOrientationProvider,
-                  urlOpener: AttributionURLOpener) {
-        super.init(frame: frame,
-                   mapInitOptions: mapInitOptions,
-                   orientationProvider: orientationProvider,
-                   urlOpener: urlOpener)
     }
 
     required init?(coder: NSCoder) {

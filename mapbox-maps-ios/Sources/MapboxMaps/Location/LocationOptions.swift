@@ -8,17 +8,20 @@ public struct LocationOptions: Equatable {
     /// before a location update is generated.
     ///
     /// The default value of this property is `kCLDistanceFilterNone`.
-    public var distanceFilter: CLLocationDistance
+    @available(*, unavailable, message: "Use AppleLocationProvider.Options.distanceFilter instead")
+    public var distanceFilter: CLLocationDistance = kCLDistanceFilterNone
 
     /// Specifies the accuracy of the location data.
     ///
     /// The default value is `kCLLocationAccuracyBest`.
-    public var desiredAccuracy: CLLocationAccuracy
+    @available(*, unavailable, message: "Use AppleLocationProvider.Options.desiredAccuracy instead")
+    public var desiredAccuracy: CLLocationAccuracy = kCLLocationAccuracyBest
 
     /// Sets the type of user activity associated with the location updates.
     ///
     /// The default value is `CLActivityType.other`.
-    public var activityType: CLActivityType
+    @available(*, unavailable, message: "Use AppleLocationProvider.Options.activityType instead")
+    public var activityType: CLActivityType = .other
 
     /// Sets the type of puck that should be used
     public var puckType: PuckType?
@@ -35,24 +38,14 @@ public struct LocationOptions: Equatable {
 
     /// Initializes a `LocationOptions`.
     /// - Parameters:
-    ///   - distanceFilter: Specifies the minimum distance (measured in meters) a device must move horizontally
-    /// before a location update is generated.
-    ///   - desiredAccuracy: Specifies the accuracy of the location data.
-    ///   - activityType: Sets the type of user activity associated with the location.
     ///   - puckType: Sets the type of puck that should be used.
     ///   - puckBearing: Specifies if a `Puck` should use `Heading` or `Course` for the bearing.
     ///   - puckBearingEnabled: Whether the puck rotates to track the bearing source.
     public init(
-        distanceFilter: CLLocationDistance = kCLDistanceFilterNone,
-        desiredAccuracy: CLLocationAccuracy = kCLLocationAccuracyBest,
-        activityType: CLActivityType = .other,
         puckType: PuckType? = nil,
         puckBearing: PuckBearing = .heading,
         puckBearingEnabled: Bool = true
     ) {
-        self.distanceFilter = distanceFilter
-        self.desiredAccuracy = desiredAccuracy
-        self.activityType = activityType
         self.puckType = puckType
         self.puckBearing = puckBearing
         self.puckBearingEnabled = puckBearingEnabled

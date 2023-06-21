@@ -1,28 +1,28 @@
 import MapboxMaps
 
-final class MockLocationManagerDelegate: LocationPermissionsDelegate {
+final class MockLocationManagerDelegate: AppleLocationProviderDelegate {
     struct DidChangeAccuracyAuthorizationParams {
-        var locationManager: LocationManager
+        var locationProvider: AppleLocationProvider
         var accuracyAuthorization: CLAccuracyAuthorization
     }
     let didChangeAccuracyAuthorizationStub = Stub<DidChangeAccuracyAuthorizationParams, Void>()
-    func locationManager(_ locationManager: LocationManager, didChangeAccuracyAuthorization accuracyAuthorization: CLAccuracyAuthorization) {
+    func appleLocationProvider(_ locationProvider: AppleLocationProvider, didChangeAccuracyAuthorization accuracyAuthorization: CLAccuracyAuthorization) {
         didChangeAccuracyAuthorizationStub.call(with: .init(
-            locationManager: locationManager,
+            locationProvider: locationProvider,
             accuracyAuthorization: accuracyAuthorization))
     }
 
     struct DidFailToLocateUserWithErrorParams {
-        var locationManager: LocationManager
+        var locationProvider: AppleLocationProvider
         var error: Error
     }
     let didFailToLocateUserWithErrorStub = Stub<DidFailToLocateUserWithErrorParams, Void>()
-    func locationManager(_ locationManager: LocationManager, didFailToLocateUserWithError error: Error) {
-        didFailToLocateUserWithErrorStub.call(with: .init(locationManager: locationManager, error: error))
+    func appleLocationProvider(_ locationProvider: AppleLocationProvider, didFailWithError error: Error) {
+        didFailToLocateUserWithErrorStub.call(with: .init(locationProvider: locationProvider, error: error))
     }
 
-    let shouldDisplayHeadingCalibrationStub = Stub<LocationManager, Bool>(defaultReturnValue: false)
-    func locationManagerShouldDisplayHeadingCalibration(_ locationManager: LocationManager) -> Bool {
-        return shouldDisplayHeadingCalibrationStub.call(with: locationManager)
+    let shouldDisplayHeadingCalibrationStub = Stub<AppleLocationProvider, Bool>(defaultReturnValue: false)
+    func appleLocationProviderShouldDisplayHeadingCalibration(_ locationProvider: AppleLocationProvider) -> Bool {
+        return shouldDisplayHeadingCalibrationStub.call(with: locationProvider)
     }
 }

@@ -52,7 +52,7 @@ internal final class Puck3D: Puck {
     }
 
     private func updateSourceAndLayer() {
-        guard isActive, let location = interpolatedLocationProducer.location else {
+        guard isActive, let location = interpolatedLocationProducer.currentLocation else {
             return
         }
 

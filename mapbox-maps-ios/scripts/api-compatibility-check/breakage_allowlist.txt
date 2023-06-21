@@ -398,3 +398,77 @@ Var Snapshotter.style has declared type change from MapboxMaps.Style to MapboxMa
 
 // Expose Model layer as experimental
 EnumElement LayerType.model is now with @_spi
+
+// Simplify location provider
+Func LocationProviderDelegate.locationProvider(_:didUpdateHeading:) has generic signature change from <Self where Self : MapboxMaps.LocationProviderDelegate> to <Self where Self : MapboxMaps.AppleLocationProviderDelegate>
+Func LocationProviderDelegate.locationProvider(_:didUpdateLocations:) has generic signature change from <Self where Self : MapboxMaps.LocationProviderDelegate> to <Self where Self : MapboxMaps.AppleLocationProviderDelegate>
+Constructor AppleLocationProvider.init() has been removed
+Constructor MapView.init(frame:mapInitOptions:orientationProvider:urlOpener:) has been removed
+Func AppleLocationProvider.dismissHeadingCalibrationDisplay() has been removed
+Func AppleLocationProvider.requestAlwaysAuthorization() has been removed
+Func AppleLocationProvider.requestWhenInUseAuthorization() has been removed
+Func AppleLocationProvider.setDelegate(_:) has been removed
+Func AppleLocationProvider.startUpdatingHeading() has been removed
+Func AppleLocationProvider.startUpdatingLocation() has been removed
+Func AppleLocationProvider.stopUpdatingHeading() has been removed
+Func AppleLocationProvider.stopUpdatingLocation() has been removed
+Func InterfaceOrientationProvider.interfaceOrientation(for:) has been removed
+Func LocationManager.requestTemporaryFullAccuracyPermissions(withPurposeKey:) has been removed
+Func LocationProvider.dismissHeadingCalibrationDisplay() has been removed
+Func LocationProvider.requestAlwaysAuthorization() has been removed
+Func LocationProvider.requestTemporaryFullAccuracyAuthorization(withPurposeKey:) has been removed
+Func LocationProvider.requestWhenInUseAuthorization() has been removed
+Func LocationProvider.setDelegate(_:) has been removed
+Func LocationProvider.startUpdatingHeading() has been removed
+Func LocationProvider.startUpdatingLocation() has been removed
+Func LocationProvider.stopUpdatingHeading() has been removed
+Func LocationProvider.stopUpdatingLocation() has been removed
+Func LocationProviderDelegate.locationProvider(_:didFailWithError:) has been removed
+Func LocationProviderDelegate.locationProviderDidChangeAuthorization(_:) has been removed
+Protocol LocationPermissionsDelegate has been removed
+Var AppleLocationProvider.accuracyAuthorization has been removed
+Var AppleLocationProvider.authorizationStatus has been removed
+Var AppleLocationProvider.heading has been removed
+Var AppleLocationProvider.headingOrientation has been removed
+Var LocationManager.consumers has been removed
+Var LocationManager.delegate has been removed
+Var LocationOptions.activityType has been removed
+Var LocationOptions.desiredAccuracy has been removed
+Var LocationOptions.distanceFilter has been removed
+Var LocationProvider.accuracyAuthorization has been removed
+Var LocationProvider.authorizationStatus has been removed
+Var LocationProvider.heading has been removed
+Var LocationProvider.headingOrientation has been removed
+Var LocationProvider.locationProviderOptions has been removed
+Func AppleLocationProvider.locationManager(_:didFailWithError:) has ObjC name change from locationManager:didFailWithError: to
+Func AppleLocationProvider.locationManager(_:didUpdateHeading:) has ObjC name change from locationManager:didUpdateHeading: to
+Func AppleLocationProvider.locationManager(_:didUpdateLocations:) has ObjC name change from locationManager:didUpdateLocations: to
+Func AppleLocationProvider.locationManagerDidChangeAuthorization(_:) has ObjC name change from locationManagerDidChangeAuthorization: to
+Func AppleLocationProvider.locationManagerShouldDisplayHeadingCalibration(_:) has ObjC name change from locationManagerShouldDisplayHeadingCalibration: to
+Func LocationProviderDelegate.locationProvider(_:didUpdateHeading:) has been renamed to Func appleLocationProvider(_:didChangeAccuracyAuthorization:)
+Func LocationProviderDelegate.locationProvider(_:didUpdateLocations:) has been renamed to Func appleLocationProvider(_:didFailWithError:)
+Protocol LocationProviderDelegate has been renamed to Protocol AppleLocationProviderDelegate
+Var AppleLocationProvider.locationProviderOptions has been renamed to Var options
+Accessor AppleLocationProvider.locationProviderOptions.Get() has return type change from MapboxMaps.LocationOptions to MapboxMaps.AppleLocationProvider.Options
+Accessor AppleLocationProvider.locationProviderOptions.Set() has parameter 0 type change from MapboxMaps.LocationOptions to MapboxMaps.AppleLocationProvider.Options
+Accessor LocationManager.locationProvider.Get() has return type change from MapboxMaps.LocationProvider! to MapboxMaps.LocationProvider
+Func LocationProviderDelegate.locationProvider(_:didUpdateHeading:) has parameter 0 type change from MapboxMaps.LocationProvider to MapboxMaps.AppleLocationProvider
+Func LocationProviderDelegate.locationProvider(_:didUpdateHeading:) has parameter 1 type change from CoreLocation.CLHeading to CoreLocation.CLAccuracyAuthorization
+Func LocationProviderDelegate.locationProvider(_:didUpdateLocations:) has parameter 0 type change from MapboxMaps.LocationProvider to MapboxMaps.AppleLocationProvider
+Func LocationProviderDelegate.locationProvider(_:didUpdateLocations:) has parameter 1 type change from [CoreLocation.CLLocation] to Swift.Error
+Var AppleLocationProvider.locationProviderOptions has declared type change from MapboxMaps.LocationOptions to MapboxMaps.AppleLocationProvider.Options
+Var LocationManager.locationProvider has declared type change from MapboxMaps.LocationProvider! to MapboxMaps.LocationProvider
+Class AppleLocationProvider has removed conformance to CLLocationManagerDelegate
+Class AppleLocationProvider has removed conformance to CVarArg
+Class AppleLocationProvider has removed conformance to CustomDebugStringConvertible
+Class AppleLocationProvider has removed conformance to CustomStringConvertible
+Class AppleLocationProvider has removed conformance to Equatable
+Class AppleLocationProvider has removed conformance to Hashable
+Class AppleLocationProvider has removed conformance to NSObjectProtocol
+Func AppleLocationProviderDelegate.appleLocationProviderShouldDisplayHeadingCalibration(_:) has been added as a protocol requirement
+Func LocationProvider.add(consumer:) has been added as a protocol requirement
+Func LocationProvider.remove(consumer:) has been added as a protocol requirement
+Var InterfaceOrientationProvider.onInterfaceOrientationChange has been added as a protocol requirement
+Var LocationProvider.latestLocation has been added as a protocol requirement
+Class AppleLocationProvider has removed its super class ObjectiveC.NSObject
+Class AppleLocationProvider no longer inherits convenience inits from its superclass

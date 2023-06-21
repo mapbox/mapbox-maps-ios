@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.0.0-alpha.2 - 21 June, 2023
+
 * Remove unnecessary check before updating a geo json source.
 * Remove deprecated `LocationManager.updateHeadingForCurrentDeviceOrientation()` method.
 * Remove deprecated `MapEvents.EventKind`.

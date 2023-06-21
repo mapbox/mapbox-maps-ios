@@ -1,32 +1,31 @@
 @testable import MapboxMaps
 
-final class MockLocationProducerDelegate: LocationProducerDelegate {
+final class MockLocationProducerDelegate: AppleLocationProviderDelegate {
     struct DidFailWithErrorParams {
-        var locationProducer: LocationProducerProtocol
+        var locationProvider: AppleLocationProvider
         var error: Error
     }
     let didFailWithErrorStub = Stub<DidFailWithErrorParams, Void>()
-    func locationProducer(_ locationProducer: LocationProducerProtocol,
-                          didFailWithError error: Error) {
+    func appleLocationProvider(_ locationProvider: AppleLocationProvider, didFailWithError error: Error) {
         didFailWithErrorStub.call(with: .init(
-            locationProducer: locationProducer,
+            locationProvider: locationProvider,
             error: error))
     }
 
     struct DidChangeAccuracyAuthorizationParams {
-        var locationProducer: LocationProducerProtocol
+        var locationProvider: AppleLocationProvider
         var accuracyAuthorization: CLAccuracyAuthorization
     }
     let didChangeAccuracyAuthorizationStub = Stub<DidChangeAccuracyAuthorizationParams, Void>()
-    func locationProducer(_ locationProducer: LocationProducerProtocol,
-                          didChangeAccuracyAuthorization accuracyAuthorization: CLAccuracyAuthorization) {
+    func appleLocationProvider(_ locationProvider: AppleLocationProvider,
+                               didChangeAccuracyAuthorization accuracyAuthorization: CLAccuracyAuthorization) {
         didChangeAccuracyAuthorizationStub.call(with: .init(
-            locationProducer: locationProducer,
+            locationProvider: locationProvider,
             accuracyAuthorization: accuracyAuthorization))
     }
 
-    let shouldDisplayHeadingCalibrationStub = Stub<LocationProducerProtocol, Bool>(defaultReturnValue: false)
-    func locationProducerShouldDisplayHeadingCalibration(_ locationProducer: LocationProducerProtocol) -> Bool {
-        return shouldDisplayHeadingCalibrationStub.call(with: locationProducer)
+    let shouldDisplayHeadingCalibrationStub = Stub<AppleLocationProvider, Bool>(defaultReturnValue: false)
+    func appleLocationProviderShouldDisplayHeadingCalibration(_ locationProvider: AppleLocationProvider) -> Bool {
+        return shouldDisplayHeadingCalibrationStub.call(with: locationProvider)
     }
 }

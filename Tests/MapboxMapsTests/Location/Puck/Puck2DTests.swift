@@ -59,7 +59,7 @@ final class Puck2DTests: XCTestCase {
         location.course = course
         location.heading = heading
         location.horizontalAccuracy = horizontalAccuracy
-        interpolatedLocationProducer.location = location
+        interpolatedLocationProducer.currentLocation = location
         // invoke handler synchronously to mimic the actual implementation
         interpolatedLocationProducer.observeStub.defaultSideEffect = {
             let handler = $0.parameters
@@ -343,7 +343,7 @@ final class Puck2DTests: XCTestCase {
         puck2D.isActive = true
 
         var expectedProperties = makeExpectedLayerProperties(with: location)
-        expectedProperties["bearing"] = interpolatedLocationProducer.location!.heading!
+        expectedProperties["bearing"] = interpolatedLocationProducer.currentLocation!.heading!
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
@@ -381,7 +381,7 @@ final class Puck2DTests: XCTestCase {
         puck2D.isActive = true
 
         var expectedProperties = makeExpectedLayerProperties(with: location)
-        expectedProperties["bearing"] = interpolatedLocationProducer.location!.course!
+        expectedProperties["bearing"] = interpolatedLocationProducer.currentLocation!.course!
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }

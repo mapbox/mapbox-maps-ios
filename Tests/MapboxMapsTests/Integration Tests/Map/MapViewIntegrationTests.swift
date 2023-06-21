@@ -116,16 +116,4 @@ final class MapViewIntegrationTests: IntegrationTestCase {
 
         wait(for: [mainQueueExpectation], timeout: 1)
     }
-
-    func testMapViewDoesNotStartLocationServicesAutomatically() {
-        let locationProvider = MockLocationProvider()
-
-        mapView.location.overrideLocationProvider(with: locationProvider)
-
-        XCTAssertTrue(locationProvider.startUpdatingLocationStub.invocations.isEmpty)
-        XCTAssertTrue(locationProvider.startUpdatingHeadingStub.invocations.isEmpty)
-        XCTAssertTrue(locationProvider.requestAlwaysAuthorizationStub.invocations.isEmpty)
-        XCTAssertTrue(locationProvider.requestWhenInUseAuthorizationStub.invocations.isEmpty)
-        XCTAssertTrue(locationProvider.requestTemporaryFullAccuracyAuthorizationStub.invocations.isEmpty)
-    }
 }

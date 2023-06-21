@@ -2,7 +2,7 @@
 /// setting ``CameraOptions/bearing``.
 ///
 /// - SeeAlso: ``LocationOptions/puckBearing``
-public enum FollowPuckViewportStateBearing: Hashable {
+public enum FollowPuckViewportStateBearing: Codable, Hashable {
 
     /// ``FollowPuckViewportState`` sets ``CameraOptions/bearing`` to a constant value.
     ///

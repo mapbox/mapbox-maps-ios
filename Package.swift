@@ -10,8 +10,8 @@ let commonChecksum = "c24d3dd72c6543520f090eea6258c6017b1cac6581dfd348749e931aa1
 
 func folder(_ version: String) -> String { version.contains("SNAPSHOT") ? "snapshots" : "releases" }
 
-let mapboxMapsPath: String? = nil
-let mapboxMapsTestsPath: String? = nil
+let mapboxMapsPath: String? = "mapbox-maps-ios/Sources/MapboxMaps"
+let mapboxMapsTestsPath: String? = "mapbox-maps-ios/Tests/MapboxMapsTests"
 
 let package = Package(
     name: "MapboxMaps",

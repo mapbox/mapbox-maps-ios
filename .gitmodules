@@ -1,6 +1,3 @@
-[submodule "mobile-metrics"]
-	path = mobile-metrics
-	url = git@github.com:mapbox/mobile-metrics.git
 [submodule "codegen/vendor/mapbox-maps-stylegen"]
 	path = codegen/vendor/mapbox-maps-stylegen
 	url = git@github.com:mapbox/mapbox-maps-stylegen.git

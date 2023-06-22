@@ -10,6 +10,9 @@ let commonChecksum = "c24d3dd72c6543520f090eea6258c6017b1cac6581dfd348749e931aa1
 
 func folder(_ version: String) -> String { version.contains("SNAPSHOT") ? "snapshots" : "releases" }
 
+let mapboxMapsPath: String? = nil
+let mapboxMapsTestsPath: String? = nil
+
 let package = Package(
     name: "MapboxMaps",
     defaultLocalization: "en",
@@ -41,6 +44,7 @@ let package = Package(
                 .product(name: "Turf", package: "turf-swift"),
                 "MapboxCommon",
             ],
+            path: mapboxMapsPath,
             exclude: [
                 "Info.plist",
             ],
@@ -53,6 +57,7 @@ let package = Package(
             dependencies: [
                 "MapboxMaps",
             ],
+            path: mapboxMapsTestsPath,
             exclude: [
                 "Info.plist",
                 "Integration Tests/HTTP/HTTPIntegrationTests.swift",

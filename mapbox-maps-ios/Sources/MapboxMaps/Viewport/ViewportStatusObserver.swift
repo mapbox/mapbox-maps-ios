@@ -20,10 +20,6 @@ public protocol ViewportStatusObserver: AnyObject {
 public struct ViewportStatusChangeReason: Hashable {
     private var rawValue: String
 
-    private init(rawValue: String) {
-        self.rawValue = rawValue
-    }
-
     /// ``Viewport/status`` changed because ``Viewport/idle()`` was invoked.
     public static let idleRequested = ViewportStatusChangeReason(rawValue: "IDLE_REQUESTED")
 

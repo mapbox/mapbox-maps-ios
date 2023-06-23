@@ -20,9 +20,4 @@ import Foundation
     public let id: String
     /// Rendering ``Light3DType`` of this light.
     public let lightType: Light3DType
-
-    internal init(id: String, lightType: Light3DType) {
-        self.id = id
-        self.lightType = lightType
-    }
 }

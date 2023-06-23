@@ -33,10 +33,6 @@ public struct TypeConversionError: Error, Equatable {
 
     /// The conversion was not successful
     public static let unsuccessfulConversion = TypeConversionError(message: "Unsuccessful conversion")
-
-    init(message: String) {
-        self.message = message
-    }
 }
 
 /// Type of errors thrown by the `MapboxMap` APIs.

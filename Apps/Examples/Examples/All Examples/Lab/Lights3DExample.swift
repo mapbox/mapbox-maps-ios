@@ -32,7 +32,6 @@ final class Lights3DExample: UIViewController, ExampleProtocol {
     }
 
     func setupExample() {
-        addBuildingExtrusions()
         add3DLights()
     }
 
@@ -99,53 +98,6 @@ final class Lights3DExample: UIViewController, ExampleProtocol {
                                           bearing: 60.54,
                                           pitch: 60)
         mapView.mapboxMap.setCamera(to: cameraOptions)
-    }
-
-    internal func addBuildingExtrusions() {
-        var layer = FillExtrusionLayer(id: "3d-buildings")
-
-        layer.source = "composite"
-        layer.minZoom = 15
-        layer.sourceLayer = "building"
-        layer.fillExtrusionColor   = .constant(StyleColor(.lightGray))
-        layer.fillExtrusionOpacity = .constant(0.8)
-
-        layer.filter = Exp(.eq) {
-            Exp(.get) {
-                "extrude"
-            }
-            "true"
-        }
-
-        layer.fillExtrusionHeight = .expression(
-            Exp(.interpolate) {
-                Exp(.linear)
-                Exp(.zoom)
-                15
-                0
-                15.05
-                Exp(.get) {
-                    "height"
-                }
-            }
-        )
-
-        layer.fillExtrusionBase = .expression(
-            Exp(.interpolate) {
-                Exp(.linear)
-                Exp(.zoom)
-                15
-                0
-                15.05
-                Exp(.get) { "min_height"}
-            }
-        )
-
-        layer.fillExtrusionAmbientOcclusionIntensity = .constant(0.3)
-
-        layer.fillExtrusionAmbientOcclusionRadius = .constant(3.0)
-
-        try! mapView.mapboxMap.addLayer(layer)
     }
 
     var animationProgress = 0.0 {

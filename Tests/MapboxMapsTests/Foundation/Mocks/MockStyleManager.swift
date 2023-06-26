@@ -505,6 +505,22 @@ class MockStyleManager: StyleManagerProtocol {
         addStyleModelStub.call(with: AddStyleModelParams(modelId: modelId, modelUri: modelUri))
     }
 
+    struct RemoveStyleModelParams {
+        let modelId: String
+    }
+    let removeStyleModelStub = Stub<RemoveStyleModelParams, Expected<NSNull, NSString>>(defaultReturnValue: .init(value: NSNull()))
+    func removeStyleModel(forModelId modelId: String) -> Expected<NSNull, NSString> {
+        removeStyleModelStub.call(with: RemoveStyleModelParams(modelId: modelId))
+    }
+
+    struct HasStyleModelParams {
+        let modelId: String
+    }
+    let hasStyleModelStub = Stub<HasStyleModelParams, Bool>(defaultReturnValue: false)
+    func hasStyleModel(forModelId modelId: String) -> Bool {
+        hasStyleModelStub.call(with: HasStyleModelParams(modelId: modelId))
+    }
+
     let getStyleAtmospherePropertyStub = Stub<String, MapboxCoreMaps.StylePropertyValue>(
         defaultReturnValue: .init(value: "stub", kind: .undefined)
     )

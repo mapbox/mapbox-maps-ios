@@ -18,10 +18,6 @@ public struct ViewAnnotationManagerError: Error, Equatable {
 
     /// The required geometry field is missing
     public static let geometryFieldMissing = ViewAnnotationManagerError(message: "Geometry field missing")
-
-    init(message: String) {
-        self.message = message
-    }
 }
 
 /// An interface you use to detect when the map view lays out or updates visibility of annotation views.

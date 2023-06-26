@@ -54,7 +54,7 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
             currentLocation: CLLocation(
                 latitude: centerCoordinate.latitude,
                 longitude: centerCoordinate.longitude))
-        mapView.location.overrideLocationProvider(with: customLocationProvider)
+        mapView.location.provider = customLocationProvider
         mapView.location.options.puckType = .puck2D(.makeDefault())
 
         // create point annotation manager to house point annotations
@@ -94,7 +94,7 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
             }
         }.store(in: &cancelables)
         mapView.gestures.delegate = self
-        mapView.location.addLocationConsumer(self)
+        mapView.location.provider.add(consumer: self)
     }
 
     @objc private func voiceOverStatusDidChange() {

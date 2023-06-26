@@ -48,6 +48,12 @@ public struct LineLayer: Layer {
     /// Specifies the lengths of the alternating dashes and gaps that form the dash pattern. The lengths are later scaled by the line width. To convert a dash length to pixels, multiply the length by the current line width. Note that GeoJSON sources with `lineMetrics: true` specified won't render dashed lines to the expected scale. Also note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public var lineDasharray: Value<[Double]>?
 
+    /// Decrease line layer opacity based on occlusion from 3D objects. Value 0 disables occlusion, value 1 means fully occluded.
+    public var lineDepthOcclusionFactor: Value<Double>?
+
+    /// Transition options for `lineDepthOcclusionFactor`.
+    public var lineDepthOcclusionFactorTransition: StyleTransition?
+
     /// Draws a line casing outside of a line's actual path. Value indicates the width of the inner gap.
     public var lineGapWidth: Value<Double>?
 
@@ -112,6 +118,8 @@ public struct LineLayer: Layer {
         try paintContainer.encodeIfPresent(lineColor, forKey: .lineColor)
         try paintContainer.encodeIfPresent(lineColorTransition, forKey: .lineColorTransition)
         try paintContainer.encodeIfPresent(lineDasharray, forKey: .lineDasharray)
+        try paintContainer.encodeIfPresent(lineDepthOcclusionFactor, forKey: .lineDepthOcclusionFactor)
+        try paintContainer.encodeIfPresent(lineDepthOcclusionFactorTransition, forKey: .lineDepthOcclusionFactorTransition)
         try paintContainer.encodeIfPresent(lineGapWidth, forKey: .lineGapWidth)
         try paintContainer.encodeIfPresent(lineGapWidthTransition, forKey: .lineGapWidthTransition)
         try paintContainer.encodeIfPresent(lineGradient, forKey: .lineGradient)
@@ -152,6 +160,8 @@ public struct LineLayer: Layer {
             lineColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .lineColor)
             lineColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineColorTransition)
             lineDasharray = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .lineDasharray)
+            lineDepthOcclusionFactor = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineDepthOcclusionFactor)
+            lineDepthOcclusionFactorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineDepthOcclusionFactorTransition)
             lineGapWidth = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineGapWidth)
             lineGapWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineGapWidthTransition)
             lineGradient = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .lineGradient)
@@ -207,6 +217,8 @@ public struct LineLayer: Layer {
         case lineColor = "line-color"
         case lineColorTransition = "line-color-transition"
         case lineDasharray = "line-dasharray"
+        case lineDepthOcclusionFactor = "line-depth-occlusion-factor"
+        case lineDepthOcclusionFactorTransition = "line-depth-occlusion-factor-transition"
         case lineGapWidth = "line-gap-width"
         case lineGapWidthTransition = "line-gap-width-transition"
         case lineGradient = "line-gradient"

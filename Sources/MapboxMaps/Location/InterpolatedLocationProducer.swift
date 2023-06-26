@@ -3,7 +3,9 @@ import os
 
 internal protocol InterpolatedLocationProducerProtocol: AnyObject {
     var isEnabled: Bool { get set }
-    var location: InterpolatedLocation? { get }
+    var locationProvider: LocationProvider { get set }
+    var currentLocation: InterpolatedLocation? { get }
+    var latestLocation: Location? { get }
     func observe(with handler: @escaping (InterpolatedLocation) -> Bool) -> Cancelable
     func addPuckLocationConsumer(_ consumer: PuckLocationConsumer)
     func removePuckLocationConsumer(_ consumer: PuckLocationConsumer)
@@ -22,7 +24,9 @@ internal final class InterpolatedLocationProducer: InterpolatedLocationProducerP
     private let consumers = WeakSet<PuckLocationConsumer>()
     private var cancelableToken: Cancelable?
 
-    internal var location: InterpolatedLocation? {
+    internal private(set) var latestLocation: Location?
+
+    internal var currentLocation: InterpolatedLocation? {
         observableInterpolatedLocation.value
     }
 
@@ -36,23 +40,44 @@ internal final class InterpolatedLocationProducer: InterpolatedLocationProducerP
         cancelableToken?.cancel()
     }
 
+    internal var locationProvider: LocationProvider {
+        didSet {
+            oldValue.remove(consumer: self)
+            if isActive {
+                locationProvider.add(consumer: self)
+            }
+
+        }
+    }
+    private weak var displayLinkCoordinator: DisplayLinkCoordinator?
+
+    private var isActive: Bool = false {
+        didSet {
+            if isActive {
+                locationProvider.add(consumer: self)
+                displayLinkCoordinator?.add(self)
+            } else {
+                locationProvider.remove(consumer: self)
+                displayLinkCoordinator?.remove(self)
+            }
+        }
+    }
+
     internal init(observableInterpolatedLocation: ObservableInterpolatedLocationProtocol,
                   locationInterpolator: LocationInterpolatorProtocol,
                   dateProvider: DateProvider,
-                  locationProducer: LocationProducerProtocol,
+                  locationProvider: LocationProvider,
                   displayLinkCoordinator: DisplayLinkCoordinator) {
         self.observableInterpolatedLocation = observableInterpolatedLocation
         self.locationInterpolator = locationInterpolator
         self.dateProvider = dateProvider
-        observableInterpolatedLocation.onFirstSubscribe = { [weak self, weak displayLinkCoordinator] in
-            guard let self = self else { return }
-            locationProducer.add(self)
-            displayLinkCoordinator?.add(self)
+        self.locationProvider = locationProvider
+        self.displayLinkCoordinator = displayLinkCoordinator
+        observableInterpolatedLocation.onFirstSubscribe = { [weak self] in
+            self?.isActive = true
         }
-        observableInterpolatedLocation.onLastUnsubscribe = { [weak self, weak displayLinkCoordinator] in
-            guard let self = self else { return }
-            locationProducer.remove(self)
-            displayLinkCoordinator?.remove(self)
+        observableInterpolatedLocation.onLastUnsubscribe = { [weak self] in
+            self?.isActive = false
         }
     }
 
@@ -117,6 +142,7 @@ internal final class InterpolatedLocationProducer: InterpolatedLocationProducerP
 
 extension InterpolatedLocationProducer: LocationConsumer {
     internal func locationUpdate(newLocation: Location) {
+        latestLocation = newLocation
         let currentDate = dateProvider.now
 
         // as a first iteration, assume a 1s location update interval and use a

@@ -506,6 +506,79 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-dasharray"] as! [Double], defaultValue)
     }
 
+    func testInitialLineDepthOcclusionFactor() {
+        let initialValue = manager.lineDepthOcclusionFactor
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetLineDepthOcclusionFactor() {
+        let value = Double.random(in: 0...1)
+        manager.lineDepthOcclusionFactor = value
+        XCTAssertEqual(manager.lineDepthOcclusionFactor, value)
+
+        // test layer and source synced and properties added
+        manager.syncSourceAndLayerIfNeeded()
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-depth-occlusion-factor"] as! Double, value)
+    }
+
+    func testLineDepthOcclusionFactorAnnotationPropertiesAddedWithoutDuplicate() {
+        let newLineDepthOcclusionFactorProperty = Double.random(in: 0...1)
+        let secondLineDepthOcclusionFactorProperty = Double.random(in: 0...1)
+
+        manager.lineDepthOcclusionFactor = newLineDepthOcclusionFactorProperty
+        manager.syncSourceAndLayerIfNeeded()
+        manager.lineDepthOcclusionFactor = secondLineDepthOcclusionFactorProperty
+        manager.syncSourceAndLayerIfNeeded()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-depth-occlusion-factor"] as! Double, secondLineDepthOcclusionFactorProperty)
+    }
+
+    func testNewLineDepthOcclusionFactorPropertyMergedWithAnnotationProperties() {
+        var annotations = [PolylineAnnotation]()
+        for _ in 0...5 {
+            let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
+            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
+            annotation.lineJoin = LineJoin.allCases.randomElement()!
+            annotation.lineSortKey = Double.random(in: -100000...100000)
+            annotation.lineBlur = Double.random(in: 0...100000)
+            annotation.lineColor = StyleColor.random()
+            annotation.lineGapWidth = Double.random(in: 0...100000)
+            annotation.lineOffset = Double.random(in: -100000...100000)
+            annotation.lineOpacity = Double.random(in: 0...1)
+            annotation.linePattern = String.randomASCII(withLength: .random(in: 0...100))
+            annotation.lineWidth = Double.random(in: 0...100000)
+            annotations.append(annotation)
+        }
+        let newLineDepthOcclusionFactorProperty = Double.random(in: 0...1)
+
+        manager.annotations = annotations
+        manager.lineDepthOcclusionFactor = newLineDepthOcclusionFactorProperty
+        manager.syncSourceAndLayerIfNeeded()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-depth-occlusion-factor"])
+    }
+
+    func testSetToNilLineDepthOcclusionFactor() {
+        let newLineDepthOcclusionFactorProperty = Double.random(in: 0...1)
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-depth-occlusion-factor").value as! Double
+        manager.lineDepthOcclusionFactor = newLineDepthOcclusionFactorProperty
+        manager.syncSourceAndLayerIfNeeded()
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-depth-occlusion-factor"])
+
+        manager.lineDepthOcclusionFactor = nil
+        manager.syncSourceAndLayerIfNeeded()
+        XCTAssertNil(manager.lineDepthOcclusionFactor)
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-depth-occlusion-factor"] as! Double, defaultValue)
+    }
+
     func testInitialLineTranslate() {
         let initialValue = manager.lineTranslate
         XCTAssertNil(initialValue)

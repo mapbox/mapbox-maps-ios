@@ -39,7 +39,7 @@ public final class MapInitOptions: NSObject {
     public init(
         mapOptions: MapOptions = MapOptions(),
         cameraOptions: CameraOptions? = nil,
-        styleURI: StyleURI? = .streets,
+        styleURI: StyleURI? = .standard,
         styleJSON: String? = nil
     ) {
         self.mapOptions      = mapOptions

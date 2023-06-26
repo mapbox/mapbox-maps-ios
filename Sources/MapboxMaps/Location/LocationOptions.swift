@@ -9,19 +9,19 @@ public struct LocationOptions: Equatable {
     ///
     /// The default value of this property is `kCLDistanceFilterNone`.
     @available(*, unavailable, message: "Use AppleLocationProvider.Options.distanceFilter instead")
-    public var distanceFilter: CLLocationDistance = kCLDistanceFilterNone
+    public var distanceFilter: CLLocationDistance { kCLDistanceFilterNone }
 
     /// Specifies the accuracy of the location data.
     ///
     /// The default value is `kCLLocationAccuracyBest`.
     @available(*, unavailable, message: "Use AppleLocationProvider.Options.desiredAccuracy instead")
-    public var desiredAccuracy: CLLocationAccuracy = kCLLocationAccuracyBest
+    public var desiredAccuracy: CLLocationAccuracy { kCLLocationAccuracyBest }
 
     /// Sets the type of user activity associated with the location updates.
     ///
     /// The default value is `CLActivityType.other`.
     @available(*, unavailable, message: "Use AppleLocationProvider.Options.activityType instead")
-    public var activityType: CLActivityType = .other
+    public var activityType: CLActivityType { .other }
 
     /// Sets the type of puck that should be used
     public var puckType: PuckType?

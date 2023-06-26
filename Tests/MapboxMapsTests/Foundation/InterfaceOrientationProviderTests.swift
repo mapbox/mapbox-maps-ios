@@ -7,10 +7,12 @@ final class DefaultInterfaceOrientationProviderTests: XCTestCase {
     var device: MockUIDevice!
     var orientationProvider: DefaultInterfaceOrientationProvider!
     @MutableRef var userInterfaceOrientationView: UIView?
+    var cancellables: Set<AnyCancelable>!
 
     override func setUp() {
         super.setUp()
 
+        cancellables = Set<AnyCancelable>()
         notificationCenter = MockNotificationCenter()
         device = MockUIDevice()
         orientationProvider = DefaultInterfaceOrientationProvider(
@@ -22,6 +24,7 @@ final class DefaultInterfaceOrientationProviderTests: XCTestCase {
     override func tearDown() {
         super.tearDown()
 
+        cancellables = nil
         notificationCenter = nil
         device = nil
         orientationProvider = nil
@@ -57,17 +60,16 @@ final class DefaultInterfaceOrientationProviderTests: XCTestCase {
 
     func testBeginGeneratingDeviceOrientationNotificationsIsCalledWhenUpdating() {
         // when
-        let token = orientationProvider.onInterfaceOrientationChange.observe { _ in }
+        orientationProvider.onInterfaceOrientationChange.observe { _ in }.store(in: &cancellables)
 
         XCTAssertEqual(device.beginGeneratingDeviceOrientationNotificationsStub.invocations.count, 1)
         XCTAssertEqual(device.endGeneratingDeviceOrientationNotificationsStub.invocations.count, 0)
-        _ = token
     }
 
     func testEndGeneratingDeviceOrientationNotificationsIsCalledWhenNotUpdating() {
         // when
         do {
-            _ =  orientationProvider.onInterfaceOrientationChange.observe { _ in }
+            _ = orientationProvider.onInterfaceOrientationChange.observe { _ in }
         }
 
         // then
@@ -77,13 +79,12 @@ final class DefaultInterfaceOrientationProviderTests: XCTestCase {
 
     func testDeviceOrientationDidChangeSubscribedWhenUpdating() {
         // when
-        let token = orientationProvider.onInterfaceOrientationChange.observe { _ in }
+        orientationProvider.onInterfaceOrientationChange.observe { _ in }.store(in: &cancellables)
 
         // then
         XCTAssertEqual(notificationCenter.addObserverStub.invocations.count, 1)
         XCTAssertIdentical(notificationCenter.addObserverStub.invocations.first?.parameters.observer as? AnyObject, orientationProvider)
         XCTAssertEqual(notificationCenter.addObserverStub.invocations.first?.parameters.name, UIDevice.orientationDidChangeNotification)
-        _ = token
     }
 
     func testDeviceOrientationDidChangeUnsubscribedWhenInactive() {
@@ -99,7 +100,7 @@ final class DefaultInterfaceOrientationProviderTests: XCTestCase {
     func testHeadingOrientationIsUpdatedWhenDeviceOrientationDidChange() {
         // given
         @Stubbed var orientation: UIInterfaceOrientation?
-        let token = orientationProvider.onInterfaceOrientationChange.observe { orientation = $0 }
+        orientationProvider.onInterfaceOrientationChange.observe { orientation = $0 }.store(in: &cancellables)
         $orientation.setStub.reset()
 
         // when
@@ -107,6 +108,5 @@ final class DefaultInterfaceOrientationProviderTests: XCTestCase {
 
         // then
         XCTAssertEqual($orientation.setStub.invocations.count, 1)
-        _ = token
     }
 }

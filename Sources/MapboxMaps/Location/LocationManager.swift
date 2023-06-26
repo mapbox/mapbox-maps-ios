@@ -13,7 +13,7 @@ public final class LocationManager {
 
     /// The object that acts as the delegate of the location manager.
     @available(*, unavailable, message: "Use AppleLocationProvider.delegate instead")
-    public weak var delegate: LocationPermissionsDelegate?
+    public weak var delegate: LocationPermissionsDelegate? { nil }
 
     /// Configuration options for the location manager.
     public var options = LocationOptions() {

@@ -2,9 +2,6 @@ parameters:
   project-name:
     description: Project name in SDK Registry.
     type: string
-  skip-private-sdk:
-    description: Whether to skip private flavor of SDK to release.
-    type: boolean
 executor: xcode-latest
 steps:
   - checkout-root
@@ -24,7 +21,7 @@ steps:
         scripts/release/upload-docs --jazzy-docs api-docs --docc-docs workspace/docc --version "$VERSION"
   - run:
       name: Create SDK Registry PR
-      command: SKIP_PRIVATE=<< parameters.skip-private-sdk >> scripts/release/create-api-downloads-pr.sh << parameters.project-name >> "$VERSION"
+      command: scripts/release/create-api-downloads-pr.sh << parameters.project-name >> "$VERSION"
   - persist_to_workspace:
       root: .
       paths:

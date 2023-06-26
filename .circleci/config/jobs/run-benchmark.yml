@@ -4,8 +4,6 @@ steps:
   - mapbox/add-mapbox-ssh-key
   - mapbox/install-mbx-ci:
       platform: linux
-  - checkout-submodule:
-      at: mobile-metrics
   - attach_workspace:
       at: Products
   - run: ls -l Products/
@@ -19,7 +17,7 @@ steps:
   - run:
       name: Schedule DeviceFarm run
       command: |
-        mobile-metrics/ios-maps/Scripts/devicefarm.py \
+        scripts/devicefarm.py \
           "$AWS_DEVICE_FARM_PROJECT_ARN" \
           --name "Benchmark_v2-$CIRCLE_SHA1-$CIRCLE_BUILD_NUM" \
           --device-pool "$AWS_DEVICE_POOL_ARN" \
@@ -33,7 +31,7 @@ steps:
   - run:
       name: Wait for DeviceFarm results
       command: |
-        mobile-metrics/ios-maps/Scripts/devicefarm.py \
+        scripts/devicefarm.py \
           "$AWS_DEVICE_FARM_PROJECT_ARN" \
           --run-arn-file benchmark_waiter.json \
           --artifacts-dir BenchmarkResults \

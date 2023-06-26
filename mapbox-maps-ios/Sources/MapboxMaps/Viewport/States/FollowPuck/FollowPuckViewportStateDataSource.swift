@@ -51,7 +51,7 @@ internal final class FollowPuckViewportStateDataSource: FollowPuckViewportStateD
     }
 
     private func processUpdatedCamera() {
-        if let cameraOptions = interpolatedLocationProducer.location.map(cameraOptions(for:)) {
+        if let cameraOptions = interpolatedLocationProducer.currentLocation.map(cameraOptions(for:)) {
             observableCameraOptions.notify(with: cameraOptions)
         }
     }

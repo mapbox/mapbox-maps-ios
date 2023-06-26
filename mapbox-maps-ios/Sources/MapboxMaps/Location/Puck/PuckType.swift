@@ -150,6 +150,15 @@ public struct Puck3DConfiguration: Equatable {
     /// The opacity of the model used as the location puck
     public var modelOpacity: Value<Double>?
 
+    /// Enable/disable shadow casting for the puck model
+    @_spi(Experimental) public var modelCastShadows: Value<Bool>?
+
+    /// Enable/disable shadow receiving for the puck model
+    @_spi(Experimental) public var modelReceiveShadows: Value<Bool>?
+
+    /// Defines scaling mode. Only applies to location-indicator type layers. Default to ``ModelScaleMode/viewport``.
+    @_spi(Experimental) public var modelScaleMode: Value<ModelScaleMode>?
+
     /// Initialize a `Puck3DConfiguration` with a model, scale and rotation.
     /// - Parameters:
     ///   - model: The `gltf` model to use for the puck.
@@ -161,6 +170,29 @@ public struct Puck3DConfiguration: Equatable {
         self.modelScale = modelScale
         self.modelRotation = modelRotation
         self.modelOpacity = modelOpacity
+    }
+
+    /// Initialize a `Puck3DConfiguration` with a model, scale, rotation and an parameter to control shadow casting.
+    /// - Parameters:
+    ///   - model: The `gltf` model to use for the puck.
+    ///   - modelScale: The amount to scale the model by.
+    ///   - modelRotation: The rotation of the model in euler angles `[lon, lat, z]`.
+    ///   - modelOpacity: The opacity of the model used as the location puck
+    ///   - modelCastShadows: Enable/disable shadow casting for the puck model
+    ///   - modelReceiveShadows: Enable/disable shadow receiving for the puck model
+    @_spi(Experimental) public init(model: Model,
+                                    modelScale: Value<[Double]>? = nil,
+                                    modelRotation: Value<[Double]>? = nil,
+                                    modelOpacity: Value<Double>? = nil,
+                                    modelCastShadows: Value<Bool>? = nil,
+                                    modelReceiveShadows: Value<Bool>? = nil,
+                                    modelScaleMode: Value<ModelScaleMode>? = .constant(.viewport)) {
+        self.model = model
+        self.modelScale = modelScale
+        self.modelRotation = modelRotation
+        self.modelCastShadows = modelCastShadows
+        self.modelReceiveShadows = modelReceiveShadows
+        self.modelScaleMode = modelScaleMode
     }
 }
 

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -163,6 +163,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CADCF8D72585513C0065C51B /* Build configuration list for PBXNativeTarget "StressTest" */;
 			buildPhases = (
+				959F08DE2A3F56E3002DE420 /* Insert Mapbox Access Token */,
 				CADCF8A9258551390065C51B /* Sources */,
 				CADCF8AA258551390065C51B /* Frameworks */,
 				CADCF8AB258551390065C51B /* Resources */,
@@ -284,6 +285,30 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		959F08DE2A3F56E3002DE420 /* Insert Mapbox Access Token */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Insert Mapbox Access Token";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(INFOPLIST_PREFIX_HEADER)",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "$SRCROOT/../../scripts/insert_access_token.sh\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		CADCF8A9258551390065C51B /* Sources */ = {
@@ -473,6 +498,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				INFOPLIST_FILE = StressTest/Info.plist;
+				INFOPLIST_PREFIX_HEADER = "$(DERIVED_FILE_DIR)/InfoPlist.Prefix.h";
+				INFOPLIST_PREPROCESS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -493,6 +520,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				INFOPLIST_FILE = StressTest/Info.plist;
+				INFOPLIST_PREFIX_HEADER = "$(DERIVED_FILE_DIR)/InfoPlist.Prefix.h";
+				INFOPLIST_PREPROCESS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -13,15 +13,15 @@ class SpecsBenchmark: XCTestCase {
     }
 
     func testNavDayMunichTtrcCold() throws {
-        try runScenarioBenchmark(name: "nav-day-munich-ttrc-cold")
+        try runScenarioBenchmark(name: "nav-day-munich-ttrc-cold", measureFrom: { $0 is CreateMapCommand })
     }
 
     func testNavDayMunichTtrcWarm() throws {
-        try runScenarioBenchmark(name: "nav-day-munich-ttrc-warm")
+        try runScenarioBenchmark(name: "nav-day-munich-ttrc-warm", measureFrom: { $0 is CreateMapCommand })
     }
 
     func testStreetsMunichTtrcCold() throws {
-        try runScenarioBenchmark(name: "streets-munich-ttrc-cold")
+        try runScenarioBenchmark(name: "streets-munich-ttrc-cold", measureFrom: { $0 is CreateMapCommand })
     }
 
     func testStreetsMunichTtrcWarm() throws {

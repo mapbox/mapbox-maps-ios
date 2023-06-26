@@ -36,8 +36,6 @@ def main():
                         help='use dependencies from the last release')
     parser.add_argument('--clean', action=argparse.BooleanOptionalAction, default=False,
                         help='clean repositories before checkout')
-    parser.add_argument('--private-commit', type=str,
-                        help='commit to use for private version of Mapbox Maps iOS. If specified, the private repo will be checked out instead of local public subtree.')
 
     parser.add_argument('--force-relative-paths', action=argparse.BooleanOptionalAction, help="Replace absolute paths with relative paths in the generated project file. Experimental.")
 
@@ -50,13 +48,8 @@ def main():
         os.mkdir("build")
     os.chdir("build")
 
-    if args.private_commit:
-        maps_path = "mapbox-maps-ios-private"
-        print_phase(f"Checkout Private Mapbox Maps iOS ({maps_path}@{args.private_commit})")
-        checkout_repo(maps_path, args.private_commit, clean=args.clean)
-    else:
-        maps_path = "../../mapbox-maps-ios"
-        print_phase(f"Using Public Mapbox Maps iOS from subtree")
+
+    maps_path = "../../mapbox-maps-ios"
 
     if args.stable:
         with open(f"{maps_path}/scripts/release/packager/versions.json") as f:

@@ -6,7 +6,7 @@ final class MapViewTests: XCTestCase {
     var notificationCenter: MockNotificationCenter!
     var bundle: MockBundle!
     var displayLink: MockDisplayLink!
-    var locationProducer: MockLocationProducer!
+    var locationProvider: MockLocationProvider!
     var dependencyProvider: MockMapViewDependencyProvider!
     var cameraAnimatorsRunner: MockCameraAnimatorsRunner!
     var attributionURLOpener: MockAttributionURLOpener!
@@ -20,13 +20,13 @@ final class MapViewTests: XCTestCase {
         notificationCenter = MockNotificationCenter()
         bundle = MockBundle()
         displayLink = MockDisplayLink()
-        locationProducer = MockLocationProducer()
+        locationProvider = MockLocationProvider()
         cameraAnimatorsRunner = MockCameraAnimatorsRunner()
         dependencyProvider = MockMapViewDependencyProvider()
         dependencyProvider.notificationCenter = notificationCenter
         dependencyProvider.bundle = bundle
         dependencyProvider.makeDisplayLinkStub.defaultReturnValue = displayLink
-        dependencyProvider.makeLocationProducerStub.defaultReturnValue = locationProducer
+        dependencyProvider.makeLocationProviderStub.defaultReturnValue = locationProvider
         dependencyProvider.makeCameraAnimatorsRunnerStub.defaultReturnValue = cameraAnimatorsRunner
         attributionURLOpener = MockAttributionURLOpener()
         applicationState = .active
@@ -45,7 +45,7 @@ final class MapViewTests: XCTestCase {
         mapView = nil
         attributionURLOpener = nil
         dependencyProvider = nil
-        locationProducer = nil
+        locationProvider = nil
         cameraAnimatorsRunner = nil
         displayLink = nil
         bundle = nil
@@ -402,7 +402,7 @@ final class MapViewTestsWithScene: XCTestCase {
     var notificationCenter: MockNotificationCenter!
     var bundle: MockBundle!
     var displayLink: MockDisplayLink!
-    var locationProducer: MockLocationProducer!
+    var locationProvider: MockLocationProvider!
     var dependencyProvider: MockMapViewDependencyProvider!
     var orientationProvider: MockInterfaceOrientationProvider!
     var attributionURLOpener: MockAttributionURLOpener!
@@ -418,12 +418,12 @@ final class MapViewTestsWithScene: XCTestCase {
         bundle = MockBundle()
         bundle.infoDictionaryStub.defaultReturnValue = ["UIApplicationSceneManifest": []]
         displayLink = MockDisplayLink()
-        locationProducer = MockLocationProducer()
+        locationProvider = MockLocationProvider()
         dependencyProvider = MockMapViewDependencyProvider()
         dependencyProvider.notificationCenter = notificationCenter
         dependencyProvider.bundle = bundle
         dependencyProvider.makeDisplayLinkStub.defaultReturnValue = displayLink
-        dependencyProvider.makeLocationProducerStub.defaultReturnValue = locationProducer
+        dependencyProvider.makeLocationProviderStub.defaultReturnValue = locationProvider
         orientationProvider = MockInterfaceOrientationProvider()
         attributionURLOpener = MockAttributionURLOpener()
         applicationState = .active
@@ -451,7 +451,7 @@ final class MapViewTestsWithScene: XCTestCase {
         attributionURLOpener = nil
         orientationProvider = nil
         dependencyProvider = nil
-        locationProducer = nil
+        locationProvider = nil
         displayLink = nil
 
         bundle = nil

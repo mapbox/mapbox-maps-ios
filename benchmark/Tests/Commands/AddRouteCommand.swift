@@ -19,7 +19,7 @@ struct AddRouteCommand: AsyncCommand {
 
         mapView.location.options.puckType = .puck2D(.makeDefault(showBearing: false))
         mapView.location.options.puckBearing = .course
-        mapView.location.overrideLocationProvider(with: locationProvider)
+        mapView.location.provider = locationProvider
 
         // Setup route.
         let route = try getRoute()

@@ -6,7 +6,7 @@ final class InterpolatedLocationProducerTests: XCTestCase {
     var observableInterpolatedLocation: MockObservableInterpolatedLocation!
     var locationInterpolator: MockLocationInterpolator!
     var dateProvider: MockDateProvider!
-    var locationProducer: MockLocationProducer!
+    var locationProvider: MockLocationProvider!
     var displayLinkCoordinator: MockDisplayLinkCoordinator!
     var interpolatedLocationProducer: InterpolatedLocationProducer!
 
@@ -15,20 +15,20 @@ final class InterpolatedLocationProducerTests: XCTestCase {
         observableInterpolatedLocation = MockObservableInterpolatedLocation()
         locationInterpolator = MockLocationInterpolator()
         dateProvider = MockDateProvider()
-        locationProducer = MockLocationProducer()
+        locationProvider = MockLocationProvider()
         displayLinkCoordinator = MockDisplayLinkCoordinator()
         interpolatedLocationProducer = InterpolatedLocationProducer(
             observableInterpolatedLocation: observableInterpolatedLocation,
             locationInterpolator: locationInterpolator,
             dateProvider: dateProvider,
-            locationProducer: locationProducer,
+            locationProvider: locationProvider,
             displayLinkCoordinator: displayLinkCoordinator)
     }
 
     override func tearDown() {
         interpolatedLocationProducer = nil
         displayLinkCoordinator = nil
-        locationProducer = nil
+        locationProvider = nil
         dateProvider = nil
         locationInterpolator = nil
         observableInterpolatedLocation = nil
@@ -36,15 +36,15 @@ final class InterpolatedLocationProducerTests: XCTestCase {
     }
 
     func testInitialization() {
-        XCTAssertEqual(locationProducer.addStub.invocations.count, 0)
+        XCTAssertEqual(locationProvider.addConsumerStub.invocations.count, 0)
         XCTAssertEqual(displayLinkCoordinator.addStub.invocations.count, 0)
     }
 
     func testOnFirstSubscribe() {
         observableInterpolatedLocation.onFirstSubscribe?()
 
-        XCTAssertEqual(locationProducer.addStub.invocations.count, 1)
-        XCTAssertIdentical(locationProducer.addStub.invocations.first?.parameters, interpolatedLocationProducer)
+        XCTAssertEqual(locationProvider.addConsumerStub.invocations.count, 1)
+        XCTAssertIdentical(locationProvider.addConsumerStub.invocations.first?.parameters, interpolatedLocationProducer)
         XCTAssertEqual(displayLinkCoordinator.addStub.invocations.count, 1)
         XCTAssertIdentical(displayLinkCoordinator.addStub.invocations.first?.parameters, interpolatedLocationProducer)
     }
@@ -52,16 +52,16 @@ final class InterpolatedLocationProducerTests: XCTestCase {
     func testOnLastUnsubscribe() {
         observableInterpolatedLocation.onLastUnsubscribe?()
 
-        XCTAssertEqual(locationProducer.removeStub.invocations.count, 1)
-        XCTAssertIdentical(locationProducer.removeStub.invocations.first?.parameters, interpolatedLocationProducer)
+        XCTAssertEqual(locationProvider.removeConsumerStub.invocations.count, 1)
+        XCTAssertIdentical(locationProvider.removeConsumerStub.invocations.first?.parameters, interpolatedLocationProducer)
         XCTAssertEqual(displayLinkCoordinator.removeStub.invocations.count, 1)
         XCTAssertIdentical(displayLinkCoordinator.removeStub.invocations.first?.parameters, interpolatedLocationProducer)
     }
 
-    func testLocation() {
+    func testCurrentLocation() {
         observableInterpolatedLocation.value = .random(.random())
 
-        XCTAssertEqual(interpolatedLocationProducer.location, observableInterpolatedLocation.value)
+        XCTAssertEqual(interpolatedLocationProducer.currentLocation, observableInterpolatedLocation.value)
     }
 
     func testObserve() throws {
@@ -227,5 +227,53 @@ final class InterpolatedLocationProducerTests: XCTestCase {
         interpolatedLocationProducer.participate()
         XCTAssertEqual(locationInterpolator.interpolateStub.invocations.count, 0)
         XCTAssertEqual(observableInterpolatedLocation.notifyStub.invocations.map(\.parameters), [interpolatedLocation2])
+    }
+
+    func testNewLocationProviderIsSubscribedWhenActive() {
+        // given
+        let oldLocationProvider = locationProvider
+        let newLocationProvider = MockLocationProvider()
+        observableInterpolatedLocation.onFirstSubscribe?()
+
+        // when
+        interpolatedLocationProducer.locationProvider = newLocationProvider
+
+        // then
+        // old provider unsubscribed
+        XCTAssertEqual(oldLocationProvider?.removeConsumerStub.invocations.count, 1)
+        XCTAssertIdentical(oldLocationProvider?.removeConsumerStub.invocations.first?.parameters, interpolatedLocationProducer)
+        // new provider subscribed
+        XCTAssertEqual(newLocationProvider.addConsumerStub.invocations.count, 1)
+        XCTAssertIdentical(newLocationProvider.addConsumerStub.invocations.first?.parameters, interpolatedLocationProducer)
+    }
+
+    func testNewLocationProviderIsNotSubscribedWhenInactive() {
+        // given
+        let oldLocationProvider = locationProvider
+        let newLocationProvider = MockLocationProvider()
+
+        // when
+        interpolatedLocationProducer.locationProvider = newLocationProvider
+
+        // then
+        // old provider unsubscribed
+        XCTAssertEqual(oldLocationProvider?.removeConsumerStub.invocations.count, 1)
+        XCTAssertIdentical(oldLocationProvider?.removeConsumerStub.invocations.first?.parameters, interpolatedLocationProducer)
+        // new provider not(yet) subscribed
+        XCTAssertEqual(newLocationProvider.addConsumerStub.invocations.count, 0)
+    }
+
+    func testLatestLocationIsLastReceivedProviderLocation() {
+        // given
+        let location = Location(location: .random(), accuracyAuthorization: .random())
+        observableInterpolatedLocation.onFirstSubscribe?()
+
+        // when
+        locationProvider.postLocationUpdate(location)
+
+        // then
+        XCTAssertEqual(interpolatedLocationProducer.latestLocation?.location, location.location)
+        XCTAssertEqual(interpolatedLocationProducer.latestLocation?.heading, location.heading)
+        XCTAssertEqual(interpolatedLocationProducer.latestLocation?.accuracyAuthorization, location.accuracyAuthorization)
     }
 }

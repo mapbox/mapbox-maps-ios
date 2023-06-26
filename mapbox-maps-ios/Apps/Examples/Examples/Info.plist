@@ -25,7 +25,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MBXAccessToken</key>
-	<string></string>
+	<string>MAPBOX_ACCESS_TOKEN</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Get user location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

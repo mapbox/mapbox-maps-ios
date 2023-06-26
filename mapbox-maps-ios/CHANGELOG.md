@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.0.0-alpha.2 - 21 June, 2023
+
 * Remove unnecessary check before updating a geo json source.
 * Remove deprecated `LocationManager.updateHeadingForCurrentDeviceOrientation()` method.
 * Remove deprecated `MapEvents.EventKind`.
@@ -88,6 +90,53 @@ Mapbox welcomes participation and contributions from everyone.
 * Deprecate `MapboxMap/style` and `Snapshotter/style`, from now on you can access Style APIs directly from `MapboxMap` and `Snapshotter` instance.
 *  Support string option in `GeoJSONSourceData`.
 * Add a new experimental API to enable Tracing with `Tracing.status = .enabled`. Checkout `Tracing` reference to see more.
+* Introduce `FillExtrusionLayer.fillExtrusionRoundedRoof` , `FillExtrusionLayer.fillExtrusionEdgeRadius` API.
+* Introduce `line-depth-occlusion` API.
+* Introduce `FillExtrusionLayer/fillExtrusionRoundedRoof`, `FillExtrusionLayer/fillExtrusionEdgeRadius` API.
+* Introduce `lineDepthOcclusionFactor` API for `LineLayer`s and `PolylineAnnotiationManager`.
+* Add `Codable` support to `CameraOptions`, `CameraState`, `FollowPuckViewportStateBearing`, `FollowPuckViewportStateOptions`.
+
+## 10.14.0 - June 14, 2023
+
+* Added experimental `tileCover` method to the `Snapshotter` that returns tile ids covering the map.
+* Update MapboxCoreMaps to 10.14.0 and MapboxCommon to 23.6.0.
+
+## 10.14.0-rc.1 - May 31, 2023
+
+* Fix the issue with simultaneous zooming/panning during the pitch gesture.
+* Fix the issue with black MapView when transparent style is used.
+* Update MapboxCoreMaps to 10.14.0-rc.1 and MapboxCommon to 23.6.0-rc.1.
+
+## 10.14.0-beta.1 - May 17, 2023
+
+* Add a renamed flag to `PuckBearingSource` and related APIs.
+* Update MapboxCoreMaps to 10.14.0-beta.1 and MapboxCommon to 23.6.0-beta.1. 
+
+## 10.13.1 - May 5, 2023
+
+* Remove XCFramework binary dependency on MapboxMobileEvents.
+* Update MapboxCoreMaps to 10.13.1 and MapboxCommon to 23.5.0
+* [CarPlay] Fix display link is not correctly paused/resumed when map is added to a CarPlay dashboard scene.
+
+## 10.13.0-rc.1 - April 19, 2023
+
+* Update MapboxCoreMaps to 10.13.0-rc.1 and MapboxCommon to 23.5.0-rc.1. 
+
+## 10.13.0-beta.1 - April 5, 2023
+
+* Remove unnecessary check before updating a geo json source.
+* Enable zoom during a drag gesture.
+* Fix bearing value is fluctuating between initial value and correct value during a rotation gesture.
+* Allows animation during any ongoing gestures.
+* Sync map size to the size of the metal view.
+* Fix visual jitter when an annotation dragging ends.
+* Fix missing feature properties for `nil`/`null` values.
+* Added experimental `tileCover` method to `MapboxMap` that returns tile ids covering the map.
+* Update MapboxCoreMaps to 10.13.0-beta.1 and MapboxCommon to 23.5.0-beta.1.
+
+## 10.12.1 - March 29, 2023
+
+* Bump MapboxCoreMaps to 10.12.1
 
 ## 10.12.0 - March 22, 2023
 

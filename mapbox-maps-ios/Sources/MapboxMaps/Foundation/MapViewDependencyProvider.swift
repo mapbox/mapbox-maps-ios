@@ -12,15 +12,16 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
     func makeGestureManager(view: UIView,
                             mapboxMap: MapboxMapProtocol,
                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager
-    func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool,
-                              userInterfaceOrientationView: UIView) -> LocationProducerProtocol
-    func makeInterpolatedLocationProducer(locationProducer: LocationProducerProtocol,
+    func makeLocationProvider(userInterfaceOrientationView: UIView) -> LocationProvider
+    func makeInterpolatedLocationProducer(locationProvider: LocationProvider,
                                           displayLinkCoordinator: DisplayLinkCoordinator) -> InterpolatedLocationProducerProtocol
-    func makeLocationManager(locationProducer: LocationProducerProtocol,
+    // swiftlint:disable:next function_parameter_count
+    func makeLocationManager(locationProvider: LocationProvider,
                              interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
                              style: StyleProtocol,
                              mapboxMap: MapboxMapProtocol,
-                             displayLinkCoordinator: DisplayLinkCoordinator) -> LocationManager
+                             displayLinkCoordinator: DisplayLinkCoordinator,
+                             userInterfaceOrientationView: UIView) -> LocationManager
     func makeViewportImpl(mapboxMap: MapboxMapProtocol,
                           cameraAnimationsManager: CameraAnimationsManagerProtocol,
                           anyTouchGestureRecognizer: UIGestureRecognizer,
@@ -42,11 +43,6 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     internal let bundle: BundleProtocol = Bundle.main
 
     private let mainQueue: MainQueueProtocol = MainQueueWrapper()
-    private let interfaceOrientationProvider: InterfaceOrientationProvider
-
-    internal init(interfaceOrientationProvider: InterfaceOrientationProvider) {
-        self.interfaceOrientationProvider = interfaceOrientationProvider
-    }
 
     internal func makeMetalView(frame: CGRect, device: MTLDevice?) -> MTKView {
         MTKView(frame: frame, device: device)
@@ -259,19 +255,13 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             factory: factory)
     }
 
-    internal func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool,
-                                       userInterfaceOrientationView: UIView) -> LocationProducerProtocol {
-        let locationProvider = AppleLocationProvider()
-        return LocationProducer(
-            locationProvider: locationProvider,
-            interfaceOrientationProvider: interfaceOrientationProvider,
-            notificationCenter: notificationCenter,
-            userInterfaceOrientationView: userInterfaceOrientationView,
-            device: .current,
-            mayRequestWhenInUseAuthorization: mayRequestWhenInUseAuthorization)
+    internal func makeLocationProvider(userInterfaceOrientationView: UIView) -> LocationProvider {
+        let provider = AppleLocationProvider(
+                userInterfaceOrientationViewProvider: { [weak userInterfaceOrientationView] in userInterfaceOrientationView})
+        return provider
     }
 
-    internal func makeInterpolatedLocationProducer(locationProducer: LocationProducerProtocol,
+    internal func makeInterpolatedLocationProducer(locationProvider: LocationProvider,
                                                    displayLinkCoordinator: DisplayLinkCoordinator) -> InterpolatedLocationProducerProtocol {
         let doubleInterpolator = DoubleInterpolator()
         let wrappingInterpolator = WrappingInterpolator()
@@ -290,15 +280,16 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             observableInterpolatedLocation: ObservableInterpolatedLocation(),
             locationInterpolator: locationInterpolator,
             dateProvider: DefaultDateProvider(),
-            locationProducer: locationProducer,
+            locationProvider: locationProvider,
             displayLinkCoordinator: displayLinkCoordinator)
     }
-
-    internal func makeLocationManager(locationProducer: LocationProducerProtocol,
+    // swiftlint:disable:next function_parameter_count
+    internal func makeLocationManager(locationProvider: LocationProvider,
                                       interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
                                       style: StyleProtocol,
                                       mapboxMap: MapboxMapProtocol,
-                                      displayLinkCoordinator: DisplayLinkCoordinator) -> LocationManager {
+                                      displayLinkCoordinator: DisplayLinkCoordinator,
+                                      userInterfaceOrientationView: UIView) -> LocationManager {
         let puckManager = PuckManager(
             puck2DProvider: { [weak displayLinkCoordinator] configuration in
                 guard let displayLinkCoordinator = displayLinkCoordinator else {
@@ -319,9 +310,10 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                     interpolatedLocationProducer: interpolatedLocationProducer)
             })
         return LocationManager(
-            locationProducer: locationProducer,
+            locationProvider: locationProvider,
             interpolatedLocationProducer: interpolatedLocationProducer,
-            puckManager: puckManager)
+            puckManager: puckManager,
+            userInterfaceOrientationView: userInterfaceOrientationView)
     }
 
     internal func makeViewportImpl(mapboxMap: MapboxMapProtocol,

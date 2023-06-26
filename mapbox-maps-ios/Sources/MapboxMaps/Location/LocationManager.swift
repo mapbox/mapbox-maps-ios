@@ -6,25 +6,14 @@ import UIKit
 public final class LocationManager {
 
     /// Represents the latest location received from the location provider.
+    @available(*, deprecated, message: "Use LocationProvider.latestLocation instead")
     public var latestLocation: Location? {
-        return locationProducer.latestLocation
+        return locationProvider.latestLocation
     }
 
     /// The object that acts as the delegate of the location manager.
+    @available(*, unavailable, message: "Use AppleLocationProvider.delegate instead")
     public weak var delegate: LocationPermissionsDelegate?
-
-    /// The current underlying location provider. Use `overrideLocationProvider(with:)` to substitute a different provider.
-    /// Avoid manipulating the location provider directly. LocationManager assumes full responsibility for starting and stopping location
-    /// and heading updates as needed.
-    public var locationProvider: LocationProvider! {
-        return locationProducer.locationProvider
-    }
-
-    /// The set of objects that are currently consuming location updates.
-    /// The returned object is a copy of the underlying one, so mutating it will have no effect.
-    public var consumers: [LocationConsumer] {
-        return locationProducer.consumers
-    }
 
     /// Configuration options for the location manager.
     public var options = LocationOptions() {
@@ -33,37 +22,57 @@ public final class LocationManager {
         }
     }
 
-    private let locationProducer: LocationProducerProtocol
+    /// The current location provider.
+    /// Use this property to override the default(CoreLocation based) location provider with the supplied one.
+    public var provider: LocationProvider {
+        didSet {
+            interpolatedLocationProducer.locationProvider = provider
+        }
+    }
+
+    /// The current location provider.
+    /// Use this property to override the default(CoreLocation based) location provider with the supplied one.
+    @available(*, deprecated, renamed: "provider")
+    public var locationProvider: LocationProvider {
+        get { provider }
+        set { provider = newValue }
+    }
+
     private let interpolatedLocationProducer: InterpolatedLocationProducerProtocol
 
     /// Manager that handles the visual puck element.
     /// Only created if `showsUserLocation` is `true`.
     private let puckManager: PuckManagerProtocol
+    private weak var userInterfaceOrientationView: UIView?
 
-    internal init(locationProducer: LocationProducerProtocol,
+    internal init(locationProvider: LocationProvider,
                   interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
-                  puckManager: PuckManagerProtocol) {
-        self.locationProducer = locationProducer
+                  puckManager: PuckManagerProtocol,
+                  userInterfaceOrientationView: UIView) {
+        self.provider = locationProvider
         self.interpolatedLocationProducer = interpolatedLocationProducer
         self.puckManager = puckManager
-        locationProducer.delegate = self
+        self.userInterfaceOrientationView = userInterfaceOrientationView
         syncOptions()
     }
 
-    /// Overrides the default(CoreLocation-based) location provider with the supplied one.
+    ///
     /// - Parameter customLocationProvider: The location provider to be used for location-related things.
+    @available(*, deprecated, renamed: "provider")
     public func overrideLocationProvider(with customLocationProvider: LocationProvider) {
-        locationProducer.locationProvider = customLocationProvider
+        provider = customLocationProvider
     }
 
     /// The location manager holds weak references to consumers, client code should retain these references.
+    @available(*, deprecated, message: "Use LocationProvider.add(consumer:) directly")
     public func addLocationConsumer(_ consumer: LocationConsumer) {
-        locationProducer.add(consumer)
+        provider.add(consumer: consumer)
     }
 
     /// Removes a location consumer from the location manager.
+    @available(*, deprecated, message: "Use LocationProvider.remove(consumer:) directly")
     public func removeLocationConsumer(_ consumer: LocationConsumer) {
-        locationProducer.remove(consumer)
+        provider.remove(consumer: consumer)
     }
 
     /// Adds ``PuckLocationConsumer`` to the location manager.
@@ -81,33 +90,14 @@ public final class LocationManager {
     }
 
     /// Allows a custom case to request full accuracy
-    @available(iOS 14.0, *)
-    public func requestTemporaryFullAccuracyPermissions(withPurposeKey purposeKey: String) {
-        locationProvider.requestTemporaryFullAccuracyAuthorization(withPurposeKey: purposeKey)
-    }
+    @available(*, unavailable, message: "Use AppleLocationProvider.requestTemporaryFullAccuracyAuthorization(withPurposeKey:) instead")
+    public func requestTemporaryFullAccuracyPermissions(withPurposeKey purposeKey: String) { fatalError() }
 
     private func syncOptions() {
-        locationProducer.locationProvider.locationProviderOptions = options
         puckManager.puckType = options.puckType
         puckManager.puckBearing = options.puckBearing
         puckManager.puckBearingEnabled = options.puckBearingEnabled
 
         interpolatedLocationProducer.isEnabled = options.puckType != nil
-    }
-}
-
-extension LocationManager: LocationProducerDelegate {
-    internal func locationProducer(_ locationProducer: LocationProducerProtocol,
-                                   didFailWithError error: Error) {
-        delegate?.locationManager(self, didFailToLocateUserWithError: error)
-    }
-
-    internal func locationProducer(_ locationProducer: LocationProducerProtocol,
-                                   didChangeAccuracyAuthorization accuracyAuthorization: CLAccuracyAuthorization) {
-        delegate?.locationManager(self, didChangeAccuracyAuthorization: accuracyAuthorization)
-    }
-
-    func locationProducerShouldDisplayHeadingCalibration(_ locationProducer: LocationProducerProtocol) -> Bool {
-        return delegate?.locationManagerShouldDisplayHeadingCalibration(self) ?? false
     }
 }

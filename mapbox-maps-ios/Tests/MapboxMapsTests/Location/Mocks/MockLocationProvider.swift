@@ -1,60 +1,50 @@
-import CoreLocation
-import MapboxMaps
+@testable import MapboxMaps
 
 final class MockLocationProvider: LocationProvider {
+    @Stubbed var latestLocation: Location?
 
-    var locationProviderOptions = LocationOptions()
-
-    var authorizationStatus: CLAuthorizationStatus = .notDetermined
-
-    var accuracyAuthorization: CLAccuracyAuthorization = .fullAccuracy
-
-    var heading: CLHeading?
-
-    @Stubbed var headingOrientation: CLDeviceOrientation = .unknown
-
-    let setDelegateStub = Stub<LocationProviderDelegate, Void>()
-    func setDelegate(_ delegate: LocationProviderDelegate) {
-        setDelegateStub.call(with: delegate)
+    let addConsumerStub = Stub<LocationConsumer, Void>()
+    func add(consumer: LocationConsumer) {
+        addConsumerStub.call(with: consumer)
     }
 
-    let requestAlwaysAuthorizationStub = Stub<Void, Void>()
-    func requestAlwaysAuthorization() {
-        requestAlwaysAuthorizationStub.call()
+    let removeConsumerStub = Stub<LocationConsumer, Void>()
+    func remove(consumer: LocationConsumer) {
+        removeConsumerStub.call(with: consumer)
     }
 
-    let requestWhenInUseAuthorizationStub = Stub<Void, Void>()
-    func requestWhenInUseAuthorization() {
-        requestWhenInUseAuthorizationStub.call()
+    func postLocationUpdate(_ location: Location) {
+        let addedConsumers = addConsumerStub.invocations.map(\.parameters)
+        let removedConsumers = removeConsumerStub.invocations.map(\.parameters)
+        let activeConsumers = addedConsumers.filter { addedConsumer in
+            !removedConsumers.contains(where: { $0 === addedConsumer})
+        }
+
+        for consumer in activeConsumers {
+            consumer.locationUpdate(newLocation: location)
+        }
+    }
+}
+
+final class MockInterpolatedLocationProducer: InterpolatedLocationProducerProtocol {
+    @Stubbed var locationProvider: LocationProvider = MockLocationProvider()
+
+    var latestLocation: Location?
+    var currentLocation: InterpolatedLocation?
+    @Stubbed var isEnabled: Bool = true
+
+    let observeStub = Stub<(InterpolatedLocation) -> Bool, Cancelable>(defaultReturnValue: MockCancelable())
+    func observe(with handler: @escaping (InterpolatedLocation) -> Bool) -> Cancelable {
+        observeStub.call(with: handler)
     }
 
-    let requestTemporaryFullAccuracyAuthorizationStub = Stub<String, Void>()
-    func requestTemporaryFullAccuracyAuthorization(withPurposeKey purposeKey: String) {
-        requestTemporaryFullAccuracyAuthorizationStub.call(with: purposeKey)
+    let addPuckLocationConsumerStub = Stub<PuckLocationConsumer, Void>()
+    func addPuckLocationConsumer(_ consumer: PuckLocationConsumer) {
+        addPuckLocationConsumerStub.call(with: consumer)
     }
 
-    let startUpdatingLocationStub = Stub<Void, Void>()
-    func startUpdatingLocation() {
-        startUpdatingLocationStub.call()
-    }
-
-    let stopUpdatingLocationStub = Stub<Void, Void>()
-    func stopUpdatingLocation() {
-        stopUpdatingLocationStub.call()
-    }
-
-    let startUpdatingHeadingStub = Stub<Void, Void>()
-    func startUpdatingHeading() {
-        startUpdatingHeadingStub.call()
-    }
-
-    let stopUpdatingHeadingStub = Stub<Void, Void>()
-    func stopUpdatingHeading() {
-        stopUpdatingHeadingStub.call()
-    }
-
-    let dismissHeadingCalibrationDisplayStub = Stub<Void, Void>()
-    func dismissHeadingCalibrationDisplay() {
-        dismissHeadingCalibrationDisplayStub.call()
+    let removePuckLocationConsumerStub = Stub<PuckLocationConsumer, Void>()
+    func removePuckLocationConsumer(_ consumer: PuckLocationConsumer) {
+        removePuckLocationConsumerStub.call(with: consumer)
     }
 }

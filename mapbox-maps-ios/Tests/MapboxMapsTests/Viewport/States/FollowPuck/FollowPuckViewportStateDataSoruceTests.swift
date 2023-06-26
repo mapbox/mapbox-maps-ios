@@ -31,7 +31,7 @@ final class FollowPuckViewportStateDataSourceTests: XCTestCase {
     func updateLocation() throws -> InterpolatedLocation {
         let handler = try XCTUnwrap(interpolatedLocationProducer.observeStub.invocations.first?.parameters)
         let location = InterpolatedLocation.random()
-        interpolatedLocationProducer.location = location
+        interpolatedLocationProducer.currentLocation = location
         XCTAssertTrue(handler(location))
         return location
     }

@@ -11,7 +11,6 @@ source "$UTILS_PATH"
 
 VERSION_RULE=0
 BRANCH_RULE=0
-PRIVATE_REPO_RULE=0
 ENABLE_DIRECT_DOWNLOADS_VALIDATION=1
 EXCLUSIVE_DIRECT_DOWNLOADS_VALIDATION=0
 SNAPSHOT=0
@@ -43,17 +42,13 @@ main() {
         unzip -q "$TMP_ROOT/MapboxMaps.zip" -d "$DYNAMIC_ARTIFACTS_DOWNLOAD_PATH"
 
         export DYNAMIC_ARTIFACTS_PATH="$DYNAMIC_ARTIFACTS_DOWNLOAD_PATH/artifacts"
-    fi   
+    fi
 
     set +u
     if [[ -n "$CIRCLE_REPOSITORY_URL" ]]; then
         REPOSITORY_NAME=${CIRCLE_REPOSITORY_URL##*/}
     else
-        if [[ $PRIVATE_REPO_RULE == 1 ]]; then
-            REPOSITORY_NAME="mapbox-maps-ios-private.git"
-        else
-            REPOSITORY_NAME="mapbox-maps-ios.git"
-        fi
+        REPOSITORY_NAME="mapbox-maps-ios.git"
     fi
     set -u
 
@@ -110,7 +105,6 @@ Usage:
     -d  Disable downloads validation. Suitable for running validation before binaries would be available
     -o  Enable exclusive validation for direct downloads. It makes sense to run after the first run with -d option
     -b  MapboxMaps branch name to be used
-    -p  Use private repo for MapboxMaps
     -s  Use snapshot version
 HELP_USAGE
 }
@@ -131,9 +125,6 @@ case "${flag}" in
         ;;
     o)
         EXCLUSIVE_DIRECT_DOWNLOADS_VALIDATION=1
-        ;;
-    p)
-        PRIVATE_REPO_RULE=1
         ;;
     s)
         SNAPSHOT=1

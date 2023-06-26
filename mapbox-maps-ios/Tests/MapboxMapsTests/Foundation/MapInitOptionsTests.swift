@@ -5,7 +5,7 @@ class MapInitOptionsTests: XCTestCase {
 
     func testDefaultStyleURIAndCamera() {
         let mapInitOptions = MapInitOptions()
-        XCTAssert(mapInitOptions.styleURI == .streets)
+        XCTAssert(mapInitOptions.styleURI == .standard)
         XCTAssertNil(mapInitOptions.cameraOptions)
     }
 

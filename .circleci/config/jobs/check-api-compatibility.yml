@@ -12,13 +12,6 @@ steps:
       command: |
         export GITHUB_TOKEN=$(mbx-ci github writer private token)
         scripts/api-compatibility-check/breaking-api-check.py check-api workspace/baseline.api.json workspace/latest.api.json --breakage-allowlist-path scripts/api-compatibility-check/breakage_allowlist.txt --report-path api-compatibility-report.txt --comment-pr
-  - run:
-      name: Check private preview API compatibility if needed
-      command: |
-        if [ -f workspace/latest.private.api.json ]; then
-            export GITHUB_TOKEN=$(mbx-ci github writer private token)
-            scripts/api-compatibility-check/breaking-api-check.py check-api workspace/baseline.api.json workspace/latest.private.api.json --breakage-allowlist-path ../private/scripts/api-compatibility-check/breakage_allowlist.txt --report-path api-compatibility-report-private-preview.txt --comment-pr
-        fi
   - store_artifacts:
       path: api-compatibility-report.txt
   - store_artifacts:

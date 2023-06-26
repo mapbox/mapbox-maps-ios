@@ -2,14 +2,15 @@ import Foundation
 import MapboxMaps
 
 final class OnDemandLocationProvider: LocationProvider {
-    var locationProviderOptions = LocationOptions()
-    var authorizationStatus: CLAuthorizationStatus = .authorizedAlways
-    var accuracyAuthorization: CLAccuracyAuthorization = .fullAccuracy
+    private let locationConsumers = NSHashTable<AnyObject>.weakObjects()
 
-    var heading: CLHeading?
-    var headingOrientation: CLDeviceOrientation = .portrait
 
-    private weak var delegate: LocationProviderDelegate?
+    var latestLocation: Location? {
+        return Location(
+            location: CLLocation(latitude: currentCoordination.latitude, longitude: currentCoordination.longitude),
+            accuracyAuthorization: .fullAccuracy
+        )
+    }
 
     var currentCoordination: LocationCoordinate2D! {
         didSet {
@@ -19,25 +20,21 @@ final class OnDemandLocationProvider: LocationProvider {
 
     init() {}
 
-    func setDelegate(_ delegate: LocationProviderDelegate) {
-        self.delegate = delegate
-    }
-
-    func requestAlwaysAuthorization() {}
-    func requestWhenInUseAuthorization() {}
-    func requestTemporaryFullAccuracyAuthorization(withPurposeKey purposeKey: String) {}
-
     func startUpdatingLocation() {
         guard currentCoordination != nil else { return }
-        delegate?.locationProvider(
-            self,
-            didUpdateLocations: [CLLocation(latitude: currentCoordination.latitude, longitude: currentCoordination.longitude)]
-        )
+        let clLocation = CLLocation(latitude: currentCoordination.latitude, longitude: currentCoordination.longitude)
+        let location = Location(location: clLocation, accuracyAuthorization: .fullAccuracy)
+
+        for consumer in locationConsumers.allObjects {
+            (consumer as? LocationConsumer)?.locationUpdate(newLocation: location)
+        }
     }
 
-    func stopUpdatingLocation() {}
+    func add(consumer: LocationConsumer) {
+        locationConsumers.add(consumer)
+    }
 
-    func startUpdatingHeading() {}
-    func stopUpdatingHeading() {}
-    func dismissHeadingCalibrationDisplay() {}
+    func remove(consumer: LocationConsumer) {
+        locationConsumers.remove(consumer)
+    }
 }

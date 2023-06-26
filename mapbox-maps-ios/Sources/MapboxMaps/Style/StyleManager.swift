@@ -1045,11 +1045,45 @@ public class StyleManager {
 
     // MARK: Model
 
-    /// :nodoc:
+    /// Adds a model to be used in the style. This API can also be used for updating
+    /// a model. If the model for a given `modelId` was already added, it gets replaced by the new model.
+    ///
+    /// The model can be used in `model-id` property in model layer.
+    ///
+    /// - Parameters:
+    ///    - modelId: An identifier of the model.
+    ///    - modelUri: A URI for the model.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
     @_spi(Experimental) public func addStyleModel(modelId: String, modelUri: String) throws {
         try handleExpected {
             styleManager.addStyleModel(forModelId: modelId, modelUri: modelUri)
         }
+    }
+
+    /// Removes a model from the style.
+    ///
+    /// - Parameters:
+    ///    - modelId: The identifier of the model to remove.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    @_spi(Experimental) public func removeStyleModel(modelId: String) throws {
+        try handleExpected {
+            styleManager.removeStyleModel(forModelId: modelId)
+        }
+    }
+
+    /// Checks whether a model exists.
+    ///
+    /// - Parameters:
+    ///    - modelId: The identifier of the model.
+    ///
+    /// - Returns:
+    ///     True if model exists, false otherwise.
+    @_spi(Experimental) public func hasStyleModel(modelId: String) -> Bool {
+        return styleManager.hasStyleModel(forModelId: modelId)
     }
 
     // MARK: - Custom geometry

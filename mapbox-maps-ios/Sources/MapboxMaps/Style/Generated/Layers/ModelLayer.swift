@@ -19,6 +19,36 @@ import Foundation
     /// Model to render.
     public var modelId: Value<String>?
 
+    /// Intensity of the ambient occlusion if present in the 3D model.
+    public var modelAmbientOcclusionIntensity: Value<Double>?
+
+    /// Transition options for `modelAmbientOcclusionIntensity`.
+    public var modelAmbientOcclusionIntensityTransition: StyleTransition?
+
+    /// Enable/Disable shadow casting for this layer
+    public var modelCastShadows: Value<Bool>?
+
+    /// The tint color of the model layer. model-color-mix-intensity (defaults to 0) defines tint(mix) intensity - this means that, this color is not used unless model-color-mix-intensity gets value greater than 0.
+    public var modelColor: Value<StyleColor>?
+
+    /// Transition options for `modelColor`.
+    public var modelColorTransition: StyleTransition?
+
+    /// Intensity of model-color (on a scale from 0 to 1) in color mix with original 3D model's colors. Higher number will present a higher model-color contribution in mix.
+    public var modelColorMixIntensity: Value<Double>?
+
+    /// Transition options for `modelColorMixIntensity`.
+    public var modelColorMixIntensityTransition: StyleTransition?
+
+    /// The opacity of the model layer.
+    public var modelOpacity: Value<Double>?
+
+    /// Transition options for `modelOpacity`.
+    public var modelOpacityTransition: StyleTransition?
+
+    /// Enable/Disable shadow receiving for this layer
+    public var modelReceiveShadows: Value<Bool>?
+
     /// The rotation of the model in euler angles [lon, lat, z].
     public var modelRotation: Value<[Double]>?
 
@@ -30,6 +60,15 @@ import Foundation
 
     /// Transition options for `modelScale`.
     public var modelScaleTransition: StyleTransition?
+
+    /// Defines scaling mode. Only applies to location-indicator type layers.
+    public var modelScaleMode: Value<ModelScaleMode>?
+
+    /// The translation of the model in meters in form of [longitudal, latitudal, altitude] offsets.
+    public var modelTranslation: Value<[Double]>?
+
+    /// Transition options for `modelTranslation`.
+    public var modelTranslationTransition: StyleTransition?
 
     /// Defines rendering behavior of model in respect to other 3D scene objects.
     public var modelType: Value<ModelType>?
@@ -51,10 +90,23 @@ import Foundation
         try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
+        try paintContainer.encodeIfPresent(modelAmbientOcclusionIntensity, forKey: .modelAmbientOcclusionIntensity)
+        try paintContainer.encodeIfPresent(modelAmbientOcclusionIntensityTransition, forKey: .modelAmbientOcclusionIntensityTransition)
+        try paintContainer.encodeIfPresent(modelCastShadows, forKey: .modelCastShadows)
+        try paintContainer.encodeIfPresent(modelColor, forKey: .modelColor)
+        try paintContainer.encodeIfPresent(modelColorTransition, forKey: .modelColorTransition)
+        try paintContainer.encodeIfPresent(modelColorMixIntensity, forKey: .modelColorMixIntensity)
+        try paintContainer.encodeIfPresent(modelColorMixIntensityTransition, forKey: .modelColorMixIntensityTransition)
+        try paintContainer.encodeIfPresent(modelOpacity, forKey: .modelOpacity)
+        try paintContainer.encodeIfPresent(modelOpacityTransition, forKey: .modelOpacityTransition)
+        try paintContainer.encodeIfPresent(modelReceiveShadows, forKey: .modelReceiveShadows)
         try paintContainer.encodeIfPresent(modelRotation, forKey: .modelRotation)
         try paintContainer.encodeIfPresent(modelRotationTransition, forKey: .modelRotationTransition)
         try paintContainer.encodeIfPresent(modelScale, forKey: .modelScale)
         try paintContainer.encodeIfPresent(modelScaleTransition, forKey: .modelScaleTransition)
+        try paintContainer.encodeIfPresent(modelScaleMode, forKey: .modelScaleMode)
+        try paintContainer.encodeIfPresent(modelTranslation, forKey: .modelTranslation)
+        try paintContainer.encodeIfPresent(modelTranslationTransition, forKey: .modelTranslationTransition)
         try paintContainer.encodeIfPresent(modelType, forKey: .modelType)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
@@ -73,10 +125,23 @@ import Foundation
         maxZoom = try container.decodeIfPresent(Double.self, forKey: .maxZoom)
 
         if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
+            modelAmbientOcclusionIntensity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .modelAmbientOcclusionIntensity)
+            modelAmbientOcclusionIntensityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelAmbientOcclusionIntensityTransition)
+            modelCastShadows = try paintContainer.decodeIfPresent(Value<Bool>.self, forKey: .modelCastShadows)
+            modelColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .modelColor)
+            modelColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelColorTransition)
+            modelColorMixIntensity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .modelColorMixIntensity)
+            modelColorMixIntensityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelColorMixIntensityTransition)
+            modelOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .modelOpacity)
+            modelOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelOpacityTransition)
+            modelReceiveShadows = try paintContainer.decodeIfPresent(Value<Bool>.self, forKey: .modelReceiveShadows)
             modelRotation = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .modelRotation)
             modelRotationTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelRotationTransition)
             modelScale = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .modelScale)
             modelScaleTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelScaleTransition)
+            modelScaleMode = try paintContainer.decodeIfPresent(Value<ModelScaleMode>.self, forKey: .modelScaleMode)
+            modelTranslation = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .modelTranslation)
+            modelTranslationTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelTranslationTransition)
             modelType = try paintContainer.decodeIfPresent(Value<ModelType>.self, forKey: .modelType)
         }
 
@@ -106,10 +171,23 @@ import Foundation
     }
 
     enum PaintCodingKeys: String, CodingKey {
+        case modelAmbientOcclusionIntensity = "model-ambient-occlusion-intensity"
+        case modelAmbientOcclusionIntensityTransition = "model-ambient-occlusion-intensity-transition"
+        case modelCastShadows = "model-cast-shadows"
+        case modelColor = "model-color"
+        case modelColorTransition = "model-color-transition"
+        case modelColorMixIntensity = "model-color-mix-intensity"
+        case modelColorMixIntensityTransition = "model-color-mix-intensity-transition"
+        case modelOpacity = "model-opacity"
+        case modelOpacityTransition = "model-opacity-transition"
+        case modelReceiveShadows = "model-receive-shadows"
         case modelRotation = "model-rotation"
         case modelRotationTransition = "model-rotation-transition"
         case modelScale = "model-scale"
         case modelScaleTransition = "model-scale-transition"
+        case modelScaleMode = "model-scale-mode"
+        case modelTranslation = "model-translation"
+        case modelTranslationTransition = "model-translation-transition"
         case modelType = "model-type"
     }
 }

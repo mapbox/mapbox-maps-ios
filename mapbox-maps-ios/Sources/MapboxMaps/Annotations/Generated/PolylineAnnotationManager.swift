@@ -253,6 +253,16 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         }
     }
 
+    /// Emission strength.
+    public var lineEmissiveStrength: Double? {
+        get {
+            return layerProperties["line-emissive-strength"] as? Double
+        }
+        set {
+            layerProperties["line-emissive-strength"] = newValue
+        }
+    }
+
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     public var lineTranslate: [Double]? {
         get {

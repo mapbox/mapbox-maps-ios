@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class LineLayerTests: XCTestCase {
 
@@ -92,11 +92,17 @@ final class LineLayerTests: XCTestCase {
        var layer = LineLayer(id: "test-id")
        layer.lineBlur = Value<Double>.testConstantValue()
        layer.lineBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.lineBorderColor = Value<StyleColor>.testConstantValue()
+       layer.lineBorderColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.lineBorderWidth = Value<Double>.testConstantValue()
+       layer.lineBorderWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.lineColor = Value<StyleColor>.testConstantValue()
        layer.lineColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.lineDasharray = Value<[Double]>.testConstantValue()
        layer.lineDepthOcclusionFactor = Value<Double>.testConstantValue()
        layer.lineDepthOcclusionFactorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.lineEmissiveStrength = Value<Double>.testConstantValue()
+       layer.lineEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.lineGapWidth = Value<Double>.testConstantValue()
        layer.lineGapWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.lineGradient = Value<StyleColor>.testConstantValue()
@@ -128,9 +134,12 @@ final class LineLayerTests: XCTestCase {
            let decodedLayer = try JSONDecoder().decode(LineLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .visible)
            XCTAssert(layer.lineBlur == Value<Double>.testConstantValue())
+           XCTAssert(layer.lineBorderColor == Value<StyleColor>.testConstantValue())
+           XCTAssert(layer.lineBorderWidth == Value<Double>.testConstantValue())
            XCTAssert(layer.lineColor == Value<StyleColor>.testConstantValue())
            XCTAssert(layer.lineDasharray == Value<[Double]>.testConstantValue())
            XCTAssert(layer.lineDepthOcclusionFactor == Value<Double>.testConstantValue())
+           XCTAssert(layer.lineEmissiveStrength == Value<Double>.testConstantValue())
            XCTAssert(layer.lineGapWidth == Value<Double>.testConstantValue())
            XCTAssert(layer.lineGradient == Value<StyleColor>.testConstantValue())
            XCTAssert(layer.lineOffset == Value<Double>.testConstantValue())

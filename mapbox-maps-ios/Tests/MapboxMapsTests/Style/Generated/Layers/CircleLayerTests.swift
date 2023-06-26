@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class CircleLayerTests: XCTestCase {
 
@@ -86,6 +86,8 @@ final class CircleLayerTests: XCTestCase {
        layer.circleBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.circleColor = Value<StyleColor>.testConstantValue()
        layer.circleColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.circleEmissiveStrength = Value<Double>.testConstantValue()
+       layer.circleEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.circleOpacity = Value<Double>.testConstantValue()
        layer.circleOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.circlePitchAlignment = Value<CirclePitchAlignment>.testConstantValue()
@@ -119,6 +121,7 @@ final class CircleLayerTests: XCTestCase {
            XCTAssert(decodedLayer.visibility == .visible)
            XCTAssert(layer.circleBlur == Value<Double>.testConstantValue())
            XCTAssert(layer.circleColor == Value<StyleColor>.testConstantValue())
+           XCTAssert(layer.circleEmissiveStrength == Value<Double>.testConstantValue())
            XCTAssert(layer.circleOpacity == Value<Double>.testConstantValue())
            XCTAssert(layer.circlePitchAlignment == Value<CirclePitchAlignment>.testConstantValue())
            XCTAssert(layer.circlePitchScale == Value<CirclePitchScale>.testConstantValue())

@@ -30,6 +30,12 @@ public struct FillLayer: Layer {
     /// Transition options for `fillColor`.
     public var fillColorTransition: StyleTransition?
 
+    /// Emission strength.
+    @_spi(Experimental) public var fillEmissiveStrength: Value<Double>?
+
+    /// Transition options for `fillEmissiveStrength`.
+    @_spi(Experimental) public var fillEmissiveStrengthTransition: StyleTransition?
+
     /// The opacity of the entire fill layer. In contrast to the `fill-color`, this value will also affect the 1px stroke around the fill, if the stroke is used.
     public var fillOpacity: Value<Double>?
 
@@ -74,6 +80,8 @@ public struct FillLayer: Layer {
         try paintContainer.encodeIfPresent(fillAntialias, forKey: .fillAntialias)
         try paintContainer.encodeIfPresent(fillColor, forKey: .fillColor)
         try paintContainer.encodeIfPresent(fillColorTransition, forKey: .fillColorTransition)
+        try paintContainer.encodeIfPresent(fillEmissiveStrength, forKey: .fillEmissiveStrength)
+        try paintContainer.encodeIfPresent(fillEmissiveStrengthTransition, forKey: .fillEmissiveStrengthTransition)
         try paintContainer.encodeIfPresent(fillOpacity, forKey: .fillOpacity)
         try paintContainer.encodeIfPresent(fillOpacityTransition, forKey: .fillOpacityTransition)
         try paintContainer.encodeIfPresent(fillOutlineColor, forKey: .fillOutlineColor)
@@ -102,6 +110,8 @@ public struct FillLayer: Layer {
             fillAntialias = try paintContainer.decodeIfPresent(Value<Bool>.self, forKey: .fillAntialias)
             fillColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .fillColor)
             fillColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillColorTransition)
+            fillEmissiveStrength = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillEmissiveStrength)
+            fillEmissiveStrengthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillEmissiveStrengthTransition)
             fillOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillOpacity)
             fillOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillOpacityTransition)
             fillOutlineColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .fillOutlineColor)
@@ -141,6 +151,8 @@ public struct FillLayer: Layer {
         case fillAntialias = "fill-antialias"
         case fillColor = "fill-color"
         case fillColorTransition = "fill-color-transition"
+        case fillEmissiveStrength = "fill-emissive-strength"
+        case fillEmissiveStrengthTransition = "fill-emissive-strength-transition"
         case fillOpacity = "fill-opacity"
         case fillOpacityTransition = "fill-opacity-transition"
         case fillOutlineColor = "fill-outline-color"

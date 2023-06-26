@@ -24,6 +24,12 @@ public struct BackgroundLayer: Layer {
     /// Transition options for `backgroundColor`.
     public var backgroundColorTransition: StyleTransition?
 
+    /// Emission strength.
+    @_spi(Experimental) public var backgroundEmissiveStrength: Value<Double>?
+
+    /// Transition options for `backgroundEmissiveStrength`.
+    @_spi(Experimental) public var backgroundEmissiveStrengthTransition: StyleTransition?
+
     /// The opacity at which the background will be drawn.
     public var backgroundOpacity: Value<Double>?
 
@@ -52,6 +58,8 @@ public struct BackgroundLayer: Layer {
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
         try paintContainer.encodeIfPresent(backgroundColor, forKey: .backgroundColor)
         try paintContainer.encodeIfPresent(backgroundColorTransition, forKey: .backgroundColorTransition)
+        try paintContainer.encodeIfPresent(backgroundEmissiveStrength, forKey: .backgroundEmissiveStrength)
+        try paintContainer.encodeIfPresent(backgroundEmissiveStrengthTransition, forKey: .backgroundEmissiveStrengthTransition)
         try paintContainer.encodeIfPresent(backgroundOpacity, forKey: .backgroundOpacity)
         try paintContainer.encodeIfPresent(backgroundOpacityTransition, forKey: .backgroundOpacityTransition)
         try paintContainer.encodeIfPresent(backgroundPattern, forKey: .backgroundPattern)
@@ -73,6 +81,8 @@ public struct BackgroundLayer: Layer {
         if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
             backgroundColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .backgroundColor)
             backgroundColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .backgroundColorTransition)
+            backgroundEmissiveStrength = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .backgroundEmissiveStrength)
+            backgroundEmissiveStrengthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .backgroundEmissiveStrengthTransition)
             backgroundOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .backgroundOpacity)
             backgroundOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .backgroundOpacityTransition)
             backgroundPattern = try paintContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .backgroundPattern)
@@ -104,6 +114,8 @@ public struct BackgroundLayer: Layer {
     enum PaintCodingKeys: String, CodingKey {
         case backgroundColor = "background-color"
         case backgroundColorTransition = "background-color-transition"
+        case backgroundEmissiveStrength = "background-emissive-strength"
+        case backgroundEmissiveStrengthTransition = "background-emissive-strength-transition"
         case backgroundOpacity = "background-opacity"
         case backgroundOpacityTransition = "background-opacity-transition"
         case backgroundPattern = "background-pattern"

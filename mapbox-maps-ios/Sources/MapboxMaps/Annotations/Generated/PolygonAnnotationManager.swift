@@ -213,6 +213,16 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         }
     }
 
+    /// Emission strength.
+    public var fillEmissiveStrength: Double? {
+        get {
+            return layerProperties["fill-emissive-strength"] as? Double
+        }
+        set {
+            layerProperties["fill-emissive-strength"] = newValue
+        }
+    }
+
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     public var fillTranslate: [Double]? {
         get {

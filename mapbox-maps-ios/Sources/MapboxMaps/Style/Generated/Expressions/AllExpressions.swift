@@ -130,6 +130,12 @@ public extension Expression {
         /// Returns the kernel density estimation of a pixel in a heatmap layer, which is a relative measure of how many data points are crowded around a particular pixel. Can only be used in the `heatmap-color` property.
         case heatmapDensity = "heatmap-density"
 
+        /// Creates a color value from hue (range 0-360), saturation and lightness components (range 0-100), and an alpha component of 1. If any component is out of range, the expression is an error.
+        case hsl = "hsl"
+
+        /// Creates a color value from hue (range 0-360), saturation and lightness components (range 0-100), and an alpha component (range 0-1). If any component is out of range, the expression is an error.
+        case hsla = "hsla"
+
         /// Returns the feature's id, if it has one.
         case id = "id"
 
@@ -188,6 +194,9 @@ public extension Expression {
         /// Returns the maximum value of the inputs.
         case max = "max"
 
+        /// Returns a requested property of the light configuration based on the supplied options. Currently the only supported option is `brightness` which returns the global brightness value of the lights on a scale of 0 to 1, where 0 means total darkness and 1 means full brightness.
+        case measureLight = "measure-light"
+
         /// Returns the minimum value of the inputs.
         case min = "min"
 
@@ -208,6 +217,9 @@ public extension Expression {
 
         /// Returns the feature properties object.  Note that in some cases, it may be more efficient to use `["get", "property_name"]` directly.
         case properties = "properties"
+
+        /// Returns a random value in the specified range (first two input numbers) based on a supplied seed (third input). The seed can be an expression or a constant number or string value.
+        case random = "random"
 
         /// Returns the raster value of a pixel computed via `raster-color-mix`. Can only be used in the `raster-color` property.
         case rasterValue = "raster-value"

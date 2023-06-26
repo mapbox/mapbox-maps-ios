@@ -33,6 +33,12 @@ public struct CircleLayer: Layer {
     /// Transition options for `circleColor`.
     public var circleColorTransition: StyleTransition?
 
+    /// Emission strength.
+    @_spi(Experimental) public var circleEmissiveStrength: Value<Double>?
+
+    /// Transition options for `circleEmissiveStrength`.
+    @_spi(Experimental) public var circleEmissiveStrengthTransition: StyleTransition?
+
     /// The opacity at which the circle will be drawn.
     public var circleOpacity: Value<Double>?
 
@@ -99,6 +105,8 @@ public struct CircleLayer: Layer {
         try paintContainer.encodeIfPresent(circleBlurTransition, forKey: .circleBlurTransition)
         try paintContainer.encodeIfPresent(circleColor, forKey: .circleColor)
         try paintContainer.encodeIfPresent(circleColorTransition, forKey: .circleColorTransition)
+        try paintContainer.encodeIfPresent(circleEmissiveStrength, forKey: .circleEmissiveStrength)
+        try paintContainer.encodeIfPresent(circleEmissiveStrengthTransition, forKey: .circleEmissiveStrengthTransition)
         try paintContainer.encodeIfPresent(circleOpacity, forKey: .circleOpacity)
         try paintContainer.encodeIfPresent(circleOpacityTransition, forKey: .circleOpacityTransition)
         try paintContainer.encodeIfPresent(circlePitchAlignment, forKey: .circlePitchAlignment)
@@ -135,6 +143,8 @@ public struct CircleLayer: Layer {
             circleBlurTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .circleBlurTransition)
             circleColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .circleColor)
             circleColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .circleColorTransition)
+            circleEmissiveStrength = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .circleEmissiveStrength)
+            circleEmissiveStrengthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .circleEmissiveStrengthTransition)
             circleOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .circleOpacity)
             circleOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .circleOpacityTransition)
             circlePitchAlignment = try paintContainer.decodeIfPresent(Value<CirclePitchAlignment>.self, forKey: .circlePitchAlignment)
@@ -182,6 +192,8 @@ public struct CircleLayer: Layer {
         case circleBlurTransition = "circle-blur-transition"
         case circleColor = "circle-color"
         case circleColorTransition = "circle-color-transition"
+        case circleEmissiveStrength = "circle-emissive-strength"
+        case circleEmissiveStrengthTransition = "circle-emissive-strength-transition"
         case circleOpacity = "circle-opacity"
         case circleOpacityTransition = "circle-opacity-transition"
         case circlePitchAlignment = "circle-pitch-alignment"

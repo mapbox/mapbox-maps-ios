@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class CircleLayerIntegrationTests: MapViewIntegrationTestCase {
 
@@ -31,6 +31,8 @@ final class CircleLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.circleBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.circleColor = Value<StyleColor>.testConstantValue()
             layer.circleColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.circleEmissiveStrength = Value<Double>.testConstantValue()
+            layer.circleEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.circleOpacity = Value<Double>.testConstantValue()
             layer.circleOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.circlePitchAlignment = Value<CirclePitchAlignment>.testConstantValue()

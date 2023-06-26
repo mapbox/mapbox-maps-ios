@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
 
@@ -66,18 +66,24 @@ final class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
 
             layer.iconColor = Value<StyleColor>.testConstantValue()
             layer.iconColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.iconEmissiveStrength = Value<Double>.testConstantValue()
+            layer.iconEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.iconHaloBlur = Value<Double>.testConstantValue()
             layer.iconHaloBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.iconHaloColor = Value<StyleColor>.testConstantValue()
             layer.iconHaloColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.iconHaloWidth = Value<Double>.testConstantValue()
             layer.iconHaloWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.iconImageCrossFade = Value<Double>.testConstantValue()
+            layer.iconImageCrossFadeTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.iconOpacity = Value<Double>.testConstantValue()
             layer.iconOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.iconTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.iconTranslateAnchor = Value<IconTranslateAnchor>.testConstantValue()
             layer.textColor = Value<StyleColor>.testConstantValue()
             layer.textColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.textEmissiveStrength = Value<Double>.testConstantValue()
+            layer.textEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.textHaloBlur = Value<Double>.testConstantValue()
             layer.textHaloBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.textHaloColor = Value<StyleColor>.testConstantValue()

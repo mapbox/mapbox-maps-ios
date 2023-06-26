@@ -60,8 +60,7 @@ final class DefaultInterfaceOrientationProviderTests: XCTestCase {
 
     func testBeginGeneratingDeviceOrientationNotificationsIsCalledWhenUpdating() {
         // when
-        let token = orientationProvider.onInterfaceOrientationChange.observe { _ in }
-        cancellables.insert(token)
+        orientationProvider.onInterfaceOrientationChange.observe { _ in }.store(in: &cancellables)
 
         XCTAssertEqual(device.beginGeneratingDeviceOrientationNotificationsStub.invocations.count, 1)
         XCTAssertEqual(device.endGeneratingDeviceOrientationNotificationsStub.invocations.count, 0)
@@ -80,8 +79,7 @@ final class DefaultInterfaceOrientationProviderTests: XCTestCase {
 
     func testDeviceOrientationDidChangeSubscribedWhenUpdating() {
         // when
-        let token = orientationProvider.onInterfaceOrientationChange.observe { _ in }
-        cancellables.insert(token)
+        orientationProvider.onInterfaceOrientationChange.observe { _ in }.store(in: &cancellables)
 
         // then
         XCTAssertEqual(notificationCenter.addObserverStub.invocations.count, 1)
@@ -102,8 +100,7 @@ final class DefaultInterfaceOrientationProviderTests: XCTestCase {
     func testHeadingOrientationIsUpdatedWhenDeviceOrientationDidChange() {
         // given
         @Stubbed var orientation: UIInterfaceOrientation?
-        let token = orientationProvider.onInterfaceOrientationChange.observe { orientation = $0 }
-        cancellables.insert(token)
+        orientationProvider.onInterfaceOrientationChange.observe { orientation = $0 }.store(in: &cancellables)
         $orientation.setStub.reset()
 
         // when

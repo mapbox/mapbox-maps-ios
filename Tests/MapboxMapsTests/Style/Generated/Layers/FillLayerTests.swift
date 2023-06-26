@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class FillLayerTests: XCTestCase {
 
@@ -85,6 +85,8 @@ final class FillLayerTests: XCTestCase {
        layer.fillAntialias = Value<Bool>.testConstantValue()
        layer.fillColor = Value<StyleColor>.testConstantValue()
        layer.fillColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.fillEmissiveStrength = Value<Double>.testConstantValue()
+       layer.fillEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.fillOpacity = Value<Double>.testConstantValue()
        layer.fillOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.fillOutlineColor = Value<StyleColor>.testConstantValue()
@@ -111,6 +113,7 @@ final class FillLayerTests: XCTestCase {
            XCTAssert(decodedLayer.visibility == .visible)
            XCTAssert(layer.fillAntialias == Value<Bool>.testConstantValue())
            XCTAssert(layer.fillColor == Value<StyleColor>.testConstantValue())
+           XCTAssert(layer.fillEmissiveStrength == Value<Double>.testConstantValue())
            XCTAssert(layer.fillOpacity == Value<Double>.testConstantValue())
            XCTAssert(layer.fillOutlineColor == Value<StyleColor>.testConstantValue())
            XCTAssert(layer.fillPattern == Value<ResolvedImage>.testConstantValue())

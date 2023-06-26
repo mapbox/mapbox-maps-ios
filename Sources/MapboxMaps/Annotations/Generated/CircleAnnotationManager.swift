@@ -203,6 +203,16 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
 
     // MARK: - Common layer properties
 
+    /// Emission strength.
+    public var circleEmissiveStrength: Double? {
+        get {
+            return layerProperties["circle-emissive-strength"] as? Double
+        }
+        set {
+            layerProperties["circle-emissive-strength"] = newValue
+        }
+    }
+
     /// Orientation of circle when map is pitched.
     public var circlePitchAlignment: CirclePitchAlignment? {
         get {

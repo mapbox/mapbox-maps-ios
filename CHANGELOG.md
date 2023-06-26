@@ -4,6 +4,14 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Introduce `hsl`, `hsla` color expression.
+* Introduce `random` expression.
+* Introduce `measureLight` expression lights configuration property.
+* Introduce `LineLayer/lineBorderColor`, `LineLayer/lineBorderWidth` APIs.
+* Introduce `SymbolLayer/iconImageCrossFade` API.
+* Introduce experimental `BackgroundLayer/backgroundEmissiveStrength`, `CircleLayer/circleEmissiveStrength`, `FillLayer/fillEmissiveStrength`, `LineLayer/lineEmissiveStrength`, `SymbolLayer/iconEmissiveStrength`, `SymbolLayer/textEmissiveStrength`, `ModelLayer/modelEmissiveStrength`, `ModelLayer/modelRoughness`, `ModelLayer/modelHeightBasedEmissiveStrengthMultiplier` APIs.
+* Introduce experimental `FillExtrusionLayer/fillExtrusionAmbientOcclusionWallRadius`, `FillExtrusionLayer/fillExtrusionAmbientOcclusionGroundRadius`, `FillExtrusionLayer/fillExtrusionAmbientOcclusionGroundAttenuation`, `FillExtrusionLayer/fillExtrusionFloodLightColor`, `FillExtrusionLayer/fillExtrusionFloodLightIntensity`, `FillExtrusionLayer/fillExtrusionFloodLightWallRadius`, `FillExtrusionLayer/fillExtrusionFloodLightGroundRadius`, `FillExtrusionLayer/fillExtrusionFloodLightGroundAttenuation`, `FillExtrusionLayer/fillExtrusionVerticalScale` APIs.
+
 ## 11.0.0-alpha.2 - 21 June, 2023
 
 * Remove unnecessary check before updating a geo json source.

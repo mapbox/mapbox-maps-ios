@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class BackgroundLayerTests: XCTestCase {
 
@@ -82,6 +82,8 @@ final class BackgroundLayerTests: XCTestCase {
        var layer = BackgroundLayer(id: "test-id")
        layer.backgroundColor = Value<StyleColor>.testConstantValue()
        layer.backgroundColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.backgroundEmissiveStrength = Value<Double>.testConstantValue()
+       layer.backgroundEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.backgroundOpacity = Value<Double>.testConstantValue()
        layer.backgroundOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.backgroundPattern = Value<ResolvedImage>.testConstantValue()
@@ -102,6 +104,7 @@ final class BackgroundLayerTests: XCTestCase {
            let decodedLayer = try JSONDecoder().decode(BackgroundLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .visible)
            XCTAssert(layer.backgroundColor == Value<StyleColor>.testConstantValue())
+           XCTAssert(layer.backgroundEmissiveStrength == Value<Double>.testConstantValue())
            XCTAssert(layer.backgroundOpacity == Value<Double>.testConstantValue())
            XCTAssert(layer.backgroundPattern == Value<ResolvedImage>.testConstantValue())
        } catch {

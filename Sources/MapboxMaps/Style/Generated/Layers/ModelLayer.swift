@@ -40,6 +40,18 @@ import Foundation
     /// Transition options for `modelColorMixIntensity`.
     public var modelColorMixIntensityTransition: StyleTransition?
 
+    /// Strength of the emission. There is no emission for value 0. For value 1.0, only emissive component (no shading) is displayed and values above 1.0 produce light contribution to surrounding area, for some of the parts (e.g. doors). Expressions that depend on measure-light are not supported when using GeoJSON or vector tile as the model layer source.
+    public var modelEmissiveStrength: Value<Double>?
+
+    /// Transition options for `modelEmissiveStrength`.
+    public var modelEmissiveStrengthTransition: StyleTransition?
+
+    /// Emissive strength multiplier along model height (gradient begin, gradient end, value at begin, value at end, gradient curve power (logarithmic scale, curve power = pow(10, val)).
+    public var modelHeightBasedEmissiveStrengthMultiplier: Value<[Double]>?
+
+    /// Transition options for `modelHeightBasedEmissiveStrengthMultiplier`.
+    public var modelHeightBasedEmissiveStrengthMultiplierTransition: StyleTransition?
+
     /// The opacity of the model layer.
     public var modelOpacity: Value<Double>?
 
@@ -54,6 +66,12 @@ import Foundation
 
     /// Transition options for `modelRotation`.
     public var modelRotationTransition: StyleTransition?
+
+    /// Material roughness. Material is fully smooth for value 0, and fully rough for value 1. Affects only layers using batched-model source.
+    public var modelRoughness: Value<Double>?
+
+    /// Transition options for `modelRoughness`.
+    public var modelRoughnessTransition: StyleTransition?
 
     /// The scale of the model.
     public var modelScale: Value<[Double]>?
@@ -97,11 +115,17 @@ import Foundation
         try paintContainer.encodeIfPresent(modelColorTransition, forKey: .modelColorTransition)
         try paintContainer.encodeIfPresent(modelColorMixIntensity, forKey: .modelColorMixIntensity)
         try paintContainer.encodeIfPresent(modelColorMixIntensityTransition, forKey: .modelColorMixIntensityTransition)
+        try paintContainer.encodeIfPresent(modelEmissiveStrength, forKey: .modelEmissiveStrength)
+        try paintContainer.encodeIfPresent(modelEmissiveStrengthTransition, forKey: .modelEmissiveStrengthTransition)
+        try paintContainer.encodeIfPresent(modelHeightBasedEmissiveStrengthMultiplier, forKey: .modelHeightBasedEmissiveStrengthMultiplier)
+        try paintContainer.encodeIfPresent(modelHeightBasedEmissiveStrengthMultiplierTransition, forKey: .modelHeightBasedEmissiveStrengthMultiplierTransition)
         try paintContainer.encodeIfPresent(modelOpacity, forKey: .modelOpacity)
         try paintContainer.encodeIfPresent(modelOpacityTransition, forKey: .modelOpacityTransition)
         try paintContainer.encodeIfPresent(modelReceiveShadows, forKey: .modelReceiveShadows)
         try paintContainer.encodeIfPresent(modelRotation, forKey: .modelRotation)
         try paintContainer.encodeIfPresent(modelRotationTransition, forKey: .modelRotationTransition)
+        try paintContainer.encodeIfPresent(modelRoughness, forKey: .modelRoughness)
+        try paintContainer.encodeIfPresent(modelRoughnessTransition, forKey: .modelRoughnessTransition)
         try paintContainer.encodeIfPresent(modelScale, forKey: .modelScale)
         try paintContainer.encodeIfPresent(modelScaleTransition, forKey: .modelScaleTransition)
         try paintContainer.encodeIfPresent(modelScaleMode, forKey: .modelScaleMode)
@@ -132,11 +156,17 @@ import Foundation
             modelColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelColorTransition)
             modelColorMixIntensity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .modelColorMixIntensity)
             modelColorMixIntensityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelColorMixIntensityTransition)
+            modelEmissiveStrength = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .modelEmissiveStrength)
+            modelEmissiveStrengthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelEmissiveStrengthTransition)
+            modelHeightBasedEmissiveStrengthMultiplier = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .modelHeightBasedEmissiveStrengthMultiplier)
+            modelHeightBasedEmissiveStrengthMultiplierTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelHeightBasedEmissiveStrengthMultiplierTransition)
             modelOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .modelOpacity)
             modelOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelOpacityTransition)
             modelReceiveShadows = try paintContainer.decodeIfPresent(Value<Bool>.self, forKey: .modelReceiveShadows)
             modelRotation = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .modelRotation)
             modelRotationTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelRotationTransition)
+            modelRoughness = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .modelRoughness)
+            modelRoughnessTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelRoughnessTransition)
             modelScale = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .modelScale)
             modelScaleTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .modelScaleTransition)
             modelScaleMode = try paintContainer.decodeIfPresent(Value<ModelScaleMode>.self, forKey: .modelScaleMode)
@@ -178,11 +208,17 @@ import Foundation
         case modelColorTransition = "model-color-transition"
         case modelColorMixIntensity = "model-color-mix-intensity"
         case modelColorMixIntensityTransition = "model-color-mix-intensity-transition"
+        case modelEmissiveStrength = "model-emissive-strength"
+        case modelEmissiveStrengthTransition = "model-emissive-strength-transition"
+        case modelHeightBasedEmissiveStrengthMultiplier = "model-height-based-emissive-strength-multiplier"
+        case modelHeightBasedEmissiveStrengthMultiplierTransition = "model-height-based-emissive-strength-multiplier-transition"
         case modelOpacity = "model-opacity"
         case modelOpacityTransition = "model-opacity-transition"
         case modelReceiveShadows = "model-receive-shadows"
         case modelRotation = "model-rotation"
         case modelRotationTransition = "model-rotation-transition"
+        case modelRoughness = "model-roughness"
+        case modelRoughnessTransition = "model-roughness-transition"
         case modelScale = "model-scale"
         case modelScaleTransition = "model-scale-transition"
         case modelScaleMode = "model-scale-mode"

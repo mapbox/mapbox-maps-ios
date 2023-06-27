@@ -104,10 +104,9 @@ open class MapView: UIView {
     private let notificationCenter: NotificationCenterProtocol
     private let bundle: BundleProtocol
 
-    /*** The preferred frames per second used for map rendering.
-        NOTE: `MapView.preferredFrameRateRange` is available for iOS 15.0 and above.
-     */
-    @available(iOS, deprecated: 1000000)
+    /// The preferred frames per second used for map rendering.
+    /// - Note: ``preferredFrameRateRange`` is available for iOS 15.0 and above.
+    @available(iOS, deprecated: 15, message: "Use preferredFrameRateRange instead.")
     public var preferredFramesPerSecond: Int {
         get {
             return _preferredFramesPerSecond ?? displayLink?.preferredFramesPerSecond ?? 0
@@ -165,11 +164,13 @@ open class MapView: UIView {
     }
 
     /// The map's current camera
+    @available(*, deprecated, renamed: "mapboxMap.cameraState")
     public var cameraState: CameraState {
         return mapboxMap.cameraState
     }
 
     /// The map's current anchor, calculated after applying padding (if it exists)
+    @available(*, deprecated, renamed: "mapboxMap.anchor")
     public var anchor: CGPoint {
         return mapboxMap.anchor
     }

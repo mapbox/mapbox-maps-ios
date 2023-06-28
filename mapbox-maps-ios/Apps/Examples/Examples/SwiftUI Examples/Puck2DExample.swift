@@ -19,8 +19,6 @@ extension Puck2DConfiguration {
 
 @available(iOS 14.0, *)
 struct Puck2DExample: View {
-    @State private var camera = CameraState(center: .helsinki, zoom: 12)
-
     @State private var isPuckBearingVisible = true
     @State private var isPuckAccuracyRingVisible = false
     @State private var puckOpacity = 1.0
@@ -28,7 +26,7 @@ struct Puck2DExample: View {
 
     var body: some View {
         Map(
-            camera: $camera,
+            initialViewport: .followPuck(zoom: 17),
             locationOptions: .init(
                 puckType: .puck2D(.makeDefault(
                     showBearing: isPuckBearingVisible,

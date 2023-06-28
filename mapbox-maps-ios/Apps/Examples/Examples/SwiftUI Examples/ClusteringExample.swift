@@ -16,12 +16,11 @@ struct ClusteringExample : View {
         var message: String
     }
 
-    @State private var camera = CameraState(center: .dc, zoom: 10)
     @State var details: Detail?
 
     var body: some View {
         MapReader { proxy in
-            Map(camera: $camera)
+            Map(initialViewport: .camera(center: .dc, zoom: 10))
                 .styleURI(.dark)
                 .onStyleLoaded { _ in
                     // This example uses direct style manipulation with MapboxMap
@@ -166,4 +165,3 @@ struct ClusteringExample_Preview: PreviewProvider {
         ClusteringExample()
     }
 }
-

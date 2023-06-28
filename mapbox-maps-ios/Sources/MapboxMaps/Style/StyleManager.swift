@@ -5,6 +5,8 @@ import UIKit
 
 @_spi(Package)
 public protocol StyleProtocol: AnyObject {
+    var isStyleLoaded: Bool { get }
+    var styleDefaultCamera: CameraOptions { get }
     var uri: StyleURI? { get set }
     func addLayer(_ layer: Layer, layerPosition: LayerPosition?) throws
     func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition?) throws

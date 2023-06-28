@@ -1,0 +1,1 @@
+../../MapboxMapsTests/Viewport/Mocks/MockViewportTransition.swift

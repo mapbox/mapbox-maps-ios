@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@testable @_spi(Package) import MapboxMaps
 
 final class ViewportTests: XCTestCase {
     var impl: MockViewportManagerImpl!
@@ -160,7 +160,7 @@ final class ViewportTests: XCTestCase {
     }
 
     func testMakeImmediateViewportTransition() {
-        _ = viewport.makeImmediateViewportTransition()
+        let _: ImmediateViewportTransition = viewport.makeImmediateViewportTransition()
 
         // doesn't crash; no interface to verify
     }

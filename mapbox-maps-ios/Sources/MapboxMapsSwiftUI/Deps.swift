@@ -1,16 +1,18 @@
 import SwiftUI
 @_spi(Package) import MapboxMaps
+import MapboxCoreMaps
 
 @available(iOS 13.0, *)
 struct MapDependencies {
     var cameraBounds = CameraBoundsOptions()
-    var styleURIs = StyleURIs(default: .streets, darkMode: nil)
+    var styleURIs = StyleURIs(default: .standard, darkMode: nil)
     var gestureOptions = GestureOptions()
     var actions = Actions()
     var constrainMode = ConstrainMode.heightOnly
     var viewportMode = ViewportMode.default
     var orientation = NorthOrientation.upwards
     var eventsSubscriptions = [AnyEventSubscription]()
+    var cameraChangeHandlers = [(CameraChanged) -> Void]()
 }
 
 @available(iOS 13.0, *)

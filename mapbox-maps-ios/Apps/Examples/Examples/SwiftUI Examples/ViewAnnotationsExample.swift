@@ -8,14 +8,13 @@ extension Point: Identifiable {
 
 @available(iOS 14.0, *)
 struct ViewAnnotationsExample: View {
-    @State var camera = CameraState(center: .helsinki, zoom: 5)
     @State var points: [Point] = []
     @State var allowOverlap: Bool = false
     @State var anchor: ViewAnnotationAnchor = .bottom
 
     var body: some View {
         MapReader { proxy in
-            Map(camera: $camera, mapInitOptions: nil) {
+            Map(initialViewport: .camera(center: .helsinki, zoom: 5), mapInitOptions: nil) {
                 ForEvery([CLLocationCoordinate2D.helsinki, .berlin], id: \.latitude) { point in
                     ViewAnnotation(point) {
                         Circle().fill(.red).frame(width: 30, height: 30)

@@ -1,6 +1,6 @@
 import XCTest
 import Combine
-@testable import MapboxMaps
+@_spi(Package) @testable import MapboxMaps
 
 final class SignalTests: XCTestCase {
     var cancellables = Set<AnyCancelable>()

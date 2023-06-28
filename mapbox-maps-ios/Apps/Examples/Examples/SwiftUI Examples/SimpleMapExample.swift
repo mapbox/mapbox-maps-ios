@@ -3,12 +3,11 @@ import SwiftUI
 
 @available(iOS 14.0, *)
 struct SimpleMapExample: View {
-    @State var camera = CameraState(center: .helsinki, zoom: 12)
     var body: some View {
-        Map(camera: $camera)
+        let polygon = Polygon(center: .helsinki, radius: 10000, vertices: 30)
+        Map(initialViewport: .overview(geometry: polygon))
             .styleURI(.streets, darkMode: .dark)
             .ignoresSafeArea()
-            .cameraDebugOverlay(alignment: .bottom, camera: $camera)
     }
 }
 

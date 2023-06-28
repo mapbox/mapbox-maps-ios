@@ -40,65 +40,109 @@ public typealias LocationUpdateAction = (Location) -> Void
 public struct Map: UIViewControllerRepresentable {
     public typealias InitOptionsProvider = () -> MapInitOptions
 
-    var camera: Binding<CameraState>?
+    var viewport: ConstantOrBinding<Viewport>
     var mapDependencies = MapDependencies()
     private var mapInitOptions: InitOptionsProvider?
     private var locationDependencies = LocationDependencies()
     private var mapContentVisitor = DefaultMapContentVisitor()
 
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.layoutDirection) var layoutDirection
 
     /// Creates a map that displays annotations.
     ///
     /// - Parameters:
-    ///     - camera: The camera state to display. If not specified, the default camera options from style will be used. See [center](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-center), [zoom](https://docs.mapbox.com/mapbox-gl-js/style-spec/root/#zoom), [bearing](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-bearing), [pitch](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-pitch).
+    ///     - viewport: The camera viewport to display.
     ///     - mapInitOptions: A closure to provide initial map parameters. It gets called only once when `Map` is created.
     ///     - locationOptions: The options to configure ``LocationManager``.
-    ///     - annotationItems: The collection of data that the view uses to display annotations.
-    ///     - annotationContent: A closure that produces the annotation content.
+    ///     - content: A map content building closure.
     public init(
-        camera: Binding<CameraState>? = nil,
+        viewport: Binding<Viewport>,
         mapInitOptions: InitOptionsProvider? = nil,
         locationOptions: LocationOptions = LocationOptions(),
-        @MapContentBuilder _ content: () -> MapContent
+        @MapContentBuilder content: @escaping () -> MapContent
     ) {
-        self.camera = camera
+        self.init(
+            _viewport: .binding(viewport),
+            mapInitOptions: mapInitOptions,
+            locationOptions: locationOptions,
+            content: content)
+    }
+
+    /// Creates a map that displays annotations.
+    ///
+    /// - Parameters:
+    ///     - initialViewport: The camera viewport to display.
+    ///     - mapInitOptions: A closure to provide initial map parameters. It gets called only once when `Map` is created.
+    ///     - locationOptions: The options to configure ``LocationManager``.
+    ///     - content: A map content building closure.
+    public init(
+        initialViewport: Viewport = .styleDefault,
+        mapInitOptions: InitOptionsProvider? = nil,
+        locationOptions: LocationOptions = LocationOptions(),
+        @MapContentBuilder content: @escaping () -> MapContent
+    ) {
+        self.init(
+            _viewport: .constant(initialViewport),
+            mapInitOptions: mapInitOptions,
+            locationOptions: locationOptions,
+            content: content)
+    }
+
+    private init(
+        _viewport: ConstantOrBinding<Viewport>,
+        mapInitOptions: InitOptionsProvider? = nil,
+        locationOptions: LocationOptions = LocationOptions(),
+        content: (() -> MapContent)? = nil
+    ) {
+        self.viewport = _viewport
         self.mapInitOptions = mapInitOptions
         locationDependencies.locationOptions = locationOptions
-        content()._visit(mapContentVisitor)
+        content?()._visit(mapContentVisitor)
     }
 
     public func makeCoordinator() -> Coordinator {
-        Coordinator(
-            basic: MapBasicCoordinator(setCamera: camera.map(\.setter)),
-            viewAnnotation: ViewAnnotationCoordinator(),
-            location: LocationCoordinator())
-    }
-
-    public func makeUIViewController(context: Context) -> MapViewController {
         let mapView = MapView(frame: .zero, mapInitOptions: mapInitOptions?() ?? MapInitOptions())
-        let mapController = MapViewController(mapView: mapView)
-        context.environment.mapViewProvider?.mapView = mapView
-        context.coordinator.basic.setMapView(MapViewFacade(from: mapView))
-        context.coordinator.viewAnnotation.setup(with: ViewAnnotationCoordinator.Deps(
+        let vc = MapViewController(mapView: mapView)
+
+        let basicCoordinator = MapBasicCoordinator(
+            setViewport: viewport.setter,
+            mapView: MapViewFacade(from: mapView))
+
+        let coordinator = Coordinator(
+            basic: basicCoordinator,
+            viewAnnotation: ViewAnnotationCoordinator(),
+            location: LocationCoordinator(),
+            viewController: vc,
+            mapView: mapView)
+        // TODO: pass deps in initializer.
+        coordinator.viewAnnotation.setup(with: ViewAnnotationCoordinator.Deps(
             viewAnnotationsManager: mapView.viewAnnotations,
-            addViewController: { view in
-                mapController.addChild(view)
-                view.didMove(toParent: mapController)
+            addViewController: { childVC in
+                vc.addChild(childVC)
+                childVC.didMove(toParent: vc)
             },
-            removeViewController: { view in
-                view.willMove(toParent: nil)
-                view.removeFromParent()
+            removeViewController: { childVC in
+                childVC.willMove(toParent: nil)
+                childVC.removeFromParent()
             }))
-        context.coordinator.location.setup(with: mapView.location)
-        return mapController
+        coordinator.location.setup(with: mapView.location)
+
+        return coordinator
     }
 
-    public func updateUIViewController(_ mapController: MapViewController, context: Context) {
+    public func makeUIViewController(context: Context) -> UIViewController {
+        context.environment.mapViewProvider?.mapView = context.coordinator.mapView
+        return context.coordinator.viewController
+    }
+
+    public func updateUIViewController(_ mapController: UIViewController, context: Context) {
         context.coordinator.basic.update(
-            camera: camera?.wrappedValue,
+            viewport: viewport,
             deps: mapDependencies,
-            colorScheme: colorScheme)
+            layoutDirection: layoutDirection,
+            colorScheme: colorScheme,
+            animationData: context.transaction.viewportAnimationData)
         context.coordinator.viewAnnotation.updateAnnotations(to: mapContentVisitor.visitedViewAnnotations)
         context.coordinator.location.update(deps: locationDependencies)
     }
@@ -107,21 +151,41 @@ public struct Map: UIViewControllerRepresentable {
 @available(iOS 13.0, *)
 extension Map {
 
-    /// Creates a map.
-    ///
-    /// - Parameters:
-    ///     - camera: The camera state to display. If not specified, the default camera options from style will be used. See [center](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-center), [zoom](https://docs.mapbox.com/mapbox-gl-js/style-spec/root/#zoom), [bearing](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-bearing), [pitch](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-pitch).
-    ///     - mapInitOptions: A closure to provide initial map parameters. It gets called only once when `Map` is created.
-    ///     - locationOptions: The options to configure ``LocationManager``.
-    public init(
-        camera: Binding<CameraState>? = nil,
-        mapInitOptions: InitOptionsProvider? = nil,
-        locationOptions: LocationOptions = LocationOptions()
-    ) {
-        self.camera = camera
-        self.mapInitOptions = mapInitOptions
-        locationDependencies.locationOptions = locationOptions
-    }
+     /// Creates a map.
+     ///
+     /// - Parameters:
+     ///     - viewport: The camera viewport to display.
+     ///     - mapInitOptions: A closure to provide initial map parameters. It gets called only once when `Map` is created.
+     ///     - locationOptions: The options to configure ``LocationManager``.
+     public init(
+         viewport: Binding<Viewport>,
+         mapInitOptions: InitOptionsProvider? = nil,
+         locationOptions: LocationOptions = LocationOptions()
+     ) {
+         self.init(
+            _viewport: .binding(viewport),
+            mapInitOptions: mapInitOptions,
+            locationOptions: locationOptions,
+            content: nil)
+     }
+
+     /// Creates a map.
+     ///
+     /// - Parameters:
+     ///     - initialViewport: Initial camera viewport.
+     ///     - mapInitOptions: A closure to provide initial map parameters. It gets called only once when `Map` is created.
+     ///     - locationOptions: The options to configure ``LocationManager``.
+     public init(
+         initialViewport: Viewport = .styleDefault,
+         mapInitOptions: InitOptionsProvider? = nil,
+         locationOptions: LocationOptions = LocationOptions()
+     ) {
+         self.init(
+            _viewport: .constant(initialViewport),
+            mapInitOptions: mapInitOptions,
+            locationOptions: locationOptions,
+            content: nil)
+     }
 }
 
 @available(iOS 13.0, *)
@@ -173,7 +237,7 @@ public extension Map {
 
     /// Adds tap action to layers with specified `layerIds`.
     ///
-    /// The action will only be called when at least one of specified layers are at the tap position.
+    /// The action will only be called when at least one of specified layers are at the tap viewport.
     ///
     /// - Parameters:
     ///  - layerIds: The identifiers of layers where to perform features lookup.
@@ -207,18 +271,28 @@ extension Map {
         let basic: MapBasicCoordinator
         let viewAnnotation: ViewAnnotationCoordinator
         let location: LocationCoordinator
+        let viewController: UIViewController
+        let mapView: MapView
 
-        init(basic: MapBasicCoordinator, viewAnnotation: ViewAnnotationCoordinator, location: LocationCoordinator) {
+        init(
+            basic: MapBasicCoordinator,
+            viewAnnotation: ViewAnnotationCoordinator,
+            location: LocationCoordinator,
+            viewController: UIViewController,
+            mapView: MapView
+        ) {
             self.basic = basic
             self.viewAnnotation = viewAnnotation
             self.location = location
+            self.viewController = viewController
+            self.mapView = mapView
         }
     }
 
-    public final class MapViewController: UIViewController {
+    private final class MapViewController: UIViewController {
         private let mapView: MapView
 
-        public init(mapView: MapView) {
+        init(mapView: MapView) {
             self.mapView = mapView
             super.init(nibName: nil, bundle: nil)
         }
@@ -227,7 +301,7 @@ extension Map {
             fatalError("init(coder:) has not been implemented")
         }
 
-        public override func loadView() {
+        override func loadView() {
             view = mapView
         }
     }
@@ -237,5 +311,17 @@ extension Map {
 private extension Binding {
     var setter: (Value) -> Void {
         { self.wrappedValue = $0 }
+    }
+}
+
+@available(iOS 13.0, *)
+private extension ConstantOrBinding {
+    var setter: ((T) -> Void)? {
+        switch self {
+        case .constant:
+            return nil
+        case .binding(let binding):
+            return binding.setter
+        }
     }
 }

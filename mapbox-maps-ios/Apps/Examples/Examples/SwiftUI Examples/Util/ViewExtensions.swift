@@ -64,3 +64,14 @@ extension Color {
         Color(red: .random(in: 0...1), green: .random(in: 0...1), blue: .random(in: 0...1))
     }
 }
+
+@available(iOS 13.0, *)
+extension View {
+    func fixedMenuOrder() -> some View {
+        if #available(iOS 16.0, *) {
+            return self.menuOrder(.fixed)
+        } else {
+            return self
+        }
+    }
+}

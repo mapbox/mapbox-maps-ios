@@ -6,29 +6,28 @@ import SwiftUI
 struct FeaturesQueryExample: View {
     @StateObject private var model = Model()
     var body: some View {
-        MapReader { proxy in
-            Map(mapInitOptions: nil) {
-                // Annotations that shows tap location.
-                if let queryResult = model.queryResult {
-                    ViewAnnotation(queryResult.coordinate) {
-                        Circle()
-                            .fill(.red)
-                            .frame(width: 8, height: 8)
+        GeometryReader { geometry in
+            MapReader { proxy in
+                Map(viewport: $model.viewport, mapInitOptions: nil) {
+                    // Annotations that shows tap location.
+                    if let queryResult = model.queryResult {
+                        ViewAnnotation(queryResult.coordinate) {
+                            Circle()
+                                .fill(.red)
+                                .frame(width: 8, height: 8)
+                        }
                     }
                 }
-            }
-            .onMapTapGesture { point in
-                model.mapTapped(at: point, map: proxy.map)
-            }
-            .ignoresSafeArea()
-            .sheet(item: $model.queryResult, onDismiss: { model.queryResult = nil }) {
-                ResultView(result: $0)
-                    .defaultDetents()
-            }
-            .onChange(of: model.queryResult?.coordinate) { coordinate in
-                if let coordinate = coordinate, let camera = proxy.camera {
-                    let options = CameraOptions(center: coordinate)
-                    camera.ease(to: options, duration: 0.5, curve: .easeOut)
+                .styleURI(.streets) // In standard style the layers are opaque
+                .onMapTapGesture { point in
+                    model.mapTapped(at: point, map: proxy.map, bottomInset: geometry.size.height * 0.33)
+                }
+                .ignoresSafeArea()
+                .sheet(item: $model.queryResult, onDismiss: {
+                    model.dismiss()
+                }) {
+                    ResultView(result: $0)
+                        .defaultDetents()
                 }
             }
         }
@@ -44,18 +43,35 @@ private class Model: ObservableObject {
     @Published
     var queryResult: QueryResult? = nil
 
+    @Published
+    var viewport: Viewport = .styleDefault
+
     private var cancellable: Cancelable? = nil
 
-    func mapTapped(at point: CGPoint, map: MapboxMap?) {
+    func mapTapped(at point: CGPoint, map: MapboxMap?, bottomInset: CGFloat) {
         cancellable?.cancel()
         guard let map = map else {
             return
         }
         cancellable = map.queryRenderedFeatures(with: point) { [self] result in
             cancellable = nil
-            queryResult = try? QueryResult(
+            let coordinate = map.coordinate(for: point)
+            guard let queryResult = try? QueryResult(
                 features: result.get(),
-                coordinate: map.coordinate(for: point))
+                coordinate: coordinate) else {return}
+            self.queryResult = queryResult
+
+            withViewportAnimation(.easeOut(duration: 0.5)) {
+                viewport = .camera(center: coordinate)
+                    .inset(edges: .bottom, length: bottomInset, ignoringSafeArea: true)
+            }
+        }
+    }
+
+    func dismiss() {
+        queryResult = nil
+        withViewportAnimation(.easeOut(duration: 0.2)) {
+            viewport = .camera() // Reset the inset
         }
     }
 }
@@ -118,7 +134,6 @@ struct FeaturesQueryExample_Preview: PreviewProvider {
         FeaturesQueryExample()
     }
 }
-
 
 extension JSONObject {
     var prettyPrinted: String? {

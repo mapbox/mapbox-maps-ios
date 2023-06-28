@@ -1,4 +1,4 @@
-@testable import MapboxMaps
+@_spi(Package) @testable import MapboxMaps
 import XCTest
 
 final class RefTests: XCTestCase {

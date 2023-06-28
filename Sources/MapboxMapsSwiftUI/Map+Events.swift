@@ -24,7 +24,7 @@ public extension Map {
 
     /// Adds an action to perform when the camera is changed.
     func onCameraChanged(action: @escaping (CameraChanged) -> Void) -> Self {
-        append(\.mapDependencies.eventsSubscriptions, AnyEventSubscription(keyPath: \.onCameraChanged, perform: action))
+        append(\.mapDependencies.cameraChangeHandlers, action)
     }
 
     /// Adds an action to perform when the map has entered the idle state.

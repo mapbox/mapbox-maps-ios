@@ -66,6 +66,7 @@ extension Signal {
 // so be careful with publishing operators on Signal.
 // Currently only the `observe` and `observeNext` are published which seem to be enough
 // for the most common use cases.
+@_spi(Package)
 extension Signal {
     /// Creates a signal that triggers once, then cancels itself.
     internal func takeFirst() -> Signal {
@@ -81,7 +82,7 @@ extension Signal {
     }
 
     /// Creates a signal that triggers if `condition` is `true`.
-    internal func filter(_ condition: @escaping (Payload) -> Bool) -> Signal {
+    public func filter(_ condition: @escaping (Payload) -> Bool) -> Signal {
         Signal(observeImpl: { handle in
             observeImpl { payload in
                 if condition(payload) {

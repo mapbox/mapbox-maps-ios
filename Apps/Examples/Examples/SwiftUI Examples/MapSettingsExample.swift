@@ -11,24 +11,32 @@ struct Settings {
 
 @available(iOS 14.0, *)
 struct MapSettingsExample : View {
-    @State private var camera = CameraState(center: .berlin, zoom: 12)
-
+    @State private var cameraState = CameraState(center: .berlin, padding: .zero, zoom: 12, bearing: 0, pitch: 0)
     @State private var settingsOpened = false
     @State private var settings = Settings()
 
     var body: some View {
-        Map(camera: $camera)
+        Map(initialViewport: .camera(center: .berlin, zoom: 12))
             .cameraBounds(settings.cameraBounds)
             .styleURI(settings.styleURI)
             .gestureOptions(settings.gestureOptions)
             .northOrientation(settings.orientation)
             .constrainMode(settings.constrainMode)
+            .onCameraChanged { event in
+                // NOTE: updating camera @State on every camera change is not recommended
+                // because it will lead to body re-evaluation on every frame if user drags the map.
+                // Here it is used for demonstration purposes.
+                cameraState = event.cameraState
+            }
             .ignoresSafeArea()
             .sheet(isPresented: $settingsOpened) {
                 SettingsView(settings: $settings)
                     .defaultDetents()
             }
-            .cameraDebugOverlay(alignment: .bottom, camera: $camera)
+            .cameraDebugOverlay(alignment: .bottom, camera: cameraState)
+            .safeOverlay(alignment: .trailing, content: {
+                MapStyleSelectorButton(styleURI: $settings.styleURI)
+            })
             .toolbar {
                 Button("Settings") {
                     settingsOpened.toggle()
@@ -43,16 +51,6 @@ struct SettingsView : View {
     var body: some View {
         Form {
             Section {
-                Picker(selection: $settings.styleURI, label: Text("Map Style")) {
-                    Text("Streets v12").tag(StyleURI.streetsV12)
-                    Text("Streets").tag(StyleURI.streets)
-                    Text("Outdoors").tag(StyleURI.outdoors)
-                    Text("Dark").tag(StyleURI.dark)
-                    Text("Light").tag(StyleURI.light)
-                    Text("Satellite").tag(StyleURI.satellite)
-                    Text("Satellite Streets").tag(StyleURI.satelliteStreets)
-                    Text("Custom").tag(StyleURI.customStyle)
-                }
                 Picker(selection: $settings.cameraBounds, label: Text("Camera Bounds")) {
                     Text("World").tag(CameraBoundsOptions.world)
                     Text("Iceland").tag(CameraBoundsOptions.iceland)

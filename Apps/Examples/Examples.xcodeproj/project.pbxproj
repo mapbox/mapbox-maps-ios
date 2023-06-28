@@ -78,6 +78,7 @@
 		9501A5A62A38830B00F2AF92 /* ButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9501A5A12A38830B00F2AF92 /* ButtonStyle.swift */; };
 		9501A5A72A38830B00F2AF92 /* CameraDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9501A5A22A38830B00F2AF92 /* CameraDebugView.swift */; };
 		9501A5A82A38830B00F2AF92 /* SwiftExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9501A5A32A38830B00F2AF92 /* SwiftExtensions.swift */; };
+		951693B22A581DFC0083DC4C /* LocateMeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951693B12A581DFC0083DC4C /* LocateMeExample.swift */; };
 		953290572982C681005E1FE1 /* MapboxMapsSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 953290562982C681005E1FE1 /* MapboxMapsSwiftUI */; };
 		954AF549298A821E00365B6C /* ClusteringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954AF548298A821E00365B6C /* ClusteringExample.swift */; };
 		955B69EF299AAE6700FD4A19 /* RasterColorExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955B69EE299AAE6700FD4A19 /* RasterColorExample.swift */; };
@@ -85,6 +86,7 @@
 		959EDE5229F5520500AEE16C /* MapEventsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959EDE5129F5520500AEE16C /* MapEventsExample.swift */; };
 		95A7E4F12A6ECBC700C2E81D /* CombineLocationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A7E4F02A6ECBC700C2E81D /* CombineLocationExample.swift */; };
 		95A8C6A32A1A60E900D0FB48 /* CombineExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A8C6A22A1A60E900D0FB48 /* CombineExample.swift */; };
+		95AFCFC12A4AF30E00395A86 /* MapViewportExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95AFCFC02A4AF30E00395A86 /* MapViewportExample.swift */; };
 		95B589B62982BFE800BF4F31 /* SimpleMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B589B02982BFE800BF4F31 /* SimpleMapExample.swift */; };
 		95B589B82982BFE800BF4F31 /* SwiftUIRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B589B22982BFE800BF4F31 /* SwiftUIRoot.swift */; };
 		95B589B92982BFE800BF4F31 /* FeaturesQueryExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B589B32982BFE800BF4F31 /* FeaturesQueryExample.swift */; };
@@ -260,12 +262,14 @@
 		9501A5A12A38830B00F2AF92 /* ButtonStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonStyle.swift; sourceTree = "<group>"; };
 		9501A5A22A38830B00F2AF92 /* CameraDebugView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraDebugView.swift; sourceTree = "<group>"; };
 		9501A5A32A38830B00F2AF92 /* SwiftExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftExtensions.swift; sourceTree = "<group>"; };
+		951693B12A581DFC0083DC4C /* LocateMeExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocateMeExample.swift; sourceTree = "<group>"; };
 		954AF548298A821E00365B6C /* ClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClusteringExample.swift; sourceTree = "<group>"; };
 		955B69EE299AAE6700FD4A19 /* RasterColorExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RasterColorExample.swift; sourceTree = "<group>"; };
 		95857AC129B7A1A2005D238C /* LongTapAnimationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongTapAnimationExample.swift; sourceTree = "<group>"; };
 		959EDE5129F5520500AEE16C /* MapEventsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapEventsExample.swift; sourceTree = "<group>"; };
 		95A7E4F02A6ECBC700C2E81D /* CombineLocationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineLocationExample.swift; sourceTree = "<group>"; };
 		95A8C6A22A1A60E900D0FB48 /* CombineExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineExample.swift; sourceTree = "<group>"; };
+		95AFCFC02A4AF30E00395A86 /* MapViewportExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewportExample.swift; sourceTree = "<group>"; };
 		95B589B02982BFE800BF4F31 /* SimpleMapExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleMapExample.swift; sourceTree = "<group>"; };
 		95B589B22982BFE800BF4F31 /* SwiftUIRoot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftUIRoot.swift; sourceTree = "<group>"; };
 		95B589B32982BFE800BF4F31 /* FeaturesQueryExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeaturesQueryExample.swift; sourceTree = "<group>"; };
@@ -582,6 +586,7 @@
 			isa = PBXGroup;
 			children = (
 				95B589B22982BFE800BF4F31 /* SwiftUIRoot.swift */,
+				95AFCFC02A4AF30E00395A86 /* MapViewportExample.swift */,
 				95B589B02982BFE800BF4F31 /* SimpleMapExample.swift */,
 				95B589B42982BFE800BF4F31 /* MapSettingsExample.swift */,
 				95B589B32982BFE800BF4F31 /* FeaturesQueryExample.swift */,
@@ -589,6 +594,7 @@
 				3AA5FAF229BF132800758AC0 /* Puck2DExample.swift */,
 				3AA5FAF429C0786A00758AC0 /* Puck3DExample.swift */,
 				3ADF96012992787A00819649 /* ViewAnnotationsExample.swift */,
+				951693B12A581DFC0083DC4C /* LocateMeExample.swift */,
 				9501A5942A3882D800F2AF92 /* Util */,
 			);
 			path = "SwiftUI Examples";
@@ -837,6 +843,7 @@
 				CADCF72A2584990E0065C51B /* CustomStyleURLExample.swift in Sources */,
 				3A7CE986282511C900C3A0B8 /* NavigationSimulatorExample.swift in Sources */,
 				58A28B5E2869F69C006F7D93 /* GlobeExample.swift in Sources */,
+				95AFCFC12A4AF30E00395A86 /* MapViewportExample.swift in Sources */,
 				58A28B5C2869F69C006F7D93 /* GlobeFlyToExample.swift in Sources */,
 				177C9D47269CA61100D13A2D /* ShowHideLayerExample.swift in Sources */,
 				0C784D1126D002DC004AE7D0 /* FeatureStateExample.swift in Sources */,
@@ -849,6 +856,7 @@
 				74A2313C27EDCE7F0065FB7D /* AnnotationView.swift in Sources */,
 				7412CF6C27E9D48700F03B1C /* AddMarkersSymbolExample.swift in Sources */,
 				17E28C5C2672A1160033DF0F /* SymbolClusteringExample.swift in Sources */,
+				951693B22A581DFC0083DC4C /* LocateMeExample.swift in Sources */,
 				CADCF733258499130065C51B /* Examples.swift in Sources */,
 				954AF549298A821E00365B6C /* ClusteringExample.swift in Sources */,
 				CADCF743258499570065C51B /* BasicMapExample.swift in Sources */,

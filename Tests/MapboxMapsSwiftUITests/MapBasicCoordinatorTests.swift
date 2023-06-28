@@ -7,80 +7,49 @@ import XCTest
 @available(iOS 13.0, *)
 final class MapBasicCoordinatorTests: XCTestCase {
     var mapView: MockMapView!
-    var setCameraStub: Stub<CameraState, Void>!
+    var setViewportStub: Stub<Viewport, Void>!
     var me: MapBasicCoordinator!
 
     override func setUpWithError() throws {
         mapView = MockMapView()
-        setCameraStub = Stub()
-        me = MapBasicCoordinator(setCamera: setCameraStub.call(with:))
-        me.setMapView(mapView.facade)
+        setViewportStub = Stub()
+        me = MapBasicCoordinator(setViewport: setViewportStub.call(with:), mapView: mapView.facade)
     }
 
     override func tearDownWithError() throws {
         mapView = nil
         me = nil
-        setCameraStub = nil
-    }
-
-    func testUpstreamCameraUpdate() {
-        let event = CameraChanged(cameraState: .random(), timestamp: Date())
-        mapView.mapboxMap.events.onCameraChanged.send(event)
-        XCTAssertEqual(setCameraStub.invocations.count, 1)
-
-        mapView.mapboxMap.events.onCameraChanged.send(event)
-        mapView.mapboxMap.events.onCameraChanged.send(event)
-        XCTAssertEqual(setCameraStub.invocations.count, 3)
-    }
-
-    func testDownstreamCameraUpdate() {
-        me.update(
-            camera: nil,
-            deps: MapDependencies(),
-            colorScheme: .light)
-        XCTAssertEqual(mapView.mapboxMap.setCameraStub.invocations.count, 0)
-
-        let cameraState = CameraState.random()
-        me.update(
-            camera: cameraState,
-            deps: MapDependencies(),
-            colorScheme: .light)
-        XCTAssertEqual(mapView.mapboxMap.setCameraStub.invocations.count, 1)
-        XCTAssertEqual(mapView.mapboxMap.setCameraStub.invocations.first?.parameters, CameraOptions(cameraState: cameraState))
-    }
-
-    func testCameraBounds() {
-        let cameraBounds = CameraBoundsOptions(bounds: CoordinateBounds(southwest: .random(), northeast: .random()))
-        me.update(
-            camera: nil,
-            deps: MapDependencies(cameraBounds: cameraBounds),
-            colorScheme: .light)
-        XCTAssertEqual(mapView.mapboxMap.setCameraBoundsStub.invocations.count, 1)
-        XCTAssertEqual(mapView.mapboxMap.setCameraBoundsStub.invocations.first?.parameters, cameraBounds)
+        setViewportStub = nil
     }
 
     func testStyleURI() {
         let uris = MapDependencies.StyleURIs(default: .light, darkMode: .dark)
 
         me.update(
-            camera: nil,
+            viewport: .constant(.idle),
             deps: MapDependencies(styleURIs: uris),
-            colorScheme: .light)
+            layoutDirection: .leftToRight,
+            colorScheme: .light,
+            animationData: nil)
         var invocations = mapView.style.$uri.setStub.invocations
         XCTAssertEqual(invocations.count, 1)
         XCTAssertEqual(invocations.first?.parameters, .light)
 
         me.update(
-            camera: nil,
+            viewport: .constant(.idle),
             deps: MapDependencies(styleURIs: uris),
-            colorScheme: .light)
+            layoutDirection: .leftToRight,
+            colorScheme: .light,
+            animationData: nil)
         invocations = mapView.style.$uri.setStub.invocations
         XCTAssertEqual(invocations.count, 1, "Setting same style URI doesn't change it")
 
         me.update(
-            camera: nil,
+            viewport: .constant(.idle),
             deps: MapDependencies(styleURIs: uris),
-            colorScheme: .dark)
+            layoutDirection: .leftToRight,
+            colorScheme: .dark,
+            animationData: nil)
         invocations = mapView.style.$uri.setStub.invocations
         XCTAssertEqual(invocations.count, 2)
         XCTAssertEqual(invocations[1].parameters, .dark)
@@ -88,23 +57,27 @@ final class MapBasicCoordinatorTests: XCTestCase {
 
     func testMapOptions() {
         me.update(
-            camera: nil,
+            viewport: .constant(.idle),
             deps: MapDependencies(),
-            colorScheme: .light)
+            layoutDirection: .leftToRight,
+            colorScheme: .dark,
+            animationData: nil)
 
         let mapboxMap = mapView.mapboxMap
-        // Setting to already existing valuesa doesn't change it
+        // Setting to already existing values doesn't change it
         XCTAssertEqual(mapboxMap.northOrientationStub.invocations.count, 0)
         XCTAssertEqual(mapboxMap.setConstraintModeStub.invocations.count, 0)
         XCTAssertEqual(mapboxMap.setViewportModeStub.invocations.count, 0)
 
         me.update(
-            camera: nil,
+            viewport: .constant(.idle),
             deps: MapDependencies(
                 constrainMode: .none,
                 viewportMode: .flippedY,
                 orientation: .downwards),
-            colorScheme: .light)
+            layoutDirection: .leftToRight,
+            colorScheme: .light,
+            animationData: nil)
         XCTAssertEqual(mapboxMap.setConstraintModeStub.invocations.count, 1)
         XCTAssertEqual(mapboxMap.setViewportModeStub.invocations.count, 1)
         XCTAssertEqual(mapboxMap.northOrientationStub.invocations.count, 1)
@@ -117,19 +90,21 @@ final class MapBasicCoordinatorTests: XCTestCase {
     func testTapGesture() {
         let mockActions = MockActions()
         let deps = MapDependencies(actions: mockActions.actions)
-        me.update(camera: nil, deps: deps, colorScheme: .light)
+        me.update(
+            viewport: .constant(.idle),
+            deps: deps,
+            layoutDirection: .leftToRight,
+            colorScheme: .light,
+            animationData: nil)
 
         let point = CGPoint.random()
         let coordinate = CLLocationCoordinate2D.random()
 
-        let locStub = mapView.locationsStub
-        locStub.defaultReturnValue = point
+        mapView.gestures.singleTapGestureRecognizerMock.mockLocation = point
         mapView.mapboxMap.coordinateForPointStub.defaultReturnValue = coordinate
 
         mapView.gestures.singleTapGestureRecognizerMock.sendActions()
 
-        XCTAssertEqual(locStub.invocations.count, 1)
-        XCTAssertEqual(locStub.invocations.first?.parameters, mapView.gestures.singleTapGestureRecognizerMock)
         XCTAssertEqual(mockActions.onMapTapGesture.invocations.count, 1)
         XCTAssertEqual(mockActions.onMapTapGesture.invocations.first?.parameters, point)
 
@@ -156,7 +131,12 @@ final class MapBasicCoordinatorTests: XCTestCase {
     func testTapGestureMissLayer() {
         let mockActions = MockActions()
         let deps = MapDependencies(actions: mockActions.actions)
-        me.update(camera: nil, deps: deps, colorScheme: .light)
+        me.update(
+            viewport: .constant(.idle),
+            deps: deps,
+            layoutDirection: .leftToRight,
+            colorScheme: .light,
+            animationData: nil)
 
         mapView.gestures.singleTapGestureRecognizerMock.sendActions()
 
@@ -176,7 +156,12 @@ final class MapBasicCoordinatorTests: XCTestCase {
         }
         let deps = MapDependencies(eventsSubscriptions: [subscription])
 
-        me.update(camera: nil, deps: deps, colorScheme: .light)
+        me.update(
+            viewport: .constant(.idle),
+            deps: deps,
+            layoutDirection: .leftToRight,
+            colorScheme: .light,
+            animationData: nil)
         let mapLoaded = MapLoaded(timeInterval: EventTimeInterval(begin: Date(), end: Date()))
 
         mapView.mapboxMap.events.onMapLoaded.send(mapLoaded)

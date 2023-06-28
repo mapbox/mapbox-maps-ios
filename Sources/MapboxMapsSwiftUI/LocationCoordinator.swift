@@ -16,7 +16,7 @@ struct LocationDependencies {
 final class LocationCoordinator {
 
     private var locationManager: LocationManaging?
-    
+
     func setup(with locationManager: LocationManaging) {
         guard self.locationManager == nil else { return }
         self.locationManager = locationManager

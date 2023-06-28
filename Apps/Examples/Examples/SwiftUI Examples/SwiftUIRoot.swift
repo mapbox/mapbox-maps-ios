@@ -13,6 +13,8 @@ struct SwiftUIRoot: View {
                     ExampleLink("Show me the map!", note: "Just a Map().", destination: Map().ignoresSafeArea())
                     ExampleLink("Simple map", note: "Camera observing, automatic dark mode support.", destination: SimpleMapExample())
                     ExampleLink("Map settings", note: "Showcase of the most possible map configurations.", destination: MapSettingsExample())
+                    ExampleLink("Viewport", note: "Showcase of the possible viewport states", destination: MapViewportExample())
+                    ExampleLink("Locate Me", note: "Example of how to create user location control", destination: LocateMeExample())
                 } header: { Text("Getting started") }
 
                 Section {

@@ -3,18 +3,18 @@ import SwiftUI
 
 @available(iOS 14.0, *)
 struct Puck3DExample: View {
-    @State private var camera = CameraState(center: .helsinki, zoom: 12)
     @State private var puckOpacity = 1.0
-    @State private var puckScale = 1.0
+    @State private var puckScale = 0.25
     private let model = Model(uri: Bundle.main.url(forResource: "sportcar", withExtension: "glb"))
 
     var body: some View {
         Map(
-            camera: $camera,
+            initialViewport: .followPuck(zoom: 17, bearing: .heading, pitch: 60),
             locationOptions: LocationOptions(
                 puckType: .puck3D(.init(
                     model: model,
                     modelScale: .constant([puckScale, puckScale, puckScale]),
+                    modelRotation: .constant([0, 0, 180]),
                     modelOpacity: .constant(puckOpacity)
                 ))
             )

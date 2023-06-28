@@ -1,19 +1,32 @@
 @_spi(Package) import MapboxMaps
+import SwiftUI
 import UIKit
 
-/// Abstraction on MapView which makes testing possible.
+/// Abstraction around MapView which makes unit testing possible.
+@available(iOS 13.0, *)
 struct MapViewFacade {
-    var style: StyleProtocol
+    var styleManager: StyleProtocol
     var mapboxMap: MapboxMapProtocol
-    var gestures: GestureManagerProtocol
-    var locationForGesture: (UIGestureRecognizer) -> CGPoint
+    var gestureManager: GestureManagerProtocol
+    var viewportManager: ViewportManagerProtocol
+
+    var makeViewportTransition: (MapViewportAnimation) -> ViewportTransition
+    var makeViewportState: (Viewport, LayoutDirection) -> ViewportState?
 }
 
+@available(iOS 13.0, *)
 extension MapViewFacade {
     init(from mapView: MapView) {
-        style = mapView.mapboxMap.style
+        styleManager = mapView.mapboxMap
         mapboxMap = mapView.mapboxMap
-        gestures = mapView.gestures
-        locationForGesture = { $0.location(in: mapView) }
+        gestureManager = mapView.gestures
+        viewportManager = mapView.viewport
+
+        makeViewportTransition = { animation in
+            animation.makeViewportTransition(mapView)
+        }
+        makeViewportState = { viewport, LayoutDirection in
+            viewport.makeState(with: mapView, layoutDirection: LayoutDirection)
+        }
     }
 }

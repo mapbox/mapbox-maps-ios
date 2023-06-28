@@ -164,3 +164,22 @@ public final class ViewportManager {
         return ImmediateViewportTransition(mapboxMap: mapboxMap)
     }
 }
+
+// swiftlint:disable missing_docs
+@_spi(Package)
+public protocol ViewportManagerProtocol {
+    func addStatusObserver(_ observer: ViewportStatusObserver)
+    func removeStatusObserver(_ observer: ViewportStatusObserver)
+    func idle()
+    func transition(to toState: ViewportState, transition: ViewportTransition?, completion: ((Bool) -> Void)?)
+    func makeImmediateViewportTransition() -> ViewportTransition
+}
+// swiftlint:enable missing_docs
+
+@_spi(Package)
+extension ViewportManager: ViewportManagerProtocol {
+    public func makeImmediateViewportTransition() -> ViewportTransition {
+        let transition: ImmediateViewportTransition = makeImmediateViewportTransition()
+        return transition
+    }
+}

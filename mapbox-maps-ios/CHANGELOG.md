@@ -2,6 +2,13 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## main
+
+## 10.15.0-beta.1 - June 29, 2023
+
+* Remove unneeded synthesized initializers 
+* Update MapboxCoreMaps to 10.15.0-beta.1 and MapboxCommon to 23.7.0-beta.1.  
+
 ## 10.14.0 - June 14, 2023
 
 * Added experimental `tileCover` method to the `Snapshotter` that returns tile ids covering the map.

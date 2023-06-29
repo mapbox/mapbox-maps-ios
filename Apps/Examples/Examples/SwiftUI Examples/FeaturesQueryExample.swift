@@ -9,10 +9,10 @@ struct FeaturesQueryExample: View {
         MapReader { proxy in
             Map(annotationItems: model.queryResult.asArray) { queryRes in
                 // Annotations that shows tap location.
-                ViewAnnotation(queryRes.coordinate, size: CGSize(width: 8, height: 8)) {
+                ViewAnnotation(queryRes.coordinate) {
                     Circle()
                         .fill(.red)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .frame(width: 8, height: 8)
                 }
             }
             .onMapTapGesture { point in

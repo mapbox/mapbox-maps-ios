@@ -37,17 +37,16 @@ public typealias LocationUpdateAction = (Location) -> Void
 /// A view that displays Mapbox Map.
 @_spi(Experimental)
 @available(iOS 13.0, *)
-public struct Map<Content: View>: View {
+public struct Map<Content: View>: UIViewControllerRepresentable {
     public typealias InitOptionsProvider = () -> MapInitOptions
 
     var camera: Binding<CameraState>?
     var mapDependencies = MapDependencies()
     private var mapInitOptions: InitOptionsProvider?
     private var locationDependencies = LocationDependencies()
-    private var annotationOptions = [AnyHashable: ViewAnnotationOptions]()
-    private var annotationContents = [(AnyHashable, () -> Content)]()
+    private var annotationOptions = [AnyHashable: ViewAnnotation<Content>]()
 
-    @State private var annotationsLayouts = AnnotationLayouts()
+    @Environment(\.colorScheme) var colorScheme
 
     /// Creates a map that displays annotations.
     ///
@@ -70,34 +69,43 @@ public struct Map<Content: View>: View {
 
         for item in annotationItems {
             let result = annotationContent(item)
-            annotationOptions[item.id] = result.options
-            annotationContents.append((item.id, result.content))
+            annotationOptions[item.id] = result
         }
     }
 
-    var annotations: some View {
-        ForEach(annotationContents, id: \.0) { (id: AnyHashable, content: () -> Content) in
-            if let frame = annotationsLayouts[id] {
-                content()
-                    .frame(width: frame.width, height: frame.height)
-                    .offset(x: frame.minX, y: frame.minY)
-            }
-        }
+    public func makeCoordinator() -> Coordinator {
+        Coordinator(
+            basic: MapBasicCoordinator(setCamera: camera.map(\.setter)),
+            viewAnnotation: ViewAnnotationCoordinator(),
+            location: LocationCoordinator())
     }
 
-    public var body: some View {
-        ZStack(alignment: .topLeading) {
-            InternalMap(
-                camera: camera,
-                mapDependencies: mapDependencies,
-                annotationsOptions: annotationOptions,
-                mapInitOptions: mapInitOptions,
-                locationDependencies: locationDependencies
-            ) {
-                annotationsLayouts = $0
-            }
-            annotations
-        }
+    public func makeUIViewController(context: Context) -> MapViewController {
+        let mapView = MapView(frame: .zero, mapInitOptions: mapInitOptions?() ?? MapInitOptions())
+        let mapController = MapViewController(mapView: mapView)
+        context.environment.mapViewProvider?.mapView = mapView
+        context.coordinator.basic.setMapView(MapViewFacade(from: mapView))
+        context.coordinator.viewAnnotation.setup(with: ViewAnnotationCoordinator.Deps(
+            viewAnnotationsManager: mapView.viewAnnotations,
+            addViewController: { view in
+                mapController.addChild(view)
+                view.didMove(toParent: mapController)
+            },
+            removeViewController: { view in
+                view.willMove(toParent: nil)
+                view.removeFromParent()
+            }))
+        context.coordinator.location.setup(with: mapView.location)
+        return mapController
+    }
+
+    public func updateUIViewController(_ mapController: MapViewController, context: Context) {
+        context.coordinator.basic.update(
+            camera: camera?.wrappedValue,
+            deps: mapDependencies,
+            colorScheme: colorScheme)
+        context.coordinator.viewAnnotation.updateAnnotations(to: annotationOptions)
+        context.coordinator.location.update(deps: locationDependencies)
     }
 }
 
@@ -208,5 +216,45 @@ public extension Map {
     /// Adds an action to perform when a new puck location (interpolated) is emitted.
     func onPuckLocationUpdated(perform action: @escaping LocationUpdateAction) -> Self {
         append(\.locationDependencies.puckLocationUpdateHandlers, action)
+    }
+}
+
+@available(iOS 13.0, *)
+extension Map {
+
+    public final class Coordinator {
+        let basic: MapBasicCoordinator
+        let viewAnnotation: ViewAnnotationCoordinator
+        let location: LocationCoordinator
+
+        init(basic: MapBasicCoordinator, viewAnnotation: ViewAnnotationCoordinator, location: LocationCoordinator) {
+            self.basic = basic
+            self.viewAnnotation = viewAnnotation
+            self.location = location
+        }
+    }
+
+    public final class MapViewController: UIViewController {
+        private let mapView: MapView
+
+        public init(mapView: MapView) {
+            self.mapView = mapView
+            super.init(nibName: nil, bundle: nil)
+        }
+
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+
+        public override func loadView() {
+            view = mapView
+        }
+    }
+}
+
+@available(iOS 13.0, *)
+private extension Binding {
+    var setter: (Value) -> Void {
+        { self.wrappedValue = $0 }
     }
 }

@@ -18,11 +18,10 @@ struct ViewAnnotationsExample: View {
             Map(camera: $camera, annotationItems: points) { point in
                 ViewAnnotation(
                     point.coordinates,
-                    size: CGSize(width: 150, height: 50),
                     allowOverlap: allowOverlap,
                     anchor: anchor
                 ) {
-                    ViewAnnotationContent(point: point, anchor: anchor) {
+                    ViewAnnotationContent(point: point) {
                         points.removeAll(where: { $0 == point })
                     }
                 }
@@ -62,16 +61,12 @@ struct ViewAnnotationsExample: View {
 @available(iOS 14.0, *)
 private struct ViewAnnotationContent: View {
     var point: Point
-    var anchor: ViewAnnotationAnchor
     var onRemove: () -> Void
 
     @State var appeared = false
 
     var body: some View {
         VStack {
-            if anchor == .bottom {
-                Spacer()
-            }
             let latlon = String(format: "%.2f, %.2f", point.coordinates.latitude, point.coordinates.longitude)
             HStack(alignment: .firstTextBaseline) {
                 Text("(\(latlon))")
@@ -82,13 +77,9 @@ private struct ViewAnnotationContent: View {
             .padding(5)
             .background(Color.blue)
             .foregroundColor(.white)
-            .fixedSize() // Allows annotation to grow out of specified size.
             .opacity(appeared ? 1 : 0)
             .scaleEffect(appeared ? 1 : 0.2)
             .animation(.spring(), value: appeared)
-            if anchor == .top {
-                Spacer()
-            }
         }.onAppear {
             appeared = true
         }

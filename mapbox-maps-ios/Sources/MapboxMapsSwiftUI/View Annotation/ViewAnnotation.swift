@@ -6,7 +6,7 @@ import SwiftUI
 @_spi(Experimental)
 @available(iOS 13.0, *)
 public struct ViewAnnotation<Content: View> {
-    var options: ViewAnnotationOptions
+    var config: ViewAnnotationConfig
     var content: () -> Content
 
     /// Creates an annotaion with specified options and content builder.
@@ -20,16 +20,14 @@ public struct ViewAnnotation<Content: View> {
     ///   - offsetY: Additional Y offset, positive values move annotation to right.
     public init(
         _ coordinate: CLLocationCoordinate2D,
-        size: CGSize,
         allowOverlap: Bool = false,
         anchor: ViewAnnotationAnchor = .center,
         offsetX: CGFloat? = nil,
         offsetY: CGFloat? = nil,
-        @ViewBuilder content: @escaping () -> Content) {
-        options = ViewAnnotationOptions(
-            geometry: Point(coordinate),
-            width: size.width,
-            height: size.height,
+        @ViewBuilder content: @escaping () -> Content
+    ) {
+        config = ViewAnnotationConfig(
+            point: Point(coordinate),
             allowOverlap: allowOverlap,
             anchor: anchor,
             offsetX: offsetX,
@@ -37,4 +35,13 @@ public struct ViewAnnotation<Content: View> {
         )
         self.content = content
     }
+}
+
+/// View annotation configuration
+struct ViewAnnotationConfig: Equatable {
+    var point: Point
+    var allowOverlap: Bool
+    var anchor: ViewAnnotationAnchor
+    var offsetX: CGFloat?
+    var offsetY: CGFloat?
 }

@@ -4,8 +4,8 @@ import UIKit
 @objc(ModelLayerExample)
 final class ModelLayerExample: UIViewController, ExampleProtocol {
     private enum Constants {
-        static let helsinki = Point(CLLocationCoordinate2D(latitude: 60.1699, longitude: 24.9384))
         static let mapboxHelsinki = Point(CLLocationCoordinate2D(latitude: 60.17195694011002, longitude: 24.945389069265598))
+        static let duckCoordinates = Point(CLLocationCoordinate2D(latitude: mapboxHelsinki.coordinates.latitude + 0.002, longitude: mapboxHelsinki.coordinates.longitude - 0.002))
         static let modelIdKey = "model-id-key"
         static let sourceId = "source-id"
         static let duckModelId = "model-id-duck"
@@ -19,8 +19,8 @@ final class ModelLayerExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         let cameraOptions = CameraOptions(
-            center: mid(Constants.helsinki.coordinates, Constants.mapboxHelsinki.coordinates),
-            zoom: 14,
+            center: mid(Constants.duckCoordinates.coordinates, Constants.mapboxHelsinki.coordinates),
+            zoom: 16,
             pitch: 45
         )
         let options = MapInitOptions(cameraOptions: cameraOptions)
@@ -30,7 +30,7 @@ final class ModelLayerExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
 
-        mapView.mapboxMap.loadStyleURI(.light) { [weak self] _ in
+        mapView.mapboxMap.loadStyleURI(.standard) { [weak self] _ in
             self?.setupExample()
         }
     }
@@ -42,7 +42,7 @@ final class ModelLayerExample: UIViewController, ExampleProtocol {
         try! style.addStyleModel(modelId: Constants.carModelId, modelUri: Constants.car)
 
         var source = GeoJSONSource(id: Constants.sourceId)
-        var duckFeature = Feature(geometry: Constants.helsinki)
+        var duckFeature = Feature(geometry: Constants.duckCoordinates)
         duckFeature.properties = [Constants.modelIdKey: .string(Constants.duckModelId)]
         var carFeature = Feature(geometry: Constants.mapboxHelsinki)
         carFeature.properties = [Constants.modelIdKey: .string(Constants.carModelId)]
@@ -55,7 +55,7 @@ final class ModelLayerExample: UIViewController, ExampleProtocol {
         layer.source = Constants.sourceId
         layer.modelId = .expression(Exp(.get) { Constants.modelIdKey })
         layer.modelType = .constant(.common3d)
-        layer.modelScale = .constant([100, 100, 100])
+        layer.modelScale = .constant([40, 40, 40])
         layer.modelTranslation = .constant([0, 0, 0])
         layer.modelRotation = .constant([0, 0, 90])
         layer.modelOpacity = .constant(0.7)

@@ -92,7 +92,10 @@ struct Examples {
                 type: SkyLayerExample.self),
         Example(title: "Display a 3D model in a model layer",
                 description: "Showcase the usage of a 3D model layer.",
-                type: ModelLayerExample.self)
+                type: ModelLayerExample.self),
+        Example(title: "Lights 3D",
+                description: "Configure lights in 3D environment",
+                type: Lights3DExample.self)
     ]
 
     // Examples that focus on annotations.
@@ -182,10 +185,7 @@ struct Examples {
                 type: LargeGeoJSONPerformanceExample.self),
         Example(title: "Map Events",
                 description: "Print out map events and data",
-                type: MapEventsExample.self),
-        Example(title: "Lights 3D",
-                description: "Configure lights in 3D environment",
-                type: Lights3DExample.self)
+                type: MapEventsExample.self)
     ] + {
         if #available(iOS 13.0, *) {
             return [

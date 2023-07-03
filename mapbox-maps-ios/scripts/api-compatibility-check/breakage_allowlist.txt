@@ -472,3 +472,7 @@ Var InterfaceOrientationProvider.onInterfaceOrientationChange has been added as 
 Var LocationProvider.latestLocation has been added as a protocol requirement
 Class AppleLocationProvider has removed its super class ObjectiveC.NSObject
 Class AppleLocationProvider no longer inherits convenience inits from its superclass
+
+// MapRecorder replay API changes
+Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:completion:) has been renamed to Func replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:)
+Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:completion:) has parameter 3 type change from () -> Swift.Void to Swift.Bool

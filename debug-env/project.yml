@@ -52,31 +52,10 @@ targets:
       - unitTest
     sources:
       - path: "../mapbox-maps-ios/Tests/MapboxMapsTests"
-        excludes:
-          - "Integration Tests/HTTP/HTTPIntegrationTests.swift"
     dependencies:
       - target: Examples
     settings:
       INFOPLIST_FILE: "../mapbox-maps-ios/Tests/MapboxMapsTests/Info.plist"
-
-  MapboxMapsHTTPTests:
-    templates:
-        - installTokenScript
-        - hostApplication
-        - unitTest
-    sources:
-      - path: "../mapbox-maps-ios/Tests/MapboxMapsTests"
-        includes:
-          - Integration Tests/HTTP/HTTPIntegrationTests.swift
-          - Integration Tests/MapViewIntegrationTestCase.swift
-          - Integration Tests/IntegrationTestCase.swift
-          - Helpers/Bundle+MapboxMapsTests.swift
-          - Helpers/String+FileSystemSafe.swift
-          - Helpers/XCTestCase+GuardForMetalDevice.swift
-          - Helpers/XCTestCase+MapboxAccessToken.swift
-          - Helpers/XCTestCase+TemporaryCacheDirectory.swift
-    dependencies:
-      - target: Examples
 
   Examples:
     templates:
@@ -92,7 +71,6 @@ targets:
       testTargets:
         - ExamplesTests
         - MapboxMapsTests
-        - MapboxMapsHTTPTests
       environmentVariables:
         - variable: MTL_HUD_ENABLED
           value: 1

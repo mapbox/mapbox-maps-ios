@@ -7,12 +7,30 @@ import Foundation
 public struct CircleLayer: Layer {
 
     // MARK: - Conformance to `Layer` protocol
+    /// Unique layer name
     public var id: String
+
+    /// Rendering type of this layer.
     public let type: LayerType
+
+    /// An expression specifying conditions on source features.
+    /// Only features that match the filter are displayed.
     public var filter: Expression?
+
+    /// Name of a source description to be used for this layer.
+    /// Required for all layer types except background.
     public var source: String?
+
+    /// Layer to use from a vector tile source.
+    ///
+    /// Required for vector tile sources.
+    /// Prohibited for all other source types, including GeoJSON sources.
     public var sourceLayer: String?
+
+    /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
     public var minZoom: Double?
+
+    /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
@@ -34,9 +52,15 @@ public struct CircleLayer: Layer {
     public var circleColorTransition: StyleTransition?
 
     /// Emission strength.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var circleEmissiveStrength: Value<Double>?
 
     /// Transition options for `circleEmissiveStrength`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var circleEmissiveStrengthTransition: StyleTransition?
 
     /// The opacity at which the circle will be drawn.

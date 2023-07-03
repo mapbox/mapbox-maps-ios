@@ -7,30 +7,63 @@ import Foundation
 public struct FillExtrusionLayer: Layer {
 
     // MARK: - Conformance to `Layer` protocol
+    /// Unique layer name
     public var id: String
+
+    /// Rendering type of this layer.
     public let type: LayerType
+
+    /// An expression specifying conditions on source features.
+    /// Only features that match the filter are displayed.
     public var filter: Expression?
+
+    /// Name of a source description to be used for this layer.
+    /// Required for all layer types except background.
     public var source: String?
+
+    /// Layer to use from a vector tile source.
+    ///
+    /// Required for vector tile sources.
+    /// Prohibited for all other source types, including GeoJSON sources.
     public var sourceLayer: String?
+
+    /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
     public var minZoom: Double?
+
+    /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
     public var visibility: Visibility
 
     /// Radius of a fill extrusion edge in meters. If not zero, rounds extrusion edges for a smoother appearance.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var fillExtrusionEdgeRadius: Value<Double>?
 
     /// Provides a control to futher fine-tune the look of the ambient occlusion on the ground beneath the extruded buildings. Lower values give the effect a more solid look while higher values make it smoother. This property works only with 3D light, i.e. when `lights` root property is defined.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var fillExtrusionAmbientOcclusionGroundAttenuation: Value<Double>?
 
     /// Transition options for `fillExtrusionAmbientOcclusionGroundAttenuation`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var fillExtrusionAmbientOcclusionGroundAttenuationTransition: StyleTransition?
 
     /// The extent of the ambient occlusion effect on the ground beneath the extruded buildings in meters. This property works only with 3D light, i.e. when `lights` root property is defined.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var fillExtrusionAmbientOcclusionGroundRadius: Value<Double>?
 
     /// Transition options for `fillExtrusionAmbientOcclusionGroundRadius`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var fillExtrusionAmbientOcclusionGroundRadiusTransition: StyleTransition?
 
     /// Controls the intensity of shading near ground and concave angles between walls. Default value 0.0 disables ambient occlusion and values around 0.3 provide the most plausible results for buildings.
@@ -46,9 +79,15 @@ public struct FillExtrusionLayer: Layer {
     public var fillExtrusionAmbientOcclusionRadiusTransition: StyleTransition?
 
     /// Shades area near ground and concave angles between walls where the radius defines only vertical impact. Default value 3.0 corresponds to height of one floor and brings the most plausible results for buildings. This property works only with 3D light, i.e. when `lights` root property is defined.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var fillExtrusionAmbientOcclusionWallRadius: Value<Double>?
 
     /// Transition options for `fillExtrusionAmbientOcclusionWallRadius`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var fillExtrusionAmbientOcclusionWallRadiusTransition: StyleTransition?
 
     /// The height with which to extrude the base of this layer. Must be less than or equal to `fill-extrusion-height`.
@@ -64,33 +103,63 @@ public struct FillExtrusionLayer: Layer {
     public var fillExtrusionColorTransition: StyleTransition?
 
     /// The color of the flood light effect on the walls of the extruded buildings. This property works only with 3D light, i.e. when `lights` root property is defined.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var fillExtrusionFloodLightColor: Value<StyleColor>?
 
     /// Transition options for `fillExtrusionFloodLightColor`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var fillExtrusionFloodLightColorTransition: StyleTransition?
 
     /// Provides a control to futher fine-tune the look of the flood light on the ground beneath the extruded buildings. Lower values give the effect a more solid look while higher values make it smoother. This property works only with 3D light, i.e. when `lights` root property is defined.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var fillExtrusionFloodLightGroundAttenuation: Value<Double>?
 
     /// Transition options for `fillExtrusionFloodLightGroundAttenuation`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var fillExtrusionFloodLightGroundAttenuationTransition: StyleTransition?
 
     /// The extent of the flood light effect on the ground beneath the extruded buildings in meters. This property works only with 3D light, i.e. when `lights` root property is defined.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var fillExtrusionFloodLightGroundRadius: Value<Double>?
 
     /// Transition options for `fillExtrusionFloodLightGroundRadius`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var fillExtrusionFloodLightGroundRadiusTransition: StyleTransition?
 
     /// The intensity of the flood light color. This property works only with 3D light, i.e. when `lights` root property is defined.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var fillExtrusionFloodLightIntensity: Value<Double>?
 
     /// Transition options for `fillExtrusionFloodLightIntensity`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var fillExtrusionFloodLightIntensityTransition: StyleTransition?
 
     /// The extent of the flood light effect on the walls of the extruded buildings in meters. This property works only with 3D light, i.e. when `lights` root property is defined.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var fillExtrusionFloodLightWallRadius: Value<Double>?
 
     /// Transition options for `fillExtrusionFloodLightWallRadius`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var fillExtrusionFloodLightWallRadiusTransition: StyleTransition?
 
     /// The height with which to extrude this layer.
@@ -109,6 +178,9 @@ public struct FillExtrusionLayer: Layer {
     public var fillExtrusionPattern: Value<ResolvedImage>?
 
     /// Indicates whether top edges should be rounded when fill-extrusion-edge-radius has a value greater than 0. If false, rounded edges are only applied to the sides. Default is true.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var fillExtrusionRoundedRoof: Value<Bool>?
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up (on the flat plane), respectively.
@@ -124,9 +196,15 @@ public struct FillExtrusionLayer: Layer {
     public var fillExtrusionVerticalGradient: Value<Bool>?
 
     /// A global multiplier that can be used to scale base, height, AO, and flood light of the fill extrusions.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var fillExtrusionVerticalScale: Value<Double>?
 
     /// Transition options for `fillExtrusionVerticalScale`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var fillExtrusionVerticalScaleTransition: StyleTransition?
 
     public init(id: String) {

@@ -6,6 +6,12 @@
   const doc = locals.doc
   const isExperimental = locals.experimental
   const isInternal = locals.internal
+
+  const publicDocumentationNotation = (isExperimental) => isExperimental ?
+`#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+` : ``
 -%>
 // This file is generated.
 import Foundation
@@ -18,40 +24,72 @@ import Foundation
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-<%- type %>)
 <% } -%>
+<%- publicDocumentationNotation(isExperimental).split('\n').map(line => line.trimLeft()).join('\n') -%>
 <%if (isExperimental) { -%>@_spi(Experimental) <% } -%>public struct <%- camelize(type) %>Layer: Layer {
 
     // MARK: - Conformance to `Layer` protocol
+    /// Unique layer name
+<%- publicDocumentationNotation(isExperimental) -%>
     public var id: String
+
+    /// Rendering type of this layer.
+<%- publicDocumentationNotation(isExperimental) -%>
     public let type: LayerType
+
+    /// An expression specifying conditions on source features.
+    /// Only features that match the filter are displayed.
+<%- publicDocumentationNotation(isExperimental) -%>
     public var filter: Expression?
+
+    /// Name of a source description to be used for this layer.
+    /// Required for all layer types except background.
+<%- publicDocumentationNotation(isExperimental) -%>
     public var source: String?
+
+    /// Layer to use from a vector tile source.
+    ///
+    /// Required for vector tile sources.
+    /// Prohibited for all other source types, including GeoJSON sources.
+<%- publicDocumentationNotation(isExperimental) -%>
     public var sourceLayer: String?
+
+    /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
+<%- publicDocumentationNotation(isExperimental) -%>
     public var minZoom: Double?
+
+    /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
+<%- publicDocumentationNotation(isExperimental) -%>
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
+<%- publicDocumentationNotation(isExperimental) -%>
     public var visibility: Visibility
     <%_ for (const property of layoutProperties) { -%>
 
     /// <%- markdownFriendlyDoc(property) %>
+<%- publicDocumentationNotation(isExperimental || property.experimental) -%>
     <%if (!isExperimental && property.experimental) { -%>@_spi(Experimental) <% } -%>public var <%- camelizeWithLeadingLowercase(property.name) %>: <%- propertySwiftValueType(property) %>?
     <%_ if (property.transition) { -%>
 
     /// Transition options for `<%- camelize(property.name) %>`.
+<%- publicDocumentationNotation(isExperimental || property.experimental) %>
     <%if (!isExperimental && property.experimental) { -%>@_spi(Experimental) <% } -%>public var <%- camelizeWithLeadingLowercase(property.name) %>Transition: StyleTransition?
     <%_ } -%>
     <%_ } -%>
     <%_ for (const property of paintProperties) { -%>
 
     /// <%- markdownFriendlyDoc(property) %>
+<%- publicDocumentationNotation(isExperimental || property.experimental) -%>
     <%if (!isExperimental && property.experimental) { -%>@_spi(Experimental) <% } -%>public var <%- camelizeWithLeadingLowercase(property.name) %>: <%- propertySwiftValueType(property) %>?
     <%_ if (property.transition) { -%>
 
     /// Transition options for `<%- camelizeWithLeadingLowercase(property.name) _%>`.
+<%- publicDocumentationNotation(isExperimental || property.experimental) -%>
     <%if (!isExperimental && property.experimental) { -%>@_spi(Experimental) <% } -%>public var <%- camelizeWithLeadingLowercase(property.name) _%>Transition: StyleTransition?
     <%_ } -%>
     <%_ } -%>
 
+<%- publicDocumentationNotation(isExperimental) -%>
     public init(id: String) {
         self.id = id
         self.type = LayerType.<%- camelizeWithLeadingLowercase(type) %>

@@ -46,7 +46,7 @@ final class ViewAnnotationCoordinatorTests: XCTestCase {
         XCTAssertEqual(numberOfViewsAdded, 1, "added total 1 annotation view")
         XCTAssertEqual(viewAnnotationsManager.addViewStub.invocations.count, 1)
         let opt0Invocation = try XCTUnwrap(viewAnnotationsManager.addViewStub.invocations.last)
-        verifyAnnotationOptions(opt0Invocation.parameters.options, options[0].config)
+        verifyAnnotationOptions(opt0Invocation.parameters.options, options[0].viewAnnotationConfig)
         let option0InternalView = opt0Invocation.parameters.view
 
         annotations[1] = options[1]
@@ -71,7 +71,7 @@ final class ViewAnnotationCoordinatorTests: XCTestCase {
         XCTAssertEqual(numberOfViewsAdded, 4, "added total 4 annotation views")
         XCTAssertEqual(viewAnnotationsManager.addViewStub.invocations.count, 4)
         let opt3Invocation = try XCTUnwrap(viewAnnotationsManager.addViewStub.invocations.last)
-        verifyAnnotationOptions(opt3Invocation.parameters.options, options[3].config)
+        verifyAnnotationOptions(opt3Invocation.parameters.options, options[3].viewAnnotationConfig)
         let option3InternalView = opt3Invocation.parameters.view
 
         annotations.removeValue(forKey: 3)
@@ -81,7 +81,7 @@ final class ViewAnnotationCoordinatorTests: XCTestCase {
 
         XCTAssertEqual(numberOfViewsAdded, 2)
         XCTAssertEqual(viewAnnotationsManager.addViewStub.invocations.count, 4, "nothing added")
-        verifyAnnotationOptions(viewAnnotationsManager.updateViewStub.invocations.last?.parameters.options, options[4].config)
+        verifyAnnotationOptions(viewAnnotationsManager.updateViewStub.invocations.last?.parameters.options, options[4].viewAnnotationConfig)
         let removedViews = Set(viewAnnotationsManager.removeViewStub.invocations.map(\.parameters))
         XCTAssertEqual(removedViews, Set([option0InternalView, option3InternalView]))
     }

@@ -7,12 +7,14 @@ struct FeaturesQueryExample: View {
     @StateObject private var model = Model()
     var body: some View {
         MapReader { proxy in
-            Map(annotationItems: model.queryResult.asArray) { queryRes in
+            Map(mapInitOptions: nil) {
                 // Annotations that shows tap location.
-                ViewAnnotation(queryRes.coordinate) {
-                    Circle()
-                        .fill(.red)
-                        .frame(width: 8, height: 8)
+                if let queryResult = model.queryResult {
+                    ViewAnnotation(queryResult.coordinate) {
+                        Circle()
+                            .fill(.red)
+                            .frame(width: 8, height: 8)
+                    }
                 }
             }
             .onMapTapGesture { point in

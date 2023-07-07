@@ -37,14 +37,14 @@ public typealias LocationUpdateAction = (Location) -> Void
 /// A view that displays Mapbox Map.
 @_spi(Experimental)
 @available(iOS 13.0, *)
-public struct Map<Content: View>: UIViewControllerRepresentable {
+public struct Map: UIViewControllerRepresentable {
     public typealias InitOptionsProvider = () -> MapInitOptions
 
     var camera: Binding<CameraState>?
     var mapDependencies = MapDependencies()
     private var mapInitOptions: InitOptionsProvider?
     private var locationDependencies = LocationDependencies()
-    private var annotationOptions = [AnyHashable: ViewAnnotation<Content>]()
+    private var mapContentVisitor = DefaultMapContentVisitor()
 
     @Environment(\.colorScheme) var colorScheme
 
@@ -56,21 +56,16 @@ public struct Map<Content: View>: UIViewControllerRepresentable {
     ///     - locationOptions: The options to configure ``LocationManager``.
     ///     - annotationItems: The collection of data that the view uses to display annotations.
     ///     - annotationContent: A closure that produces the annotation content.
-    public init<Items>(
+    public init(
         camera: Binding<CameraState>? = nil,
         mapInitOptions: InitOptionsProvider? = nil,
         locationOptions: LocationOptions = LocationOptions(),
-        annotationItems: Items,
-        annotationContent: @escaping (Items.Element) -> ViewAnnotation<Content>
-    ) where Items: RandomAccessCollection, Items.Element: Identifiable {
+        @MapContentBuilder _ content: () -> MapContent
+    ) {
         self.camera = camera
         self.mapInitOptions = mapInitOptions
         locationDependencies.locationOptions = locationOptions
-
-        for item in annotationItems {
-            let result = annotationContent(item)
-            annotationOptions[item.id] = result
-        }
+        content()._visit(mapContentVisitor)
     }
 
     public func makeCoordinator() -> Coordinator {
@@ -104,20 +99,21 @@ public struct Map<Content: View>: UIViewControllerRepresentable {
             camera: camera?.wrappedValue,
             deps: mapDependencies,
             colorScheme: colorScheme)
-        context.coordinator.viewAnnotation.updateAnnotations(to: annotationOptions)
+        context.coordinator.viewAnnotation.updateAnnotations(to: mapContentVisitor.visitedViewAnnotations)
         context.coordinator.location.update(deps: locationDependencies)
     }
 }
 
 @available(iOS 13.0, *)
-public extension Map where Content == Never {
+extension Map {
+
     /// Creates a map.
     ///
     /// - Parameters:
     ///     - camera: The camera state to display. If not specified, the default camera options from style will be used. See [center](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-center), [zoom](https://docs.mapbox.com/mapbox-gl-js/style-spec/root/#zoom), [bearing](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-bearing), [pitch](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-pitch).
     ///     - mapInitOptions: A closure to provide initial map parameters. It gets called only once when `Map` is created.
     ///     - locationOptions: The options to configure ``LocationManager``.
-    init(
+    public init(
         camera: Binding<CameraState>? = nil,
         mapInitOptions: InitOptionsProvider? = nil,
         locationOptions: LocationOptions = LocationOptions()

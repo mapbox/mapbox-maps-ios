@@ -15,14 +15,22 @@ struct ViewAnnotationsExample: View {
 
     var body: some View {
         MapReader { proxy in
-            Map(camera: $camera, annotationItems: points) { point in
-                ViewAnnotation(
-                    point.coordinates,
-                    allowOverlap: allowOverlap,
-                    anchor: anchor
-                ) {
-                    ViewAnnotationContent(point: point) {
-                        points.removeAll(where: { $0 == point })
+            Map(camera: $camera, mapInitOptions: nil) {
+                ForEvery([CLLocationCoordinate2D.helsinki, .berlin], id: \.latitude) { point in
+                    ViewAnnotation(point) {
+                        Circle().fill(.red).frame(width: 30, height: 30)
+                    }
+                }
+
+                ForEvery(points) { point in
+                    ViewAnnotation(
+                        point.coordinates,
+                        allowOverlap: allowOverlap,
+                        anchor: anchor
+                    ) {
+                        ViewAnnotationContent(point: point) {
+                            points.removeAll(where: { $0 == point })
+                        }
                     }
                 }
             }

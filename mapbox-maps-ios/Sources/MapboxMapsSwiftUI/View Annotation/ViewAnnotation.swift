@@ -1,13 +1,11 @@
 @_spi(Package) import MapboxMaps
-import Turf
 import SwiftUI
 
 /// Represents view annotation.
 @_spi(Experimental)
-@available(iOS 13.0, *)
-public struct ViewAnnotation<Content: View> {
-    var config: ViewAnnotationConfig
-    var content: () -> Content
+public struct ViewAnnotation: MapContent {
+    var viewAnnotationConfig: ViewAnnotationConfig
+    var makeViewController: (@escaping (CGSize) -> Void) -> UIViewController
 
     /// Creates an annotaion with specified options and content builder.
     ///
@@ -18,7 +16,8 @@ public struct ViewAnnotation<Content: View> {
     ///   - anchor: Specifies where the annotation will be located relatively to the given coordinate.
     ///   - offsetX: Additional X offset, positive values move annotation to right.
     ///   - offsetY: Additional Y offset, positive values move annotation to right.
-    public init(
+    @available(iOS 13.0, *)
+    public init<Content: View>(
         _ coordinate: CLLocationCoordinate2D,
         allowOverlap: Bool = false,
         anchor: ViewAnnotationAnchor = .center,
@@ -26,14 +25,20 @@ public struct ViewAnnotation<Content: View> {
         offsetY: CGFloat? = nil,
         @ViewBuilder content: @escaping () -> Content
     ) {
-        config = ViewAnnotationConfig(
+        viewAnnotationConfig = ViewAnnotationConfig(
             point: Point(coordinate),
             allowOverlap: allowOverlap,
             anchor: anchor,
             offsetX: offsetX,
             offsetY: offsetY
         )
-        self.content = content
+        self.makeViewController = { onSizeChange in
+            UIHostingController(rootView: content().onChangeOfSize(perform: onSizeChange))
+        }
+    }
+
+    public func _visit(_ visitor: _MapContentVisitor) {
+        visitor.add(viewAnnotation: self)
     }
 }
 

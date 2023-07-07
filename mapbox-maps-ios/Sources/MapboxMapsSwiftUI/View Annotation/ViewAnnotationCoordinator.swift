@@ -27,7 +27,7 @@ class ViewAnnotationCoordinator {
         self.deps = deps
     }
 
-    func updateAnnotations<Content: View>(to newAnnotations: [AnyHashable: ViewAnnotation<Content>]) {
+    func updateAnnotations(to newAnnotations: [AnyHashable: ViewAnnotation]) {
         guard let deps else { return }
 
         let oldIds = Set(annotations.keys)
@@ -36,7 +36,7 @@ class ViewAnnotationCoordinator {
         let removalIds = oldIds.subtracting(newIds)
         let insertionIds = newIds.subtracting(oldIds)
         let updateIds = oldIds.intersection(newIds).filter {
-            annotations[$0]?.config != newAnnotations[$0]?.config
+            annotations[$0]?.config != newAnnotations[$0]?.viewAnnotationConfig
         }
 
         removalIds.forEach { id in
@@ -46,7 +46,7 @@ class ViewAnnotationCoordinator {
         }
 
         updateIds.forEach { id in
-            guard var displayedAnnotation = annotations[id], let newAnnotationConfig = newAnnotations[id]?.config else { return }
+            guard var displayedAnnotation = annotations[id], let newAnnotationConfig = newAnnotations[id]?.viewAnnotationConfig else { return }
             displayedAnnotation.update(with: newAnnotationConfig)
             annotations[id] = displayedAnnotation
         }
@@ -79,17 +79,17 @@ private struct DisplayedViewAnnotation {
         ViewAnnotationOptions(geometry: config.point, allowOverlap: config.allowOverlap, anchor: config.anchor, offsetX: config.offsetX, offsetY: config.offsetY)
     }
 
-    init<Content: View>(from viewAnnotation: ViewAnnotation<Content>, manager: ViewAnnotationsManaging) {
+    init(from viewAnnotation: ViewAnnotation, manager: ViewAnnotationsManaging) {
         self.manager = manager
-        self.config = viewAnnotation.config
+        self.config = viewAnnotation.viewAnnotationConfig
 
         weak var contentView: UIView?
-        self.content = UIHostingController(rootView: viewAnnotation.content().onChangeOfSize { [weak manager] size in
+        self.content = viewAnnotation.makeViewController { [weak manager] size in
             guard let contentView, let manager else { return }
             wrapAssignError {
                 try manager.update(contentView, options: ViewAnnotationOptions(width: size.width, height: size.height))
             }
-        })
+        }
         content.view.backgroundColor = .clear
         contentView = content.view
     }

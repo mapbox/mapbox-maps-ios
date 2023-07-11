@@ -7,13 +7,6 @@ jobs:
   - sanity-check:
       context:
         - Slack Orb
-  - swiftlint:
-      context:
-        - Slack Orb
-  - depsvalidator:
-      context:
-        - Slack Orb
-      name: Check dependencies versions
   - build-sdk:
       context:
         - Slack Orb
@@ -35,10 +28,6 @@ jobs:
       requires:
         - build-sdk-for-api-compatibility-check
         - build-baseline-sdk
-  - create-xcframework:
-      context:
-        - Slack Orb
-        - SDK Registry Token
 
   # Run unit tests on CI simulator
   - build-tests:

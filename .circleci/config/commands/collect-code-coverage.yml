@@ -26,7 +26,6 @@ steps:
 
           zip -r coverage.zip coverage.lcov coverage.txt "<< parameters.profdata_path >>" "$BINARY_PATH" junit*
   - install-python-dependencies
-  - install-mbx-ci
   - run:
       name: Send code coverage
       command: |

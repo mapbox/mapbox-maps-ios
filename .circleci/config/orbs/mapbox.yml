@@ -37,15 +37,20 @@ commands:
       platform:
         type: enum
         enum:
+          - auto
           - darwin
           - linux
-        default: darwin
+        default: auto
       arch:
         type: enum
         enum:
+          - auto
           - amd64
           - arm64
-        default: amd64
+        default: auto
+      install_path:
+        type: string
+        default: $HOME/mbx-ci/
       version:
         type: string
         default: latest
@@ -53,15 +58,27 @@ commands:
       - run:
           name: Install << parameters.version >> mbx-ci
           command: |
-            unameOut="$(uname -s)"
-            case "${unameOut}" in
-                Linux*)     MBX_INSTALL_PATH="$HOME/bin";;
-                Darwin*)    MBX_INSTALL_PATH="/usr/local/bin/";;
-                *)          MBX_INSTALL_PATH="/usr/local/bin/"
-            esac
-            curl -Ls https://mapbox-release-engineering.s3.amazonaws.com/mbx-ci/<<parameters.version>>/mbx-ci-<<parameters.platform>>-<<parameters.arch>> > $MBX_INSTALL_PATH/mbx-ci
-            chmod 755 $MBX_INSTALL_PATH/mbx-ci
-            mbx-ci aws setup
+            system="<< parameters.platform >>"
+            if [ "$system" == "auto" ]; then
+              system=$(uname -s | tr '[:upper:]' '[:lower:]')
+            fi
+
+            arch="<< parameters.arch >>"
+            if [ "$arch" == "auto" ]; then
+              arch=$(uname -m | sed 's/x86_64/amd64/')
+            fi
+            filename=mbx-ci-${system}-${arch}
+
+            mbx_install_path="<< parameters.install_path >>"
+            echo "Downloading ${filename} to ${mbx_install_path}/mbx-ci}"
+
+            if [ ! -x "$mbx_install_path/mbx-ci" ]; then
+                mkdir -p "$mbx_install_path"
+                curl -Lf "https://mapbox-release-engineering.s3.amazonaws.com/mbx-ci/<<parameters.version>>/${filename}" -o "$mbx_install_path/mbx-ci"
+                chmod 755 "$mbx_install_path/mbx-ci"
+                echo 'export PATH=$PATH:$HOME/mbx-ci' >> $BASH_ENV
+            fi
+            "$mbx_install_path/mbx-ci" aws setup
 
   set-github-commit-status:
     parameters:
@@ -238,4 +255,3 @@ commands:
                 paths:
                   - App.ipa
                   - AppTests.zip
-

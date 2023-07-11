@@ -3,10 +3,7 @@ when:
   equal: [ scheduled_pipeline, << pipeline.trigger_source >>]
 
 jobs:
-  - swiftlint:
-      context:
-        - Slack Orb
-  - depsvalidator:
+  - sanity-check:
       context:
         - Slack Orb
   - build-sdk:
@@ -81,9 +78,3 @@ jobs:
       scheme: Examples
       requires:
         - Build Examples tests
-  - create-xcframework:
-      context:
-        - Slack Orb
-        - SDK Registry Token
-      create-xcframework-always-run: true
-      report_failure: true

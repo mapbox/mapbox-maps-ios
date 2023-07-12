@@ -4,7 +4,7 @@ import MapboxMaps
 
 final class NavigationSimulator: LocationProvider {
 
-    private let viewport: Viewport
+    private let viewport: ViewportManager
     private let route: LineString
 
     private lazy var followPuckViewPortState = viewport.makeFollowPuckViewportState(
@@ -31,7 +31,7 @@ final class NavigationSimulator: LocationProvider {
         }
     }
 
-    init(viewport: Viewport, route: LineString) {
+    init(viewport: ViewportManager, route: LineString) {
         self.viewport = viewport
         self.route = route
         routeLength = route.distance()!

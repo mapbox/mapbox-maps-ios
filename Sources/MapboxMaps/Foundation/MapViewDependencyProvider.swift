@@ -22,11 +22,11 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
                              mapboxMap: MapboxMapProtocol,
                              displayLinkCoordinator: DisplayLinkCoordinator,
                              userInterfaceOrientationView: UIView) -> LocationManager
-    func makeViewportImpl(mapboxMap: MapboxMapProtocol,
-                          cameraAnimationsManager: CameraAnimationsManagerProtocol,
-                          anyTouchGestureRecognizer: UIGestureRecognizer,
-                          doubleTapGestureRecognizer: UIGestureRecognizer,
-                          doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol
+    func makeViewportManagerImpl(mapboxMap: MapboxMapProtocol,
+                                 cameraAnimationsManager: CameraAnimationsManagerProtocol,
+                                 anyTouchGestureRecognizer: UIGestureRecognizer,
+                                 doubleTapGestureRecognizer: UIGestureRecognizer,
+                                 doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportManagerImplProtocol
     func makeAnnotationOrchestratorImpl(in view: UIView,
                                         mapboxMap: MapboxMapProtocol,
                                         mapFeatureQueryable: MapFeatureQueryable,
@@ -316,11 +316,13 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             userInterfaceOrientationView: userInterfaceOrientationView)
     }
 
-    internal func makeViewportImpl(mapboxMap: MapboxMapProtocol,
-                                   cameraAnimationsManager: CameraAnimationsManagerProtocol,
-                                   anyTouchGestureRecognizer: UIGestureRecognizer,
-                                   doubleTapGestureRecognizer: UIGestureRecognizer,
-                                   doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol {
+    internal func makeViewportManagerImpl(
+        mapboxMap: MapboxMapProtocol,
+        cameraAnimationsManager: CameraAnimationsManagerProtocol,
+        anyTouchGestureRecognizer: UIGestureRecognizer,
+        doubleTapGestureRecognizer: UIGestureRecognizer,
+        doubleTouchGestureRecognizer: UIGestureRecognizer
+    ) -> ViewportManagerImplProtocol {
         let lowZoomToHighZoomAnimationSpecProvider = LowZoomToHighZoomAnimationSpecProvider(
             mapboxMap: mapboxMap)
         let highZoomToLowZoomAnimationSpecProvider = HighZoomToLowZoomAnimationSpecProvider()
@@ -338,7 +340,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
         let defaultViewportTransition = DefaultViewportTransition(
             options: .init(),
             animationHelper: animationHelper)
-        return ViewportImpl(
+        return ViewportManagerImpl(
             options: .init(),
             mainQueue: mainQueue,
             defaultTransition: defaultViewportTransition,

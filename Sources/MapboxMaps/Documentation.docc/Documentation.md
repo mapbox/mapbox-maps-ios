@@ -204,7 +204,7 @@ The Mapbox Maps SDK for iOS is a public library for displaying interactive, thor
 
 ### Viewport
 
-- ``Viewport``
+- ``ViewportManager``
 - ``ViewportOptions``
 - ``ViewportStatus``
 - ``ViewportStatusObserver``

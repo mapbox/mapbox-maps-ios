@@ -2,19 +2,19 @@ import XCTest
 @testable import MapboxMaps
 
 final class ViewportTests: XCTestCase {
-    var impl: MockViewportImpl!
+    var impl: MockViewportManagerImpl!
     var interpolatedLocationProducer: MockInterpolatedLocationProducer!
     var cameraAnimationsManager: MockCameraAnimationsManager!
     var mapboxMap: MockMapboxMap!
-    var viewport: Viewport!
+    var viewport: ViewportManager!
 
     override func setUp() {
         super.setUp()
-        impl = MockViewportImpl()
+        impl = MockViewportManagerImpl()
         interpolatedLocationProducer = MockInterpolatedLocationProducer()
         cameraAnimationsManager = MockCameraAnimationsManager()
         mapboxMap = MockMapboxMap()
-        viewport = Viewport(
+        viewport = ViewportManager(
             impl: impl,
             interpolatedLocationProducer: interpolatedLocationProducer,
             cameraAnimationsManager: cameraAnimationsManager,

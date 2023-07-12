@@ -1,6 +1,6 @@
 /// A ``ViewportTransition`` implementation that transitions immediately without any animation.
 ///
-/// Use ``Viewport/makeImmediateViewportTransition()`` to create instances of this class.
+/// Use ``ViewportManager/makeImmediateViewportTransition()`` to create instances of this class.
 public final class ImmediateViewportTransition: ViewportTransition {
     private let mapboxMap: MapboxMapProtocol
 

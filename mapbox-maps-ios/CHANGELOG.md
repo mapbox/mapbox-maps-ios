@@ -11,6 +11,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Introduce `SymbolLayer/iconImageCrossFade` API.
 * Introduce experimental `BackgroundLayer/backgroundEmissiveStrength`, `CircleLayer/circleEmissiveStrength`, `FillLayer/fillEmissiveStrength`, `LineLayer/lineEmissiveStrength`, `SymbolLayer/iconEmissiveStrength`, `SymbolLayer/textEmissiveStrength`, `ModelLayer/modelEmissiveStrength`, `ModelLayer/modelRoughness`, `ModelLayer/modelHeightBasedEmissiveStrengthMultiplier` APIs.
 * Introduce experimental `FillExtrusionLayer/fillExtrusionAmbientOcclusionWallRadius`, `FillExtrusionLayer/fillExtrusionAmbientOcclusionGroundRadius`, `FillExtrusionLayer/fillExtrusionAmbientOcclusionGroundAttenuation`, `FillExtrusionLayer/fillExtrusionFloodLightColor`, `FillExtrusionLayer/fillExtrusionFloodLightIntensity`, `FillExtrusionLayer/fillExtrusionFloodLightWallRadius`, `FillExtrusionLayer/fillExtrusionFloodLightGroundRadius`, `FillExtrusionLayer/fillExtrusionFloodLightGroundAttenuation`, `FillExtrusionLayer/fillExtrusionVerticalScale` APIs.
+* Rename `Viewport` to `ViewportManager`.
 
 ## 11.0.0-alpha.2 - 21 June, 2023
 
@@ -118,7 +119,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## 10.14.0-beta.1 - May 17, 2023
 
 * Add a renamed flag to `PuckBearingSource` and related APIs.
-* Update MapboxCoreMaps to 10.14.0-beta.1 and MapboxCommon to 23.6.0-beta.1. 
+* Update MapboxCoreMaps to 10.14.0-beta.1 and MapboxCommon to 23.6.0-beta.1.
 
 ## 10.13.1 - May 5, 2023
 
@@ -128,7 +129,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## 10.13.0-rc.1 - April 19, 2023
 
-* Update MapboxCoreMaps to 10.13.0-rc.1 and MapboxCommon to 23.5.0-rc.1. 
+* Update MapboxCoreMaps to 10.13.0-rc.1 and MapboxCommon to 23.5.0-rc.1.
 
 ## 10.13.0-beta.1 - April 5, 2023
 

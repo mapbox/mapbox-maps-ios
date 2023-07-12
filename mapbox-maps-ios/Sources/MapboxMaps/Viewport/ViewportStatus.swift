@@ -1,17 +1,17 @@
-/// `ViewportStatus` contains 3 cases that express what the ``Viewport`` is doing at any given time.
+/// `ViewportStatus` contains 3 cases that express what the ``ViewportManager`` is doing at any given time.
 ///
 /// The ``ViewportStatus/state(_:)`` and ``ViewportStatus/transition(_:toState:)``
 /// cases have associated values that are reference types, so equality and hash are implemented in terms of
 /// the identities of those objects.
 public enum ViewportStatus: Hashable {
 
-    /// The `idle` status indicates that ``Viewport`` is inactive.
+    /// The `idle` status indicates that ``ViewportManager`` is inactive.
     case idle
 
-    /// The `state(_:)` status indicates that ``Viewport`` is running the associated value `state`.
+    /// The `state(_:)` status indicates that ``ViewportManager`` is running the associated value `state`.
     case state(_ state: ViewportState)
 
-    /// The `transition(_:toState:)` status indicates that ``Viewport`` is running `transition`
+    /// The `transition(_:toState:)` status indicates that ``ViewportManager`` is running `transition`
     /// and will start running `toState` upon success.
     case transition(_ transition: ViewportTransition, toState: ViewportState)
 

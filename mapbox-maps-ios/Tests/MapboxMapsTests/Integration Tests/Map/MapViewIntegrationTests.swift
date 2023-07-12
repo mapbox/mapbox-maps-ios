@@ -71,7 +71,7 @@ final class MapViewIntegrationTests: IntegrationTestCase {
 
     func testViewportAndStateIsReleasedAfterTransition() throws {
         weak var weakState: ViewportState?
-        weak var weakViewport: Viewport?
+        weak var weakViewport: ViewportManager?
         weak var weakMapView: MapView?
 
         autoreleasepool {

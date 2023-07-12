@@ -40,12 +40,12 @@ open class MapView: UIView {
     /// Manages the configuration of custom view annotations on the map.
     public private(set) var viewAnnotations: ViewAnnotationManager!
 
-    /// ``Viewport`` is a high-level and extensible API for driving the map camera. It
+    /// ``ViewportManager`` provides a high-level and extensible API for driving the map camera. It
     /// provides built-in states for following the location puck and showing an overview of
     /// a GeoJSON geometry, and enables the creation of custom states. Transitions
     /// between states can be animated with a built-in default transition and via custom
     /// transitions.
-    public private(set) var viewport: Viewport!
+    public private(set) var viewport: ViewportManager!
 
     /// Controls the display of attribution dialogs
     private var attributionDialogManager: AttributionDialogManager!
@@ -414,8 +414,8 @@ open class MapView: UIView {
             containerView: viewAnnotationContainerView,
             mapboxMap: mapboxMap)
 
-        viewport = Viewport(
-            impl: dependencyProvider.makeViewportImpl(
+        viewport = ViewportManager(
+            impl: dependencyProvider.makeViewportManagerImpl(
                 mapboxMap: mapboxMap,
                 cameraAnimationsManager: internalCamera,
                 anyTouchGestureRecognizer: gestures.anyTouchGestureRecognizer,

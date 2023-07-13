@@ -4,6 +4,10 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 10.15.0-rc.1 - July 13, 2023
+
+* Update MapboxCoreMaps to 10.15.0-rc.1 and MapboxCommon to 23.7.0-rc.1.  
+
 ## 10.15.0-beta.1 - June 29, 2023
 
 * Remove unneeded synthesized initializers 

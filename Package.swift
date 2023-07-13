@@ -3,10 +3,10 @@
 
 import PackageDescription
 
-let coreVersion = "11.0.0-SNAPSHOT.0630T0845Z.a04a20c"
-let coreChecksum = "b69aa030a7a6901605abc9f43d2551cf8377aa9478b4950445f2f664a74f1849"
-let commonVersion = "24.0.0-SNAPSHOT.0628T1118Z.b052007"
-let commonChecksum = "67812f0744b9ee4e1d96a6afc36de759d2696ba2de9ec9e4b1ef63dce87a9c85"
+let coreVersion = "11.0.0-SNAPSHOT.0713T1151Z.e5c06e2"
+let coreChecksum = "87e2d799a680236c825c91395b57088716c3f8e54b6f9878cc23fc7943abced4"
+let commonVersion = "24.0.0-SNAPSHOT.0710T1221Z.9a80585"
+let commonChecksum = "90e5960318768f5ed14f58f6bf10338cef3a893c6948f425028c85cdd6abf79e"
 
 func folder(_ version: String) -> String { version.contains("SNAPSHOT") ? "snapshots" : "releases" }
 
@@ -60,7 +60,6 @@ let package = Package(
             path: mapboxMapsTestsPath,
             exclude: [
                 "Info.plist",
-                "Integration Tests/HTTP/HTTPIntegrationTests.swift",
             ],
             resources: [
                 .copy("MigrationGuide/Fixtures/polygon.geojson"),

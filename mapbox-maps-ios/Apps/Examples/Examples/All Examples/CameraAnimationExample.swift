@@ -9,7 +9,9 @@ public class CameraAnimationExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds)
+        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 42.88, longitude: -78.870000), zoom: 6)
+        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
+        mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 

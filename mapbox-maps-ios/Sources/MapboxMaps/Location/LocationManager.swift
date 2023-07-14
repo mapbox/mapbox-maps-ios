@@ -6,7 +6,7 @@ import UIKit
 public final class LocationManager {
 
     /// Represents the latest location received from the location provider.
-    @available(*, deprecated, message: "Use LocationProvider.latestLocation instead")
+    @available(*, deprecated, message: "Use provider.latestLocation instead")
     public var latestLocation: Location? {
         return locationProvider.latestLocation
     }

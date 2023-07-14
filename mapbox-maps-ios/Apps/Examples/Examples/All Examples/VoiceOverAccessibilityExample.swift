@@ -126,7 +126,7 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
     }
 
     func updateLocationAccessibilityElement() {
-        if let location = mapView.location.latestLocation,
+        if let location = mapView.location.provider.latestLocation,
            let accessibilityFrame = mapView.accessibilityFrame(for: location.coordinate) {
             let element = UIAccessibilityElement(accessibilityContainer: mapView!)
             element.accessibilityIdentifier = "puck"

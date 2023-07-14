@@ -25,7 +25,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
             case .light:
                 return "Light"
             case .satelliteStreets:
-                return "Satelite"
+                return "Satellite"
             case .customUri:
                 return "Custom"
             }
@@ -52,7 +52,8 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         // Set initial camera settings
-        let options = MapInitOptions(styleURI: style.uri)
+        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 37.26301831966747, longitude: -121.97647612483807), zoom: 10)
+        let options = MapInitOptions(cameraOptions: cameraOptions, styleURI: style.uri)
 
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -73,7 +74,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
             guard let self = self else { return }
             // Register the location consumer with the map
             // Note that the location manager holds weak references to consumers, which should be retained
-            self.mapView.location.addLocationConsumer(self.cameraLocationConsumer)
+            self.mapView.location.provider.add(consumer: self.cameraLocationConsumer)
         }.store(in: &cancelables)
     }
 

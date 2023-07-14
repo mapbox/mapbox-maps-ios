@@ -114,6 +114,8 @@ final class Puck3DTests: XCTestCase {
         XCTAssertEqual(actualLayer.id, "puck-model-layer")
         XCTAssertEqual(actualLayer.modelType, .constant(.locationIndicator))
         XCTAssertEqual(actualLayer.source, "puck-model-source")
+        XCTAssertEqual(actualLayer.modelScale, configuration.modelScale)
+        XCTAssertEqual(actualLayer.modelScaleMode, configuration.modelScaleMode)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.first?.parameters.layerPosition, nil)
     }
 
@@ -219,30 +221,6 @@ final class Puck3DTests: XCTestCase {
 
         let actualLayer = try XCTUnwrap(style.addPersistentLayerStub.invocations.first?.parameters.layer as? ModelLayer)
         XCTAssertEqual(actualLayer.modelOpacity, configuration.modelOpacity)
-    }
-
-    func testDefaultModelScale() throws {
-        let stubbedModelScale = 1.0
-        configuration.modelScale = .random(.constant([stubbedModelScale, stubbedModelScale, stubbedModelScale]))
-
-        recreatePuck()
-
-        interpolatedLocationProducer.currentLocation = InterpolatedLocation(
-            location: Location(location: CLLocation(latitude: 0, longitude: 0), accuracyAuthorization: .fullAccuracy)
-        )
-        style.layerExistsStub.defaultReturnValue = false
-        puck3D.isActive = true
-
-        let modelLayer = try XCTUnwrap(style.addPersistentLayerStub.invocations.first?.parameters.layer as? ModelLayer)
-        let modelScaleString = try XCTUnwrap(try modelLayer.modelScale?.jsonString())
-
-        let modelScalePattern =
-            #"^\["interpolate","# +
-            #"\["exponential",0.5\],"# +
-            #"\["zoom"\],"# +
-            #"0.5,\["literal",\[(?:[0-9]+(?:\.[0-9]+)*,?){3}\]\],"# +
-            #"22,\["literal",\[(?:[0-9]+(?:\.[0-9]+)*,?){3}\]\]\]$"#
-        XCTAssertNotNil(modelScaleString.range(of: modelScalePattern, options: .regularExpression))
     }
 
     func testUpdateExistingSource() throws {

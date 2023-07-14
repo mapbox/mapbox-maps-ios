@@ -12,6 +12,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Introduce experimental `BackgroundLayer/backgroundEmissiveStrength`, `CircleLayer/circleEmissiveStrength`, `FillLayer/fillEmissiveStrength`, `LineLayer/lineEmissiveStrength`, `SymbolLayer/iconEmissiveStrength`, `SymbolLayer/textEmissiveStrength`, `ModelLayer/modelEmissiveStrength`, `ModelLayer/modelRoughness`, `ModelLayer/modelHeightBasedEmissiveStrengthMultiplier` APIs.
 * Introduce experimental `FillExtrusionLayer/fillExtrusionAmbientOcclusionWallRadius`, `FillExtrusionLayer/fillExtrusionAmbientOcclusionGroundRadius`, `FillExtrusionLayer/fillExtrusionAmbientOcclusionGroundAttenuation`, `FillExtrusionLayer/fillExtrusionFloodLightColor`, `FillExtrusionLayer/fillExtrusionFloodLightIntensity`, `FillExtrusionLayer/fillExtrusionFloodLightWallRadius`, `FillExtrusionLayer/fillExtrusionFloodLightGroundRadius`, `FillExtrusionLayer/fillExtrusionFloodLightGroundAttenuation`, `FillExtrusionLayer/fillExtrusionVerticalScale` APIs.
 * Rename `Viewport` to `ViewportManager`.
+* Add experimental `tileCover` method to the `Snapshotter` that returns tile ids covering the map.
 
 ## 11.0.0-alpha.2 - 21 June, 2023
 

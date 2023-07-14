@@ -9,7 +9,8 @@ final class Custom3DPuckExample: UIViewController, ExampleProtocol, LocationCons
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds)
+        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 37.26301831966747, longitude: -121.97647612483807), zoom: 15, pitch: 55)
+        mapView = MapView(frame: view.bounds, mapInitOptions: MapInitOptions(cameraOptions: cameraOptions))
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
@@ -67,7 +68,7 @@ final class Custom3DPuckExample: UIViewController, ExampleProtocol, LocationCons
         mapView.location.options.puckType = .puck3D(configuration)
         mapView.location.options.puckBearing = .course
 
-        mapView.location.addLocationConsumer(self)
+        mapView.location.provider.add(consumer: self)
     }
 
     internal func locationUpdate(newLocation: Location) {

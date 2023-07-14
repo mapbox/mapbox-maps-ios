@@ -26,7 +26,7 @@ final class BasicLocationPulsingExample: UIViewController, ExampleProtocol {
         puckConfiguration.pulsing = .default
         mapView.location.options.puckType = .puck2D(puckConfiguration)
 
-        mapView.location.addLocationConsumer(self)
+        mapView.location.provider.add(consumer: self)
 
         if #available(iOS 14.0, *) {
             navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .action)

@@ -32,7 +32,7 @@ final class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
     private func setupExample() {
 
         // We want to display the annotation at the center of the map's current viewport
-        let centerCoordinate = mapView.cameraState.center
+        let centerCoordinate = mapView.mapboxMap.cameraState.center
 
         // Make a `PointAnnotationManager` which will be responsible for managing
         // a collection of `PointAnnotion`s.

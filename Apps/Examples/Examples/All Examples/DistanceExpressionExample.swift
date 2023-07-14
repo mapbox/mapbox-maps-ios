@@ -117,7 +117,7 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
     }
 
     func circleRadius(forZoom zoom: CGFloat) -> Double {
-        let centerLatitude = mapView.cameraState.center.latitude
+        let centerLatitude = mapView.mapboxMap.cameraState.center.latitude
 
         // Get the meters per pixel at a given latitude and zoom level.
         let metersPerPoint = Projection.metersPerPoint(for: centerLatitude, zoom: zoom)

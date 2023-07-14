@@ -36,10 +36,12 @@ final class ModelLayerExample: UIViewController, ExampleProtocol {
     }
 
     private func setupExample() {
-        let style = mapView.mapboxMap.style
+        guard let mapboxMap = mapView.mapboxMap else {
+            return
+        }
 
-        try! style.addStyleModel(modelId: Constants.duckModelId, modelUri: Constants.duck)
-        try! style.addStyleModel(modelId: Constants.carModelId, modelUri: Constants.car)
+        try! mapboxMap.addStyleModel(modelId: Constants.duckModelId, modelUri: Constants.duck)
+        try! mapboxMap.addStyleModel(modelId: Constants.carModelId, modelUri: Constants.car)
 
         var source = GeoJSONSource(id: Constants.sourceId)
         var duckFeature = Feature(geometry: Constants.duckCoordinates)
@@ -49,7 +51,7 @@ final class ModelLayerExample: UIViewController, ExampleProtocol {
 
         source.data = .featureCollection(FeatureCollection(features: [duckFeature, carFeature]))
 
-        try! style.addSource(source)
+        try! mapboxMap.addSource(source)
 
         var layer = ModelLayer(id: "model-layer-id")
         layer.source = Constants.sourceId
@@ -60,7 +62,7 @@ final class ModelLayerExample: UIViewController, ExampleProtocol {
         layer.modelRotation = .constant([0, 0, 90])
         layer.modelOpacity = .constant(0.7)
 
-        try! style.addLayer(layer)
+        try! mapboxMap.addLayer(layer)
     }
 
     override func viewDidAppear(_ animated: Bool) {

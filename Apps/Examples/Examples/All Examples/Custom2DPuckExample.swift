@@ -163,7 +163,8 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        let mapInitOptions = MapInitOptions(styleURI: .dark)
+        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 37.26301831966747, longitude: -121.97647612483807), zoom: 6)
+        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .dark)
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
@@ -178,8 +179,8 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
 
-            if let currentLocation = self.mapView.location.latestLocation {
-                let cameraOptions = CameraOptions(center: currentLocation.coordinate, zoom: 20.0)
+            if let currentLocation = self.mapView.location.provider.latestLocation {
+                let cameraOptions = CameraOptions(center: currentLocation.coordinate, zoom: 16.0)
                 self.mapView.camera.ease(to: cameraOptions, duration: 2.0)
             }
         }.store(in: &cancelables)

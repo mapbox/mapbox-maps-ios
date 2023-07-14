@@ -558,7 +558,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     }
 
     /// Scales the icon to fit around the associated text.
-    @available(*, deprecated, message: "icon-text-fit property is now data driven, use `PointAnnotation.iconTextFit` instead.")
+    @available(*, deprecated, message: "iconTextFit property is now data driven, use `PointAnnotation.iconTextFit` instead.")
     public var iconTextFit: IconTextFit? {
         get {
             return layerProperties["icon-text-fit"].flatMap { $0 as? String }.flatMap(IconTextFit.init(rawValue:))
@@ -569,7 +569,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     }
 
     /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
-    @available(*, deprecated, message: "icon-text-fit-padding property is now data driven, use `PointAnnotation.iconTextFitPadding` instead.")
+    @available(*, deprecated, message: "iconTextFitPadding property is now data driven, use `PointAnnotation.iconTextFitPadding` instead.")
     public var iconTextFitPadding: [Double]? {
         get {
             return layerProperties["icon-text-fit-padding"] as? [Double]

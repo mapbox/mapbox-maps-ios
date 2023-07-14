@@ -2,161 +2,136 @@ import XCTest
 @testable import MapboxMaps
 
 final class LocationInterpolatorTests: XCTestCase {
-
-    var doubleInterpolator: MockDoubleInterpolator!
-    var directionInterpolator: MockDirectionInterpolator!
-    var coordinateInterpolator: MockCoordinateInterpolator!
-    var locationInterpolator: LocationInterpolator!
-    var from: InterpolatedLocation!
-    var to: InterpolatedLocation!
-    var fraction: Double!
-
+    var me: LocationInterpolator!
     override func setUp() {
-        super.setUp()
-        doubleInterpolator = MockDoubleInterpolator()
-        directionInterpolator = MockDirectionInterpolator()
-        coordinateInterpolator = MockCoordinateInterpolator()
-        locationInterpolator = LocationInterpolator(
-            doubleInterpolator: doubleInterpolator,
-            directionInterpolator: directionInterpolator,
-            coordinateInterpolator: coordinateInterpolator)
-        from = .random()
-        to = .random()
-        fraction = .random(in: -10...10)
-
-        doubleInterpolator.interpolateStub.returnValueQueue = .random(
-            withLength: 3,
-            generator: { .random(in: -200...200) })
-        directionInterpolator.interpolateStub.returnValueQueue = .random(
-            withLength: 2,
-            generator: { .random(in: 0..<360) })
-        coordinateInterpolator.interpolateStub.defaultReturnValue = .random()
+        me = .init()
     }
 
     override func tearDown() {
-        fraction = nil
-        to = nil
-        from = nil
-        locationInterpolator = nil
-        coordinateInterpolator = nil
-        directionInterpolator = nil
-        doubleInterpolator = nil
-        super.tearDown()
+        me = nil
     }
 
-    func verifyCommonCases(withResult result: InterpolatedLocation) {
-        XCTAssertEqual(coordinateInterpolator.interpolateStub.invocations.count, 1)
-        XCTAssertEqual(doubleInterpolator.interpolateStub.invocations.count, 2)
+    func testEdgeCases() {
+        var result = me.interpolate(from: [], to: [], fraction: 1)
+        XCTAssertEqual(result, [])
 
-        guard coordinateInterpolator.interpolateStub.invocations.count == 1,
-              doubleInterpolator.interpolateStub.invocations.count == 2 else {
-            return
-        }
+        let l1 = Location.random()
+        result = me.interpolate(from: [l1], to: [], fraction: 1)
+        XCTAssertEqual(result, [])
 
-        let coordinateInterpolateInvocation = coordinateInterpolator.interpolateStub.invocations[0]
-        XCTAssertEqual(coordinateInterpolateInvocation.parameters.from, from.coordinate)
-        XCTAssertEqual(coordinateInterpolateInvocation.parameters.to, to.coordinate)
-        XCTAssertEqual(coordinateInterpolateInvocation.parameters.fraction, fraction)
-        XCTAssertEqual(result.coordinate, coordinateInterpolateInvocation.returnValue)
+        result = me.interpolate(from: [], to: [l1], fraction: 0.5)
+        XCTAssertEqual(result, [l1])
 
-        let altitudeInterpolateInvocation = doubleInterpolator.interpolateStub.invocations[0]
-        XCTAssertEqual(altitudeInterpolateInvocation.parameters.from, from.altitude)
-        XCTAssertEqual(altitudeInterpolateInvocation.parameters.to, to.altitude)
-        XCTAssertEqual(altitudeInterpolateInvocation.parameters.fraction, fraction)
-        XCTAssertEqual(result.altitude, altitudeInterpolateInvocation.returnValue)
+        result = me.interpolate(from: [], to: [l1], fraction: 1)
+        XCTAssertEqual(result, [l1])
 
-        let horizontalAccuracyInterpolateInvocation = doubleInterpolator.interpolateStub.invocations[1]
-        XCTAssertEqual(horizontalAccuracyInterpolateInvocation.parameters.from, from.horizontalAccuracy)
-        XCTAssertEqual(horizontalAccuracyInterpolateInvocation.parameters.to, to.horizontalAccuracy)
-        XCTAssertEqual(horizontalAccuracyInterpolateInvocation.parameters.fraction, fraction)
-        XCTAssertEqual(result.horizontalAccuracy, horizontalAccuracyInterpolateInvocation.returnValue)
-
-        XCTAssertEqual(result.accuracyAuthorization, to.accuracyAuthorization)
+        result = me.interpolate(from: [], to: [l1], fraction: 2)
+        XCTAssertEqual(result, [l1])
     }
 
-    func testInterpolateWithNilFromCourseAndFromHeading() {
-        from.course = nil
-        from.heading = nil
-        to.course = .random(in: 0..<360)
-        to.heading = .random(in: 0..<360)
+    func testInterpolation() throws {
+        let from = Location(
+            coordinate: .init(latitude: 0, longitude: 0),
+            timestamp: Date.init(timeIntervalSince1970: 0),
+            altitude: 0,
+            horizontalAccuracy: 0,
+            verticalAccuracy: 0,
+            speed: 0,
+            speedAccuracy: 0,
+            bearing: 0,
+            bearingAccuracy: 0,
+            floor: 0,
+            source: "s1",
+            extra: "foo"
+        )
 
-        let location = locationInterpolator.interpolate(
-            from: from,
-            to: to,
-            fraction: fraction)
+        let to = Location(
+            coordinate: .init(latitude: -90, longitude: 200),
+            timestamp: Date.init(timeIntervalSince1970: 100),
+            altitude: 300,
+            horizontalAccuracy: 400,
+            verticalAccuracy: 500,
+            speed: 600,
+            speedAccuracy: 700,
+            bearing: 800,
+            bearingAccuracy: 900,
+            floor: 1000,
+            source: "s2",
+            extra: "bar"
+        )
 
-        verifyCommonCases(withResult: location)
+        let f = 0.5
+        let result = try XCTUnwrap(me.interpolate(from: [from], to: [to], fraction: f).last)
 
-        XCTAssertEqual(directionInterpolator.interpolateStub.invocations.count, 0)
-        XCTAssertEqual(location.course, to.course)
-        XCTAssertEqual(location.heading, to.heading)
+        var coord = CLLocationCoordinate2D(latitude: -90, longitude: 200).wrap()
+        coord.latitude *= f
+        coord.longitude *= f
+
+        let expected = Location(
+            coordinate: coord,
+            timestamp: Date.init(timeIntervalSince1970: 100),
+            altitude: 300 * f,
+            horizontalAccuracy: 400 * f,
+            verticalAccuracy: 500,
+            speed: 600,
+            speedAccuracy: 700,
+            bearing: 800.wrapped(to: 0..<360) * f,
+            bearingAccuracy: 900,
+            floor: 1000,
+            source: "s2",
+            extra: "bar"
+        )
+        XCTAssertEqual(result, expected)
     }
 
-    func testInterpolateWithNilToCourseAndToHeading() {
-        from.course = .random(in: 0..<360)
-        from.heading = .random(in: 0..<360)
-        to.course = nil
-        to.heading = nil
+    func testInterpolationOptionals() throws {
+        let from = Location(
+            coordinate: .init(latitude: 0, longitude: 0),
+            timestamp: Date.init(timeIntervalSince1970: 0),
+            altitude: nil,
+            horizontalAccuracy: nil,
+            verticalAccuracy: nil,
+            speed: nil,
+            speedAccuracy: nil,
+            bearing: nil,
+            bearingAccuracy: nil,
+            floor: nil,
+            source: nil,
+            extra: nil
+        )
 
-        let location = locationInterpolator.interpolate(
-            from: from,
-            to: to,
-            fraction: fraction)
+        let to = Location(
+            coordinate: .init(latitude: 100, longitude: 100),
+            timestamp: Date.init(timeIntervalSince1970: 100),
+            altitude: 100,
+            horizontalAccuracy: 100,
+            verticalAccuracy: nil,
+            speed: nil,
+            speedAccuracy: nil,
+            bearing: 100,
+            bearingAccuracy: nil,
+            floor: nil,
+            source: "foo",
+            extra: nil
+        )
 
-        verifyCommonCases(withResult: location)
+        let f = 0.5
+        let result = try XCTUnwrap(me.interpolate(from: [from], to: [to], fraction: f).last)
 
-        XCTAssertEqual(directionInterpolator.interpolateStub.invocations.count, 0)
-        XCTAssertNil(location.course)
-        XCTAssertNil(location.heading)
-    }
-
-    func testInterpolateWithNilToAndFromCourseAndToAndFromHeading() {
-        from.course = nil
-        from.heading = nil
-        to.course = nil
-        to.heading = nil
-
-        let location = locationInterpolator.interpolate(
-            from: from,
-            to: to,
-            fraction: fraction)
-
-        verifyCommonCases(withResult: location)
-
-        XCTAssertEqual(directionInterpolator.interpolateStub.invocations.count, 0)
-        XCTAssertNil(location.course)
-        XCTAssertNil(location.heading)
-    }
-
-    func testInterpolateWithNonNilCourseAndHeading() {
-        from.course = .random(in: 0..<360)
-        from.heading = .random(in: 0..<360)
-        to.course = .random(in: 0..<360)
-        to.heading = .random(in: 0..<360)
-
-        let location = locationInterpolator.interpolate(
-            from: from,
-            to: to,
-            fraction: fraction)
-
-        verifyCommonCases(withResult: location)
-
-        XCTAssertEqual(directionInterpolator.interpolateStub.invocations.count, 2)
-
-        guard directionInterpolator.interpolateStub.invocations.count == 2 else {
-            return
-        }
-
-        let courseInterpolateInvocation = directionInterpolator.interpolateStub.invocations[0]
-        XCTAssertEqual(courseInterpolateInvocation.parameters.from, from.course)
-        XCTAssertEqual(courseInterpolateInvocation.parameters.to, to.course)
-        XCTAssertEqual(courseInterpolateInvocation.parameters.fraction, fraction)
-        XCTAssertEqual(location.course, courseInterpolateInvocation.returnValue)
-
-        let headingInterpolateInvocation = directionInterpolator.interpolateStub.invocations[1]
-        XCTAssertEqual(headingInterpolateInvocation.parameters.from, from.heading)
-        XCTAssertEqual(headingInterpolateInvocation.parameters.to, to.heading)
-        XCTAssertEqual(headingInterpolateInvocation.parameters.fraction, fraction)
-        XCTAssertEqual(location.heading, headingInterpolateInvocation.returnValue)
+        let expected = Location(
+            coordinate: .init(latitude: 100 * f, longitude: 100 * f),
+            timestamp: Date.init(timeIntervalSince1970: 100),
+            altitude: 100,
+            horizontalAccuracy: 100,
+            verticalAccuracy: nil,
+            speed: nil,
+            speedAccuracy: nil,
+            bearing: 100,
+            bearingAccuracy: nil,
+            floor: nil,
+            source: "foo", // TODO: Fix Location.isEqual
+            extra: nil
+        )
+        XCTAssertEqual(result, expected)
     }
 }

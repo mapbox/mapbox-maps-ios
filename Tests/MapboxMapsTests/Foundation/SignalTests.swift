@@ -39,7 +39,8 @@ final class SignalTests: XCTestCase {
         var values1 = [Int]()
         var values2 = [Int]()
 
-        let subject = SignalSubject<Int> { observedValues.append( $0) }
+        let subject = SignalSubject<Int>()
+        subject.onObserved = { observedValues.append($0) }
         // Here we test multiple subscriptions
         let first = subject.signal.takeFirst()
         first
@@ -161,8 +162,10 @@ final class SignalTests: XCTestCase {
 
         var observedSuccess = [Bool]()
         var observedError = [Bool]()
-        let succesSubj = SignalSubject<Int> { observedSuccess.append($0) }
-        let errorSubj = SignalSubject<MyError> { observedError.append($0) }
+        let succesSubj = SignalSubject<Int>()
+        succesSubj.onObserved = { observedSuccess.append($0) }
+        let errorSubj = SignalSubject<MyError>()
+        errorSubj.onObserved = { observedError.append($0) }
 
         var received = [Result<Int, MyError>]()
         let combined = succesSubj.signal
@@ -207,12 +210,66 @@ final class SignalTests: XCTestCase {
         XCTAssertEqual(observedError, [true, false], "unsubscribed from error signal")
     }
 
+    func testCompactMap() {
+        let subj = SignalSubject<String>()
+
+        var received = [Int]()
+        subj.signal
+            .compactMap { Int($0) }
+            .observe { received.append($0) }
+            .store(in: &cancellables)
+
+        subj.send("0")
+        XCTAssertEqual(received, [0])
+
+        subj.send("1")
+        XCTAssertEqual(received, [0, 1])
+
+        subj.send("foo")
+        XCTAssertEqual(received, [0, 1])
+
+        subj.send("2")
+        XCTAssertEqual(received, [0, 1, 2])
+    }
+
+    func testSkipNil() {
+        let subj = SignalSubject<String?>()
+
+        var received = [String]()
+        subj.signal.skipNil().observe {
+            received.append($0)
+        }.store(in: &cancellables)
+
+        subj.send("a")
+        XCTAssertEqual(received, ["a"])
+
+        subj.send(nil)
+        XCTAssertEqual(received, ["a"])
+
+        subj.send("b")
+        XCTAssertEqual(received, ["a", "b"])
+    }
+
+    func testJust() {
+        let signal = Signal(just: 5)
+
+        var observed = [Int]()
+        let token = signal.observe { observed.append($0) }
+
+        XCTAssertEqual(observed, [5])
+
+        XCTAssertEqual(signal.latestValue, 5)
+        XCTAssertEqual(observed, [5], "Access to latestValue didn't have any side effects")
+        token.cancel()
+    }
+
     @available(iOS 13.0, *)
     func testCombineSupport() {
         var tokens = Set<AnyCancellable>()
 
         var observedValues = [Bool]()
-        let subject = SignalSubject<Int> { observedValues.append($0) }
+        let subject = SignalSubject<Int>()
+        subject.onObserved = { observedValues.append($0) }
 
         let signal = subject.signal
 
@@ -273,7 +330,8 @@ final class SignalTests: XCTestCase {
         var tokens = Set<AnyCancellable>()
 
         var observedValues = [Bool]()
-        let subject = SignalSubject<Int> { observedValues.append($0) }
+        let subject = SignalSubject<Int>()
+        subject.onObserved = { observedValues.append($0) }
 
         var values = [String]()
         let mapped = subject.signal
@@ -296,6 +354,26 @@ final class SignalTests: XCTestCase {
         subject.send(3)
 
         XCTAssertEqual(values, ["2", "4"])
+    }
 
+    @available(iOS 13.0, *)
+    func testEraseToSignal() throws {
+        let subject = CurrentValueSubject<Int?, Never>(1)
+        let signal = subject
+            .compactMap { $0 }
+            .map { "\($0)" }
+            .eraseToSignal()
+
+        var observed = [String]()
+        signal.observe { observed.append($0) }.store(in: &cancellables)
+
+        subject.value = 1
+        subject.value = 42
+        subject.value = nil
+        subject.value = 5
+
+        XCTAssertEqual(observed, ["1", "1", "42", "5"])
+
+        XCTAssertEqual(try XCTUnwrap(signal.latestValue), "5")
     }
 }

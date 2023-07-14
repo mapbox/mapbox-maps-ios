@@ -102,6 +102,7 @@ open class MapView: UIView {
     private let dependencyProvider: MapViewDependencyProviderProtocol
 
     private let displayLinkParticipants = WeakSet<DisplayLinkParticipant>()
+    private let displayLinkSignalSubject = SignalSubject<Void>()
 
     private let notificationCenter: NotificationCenterProtocol
     private let bundle: BundleProtocol
@@ -389,17 +390,12 @@ open class MapView: UIView {
             attributionButton: InfoButtonOrnament())
 
         // Initialize/Configure location source and location manager
-        let locationProvider = dependencyProvider.makeLocationProvider(userInterfaceOrientationView: self)
-        let interpolatedLocationProducer = dependencyProvider.makeInterpolatedLocationProducer(
-            locationProvider: locationProvider,
-            displayLinkCoordinator: self)
-        location = dependencyProvider.makeLocationManager(
-            locationProvider: locationProvider,
-            interpolatedLocationProducer: interpolatedLocationProducer,
-            style: mapboxMap,
-            mapboxMap: mapboxMap,
-            displayLinkCoordinator: self,
-            userInterfaceOrientationView: self)
+        location = LocationManager(
+            interfaceOrientationView: .weakRef(self),
+            displayLink: displayLinkSignalSubject.signal,
+            styleManager: mapboxMap,
+            mapboxMap: mapboxMap
+        )
 
         annotations = AnnotationOrchestrator(
             impl: dependencyProvider.makeAnnotationOrchestratorImpl(
@@ -423,7 +419,7 @@ open class MapView: UIView {
                 anyTouchGestureRecognizer: gestures.anyTouchGestureRecognizer,
                 doubleTapGestureRecognizer: gestures.doubleTapToZoomInGestureRecognizer,
                 doubleTouchGestureRecognizer: gestures.doubleTouchToZoomOutGestureRecognizer),
-            interpolatedLocationProducer: interpolatedLocationProducer,
+            onPuckRender: location.onPuckRender,
             cameraAnimationsManager: internalCamera,
             mapboxMap: mapboxMap)
     }
@@ -576,6 +572,7 @@ open class MapView: UIView {
             for participant in displayLinkParticipants.allObjects {
                 participant.participate()
             }
+            displayLinkSignalSubject.send()
         }
 
         OSLog.platform.withIntervalSignpost(SignpostName.mapViewDisplayLink, "Camera animator runner") {

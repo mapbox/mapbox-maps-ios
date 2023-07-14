@@ -1,7 +1,7 @@
 import UIKit
 import MapboxMaps
 
-final class Custom3DPuckExample: UIViewController, ExampleProtocol, LocationConsumer {
+final class Custom3DPuckExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()
 
     private var mapView: MapView!
@@ -68,18 +68,17 @@ final class Custom3DPuckExample: UIViewController, ExampleProtocol, LocationCons
         mapView.location.options.puckType = .puck3D(configuration)
         mapView.location.options.puckBearing = .course
 
-        mapView.location.provider.add(consumer: self)
-    }
-
-    internal func locationUpdate(newLocation: Location) {
-        mapView.camera.ease(
-            to: CameraOptions(
-                center: newLocation.coordinate,
-                zoom: 15,
-                bearing: 0,
-                pitch: 55),
-            duration: 1,
-            curve: .linear,
-            completion: nil)
+        mapView.location.onLocationChange.observe { [weak mapView] newLocation in
+            guard let location = newLocation.last, let mapView else { return }
+            mapView.camera.ease(
+                to: CameraOptions(
+                    center: location.coordinate,
+                    zoom: 15,
+                    bearing: 0,
+                    pitch: 55),
+                duration: 1,
+                curve: .linear,
+                completion: nil)
+        }.store(in: &cancelables)
     }
 }

@@ -345,18 +345,6 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         wait(for: [expectation], timeout: 10.0)
     }
 
-    func testEnableLocation() {
-        let mapView = MapView(frame: testRect)
-        //-->
-        mapView.location.options.puckType = .puck2D()
-        //<--
-
-        let customLocationProvider = MockLocationProvider()
-        //-->
-        mapView.location.provider = customLocationProvider
-        //<--
-    }
-
     func testAdd3DTerrain() {
         let mapView = MapView(frame: testRect)
         let expectation = self.expectation(description: "Source was added")

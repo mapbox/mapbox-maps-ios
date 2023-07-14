@@ -5,20 +5,23 @@ final class Puck3DTests: XCTestCase {
 
     var configuration: Puck3DConfiguration!
     var style: MockStyle!
-    var interpolatedLocationProducer: MockInterpolatedLocationProducer!
+    var puckRenderDataSubject: CurrentValueSignalSubject<PuckRenderingData?>!
+    var renderDataObserved = false
     var puck3D: Puck3D!
 
     override func setUp() {
         super.setUp()
         configuration = Puck3DConfiguration(model: Model())
         style = MockStyle()
-        interpolatedLocationProducer = MockInterpolatedLocationProducer()
+        puckRenderDataSubject = .init()
+        puckRenderDataSubject.onObserved = { [weak self] in self?.renderDataObserved = $0 }
         recreatePuck()
     }
 
     override func tearDown() {
         puck3D = nil
-        interpolatedLocationProducer = nil
+        puckRenderDataSubject = nil
+        renderDataObserved = false
         style = nil
         configuration = nil
         super.tearDown()
@@ -28,7 +31,7 @@ final class Puck3DTests: XCTestCase {
         puck3D = Puck3D(
             configuration: configuration,
             style: style,
-            interpolatedLocationProducer: interpolatedLocationProducer)
+            renderingData: puckRenderDataSubject.signal.skipNil())
     }
 
     func testDefaultPropertyValues() {
@@ -37,39 +40,14 @@ final class Puck3DTests: XCTestCase {
         XCTAssertEqual(puck3D.puckBearingEnabled, true)
     }
 
-    func testLocationConsumerIsNotAddedAtInitialization() {
-        XCTAssertEqual(interpolatedLocationProducer.observeStub.invocations.count, 0)
-    }
+    func testActivatingPuckBeginsAndsStopsObserving() throws {
+        XCTAssertEqual(renderDataObserved, false, "no observing by default")
 
-    func testActivatingPuckAddsLocationConsumer() throws {
         puck3D.isActive = true
-
-        XCTAssertEqual(interpolatedLocationProducer.observeStub.invocations.count, 1)
-        let cancelable = try XCTUnwrap(interpolatedLocationProducer.observeStub.invocations.first?.returnValue as? MockCancelable)
-        XCTAssertEqual(cancelable.cancelStub.invocations.count, 0)
-
-        // activating again should have no effect
-        puck3D.isActive = true
-
-        XCTAssertEqual(interpolatedLocationProducer.observeStub.invocations.count, 1)
-        XCTAssertEqual(cancelable.cancelStub.invocations.count, 0)
-    }
-
-    func testDeactivatingPuckRemovesLocationConsumer() throws {
-        puck3D.isActive = true
-        let cancelable = try XCTUnwrap(interpolatedLocationProducer.observeStub.invocations.first?.returnValue as? MockCancelable)
-        interpolatedLocationProducer.observeStub.reset()
+        XCTAssertEqual(renderDataObserved, true, "starts observing upon activation")
 
         puck3D.isActive = false
-
-        XCTAssertEqual(interpolatedLocationProducer.observeStub.invocations.count, 0)
-        XCTAssertEqual(cancelable.cancelStub.invocations.count, 1)
-
-        // deactivating again should have no effect
-        puck3D.isActive = false
-
-        XCTAssertEqual(interpolatedLocationProducer.observeStub.invocations.count, 0)
-        XCTAssertEqual(cancelable.cancelStub.invocations.count, 1)
+        XCTAssertEqual(renderDataObserved, false, "stops observing upon deactivation")
     }
 
     func testSourceAndLayerAreNotAddedAtInitialization() {
@@ -79,7 +57,7 @@ final class Puck3DTests: XCTestCase {
     }
 
     func testActivatingPuckDoesNotAddSourceAndLayerIfLatestLocationIsNil() {
-        interpolatedLocationProducer.currentLocation = nil
+        puckRenderDataSubject.value = nil
 
         puck3D.isActive = true
 
@@ -89,11 +67,11 @@ final class Puck3DTests: XCTestCase {
     }
 
     func testActivatingPuckAddsSourceAndLayerIfLatestLocationIsNonNil() throws {
-        let coordinate = CLLocationCoordinate2D.random()
-        var location = InterpolatedLocation.random()
-        location.coordinate = coordinate
-        location.heading = nil
-        interpolatedLocationProducer.currentLocation = location
+        var data = PuckRenderingData.random()
+        data.heading = nil
+        let coordinate = data.location.coordinate
+        puckRenderDataSubject.value = data
+
         style.sourceExistsStub.defaultReturnValue = false
         style.layerExistsStub.defaultReturnValue = false
 
@@ -125,10 +103,10 @@ final class Puck3DTests: XCTestCase {
             .random(in: 0..<360),
             .random(in: 0..<360)]
         recreatePuck()
-        let heading = CLLocationDirection.random(in: 0..<360)
-        var location = InterpolatedLocation.random()
-        location.heading = heading
-        interpolatedLocationProducer.currentLocation = location
+        let data = PuckRenderingData.random()
+        let heading = try XCTUnwrap(data.heading).direction
+
+        puckRenderDataSubject.value = data
         style.sourceExistsStub.defaultReturnValue = false
         puck3D.puckBearing = .heading
 
@@ -146,16 +124,17 @@ final class Puck3DTests: XCTestCase {
             .random(in: 0..<360),
             .random(in: 0..<360)]
         recreatePuck()
-        var location = InterpolatedLocation.random()
-        location.course = .random(in: 0..<360)
-        interpolatedLocationProducer.currentLocation = location
+
+        let data = PuckRenderingData.random()
+
+        puckRenderDataSubject.value = data
         style.sourceExistsStub.defaultReturnValue = false
         puck3D.puckBearing = .course
 
         puck3D.isActive = true
 
-        var expectedOrientation = configuration.model.orientation!
-        expectedOrientation[2] += location.course!
+        var expectedOrientation = try XCTUnwrap(configuration.model.orientation)
+        expectedOrientation[2] += try XCTUnwrap(data.location.bearing)
         let actualSource = try XCTUnwrap(style.addSourceStub.invocations.first?.parameters.source as? ModelSource)
         XCTAssertEqual(actualSource.models?["puck-model"]?.orientation, expectedOrientation)
     }
@@ -166,10 +145,9 @@ final class Puck3DTests: XCTestCase {
             .random(in: 0..<360),
             .random(in: 0..<360)]
         recreatePuck()
-        let heading = CLLocationDirection.random(in: 0..<360)
-        var location = InterpolatedLocation.random()
-        location.heading = heading
-        interpolatedLocationProducer.currentLocation = location
+
+        puckRenderDataSubject.value = .random()
+
         style.sourceExistsStub.defaultReturnValue = false
         puck3D.puckBearing = .heading
         puck3D.puckBearingEnabled = false
@@ -186,9 +164,9 @@ final class Puck3DTests: XCTestCase {
             .random(in: 0..<360),
             .random(in: 0..<360)]
         recreatePuck()
-        var location = InterpolatedLocation.random()
-        location.course = .random(in: 0..<360)
-        interpolatedLocationProducer.currentLocation = location
+
+        puckRenderDataSubject.value = .random()
+
         style.sourceExistsStub.defaultReturnValue = false
         puck3D.puckBearing = .course
         puck3D.puckBearingEnabled = false
@@ -202,7 +180,7 @@ final class Puck3DTests: XCTestCase {
     func testModelRotation() throws {
         configuration.modelRotation = .constant(.random(withLength: 3, generator: { .random(in: 0..<360) }))
         recreatePuck()
-        interpolatedLocationProducer.currentLocation = .random()
+        puckRenderDataSubject.value = .random()
         style.layerExistsStub.defaultReturnValue = false
 
         puck3D.isActive = true
@@ -214,7 +192,7 @@ final class Puck3DTests: XCTestCase {
     func testModelOpacity() throws {
         configuration.modelOpacity = .constant(.random(in: 0.0...1.0))
         recreatePuck()
-        interpolatedLocationProducer.currentLocation = .random()
+        puckRenderDataSubject.value = .random()
         style.layerExistsStub.defaultReturnValue = false
 
         puck3D.isActive = true
@@ -224,9 +202,9 @@ final class Puck3DTests: XCTestCase {
     }
 
     func testUpdateExistingSource() throws {
-        var location = InterpolatedLocation.random()
-        location.heading = nil
-        interpolatedLocationProducer.currentLocation = location
+        let location = Location.random()
+        puckRenderDataSubject.value = PuckRenderingData(location: location)
+
         style.sourceExistsStub.defaultReturnValue = true
         style.layerExistsStub.defaultReturnValue = true
 
@@ -252,7 +230,7 @@ final class Puck3DTests: XCTestCase {
     }
 
     func testSettingPuckBearingWhenInactive() {
-        interpolatedLocationProducer.currentLocation = .random()
+        puckRenderDataSubject.value = .random()
         style.sourceExistsStub.defaultReturnValue = false
         style.layerExistsStub.defaultReturnValue = false
         puck3D.isActive = false
@@ -264,36 +242,18 @@ final class Puck3DTests: XCTestCase {
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
     }
 
-    func testSettingPuckBearingWhenActive() {
-        interpolatedLocationProducer.currentLocation = .random()
-        puck3D.isActive = true
-        style.sourceExistsStub.defaultReturnValue = true
-        style.layerExistsStub.defaultReturnValue = true
-        style.addSourceStub.reset()
-        style.setSourcePropertiesStub.reset()
-        style.addPersistentLayerStub.reset()
-
-        puck3D.puckBearing = [.heading, .course].randomElement()!
-
-        XCTAssertEqual(style.addSourceStub.invocations.count, 0)
-        XCTAssertEqual(style.setSourcePropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
-        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
-    }
-
     func testLocationUpdateWhenActive() throws {
-        interpolatedLocationProducer.currentLocation = .random()
+        puckRenderDataSubject.value = .random()
         puck3D.isActive = true
+
         style.sourceExistsStub.defaultReturnValue = true
         style.layerExistsStub.defaultReturnValue = true
         style.addSourceStub.reset()
         style.setSourcePropertiesStub.reset()
         style.addPersistentLayerStub.reset()
-        let handler = try XCTUnwrap(interpolatedLocationProducer.observeStub.invocations.first?.parameters)
 
-        let wantsMoreUpdates = handler(interpolatedLocationProducer.currentLocation!)
+        puckRenderDataSubject.value = .random()
 
-        XCTAssertTrue(wantsMoreUpdates)
         XCTAssertEqual(style.addSourceStub.invocations.count, 0)
         XCTAssertEqual(style.setSourcePropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)

@@ -501,3 +501,22 @@ Constructor SymbolLayer.init(id:) has been removed
 Func MapboxMap.camera(for:padding:bearing:pitch:) has been renamed to Func camera(for:padding:bearing:pitch:maxZoom:offset:)
 Func MapboxMap.camera(for:padding:bearing:pitch:) has parameter 0 type change from MapboxCoreMaps.CoordinateBounds to [CoreLocation.CLLocationCoordinate2D]
 Func MapboxMap.camera(for:padding:bearing:pitch:) has parameter 0 type change from [CoreLocation.CLLocationCoordinate2D] to MapboxCoreMaps.CoordinateBounds
+
+// Split Location into Location and Heading
+Class Location has been removed
+Func LocationManager.addLocationConsumer(newConsumer:) has been removed
+Func LocationManager.addPuckLocationConsumer(_:) has been removed
+Func LocationManager.removeLocationConsumer(consumer:) has been removed
+Func LocationManager.removePuckLocationConsumer(_:) has been removed
+Protocol LocationConsumer has been removed
+Protocol LocationProvider has been removed
+Protocol PuckLocationConsumer has been removed
+Var LocationManager.locationProvider has been removed
+Func LocationManager.overrideLocationProvider(with:) has been renamed to Func override(locationProvider:headingProvider:)
+Func LocationManager.overrideLocationProvider(with:) has parameter 0 type change from MapboxMaps.LocationProvider to MapboxMaps.Signal<[MapboxCommon.Location]>
+Class AppleLocationProvider has removed conformance to LocationProvider
+Func LocationManager.overrideLocationProvider(with:) has been renamed to Func override(provider:)
+Var AppleLocationProvider.heading has been renamed to Var latestHeading
+Accessor AppleLocationProvider.heading.Get() has return type change from CoreLocation.CLHeading? to MapboxMaps.Heading?
+Func LocationManager.overrideLocationProvider(with:) has parameter 0 type change from MapboxMaps.LocationProvider to MapboxCommon.LocationProvider & MapboxMaps.HeadingProvider
+Var AppleLocationProvider.heading has declared type change from CoreLocation.CLHeading? to MapboxMaps.Heading?

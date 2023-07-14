@@ -45,7 +45,7 @@ final class DefaultInterfaceOrientationProviderTests: XCTestCase {
         window.makeKeyAndVisible()
 
         // when
-        let orientation = orientationProvider.interfaceOrientation
+        let orientation = orientationProvider.onInterfaceOrientationChange.latestValue
 
         // then
         if #available(iOS 13, *) {

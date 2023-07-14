@@ -3,6 +3,8 @@ import Foundation
 import UIKit
 
 final class MockInterfaceOrientationProvider: InterfaceOrientationProvider {
-    @Stubbed var interfaceOrientation: UIInterfaceOrientation = .unknown
-    @TestSignal var onInterfaceOrientationChange: Signal<UIInterfaceOrientation>
+    var onInterfaceOrientationChange: Signal<UIInterfaceOrientation> { $interfaceOrientation }
+
+    @TestPublished
+    var interfaceOrientation: UIInterfaceOrientation = .unknown
 }

@@ -5,7 +5,6 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()
 
     private var mapView: MapView!
-    private var cameraLocationConsumer: CameraLocationConsumer!
     private lazy var toggleBearingImageButton = UIButton(frame: .zero)
     private lazy var styleToggle = UISegmentedControl(items: Style.allCases.map(\.name))
     private var style: Style = .satelliteStreets {
@@ -64,17 +63,15 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         // Setup and create button for toggling show bearing image
         setupToggleShowBearingImageButton()
 
-        cameraLocationConsumer = CameraLocationConsumer(mapView: mapView)
-
         // Add user position icon to the map with location indicator layer
         mapView.location.options.puckType = .puck2D()
 
-        // Allows the delegate to receive information about map events.
-        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
-            guard let self = self else { return }
-            // Register the location consumer with the map
-            // Note that the location manager holds weak references to consumers, which should be retained
-            self.mapView.location.provider.add(consumer: self.cameraLocationConsumer)
+        // Update the camera's centerCoordinate when a locationUpdate is received.
+        mapView.location.onLocationChange.observe { [weak mapView] newLocation in
+            guard let location = newLocation.last, let mapView else { return }
+            mapView.camera.ease(
+                to: CameraOptions(center: location.coordinate, zoom: 15),
+                duration: 1.3)
         }.store(in: &cancelables)
     }
 
@@ -131,20 +128,5 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
 
         // set the segmented control as the title view
         navigationItem.titleView = styleToggle
-    }
-}
-
-// Create class which conforms to LocationConsumer, update the camera's centerCoordinate when a locationUpdate is received
-public class CameraLocationConsumer: LocationConsumer {
-    weak var mapView: MapView?
-
-    init(mapView: MapView) {
-        self.mapView = mapView
-    }
-
-    public func locationUpdate(newLocation: Location) {
-        mapView?.camera.ease(
-            to: CameraOptions(center: newLocation.coordinate, zoom: 15),
-            duration: 1.3)
     }
 }

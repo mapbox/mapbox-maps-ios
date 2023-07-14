@@ -25,14 +25,14 @@ public enum FollowPuckViewportStateBearing: Codable, Hashable {
     ///   - ``Location/course``
     case course
 
-    internal func evaluate(with location: InterpolatedLocation) -> CLLocationDirection? {
+    internal func evaluate(with data: PuckRenderingData) -> CLLocationDirection? {
         switch self {
         case .constant(let value):
             return value
         case .heading:
-            return location.heading
+            return data.heading?.direction
         case .course:
-            return location.course
+            return data.location.bearing
         }
     }
 }

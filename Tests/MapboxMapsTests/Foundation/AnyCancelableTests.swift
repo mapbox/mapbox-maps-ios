@@ -54,6 +54,20 @@ final class AnyCancelableTests: XCTestCase {
         XCTAssertEqual(counter2.value, 1)
     }
 
+    func testCancelableObjectInit() {
+        let counter = CancelCounter()
+
+        let cancelable = AnyCancelable(counter)
+
+        XCTAssertEqual(counter.value, 0)
+
+        cancelable.cancel()
+        XCTAssertEqual(counter.value, 1)
+
+        cancelable.cancel()
+        XCTAssertEqual(counter.value, 1)
+    }
+
     func testDeinit() {
         let counter1 = CancelCounter()
         let counter2 = CancelCounter()

@@ -61,4 +61,13 @@ final class MockMapSnapshotter: MockStyleManager, MapSnapshotterProtocol {
     func coordinateBoundsForCamera(forCamera camera: MapboxCoreMaps.CameraOptions) -> CoordinateBounds {
         coordinateBoundsForCameraStub.call(with: camera)
     }
+
+    struct TileCoverParams {
+        var options: MapboxCoreMaps.TileCoverOptions
+        var cameraOptions: MapboxCoreMaps.CameraOptions?
+    }
+    var tileCoverStub = Stub<TileCoverParams, [CanonicalTileID]>(defaultReturnValue: [])
+    func __tileCover(for options: MapboxCoreMaps.TileCoverOptions, cameraOptions: MapboxCoreMaps.CameraOptions?) -> [CanonicalTileID] {
+        tileCoverStub.call(with: TileCoverParams(options: options, cameraOptions: cameraOptions))
+    }
 }

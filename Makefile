@@ -26,3 +26,8 @@ delete-code:
 
 .PHONY: generate-style-code generate-annotation-code generate-annotation-code-private generate-private-code generate-public-code generate-code
 .PHONY: delete-code regenerate-code
+
+.PHONY: validate-ci
+validate:
+	circleci config validate -c ../.circleci/config.yml
+	circleci config pack ../.circleci/config | circleci config validate -

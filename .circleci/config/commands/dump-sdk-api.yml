@@ -41,7 +41,7 @@ steps:
   - run:
       name: Build SDK and dump API to JSON format
       command: |
-        if [ -f "<< parameters.output >>" ]; then
+        if [[ -f "<< parameters.output >>" && << parameters.baseline >> = true ]]; then
           echo "File << parameters.output >> exists."
           exit 0
         fi

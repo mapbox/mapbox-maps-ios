@@ -7,13 +7,6 @@ jobs:
   - sanity-check:
       context:
         - Slack Orb
-  - build-sdk:
-      context:
-        - Slack Orb
-        - SDK Registry Token
-      name: Build SDK
-      configuration: "Release"
-
   - build-sdk-for-api-compatibility-check:
       context:
         - Slack Orb

@@ -1,8 +1,17 @@
 when: << pipeline.parameters.turf-revision >>
 jobs:
-  - turf-integration-job:
+  - build-tests:
       context:
         - Slack Orb
         - SDK Registry Token
-      name: "Run Unit Tests"
+        - Maps SDK/Public Mapbox Token
+      name: build-tests-turf-<< pipeline.parameters.turf-revision >>
       turf-revision: << pipeline.parameters.turf-revision >>
+  - run-unit-tests:
+      context:
+        - Slack Orb
+      name: run-unit-tests-turf-<< pipeline.parameters.turf-revision >>
+      xcode: 14.1.0
+      destination: OS=16.1,name=iPhone 14
+      requires:
+        - build-tests-turf-<< pipeline.parameters.turf-revision >>

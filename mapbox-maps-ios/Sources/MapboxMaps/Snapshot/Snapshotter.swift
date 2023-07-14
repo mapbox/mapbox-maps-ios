@@ -29,7 +29,9 @@ internal protocol MapSnapshotterProtocol: StyleManagerProtocol {
     func __tileCover(for options: MapboxCoreMaps.TileCoverOptions, cameraOptions: MapboxCoreMaps.CameraOptions?) -> [CanonicalTileID]
 }
 
-extension MapSnapshotter: MapSnapshotterProtocol {}
+extension MapSnapshotter: MapSnapshotterProtocol {
+
+}
 
 /// A utility class for capturing styled map snapshots.
 ///

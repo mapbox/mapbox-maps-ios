@@ -35,3 +35,16 @@ private extension Signal {
         }
     }
 }
+
+@available(iOS 13.0, *)
+extension Publisher where Failure == Never {
+    /// Wraps this publisher into a signal.
+    public func eraseToSignal() -> Signal<Output> {
+        Signal { handler in
+            let token = self.sink(receiveValue: handler)
+            return AnyCancelable {
+                token.cancel()
+            }
+        }
+    }
+}

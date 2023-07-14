@@ -8,9 +8,6 @@ import Combine
 /// Use this protocol when the map view is used in non-application target (e.g. application extension target).
 @available(iOS, deprecated: 13)
 public protocol InterfaceOrientationProvider {
-    /// Returns the current interface orientation
-    var interfaceOrientation: UIInterfaceOrientation { get }
-
     /// Asks the provider for the interface orientation of the map view.
     ///
     /// When a device is rotated map view passes current interface orientation to its location provider in order to ensure heading is displayed correctly.
@@ -18,37 +15,31 @@ public protocol InterfaceOrientationProvider {
 }
 
 internal final class DefaultInterfaceOrientationProvider: InterfaceOrientationProvider {
-    var onInterfaceOrientationChange: Signal<UIInterfaceOrientation> { orientationChangeSubject.signal }
+    var onInterfaceOrientationChange: Signal<UIInterfaceOrientation> { subject.signal }
 
-    private lazy var orientationChangeSubject = SignalSubject<UIInterfaceOrientation>(onObserved: { [weak self] beingObserved in
-        self?.isUpdating = beingObserved
-    })
-
-    var interfaceOrientation: UIInterfaceOrientation {
-        let view = userInterfaceOrientationView.value
-        let orientation: UIInterfaceOrientation
-
-        if #available(iOS 13.0, *) {
-            orientation = view?.window?.windowScene?.interfaceOrientation ?? .unknown
-        } else {
-            orientation = UIInterfaceOrientation(deviceOrientation: device.orientation)
+    private lazy var subject: CurrentValueSignalSubject<UIInterfaceOrientation> = {
+        let subject = CurrentValueSignalSubject(interfaceOrientation)
+        subject.onObserved = { [weak self] observed in
+            if observed {
+                self?.startUpdatingInterfaceOrientation()
+            } else {
+                self?.stopUpdatingInterfaceOrientation()
+            }
         }
+        return subject
+    }()
 
-        return orientation
+    private var interfaceOrientation: UIInterfaceOrientation {
+        if #available(iOS 13.0, *) {
+            let view = userInterfaceOrientationView.value
+            return view?.window?.windowScene?.interfaceOrientation ?? .unknown
+        }
+        return UIInterfaceOrientation(deviceOrientation: device.orientation)
     }
 
     private let userInterfaceOrientationView: Ref<UIView?>
     private let notificationCenter: NotificationCenterProtocol
     private let device: UIDeviceProtocol
-    private var isUpdating = false {
-        didSet {
-            if isUpdating {
-                startUpdatingInterfaceOrientation()
-            } else {
-                stopUpdatingInterfaceOrientation()
-            }
-        }
-    }
 
     internal init(userInterfaceOrientationView: Ref<UIView?>,
                   notificationCenter: NotificationCenterProtocol,
@@ -56,6 +47,7 @@ internal final class DefaultInterfaceOrientationProvider: InterfaceOrientationPr
         self.notificationCenter = notificationCenter
         self.device = device
         self.userInterfaceOrientationView = userInterfaceOrientationView
+
     }
 
     private func startUpdatingInterfaceOrientation() {
@@ -72,7 +64,7 @@ internal final class DefaultInterfaceOrientationProvider: InterfaceOrientationPr
     }
 
     @objc private func deviceOrientationDidChange(_ notification: Notification) {
-        orientationChangeSubject.send(interfaceOrientation)
+        subject.value = interfaceOrientation
     }
 }
 

@@ -8,9 +8,9 @@ final class AppleLocationProviderTests: XCTestCase {
     var locationProvider: AppleLocationProvider!
     // swiftlint:disable:next weak_delegate
     var delegate: MockLocationProducerDelegate!
-    var consumer: MockLocationConsumer!
     var interfaceOrientationProvider: MockInterfaceOrientationProvider!
     var locationManagerDelegateProxy: CLLocationManagerDelegateProxy!
+    var cancelables = Set<AnyCancelable>()
 
     override func setUp() {
         super.setUp()
@@ -24,17 +24,26 @@ final class AppleLocationProviderTests: XCTestCase {
             locationManagerDelegateProxy: locationManagerDelegateProxy)
         delegate = MockLocationProducerDelegate()
         locationProvider.delegate = delegate
-        consumer = MockLocationConsumer()
     }
 
     override func tearDown() {
+        cancelables.removeAll()
         interfaceOrientationProvider = nil
-        consumer = nil
         delegate = nil
         locationProvider = nil
         locationManagerDelegateProxy = nil
         locationManager = nil
         super.tearDown()
+    }
+
+    // Kickstarts location updates
+    private func addNoopLocationObserver() {
+        locationProvider.onLocationUpdate.observe { _ in }.store(in: &cancelables)
+    }
+
+    // Kickstarts heading updates
+    private func addNoopHeadingObserver() {
+        locationProvider.onHeadingUpdate.observe { _ in }.store(in: &cancelables)
     }
 
     func testInitializationDoesNotStartOrStopUpdating() {
@@ -44,67 +53,68 @@ final class AppleLocationProviderTests: XCTestCase {
         XCTAssertTrue(locationManager.stopUpdatingHeadingStub.invocations.isEmpty)
     }
 
-    func testAddingConsumerStartsUpdating() {
-        locationProvider.add(consumer: consumer)
+    func testObservingLocationStartsAndStopsLocationUpdates() {
+        let token = locationProvider.onLocationUpdate.observe { _ in }
 
         XCTAssertEqual(locationManager.startUpdatingLocationStub.invocations.count, 1)
+
+        let token2 = locationProvider.onLocationUpdate.observe { _ in }
+        XCTAssertEqual(locationManager.startUpdatingLocationStub.invocations.count, 1)
+        XCTAssertEqual(locationManager.stopUpdatingLocationStub.invocations.count, 0)
+
+        token.cancel()
+        XCTAssertEqual(locationManager.stopUpdatingLocationStub.invocations.count, 0)
+
+        token2.cancel()
+        XCTAssertEqual(locationManager.startUpdatingLocationStub.invocations.count, 1)
+        XCTAssertEqual(locationManager.stopUpdatingLocationStub.invocations.count, 1)
+
+        // no heading updates touched
+        XCTAssertTrue(locationManager.startUpdatingHeadingStub.invocations.isEmpty)
+        XCTAssertTrue(locationManager.stopUpdatingHeadingStub.invocations.isEmpty)
+    }
+
+    func testObservingHeadingStartsAndStopsHeadingUpdates() {
+        let token = locationProvider.onHeadingUpdate.observe { _ in }
+
         XCTAssertEqual(locationManager.startUpdatingHeadingStub.invocations.count, 1)
+
+        let token2 = locationProvider.onHeadingUpdate.observe { _ in }
+        XCTAssertEqual(locationManager.startUpdatingHeadingStub.invocations.count, 1)
+        XCTAssertEqual(locationManager.stopUpdatingHeadingStub.invocations.count, 0)
+
+        token.cancel()
+        XCTAssertEqual(locationManager.stopUpdatingHeadingStub.invocations.count, 0)
+
+        token2.cancel()
+        XCTAssertEqual(locationManager.startUpdatingHeadingStub.invocations.count, 1)
+        XCTAssertEqual(locationManager.stopUpdatingHeadingStub.invocations.count, 1)
+
+        // no location updates touched
+        XCTAssertTrue(locationManager.startUpdatingLocationStub.invocations.isEmpty)
         XCTAssertTrue(locationManager.stopUpdatingLocationStub.invocations.isEmpty)
-        XCTAssertTrue(locationManager.stopUpdatingHeadingStub.invocations.isEmpty)
     }
 
-    func testRemovingAllConsumerStopsUpdating() {
-        locationProvider.add(consumer: consumer)
-        locationProvider.remove(consumer: consumer)
-
-        XCTAssertEqual(locationManager.stopUpdatingLocationStub.invocations.count, 1)
-        XCTAssertEqual(locationManager.stopUpdatingHeadingStub.invocations.count, 1)
-    }
-
-    func testRemovingConsumerAfterOtherWasDeinitedStopsUpdating() {
-        autoreleasepool {
-            locationProvider.add(consumer: MockLocationConsumer())
-        }
-        locationProvider.add(consumer: consumer)
-        locationProvider.remove(consumer: consumer)
-
-        XCTAssertEqual(locationManager.stopUpdatingLocationStub.invocations.count, 1)
-        XCTAssertEqual(locationManager.stopUpdatingHeadingStub.invocations.count, 1)
-    }
-
-    func testAddingAConsumerMoreThanOnceHasNoEffect() {
-        locationProvider.add(consumer: consumer)
-        locationProvider.add(consumer: consumer)
-        locationProvider.remove(consumer: consumer)
-
-        XCTAssertEqual(locationManager.stopUpdatingLocationStub.invocations.count, 1)
-        XCTAssertEqual(locationManager.stopUpdatingHeadingStub.invocations.count, 1)
-    }
-
-    func testRemovingAConsumerMoreThanOnceHasNoEffect() {
-        locationProvider.add(consumer: consumer)
-        locationProvider.remove(consumer: consumer)
-        locationManager.stopUpdatingLocationStub.reset()
-        locationManager.stopUpdatingHeadingStub.reset()
-
-        locationProvider.remove(consumer: consumer)
-
-        XCTAssertTrue(locationManager.stopUpdatingLocationStub.invocations.isEmpty)
-        XCTAssertTrue(locationManager.stopUpdatingHeadingStub.invocations.isEmpty)
-    }
-
-    func testAddingAConsumerRequestsWhenInUseAuthorizationIfStatusIsNotDetermined() {
+    func testAddingALocationConsumerRequestsWhenInUseAuthorizationIfStatusIsNotDetermined() {
         locationManager.compatibleAuthorizationStatus = .notDetermined
 
-        locationProvider.add(consumer: consumer)
+        _ = locationProvider.onLocationUpdate.observe { _ in }
 
         XCTAssertEqual(locationManager.requestWhenInUseAuthorizationStub.invocations.count, 1)
     }
 
-    func testAddingAConsumerDoesNotRequestWhenInUseAuthorizationForOtherStatuses() {
+    func testAddingAHeadingConsumerDoesntRequestPermissions() {
+        locationManager.compatibleAuthorizationStatus = .notDetermined
+
+        _ = locationProvider.onHeadingUpdate.observe { _ in }
+
+        XCTAssertTrue(locationManager.requestWhenInUseAuthorizationStub.invocations.isEmpty)
+    }
+
+    func testAddingALocationConsumerDoesNotRequestWhenInUseAuthorizationForOtherStatuses() {
         locationManager.compatibleAuthorizationStatus = [.restricted, .denied, .authorizedAlways, .authorizedWhenInUse].randomElement()!
 
-        locationProvider.add(consumer: consumer)
+        _ = locationProvider.onLocationUpdate.observe { _ in }
 
         XCTAssertTrue(locationManager.requestWhenInUseAuthorizationStub.invocations.isEmpty)
     }
@@ -117,80 +127,119 @@ final class AppleLocationProviderTests: XCTestCase {
             locationManagerDelegateProxy: locationManagerDelegateProxy)
         locationManager.compatibleAuthorizationStatus = .notDetermined
 
-        locationProvider.add(consumer: consumer)
+        _ = locationProvider.onLocationUpdate.observe { _ in }
 
         XCTAssertTrue(locationManager.requestWhenInUseAuthorizationStub.invocations.isEmpty)
     }
 
-    func testConsumersAreNotifiedOfNewLocationsAfterLatestLocationIsUpdated() {
-        let locations = [
-            CLLocation(latitude: 0, longitude: 0),
-            CLLocation(latitude: 1, longitude: 1)]
-        let otherConsumer = MockLocationConsumer()
-        let consumers = [consumer!, otherConsumer]
+    func testObserversAreNotifiedOfNewLocations() {
+        // Observe via object api (LocationProvider)
+        var observedViaObjectAPI = [[CLLocationCoordinate2D]]()
+        locationProvider.toSignal().observe { (locations: [Location]) in
+            observedViaObjectAPI.append(locations.map(\.coordinate))
+        }.store(in: &cancelables)
 
-        for c in consumers {
-            c.locationUpdateStub.defaultSideEffect = { _ in
-                XCTAssertTrue(self.locationProvider.latestLocation?.location === locations[1])
+        // observe via signal api
+        var observed = [[CLLocationCoordinate2D]]()
+        locationProvider.onLocationUpdate
+            .observe {
+                observed.append($0.map(\.coordinate))
             }
-            locationProvider.add(consumer: c)
-        }
+            .store(in: &cancelables)
 
-        locationProvider.locationManager(CLLocationManager(), didUpdateLocations: locations)
+        XCTAssertEqual(observed, [[]])
+        XCTAssertEqual(observedViaObjectAPI, [[], []]) // TODO: fix double update
 
-        for c in consumers {
-            XCTAssertEqual(c.locationUpdateStub.invocations.count, 1)
-            XCTAssertTrue(c.locationUpdateStub.invocations.first?.parameters.location === locations[1])
-            // accuracyAuthorization is populated with the value from the locationProvider
-            // at the time of initialization. This value is only updated when the provider
-            // notifies its delegate that the authorization has changed.
-            XCTAssertTrue(c.locationUpdateStub.invocations.first?.parameters.accuracyAuthorization == locationManager.compatibleAccuracyAuthorization)
-        }
+        let locations = [
+            CLLocationCoordinate2D(latitude: 0, longitude: 0),
+            CLLocationCoordinate2D(latitude: 1, longitude: 1)]
+        let clLocations = locations.map { CLLocation(latitude: $0.latitude, longitude: $0.longitude) }
+        locationProvider.locationManager(CLLocationManager(), didUpdateLocations: clLocations)
+
+        XCTAssertEqual(observed, [[], locations])
+        XCTAssertEqual(observedViaObjectAPI, [[], [], locations])
+        XCTAssertTrue(locationProvider.latestLocation?.coordinate == locations[1])
+        XCTAssertTrue(locationProvider.getLastObservedLocation()?.coordinate == locations[1])
     }
 
-    func testConsumersAreNotifiedOfNewHeadingsAfterLatestLocationIsUpdated() {
-        let heading = CLHeading()
-        let location = CLLocation()
-        let otherConsumer = MockLocationConsumer()
-        let consumers = [consumer!, otherConsumer]
+    func testObserversAreNotifiedOfNewHeadings() {
+        // Observe via object api (HeadingProvider)
+        var observedViaObjectAPI = [Heading]()
+        locationProvider.toSignal().observe { (heading: Heading) in
+            observedViaObjectAPI.append(heading)
+        }.store(in: &cancelables)
 
-        for c in consumers {
-            c.locationUpdateStub.defaultSideEffect = { _ in
-                XCTAssertTrue(self.locationProvider.latestLocation?.heading === heading)
+        // observe via signal api
+        var observed = [Heading]()
+        locationProvider.onHeadingUpdate
+            .observe {
+                observed.append($0)
             }
-            locationProvider.add(consumer: c)
-        }
+            .store(in: &cancelables)
 
-        locationProvider.locationManager(CLLocationManager(), didUpdateHeading: heading)
-        locationProvider.locationManager(CLLocationManager(), didUpdateLocations: [location])
+        XCTAssertEqual(observed, [])
+        XCTAssertEqual(observedViaObjectAPI, observed)
+        XCTAssertEqual(locationProvider.latestHeading, nil)
 
-        for c in consumers {
-            XCTAssertEqual(c.locationUpdateStub.invocations.count, 1)
-            XCTAssertTrue(c.locationUpdateStub.invocations.first?.parameters.heading === heading)
-        }
+        let heading1 = Heading.random()
+        let heading2 = Heading.random()
+
+        let clHeading1 = MockHeading()
+        clHeading1.trueHeadingStub.defaultReturnValue = heading1.direction
+        clHeading1.headingAccuracyStub.defaultReturnValue = heading1.accuracy
+        clHeading1.timestampStub.defaultReturnValue = heading1.timestamp
+
+        let clHeading2 = MockHeading()
+        clHeading2.trueHeadingStub.defaultReturnValue = -0.1
+        clHeading2.magneticHeadingStub.defaultReturnValue = heading2.direction
+        clHeading2.headingAccuracyStub.defaultReturnValue = heading2.accuracy
+        clHeading2.timestampStub.defaultReturnValue = heading2.timestamp
+
+        locationProvider.locationManager(CLLocationManager(), didUpdateHeading: clHeading1)
+        locationProvider.locationManager(CLLocationManager(), didUpdateHeading: clHeading2)
+
+        XCTAssertEqual(observed, [heading1, heading2])
+        XCTAssertEqual(observedViaObjectAPI, observed)
+        XCTAssertEqual(locationProvider.latestHeading, heading2)
     }
 
     func testConsumersAreNotifiedOfNewAccuracyAuthorizationsAfterLatestLocationIsUpdated() {
-        let location = CLLocation()
+        let coordinate = CLLocationCoordinate2D.random()
+        let clLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
         let accuracyAuthorization = CLAccuracyAuthorization.reducedAccuracy
-        let otherConsumer = MockLocationConsumer()
-        let consumers = [consumer!, otherConsumer]
+
         locationManager.compatibleAccuracyAuthorization = accuracyAuthorization
 
-        for c in consumers {
-            c.locationUpdateStub.defaultSideEffect = { _ in
-                XCTAssertTrue(self.locationProvider.latestLocation?.accuracyAuthorization == accuracyAuthorization)
+        // TODO: Compare Location here after updating Common to 24.0.0-beta.2
+        struct Loc: Equatable {
+            let coord: CLLocationCoordinate2D
+            let auth: CLAccuracyAuthorization
+            init(coord: CLLocationCoordinate2D, auth: CLAccuracyAuthorization) {
+                self.coord = coord
+                self.auth = auth
             }
-            locationProvider.add(consumer: c)
+            init(_ location: Location) {
+                self.coord = location.coordinate
+                self.auth = location.accuracyAuthorization
+            }
         }
+
+        // observe via signal api
+        var observed = [[Loc]]()
+        locationProvider.onLocationUpdate.observe {
+            observed.append($0.map(Loc.init(_:)))
+        }.store(in: &cancelables)
+
+        XCTAssertEqual(observed, [[]], "initial empty value")
 
         locationProvider.locationManagerDidChangeAuthorization(CLLocationManager())
-        locationProvider.locationManager(CLLocationManager(), didUpdateLocations: [location])
 
-        for c in consumers {
-            XCTAssertEqual(c.locationUpdateStub.invocations.count, 1)
-            XCTAssertTrue(c.locationUpdateStub.invocations.first?.parameters.accuracyAuthorization == accuracyAuthorization)
-        }
+        XCTAssertEqual(observed, [[], []], "accuracy change triggered an update")
+
+        locationProvider.locationManager(CLLocationManager(), didUpdateLocations: [clLocation])
+
+        let expected = Loc(coord: coordinate, auth: accuracyAuthorization)
+        XCTAssertEqual(observed, [[], [], [expected]], "location change triggered an update")
     }
 
     func testDeinit() throws {
@@ -200,7 +249,8 @@ final class AppleLocationProviderTests: XCTestCase {
                 interfaceOrientationProvider: interfaceOrientationProvider,
                 mayRequestWhenInUseAuthorization: true,
                 locationManagerDelegateProxy: locationManagerDelegateProxy)
-            locationProducer.add(consumer: consumer)
+            locationProducer.onLocationUpdate.observe { _ in }.store(in: &cancelables)
+            locationProducer.onHeadingUpdate.observe { _ in }.store(in: &cancelables)
             // reset to break a strong reference cycle from
             // locationProducer -> locationProvider -> setDelegateStub
             // -> locationProducer
@@ -209,30 +259,6 @@ final class AppleLocationProviderTests: XCTestCase {
         }
         XCTAssertEqual(locationManager.stopUpdatingLocationStub.invocations.count, 1)
         XCTAssertEqual(locationManager.stopUpdatingHeadingStub.invocations.count, 1)
-    }
-
-    func testDidUpdateLocationsUpdatesLatestLocation() {
-        let location = CLLocation()
-
-        locationProvider.locationManager(CLLocationManager(), didUpdateLocations: [CLLocation(), location])
-
-        XCTAssertTrue(locationProvider.latestLocation?.location === location)
-    }
-
-    func testDidUpdateHeadingUpdatesLatestLocation() {
-        let heading1 = CLHeading()
-        let heading2 = CLHeading()
-        locationProvider.locationManager(CLLocationManager(), didUpdateHeading: heading1)
-
-        XCTAssertNil(locationProvider.latestLocation)
-
-        locationProvider.locationManager(CLLocationManager(), didUpdateLocations: [CLLocation()])
-
-        XCTAssertTrue(locationProvider.latestLocation?.heading === heading1)
-
-        locationProvider.locationManager(CLLocationManager(), didUpdateHeading: heading2)
-
-        XCTAssertTrue(locationProvider.latestLocation?.heading === heading2)
     }
 
     func testDidChangeAuthorizationUpdatesLatestLocation() {
@@ -249,59 +275,8 @@ final class AppleLocationProviderTests: XCTestCase {
         XCTAssertEqual(locationProvider.latestLocation?.accuracyAuthorization, .reducedAccuracy)
     }
 
-    func testStopUpdatingDuringDidUpdateLocationsDueToConsumerDeinit() throws {
-        locationManager.$delegate.setStub.reset()
-        autoreleasepool {
-            locationProvider.add(consumer: MockLocationConsumer())
-        }
-
-        locationProvider.locationManager(CLLocationManager(), didUpdateLocations: [CLLocation()])
-
-        XCTAssertEqual(locationManager.stopUpdatingLocationStub.invocations.count, 1)
-        XCTAssertEqual(locationManager.stopUpdatingHeadingStub.invocations.count, 1)
-    }
-
-    func testStopUpdatingDuringDidUpdateHeadingDueToConsumerDeinit() {
-        locationManager.$delegate.setStub.reset()
-        autoreleasepool {
-            locationProvider.add(consumer: MockLocationConsumer())
-        }
-
-        locationProvider.locationManager(CLLocationManager(), didUpdateHeading: CLHeading())
-
-        XCTAssertEqual(locationManager.stopUpdatingLocationStub.invocations.count, 1)
-        XCTAssertEqual(locationManager.stopUpdatingHeadingStub.invocations.count, 1)
-    }
-
-    func testStopUpdatingDuringDidFailWithErrorDueToConsumerDeinit() {
-        locationManager.$delegate.setStub.reset()
-        autoreleasepool {
-            locationProvider.add(consumer: MockLocationConsumer())
-        }
-
-        locationProvider.locationManager(CLLocationManager(), didFailWithError: MockError())
-
-        XCTAssertEqual(locationManager.stopUpdatingLocationStub.invocations.count, 1)
-        XCTAssertEqual(locationManager.stopUpdatingHeadingStub.invocations.count, 1)
-        XCTAssertEqual(delegate?.didFailWithErrorStub.invocations.count, 1)
-    }
-
-    func testStopUpdatingDuringDidChangeAuthorizationDueToConsumerDeinit() {
-        locationManager.$delegate.setStub.reset()
-        autoreleasepool {
-            locationProvider.add(consumer: MockLocationConsumer())
-        }
-
-        locationManager.compatibleAccuracyAuthorization = .reducedAccuracy
-        locationProvider.locationManagerDidChangeAuthorization(CLLocationManager())
-
-        XCTAssertEqual(locationManager.stopUpdatingLocationStub.invocations.count, 1)
-        XCTAssertEqual(locationManager.stopUpdatingHeadingStub.invocations.count, 1)
-        XCTAssertEqual(delegate?.didChangeAccuracyAuthorizationStub.invocations.count, 1)
-    }
-
     func testDidFailWithErrorNotifiesDelegate() throws {
-        locationProvider.add(consumer: consumer)
+        addNoopLocationObserver()
         let error = MockError()
 
         locationProvider.locationManager(CLLocationManager(), didFailWithError: error)
@@ -337,7 +312,7 @@ final class AppleLocationProviderTests: XCTestCase {
         locationManagerDelegateProxy: locationManagerDelegateProxy)
         delegate = MockLocationProducerDelegate()
         locationProvider.delegate = delegate
-        locationProvider.add(consumer: consumer)
+        addNoopLocationObserver()
         locationManager.compatibleAccuracyAuthorization = accuracyAuthorizationValues[changedIndex]
 
         locationProvider.locationManagerDidChangeAuthorization(CLLocationManager())
@@ -356,7 +331,7 @@ final class AppleLocationProviderTests: XCTestCase {
         locationManagerDelegateProxy: locationManagerDelegateProxy)
         delegate = MockLocationProducerDelegate()
         locationProvider.delegate = delegate
-        locationProvider.add(consumer: consumer)
+        addNoopLocationObserver()
 
         locationProvider.locationManagerDidChangeAuthorization(CLLocationManager())
 
@@ -364,7 +339,7 @@ final class AppleLocationProviderTests: XCTestCase {
     }
 
     func testRequestsTemporaryFullAccuracyAuthorizationWhenAccuracyIsReduced() {
-        locationProvider.add(consumer: consumer)
+        addNoopLocationObserver()
         locationManager.compatibleAuthorizationStatus = [.authorizedAlways, .authorizedWhenInUse].randomElement()!
         locationManager.compatibleAccuracyAuthorization = .reducedAccuracy
 
@@ -380,7 +355,7 @@ final class AppleLocationProviderTests: XCTestCase {
     }
 
     func testDoesNotRequestTemporaryFullAccuracyAuthorizationIfPermissionsNotGranted() {
-        locationProvider.add(consumer: consumer)
+        addNoopLocationObserver()
         locationManager.compatibleAuthorizationStatus = [.notDetermined, .restricted, .denied].randomElement()!
         locationManager.compatibleAccuracyAuthorization = .reducedAccuracy
 
@@ -390,7 +365,7 @@ final class AppleLocationProviderTests: XCTestCase {
     }
 
     func testDoesNotRequestTemporaryFullAccuracyAuthorizationWhenAccuracyIsFull() {
-        locationProvider.add(consumer: consumer)
+        addNoopLocationObserver()
         locationManager.compatibleAuthorizationStatus = [.authorizedAlways, .authorizedWhenInUse].randomElement()!
         locationManager.compatibleAccuracyAuthorization = .fullAccuracy
 
@@ -411,12 +386,12 @@ final class AppleLocationProviderTests: XCTestCase {
     func testHeadingOrientationChangeIsPropagated() {
         // given
         let newOrientation = UIInterfaceOrientation.landscapeRight
-        interfaceOrientationProvider.$interfaceOrientation.getStub.defaultReturnValue = .portraitUpsideDown
-        locationProvider.add(consumer: consumer)
+        interfaceOrientationProvider.interfaceOrientation = .portraitUpsideDown
+        addNoopHeadingObserver()
         locationManager.$headingOrientation.reset()
 
         // when
-        interfaceOrientationProvider.$onInterfaceOrientationChange.send(.landscapeRight)
+        interfaceOrientationProvider.interfaceOrientation = .landscapeRight
 
         // then
         XCTAssertEqual(locationManager.$headingOrientation.setStub.invocations.count, 1)
@@ -426,8 +401,8 @@ final class AppleLocationProviderTests: XCTestCase {
     func testHeadingOrientationIsUpdatedInPlaceUponActivation() {
         // given
         let newOrientation = UIInterfaceOrientation.portraitUpsideDown
-        interfaceOrientationProvider.$interfaceOrientation.getStub.defaultReturnValue = newOrientation
-        locationProvider.add(consumer: consumer)
+        interfaceOrientationProvider.interfaceOrientation = newOrientation
+        addNoopHeadingObserver()
 
         // then
         XCTAssertEqual(locationManager.$headingOrientation.setStub.invocations.count, 1)
@@ -438,13 +413,13 @@ final class AppleLocationProviderTests: XCTestCase {
         // given
         let orientation: UIInterfaceOrientation = .landscapeLeft
         locationManager.$headingOrientation.getStub.defaultReturnValue = CLDeviceOrientation(interfaceOrientation: orientation)
-        locationProvider.add(consumer: consumer)
-        interfaceOrientationProvider.$onInterfaceOrientationChange.send(orientation)
+        addNoopHeadingObserver()
+        interfaceOrientationProvider.interfaceOrientation = orientation
         locationManager.$headingOrientation.getStub.reset()
         locationManager.$headingOrientation.setStub.reset()
 
         // when
-        interfaceOrientationProvider.$onInterfaceOrientationChange.send(orientation)
+        interfaceOrientationProvider.interfaceOrientation = orientation
 
         // then
         XCTAssertEqual(locationManager.$headingOrientation.getStub.invocations.count, 0) // heading orientation should be cached by the provider

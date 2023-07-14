@@ -10,12 +10,9 @@ internal final class Puck3D: Puck {
                 return
             }
             if isActive {
-                interpolatedLocationProducer
-                    .observe { [weak self] _ in
-                        self?.updateSourceAndLayer()
-                        return true
-                    }.erased.store(in: &cancelables)
-                updateSourceAndLayer()
+                renderingData.observe { [weak self] data in
+                    self?.render(with: data)
+                }.store(in: &cancelables)
             } else {
                 cancelables.removeAll()
                 if style.layerExists(withId: Self.layerID) {
@@ -28,35 +25,30 @@ internal final class Puck3D: Puck {
         }
     }
 
-    internal var puckBearing: PuckBearing = .heading {
-        didSet {
-            updateSourceAndLayer()
-        }
-    }
-
+    // The change in this properties will be handled in the next render call (renderingData update).
+    // TODO: Those properties should come as part of rendering data.
+    internal var puckBearing: PuckBearing = .heading
     internal var puckBearingEnabled: Bool = true
 
     private let configuration: Puck3DConfiguration
     private let style: StyleProtocol
-    private let interpolatedLocationProducer: InterpolatedLocationProducerProtocol
+    private let renderingData: Signal<PuckRenderingData>
 
     private var cancelables = Set<AnyCancelable>()
 
     internal init(configuration: Puck3DConfiguration,
                   style: StyleProtocol,
-                  interpolatedLocationProducer: InterpolatedLocationProducerProtocol) {
+                  renderingData: Signal<PuckRenderingData>) {
         self.configuration = configuration
         self.style = style
-        self.interpolatedLocationProducer = interpolatedLocationProducer
+        self.renderingData = renderingData
     }
 
-    private func updateSourceAndLayer() {
-        guard isActive, let location = interpolatedLocationProducer.currentLocation else {
-            return
-        }
+    private func render(with data: PuckRenderingData) {
+        guard isActive else { return }
 
         var model = configuration.model
-        model.position = [location.coordinate.longitude, location.coordinate.latitude]
+        model.position = [data.location.coordinate.longitude, data.location.coordinate.latitude]
 
         model.orientation = model.orientation
             .flatMap { orientation -> [Double]? in
@@ -72,11 +64,11 @@ internal final class Puck3D: Puck {
         if puckBearingEnabled {
             switch puckBearing {
             case .heading:
-                if let validHeadingDirection = location.heading {
+                if let validHeadingDirection = data.heading?.direction {
                     model.orientation?[2] += validHeadingDirection
                 }
             case .course:
-                if let validCourseDirection = location.course {
+                if let validCourseDirection = data.location.bearing {
                     model.orientation?[2] += validCourseDirection
                 }
             }

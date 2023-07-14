@@ -74,30 +74,6 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
         return GestureHandler(gestureRecognizer: UIGestureRecognizer())
     }
 
-    // MARK: - Location
-    let makeLocationProviderStub = Stub<UIView, MockLocationProvider>(defaultReturnValue: MockLocationProvider())
-    func makeLocationProvider(userInterfaceOrientationView: UIView) -> LocationProvider {
-        return makeLocationProviderStub.call(with: userInterfaceOrientationView)
-    }
-    func makeInterpolatedLocationProducer(locationProvider: LocationProvider,
-                                          displayLinkCoordinator: DisplayLinkCoordinator) -> InterpolatedLocationProducerProtocol {
-        return MockInterpolatedLocationProducer()
-    }
-
-    // swiftlint:disable:next function_parameter_count
-    func makeLocationManager(locationProvider: LocationProvider,
-                             interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
-                             style: StyleProtocol,
-                             mapboxMap: MapboxMapProtocol,
-                             displayLinkCoordinator: DisplayLinkCoordinator,
-                             userInterfaceOrientationView: UIView) -> LocationManager {
-        return LocationManager(
-            locationProvider: locationProvider,
-            interpolatedLocationProducer: interpolatedLocationProducer,
-            puckManager: MockPuckManager(),
-            userInterfaceOrientationView: userInterfaceOrientationView)
-    }
-
     // MARK: - Viewport
     struct MakeViewportManagerImplParams {
         var mapboxMap: MapboxMapProtocol

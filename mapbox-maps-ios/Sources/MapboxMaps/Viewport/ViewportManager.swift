@@ -15,16 +15,16 @@ public final class ViewportManager {
     }
 
     private let impl: ViewportManagerImplProtocol
-    private let interpolatedLocationProducer: InterpolatedLocationProducerProtocol
+    private let onPuckRender: Signal<PuckRenderingData>
     private let cameraAnimationsManager: CameraAnimationsManagerProtocol
     private let mapboxMap: MapboxMapProtocol
 
     internal init(impl: ViewportManagerImplProtocol,
-                  interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
+                  onPuckRender: Signal<PuckRenderingData>,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol,
                   mapboxMap: MapboxMapProtocol) {
         self.impl = impl
-        self.interpolatedLocationProducer = interpolatedLocationProducer
+        self.onPuckRender = onPuckRender
         self.cameraAnimationsManager = cameraAnimationsManager
         self.mapboxMap = mapboxMap
     }
@@ -118,7 +118,7 @@ public final class ViewportManager {
         return FollowPuckViewportState(
             dataSource: FollowPuckViewportStateDataSource(
                 options: options,
-                interpolatedLocationProducer: interpolatedLocationProducer,
+                onPuckRender: onPuckRender,
                 observableCameraOptions: ObservableCameraOptions()),
             mapboxMap: mapboxMap)
     }

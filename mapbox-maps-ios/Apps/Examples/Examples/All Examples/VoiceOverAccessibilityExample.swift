@@ -50,11 +50,8 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
         mapView.isAccessibilityElement = false
         mapView.accessibilityElements = []
 
-        let customLocationProvider = SimulatedLocationProvider(
-            currentLocation: CLLocation(
-                latitude: centerCoordinate.latitude,
-                longitude: centerCoordinate.longitude))
-        mapView.location.provider = customLocationProvider
+        let location = Location(coordinate: centerCoordinate, timestamp: Date())
+        mapView.location.override(locationProvider: Signal(just: [location]))
         mapView.location.options.puckType = .puck2D(.makeDefault())
 
         // create point annotation manager to house point annotations
@@ -94,7 +91,10 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
             }
         }.store(in: &cancelables)
         mapView.gestures.delegate = self
-        mapView.location.provider.add(consumer: self)
+        mapView.location.onLocationChange.observe { [weak self] location in
+            guard let self, let location = location.last else { return }
+            self.updateLocationAccessibilityElement(location: location)
+        }.store(in: &cancelables)
     }
 
     @objc private func voiceOverStatusDidChange() {
@@ -125,9 +125,8 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
         mapView.accessibilityElements = allAccessibilityElements
     }
 
-    func updateLocationAccessibilityElement() {
-        if let location = mapView.location.provider.latestLocation,
-           let accessibilityFrame = mapView.accessibilityFrame(for: location.coordinate) {
+    func updateLocationAccessibilityElement(location: Location) {
+        if let accessibilityFrame = mapView.accessibilityFrame(for: location.coordinate) {
             let element = UIAccessibilityElement(accessibilityContainer: mapView!)
             element.accessibilityIdentifier = "puck"
             element.accessibilityLabel = "Current Location"
@@ -139,8 +138,6 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
     }
 
     func updateAllAccessibilityElements(completion: @escaping () -> Void = {}) {
-        updateLocationAccessibilityElement()
-
         let group = DispatchGroup()
 
         // update accessibility elements for annotations
@@ -228,12 +225,6 @@ extension VoiceOverAccessibilityExample: GestureManagerDelegate {
 
     func gestureManager(_ gestureManager: GestureManager, didEndAnimatingFor gestureType: GestureType) {
         updateAllAccessibilityElements()
-    }
-}
-
-extension VoiceOverAccessibilityExample: LocationConsumer {
-    func locationUpdate(newLocation: Location) {
-        updateLocationAccessibilityElement()
     }
 }
 

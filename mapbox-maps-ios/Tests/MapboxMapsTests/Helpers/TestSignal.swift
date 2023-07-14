@@ -13,3 +13,21 @@ final class TestSignal<T> {
 
     let subject = SignalSubject<T>()
 }
+
+/// Analogous to Published in Combine.
+@propertyWrapper
+final class TestPublished<T> {
+    var projectedValue: Signal<T> {
+        subject.signal
+    }
+
+    var wrappedValue: T {
+        set { subject.value = newValue }
+        get { subject.value }
+    }
+    let subject: CurrentValueSignalSubject<T>
+
+    init(wrappedValue: T) {
+        self.subject = .init(wrappedValue)
+    }
+}

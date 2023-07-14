@@ -19,7 +19,7 @@ struct AddRouteCommand: AsyncCommand {
 
         mapView.location.options.puckType = .puck2D(.makeDefault(showBearing: false))
         mapView.location.options.puckBearing = .course
-        mapView.location.provider = locationProvider
+        mapView.location.override(locationProvider: locationProvider.locations)
 
         // Setup route.
         let route = try getRoute()
@@ -31,20 +31,20 @@ struct AddRouteCommand: AsyncCommand {
         try mapView.mapboxMap.addPersistentLayer(makeCasingLayer())
         try mapView.mapboxMap.addPersistentLayer(makeLineLayer())
 
-        mapView.mapboxMap.onCameraChanged.observe { [weak locationProvider] payload in
+        mapView.mapboxMap.onCameraChanged.observe { [locationProvider] payload in
             let newLocation = payload.cameraState.center
             let traveledDistance = route.line.distance(to: newLocation) ?? 0
-            let progess = traveledDistance / route.distance
+            let progress = traveledDistance / route.distance
 
-            locationProvider?.currentCoordination = newLocation
+            locationProvider.coordinate = newLocation
             try? mapView.mapboxMap.setLayerProperty(
                 for: ID.routeLineLayer,
                 property: "line-trim-offset",
-                value: [0, progess])
+                value: [0, progress])
             try? mapView.mapboxMap.setLayerProperty(
                 for: ID.casingLineLayer,
                 property: "line-trim-offset",
-                value: [0, progess])
+                value: [0, progress])
         }.store(in: &context.cancellables)
     }
 

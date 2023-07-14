@@ -10,6 +10,7 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
 
     private var mapView: MapView!
     private var navigationSimulator: NavigationSimulator!
+    private var cancelables = Set<AnyCancelable>()
 
     private lazy var routeSource: Source = {
         var source = GeoJSONSource(id: ID.routeSource)
@@ -44,8 +45,10 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
         let configuration = Puck2DConfiguration(topImage: UIImage(named: "user_puck_icon")!)
         mapView.location.options.puckType = .puck2D(configuration)
         mapView.location.options.puckBearing = .course
-        mapView.location.provider = navigationSimulator
-        mapView.location.addPuckLocationConsumer(self)
+        mapView.location.override(locationProvider: navigationSimulator)
+        mapView.location.onPuckRender.observe { [weak self] in
+            self?.onPuckRender(data: $0)
+        }.store(in: &cancelables)
 
         do {
             try mapView.mapboxMap.addSource(routeSource)
@@ -196,12 +199,9 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
             fatalError("Unable to decode Route GeoJSON source")
         }
     }()
-}
 
-extension NavigationSimulatorExample: PuckLocationConsumer {
-
-    func puckLocationUpdate(newLocation: Location) {
-        let progress = navigationSimulator.progressFromStart(to: newLocation)
+    private func onPuckRender(data: PuckRenderingData) {
+        let progress = navigationSimulator.progressFromStart(to: data.location)
 
         try? mapView.mapboxMap.setLayerProperty(for: ID.routeLineLayer, property: "line-trim-offset", value: [0, progress])
         try? mapView.mapboxMap.setLayerProperty(for: ID.casingLineLayer, property: "line-trim-offset", value: [0, progress])

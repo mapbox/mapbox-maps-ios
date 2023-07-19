@@ -67,8 +67,8 @@ jobs:
       context:
         - Slack Orb
       name: run-unit-tests-min-turf
-      xcode: 13.1.0
-      destination: OS=15.0,name=iPhone 12
+      xcode: 14.1.0
+      destination: OS=16.1,name=iPhone 14
       requires:
         - build-tests-min-turf
 

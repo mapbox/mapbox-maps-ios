@@ -14,8 +14,6 @@ The Mapbox Maps SDK v11 introduces improvements to how Mapbox works on iOS platf
 |---------|---------------|---------------|-------------|
 | 11.0.0  | 14.1+         | 5.7.1+        | 12+         |
 
-## Migration Steps 
-
 ## 1. Update Dependencies
 
 Update your app's dependencies to use 11+ version of the Mapbox Maps SDK for iOS. We distribute the SDK through Swift Package Manager (SPM), CocoaPods, and Direct Download. Full instructions are found [here](https://docs.mapbox.com/ios/maps/guides/install/).
@@ -122,13 +120,7 @@ As part of this change `ResourceOptions` and `ResourceOptionsManager` have been 
 
 ### 2.4 New 3D Lighting API
 
-In v11 we've introduced new experimental lighting APIs to give you control of lighting and shadows in your map when using 3D objects: ``AmbientLight`` and ``DirectionalLight``. 
-
-TODO: Add image, point to example
-
-Relatedly, we've added new APIs on ``FillExtrusionLayer`` and ``LineLayer``s to support 3D lighting styling and working with 3D model layers. 
-
-TODO: Maybe list them or show a small example. 
+In v11 we've introduced new experimental lighting APIs to give you control of lighting and shadows in your map when using 3D objects: ``AmbientLight`` and ``DirectionalLight``. We've also added new APIs on ``FillExtrusionLayer`` and ``LineLayer``s to support this 3D lighting styling and enhance your ability to work with 3D model layers. Together, these properties can illuminate your 3D objects such as buildings and terrain to provide a more realistic and immersive map experience for your users. These properties can be set at runtime to follow the time of day, a particular mood, or other lighting goals in your map. Check out our example [here](mapbox-maps-ios/Apps/Examples/Examples/All Examples/Lab/Lights3DExample.swift) for implementation recommendations. 
 
 ### 2.5 Location API
 
@@ -136,7 +128,7 @@ TBD:
 - https://mapbox.atlassian.net/browse/MAPSSDK-205
 - https://mapbox.atlassian.net/browse/MAPSIOS-879
 
-We introduced several changes to ``LocationManager``. The ``latestLocation`` should now be accessed through the ``provider`` property, which has been renamed from ``locationProvider``. We've additionally renamed the add/remove location consumer methods to align with Swift API Design Guidelines: 
+We introduced several changes to ``LocationManager``. The latestLocation should now be accessed through the provider property, which has been renamed from locationProvider. We've additionally renamed the add/remove location consumer methods to align with Swift API Design Guidelines: 
 
 **v10:**
 ```swift
@@ -151,7 +143,7 @@ let currentLocation = self.mapView.location.provider.latestLocation
 mapView.location.provider.add(consumer: self)
 mapView.location.provider.remove(consumer: self)
 ```
-We've simplified the ``LocationProvider`` protocol, now it requires only to implement observation and `latestLocation`,
+We've simplified the ``LocationProvider`` protocol, now it requires only to implement observation and latestLocation,
 down from 14 methods/properties required in v10.
 
 ```swift
@@ -172,13 +164,11 @@ final class MyLocationProvider: LocationProvider {
 
 ### 2.6 Camera API
 
-TBD:
-- animation Owner https://mapbox.atlassian.net/browse/MAPSIOS-33
-- optional padding https://mapbox.atlassian.net/browse/MAPSIOS-725
-- Free camera improvements https://mapbox.atlassian.net/browse/MAPSIOS-892
-- MaxZoom and offset in cameraForCoordinateBounds https://mapbox.atlassian.net/browse/MAPSIOS-723
+In v11, we have refined the Camera API introduced in v10 to improve developer ergonomics. These changes include several minor updates to usability: 
 
-``cameraState`` can now be accessed through ``mapboxMap`` rather than directly on ``mapView``.
+- The SDK now exposes the owner property on ``CameraAnimator``, allowing you to more easily identify the owner. 
+- The cameraFor methods (cameraForCoordinatesArray, cameraForLocationArray, and cameraForCoordinateBounds) have been simplified and aligned with our Android and Web SDKs. Passing a padding parameter is now optional, and additional optional maxZoom and offset parameters are available for cameraForCoordinateBounds. 
+- Finally, cameraState can now be accessed through mapboxMap rather than directly on mapView.
 
 **v10:**
 ```swift
@@ -275,13 +265,15 @@ TODO
 To further improve the performance of 3D model layer, we have replaced Puck 3D's default `model-scale` expression with new API ``Puck3DConfiguration/modelScaleMode``; by default this property is ``ModelScaleMode/viewport``, which will keep the 3D model size constant across different zoom levels.
 While this means that Puck 3D's size should render similarly to v10, it does introduces a behavior breaking change - that ``Puck3DConfiguration/modelScale`` needs to be adjusted to correctly render the puck (we found the adjustment to be around 100x of v10 `model-scale` value, but that could vary depending on other properties etc.)
 
+## Migration Steps 
+
 ## 3. Replace Deprecated APIs and Address Breaking Changes
 
 Check for any deprecated APIs in your code and replace them with the recommended alternatives. Deprecated APIs may be removed in future releases.
 
 ### 3.1 Replace deprecated MapboxMap/style and Snapshot/style
 
-We've simplified MapboxMap and Snapshot so you can now access Style APIs directly from ``MapboxMap`` and ``Snapshotter`` instance rather than going through the deprecated ``Style`` object. For example: 
+We've simplified MapboxMap and Snapshot so you can now access Style APIs directly from ``MapboxMap`` and ``Snapshotter`` instance rather than going through the deprecated Style object. For example: 
 
 **v10:**
 ```swift
@@ -297,9 +289,9 @@ mapView.mapboxMap.updateGeoJSONSource(withId: "route", geoJSON: route)
 let projection = snapshot.projection
 ```
 
-### 3.2 Replace deprecated Annotations properties for ``iconTextFit`` and ``iconTextFitPadding``
+### 3.2 Replace deprecated Annotations properties for iconTextFit and iconTextFitPadding
 
-In v11, you can update ``iconTextFit`` and ``iconTextFitPadding`` directly on the PointAnnotation rather than through the PointAnnotationManager. This allows for control over these values for each annotation. 
+In v11, you can update iconTextFit and iconTextFitPadding directly on the PointAnnotation rather than through the PointAnnotationManager. This allows for control over these values for each annotation. 
 
 **v10:**
 ```swift

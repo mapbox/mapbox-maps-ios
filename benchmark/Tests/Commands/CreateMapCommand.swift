@@ -20,11 +20,7 @@ struct CreateMapCommand: AsyncCommand, Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.style = try container.decode(StyleURI.self, forKey: .style)
         self.camera = try container.decode(CameraOptions.self, forKey: .camera)
-        if try container.decodeIfPresent(Bool.self, forKey: .tileStoreUsage) == true {
-            self.tileStoreUsageMode = .readOnly
-        } else {
-            self.tileStoreUsageMode = .disabled
-        }
+        tileStoreUsageMode = .readOnly
     }
 
     init(style: StyleURI, camera: CameraOptions, tileStoreUsageMode: TileStoreUsageMode = .disabled) {

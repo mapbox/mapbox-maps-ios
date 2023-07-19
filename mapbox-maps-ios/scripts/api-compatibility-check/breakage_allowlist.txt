@@ -481,3 +481,6 @@ Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:completion
 Class Viewport has been renamed to Class ViewportManager
 Accessor MapView.viewport.Get() has return type change from MapboxMaps.Viewport! to MapboxMaps.ViewportManager!
 Var MapView.viewport has declared type change from MapboxMaps.Viewport! to MapboxMaps.ViewportManager!
+
+// OfflineManager + remove style packs
+Func OfflineManager.removeStylePack(for:) has been renamed to Func removeStylePack(for:completion:)

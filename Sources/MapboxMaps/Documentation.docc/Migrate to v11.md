@@ -122,6 +122,7 @@ MapboxMapsOptions.tileStore = tileStore
 To clear the temporary map data, use the ``MapboxMap/clearData(completion:)`` method.
 
 As part of this change `ResourceOptions` and `ResourceOptionsManager` have been removed.
+The TileStore also no longer accepts access token as part of its options.
 
 ### 2.4 New 3D Lighting API
 
@@ -435,6 +436,10 @@ import MapboxMaps
 
 class ViewController: UIViewController { }
 ```
+### 3.8 Http Stack changes
+`HTTPServiceFactory.reset`, `HttpServiceFactory.setUserDefinedForCustom` and `HttpServiceInterface` have been removed from public visibility. ***It is thus no longer possible to override the HTTP stack.***
+
+If you need to set a HTTP interceptor you can do it via the `HttpServiceFactory.setHttpServiceInterceptor` function. The `HttpServiceInterceptor` interface has a new `onUpload` function that requires implementation.
 
 ## 4. Update APIs deprecated in v10 which have been removed in v11
 

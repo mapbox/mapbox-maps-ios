@@ -99,7 +99,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Support string option in `GeoJSONSourceData`.
 * Allows passing `extraOptions` (which must be a valid JSON object) when creating `StylePackLoadOptions`and `TilesetDescriptorOptions`.
 * Deprecate `MapboxMap/style` and `Snapshotter/style`, from now on you can access Style APIs directly from `MapboxMap` and `Snapshotter` instance.
-* Add a new experimental API to enable Tracing with `Tracing.status = .enabled`. Checkout `Tracing` reference to see more.
+* Add a new API to enable Tracing with `Tracing.status = .enabled`. Checkout `Tracing` reference to see more.
 * Introduce `FillExtrusionLayer.fillExtrusionRoundedRoof` , `FillExtrusionLayer.fillExtrusionEdgeRadius` API.
 * Introduce `line-depth-occlusion` API.
 * Introduce `FillExtrusionLayer/fillExtrusionRoundedRoof`, `FillExtrusionLayer/fillExtrusionEdgeRadius` API.

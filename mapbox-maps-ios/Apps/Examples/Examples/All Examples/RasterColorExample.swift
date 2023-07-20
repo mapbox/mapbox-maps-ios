@@ -40,8 +40,7 @@ class RasterColorExample: UIViewController, ExampleProtocol {
         var backgroundLayer = BackgroundLayer(id: "background-layer-id")
         backgroundLayer.backgroundColor = .constant(StyleColor(red: 4.0, green: 7.0, blue: 14.0, alpha: 1)!)
 
-        var rasterLayer = RasterLayer(id: "raster-layer-id")
-        rasterLayer.source = rasterSource.id
+        var rasterLayer = RasterLayer(id: "raster-layer-id", source: rasterSource.id)
         rasterLayer.rasterColor = .expression(Exp(.interpolate) {
             Exp(.linear)
             Exp(.rasterValue)

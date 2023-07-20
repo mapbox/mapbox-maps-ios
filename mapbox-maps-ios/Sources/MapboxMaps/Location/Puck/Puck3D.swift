@@ -93,8 +93,7 @@ internal final class Puck3D: Puck {
 
         // create the layer if needed
         if !style.layerExists(withId: Self.layerID) {
-            var modelLayer = ModelLayer(id: Self.layerID)
-            modelLayer.source = Self.sourceID
+            var modelLayer = ModelLayer(id: Self.layerID, source: Self.sourceID)
             modelLayer.modelScale = configuration.modelScale
             modelLayer.modelScaleMode = configuration.modelScaleMode
             modelLayer.modelType = .constant(.locationIndicator)

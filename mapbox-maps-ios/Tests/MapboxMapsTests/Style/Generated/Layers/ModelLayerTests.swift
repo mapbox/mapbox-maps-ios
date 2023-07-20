@@ -6,25 +6,22 @@ final class ModelLayerTests: XCTestCase {
 
     func testLayerProtocolMembers() {
 
-        var layer = ModelLayer(id: "test-id")
-        layer.source = "some-source"
-        layer.sourceLayer = nil
+        var layer = ModelLayer(id: "test-id", source: "source")
         layer.minZoom = 10.0
         layer.maxZoom = 20.0
 
-        XCTAssert(layer.id == "test-id")
-        XCTAssert(layer.type == LayerType.model)
-        XCTAssert(layer.filter == nil)
-        XCTAssert(layer.source == "some-source")
+        XCTAssertEqual(layer.id, "test-id")
+        XCTAssertEqual(layer.type, LayerType.model)
+        XCTAssertNil(layer.filter)
+        XCTAssert(layer.source == "source")
+
         XCTAssertNil(layer.sourceLayer)
-        XCTAssert(layer.minZoom == 10.0)
-        XCTAssert(layer.maxZoom == 20.0)
+        XCTAssertEqual(layer.minZoom, 10.0)
+        XCTAssertEqual(layer.maxZoom, 20.0)
     }
 
     func testEncodingAndDecodingOfLayerProtocolProperties() {
-        var layer = ModelLayer(id: "test-id")
-        layer.source = "some-source"
-        layer.sourceLayer = nil
+        var layer = ModelLayer(id: "test-id", source: "source")
         layer.minZoom = 10.0
         layer.maxZoom = 20.0
 
@@ -42,20 +39,20 @@ final class ModelLayerTests: XCTestCase {
 
         do {
             let decodedLayer = try JSONDecoder().decode(ModelLayer.self, from: validData)
-            XCTAssert(decodedLayer.id == "test-id")
-            XCTAssert(decodedLayer.type == LayerType.model)
-            XCTAssert(decodedLayer.filter == nil)
-            XCTAssert(decodedLayer.source == "some-source")
+            XCTAssertEqual(decodedLayer.id, "test-id")
+            XCTAssertEqual(decodedLayer.type, LayerType.model)
+            XCTAssertNil(decodedLayer.filter)
+            XCTAssert(decodedLayer.source == "source")
             XCTAssertNil(decodedLayer.sourceLayer)
-            XCTAssert(decodedLayer.minZoom == 10.0)
-            XCTAssert(decodedLayer.maxZoom == 20.0)
+            XCTAssertEqual(decodedLayer.minZoom, 10.0)
+            XCTAssertEqual(decodedLayer.maxZoom, 20.0)
         } catch {
             XCTFail("Failed to decode ModelLayer")
         }
     }
 
     func testEncodingAndDecodingOfLayoutProperties() {
-        var layer = ModelLayer(id: "test-id")
+        var layer = ModelLayer(id: "test-id", source: "source")
         layer.visibility = .visible
         layer.modelId = Value<String>.testConstantValue()
 
@@ -73,15 +70,15 @@ final class ModelLayerTests: XCTestCase {
 
         do {
             let decodedLayer = try JSONDecoder().decode(ModelLayer.self, from: validData)
-            XCTAssert(decodedLayer.visibility == .visible)
-            XCTAssert(layer.modelId == Value<String>.testConstantValue())
+            XCTAssertEqual(decodedLayer.visibility, .visible)
+            XCTAssertEqual(layer.modelId, Value<String>.testConstantValue())
         } catch {
             XCTFail("Failed to decode ModelLayer")
         }
     }
 
     func testEncodingAndDecodingOfPaintProperties() {
-       var layer = ModelLayer(id: "test-id")
+       var layer = ModelLayer(id: "test-id", source: "source")
        layer.modelAmbientOcclusionIntensity = Value<Double>.testConstantValue()
        layer.modelAmbientOcclusionIntensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.modelCastShadows = Value<Bool>.testConstantValue()
@@ -121,21 +118,21 @@ final class ModelLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(ModelLayer.self, from: validData)
-           XCTAssert(decodedLayer.visibility == .visible)
-           XCTAssert(layer.modelAmbientOcclusionIntensity == Value<Double>.testConstantValue())
-           XCTAssert(layer.modelCastShadows == Value<Bool>.testConstantValue())
-           XCTAssert(layer.modelColor == Value<StyleColor>.testConstantValue())
-           XCTAssert(layer.modelColorMixIntensity == Value<Double>.testConstantValue())
-           XCTAssert(layer.modelEmissiveStrength == Value<Double>.testConstantValue())
-           XCTAssert(layer.modelHeightBasedEmissiveStrengthMultiplier == Value<[Double]>.testConstantValue())
-           XCTAssert(layer.modelOpacity == Value<Double>.testConstantValue())
-           XCTAssert(layer.modelReceiveShadows == Value<Bool>.testConstantValue())
-           XCTAssert(layer.modelRotation == Value<[Double]>.testConstantValue())
-           XCTAssert(layer.modelRoughness == Value<Double>.testConstantValue())
-           XCTAssert(layer.modelScale == Value<[Double]>.testConstantValue())
-           XCTAssert(layer.modelScaleMode == Value<ModelScaleMode>.testConstantValue())
-           XCTAssert(layer.modelTranslation == Value<[Double]>.testConstantValue())
-           XCTAssert(layer.modelType == Value<ModelType>.testConstantValue())
+           XCTAssertEqual(decodedLayer.visibility, .visible)
+           XCTAssertEqual(layer.modelAmbientOcclusionIntensity, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.modelCastShadows, Value<Bool>.testConstantValue())
+           XCTAssertEqual(layer.modelColor, Value<StyleColor>.testConstantValue())
+           XCTAssertEqual(layer.modelColorMixIntensity, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.modelEmissiveStrength, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.modelHeightBasedEmissiveStrengthMultiplier, Value<[Double]>.testConstantValue())
+           XCTAssertEqual(layer.modelOpacity, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.modelReceiveShadows, Value<Bool>.testConstantValue())
+           XCTAssertEqual(layer.modelRotation, Value<[Double]>.testConstantValue())
+           XCTAssertEqual(layer.modelRoughness, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.modelScale, Value<[Double]>.testConstantValue())
+           XCTAssertEqual(layer.modelScaleMode, Value<ModelScaleMode>.testConstantValue())
+           XCTAssertEqual(layer.modelTranslation, Value<[Double]>.testConstantValue())
+           XCTAssertEqual(layer.modelType, Value<ModelType>.testConstantValue())
        } catch {
            XCTFail("Failed to decode ModelLayer")
        }

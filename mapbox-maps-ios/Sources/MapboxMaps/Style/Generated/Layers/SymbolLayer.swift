@@ -18,7 +18,7 @@ public struct SymbolLayer: Layer {
     public var filter: Expression?
 
     /// Name of a source description to be used for this layer.
-    /// Required for all layer types except background.
+    /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
     public var source: String?
 
     /// Layer to use from a vector tile source.
@@ -267,7 +267,8 @@ public struct SymbolLayer: Layer {
     /// Controls the frame of reference for `text-translate`.
     public var textTranslateAnchor: Value<TextTranslateAnchor>?
 
-    public init(id: String) {
+    public init(id: String, source: String) {
+        self.source = source
         self.id = id
         self.type = LayerType.symbol
         self.visibility = .visible

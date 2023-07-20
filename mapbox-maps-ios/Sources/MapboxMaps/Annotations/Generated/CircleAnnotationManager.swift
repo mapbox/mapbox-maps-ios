@@ -102,8 +102,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
             try style.addSource(source)
 
             // Add the correct backing layer for this annotation type
-            var layer = CircleLayer(id: layerId)
-            layer.source = sourceId
+            let layer = CircleLayer(id: layerId, source: sourceId)
             try style.addPersistentLayer(layer, layerPosition: layerPosition)
         } catch {
             Log.error(

@@ -12,6 +12,9 @@
     @_documentation(visibility: public)
 #endif
 ` : ``
+
+  const layersWithoutSource = ['background', 'sky', 'location-indicator']
+  const shouldIncludeSource = !layersWithoutSource.includes(type)
 -%>
 // This file is generated.
 import Foundation
@@ -42,7 +45,7 @@ import Foundation
     public var filter: Expression?
 
     /// Name of a source description to be used for this layer.
-    /// Required for all layer types except background.
+    /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
 <%- publicDocumentationNotation(isExperimental) -%>
     public var source: String?
 
@@ -90,7 +93,12 @@ import Foundation
     <%_ } -%>
 
 <%- publicDocumentationNotation(isExperimental) -%>
+<% if (shouldIncludeSource) { -%>
+    public init(id: String, source: String) {
+        self.source = source
+<% } else { -%>
     public init(id: String) {
+<% } -%>
         self.id = id
         self.type = LayerType.<%- camelizeWithLeadingLowercase(type) %>
         self.visibility = .visible

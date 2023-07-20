@@ -13,13 +13,13 @@ public protocol Layer: Codable, StyleEncodable, StyleDecodable {
     var filter: Expression? { get set }
 
     /// Name of a source description to be used for this layer.
-    /// Required for all layer types except background.
-    var source: String? { get set }
+    /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
+    var source: String? { get }
 
     /// Layer to use from a vector tile source.
     /// Required for vector tile sources.
     /// Prohibited for all other source types, including GeoJSON sources.
-    var sourceLayer: String? { get set }
+    var sourceLayer: String? { get }
 
     /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
     var minZoom: Double? { get set }

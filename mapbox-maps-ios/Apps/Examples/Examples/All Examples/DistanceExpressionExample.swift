@@ -38,8 +38,7 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
 
         // Create a `CircleLayer` from the previously defined source. The source ID
         // will be set for the source once it is added to the map's style.
-        var circleLayer = CircleLayer(id: "circle-layer")
-        circleLayer.source = source.id
+        var circleLayer = CircleLayer(id: "circle-layer", source: source.id)
 
         // This expression simulates a `CircleLayer` with a radius of 150 meters. For features that will be
         // visible at lower zoom levels, add more stops at the zoom levels where the feature will be more

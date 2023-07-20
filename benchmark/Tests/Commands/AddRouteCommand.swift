@@ -31,8 +31,8 @@ struct AddRouteCommand: AsyncCommand {
         try mapView.mapboxMap.addPersistentLayer(makeCasingLayer())
         try mapView.mapboxMap.addPersistentLayer(makeLineLayer())
 
-        mapView.mapboxMap.onCameraChanged.observe { [weak locationProvider] _ in
-            let newLocation = mapView.cameraState.center
+        mapView.mapboxMap.onCameraChanged.observe { [weak locationProvider] payload in
+            let newLocation = payload.cameraState.center
             let traveledDistance = route.line.distance(to: newLocation) ?? 0
             let progess = traveledDistance / route.distance
 
@@ -49,8 +49,7 @@ struct AddRouteCommand: AsyncCommand {
     }
 
     private func makeLineLayer() -> LineLayer {
-        var lineLayer = LineLayer(id: ID.routeLineLayer)
-        lineLayer.source = ID.routeSource
+        var lineLayer = LineLayer(id: ID.routeLineLayer, source: ID.routeSource)
         lineLayer.lineCap = .constant(.round)
         lineLayer.lineJoin = .constant(.round)
         lineLayer.lineWidth = .constant(10)
@@ -77,8 +76,7 @@ struct AddRouteCommand: AsyncCommand {
     }
 
     private func makeCasingLayer() -> LineLayer {
-        var casingLayer = LineLayer(id: ID.casingLineLayer)
-        casingLayer.source = ID.routeSource
+        var casingLayer = LineLayer(id: ID.casingLineLayer, source: ID.routeSource)
         casingLayer.lineCap = .constant(.round)
         casingLayer.lineJoin = .constant(.round)
         casingLayer.lineWidth = .expression(

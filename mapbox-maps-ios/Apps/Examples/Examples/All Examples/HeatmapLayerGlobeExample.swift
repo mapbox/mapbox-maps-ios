@@ -55,8 +55,7 @@ public class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
     func createHeatmapLayer() {
 
         // Add earthquake-viz layer
-        var heatmapLayer = HeatmapLayer(id: self.heatmapLayerId)
-        heatmapLayer.source = self.earthquakeSourceId
+        var heatmapLayer = HeatmapLayer(id: self.heatmapLayerId, source: self.earthquakeSourceId)
         heatmapLayer.maxZoom = 9.0
         heatmapLayer.sourceLayer  = self.heatmapLayerSource
 
@@ -145,8 +144,7 @@ public class HeatmapLayerGlobeExample: UIViewController, ExampleProtocol {
         }
 
         // Add circle layer
-        var circleLayer = CircleLayer(id: self.circleLayerId)
-        circleLayer.source = self.earthquakeSourceId
+        var circleLayer = CircleLayer(id: self.circleLayerId, source: self.earthquakeSourceId)
 
         // Adjust the circle layer radius by zoom level
         circleLayer.circleRadius = .expression(

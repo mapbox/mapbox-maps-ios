@@ -18,7 +18,7 @@ public struct CircleLayer: Layer {
     public var filter: Expression?
 
     /// Name of a source description to be used for this layer.
-    /// Required for all layer types except background.
+    /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
     public var source: String?
 
     /// Layer to use from a vector tile source.
@@ -108,7 +108,8 @@ public struct CircleLayer: Layer {
     /// Controls the frame of reference for `circle-translate`.
     public var circleTranslateAnchor: Value<CircleTranslateAnchor>?
 
-    public init(id: String) {
+    public init(id: String, source: String) {
+        self.source = source
         self.id = id
         self.type = LayerType.circle
         self.visibility = .visible

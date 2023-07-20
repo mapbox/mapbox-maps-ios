@@ -53,6 +53,8 @@ public struct Tracing: OptionSet {
 
     internal static let disableTracingKeys = ["0", "disabled"]
 
+    internal static let enableTracingKeys = ["1", "enabled"]
+
     internal static func runtimeValue(
         provider: EnvironmentVariableProvider = { ProcessInfo.processInfo.environment[$0] }
     ) -> Tracing {
@@ -67,7 +69,7 @@ public struct Tracing: OptionSet {
             return .disabled
         }
 
-        guard !envValue.isEmpty else { return .enabled }
+        guard !envValue.isEmpty, !enableTracingKeys.contains(envValue) else { return .enabled }
 
         return envValue.split(separator: ",")
             .map({ $0.trimmingCharacters(in: .whitespaces) }).filter({ !$0.isEmpty })

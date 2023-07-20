@@ -193,8 +193,41 @@ mapView.mapboxMap.cameraState.center
 
 ### 2.7 Tracing
 
-TBD
-Add a new experimental API to enable Tracing with `Tracing.status = .enabled`. Checkout `Tracing` reference to see more.
+The Maps SDK introduces signpost recording support. Signposts are important instruments for analyzing performance and detecting bottlenecks in your code.
+
+**How to enable tracing**
+
+```swift
+Tracing.status = .enabled
+```
+Alternatively, you can set the `MAPBOX_MAPS_SIGNPOSTS_ENABLED` environment variable to `1` in your application scheme.
+
+Please note that these options will enable all available Maps SDK components for tracing.
+
+**Configure tracing components**
+
+Signposts in the Maps SDK are currently separated into two components:
+
+Tracing component | Description
+--- | ---
+`core` | Rendering engine (responsible for almost every rendering aspect in the ``MapView`` and ``Snapshotter``).
+`platform` | Maps SDK functionality like gestures, animations, view annotations, and so on.
+
+> Important: SDK generates a lot of event for each frame, so Instruments might skip some of them in `Immediate` record mode. Enable `Last N seconds` mode to preserve full signpost data ([see more](https://help.apple.com/instruments/mac/11.0/index.html?localePath=en.lproj#/dev191fbf48)). 
+
+To limit signposts generation for a single component, please use the following API:
+
+```swift
+Tracing.status = .platform
+```
+
+To configure tracing components through environment variable use comma separator like:
+```
+MAPBOX_MAPS_SIGNPOSTS_ENABLED=core,platform
+```
+> Hint: Pass `0` or `disabled` to disable tracing through environment variable. 
+
+`Tracing.status` API takes precedence over environment variable value. All values are case-insensitive.
 
 ### 2.8 Other minor ergonomic improvements
 

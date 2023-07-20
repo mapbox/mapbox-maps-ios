@@ -95,6 +95,31 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
         removeMapView()
     }
 
+    func testMapCameraForCoordinateBoundsSetsCamera() {
+        setupMapView()
+
+        // set up initial map camera
+        let initialCamera = CameraOptions(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), padding: UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100), zoom: 1)
+        mapView.mapboxMap.setCamera(to: initialCamera)
+
+        // get new camera based on bounds and set the map to it
+        let bounds = CoordinateBounds(southwest: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+                                      northeast: CLLocationCoordinate2D(latitude: 1, longitude: 1))
+        let newCamera = mapView.mapboxMap.camera(for: bounds, padding: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0), bearing: 100, pitch: 45, maxZoom: 2, offset: CGPoint(x: 4, y: 4))
+        mapView.mapboxMap.setCamera(to: newCamera)
+
+        XCTAssertEqual(mapView.mapboxMap.cameraState.bearing, 100)
+        XCTAssertEqual(mapView.mapboxMap.cameraState.center.longitude.rounded(), newCamera.center?.longitude.rounded())
+        XCTAssertEqual(mapView.mapboxMap.cameraState.center.latitude.rounded(), newCamera.center?.latitude.rounded())
+        XCTAssertEqual(mapView.mapboxMap.cameraState.pitch, 45)
+        XCTAssertEqual(mapView.mapboxMap.cameraState.zoom, newCamera.zoom)
+
+        // cameraForCoordinateBounds does not return padding, so this should stay the same from the inital camera
+        XCTAssertEqual(mapView.mapboxMap.cameraState.padding, UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100))
+
+        removeMapView()
+    }
+
     // MARK: - Helpers
 
     private func setupMapView() {

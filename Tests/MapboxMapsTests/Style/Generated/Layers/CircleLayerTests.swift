@@ -6,25 +6,22 @@ final class CircleLayerTests: XCTestCase {
 
     func testLayerProtocolMembers() {
 
-        var layer = CircleLayer(id: "test-id")
-        layer.source = "some-source"
-        layer.sourceLayer = nil
+        var layer = CircleLayer(id: "test-id", source: "source")
         layer.minZoom = 10.0
         layer.maxZoom = 20.0
 
-        XCTAssert(layer.id == "test-id")
-        XCTAssert(layer.type == LayerType.circle)
-        XCTAssert(layer.filter == nil)
-        XCTAssert(layer.source == "some-source")
+        XCTAssertEqual(layer.id, "test-id")
+        XCTAssertEqual(layer.type, LayerType.circle)
+        XCTAssertNil(layer.filter)
+        XCTAssert(layer.source == "source")
+
         XCTAssertNil(layer.sourceLayer)
-        XCTAssert(layer.minZoom == 10.0)
-        XCTAssert(layer.maxZoom == 20.0)
+        XCTAssertEqual(layer.minZoom, 10.0)
+        XCTAssertEqual(layer.maxZoom, 20.0)
     }
 
     func testEncodingAndDecodingOfLayerProtocolProperties() {
-        var layer = CircleLayer(id: "test-id")
-        layer.source = "some-source"
-        layer.sourceLayer = nil
+        var layer = CircleLayer(id: "test-id", source: "source")
         layer.minZoom = 10.0
         layer.maxZoom = 20.0
 
@@ -42,20 +39,20 @@ final class CircleLayerTests: XCTestCase {
 
         do {
             let decodedLayer = try JSONDecoder().decode(CircleLayer.self, from: validData)
-            XCTAssert(decodedLayer.id == "test-id")
-            XCTAssert(decodedLayer.type == LayerType.circle)
-            XCTAssert(decodedLayer.filter == nil)
-            XCTAssert(decodedLayer.source == "some-source")
+            XCTAssertEqual(decodedLayer.id, "test-id")
+            XCTAssertEqual(decodedLayer.type, LayerType.circle)
+            XCTAssertNil(decodedLayer.filter)
+            XCTAssert(decodedLayer.source == "source")
             XCTAssertNil(decodedLayer.sourceLayer)
-            XCTAssert(decodedLayer.minZoom == 10.0)
-            XCTAssert(decodedLayer.maxZoom == 20.0)
+            XCTAssertEqual(decodedLayer.minZoom, 10.0)
+            XCTAssertEqual(decodedLayer.maxZoom, 20.0)
         } catch {
             XCTFail("Failed to decode CircleLayer")
         }
     }
 
     func testEncodingAndDecodingOfLayoutProperties() {
-        var layer = CircleLayer(id: "test-id")
+        var layer = CircleLayer(id: "test-id", source: "source")
         layer.visibility = .visible
         layer.circleSortKey = Value<Double>.testConstantValue()
 
@@ -73,15 +70,15 @@ final class CircleLayerTests: XCTestCase {
 
         do {
             let decodedLayer = try JSONDecoder().decode(CircleLayer.self, from: validData)
-            XCTAssert(decodedLayer.visibility == .visible)
-            XCTAssert(layer.circleSortKey == Value<Double>.testConstantValue())
+            XCTAssertEqual(decodedLayer.visibility, .visible)
+            XCTAssertEqual(layer.circleSortKey, Value<Double>.testConstantValue())
         } catch {
             XCTFail("Failed to decode CircleLayer")
         }
     }
 
     func testEncodingAndDecodingOfPaintProperties() {
-       var layer = CircleLayer(id: "test-id")
+       var layer = CircleLayer(id: "test-id", source: "source")
        layer.circleBlur = Value<Double>.testConstantValue()
        layer.circleBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.circleColor = Value<StyleColor>.testConstantValue()
@@ -118,19 +115,19 @@ final class CircleLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(CircleLayer.self, from: validData)
-           XCTAssert(decodedLayer.visibility == .visible)
-           XCTAssert(layer.circleBlur == Value<Double>.testConstantValue())
-           XCTAssert(layer.circleColor == Value<StyleColor>.testConstantValue())
-           XCTAssert(layer.circleEmissiveStrength == Value<Double>.testConstantValue())
-           XCTAssert(layer.circleOpacity == Value<Double>.testConstantValue())
-           XCTAssert(layer.circlePitchAlignment == Value<CirclePitchAlignment>.testConstantValue())
-           XCTAssert(layer.circlePitchScale == Value<CirclePitchScale>.testConstantValue())
-           XCTAssert(layer.circleRadius == Value<Double>.testConstantValue())
-           XCTAssert(layer.circleStrokeColor == Value<StyleColor>.testConstantValue())
-           XCTAssert(layer.circleStrokeOpacity == Value<Double>.testConstantValue())
-           XCTAssert(layer.circleStrokeWidth == Value<Double>.testConstantValue())
-           XCTAssert(layer.circleTranslate == Value<[Double]>.testConstantValue())
-           XCTAssert(layer.circleTranslateAnchor == Value<CircleTranslateAnchor>.testConstantValue())
+           XCTAssertEqual(decodedLayer.visibility, .visible)
+           XCTAssertEqual(layer.circleBlur, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.circleColor, Value<StyleColor>.testConstantValue())
+           XCTAssertEqual(layer.circleEmissiveStrength, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.circleOpacity, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.circlePitchAlignment, Value<CirclePitchAlignment>.testConstantValue())
+           XCTAssertEqual(layer.circlePitchScale, Value<CirclePitchScale>.testConstantValue())
+           XCTAssertEqual(layer.circleRadius, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.circleStrokeColor, Value<StyleColor>.testConstantValue())
+           XCTAssertEqual(layer.circleStrokeOpacity, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.circleStrokeWidth, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.circleTranslate, Value<[Double]>.testConstantValue())
+           XCTAssertEqual(layer.circleTranslateAnchor, Value<CircleTranslateAnchor>.testConstantValue())
        } catch {
            XCTFail("Failed to decode CircleLayer")
        }

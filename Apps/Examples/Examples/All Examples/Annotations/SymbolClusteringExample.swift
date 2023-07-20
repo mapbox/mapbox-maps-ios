@@ -82,15 +82,11 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         source.clusterProperties = clusterProperties
 
 
-        var clusteredLayer = createClusteredLayer()
-        clusteredLayer.source = source.id
-
-        var unclusteredLayer = createUnclusteredLayer()
-        unclusteredLayer.source = source.id
+        let clusteredLayer = createClusteredLayer(source: source.id)
+        let unclusteredLayer = createUnclusteredLayer(source: source.id)
 
         // `clusterCountLayer` is a `SymbolLayer` that represents the point count within individual clusters.
-        var clusterCountLayer = createNumberLayer()
-        clusterCountLayer.source = source.id
+        let clusterCountLayer = createNumberLayer(source: source.id)
 
         // Add the source and two layers to the map.
         try! mapView.mapboxMap.addSource(source)
@@ -103,9 +99,9 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         finish()
     }
 
-    func createClusteredLayer() -> CircleLayer {
+    func createClusteredLayer(source: String) -> CircleLayer {
         // Create a symbol layer to represent the clustered points.
-        var clusteredLayer = CircleLayer(id: "clustered-circle-layer")
+        var clusteredLayer = CircleLayer(id: "clustered-circle-layer", source: source)
 
         // Filter out unclustered features by checking for `point_count`. This
         // is added to clusters when the cluster is created. If your source
@@ -129,9 +125,9 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         return clusteredLayer
     }
 
-    func createUnclusteredLayer() -> SymbolLayer {
+    func createUnclusteredLayer(source: String) -> SymbolLayer {
         // Create a symbol layer to represent the points that aren't clustered.
-        var unclusteredLayer = SymbolLayer(id: "unclustered-point-layer")
+        var unclusteredLayer = SymbolLayer(id: "unclustered-point-layer", source: source)
 
         // Filter out clusters by checking for `point_count`.
         unclusteredLayer.filter = Exp(.not) {
@@ -151,8 +147,8 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         return unclusteredLayer
     }
 
-    func createNumberLayer() -> SymbolLayer {
-        var numberLayer = SymbolLayer(id: "cluster-count-layer")
+    func createNumberLayer(source: String) -> SymbolLayer {
+        var numberLayer = SymbolLayer(id: "cluster-count-layer", source: source)
 
         // check whether the point feature is clustered
         numberLayer.filter = Exp(.has) { "point_count" }

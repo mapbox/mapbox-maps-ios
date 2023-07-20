@@ -71,8 +71,7 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
         try? mapView.mapboxMap.addSource(source)
 
         // Create a symbol layer
-        var symbolLayer = SymbolLayer(id: "layer-id")
-        symbolLayer.source = Constants.sourceId
+        var symbolLayer = SymbolLayer(id: "layer-id", source: Constants.sourceId)
         symbolLayer.iconImage = .constant(.name(Constants.markerIconId))
         symbolLayer.iconIgnorePlacement = .constant(true)
         symbolLayer.iconAllowOverlap = .constant(true)

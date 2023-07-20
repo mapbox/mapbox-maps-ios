@@ -181,8 +181,7 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
     }
 
     fileprivate func makeLayer() -> SymbolLayer {
-        var symbolLayer = SymbolLayer(id: "test-layer")
-        symbolLayer.source = .testSource
+        var symbolLayer = SymbolLayer(id: "test-layer", source: .testSource)
         symbolLayer.textField = .constant("test")
 
         return symbolLayer

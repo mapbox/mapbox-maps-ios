@@ -84,9 +84,8 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
 
     // See https://docs.mapbox.com/mapbox-gl-js/example/3d-buildings/ for equivalent gl-js example
     internal func addBuildingExtrusions() {
-        var layer = FillExtrusionLayer(id: "3d-buildings")
+        var layer = FillExtrusionLayer(id: "3d-buildings", source: "composite")
 
-        layer.source                      = "composite"
         layer.minZoom                     = 15
         layer.sourceLayer                 = "building"
         layer.fillExtrusionColor   = .constant(StyleColor(.lightGray))

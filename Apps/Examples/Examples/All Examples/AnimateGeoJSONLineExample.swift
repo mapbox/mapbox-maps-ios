@@ -38,8 +38,7 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
         routeLineSource.data = .feature(Feature(geometry: LineString([allCoordinates[currentIndex]])))
 
         // Create a line layer
-        var lineLayer = LineLayer(id: "line-layer")
-        lineLayer.source = sourceIdentifier
+        var lineLayer = LineLayer(id: "line-layer", source: sourceIdentifier)
         lineLayer.lineColor = .constant(StyleColor(.red))
 
         let lowZoomWidth = 5

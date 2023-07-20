@@ -19,9 +19,7 @@ final class HeatmapLayerIntegrationTests: MapViewIntegrationTestCase {
 
         didFinishLoadingStyle = { mapView in
 
-            var layer = HeatmapLayer(id: "test-id")
-            layer.source = "some-source"
-            layer.sourceLayer = nil
+            var layer = HeatmapLayer(id: "test-id", source: "source")
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
             layer.visibility = .visible

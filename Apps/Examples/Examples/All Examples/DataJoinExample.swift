@@ -85,8 +85,7 @@ final class DataJoinExample: UIViewController, ExampleProtocol {
         source.url = "mapbox://mapbox.country-boundaries-v1"
 
         // Add layer from the vector tile source to create the choropleth
-        var layer = FillLayer(id: "countries")
-        layer.source = source.id
+        var layer = FillLayer(id: "countries", source: source.id)
         layer.sourceLayer = "country_boundaries"
 
         // Build a GL match expression that defines the color for every vector tile feature

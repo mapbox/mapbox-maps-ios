@@ -125,8 +125,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
             }
 
             // Add the correct backing layer for this annotation type
-            var layer = SymbolLayer(id: layerId)
-            layer.source = sourceId
+            var layer = SymbolLayer(id: layerId, source: sourceId)
 
             // Show all icons and texts by default in point annotations.
             layer.iconAllowOverlap = .constant(true)
@@ -168,8 +167,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
     private func createClusterLevelLayer(clusterOptions: ClusterOptions) -> CircleLayer {
         let layedID = "mapbox-iOS-cluster-circle-layer-manager-" + id
-        var circleLayer = CircleLayer(id: layedID)
-        circleLayer.source = sourceId
+        var circleLayer = CircleLayer(id: layedID, source: sourceId)
         circleLayer.circleColor = clusterOptions.circleColor
         circleLayer.circleRadius = clusterOptions.circleRadius
         circleLayer.filter = Exp(.has) { "point_count" }
@@ -178,8 +176,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
     private func createClusterTextLayer(clusterOptions: ClusterOptions) -> SymbolLayer {
         let layerID = "mapbox-iOS-cluster-text-layer-manager-" + id
-        var symbolLayer = SymbolLayer(id: layerID)
-        symbolLayer.source = sourceId
+        var symbolLayer = SymbolLayer(id: layerID, source: sourceId)
         symbolLayer.textField = clusterOptions.textField
         symbolLayer.textSize = clusterOptions.textSize
         symbolLayer.textColor = clusterOptions.textColor
@@ -558,7 +555,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     }
 
     /// Scales the icon to fit around the associated text.
-    @available(*, deprecated, message: "iconTextFit property is now data driven, use `PointAnnotation.iconTextFit` instead.")
+    @available(*, deprecated, message: "icon-text-fit property is now data driven, use `PointAnnotation.iconTextFit` instead.")
     public var iconTextFit: IconTextFit? {
         get {
             return layerProperties["icon-text-fit"].flatMap { $0 as? String }.flatMap(IconTextFit.init(rawValue:))
@@ -569,7 +566,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     }
 
     /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
-    @available(*, deprecated, message: "iconTextFitPadding property is now data driven, use `PointAnnotation.iconTextFitPadding` instead.")
+    @available(*, deprecated, message: "icon-text-fit-padding property is now data driven, use `PointAnnotation.iconTextFitPadding` instead.")
     public var iconTextFitPadding: [Double]? {
         get {
             return layerProperties["icon-text-fit-padding"] as? [Double]

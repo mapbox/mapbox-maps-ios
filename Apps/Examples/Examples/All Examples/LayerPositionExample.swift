@@ -91,8 +91,7 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
 
     // Wait for the style to load before adding data to it.
     public func setupExample() {
-        layer = FillLayer(id: "polygon-layer")
-        layer.source = sourceIdentifier
+        layer = FillLayer(id: "polygon-layer", source: sourceIdentifier)
         // Apply basic styling to the fill layer.
         layer.fillColor = .constant(StyleColor(#colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)))
         layer.fillOutlineColor = .constant(StyleColor(#colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)))

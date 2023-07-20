@@ -33,9 +33,8 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
         geoJSONSource.data = .string("https://docs.mapbox.com/mapbox-gl-js/assets/us_states.geojson")
 
         // Create a new fill layer associated with the data source.
-        var fillLayer = FillLayer(id: "US-states")
+        var fillLayer = FillLayer(id: "US-states", source: geoJSONSource.id)
         fillLayer.sourceLayer = "state_county_population_2014_cen"
-        fillLayer.source = geoJSONSource.id
 
         // Apply basic styling to the fill layer.
         fillLayer.fillColor = .constant(StyleColor(.blue))

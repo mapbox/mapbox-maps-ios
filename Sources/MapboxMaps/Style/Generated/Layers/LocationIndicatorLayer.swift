@@ -18,7 +18,7 @@ public struct LocationIndicatorLayer: Layer {
     public var filter: Expression?
 
     /// Name of a source description to be used for this layer.
-    /// Required for all layer types except background.
+    /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
     public var source: String?
 
     /// Layer to use from a vector tile source.

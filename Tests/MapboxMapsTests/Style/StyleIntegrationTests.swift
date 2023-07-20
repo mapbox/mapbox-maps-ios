@@ -210,7 +210,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testConvertExpression() {
-        var symbolLayer = SymbolLayer(id: "testLayer")
+        var symbolLayer = SymbolLayer(id: "testLayer", source: "source")
         let originalExpression = Exp(.format) {
             Exp(.coalesce) {
                 Exp(.get) {

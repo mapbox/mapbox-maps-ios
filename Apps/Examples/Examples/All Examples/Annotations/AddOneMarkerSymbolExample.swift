@@ -37,8 +37,7 @@ final class AddOneMarkerSymbolExample: UIViewController, ExampleProtocol {
         source.data = .geometry(Geometry.point(Point(Constants.coordinate)))
         try? mapView.mapboxMap.addSource(source)
 
-        var layer = SymbolLayer(id: Constants.LAYER_ID)
-        layer.source = Constants.SOURCE_ID
+        var layer = SymbolLayer(id: Constants.LAYER_ID, source: Constants.SOURCE_ID)
         layer.iconImage = .constant(.name(Constants.BLUE_ICON_ID))
         layer.iconAnchor = .constant(.bottom)
         try? mapView.mapboxMap.addLayer(layer)

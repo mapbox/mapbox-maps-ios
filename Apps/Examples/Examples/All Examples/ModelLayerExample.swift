@@ -53,8 +53,7 @@ final class ModelLayerExample: UIViewController, ExampleProtocol {
 
         try! mapboxMap.addSource(source)
 
-        var layer = ModelLayer(id: "model-layer-id")
-        layer.source = Constants.sourceId
+        var layer = ModelLayer(id: "model-layer-id", source: Constants.sourceId)
         layer.modelId = .expression(Exp(.get) { Constants.modelIdKey })
         layer.modelType = .constant(.common3d)
         layer.modelScale = .constant([40, 40, 40])

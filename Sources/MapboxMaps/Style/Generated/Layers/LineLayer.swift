@@ -18,7 +18,7 @@ public struct LineLayer: Layer {
     public var filter: Expression?
 
     /// Name of a source description to be used for this layer.
-    /// Required for all layer types except background.
+    /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
     public var source: String?
 
     /// Layer to use from a vector tile source.
@@ -138,7 +138,8 @@ public struct LineLayer: Layer {
     /// Transition options for `lineWidth`.
     public var lineWidthTransition: StyleTransition?
 
-    public init(id: String) {
+    public init(id: String, source: String) {
+        self.source = source
         self.id = id
         self.type = LayerType.line
         self.visibility = .visible

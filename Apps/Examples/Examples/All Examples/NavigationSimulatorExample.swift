@@ -61,8 +61,7 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
     // MARK: - Util
 
     private func makeRouteLineLayer() -> LineLayer {
-        var routeLayer = LineLayer(id: ID.routeLineLayer)
-        routeLayer.source = ID.routeSource
+        var routeLayer = LineLayer(id: ID.routeLineLayer, source: ID.routeSource)
         routeLayer.lineCap = .constant(.round)
         routeLayer.lineJoin = .constant(.round)
         routeLayer.lineWidth = .expression(
@@ -126,8 +125,7 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
     }
 
     private func makeCasingLayer() -> LineLayer {
-        var casingLayer = LineLayer(id: ID.casingLineLayer)
-        casingLayer.source = ID.routeSource
+        var casingLayer = LineLayer(id: ID.casingLineLayer, source: ID.routeSource)
         casingLayer.lineCap = .constant(.round)
         casingLayer.lineJoin = .constant(.round)
 

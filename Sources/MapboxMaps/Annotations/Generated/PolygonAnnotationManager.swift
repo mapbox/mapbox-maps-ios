@@ -102,8 +102,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
             try style.addSource(source)
 
             // Add the correct backing layer for this annotation type
-            var layer = FillLayer(id: layerId)
-            layer.source = sourceId
+            let layer = FillLayer(id: layerId, source: sourceId)
             try style.addPersistentLayer(layer, layerPosition: layerPosition)
         } catch {
             Log.error(

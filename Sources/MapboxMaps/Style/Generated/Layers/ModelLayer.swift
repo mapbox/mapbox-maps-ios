@@ -28,7 +28,7 @@ import Foundation
     public var filter: Expression?
 
     /// Name of a source description to be used for this layer.
-    /// Required for all layer types except background.
+    /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -214,7 +214,8 @@ import Foundation
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
-    public init(id: String) {
+    public init(id: String, source: String) {
+        self.source = source
         self.id = id
         self.type = LayerType.model
         self.visibility = .visible

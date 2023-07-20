@@ -52,8 +52,7 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
         try? mapView.mapboxMap.addImage(UIImage(named: "blue_marker_view")!, id: Constants.blueMarkerImageId)
 
         // Create a symbol layer for markers
-        var markerLayer = SymbolLayer(id: Constants.markerLayerId)
-        markerLayer.source = Constants.markerSourceId
+        var markerLayer = SymbolLayer(id: Constants.markerLayerId, source: Constants.markerSourceId)
         markerLayer.iconImage = .constant(.name(Constants.blueMarkerImageId))
         markerLayer.iconAllowOverlap = .constant(true)
         // Adding an offset so that the bottom of the blue icon gets fixed to the coordinate, rather than the
@@ -68,8 +67,7 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
         try? mapView.mapboxMap.addSource(selectedMarkerSource)
 
         // Create a symbol layer for the selected marker
-        var selectedMarkerLayer = SymbolLayer(id: Constants.selectedMarkerLayerId)
-        selectedMarkerLayer.source = Constants.selectedMarkerSourceId
+        var selectedMarkerLayer = SymbolLayer(id: Constants.selectedMarkerLayerId, source: Constants.selectedMarkerSourceId)
         selectedMarkerLayer.iconImage = .constant(.name(Constants.blueMarkerImageId))
         selectedMarkerLayer.iconAllowOverlap = .constant(true)
         // Adding an offset so that the bottom of the blue icon gets fixed to the coordinate, rather than the

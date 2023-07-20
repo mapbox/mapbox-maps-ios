@@ -484,3 +484,15 @@ Var MapView.viewport has declared type change from MapboxMaps.Viewport! to Mapbo
 
 // OfflineManager + remove style packs
 Func OfflineManager.removeStylePack(for:) has been renamed to Func removeStylePack(for:completion:)
+
+// New Layer inits with source (when applies)
+Accessor Layer.source.Set() has been removed
+Accessor Layer.sourceLayer.Set() has been removed
+Constructor CircleLayer.init(id:) has been removed
+Constructor FillExtrusionLayer.init(id:) has been removed
+Constructor FillLayer.init(id:) has been removed
+Constructor HeatmapLayer.init(id:) has been removed
+Constructor HillshadeLayer.init(id:) has been removed
+Constructor LineLayer.init(id:) has been removed
+Constructor RasterLayer.init(id:) has been removed
+Constructor SymbolLayer.init(id:) has been removed

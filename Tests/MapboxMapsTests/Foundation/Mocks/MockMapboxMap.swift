@@ -130,10 +130,13 @@ final class MockMapboxMap: MapboxMapProtocol {
         var padding: UIEdgeInsets
         var bearing: Double?
         var pitch: Double?
+        var maxZoom: Double?
+        var offset: CGPoint?
     }
     let cameraForCoordinateBoundsStub = Stub<CameraForCoordinateBoundsParams, MapboxMaps.CameraOptions>(defaultReturnValue: .random())
-    func camera(for coordinateBounds: CoordinateBounds, padding: UIEdgeInsets, bearing: Double?, pitch: Double?) -> MapboxMaps.CameraOptions {
-        cameraForCoordinateBoundsStub.call(with: .init(coordinateBounds: coordinateBounds, padding: padding, bearing: bearing, pitch: pitch))
+    // swiftlint:disable:next function_parameter_count
+    func camera(for coordinateBounds: CoordinateBounds, padding: UIEdgeInsets, bearing: Double?, pitch: Double?, maxZoom: Double?, offset: CGPoint?) -> MapboxMaps.CameraOptions {
+        cameraForCoordinateBoundsStub.call(with: .init(coordinateBounds: coordinateBounds, padding: padding, bearing: bearing, pitch: pitch, maxZoom: maxZoom, offset: offset))
     }
 
     let pointStub = Stub<CLLocationCoordinate2D, CGPoint>(defaultReturnValue: .random())

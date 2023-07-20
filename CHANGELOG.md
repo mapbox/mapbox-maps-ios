@@ -14,6 +14,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Rename `Viewport` to `ViewportManager`.
 * Apply `ModelScaleMode.viewport` to Puck3D configuration and remove the custom expression for the `modelScale` of the puck. This means if you are using a constant for `Puck3DConfiguration/modelScale` in v10, you need to adjust this model-scale constant so the puck would be rendered correctly in v11, while this value depends on other configurations of your puck, we have found the new adjusted model-scale to fall between 10x-100x of the old value.
 * Add experimental `tileCover` method to the `Snapshotter` that returns tile ids covering the map.
+* Add optional `maxZoom` and `offset` parameters to `MapboxMap.camera(for coordinateBounds:)`. `MapboxMap.camera(for coordinateBounds:)`, `MapboxMap.camera(for coordinates:)`, and `MapboxMap.camera(for geometry:)` no longer return a padding value.
 
 ## 11.0.0-alpha.2 - 21 June, 2023
 

@@ -496,3 +496,8 @@ Constructor HillshadeLayer.init(id:) has been removed
 Constructor LineLayer.init(id:) has been removed
 Constructor RasterLayer.init(id:) has been removed
 Constructor SymbolLayer.init(id:) has been removed
+
+// cameraForCoordinateBounds
+Func MapboxMap.camera(for:padding:bearing:pitch:) has been renamed to Func camera(for:padding:bearing:pitch:maxZoom:offset:)
+Func MapboxMap.camera(for:padding:bearing:pitch:) has parameter 0 type change from MapboxCoreMaps.CoordinateBounds to [CoreLocation.CLLocationCoordinate2D]
+Func MapboxMap.camera(for:padding:bearing:pitch:) has parameter 0 type change from [CoreLocation.CLLocationCoordinate2D] to MapboxCoreMaps.CoordinateBounds

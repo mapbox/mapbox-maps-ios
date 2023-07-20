@@ -129,8 +129,53 @@ final class MapboxMapTests: XCTestCase {
         XCTAssertEqual(expectedCenter.latitude, camera.center!.latitude, accuracy: 0.25)
         XCTAssertEqual(expectedCenter.longitude, camera.center!.longitude, accuracy: 0.25)
         XCTAssertEqual(camera.bearing, 0)
-        XCTAssertEqual(camera.padding, .zero)
+        XCTAssertNil(camera.padding)
         XCTAssertEqual(camera.pitch, 0)
+    }
+
+    func testCameraForCoordinateBounds() {
+        let southwest = CLLocationCoordinate2DMake(0, 0)
+        let northeast = CLLocationCoordinate2DMake(4, 4)
+        let southeast = CLLocationCoordinate2DMake(0, 4)
+        let latitudeDelta =  northeast.latitude - southeast.latitude
+        let longitudeDelta = southeast.longitude - southwest.longitude
+        let expectedCenter = CLLocationCoordinate2DMake(northeast.latitude - (latitudeDelta / 2), southeast.longitude - (longitudeDelta / 2))
+        let coordinateBounds = CoordinateBounds(southwest: southwest, northeast: northeast)
+
+        let camera = mapboxMap.camera(for: coordinateBounds,
+                                      padding: .zero,
+                                      bearing: 0,
+                                      pitch: 0,
+                                      maxZoom: 0,
+                                      offset: nil)
+        XCTAssertEqual(expectedCenter.latitude, camera.center!.latitude, accuracy: 0.25)
+        XCTAssertEqual(expectedCenter.longitude, camera.center!.longitude, accuracy: 0.25)
+        XCTAssertEqual(camera.bearing, 0)
+        XCTAssertNil(camera.padding)
+        XCTAssertEqual(camera.pitch, 0)
+    }
+
+    func testCameraForCoordinateBoundsWithValues() {
+        let southwest = CLLocationCoordinate2DMake(0, 0)
+        let northeast = CLLocationCoordinate2DMake(4, 4)
+        let southeast = CLLocationCoordinate2DMake(0, 4)
+        let latitudeDelta =  northeast.latitude - southeast.latitude
+        let longitudeDelta = southeast.longitude - southwest.longitude
+        let expectedCenter = CLLocationCoordinate2DMake(northeast.latitude - (latitudeDelta / 2), southeast.longitude - (longitudeDelta / 2))
+        let coordinateBounds = CoordinateBounds(southwest: southwest, northeast: northeast)
+        let screenCoordinate = CGPoint(x: 1.0, y: 2.0)
+
+        let camera = mapboxMap.camera(for: coordinateBounds,
+                                      padding: UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2),
+                                      bearing: 4,
+                                      pitch: 65,
+                                      maxZoom: 12,
+                                      offset: screenCoordinate)
+        XCTAssertEqual(expectedCenter.latitude, camera.center!.latitude, accuracy: 0.25)
+        XCTAssertEqual(expectedCenter.longitude, camera.center!.longitude, accuracy: 0.25)
+        XCTAssertEqual(camera.bearing, 4)
+        XCTAssertNil(camera.padding)
+        XCTAssertEqual(camera.pitch, 65)
     }
 
     func testCameraForGeometry() {
@@ -164,7 +209,7 @@ final class MapboxMapTests: XCTestCase {
         XCTAssertEqual(expectedCenter.latitude, camera.center!.latitude, accuracy: 0.25)
         XCTAssertEqual(expectedCenter.longitude, camera.center!.longitude, accuracy: 0.25)
         XCTAssertEqual(camera.bearing, 0)
-        XCTAssertEqual(camera.padding, .zero)
+        XCTAssertNil(camera.padding)
         XCTAssertEqual(camera.pitch, 0)
     }
 

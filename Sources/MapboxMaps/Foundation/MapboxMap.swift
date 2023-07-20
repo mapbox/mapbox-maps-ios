@@ -26,7 +26,13 @@ internal protocol MapboxMapProtocol: AnyObject {
     func options(forViewAnnotationWithId id: String) throws -> ViewAnnotationOptions
     func pointIsAboveHorizon(_ point: CGPoint) -> Bool
     func camera(for geometry: Geometry, padding: UIEdgeInsets, bearing: CGFloat?, pitch: CGFloat?) -> CameraOptions
-    func camera(for coordinateBounds: CoordinateBounds, padding: UIEdgeInsets, bearing: Double?, pitch: Double?) -> CameraOptions
+    // swiftlint:disable:next function_parameter_count
+    func camera(for coordinateBounds: CoordinateBounds,
+                padding: UIEdgeInsets,
+                bearing: Double?,
+                pitch: Double?,
+                maxZoom: Double?,
+                offset: CGPoint?) -> CameraOptions
     func coordinate(for point: CGPoint) -> CLLocationCoordinate2D
     func point(for coordinate: CLLocationCoordinate2D) -> CGPoint
     func performWithoutNotifying(_ block: () -> Void)
@@ -411,20 +417,26 @@ public final class MapboxMap: StyleManager, MapboxMapProtocol {
     ///
     /// - Parameters:
     ///   - coordinateBounds: The coordinate bounds that will be displayed within the viewport.
-    ///   - padding: The new padding to be used by the camera.
-    ///   - bearing: The new bearing to be used by the camera.
-    ///   - pitch: The new pitch to be used by the camera.
+    ///   - padding: The amount of padding to add to the given bounds when calculating the camera, in points. This is differnt from camera padding.
+    ///   - bearing: The new bearing to be used by the camera, in degrees (0°, 360°) clockwise from true north.
+    ///   - pitch: The new pitch to be used by the camera, in degrees (0°, 85°) with 0° being a top-down view.
+    ///   - maxZoom: The maximum zoom level to allow when the camera would transition to the specified bounds.
+    ///   - offset: The center of the given bounds relative to the map's center, measured in points.
     /// - Returns: A `CameraOptions` that fits the provided constraints
-    public func camera(for coordinateBounds: CoordinateBounds,
+    public func camera(for coordinateBounds: CoordinateBounds, // swiftlint:disable:this function_parameter_count
                        padding: UIEdgeInsets,
                        bearing: Double?,
-                       pitch: Double?) -> CameraOptions {
+                       pitch: Double?,
+                       maxZoom: Double?,
+                       offset: CGPoint?) -> CameraOptions {
         return CameraOptions(
             __map.cameraForCoordinateBounds(
                 for: coordinateBounds,
                 padding: padding.toMBXEdgeInsetsValue(),
                 bearing: bearing?.NSNumber,
-                pitch: pitch?.NSNumber))
+                pitch: pitch?.NSNumber,
+                maxZoom: maxZoom?.NSNumber,
+                offset: offset?.screenCoordinate))
     }
 
     /// Calculates a `CameraOptions` to fit a list of coordinates.
@@ -433,9 +445,9 @@ public final class MapboxMap: StyleManager, MapboxMapProtocol {
     ///
     /// - Parameters:
     ///   - coordinates: Array of coordinates that should fit within the new viewport.
-    ///   - padding: The new padding to be used by the camera.
-    ///   - bearing: The new bearing to be used by the camera.
-    ///   - pitch: The new pitch to be used by the camera.
+    ///   - padding: The amount of padding to add to the given bounds when calculating the camera, in points. This is differnt from camera padding. 
+    ///   - bearing: The new bearing to be used by the camera, in degrees (0°, 360°) clockwise from true north.
+    ///   - pitch: The new pitch to be used by the camera, in degrees (0°, 85°) with 0° being a top-down view.
     /// - Returns: A `CameraOptions` that fits the provided constraints
     public func camera(for coordinates: [CLLocationCoordinate2D],
                        padding: UIEdgeInsets?,

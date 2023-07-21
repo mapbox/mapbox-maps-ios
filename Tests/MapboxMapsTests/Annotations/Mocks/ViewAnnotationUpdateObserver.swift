@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 @testable import MapboxMaps
 
 final class MockViewAnnotationUpdateObserver: ViewAnnotationUpdateObserver {

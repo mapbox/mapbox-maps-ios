@@ -127,7 +127,7 @@ final class StyleLocalizationTests: MapViewIntegrationTestCase {
         source.data = .feature(Feature(geometry: Point(CLLocationCoordinate2D(latitude: 0, longitude: 0))))
         try mapView.mapboxMap.addSource(source)
 
-        var symbolLayer = SymbolLayer(id: "a", source: "a")
+        let symbolLayer = SymbolLayer(id: "a", source: "a")
 
         try mapView.mapboxMap.addLayer(symbolLayer)
 

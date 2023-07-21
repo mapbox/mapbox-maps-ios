@@ -1,4 +1,5 @@
 import UIKit
+import MetalKit
 
 internal protocol MapViewDependencyProviderProtocol: AnyObject {
     var notificationCenter: NotificationCenterProtocol { get }

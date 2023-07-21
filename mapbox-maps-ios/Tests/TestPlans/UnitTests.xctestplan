@@ -72,6 +72,7 @@
         "SkyLayerIntegrationTests",
         "StyleIntegrationTests",
         "StyleLoadIntegrationTests",
+        "GeoJSONUpdateIntegrationTests",
         "StyleLocalizationTests",
         "SymbolLayerIntegrationTests",
         "TileCoverIntegrationTests",

@@ -161,6 +161,15 @@ internal protocol StyleManagerProtocol {
     func setStyleAtmospherePropertyForProperty(_ property: String, value: Any) -> Expected<NSNull, NSString>
 
     func getStyleAtmosphereProperty(forProperty: String) -> StylePropertyValue
+    func addGeoJSONSourceFeatures(forSourceId sourceId: String,
+                                  dataId: String,
+                                  features: [MapboxCommon.Feature]) -> Expected<NSNull, NSString>
+    func updateGeoJSONSourceFeatures(forSourceId sourceId: String,
+                                     dataId: String,
+                                     features: [MapboxCommon.Feature]) -> Expected<NSNull, NSString>
+    func removeGeoJSONSourceFeatures(forSourceId sourceId: String,
+                                     dataId: String,
+                                     featureIds: [String]) -> Expected<NSNull, NSString>
 }
 
 // MARK: Conformance

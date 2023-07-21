@@ -107,6 +107,12 @@ Mapbox welcomes participation and contributions from everyone.
 * Introduce `FillExtrusionLayer/fillExtrusionRoundedRoof`, `FillExtrusionLayer/fillExtrusionEdgeRadius` API.
 * Introduce `lineDepthOcclusionFactor` API for `LineLayer`s and `PolylineAnnotiationManager`.
 * Add `Codable` support to `CameraOptions`, `CameraState`, `FollowPuckViewportStateBearing`, `FollowPuckViewportStateOptions`.
+* Expose new Style APIs for partial GeoJSON update:
+```swift
+MapboxMap.addGeoJSONSourceFeatures(forSourceId:features:dataId:)
+MapboxMap.updateGeoJSONSourceFeatures(forSourceId:features:dataId:)
+MapboxMap.removeGeoJSONSourceFeatures(forSourceId:featureIds:dataId:)
+```
 
 ## 10.14.0 - June 14, 2023
 

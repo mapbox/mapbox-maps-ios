@@ -336,9 +336,9 @@ mapView.mapboxMap.updateGeoJSONSource(withId: "route", geoJSON: route)
 let projection = snapshot.projection
 ```
 
-### 3.2 Replace deprecated Annotations properties for iconTextFit and iconTextFitPadding
+### 3.2 Replace deprecated Annotations properties for `iconTextFit` and `iconTextFitPadding`
 
-In v11, you can update iconTextFit and iconTextFitPadding directly on the PointAnnotation rather than through the PointAnnotationManager. This allows for control over these values for each annotation.
+In v11, you can update `iconTextFit` and `iconTextFitPadding` directly on the ``PointAnnotation`` rather than through the ``PointAnnotationManager``. This allows for control over these values for each annotation.
 
 **v10:**
 
@@ -354,7 +354,8 @@ pointAnnotation.iconTextFit = .width
 pointAnnotation.iconTextFitPadding = [1, 2.3, 4, 5]
 ```
 
-As a result, `PointAnnotationManager.iconTextFit` and `PointAnnotationManager.iconTextFitPadding` are deprecated in v11 and will be removed in v12.
+As a result, ``PointAnnotationManager/iconTextFit`` and ``PointAnnotationManager/iconTextFitPadding`` are deprecated in v11 and will be removed in v12.
+
 
 ### 3.3 Replace deprecated Events methods
 
@@ -437,13 +438,16 @@ class ViewController: UIViewController { }
 
 ## 4. Update APIs deprecated in v10 which have been removed in v11
 
-- ``Location`` initializer , instead use TODO
-- ``GestureOptions.pinchRotateEnabled``, instead use TODO
-- ``MapboxMap.setRenderCache(_:)``, instead use TODO
-- ``MapEvents.EventKind``, instead use TODO
-- ``LocationManager.updateHeadingForCurrentDeviceOrientation()``
-- `PuckBearingSource`and related APIs, instead use TODO
-- Deprecated transition properties from layers, instead use TODO
+- `textLineHeight` property has been removed from ``PointAnnotationManager``. Instead, use the data-driven ``PointAnnotation/textLineHeight``.
+- `PuckBearingSource` has been renamed to ``PuckBearing`` and removed in v11. Along with this, constructor `LocationOptions.init(distanceFilter:desiredAccuracy:activityType:puckType:puckBearingSource:puckBearingEnabled:)` has also been removed, instead please use ``LocationOptions/init(puckType:puckBearing:puckBearingEnabled:)``
+- `pinchRotateEnabled` property has been removed from ``GestureOptions``. Instead, use the renamed ``GestureOptions/rotateEnabled``.
+- Experimental `MapboxMap.setRenderCache(_:)` has been removed.
+- `MapEvents.EventKind` and `MapEvents.Event` have been removed, however, we have provided a shim to smoothen the migration process from v10 to v11. Please refer to [Type-safe Events API](#22-type-safe-events-api) to update your events code.
+- The following transition properties have been removed from our layers:
+    * `backgroundPatternTransition` has been removed from ``BackgroundLayer``
+    * `fillExtrusionPatternTransition` has been removed from ``FillExtrusionLayer``
+    * `fillPatternTransition` has been removed from ``FillLayer``
+    * `lineDasharrayTransition`, `linePatternTransition` have been removed from ``LineLayer``
 
 ## 5. Review other changes
 

@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 
 extension TilesetDescriptorOptions {
     /// Initializes a `TilesetDescriptorOptions` which is used in the creation of

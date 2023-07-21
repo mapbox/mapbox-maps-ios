@@ -1,5 +1,6 @@
 import Foundation
 @testable import MapboxMaps
+import QuartzCore
 
 final class MockDisplayLink: CADisplayLink {
 

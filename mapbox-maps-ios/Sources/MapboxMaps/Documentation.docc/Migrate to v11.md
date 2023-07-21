@@ -414,6 +414,27 @@ mapboxMap.isStyleLoaded = true
 let defaultCamera = mapboxMap.styleDefaultCamera
 ```
 
+### 3.7 Maps SDK no longer reexport MetalKit and UIKit.
+
+Mapbox Maps SDK no longer reexport MetalKit and UIKit framework. In v10 version you could omit `import UIKit` if you already have an `import MapboxMaps` statement. 
+
+**v10:**
+
+```swift
+import MapboxMaps
+
+class ViewController: UIViewController { }
+```
+
+**v11:**
+
+```swift
+import UIKit
+import MapboxMaps
+
+class ViewController: UIViewController { }
+```
+
 ## 4. Update APIs deprecated in v10 which have been removed in v11
 
 - ``Location`` initializer , instead use TODO

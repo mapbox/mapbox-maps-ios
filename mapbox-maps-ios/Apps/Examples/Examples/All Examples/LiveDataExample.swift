@@ -1,3 +1,4 @@
+import UIKit
 import MapboxMaps
 
 final class LiveDataExample: UIViewController, ExampleProtocol {

@@ -437,6 +437,117 @@ final class StyleSourceManagerTests: XCTestCase {
         XCTAssertEqual(backgroundQueue.asyncWorkItemStub.invocations.count, 0)
         XCTAssertEqual(mainQueue.asyncClosureStub.invocations.count, 0)
     }
+
+    func testAddGeoJSONSourceFeatures() throws {
+        // given
+        let sourceId = String.randomASCII(withLength: 10)
+        let dataId = String.randomASCII(withLength: 11)
+        let point = Point(.random())
+        let featureIdentifier = Double.random(in: 0...1000)
+        var feature = Feature.init(geometry: point.geometry)
+        feature.identifier = .number(featureIdentifier)
+        backgroundQueue.asyncWorkItemStub.defaultSideEffect = { $0.parameters.perform() }
+
+        // when
+        try sourceManager.addGeoJSONSourceFeatures(forSourceId: sourceId, features: [feature], dataId: dataId)
+
+        // then
+        XCTAssertEqual(styleManager.addGeoJSONSourceFeaturesStub.invocations.count, 1)
+        let parameters = try XCTUnwrap(styleManager.addGeoJSONSourceFeaturesStub.invocations.first?.parameters)
+        XCTAssertEqual(parameters.sourceId, sourceId)
+        XCTAssertEqual(parameters.features.count, 1)
+        XCTAssertEqual(parameters.dataId, dataId)
+        let resultFeature = try XCTUnwrap(parameters.features.first)
+        XCTAssertEqual(resultFeature.geometry.extractLocations()?.coordinateValue(), point.coordinates)
+        XCTAssertEqual((resultFeature.identifier as? NSNumber)?.doubleValue, featureIdentifier)
+    }
+
+    func testUpdateGeoJSONSourceFeatures() throws {
+        // given
+        let sourceId = String.randomASCII(withLength: 10)
+        let dataId = String.randomASCII(withLength: 11)
+        let point = Point(.random())
+        let featureIdentifier = Double.random(in: 0...1000)
+        var feature = Feature.init(geometry: point.geometry)
+        feature.identifier = .number(featureIdentifier)
+        backgroundQueue.asyncWorkItemStub.defaultSideEffect = { $0.parameters.perform() }
+
+        // when
+        try sourceManager.updateGeoJSONSourceFeatures(forSourceId: sourceId, features: [feature], dataId: dataId)
+
+        // then
+        XCTAssertEqual(styleManager.updateGeoJSONSourceFeaturesStub.invocations.count, 1)
+        let parameters = try XCTUnwrap(styleManager.updateGeoJSONSourceFeaturesStub.invocations.first?.parameters)
+        XCTAssertEqual(parameters.sourceId, sourceId)
+        XCTAssertEqual(parameters.features.count, 1)
+        XCTAssertEqual(parameters.dataId, dataId)
+        let resultFeature = try XCTUnwrap(parameters.features.first)
+        XCTAssertEqual(resultFeature.geometry.extractLocations()?.coordinateValue(), point.coordinates)
+        XCTAssertEqual((resultFeature.identifier as? NSNumber)?.doubleValue, featureIdentifier)
+    }
+
+    func testPartialUpdateAPIsDontCancelPreviousUpdates() throws {
+        // given
+        let sourceId = String.randomASCII(withLength: 10)
+        let point = Point(.random())
+        let featureIdentifier = Double.random(in: 0...1000)
+        var feature = Feature.init(geometry: point.geometry)
+        feature.identifier = .number(featureIdentifier)
+
+        // when
+        sourceManager.updateGeoJSONSource(withId: sourceId, data: .emptyFeatureCollection(), dataId: nil)
+        try sourceManager.addGeoJSONSourceFeatures(forSourceId: sourceId, features: [feature], dataId: nil)
+        try sourceManager.updateGeoJSONSourceFeatures(forSourceId: sourceId, features: [feature], dataId: nil)
+        try sourceManager.removeGeoJSONSourceFeatures(forSourceId: sourceId,
+                                                      featureIds: [featureIdentifier.description],
+                                                      dataId: nil)
+
+        // then
+        XCTAssertEqual(backgroundQueue.asyncWorkItemStub.invocations.count, 4)
+        XCTAssertTrue(backgroundQueue.asyncWorkItemStub.invocations.allSatisfy { !$0.parameters.isCancelled })
+    }
+
+    func testFullUpdateAPIsCancelsAllPreviousUpdates() throws {
+        // given
+        let sourceId = String.randomASCII(withLength: 10)
+        let point = Point(.random())
+        let featureIdentifier = Double.random(in: 0...1000)
+        var feature = Feature.init(geometry: point.geometry)
+        feature.identifier = .number(featureIdentifier)
+
+        sourceManager.updateGeoJSONSource(withId: sourceId, data: .emptyFeatureCollection(), dataId: nil)
+        try sourceManager.addGeoJSONSourceFeatures(forSourceId: sourceId, features: [feature], dataId: nil)
+        try sourceManager.updateGeoJSONSourceFeatures(forSourceId: sourceId, features: [feature], dataId: nil)
+        try sourceManager.removeGeoJSONSourceFeatures(forSourceId: sourceId,
+                                                      featureIds: [featureIdentifier.description],
+                                                      dataId: nil)
+
+        // when
+        sourceManager.updateGeoJSONSource(withId: sourceId, data: .emptyFeatureCollection(), dataId: nil)
+
+        // then
+        XCTAssertEqual(backgroundQueue.asyncWorkItemStub.invocations.count, 5)
+        XCTAssertEqual(backgroundQueue.asyncWorkItemStub.invocations.filter(\.parameters.isCancelled).count, 4)
+        XCTAssertFalse(backgroundQueue.asyncWorkItemStub.invocations.last!.parameters.isCancelled)
+    }
+
+    func testRemoveGeoJSONSourceFeatures() throws {
+        // given
+        let sourceId = String.randomASCII(withLength: 10)
+        let dataId = String.randomASCII(withLength: 11)
+        let featureIdentifiers = (0...10).map { String.randomASCII(withLength: $0) }
+        backgroundQueue.asyncWorkItemStub.defaultSideEffect = { $0.parameters.perform() }
+
+        // when
+        try sourceManager.removeGeoJSONSourceFeatures(forSourceId: sourceId, featureIds: featureIdentifiers, dataId: dataId)
+
+        // then
+        XCTAssertEqual(styleManager.removeGeoJSONSourceFeaturesStub.invocations.count, 1)
+        let parameters = try XCTUnwrap(styleManager.removeGeoJSONSourceFeaturesStub.invocations.first?.parameters)
+        XCTAssertEqual(parameters.sourceId, sourceId)
+        XCTAssertEqual(parameters.featureIds, featureIdentifiers)
+        XCTAssertEqual(parameters.dataId, dataId)
+    }
 }
 
 private extension GeoJSONSourceData {

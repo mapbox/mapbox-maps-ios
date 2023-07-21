@@ -539,6 +539,39 @@ class MockStyleManager: StyleManagerProtocol {
     func setStyleAtmospherePropertyForProperty(_ property: String, value: Any) -> Expected<NSNull, NSString> {
         setStyleAtmospherePropertyStub.call(with: SetStylePropertyParameters(property: property, value: value))
     }
+
+    struct AddGeoJSONSourceFeaturesParams {
+        let sourceId: String
+        let features: [MapboxCommon.Feature]
+        let dataId: String
+    }
+    let addGeoJSONSourceFeaturesStub = Stub<AddGeoJSONSourceFeaturesParams, Expected<NSNull, NSString>>(
+        defaultReturnValue: .init(value: NSNull()))
+    func addGeoJSONSourceFeatures(forSourceId sourceId: String, dataId: String, features: [MapboxCommon.Feature]) -> Expected<NSNull, NSString> {
+        addGeoJSONSourceFeaturesStub.call(with: .init(sourceId: sourceId, features: features, dataId: dataId))
+    }
+
+    struct UpdateGeoJSONSourceFeaturesParams {
+        let sourceId: String
+        let features: [MapboxCommon.Feature]
+        let dataId: String
+    }
+    let updateGeoJSONSourceFeaturesStub = Stub<UpdateGeoJSONSourceFeaturesParams, Expected<NSNull, NSString>>(
+        defaultReturnValue: .init(value: NSNull()))
+    func updateGeoJSONSourceFeatures(forSourceId sourceId: String, dataId: String, features: [MapboxCommon.Feature]) -> Expected<NSNull, NSString> {
+        updateGeoJSONSourceFeaturesStub.call(with: .init(sourceId: sourceId, features: features, dataId: dataId))
+    }
+
+    struct RemoveGeoJSONSourceFeaturesParams {
+        let sourceId: String
+        let featureIds: [String]
+        let dataId: String
+    }
+    let removeGeoJSONSourceFeaturesStub = Stub<RemoveGeoJSONSourceFeaturesParams, Expected<NSNull, NSString>>(
+        defaultReturnValue: .init(value: NSNull()))
+    func removeGeoJSONSourceFeatures(forSourceId sourceId: String, dataId: String, featureIds: [String]) -> Expected<NSNull, NSString> {
+        removeGeoJSONSourceFeaturesStub.call(with: .init(sourceId: sourceId, featureIds: featureIds, dataId: dataId))
+    }
 }
 
 struct NonEncodableLayer: Layer {

@@ -19,6 +19,9 @@ internal protocol StyleProtocol: AnyObject {
     func setSourceProperty(for sourceId: String, property: String, value: Any) throws
     func setSourceProperties(for sourceId: String, properties: [String: Any]) throws
     func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject, dataId: String?)
+    func addGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String?) throws
+    func updateGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String?) throws
+    func removeGeoJSONSourceFeatures(forSourceId sourceId: String, featureIds: [String], dataId: String?) throws
 
     //swiftlint:disable:next function_parameter_count
     func addImage(_ image: UIImage,
@@ -239,6 +242,12 @@ public class StyleManager: StyleProtocol {
     ///   - data: The new data to be associated with the source.
     ///   - dataId: An optional data ID to filter ``MapboxMap/onSourceDataLoaded`` to only the specified data source.
     ///
+    /// The update will be scheduled and applied on a GeoJSON serialization queue.
+    ///
+    /// In order to capture events when actual data is drawn on the map please refer to Events API
+    /// and listen to `onSourceDataLoaded` (optionally pass the `dataId` parameter to filter the events)
+    /// or `onMapLoadingError` with `type = metadata` if data parsing error has occurred.
+    ///
     /// - Attention: This method is only effective with sources of `GeoJSONSource`
     /// type, and cannot be used to update other source types.
     public func updateGeoJSONSource(withId id: String, data: GeoJSONSourceData, dataId: String? = nil) {
@@ -253,10 +262,101 @@ public class StyleManager: StyleProtocol {
     ///   a feature or feature collection.
     ///   - dataId: An optional data ID to filter ``MapboxMap/sourceDataLoaded`` to only the specified data source.
     ///
+    /// The update will be scheduled and applied on a GeoJSON serialization queue.
+    ///
+    /// In order to capture events when actual data is drawn on the map please refer to Events API
+    /// and listen to `onSourceDataLoaded` (optionally pass the `dataId` parameter to filter the events)
+    /// or `onMapLoadingError` with `type = metadata` if data parsing error has occurred.
+    ///
     /// - Attention: This method is only effective with sources of `GeoJSONSource`
     /// type, and cannot be used to update other source types.
     public func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject, dataId: String? = nil) {
         updateGeoJSONSource(withId: id, data: geoJSON.sourceData, dataId: dataId)
+    }
+
+    /// Add additional features to a GeoJSON style source.
+    ///
+    /// The add operation will be scheduled and applied on a GeoJSON serialization queue.
+    ///
+    /// In order to capture events when actual data is drawn on the map please refer to Events API
+    /// and listen to `onSourceDataLoaded` (optionally pass the `dataId` parameter to filter the events)
+    /// or `onMapLoadingError` with `type = metadata` if data parsing error has occurred.
+    ///
+    /// Partially updating a GeoJSON source is not compatible with using shared cache and generated IDs.
+    /// It is important to ensure that every feature in the GeoJSON style source, as well as the newly added
+    /// feature, has a unique ID (or a unique promote ID if in use). Failure to provide unique IDs will result
+    /// in a `map-loading-error`.
+    ///
+    /// - Note: The method allows the user to provide a data ID, which will be returned as the `dataId` parameter in the
+    /// `source-data-loaded` event. However, it's important to note that multiple partial updates can be queued
+    /// for the same GeoJSON source when ongoing source parsing is taking place. In these cases, the partial
+    /// updates will be applied to the source in batches. Only the data ID provided in the most recent call within
+    /// each batch will be included in the `source-data-loaded` event. If no data ID is provided in the most recent
+    /// call, the data ID in the `source-data-loaded`event will be null.
+    ///
+    /// - Parameters:
+    ///   - sourceId: The identifier of the style source.
+    ///   - features: An array of GeoJSON features to be added to the source.
+    ///   - dataId: An arbitrary string used to track the given GeoJSON data.
+    /// - Throws: ``StyleError`` if there is a problem adding features to the source.
+    public func addGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String? = nil) {
+        sourceManager.addGeoJSONSourceFeatures(forSourceId: sourceId, features: features, dataId: dataId)
+    }
+
+    /// Update existing features in a GeoJSON style source.
+    ///
+    /// The update operation will be scheduled and applied on a GeoJSON serialization queue.
+    ///
+    /// In order to capture events when actual data is drawn on the map please refer to Events API
+    /// and listen to `onSourceDataLoaded` (optionally pass the `dataId` parameter to filter the events)
+    /// or `onMapLoadingError` with `type = metadata` if data parsing error has occurred.
+    ///
+    /// Partially updating a GeoJSON source is not compatible with using shared cache and generated IDs.
+    /// It is important to ensure that every feature in the GeoJSON style source, as well as the newly added
+    /// feature, has a unique ID (or a unique promote ID if in use). Failure to provide unique IDs will result
+    /// in a `map-loading-error`.
+    ///
+    /// - Note: The method allows the user to provide a data ID, which will be returned as the `dataId` parameter in the
+    /// `source-data-loaded` event. However, it's important to note that multiple partial updates can be queued
+    /// for the same GeoJSON source when ongoing source parsing is taking place. In these cases, the partial
+    /// updates will be applied to the source in batches. Only the data ID provided in the most recent call within
+    /// each batch will be included in the `source-data-loaded` event. If no data ID is provided in the most recent
+    /// call, the data ID in the `source-data-loaded`event will be null.
+    /// - Parameters:
+    ///   - sourceId: A style source identifier.
+    ///   - features: The GeoJSON features to be updated in the source.
+    ///   - dataId: An arbitrary string used to track the given GeoJSON data.
+    /// - Throws: ``StyleError`` if there is a problem updating features in the source.
+    public func updateGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String? = nil) {
+        sourceManager.updateGeoJSONSourceFeatures(forSourceId: sourceId, features: features, dataId: dataId)
+    }
+
+    /// Remove features from a GeoJSON style source.
+    ///
+    /// The remove operation will be scheduled and applied on a GeoJSON serialization queue.
+    ///
+    /// In order to capture events when actual data is drawn on the map please refer to Events API
+    /// and listen to `onSourceDataLoaded` (optionally pass the `dataId` parameter to filter the events)
+    /// or `onMapLoadingError` with `type = metadata` if an error has occurred.
+    ///
+    /// Partially updating a GeoJSON source is not compatible with using shared cache and generated IDs.
+    /// It is important to ensure that every feature in the GeoJSON style source, as well as the newly added
+    /// feature, has a unique ID (or a unique promote ID if in use). Failure to provide unique IDs will result
+    /// in a `map-loading-error`.
+    ///
+    /// - Note: The method allows the user to provide a data ID, which will be returned as the `dataId` parameter in the
+    /// `source-data-loaded` event. However, it's important to note that multiple partial updates can be queued
+    /// for the same GeoJSON source when ongoing source parsing is taking place. In these cases, the partial
+    /// updates will be applied to the source in batches. Only the data ID provided in the most recent call within
+    /// each batch will be included in the `source-data-loaded` event. If no data ID is provided in the most recent
+    /// call, the data ID in the `source-data-loaded`event will be null.
+    /// - Parameters:
+    ///   - sourceId: A style source identifier.
+    ///   - featureIds: The Ids of the features that need to be removed from the source.
+    ///   - dataId: An arbitrary string used to track the given GeoJSON data.
+    /// - Throws: ``StyleError`` if there is a problem removing features from the source.
+    public func removeGeoJSONSourceFeatures(forSourceId sourceId: String, featureIds: [String], dataId: String? = nil) {
+        sourceManager.removeGeoJSONSourceFeatures(forSourceId: sourceId, featureIds: featureIds, dataId: dataId)
     }
 
     /// `true` if and only if the style JSON contents, the style specified sprite,

@@ -2,6 +2,36 @@
 import UIKit
 
 final class MockStyle: StyleProtocol {
+    struct AddGeoJSONSourceFeaturesParams {
+        let sourceId: String
+        let features: [Feature]
+        let dataId: String?
+
+    }
+    let addGeoJSONSourceFeaturesStub = Stub<AddGeoJSONSourceFeaturesParams, Void>()
+    func addGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String?) throws {
+        addGeoJSONSourceFeaturesStub.call(with: .init(sourceId: sourceId, features: features, dataId: dataId))
+    }
+
+    struct UpdateGeoJSONSourceFeaturesParams {
+        let sourceId: String
+        let features: [Feature]
+        let dataId: String?
+    }
+    let updateGeoJSONSourceFeaturesStub = Stub<UpdateGeoJSONSourceFeaturesParams, Void>()
+    func updateGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String?) throws {
+        updateGeoJSONSourceFeaturesStub.call(with: .init(sourceId: sourceId, features: features, dataId: dataId))
+    }
+
+    struct RemoveGeoJSONSourceFeaturesParams {
+        let sourceId: String
+        let featureIds: [String]
+        let dataId: String?
+    }
+    let removeGeoJSONSourceFeaturesStub = Stub<RemoveGeoJSONSourceFeaturesParams, Void>()
+    func removeGeoJSONSourceFeatures(forSourceId sourceId: String, featureIds: [String], dataId: String?) throws {
+        removeGeoJSONSourceFeaturesStub.call(with: .init(sourceId: sourceId, featureIds: featureIds, dataId: dataId))
+    }
 
     struct AddLayerParams {
         var layer: Layer

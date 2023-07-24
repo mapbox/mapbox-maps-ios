@@ -207,16 +207,40 @@ public final class MapboxMap: StyleManager, MapboxMapProtocol {
         token.store(in: &cancelables)
     }
 
+    private func observeStyleDataLoaded(_ completion: @escaping () -> Void) {
+        weak var weakToken: AnyCancelable?
+        let token = onStyleDataLoaded
+            .filter { $0.type == .style }
+            .observeNext { [weak self] _ in
+                guard let self else { return }
+
+                completion()
+
+                if let token = weakToken {
+                    self.cancelables.remove(token)
+                }
+            }
+        weakToken = token
+        token.store(in: &cancelables)
+    }
+
     /// Loads a `style` from a StyleURI, calling a completion closure when the
     /// style is fully loaded or there has been an error during load.
     ///
     /// - Parameters:
     ///   - styleURI: StyleURI to load
-    ///   - completion: Closure called when the style has been fully loaded. The
-    ///     `Result` type encapsulates the `Style` or error that occurred. See
-    ///     `MapLoadingError`
-    public func loadStyle(_ styleURI: StyleURI, completion: ((MapLoadingError?) -> Void)? = nil) {
-        if let completion = completion {
+    ///   - transition: Options for the style transition.
+    ///   - completion: Closure called when the style has been fully loaded.
+    ///     If style has failed to load a `MapLoadingError` is provided to the closure.
+    public func loadStyle(_ styleURI: StyleURI,
+                          transition: TransitionOptions? = nil,
+                          completion: ((MapLoadingError?) -> Void)? = nil) {
+        if let transition {
+            observeStyleDataLoaded { [weak self] in
+                self?.styleTransition = transition
+            }
+        }
+        if let completion {
             observeStyleLoad(completion)
         }
         __map.setStyleURIForUri(styleURI.rawValue)
@@ -227,9 +251,7 @@ public final class MapboxMap: StyleManager, MapboxMapProtocol {
     ///
     /// - Parameters:
     ///   - styleURI: StyleURI to load
-    ///   - completion: Closure called when the style has been fully loaded. The
-    ///     `Result` type encapsulates the `Style` or error that occurred. See
-    ///     `MapLoadingError`
+    ///   - completion: Closure called when the style has been fully loaded.
     @available(*, deprecated, renamed: "loadStyle")
     public func loadStyleURI(_ styleURI: StyleURI, completion: ((MapLoadingError?) -> Void)? = nil) {
         loadStyle(styleURI, completion: completion)
@@ -240,11 +262,16 @@ public final class MapboxMap: StyleManager, MapboxMapProtocol {
     ///
     /// - Parameters:
     ///   - JSON: Style JSON string
-    ///   - completion: Closure called when the style has been fully loaded. The
-    ///     `Result` type encapsulates the `Style` or error that occurred. See
-    ///     `MapLoadingError`
-    public func loadStyle(_ JSON: String, completion: ((MapLoadingError?) -> Void)? = nil) {
-        if let completion = completion {
+    ///   - transition: Options for the style transition.
+    ///   - completion: Closure called when the style has been fully loaded.
+    ///     If style has failed to load a `MapLoadingError` is provided to the closure.
+    public func loadStyle(_ JSON: String,
+                          transition: TransitionOptions? = nil,
+                          completion: ((MapLoadingError?) -> Void)? = nil) {
+        if let transition {
+            observeStyleDataLoaded { [weak self] in self?.styleTransition = transition }
+        }
+        if let completion {
             observeStyleLoad(completion)
         }
         __map.setStyleJSONForJson(JSON)

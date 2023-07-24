@@ -60,3 +60,21 @@ jobs:
       requires:
         - Build Examples tests [non-main]
       devices: --device model=iphone13pro,version=15.7
+
+  - run-benchmark?:
+      type: approval
+      filters:
+        branches:
+          ignore:
+            - main
+            - develop
+  - build-benchmark:
+      context:
+        - SDK Registry Token
+        - MapboxCI GitHub UserToken
+        - Maps SDK/Public Mapbox Token
+      requires:
+        - run-benchmark?
+  - run-benchmark:
+      requires:
+        - build-benchmark

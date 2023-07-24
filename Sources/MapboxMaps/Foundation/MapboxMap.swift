@@ -359,11 +359,13 @@ public final class MapboxMap: StyleManager, MapboxMapProtocol {
     /// - Parameter rect: The `rect` whose bounds will be transformed into a set of map coordinate bounds.
     /// - Returns: A `CoordinateBounds` object that represents the southwest and northeast corners of the view's bounds.
     public func coordinateBounds(for rect: CGRect) -> CoordinateBounds {
-        let topRight = coordinate(for: CGPoint(x: rect.maxX, y: rect.minY)).wrap()
-        let bottomLeft = coordinate(for: CGPoint(x: rect.minX, y: rect.maxY)).wrap()
+        let topRight = CGPoint(x: rect.maxX, y: rect.minY)
+        let bottomLeft = CGPoint(x: rect.minX, y: rect.maxY)
 
-        let southwest = CLLocationCoordinate2D(latitude: bottomLeft.latitude, longitude: bottomLeft.longitude)
-        let northeast = CLLocationCoordinate2D(latitude: topRight.latitude, longitude: topRight.longitude)
+        let coordinates = coordinates(for: [topRight, bottomLeft])
+
+        let northeast = coordinates[0].wrap()
+        let southwest = coordinates[1].wrap()
 
         return CoordinateBounds(southwest: southwest, northeast: northeast)
     }
@@ -372,19 +374,11 @@ public final class MapboxMap: StyleManager, MapboxMapProtocol {
     /// - Parameter coordinateBounds: The `coordinateBounds` that will be converted into a rect relative to the `MapView`
     /// - Returns: A `CGRect` whose corners represent the vertices of a set of `CoordinateBounds`.
     public func rect(for coordinateBounds: CoordinateBounds) -> CGRect {
-        let southwest = coordinateBounds.southwest.wrap()
-        let northeast = coordinateBounds.northeast.wrap()
+        let points = points(for: [coordinateBounds.southwest.wrap(), coordinateBounds.northeast.wrap()])
+        let swPoint = points[0]
+        let nePoint = points[1]
 
-        var rect = CGRect.zero
-
-        let swPoint = point(for: southwest)
-        let nePoint = point(for: northeast)
-
-        rect = CGRect(origin: swPoint, size: CGSize.zero)
-
-        rect = rect.extend(from: nePoint)
-
-        return rect
+        return CGRect(origin: swPoint, size: CGSize.zero).extend(from: nePoint)
     }
 
     // MARK: Debug options

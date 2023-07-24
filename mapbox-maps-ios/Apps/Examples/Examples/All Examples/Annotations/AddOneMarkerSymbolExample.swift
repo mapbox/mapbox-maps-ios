@@ -21,7 +21,7 @@ final class AddOneMarkerSymbolExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.loadStyleURI(.streets) { [weak self] error in
+        mapView.mapboxMap.loadStyle(.streets) { [weak self] error in
             guard error == nil else { return }
 
             self?.addMarkerAnnotation()

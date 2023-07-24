@@ -278,7 +278,7 @@ final class MapboxMapTests: XCTestCase {
         let completionIsCalledOnce = expectation(description: "loadStyle completion should be called once")
         completionIsCalledOnce.assertForOverFulfill = true
 
-        mapboxMap.loadStyleURI(.dark) { _ in
+        mapboxMap.loadStyle(.dark) { _ in
             completionIsCalledOnce.fulfill()
         }
         let interval = EventTimeInterval(begin: .init(), end: .init())

@@ -48,7 +48,7 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
         setupMapView()
 
         let completionCalled = expectation(description: "Completion closure is called")
-        mapView.mapboxMap.loadStyleURI(.streets) { _ in
+        mapView.mapboxMap.loadStyle(.streets) { _ in
             completionCalled.fulfill()
         }
         wait(for: [completionCalled], timeout: 5.0)
@@ -64,7 +64,7 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
         setupMapView()
 
         let completionCalled = expectation(description: "Completion closure is called")
-        mapView.mapboxMap.loadStyleJSON(styleJSON) { [mapboxMap = mapView.mapboxMap] error in
+        mapView.mapboxMap.loadStyle(styleJSON) { [mapboxMap = mapView.mapboxMap] error in
             XCTAssertNil(error)
             XCTAssertEqual(styleJSON, mapboxMap?.styleJSON)
             completionCalled.fulfill()

@@ -215,26 +215,52 @@ public final class MapboxMap: StyleManager, MapboxMapProtocol {
     ///   - completion: Closure called when the style has been fully loaded. The
     ///     `Result` type encapsulates the `Style` or error that occurred. See
     ///     `MapLoadingError`
-    public func loadStyleURI(_ styleURI: StyleURI, completion: ((MapLoadingError?) -> Void)? = nil) {
+    public func loadStyle(_ styleURI: StyleURI, completion: ((MapLoadingError?) -> Void)? = nil) {
         if let completion = completion {
             observeStyleLoad(completion)
         }
         __map.setStyleURIForUri(styleURI.rawValue)
     }
 
+    /// Loads a `style` from a StyleURI, calling a completion closure when the
+    /// style is fully loaded or there has been an error during load.
+    ///
+    /// - Parameters:
+    ///   - styleURI: StyleURI to load
+    ///   - completion: Closure called when the style has been fully loaded. The
+    ///     `Result` type encapsulates the `Style` or error that occurred. See
+    ///     `MapLoadingError`
+    @available(*, deprecated, renamed: "loadStyle")
+    public func loadStyleURI(_ styleURI: StyleURI, completion: ((MapLoadingError?) -> Void)? = nil) {
+        loadStyle(styleURI, completion: completion)
+    }
+
     /// Loads a `style` from a JSON string, calling a completion closure when the
     /// style is fully loaded or there has been an error during load.
     ///
     /// - Parameters:
-    ///   - styleURI: Style JSON string
+    ///   - JSON: Style JSON string
     ///   - completion: Closure called when the style has been fully loaded. The
     ///     `Result` type encapsulates the `Style` or error that occurred. See
     ///     `MapLoadingError`
-    public func loadStyleJSON(_ JSON: String, completion: ((MapLoadingError?) -> Void)? = nil) {
+    public func loadStyle(_ JSON: String, completion: ((MapLoadingError?) -> Void)? = nil) {
         if let completion = completion {
             observeStyleLoad(completion)
         }
         __map.setStyleJSONForJson(JSON)
+    }
+
+    /// Loads a `style` from a JSON string, calling a completion closure when the
+    /// style is fully loaded or there has been an error during load.
+    ///
+    /// - Parameters:
+    ///   - JSON: Style JSON string
+    ///   - completion: Closure called when the style has been fully loaded. The
+    ///     `Result` type encapsulates the `Style` or error that occurred. See
+    ///     `MapLoadingError`
+    @available(*, deprecated, renamed: "loadStyle")
+    public func loadStyleJSON(_ JSON: String, completion: ((MapLoadingError?) -> Void)? = nil) {
+        loadStyle(JSON, completion: completion)
     }
 
     // MARK: - Prefetching
@@ -935,7 +961,7 @@ extension MapboxMap {
     public var onStyleLoaded: Signal<StyleLoaded> { events.signal(for: \.onStyleLoaded) }
 
         /// The requested style data has been loaded. The `type` property defines what kind of style data has been loaded.
-        /// Event may be emitted synchronously, for example, when ``MapboxMap/loadStyleJSON(_:completion:)`` is used to load style.
+        /// Event may be emitted synchronously, for example, when ``MapboxMap/loadStyle(_:completion:)`` is used to load style.
         ///
         /// Based on an event data `type` property value, following use-cases may be implemented:
         /// - `style`: Style is parsed, style layer properties could be read and modified, style layers and sources could be

@@ -265,7 +265,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
 
         let styleJSONFinishedLoading = expectation(description: "Style JSON has finished loading")
-        mapView.mapboxMap.loadStyleJSON(styleJSON) { _ in
+        mapView.mapboxMap.loadStyle(styleJSON) { _ in
             styleJSONFinishedLoading.fulfill()
         }
 
@@ -401,7 +401,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
 
         let styleJSONFinishedLoading = expectation(description: "Style JSON has finished loading")
-        mapView.mapboxMap.loadStyleJSON(styleJSON) { _ in
+        mapView.mapboxMap.loadStyle(styleJSON) { _ in
             styleJSONFinishedLoading.fulfill()
         }
 

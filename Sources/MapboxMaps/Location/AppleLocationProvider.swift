@@ -76,11 +76,11 @@ public final class AppleLocationProvider {
 
     /// A stream of location updates.
     ///
-    /// An observer will receive a cached value upon subscription.
+    /// An observer will receive a cached value (if any) upon subscription.
     ///
     /// - Note: When the first observer is added, the underlying `CLLocationManager` instance will
     /// ask for permissions (if needed) and start to produce the location updates. When the last observer is gone it will stop.
-    public var onLocationUpdate: Signal<[Location]> { locationSubject.signal }
+    public var onLocationUpdate: Signal<[Location]> { locationSubject.signal.skipNil() }
 
     /// A stream of heading (compass) updates.
     ///
@@ -94,9 +94,9 @@ public final class AppleLocationProvider {
     ///
     /// - Note: The location updates only when there is at least one observer of location updates.
     /// In general, it's recommended to observe the location via ``AppleLocationProvider/onLocationUpdate``.
-    public var latestLocation: Location? { locationSubject.value.last }
+    public var latestLocation: Location? { locationSubject.value?.last }
 
-    private let locationSubject = CurrentValueSignalSubject<[Location]>()
+    private let locationSubject = CurrentValueSignalSubject<[Location]?>()
     private let headingSubject = CurrentValueSignalSubject<Heading?>()
 
     private lazy var locationObservingAdapter = SignalObservingAdapter(signal: onLocationUpdate, notify: notifyLocationObserver(_:_:))
@@ -107,7 +107,9 @@ public final class AppleLocationProvider {
             if latestAccuracyAuthorization != oldValue {
                 delegate?.appleLocationProvider(self, didChangeAccuracyAuthorization: latestAccuracyAuthorization)
             }
-            doLocationUpdate(locationSubject.value)
+            if let location = locationSubject.value {
+                doLocationUpdate(location)
+            }
         }
     }
 
@@ -130,10 +132,9 @@ public final class AppleLocationProvider {
         didSet {
             if isHeadingUpdating {
                 locationManager.startUpdatingHeading()
-                orientationChangeToken = interfaceOrientationProvider.onInterfaceOrientationChange
-                    .observe { [weak self] newOrientation in
-                        self?.updateHeadingOrientationIfNeeded(newOrientation)
-                    }
+                orientationChangeToken = interfaceOrientation.observe { [weak self] newOrientation in
+                    self?.updateHeadingOrientationIfNeeded(newOrientation)
+                }
             } else {
                 locationManager.stopUpdatingHeading()
                 orientationChangeToken = nil
@@ -142,7 +143,7 @@ public final class AppleLocationProvider {
     }
 
     private let locationManager: CLLocationManagerProtocol
-    internal let interfaceOrientationProvider: InterfaceOrientationProvider
+    internal let interfaceOrientation: Signal<UIInterfaceOrientation>
     internal let locationManagerDelegateProxy: CLLocationManagerDelegateProxy
     private let mayRequestWhenInUseAuthorization: Bool
     // cache heading orientation for performance reasons,
@@ -154,6 +155,7 @@ public final class AppleLocationProvider {
 
     /// Initializes the built-in location provider. The required view will be used to obtain user interface orientation
     /// for correct heading calculation.
+    ///
     /// - Parameter userInterfaceOrientationViewProvider: The view used to get the user interface orientation from.
     public convenience init(userInterfaceOrientationViewProvider: @escaping () -> UIView?) {
         let orientationProvider = DefaultInterfaceOrientationProvider(
@@ -162,29 +164,31 @@ public final class AppleLocationProvider {
             device: UIDevice.current)
 
         self.init(locationManager: CLLocationManager(),
-                  interfaceOrientationProvider: orientationProvider,
+                  interfaceOrientation: Signal { orientationProvider.onInterfaceOrientationChange.observe($0) },
                   mayRequestWhenInUseAuthorization: Bundle.main.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil,
                   locationManagerDelegateProxy: CLLocationManagerDelegateProxy())
     }
 
-    /// Initializes the built-in location provider with a custom interface orientation provider
-    /// - Parameter interfaceOrientationProvider: The interface orientation provider used for heading calculation.
-    @available(iOS, deprecated: 13, message: "Use init() instead")
-    public convenience init(interfaceOrientationProvider: InterfaceOrientationProvider) {
+    /// Initializes the built-in location provider with a custom interface orientation provider.
+    ///
+    /// - Parameters:
+    ///  - interfaceOrientation: A stream of user interface orientation updates that sets
+    ///  the `headingOrientation` of underlying `CLLocationManager`.
+    public convenience init(interfaceOrientation: Signal<UIInterfaceOrientation>) {
         self.init(locationManager: CLLocationManager(),
-                  interfaceOrientationProvider: interfaceOrientationProvider,
+                  interfaceOrientation: interfaceOrientation,
                   mayRequestWhenInUseAuthorization: Bundle.main.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil,
                   locationManagerDelegateProxy: CLLocationManagerDelegateProxy())
     }
 
     internal init(locationManager: CLLocationManagerProtocol,
-                  interfaceOrientationProvider: InterfaceOrientationProvider,
+                  interfaceOrientation: Signal<UIInterfaceOrientation>,
                   mayRequestWhenInUseAuthorization: Bool,
                   locationManagerDelegateProxy: CLLocationManagerDelegateProxy) {
         self.locationManager = locationManager
         self.mayRequestWhenInUseAuthorization = mayRequestWhenInUseAuthorization
         self.latestAccuracyAuthorization = locationManager.compatibleAccuracyAuthorization
-        self.interfaceOrientationProvider = interfaceOrientationProvider
+        self.interfaceOrientation = interfaceOrientation
         self.headingOrientation = locationManager.headingOrientation
         self.locationManagerDelegateProxy = locationManagerDelegateProxy
         self.locationManager.delegate = locationManagerDelegateProxy

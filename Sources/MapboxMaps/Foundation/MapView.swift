@@ -212,7 +212,7 @@ open class MapView: UIView {
     @available(iOS, unavailable, message: "Use init(frame:mapInitOptions:urlOpener:) instead")
     public init(frame: CGRect,
                 mapInitOptions: MapInitOptions = MapInitOptions(),
-                orientationProvider: InterfaceOrientationProvider,
+                orientationProvider: Void,
                 urlOpener: AttributionURLOpener) { fatalError("Shouldn't be called") }
 
     /// Initialize a MapView

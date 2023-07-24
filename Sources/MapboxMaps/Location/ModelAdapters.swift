@@ -2,9 +2,11 @@ import MapboxCommon
 
 extension HeadingProvider {
     /// Converts provider to a signal. The resulting signal retains the provider.
-    func toSignal() -> Signal<Heading> {
+    /// - Parameters:
+    ///  - sendCurrentValue: If the resulting signal should emit the current value upon subscription.
+    func toSignal(sendCurrentValue: Bool = true) -> Signal<Heading> {
         Signal { [self] handler in
-            if let latestHeading {
+            if sendCurrentValue, let latestHeading {
                 handler(latestHeading)
             }
             let observer = ObjectWrapper(subject: handler)
@@ -24,9 +26,13 @@ extension ObjectWrapper: HeadingObserver where T == (Heading) -> Void {
 
 extension LocationProvider {
     /// Converts provider to a signal. The resulting signal retains the provider.
-    func toSignal() -> Signal<[Location]> {
+    /// - Parameters:
+    ///  - sendCurrentValue: If the resulting signal should emit the current value upon subscription.
+    func toSignal(sendCurrentValue: Bool = true) -> Signal<[Location]> {
         Signal { [self] handler in
-            handler(self.getLastObservedLocation().asArray)
+            if sendCurrentValue {
+                handler(self.getLastObservedLocation().asArray)
+            }
             let observer = SignalLocationObserver(closure: handler)
             self.addLocationObserver(for: observer)
             return AnyCancelable {

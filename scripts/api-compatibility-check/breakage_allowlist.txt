@@ -511,6 +511,7 @@ Func LocationManager.removePuckLocationConsumer(_:) has been removed
 Protocol LocationConsumer has been removed
 Protocol LocationProvider has been removed
 Protocol PuckLocationConsumer has been removed
+Protocol InterfaceOrientationProvider has been removed
 Var LocationManager.locationProvider has been removed
 Func LocationManager.overrideLocationProvider(with:) has been renamed to Func override(locationProvider:headingProvider:)
 Func LocationManager.overrideLocationProvider(with:) has parameter 0 type change from MapboxMaps.LocationProvider to MapboxMaps.Signal<[MapboxCommon.Location]>

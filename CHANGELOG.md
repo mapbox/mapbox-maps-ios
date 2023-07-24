@@ -18,6 +18,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Add optional `maxZoom` and `offset` parameters to `MapboxMap.camera(for coordinateBounds:)`. `MapboxMap.camera(for coordinateBounds:)`, `MapboxMap.camera(for coordinates:)`, and `MapboxMap.camera(for geometry:)` no longer return a padding value.
 * `Location` is splitted into `Location` and `Heading` structs, the location and heading data are now animated individually.
 * Replace `loadStyleJSON(_:completion:)`/`loadStyleJSON(_:completion:)` with overloaded `loadStyle(_:completion:)`.
+* Add transition options as a parameter to `loadStyle(...)` methods.
 
 ## 11.0.0-alpha.2 - 21 June, 2023
 

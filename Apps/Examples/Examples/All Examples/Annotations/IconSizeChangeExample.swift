@@ -33,7 +33,7 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
             self?.finish()
         }.store(in: &cancelables)
 
-        mapView.mapboxMap.loadStyleURI(.dark)
+        mapView.mapboxMap.loadStyle(.dark)
     }
 
     private func setupExample() {

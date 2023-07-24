@@ -30,7 +30,7 @@ final class ModelLayerExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
 
-        mapView.mapboxMap.loadStyleURI(.standard) { [weak self] _ in
+        mapView.mapboxMap.loadStyle(.standard) { [weak self] _ in
             self?.setupExample()
         }
     }

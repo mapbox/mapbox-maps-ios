@@ -17,6 +17,7 @@ Mapbox welcomes participation and contributions from everyone.
 * SDK no longer reexport MetalKit and UIKit.
 * Add optional `maxZoom` and `offset` parameters to `MapboxMap.camera(for coordinateBounds:)`. `MapboxMap.camera(for coordinateBounds:)`, `MapboxMap.camera(for coordinates:)`, and `MapboxMap.camera(for geometry:)` no longer return a padding value.
 * `Location` is splitted into `Location` and `Heading` structs, the location and heading data are now animated individually.
+* Replace `loadStyleJSON(_:completion:)`/`loadStyleJSON(_:completion:)` with overloaded `loadStyle(_:completion:)`.
 
 ## 11.0.0-alpha.2 - 21 June, 2023
 

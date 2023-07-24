@@ -132,11 +132,11 @@ public final class LocationManager {
 
     /// Represents the latest location received from the location provider.
     ///
-    /// - Note: The value is lazy and updates only when there is at least one consumer of location data,
+    /// - Note: The value is lazy and gets updated only when there is at least one consumer of location data,
     /// such as visible location puck or ``LocationManager/onLocationChange`` observer.
     ///
-    /// In general, it's recommended to observe ``LocationManager/onLocationChange`` instead.
-    @available(*, deprecated, message: "Use onLocationChange instead")
+    /// In general, if you need to know the user location it's recommended to observe
+    /// the ``LocationManager/onLocationChange`` instead.
     public var latestLocation: Location? {
         onLocationChange.latestValue?.last
     }

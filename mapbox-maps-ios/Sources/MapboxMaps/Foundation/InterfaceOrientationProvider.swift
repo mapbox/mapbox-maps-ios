@@ -1,24 +1,12 @@
 import Foundation
 import UIKit
 import CoreLocation
-import Combine
 
-/// A protocol that supplies current interface orientation for the map view.
-///
-/// Use this protocol when the map view is used in non-application target (e.g. application extension target).
-@available(iOS, deprecated: 13)
-public protocol InterfaceOrientationProvider {
-    /// Asks the provider for the interface orientation of the map view.
-    ///
-    /// When a device is rotated map view passes current interface orientation to its location provider in order to ensure heading is displayed correctly.
-    var onInterfaceOrientationChange: Signal<UIInterfaceOrientation> { get }
-}
-
-internal final class DefaultInterfaceOrientationProvider: InterfaceOrientationProvider {
+internal final class DefaultInterfaceOrientationProvider {
     var onInterfaceOrientationChange: Signal<UIInterfaceOrientation> { subject.signal }
 
     private lazy var subject: CurrentValueSignalSubject<UIInterfaceOrientation> = {
-        let subject = CurrentValueSignalSubject(interfaceOrientation)
+        let subject = CurrentValueSignalSubject(calculateInterfaceOrientation())
         subject.onObserved = { [weak self] observed in
             if observed {
                 self?.startUpdatingInterfaceOrientation()
@@ -28,14 +16,6 @@ internal final class DefaultInterfaceOrientationProvider: InterfaceOrientationPr
         }
         return subject
     }()
-
-    private var interfaceOrientation: UIInterfaceOrientation {
-        if #available(iOS 13.0, *) {
-            let view = userInterfaceOrientationView.value
-            return view?.window?.windowScene?.interfaceOrientation ?? .unknown
-        }
-        return UIInterfaceOrientation(deviceOrientation: device.orientation)
-    }
 
     private let userInterfaceOrientationView: Ref<UIView?>
     private let notificationCenter: NotificationCenterProtocol
@@ -64,7 +44,15 @@ internal final class DefaultInterfaceOrientationProvider: InterfaceOrientationPr
     }
 
     @objc private func deviceOrientationDidChange(_ notification: Notification) {
-        subject.value = interfaceOrientation
+        subject.value = calculateInterfaceOrientation()
+    }
+
+    private func calculateInterfaceOrientation() -> UIInterfaceOrientation {
+        if #available(iOS 13.0, *) {
+            let view = userInterfaceOrientationView.value
+            return view?.window?.windowScene?.interfaceOrientation ?? .unknown
+        }
+        return UIInterfaceOrientation(deviceOrientation: device.orientation)
     }
 }
 

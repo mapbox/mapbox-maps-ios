@@ -441,6 +441,85 @@ class ViewController: UIViewController { }
 
 If you need to set a HTTP interceptor you can do it via the `HttpServiceFactory.setHttpServiceInterceptor` function. The `HttpServiceInterceptor` interface has a new `onUpload` function that requires implementation.
 
+### 3.9 Offline API
+
+#### 3.9.1 ``OfflineManager`` API changes
+
+- Due to changes documented in [Access Token and Map Options management](#23-access-token-and-map-options-management), you no longer need to provide a resource options when initializing an instance of ``OfflineManager``.
+- `TilesetDescriptorOptionsForTilesets` and `OfflineManager/createTilesetDescriptorForTilesetDescriptorOptions(_:)` has been removed. Instead you can provide an optional list of `tilesets` when initializing an instance of ``TilesetDescriptorOptions`` and use it to create a `TilesetDescriptor` using `OfflineManager/createTilesetDescriptor(_:)`.
+- You can now observe when a style pack is removed with a completion handler.
+
+**v10**
+```swift
+let offlineManager = OfflineManager(resourceOptions: aResourceOptions)
+let tilesetDescriptorOptions = TilesetDescriptorOptionsForTilesets(
+    tilesets: ["mapbox://mapbox.mapbox-streets-v8"], 
+    zoomRange: 0...5)
+
+let tilesetDescriptor = offlineManager.createTilesetDescriptorForTilesetDescriptorOptions(tilesetDescriptorOptions)
+
+offlineManager.removeStylePack(for: .streets)
+```
+
+**v11**
+```swift
+let offlineManager = OfflineManager()
+let tileSetDescriptorOptions = TilesetDescriptorOptions(
+    styleURI: .outdoors,
+    zoomRange: 0...16, 
+    tilesets: ["mapbox://mapbox.mapbox-streets-v8"])
+
+let tilesetDescriptor = offlineManager.createTilesetDescriptor(for: tileSetDescriptorOptions)
+
+offlineManager.removeStylePack(for: .streets) { result in
+    // handle style pack removal result
+}
+```
+
+#### 3.9.2 Legacy ``OfflineRegionManager`` changes
+
+- Due to changes documented in [Access Token and Map Options management](#23-access-token-and-map-options-management), you no longer need to provide a resource options when initializing an instance of ``OfflineRegionManager``.
+- `ResponseError` has been renamed to ``OfflineRegionError``, with new flag named `isFatal` indicating that the error is fatal i.e. the region cannot proceed downloading of any resources and it will be put to inactive state.
+- ``OfflineRegionObserver`` no longer requires function `responseError(forError:)`, instead you can implement function `errorOccurred(forError:)` to be notified of errors encountered while downloading regional resources.
+- `ResponseErrorReason` is renamed to `OfflineRegionErrorType`.
+    - The `OfflineRegionErrorType.diskFull` is introduced as a specific error code for shortage of the available space to store the resources.
+    - The `OfflineRegionErrorType.tileCountLimitExceeded` is introduced as a specific error code indicating that the limit on the number of Mapbox tiles stored for offline regions has been reached. As a result, function `tileCountLimitExceeded()` is no longer required for conformers of `OfflineRegionObserver`.
+
+**v10**
+```swift
+let offlineRegionManager = OfflineRegionManager(resourceOptions: aResourceOptions)
+let observer = OfflineRegionObserver()
+offlineRegionManager.setOfflineRegionObserverFor(observer)
+
+class OfflineRegionObserver: MapboxCoreMaps.OfflineRegionObserver {
+
+    func responseError(forError error: ResponseError) { 
+        // handle error
+    }
+
+    func tileCountLimitExceeded() {
+        // handle tile count limit exceeded
+    }
+}
+```
+
+**v11**
+```swift
+let offlineRegionManager = OfflineRegionManager()
+let observer = OfflineRegionObserver()
+offlineRegionManager.setOfflineRegionObserverFor(observer)
+
+class OfflineRegionObserver: MapboxCoreMaps.OfflineRegionObserver {
+
+    func errorOccurred(forError error: OfflineRegionError) {
+        if case error.type == .tileCountLimitExceeded {
+            // handle tile count limit exceed
+        }
+        ...
+    }
+}
+```
+
 ## 4. Update APIs deprecated in v10 which have been removed in v11
 
 - `textLineHeight` property has been removed from ``PointAnnotationManager``. Instead, use the data-driven ``PointAnnotation/textLineHeight``.

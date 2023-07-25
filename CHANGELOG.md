@@ -20,6 +20,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Replace `loadStyleJSON(_:completion:)`/`loadStyleJSON(_:completion:)` with overloaded `loadStyle(_:completion:)`.
 * Mark `Expression.Operator.activeAnchor` as experimental.
 * Add transition options as a parameter to `loadStyle(...)` methods.
+* Add `MapboxMap.coordinate(s)Info(for:)` for converting offscreen points into geographical coordinates.
 
 ## 11.0.0-alpha.2 - 21 June, 2023
 

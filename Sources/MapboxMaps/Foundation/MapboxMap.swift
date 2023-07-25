@@ -671,6 +671,34 @@ public final class MapboxMap: StyleManager, MapboxMapProtocol {
         return locations.map { $0.coordinate }
     }
 
+    /// Obtains the geographical coordinate information that corresponds to a given point.
+    /// The point must exist in the coordinate space of the ``MapView``.
+    ///
+    /// The returned coordinate will be the closest position projected onto the map surface,
+    /// in case the screen coordinate does not intersect with the map surface.
+    ///
+    /// - Parameter point: The point to convert. Must exist in the coordinate space
+    ///     of the `MapView`.
+    ///
+    /// - Returns: A `CoordinateInfo` record containing information about the geographical coordinate corresponding to the given point, including whether it is on the map surface.
+    func coordinateInfo(for point: CGPoint) -> CoordinateInfo {
+        return __map.coordinateInfoForPixel(forPixel: point.screenCoordinate)
+    }
+
+    /// Obtains the geographical coordinate information that corresponds to given points.
+    /// The points must exist in the coordinate space of the ``MapView``.
+    ///
+    /// The returned coordinate will be the closest position projected onto the map surface,
+    /// in case the screen coordinate does not intersect with the map surface.
+    ///
+    /// - Parameter points: The array of points to convert. Points must exist in the coordinate space
+    ///     of the `MapView`.
+    ///
+    /// - Returns: An array of `CoordinateInfo` records containing information about the geographical coordinates corresponding to the given points, including whether they are on the map surface.
+    func coordinatesInfo(for points: [CGPoint]) -> [CoordinateInfo] {
+        return __map.coordinatesInfoForPixels(forPixels: points.map(\.screenCoordinate))
+    }
+
     // MARK: - Camera options setters/getters
 
     /// Changes the map view by any combination of center, zoom, bearing, and pitch,

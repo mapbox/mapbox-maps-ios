@@ -72,6 +72,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                 super.viewDidLoad()
 
                 mapView = MapView(frame: view.bounds)
+                mapView.mapboxMap.styleURI = .streets
                 view.addSubview(mapView)
 
                 /**
@@ -275,6 +276,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         myGeoJSONSource.data = .url(geoJSONURL(from: "polygon")!)
 
         let mapView = MapView(frame: testRect)
+        mapView.mapboxMap.styleURI = .streets
         let expectation = self.expectation(description: "Source was added")
         mapView.mapboxMap.onStyleLoaded.observeNext { _ in
             do {
@@ -311,6 +313,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
     func testExpression() throws {
         let mapView = MapView(frame: testRect)
+        mapView.mapboxMap.styleURI = .streets
         let expectation = self.expectation(description: "layer updated")
         mapView.mapboxMap.onStyleLoaded.observeNext { _ in
             do {
@@ -347,6 +350,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
     func testAdd3DTerrain() {
         let mapView = MapView(frame: testRect)
+        mapView.mapboxMap.styleURI = .streets
         let expectation = self.expectation(description: "Source was added")
         mapView.mapboxMap.onStyleLoaded.observeNext { _ in
             do {

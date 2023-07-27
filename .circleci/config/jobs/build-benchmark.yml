@@ -12,6 +12,7 @@ steps:
         - mapbox/add-mapbox-netrc
         - mapbox/add-mapbox-filetoken
         - mapbox/install-mbx-ci
+        - generate-sla-tests
         - build-benchmark
         - mapbox/prepare-build-for-device-testing:
             derivedDataPath: benchmark/DerivedData

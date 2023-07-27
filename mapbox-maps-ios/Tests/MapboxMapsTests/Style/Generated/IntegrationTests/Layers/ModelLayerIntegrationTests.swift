@@ -19,9 +19,7 @@ final class ModelLayerIntegrationTests: MapViewIntegrationTestCase {
 
         didFinishLoadingStyle = { mapView in
 
-            var layer = ModelLayer(id: "test-id")
-            layer.source = "some-source"
-            layer.sourceLayer = nil
+            var layer = ModelLayer(id: "test-id", source: "source")
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
             layer.visibility = .visible
@@ -34,10 +32,15 @@ final class ModelLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.modelColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.modelColorMixIntensity = Value<Double>.testConstantValue()
             layer.modelColorMixIntensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.modelEmissiveStrength = Value<Double>.testConstantValue()
+            layer.modelEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.modelHeightBasedEmissiveStrengthMultiplierTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.modelOpacity = Value<Double>.testConstantValue()
             layer.modelOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.modelReceiveShadows = Value<Bool>.testConstantValue()
             layer.modelRotationTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.modelRoughness = Value<Double>.testConstantValue()
+            layer.modelRoughnessTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.modelScaleTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.modelScaleMode = Value<ModelScaleMode>.testConstantValue()
             layer.modelTranslationTransition = StyleTransition(duration: 10.0, delay: 10.0)

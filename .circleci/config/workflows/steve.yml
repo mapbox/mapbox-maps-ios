@@ -7,20 +7,6 @@ jobs:
   - sanity-check:
       context:
         - Slack Orb
-  - swiftlint:
-      context:
-        - Slack Orb
-  - depsvalidator:
-      context:
-        - Slack Orb
-      name: Check dependencies versions
-  - build-sdk:
-      context:
-        - Slack Orb
-        - SDK Registry Token
-      name: Build SDK
-      configuration: "Release"
-
   - build-sdk-for-api-compatibility-check:
       context:
         - Slack Orb
@@ -35,10 +21,6 @@ jobs:
       requires:
         - build-sdk-for-api-compatibility-check
         - build-baseline-sdk
-  - create-xcframework:
-      context:
-        - Slack Orb
-        - SDK Registry Token
 
   # Run unit tests on CI simulator
   - build-tests:
@@ -85,8 +67,8 @@ jobs:
       context:
         - Slack Orb
       name: run-unit-tests-min-turf
-      xcode: 13.1.0
-      destination: OS=15.0,name=iPhone 12
+      xcode: 14.1.0
+      destination: OS=16.1,name=iPhone 14
       requires:
         - build-tests-min-turf
 

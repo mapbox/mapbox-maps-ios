@@ -1,3 +1,5 @@
+import UIKit
+
 /// Options to configure point annotation clustering with PointAnnotationManager.
 ///
 /// ClusterOptions exposes a minimal of configuration options, a more advanced setup can be created manually with

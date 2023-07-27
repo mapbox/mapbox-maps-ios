@@ -1,5 +1,6 @@
 import UIKit
 import MapboxMaps
+import MetalKit
 
 final class CustomLayerExample: UIViewController, ExampleProtocol {
 
@@ -9,7 +10,8 @@ final class CustomLayerExample: UIViewController, ExampleProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds)
+        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), zoom: 4)
+        mapView = MapView(frame: view.bounds, mapInitOptions: MapInitOptions(cameraOptions: cameraOptions))
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 

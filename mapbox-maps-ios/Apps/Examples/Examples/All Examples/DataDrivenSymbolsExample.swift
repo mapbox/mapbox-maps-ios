@@ -40,10 +40,8 @@ public class DataDrivenSymbolsExample: UIViewController, ExampleProtocol {
         try! mapView.mapboxMap.addSource(source)
 
         // Create a symbol layer and access the layer contained.
-        var layer = SymbolLayer(id: sourceLayerIdentifier)
-
         // The source property refers to the identifier provided when the source was added.
-        layer.source = sourceLayerIdentifier
+        var layer = SymbolLayer(id: sourceLayerIdentifier, source: sourceLayerIdentifier)
 
         // Access the layer that contains the Point of Interest (POI) data.
         // The source layer property is a unique identifier for a layer within a vector tile source.

@@ -1,7 +1,7 @@
 /// A ``ViewportState`` implementation that tracks the location puck (to show a puck, use
 /// ``LocationOptions/puckType``)
 ///
-/// Use ``Viewport/makeFollowPuckViewportState(options:)`` to create instances of this
+/// Use ``ViewportManager/makeFollowPuckViewportState(options:)`` to create instances of this
 /// class.
 public final class FollowPuckViewportState {
 

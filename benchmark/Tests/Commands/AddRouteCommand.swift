@@ -19,7 +19,7 @@ struct AddRouteCommand: AsyncCommand {
 
         mapView.location.options.puckType = .puck2D(.makeDefault(showBearing: false))
         mapView.location.options.puckBearing = .course
-        mapView.location.provider = locationProvider
+        mapView.location.override(locationProvider: locationProvider.locations)
 
         // Setup route.
         let route = try getRoute()
@@ -31,26 +31,25 @@ struct AddRouteCommand: AsyncCommand {
         try mapView.mapboxMap.addPersistentLayer(makeCasingLayer())
         try mapView.mapboxMap.addPersistentLayer(makeLineLayer())
 
-        mapView.mapboxMap.onCameraChanged.observe { [weak locationProvider] _ in
-            let newLocation = mapView.cameraState.center
+        mapView.mapboxMap.onCameraChanged.observe { [locationProvider] payload in
+            let newLocation = payload.cameraState.center
             let traveledDistance = route.line.distance(to: newLocation) ?? 0
-            let progess = traveledDistance / route.distance
+            let progress = traveledDistance / route.distance
 
-            locationProvider?.currentCoordination = newLocation
+            locationProvider.coordinate = newLocation
             try? mapView.mapboxMap.setLayerProperty(
                 for: ID.routeLineLayer,
                 property: "line-trim-offset",
-                value: [0, progess])
+                value: [0, progress])
             try? mapView.mapboxMap.setLayerProperty(
                 for: ID.casingLineLayer,
                 property: "line-trim-offset",
-                value: [0, progess])
+                value: [0, progress])
         }.store(in: &context.cancellables)
     }
 
     private func makeLineLayer() -> LineLayer {
-        var lineLayer = LineLayer(id: ID.routeLineLayer)
-        lineLayer.source = ID.routeSource
+        var lineLayer = LineLayer(id: ID.routeLineLayer, source: ID.routeSource)
         lineLayer.lineCap = .constant(.round)
         lineLayer.lineJoin = .constant(.round)
         lineLayer.lineWidth = .constant(10)
@@ -77,8 +76,7 @@ struct AddRouteCommand: AsyncCommand {
     }
 
     private func makeCasingLayer() -> LineLayer {
-        var casingLayer = LineLayer(id: ID.casingLineLayer)
-        casingLayer.source = ID.routeSource
+        var casingLayer = LineLayer(id: ID.casingLineLayer, source: ID.routeSource)
         casingLayer.lineCap = .constant(.round)
         casingLayer.lineJoin = .constant(.round)
         casingLayer.lineWidth = .expression(

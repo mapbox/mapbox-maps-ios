@@ -1,4 +1,5 @@
 import UIKit
+import MetalKit
 
 internal protocol MapViewDependencyProviderProtocol: AnyObject {
     var notificationCenter: NotificationCenterProtocol { get }
@@ -12,21 +13,11 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
     func makeGestureManager(view: UIView,
                             mapboxMap: MapboxMapProtocol,
                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager
-    func makeLocationProvider(userInterfaceOrientationView: UIView) -> LocationProvider
-    func makeInterpolatedLocationProducer(locationProvider: LocationProvider,
-                                          displayLinkCoordinator: DisplayLinkCoordinator) -> InterpolatedLocationProducerProtocol
-    // swiftlint:disable:next function_parameter_count
-    func makeLocationManager(locationProvider: LocationProvider,
-                             interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
-                             style: StyleProtocol,
-                             mapboxMap: MapboxMapProtocol,
-                             displayLinkCoordinator: DisplayLinkCoordinator,
-                             userInterfaceOrientationView: UIView) -> LocationManager
-    func makeViewportImpl(mapboxMap: MapboxMapProtocol,
-                          cameraAnimationsManager: CameraAnimationsManagerProtocol,
-                          anyTouchGestureRecognizer: UIGestureRecognizer,
-                          doubleTapGestureRecognizer: UIGestureRecognizer,
-                          doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol
+     func makeViewportManagerImpl(mapboxMap: MapboxMapProtocol,
+                                  cameraAnimationsManager: CameraAnimationsManagerProtocol,
+                                  anyTouchGestureRecognizer: UIGestureRecognizer,
+                                  doubleTapGestureRecognizer: UIGestureRecognizer,
+                                  doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportManagerImplProtocol
     func makeAnnotationOrchestratorImpl(in view: UIView,
                                         mapboxMap: MapboxMapProtocol,
                                         mapFeatureQueryable: MapFeatureQueryable,
@@ -36,7 +27,6 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
     func makeEventsManager() -> EventsManagerProtocol
 }
 
-// swiftlint:disable:next type_body_length
 internal final class MapViewDependencyProvider: MapViewDependencyProviderProtocol {
     internal let notificationCenter: NotificationCenterProtocol = NotificationCenter.default
 
@@ -255,72 +245,13 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             factory: factory)
     }
 
-    internal func makeLocationProvider(userInterfaceOrientationView: UIView) -> LocationProvider {
-        let provider = AppleLocationProvider(
-                userInterfaceOrientationViewProvider: { [weak userInterfaceOrientationView] in userInterfaceOrientationView})
-        return provider
-    }
-
-    internal func makeInterpolatedLocationProducer(locationProvider: LocationProvider,
-                                                   displayLinkCoordinator: DisplayLinkCoordinator) -> InterpolatedLocationProducerProtocol {
-        let doubleInterpolator = DoubleInterpolator()
-        let wrappingInterpolator = WrappingInterpolator()
-        let directionInterpolator = DirectionInterpolator(
-            wrappingInterpolator: wrappingInterpolator)
-        let longitudeInterpolator = LongitudeInterpolator(
-            wrappingInterpolator: wrappingInterpolator)
-        let coordinateInterpolator = CoordinateInterpolator(
-            doubleInterpolator: doubleInterpolator,
-            longitudeInterpolator: longitudeInterpolator)
-        let locationInterpolator = LocationInterpolator(
-            doubleInterpolator: doubleInterpolator,
-            directionInterpolator: directionInterpolator,
-            coordinateInterpolator: coordinateInterpolator)
-        return InterpolatedLocationProducer(
-            observableInterpolatedLocation: ObservableInterpolatedLocation(),
-            locationInterpolator: locationInterpolator,
-            dateProvider: DefaultDateProvider(),
-            locationProvider: locationProvider,
-            displayLinkCoordinator: displayLinkCoordinator)
-    }
-    // swiftlint:disable:next function_parameter_count
-    internal func makeLocationManager(locationProvider: LocationProvider,
-                                      interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
-                                      style: StyleProtocol,
-                                      mapboxMap: MapboxMapProtocol,
-                                      displayLinkCoordinator: DisplayLinkCoordinator,
-                                      userInterfaceOrientationView: UIView) -> LocationManager {
-        let puckManager = PuckManager(
-            puck2DProvider: { [weak displayLinkCoordinator] configuration in
-                guard let displayLinkCoordinator = displayLinkCoordinator else {
-                    fatalError("DisplayLinkCoordinator must be present when creating a 2D puck")
-                }
-                return Puck2D(
-                    configuration: configuration,
-                    style: style,
-                    interpolatedLocationProducer: interpolatedLocationProducer,
-                    mapboxMap: mapboxMap,
-                    displayLinkCoordinator: displayLinkCoordinator,
-                    timeProvider: DefaultTimeProvider())
-            },
-            puck3DProvider: { configuration in
-                Puck3D(
-                    configuration: configuration,
-                    style: style,
-                    interpolatedLocationProducer: interpolatedLocationProducer)
-            })
-        return LocationManager(
-            locationProvider: locationProvider,
-            interpolatedLocationProducer: interpolatedLocationProducer,
-            puckManager: puckManager,
-            userInterfaceOrientationView: userInterfaceOrientationView)
-    }
-
-    internal func makeViewportImpl(mapboxMap: MapboxMapProtocol,
-                                   cameraAnimationsManager: CameraAnimationsManagerProtocol,
-                                   anyTouchGestureRecognizer: UIGestureRecognizer,
-                                   doubleTapGestureRecognizer: UIGestureRecognizer,
-                                   doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol {
+    internal func makeViewportManagerImpl(
+        mapboxMap: MapboxMapProtocol,
+        cameraAnimationsManager: CameraAnimationsManagerProtocol,
+        anyTouchGestureRecognizer: UIGestureRecognizer,
+        doubleTapGestureRecognizer: UIGestureRecognizer,
+        doubleTouchGestureRecognizer: UIGestureRecognizer
+    ) -> ViewportManagerImplProtocol {
         let lowZoomToHighZoomAnimationSpecProvider = LowZoomToHighZoomAnimationSpecProvider(
             mapboxMap: mapboxMap)
         let highZoomToLowZoomAnimationSpecProvider = HighZoomToLowZoomAnimationSpecProvider()
@@ -338,7 +269,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
         let defaultViewportTransition = DefaultViewportTransition(
             options: .init(),
             animationHelper: animationHelper)
-        return ViewportImpl(
+        return ViewportManagerImpl(
             options: .init(),
             mainQueue: mainQueue,
             defaultTransition: defaultViewportTransition,

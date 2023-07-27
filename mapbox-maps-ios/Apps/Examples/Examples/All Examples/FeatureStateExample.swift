@@ -86,8 +86,7 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
         }
 
         // Add earthquake-viz layer
-        var earthquakeVizLayer = CircleLayer(id: Self.earthquakeLayerId)
-        earthquakeVizLayer.source = Self.earthquakeSourceId
+        var earthquakeVizLayer = CircleLayer(id: Self.earthquakeLayerId, source: Self.earthquakeSourceId)
 
         // The feature-state dependent circle-radius expression will render
         // the radius size according to its magnitude when

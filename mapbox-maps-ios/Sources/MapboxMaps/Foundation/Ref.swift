@@ -1,14 +1,14 @@
-import Foundation
+import UIKit
 
 /// `Ref` is read-only reference to arbitrary value captured by closure.
 /// It is used to pass the value, that might be changed over time.
 internal struct Ref<Value> {
-    private let get: () -> Value
+    let getter: () -> Value
 
-    internal var value: Value { `get`() }
+    internal var value: Value { getter() }
 
-    internal init(_ get: @escaping () -> Value) {
-        self.get = get
+    internal init(_ getter: @escaping () -> Value) {
+        self.getter = getter
     }
 }
 
@@ -59,8 +59,8 @@ internal struct MutableRef<Value> {
 
 extension Ref {
     func map<U>(_ transform: @escaping (Value) -> U) -> Ref<U> {
-        Ref<U> { [get] in
-            transform(get())
+        Ref<U> { [getter] in
+            transform(getter())
         }
     }
 }
@@ -69,15 +69,25 @@ extension Ref where Value: AnyObject {
     /// Creates a reference that weakly caches the value returned from the original Provider.
     internal func weaklyCached() -> Ref<Value> {
         weak var cache: Value?
-        return Ref { [get] in
-            let value = cache ?? get()
+        return Ref { [getter] in
+            let value = cache ?? getter()
             cache = value
             return value
         }
     }
 }
 
+extension Ref where Value == Date {
+    static let now = Ref { Date() }
+}
+
 extension Ref where Value == UIApplication.State {
     @available(iOSApplicationExtension, unavailable)
     static let global = Ref { UIApplication.shared.applicationState }
+}
+
+extension Ref {
+    static func weakRef<O: AnyObject>(_ object: O) -> Ref where Value == O? {
+        Ref { [weak object] in object }
+    }
 }

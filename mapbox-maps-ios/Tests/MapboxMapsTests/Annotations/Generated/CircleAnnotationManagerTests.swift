@@ -60,7 +60,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.id, manager.id)
     }
 
-    func testAddLayer() {
+    func testAddLayer() throws {
         style.addSourceStub.reset()
         let initializedManager = CircleAnnotationManager(
             id: id,
@@ -74,7 +74,8 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layer.type, LayerType.circle)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layer.id, initializedManager.id)
-        XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layer.source, initializedManager.sourceId)
+        let addedLayer = try XCTUnwrap(style.addPersistentLayerStub.invocations.last?.parameters.layer as? CircleLayer)
+        XCTAssertEqual(addedLayer.source, initializedManager.sourceId)
         XCTAssertNil(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition)
     }
 
@@ -207,6 +208,77 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         manager.handleQueriedFeatureIds(queriedFeatureIds)
 
         XCTAssertNil(delegateAnnotations)
+    }
+
+    func testInitialCircleEmissiveStrength() {
+        let initialValue = manager.circleEmissiveStrength
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetCircleEmissiveStrength() {
+        let value = Double.random(in: 0...100000)
+        manager.circleEmissiveStrength = value
+        XCTAssertEqual(manager.circleEmissiveStrength, value)
+
+        // test layer and source synced and properties added
+        manager.syncSourceAndLayerIfNeeded()
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-emissive-strength"] as! Double, value)
+    }
+
+    func testCircleEmissiveStrengthAnnotationPropertiesAddedWithoutDuplicate() {
+        let newCircleEmissiveStrengthProperty = Double.random(in: 0...100000)
+        let secondCircleEmissiveStrengthProperty = Double.random(in: 0...100000)
+
+        manager.circleEmissiveStrength = newCircleEmissiveStrengthProperty
+        manager.syncSourceAndLayerIfNeeded()
+        manager.circleEmissiveStrength = secondCircleEmissiveStrengthProperty
+        manager.syncSourceAndLayerIfNeeded()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-emissive-strength"] as! Double, secondCircleEmissiveStrengthProperty)
+    }
+
+    func testNewCircleEmissiveStrengthPropertyMergedWithAnnotationProperties() {
+        var annotations = [CircleAnnotation]()
+        for _ in 0...5 {
+            var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+            annotation.circleSortKey = Double.random(in: -100000...100000)
+            annotation.circleBlur = Double.random(in: -100000...100000)
+            annotation.circleColor = StyleColor.random()
+            annotation.circleOpacity = Double.random(in: 0...1)
+            annotation.circleRadius = Double.random(in: 0...100000)
+            annotation.circleStrokeColor = StyleColor.random()
+            annotation.circleStrokeOpacity = Double.random(in: 0...1)
+            annotation.circleStrokeWidth = Double.random(in: 0...100000)
+            annotations.append(annotation)
+        }
+        let newCircleEmissiveStrengthProperty = Double.random(in: 0...100000)
+
+        manager.annotations = annotations
+        manager.circleEmissiveStrength = newCircleEmissiveStrengthProperty
+        manager.syncSourceAndLayerIfNeeded()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-emissive-strength"])
+    }
+
+    func testSetToNilCircleEmissiveStrength() {
+        let newCircleEmissiveStrengthProperty = Double.random(in: 0...100000)
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-emissive-strength").value as! Double
+        manager.circleEmissiveStrength = newCircleEmissiveStrengthProperty
+        manager.syncSourceAndLayerIfNeeded()
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-emissive-strength"])
+
+        manager.circleEmissiveStrength = nil
+        manager.syncSourceAndLayerIfNeeded()
+        XCTAssertNil(manager.circleEmissiveStrength)
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-emissive-strength"] as! Double, defaultValue)
     }
 
     func testInitialCirclePitchAlignment() {

@@ -20,10 +20,7 @@ internal enum SignpostName {
 /// 3. All other values will be processed as a component names and be enabled accordingly.
 /// The comma `,` delimiter has to be used to pass multiple components (e.g. `"core,platform"`).
 /// 4. Value is case-insensitive.
-#if swift(>=5.8)
-@_documentation(visibility: public)
-#endif
-@_spi(Experimental) public struct Tracing: OptionSet {
+public struct Tracing: OptionSet {
     /// No tracing logs will be generated
     public static let disabled = Tracing([])
 
@@ -39,11 +36,8 @@ internal enum SignpostName {
     /// Environment variable name to change the default tracing value
     public static let environmentVariableName = "MAPBOX_MAPS_SIGNPOSTS_ENABLED"
 
-    #if swift(>=5.8)
-    @_documentation(visibility: public)
-    #endif
     /// Change tracing generation logic in runtime.
-    @_spi(Experimental) public static var status: Tracing = .runtimeValue() {
+    public static var status: Tracing = .runtimeValue() {
         didSet {
             Tracing.updateCore(tracing: status)
         }
@@ -59,6 +53,8 @@ internal enum SignpostName {
 
     internal static let disableTracingKeys = ["0", "disabled"]
 
+    internal static let enableTracingKeys = ["1", "enabled"]
+
     internal static func runtimeValue(
         provider: EnvironmentVariableProvider = { ProcessInfo.processInfo.environment[$0] }
     ) -> Tracing {
@@ -73,7 +69,7 @@ internal enum SignpostName {
             return .disabled
         }
 
-        guard !envValue.isEmpty else { return .enabled }
+        guard !envValue.isEmpty, !enableTracingKeys.contains(envValue) else { return .enabled }
 
         return envValue.split(separator: ",")
             .map({ $0.trimmingCharacters(in: .whitespaces) }).filter({ !$0.isEmpty })

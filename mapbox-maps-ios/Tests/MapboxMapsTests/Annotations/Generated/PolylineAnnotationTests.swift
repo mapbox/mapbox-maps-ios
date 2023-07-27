@@ -49,6 +49,36 @@ final class PolylineAnnotationTests: XCTestCase {
         XCTAssertEqual(lineBlur, annotation.lineBlur)
     }
 
+    func testLineBorderColor() {
+        let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
+        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
+        annotation.lineBorderColor =  StyleColor.testConstantValue()
+
+        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
+            return
+        }
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .string(lineBorderColor) = layerProperties["line-border-color"] else {
+            return XCTFail("Layer property line-border-color should be set to a string.")
+        }
+        XCTAssertEqual(lineBorderColor, annotation.lineBorderColor.flatMap { $0.rgbaString })
+    }
+
+    func testLineBorderWidth() {
+        let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
+        var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
+        annotation.lineBorderWidth =  Double.testConstantValue()
+
+        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
+            return
+        }
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(lineBorderWidth) = layerProperties["line-border-width"] else {
+            return XCTFail("Layer property line-border-width should be set to a number.")
+        }
+        XCTAssertEqual(lineBorderWidth, annotation.lineBorderWidth)
+    }
+
     func testLineColor() {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
         var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)

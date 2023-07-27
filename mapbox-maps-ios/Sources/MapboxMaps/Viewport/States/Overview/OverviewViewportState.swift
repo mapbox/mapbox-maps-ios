@@ -3,7 +3,7 @@ import Turf
 /// A ``ViewportState`` implementation that shows an overview of the geometry specified by its
 /// ``OverviewViewportStateOptions/geometry``.
 ///
-/// Use ``Viewport/makeOverviewViewportState(options:)`` to create instances of this
+/// Use ``ViewportManager/makeOverviewViewportState(options:)`` to create instances of this
 /// class.
 public final class OverviewViewportState {
 

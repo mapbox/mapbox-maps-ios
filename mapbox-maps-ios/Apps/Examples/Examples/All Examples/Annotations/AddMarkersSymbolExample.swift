@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 import MapboxMaps
 
 final class AddMarkersSymbolExample: UIViewController, ExampleProtocol {
@@ -69,8 +69,7 @@ final class AddMarkersSymbolExample: UIViewController, ExampleProtocol {
             Constants.RED_ICON_ID
             Constants.RED_ICON_ID
         }
-        var layer = SymbolLayer(id: Constants.LAYER_ID)
-        layer.source = Constants.SOURCE_ID
+        var layer = SymbolLayer(id: Constants.LAYER_ID, source: Constants.SOURCE_ID)
         layer.iconImage = .expression(imageExpression)
         layer.iconAnchor = .constant(.bottom)
         layer.iconAllowOverlap = .constant(false)

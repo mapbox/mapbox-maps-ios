@@ -5,15 +5,20 @@ import XCTest
 struct ClearOfflineDataCommand: AsyncCommand, Decodable {
     @MainActor
     func execute(context: Context) async throws {
-        let manager = OfflineManager()
-
-        let packs = try await manager.allStylePacks()
-
-        for pack in packs {
-            manager.removeStylePack(for: StyleURI(rawValue: pack.styleURI)!)
-        }
+        let offlineManager = OfflineManager()
+        let packs = try await offlineManager.allStylePacks()
 
         try await MapboxMap.clearData()
+
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            for pack in packs {
+                group.addTask {
+                    try await offlineManager.remove(stylePack: pack)
+                }
+            }
+
+            try await group.waitForAll()
+        }
 
         let tileStore = TileStore.default
         tileStore.setOptionForKey(TileStoreOptions.diskQuota, value: 0)

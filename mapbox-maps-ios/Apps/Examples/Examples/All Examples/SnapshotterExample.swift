@@ -86,7 +86,7 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
                 return
             }
 
-            let snapshotterCameraOptions = CameraOptions(cameraState: self.mapView.cameraState)
+            let snapshotterCameraOptions = CameraOptions(cameraState: self.mapView.mapboxMap.cameraState)
             self.snapshotter.setCamera(to: snapshotterCameraOptions)
             self.startSnapshot()
         }.store(in: &cancelables)

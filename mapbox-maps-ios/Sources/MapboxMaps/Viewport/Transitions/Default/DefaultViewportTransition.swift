@@ -1,6 +1,6 @@
 /// A default ``ViewportTransition`` implementation.
 ///
-/// Use ``Viewport/makeDefaultViewportTransition(options:)`` to create instances of this
+/// Use ``ViewportManager/makeDefaultViewportTransition(options:)`` to create instances of this
 /// class.
 public final class DefaultViewportTransition {
 

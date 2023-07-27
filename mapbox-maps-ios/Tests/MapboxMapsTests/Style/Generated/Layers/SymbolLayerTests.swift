@@ -1,30 +1,23 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class SymbolLayerTests: XCTestCase {
 
     func testLayerProtocolMembers() {
 
-        var layer = SymbolLayer(id: "test-id")
-        layer.source = "some-source"
-        layer.sourceLayer = nil
+        var layer = SymbolLayer(id: "test-id", source: "source")
         layer.minZoom = 10.0
         layer.maxZoom = 20.0
 
-        XCTAssert(layer.id == "test-id")
-        XCTAssert(layer.type == LayerType.symbol)
-        XCTAssert(layer.filter == nil)
-        XCTAssert(layer.source == "some-source")
-        XCTAssertNil(layer.sourceLayer)
-        XCTAssert(layer.minZoom == 10.0)
-        XCTAssert(layer.maxZoom == 20.0)
+        XCTAssertEqual(layer.id, "test-id")
+        XCTAssertEqual(layer.type, LayerType.symbol)
+        XCTAssertEqual(layer.minZoom, 10.0)
+        XCTAssertEqual(layer.maxZoom, 20.0)
     }
 
     func testEncodingAndDecodingOfLayerProtocolProperties() {
-        var layer = SymbolLayer(id: "test-id")
-        layer.source = "some-source"
-        layer.sourceLayer = nil
+        var layer = SymbolLayer(id: "test-id", source: "source")
         layer.minZoom = 10.0
         layer.maxZoom = 20.0
 
@@ -42,20 +35,18 @@ final class SymbolLayerTests: XCTestCase {
 
         do {
             let decodedLayer = try JSONDecoder().decode(SymbolLayer.self, from: validData)
-            XCTAssert(decodedLayer.id == "test-id")
-            XCTAssert(decodedLayer.type == LayerType.symbol)
-            XCTAssert(decodedLayer.filter == nil)
-            XCTAssert(decodedLayer.source == "some-source")
-            XCTAssertNil(decodedLayer.sourceLayer)
-            XCTAssert(decodedLayer.minZoom == 10.0)
-            XCTAssert(decodedLayer.maxZoom == 20.0)
+            XCTAssertEqual(decodedLayer.id, "test-id")
+            XCTAssertEqual(decodedLayer.type, LayerType.symbol)
+            XCTAssert(decodedLayer.source == "source")
+            XCTAssertEqual(decodedLayer.minZoom, 10.0)
+            XCTAssertEqual(decodedLayer.maxZoom, 20.0)
         } catch {
             XCTFail("Failed to decode SymbolLayer")
         }
     }
 
     func testEncodingAndDecodingOfLayoutProperties() {
-        var layer = SymbolLayer(id: "test-id")
+        var layer = SymbolLayer(id: "test-id", source: "source")
         layer.visibility = .visible
         layer.iconAllowOverlap = Value<Bool>.testConstantValue()
         layer.iconAnchor = Value<IconAnchor>.testConstantValue()
@@ -113,63 +104,67 @@ final class SymbolLayerTests: XCTestCase {
 
         do {
             let decodedLayer = try JSONDecoder().decode(SymbolLayer.self, from: validData)
-            XCTAssert(decodedLayer.visibility == .visible)
-            XCTAssert(layer.iconAllowOverlap == Value<Bool>.testConstantValue())
-            XCTAssert(layer.iconAnchor == Value<IconAnchor>.testConstantValue())
-            XCTAssert(layer.iconIgnorePlacement == Value<Bool>.testConstantValue())
-            XCTAssert(layer.iconImage == Value<ResolvedImage>.testConstantValue())
-            XCTAssert(layer.iconKeepUpright == Value<Bool>.testConstantValue())
-            XCTAssert(layer.iconOffset == Value<[Double]>.testConstantValue())
-            XCTAssert(layer.iconOptional == Value<Bool>.testConstantValue())
-            XCTAssert(layer.iconPadding == Value<Double>.testConstantValue())
-            XCTAssert(layer.iconPitchAlignment == Value<IconPitchAlignment>.testConstantValue())
-            XCTAssert(layer.iconRotate == Value<Double>.testConstantValue())
-            XCTAssert(layer.iconRotationAlignment == Value<IconRotationAlignment>.testConstantValue())
-            XCTAssert(layer.iconSize == Value<Double>.testConstantValue())
-            XCTAssert(layer.iconTextFit == Value<IconTextFit>.testConstantValue())
-            XCTAssert(layer.iconTextFitPadding == Value<[Double]>.testConstantValue())
-            XCTAssert(layer.symbolAvoidEdges == Value<Bool>.testConstantValue())
-            XCTAssert(layer.symbolPlacement == Value<SymbolPlacement>.testConstantValue())
-            XCTAssert(layer.symbolSortKey == Value<Double>.testConstantValue())
-            XCTAssert(layer.symbolSpacing == Value<Double>.testConstantValue())
-            XCTAssert(layer.symbolZOrder == Value<SymbolZOrder>.testConstantValue())
-            XCTAssert(layer.textAllowOverlap == Value<Bool>.testConstantValue())
-            XCTAssert(layer.textAnchor == Value<TextAnchor>.testConstantValue())
-            XCTAssert(layer.textField == Value<String>.testConstantValue())
-            XCTAssert(layer.textFont == Value<[String]>.testConstantValue())
-            XCTAssert(layer.textIgnorePlacement == Value<Bool>.testConstantValue())
-            XCTAssert(layer.textJustify == Value<TextJustify>.testConstantValue())
-            XCTAssert(layer.textKeepUpright == Value<Bool>.testConstantValue())
-            XCTAssert(layer.textLetterSpacing == Value<Double>.testConstantValue())
-            XCTAssert(layer.textLineHeight == Value<Double>.testConstantValue())
-            XCTAssert(layer.textMaxAngle == Value<Double>.testConstantValue())
-            XCTAssert(layer.textMaxWidth == Value<Double>.testConstantValue())
-            XCTAssert(layer.textOffset == Value<[Double]>.testConstantValue())
-            XCTAssert(layer.textOptional == Value<Bool>.testConstantValue())
-            XCTAssert(layer.textPadding == Value<Double>.testConstantValue())
-            XCTAssert(layer.textPitchAlignment == Value<TextPitchAlignment>.testConstantValue())
-            XCTAssert(layer.textRadialOffset == Value<Double>.testConstantValue())
-            XCTAssert(layer.textRotate == Value<Double>.testConstantValue())
-            XCTAssert(layer.textRotationAlignment == Value<TextRotationAlignment>.testConstantValue())
-            XCTAssert(layer.textSize == Value<Double>.testConstantValue())
-            XCTAssert(layer.textTransform == Value<TextTransform>.testConstantValue())
-            XCTAssert(layer.textVariableAnchor == Value<[TextAnchor]>.testConstantValue())
-            XCTAssert(layer.textWritingMode == Value<[TextWritingMode]>.testConstantValue())
+            XCTAssertEqual(decodedLayer.visibility, .visible)
+            XCTAssertEqual(layer.iconAllowOverlap, Value<Bool>.testConstantValue())
+            XCTAssertEqual(layer.iconAnchor, Value<IconAnchor>.testConstantValue())
+            XCTAssertEqual(layer.iconIgnorePlacement, Value<Bool>.testConstantValue())
+            XCTAssertEqual(layer.iconImage, Value<ResolvedImage>.testConstantValue())
+            XCTAssertEqual(layer.iconKeepUpright, Value<Bool>.testConstantValue())
+            XCTAssertEqual(layer.iconOffset, Value<[Double]>.testConstantValue())
+            XCTAssertEqual(layer.iconOptional, Value<Bool>.testConstantValue())
+            XCTAssertEqual(layer.iconPadding, Value<Double>.testConstantValue())
+            XCTAssertEqual(layer.iconPitchAlignment, Value<IconPitchAlignment>.testConstantValue())
+            XCTAssertEqual(layer.iconRotate, Value<Double>.testConstantValue())
+            XCTAssertEqual(layer.iconRotationAlignment, Value<IconRotationAlignment>.testConstantValue())
+            XCTAssertEqual(layer.iconSize, Value<Double>.testConstantValue())
+            XCTAssertEqual(layer.iconTextFit, Value<IconTextFit>.testConstantValue())
+            XCTAssertEqual(layer.iconTextFitPadding, Value<[Double]>.testConstantValue())
+            XCTAssertEqual(layer.symbolAvoidEdges, Value<Bool>.testConstantValue())
+            XCTAssertEqual(layer.symbolPlacement, Value<SymbolPlacement>.testConstantValue())
+            XCTAssertEqual(layer.symbolSortKey, Value<Double>.testConstantValue())
+            XCTAssertEqual(layer.symbolSpacing, Value<Double>.testConstantValue())
+            XCTAssertEqual(layer.symbolZOrder, Value<SymbolZOrder>.testConstantValue())
+            XCTAssertEqual(layer.textAllowOverlap, Value<Bool>.testConstantValue())
+            XCTAssertEqual(layer.textAnchor, Value<TextAnchor>.testConstantValue())
+            XCTAssertEqual(layer.textField, Value<String>.testConstantValue())
+            XCTAssertEqual(layer.textFont, Value<[String]>.testConstantValue())
+            XCTAssertEqual(layer.textIgnorePlacement, Value<Bool>.testConstantValue())
+            XCTAssertEqual(layer.textJustify, Value<TextJustify>.testConstantValue())
+            XCTAssertEqual(layer.textKeepUpright, Value<Bool>.testConstantValue())
+            XCTAssertEqual(layer.textLetterSpacing, Value<Double>.testConstantValue())
+            XCTAssertEqual(layer.textLineHeight, Value<Double>.testConstantValue())
+            XCTAssertEqual(layer.textMaxAngle, Value<Double>.testConstantValue())
+            XCTAssertEqual(layer.textMaxWidth, Value<Double>.testConstantValue())
+            XCTAssertEqual(layer.textOffset, Value<[Double]>.testConstantValue())
+            XCTAssertEqual(layer.textOptional, Value<Bool>.testConstantValue())
+            XCTAssertEqual(layer.textPadding, Value<Double>.testConstantValue())
+            XCTAssertEqual(layer.textPitchAlignment, Value<TextPitchAlignment>.testConstantValue())
+            XCTAssertEqual(layer.textRadialOffset, Value<Double>.testConstantValue())
+            XCTAssertEqual(layer.textRotate, Value<Double>.testConstantValue())
+            XCTAssertEqual(layer.textRotationAlignment, Value<TextRotationAlignment>.testConstantValue())
+            XCTAssertEqual(layer.textSize, Value<Double>.testConstantValue())
+            XCTAssertEqual(layer.textTransform, Value<TextTransform>.testConstantValue())
+            XCTAssertEqual(layer.textVariableAnchor, Value<[TextAnchor]>.testConstantValue())
+            XCTAssertEqual(layer.textWritingMode, Value<[TextWritingMode]>.testConstantValue())
         } catch {
             XCTFail("Failed to decode SymbolLayer")
         }
     }
 
     func testEncodingAndDecodingOfPaintProperties() {
-       var layer = SymbolLayer(id: "test-id")
+       var layer = SymbolLayer(id: "test-id", source: "source")
        layer.iconColor = Value<StyleColor>.testConstantValue()
        layer.iconColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.iconEmissiveStrength = Value<Double>.testConstantValue()
+       layer.iconEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.iconHaloBlur = Value<Double>.testConstantValue()
        layer.iconHaloBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.iconHaloColor = Value<StyleColor>.testConstantValue()
        layer.iconHaloColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.iconHaloWidth = Value<Double>.testConstantValue()
        layer.iconHaloWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.iconImageCrossFade = Value<Double>.testConstantValue()
+       layer.iconImageCrossFadeTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.iconOpacity = Value<Double>.testConstantValue()
        layer.iconOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.iconTranslate = Value<[Double]>.testConstantValue()
@@ -177,6 +172,8 @@ final class SymbolLayerTests: XCTestCase {
        layer.iconTranslateAnchor = Value<IconTranslateAnchor>.testConstantValue()
        layer.textColor = Value<StyleColor>.testConstantValue()
        layer.textColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.textEmissiveStrength = Value<Double>.testConstantValue()
+       layer.textEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.textHaloBlur = Value<Double>.testConstantValue()
        layer.textHaloBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.textHaloColor = Value<StyleColor>.testConstantValue()
@@ -203,21 +200,24 @@ final class SymbolLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(SymbolLayer.self, from: validData)
-           XCTAssert(decodedLayer.visibility == .visible)
-           XCTAssert(layer.iconColor == Value<StyleColor>.testConstantValue())
-           XCTAssert(layer.iconHaloBlur == Value<Double>.testConstantValue())
-           XCTAssert(layer.iconHaloColor == Value<StyleColor>.testConstantValue())
-           XCTAssert(layer.iconHaloWidth == Value<Double>.testConstantValue())
-           XCTAssert(layer.iconOpacity == Value<Double>.testConstantValue())
-           XCTAssert(layer.iconTranslate == Value<[Double]>.testConstantValue())
-           XCTAssert(layer.iconTranslateAnchor == Value<IconTranslateAnchor>.testConstantValue())
-           XCTAssert(layer.textColor == Value<StyleColor>.testConstantValue())
-           XCTAssert(layer.textHaloBlur == Value<Double>.testConstantValue())
-           XCTAssert(layer.textHaloColor == Value<StyleColor>.testConstantValue())
-           XCTAssert(layer.textHaloWidth == Value<Double>.testConstantValue())
-           XCTAssert(layer.textOpacity == Value<Double>.testConstantValue())
-           XCTAssert(layer.textTranslate == Value<[Double]>.testConstantValue())
-           XCTAssert(layer.textTranslateAnchor == Value<TextTranslateAnchor>.testConstantValue())
+           XCTAssertEqual(decodedLayer.visibility, .visible)
+           XCTAssertEqual(layer.iconColor, Value<StyleColor>.testConstantValue())
+           XCTAssertEqual(layer.iconEmissiveStrength, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.iconHaloBlur, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.iconHaloColor, Value<StyleColor>.testConstantValue())
+           XCTAssertEqual(layer.iconHaloWidth, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.iconImageCrossFade, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.iconOpacity, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.iconTranslate, Value<[Double]>.testConstantValue())
+           XCTAssertEqual(layer.iconTranslateAnchor, Value<IconTranslateAnchor>.testConstantValue())
+           XCTAssertEqual(layer.textColor, Value<StyleColor>.testConstantValue())
+           XCTAssertEqual(layer.textEmissiveStrength, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.textHaloBlur, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.textHaloColor, Value<StyleColor>.testConstantValue())
+           XCTAssertEqual(layer.textHaloWidth, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.textOpacity, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.textTranslate, Value<[Double]>.testConstantValue())
+           XCTAssertEqual(layer.textTranslateAnchor, Value<TextTranslateAnchor>.testConstantValue())
        } catch {
            XCTFail("Failed to decode SymbolLayer")
        }

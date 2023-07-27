@@ -4,6 +4,26 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Introduce `hsl`, `hsla` color expression.
+* Introduce `random` expression.
+* Introduce `measureLight` expression lights configuration property.
+* Introduce `LineLayer/lineBorderColor`, `LineLayer/lineBorderWidth` APIs.
+* Introduce `SymbolLayer/iconImageCrossFade` API.
+* Introduce experimental `BackgroundLayer/backgroundEmissiveStrength`, `CircleLayer/circleEmissiveStrength`, `FillLayer/fillEmissiveStrength`, `LineLayer/lineEmissiveStrength`, `SymbolLayer/iconEmissiveStrength`, `SymbolLayer/textEmissiveStrength`, `ModelLayer/modelEmissiveStrength`, `ModelLayer/modelRoughness`, `ModelLayer/modelHeightBasedEmissiveStrengthMultiplier` APIs.
+* Introduce experimental `FillExtrusionLayer/fillExtrusionAmbientOcclusionWallRadius`, `FillExtrusionLayer/fillExtrusionAmbientOcclusionGroundRadius`, `FillExtrusionLayer/fillExtrusionAmbientOcclusionGroundAttenuation`, `FillExtrusionLayer/fillExtrusionFloodLightColor`, `FillExtrusionLayer/fillExtrusionFloodLightIntensity`, `FillExtrusionLayer/fillExtrusionFloodLightWallRadius`, `FillExtrusionLayer/fillExtrusionFloodLightGroundRadius`, `FillExtrusionLayer/fillExtrusionFloodLightGroundAttenuation`, `FillExtrusionLayer/fillExtrusionVerticalScale` APIs.
+* Rename `Viewport` to `ViewportManager`.
+* Apply `ModelScaleMode.viewport` to Puck3D configuration and remove the custom expression for the `modelScale` of the puck. This means if you are using a constant for `Puck3DConfiguration/modelScale` in v10, you need to adjust this model-scale constant so the puck would be rendered correctly in v11, while this value depends on other configurations of your puck, we have found the new adjusted model-scale to fall between 10x-100x of the old value.
+* Add experimental `tileCover` method to the `Snapshotter` that returns tile ids covering the map.
+* SDK no longer reexport MetalKit and UIKit.
+* Add optional `maxZoom` and `offset` parameters to `MapboxMap.camera(for coordinateBounds:)`. `MapboxMap.camera(for coordinateBounds:)`, `MapboxMap.camera(for coordinates:)`, and `MapboxMap.camera(for geometry:)` no longer return a padding value.
+* `Location` is splitted into `Location` and `Heading` structs, the location and heading data are now animated individually.
+* Replace `loadStyleJSON(_:completion:)`/`loadStyleJSON(_:completion:)` with overloaded `loadStyle(_:completion:)`.
+* Mark `Expression.Operator.activeAnchor` as experimental.
+* Add transition options as a parameter to `loadStyle(...)` methods.
+* Add `MapboxMap.coordinate(s)Info(for:)` for converting offscreen points into geographical coordinates.
+* Fixed an issue when `MapboxMap.point(for:)` could return false negative result.
+* Remove `source`, `sourceLayer`, `filter` properties from the `Layer` protocol requirement.
+
 ## 11.0.0-alpha.2 - 21 June, 2023
 
 * Remove unnecessary check before updating a geo json source.
@@ -88,13 +108,18 @@ Mapbox welcomes participation and contributions from everyone.
 * Support string option in `GeoJSONSourceData`.
 * Allows passing `extraOptions` (which must be a valid JSON object) when creating `StylePackLoadOptions`and `TilesetDescriptorOptions`.
 * Deprecate `MapboxMap/style` and `Snapshotter/style`, from now on you can access Style APIs directly from `MapboxMap` and `Snapshotter` instance.
-*  Support string option in `GeoJSONSourceData`.
-* Add a new experimental API to enable Tracing with `Tracing.status = .enabled`. Checkout `Tracing` reference to see more.
+* Add a new API to enable Tracing with `Tracing.status = .enabled`. Checkout `Tracing` reference to see more.
 * Introduce `FillExtrusionLayer.fillExtrusionRoundedRoof` , `FillExtrusionLayer.fillExtrusionEdgeRadius` API.
 * Introduce `line-depth-occlusion` API.
 * Introduce `FillExtrusionLayer/fillExtrusionRoundedRoof`, `FillExtrusionLayer/fillExtrusionEdgeRadius` API.
 * Introduce `lineDepthOcclusionFactor` API for `LineLayer`s and `PolylineAnnotiationManager`.
 * Add `Codable` support to `CameraOptions`, `CameraState`, `FollowPuckViewportStateBearing`, `FollowPuckViewportStateOptions`.
+* Expose new Style APIs for partial GeoJSON update:
+```swift
+MapboxMap.addGeoJSONSourceFeatures(forSourceId:features:dataId:)
+MapboxMap.updateGeoJSONSourceFeatures(forSourceId:features:dataId:)
+MapboxMap.removeGeoJSONSourceFeatures(forSourceId:featureIds:dataId:)
+```
 
 ## 10.14.0 - June 14, 2023
 
@@ -110,7 +135,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## 10.14.0-beta.1 - May 17, 2023
 
 * Add a renamed flag to `PuckBearingSource` and related APIs.
-* Update MapboxCoreMaps to 10.14.0-beta.1 and MapboxCommon to 23.6.0-beta.1. 
+* Update MapboxCoreMaps to 10.14.0-beta.1 and MapboxCommon to 23.6.0-beta.1.
 
 ## 10.13.1 - May 5, 2023
 
@@ -120,7 +145,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## 10.13.0-rc.1 - April 19, 2023
 
-* Update MapboxCoreMaps to 10.13.0-rc.1 and MapboxCommon to 23.5.0-rc.1. 
+* Update MapboxCoreMaps to 10.13.0-rc.1 and MapboxCommon to 23.5.0-rc.1.
 
 ## 10.13.0-beta.1 - April 5, 2023
 

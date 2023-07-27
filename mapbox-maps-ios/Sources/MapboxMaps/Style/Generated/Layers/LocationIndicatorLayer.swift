@@ -7,12 +7,16 @@ import Foundation
 public struct LocationIndicatorLayer: Layer {
 
     // MARK: - Conformance to `Layer` protocol
+    /// Unique layer name
     public var id: String
+
+    /// Rendering type of this layer.
     public let type: LayerType
-    public var filter: Expression?
-    public var source: String?
-    public var sourceLayer: String?
+
+    /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
     public var minZoom: Double?
+
+    /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
@@ -109,9 +113,6 @@ public struct LocationIndicatorLayer: Layer {
         var container = encoder.container(keyedBy: RootCodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(type, forKey: .type)
-        try container.encodeIfPresent(filter, forKey: .filter)
-        try container.encodeIfPresent(source, forKey: .source)
-        try container.encodeIfPresent(sourceLayer, forKey: .sourceLayer)
         try container.encodeIfPresent(minZoom, forKey: .minZoom)
         try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
 
@@ -152,9 +153,6 @@ public struct LocationIndicatorLayer: Layer {
         let container = try decoder.container(keyedBy: RootCodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         type = try container.decode(LayerType.self, forKey: .type)
-        filter = try container.decodeIfPresent(Expression.self, forKey: .filter)
-        source = try container.decodeIfPresent(String.self, forKey: .source)
-        sourceLayer = try container.decodeIfPresent(String.self, forKey: .sourceLayer)
         minZoom = try container.decodeIfPresent(Double.self, forKey: .minZoom)
         maxZoom = try container.decodeIfPresent(Double.self, forKey: .maxZoom)
 
@@ -198,9 +196,6 @@ public struct LocationIndicatorLayer: Layer {
     enum RootCodingKeys: String, CodingKey {
         case id = "id"
         case type = "type"
-        case filter = "filter"
-        case source = "source"
-        case sourceLayer = "source-layer"
         case minZoom = "minzoom"
         case maxZoom = "maxzoom"
         case layout = "layout"

@@ -9,7 +9,9 @@ internal class SignalSubject<Payload> {
     /// Use `signal` to subscribe to events.
     let signal: Signal<Payload>
 
-    private let onObserved: ObservationHandler?
+    /// A callback that receives `true` when the first observer is added, and `false`
+    /// when the last observer is gone.
+    var onObserved: ObservationHandler?
 
     private var subscriptions = [Subscription]() {
         didSet {
@@ -21,17 +23,11 @@ internal class SignalSubject<Payload> {
         }
     }
 
-    /// Creates SignalSubject.
-    ///
-    /// - Parameters:
-    ///     onObserved: A callback recieves `true` when the first observer is added, and `false` when last observer is gone.
-    init(onObserved: ObservationHandler? = nil) {
-        self.onObserved = onObserved
-
+    init() {
         weak var weakSelf: SignalSubject?
         self.signal = Signal(observeImpl: { handler in
             assert(weakSelf != nil, "Subscription to deallocated subject")
-            return weakSelf?.observe(handler: handler) ?? AnyCancelable {}
+            return weakSelf?.observe(handler: handler) ?? .empty
         })
         weakSelf = self
     }
@@ -52,11 +48,17 @@ internal class SignalSubject<Payload> {
         let subscription = Subscription(subject: handler)
         subscriptions.append(subscription)
 
-        // Use of AnyCancelable here allows to have unambigous cancellation behaviour:
+        // Use of AnyCancelable here allows to have unambiguous cancellation behavior:
         // If you don't store the cancellable, it inevitably cancels the subscription.
         return AnyCancelable {
             self.cancel(subscription: subscription)
         }
+    }
+}
+
+extension SignalSubject where Payload == Void {
+    func send() {
+        send(())
     }
 }
 
@@ -69,20 +71,20 @@ extension SignalSubject {
     ///   - method: A closure that subscribes to certain event in callback-style.
     static func from(method: @escaping (@escaping Handler) -> Cancelable) -> SignalSubject {
         var cancellable: Cancelable?
-        weak var weakSelf: SignalSubject?
-        let subject = SignalSubject { observed in
+
+        let subject = SignalSubject()
+        subject.onObserved = { [weak subject] observed in
             if observed {
                 assert(cancellable == nil)
                 cancellable = method { payload in
-                    assert(weakSelf != nil)
-                    weakSelf?.send(payload)
+                    assert(subject != nil)
+                    subject?.send(payload)
                 }
             } else {
                 cancellable?.cancel()
                 cancellable = nil
             }
         }
-        weakSelf = subject
         return subject
     }
 

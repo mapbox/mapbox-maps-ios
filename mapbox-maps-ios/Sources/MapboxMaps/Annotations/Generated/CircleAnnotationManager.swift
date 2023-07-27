@@ -102,8 +102,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
             try style.addSource(source)
 
             // Add the correct backing layer for this annotation type
-            var layer = CircleLayer(id: layerId)
-            layer.source = sourceId
+            let layer = CircleLayer(id: layerId, source: sourceId)
             try style.addPersistentLayer(layer, layerPosition: layerPosition)
         } catch {
             Log.error(
@@ -202,6 +201,16 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
     }
 
     // MARK: - Common layer properties
+
+    /// Emission strength.
+    public var circleEmissiveStrength: Double? {
+        get {
+            return layerProperties["circle-emissive-strength"] as? Double
+        }
+        set {
+            layerProperties["circle-emissive-strength"] = newValue
+        }
+    }
 
     /// Orientation of circle when map is pitched.
     public var circlePitchAlignment: CirclePitchAlignment? {

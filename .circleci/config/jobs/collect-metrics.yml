@@ -1,4 +1,5 @@
 executor: xcode-sdk-min
+resource_class: macos.x86.medium.gen2
 steps:
   - checkout
   - mapbox/add-mapbox-ssh-key

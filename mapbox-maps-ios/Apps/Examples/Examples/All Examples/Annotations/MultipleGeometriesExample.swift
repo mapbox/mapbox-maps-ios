@@ -64,12 +64,11 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
 
     /// Create and style a FillLayer that uses the Polygon Feature's coordinates in the GeoJSON data
     private func addPolygonLayer() {
-        var polygonLayer = FillLayer(id: "fill-layer")
+        var polygonLayer = FillLayer(id: "fill-layer", source: Constants.geoJSONDataSourceIdentifier)
         polygonLayer.filter = Exp(.eq) {
             "$type"
             "Polygon"
         }
-        polygonLayer.source = Constants.geoJSONDataSourceIdentifier
         polygonLayer.fillColor = .constant(StyleColor(red: 68, green: 105, blue: 247, alpha: 1)!)
         polygonLayer.fillOpacity = .constant(0.3)
         try! mapView.mapboxMap.addLayer(polygonLayer)
@@ -77,12 +76,11 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
 
     private func addLineStringLayer() {
         // Create and style a LineLayer that uses the Line String Feature's coordinates in the GeoJSON data
-        var lineLayer = LineLayer(id: "line-layer")
+        var lineLayer = LineLayer(id: "line-layer", source: Constants.geoJSONDataSourceIdentifier)
         lineLayer.filter = Exp(.eq) {
             "$type"
             "LineString"
         }
-        lineLayer.source = Constants.geoJSONDataSourceIdentifier
         lineLayer.lineColor = .constant(StyleColor(.red))
         lineLayer.lineWidth = .constant(2)
         try! mapView.mapboxMap.addLayer(lineLayer)
@@ -92,12 +90,11 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
         // Create a circle layer associated with the GeoJSON data source,
         // filter it so that only the point data is shown,
         // and apply basic styling to it.
-        var circleLayer = CircleLayer(id: "circle-layer")
+        var circleLayer = CircleLayer(id: "circle-layer", source: Constants.geoJSONDataSourceIdentifier)
         circleLayer.filter = Exp(.eq) {
             "$type"
             "Point"
         }
-        circleLayer.source = Constants.geoJSONDataSourceIdentifier
         circleLayer.circleColor = .constant(StyleColor(.red))
         circleLayer.circleRadius = .constant(6.0)
         circleLayer.circleStrokeWidth = .constant(2.0)

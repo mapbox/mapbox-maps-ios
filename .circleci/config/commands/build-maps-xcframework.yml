@@ -26,7 +26,7 @@ steps:
       command: |
         brew install mint
         pip3 install gitpython awscli
-        echo "export PATH=\"$HOME/.mint/bin:$PATH\"" >> $BASH_ENV
+        echo "export PATH=\"$HOME/.mint/bin:"'$PATH'"\"" >> $BASH_ENV
         mint install git@github.com:mapbox/ios-binary-size.git
         unzip ~/project/MapboxMaps.zip "artifacts/MapboxMaps.xcframework/*"
   - unless:

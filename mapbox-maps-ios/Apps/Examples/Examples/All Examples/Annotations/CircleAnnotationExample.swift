@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 import MapboxMaps
 
 final class CircleAnnotationExample: UIViewController, ExampleProtocol {
@@ -7,6 +7,9 @@ final class CircleAnnotationExample: UIViewController, ExampleProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), zoom: 2)
+        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
+        mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 

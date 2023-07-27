@@ -34,10 +34,9 @@ public class FitCameraToGeometryExample: UIViewController, ExampleProtocol {
         var source = GeoJSONSource(id: "triangle-source")
         source.data = .feature(polygonFeature)
 
-        var polygonLayer = FillLayer(id: "triangle-style")
+        var polygonLayer = FillLayer(id: "triangle-style", source: source.id)
         polygonLayer.fillOpacity = .constant(0.5)
         polygonLayer.fillColor = .constant(StyleColor(.gray))
-        polygonLayer.source = source.id
 
         do {
             try mapView.mapboxMap.addSource(source)

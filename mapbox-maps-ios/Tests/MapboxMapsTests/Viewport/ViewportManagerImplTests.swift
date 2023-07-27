@@ -1,7 +1,7 @@
 import XCTest
 @testable import MapboxMaps
 
-final class ViewportImplTests: XCTestCase {
+final class ViewportManagerImplTests: XCTestCase {
 
     var options: ViewportOptions!
     var mainQueue: MockDispatchQueue!
@@ -9,7 +9,7 @@ final class ViewportImplTests: XCTestCase {
     var anyTouchGestureRecognizer: MockGestureRecognizer!
     var doubleTapGestureRecognizer: MockGestureRecognizer!
     var doubleTouchGestureRecognizer: MockGestureRecognizer!
-    var viewportImpl: ViewportImpl!
+    var viewportImpl: ViewportManagerImpl!
     var statusObserver: MockViewportStatusObserver!
 
     override func setUp() {
@@ -20,7 +20,7 @@ final class ViewportImplTests: XCTestCase {
         anyTouchGestureRecognizer = MockGestureRecognizer()
         doubleTapGestureRecognizer = MockGestureRecognizer()
         doubleTouchGestureRecognizer = MockGestureRecognizer()
-        viewportImpl = ViewportImpl(
+        viewportImpl = ViewportManagerImpl(
             options: options,
             mainQueue: mainQueue,
             defaultTransition: defaultTransition,
@@ -241,7 +241,7 @@ final class ViewportImplTests: XCTestCase {
         XCTAssertEqual(transitionToBRunCancelable.cancelStub.invocations.count, 1)
     }
 
-    // this test fails if ViewportImpl notifies observers of status changes synchronously
+    // this test fails if ViewportManagerImpl notifies observers of status changes synchronously
     func testStatusObserverDeliveryOrderMultipleObserversAndObserverInitiatedTransition() {
         let stateA = MockViewportState()
         let stateB = MockViewportState()

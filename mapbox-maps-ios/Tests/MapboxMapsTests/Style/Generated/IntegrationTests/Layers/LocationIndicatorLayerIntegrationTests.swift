@@ -20,8 +20,6 @@ final class LocationIndicatorLayerIntegrationTests: MapViewIntegrationTestCase {
         didFinishLoadingStyle = { mapView in
 
             var layer = LocationIndicatorLayer(id: "test-id")
-            layer.source = "some-source"
-            layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
             layer.visibility = .visible

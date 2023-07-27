@@ -83,6 +83,7 @@
 		955B69EF299AAE6700FD4A19 /* RasterColorExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955B69EE299AAE6700FD4A19 /* RasterColorExample.swift */; };
 		95857AC229B7A1A2005D238C /* LongTapAnimationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95857AC129B7A1A2005D238C /* LongTapAnimationExample.swift */; };
 		959EDE5229F5520500AEE16C /* MapEventsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959EDE5129F5520500AEE16C /* MapEventsExample.swift */; };
+		95A7E4F12A6ECBC700C2E81D /* CombineLocationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A7E4F02A6ECBC700C2E81D /* CombineLocationExample.swift */; };
 		95A8C6A32A1A60E900D0FB48 /* CombineExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A8C6A22A1A60E900D0FB48 /* CombineExample.swift */; };
 		95B589B62982BFE800BF4F31 /* SimpleMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B589B02982BFE800BF4F31 /* SimpleMapExample.swift */; };
 		95B589B82982BFE800BF4F31 /* SwiftUIRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B589B22982BFE800BF4F31 /* SwiftUIRoot.swift */; };
@@ -99,7 +100,6 @@
 		B5327EC3260277AC0095B6BD /* ExampleProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5327EC2260277AC0095B6BD /* ExampleProtocol.swift */; };
 		B57E1BAE27B5B6B900E8E3BA /* ViewportExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57E1BAD27B5B6B900E8E3BA /* ViewportExample.swift */; };
 		B58E470927BABE0E00D87FD6 /* AdvancedViewportGesturesExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58E470827BABE0E00D87FD6 /* AdvancedViewportGesturesExample.swift */; };
-		B5E6397C28066BDD00F95094 /* SimulatedLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E6397B28066BDD00F95094 /* SimulatedLocationProvider.swift */; };
 		C608C107267BC5B1003C86C3 /* LocalizationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = C608C106267BC5B1003C86C3 /* LocalizationExample.swift */; };
 		CA03F10F26268DF700673961 /* OfflineManagerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA03F10E26268DF700673961 /* OfflineManagerExample.swift */; };
 		CA4F1F7225E815CF00822D2A /* SwiftUIExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07A2E03C25CB64E20082BC31 /* SwiftUIExample.swift */; };
@@ -264,6 +264,7 @@
 		955B69EE299AAE6700FD4A19 /* RasterColorExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RasterColorExample.swift; sourceTree = "<group>"; };
 		95857AC129B7A1A2005D238C /* LongTapAnimationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongTapAnimationExample.swift; sourceTree = "<group>"; };
 		959EDE5129F5520500AEE16C /* MapEventsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapEventsExample.swift; sourceTree = "<group>"; };
+		95A7E4F02A6ECBC700C2E81D /* CombineLocationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineLocationExample.swift; sourceTree = "<group>"; };
 		95A8C6A22A1A60E900D0FB48 /* CombineExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineExample.swift; sourceTree = "<group>"; };
 		95B589B02982BFE800BF4F31 /* SimpleMapExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleMapExample.swift; sourceTree = "<group>"; };
 		95B589B22982BFE800BF4F31 /* SwiftUIRoot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftUIRoot.swift; sourceTree = "<group>"; };
@@ -280,7 +281,6 @@
 		B5327EC2260277AC0095B6BD /* ExampleProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleProtocol.swift; sourceTree = "<group>"; };
 		B57E1BAD27B5B6B900E8E3BA /* ViewportExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewportExample.swift; sourceTree = "<group>"; };
 		B58E470827BABE0E00D87FD6 /* AdvancedViewportGesturesExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedViewportGesturesExample.swift; sourceTree = "<group>"; };
-		B5E6397B28066BDD00F95094 /* SimulatedLocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatedLocationProvider.swift; sourceTree = "<group>"; };
 		C608C106267BC5B1003C86C3 /* LocalizationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationExample.swift; sourceTree = "<group>"; };
 		C64ED3842540A2BE00ADADFB /* CameraAnimationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraAnimationExample.swift; sourceTree = "<group>"; };
 		C64ED3C42540DD6E00ADADFB /* CustomPointAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPointAnnotationExample.swift; sourceTree = "<group>"; };
@@ -335,7 +335,6 @@
 				B5327EBE260277930095B6BD /* Example.swift */,
 				B5327EC2260277AC0095B6BD /* ExampleProtocol.swift */,
 				0746C14D252FA9D4001638BD /* Examples.swift */,
-				B5E6397B28066BDD00F95094 /* SimulatedLocationProvider.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -537,6 +536,7 @@
 				95A8C6A22A1A60E900D0FB48 /* CombineExample.swift */,
 				7406E36F2806B66F002CC41F /* ResizableImageExample.swift */,
 				FE99952A2A1E05200068AB12 /* Lights3DExample.swift */,
+				95A7E4F02A6ECBC700C2E81D /* CombineLocationExample.swift */,
 			);
 			path = Lab;
 			sourceTree = "<group>";
@@ -861,6 +861,7 @@
 				7412CF6827E9A8D600F03B1C /* UIColor+Random.swift in Sources */,
 				0CC4ECEA25B8AD3000F998B8 /* Custom2DPuckExample.swift in Sources */,
 				CADCF71F2584990E0065C51B /* DataDrivenSymbolsExample.swift in Sources */,
+				95A7E4F12A6ECBC700C2E81D /* CombineLocationExample.swift in Sources */,
 				CADCF7302584990E0065C51B /* LayerPositionExample.swift in Sources */,
 				FEA410F02A2630EF002F1816 /* ApplicationCarPlaySceneDelegage.swift in Sources */,
 				CA86E81825BE7C2300E5A1D9 /* BuildingExtrusionsExample.swift in Sources */,
@@ -870,7 +871,6 @@
 				CADCF7282584990E0065C51B /* LineAnnotationExample.swift in Sources */,
 				74D0803A28A13916008EB69C /* BasicLocationPulsingExample.swift in Sources */,
 				CADCF72F2584990E0065C51B /* SnapshotterCoreGraphicsExample.swift in Sources */,
-				B5E6397C28066BDD00F95094 /* SimulatedLocationProvider.swift in Sources */,
 				FEA410F62A26314A002F1816 /* CarPlayMapViewController.swift in Sources */,
 				304AB3B527439287005B6D09 /* ViewAnnotationMarkerExample.swift in Sources */,
 				CA4F1F7225E815CF00822D2A /* SwiftUIExample.swift in Sources */,

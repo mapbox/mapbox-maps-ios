@@ -1,40 +1,16 @@
 import Foundation
 import MapboxMaps
+import Combine
 
-final class OnDemandLocationProvider: LocationProvider {
-    private let locationConsumers = NSHashTable<AnyObject>.weakObjects()
+final class OnDemandLocationProvider {
+    @Published
+    var coordinate: CLLocationCoordinate2D?
 
-
-    var latestLocation: Location? {
-        return Location(
-            location: CLLocation(latitude: currentCoordination.latitude, longitude: currentCoordination.longitude),
-            accuracyAuthorization: .fullAccuracy
-        )
-    }
-
-    var currentCoordination: LocationCoordinate2D! {
-        didSet {
-            startUpdatingLocation()
-        }
-    }
-
-    init() {}
-
-    func startUpdatingLocation() {
-        guard currentCoordination != nil else { return }
-        let clLocation = CLLocation(latitude: currentCoordination.latitude, longitude: currentCoordination.longitude)
-        let location = Location(location: clLocation, accuracyAuthorization: .fullAccuracy)
-
-        for consumer in locationConsumers.allObjects {
-            (consumer as? LocationConsumer)?.locationUpdate(newLocation: location)
-        }
-    }
-
-    func add(consumer: LocationConsumer) {
-        locationConsumers.add(consumer)
-    }
-
-    func remove(consumer: LocationConsumer) {
-        locationConsumers.remove(consumer)
+    var locations: Signal<[Location]> {
+        return $coordinate
+            .compactMap { $0 }
+            .map { coordinate in
+                [Location(coordinate: coordinate, timestamp: Date())]
+            }.eraseToSignal()
     }
 }

@@ -63,8 +63,7 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
         var airplaneRoute = GeoJSONSource(id: "airplane-route")
         airplaneRoute.data = .feature(Feature(geometry: routeLine))
 
-        var lineLayer = LineLayer(id: "line-layer")
-        lineLayer.source = airplaneRoute.id
+        var lineLayer = LineLayer(id: "line-layer", source: airplaneRoute.id)
         lineLayer.lineColor = .constant(StyleColor(.red))
         lineLayer.lineWidth = .constant(3.0)
         lineLayer.lineCap = .constant(.round)
@@ -74,8 +73,7 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
         let point = Point(routeLine.coordinates[0])
         airplaneSymbol.data = .feature(Feature(geometry: point))
 
-        var airplaneSymbolLayer = SymbolLayer(id: "airplane")
-        airplaneSymbolLayer.source = airplaneSymbol.id
+        var airplaneSymbolLayer = SymbolLayer(id: "airplane", source: airplaneSymbol.id)
         // "airport" is the name the image that belongs in the style's sprite by default.
         airplaneSymbolLayer.iconImage = .constant(.name("airport"))
         airplaneSymbolLayer.iconRotationAlignment = .constant(.map)

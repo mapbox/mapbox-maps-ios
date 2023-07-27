@@ -14,7 +14,6 @@ parameters:
         - snapshots
     default: releases
 executor: xcode-sdk-min
-resource_class: macos.x86.medium.gen2
 steps:
   - checkout-root
   - configure-environment:

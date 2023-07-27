@@ -9,8 +9,7 @@ parameters:
 steps:
     - add-mapbox-submodules-key
     - checkout-root
-    - install-mbx-ci:
-        platform: linux
+    - mapbox/install-mbx-ci
     - run:
         command: |
             curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg

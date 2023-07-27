@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 import MapboxMaps
 
 struct CreateMapCommand: AsyncCommand, Decodable {
@@ -19,12 +19,8 @@ struct CreateMapCommand: AsyncCommand, Decodable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.style = try container.decode(StyleURI.self, forKey: .style)
-        self.camera = try container.decode(CameraOptions.self, forKey: .camera)
-        if try container.decodeIfPresent(Bool.self, forKey: .tileStoreUsage) == true {
-            self.tileStoreUsageMode = .readOnly
-        } else {
-            self.tileStoreUsageMode = .disabled
-        }
+        self.camera = try container.decode(SLACameraOptions.self, forKey: .camera).cameraOptions
+        tileStoreUsageMode = .readOnly
     }
 
     init(style: StyleURI, camera: CameraOptions, tileStoreUsageMode: TileStoreUsageMode = .disabled) {
@@ -63,5 +59,20 @@ struct CreateMapCommand: AsyncCommand, Decodable {
 
     func cleanup(context: Context) {
         context.mapView?.removeFromSuperview()
+    }
+}
+
+private struct SLACameraOptions: Decodable {
+    let cameraOptions: MapboxMaps.CameraOptions
+    enum CenterCodingKeys: CodingKey {
+        case center
+    }
+    init(from decoder: Decoder) throws {
+        var cameraOptions = try MapboxMaps.CameraOptions(from: decoder)
+        if cameraOptions.center == nil {
+            let container = try decoder.container(keyedBy: CenterCodingKeys.self)
+            cameraOptions.center = try container.decodeIfPresent(CLLocationCoordinate2D.self, forKey: .center)
+        }
+        self.cameraOptions = cameraOptions
     }
 }

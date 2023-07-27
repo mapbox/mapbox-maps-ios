@@ -2,8 +2,7 @@ executor: base-docker
 steps:
   - checkout
   - mapbox/add-mapbox-ssh-key
-  - mapbox/install-mbx-ci:
-      platform: linux
+  - mapbox/install-mbx-ci
   - attach_workspace:
       at: Products
   - run: ls -l Products/

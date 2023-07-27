@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 import MapboxMaps
 
 public class LineGradientExample: UIViewController, ExampleProtocol {
@@ -71,14 +71,11 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
         geoJSONSource.lineMetrics = true // MUST be `true` in order to use `lineGradient` expression
 
         // Create a line layer
-        var lineLayer = LineLayer(id: "line-layer")
+        var lineLayer = LineLayer(id: "line-layer", source: geoJSONSource.id)
         lineLayer.filter = Exp(.eq) {
             "$type"
             "LineString"
         }
-
-        // Setting the source
-        lineLayer.source = geoJSONSource.id
 
         // Styling the line
         lineLayer.lineColor = .constant(StyleColor(.red))

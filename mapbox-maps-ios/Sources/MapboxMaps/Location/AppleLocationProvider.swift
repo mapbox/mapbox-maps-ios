@@ -1,5 +1,6 @@
 import UIKit
 import Foundation
+import MapboxCommon
 
 /// The ``AppleLocationProviderDelegate`` protocol defines a set of optional methods that you
 /// can use to receive events from an associated location provider object.
@@ -24,8 +25,8 @@ public protocol AppleLocationProviderDelegate: AnyObject {
     func appleLocationProviderShouldDisplayHeadingCalibration(_ locationProvider: AppleLocationProvider) -> Bool
 }
 
-/// A location provider based on CoreLocation's `CLLocationManager`
-public final class AppleLocationProvider: LocationProvider {
+/// A location provider based on CoreLocation's `CLLocationManager`.
+public final class AppleLocationProvider {
 
     public struct Options: Equatable {
         /// Specifies the minimum distance (measured in meters) a device must move horizontally
@@ -61,6 +62,7 @@ public final class AppleLocationProvider: LocationProvider {
         }
     }
 
+    /// Location manager options.
     public var options: Options = Options() {
         didSet {
             locationManager.distanceFilter = options.distanceFilter
@@ -69,64 +71,79 @@ public final class AppleLocationProvider: LocationProvider {
         }
     }
 
+    /// A delegate of location provider.
     public weak var delegate: AppleLocationProviderDelegate?
 
-    /// Represents the latest location received from the location provider.
-    public var latestLocation: Location? {
-        return latestCLLocation.map {
-            Location(
-                location: $0,
-                heading: latestHeading,
-                accuracyAuthorization: latestAccuracyAuthorization)
-        }
-    }
+    /// A stream of location updates.
+    ///
+    /// An observer will receive a cached value (if any) upon subscription.
+    ///
+    /// - Note: When the first observer is added, the underlying `CLLocationManager` instance will
+    /// ask for permissions (if needed) and start to produce the location updates. When the last observer is gone it will stop.
+    public var onLocationUpdate: Signal<[Location]> { locationSubject.signal.skipNil() }
 
-    private var latestCLLocation: CLLocation? {
-        didSet { notifyConsumers() }
-    }
+    /// A stream of heading (compass) updates.
+    ///
+    /// An observer will receive a cached value (if any) upon subscription.
+    ///
+    /// - Note: When the first observer is added, the underlying `CLLocationManager` instance will
+    /// start to produce the heading updates. When the last observer is gone, it will stop.
+    public var onHeadingUpdate: Signal<Heading> { headingSubject.signal.skipNil() }
 
-    private var latestHeading: CLHeading? {
-        didSet { notifyConsumers() }
-    }
+    /// A latest known location.
+    ///
+    /// - Note: The location updates only when there is at least one observer of location updates.
+    /// In general, it's recommended to observe the location via ``AppleLocationProvider/onLocationUpdate``.
+    public var latestLocation: Location? { locationSubject.value?.last }
+
+    private let locationSubject = CurrentValueSignalSubject<[Location]?>()
+    private let headingSubject = CurrentValueSignalSubject<Heading?>()
+
+    private lazy var locationObservingAdapter = SignalObservingAdapter(signal: onLocationUpdate, notify: notifyLocationObserver(_:_:))
+    private lazy var headingObservingAdapter = SignalObservingAdapter(signal: onHeadingUpdate, notify: notifyHeadingObserver(_:_:))
 
     private var latestAccuracyAuthorization: CLAccuracyAuthorization {
         didSet {
             if latestAccuracyAuthorization != oldValue {
                 delegate?.appleLocationProvider(self, didChangeAccuracyAuthorization: latestAccuracyAuthorization)
             }
-            notifyConsumers()
+            if let location = locationSubject.value {
+                doLocationUpdate(location)
+            }
         }
     }
 
-    private let _consumers = WeakSet<LocationConsumer>()
-
-    private var isUpdating = false {
+    private var isLocationUpdating = false {
         didSet {
-            guard isUpdating != oldValue else {
-                return
-            }
-            if isUpdating {
+            if isLocationUpdating {
                 /// Get permissions if needed
                 if mayRequestWhenInUseAuthorization,
                    locationManager.compatibleAuthorizationStatus == .notDetermined {
                     locationManager.requestWhenInUseAuthorization()
                 }
                 locationManager.startUpdatingLocation()
-                locationManager.startUpdatingHeading()
-                updateHeadingOrientationIfNeeded(interfaceOrientationProvider.interfaceOrientation)
-                interfaceOrientationProvider.onInterfaceOrientationChange.observe { [weak self] newOrientation in
-                    self?.updateHeadingOrientationIfNeeded(newOrientation)
-                }.store(in: &cancellables)
             } else {
                 locationManager.stopUpdatingLocation()
+            }
+        }
+    }
+
+    private var isHeadingUpdating = false {
+        didSet {
+            if isHeadingUpdating {
+                locationManager.startUpdatingHeading()
+                orientationChangeToken = interfaceOrientation.observe { [weak self] newOrientation in
+                    self?.updateHeadingOrientationIfNeeded(newOrientation)
+                }
+            } else {
                 locationManager.stopUpdatingHeading()
-                cancellables.removeAll()
+                orientationChangeToken = nil
             }
         }
     }
 
     private let locationManager: CLLocationManagerProtocol
-    internal let interfaceOrientationProvider: InterfaceOrientationProvider
+    internal let interfaceOrientation: Signal<UIInterfaceOrientation>
     internal let locationManagerDelegateProxy: CLLocationManagerDelegateProxy
     private let mayRequestWhenInUseAuthorization: Bool
     // cache heading orientation for performance reasons,
@@ -134,68 +151,52 @@ public final class AppleLocationProvider: LocationProvider {
     private var headingOrientation: CLDeviceOrientation {
         didSet { locationManager.headingOrientation = headingOrientation }
     }
-    private var cancellables = Set<AnyCancelable>()
+    private var orientationChangeToken: AnyCancelable?
 
-    /// Initializes the built-in location provider. The required view will be used to obtain user interface orientation
-    /// for correct heading calculation.
-    /// - Parameter userInterfaceOrientationViewProvider: The view used to get the user interface orientation from.
-    public convenience init(userInterfaceOrientationViewProvider: @escaping () -> UIView?) {
+    var orientationProvider: DefaultInterfaceOrientationProvider?
+
+    /// Initializes the built-in location provider.
+    public convenience init() {
         let orientationProvider = DefaultInterfaceOrientationProvider(
-            userInterfaceOrientationView: Ref(userInterfaceOrientationViewProvider),
             notificationCenter: NotificationCenter.default,
             device: UIDevice.current)
 
         self.init(locationManager: CLLocationManager(),
-                  interfaceOrientationProvider: orientationProvider,
+                  interfaceOrientation: orientationProvider.onInterfaceOrientationChange,
                   mayRequestWhenInUseAuthorization: Bundle.main.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil,
                   locationManagerDelegateProxy: CLLocationManagerDelegateProxy())
-    }
 
-    /// Initializes the built-in location provider with a custom interface orientation provider
-    /// - Parameter interfaceOrientationProvider: The interface orientation provider used for heading calculation.
-    @available(iOS, deprecated: 13, message: "Use init() instead")
-    public convenience init(interfaceOrientationProvider: InterfaceOrientationProvider) {
-        self.init(locationManager: CLLocationManager(),
-                  interfaceOrientationProvider: interfaceOrientationProvider,
-                  mayRequestWhenInUseAuthorization: Bundle.main.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil,
-                  locationManagerDelegateProxy: CLLocationManagerDelegateProxy())
+        self.orientationProvider = orientationProvider
     }
 
     internal init(locationManager: CLLocationManagerProtocol,
-                  interfaceOrientationProvider: InterfaceOrientationProvider,
+                  interfaceOrientation: Signal<UIInterfaceOrientation>,
                   mayRequestWhenInUseAuthorization: Bool,
                   locationManagerDelegateProxy: CLLocationManagerDelegateProxy) {
         self.locationManager = locationManager
         self.mayRequestWhenInUseAuthorization = mayRequestWhenInUseAuthorization
         self.latestAccuracyAuthorization = locationManager.compatibleAccuracyAuthorization
-        self.interfaceOrientationProvider = interfaceOrientationProvider
+        self.interfaceOrientation = interfaceOrientation
         self.headingOrientation = locationManager.headingOrientation
         self.locationManagerDelegateProxy = locationManagerDelegateProxy
         self.locationManager.delegate = locationManagerDelegateProxy
 
+        locationSubject.onObserved = { [weak self] in self?.isLocationUpdating = $0 }
+        headingSubject.onObserved = { [weak self] in self?.isHeadingUpdating = $0 }
         locationManagerDelegateProxy.delegate = self
     }
 
     deinit {
         // note that property observers (didSet) don't run during deinit
-        if isUpdating {
+        if isLocationUpdating {
             locationManager.stopUpdatingLocation()
+        }
+        if isHeadingUpdating {
             locationManager.stopUpdatingHeading()
         }
     }
 
-    /// The location manager holds weak references to consumers, client code should retain these references.
-    public func add(consumer: LocationConsumer) {
-        _consumers.add(consumer)
-        syncIsUpdating()
-    }
-
-    /// Removes a location consumer from the location manager.
-    public func remove(consumer: LocationConsumer) {
-        _consumers.remove(consumer)
-        syncIsUpdating()
-    }
-
+    /// Requests permission to temporarily use location services with full accuracy.
     @available(iOS 14.0, *)
     public func requestTemporaryFullAccuracyAuthorization(withPurposeKey purposeKey: String) {
         locationManager.requestTemporaryFullAccuracyAuthorization(withPurposeKey: purposeKey)
@@ -212,22 +213,53 @@ public final class AppleLocationProvider: LocationProvider {
             self.headingOrientation = headingOrientation
         }
     }
+}
 
-    private func notifyConsumers() {
-        guard isUpdating else {
-            return
-        }
-        if let latestLocation = latestLocation {
-            for consumer in _consumers.allObjects {
-                consumer.locationUpdate(newLocation: latestLocation)
-            }
-        }
+extension AppleLocationProvider: LocationProvider {
+    /// Returns a latest observed location.
+    public func getLastObservedLocation() -> Location? {
+        latestLocation
     }
 
-    private func syncIsUpdating() {
-        // check _consumers.anyObject != nil instead of simply _consumers.count
-        // which may still include objects that have been deinited
-        isUpdating = (_consumers.anyObject != nil)
+    /// Adds a location observer.
+    ///
+    /// The observer will receive a cached value upon subscription.
+    ///
+    /// - Note: When the first observer is added, the underlying `CLLocationManager` instance will
+    /// ask for permissions (if needed) and start to produce the location updates.
+    public func addLocationObserver(for observer: LocationObserver) {
+        locationObservingAdapter.add(observer: observer)
+    }
+
+    /// Removes the location observer
+    ///
+    /// When the last observer is gone, the underlying `CLLocationManager` it will stop location updates.
+    public func removeLocationObserver(for observer: LocationObserver) {
+        locationObservingAdapter.remove(observer: observer)
+    }
+}
+
+extension AppleLocationProvider: HeadingProvider {
+    /// A latest known heading.
+    ///
+    /// - Note: The heading updates only when there is at least one observer of heading updates.
+    public var latestHeading: Heading? { headingSubject.value }
+
+    /// Adds a heading updates observer.
+    ///
+    /// An observer will receive a cached value (if any) upon subscription.
+    ///
+    /// - Note: When the first observer is added, the underlying `CLLocationManager` instance will
+    /// start to produce the heading updates.
+    public func add(headingObserver: HeadingObserver) {
+        headingObservingAdapter.add(observer: headingObserver)
+    }
+
+    /// Removes heading observer.
+    ///
+    /// When the last observer is gone, the underlying `CLLocationManager` it will stop heading updates.
+    public func remove(headingObserver: HeadingObserver) {
+        headingObservingAdapter.remove(observer: headingObserver)
     }
 }
 
@@ -237,26 +269,28 @@ public final class AppleLocationProvider: LocationProvider {
 // they may be deinited without ever being explicitly removed.
 extension AppleLocationProvider: CLLocationManagerDelegateProxyDelegate {
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        syncIsUpdating()
-        latestCLLocation = locations.last
+        doLocationUpdate(locations.map(Location.init(clLocation:)))
+    }
+
+    private func doLocationUpdate(_ locations: [Location]) {
+        locationSubject.value = locations.map {
+            $0.copyBySetting(accuracyAuthorization: latestAccuracyAuthorization)
+        }
     }
 
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        syncIsUpdating()
-        latestHeading = newHeading
+        headingSubject.value = Heading(from: newHeading)
     }
 
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        syncIsUpdating()
         Log.error(forMessage: "\(self) did fail with error: \(error)", category: "Location")
         delegate?.appleLocationProvider(self, didFailWithError: error)
     }
 
     public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        syncIsUpdating()
         let accuracyAuthorization = locationManager.compatibleAccuracyAuthorization
         if #available(iOS 14.0, *),
-           isUpdating,
+           isLocationUpdating,
            [.authorizedAlways, .authorizedWhenInUse].contains(locationManager.compatibleAuthorizationStatus),
            accuracyAuthorization == .reducedAccuracy {
             locationManager.requestTemporaryFullAccuracyAuthorization(
@@ -268,4 +302,12 @@ extension AppleLocationProvider: CLLocationManagerDelegateProxyDelegate {
     public func locationManagerShouldDisplayHeadingCalibration(_ manager: CLLocationManager) -> Bool {
         return delegate?.appleLocationProviderShouldDisplayHeadingCalibration(self) ?? false
     }
+}
+
+private func notifyLocationObserver(_ observer: LocationObserver, _ locations: [Location]) {
+    observer.onLocationUpdateReceived(for: locations)
+}
+
+private func notifyHeadingObserver(_ observer: HeadingObserver, _ heading: Heading) {
+    observer.onHeadingUpdate(heading)
 }

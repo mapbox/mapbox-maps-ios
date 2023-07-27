@@ -1,3 +1,5 @@
+import UIKit
+
 /// Configuration options for ``FollowPuckViewportState``.
 ///
 /// Each of the ``CameraOptions``-related properties is optional, so that the state can be configured to

@@ -101,12 +101,17 @@ extension OfflineManager {
     /// Removes a style package.
     ///
     /// - Parameter styleURI: The URI of the style package's associated style
+    /// - Parameter completion: The result callback. Any `Result` error could be of type ``StylePackError``.
     ///
     /// Removes a style package from the existing packages list. The actual
     /// resources eviction might be deferred. All pending loading operations for
     /// the style package with the given id will fail with Canceled error.
-    public func removeStylePack(for styleURI: StyleURI) {
-        removeStylePack(forStyleURI: styleURI.rawValue)
+    public func removeStylePack(for styleURI: StyleURI, completion: ((Result<StylePack, Error>) -> Void)? = nil) {
+        if let completion {
+            __removeStylePack(forStyleURI: styleURI.rawValue, callback: offlineManagerClosureAdapter(for: completion, type: StylePack.self))
+        } else {
+            removeStylePack(forStyleURI: styleURI.rawValue)
+        }
     }
 }
 

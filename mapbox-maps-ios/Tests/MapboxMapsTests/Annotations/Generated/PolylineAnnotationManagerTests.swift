@@ -61,7 +61,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.id, manager.id)
     }
 
-    func testAddLayer() {
+    func testAddLayer() throws {
         style.addSourceStub.reset()
         let initializedManager = PolylineAnnotationManager(
             id: id,
@@ -75,7 +75,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layer.type, LayerType.line)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layer.id, initializedManager.id)
-        XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layer.source, initializedManager.sourceId)
+        let addedLayer = try XCTUnwrap(style.addPersistentLayerStub.invocations.last?.parameters.layer as? LineLayer)
+        XCTAssertEqual(addedLayer.source, initializedManager.sourceId)
         XCTAssertNil(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition)
     }
 
@@ -254,6 +255,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             annotation.lineJoin = LineJoin.allCases.randomElement()!
             annotation.lineSortKey = Double.random(in: -100000...100000)
             annotation.lineBlur = Double.random(in: 0...100000)
+            annotation.lineBorderColor = StyleColor.random()
+            annotation.lineBorderWidth = Double.random(in: 0...100000)
             annotation.lineColor = StyleColor.random()
             annotation.lineGapWidth = Double.random(in: 0...100000)
             annotation.lineOffset = Double.random(in: -100000...100000)
@@ -327,6 +330,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             annotation.lineJoin = LineJoin.allCases.randomElement()!
             annotation.lineSortKey = Double.random(in: -100000...100000)
             annotation.lineBlur = Double.random(in: 0...100000)
+            annotation.lineBorderColor = StyleColor.random()
+            annotation.lineBorderWidth = Double.random(in: 0...100000)
             annotation.lineColor = StyleColor.random()
             annotation.lineGapWidth = Double.random(in: 0...100000)
             annotation.lineOffset = Double.random(in: -100000...100000)
@@ -400,6 +405,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             annotation.lineJoin = LineJoin.allCases.randomElement()!
             annotation.lineSortKey = Double.random(in: -100000...100000)
             annotation.lineBlur = Double.random(in: 0...100000)
+            annotation.lineBorderColor = StyleColor.random()
+            annotation.lineBorderWidth = Double.random(in: 0...100000)
             annotation.lineColor = StyleColor.random()
             annotation.lineGapWidth = Double.random(in: 0...100000)
             annotation.lineOffset = Double.random(in: -100000...100000)
@@ -473,6 +480,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             annotation.lineJoin = LineJoin.allCases.randomElement()!
             annotation.lineSortKey = Double.random(in: -100000...100000)
             annotation.lineBlur = Double.random(in: 0...100000)
+            annotation.lineBorderColor = StyleColor.random()
+            annotation.lineBorderWidth = Double.random(in: 0...100000)
             annotation.lineColor = StyleColor.random()
             annotation.lineGapWidth = Double.random(in: 0...100000)
             annotation.lineOffset = Double.random(in: -100000...100000)
@@ -546,6 +555,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             annotation.lineJoin = LineJoin.allCases.randomElement()!
             annotation.lineSortKey = Double.random(in: -100000...100000)
             annotation.lineBlur = Double.random(in: 0...100000)
+            annotation.lineBorderColor = StyleColor.random()
+            annotation.lineBorderWidth = Double.random(in: 0...100000)
             annotation.lineColor = StyleColor.random()
             annotation.lineGapWidth = Double.random(in: 0...100000)
             annotation.lineOffset = Double.random(in: -100000...100000)
@@ -577,6 +588,81 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertNil(manager.lineDepthOcclusionFactor)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-depth-occlusion-factor"] as! Double, defaultValue)
+    }
+
+    func testInitialLineEmissiveStrength() {
+        let initialValue = manager.lineEmissiveStrength
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetLineEmissiveStrength() {
+        let value = Double.random(in: 0...100000)
+        manager.lineEmissiveStrength = value
+        XCTAssertEqual(manager.lineEmissiveStrength, value)
+
+        // test layer and source synced and properties added
+        manager.syncSourceAndLayerIfNeeded()
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-emissive-strength"] as! Double, value)
+    }
+
+    func testLineEmissiveStrengthAnnotationPropertiesAddedWithoutDuplicate() {
+        let newLineEmissiveStrengthProperty = Double.random(in: 0...100000)
+        let secondLineEmissiveStrengthProperty = Double.random(in: 0...100000)
+
+        manager.lineEmissiveStrength = newLineEmissiveStrengthProperty
+        manager.syncSourceAndLayerIfNeeded()
+        manager.lineEmissiveStrength = secondLineEmissiveStrengthProperty
+        manager.syncSourceAndLayerIfNeeded()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-emissive-strength"] as! Double, secondLineEmissiveStrengthProperty)
+    }
+
+    func testNewLineEmissiveStrengthPropertyMergedWithAnnotationProperties() {
+        var annotations = [PolylineAnnotation]()
+        for _ in 0...5 {
+            let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
+            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
+            annotation.lineJoin = LineJoin.allCases.randomElement()!
+            annotation.lineSortKey = Double.random(in: -100000...100000)
+            annotation.lineBlur = Double.random(in: 0...100000)
+            annotation.lineBorderColor = StyleColor.random()
+            annotation.lineBorderWidth = Double.random(in: 0...100000)
+            annotation.lineColor = StyleColor.random()
+            annotation.lineGapWidth = Double.random(in: 0...100000)
+            annotation.lineOffset = Double.random(in: -100000...100000)
+            annotation.lineOpacity = Double.random(in: 0...1)
+            annotation.linePattern = String.randomASCII(withLength: .random(in: 0...100))
+            annotation.lineWidth = Double.random(in: 0...100000)
+            annotations.append(annotation)
+        }
+        let newLineEmissiveStrengthProperty = Double.random(in: 0...100000)
+
+        manager.annotations = annotations
+        manager.lineEmissiveStrength = newLineEmissiveStrengthProperty
+        manager.syncSourceAndLayerIfNeeded()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-emissive-strength"])
+    }
+
+    func testSetToNilLineEmissiveStrength() {
+        let newLineEmissiveStrengthProperty = Double.random(in: 0...100000)
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-emissive-strength").value as! Double
+        manager.lineEmissiveStrength = newLineEmissiveStrengthProperty
+        manager.syncSourceAndLayerIfNeeded()
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-emissive-strength"])
+
+        manager.lineEmissiveStrength = nil
+        manager.syncSourceAndLayerIfNeeded()
+        XCTAssertNil(manager.lineEmissiveStrength)
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-emissive-strength"] as! Double, defaultValue)
     }
 
     func testInitialLineTranslate() {
@@ -619,6 +705,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             annotation.lineJoin = LineJoin.allCases.randomElement()!
             annotation.lineSortKey = Double.random(in: -100000...100000)
             annotation.lineBlur = Double.random(in: 0...100000)
+            annotation.lineBorderColor = StyleColor.random()
+            annotation.lineBorderWidth = Double.random(in: 0...100000)
             annotation.lineColor = StyleColor.random()
             annotation.lineGapWidth = Double.random(in: 0...100000)
             annotation.lineOffset = Double.random(in: -100000...100000)
@@ -692,6 +780,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             annotation.lineJoin = LineJoin.allCases.randomElement()!
             annotation.lineSortKey = Double.random(in: -100000...100000)
             annotation.lineBlur = Double.random(in: 0...100000)
+            annotation.lineBorderColor = StyleColor.random()
+            annotation.lineBorderWidth = Double.random(in: 0...100000)
             annotation.lineColor = StyleColor.random()
             annotation.lineGapWidth = Double.random(in: 0...100000)
             annotation.lineOffset = Double.random(in: -100000...100000)
@@ -765,6 +855,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             annotation.lineJoin = LineJoin.allCases.randomElement()!
             annotation.lineSortKey = Double.random(in: -100000...100000)
             annotation.lineBlur = Double.random(in: 0...100000)
+            annotation.lineBorderColor = StyleColor.random()
+            annotation.lineBorderWidth = Double.random(in: 0...100000)
             annotation.lineColor = StyleColor.random()
             annotation.lineGapWidth = Double.random(in: 0...100000)
             annotation.lineOffset = Double.random(in: -100000...100000)

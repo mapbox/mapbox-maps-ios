@@ -7,12 +7,30 @@ import Foundation
 public struct SymbolLayer: Layer {
 
     // MARK: - Conformance to `Layer` protocol
+    /// Unique layer name
     public var id: String
+
+    /// Rendering type of this layer.
     public let type: LayerType
+
+    /// An expression specifying conditions on source features.
+    /// Only features that match the filter are displayed.
     public var filter: Expression?
+
+    /// Name of a source description to be used for this layer.
+    /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
     public var source: String?
+
+    /// Layer to use from a vector tile source.
+    ///
+    /// Required for vector tile sources.
+    /// Prohibited for all other source types, including GeoJSON sources.
     public var sourceLayer: String?
+
+    /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
     public var minZoom: Double?
+
+    /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
@@ -147,6 +165,18 @@ public struct SymbolLayer: Layer {
     /// Transition options for `iconColor`.
     public var iconColorTransition: StyleTransition?
 
+    /// Emission strength.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public var iconEmissiveStrength: Value<Double>?
+
+    /// Transition options for `iconEmissiveStrength`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public var iconEmissiveStrengthTransition: StyleTransition?
+
     /// Fade out the halo towards the outside.
     public var iconHaloBlur: Value<Double>?
 
@@ -164,6 +194,12 @@ public struct SymbolLayer: Layer {
 
     /// Transition options for `iconHaloWidth`.
     public var iconHaloWidthTransition: StyleTransition?
+
+    /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together.
+    public var iconImageCrossFade: Value<Double>?
+
+    /// Transition options for `iconImageCrossFade`.
+    public var iconImageCrossFadeTransition: StyleTransition?
 
     /// The opacity at which the icon will be drawn.
     public var iconOpacity: Value<Double>?
@@ -185,6 +221,18 @@ public struct SymbolLayer: Layer {
 
     /// Transition options for `textColor`.
     public var textColorTransition: StyleTransition?
+
+    /// Emission strength.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public var textEmissiveStrength: Value<Double>?
+
+    /// Transition options for `textEmissiveStrength`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public var textEmissiveStrengthTransition: StyleTransition?
 
     /// The halo's fadeout distance towards the outside.
     public var textHaloBlur: Value<Double>?
@@ -219,7 +267,8 @@ public struct SymbolLayer: Layer {
     /// Controls the frame of reference for `text-translate`.
     public var textTranslateAnchor: Value<TextTranslateAnchor>?
 
-    public init(id: String) {
+    public init(id: String, source: String) {
+        self.source = source
         self.id = id
         self.type = LayerType.symbol
         self.visibility = .visible
@@ -238,12 +287,16 @@ public struct SymbolLayer: Layer {
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
         try paintContainer.encodeIfPresent(iconColor, forKey: .iconColor)
         try paintContainer.encodeIfPresent(iconColorTransition, forKey: .iconColorTransition)
+        try paintContainer.encodeIfPresent(iconEmissiveStrength, forKey: .iconEmissiveStrength)
+        try paintContainer.encodeIfPresent(iconEmissiveStrengthTransition, forKey: .iconEmissiveStrengthTransition)
         try paintContainer.encodeIfPresent(iconHaloBlur, forKey: .iconHaloBlur)
         try paintContainer.encodeIfPresent(iconHaloBlurTransition, forKey: .iconHaloBlurTransition)
         try paintContainer.encodeIfPresent(iconHaloColor, forKey: .iconHaloColor)
         try paintContainer.encodeIfPresent(iconHaloColorTransition, forKey: .iconHaloColorTransition)
         try paintContainer.encodeIfPresent(iconHaloWidth, forKey: .iconHaloWidth)
         try paintContainer.encodeIfPresent(iconHaloWidthTransition, forKey: .iconHaloWidthTransition)
+        try paintContainer.encodeIfPresent(iconImageCrossFade, forKey: .iconImageCrossFade)
+        try paintContainer.encodeIfPresent(iconImageCrossFadeTransition, forKey: .iconImageCrossFadeTransition)
         try paintContainer.encodeIfPresent(iconOpacity, forKey: .iconOpacity)
         try paintContainer.encodeIfPresent(iconOpacityTransition, forKey: .iconOpacityTransition)
         try paintContainer.encodeIfPresent(iconTranslate, forKey: .iconTranslate)
@@ -251,6 +304,8 @@ public struct SymbolLayer: Layer {
         try paintContainer.encodeIfPresent(iconTranslateAnchor, forKey: .iconTranslateAnchor)
         try paintContainer.encodeIfPresent(textColor, forKey: .textColor)
         try paintContainer.encodeIfPresent(textColorTransition, forKey: .textColorTransition)
+        try paintContainer.encodeIfPresent(textEmissiveStrength, forKey: .textEmissiveStrength)
+        try paintContainer.encodeIfPresent(textEmissiveStrengthTransition, forKey: .textEmissiveStrengthTransition)
         try paintContainer.encodeIfPresent(textHaloBlur, forKey: .textHaloBlur)
         try paintContainer.encodeIfPresent(textHaloBlurTransition, forKey: .textHaloBlurTransition)
         try paintContainer.encodeIfPresent(textHaloColor, forKey: .textHaloColor)
@@ -321,12 +376,16 @@ public struct SymbolLayer: Layer {
         if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
             iconColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .iconColor)
             iconColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconColorTransition)
+            iconEmissiveStrength = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .iconEmissiveStrength)
+            iconEmissiveStrengthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconEmissiveStrengthTransition)
             iconHaloBlur = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .iconHaloBlur)
             iconHaloBlurTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconHaloBlurTransition)
             iconHaloColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .iconHaloColor)
             iconHaloColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconHaloColorTransition)
             iconHaloWidth = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .iconHaloWidth)
             iconHaloWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconHaloWidthTransition)
+            iconImageCrossFade = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .iconImageCrossFade)
+            iconImageCrossFadeTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconImageCrossFadeTransition)
             iconOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .iconOpacity)
             iconOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconOpacityTransition)
             iconTranslate = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .iconTranslate)
@@ -334,6 +393,8 @@ public struct SymbolLayer: Layer {
             iconTranslateAnchor = try paintContainer.decodeIfPresent(Value<IconTranslateAnchor>.self, forKey: .iconTranslateAnchor)
             textColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .textColor)
             textColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .textColorTransition)
+            textEmissiveStrength = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .textEmissiveStrength)
+            textEmissiveStrengthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .textEmissiveStrengthTransition)
             textHaloBlur = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .textHaloBlur)
             textHaloBlurTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .textHaloBlurTransition)
             textHaloColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .textHaloColor)
@@ -455,12 +516,16 @@ public struct SymbolLayer: Layer {
     enum PaintCodingKeys: String, CodingKey {
         case iconColor = "icon-color"
         case iconColorTransition = "icon-color-transition"
+        case iconEmissiveStrength = "icon-emissive-strength"
+        case iconEmissiveStrengthTransition = "icon-emissive-strength-transition"
         case iconHaloBlur = "icon-halo-blur"
         case iconHaloBlurTransition = "icon-halo-blur-transition"
         case iconHaloColor = "icon-halo-color"
         case iconHaloColorTransition = "icon-halo-color-transition"
         case iconHaloWidth = "icon-halo-width"
         case iconHaloWidthTransition = "icon-halo-width-transition"
+        case iconImageCrossFade = "icon-image-cross-fade"
+        case iconImageCrossFadeTransition = "icon-image-cross-fade-transition"
         case iconOpacity = "icon-opacity"
         case iconOpacityTransition = "icon-opacity-transition"
         case iconTranslate = "icon-translate"
@@ -468,6 +533,8 @@ public struct SymbolLayer: Layer {
         case iconTranslateAnchor = "icon-translate-anchor"
         case textColor = "text-color"
         case textColorTransition = "text-color-transition"
+        case textEmissiveStrength = "text-emissive-strength"
+        case textEmissiveStrengthTransition = "text-emissive-strength-transition"
         case textHaloBlur = "text-halo-blur"
         case textHaloBlurTransition = "text-halo-blur-transition"
         case textHaloColor = "text-halo-color"

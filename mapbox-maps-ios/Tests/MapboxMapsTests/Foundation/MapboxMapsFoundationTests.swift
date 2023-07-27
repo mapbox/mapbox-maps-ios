@@ -85,6 +85,31 @@ class MapboxMapsFoundationTests: XCTestCase {
         XCTAssertEqual(coordinate.longitude, CLLocationDegrees(0), accuracy: accuracy)
     }
 
+    func testPointToCoordinateInfo() {
+        let subView = UIView(frame: mapView.bounds)
+        mapView.addSubview(subView)
+
+        // Convert the subview's center to a coordinate.
+        // The subview's center is expected to be at the center coordinate of the map.
+        let center = CGPoint(x: subView.bounds.midX, y: subView.bounds.midY)
+        let coordinateInfo = mapView.mapboxMap.coordinateInfo(for: center)
+
+        XCTAssertEqual(coordinateInfo.coordinate.latitude, CLLocationDegrees(0), accuracy: accuracy)
+        XCTAssertEqual(coordinateInfo.coordinate.longitude, CLLocationDegrees(0), accuracy: accuracy)
+        XCTAssertTrue(coordinateInfo.isOnSurface)
+    }
+
+    func testPointToCoordinateInfoOffscreen() {
+        let subView = UIView(frame: mapView.bounds)
+        mapView.addSubview(subView)
+
+        let coordinateInfo = mapView.mapboxMap.coordinateInfo(for: .init(x: .max, y: .max))
+
+        XCTAssertEqual(coordinateInfo.coordinate.latitude, CLLocationDegrees(-90), accuracy: accuracy)
+        XCTAssertEqual(coordinateInfo.coordinate.longitude, CLLocationDegrees(140), accuracy: accuracy)
+        XCTAssertFalse(coordinateInfo.isOnSurface)
+    }
+
     func testPointToCoordinateWithBoundsShifted() {
         // Shift bounds down and right 1/2 of the map's size
         mapView.bounds = CGRect(x: mapView.frame.midX,

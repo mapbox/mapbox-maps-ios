@@ -1,30 +1,23 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class LineLayerTests: XCTestCase {
 
     func testLayerProtocolMembers() {
 
-        var layer = LineLayer(id: "test-id")
-        layer.source = "some-source"
-        layer.sourceLayer = nil
+        var layer = LineLayer(id: "test-id", source: "source")
         layer.minZoom = 10.0
         layer.maxZoom = 20.0
 
-        XCTAssert(layer.id == "test-id")
-        XCTAssert(layer.type == LayerType.line)
-        XCTAssert(layer.filter == nil)
-        XCTAssert(layer.source == "some-source")
-        XCTAssertNil(layer.sourceLayer)
-        XCTAssert(layer.minZoom == 10.0)
-        XCTAssert(layer.maxZoom == 20.0)
+        XCTAssertEqual(layer.id, "test-id")
+        XCTAssertEqual(layer.type, LayerType.line)
+        XCTAssertEqual(layer.minZoom, 10.0)
+        XCTAssertEqual(layer.maxZoom, 20.0)
     }
 
     func testEncodingAndDecodingOfLayerProtocolProperties() {
-        var layer = LineLayer(id: "test-id")
-        layer.source = "some-source"
-        layer.sourceLayer = nil
+        var layer = LineLayer(id: "test-id", source: "source")
         layer.minZoom = 10.0
         layer.maxZoom = 20.0
 
@@ -42,20 +35,18 @@ final class LineLayerTests: XCTestCase {
 
         do {
             let decodedLayer = try JSONDecoder().decode(LineLayer.self, from: validData)
-            XCTAssert(decodedLayer.id == "test-id")
-            XCTAssert(decodedLayer.type == LayerType.line)
-            XCTAssert(decodedLayer.filter == nil)
-            XCTAssert(decodedLayer.source == "some-source")
-            XCTAssertNil(decodedLayer.sourceLayer)
-            XCTAssert(decodedLayer.minZoom == 10.0)
-            XCTAssert(decodedLayer.maxZoom == 20.0)
+            XCTAssertEqual(decodedLayer.id, "test-id")
+            XCTAssertEqual(decodedLayer.type, LayerType.line)
+            XCTAssert(decodedLayer.source == "source")
+            XCTAssertEqual(decodedLayer.minZoom, 10.0)
+            XCTAssertEqual(decodedLayer.maxZoom, 20.0)
         } catch {
             XCTFail("Failed to decode LineLayer")
         }
     }
 
     func testEncodingAndDecodingOfLayoutProperties() {
-        var layer = LineLayer(id: "test-id")
+        var layer = LineLayer(id: "test-id", source: "source")
         layer.visibility = .visible
         layer.lineCap = Value<LineCap>.testConstantValue()
         layer.lineJoin = Value<LineJoin>.testConstantValue()
@@ -77,26 +68,32 @@ final class LineLayerTests: XCTestCase {
 
         do {
             let decodedLayer = try JSONDecoder().decode(LineLayer.self, from: validData)
-            XCTAssert(decodedLayer.visibility == .visible)
-            XCTAssert(layer.lineCap == Value<LineCap>.testConstantValue())
-            XCTAssert(layer.lineJoin == Value<LineJoin>.testConstantValue())
-            XCTAssert(layer.lineMiterLimit == Value<Double>.testConstantValue())
-            XCTAssert(layer.lineRoundLimit == Value<Double>.testConstantValue())
-            XCTAssert(layer.lineSortKey == Value<Double>.testConstantValue())
+            XCTAssertEqual(decodedLayer.visibility, .visible)
+            XCTAssertEqual(layer.lineCap, Value<LineCap>.testConstantValue())
+            XCTAssertEqual(layer.lineJoin, Value<LineJoin>.testConstantValue())
+            XCTAssertEqual(layer.lineMiterLimit, Value<Double>.testConstantValue())
+            XCTAssertEqual(layer.lineRoundLimit, Value<Double>.testConstantValue())
+            XCTAssertEqual(layer.lineSortKey, Value<Double>.testConstantValue())
         } catch {
             XCTFail("Failed to decode LineLayer")
         }
     }
 
     func testEncodingAndDecodingOfPaintProperties() {
-       var layer = LineLayer(id: "test-id")
+       var layer = LineLayer(id: "test-id", source: "source")
        layer.lineBlur = Value<Double>.testConstantValue()
        layer.lineBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.lineBorderColor = Value<StyleColor>.testConstantValue()
+       layer.lineBorderColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.lineBorderWidth = Value<Double>.testConstantValue()
+       layer.lineBorderWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.lineColor = Value<StyleColor>.testConstantValue()
        layer.lineColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.lineDasharray = Value<[Double]>.testConstantValue()
        layer.lineDepthOcclusionFactor = Value<Double>.testConstantValue()
        layer.lineDepthOcclusionFactorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.lineEmissiveStrength = Value<Double>.testConstantValue()
+       layer.lineEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.lineGapWidth = Value<Double>.testConstantValue()
        layer.lineGapWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.lineGradient = Value<StyleColor>.testConstantValue()
@@ -126,20 +123,23 @@ final class LineLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(LineLayer.self, from: validData)
-           XCTAssert(decodedLayer.visibility == .visible)
-           XCTAssert(layer.lineBlur == Value<Double>.testConstantValue())
-           XCTAssert(layer.lineColor == Value<StyleColor>.testConstantValue())
-           XCTAssert(layer.lineDasharray == Value<[Double]>.testConstantValue())
-           XCTAssert(layer.lineDepthOcclusionFactor == Value<Double>.testConstantValue())
-           XCTAssert(layer.lineGapWidth == Value<Double>.testConstantValue())
-           XCTAssert(layer.lineGradient == Value<StyleColor>.testConstantValue())
-           XCTAssert(layer.lineOffset == Value<Double>.testConstantValue())
-           XCTAssert(layer.lineOpacity == Value<Double>.testConstantValue())
-           XCTAssert(layer.linePattern == Value<ResolvedImage>.testConstantValue())
-           XCTAssert(layer.lineTranslate == Value<[Double]>.testConstantValue())
-           XCTAssert(layer.lineTranslateAnchor == Value<LineTranslateAnchor>.testConstantValue())
-           XCTAssert(layer.lineTrimOffset == Value<[Double]>.testConstantValue())
-           XCTAssert(layer.lineWidth == Value<Double>.testConstantValue())
+           XCTAssertEqual(decodedLayer.visibility, .visible)
+           XCTAssertEqual(layer.lineBlur, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.lineBorderColor, Value<StyleColor>.testConstantValue())
+           XCTAssertEqual(layer.lineBorderWidth, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.lineColor, Value<StyleColor>.testConstantValue())
+           XCTAssertEqual(layer.lineDasharray, Value<[Double]>.testConstantValue())
+           XCTAssertEqual(layer.lineDepthOcclusionFactor, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.lineEmissiveStrength, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.lineGapWidth, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.lineGradient, Value<StyleColor>.testConstantValue())
+           XCTAssertEqual(layer.lineOffset, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.lineOpacity, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.linePattern, Value<ResolvedImage>.testConstantValue())
+           XCTAssertEqual(layer.lineTranslate, Value<[Double]>.testConstantValue())
+           XCTAssertEqual(layer.lineTranslateAnchor, Value<LineTranslateAnchor>.testConstantValue())
+           XCTAssertEqual(layer.lineTrimOffset, Value<[Double]>.testConstantValue())
+           XCTAssertEqual(layer.lineWidth, Value<Double>.testConstantValue())
        } catch {
            XCTFail("Failed to decode LineLayer")
        }

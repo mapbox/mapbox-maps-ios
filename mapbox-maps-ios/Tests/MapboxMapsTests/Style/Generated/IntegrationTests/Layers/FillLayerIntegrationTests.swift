@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class FillLayerIntegrationTests: MapViewIntegrationTestCase {
 
@@ -19,9 +19,7 @@ final class FillLayerIntegrationTests: MapViewIntegrationTestCase {
 
         didFinishLoadingStyle = { mapView in
 
-            var layer = FillLayer(id: "test-id")
-            layer.source = "some-source"
-            layer.sourceLayer = nil
+            var layer = FillLayer(id: "test-id", source: "source")
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
             layer.visibility = .visible
@@ -30,6 +28,8 @@ final class FillLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.fillAntialias = Value<Bool>.testConstantValue()
             layer.fillColor = Value<StyleColor>.testConstantValue()
             layer.fillColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.fillEmissiveStrength = Value<Double>.testConstantValue()
+            layer.fillEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillOpacity = Value<Double>.testConstantValue()
             layer.fillOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillOutlineColor = Value<StyleColor>.testConstantValue()

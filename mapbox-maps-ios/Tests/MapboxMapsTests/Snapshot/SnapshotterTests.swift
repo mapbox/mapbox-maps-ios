@@ -1,5 +1,5 @@
 import XCTest
-@_spi(Package) @testable import MapboxMaps
+@_spi(Experimental) @_spi(Package) @testable import MapboxMaps
 @_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
 import CoreLocation
@@ -228,5 +228,23 @@ final class SnapshotterTests: XCTestCase {
 
         XCTAssertIdentical(sourceAddedStub.invocations[0].parameters, sourceAdded1)
         XCTAssertIdentical(sourceAddedStub.invocations[1].parameters, sourceAdded2)
+    }
+
+    func testTileCover() throws {
+        let stubReturnTileIDs = [CanonicalTileID(z: 3, x: 5, y: 7)]
+
+        let options = TileCoverOptions(tileSize: 512, minZoom: 4, maxZoom: 8, roundZoom: true)
+        mockMapSnapshotter.tileCoverStub.returnValueQueue.append(stubReturnTileIDs)
+
+        let tileIDs = snapshotter.tileCover(for: options)
+        XCTAssertEqual(stubReturnTileIDs, tileIDs)
+
+        let coreOptions = MapboxCoreMaps.TileCoverOptions(options)
+        let parameters = try XCTUnwrap(mockMapSnapshotter.tileCoverStub.invocations.first?.parameters)
+
+        XCTAssertEqual(parameters.options.maxZoom?.uint8Value, options.maxZoom)
+        XCTAssertEqual(parameters.options.minZoom?.uint8Value, options.minZoom)
+        XCTAssertEqual(parameters.options.roundZoom?.boolValue, options.roundZoom)
+        XCTAssertEqual(parameters.options.tileSize?.uint16Value, options.tileSize)
     }
 }

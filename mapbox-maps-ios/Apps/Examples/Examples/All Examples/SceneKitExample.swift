@@ -15,7 +15,7 @@ final class SceneKitExample: UIViewController, ExampleProtocol {
                                    zoom: 18,
                                    bearing: 180,
                                    pitch: 60)
-        let options = MapInitOptions(cameraOptions: camera)
+        let options = MapInitOptions(cameraOptions: camera, styleURI: .streets)
 
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]

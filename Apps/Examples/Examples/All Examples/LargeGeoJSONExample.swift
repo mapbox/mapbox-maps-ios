@@ -47,8 +47,7 @@ final class LargeGeoJSONPerformanceExample: UIViewController, ExampleProtocol {
             var source = GeoJSONSource(id: "source_\(i)")
             source.data = .string(geoJSON)
 
-            var lineLayer = LineLayer(id: "line_layer_\(i)")
-            lineLayer.source = source.id
+            var lineLayer = LineLayer(id: "line_layer_\(i)", source: source.id)
             lineLayer.lineColor = .constant(StyleColor(.systemBlue))
             lineLayer.lineOffset = .constant(Double(5 * i))
 
@@ -68,8 +67,7 @@ final class LargeGeoJSONPerformanceExample: UIViewController, ExampleProtocol {
         try mapView.mapboxMap.addSource(source, dataId: String(jsonUpdateCounter))
         jsonUpdateCounter += 1
 
-        var symbolLayer = SymbolLayer(id: "layer_marker")
-        symbolLayer.source = source.id
+        var symbolLayer = SymbolLayer(id: "layer_marker", source: source.id)
         symbolLayer.iconImage = .constant(.name("icon"))
         symbolLayer.iconAnchor = .constant(.bottom)
 
@@ -86,8 +84,7 @@ final class LargeGeoJSONPerformanceExample: UIViewController, ExampleProtocol {
         try mapView.mapboxMap.addSource(source, dataId: String(jsonUpdateCounter))
         jsonUpdateCounter += 1
 
-        var lineLayer = LineLayer(id: "line_layer_\(Self.largeSourceCount)")
-        lineLayer.source = source.id
+        var lineLayer = LineLayer(id: "line_layer_\(Self.largeSourceCount)", source: source.id)
         lineLayer.lineColor = .constant(StyleColor(.systemGreen))
         lineLayer.lineOffset = .constant(Double(5 * Self.largeSourceCount))
 

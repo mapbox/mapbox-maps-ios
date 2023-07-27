@@ -15,57 +15,52 @@ internal final class Puck2D: Puck {
                 return
             }
             if isActive {
-                interpolatedLocationProducer
-                    .observe { [weak self] (location) in
-                        self?.latestLocation = location
-                        return true
-                    }.erased.store(in: &cancelables)
-                if configuration.pulsing?.isEnabled == true {
-                    displayLinkCoordinator?.add(self)
-                }
+                renderingData.observe { [weak self] data in
+                    self?.render(with: data)
+                }.store(in: &cancelables)
             } else {
-                displayLinkCoordinator?.remove(self)
                 cancelables.removeAll()
                 try? style.removeLayer(withId: Self.layerID)
                 try? style.removeImage(withId: Self.topImageId)
                 try? style.removeImage(withId: Self.bearingImageId)
                 try? style.removeImage(withId: Self.shadowImageId)
                 previouslySetLayerPropertyKeys.removeAll()
-                latestLocation = nil
+                currentAccuracyAuthorization = nil
             }
         }
     }
 
-    internal var puckBearing: PuckBearing = .heading {
-        didSet {
-            updateLayer()
-        }
-    }
-
+    // The change in this properties will be handled in the next render call (renderingData update).
+    // TODO: Those properties should come as part of rendering data.
+    internal var puckBearing: PuckBearing = .heading
     internal var puckBearingEnabled: Bool = true
 
-    private var latestLocation: InterpolatedLocation? {
-        didSet {
-            if oldValue?.accuracyAuthorization == latestLocation?.accuracyAuthorization {
-                updateLayerLocationFastPath()
-            } else {
-                updateLayer()
-            }
+    private func render(with data: PuckRenderingData) {
+        let newAccuracyAuthorization = data.location.accuracyAuthorization
+        if currentAccuracyAuthorization != newAccuracyAuthorization {
+            currentAccuracyAuthorization = newAccuracyAuthorization
+            updateLayer(with: data)
+        } else {
+            updateLayerFastPath(with: data)
+        }
+
+        if let pulsing = configuration.pulsing, pulsing.isEnabled {
+            renderPulsing(with: data)
         }
     }
 
     private let configuration: Puck2DConfiguration
     private let style: StyleProtocol
-    private let interpolatedLocationProducer: InterpolatedLocationProducerProtocol
     private let mapboxMap: MapboxMapProtocol
     private var cancelables = Set<AnyCancelable>()
     private let timeProvider: TimeProvider
-    private weak var displayLinkCoordinator: DisplayLinkCoordinator?
+    private let renderingData: Signal<PuckRenderingData>
     // cache the encoded configuration.resolvedScale to avoid work at every location update
     private let encodedScale: Any
     private let pulsingAnimationDuration: CFTimeInterval = 3
     private let pulsingAnimationTimingCurve = UnitBezier(p1: .zero, p2: CGPoint(x: 0.25, y: 1))
     private var pulsingAnimationStartTimestamp: CFTimeInterval?
+    private var currentAccuracyAuthorization: CLAccuracyAuthorization?
 
     /// The keys of the style properties that were set during the previous sync.
     /// Used to identify which styles need to be restored to their default values in
@@ -74,15 +69,13 @@ internal final class Puck2D: Puck {
 
     internal init(configuration: Puck2DConfiguration,
                   style: StyleProtocol,
-                  interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
+                  renderingData: Signal<PuckRenderingData>,
                   mapboxMap: MapboxMapProtocol,
-                  displayLinkCoordinator: DisplayLinkCoordinator,
                   timeProvider: TimeProvider) {
         self.configuration = configuration
         self.style = style
-        self.interpolatedLocationProducer = interpolatedLocationProducer
+        self.renderingData = renderingData
         self.mapboxMap = mapboxMap
-        self.displayLinkCoordinator = displayLinkCoordinator
         self.timeProvider = timeProvider
         self.encodedScale = try! configuration.resolvedScale.toJSON()
     }
@@ -114,20 +107,18 @@ internal final class Puck2D: Puck {
     }
 
     // swiftlint:disable:next function_body_length
-    private func updateLayer() {
-        guard isActive, let location = latestLocation else {
-            return
-        }
+    private func updateLayer(with data: PuckRenderingData) {
+        guard isActive else { return }
 
         var newLayerLayoutProperties = [LocationIndicatorLayer.LayoutCodingKeys: Any]()
         var newLayerPaintProperties = [LocationIndicatorLayer.PaintCodingKeys: Any]()
 
         newLayerPaintProperties[.location] = [
-            location.coordinate.latitude,
-            location.coordinate.longitude,
+            data.location.coordinate.latitude,
+            data.location.coordinate.longitude,
             0
         ]
-        switch location.accuracyAuthorization {
+        switch data.location.accuracyAuthorization {
         case .fullAccuracy:
             let immediateTransition = [
                 StyleTransition.CodingKeys.duration.rawValue: 0,
@@ -147,7 +138,7 @@ internal final class Puck2D: Puck {
             newLayerPaintProperties[.locationIndicatorOpacity] = configuration.opacity
             newLayerPaintProperties[.locationIndicatorOpacityTransition] = immediateTransition
             if configuration.showsAccuracyRing {
-                newLayerPaintProperties[.accuracyRadius] = location.horizontalAccuracy
+                newLayerPaintProperties[.accuracyRadius] = data.location.horizontalAccuracy
                 newLayerPaintProperties[.accuracyRadiusColor] = StyleColor(configuration.accuracyRingColor).rgbaString
                 newLayerPaintProperties[.accuracyRadiusBorderColor] = StyleColor(configuration.accuracyRingBorderColor).rgbaString
             }
@@ -155,9 +146,9 @@ internal final class Puck2D: Puck {
             if puckBearingEnabled {
                 switch puckBearing {
                 case .heading:
-                    newLayerPaintProperties[.bearing] = location.heading ?? 0
+                    newLayerPaintProperties[.bearing] = data.heading?.direction ?? 0
                 case .course:
-                    newLayerPaintProperties[.bearing] = location.course ?? 0
+                    newLayerPaintProperties[.bearing] = data.location.bearing ?? 0
                 }
             }
         case .reducedAccuracy:
@@ -179,9 +170,10 @@ internal final class Puck2D: Puck {
             // with static radius.
             let zoomCutoffRange: ClosedRange<Double> = 4.0...7.5
             let accuracyRange: ClosedRange<CLLocationDistance> = 1000...20_000
-            let cutoffZoomLevel = zoomCutoffRange.upperBound - (zoomCutoffRange.magnitude * (location.horizontalAccuracy - accuracyRange.lowerBound) / accuracyRange.magnitude)
+            let horizontalAccuracy = data.location.horizontalAccuracy ?? 1000
+            let cutoffZoomLevel = zoomCutoffRange.upperBound - (zoomCutoffRange.magnitude * (horizontalAccuracy - accuracyRange.lowerBound) / accuracyRange.magnitude)
             let minPuckRadiusInPoints = 11.0
-            let minPuckRadiusInMeters = minPuckRadiusInPoints * Projection.metersPerPoint(for: location.coordinate.latitude, zoom: cutoffZoomLevel)
+            let minPuckRadiusInMeters = minPuckRadiusInPoints * Projection.metersPerPoint(for: data.location.coordinate.latitude, zoom: cutoffZoomLevel)
             newLayerPaintProperties[.accuracyRadius] = [
                 Expression.Operator.interpolate.rawValue,
                 [Expression.Operator.linear.rawValue],
@@ -189,7 +181,7 @@ internal final class Puck2D: Puck {
                 cutoffZoomLevel,
                 minPuckRadiusInMeters,
                 cutoffZoomLevel + 1,
-                location.horizontalAccuracy
+                horizontalAccuracy
             ] as [Any]
             newLayerPaintProperties[.accuracyRadiusColor] = [
                 Expression.Operator.step.rawValue,
@@ -256,28 +248,27 @@ internal final class Puck2D: Puck {
         }
     }
 
-    private func updateLayerLocationFastPath() {
-        guard isActive, let location = latestLocation else {
-            return
-        }
+    private func updateLayerFastPath(with data: PuckRenderingData) {
+        guard isActive else { return }
         var layerProperties: [String: Any] = [
             LocationIndicatorLayer.PaintCodingKeys.location.rawValue: [
-                location.coordinate.latitude,
-                location.coordinate.longitude,
+                data.location.coordinate.latitude,
+                data.location.coordinate.longitude,
                 0
             ]
         ]
-        switch location.accuracyAuthorization {
+
+        switch data.location.accuracyAuthorization {
         case .fullAccuracy:
             if configuration.showsAccuracyRing {
-                layerProperties[LocationIndicatorLayer.PaintCodingKeys.accuracyRadius.rawValue] = location.horizontalAccuracy
+                layerProperties[LocationIndicatorLayer.PaintCodingKeys.accuracyRadius.rawValue] = data.location.horizontalAccuracy
             }
             if puckBearingEnabled {
                 switch puckBearing {
                 case .heading:
-                    layerProperties[LocationIndicatorLayer.PaintCodingKeys.bearing.rawValue] = location.heading ?? 0
+                    layerProperties[LocationIndicatorLayer.PaintCodingKeys.bearing.rawValue] = data.heading?.direction ?? 0
                 case .course:
-                    layerProperties[LocationIndicatorLayer.PaintCodingKeys.bearing.rawValue] = location.course ?? 0
+                    layerProperties[LocationIndicatorLayer.PaintCodingKeys.bearing.rawValue] = data.location.bearing ?? 0
                 }
             }
         case .reducedAccuracy:
@@ -288,16 +279,13 @@ internal final class Puck2D: Puck {
 
         try! style.setLayerProperties(for: Self.layerID, properties: layerProperties)
     }
-}
 
-extension Puck2D: DisplayLinkParticipant {
-    func participate() {
+    private func renderPulsing(with data: PuckRenderingData) {
         let participantTrace = OSLog.platform.beginInterval(SignpostName.mapViewDisplayLink,
-                                                            beginMessage: "Participant: Puck2D")
+                                                            beginMessage: "Participant: Puck2D Pulsing")
         defer { participantTrace?.end() }
 
         guard style.layerExists(withId: Self.layerID),
-              let location = latestLocation,
               let pulsing = configuration.pulsing else {
             return
         }
@@ -310,7 +298,7 @@ extension Puck2D: DisplayLinkParticipant {
         let progress = min((currentTime - startTimestamp) / pulsingAnimationDuration, 1)
         let curvedProgress = pulsingAnimationTimingCurve.solve(progress, 1e-6)
 
-        let baseRadius = pulsing.radius.value(for: location, zoom: mapboxMap.cameraState.zoom)
+        let baseRadius = pulsing.radius.value(for: data.location, zoom: mapboxMap.cameraState.zoom)
         let radius = baseRadius * curvedProgress
         let alpha = 1.0 - curvedProgress
         let color = pulsing.color.withAlphaComponent(curvedProgress <= 0.1 ? 0 : alpha)
@@ -322,7 +310,6 @@ extension Puck2D: DisplayLinkParticipant {
         if progress >= 1 {
             pulsingAnimationStartTimestamp = currentTime
         }
-
         try! style.setLayerProperties(for: Self.layerID, properties: properties.mapKeys(\.rawValue))
     }
 }
@@ -342,12 +329,13 @@ private extension Puck2DConfiguration {
 }
 
 private extension Puck2DConfiguration.Pulsing.Radius {
-    func value(for location: InterpolatedLocation, zoom: CGFloat) -> Double {
+    func value(for location: Location, zoom: CGFloat) -> Double {
+        let horizontalAccuracy = location.horizontalAccuracy ?? 0
         switch self {
         case .constant(let radius):
             return radius
         case .accuracy:
-            return location.horizontalAccuracy / Projection.metersPerPoint(for: location.coordinate.latitude, zoom: zoom)
+            return horizontalAccuracy / Projection.metersPerPoint(for: location.coordinate.latitude, zoom: zoom)
         }
     }
 }

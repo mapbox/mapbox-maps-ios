@@ -165,11 +165,20 @@ public struct Puck3DConfiguration: Equatable {
     ///   - modelScale: The amount to scale the model by.
     ///   - modelRotation: The rotation of the model in euler angles `[lon, lat, z]`.
     ///   - modelOpacity: The opacity of the model used as the location puck
-    public init(model: Model, modelScale: Value<[Double]>? = nil, modelRotation: Value<[Double]>? = nil, modelOpacity: Value<Double>? = nil) {
-        self.model = model
-        self.modelScale = modelScale
-        self.modelRotation = modelRotation
-        self.modelOpacity = modelOpacity
+    public init(
+        model: Model,
+        modelScale: Value<[Double]>? = nil,
+        modelRotation: Value<[Double]>? = nil,
+        modelOpacity: Value<Double>? = nil
+    ) {
+        self.init(
+            model: model,
+            modelScale: modelScale,
+            modelRotation: modelRotation,
+            modelOpacity: modelOpacity,
+            modelCastShadows: nil,
+            modelReceiveShadows: nil,
+            modelScaleMode: nil)
     }
 
     /// Initialize a `Puck3DConfiguration` with a model, scale, rotation and an parameter to control shadow casting.
@@ -186,13 +195,13 @@ public struct Puck3DConfiguration: Equatable {
                                     modelOpacity: Value<Double>? = nil,
                                     modelCastShadows: Value<Bool>? = nil,
                                     modelReceiveShadows: Value<Bool>? = nil,
-                                    modelScaleMode: Value<ModelScaleMode>? = .constant(.viewport)) {
+                                    modelScaleMode: Value<ModelScaleMode>? = nil) {
         self.model = model
         self.modelScale = modelScale
         self.modelRotation = modelRotation
         self.modelCastShadows = modelCastShadows
         self.modelReceiveShadows = modelReceiveShadows
-        self.modelScaleMode = modelScaleMode
+        self.modelScaleMode = modelScaleMode ?? .constant(.viewport)
     }
 }
 

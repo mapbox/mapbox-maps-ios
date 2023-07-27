@@ -1,3 +1,4 @@
+import UIKit
 import MapboxMaps
 
 class AnimateImageLayerExample: UIViewController, ExampleProtocol {
@@ -53,8 +54,7 @@ class AnimateImageLayerExample: UIViewController, ExampleProtocol {
         imageSource.url = path
 
         // Create a `RasterLayer` that will display the images from the `ImageSource`
-        var imageLayer = RasterLayer(id: "radar-layer")
-        imageLayer.source = sourceId
+        var imageLayer = RasterLayer(id: "radar-layer", source: sourceId)
 
         // Set `rasterFadeDuration` to `0`. This prevents visible transitions when the image is updated.
         imageLayer.rasterFadeDuration = .constant(0)

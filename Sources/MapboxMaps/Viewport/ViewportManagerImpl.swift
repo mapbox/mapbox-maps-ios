@@ -1,5 +1,5 @@
 import UIKit
-internal protocol ViewportImplProtocol: AnyObject {
+internal protocol ViewportManagerImplProtocol: AnyObject {
     var options: ViewportOptions { get set }
 
     var status: ViewportStatus { get }
@@ -21,7 +21,7 @@ internal protocol ViewportImplProtocol: AnyObject {
 //  - in a state (camera is being managed by a ViewportState)
 //  - transitioning (camera is being managed by a ViewportTransition)
 //
-internal final class ViewportImpl: ViewportImplProtocol {
+internal final class ViewportManagerImpl: ViewportManagerImplProtocol {
 
     internal var options: ViewportOptions {
         get {

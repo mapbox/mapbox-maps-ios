@@ -12,10 +12,6 @@ extension MapView {
 
         /// Metal view or one of its subviews is missing image data.
         public static let missingImageData = SnapshotError(message: "Missing image data")
-
-        init(message: String) {
-            self.message = message
-        }
     }
 
     /// Synchronously captures the rendered map as a `UIImage`. The image does not include the

@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
 
@@ -19,9 +19,7 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
 
         didFinishLoadingStyle = { mapView in
 
-            var layer = LineLayer(id: "test-id")
-            layer.source = "some-source"
-            layer.sourceLayer = nil
+            var layer = LineLayer(id: "test-id", source: "source")
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
             layer.visibility = .visible
@@ -33,10 +31,16 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
 
             layer.lineBlur = Value<Double>.testConstantValue()
             layer.lineBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.lineBorderColor = Value<StyleColor>.testConstantValue()
+            layer.lineBorderColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.lineBorderWidth = Value<Double>.testConstantValue()
+            layer.lineBorderWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineColor = Value<StyleColor>.testConstantValue()
             layer.lineColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineDepthOcclusionFactor = Value<Double>.testConstantValue()
             layer.lineDepthOcclusionFactorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.lineEmissiveStrength = Value<Double>.testConstantValue()
+            layer.lineEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineGapWidth = Value<Double>.testConstantValue()
             layer.lineGapWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineGradient = Value<StyleColor>.testConstantValue()

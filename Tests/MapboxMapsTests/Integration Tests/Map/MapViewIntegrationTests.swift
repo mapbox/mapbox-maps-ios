@@ -21,6 +21,7 @@ final class MapViewIntegrationTests: IntegrationTestCase {
 
         MapboxMapsOptions.dataPath = dataPathURL
         mapView = MapView(frame: rootView.bounds)
+        mapView.mapboxMap.styleURI = .streets
         rootView.addSubview(mapView)
     }
 
@@ -51,6 +52,7 @@ final class MapViewIntegrationTests: IntegrationTestCase {
 
             MapboxMapsOptions.dataPath = dataPathURL
             let mapView = MapView(frame: rootView.bounds)
+            mapView.mapboxMap.styleURI = .streets
             weakMapView = mapView
 
             rootView.addSubview(mapView)
@@ -71,7 +73,7 @@ final class MapViewIntegrationTests: IntegrationTestCase {
 
     func testViewportAndStateIsReleasedAfterTransition() throws {
         weak var weakState: ViewportState?
-        weak var weakViewport: Viewport?
+        weak var weakViewport: ViewportManager?
         weak var weakMapView: MapView?
 
         autoreleasepool {
@@ -84,6 +86,7 @@ final class MapViewIntegrationTests: IntegrationTestCase {
 
             MapboxMapsOptions.dataPath = dataPathURL
             let mapView = MapView(frame: rootView.bounds)
+            mapView.mapboxMap.styleURI = .streets
             weakMapView = mapView
             weakViewport = mapView.viewport
 

@@ -347,36 +347,36 @@ EnumElement GeoJSONSourceData.empty has been removed
 EnumElement GeoJSONSourceData.url has been removed
 
 // `TypeConversionError`, `SnapshotError`, and `ViewAnnotationManagerError` are now structs with static variables instead of enums
-Enum MapView.SnapshotError has been changed to a Struct 
-Enum TypeConversionError has been changed to a Struct 
-Enum ViewAnnotationManagerError has been changed to a Struct 
-EnumElement MapView.SnapshotError.missingImageData has declared type change from (MapboxMaps.MapView.SnapshotError.Type) -> MapboxMaps.MapView.SnapshotError to MapboxMaps.MapView.SnapshotError 
-EnumElement MapView.SnapshotError.noMetalView has declared type change from (MapboxMaps.MapView.SnapshotError.Type) -> MapboxMaps.MapView.SnapshotError to MapboxMaps.MapView.SnapshotError 
-EnumElement TypeConversionError.invalidObject has declared type change from (MapboxMaps.TypeConversionError.Type) -> MapboxMaps.TypeConversionError to MapboxMaps.TypeConversionError 
-EnumElement TypeConversionError.unexpectedType has declared type change from (MapboxMaps.TypeConversionError.Type) -> MapboxMaps.TypeConversionError to MapboxMaps.TypeConversionError 
-EnumElement TypeConversionError.unsuccessfulConversion has declared type change from (MapboxMaps.TypeConversionError.Type) -> MapboxMaps.TypeConversionError to MapboxMaps.TypeConversionError 
-EnumElement ViewAnnotationManagerError.annotationNotFound has declared type change from (MapboxMaps.ViewAnnotationManagerError.Type) -> MapboxMaps.ViewAnnotationManagerError to MapboxMaps.ViewAnnotationManagerError 
-EnumElement ViewAnnotationManagerError.associatedFeatureIdIsAlreadyInUse has declared type change from (MapboxMaps.ViewAnnotationManagerError.Type) -> MapboxMaps.ViewAnnotationManagerError to MapboxMaps.ViewAnnotationManagerError 
-EnumElement ViewAnnotationManagerError.geometryFieldMissing has declared type change from (MapboxMaps.ViewAnnotationManagerError.Type) -> MapboxMaps.ViewAnnotationManagerError to MapboxMaps.ViewAnnotationManagerError 
-EnumElement ViewAnnotationManagerError.viewIsAlreadyAdded has declared type change from (MapboxMaps.ViewAnnotationManagerError.Type) -> MapboxMaps.ViewAnnotationManagerError to MapboxMaps.ViewAnnotationManagerError 
-EnumElement MapView.SnapshotError.missingImageData is now static 
-EnumElement MapView.SnapshotError.noMetalView is now static 
-EnumElement TypeConversionError.invalidObject is now static 
-EnumElement TypeConversionError.unexpectedType is now static 
-EnumElement TypeConversionError.unsuccessfulConversion is now static 
-EnumElement ViewAnnotationManagerError.annotationNotFound is now static 
-EnumElement ViewAnnotationManagerError.associatedFeatureIdIsAlreadyInUse is now static 
-EnumElement ViewAnnotationManagerError.geometryFieldMissing is now static 
-EnumElement ViewAnnotationManagerError.viewIsAlreadyAdded is now static 
-Enum MapView.SnapshotError has removed conformance to Hashable 
-Enum TypeConversionError has removed conformance to Hashable 
-Enum ViewAnnotationManagerError has removed conformance to Hashable 
-Func MapView.SnapshotError.hash(into:) has been removed 
-Func TypeConversionError.hash(into:) has been removed 
-Func ViewAnnotationManagerError.hash(into:) has been removed 
-Var MapView.SnapshotError.hashValue has been removed 
-Var TypeConversionError.hashValue has been removed 
-Var ViewAnnotationManagerError.hashValue has been removed 
+Enum MapView.SnapshotError has been changed to a Struct
+Enum TypeConversionError has been changed to a Struct
+Enum ViewAnnotationManagerError has been changed to a Struct
+EnumElement MapView.SnapshotError.missingImageData has declared type change from (MapboxMaps.MapView.SnapshotError.Type) -> MapboxMaps.MapView.SnapshotError to MapboxMaps.MapView.SnapshotError
+EnumElement MapView.SnapshotError.noMetalView has declared type change from (MapboxMaps.MapView.SnapshotError.Type) -> MapboxMaps.MapView.SnapshotError to MapboxMaps.MapView.SnapshotError
+EnumElement TypeConversionError.invalidObject has declared type change from (MapboxMaps.TypeConversionError.Type) -> MapboxMaps.TypeConversionError to MapboxMaps.TypeConversionError
+EnumElement TypeConversionError.unexpectedType has declared type change from (MapboxMaps.TypeConversionError.Type) -> MapboxMaps.TypeConversionError to MapboxMaps.TypeConversionError
+EnumElement TypeConversionError.unsuccessfulConversion has declared type change from (MapboxMaps.TypeConversionError.Type) -> MapboxMaps.TypeConversionError to MapboxMaps.TypeConversionError
+EnumElement ViewAnnotationManagerError.annotationNotFound has declared type change from (MapboxMaps.ViewAnnotationManagerError.Type) -> MapboxMaps.ViewAnnotationManagerError to MapboxMaps.ViewAnnotationManagerError
+EnumElement ViewAnnotationManagerError.associatedFeatureIdIsAlreadyInUse has declared type change from (MapboxMaps.ViewAnnotationManagerError.Type) -> MapboxMaps.ViewAnnotationManagerError to MapboxMaps.ViewAnnotationManagerError
+EnumElement ViewAnnotationManagerError.geometryFieldMissing has declared type change from (MapboxMaps.ViewAnnotationManagerError.Type) -> MapboxMaps.ViewAnnotationManagerError to MapboxMaps.ViewAnnotationManagerError
+EnumElement ViewAnnotationManagerError.viewIsAlreadyAdded has declared type change from (MapboxMaps.ViewAnnotationManagerError.Type) -> MapboxMaps.ViewAnnotationManagerError to MapboxMaps.ViewAnnotationManagerError
+EnumElement MapView.SnapshotError.missingImageData is now static
+EnumElement MapView.SnapshotError.noMetalView is now static
+EnumElement TypeConversionError.invalidObject is now static
+EnumElement TypeConversionError.unexpectedType is now static
+EnumElement TypeConversionError.unsuccessfulConversion is now static
+EnumElement ViewAnnotationManagerError.annotationNotFound is now static
+EnumElement ViewAnnotationManagerError.associatedFeatureIdIsAlreadyInUse is now static
+EnumElement ViewAnnotationManagerError.geometryFieldMissing is now static
+EnumElement ViewAnnotationManagerError.viewIsAlreadyAdded is now static
+Enum MapView.SnapshotError has removed conformance to Hashable
+Enum TypeConversionError has removed conformance to Hashable
+Enum ViewAnnotationManagerError has removed conformance to Hashable
+Func MapView.SnapshotError.hash(into:) has been removed
+Func TypeConversionError.hash(into:) has been removed
+Func ViewAnnotationManagerError.hash(into:) has been removed
+Var MapView.SnapshotError.hashValue has been removed
+Var TypeConversionError.hashValue has been removed
+Var ViewAnnotationManagerError.hashValue has been removed
 
 // Offline APIs - add extraOptions in load options
 Constructor StylePackLoadOptions.init(glyphsRasterizationMode:metadata:acceptExpired:) has been removed
@@ -472,3 +472,67 @@ Var InterfaceOrientationProvider.onInterfaceOrientationChange has been added as 
 Var LocationProvider.latestLocation has been added as a protocol requirement
 Class AppleLocationProvider has removed its super class ObjectiveC.NSObject
 Class AppleLocationProvider no longer inherits convenience inits from its superclass
+
+// MapRecorder replay API changes
+Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:completion:) has been renamed to Func replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:)
+Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:completion:) has parameter 3 type change from () -> Swift.Void to Swift.Bool
+
+// Rename Viewport to ViewportManager
+Class Viewport has been renamed to Class ViewportManager
+Accessor MapView.viewport.Get() has return type change from MapboxMaps.Viewport! to MapboxMaps.ViewportManager!
+Var MapView.viewport has declared type change from MapboxMaps.Viewport! to MapboxMaps.ViewportManager!
+
+// OfflineManager + remove style packs
+Func OfflineManager.removeStylePack(for:) has been renamed to Func removeStylePack(for:completion:)
+
+// New Layer inits with source (when applies)
+Accessor Layer.source.Set() has been removed
+Accessor Layer.sourceLayer.Set() has been removed
+Constructor CircleLayer.init(id:) has been removed
+Constructor FillExtrusionLayer.init(id:) has been removed
+Constructor FillLayer.init(id:) has been removed
+Constructor HeatmapLayer.init(id:) has been removed
+Constructor HillshadeLayer.init(id:) has been removed
+Constructor LineLayer.init(id:) has been removed
+Constructor RasterLayer.init(id:) has been removed
+Constructor SymbolLayer.init(id:) has been removed
+
+// cameraForCoordinateBounds
+Func MapboxMap.camera(for:padding:bearing:pitch:) has been renamed to Func camera(for:padding:bearing:pitch:maxZoom:offset:)
+Func MapboxMap.camera(for:padding:bearing:pitch:) has parameter 0 type change from MapboxCoreMaps.CoordinateBounds to [CoreLocation.CLLocationCoordinate2D]
+Func MapboxMap.camera(for:padding:bearing:pitch:) has parameter 0 type change from [CoreLocation.CLLocationCoordinate2D] to MapboxCoreMaps.CoordinateBounds
+
+// Split Location into Location and Heading
+Class Location has been removed
+Func LocationManager.addLocationConsumer(newConsumer:) has been removed
+Func LocationManager.addPuckLocationConsumer(_:) has been removed
+Func LocationManager.removeLocationConsumer(consumer:) has been removed
+Func LocationManager.removePuckLocationConsumer(_:) has been removed
+Protocol LocationConsumer has been removed
+Protocol LocationProvider has been removed
+Protocol PuckLocationConsumer has been removed
+Protocol InterfaceOrientationProvider has been removed
+Var LocationManager.locationProvider has been removed
+Func LocationManager.overrideLocationProvider(with:) has been renamed to Func override(locationProvider:headingProvider:)
+Func LocationManager.overrideLocationProvider(with:) has parameter 0 type change from MapboxMaps.LocationProvider to MapboxMaps.Signal<[MapboxCommon.Location]>
+Class AppleLocationProvider has removed conformance to LocationProvider
+Func LocationManager.overrideLocationProvider(with:) has been renamed to Func override(provider:)
+Var AppleLocationProvider.heading has been renamed to Var latestHeading
+Accessor AppleLocationProvider.heading.Get() has return type change from CoreLocation.CLHeading? to MapboxMaps.Heading?
+Func LocationManager.overrideLocationProvider(with:) has parameter 0 type change from MapboxMaps.LocationProvider to MapboxCommon.LocationProvider & MapboxMaps.HeadingProvider
+Var AppleLocationProvider.heading has declared type change from CoreLocation.CLHeading? to MapboxMaps.Heading?
+Constructor AppleLocationProvider.init() has ObjC name change from init to
+
+// Remove source, sourceLayer, filter from the Layer protocol
+Var BackgroundLayer.filter has been removed
+Var BackgroundLayer.source has been removed
+Var BackgroundLayer.sourceLayer has been removed
+Var Layer.filter has been removed
+Var Layer.source has been removed
+Var Layer.sourceLayer has been removed
+Var LocationIndicatorLayer.filter has been removed
+Var LocationIndicatorLayer.source has been removed
+Var LocationIndicatorLayer.sourceLayer has been removed
+Var SkyLayer.filter has been removed
+Var SkyLayer.source has been removed
+Var SkyLayer.sourceLayer has been removed

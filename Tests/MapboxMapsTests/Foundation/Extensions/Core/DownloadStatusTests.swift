@@ -5,30 +5,32 @@ import XCTest
 final class DownloadStatusTests: XCTestCase {
     var httpRequest: HttpRequest!
     var downloadOptions: DownloadOptions!
-    var downloadError: DownloadError!
+    var downloadError: TransferError!
     var httpRequestError: HttpRequestError!
     var httpResponseData: HttpResponseData!
+    var sdkInformation: SdkInformation!
 
     override func setUp() {
         super.setUp()
-        httpRequest = HttpRequest(url: name, headers: [:], uaComponents: UAComponents(), body: nil)
+        sdkInformation = SdkInformation(name: "maps-ios-tests", version: "1.0", packageName: "MapboxMaps")
+        httpRequest = HttpRequest(url: name, headers: [:], sdkInformation: sdkInformation, body: nil)
         downloadOptions = DownloadOptions(request: httpRequest, localPath: "some/test/path")
         httpRequestError = HttpRequestError(type: .otherError, message: "Some failure")
         httpResponseData = HttpResponseData(headers: [:], code: 200, data: Data())
-        downloadError = DownloadError(code: .networkError, message: "Some network error")
+        downloadError = TransferError(code: .networkError, message: "Some network error")
     }
 
     func testSuccessfulLongInitializer() {
         let status = DownloadStatus(downloadId: 1,
                                     state: .finished,
                                     error: .none,
-                                    totalBytes: 2,
+                                    totalBytes: 2.NSNumber,
                                     receivedBytes: 3,
                                     transferredBytes: 4,
                                     downloadOptions: downloadOptions,
-                                    httpResult: .success(httpResponseData))
+                                    httpResult: .init(value: httpResponseData))
         XCTAssertEqual(status.downloadId, 1, "The value for downloadId should be 1, got \(status.downloadId)")
-        XCTAssertEqual(status.state, DownloadState.finished, "The download state should be finished, got \(status.state)")
+        XCTAssertEqual(status.state, TransferState.finished, "The download state should be finished, got \(status.state)")
         XCTAssertNil(status.error, "The error should be nil, got \(status.error.debugDescription)")
         XCTAssertEqual(status.__totalBytes, 2, "The value for __totalBytes should be 2, got \(status.__totalBytes.debugDescription)")
         XCTAssertEqual(status.receivedBytes, 3, "The value for receivedBytes should be 3, got \(status.receivedBytes)")
@@ -50,10 +52,10 @@ final class DownloadStatusTests: XCTestCase {
                                     receivedBytes: 3,
                                     transferredBytes: 4,
                                     downloadOptions: downloadOptions,
-                                    httpResult: .failure(httpRequestError))
+                                    httpResult: .init(error: httpRequestError))
         XCTAssertEqual(status.downloadId, 1, "The value for downloadId should be 1, got \(status.downloadId)")
-        XCTAssertEqual(status.state, DownloadState.failed, "The download state should be failed, got \(status.state)")
-        XCTAssertEqual(status.error, downloadError, "The error should be \(downloadError.localizedDescription), got \(status.error.debugDescription)")
+        XCTAssertEqual(status.state, TransferState.failed, "The download state should be failed, got \(status.state)")
+        XCTAssertEqual(status.error, downloadError, "The error should be \(downloadError.message), got \(status.error.debugDescription)")
         XCTAssertEqual(status.__totalBytes, 2, "The value for __totalBytes should be 2, got \(status.__totalBytes.debugDescription)")
         XCTAssertEqual(status.receivedBytes, 3, "The value for receivedBytes should be 3, got \(status.receivedBytes)")
         XCTAssertEqual(status.transferredBytes, 4, "The value for transferredBytes should be 4, got \(status.transferredBytes)")
@@ -76,7 +78,7 @@ final class DownloadStatusTests: XCTestCase {
                                     downloadOptions: downloadOptions,
                                     httpResult: nil)
         XCTAssertEqual(status.downloadId, 1, "The value for downloadId should be 1, got \(status.downloadId)")
-        XCTAssertEqual(status.state, DownloadState.finished, "The download state should be finished, got \(status.state)")
+        XCTAssertEqual(status.state, TransferState.finished, "The download state should be finished, got \(status.state)")
         XCTAssertNil(status.error, "The error should be nil, got \(status.error.debugDescription)")
         XCTAssertEqual(status.__totalBytes, 2, "The value for __totalBytes should be 2, got \(status.__totalBytes.debugDescription)")
         XCTAssertEqual(status.receivedBytes, 3, "The value for receivedBytes should be 3, got \(status.receivedBytes)")
@@ -86,10 +88,14 @@ final class DownloadStatusTests: XCTestCase {
     }
 
     func testSuccessfulShortInitializer() {
-        let status = DownloadStatus(error: nil,
+        let status = DownloadStatus(downloadId: 0,
+                                    state: .pending,
+                                    error: nil,
                                     totalBytes: 1234,
+                                    receivedBytes: 0,
+                                    transferredBytes: 0,
                                     downloadOptions: downloadOptions,
-                                    httpResult: .success(httpResponseData))
+                                    httpResult: .init(value: httpResponseData))
 
         XCTAssertNil(status.error, "The error should be nil, got \(status.error.debugDescription)")
         XCTAssertEqual(status.__totalBytes, 1234, "The value for __totalBytes should be 1234, got \(status.__totalBytes.debugDescription)")
@@ -102,12 +108,16 @@ final class DownloadStatusTests: XCTestCase {
     }
 
     func testFailedShortInitializer() {
-        let status = DownloadStatus(error: downloadError,
+        let status = DownloadStatus(downloadId: 0,
+                                    state: .pending,
+                                    error: downloadError,
                                     totalBytes: 1234,
+                                    receivedBytes: 0,
+                                    transferredBytes: 0,
                                     downloadOptions: downloadOptions,
-                                    httpResult: .failure(httpRequestError))
+                                    httpResult: .init(error: httpRequestError))
 
-        XCTAssertEqual(status.error, downloadError, "The error should be \(downloadError.localizedDescription), got \(status.error.debugDescription)")
+        XCTAssertEqual(status.error, downloadError, "The error should be \(downloadError.message), got \(status.error.debugDescription)")
         XCTAssertEqual(status.__totalBytes, 1234, "The value for __totalBytes should be 1234, got \(status.__totalBytes.debugDescription)")
         XCTAssertEqual(status.downloadOptions, downloadOptions, "The value for downloadOptions should be \(downloadOptions.debugDescription), got \(status.downloadOptions.debugDescription)")
         if let result = status.__httpResult, result.isError(), let error = result.error {
@@ -118,8 +128,12 @@ final class DownloadStatusTests: XCTestCase {
     }
 
     func testNilShortInitializer() {
-        let status = DownloadStatus(error: nil,
+        let status = DownloadStatus(downloadId: 0,
+                                    state: .pending,
+                                    error: nil,
                                     totalBytes: 1234,
+                                    receivedBytes: 0,
+                                    transferredBytes: 0,
                                     downloadOptions: downloadOptions,
                                     httpResult: nil)
 
@@ -130,7 +144,7 @@ final class DownloadStatusTests: XCTestCase {
     }
 
     func testNilHttpResult() {
-        let status = DownloadStatus(__downloadId: 1,
+        let status = DownloadStatus(downloadId: 1,
                                     state: .finished,
                                     error: .none,
                                     totalBytes: 2,
@@ -138,25 +152,33 @@ final class DownloadStatusTests: XCTestCase {
                                     transferredBytes: 4,
                                     downloadOptions: downloadOptions,
                                     httpResult: nil)
-        XCTAssertNil(status.httpResult, "httpResult should be nil.")
+        XCTAssertNil(status.__httpResult?.result, "httpResult should be nil.")
     }
 
     func testValueHttpResult() throws {
-        let status = DownloadStatus(__error: nil,
+        let status = DownloadStatus(downloadId: 0,
+                                    state: .pending,
+                                    error: nil,
                                     totalBytes: nil,
+                                    receivedBytes: 0,
+                                    transferredBytes: 0,
                                     downloadOptions: downloadOptions,
                                     httpResult: Expected(value: httpResponseData))
 
-        let result = try status.httpResult?.get()
+        let result = try status.__httpResult?.result.get()
         XCTAssertEqual(result, httpResponseData, "The two HttpResponseData va;ues should be equal.")
     }
 
     func testErrorHttpResult() throws {
-        let status = DownloadStatus(__error: nil,
+        let status = DownloadStatus(downloadId: 0,
+                                    state: .pending,
+                                    error: nil,
                                     totalBytes: nil,
+                                    receivedBytes: 0,
+                                    transferredBytes: 0,
                                     downloadOptions: downloadOptions,
                                     httpResult: Expected(error: httpRequestError))
-        let result = status.httpResult
+        let result = status.__httpResult?.result
         guard case .failure(let error) = result else {
             XCTFail("Expected to find an error, instead found \(result.debugDescription).")
             return
@@ -166,19 +188,39 @@ final class DownloadStatusTests: XCTestCase {
     }
 
     func testNilTotalBytes() {
-        let status = DownloadStatus(error: .none,
+        let status = DownloadStatus(downloadId: 0,
+                                    state: .pending,
+                                    error: .none,
                                     totalBytes: nil,
+                                    receivedBytes: 0,
+                                    transferredBytes: 0,
                                     downloadOptions: downloadOptions,
-                                    httpResult: .success(httpResponseData))
+                                    httpResult: .init(value: httpResponseData))
 
-        XCTAssertNil(status.totalBytes, "The value for totalBytes should be nil.")
+        XCTAssertNil(status.__totalBytes?.uint64Value, "The value for totalBytes should be nil.")
     }
 
     func testNotNilTotalBytes() {
-        let status = DownloadStatus(error: .none,
+        let status = DownloadStatus(downloadId: 0,
+                                    state: .pending,
+                                    error: .none,
                                     totalBytes: 1234,
+                                    receivedBytes: 0,
+                                    transferredBytes: 0,
                                     downloadOptions: downloadOptions,
-                                    httpResult: .success(httpResponseData))
-        XCTAssertEqual(status.totalBytes, 1234, "The value for totalBytes should be 1234, found \(status.totalBytes.debugDescription).")
+                                    httpResult: .init(value: httpResponseData))
+        XCTAssertEqual(status.__totalBytes?.uint64Value, 1234, "The value for totalBytes should be 1234, found \(String(describing: status.__totalBytes?.uint64Value)).")
+    }
+}
+
+fileprivate extension Expected<HttpResponseData, HttpRequestError> {
+    var result: Result<ValueType, ErrorType> {
+        if isValue(), let value = value {
+            return .success(value)
+        } else if isError(), let error = error {
+            return .failure(error)
+        } else {
+            fatalError("Found unexpected types.")
+        }
     }
 }

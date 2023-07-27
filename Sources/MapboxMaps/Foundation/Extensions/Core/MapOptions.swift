@@ -1,3 +1,5 @@
+import UIKit
+
 extension MapOptions {
     /// Initialize a `MapOptions` object that is used when initializing a Map.
     ///

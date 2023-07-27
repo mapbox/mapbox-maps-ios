@@ -129,8 +129,53 @@ final class MapboxMapTests: XCTestCase {
         XCTAssertEqual(expectedCenter.latitude, camera.center!.latitude, accuracy: 0.25)
         XCTAssertEqual(expectedCenter.longitude, camera.center!.longitude, accuracy: 0.25)
         XCTAssertEqual(camera.bearing, 0)
-        XCTAssertEqual(camera.padding, .zero)
+        XCTAssertNil(camera.padding)
         XCTAssertEqual(camera.pitch, 0)
+    }
+
+    func testCameraForCoordinateBounds() {
+        let southwest = CLLocationCoordinate2DMake(0, 0)
+        let northeast = CLLocationCoordinate2DMake(4, 4)
+        let southeast = CLLocationCoordinate2DMake(0, 4)
+        let latitudeDelta =  northeast.latitude - southeast.latitude
+        let longitudeDelta = southeast.longitude - southwest.longitude
+        let expectedCenter = CLLocationCoordinate2DMake(northeast.latitude - (latitudeDelta / 2), southeast.longitude - (longitudeDelta / 2))
+        let coordinateBounds = CoordinateBounds(southwest: southwest, northeast: northeast)
+
+        let camera = mapboxMap.camera(for: coordinateBounds,
+                                      padding: .zero,
+                                      bearing: 0,
+                                      pitch: 0,
+                                      maxZoom: 0,
+                                      offset: nil)
+        XCTAssertEqual(expectedCenter.latitude, camera.center!.latitude, accuracy: 0.25)
+        XCTAssertEqual(expectedCenter.longitude, camera.center!.longitude, accuracy: 0.25)
+        XCTAssertEqual(camera.bearing, 0)
+        XCTAssertNil(camera.padding)
+        XCTAssertEqual(camera.pitch, 0)
+    }
+
+    func testCameraForCoordinateBoundsWithValues() {
+        let southwest = CLLocationCoordinate2DMake(0, 0)
+        let northeast = CLLocationCoordinate2DMake(4, 4)
+        let southeast = CLLocationCoordinate2DMake(0, 4)
+        let latitudeDelta =  northeast.latitude - southeast.latitude
+        let longitudeDelta = southeast.longitude - southwest.longitude
+        let expectedCenter = CLLocationCoordinate2DMake(northeast.latitude - (latitudeDelta / 2), southeast.longitude - (longitudeDelta / 2))
+        let coordinateBounds = CoordinateBounds(southwest: southwest, northeast: northeast)
+        let screenCoordinate = CGPoint(x: 1.0, y: 2.0)
+
+        let camera = mapboxMap.camera(for: coordinateBounds,
+                                      padding: UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2),
+                                      bearing: 4,
+                                      pitch: 65,
+                                      maxZoom: 12,
+                                      offset: screenCoordinate)
+        XCTAssertEqual(expectedCenter.latitude, camera.center!.latitude, accuracy: 0.25)
+        XCTAssertEqual(expectedCenter.longitude, camera.center!.longitude, accuracy: 0.25)
+        XCTAssertEqual(camera.bearing, 4)
+        XCTAssertNil(camera.padding)
+        XCTAssertEqual(camera.pitch, 65)
     }
 
     func testCameraForGeometry() {
@@ -164,7 +209,7 @@ final class MapboxMapTests: XCTestCase {
         XCTAssertEqual(expectedCenter.latitude, camera.center!.latitude, accuracy: 0.25)
         XCTAssertEqual(expectedCenter.longitude, camera.center!.longitude, accuracy: 0.25)
         XCTAssertEqual(camera.bearing, 0)
-        XCTAssertEqual(camera.padding, .zero)
+        XCTAssertNil(camera.padding)
         XCTAssertEqual(camera.pitch, 0)
     }
 
@@ -233,7 +278,7 @@ final class MapboxMapTests: XCTestCase {
         let completionIsCalledOnce = expectation(description: "loadStyle completion should be called once")
         completionIsCalledOnce.assertForOverFulfill = true
 
-        mapboxMap.loadStyleURI(.dark) { _ in
+        mapboxMap.loadStyle(.dark) { _ in
             completionIsCalledOnce.fulfill()
         }
         let interval = EventTimeInterval(begin: .init(), end: .init())
@@ -241,6 +286,26 @@ final class MapboxMapTests: XCTestCase {
         events.onStyleLoaded.send(StyleLoaded(timeInterval: interval))
 
         waitForExpectations(timeout: 0.3)
+    }
+
+    func testTransitionOptionsAppliedUponStyleDataLoaded() {
+        // given
+        let options = TransitionOptions(duration: .random(), delay: .random(), enablePlacementTransitions: .random())
+
+        // when
+        mapboxMap.loadStyle(.light, transition: options)
+
+        // then
+        let interval = EventTimeInterval(begin: .init(), end: .init())
+        events.onStyleLoaded.send(.init(timeInterval: interval))
+        events.onStyleDataLoaded.send(.init(type: .sources, timeInterval: interval))
+        events.onStyleDataLoaded.send(.init(type: .sprite, timeInterval: interval))
+        XCTAssertNil(mapboxMap.styleTransition.duration) // should not be applied just yet
+
+        events.onStyleDataLoaded.send(.init(type: .style, timeInterval: interval))
+        XCTAssertEqual(mapboxMap.styleTransition.duration!, options.duration!, accuracy: 0.1)
+        XCTAssertEqual(mapboxMap.styleTransition.delay!, options.delay!, accuracy: 0.1)
+        XCTAssertEqual(mapboxMap.styleTransition.enablePlacementTransitions, options.enablePlacementTransitions)
     }
 
     func testEvents() {
@@ -403,5 +468,22 @@ final class MapboxMapTests: XCTestCase {
         events.onMapIdle.send(mapIdle2)
         XCTAssertEqual(stub.invocations.count, 2)
         XCTAssertIdentical(stub.invocations[1].parameters, mapIdle2)
+    }
+
+    func testFittingPoint() {
+        let size = CGSize(width: 100, height: 100)
+
+        XCTAssertEqual(CGPoint(x: 1, y: 1).fit(to: size), CGPoint(x: 1, y: 1))
+        XCTAssertEqual(CGPoint(x: 0, y: 0).fit(to: size), CGPoint(x: 0, y: 0))
+        XCTAssertEqual(CGPoint(x: 100, y: 100).fit(to: size), CGPoint(x: 100, y: 100))
+        XCTAssertEqual(CGPoint(x: -0.1, y: 0.2).fit(to: size), CGPoint(x: 0, y: 0.2))
+        XCTAssertEqual(CGPoint(x: 1, y: -0.2).fit(to: size), CGPoint(x: 1, y: 0))
+        XCTAssertEqual(CGPoint(x: -0.3, y: -0.3).fit(to: size), CGPoint(x: 0, y: 0))
+        XCTAssertEqual(CGPoint(x: -0.5, y: -0.3).fit(to: size), CGPoint(x: -1, y: -1))
+        XCTAssertEqual(CGPoint(x: -0.3, y: -0.5).fit(to: size), CGPoint(x: -1, y: -1))
+        XCTAssertEqual(CGPoint(x: 100.1, y: 99.9).fit(to: size), CGPoint(x: 100, y: 99.9))
+        XCTAssertEqual(CGPoint(x: 99.9, y: 100.1).fit(to: size), CGPoint(x: 99.9, y: 100))
+        XCTAssertEqual(CGPoint(x: 102, y: 1).fit(to: size), CGPoint(x: -1, y: -1))
+        XCTAssertEqual(CGPoint(x: 1, y: 101).fit(to: size), CGPoint(x: -1, y: -1))
     }
 }

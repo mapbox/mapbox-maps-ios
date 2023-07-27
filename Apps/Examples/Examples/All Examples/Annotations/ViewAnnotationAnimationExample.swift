@@ -46,8 +46,7 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
 
         try! mapView.mapboxMap.addSource(source)
 
-        var layer = LineLayer(id: "route-layer")
-        layer.source = source.id
+        var layer = LineLayer(id: "route-layer", source: source.id)
         layer.lineColor = .constant(StyleColor(UIColor.systemPink))
         layer.lineWidth = .constant(4)
 

@@ -26,9 +26,12 @@ internal protocol MapSnapshotterProtocol: StyleManagerProtocol {
                               pitch: NSNumber?) -> MapboxCoreMaps.CameraOptions
 
     func coordinateBoundsForCamera(forCamera camera: MapboxCoreMaps.CameraOptions) -> CoordinateBounds
+    func __tileCover(for options: MapboxCoreMaps.TileCoverOptions, cameraOptions: MapboxCoreMaps.CameraOptions?) -> [CanonicalTileID]
 }
 
-extension MapSnapshotter: MapSnapshotterProtocol {}
+extension MapSnapshotter: MapSnapshotterProtocol {
+
+}
 
 /// A utility class for capturing styled map snapshots.
 ///
@@ -36,7 +39,7 @@ extension MapSnapshotter: MapSnapshotterProtocol {}
 /// You can configure the final result via ``MapSnapshotOptions`` upon construction time and take.
 public class Snapshotter: StyleManager {
 
-    /// Internal `MapboxCoreMaps.MBXMapSnapshotter` object that takes care of
+    /// Internal `MapboxCoreMaps.MBMMapSnapshotter` object that takes care of
     /// rendering a snapshot.
     internal let mapSnapshotter: MapSnapshotterProtocol
 
@@ -306,6 +309,17 @@ public class Snapshotter: StyleManager {
             bearing: bearing?.NSNumber,
             pitch: pitch?.NSNumber))
     }
+
+    /// Returns array of tile identifiers that cover current map camera.
+    ///
+    /// - Parameters:
+    ///  - options: Options for the tile cover method.
+    @_spi(Experimental)
+    public func tileCover(for options: TileCoverOptions) -> [CanonicalTileID] {
+        mapSnapshotter.__tileCover(
+            for: MapboxCoreMaps.TileCoverOptions(options),
+            cameraOptions: nil)
+    }
 }
 
 // MARK: - Snapshotter Event handling
@@ -323,7 +337,7 @@ extension Snapshotter {
     public var onStyleLoaded: Signal<StyleLoaded> { events.signal(for: \.onStyleLoaded) }
 
     /// The requested style data has been loaded. The `type` property defines what kind of style data has been loaded.
-    /// Event may be emitted synchronously, for example, when ``MapboxMap/loadStyleJSON(_:completion:)`` is used to load style.
+    /// Event may be emitted synchronously, for example, when ``MapboxMap/loadStyle(_:completion:)`` is used to load style.
     ///
     /// Based on an event data `type` property value, following use-cases may be implemented:
     /// - `style`: Style is parsed, style layer properties could be read and modified, style layers and sources could be

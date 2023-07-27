@@ -9,6 +9,9 @@ internal protocol StyleSourceManagerProtocol: AnyObject {
     func source(withId id: String) throws -> Source
     func addSource(_ source: Source, dataId: String?) throws
     func updateGeoJSONSource(withId id: String, data: GeoJSONSourceData, dataId: String?)
+    func addGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String?)
+    func updateGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String?)
+    func removeGeoJSONSourceFeatures(forSourceId sourceId: String, featureIds: [String], dataId: String?)
     func addSource(withId id: String, properties: [String: Any]) throws
     func removeSource(withId id: String) throws
     func sourceExists(withId id: String) -> Bool
@@ -28,16 +31,12 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
     private let styleManager: StyleManagerProtocol
     private let mainQueue: DispatchQueueProtocol
     private let backgroundQueue: DispatchQueueProtocol
-    private var workItems = [SourceId: AnyCancelable]()
+    private var workItemTracker = WorkItemPerGeoJSONSourceTracker()
 
     internal var allSourceIdentifiers: [SourceInfo] {
         return styleManager.getStyleSources().map { info in
             SourceInfo(id: info.id, type: SourceType(stringLiteral: info.type))
         }
-    }
-
-    deinit {
-        workItems.values.forEach { $0.cancel() }
     }
 
     internal init(
@@ -87,6 +86,84 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
         try setSourceProperties(for: source.id, properties: volatileProperties)
     }
 
+    func addGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String?) {
+        let item = DispatchWorkItem { [weak self] in
+            guard let self else { return }
+            do {
+                try handleExpected {
+                    return self.styleManager.addGeoJSONSourceFeatures(forSourceId: sourceId,
+                                                                      dataId: dataId ?? "",
+                                                                      features: features.map(MapboxCommon.Feature.init))
+                }
+            } catch {
+                Log.error(forMessage: "Failed to add features for source with id: \(sourceId), dataId: \(dataId ?? ""), error: \(error)")
+            }
+        }
+        workItemTracker.add(AnyCancelable(item.cancel), for: sourceId)
+        backgroundQueue.async(execute: item)
+    }
+
+    private final class WorkItemPerGeoJSONSourceTracker {
+        private var cancellables = [SourceId: CompositeCancelable]()
+
+        func add(_ cancellable: Cancelable, for sourceId: SourceId) {
+            let compositeCancellable: CompositeCancelable
+
+            if let cached = cancellables[sourceId] {
+                compositeCancellable = cached
+            } else {
+                compositeCancellable = CompositeCancelable()
+            }
+
+            compositeCancellable.add(cancellable)
+            cancellables[sourceId] = compositeCancellable
+        }
+
+        func cancelAll(for sourceId: SourceId) {
+            cancellables.removeValue(forKey: sourceId)?.cancel()
+        }
+
+        deinit {
+            cancellables.values.forEach { $0.cancel() }
+        }
+    }
+
+    func updateGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String?) {
+        let item = DispatchWorkItem { [weak self] in
+            guard let self else { return }
+            do {
+                try handleExpected {
+                    return self.styleManager.updateGeoJSONSourceFeatures(forSourceId: sourceId,
+                                                                    dataId: dataId ?? "",
+                                                                    features: features.map(MapboxCommon.Feature.init))
+                }
+            } catch {
+                Log.error(forMessage: "Failed to update features for source with id: \(sourceId), dataId: \(dataId ?? ""), error: \(error)")
+            }
+        }
+
+        workItemTracker.add(AnyCancelable(item.cancel), for: sourceId)
+        backgroundQueue.async(execute: item)
+    }
+
+    func removeGeoJSONSourceFeatures(forSourceId sourceId: String, featureIds: [String], dataId: String?) {
+        let item = DispatchWorkItem { [weak self] in
+            guard let self else { return }
+            do {
+                try handleExpected {
+                    return self.styleManager.removeGeoJSONSourceFeatures(forSourceId: sourceId,
+                                                                         dataId: dataId ?? "",
+                                                                         featureIds: featureIds)
+                }
+            } catch {
+                Log.error(forMessage: "Failed to remove features for source with id: \(sourceId), dataId: \(dataId ?? ""), error: \(error)")
+            }
+        }
+
+        workItemTracker.add(AnyCancelable(item.cancel), for: sourceId)
+        backgroundQueue.async(execute: item)
+    }
+
     // MARK: - Untyped API
 
     internal func addSource(withId id: String, properties: [String: Any]) throws {
@@ -100,7 +177,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
             return styleManager.removeStyleSource(forSourceId: id)
         }
 
-        workItems.removeValue(forKey: id)?.cancel()
+        workItemTracker.cancelAll(for: id)
     }
 
     internal func sourceExists(withId id: String) -> Bool {
@@ -162,7 +239,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
     }
 
     func updateGeoJSONSource(withId id: String, data: GeoJSONSourceData, dataId: String?) {
-        workItems.removeValue(forKey: id)?.cancel()
+        workItemTracker.cancelAll(for: id)
 
         // This implementation favors the first submitted task and the last, in case of many work items queuing up -
         // the item that started execution will disregard cancellation, queued up items in the middle will get cancelled,
@@ -177,7 +254,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
             }
         }
 
-        workItems[id] = AnyCancelable(item.cancel)
+        workItemTracker.add(AnyCancelable(item.cancel), for: id)
         backgroundQueue.async(execute: item)
     }
 }

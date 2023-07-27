@@ -7,12 +7,30 @@ import Foundation
 public struct CircleLayer: Layer {
 
     // MARK: - Conformance to `Layer` protocol
+    /// Unique layer name
     public var id: String
+
+    /// Rendering type of this layer.
     public let type: LayerType
+
+    /// An expression specifying conditions on source features.
+    /// Only features that match the filter are displayed.
     public var filter: Expression?
+
+    /// Name of a source description to be used for this layer.
+    /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
     public var source: String?
+
+    /// Layer to use from a vector tile source.
+    ///
+    /// Required for vector tile sources.
+    /// Prohibited for all other source types, including GeoJSON sources.
     public var sourceLayer: String?
+
+    /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
     public var minZoom: Double?
+
+    /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
@@ -32,6 +50,18 @@ public struct CircleLayer: Layer {
 
     /// Transition options for `circleColor`.
     public var circleColorTransition: StyleTransition?
+
+    /// Emission strength.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public var circleEmissiveStrength: Value<Double>?
+
+    /// Transition options for `circleEmissiveStrength`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public var circleEmissiveStrengthTransition: StyleTransition?
 
     /// The opacity at which the circle will be drawn.
     public var circleOpacity: Value<Double>?
@@ -78,7 +108,8 @@ public struct CircleLayer: Layer {
     /// Controls the frame of reference for `circle-translate`.
     public var circleTranslateAnchor: Value<CircleTranslateAnchor>?
 
-    public init(id: String) {
+    public init(id: String, source: String) {
+        self.source = source
         self.id = id
         self.type = LayerType.circle
         self.visibility = .visible
@@ -99,6 +130,8 @@ public struct CircleLayer: Layer {
         try paintContainer.encodeIfPresent(circleBlurTransition, forKey: .circleBlurTransition)
         try paintContainer.encodeIfPresent(circleColor, forKey: .circleColor)
         try paintContainer.encodeIfPresent(circleColorTransition, forKey: .circleColorTransition)
+        try paintContainer.encodeIfPresent(circleEmissiveStrength, forKey: .circleEmissiveStrength)
+        try paintContainer.encodeIfPresent(circleEmissiveStrengthTransition, forKey: .circleEmissiveStrengthTransition)
         try paintContainer.encodeIfPresent(circleOpacity, forKey: .circleOpacity)
         try paintContainer.encodeIfPresent(circleOpacityTransition, forKey: .circleOpacityTransition)
         try paintContainer.encodeIfPresent(circlePitchAlignment, forKey: .circlePitchAlignment)
@@ -135,6 +168,8 @@ public struct CircleLayer: Layer {
             circleBlurTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .circleBlurTransition)
             circleColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .circleColor)
             circleColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .circleColorTransition)
+            circleEmissiveStrength = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .circleEmissiveStrength)
+            circleEmissiveStrengthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .circleEmissiveStrengthTransition)
             circleOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .circleOpacity)
             circleOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .circleOpacityTransition)
             circlePitchAlignment = try paintContainer.decodeIfPresent(Value<CirclePitchAlignment>.self, forKey: .circlePitchAlignment)
@@ -182,6 +217,8 @@ public struct CircleLayer: Layer {
         case circleBlurTransition = "circle-blur-transition"
         case circleColor = "circle-color"
         case circleColorTransition = "circle-color-transition"
+        case circleEmissiveStrength = "circle-emissive-strength"
+        case circleEmissiveStrengthTransition = "circle-emissive-strength-transition"
         case circleOpacity = "circle-opacity"
         case circleOpacityTransition = "circle-opacity-transition"
         case circlePitchAlignment = "circle-pitch-alignment"

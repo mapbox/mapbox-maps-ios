@@ -125,8 +125,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
             }
 
             // Add the correct backing layer for this annotation type
-            var layer = SymbolLayer(id: layerId)
-            layer.source = sourceId
+            var layer = SymbolLayer(id: layerId, source: sourceId)
 
             // Show all icons and texts by default in point annotations.
             layer.iconAllowOverlap = .constant(true)
@@ -168,8 +167,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
     private func createClusterLevelLayer(clusterOptions: ClusterOptions) -> CircleLayer {
         let layedID = "mapbox-iOS-cluster-circle-layer-manager-" + id
-        var circleLayer = CircleLayer(id: layedID)
-        circleLayer.source = sourceId
+        var circleLayer = CircleLayer(id: layedID, source: sourceId)
         circleLayer.circleColor = clusterOptions.circleColor
         circleLayer.circleRadius = clusterOptions.circleRadius
         circleLayer.filter = Exp(.has) { "point_count" }
@@ -178,8 +176,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
     private func createClusterTextLayer(clusterOptions: ClusterOptions) -> SymbolLayer {
         let layerID = "mapbox-iOS-cluster-text-layer-manager-" + id
-        var symbolLayer = SymbolLayer(id: layerID)
-        symbolLayer.source = sourceId
+        var symbolLayer = SymbolLayer(id: layerID, source: sourceId)
         symbolLayer.textField = clusterOptions.textField
         symbolLayer.textSize = clusterOptions.textSize
         symbolLayer.textColor = clusterOptions.textColor

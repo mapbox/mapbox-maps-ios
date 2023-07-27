@@ -39,7 +39,7 @@ internal final class EventsManager: EventsManagerProtocol {
 
     internal init() {
         let eventsServerOptions = EventsServerOptions(
-            userAgentFragment: Constants.UserAgent,
+            sdkInformation: .init(name: Constants.MGLAPIClientUserAgentBase, version: Constants.SDKVersion, packageName: nil),
             deferredDeliveryServiceOptions: nil)
         eventsService = EventsService.getOrCreate(for: eventsServerOptions)
         telemetryService = TelemetryService.getOrCreate()
@@ -137,9 +137,7 @@ internal final class EventsManager: EventsManagerProtocol {
     }
 
     internal func sendTurnstile() {
-        let turnstileEvent = TurnstileEvent(skuId: UserSKUIdentifier.mapsMAUS,
-                                            sdkIdentifier: Constants.MGLAPIClientUserAgentBase,
-                                            sdkVersion: Constants.SDKVersion)
+        let turnstileEvent = TurnstileEvent(skuId: UserSKUIdentifier.mapsMAUS)
         eventsService.sendTurnstileEvent(for: turnstileEvent)
     }
 

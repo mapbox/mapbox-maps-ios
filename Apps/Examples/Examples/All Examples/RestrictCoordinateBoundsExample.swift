@@ -18,7 +18,7 @@ final class RestrictCoordinateBoundsExample: UIViewController, ExampleProtocol {
         try? mapView.mapboxMap.setCameraBounds(with: CameraBoundsOptions(bounds: bounds))
 
         // Center the camera on the bounds
-        let camera = mapView.mapboxMap.camera(for: bounds, padding: .zero, bearing: 0, pitch: 0)
+        let camera = mapView.mapboxMap.camera(for: bounds, padding: .zero, bearing: 0, pitch: 0, maxZoom: nil, offset: nil)
 
         // Set the camera's center coordinate.
         mapView.mapboxMap.setCamera(to: camera)

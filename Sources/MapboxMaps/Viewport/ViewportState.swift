@@ -1,18 +1,18 @@
-/// `ViewportState` is a protocol that ``Viewport`` depends on as it orchestrates transitions to and
+/// `ViewportState` is a protocol that ``ViewportManager`` depends on as it orchestrates transitions to and
 /// from different states.
 ///
-/// A `ViewportState` is a reference type and must not be shared among multiple ``Viewport``
+/// A `ViewportState` is a reference type and must not be shared among multiple ``ViewportManager``
 /// instances simultaneously.
 ///
 /// The ``ViewportState/observeDataSource(with:)`` method allows
 /// ``ViewportTransition``s to consume a stream of camera updates from a target state while
 /// executing a transition. ``ViewportState/startUpdatingCamera()`` and
 /// ``ViewportState/stopUpdatingCamera()`` are invoked to tell the state that it should assume or
-/// relinquish control of the map's camera. These are typically used by ``Viewport`` itself after a
+/// relinquish control of the map's camera. These are typically used by ``ViewportManager`` itself after a
 /// successful transition into a state and when exiting a state, respectively.
 ///
 /// MapboxMaps provides implementations of ``ViewportState`` that can be created and configured
-/// via methods on ``Viewport``. Applications may also define their own implementations to handle
+/// via methods on ``ViewportManager``. Applications may also define their own implementations to handle
 /// advanced use cases not covered by the provided implementations.
 ///
 /// States should generally pre-warm their data sources as soon as they are created to minimize delays when
@@ -31,7 +31,7 @@ public protocol ViewportState: AnyObject {
     /// the current camera if it's not too stale rather than waiting for the next camera change to occur. To
     /// increase the likelihood that a valid camera exists when a handler is registered, design
     /// `ViewportState` implementations so that they start updating their internal state prior to when
-    /// they are passed to ``Viewport/transition(to:transition:completion:)``.
+    /// they are passed to ``ViewportManager/transition(to:transition:completion:)``.
     ///
     /// The caller may either cancel the returned ``Cancelable`` *or* return `false` from
     /// `handler` to indicate that it wishes to stop receiving updates. Following either of these events,
@@ -47,7 +47,7 @@ public protocol ViewportState: AnyObject {
 
     /// Tells this state that it is now responsible for updating the camera.
     ///
-    /// ``Viewport`` calls this method at the end of a successful transition into this state.
+    /// ``ViewportManager`` calls this method at the end of a successful transition into this state.
     ///
     /// Implementations typically have a dependency on either ``MapboxMap`` so that they can use its
     /// ``MapboxMap/setCamera(to:)`` method to change the camea or on
@@ -56,7 +56,7 @@ public protocol ViewportState: AnyObject {
 
     /// Tells this state that it is no longer responsible for updating the camera.
     ///
-    /// ``Viewport`` calls this method at the beginning of the transition out of this state.
+    /// ``ViewportManager`` calls this method at the beginning of the transition out of this state.
     ///
     /// Implementations must stop updating the camera immediately and should typically cancel any
     /// ongoing animations that they started when this method is invoked.

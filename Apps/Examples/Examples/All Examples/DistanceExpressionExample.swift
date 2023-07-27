@@ -1,4 +1,5 @@
 import MapboxMaps
+import UIKit
 
 class DistanceExpressionExample: UIViewController, ExampleProtocol {
     var mapView: MapView!
@@ -38,8 +39,7 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
 
         // Create a `CircleLayer` from the previously defined source. The source ID
         // will be set for the source once it is added to the map's style.
-        var circleLayer = CircleLayer(id: "circle-layer")
-        circleLayer.source = source.id
+        var circleLayer = CircleLayer(id: "circle-layer", source: source.id)
 
         // This expression simulates a `CircleLayer` with a radius of 150 meters. For features that will be
         // visible at lower zoom levels, add more stops at the zoom levels where the feature will be more
@@ -117,7 +117,7 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
     }
 
     func circleRadius(forZoom zoom: CGFloat) -> Double {
-        let centerLatitude = mapView.cameraState.center.latitude
+        let centerLatitude = mapView.mapboxMap.cameraState.center.latitude
 
         // Get the meters per pixel at a given latitude and zoom level.
         let metersPerPoint = Projection.metersPerPoint(for: centerLatitude, zoom: zoom)

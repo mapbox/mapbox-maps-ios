@@ -1,3 +1,4 @@
+import UIKit
 // swiftlint:disable identifier_name
 
 /// "fly-to" interpolator object that implements an “optimal path” animation

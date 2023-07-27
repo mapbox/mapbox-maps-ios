@@ -33,8 +33,7 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
         vectorSource.minzoom = 6
         vectorSource.maxzoom = 14
 
-        var lineLayer = LineLayer(id: "line-layer")
-        lineLayer.source = vectorSource.id
+        var lineLayer = LineLayer(id: "line-layer", source: vectorSource.id)
         lineLayer.sourceLayer = "sequence"
         let lineColor = StyleColor(UIColor(red: 0.21, green: 0.69, blue: 0.43, alpha: 1.00))
         lineLayer.lineColor = .constant(lineColor)

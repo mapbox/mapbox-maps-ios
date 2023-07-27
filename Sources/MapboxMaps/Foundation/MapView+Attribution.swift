@@ -21,7 +21,7 @@ extension MapView: AttributionDialogManagerDelegate {
     }
 
     internal func mapboxFeedbackURL(accessToken: String = MapboxOptions.accessToken) -> URL {
-        let cameraState = self.cameraState
+        let cameraState = self.mapboxMap.cameraState
 
         var components = URLComponents(string: "https://apps.mapbox.com/feedback/")!
         components.fragment = String(format: "/%.5f/%.5f/%.2f/%.1f/%i",

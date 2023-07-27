@@ -3,25 +3,29 @@ import CoreLocation
 import MapboxMaps
 
 final class NavigationSimulator: LocationProvider {
+    func addLocationObserver(for observer: LocationObserver) {
+        locationObservers.add(observer)
+    }
 
-    private let viewport: Viewport
+    func removeLocationObserver(for observer: LocationObserver) {
+        locationObservers.remove(observer)
+    }
+
+    func getLastObservedLocation() -> Location? {
+        Location(coordinate: currentLocation, timestamp: Date(), floor: nil, extra: nil)
+    }
+
+    private let viewport: ViewportManager
     private let route: LineString
 
     private lazy var followPuckViewPortState = viewport.makeFollowPuckViewportState(
         options: FollowPuckViewportStateOptions(bearing: .course)
     )
 
-    private let locationConsumers = NSHashTable<AnyObject>.weakObjects()
+    private let locationObservers = NSHashTable<AnyObject>.weakObjects()
     private var isStarted = false
     private let routeLength: LocationDistance
     private var routePointsToTravel: [LocationCoordinate2D]
-
-    var latestLocation: Location? {
-        return Location(location:
-                            CLLocation(latitude: currentLocation.latitude, longitude: currentLocation.longitude),
-                        accuracyAuthorization: .fullAccuracy
-        )
-    }
     
     private var direction: LocationDirection
     private var currentLocation: LocationCoordinate2D {
@@ -31,7 +35,7 @@ final class NavigationSimulator: LocationProvider {
         }
     }
 
-    init(viewport: Viewport, route: LineString) {
+    init(viewport: ViewportManager, route: LineString) {
         self.viewport = viewport
         self.route = route
         routeLength = route.distance()!
@@ -65,28 +69,21 @@ final class NavigationSimulator: LocationProvider {
     }
 
     private func startUpdatingLocation() {
-        let location = CLLocation(
+        let location = Location(
             coordinate: currentLocation,
+            timestamp: Date(),
             altitude: 0,
             horizontalAccuracy: kCLLocationAccuracyBestForNavigation,
             verticalAccuracy: kCLLocationAccuracyBestForNavigation,
+            speed: 0,
             // Turf calculates bearing in decimal degrees within -180 to 180,
             // while Apple's course requires value in decimal degrees from 0 - 359.9
-            course: direction < 0 ? 360 + direction : direction,
-            speed: 0,
-            timestamp: Date()
-        )
+            bearing: direction < 0 ? 360 + direction : direction,
+            floor: nil,
+            extra: nil)
 
-        for consumer in locationConsumers.allObjects {
-            (consumer as? LocationConsumer)?.locationUpdate(newLocation: .init(location: location, accuracyAuthorization: .fullAccuracy))
+        for consumer in locationObservers.allObjects {
+            (consumer as? LocationObserver)?.onLocationUpdateReceived(for: [location])
         }
-    }
-
-    func add(consumer: LocationConsumer) {
-        locationConsumers.add(consumer)
-    }
-
-    func remove(consumer: LocationConsumer) {
-        locationConsumers.remove(consumer)
     }
 }

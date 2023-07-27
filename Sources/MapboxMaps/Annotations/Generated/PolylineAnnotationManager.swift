@@ -102,8 +102,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
             try style.addSource(source)
 
             // Add the correct backing layer for this annotation type
-            var layer = LineLayer(id: layerId)
-            layer.source = sourceId
+            let layer = LineLayer(id: layerId, source: sourceId)
             try style.addPersistentLayer(layer, layerPosition: layerPosition)
         } catch {
             Log.error(
@@ -250,6 +249,16 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         }
         set {
             layerProperties["line-depth-occlusion-factor"] = newValue
+        }
+    }
+
+    /// Emission strength.
+    public var lineEmissiveStrength: Double? {
+        get {
+            return layerProperties["line-emissive-strength"] as? Double
+        }
+        set {
+            layerProperties["line-emissive-strength"] = newValue
         }
     }
 

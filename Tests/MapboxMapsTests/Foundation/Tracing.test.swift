@@ -38,6 +38,18 @@ final class TracingTests: XCTestCase {
         XCTAssertEqual(tracing, .disabled)
     }
 
+    func testEnabledTracingWithEnabledWord() {
+        let tracing = parseTracingEnv("enabled")
+
+        XCTAssertEqual(tracing, .enabled)
+    }
+
+    func testEnabledTracingWithValue1() {
+        let tracing = parseTracingEnv("1")
+
+        XCTAssertEqual(tracing, .enabled)
+    }
+
     func testMultipleComponents() {
         let tracing = parseTracingEnv("core,platform")
 

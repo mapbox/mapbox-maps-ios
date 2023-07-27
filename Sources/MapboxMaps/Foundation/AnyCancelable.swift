@@ -69,3 +69,7 @@ extension AnyCancelable {
         collection.append(self)
     }
 }
+
+extension AnyCancelable {
+    static var empty: AnyCancelable { AnyCancelable {} }
+}

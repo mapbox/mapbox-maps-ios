@@ -212,8 +212,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
         geoJSONClusterSource.data = .featureCollection(FeatureCollection(features: features))
         geoJSONClusterSource.cluster = true
 
-        var geoJSONLayer = CircleLayer(id: "cluster-layer")
-        geoJSONLayer.source = clusterSourceID
+        var geoJSONLayer = CircleLayer(id: "cluster-layer", source: clusterSourceID)
 
         didFinishLoadingStyle = { mapView in
 

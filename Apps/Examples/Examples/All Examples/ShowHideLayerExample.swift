@@ -1,3 +1,4 @@
+import UIKit
 import MapboxMaps
 
 class ShowHideLayerExample: UIViewController, ExampleProtocol {
@@ -38,10 +39,9 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         var museumsSource = VectorSource(id: "museum-source")
         museumsSource.url = "mapbox://mapbox.2opop9hr"
 
-        var museumLayer = CircleLayer(id: museumLayerId)
+        // Create CircleLayer with id and source identifier.
+        var museumLayer = CircleLayer(id: museumLayerId, source: museumsSource.id)
 
-        // Assign this layer's source.
-        museumLayer.source = museumsSource.id
         // Specify the layer within the vector source to render on the map.
         museumLayer.sourceLayer = "museum-cusco"
 
@@ -56,10 +56,9 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         // can be found at https://docs.mapbox.com/vector-tiles/reference/mapbox-terrain-v2/
         contourSource.url = "mapbox://mapbox.mapbox-terrain-v2"
 
-        var contourLayer = LineLayer(id: contourLayerId)
+        var contourLayer = LineLayer(id: contourLayerId, source: contourSource.id)
 
-        // Assign this layer's source and source layer ID.
-        contourLayer.source = contourSource.id
+        // Assign this layer's source layer ID.
         contourLayer.sourceLayer = "contour"
 
         // Style the contents of the source's contour layer.

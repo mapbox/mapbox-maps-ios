@@ -33,7 +33,13 @@ public protocol MapboxMapProtocol: AnyObject {
     func options(forViewAnnotationWithId id: String) throws -> ViewAnnotationOptions
     func pointIsAboveHorizon(_ point: CGPoint) -> Bool
     func camera(for geometry: Geometry, padding: UIEdgeInsets, bearing: CGFloat?, pitch: CGFloat?) -> CameraOptions
-    func camera(for coordinateBounds: CoordinateBounds, padding: UIEdgeInsets, bearing: Double?, pitch: Double?) -> CameraOptions
+    // swiftlint:disable:next function_parameter_count
+    func camera(for coordinateBounds: CoordinateBounds,
+                padding: UIEdgeInsets,
+                bearing: Double?,
+                pitch: Double?,
+                maxZoom: Double?,
+                offset: CGPoint?) -> CameraOptions
     func coordinate(for point: CGPoint) -> CLLocationCoordinate2D
     func point(for coordinate: CLLocationCoordinate2D) -> CGPoint
     func performWithoutNotifying(_ block: () throws -> Void) rethrows
@@ -223,34 +229,87 @@ public final class MapboxMap: StyleManager {
         token.store(in: &cancelables)
     }
 
+    private func observeStyleDataLoaded(_ completion: @escaping () -> Void) {
+        weak var weakToken: AnyCancelable?
+        let token = onStyleDataLoaded
+            .filter { $0.type == .style }
+            .observeNext { [weak self] _ in
+                guard let self else { return }
+
+                completion()
+
+                if let token = weakToken {
+                    self.cancelables.remove(token)
+                }
+            }
+        weakToken = token
+        token.store(in: &cancelables)
+    }
+
     /// Loads a `style` from a StyleURI, calling a completion closure when the
     /// style is fully loaded or there has been an error during load.
     ///
     /// - Parameters:
     ///   - styleURI: StyleURI to load
-    ///   - completion: Closure called when the style has been fully loaded. The
-    ///     `Result` type encapsulates the `Style` or error that occurred. See
-    ///     `MapLoadingError`
-    public func loadStyleURI(_ styleURI: StyleURI, completion: ((MapLoadingError?) -> Void)? = nil) {
-        if let completion = completion {
+    ///   - transition: Options for the style transition.
+    ///   - completion: Closure called when the style has been fully loaded.
+    ///     If style has failed to load a `MapLoadingError` is provided to the closure.
+    public func loadStyle(_ styleURI: StyleURI,
+                          transition: TransitionOptions? = nil,
+                          completion: ((MapLoadingError?) -> Void)? = nil) {
+        if let transition {
+            observeStyleDataLoaded { [weak self] in
+                self?.styleTransition = transition
+            }
+        }
+        if let completion {
             observeStyleLoad(completion)
         }
         __map.setStyleURIForUri(styleURI.rawValue)
+    }
+
+    /// Loads a `style` from a StyleURI, calling a completion closure when the
+    /// style is fully loaded or there has been an error during load.
+    ///
+    /// - Parameters:
+    ///   - styleURI: StyleURI to load
+    ///   - completion: Closure called when the style has been fully loaded.
+    @available(*, deprecated, renamed: "loadStyle")
+    public func loadStyleURI(_ styleURI: StyleURI, completion: ((MapLoadingError?) -> Void)? = nil) {
+        loadStyle(styleURI, completion: completion)
     }
 
     /// Loads a `style` from a JSON string, calling a completion closure when the
     /// style is fully loaded or there has been an error during load.
     ///
     /// - Parameters:
-    ///   - styleURI: Style JSON string
-    ///   - completion: Closure called when the style has been fully loaded. The
-    ///     `Result` type encapsulates the `Style` or error that occurred. See
-    ///     `MapLoadingError`
-    public func loadStyleJSON(_ JSON: String, completion: ((MapLoadingError?) -> Void)? = nil) {
-        if let completion = completion {
+    ///   - JSON: Style JSON string
+    ///   - transition: Options for the style transition.
+    ///   - completion: Closure called when the style has been fully loaded.
+    ///     If style has failed to load a `MapLoadingError` is provided to the closure.
+    public func loadStyle(_ JSON: String,
+                          transition: TransitionOptions? = nil,
+                          completion: ((MapLoadingError?) -> Void)? = nil) {
+        if let transition {
+            observeStyleDataLoaded { [weak self] in self?.styleTransition = transition }
+        }
+        if let completion {
             observeStyleLoad(completion)
         }
         __map.setStyleJSONForJson(JSON)
+    }
+
+    /// Loads a `style` from a JSON string, calling a completion closure when the
+    /// style is fully loaded or there has been an error during load.
+    ///
+    /// - Parameters:
+    ///   - JSON: Style JSON string
+    ///   - completion: Closure called when the style has been fully loaded. The
+    ///     `Result` type encapsulates the `Style` or error that occurred. See
+    ///     `MapLoadingError`
+    @available(*, deprecated, renamed: "loadStyle")
+    public func loadStyleJSON(_ JSON: String, completion: ((MapLoadingError?) -> Void)? = nil) {
+        loadStyle(JSON, completion: completion)
     }
 
     // MARK: - Prefetching
@@ -322,11 +381,13 @@ public final class MapboxMap: StyleManager {
     /// - Parameter rect: The `rect` whose bounds will be transformed into a set of map coordinate bounds.
     /// - Returns: A `CoordinateBounds` object that represents the southwest and northeast corners of the view's bounds.
     public func coordinateBounds(for rect: CGRect) -> CoordinateBounds {
-        let topRight = coordinate(for: CGPoint(x: rect.maxX, y: rect.minY)).wrap()
-        let bottomLeft = coordinate(for: CGPoint(x: rect.minX, y: rect.maxY)).wrap()
+        let topRight = CGPoint(x: rect.maxX, y: rect.minY)
+        let bottomLeft = CGPoint(x: rect.minX, y: rect.maxY)
 
-        let southwest = CLLocationCoordinate2D(latitude: bottomLeft.latitude, longitude: bottomLeft.longitude)
-        let northeast = CLLocationCoordinate2D(latitude: topRight.latitude, longitude: topRight.longitude)
+        let coordinates = coordinates(for: [topRight, bottomLeft])
+
+        let northeast = coordinates[0].wrap()
+        let southwest = coordinates[1].wrap()
 
         return CoordinateBounds(southwest: southwest, northeast: northeast)
     }
@@ -335,19 +396,11 @@ public final class MapboxMap: StyleManager {
     /// - Parameter coordinateBounds: The `coordinateBounds` that will be converted into a rect relative to the `MapView`
     /// - Returns: A `CGRect` whose corners represent the vertices of a set of `CoordinateBounds`.
     public func rect(for coordinateBounds: CoordinateBounds) -> CGRect {
-        let southwest = coordinateBounds.southwest.wrap()
-        let northeast = coordinateBounds.northeast.wrap()
+        let points = points(for: [coordinateBounds.southwest.wrap(), coordinateBounds.northeast.wrap()])
+        let swPoint = points[0]
+        let nePoint = points[1]
 
-        var rect = CGRect.zero
-
-        let swPoint = point(for: southwest)
-        let nePoint = point(for: northeast)
-
-        rect = CGRect(origin: swPoint, size: CGSize.zero)
-
-        rect = rect.extend(from: nePoint)
-
-        return rect
+        return CGRect(origin: swPoint, size: CGSize.zero).extend(from: nePoint)
     }
 
     // MARK: Debug options
@@ -437,20 +490,26 @@ public final class MapboxMap: StyleManager {
     ///
     /// - Parameters:
     ///   - coordinateBounds: The coordinate bounds that will be displayed within the viewport.
-    ///   - padding: The new padding to be used by the camera.
-    ///   - bearing: The new bearing to be used by the camera.
-    ///   - pitch: The new pitch to be used by the camera.
+    ///   - padding: The amount of padding to add to the given bounds when calculating the camera, in points. This is differnt from camera padding.
+    ///   - bearing: The new bearing to be used by the camera, in degrees (0°, 360°) clockwise from true north.
+    ///   - pitch: The new pitch to be used by the camera, in degrees (0°, 85°) with 0° being a top-down view.
+    ///   - maxZoom: The maximum zoom level to allow when the camera would transition to the specified bounds.
+    ///   - offset: The center of the given bounds relative to the map's center, measured in points.
     /// - Returns: A `CameraOptions` that fits the provided constraints
-    public func camera(for coordinateBounds: CoordinateBounds,
+    public func camera(for coordinateBounds: CoordinateBounds, // swiftlint:disable:this function_parameter_count
                        padding: UIEdgeInsets,
                        bearing: Double?,
-                       pitch: Double?) -> CameraOptions {
+                       pitch: Double?,
+                       maxZoom: Double?,
+                       offset: CGPoint?) -> CameraOptions {
         return CameraOptions(
             __map.cameraForCoordinateBounds(
                 for: coordinateBounds,
                 padding: padding.toMBXEdgeInsetsValue(),
                 bearing: bearing?.NSNumber,
-                pitch: pitch?.NSNumber))
+                pitch: pitch?.NSNumber,
+                maxZoom: maxZoom?.NSNumber,
+                offset: offset?.screenCoordinate))
     }
 
     /// Calculates a `CameraOptions` to fit a list of coordinates.
@@ -459,9 +518,9 @@ public final class MapboxMap: StyleManager {
     ///
     /// - Parameters:
     ///   - coordinates: Array of coordinates that should fit within the new viewport.
-    ///   - padding: The new padding to be used by the camera.
-    ///   - bearing: The new bearing to be used by the camera.
-    ///   - pitch: The new pitch to be used by the camera.
+    ///   - padding: The amount of padding to add to the given bounds when calculating the camera, in points. This is differnt from camera padding. 
+    ///   - bearing: The new bearing to be used by the camera, in degrees (0°, 360°) clockwise from true north.
+    ///   - pitch: The new pitch to be used by the camera, in degrees (0°, 85°) with 0° being a top-down view.
     /// - Returns: A `CameraOptions` that fits the provided constraints
     public func camera(for coordinates: [CLLocationCoordinate2D],
                        padding: UIEdgeInsets?,
@@ -599,8 +658,7 @@ public final class MapboxMap: StyleManager {
     /// - Returns: A `CGPoint` relative to the `UIView`. If the point is outside of the bounds
     ///     of `MapView` the returned point contains `-1.0` for both coordinates.
     public func point(for coordinate: CLLocationCoordinate2D) -> CGPoint {
-        let point = __map.pixelForCoordinate(for: coordinate).point
-        return CGRect(origin: .zero, size: size).contains(point) ? point : CGPoint(x: -1.0, y: -1.0)
+        return __map.pixelForCoordinate(for: coordinate).point.fit(to: size)
     }
 
     /// Converts map coordinates to an array of `CGPoint`, relative to the `MapView`.
@@ -630,6 +688,34 @@ public final class MapboxMap: StyleManager {
         let screenCoords = points.map { $0.screenCoordinate }
         let locations = __map.coordinatesForPixels(forPixels: screenCoords)
         return locations.map { $0.coordinate }
+    }
+
+    /// Obtains the geographical coordinate information that corresponds to a given point.
+    /// The point must exist in the coordinate space of the ``MapView``.
+    ///
+    /// The returned coordinate will be the closest position projected onto the map surface,
+    /// in case the screen coordinate does not intersect with the map surface.
+    ///
+    /// - Parameter point: The point to convert. Must exist in the coordinate space
+    ///     of the `MapView`.
+    ///
+    /// - Returns: A `CoordinateInfo` record containing information about the geographical coordinate corresponding to the given point, including whether it is on the map surface.
+    func coordinateInfo(for point: CGPoint) -> CoordinateInfo {
+        return __map.coordinateInfoForPixel(forPixel: point.screenCoordinate)
+    }
+
+    /// Obtains the geographical coordinate information that corresponds to given points.
+    /// The points must exist in the coordinate space of the ``MapView``.
+    ///
+    /// The returned coordinate will be the closest position projected onto the map surface,
+    /// in case the screen coordinate does not intersect with the map surface.
+    ///
+    /// - Parameter points: The array of points to convert. Points must exist in the coordinate space
+    ///     of the `MapView`.
+    ///
+    /// - Returns: An array of `CoordinateInfo` records containing information about the geographical coordinates corresponding to the given points, including whether they are on the map surface.
+    func coordinatesInfo(for points: [CGPoint]) -> [CoordinateInfo] {
+        return __map.coordinatesInfoForPixels(forPixels: points.map(\.screenCoordinate))
     }
 
     // MARK: - Camera options setters/getters
@@ -954,7 +1040,7 @@ extension MapboxMap {
     public var onStyleLoaded: Signal<StyleLoaded> { events.signal(for: \.onStyleLoaded) }
 
         /// The requested style data has been loaded. The `type` property defines what kind of style data has been loaded.
-        /// Event may be emitted synchronously, for example, when ``MapboxMap/loadStyleJSON(_:completion:)`` is used to load style.
+        /// Event may be emitted synchronously, for example, when ``MapboxMap/loadStyle(_:completion:)`` is used to load style.
         ///
         /// Based on an event data `type` property value, following use-cases may be implemented:
         /// - `style`: Style is parsed, style layer properties could be read and modified, style layers and sources could be
@@ -1271,5 +1357,26 @@ extension MapboxMap {
 extension MapboxMap {
     internal var __testingMap: Map {
         return __map
+    }
+}
+
+extension CGPoint {
+    func fit(to boundingSize: CGSize) -> CGPoint {
+        var x = self.x
+        var y = self.y
+
+        // Round only when value is out of the bounding box
+        if x < 0 || x > boundingSize.width {
+            x.round(.toNearestOrAwayFromZero)
+        }
+        if y < 0 || y > boundingSize.height {
+            y.round(.toNearestOrAwayFromZero)
+        }
+
+        if (0...boundingSize.width).contains(x) && (0...boundingSize.height).contains(y) {
+            return CGPoint(x: x, y: y)
+        }
+
+        return CGPoint(x: -1, y: -1)
     }
 }

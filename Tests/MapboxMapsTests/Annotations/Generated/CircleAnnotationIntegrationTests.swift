@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
@@ -59,6 +59,32 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         }), evaluatedWith: nil, handler: nil)
 
         waitForExpectations(timeout: 2, handler: nil)
+    }
+
+    func testCircleEmissiveStrength() throws {
+        // Test that the setter and getter work
+        let value = Double.random(in: 0...100000)
+        manager.circleEmissiveStrength = value
+        XCTAssertEqual(manager.circleEmissiveStrength, value)
+
+        // Test that the value is synced to the layer
+        manager.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
+        if case .constant(let actualValue) = layer.circleEmissiveStrength {
+            XCTAssertEqual(actualValue, value, accuracy: 0.1)
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.circleEmissiveStrength = nil
+        XCTAssertNil(manager.circleEmissiveStrength)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
+        XCTAssertEqual(layer.circleEmissiveStrength, .constant((StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-emissive-strength").value as! NSNumber).doubleValue))
     }
 
     func testCirclePitchAlignment() throws {

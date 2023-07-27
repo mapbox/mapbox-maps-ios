@@ -122,8 +122,7 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
             try? mapView.mapboxMap.setTerrain(terrain)
         }
 
-        var layer = SymbolLayer(id: Constants.LAYER_ID)
-        layer.source = Constants.SOURCE_ID
+        var layer = SymbolLayer(id: Constants.LAYER_ID, source: Constants.SOURCE_ID)
         layer.iconImage = .constant(.name(Constants.BLUE_ICON_ID))
         layer.iconAnchor = .constant(.bottom)
         layer.iconAllowOverlap = .constant(true)

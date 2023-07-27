@@ -1,10 +1,12 @@
 // swiftlint:disable file_length
 @_exported import MapboxCoreMaps
 @_exported import MapboxCommon
-@_exported import MetalKit
 @_exported import Turf
+
 @_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
+
+import MetalKit
 import UIKit
 import os
 
@@ -40,12 +42,12 @@ open class MapView: UIView {
     /// Manages the configuration of custom view annotations on the map.
     public private(set) var viewAnnotations: ViewAnnotationManager!
 
-    /// ``Viewport`` is a high-level and extensible API for driving the map camera. It
+    /// ``ViewportManager`` provides a high-level and extensible API for driving the map camera. It
     /// provides built-in states for following the location puck and showing an overview of
     /// a GeoJSON geometry, and enables the creation of custom states. Transitions
     /// between states can be animated with a built-in default transition and via custom
     /// transitions.
-    public private(set) var viewport: Viewport!
+    public private(set) var viewport: ViewportManager!
 
     /// Controls the display of attribution dialogs
     private var attributionDialogManager: AttributionDialogManager!
@@ -100,14 +102,14 @@ open class MapView: UIView {
     private let dependencyProvider: MapViewDependencyProviderProtocol
 
     private let displayLinkParticipants = WeakSet<DisplayLinkParticipant>()
+    private let displayLinkSignalSubject = SignalSubject<Void>()
 
     private let notificationCenter: NotificationCenterProtocol
     private let bundle: BundleProtocol
 
-    /*** The preferred frames per second used for map rendering.
-        NOTE: `MapView.preferredFrameRateRange` is available for iOS 15.0 and above.
-     */
-    @available(iOS, deprecated: 1000000)
+    /// The preferred frames per second used for map rendering.
+    /// - Note: ``preferredFrameRateRange`` is available for iOS 15.0 and above.
+    @available(iOS, deprecated: 15, message: "Use preferredFrameRateRange instead.")
     public var preferredFramesPerSecond: Int {
         get {
             return _preferredFramesPerSecond ?? displayLink?.preferredFramesPerSecond ?? 0
@@ -165,11 +167,13 @@ open class MapView: UIView {
     }
 
     /// The map's current camera
+    @available(*, deprecated, renamed: "mapboxMap.cameraState")
     public var cameraState: CameraState {
         return mapboxMap.cameraState
     }
 
     /// The map's current anchor, calculated after applying padding (if it exists)
+    @available(*, deprecated, renamed: "mapboxMap.anchor")
     public var anchor: CGPoint {
         return mapboxMap.anchor
     }
@@ -208,7 +212,7 @@ open class MapView: UIView {
     @available(iOS, unavailable, message: "Use init(frame:mapInitOptions:urlOpener:) instead")
     public init(frame: CGRect,
                 mapInitOptions: MapInitOptions = MapInitOptions(),
-                orientationProvider: InterfaceOrientationProvider,
+                orientationProvider: Void,
                 urlOpener: AttributionURLOpener) { fatalError("Shouldn't be called") }
 
     /// Initialize a MapView
@@ -313,11 +317,11 @@ open class MapView: UIView {
         // Use the overriding style URI if provided (currently from IB)
         if let initialStyleURI = overridingStyleURI,
            let styleURI = StyleURI(url: initialStyleURI) {
-            mapboxMap.loadStyleURI(styleURI)
+            mapboxMap.loadStyle(styleURI)
         } else if let initialStyleJSON = resolvedMapInitOptions.styleJSON {
-            mapboxMap.loadStyleJSON(initialStyleJSON)
+            mapboxMap.loadStyle(initialStyleJSON)
         } else if let initialStyleURI = resolvedMapInitOptions.styleURI {
-            mapboxMap.loadStyleURI(initialStyleURI)
+            mapboxMap.loadStyle(initialStyleURI)
         }
 
         if let cameraOptions = resolvedMapInitOptions.cameraOptions {
@@ -386,17 +390,12 @@ open class MapView: UIView {
             attributionButton: InfoButtonOrnament())
 
         // Initialize/Configure location source and location manager
-        let locationProvider = dependencyProvider.makeLocationProvider(userInterfaceOrientationView: self)
-        let interpolatedLocationProducer = dependencyProvider.makeInterpolatedLocationProducer(
-            locationProvider: locationProvider,
-            displayLinkCoordinator: self)
-        location = dependencyProvider.makeLocationManager(
-            locationProvider: locationProvider,
-            interpolatedLocationProducer: interpolatedLocationProducer,
-            style: mapboxMap,
-            mapboxMap: mapboxMap,
-            displayLinkCoordinator: self,
-            userInterfaceOrientationView: self)
+        location = LocationManager(
+            interfaceOrientationView: .weakRef(self),
+            displayLink: displayLinkSignalSubject.signal,
+            styleManager: mapboxMap,
+            mapboxMap: mapboxMap
+        )
 
         annotations = AnnotationOrchestrator(
             impl: dependencyProvider.makeAnnotationOrchestratorImpl(
@@ -413,14 +412,14 @@ open class MapView: UIView {
             containerView: viewAnnotationContainerView,
             mapboxMap: mapboxMap)
 
-        viewport = Viewport(
-            impl: dependencyProvider.makeViewportImpl(
+        viewport = ViewportManager(
+            impl: dependencyProvider.makeViewportManagerImpl(
                 mapboxMap: mapboxMap,
                 cameraAnimationsManager: internalCamera,
                 anyTouchGestureRecognizer: gestures.anyTouchGestureRecognizer,
                 doubleTapGestureRecognizer: gestures.doubleTapToZoomInGestureRecognizer,
                 doubleTouchGestureRecognizer: gestures.doubleTouchToZoomOutGestureRecognizer),
-            interpolatedLocationProducer: interpolatedLocationProducer,
+            onPuckRender: location.onPuckRender,
             cameraAnimationsManager: internalCamera,
             mapboxMap: mapboxMap)
     }
@@ -573,6 +572,7 @@ open class MapView: UIView {
             for participant in displayLinkParticipants.allObjects {
                 participant.participate()
             }
+            displayLinkSignalSubject.send()
         }
 
         OSLog.platform.withIntervalSignpost(SignpostName.mapViewDisplayLink, "Camera animator runner") {

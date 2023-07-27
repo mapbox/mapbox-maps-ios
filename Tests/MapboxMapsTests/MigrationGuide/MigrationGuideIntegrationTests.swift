@@ -72,6 +72,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                 super.viewDidLoad()
 
                 mapView = MapView(frame: view.bounds)
+                mapView.mapboxMap.styleURI = .streets
                 view.addSubview(mapView)
 
                 /**
@@ -179,115 +180,6 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         //<--
     }
 
-    func testAppDelegateConfig() throws {
-        //-->
-        //import UIKit
-        //import MapboxMaps
-        //
-        //@UIApplicationMain
-        class AppDelegate: UIResponder, UIApplicationDelegate {
-
-            var window: UIWindow?
-            let customHTTPService = CustomHttpService()
-
-            func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-                // commenting this out for testing purposes to avoid
-                // interfering with global state that may impact other
-                // tests
-                //
-                // HttpServiceFactory.setUserDefinedForCustom(customHTTPService)
-                return true
-            }
-        }
-        //<--
-
-        //-->
-        class CustomHttpService: HttpServiceInterface {
-            // MARK: - HttpServiceInterface protocol conformance
-
-            func request(for request: HttpRequest, callback: @escaping HttpResponseCallback) -> UInt64 {
-                // Make an API request
-                var urlRequest = URLRequest(url: URL(string: request.url)!)
-
-                let methodMap: [HttpMethod: String] = [
-                    .get: "GET",
-                    .head: "HEAD",
-                    .post: "POST"
-                ]
-
-                urlRequest.httpMethod          = methodMap[request.method]!
-                urlRequest.httpBody            = request.body
-                urlRequest.allHTTPHeaderFields = request.headers
-
-                let task = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
-
-                    // `HttpResponse` takes an `Expected` type. This is very similar to Swift's
-                    // `Result` type. APIs using `Expected` are prone to future changes.
-                    let result: Result<HttpResponseData, HttpRequestError>
-
-                    if let error = error {
-                        // Map NSURLError to HttpRequestErrorType
-                        let requestError = HttpRequestError(type: .otherError, message: error.localizedDescription)
-                        result = .failure(requestError)
-                    } else if let response = response as? HTTPURLResponse,
-                            let data = data {
-
-                        // Keys are expected to be lowercase
-                        var headers: [String: String] = [:]
-                        for (key, value) in response.allHeaderFields {
-                            guard let key = key as? String,
-                                  let value = value as? String else {
-                                continue
-                            }
-
-                            headers[key.lowercased()] = value
-                        }
-
-                        let responseData = HttpResponseData(headers: headers, code: Int64(response.statusCode), data: data)
-                        result = .success(responseData)
-                    } else {
-                        // Error
-                        let requestError = HttpRequestError(type: .otherError, message: "Invalid response")
-                        result = .failure(requestError)
-                    }
-
-                    let response = HttpResponse(request: request, result: result)
-                    callback(response)
-                }
-
-                task.resume()
-
-                // Handle used to cancel requests
-                return UInt64(task.taskIdentifier)
-            }
-        //<--
-
-            func setMaxRequestsPerHostForMax(_ max: UInt8) {
-                fatalError()
-            }
-
-            func cancelRequest(forId id: UInt64, callback: @escaping ResultCallback) {
-                fatalError()
-            }
-
-            func supportsKeepCompression() -> Bool {
-                return false
-            }
-
-            func download(for options: DownloadOptions, callback: @escaping DownloadStatusCallback) -> UInt64 {
-                fatalError()
-            }
-
-            func setInterceptorForInterceptor(_ interceptor: HttpServiceInterceptorInterface?) {
-                fatalError()
-            }
-        }
-
-        let appDelegate = AppDelegate()
-
-        _ = appDelegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
-    }
-
     func testSettingCamera() {
         let frame = testRect
 
@@ -384,6 +276,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         myGeoJSONSource.data = .url(geoJSONURL(from: "polygon")!)
 
         let mapView = MapView(frame: testRect)
+        mapView.mapboxMap.styleURI = .streets
         let expectation = self.expectation(description: "Source was added")
         mapView.mapboxMap.onStyleLoaded.observeNext { _ in
             do {
@@ -420,6 +313,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
     func testExpression() throws {
         let mapView = MapView(frame: testRect)
+        mapView.mapboxMap.styleURI = .streets
         let expectation = self.expectation(description: "layer updated")
         mapView.mapboxMap.onStyleLoaded.observeNext { _ in
             do {
@@ -454,20 +348,9 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         wait(for: [expectation], timeout: 10.0)
     }
 
-    func testEnableLocation() {
-        let mapView = MapView(frame: testRect)
-        //-->
-        mapView.location.options.puckType = .puck2D()
-        //<--
-
-        let customLocationProvider = MockLocationProvider()
-        //-->
-        mapView.location.provider = customLocationProvider
-        //<--
-    }
-
     func testAdd3DTerrain() {
         let mapView = MapView(frame: testRect)
+        mapView.mapboxMap.styleURI = .streets
         let expectation = self.expectation(description: "Source was added")
         mapView.mapboxMap.onStyleLoaded.observeNext { _ in
             do {

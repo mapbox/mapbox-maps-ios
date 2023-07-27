@@ -1,8 +1,8 @@
-/// `ViewportTransition` is a protocol that ``Viewport`` depends on as it orchestrates transitions
+/// `ViewportTransition` is a protocol that ``ViewportManager`` depends on as it orchestrates transitions
 /// to and from different ``ViewportState``s.
 ///
 /// MapboxMaps provides implementations of ``ViewportTransition`` that can be created and
-/// configured via methods on ``Viewport``. Applications may also define their own implementations to
+/// configured via methods on ``ViewportManager``. Applications may also define their own implementations to
 /// handle advanced use cases not covered by the provided implementations.
 ///
 /// - SeeAlso:

@@ -40,7 +40,8 @@ final class SignalSubjectTests: XCTestCase {
     func testOnObservedCallback() {
         var observed = false
         var observedCalls = 0
-        let subject = SignalSubject<Int> { obs in
+        let subject = SignalSubject<Int>()
+        subject.onObserved = { obs in
             observed = obs
             observedCalls += 1
         }
@@ -71,7 +72,8 @@ final class SignalSubjectTests: XCTestCase {
         var observedValues = [Bool]()
         var values = [Int]()
 
-        let subject = SignalSubject<Int> { observed in
+        let subject = SignalSubject<Int>()
+        subject.onObserved = { observed in
             observedValues.append(observed)
         }
 

@@ -6,7 +6,7 @@
 ///  - idle (not updating the camera)
 ///  - in a state (camera is being managed by a ``ViewportState``)
 ///  - transitioning (camera is being managed by a ``ViewportTransition``)
-public final class Viewport {
+public final class ViewportManager {
 
     /// Configuration options for adjusting the viewport's behavior.
     public var options: ViewportOptions {
@@ -14,17 +14,17 @@ public final class Viewport {
         set { impl.options = newValue }
     }
 
-    private let impl: ViewportImplProtocol
-    private let interpolatedLocationProducer: InterpolatedLocationProducerProtocol
+    private let impl: ViewportManagerImplProtocol
+    private let onPuckRender: Signal<PuckRenderingData>
     private let cameraAnimationsManager: CameraAnimationsManagerProtocol
     private let mapboxMap: MapboxMapProtocol
 
-    internal init(impl: ViewportImplProtocol,
-                  interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
+    internal init(impl: ViewportManagerImplProtocol,
+                  onPuckRender: Signal<PuckRenderingData>,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol,
                   mapboxMap: MapboxMapProtocol) {
         self.impl = impl
-        self.interpolatedLocationProducer = interpolatedLocationProducer
+        self.onPuckRender = onPuckRender
         self.cameraAnimationsManager = cameraAnimationsManager
         self.mapboxMap = mapboxMap
     }
@@ -32,41 +32,41 @@ public final class Viewport {
     /// The current ``ViewportStatus``.
     ///
     /// `status` cannot be set directly. Use
-    /// ``Viewport/transition(to:transition:completion:)`` and ``Viewport/idle()`` to
+    /// ``ViewportManager/transition(to:transition:completion:)`` and ``ViewportManager/idle()`` to
     /// transition to a state or to idle.
     ///
     /// Defaults to ``ViewportStatus/idle``.
     ///
     /// - SeeAlso:
-    ///   - ``Viewport/addStatusObserver(_:)``
-    ///   - ``Viewport/removeStatusObserver(_:)``
+    ///   - ``ViewportManager/addStatusObserver(_:)``
+    ///   - ``ViewportManager/removeStatusObserver(_:)``
     public var status: ViewportStatus {
         impl.status
     }
 
-    /// Subscribes a ``ViewportStatusObserver`` to ``Viewport/status`` changes.
+    /// Subscribes a ``ViewportStatusObserver`` to ``ViewportManager/status`` changes.
     ///
     /// Viewport keeps a strong reference to registered observers. Adding the same observer again while it is already subscribed has no effect.
     ///
     /// - Note: Observers are notified of status changes asynchronously on the main queue. This means that by
     /// the time the notification is delivered, the status may have already changed again. This behavior is necessary to allow
     /// observers to trigger further transitions while avoiding out-of-order delivery of status changed notifications.
-    /// - Parameter observer: An object that will be notified when the ``Viewport/status`` changes.
-    /// - SeeAlso: ``Viewport/removeStatusObserver(_:)``
+    /// - Parameter observer: An object that will be notified when the ``ViewportManager/status`` changes.
+    /// - SeeAlso: ``ViewportManager/removeStatusObserver(_:)``
     public func addStatusObserver(_ observer: ViewportStatusObserver) {
         impl.addStatusObserver(observer)
     }
 
-    /// Unsubscribes a ``ViewportStatusObserver`` from ``Viewport/status`` changes. This causes viewport
+    /// Unsubscribes a ``ViewportStatusObserver`` from ``ViewportManager/status`` changes. This causes viewport
     /// to release its strong reference to the observer. Removing an observer that is not subscribed has no effect.
     ///
-    /// - Parameter observer: An object that should no longer be notified when the ``Viewport/status`` changes.
-    /// - SeeAlso: ``Viewport/addStatusObserver(_:)``
+    /// - Parameter observer: An object that should no longer be notified when the ``ViewportManager/status`` changes.
+    /// - SeeAlso: ``ViewportManager/addStatusObserver(_:)``
     public func removeStatusObserver(_ observer: ViewportStatusObserver) {
         impl.removeStatusObserver(observer)
     }
 
-    /// Sets ``Viewport/status`` to ``ViewportStatus/idle`` synchronously.
+    /// Sets ``ViewportManager/status`` to ``ViewportStatus/idle`` synchronously.
     ///
     /// This cancels any active ``ViewportState`` or ``ViewportTransition``.
     public func idle() {
@@ -75,13 +75,13 @@ public final class Viewport {
 
     /// Executes a transition to the requested state.
     ///
-    /// If the transition fails, ``Viewport/status`` is set to ``ViewportStatus/idle``.
+    /// If the transition fails, ``ViewportManager/status`` is set to ``ViewportStatus/idle``.
     ///
     /// Transitioning to state `x` when the status is `.state(x)` invokes `completion`
-    /// synchronously with `true` and does not modify ``Viewport/status``.
+    /// synchronously with `true` and does not modify ``ViewportManager/status``.
     ///
     /// Transitioning to state `x` when the status is `.transition(_, x)` invokes `completion`
-    /// synchronously with `false` and does not modify ``Viewport/status``.
+    /// synchronously with `false` and does not modify ``ViewportManager/status``.
     ///
     /// `Viewport` keeps a strong reference to active transitions and states. To reuse states and transitions,
     /// keep strong references to them in the consuming project.
@@ -89,18 +89,18 @@ public final class Viewport {
     /// - Parameters:
     ///   - toState: The target ``ViewportState`` to transition to.
     ///   - transition: The ``ViewportTransition`` that is used to transition to the target state.
-    ///                 If `nil`, ``Viewport/defaultTransition`` is used. Defaults to `nil`.
+    ///                 If `nil`, ``ViewportManager/defaultTransition`` is used. Defaults to `nil`.
     ///   - completion: A closure that is invoked when the transition ends. Defaults to `nil`.
     ///   - success: Whether the transition ran to completion. Transitions may end early if they fail or
     ///              are interrupted (e.g. by another call to
-    ///              `transition(to:transition:completion:)` or ``Viewport/idle()``)
+    ///              `transition(to:transition:completion:)` or ``ViewportManager/idle()``)
     public func transition(to toState: ViewportState,
                            transition: ViewportTransition? = nil,
                            completion: ((_ success: Bool) -> Void)? = nil) {
         impl.transition(to: toState, transition: transition, completion: completion)
     }
 
-    /// ``Viewport/transition(to:transition:completion:)`` uses this transition unless
+    /// ``ViewportManager/transition(to:transition:completion:)`` uses this transition unless
     /// some non-nil value is passed to its `transition` argument.
     ///
     /// Defaults to ``DefaultViewportTransition`` with default options.
@@ -118,7 +118,7 @@ public final class Viewport {
         return FollowPuckViewportState(
             dataSource: FollowPuckViewportStateDataSource(
                 options: options,
-                interpolatedLocationProducer: interpolatedLocationProducer,
+                onPuckRender: onPuckRender,
                 observableCameraOptions: ObservableCameraOptions()),
             mapboxMap: mapboxMap)
     }

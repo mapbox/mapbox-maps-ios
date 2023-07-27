@@ -1,4 +1,5 @@
 import Foundation
+import MetalKit
 @_spi(Package) @testable import MapboxMaps
 
 final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
@@ -74,45 +75,23 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
         return GestureHandler(gestureRecognizer: UIGestureRecognizer())
     }
 
-    // MARK: - Location
-    let makeLocationProviderStub = Stub<UIView, MockLocationProvider>(defaultReturnValue: MockLocationProvider())
-    func makeLocationProvider(userInterfaceOrientationView: UIView) -> LocationProvider {
-        return makeLocationProviderStub.call(with: userInterfaceOrientationView)
-    }
-    func makeInterpolatedLocationProducer(locationProvider: LocationProvider,
-                                          displayLinkCoordinator: DisplayLinkCoordinator) -> InterpolatedLocationProducerProtocol {
-        return MockInterpolatedLocationProducer()
-    }
-
-    // swiftlint:disable:next function_parameter_count
-    func makeLocationManager(locationProvider: LocationProvider,
-                             interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
-                             style: StyleProtocol,
-                             mapboxMap: MapboxMapProtocol,
-                             displayLinkCoordinator: DisplayLinkCoordinator,
-                             userInterfaceOrientationView: UIView) -> LocationManager {
-        return LocationManager(
-            locationProvider: locationProvider,
-            interpolatedLocationProducer: interpolatedLocationProducer,
-            puckManager: MockPuckManager(),
-            userInterfaceOrientationView: userInterfaceOrientationView)
-    }
-
     // MARK: - Viewport
-    struct MakeViewportImplParams {
+    struct MakeViewportManagerImplParams {
         var mapboxMap: MapboxMapProtocol
         var cameraAnimationsManager: CameraAnimationsManagerProtocol
         var anyTouchGestureRecognizer: UIGestureRecognizer
         var doubleTapGestureRecognizer: UIGestureRecognizer
         var doubleTouchGestureRecognizer: UIGestureRecognizer
     }
-    let makeViewportImplStub = Stub<MakeViewportImplParams, ViewportImplProtocol>(defaultReturnValue: MockViewportImpl())
-    func makeViewportImpl(mapboxMap: MapboxMapProtocol,
-                          cameraAnimationsManager: CameraAnimationsManagerProtocol,
-                          anyTouchGestureRecognizer: UIGestureRecognizer,
-                          doubleTapGestureRecognizer: UIGestureRecognizer,
-                          doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol {
-        makeViewportImplStub.call(with: .init(
+    let makeViewportManagerImplStub = Stub<MakeViewportManagerImplParams, ViewportManagerImplProtocol>(defaultReturnValue: MockViewportManagerImpl())
+    func makeViewportManagerImpl(
+        mapboxMap: MapboxMapProtocol,
+        cameraAnimationsManager: CameraAnimationsManagerProtocol,
+        anyTouchGestureRecognizer: UIGestureRecognizer,
+        doubleTapGestureRecognizer: UIGestureRecognizer,
+        doubleTouchGestureRecognizer: UIGestureRecognizer
+    ) -> ViewportManagerImplProtocol {
+        makeViewportManagerImplStub.call(with: .init(
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager,
             anyTouchGestureRecognizer: anyTouchGestureRecognizer,

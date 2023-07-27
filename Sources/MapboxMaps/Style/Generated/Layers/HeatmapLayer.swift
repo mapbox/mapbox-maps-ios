@@ -7,12 +7,30 @@ import Foundation
 public struct HeatmapLayer: Layer {
 
     // MARK: - Conformance to `Layer` protocol
+    /// Unique layer name
     public var id: String
+
+    /// Rendering type of this layer.
     public let type: LayerType
+
+    /// An expression specifying conditions on source features.
+    /// Only features that match the filter are displayed.
     public var filter: Expression?
+
+    /// Name of a source description to be used for this layer.
+    /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
     public var source: String?
+
+    /// Layer to use from a vector tile source.
+    ///
+    /// Required for vector tile sources.
+    /// Prohibited for all other source types, including GeoJSON sources.
     public var sourceLayer: String?
+
+    /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
     public var minZoom: Double?
+
+    /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
@@ -42,7 +60,8 @@ public struct HeatmapLayer: Layer {
     /// A measure of how much an individual point contributes to the heatmap. A value of 10 would be equivalent to having 10 points of weight 1 in the same spot. Especially useful when combined with clustering.
     public var heatmapWeight: Value<Double>?
 
-    public init(id: String) {
+    public init(id: String, source: String) {
+        self.source = source
         self.id = id
         self.type = LayerType.heatmap
         self.visibility = .visible

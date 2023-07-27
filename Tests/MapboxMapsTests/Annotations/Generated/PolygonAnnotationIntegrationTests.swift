@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
@@ -92,6 +92,32 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
         XCTAssertEqual(layer.fillAntialias, .constant((StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-antialias").value as! NSNumber).boolValue))
+    }
+
+    func testFillEmissiveStrength() throws {
+        // Test that the setter and getter work
+        let value = Double.random(in: 0...100000)
+        manager.fillEmissiveStrength = value
+        XCTAssertEqual(manager.fillEmissiveStrength, value)
+
+        // Test that the value is synced to the layer
+        manager.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
+        if case .constant(let actualValue) = layer.fillEmissiveStrength {
+            XCTAssertEqual(actualValue, value, accuracy: 0.1)
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.fillEmissiveStrength = nil
+        XCTAssertNil(manager.fillEmissiveStrength)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
+        XCTAssertEqual(layer.fillEmissiveStrength, .constant((StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-emissive-strength").value as! NSNumber).doubleValue))
     }
 
     func testFillTranslate() throws {

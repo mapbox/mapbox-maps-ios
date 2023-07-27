@@ -56,38 +56,6 @@ targets:
       Release: Configurations/unitTests.xcconfig
     sources:
       - path: "Tests/MapboxMapsTests"
-        excludes:
-          - "Integration Tests/HTTP/HTTPIntegrationTests.swift"
-    dependencies:
-      - target: MapboxTestHost
-  MapboxMapsHTTPTestsWithHost:
-    templates:
-      - installTokenScript
-    type: bundle.unit-test
-    platform: iOS
-    settings:
-      base:
-        ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: "YES"
-        TARGETED_DEVICE_FAMILY: "1,2"
-        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @loader_path/Frameworks"
-        INFOPLIST_FILE: "Tests/MapboxMapsTests/Info.plist"
-        PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxTests"
-        PRODUCT_NAME: "$(TARGET_NAME)"
-        CODE_SIGN_STYLE: "Automatic"
-    configFiles:
-      Debug: Configurations/unitTests.xcconfig
-      Release: Configurations/unitTests.xcconfig
-    sources:
-      - path: "Tests/MapboxMapsTests"
-        includes:
-          - "Integration Tests/HTTP/HTTPIntegrationTests.swift"
-          - "Integration Tests/MapViewIntegrationTestCase.swift"
-          - "Integration Tests/IntegrationTestCase.swift"
-          - "Helpers/Bundle+MapboxMapsTests.swift"
-          - "Helpers/String+FileSystemSafe.swift"
-          - "Helpers/XCTestCase+GuardForMetalDevice.swift"
-          - "Helpers/XCTestCase+MapboxAccessToken.swift"
-          - "Helpers/XCTestCase+TemporaryCacheDirectory.swift"
     dependencies:
       - target: MapboxTestHost
   GestureTests:
@@ -149,7 +117,6 @@ targets:
       - package: Fingertips
     scheme:
       testTargets:
-          - MapboxMapsHTTPTestsWithHost
           - MapboxMapsTestsWithHost
           - GestureTests
       gatherCoverageData: true

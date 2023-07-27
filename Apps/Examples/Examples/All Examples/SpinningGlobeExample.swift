@@ -36,7 +36,7 @@ final class SpinningGlobeExample: UIViewController, GestureManagerDelegate, Exam
         // Rotate at intermediate speeds between zoom levels 3 and 5.
         let slowSpinZoom = 3.0
 
-        let zoom = mapView.cameraState.zoom
+        let zoom = mapView.mapboxMap.cameraState.zoom
         if !userInteracting && zoom < maxSpinZoom {
             var distancePerSecond = 360.0 / secPerRevolution
             if zoom > slowSpinZoom {
@@ -44,7 +44,7 @@ final class SpinningGlobeExample: UIViewController, GestureManagerDelegate, Exam
                 let zoomDif = (maxSpinZoom - zoom) / (maxSpinZoom - slowSpinZoom)
                 distancePerSecond *= zoomDif
             }
-            let center = mapView.cameraState.center
+            let center = mapView.mapboxMap.cameraState.center
             let targetCenter = CLLocationCoordinate2D(latitude: center.latitude, longitude: center.longitude - distancePerSecond)
 
             // Smoothly animate the map over one second.

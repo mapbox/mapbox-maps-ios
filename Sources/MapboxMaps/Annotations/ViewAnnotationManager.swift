@@ -480,7 +480,9 @@ extension ViewAnnotationManager {
             for: innerBounds,
             padding: padding,
             bearing: bearing.map(Double.init),
-            pitch: pitch.map(Double.init))
+            pitch: pitch.map(Double.init),
+            maxZoom: nil,
+            offset: nil)
     }
 
     /// Calculates the ``CoordinateBounds`` of an annotation at the given `zoom` level.

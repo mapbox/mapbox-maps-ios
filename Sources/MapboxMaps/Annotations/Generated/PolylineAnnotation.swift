@@ -86,6 +86,26 @@ public struct PolylineAnnotation: Annotation {
         }
     }
 
+    /// The color of the line border. If line-border-width is greater than zero and the alpha value of this color is 0 (default), the color for the border will be selected automatically based on the line color.
+    public var lineBorderColor: StyleColor? {
+        get {
+            return layerProperties["line-border-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rgbaString:))
+        }
+        set {
+            layerProperties["line-border-color"] = newValue?.rgbaString
+        }
+    }
+
+    /// The width of the line border. A value of zero means no border.
+    public var lineBorderWidth: Double? {
+        get {
+            return layerProperties["line-border-width"] as? Double
+        }
+        set {
+            layerProperties["line-border-width"] = newValue
+        }
+    }
+
     /// The color with which the line will be drawn.
     public var lineColor: StyleColor? {
         get {

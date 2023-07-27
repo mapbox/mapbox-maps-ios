@@ -1,3 +1,4 @@
+import UIKit
 import MapboxMaps
 
 final class LiveDataExample: UIViewController, ExampleProtocol {
@@ -39,8 +40,7 @@ final class LiveDataExample: UIViewController, ExampleProtocol {
         // this information is received from the URL
         let source = GeoJSONSource(id: "ISS-source")
 
-        var issLayer = SymbolLayer(id: "iss-layer")
-        issLayer.source = source.id
+        var issLayer = SymbolLayer(id: "iss-layer", source: source.id)
 
         // Mapbox Streets contains an image named `rocket`. Use that image
         // to represent the location of the ISS.

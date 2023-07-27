@@ -8,6 +8,7 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
     /// Closures for map view delegate
     internal var didFinishLoadingStyle: ((MapView) -> Void)?
     internal var didBecomeIdle: ((MapView) -> Void)?
+    internal var didLoadMap: ((MapView) -> Void)?
 
     internal override func setUpWithError() throws {
         try guardForMetalDevice()
@@ -34,6 +35,11 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
         view.mapboxMap.onMapIdle.observe { [weak self] _ in
             guard let self = self, let mapView = self.mapView else { return }
             self.didBecomeIdle?(mapView)
+        }.store(in: &cancelables)
+
+        view.mapboxMap.onMapLoaded.observe { [weak self] _ in
+            guard let self = self, let mapView = self.mapView else { return }
+            self.didLoadMap?(mapView)
         }.store(in: &cancelables)
 
         rootView.addSubview(view)
@@ -65,6 +71,7 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
 
         didFinishLoadingStyle = nil
         didBecomeIdle = nil
+        didLoadMap = nil
 
         try super.tearDownWithError()
     }

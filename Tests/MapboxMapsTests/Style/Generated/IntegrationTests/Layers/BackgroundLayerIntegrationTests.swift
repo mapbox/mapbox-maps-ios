@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class BackgroundLayerIntegrationTests: MapViewIntegrationTestCase {
 
@@ -20,14 +20,14 @@ final class BackgroundLayerIntegrationTests: MapViewIntegrationTestCase {
         didFinishLoadingStyle = { mapView in
 
             var layer = BackgroundLayer(id: "test-id")
-            layer.source = "some-source"
-            layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
             layer.visibility = .visible
 
             layer.backgroundColor = Value<StyleColor>.testConstantValue()
             layer.backgroundColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.backgroundEmissiveStrength = Value<Double>.testConstantValue()
+            layer.backgroundEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.backgroundOpacity = Value<Double>.testConstantValue()
             layer.backgroundOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.backgroundPattern = Value<ResolvedImage>.testConstantValue()

@@ -200,21 +200,6 @@ public extension Map {
     }
 }
 
-// MARK: Location
-
-@available(iOS 13.0, *)
-public extension Map {
-    /// Adds an action to perform when a new location is emitted.
-    func onLocationUpdated(perform action: @escaping LocationUpdateAction) -> Self {
-        append(\.locationDependencies.locationUpdateHandlers, action)
-    }
-
-    /// Adds an action to perform when a new puck location (interpolated) is emitted.
-    func onPuckLocationUpdated(perform action: @escaping LocationUpdateAction) -> Self {
-        append(\.locationDependencies.puckLocationUpdateHandlers, action)
-    }
-}
-
 @available(iOS 13.0, *)
 extension Map {
 

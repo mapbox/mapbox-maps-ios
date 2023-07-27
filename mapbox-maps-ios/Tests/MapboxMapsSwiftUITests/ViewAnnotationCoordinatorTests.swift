@@ -37,8 +37,8 @@ final class ViewAnnotationCoordinatorTests: XCTestCase {
                 numberOfViewsAdded -= 1
             }))
 
-        let options = (0...4).map { _ in ViewAnnotation<EmptyView>.random() }
-        var annotations = [AnyHashable: ViewAnnotation<EmptyView>]()
+        let options = (0...4).map { _ in ViewAnnotation.random() }
+        var annotations = [AnyHashable: ViewAnnotation]()
         annotations[0] = options[0]
 
         me.updateAnnotations(to: annotations)
@@ -88,9 +88,8 @@ final class ViewAnnotationCoordinatorTests: XCTestCase {
 }
 
 @available(iOS 13.0, *)
-extension ViewAnnotation where Content == EmptyView {
-
-    static func random() -> ViewAnnotation<Content> {
+extension ViewAnnotation {
+    static func random() -> ViewAnnotation {
         ViewAnnotation(
             CLLocationCoordinate2D.random(),
             allowOverlap: .random(),

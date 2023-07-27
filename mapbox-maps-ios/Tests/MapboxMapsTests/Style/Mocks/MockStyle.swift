@@ -33,7 +33,6 @@ final class MockStyle: StyleProtocol {
     func removeGeoJSONSourceFeatures(forSourceId sourceId: String, featureIds: [String], dataId: String?) throws {
         removeGeoJSONSourceFeaturesStub.call(with: .init(sourceId: sourceId, featureIds: featureIds, dataId: dataId))
     }
->>>>>>> develop
 
     struct AddLayerParams {
         var layer: Layer

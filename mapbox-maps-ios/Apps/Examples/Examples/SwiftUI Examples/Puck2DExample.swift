@@ -38,9 +38,6 @@ struct Puck2DExample: View {
             )
         )
         .styleURI(.dark)
-        .onLocationUpdated { location in
-            camera.center = location.coordinate
-        }
         .ignoresSafeArea()
         .safeOverlay(alignment: .bottom) {
             VStack(alignment: .leading) {

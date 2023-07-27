@@ -1,3 +1,4 @@
+import UIKit
 @_spi(Experimental) @testable import MapboxMapsSwiftUI
 
 struct MockMapView {

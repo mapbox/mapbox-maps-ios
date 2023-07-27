@@ -333,6 +333,27 @@ poiSource.data = .string(poiGeoJSON)
 mapView.mapboxMap.addSource(poiSource)
 ```
 
+#### Layers
+
+Most layers (such as ``LineLayer``, ``CircleLayer``, and others) now require the `source` parameter in the initializer. It will make style manipulation code less error-prone.
+
+**v10**
+
+```swift
+var lineLayer = LineLayer(id: "route-line")
+lineLayer.source = "route-data"
+mapView.mapboxMap.style.addLayer(lineLayer)
+```
+
+**v11**
+
+```swift
+let lineLayer = LineLayer(id: "route-line", source: "route-data")
+mapView.mapboxMap.addLayer(lineLayer)
+```
+
+Contrary to that, some layers (such as ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``) don't need `source`, `sourceLayer`, and `filter` properties. To clean up the code we removed them from those layers and from the ``Layer`` protocol.
+
 #### Support of GeoJSON partial updates.
 
 Instead of setting the whole new GeoJSON object anew every time a single feature has changed, now you can apply more granular, partial GeoJSON updates.

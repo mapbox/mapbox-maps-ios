@@ -12,10 +12,6 @@ final class HillshadeLayerTests: XCTestCase {
 
         XCTAssertEqual(layer.id, "test-id")
         XCTAssertEqual(layer.type, LayerType.hillshade)
-        XCTAssertNil(layer.filter)
-        XCTAssert(layer.source == "source")
-
-        XCTAssertNil(layer.sourceLayer)
         XCTAssertEqual(layer.minZoom, 10.0)
         XCTAssertEqual(layer.maxZoom, 20.0)
     }
@@ -41,9 +37,7 @@ final class HillshadeLayerTests: XCTestCase {
             let decodedLayer = try JSONDecoder().decode(HillshadeLayer.self, from: validData)
             XCTAssertEqual(decodedLayer.id, "test-id")
             XCTAssertEqual(decodedLayer.type, LayerType.hillshade)
-            XCTAssertNil(decodedLayer.filter)
             XCTAssert(decodedLayer.source == "source")
-            XCTAssertNil(decodedLayer.sourceLayer)
             XCTAssertEqual(decodedLayer.minZoom, 10.0)
             XCTAssertEqual(decodedLayer.maxZoom, 20.0)
         } catch {

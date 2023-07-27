@@ -13,20 +13,6 @@ public struct LocationIndicatorLayer: Layer {
     /// Rendering type of this layer.
     public let type: LayerType
 
-    /// An expression specifying conditions on source features.
-    /// Only features that match the filter are displayed.
-    public var filter: Expression?
-
-    /// Name of a source description to be used for this layer.
-    /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
-    public var source: String?
-
-    /// Layer to use from a vector tile source.
-    ///
-    /// Required for vector tile sources.
-    /// Prohibited for all other source types, including GeoJSON sources.
-    public var sourceLayer: String?
-
     /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
     public var minZoom: Double?
 
@@ -127,9 +113,6 @@ public struct LocationIndicatorLayer: Layer {
         var container = encoder.container(keyedBy: RootCodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(type, forKey: .type)
-        try container.encodeIfPresent(filter, forKey: .filter)
-        try container.encodeIfPresent(source, forKey: .source)
-        try container.encodeIfPresent(sourceLayer, forKey: .sourceLayer)
         try container.encodeIfPresent(minZoom, forKey: .minZoom)
         try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
 
@@ -170,9 +153,6 @@ public struct LocationIndicatorLayer: Layer {
         let container = try decoder.container(keyedBy: RootCodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         type = try container.decode(LayerType.self, forKey: .type)
-        filter = try container.decodeIfPresent(Expression.self, forKey: .filter)
-        source = try container.decodeIfPresent(String.self, forKey: .source)
-        sourceLayer = try container.decodeIfPresent(String.self, forKey: .sourceLayer)
         minZoom = try container.decodeIfPresent(Double.self, forKey: .minZoom)
         maxZoom = try container.decodeIfPresent(Double.self, forKey: .maxZoom)
 
@@ -216,9 +196,6 @@ public struct LocationIndicatorLayer: Layer {
     enum RootCodingKeys: String, CodingKey {
         case id = "id"
         case type = "type"
-        case filter = "filter"
-        case source = "source"
-        case sourceLayer = "source-layer"
         case minZoom = "minzoom"
         case maxZoom = "maxzoom"
         case layout = "layout"

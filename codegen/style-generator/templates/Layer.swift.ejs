@@ -39,6 +39,7 @@ import Foundation
 <%- publicDocumentationNotation(isExperimental) -%>
     public let type: LayerType
 
+<% if (shouldIncludeSource) { -%>
     /// An expression specifying conditions on source features.
     /// Only features that match the filter are displayed.
 <%- publicDocumentationNotation(isExperimental) -%>
@@ -56,6 +57,7 @@ import Foundation
 <%- publicDocumentationNotation(isExperimental) -%>
     public var sourceLayer: String?
 
+<% } -%>
     /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
 <%- publicDocumentationNotation(isExperimental) -%>
     public var minZoom: Double?
@@ -108,9 +110,11 @@ import Foundation
         var container = encoder.container(keyedBy: RootCodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(type, forKey: .type)
+<% if (shouldIncludeSource) { -%>
         try container.encodeIfPresent(filter, forKey: .filter)
         try container.encodeIfPresent(source, forKey: .source)
         try container.encodeIfPresent(sourceLayer, forKey: .sourceLayer)
+<% } -%>
         try container.encodeIfPresent(minZoom, forKey: .minZoom)
         try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
 
@@ -136,9 +140,11 @@ import Foundation
         let container = try decoder.container(keyedBy: RootCodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         type = try container.decode(LayerType.self, forKey: .type)
+<% if (shouldIncludeSource) { -%>
         filter = try container.decodeIfPresent(Expression.self, forKey: .filter)
         source = try container.decodeIfPresent(String.self, forKey: .source)
         sourceLayer = try container.decodeIfPresent(String.self, forKey: .sourceLayer)
+<% } -%>
         minZoom = try container.decodeIfPresent(Double.self, forKey: .minZoom)
         maxZoom = try container.decodeIfPresent(Double.self, forKey: .maxZoom)
 
@@ -167,9 +173,11 @@ import Foundation
     enum RootCodingKeys: String, CodingKey {
         case id = "id"
         case type = "type"
+<% if (shouldIncludeSource) { -%>
         case filter = "filter"
         case source = "source"
         case sourceLayer = "source-layer"
+<% } -%>
         case minZoom = "minzoom"
         case maxZoom = "maxzoom"
         case layout = "layout"

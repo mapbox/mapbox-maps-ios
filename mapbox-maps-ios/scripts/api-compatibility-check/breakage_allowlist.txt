@@ -522,3 +522,17 @@ Accessor AppleLocationProvider.heading.Get() has return type change from CoreLoc
 Func LocationManager.overrideLocationProvider(with:) has parameter 0 type change from MapboxMaps.LocationProvider to MapboxCommon.LocationProvider & MapboxMaps.HeadingProvider
 Var AppleLocationProvider.heading has declared type change from CoreLocation.CLHeading? to MapboxMaps.Heading?
 Constructor AppleLocationProvider.init() has ObjC name change from init to
+
+// Remove source, sourceLayer, filter from the Layer protocol
+Var BackgroundLayer.filter has been removed
+Var BackgroundLayer.source has been removed
+Var BackgroundLayer.sourceLayer has been removed
+Var Layer.filter has been removed
+Var Layer.source has been removed
+Var Layer.sourceLayer has been removed
+Var LocationIndicatorLayer.filter has been removed
+Var LocationIndicatorLayer.source has been removed
+Var LocationIndicatorLayer.sourceLayer has been removed
+Var SkyLayer.filter has been removed
+Var SkyLayer.source has been removed
+Var SkyLayer.sourceLayer has been removed

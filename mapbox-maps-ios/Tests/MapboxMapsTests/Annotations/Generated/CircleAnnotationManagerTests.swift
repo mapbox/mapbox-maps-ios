@@ -60,7 +60,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.id, manager.id)
     }
 
-    func testAddLayer() {
+    func testAddLayer() throws {
         style.addSourceStub.reset()
         let initializedManager = CircleAnnotationManager(
             id: id,
@@ -74,7 +74,8 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layer.type, LayerType.circle)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layer.id, initializedManager.id)
-        XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layer.source, initializedManager.sourceId)
+        let addedLayer = try XCTUnwrap(style.addPersistentLayerStub.invocations.last?.parameters.layer as? CircleLayer)
+        XCTAssertEqual(addedLayer.source, initializedManager.sourceId)
         XCTAssertNil(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition)
     }
 

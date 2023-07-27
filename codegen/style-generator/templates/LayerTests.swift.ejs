@@ -23,14 +23,6 @@ final class <%- camelize(type) %>LayerTests: XCTestCase {
 
         XCTAssertEqual(layer.id, "test-id")
         XCTAssertEqual(layer.type, LayerType.<%- camelizeWithLeadingLowercase(type) %>)
-        XCTAssertNil(layer.filter)
-<% if (shouldIncludeSource) { -%>
-        XCTAssert(layer.source == "source")
-<% } else { -%>
-        XCTAssertNil(layer.source)
-<% } -%>
-
-        XCTAssertNil(layer.sourceLayer)
         XCTAssertEqual(layer.minZoom, 10.0)
         XCTAssertEqual(layer.maxZoom, 20.0)
     }
@@ -56,13 +48,9 @@ final class <%- camelize(type) %>LayerTests: XCTestCase {
             let decodedLayer = try JSONDecoder().decode(<%- camelize(type) %>Layer.self, from: validData)
             XCTAssertEqual(decodedLayer.id, "test-id")
             XCTAssertEqual(decodedLayer.type, LayerType.<%- camelizeWithLeadingLowercase(type) %>)
-            XCTAssertNil(decodedLayer.filter)
 <% if (shouldIncludeSource) { -%>
             XCTAssert(decodedLayer.source == "source")
-<% } else { -%>
-            XCTAssertNil(decodedLayer.source)
 <% } -%>
-            XCTAssertNil(decodedLayer.sourceLayer)
             XCTAssertEqual(decodedLayer.minZoom, 10.0)
             XCTAssertEqual(decodedLayer.maxZoom, 20.0)
         } catch {

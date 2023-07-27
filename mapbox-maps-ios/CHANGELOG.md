@@ -22,6 +22,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Add transition options as a parameter to `loadStyle(...)` methods.
 * Add `MapboxMap.coordinate(s)Info(for:)` for converting offscreen points into geographical coordinates.
 * Fixed an issue when `MapboxMap.point(for:)` could return false negative result.
+* Remove `source`, `sourceLayer`, `filter` properties from the `Layer` protocol requirement.
 
 ## 11.0.0-alpha.2 - 21 June, 2023
 

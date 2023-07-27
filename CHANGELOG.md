@@ -21,6 +21,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Mark `Expression.Operator.activeAnchor` as experimental.
 * Add transition options as a parameter to `loadStyle(...)` methods.
 * Add `MapboxMap.coordinate(s)Info(for:)` for converting offscreen points into geographical coordinates.
+* Fixed an issue when `MapboxMap.point(for:)` could return false negative result.
 
 ## 11.0.0-alpha.2 - 21 June, 2023
 

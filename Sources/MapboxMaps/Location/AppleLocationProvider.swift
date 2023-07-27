@@ -25,7 +25,7 @@ public protocol AppleLocationProviderDelegate: AnyObject {
     func appleLocationProviderShouldDisplayHeadingCalibration(_ locationProvider: AppleLocationProvider) -> Bool
 }
 
-/// A location provider based on CoreLocation's `CLLocationManager`
+/// A location provider based on CoreLocation's `CLLocationManager`.
 public final class AppleLocationProvider {
 
     public struct Options: Equatable {
@@ -153,32 +153,20 @@ public final class AppleLocationProvider {
     }
     private var orientationChangeToken: AnyCancelable?
 
-    /// Initializes the built-in location provider. The required view will be used to obtain user interface orientation
-    /// for correct heading calculation.
-    ///
-    /// - Parameter userInterfaceOrientationViewProvider: The view used to get the user interface orientation from.
-    public convenience init(userInterfaceOrientationViewProvider: @escaping () -> UIView?) {
+    var orientationProvider: DefaultInterfaceOrientationProvider?
+
+    /// Initializes the built-in location provider.
+    public convenience init() {
         let orientationProvider = DefaultInterfaceOrientationProvider(
-            userInterfaceOrientationView: Ref(userInterfaceOrientationViewProvider),
             notificationCenter: NotificationCenter.default,
             device: UIDevice.current)
 
         self.init(locationManager: CLLocationManager(),
-                  interfaceOrientation: Signal { orientationProvider.onInterfaceOrientationChange.observe($0) },
+                  interfaceOrientation: orientationProvider.onInterfaceOrientationChange,
                   mayRequestWhenInUseAuthorization: Bundle.main.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil,
                   locationManagerDelegateProxy: CLLocationManagerDelegateProxy())
-    }
 
-    /// Initializes the built-in location provider with a custom interface orientation provider.
-    ///
-    /// - Parameters:
-    ///  - interfaceOrientation: A stream of user interface orientation updates that sets
-    ///  the `headingOrientation` of underlying `CLLocationManager`.
-    public convenience init(interfaceOrientation: Signal<UIInterfaceOrientation>) {
-        self.init(locationManager: CLLocationManager(),
-                  interfaceOrientation: interfaceOrientation,
-                  mayRequestWhenInUseAuthorization: Bundle.main.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil,
-                  locationManagerDelegateProxy: CLLocationManagerDelegateProxy())
+        self.orientationProvider = orientationProvider
     }
 
     internal init(locationManager: CLLocationManagerProtocol,

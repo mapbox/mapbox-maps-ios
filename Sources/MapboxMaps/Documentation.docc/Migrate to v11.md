@@ -130,47 +130,107 @@ In v11 we've introduced new experimental lighting APIs to give you control of li
 
 ### 2.5 Location API
 
-TBD:
+We introduced several changes to the location-related classes and protocols that will make working with location easier.
 
-- https://mapbox.atlassian.net/browse/MAPSSDK-205
-- https://mapbox.atlassian.net/browse/MAPSIOS-879
+The old `LocationProvider` and `Location` were significantly simplified:
+- The `LocationProvider` and `Location` are now only responsible for providing location updates. The `LocationProvider` doesn't manage the permissions, accuracy authorization, or heading anymore.
+- Heading (compass) data doesn't participate in `Location`.
+- The new ``HeadingProvider`` and ``Heading`` are now responsible for providing the heading (compass) updates. The ``HeadingProvider`` is optional and only needed if you use ``PuckBearing/heading`` as a puck bearing type.
 
-We introduced several changes to ``LocationManager``. The latestLocation should now be accessed through the provider property, which has been renamed from locationProvider. We've additionally renamed the add/remove location consumer methods to align with Swift API Design Guidelines:
+- Note: `Location` and ``Heading`` have been separated because their updates can come from the different sources. This also allows us to animate the heading quicker than the location which results in more responsive puck behavior.
 
-**v10:**
-
-```swift
-let currentLocation = self.mapView.location.latestLocation
-mapView.location.addLocationConsumer(newConsumer: self)
-mapView.location.removeLocationConsumer(consumer: self)
-```
-
-**v11:**
+In case you need to drive the puck with custom location data, the ``LocationProvider`` protocol is easy to implement in **v11**:
 
 ```swift
-let currentLocation = self.mapView.location.provider.latestLocation
-mapView.location.provider.add(consumer: self)
-mapView.location.provider.remove(consumer: self)
-```
-
-We've simplified the ``LocationProvider`` protocol, now it requires only to implement observation and latestLocation,
-down from 14 methods/properties required in v10.
-
-```swift
-final class MyLocationProvider: LocationProvider {
-    private let consumers: NSHashTable<AnyObject> = .weakObjects()
-
-    private(set) var latestLocation: Location?
-
-    func add(consumer: LocationConsumer) {
-        consumers.add(consumer)
+class CustomLocationProvider: LocationProvider {
+    private let observers: NSHashTable<AnyObject> = .weakObjects()
+    var location: Location? {
+        didSet {
+            guard let location else { return }
+            for observer in observers.allObjects {
+                (observer as? LocationObserver)?.onLocationUpdateReceived(for: [location])
+            }
+        }
     }
 
-    func remove(consumer: LocationConsumer) {
-        consumers.remove(consumer)
+    public func getLastObservedLocation() -> Location? {
+        location
+    }
+
+    public func addLocationObserver(for observer: LocationObserver) {
+        observers.add(observer)
+    }
+
+    public func removeLocationObserver(for observer: LocationObserver) {
+        observers.remove(observer)
     }
 }
+
+// Override the location provider with the custom one.
+let locationProvider = CustomLocationProvider()
+mapView.location.override(locationProvider: locationProvider)
 ```
+
+In case you also need to supply a custom heading (compass) data, implement the ``HeadingProvider`` and override it too:
+
+```swift
+let headingProvider = CustomHeadingProvider()
+mapView.location.override(locationProvider: locationProvider, headingProvider: headingProvider)
+```
+
+The ``LocationManager`` was simplified too. Now it only manages the the location puck, not the ``LocationProvider``. For example, its ``LocationManager/options`` only determine the puck appearance. If you need to fine-tune the location provider itself, do it directly via the default ``AppleLocationProvider`` or your own custom provider implementation.
+
+**v10**
+
+```swift
+mapView.location.options.distanceFilter = 100
+```
+
+**v11**
+```swift
+let locationProvider = AppleLocationProvider()
+locationProvider.options.distanceFilter = 100
+mapView.location.override(provider: locationProvider)
+```
+
+The ``LocationManager`` now provides ``Signal`` endpoints such as ``LocationManager/onPuckRender``, ``LocationManager/onLocationChange``, ``LocationManager/onHeadingChange``. You can use them to observe puck in the same way, as Map Events (see section 2.2). 
+
+**v10**
+```swift
+mapView.location.addPuckLocationConsumer(self)
+```
+
+**v11**
+```swift
+mapView.location.onPuckRender.observe { renderingData in
+    // Adjust puck-connected elements (route line, annotations) here.
+}.store(in: &cancelables)
+```
+
+As a bonus, you now can use a Combine `Publisher` to drive the puck location updates:
+
+**v11**
+
+```swift
+class Example {
+    @Published
+    private var locations = [Location(coordinate: .init(latitude: 0, longitude: 0), timestamp: Date())]
+    @Published
+    private var heading = Heading(direction: 0, accuracy: 0)
+
+    func setup() {
+        mapView.location.override(
+            locationProvider: $location.eraseToSignal(),
+            headingProvider: $heading.eraseToSignal())
+    }
+
+    func update() {
+        locations = /* new locations update */
+        heading = /* new heading */
+    }
+```
+
+Please check out a more detailed example [here](mapbox-maps-ios/Apps/Examples/Examples/All Examples/Lab/CombineLocationExample.swift).
 
 ### 2.6 Camera API
 
@@ -245,7 +305,7 @@ Sources are now required to specify ``Source/id`` upon creation for easier refer
 
 ```swift
 let terrainSource = RasterDemSource()
-mapView.mapboxMap.addSource(terrainSource, id: "terrain-source")
+mapView.mapboxMap.style.addSource(terrainSource, id: "terrain-source")
 ```
 
 **v11:**
@@ -384,7 +444,7 @@ mapView.mapboxMap.anchor // TODO: this is inaccessible due to internal protectio
 
 ### 3.5 Replace deprecated LocationManager properties
 
-We've made several changes and renamings to ``LocationManager`` . See the above Location section for more details.
+We've made several changes and renamings to ``LocationManager``, ``LocationProvider``, ``Location``. See the above Location section for more details.
 
 ### 3.6 Replace deprecated MapboxMap properties
 

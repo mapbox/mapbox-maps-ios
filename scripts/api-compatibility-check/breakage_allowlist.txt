@@ -521,3 +521,4 @@ Var AppleLocationProvider.heading has been renamed to Var latestHeading
 Accessor AppleLocationProvider.heading.Get() has return type change from CoreLocation.CLHeading? to MapboxMaps.Heading?
 Func LocationManager.overrideLocationProvider(with:) has parameter 0 type change from MapboxMaps.LocationProvider to MapboxCommon.LocationProvider & MapboxMaps.HeadingProvider
 Var AppleLocationProvider.heading has declared type change from CoreLocation.CLHeading? to MapboxMaps.Heading?
+Constructor AppleLocationProvider.init() has ObjC name change from init to

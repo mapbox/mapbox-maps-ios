@@ -61,7 +61,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.id, manager.id)
     }
 
-    func testAddLayer() {
+    func testAddLayer() throws {
         style.addSourceStub.reset()
         let initializedManager = PolylineAnnotationManager(
             id: id,
@@ -75,7 +75,8 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layer.type, LayerType.line)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layer.id, initializedManager.id)
-        XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layer.source, initializedManager.sourceId)
+        let addedLayer = try XCTUnwrap(style.addPersistentLayerStub.invocations.last?.parameters.layer as? LineLayer)
+        XCTAssertEqual(addedLayer.source, initializedManager.sourceId)
         XCTAssertNil(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition)
     }
 

@@ -12,10 +12,6 @@ final class BackgroundLayerTests: XCTestCase {
 
         XCTAssertEqual(layer.id, "test-id")
         XCTAssertEqual(layer.type, LayerType.background)
-        XCTAssertNil(layer.filter)
-        XCTAssertNil(layer.source)
-
-        XCTAssertNil(layer.sourceLayer)
         XCTAssertEqual(layer.minZoom, 10.0)
         XCTAssertEqual(layer.maxZoom, 20.0)
     }
@@ -41,9 +37,6 @@ final class BackgroundLayerTests: XCTestCase {
             let decodedLayer = try JSONDecoder().decode(BackgroundLayer.self, from: validData)
             XCTAssertEqual(decodedLayer.id, "test-id")
             XCTAssertEqual(decodedLayer.type, LayerType.background)
-            XCTAssertNil(decodedLayer.filter)
-            XCTAssertNil(decodedLayer.source)
-            XCTAssertNil(decodedLayer.sourceLayer)
             XCTAssertEqual(decodedLayer.minZoom, 10.0)
             XCTAssertEqual(decodedLayer.maxZoom, 20.0)
         } catch {

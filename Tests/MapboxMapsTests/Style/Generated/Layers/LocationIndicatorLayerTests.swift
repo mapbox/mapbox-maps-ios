@@ -12,10 +12,6 @@ final class LocationIndicatorLayerTests: XCTestCase {
 
         XCTAssertEqual(layer.id, "test-id")
         XCTAssertEqual(layer.type, LayerType.locationIndicator)
-        XCTAssertNil(layer.filter)
-        XCTAssertNil(layer.source)
-
-        XCTAssertNil(layer.sourceLayer)
         XCTAssertEqual(layer.minZoom, 10.0)
         XCTAssertEqual(layer.maxZoom, 20.0)
     }
@@ -41,9 +37,6 @@ final class LocationIndicatorLayerTests: XCTestCase {
             let decodedLayer = try JSONDecoder().decode(LocationIndicatorLayer.self, from: validData)
             XCTAssertEqual(decodedLayer.id, "test-id")
             XCTAssertEqual(decodedLayer.type, LayerType.locationIndicator)
-            XCTAssertNil(decodedLayer.filter)
-            XCTAssertNil(decodedLayer.source)
-            XCTAssertNil(decodedLayer.sourceLayer)
             XCTAssertEqual(decodedLayer.minZoom, 10.0)
             XCTAssertEqual(decodedLayer.maxZoom, 20.0)
         } catch {

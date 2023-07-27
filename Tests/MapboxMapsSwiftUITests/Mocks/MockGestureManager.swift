@@ -1,3 +1,4 @@
+import UIKit
 @_spi(Package) import MapboxMaps
 
 final class MockGestureManager: GestureManagerProtocol {

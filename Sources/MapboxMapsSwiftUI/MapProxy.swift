@@ -17,7 +17,7 @@ public struct MapProxy {
     public var map: MapboxMap? { provider.mapView?.mapboxMap }
 
     /// Extensible API for driving the map camera.
-    public var viewport: Viewport? { provider.mapView?.viewport }
+    public var viewport: ViewportManager? { provider.mapView?.viewport }
 
     /// Handles location events on map.
     public var location: LocationManager? { provider.mapView?.location }

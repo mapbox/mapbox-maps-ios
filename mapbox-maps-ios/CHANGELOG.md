@@ -4,10 +4,12 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Fixed an issue when `MapboxMap.point(for:)` could return false negative result.
+
 ## 10.15.0-beta.1 - June 29, 2023
 
-* Remove unneeded synthesized initializers 
-* Update MapboxCoreMaps to 10.15.0-beta.1 and MapboxCommon to 23.7.0-beta.1.  
+* Remove unneeded synthesized initializers
+* Update MapboxCoreMaps to 10.15.0-beta.1 and MapboxCommon to 23.7.0-beta.1.
 
 ## 10.14.0 - June 14, 2023
 
@@ -23,7 +25,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## 10.14.0-beta.1 - May 17, 2023
 
 * Add a renamed flag to `PuckBearingSource` and related APIs.
-* Update MapboxCoreMaps to 10.14.0-beta.1 and MapboxCommon to 23.6.0-beta.1. 
+* Update MapboxCoreMaps to 10.14.0-beta.1 and MapboxCommon to 23.6.0-beta.1.
 
 ## 10.13.1 - May 5, 2023
 
@@ -33,7 +35,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## 10.13.0-rc.1 - April 19, 2023
 
-* Update MapboxCoreMaps to 10.13.0-rc.1 and MapboxCommon to 23.5.0-rc.1. 
+* Update MapboxCoreMaps to 10.13.0-rc.1 and MapboxCommon to 23.5.0-rc.1.
 
 ## 10.13.0-beta.1 - April 5, 2023
 

@@ -416,4 +416,21 @@ final class MapboxMapTests: XCTestCase {
         XCTAssertEqual(mapboxObservable.performWithoutNotifyingInvocationCount, 1)
         XCTAssertEqual(blockStub.invocations.count, 1)
     }
+
+    func testFittingPoint() {
+        let size = CGSize(width: 100, height: 100)
+
+        XCTAssertEqual(CGPoint(x: 1, y: 1).fit(to: size), CGPoint(x: 1, y: 1))
+        XCTAssertEqual(CGPoint(x: 0, y: 0).fit(to: size), CGPoint(x: 0, y: 0))
+        XCTAssertEqual(CGPoint(x: 100, y: 100).fit(to: size), CGPoint(x: 100, y: 100))
+        XCTAssertEqual(CGPoint(x: -0.1, y: 0.2).fit(to: size), CGPoint(x: 0, y: 0.2))
+        XCTAssertEqual(CGPoint(x: 1, y: -0.2).fit(to: size), CGPoint(x: 1, y: 0))
+        XCTAssertEqual(CGPoint(x: -0.3, y: -0.3).fit(to: size), CGPoint(x: 0, y: 0))
+        XCTAssertEqual(CGPoint(x: -0.5, y: -0.3).fit(to: size), CGPoint(x: -1, y: -1))
+        XCTAssertEqual(CGPoint(x: -0.3, y: -0.5).fit(to: size), CGPoint(x: -1, y: -1))
+        XCTAssertEqual(CGPoint(x: 100.1, y: 99.9).fit(to: size), CGPoint(x: 100, y: 99.9))
+        XCTAssertEqual(CGPoint(x: 99.9, y: 100.1).fit(to: size), CGPoint(x: 99.9, y: 100))
+        XCTAssertEqual(CGPoint(x: 102, y: 1).fit(to: size), CGPoint(x: -1, y: -1))
+        XCTAssertEqual(CGPoint(x: 1, y: 101).fit(to: size), CGPoint(x: -1, y: -1))
+    }
 }

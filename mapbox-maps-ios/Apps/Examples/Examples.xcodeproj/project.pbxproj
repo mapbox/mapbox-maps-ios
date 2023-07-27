@@ -73,6 +73,7 @@
 		955B69EF299AAE6700FD4A19 /* RasterColorExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955B69EE299AAE6700FD4A19 /* RasterColorExample.swift */; };
 		95857AC229B7A1A2005D238C /* LongTapAnimationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95857AC129B7A1A2005D238C /* LongTapAnimationExample.swift */; };
 		959EDE5229F5520500AEE16C /* MapEventsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959EDE5129F5520500AEE16C /* MapEventsExample.swift */; };
+		95A7E4F12A6ECBC700C2E81D /* CombineLocationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A7E4F02A6ECBC700C2E81D /* CombineLocationExample.swift */; };
 		95A8C6A32A1A60E900D0FB48 /* CombineExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A8C6A22A1A60E900D0FB48 /* CombineExample.swift */; };
 		A41E58342654593500D8B946 /* SwitchStylesExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E58332654593500D8B946 /* SwitchStylesExample.swift */; };
 		A41E584C26555A3400D8B946 /* PointClusteringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E584B26555A3400D8B946 /* PointClusteringExample.swift */; };
@@ -240,6 +241,7 @@
 		955B69EE299AAE6700FD4A19 /* RasterColorExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RasterColorExample.swift; sourceTree = "<group>"; };
 		95857AC129B7A1A2005D238C /* LongTapAnimationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongTapAnimationExample.swift; sourceTree = "<group>"; };
 		959EDE5129F5520500AEE16C /* MapEventsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapEventsExample.swift; sourceTree = "<group>"; };
+		95A7E4F02A6ECBC700C2E81D /* CombineLocationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineLocationExample.swift; sourceTree = "<group>"; };
 		95A8C6A22A1A60E900D0FB48 /* CombineExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineExample.swift; sourceTree = "<group>"; };
 		A41E58332654593500D8B946 /* SwitchStylesExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchStylesExample.swift; sourceTree = "<group>"; };
 		A41E584B26555A3400D8B946 /* PointClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointClusteringExample.swift; sourceTree = "<group>"; };
@@ -505,6 +507,7 @@
 				95A8C6A22A1A60E900D0FB48 /* CombineExample.swift */,
 				7406E36F2806B66F002CC41F /* ResizableImageExample.swift */,
 				FE99952A2A1E05200068AB12 /* Lights3DExample.swift */,
+				95A7E4F02A6ECBC700C2E81D /* CombineLocationExample.swift */,
 			);
 			path = Lab;
 			sourceTree = "<group>";
@@ -792,6 +795,7 @@
 				7412CF6827E9A8D600F03B1C /* UIColor+Random.swift in Sources */,
 				0CC4ECEA25B8AD3000F998B8 /* Custom2DPuckExample.swift in Sources */,
 				CADCF71F2584990E0065C51B /* DataDrivenSymbolsExample.swift in Sources */,
+				95A7E4F12A6ECBC700C2E81D /* CombineLocationExample.swift in Sources */,
 				CADCF7302584990E0065C51B /* LayerPositionExample.swift in Sources */,
 				FEA410F02A2630EF002F1816 /* ApplicationCarPlaySceneDelegage.swift in Sources */,
 				CA86E81825BE7C2300E5A1D9 /* BuildingExtrusionsExample.swift in Sources */,

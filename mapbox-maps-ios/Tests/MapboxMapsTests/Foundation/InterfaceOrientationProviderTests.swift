@@ -16,9 +16,9 @@ final class DefaultInterfaceOrientationProviderTests: XCTestCase {
         notificationCenter = MockNotificationCenter()
         device = MockUIDevice()
         orientationProvider = DefaultInterfaceOrientationProvider(
-            userInterfaceOrientationView: $userInterfaceOrientationView,
             notificationCenter: notificationCenter,
             device: device)
+        orientationProvider.view = $userInterfaceOrientationView
     }
 
     override func tearDown() {
@@ -56,6 +56,14 @@ final class DefaultInterfaceOrientationProviderTests: XCTestCase {
             // on iOS 12 the orientation is taken from UIDevice.orientation
             XCTAssertEqual(orientation, UIInterfaceOrientation(deviceOrientation: deviceOrientation))
         }
+    }
+
+    func testFallbackDeviceOrientationWhenNoViewProvided() {
+        orientationProvider.view = nil
+
+        device.$orientation.getStub.defaultReturnValue = .portraitUpsideDown
+
+        XCTAssertEqual(orientationProvider.onInterfaceOrientationChange.latestValue, UIInterfaceOrientation(deviceOrientation: .portraitUpsideDown))
     }
 
     func testBeginGeneratingDeviceOrientationNotificationsIsCalledWhenUpdating() {

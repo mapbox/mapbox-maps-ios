@@ -52,6 +52,9 @@ public final class LocationManager {
         locationProvider: LocationProvider,
         headingProvider: HeadingProvider? = nil
     ) {
+        // Patch the default location provider with the proper interface orientation view.
+        (headingProvider as? AppleLocationProvider)?.orientationProvider?.view = interfaceOrientationView
+
         onLocationChangeProxy.proxied = locationProvider.toSignal()
         onHeadingChangeProxy.proxied = headingProvider?.toSignal()
     }
@@ -68,12 +71,14 @@ public final class LocationManager {
     private let onHeadingChangeProxy = CurrentValueSignalProxy<Heading>()
     private let puckAnimator: ValueAnimator<PuckRenderingData?>
     private let puckManager: PuckManager
+    private var interfaceOrientationView: Ref<UIView?>?
 
     convenience internal init(interfaceOrientationView: Ref<UIView?>,
                               displayLink: Signal<Void>,
                               styleManager: StyleProtocol,
                               mapboxMap: MapboxMapProtocol) {
-        let provider = AppleLocationProvider(userInterfaceOrientationViewProvider: interfaceOrientationView.getter)
+        let provider = AppleLocationProvider()
+        provider.orientationProvider?.view = interfaceOrientationView
 
         self.init(styleManager: styleManager,
                   mapboxMap: mapboxMap,
@@ -81,6 +86,7 @@ public final class LocationManager {
                   locationProvider: Signal { provider.onLocationUpdate.observe($0) }, // retains provider
                   headingProvider: Signal { provider.onHeadingUpdate.observe($0) },
                   nowTimestamp: .now)
+        self.interfaceOrientationView = interfaceOrientationView
     }
 
     internal init(styleManager: StyleProtocol,

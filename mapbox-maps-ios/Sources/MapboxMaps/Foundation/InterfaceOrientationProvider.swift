@@ -17,17 +17,14 @@ internal final class DefaultInterfaceOrientationProvider {
         return subject
     }()
 
-    private let userInterfaceOrientationView: Ref<UIView?>
+    var view: Ref<UIView?>?
     private let notificationCenter: NotificationCenterProtocol
     private let device: UIDeviceProtocol
 
-    internal init(userInterfaceOrientationView: Ref<UIView?>,
-                  notificationCenter: NotificationCenterProtocol,
+    internal init(notificationCenter: NotificationCenterProtocol,
                   device: UIDeviceProtocol) {
         self.notificationCenter = notificationCenter
         self.device = device
-        self.userInterfaceOrientationView = userInterfaceOrientationView
-
     }
 
     private func startUpdatingInterfaceOrientation() {
@@ -48,9 +45,10 @@ internal final class DefaultInterfaceOrientationProvider {
     }
 
     private func calculateInterfaceOrientation() -> UIInterfaceOrientation {
-        if #available(iOS 13.0, *) {
-            let view = userInterfaceOrientationView.value
-            return view?.window?.windowScene?.interfaceOrientation ?? .unknown
+        if #available(iOS 13.0, *), let view = view?.value {
+            if let orientation = view.window?.windowScene?.interfaceOrientation {
+                return orientation
+            }
         }
         return UIInterfaceOrientation(deviceOrientation: device.orientation)
     }

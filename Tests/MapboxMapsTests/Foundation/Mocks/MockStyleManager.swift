@@ -165,6 +165,65 @@ class MockStyleManager: StyleManagerProtocol {
         isStyleLoadedStub.call()
     }
 
+    // MARK: Style Imports
+
+    let getStyleImportsStub = Stub<Void, [MapboxCoreMaps.StyleObjectInfo]>(defaultReturnValue: [])
+    func getStyleImports() -> [StyleObjectInfo] {
+        getStyleImportsStub.call()
+    }
+
+    struct RemoveStyleImportParameters {
+        let importId: String
+    }
+    let removeStyleImportStub = Stub<RemoveStyleImportParameters, Expected<NSNull, NSString>>(defaultReturnValue: .init(value: NSNull()))
+    func removeStyleImport(forImportId importId: String) -> Expected<NSNull, NSString> {
+        removeStyleImportStub.call(with: RemoveStyleImportParameters(importId: importId))
+    }
+
+    struct GetStyleImportSchemaParameters {
+        let importId: String
+    }
+    let getStyleImportSchemaStub = Stub<GetStyleImportSchemaParameters, Expected<AnyObject, NSString>>(defaultReturnValue: .init(value: NSDictionary(dictionary: ["stub": "stub"])))
+    func getStyleImportSchema(forImportId importId: String) -> Expected<AnyObject, NSString> {
+        getStyleImportSchemaStub.call(with: GetStyleImportSchemaParameters(importId: importId))
+    }
+
+    struct GetStyleImportConfigPropertiesParameters {
+        let importId: String
+    }
+    let getStyleImportConfigPropertiesStub = Stub<GetStyleImportConfigPropertiesParameters, Expected<NSDictionary, NSString>>(defaultReturnValue: .init(value: NSDictionary(dictionary: ["stub": StylePropertyValue.init(value: "stub", kind: .undefined)])))
+    func getStyleImportConfigProperties(forImportId importId: String) -> Expected<NSDictionary, NSString> {
+        getStyleImportConfigPropertiesStub.call(with: GetStyleImportConfigPropertiesParameters(importId: importId))
+    }
+
+    struct GetStyleImportConfigPropertyParameters {
+        let importId: String
+        let config: String
+    }
+    let getStyleImportConfigPropertyStub = Stub<GetStyleImportConfigPropertyParameters, Expected<MapboxCoreMaps.StylePropertyValue, NSString>>(defaultReturnValue: .init(value: .init(value: "stub", kind: .undefined)))
+    func getStyleImportConfigProperty(forImportId importId: String, config: String) -> Expected<StylePropertyValue, NSString> {
+        getStyleImportConfigPropertyStub.call(with: GetStyleImportConfigPropertyParameters(importId: importId, config: config))
+    }
+
+    struct SetStyleImportConfigPropertiesForImportIdParameters {
+        let importId: String
+        let configs: [String: Any]
+    }
+    let setStyleImportConfigPropertiesForImportIdStub = Stub<SetStyleImportConfigPropertiesForImportIdParameters, Expected<NSNull, NSString>>(defaultReturnValue: .init(value: NSNull()))
+    func setStyleImportConfigPropertiesForImportId(_ importId: String, configs: [String: Any]) -> Expected<NSNull, NSString> {
+        setStyleImportConfigPropertiesForImportIdStub.call(with: SetStyleImportConfigPropertiesForImportIdParameters(importId: importId, configs: configs))
+    }
+
+    struct SetStyleImportConfigPropertyForImportIdParameters {
+        let importId: String
+        let config: String
+        let value: Any
+    }
+    let setStyleImportConfigPropertyForImportIdStub = Stub<SetStyleImportConfigPropertyForImportIdParameters, Expected<NSNull, NSString>>(defaultReturnValue: .init(value: NSNull()))
+    func setStyleImportConfigPropertyForImportId(_ importId: String, config: String, value: Any) -> Expected<NSNull, NSString> {
+        setStyleImportConfigPropertyForImportIdStub.call(with: SetStyleImportConfigPropertyForImportIdParameters(importId: importId, config: config, value: value))
+    }
+
     // MARK: Layers
 
     struct AddStyleLayerParameters {

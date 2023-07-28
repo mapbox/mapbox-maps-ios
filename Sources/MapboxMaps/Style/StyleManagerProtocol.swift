@@ -15,6 +15,16 @@ internal protocol StyleManagerProtocol {
     func getStyleTransition() -> MapboxCoreMaps.TransitionOptions
     func setStyleTransitionFor(_ transitionOptions: MapboxCoreMaps.TransitionOptions)
 
+    func getStyleImports() -> [StyleObjectInfo]
+    func removeStyleImport(forImportId importId: String) -> Expected<NSNull, NSString>
+    func getStyleImportSchema(forImportId importId: String) -> Expected<AnyObject, NSString>
+    func getStyleImportConfigProperties(forImportId importId: String) -> Expected<NSDictionary, NSString>
+    func getStyleImportConfigProperty(
+        forImportId importId: String,
+        config: String) -> Expected<MapboxCoreMaps.StylePropertyValue, NSString>
+    func setStyleImportConfigPropertiesForImportId(_ importId: String, configs: [String: Any]) -> Expected<NSNull, NSString>
+    func setStyleImportConfigPropertyForImportId(_  importId: String, config: String, value: Any) -> Expected<NSNull, NSString>
+
     func styleLayerExists(forLayerId layerId: String) -> Bool
     func getStyleLayers() -> [MapboxCoreMaps.StyleObjectInfo]
 

@@ -618,4 +618,72 @@ final class StyleTests: XCTestCase {
         XCTAssertEqual(parameters.featureIds, featureIdentifiers)
         XCTAssertEqual(parameters.dataId, dataId)
     }
+
+    // MARK: Style Imports
+    func testGetStyleImports() {
+        _ = style.styleImports
+        XCTAssertEqual(styleManager.getStyleImportsStub.invocations.count, 1)
+    }
+
+    func testRemoveStyleImport() {
+        let importId = UUID().uuidString
+
+        try? style.removeStyleImport(forImportId: importId)
+        XCTAssertEqual(styleManager.removeStyleImportStub.invocations.count, 1)
+        XCTAssertEqual(styleManager.removeStyleImportStub.invocations.first?.parameters.importId, importId)
+    }
+
+    func testGetStyleImportSchema() {
+        let importId = UUID().uuidString
+
+        let importSchema = try? style.getStyleImportSchema(forImportId: importId)
+        XCTAssertEqual(styleManager.getStyleImportSchemaStub.invocations.count, 1)
+        XCTAssertEqual(styleManager.getStyleImportSchemaStub.invocations.first?.parameters.importId, importId)
+        XCTAssertEqual(importSchema as? NSDictionary, NSDictionary(dictionary: ["stub": "stub"]))
+    }
+
+    func testGetStyleImportConfigProperties() {
+        let importId = UUID().uuidString
+
+        let importConfigProperties = try? style.getStyleImportConfigProperties(forImportId: importId)
+        XCTAssertEqual(styleManager.getStyleImportConfigPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(styleManager.getStyleImportConfigPropertiesStub.invocations.first?.parameters.importId, importId)
+        XCTAssertEqual(importConfigProperties?.first?.key, "stub")
+        XCTAssertEqual(importConfigProperties?.first?.value.value as? String, "stub")
+        XCTAssertEqual(importConfigProperties?.first?.value.kind, .undefined)
+    }
+
+    func testGetStyleImportConfigProperty() {
+        let importId = UUID().uuidString
+        let config = UUID().uuidString
+
+        let importConfig = try? style.getStyleImportConfigProperty(forImportId: importId, config: config)
+        XCTAssertEqual(styleManager.getStyleImportConfigPropertyStub.invocations.count, 1)
+        XCTAssertEqual(styleManager.getStyleImportConfigPropertyStub.invocations.first?.parameters.importId, importId)
+        XCTAssertEqual(styleManager.getStyleImportConfigPropertyStub.invocations.first?.parameters.config, config)
+        XCTAssertEqual(importConfig?.value as? String, "stub")
+        XCTAssertEqual(importConfig?.kind, .undefined)
+    }
+
+    func testSetStyleImportConfigProperties() {
+        let importId = UUID().uuidString
+        let configs = [UUID().uuidString: UUID().uuidString]
+
+        try? style.setStyleImportConfigProperties(for: importId, configs: configs)
+        XCTAssertEqual(styleManager.setStyleImportConfigPropertiesForImportIdStub.invocations.count, 1)
+        XCTAssertEqual(styleManager.setStyleImportConfigPropertiesForImportIdStub.invocations.first?.parameters.importId, importId)
+        XCTAssertEqual(styleManager.setStyleImportConfigPropertiesForImportIdStub.invocations.first?.parameters.configs as? [String: String], configs)
+    }
+
+    func testSetStyleImportConfigProperty() {
+        let importId = UUID().uuidString
+        let config = UUID().uuidString
+        let value = UUID().uuidString
+
+        try? style.setStyleImportConfigProperty(for: importId, config: config, value: value)
+        XCTAssertEqual(styleManager.setStyleImportConfigPropertyForImportIdStub.invocations.count, 1)
+        XCTAssertEqual(styleManager.setStyleImportConfigPropertyForImportIdStub.invocations.first?.parameters.importId, importId)
+        XCTAssertEqual(styleManager.setStyleImportConfigPropertyForImportIdStub.invocations.first?.parameters.config, config)
+        XCTAssertEqual(styleManager.setStyleImportConfigPropertyForImportIdStub.invocations.first?.parameters.value as? String, value)
+    }
 }

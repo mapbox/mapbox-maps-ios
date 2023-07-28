@@ -34,7 +34,7 @@ public struct FillLayer: Layer {
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
-    public var visibility: Visibility
+    public var visibility: Value<Visibility>
 
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public var fillSortKey: Value<Double>?
@@ -88,7 +88,7 @@ public struct FillLayer: Layer {
         self.source = source
         self.id = id
         self.type = LayerType.fill
-        self.visibility = .visible
+        self.visibility = .constant(.visible)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -117,7 +117,7 @@ public struct FillLayer: Layer {
         try paintContainer.encodeIfPresent(fillTranslateAnchor, forKey: .fillTranslateAnchor)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
+        try layoutContainer.encode(visibility, forKey: .visibility)
         try layoutContainer.encodeIfPresent(fillSortKey, forKey: .fillSortKey)
     }
 
@@ -147,12 +147,12 @@ public struct FillLayer: Layer {
             fillTranslateAnchor = try paintContainer.decodeIfPresent(Value<FillTranslateAnchor>.self, forKey: .fillTranslateAnchor)
         }
 
-        var visibilityEncoded: Visibility?
+        var visibilityEncoded: Value<Visibility>?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
-            visibilityEncoded = try layoutContainer.decodeIfPresent(Visibility.self, forKey: .visibility)
+            visibilityEncoded = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
             fillSortKey = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .fillSortKey)
         }
-        visibility = visibilityEncoded  ?? .visible
+        visibility = visibilityEncoded ?? .constant(.visible)
     }
 
     enum RootCodingKeys: String, CodingKey {

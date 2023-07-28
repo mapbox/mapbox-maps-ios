@@ -20,7 +20,7 @@ public struct BackgroundLayer: Layer {
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
-    public var visibility: Visibility
+    public var visibility: Value<Visibility>
 
     /// The color with which the background will be drawn.
     public var backgroundColor: Value<StyleColor>?
@@ -52,7 +52,7 @@ public struct BackgroundLayer: Layer {
     public init(id: String) {
         self.id = id
         self.type = LayerType.background
-        self.visibility = .visible
+        self.visibility = .constant(.visible)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -72,7 +72,7 @@ public struct BackgroundLayer: Layer {
         try paintContainer.encodeIfPresent(backgroundPattern, forKey: .backgroundPattern)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
+        try layoutContainer.encode(visibility, forKey: .visibility)
     }
 
     public init(from decoder: Decoder) throws {
@@ -92,11 +92,11 @@ public struct BackgroundLayer: Layer {
             backgroundPattern = try paintContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .backgroundPattern)
         }
 
-        var visibilityEncoded: Visibility?
+        var visibilityEncoded: Value<Visibility>?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
-            visibilityEncoded = try layoutContainer.decodeIfPresent(Visibility.self, forKey: .visibility)
+            visibilityEncoded = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
         }
-        visibility = visibilityEncoded  ?? .visible
+        visibility = visibilityEncoded ?? .constant(.visible)
     }
 
     enum RootCodingKeys: String, CodingKey {

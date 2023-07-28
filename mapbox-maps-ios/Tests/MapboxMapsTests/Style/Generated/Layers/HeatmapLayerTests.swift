@@ -47,7 +47,7 @@ final class HeatmapLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfLayoutProperties() {
         var layer = HeatmapLayer(id: "test-id", source: "source")
-        layer.visibility = .visible
+        layer.visibility = .constant(.visible)
 
         var data: Data?
         do {
@@ -63,7 +63,7 @@ final class HeatmapLayerTests: XCTestCase {
 
         do {
             let decodedLayer = try JSONDecoder().decode(HeatmapLayer.self, from: validData)
-            XCTAssertEqual(decodedLayer.visibility, .visible)
+            XCTAssert(decodedLayer.visibility == .constant(.visible))
         } catch {
             XCTFail("Failed to decode HeatmapLayer")
         }
@@ -94,7 +94,7 @@ final class HeatmapLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(HeatmapLayer.self, from: validData)
-           XCTAssertEqual(decodedLayer.visibility, .visible)
+           XCTAssert(decodedLayer.visibility == .constant(.visible))
            XCTAssertEqual(layer.heatmapColor, Value<StyleColor>.testConstantValue())
            XCTAssertEqual(layer.heatmapIntensity, Value<Double>.testConstantValue())
            XCTAssertEqual(layer.heatmapOpacity, Value<Double>.testConstantValue())

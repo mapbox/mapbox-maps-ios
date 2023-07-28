@@ -22,7 +22,7 @@ final class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
             var layer = SymbolLayer(id: "test-id", source: "source")
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.visibility = .visible
+            layer.visibility = .constant(.visible)
             layer.iconAllowOverlap = Value<Bool>.testConstantValue()
             layer.iconAnchor = Value<IconAnchor>.testConstantValue()
             layer.iconIgnorePlacement = Value<Bool>.testConstantValue()

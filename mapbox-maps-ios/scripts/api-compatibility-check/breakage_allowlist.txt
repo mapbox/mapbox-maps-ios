@@ -758,3 +758,38 @@ EnumElement Expression.Operator.within is now static
 EnumElement Expression.Operator.zoom is now static
 Enum Expression.Operator has removed conformance to CaseIterable
 Enum Expression.Operator has removed conformance to Hashable
+
+// Layer visibility expression support
+Accessor BackgroundLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor BackgroundLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor CircleLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor CircleLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor FillExtrusionLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor FillExtrusionLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor FillLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor FillLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor HeatmapLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor HeatmapLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor HillshadeLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor HillshadeLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor LineLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor LineLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor LocationIndicatorLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor LocationIndicatorLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor RasterLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor RasterLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor SkyLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor SkyLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor SymbolLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor SymbolLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Var BackgroundLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Var CircleLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Var FillExtrusionLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Var FillLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Var HeatmapLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Var HillshadeLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Var LineLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Var LocationIndicatorLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Var RasterLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Var SkyLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Var SymbolLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>

@@ -68,7 +68,7 @@ import Foundation
 
     /// Whether this layer is displayed.
 <%- publicDocumentationNotation(isExperimental) -%>
-    public var visibility: Visibility
+    public var visibility: Value<Visibility>
     <%_ for (const property of layoutProperties) { -%>
 
     /// <%- markdownFriendlyDoc(property) %>
@@ -103,7 +103,7 @@ import Foundation
 <% } -%>
         self.id = id
         self.type = LayerType.<%- camelizeWithLeadingLowercase(type) %>
-        self.visibility = .visible
+        self.visibility = .constant(.visible)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -127,7 +127,7 @@ import Foundation
         <%_ } -%>
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
+        try layoutContainer.encode(visibility, forKey: .visibility)
         <%_ for (const property of layoutProperties) { -%>
         try layoutContainer.encodeIfPresent(<%- camelizeWithLeadingLowercase(property.name) %>, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>)
         <%_ if (property.transition) { -%>
@@ -157,17 +157,17 @@ import Foundation
             <%_ } -%>
         }
 
-        var visibilityEncoded: Visibility?
+        var visibilityEncoded: Value<Visibility>?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
-            visibilityEncoded = try layoutContainer.decodeIfPresent(Visibility.self, forKey: .visibility)
-            <%_ for (const property of layoutProperties) { -%>
+            visibilityEncoded = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
+                <%_ for (const property of layoutProperties) { -%>
             <%- camelizeWithLeadingLowercase(property.name) %> = try layoutContainer.decodeIfPresent(<%- propertySwiftValueType(property) %>.self, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>)
             <%_ if (property.transition) { -%>
             <%- camelizeWithLeadingLowercase(property.name) %>Transition = try layoutContainer.decodeIfPresent(StyleTransition.self, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>Transition)
             <%_ } -%>
             <%_ } -%>
         }
-        visibility = visibilityEncoded  ?? .visible
+        visibility = visibilityEncoded ?? .constant(.visible)
     }
 
     enum RootCodingKeys: String, CodingKey {

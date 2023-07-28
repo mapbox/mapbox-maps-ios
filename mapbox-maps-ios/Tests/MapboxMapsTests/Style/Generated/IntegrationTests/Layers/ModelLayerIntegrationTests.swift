@@ -22,7 +22,7 @@ final class ModelLayerIntegrationTests: MapViewIntegrationTestCase {
             var layer = ModelLayer(id: "test-id", source: "source")
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.visibility = .visible
+            layer.visibility = .constant(.visible)
             layer.modelId = Value<String>.testConstantValue()
 
             layer.modelAmbientOcclusionIntensity = Value<Double>.testConstantValue()

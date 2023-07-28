@@ -22,7 +22,7 @@ final class HeatmapLayerIntegrationTests: MapViewIntegrationTestCase {
             var layer = HeatmapLayer(id: "test-id", source: "source")
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.visibility = .visible
+            layer.visibility = .constant(.visible)
 
             layer.heatmapColor = Value<StyleColor>.testConstantValue()
             layer.heatmapIntensity = Value<Double>.testConstantValue()

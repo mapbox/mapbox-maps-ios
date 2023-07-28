@@ -22,7 +22,7 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
             var layer = LineLayer(id: "test-id", source: "source")
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.visibility = .visible
+            layer.visibility = .constant(.visible)
             layer.lineCap = Value<LineCap>.testConstantValue()
             layer.lineJoin = Value<LineJoin>.testConstantValue()
             layer.lineMiterLimit = Value<Double>.testConstantValue()

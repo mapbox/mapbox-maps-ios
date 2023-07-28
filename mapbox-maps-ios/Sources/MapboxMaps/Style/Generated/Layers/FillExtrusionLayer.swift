@@ -34,7 +34,7 @@ public struct FillExtrusionLayer: Layer {
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
-    public var visibility: Visibility
+    public var visibility: Value<Visibility>
 
     /// Radius of a fill extrusion edge in meters. If not zero, rounds extrusion edges for a smoother appearance.
 #if swift(>=5.8)
@@ -211,7 +211,7 @@ public struct FillExtrusionLayer: Layer {
         self.source = source
         self.id = id
         self.type = LayerType.fillExtrusion
-        self.visibility = .visible
+        self.visibility = .constant(.visible)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -263,7 +263,7 @@ public struct FillExtrusionLayer: Layer {
         try paintContainer.encodeIfPresent(fillExtrusionVerticalScaleTransition, forKey: .fillExtrusionVerticalScaleTransition)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
+        try layoutContainer.encode(visibility, forKey: .visibility)
         try layoutContainer.encodeIfPresent(fillExtrusionEdgeRadius, forKey: .fillExtrusionEdgeRadius)
     }
 
@@ -316,12 +316,12 @@ public struct FillExtrusionLayer: Layer {
             fillExtrusionVerticalScaleTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionVerticalScaleTransition)
         }
 
-        var visibilityEncoded: Visibility?
+        var visibilityEncoded: Value<Visibility>?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
-            visibilityEncoded = try layoutContainer.decodeIfPresent(Visibility.self, forKey: .visibility)
+            visibilityEncoded = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
             fillExtrusionEdgeRadius = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionEdgeRadius)
         }
-        visibility = visibilityEncoded  ?? .visible
+        visibility = visibilityEncoded ?? .constant(.visible)
     }
 
     enum RootCodingKeys: String, CodingKey {

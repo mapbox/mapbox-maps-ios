@@ -180,13 +180,13 @@ class GeoJSONUpdateIntegrationTests: MapViewIntegrationTestCase {
     func performPartialGeoJSONUpdate(_ features: [Feature]) {
         switch parameter.command {
         case .add:
-            try! mapView.mapboxMap.addGeoJSONSourceFeatures(forSourceId: Self.sourceId,
-                                                            features: features,
-                                                            dataId: Self.dataId)
+            mapView.mapboxMap.addGeoJSONSourceFeatures(forSourceId: Self.sourceId,
+                                                       features: features,
+                                                       dataId: Self.dataId)
         case .update:
-            try! mapView.mapboxMap.updateGeoJSONSourceFeatures(forSourceId: Self.sourceId,
-                                                               features: features,
-                                                               dataId: Self.dataId)
+            mapView.mapboxMap.updateGeoJSONSourceFeatures(forSourceId: Self.sourceId,
+                                                          features: features,
+                                                          dataId: Self.dataId)
         case .remove:
             let featureIds = features.compactMap { (feature: Feature) -> String? in
                 guard case .string(let id) = feature.identifier else {
@@ -195,9 +195,9 @@ class GeoJSONUpdateIntegrationTests: MapViewIntegrationTestCase {
 
                 return id
             }
-            try! mapView.mapboxMap.removeGeoJSONSourceFeatures(forSourceId: Self.sourceId,
-                                                               featureIds: featureIds,
-                                                               dataId: Self.dataId)
+            mapView.mapboxMap.removeGeoJSONSourceFeatures(forSourceId: Self.sourceId,
+                                                          featureIds: featureIds,
+                                                          dataId: Self.dataId)
         }
     }
 

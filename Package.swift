@@ -3,8 +3,8 @@
 
 import PackageDescription
 
-let coreVersion = "11.0.0-SNAPSHOT.0720T1134Z.5f428d0"
-let coreChecksum = "787859831128cf21c69d64f97ed88eae19ef7e2baa21e310e9100f796f2d387e"
+let coreVersion = "11.0.0-beta.1"
+let coreChecksum = "b8a1450a7b56e2575898bdee884a8ce0e3d5c346ba2f97c91fdda4e66bd3c2cc"
 let commonVersion = "24.0.0-beta.1"
 let commonChecksum = "cd37dd3a3e62e7b21d2242edec36e6172c9675c9e55a0f5c0346da5a93ae10b7"
 
@@ -29,7 +29,7 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "MapboxCoreMaps",
-            url: "https://api.mapbox.com/downloads/v2/mobile-maps-core-internal/\(folder(coreVersion))/ios/packages/\(coreVersion)/MapboxCoreMaps.xcframework-dynamic.zip",
+            url: "https://api.mapbox.com/downloads/v2/mobile-maps-core/\(folder(coreVersion))/ios/packages/\(coreVersion)/MapboxCoreMaps.xcframework-dynamic.zip",
             checksum: coreChecksum
         ),
         .binaryTarget(

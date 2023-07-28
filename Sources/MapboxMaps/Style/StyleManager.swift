@@ -906,112 +906,55 @@ public class StyleManager: StyleProtocol {
         return UIImage(mbmImage: mbmImage)
     }
 
-    // MARK: - Light
+    // MARK: - Lights
 
-    /// Sets a light on the style.
-    ///
-    /// - Parameter light: The `Light` that should be applied.
-    ///
-    /// - Throws: An error describing why the operation was unsuccessful.
-    public func setLight(_ light: Light) throws {
-        guard let lightDictionary = try light.toJSON() as? [String: Any] else {
-            throw TypeConversionError.unexpectedType
-        }
-
-        try setLight(properties: lightDictionary)
-    }
-
-    /// Sets the style global light source properties.
-    ///
-    /// - See Also: https://docs.mapbox.com/mapbox-gl-js/style-spec/#light
-    ///
-    /// - Parameter properties: A dictionary of style light properties values,
-    ///     with their names as key.
-    ///
-    /// - Throws:
-    ///     An error describing why the operation was unsuccessful.
-    public func setLight(properties: [String: Any]) throws {
-        try handleExpected {
-            styleManager.setStyleLightForProperties(properties)
-        }
-    }
-
-    /// Sets a value to the style light property.
-    ///
-    /// - Parameters:
-    ///   - property: Style light property name.
-    ///   - value: Style light property value.
-    ///
-    /// - Throws:
-    ///     An error describing why the operation was unsuccessful.
-    public func setLightProperty(_ property: String, value: Any) throws {
-        try handleExpected {
-            styleManager.setStyleLightPropertyForProperty(property, value: value)
+    /// The ordered list of the current style lights' identifiers and types
+    public var allLightIdentifiers: [LightInfo] {
+        return styleManager.getStyleLights().map { info in
+            LightInfo(id: info.id, type: LightType(rawValue: info.type))
         }
     }
 
     /// Gets the value of a style light property.
     ///
-    /// - Parameter property: Style light property name.
-    ///
-    /// - Returns: Style light property value.
-    public func lightProperty(_ property: String) -> Any {
-        return lightProperty(property).value
+    /// - Parameter light: The unique identifier of the style light in lights list.
+    /// - Parameter property: The style light property name.
+    public func lightProperty(for lightId: String, property: String) -> Any {
+        styleManager.getStyleLightProperty(forId: lightId, property: property).value
     }
 
-    /// Gets the value of a style light property.
-    ///
-    /// - Parameter property: Style light property name.
-    ///
-    /// - Returns: Style light property value.
-    public func lightProperty(_ property: String) -> StylePropertyValue {
-        return styleManager.getStyleLightProperty(forProperty: property)
-    }
-
-    // MARK: 3D Light
-
-    /// Set Ambient and Directional 3D lights
-    /// - Parameters:
-    ///   - ambientLight: global light configuration; ``AmbientLight``
-    ///   - directionalLight: light source like a sun; ``DirectionalLight``
-    @_spi(Experimental) public func setLights3D(ambientLight: AmbientLight, directionalLight: DirectionalLight) throws {
-        let lights: [Light3DProtocol] = [ambientLight, directionalLight]
-        let rawLights = try lights.map { try $0.allStyleProperties() }
-
+    /// Set global directional lightning.
+    /// - Parameter flatLight: The flat light source.
+    public func setLights(_ flatLight: FlatLight) throws {
+        let rawLight = try flatLight.allStyleProperties()
         try handleExpected {
-            styleManager.setStyleLightsForLights(rawLights)
+            return styleManager.setStyleLightsForLights([rawLight])
         }
     }
 
-    /// Gets the list of ``Light3DInfo`` used during rendering.
-    @_spi(Experimental) public func lights3D() -> [Light3DInfo] {
-        styleManager.getStyleLights().compactMap { info in
-            guard let light3DType = Light3DType(rawValue: info.type) else {
-                assertionFailure("Failed to create Light3DType from \(info.type)")
-                return nil
-            }
-            return Light3DInfo(id: info.id, lightType: light3DType)
+    /// Set dynamic lightning.
+    /// - Parameters:
+    ///   - ambientLight: The ambient light source.
+    ///   - directionalLight: The directional light source.
+    @_spi(Experimental) public func setLights(ambient ambientLight: AmbientLight,
+                                              directional directionalLight: DirectionalLight) throws {
+        let rawAmbientLight = try ambientLight.allStyleProperties()
+        let rawDirectionalLight = try directionalLight.allStyleProperties()
+        try handleExpected {
+            return styleManager.setStyleLightsForLights([rawAmbientLight, rawDirectionalLight])
         }
     }
 
-    /// Sets the value of a style 3D light property in lights list.
+    /// Sets the value of a style light property in lights list.
     ///
-    /// - Parameter id: The unique identifier of the style 3D light in lights list.
-    /// - Parameter property: The style 3D light property name.
-    /// - Parameter value: The style 3D light property value.
+    /// - Parameter id: The unique identifier of the style light in lights list.
+    /// - Parameter property: The style light property name.
+    /// - Parameter value: The style light property value.
     /// - throws: An error describing why the operation is unsuccessful.
-    @_spi(Experimental) public func setLight3DProperty(id: String, property: String, value: Any) throws {
+    public func setLightProperty(for lightId: String, property: String, value: Any) throws {
         try handleExpected {
-            styleManager.setStyleLightPropertyForId(id, property: property, value: value)
+            styleManager.setStyleLightPropertyForId(lightId, property: property, value: value)
         }
-    }
-
-    /// Gets the value of a style 3D light property in lights list.
-    ///
-    /// - Parameter id: The unique identifier of the style 3D light in lights list.
-    /// - Parameter property: The style 3D light property name.
-    @_spi(Experimental) public func light3DProperty(id: String, property: String) -> Any {
-        styleManager.getStyleLightProperty(forId: id, property: property).value
     }
 
     // MARK: - Terrain

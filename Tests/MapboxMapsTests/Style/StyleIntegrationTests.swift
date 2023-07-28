@@ -233,7 +233,9 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         }
     }
 
-    func testLocalizeLabelsv7() {
+    func testLocalizeLabelsv7() throws {
+        throw XCTSkip("TODO: Re-enable once https://mapbox.atlassian.net/browse/MAPSNAT-1279 is fixed.")
+
         let mapView = MapView(frame: UIScreen.main.bounds)
 
         let styleJSONObject: [String: Any] = [
@@ -261,7 +263,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             ],
         ]
 
-        let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
+        let styleJSON: String = String(data: try! JSONSerialization.data(withJSONObject: styleJSONObject, options: [.prettyPrinted]), encoding: .utf8)!
         XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
 
         let styleJSONFinishedLoading = expectation(description: "Style JSON has finished loading")
@@ -369,7 +371,9 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         assert(placeLabelProperty: "name_zh-Hans")
     }
 
-    func testLocalizeLabelsv8() {
+    func testLocalizeLabelsv8() throws {
+        throw XCTSkip("TODO: Re-enable once https://mapbox.atlassian.net/browse/MAPSNAT-1279 is fixed.")
+
         let mapView = MapView(frame: UIScreen.main.bounds)
 
         let styleJSONObject: [String: Any] = [

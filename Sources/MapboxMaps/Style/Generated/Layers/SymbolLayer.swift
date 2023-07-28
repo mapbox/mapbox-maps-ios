@@ -165,7 +165,7 @@ public struct SymbolLayer: Layer {
     /// Transition options for `iconColor`.
     public var iconColorTransition: StyleTransition?
 
-    /// Emission strength.
+    /// Emission strength
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -196,10 +196,16 @@ public struct SymbolLayer: Layer {
     public var iconHaloWidthTransition: StyleTransition?
 
     /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together.
-    public var iconImageCrossFade: Value<Double>?
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public var iconImageCrossFade: Value<Double>?
 
     /// Transition options for `iconImageCrossFade`.
-    public var iconImageCrossFadeTransition: StyleTransition?
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public var iconImageCrossFadeTransition: StyleTransition?
 
     /// The opacity at which the icon will be drawn.
     public var iconOpacity: Value<Double>?
@@ -222,7 +228,7 @@ public struct SymbolLayer: Layer {
     /// Transition options for `textColor`.
     public var textColorTransition: StyleTransition?
 
-    /// Emission strength.
+    /// Emission strength
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif

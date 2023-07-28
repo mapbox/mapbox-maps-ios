@@ -157,15 +157,11 @@ final class SnapshotterTests: XCTestCase {
         }
 
         let timeInterval = EventTimeInterval(begin: Date(), end: Date())
-        let mapLoaded = MapLoaded(timeInterval: timeInterval)
         let mapLoadingError = MapLoadingError(
             type: .source,
             message: "message",
             sourceId: nil,
             tileId: nil,
-            timestamp: Date())
-        let cameraChanged = CameraChanged(
-            cameraState: CameraState(center: .random(), padding: .random(), zoom: 0, bearing: 0, pitch: 0),
             timestamp: Date())
 
         checkEvent(\.onStyleLoaded, \.onStyleLoaded, value: StyleLoaded(timeInterval: timeInterval))
@@ -239,7 +235,6 @@ final class SnapshotterTests: XCTestCase {
         let tileIDs = snapshotter.tileCover(for: options)
         XCTAssertEqual(stubReturnTileIDs, tileIDs)
 
-        let coreOptions = MapboxCoreMaps.TileCoverOptions(options)
         let parameters = try XCTUnwrap(mockMapSnapshotter.tileCoverStub.invocations.first?.parameters)
 
         XCTAssertEqual(parameters.options.maxZoom?.uint8Value, options.maxZoom)

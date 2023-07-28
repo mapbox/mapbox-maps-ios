@@ -331,20 +331,6 @@ extension HillshadeIlluminationAnchor {
     }
 }
 
-// MARK: SKY_TYPE
-
-extension Value where T == SkyType {
-    static func testConstantValue() -> Value<SkyType> {
-        return .constant(SkyType.testConstantValue())
-    }
-}
-
-extension SkyType {
-    static func testConstantValue() -> SkyType {
-        return SkyType(rawValue: "gradient")!
-    }
-}
-
 // MARK: MODEL_SCALE_MODE
 
 extension Value where T == ModelScaleMode {
@@ -370,6 +356,20 @@ extension Value where T == ModelType {
 extension ModelType {
     static func testConstantValue() -> ModelType {
         return ModelType(rawValue: "common-3d")!
+    }
+}
+
+// MARK: SKY_TYPE
+
+extension Value where T == SkyType {
+    static func testConstantValue() -> Value<SkyType> {
+        return .constant(SkyType.testConstantValue())
+    }
+}
+
+extension SkyType {
+    static func testConstantValue() -> SkyType {
+        return SkyType(rawValue: "gradient")!
     }
 }
 

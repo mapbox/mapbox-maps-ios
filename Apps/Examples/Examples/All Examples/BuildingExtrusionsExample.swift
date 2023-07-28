@@ -40,7 +40,7 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
 
-    private var light = Light()
+    private var light = FlatLight()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -132,29 +132,29 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
     // MARK: - Actions
 
     @objc private func lightColorButtonTapped(_ sender: UIButton) {
-        if light.color == StyleColor(.red) {
-            light.color = StyleColor(.blue)
+        if case .constant(let color) = light.color, color == StyleColor(.red) {
+            light.color = .constant(StyleColor(.blue))
             sender.tintColor = .blue
         } else {
-            light.color = StyleColor(.red)
+            light.color = .constant(StyleColor(.red))
             sender.tintColor = .red
         }
 
-        try? mapView.mapboxMap.setLight(light)
+        try? mapView.mapboxMap.setLights(light)
     }
 
     @objc private func lightPositionButtonTapped(_ sender: UIButton) {
         let firstPosition = [1.5, 90, 80]
         let secondPosition = [1.15, 210, 30]
 
-        if light.position == firstPosition {
-            light.position = secondPosition
+        if case .constant(let position) = light.position, position == firstPosition {
+            light.position = .constant(secondPosition)
             sender.imageView?.transform = .identity
         } else {
-            light.position = firstPosition
+            light.position = .constant(firstPosition)
             sender.imageView?.transform = CGAffineTransform(rotationAngle: 2.0 * .pi / 3.0)
         }
 
-        try? mapView.mapboxMap.setLight(light)
+        try? mapView.mapboxMap.setLights(light)
     }
 }

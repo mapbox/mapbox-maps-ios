@@ -8,26 +8,32 @@
 import Foundation
 
 public extension Expression {
-    enum Operator: String, Codable, CaseIterable {
+    struct Operator: RawRepresentable, Codable, Equatable {
         <%_ for (const expression of expressions) { -%>
 
         <%_ %><%- blockDoc(expression, 8) %>
-        <%if (expression.experimental === true) { -%>@_spi(Experimental) <% } -%>case <%- compatibleSwiftExpressionName(expression) %> = "<%- expression.name %>"
+        <%if (expression.experimental === true) { -%>@_spi(Experimental) <% } -%>public static let <%- compatibleSwiftExpressionName(expression) %> = Operator(rawValue: "<%- expression.name %>")
         <%_ } -%>
 
         /// Interpolates linearly between the pair of stops just less than and just greater than the input
-        case linear = "linear"
+        public static let linear = Operator(rawValue: "linear")
 
         /// `["exponential", base]`
         /// Interpolates exponentially between the stops just less than and just
         /// greater than the input. base controls the rate at which the output increases: higher values make the output
         /// increase more towards the high end of the range.
         /// With values close to 1 the output increases linearly.
-        case exponential = "exponential"
+        public static let exponential = Operator(rawValue: "exponential")
 
         /// `["cubic-bezier", x1, y1, x2, y2]`
         /// Interpolates using the cubic bezier curve defined by the given control points.
-        case cubicBezier = "cubic-bezier"
+        public static let cubicBezier = Operator(rawValue: "cubic-bezier")
+
+        public var rawValue: String
+
+        public init(rawValue: String) {
+            self.rawValue = rawValue
+        }
     }
 }
 

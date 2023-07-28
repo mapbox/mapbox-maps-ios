@@ -574,3 +574,187 @@ Var Light.anchor has declared type change from MapboxMaps.Anchor? to MapboxMaps.
 Var Light.color has declared type change from MapboxMaps.StyleColor? to MapboxMaps.Value<MapboxMaps.StyleColor>?
 Var Light.intensity has declared type change from Swift.Double? to MapboxMaps.Value<Swift.Double>?
 Var Light.position has declared type change from [Swift.Double]? to MapboxMaps.Value<[Swift.Double]>?
+
+// Convert Expression.Operator from an enum to a struct with static lets
+TypeAlias Expression.Operator.AllCases has been removed
+Var Expression.Operator.allCases has been removed
+Enum Expression.Operator has been changed to a Struct
+Constructor Expression.Operator.init(rawValue:) has return type change from MapboxMaps.Expression.Operator? to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.abs has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.accumulated has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.acos has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.all has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.any has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.array has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.asin has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.at has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.atan has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.boolean has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.ceil has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.coalesce has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.collator has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.concat has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.cos has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.cubicBezier has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.distance has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.distanceFromCenter has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.division has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.downcase has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.e has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.eq has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.exponential has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.featureState has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.floor has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.format has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.geometryType has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.get has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.gt has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.gte has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.has has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.heatmapDensity has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.id has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.image has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.inExpression has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.indexOf has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.interpolate has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.isSupportedScript has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.length has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.letExpression has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.lineProgress has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.linear has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.literal has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.ln has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.ln2 has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.log10 has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.log2 has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.lt has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.lte has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.match has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.max has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.min has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.mod has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.neq has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.not has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.number has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.numberFormat has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.objectExpression has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.pi has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.pitch has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.pow has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.product has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.properties has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.rasterValue has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.resolvedLocale has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.rgb has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.rgba has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.round has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.sin has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.skyRadialProgress has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.slice has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.sqrt has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.step has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.string has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.subtract has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.sum has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.switchCase has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.tan has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.toBoolean has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.toColor has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.toNumber has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.toRgba has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.toString has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.typeofExpression has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.upcase has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.varExpression has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.within has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.zoom has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.abs is now static
+EnumElement Expression.Operator.accumulated is now static
+EnumElement Expression.Operator.acos is now static
+EnumElement Expression.Operator.all is now static
+EnumElement Expression.Operator.any is now static
+EnumElement Expression.Operator.array is now static
+EnumElement Expression.Operator.asin is now static
+EnumElement Expression.Operator.at is now static
+EnumElement Expression.Operator.atan is now static
+EnumElement Expression.Operator.boolean is now static
+EnumElement Expression.Operator.ceil is now static
+EnumElement Expression.Operator.coalesce is now static
+EnumElement Expression.Operator.collator is now static
+EnumElement Expression.Operator.concat is now static
+EnumElement Expression.Operator.cos is now static
+EnumElement Expression.Operator.cubicBezier is now static
+EnumElement Expression.Operator.distance is now static
+EnumElement Expression.Operator.distanceFromCenter is now static
+EnumElement Expression.Operator.division is now static
+EnumElement Expression.Operator.downcase is now static
+EnumElement Expression.Operator.e is now static
+EnumElement Expression.Operator.eq is now static
+EnumElement Expression.Operator.exponential is now static
+EnumElement Expression.Operator.featureState is now static
+EnumElement Expression.Operator.floor is now static
+EnumElement Expression.Operator.format is now static
+EnumElement Expression.Operator.geometryType is now static
+EnumElement Expression.Operator.get is now static
+EnumElement Expression.Operator.gt is now static
+EnumElement Expression.Operator.gte is now static
+EnumElement Expression.Operator.has is now static
+EnumElement Expression.Operator.heatmapDensity is now static
+EnumElement Expression.Operator.id is now static
+EnumElement Expression.Operator.image is now static
+EnumElement Expression.Operator.inExpression is now static
+EnumElement Expression.Operator.indexOf is now static
+EnumElement Expression.Operator.interpolate is now static
+EnumElement Expression.Operator.isSupportedScript is now static
+EnumElement Expression.Operator.length is now static
+EnumElement Expression.Operator.letExpression is now static
+EnumElement Expression.Operator.lineProgress is now static
+EnumElement Expression.Operator.linear is now static
+EnumElement Expression.Operator.literal is now static
+EnumElement Expression.Operator.ln is now static
+EnumElement Expression.Operator.ln2 is now static
+EnumElement Expression.Operator.log10 is now static
+EnumElement Expression.Operator.log2 is now static
+EnumElement Expression.Operator.lt is now static
+EnumElement Expression.Operator.lte is now static
+EnumElement Expression.Operator.match is now static
+EnumElement Expression.Operator.max is now static
+EnumElement Expression.Operator.min is now static
+EnumElement Expression.Operator.mod is now static
+EnumElement Expression.Operator.neq is now static
+EnumElement Expression.Operator.not is now static
+EnumElement Expression.Operator.number is now static
+EnumElement Expression.Operator.numberFormat is now static
+EnumElement Expression.Operator.objectExpression is now static
+EnumElement Expression.Operator.pi is now static
+EnumElement Expression.Operator.pitch is now static
+EnumElement Expression.Operator.pow is now static
+EnumElement Expression.Operator.product is now static
+EnumElement Expression.Operator.properties is now static
+EnumElement Expression.Operator.rasterValue is now static
+EnumElement Expression.Operator.resolvedLocale is now static
+EnumElement Expression.Operator.rgb is now static
+EnumElement Expression.Operator.rgba is now static
+EnumElement Expression.Operator.round is now static
+EnumElement Expression.Operator.sin is now static
+EnumElement Expression.Operator.skyRadialProgress is now static
+EnumElement Expression.Operator.slice is now static
+EnumElement Expression.Operator.sqrt is now static
+EnumElement Expression.Operator.step is now static
+EnumElement Expression.Operator.string is now static
+EnumElement Expression.Operator.subtract is now static
+EnumElement Expression.Operator.sum is now static
+EnumElement Expression.Operator.switchCase is now static
+EnumElement Expression.Operator.tan is now static
+EnumElement Expression.Operator.toBoolean is now static
+EnumElement Expression.Operator.toColor is now static
+EnumElement Expression.Operator.toNumber is now static
+EnumElement Expression.Operator.toRgba is now static
+EnumElement Expression.Operator.toString is now static
+EnumElement Expression.Operator.typeofExpression is now static
+EnumElement Expression.Operator.upcase is now static
+EnumElement Expression.Operator.varExpression is now static
+EnumElement Expression.Operator.within is now static
+EnumElement Expression.Operator.zoom is now static
+Enum Expression.Operator has removed conformance to CaseIterable
+Enum Expression.Operator has removed conformance to Hashable

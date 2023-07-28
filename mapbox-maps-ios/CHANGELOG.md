@@ -124,6 +124,20 @@ MapboxMap.addGeoJSONSourceFeatures(forSourceId:features:dataId:)
 MapboxMap.updateGeoJSONSourceFeatures(forSourceId:features:dataId:)
 MapboxMap.removeGeoJSONSourceFeatures(forSourceId:featureIds:dataId:)
 ```
+## 10.15.0 - July 27, 2023
+
+* Update MapboxCoreMaps to 10.15.0 and MapboxCommon to 23.7.0.
+* Fixed an issue when `MapboxMap.point(for:)` could return false negative result.
+
+## 10.15.0-rc.1 - July 13, 2023
+
+* Update MapboxCoreMaps to 10.15.0-rc.1 and MapboxCommon to 23.7.0-rc.1.  
+* Fixed an issue when `MapboxMap.point(for:)` could return false negative result.
+
+## 10.15.0-beta.1 - June 29, 2023
+
+* Remove unneeded synthesized initializers
+* Update MapboxCoreMaps to 10.15.0-beta.1 and MapboxCommon to 23.7.0-beta.1.
 
 ## 10.14.0 - June 14, 2023
 

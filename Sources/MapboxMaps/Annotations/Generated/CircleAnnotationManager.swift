@@ -202,7 +202,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
 
     // MARK: - Common layer properties
 
-    /// Emission strength.
+    /// Emission strength
     public var circleEmissiveStrength: Double? {
         get {
             return layerProperties["circle-emissive-strength"] as? Double

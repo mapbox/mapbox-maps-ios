@@ -252,7 +252,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    /// Emission strength.
+    /// Emission strength
     public var lineEmissiveStrength: Double? {
         get {
             return layerProperties["line-emissive-strength"] as? Double

@@ -5,13 +5,11 @@ final class MapViewTests: XCTestCase {
 
     var notificationCenter: MockNotificationCenter!
     var bundle: MockBundle!
-    var cameraAnimatorsRunnerEnablable: MockMutableEnablable!
     var displayLink: MockDisplayLink!
-    var locationProducer: MockLocationProducer!
     var dependencyProvider: MockMapViewDependencyProvider!
+    var cameraAnimatorsRunner: MockCameraAnimatorsRunner!
     var attributionURLOpener: MockAttributionURLOpener!
-    var applicationState: UIApplication.State!
-    var applicationStateProvider: Provider<UIApplication.State>?
+    @MutableRef var applicationState: UIApplication.State = .active
     var mapView: MapView!
     var window: UIWindow!
     var metalView: MockMetalView!
@@ -20,18 +18,15 @@ final class MapViewTests: XCTestCase {
         try super.setUpWithError()
         notificationCenter = MockNotificationCenter()
         bundle = MockBundle()
-        cameraAnimatorsRunnerEnablable = MockMutableEnablable()
         displayLink = MockDisplayLink()
-        locationProducer = MockLocationProducer()
+        cameraAnimatorsRunner = MockCameraAnimatorsRunner()
         dependencyProvider = MockMapViewDependencyProvider()
         dependencyProvider.notificationCenter = notificationCenter
         dependencyProvider.bundle = bundle
-        dependencyProvider.cameraAnimatorsRunnerEnablable = cameraAnimatorsRunnerEnablable
         dependencyProvider.makeDisplayLinkStub.defaultReturnValue = displayLink
-        dependencyProvider.makeLocationProducerStub.defaultReturnValue = locationProducer
+        dependencyProvider.makeCameraAnimatorsRunnerStub.defaultReturnValue = cameraAnimatorsRunner
         attributionURLOpener = MockAttributionURLOpener()
         applicationState = .active
-        applicationStateProvider = Provider(self.applicationState)
         mapView = buildMapView()
         window = UIWindow()
         window.addSubview(mapView)
@@ -45,34 +40,31 @@ final class MapViewTests: XCTestCase {
         metalView = nil
         window = nil
         mapView = nil
-        applicationState = nil
-        applicationStateProvider = nil
         attributionURLOpener = nil
         dependencyProvider = nil
-        locationProducer = nil
+        cameraAnimatorsRunner = nil
         displayLink = nil
-        cameraAnimatorsRunnerEnablable = nil
         bundle = nil
         notificationCenter = nil
         super.tearDown()
     }
 
-    func buildMapView() -> MapView {
+    func buildMapView(useApplicationState: Bool = true) -> MapView {
         return MapView(
             frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
             mapInitOptions: MapInitOptions(),
             dependencyProvider: dependencyProvider,
             urlOpener: attributionURLOpener,
-            applicationStateProvider: applicationStateProvider)
+            applicationStateProvider: useApplicationState ? $applicationState : nil)
     }
 
     func invokeDisplayLinkCallback() throws {
         let makeDisplayLinkParams = try XCTUnwrap(dependencyProvider.makeDisplayLinkStub.invocations.first?.parameters)
-        let target = try XCTUnwrap(makeDisplayLinkParams.target as? NSObject)
+        let target = try XCTUnwrap(makeDisplayLinkParams.target as? ForwardingDisplayLinkTarget)
 
         // Invoke the display link callback while there's an animator; verify that this alone does
         // not invoke setNeedsDisplay() on the MTKView
-        target.perform(makeDisplayLinkParams.selector, with: displayLink)
+        target.update(with: displayLink)
     }
 
     // test that map view is deinited
@@ -100,50 +92,45 @@ final class MapViewTests: XCTestCase {
         }
     }
 
-    func testCameraAnimatorsRunnerEnablableIsDisabledPriorToJoiningAWindow() {
-        cameraAnimatorsRunnerEnablable.$isEnabled.reset()
+    func testCameraAnimatorsRunnerIsDisabledPriorToJoiningAWindow() {
+        // Create a separate runner, to not share it with the other default MapView for this test.
+        let cameraAnimatorsRunner = MockCameraAnimatorsRunner()
+        dependencyProvider.makeCameraAnimatorsRunnerStub.defaultReturnValue = cameraAnimatorsRunner
         mapView = MapView(
             frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
             mapInitOptions: MapInitOptions(),
             dependencyProvider: dependencyProvider,
             urlOpener: attributionURLOpener,
-            applicationStateProvider: applicationStateProvider)
-
-        XCTAssertEqual(cameraAnimatorsRunnerEnablable.$isEnabled.setStub.invocations.map(\.parameters), [false])
+            applicationStateProvider: $applicationState)
+        XCTAssertEqual(cameraAnimatorsRunner.isEnabled, false)
 
         window.addSubview(mapView)
 
-        XCTAssertEqual(cameraAnimatorsRunnerEnablable.$isEnabled.setStub.invocations.map(\.parameters), [false, true])
+        XCTAssertEqual(cameraAnimatorsRunner.isEnabled, true)
     }
 
-    func testCancelsAndDisablesAnimationsWhenRemovedFromWindow() throws {
-        let runner = try XCTUnwrap(dependencyProvider.makeCameraAnimatorsRunnerStub.invocations.first?.returnValue as? MockCameraAnimatorsRunner)
-        runner.cancelAnimationsStub.reset()
-        cameraAnimatorsRunnerEnablable.$isEnabled.reset()
+    func testDisablesAnimationsWhenRemovedFromWindow() throws {
+        cameraAnimatorsRunner.$isEnabled.reset()
 
         mapView.removeFromSuperview()
 
-        XCTAssertEqual(runner.cancelAnimationsStub.invocations.count, 1)
-        XCTAssertEqual(cameraAnimatorsRunnerEnablable.$isEnabled.setStub.invocations.map(\.parameters), [false])
+        XCTAssertEqual(cameraAnimatorsRunner.$isEnabled.setStub.invocations.map(\.parameters), [false])
     }
 
-    func testCancelsAndDisablesAnimationsWhenUnableToCreateDisplayLink() throws {
+    func testDisablesAnimationsWhenUnableToCreateDisplayLink() throws {
         mapView = MapView(
             frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
             mapInitOptions: MapInitOptions(),
             dependencyProvider: dependencyProvider,
             urlOpener: attributionURLOpener,
-            applicationStateProvider: applicationStateProvider)
+            applicationStateProvider: $applicationState)
 
-        let runner = try XCTUnwrap(dependencyProvider.makeCameraAnimatorsRunnerStub.invocations.first?.returnValue as? MockCameraAnimatorsRunner)
-        runner.cancelAnimationsStub.reset()
-        cameraAnimatorsRunnerEnablable.$isEnabled.reset()
+        cameraAnimatorsRunner.$isEnabled.reset()
         dependencyProvider.makeDisplayLinkStub.defaultReturnValue = nil
 
         window.addSubview(mapView)
 
-        XCTAssertEqual(runner.cancelAnimationsStub.invocations.count, 1)
-        XCTAssertEqual(cameraAnimatorsRunnerEnablable.$isEnabled.setStub.invocations.map(\.parameters), [false])
+        XCTAssertEqual(cameraAnimatorsRunner.$isEnabled.setStub.invocations.map(\.parameters), [false])
     }
 
     func testPreferredFramesPerSecondIsInitiallyZero() {
@@ -185,7 +172,7 @@ final class MapViewTests: XCTestCase {
     }
 
     func testDisplayLinkTimestampWhenDisplayLinkIsNonNil() {
-        displayLink.timestamp = .random(in: 0..<CFTimeInterval.greatestFiniteMagnitude)
+        displayLink._timestamp = .random(in: 0..<CFTimeInterval.greatestFiniteMagnitude)
 
         XCTAssertEqual(mapView.displayLinkTimestamp, displayLink.timestamp)
     }
@@ -197,7 +184,7 @@ final class MapViewTests: XCTestCase {
     }
 
     func testDisplayLinkDurationWhenDisplayLinkIsNonNil() {
-        displayLink.duration = .random(in: 0..<CFTimeInterval.greatestFiniteMagnitude)
+        displayLink._duration = .random(in: 0..<CFTimeInterval.greatestFiniteMagnitude)
 
         XCTAssertEqual(mapView.displayLinkDuration, displayLink.duration)
     }
@@ -266,19 +253,19 @@ final class MapViewTests: XCTestCase {
     }
 
     func testDisplayLinkPausedWhenAppWillResignActive() {
-        displayLink.$isPaused.setStub.reset()
+        displayLink.$isPausedStub.setStub.reset()
 
         notificationCenter.post(name: UIApplication.willResignActiveNotification, object: nil)
 
-        XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
+        XCTAssertEqual(displayLink.$isPausedStub.setStub.invocations.map(\.parameters), [true])
     }
 
     func testDisplayLinkPausedWhenAppDidEnterBackground() {
-        displayLink.$isPaused.setStub.reset()
+        displayLink.$isPausedStub.setStub.reset()
 
         notificationCenter.post(name: UIApplication.didEnterBackgroundNotification, object: nil)
 
-        XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
+        XCTAssertEqual(displayLink.$isPausedStub.setStub.invocations.map(\.parameters), [true])
     }
 
     func testDisplayLinkPausedWhenDidMoveToWindowIfAppStateIsInactive() {
@@ -305,8 +292,7 @@ final class MapViewTests: XCTestCase {
 
     func testDisplayLinkNotPausedWhenDidMoveToWindowIfAppStateProviderIsNil() {
         // given
-        applicationStateProvider = nil
-        mapView = buildMapView()
+        mapView = buildMapView(useApplicationState: false)
         window = UIWindow()
         window.addSubview(mapView)
 
@@ -341,7 +327,7 @@ final class MapViewTests: XCTestCase {
 
         notificationCenter.post(name: UIApplication.didBecomeActiveNotification, object: nil)
 
-        XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [false])
+        XCTAssertEqual(displayLink.$isPausedStub.setStub.invocations.map(\.parameters), [false])
     }
 
     func testSubscribesToCorrectNotificationsOniOS12() throws {
@@ -411,14 +397,11 @@ final class MapViewTestsWithScene: XCTestCase {
 
     var notificationCenter: MockNotificationCenter!
     var bundle: MockBundle!
-    var cameraAnimatorsRunnerEnablable: MockMutableEnablable!
     var displayLink: MockDisplayLink!
-    var locationProducer: MockLocationProducer!
     var dependencyProvider: MockMapViewDependencyProvider!
-    var orientationProvider: MockInterfaceOrientationProvider!
     var attributionURLOpener: MockAttributionURLOpener!
     var applicationState: UIApplication.State!
-    var applicationStateProvider: Provider<UIApplication.State>?
+    var applicationStateProvider: Ref<UIApplication.State>?
     var mapView: MapView!
     var window: UIWindow!
     var metalView: MockMetalView!
@@ -428,19 +411,14 @@ final class MapViewTestsWithScene: XCTestCase {
         notificationCenter = MockNotificationCenter()
         bundle = MockBundle()
         bundle.infoDictionaryStub.defaultReturnValue = ["UIApplicationSceneManifest": []]
-        cameraAnimatorsRunnerEnablable = MockMutableEnablable()
         displayLink = MockDisplayLink()
-        locationProducer = MockLocationProducer()
         dependencyProvider = MockMapViewDependencyProvider()
         dependencyProvider.notificationCenter = notificationCenter
         dependencyProvider.bundle = bundle
-        dependencyProvider.cameraAnimatorsRunnerEnablable = cameraAnimatorsRunnerEnablable
         dependencyProvider.makeDisplayLinkStub.defaultReturnValue = displayLink
-        dependencyProvider.makeLocationProducerStub.defaultReturnValue = locationProducer
-        orientationProvider = MockInterfaceOrientationProvider()
         attributionURLOpener = MockAttributionURLOpener()
         applicationState = .active
-        applicationStateProvider = Provider(self.applicationState)
+        applicationStateProvider = Ref { self.applicationState }
         mapView = MapView(
             frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
             mapInitOptions: MapInitOptions(),
@@ -462,11 +440,9 @@ final class MapViewTestsWithScene: XCTestCase {
         applicationState = nil
         applicationStateProvider = nil
         attributionURLOpener = nil
-        orientationProvider = nil
         dependencyProvider = nil
-        locationProducer = nil
         displayLink = nil
-        cameraAnimatorsRunnerEnablable = nil
+
         bundle = nil
         notificationCenter = nil
         super.tearDown()
@@ -476,33 +452,33 @@ final class MapViewTestsWithScene: XCTestCase {
         guard #available(iOS 13.0, *) else {
             throw XCTSkip("Test requires iOS 13 or higher.")
         }
-        displayLink.$isPaused.setStub.reset()
+        displayLink.$isPausedStub.setStub.reset()
 
         notificationCenter.post(name: UIScene.didActivateNotification, object: window.parentScene)
 
-        XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [false])
+        XCTAssertEqual(displayLink.$isPausedStub.setStub.invocations.map(\.parameters), [false])
     }
 
     func testDisplayLinkPausedWhenSceneWillDeactivate() throws {
         guard #available(iOS 13.0, *) else {
             throw XCTSkip("Test requires iOS 13 or higher.")
         }
-        displayLink.$isPaused.setStub.reset()
+        displayLink.$isPausedStub.setStub.reset()
 
         notificationCenter.post(name: UIScene.willDeactivateNotification, object: window.parentScene)
 
-        XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
+        XCTAssertEqual(displayLink.$isPausedStub.setStub.invocations.map(\.parameters), [true])
     }
 
     func testDisplayLinkPausedWhenSceneDidEnterBackground() throws {
         guard #available(iOS 13.0, *) else {
             throw XCTSkip("Test requires iOS 13 or higher.")
         }
-        displayLink.$isPaused.setStub.reset()
+        displayLink.$isPausedStub.setStub.reset()
 
         notificationCenter.post(name: UIScene.didEnterBackgroundNotification, object: window.parentScene)
 
-        XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
+        XCTAssertEqual(displayLink.$isPausedStub.setStub.invocations.map(\.parameters), [true])
     }
 
     func testReleaseDrawablesInvokedWhenSceneMovingToBackground() throws {

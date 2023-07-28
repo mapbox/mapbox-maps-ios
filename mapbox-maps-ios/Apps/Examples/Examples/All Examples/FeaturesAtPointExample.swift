@@ -1,9 +1,8 @@
 import UIKit
 import MapboxMaps
 
-@objc(FeaturesAtPointExample)
-
 public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
+    private var cancelables = Set<AnyCancelable>()
 
     internal var mapView: MapView!
 
@@ -20,30 +19,22 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allows the view controller to receive information about map events.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { _ in
             self.setupExample()
 
             // The following line is just for testing purposes.
             self.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     public func setupExample() {
-
         // Create a new GeoJSON data source which gets its data from an external URL.
-        guard let dataURL = URL(string: "https://docs.mapbox.com/mapbox-gl-js/assets/us_states.geojson") else {
-            preconditionFailure("URL is not valid")
-        }
-
-        let sourceIdentifier = "US-states-vector-source"
-
-        var geoJSONSource = GeoJSONSource()
-        geoJSONSource.data = .url(dataURL)
+        var geoJSONSource = GeoJSONSource(id: "US-states-vector-source")
+        geoJSONSource.data = .string("https://docs.mapbox.com/mapbox-gl-js/assets/us_states.geojson")
 
         // Create a new fill layer associated with the data source.
-        var fillLayer = FillLayer(id: "US-states")
+        var fillLayer = FillLayer(id: "US-states", source: geoJSONSource.id)
         fillLayer.sourceLayer = "state_county_population_2014_cen"
-        fillLayer.source = sourceIdentifier
 
         // Apply basic styling to the fill layer.
         fillLayer.fillColor = .constant(StyleColor(.blue))
@@ -51,8 +42,8 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
         fillLayer.fillOutlineColor = .constant(StyleColor(.black))
 
         // Add the data source and style layer to the map.
-        try! mapView.mapboxMap.style.addSource(geoJSONSource, id: sourceIdentifier)
-        try! mapView.mapboxMap.style.addLayer(fillLayer, layerPosition: nil)
+        try! mapView.mapboxMap.addSource(geoJSONSource)
+        try! mapView.mapboxMap.addLayer(fillLayer, layerPosition: nil)
 
         // Set up the tap gesture
         addTapGesture(to: mapView)
@@ -76,7 +67,7 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
             options: RenderedQueryOptions(layerIds: ["US-states"], filter: nil)) { [weak self] result in
             switch result {
             case .success(let queriedfeatures):
-                if let firstFeature = queriedfeatures.first?.feature.properties,
+                if let firstFeature = queriedfeatures.first?.queriedFeature.feature.properties,
                    case let .string(stateName) = firstFeature["STATE_NAME"] {
                     self?.showAlert(with: "You selected \(stateName)")
                 }

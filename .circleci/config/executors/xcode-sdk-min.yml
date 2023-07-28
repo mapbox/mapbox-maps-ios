@@ -2,5 +2,5 @@
 # Please keep them in sync if this structure changes.
 macos:
   xcode: 14.1.0
-resource_class: macos.x86.medium.gen2
+resource_class: macos.m1.medium.gen1
 working_directory: ~/project/mapbox-maps-ios

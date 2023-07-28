@@ -47,33 +47,19 @@ final class MockMapSnapshotter: MockStyleManager, MapSnapshotterProtocol {
 
     struct CameraForCoordinatesParams: Equatable {
         var coordinates: [CLLocation]
-        var padding: EdgeInsets
+        var padding: EdgeInsets?
         var bearing: NSNumber?
         var pitch: NSNumber?
     }
 
     var cameraForCoordinatesStub = Stub<CameraForCoordinatesParams, MapboxCoreMaps.CameraOptions>(defaultReturnValue: .init(.random()))
-    func cameraForCoordinates(forCoordinates coordinates: [CLLocation], padding: EdgeInsets, bearing: NSNumber?, pitch: NSNumber?) -> MapboxCoreMaps.CameraOptions {
+    func cameraForCoordinates(forCoordinates coordinates: [CLLocation], padding: EdgeInsets?, bearing: NSNumber?, pitch: NSNumber?) -> MapboxCoreMaps.CameraOptions {
         cameraForCoordinatesStub.call(with: CameraForCoordinatesParams(coordinates: coordinates, padding: padding, bearing: bearing, pitch: pitch))
     }
 
     var coordinateBoundsForCameraStub = Stub<MapboxCoreMaps.CameraOptions, CoordinateBounds>(defaultReturnValue: .init(southwest: .random(), northeast: .random()))
     func coordinateBoundsForCamera(forCamera camera: MapboxCoreMaps.CameraOptions) -> CoordinateBounds {
         coordinateBoundsForCameraStub.call(with: camera)
-    }
-
-    struct SubscribeParams {
-        var observer: Observer
-        var events: [String]
-    }
-    var subscribeStub = Stub<SubscribeParams, Void>()
-    func subscribe(for observer: Observer, events: [String]) {
-        subscribeStub.call(with: SubscribeParams(observer: observer, events: events))
-    }
-
-    var unsubscribeStub = Stub<Observer, Void>()
-    func unsubscribe(for observer: Observer) {
-        unsubscribeStub.call(with: observer)
     }
 
     struct TileCoverParams {

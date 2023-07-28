@@ -1,14 +1,14 @@
 import XCTest
-import MapboxMaps
+@testable import MapboxMaps
 
 internal class MapViewIntegrationTestCase: IntegrationTestCase {
     internal var mapView: MapView!
-    internal var style: Style!
     internal var dataPathURL: URL!
 
-    /// Closures for map view delegate 
+    /// Closures for map view delegate
     internal var didFinishLoadingStyle: ((MapView) -> Void)?
     internal var didBecomeIdle: ((MapView) -> Void)?
+    internal var didLoadMap: ((MapView) -> Void)?
 
     internal override func setUpWithError() throws {
         try guardForMetalDevice()
@@ -23,23 +23,24 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
             return
         }
 
-        let resourceOptions = ResourceOptions(accessToken: accessToken,
-                                              dataPathURL: dataPathURL)
-        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions,
-                                            styleURI: nil)
+        MapboxMapsOptions.dataPath = dataPathURL
+        let mapInitOptions = MapInitOptions(styleURI: nil)
         let view = MapView(frame: window.bounds, mapInitOptions: mapInitOptions)
 
-        view.mapboxMap.onEvery(event: .styleLoaded) { [weak self] _ in
+        view.mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
             guard let self = self, let mapView = self.mapView else { return }
             self.didFinishLoadingStyle?(mapView)
-        }
+        }.store(in: &cancelables)
 
-        view.mapboxMap.onEvery(event: .mapIdle) { [weak self] _ in
+        view.mapboxMap.onMapIdle.observe { [weak self] _ in
             guard let self = self, let mapView = self.mapView else { return }
             self.didBecomeIdle?(mapView)
-        }
+        }.store(in: &cancelables)
 
-        style = view.mapboxMap.style
+        view.mapboxMap.onMapLoaded.observe { [weak self] _ in
+            guard let self = self, let mapView = self.mapView else { return }
+            self.didLoadMap?(mapView)
+        }.store(in: &cancelables)
 
         rootView.addSubview(view)
 
@@ -59,22 +60,18 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
     }
 
     internal override func tearDownWithError() throws {
-        let resourceOptions = mapView?.mapboxMap.resourceOptions
-
         mapView?.removeFromSuperview()
         mapView = nil
-        style = nil
 
-        if let resourceOptions = resourceOptions {
-            let expectation = self.expectation(description: "Clear map data")
-            MapboxMap.clearData(for: resourceOptions) { _ in
-                expectation.fulfill()
-            }
-            wait(for: [expectation], timeout: 10.0)
+        let expectation = self.expectation(description: "Clear map data")
+        MapboxMapsOptions.clearData { _ in
+            expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 10.0)
 
         didFinishLoadingStyle = nil
         didBecomeIdle = nil
+        didLoadMap = nil
 
         try super.tearDownWithError()
     }

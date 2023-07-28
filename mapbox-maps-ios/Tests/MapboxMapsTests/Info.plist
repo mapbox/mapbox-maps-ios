@@ -19,6 +19,6 @@
 	<key>CFBundleVersion</key>
 	<string>17</string>
 	<key>MBXAccessToken</key>
-	<string>$(MAPBOX_ACCESS_TOKEN)</string>
+	<string>MAPBOX_ACCESS_TOKEN</string>
 </dict>
 </plist>

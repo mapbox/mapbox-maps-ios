@@ -1,11 +1,8 @@
 import Foundation
-import MapboxCoreMaps
 @_implementationOnly import MapboxCommon_Private
 @_implementationOnly import MapboxCoreMaps_Private
 
 internal protocol StyleManagerProtocol {
-
-    func asStyleManager() -> StyleManager
 
     func getStyleURI() -> String
     func setStyleURIForUri(_ uri: String)
@@ -28,7 +25,6 @@ internal protocol StyleManagerProtocol {
     func styleSourceExists(forSourceId sourceId: String) -> Bool
     func getStyleSources() -> [MapboxCoreMaps.StyleObjectInfo]
 
-    func getStyleLightProperty(forProperty property: String) -> MapboxCoreMaps.StylePropertyValue
     func getStyleTerrainProperty(forProperty property: String) -> MapboxCoreMaps.StylePropertyValue
     func getStyleProjectionProperty(forProperty property: String) -> MapboxCoreMaps.StylePropertyValue
 
@@ -94,11 +90,11 @@ internal protocol StyleManagerProtocol {
 
     func removeStyleSource(forSourceId sourceId: String) -> Expected<NSNull, NSString>
 
-    func setStyleLightForProperties(_ properties: Any) -> Expected<NSNull, NSString>
-
-    func setStyleLightPropertyForProperty(
-        _ property: String,
-        value: Any) -> Expected<NSNull, NSString>
+    // 3D Light
+    func getStyleLights() -> [StyleObjectInfo]
+    func setStyleLightsForLights(_ lights: Any) -> Expected<NSNull, NSString>
+    func getStyleLightProperty(forId id: String, property: String) -> StylePropertyValue
+    func setStyleLightPropertyForId(_ id: String, property: String, value: Any) -> Expected<NSNull, NSString>
 
     @discardableResult
     func setStyleTerrainForProperties(_ properties: Any) -> Expected<NSNull, NSString>
@@ -113,7 +109,10 @@ internal protocol StyleManagerProtocol {
         _ property: String,
         value: Any) -> Expected<NSNull, NSString>
 
+    // Style Model API
     func addStyleModel(forModelId modelId: String, modelUri: String) -> Expected<NSNull, NSString>
+    func removeStyleModel(forModelId modelId: String) -> Expected<NSNull, NSString>
+    func hasStyleModel(forModelId modelId: String) -> Bool
 
     // swiftlint:disable:next function_parameter_count
     func addStyleImage(
@@ -146,21 +145,26 @@ internal protocol StyleManagerProtocol {
 
     func __setStyleGeoJSONSourceDataForSourceId(
         _ sourceId: String,
-        data: MapboxCoreMaps.GeoJSONSourceData
-    ) -> Expected<NSNull, NSString>
-
-    func __setStyleGeoJSONSourceDataForSourceId(
-        _ sourceId: String,
         dataId: String,
         data: MapboxCoreMaps.GeoJSONSourceData
     ) -> Expected<NSNull, NSString>
+
+    func setStyleAtmosphereForProperties(_ properties: Any) -> Expected<NSNull, NSString>
+
+    func setStyleAtmospherePropertyForProperty(_ property: String, value: Any) -> Expected<NSNull, NSString>
+
+    func getStyleAtmosphereProperty(forProperty: String) -> StylePropertyValue
+    func addGeoJSONSourceFeatures(forSourceId sourceId: String,
+                                  dataId: String,
+                                  features: [MapboxCommon.Feature]) -> Expected<NSNull, NSString>
+    func updateGeoJSONSourceFeatures(forSourceId sourceId: String,
+                                     dataId: String,
+                                     features: [MapboxCommon.Feature]) -> Expected<NSNull, NSString>
+    func removeGeoJSONSourceFeatures(forSourceId sourceId: String,
+                                     dataId: String,
+                                     featureIds: [String]) -> Expected<NSNull, NSString>
 }
 
 // MARK: Conformance
 
-extension StyleManager: StyleManagerProtocol {
-
-    func asStyleManager() -> StyleManager {
-        return self
-    }
-}
+extension MapboxCoreMaps.StyleManager: StyleManagerProtocol {}

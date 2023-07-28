@@ -1,7 +1,7 @@
 @testable import MapboxMaps
 
 final class MockCameraAnimatorsRunner: CameraAnimatorsRunnerProtocol {
-    @Stubbed var animationsEnabled: Bool = true
+    @Stubbed var isEnabled: Bool = false
 
     @Stubbed var cameraAnimators: [CameraAnimator] = []
 

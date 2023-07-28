@@ -1,3 +1,7 @@
+parameters:
+  project-name:
+    description: Project name in SDK Registry.
+    type: string
 docker:
   - image: cimg/base:stable
 steps:
@@ -6,8 +10,10 @@ steps:
   - run:
       name: Wait binaries public access
       command: |
+        export PROJECT=<< parameters.project-name >>
+        echo $PROJECT
         echo $VERSION
-        timeout 1200 bash -c 'while [[ "$(curl -n -s -o /dev/null -w ''%{http_code}'' https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/$VERSION/MapboxMaps.zip)" != "200" ]]; do sleep 5; done' || false
+        timeout 1200 bash -c 'while [[ "$(curl -n -s -o /dev/null -w ''%{http_code}'' https://api.mapbox.com/downloads/v2/$PROJECT/releases/ios/$VERSION/MapboxMaps.zip)" != "200" ]]; do sleep 5; done' || false
       no_output_timeout: 60m
   - run:
       name: Wait for public documentation to be available

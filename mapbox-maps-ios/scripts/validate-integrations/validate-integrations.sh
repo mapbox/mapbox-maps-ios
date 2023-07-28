@@ -11,9 +11,9 @@ source "$UTILS_PATH"
 
 VERSION_RULE=0
 BRANCH_RULE=0
-PRIVATE_REPO_RULE=0
 ENABLE_DIRECT_DOWNLOADS_VALIDATION=1
 EXCLUSIVE_DIRECT_DOWNLOADS_VALIDATION=0
+SNAPSHOT=0
 
 main() {
     PROJECTS_TO_TEST=("SwiftPackageManagerIntegration" "CocoaPodsIntegration")
@@ -32,15 +32,23 @@ main() {
         export DYNAMIC_ARTIFACTS_PATH="$DYNAMIC_ARTIFACTS_DOWNLOAD_PATH/artifacts"
     fi
 
+    if [[ $VERSION_RULE == 1 && $SNAPSHOT == 1 ]]; then
+        step "Download MapboxMaps binaries - snapshots"
+
+        PROJECTS_TO_TEST=("DirectDynamicDownload" "SwiftPackageManagerIntegration")
+
+        DYNAMIC_ARTIFACTS_DOWNLOAD_PATH="$TMP_ROOT/Dynamic/"
+        curl -n "https://api.mapbox.com/downloads/v2/mobile-maps-ios-preview/snapshots/ios/$MAPS_VERSION/MapboxMaps.zip" -o "$TMP_ROOT/MapboxMaps.zip"
+        unzip -q "$TMP_ROOT/MapboxMaps.zip" -d "$DYNAMIC_ARTIFACTS_DOWNLOAD_PATH"
+
+        export DYNAMIC_ARTIFACTS_PATH="$DYNAMIC_ARTIFACTS_DOWNLOAD_PATH/artifacts"
+    fi
+
     set +u
     if [[ -n "$CIRCLE_REPOSITORY_URL" ]]; then
         REPOSITORY_NAME=${CIRCLE_REPOSITORY_URL##*/}
     else
-        if [[ $PRIVATE_REPO_RULE == 1 ]]; then
-            REPOSITORY_NAME="mapbox-maps-ios-private.git"
-        else
-            REPOSITORY_NAME="mapbox-maps-ios.git"
-        fi
+        REPOSITORY_NAME="mapbox-maps-ios.git"
     fi
     set -u
 
@@ -48,17 +56,17 @@ main() {
     pushd "$SCRIPT_DIR" > /dev/null || exit 1
     MBX_TOKEN="$(cat ~/.mapbox)" REPOSITORY_NAME="${REPOSITORY_NAME}" xcodegen
 
+    if [[ $SNAPSHOT == 0 ]]; then
+        if [[ $BRANCH_RULE == 1 ]]; then
+            sed -i '' -E "s/(pod 'MapboxMaps',).*/\1 :path => '..\/..'/" Podfile
+        elif [[ $VERSION_RULE == 1 ]]; then
+            sed -i '' -E "s/(pod 'MapboxMaps',).*/\1 '= $MAPS_VERSION'/" Podfile
+        fi
 
-    if [[ $BRANCH_RULE == 1 ]]; then
-        sed -i '' -E "s/(pod 'MapboxMaps',).*/\1 :path => '..\/..'/" Podfile
-    elif [[ $VERSION_RULE == 1 ]]; then
-        sed -i '' -E "s/(pod 'MapboxMaps',).*/\1 '= $MAPS_VERSION'/" Podfile
+        pod install
     fi
 
-    pod install
-
     info "Building logs available at $ARTIFACTS_ROOT"
-    WORKSPACE_PATH="$SCRIPT_DIR/ValidateLatestMaps.xcworkspace"
 
     results_path="$SCRIPT_DIR/results"
     [[ -d "$results_path" ]] && rm -rf "$results_path"
@@ -69,10 +77,14 @@ main() {
         set +e
         LOG_FILE="$ARTIFACTS_ROOT/${scheme}_xcode-$(date +%Y%m%d%H%M%S).log"
 
-        if ! xcodebuild clean build -workspace "$WORKSPACE_PATH" -scheme "$scheme" -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED='NO' &> "$LOG_FILE"; then
+        if ! xcodebuild clean build \
+            ${XCODE_BUILD_SETTING:--workspace "$SCRIPT_DIR/ValidateLatestMaps.xcworkspace"} \
+            -scheme "$scheme" -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED='NO' &> "$LOG_FILE"; then
             cat "$LOG_FILE"
             exit 1
         fi
+
         set -e
         info "Finished $scheme building"
     done
@@ -93,11 +105,11 @@ Usage:
     -d  Disable downloads validation. Suitable for running validation before binaries would be available
     -o  Enable exclusive validation for direct downloads. It makes sense to run after the first run with -d option
     -b  MapboxMaps branch name to be used
-    -p  Use private repo for MapboxMaps
+    -s  Use snapshot version
 HELP_USAGE
 }
 
-while getopts 'b:v:dop' flag; do
+while getopts 'b:v:dops' flag; do
 case "${flag}" in
     v)  VERSION_RULE=1
         export MAPS_VERSION="$OPTARG"
@@ -114,8 +126,9 @@ case "${flag}" in
     o)
         EXCLUSIVE_DIRECT_DOWNLOADS_VALIDATION=1
         ;;
-    p)
-        PRIVATE_REPO_RULE=1
+    s)
+        SNAPSHOT=1
+        export XCODE_BUILD_SETTING="-project "$SCRIPT_DIR/ValidateLatestMaps.xcodeproj""
         ;;
     *) print_usage
     exit 1 ;;

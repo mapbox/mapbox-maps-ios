@@ -5,12 +5,10 @@ import CoreLocation
 final class ExampleIntegrationTest: MapViewIntegrationTestCase {
 
     func testWaitForIdle() throws {
-        let style = try XCTUnwrap(self.style)
-
         let expectation = XCTestExpectation(description: "Wait for map to idle")
         expectation.expectedFulfillmentCount = 2
 
-        style.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
         didFinishLoadingStyle = { _ in
             expectation.fulfill()

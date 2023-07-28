@@ -8,6 +8,9 @@ parameters:
   codecov_flag_name:
     type: string
     default: unit
+  architecture:
+    type: string
+    default: $(uname -m)
 steps:
   - run:
       name: Generate code coverage report
@@ -15,18 +18,17 @@ steps:
         BINARY_PATH="$(find build -name "<< parameters.binary_name >>" | head -1)"
 
         echo "Generating LCOV code coverage report for $BINARY_PATH"
-        xcrun llvm-cov export -arch $(uname -m) -format="lcov" \
+        xcrun llvm-cov export -arch "<< parameters.architecture >>" -format="lcov" \
           -instr-profile="<< parameters.profdata_path >>" \
           "$BINARY_PATH" > coverage.lcov
 
         echo "Generating TXT code coverage report for $BINARY_PATH"
-        xcrun llvm-cov export -arch $(uname -m) -format=text \
+        xcrun llvm-cov export -arch "<< parameters.architecture >>" -format=text \
           -instr-profile="<< parameters.profdata_path >>" \
           "$BINARY_PATH" > coverage.txt
 
           zip -r coverage.zip coverage.lcov coverage.txt "<< parameters.profdata_path >>" "$BINARY_PATH" junit*
   - install-python-dependencies
-  - install-mbx-ci
   - run:
       name: Send code coverage
       command: |

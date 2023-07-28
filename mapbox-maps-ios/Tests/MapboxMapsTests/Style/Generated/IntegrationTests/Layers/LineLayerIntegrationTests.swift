@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
 
@@ -9,21 +9,17 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
     }
 
     internal func testWaitForIdle() throws {
-        let style = try XCTUnwrap(self.style)
-
         let successfullyAddedLayerExpectation = XCTestExpectation(description: "Successfully added LineLayer to Map")
         successfullyAddedLayerExpectation.expectedFulfillmentCount = 1
 
         let successfullyRetrievedLayerExpectation = XCTestExpectation(description: "Successfully retrieved LineLayer from Map")
         successfullyRetrievedLayerExpectation.expectedFulfillmentCount = 1
 
-        style.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
-        didFinishLoadingStyle = { _ in
+        didFinishLoadingStyle = { mapView in
 
-            var layer = LineLayer(id: "test-id")
-            layer.source = "some-source"
-            layer.sourceLayer = nil
+            var layer = LineLayer(id: "test-id", source: "source")
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
@@ -35,9 +31,16 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
 
             layer.lineBlur = Value<Double>.testConstantValue()
             layer.lineBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.lineBorderColor = Value<StyleColor>.testConstantValue()
+            layer.lineBorderColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.lineBorderWidth = Value<Double>.testConstantValue()
+            layer.lineBorderWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineColor = Value<StyleColor>.testConstantValue()
             layer.lineColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.lineDasharrayTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.lineDepthOcclusionFactor = Value<Double>.testConstantValue()
+            layer.lineDepthOcclusionFactorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.lineEmissiveStrength = Value<Double>.testConstantValue()
+            layer.lineEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineGapWidth = Value<Double>.testConstantValue()
             layer.lineGapWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineGradient = Value<StyleColor>.testConstantValue()
@@ -46,7 +49,6 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.lineOpacity = Value<Double>.testConstantValue()
             layer.lineOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.linePattern = Value<ResolvedImage>.testConstantValue()
-            layer.linePatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineTranslateAnchor = Value<LineTranslateAnchor>.testConstantValue()
             layer.lineWidth = Value<Double>.testConstantValue()
@@ -54,7 +56,7 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
 
             // Add the layer
             do {
-                try style.addLayer(layer)
+                try mapView.mapboxMap.addLayer(layer)
                 successfullyAddedLayerExpectation.fulfill()
             } catch {
                 XCTFail("Failed to add LineLayer because of error: \(error)")
@@ -62,7 +64,7 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the layer
             do {
-                _ = try style.layer(withId: "test-id", type: LineLayer.self)
+                _ = try mapView.mapboxMap.layer(withId: "test-id", type: LineLayer.self)
                 successfullyRetrievedLayerExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve LineLayer because of error: \(error)")

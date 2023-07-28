@@ -2,7 +2,6 @@ import Foundation
 @testable import MapboxMaps
 
 final class MockStyleSourceManager: StyleSourceManagerProtocol {
-
     struct SourcePropertyDefaultValueParams {
         let sourceType: String
         let property: String
@@ -19,36 +18,35 @@ final class MockStyleSourceManager: StyleSourceManagerProtocol {
         let id: String
         let type: Source.Type
     }
-    let typedSourceStub = Stub<SourceParams, Source>(defaultReturnValue: GeoJSONSource())
+    let typedSourceStub = Stub<SourceParams, Source>(defaultReturnValue: GeoJSONSource(id: "foo"))
     func source<T>(withId id: String, type: T.Type) throws -> T where T: Source {
         // swiftlint:disable:next force_cast
         return typedSourceStub.call(with: SourceParams(id: id, type: type)) as! T
     }
 
-    let sourceStub = Stub<String, Source>(defaultReturnValue: GeoJSONSource())
+    let sourceStub = Stub<String, Source>(defaultReturnValue: GeoJSONSource(id: "bar"))
     func source(withId id: String) throws -> Source {
         return sourceStub.call(with: id)
     }
 
     struct AddSourceParams {
         let source: Source
-        let id: String
         let dataId: String?
     }
     let addSourceStub = Stub<AddSourceParams, Void>()
-    func addSource(_ source: Source, id: String, dataId: String?) throws {
-        addSourceStub.call(with: AddSourceParams(source: source, id: id, dataId: dataId))
+    func addSource(_ source: Source, dataId: String?) throws {
+        addSourceStub.call(with: AddSourceParams(source: source, dataId: dataId))
     }
 
     struct UpdateGeoJSONSourceParams {
         let id: String
-        let geoJSON: GeoJSONObject
+        let data: GeoJSONSourceData
         let dataId: String?
     }
 
     let updateGeoJSONSourceStub = Stub<UpdateGeoJSONSourceParams, Void>()
-    func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject, dataId: String?) throws {
-        updateGeoJSONSourceStub.call(with: UpdateGeoJSONSourceParams(id: id, geoJSON: geoJSON, dataId: dataId))
+    func updateGeoJSONSource(withId id: String, data: GeoJSONSourceData, dataId: String?) {
+        updateGeoJSONSourceStub.call(with: UpdateGeoJSONSourceParams(id: id, data: data, dataId: dataId))
     }
 
     struct AddSourceUntypedParams {
@@ -110,5 +108,35 @@ final class MockStyleSourceManager: StyleSourceManagerProtocol {
         setSourcePropertiesForParamsStub.call(
             with: SetSourcePropertiesForParams(sourceId: sourceId, properties: properties)
         )
+    }
+
+    struct AddGeoJSONSourceFeaturesParams {
+        let sourceId: String
+        let features: [Feature]
+        let dataId: String?
+    }
+    let addGeoJSONSourceFeaturesStub = Stub<AddGeoJSONSourceFeaturesParams, Void>()
+    func addGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String?) {
+        addGeoJSONSourceFeaturesStub.call(with: .init(sourceId: sourceId, features: features, dataId: dataId))
+    }
+
+    struct UpdateGeoJSONSourceFeaturesParams {
+        let sourceId: String
+        let features: [Feature]
+        let dataId: String?
+    }
+    let updateGeoJSONSourceFeaturesStub = Stub<UpdateGeoJSONSourceFeaturesParams, Void>()
+    func updateGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String?) {
+        updateGeoJSONSourceFeaturesStub.call(with: .init(sourceId: sourceId, features: features, dataId: dataId))
+    }
+
+    struct RemoveGeoJSONSourceFeaturesParams {
+        let sourceId: String
+        let featureIds: [String]
+        let dataId: String?
+    }
+    let removeGeoJSONSourceFeaturesStub = Stub<RemoveGeoJSONSourceFeaturesParams, Void>()
+    func removeGeoJSONSourceFeatures(forSourceId sourceId: String, featureIds: [String], dataId: String?) {
+        removeGeoJSONSourceFeaturesStub.call(with: .init(sourceId: sourceId, featureIds: featureIds, dataId: dataId))
     }
 }

@@ -5,18 +5,16 @@ import XCTest
 final class RasterDemSourceIntegrationTests: MapViewIntegrationTestCase {
 
     func testAdditionAndRemovalOfSource() throws {
-        let style = try XCTUnwrap(self.style)
-
         let successfullyAddedSourceExpectation = XCTestExpectation(description: "Successfully added RasterDemSource to Map")
         successfullyAddedSourceExpectation.expectedFulfillmentCount = 1
 
         let successfullyRetrievedSourceExpectation = XCTestExpectation(description: "Successfully retrieved RasterDemSource from Map")
         successfullyRetrievedSourceExpectation.expectedFulfillmentCount = 1
 
-        style.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
-        didFinishLoadingStyle = { _ in
-            var source = RasterDemSource()
+        didFinishLoadingStyle = { mapView in
+            var source = RasterDemSource(id: "test-source")
             source.url = String.testSourceValue()
             source.tiles = [String].testSourceValue()
             source.bounds = [Double].testSourceValue()
@@ -34,7 +32,7 @@ final class RasterDemSourceIntegrationTests: MapViewIntegrationTestCase {
 
             // Add the source
             do {
-                try style.addSource(source, id: "test-source")
+                try mapView.mapboxMap.addSource(source)
                 successfullyAddedSourceExpectation.fulfill()
             } catch {
                 XCTFail("Failed to add RasterDemSource because of error: \(error)")
@@ -42,7 +40,7 @@ final class RasterDemSourceIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the source
             do {
-                _ = try style.source(withId: "test-source", type: RasterDemSource.self)
+                _ = try mapView.mapboxMap.source(withId: "test-source", type: RasterDemSource.self)
                 successfullyRetrievedSourceExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve RasterDemSource because of error: \(error)")

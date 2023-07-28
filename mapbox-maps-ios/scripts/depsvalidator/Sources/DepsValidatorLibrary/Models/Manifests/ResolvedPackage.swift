@@ -2,7 +2,7 @@ import Foundation
 
 struct ResolvedPackage: Decodable, SemanticValueProviding {
     enum Error: Swift.Error {
-        case unsupportedPin(ResolvedPackageObject.Pin)
+        case unsupportedPin(Pin)
     }
 
     private static let cache = ManifestCache { (url) -> Self in
@@ -14,30 +14,29 @@ struct ResolvedPackage: Decodable, SemanticValueProviding {
         try cache.manifest(for: fileURL)
     }
 
-    var object: ResolvedPackageObject
+    var pins: [Pin]
+    let version: Int
 
-    struct ResolvedPackageObject: Decodable {
-        var pins: [Pin]
+    struct Pin: Decodable {
+        var identity: String
+        var kind: String
+        var location: String
+        var state: State
 
-        struct Pin: Decodable {
-            var package: String
-            var state: State
-
-            struct State: Decodable {
-                var branch: String?
-                var revision: String
-                var version: String?
-            }
+        struct State: Decodable {
+            var branch: String?
+            var revision: String
+            var version: String?
         }
     }
 
     func semanticValue(for dependency: Dependency) throws -> SemanticValue {
-        try .version(SemanticVersion(object.pins.first { $0.package == dependency.name(for: .resolvedPackage) }!))
+        try .version(SemanticVersion(pins.first { $0.identity == dependency.name(for: .resolvedPackage) }!))
     }
 }
 
 extension SemanticVersion {
-    init(_ pin: ResolvedPackage.ResolvedPackageObject.Pin) throws {
+    init(_ pin: ResolvedPackage.Pin) throws {
         if let version = pin.state.version {
             self = try SemanticVersion(string: version)
         } else {

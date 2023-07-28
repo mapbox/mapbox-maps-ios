@@ -1,15 +1,13 @@
 import UIKit
 import MapboxMaps
 
-@objc(AnimateGeoJSONLine)
 public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
     internal let sourceIdentifier = "route-source-identifier"
     internal var routeLineSource: GeoJSONSource!
     var currentIndex = 0
-
-    public var geoJSONLine = (identifier: "routeLine", source: GeoJSONSource())
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -23,25 +21,24 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Wait for the map to load its style before adding data.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { _ in
 
             self.addLine()
             self.animatePolyline()
 
             // The below line is used for internal testing purposes only.
             self.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     func addLine() {
 
         // Create a GeoJSON data source.
-        routeLineSource = GeoJSONSource()
+        routeLineSource = GeoJSONSource(id: sourceIdentifier)
         routeLineSource.data = .feature(Feature(geometry: LineString([allCoordinates[currentIndex]])))
 
         // Create a line layer
-        var lineLayer = LineLayer(id: "line-layer")
-        lineLayer.source = sourceIdentifier
+        var lineLayer = LineLayer(id: "line-layer", source: sourceIdentifier)
         lineLayer.lineColor = .constant(StyleColor(.red))
 
         let lowZoomWidth = 5
@@ -62,8 +59,8 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
         lineLayer.lineJoin = .constant(.round)
 
         // Add the lineLayer to the map.
-        try! mapView.mapboxMap.style.addSource(routeLineSource, id: sourceIdentifier)
-        try! mapView.mapboxMap.style.addLayer(lineLayer)
+        try! mapView.mapboxMap.addSource(routeLineSource)
+        try! mapView.mapboxMap.addLayer(lineLayer)
     }
 
     func animatePolyline() {
@@ -88,7 +85,7 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
 
             let updatedLine = Feature(geometry: LineString(currentCoordinates))
             self.routeLineSource.data = .feature(updatedLine)
-            try! self.mapView.mapboxMap.style.updateGeoJSONSource(withId: self.sourceIdentifier,
+            self.mapView.mapboxMap.updateGeoJSONSource(withId: self.sourceIdentifier,
                                                                   geoJSON: .feature(updatedLine))
         }
     }

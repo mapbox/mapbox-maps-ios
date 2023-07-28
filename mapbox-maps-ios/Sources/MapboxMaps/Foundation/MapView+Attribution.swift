@@ -20,8 +20,8 @@ extension MapView: AttributionDialogManagerDelegate {
         }
     }
 
-    internal func mapboxFeedbackURL() -> URL {
-        let cameraState = self.cameraState
+    internal func mapboxFeedbackURL(accessToken: String = MapboxOptions.accessToken) -> URL {
+        let cameraState = self.mapboxMap.cameraState
 
         var components = URLComponents(string: "https://apps.mapbox.com/feedback/")!
         components.fragment = String(format: "/%.5f/%.5f/%.2f/%.1f/%i",
@@ -37,10 +37,8 @@ extension MapView: AttributionDialogManagerDelegate {
         var queryItems = [referrerQueryItem]
 
         let sdkVersion = Bundle.mapboxMapsMetadata.version
-        var accessToken = resourceOptions.accessToken
-        accessToken = accessToken.isEmpty ? "unknown" : accessToken
 
-        if let styleURIString = mapboxMap.style.uri?.rawValue,
+        if let styleURIString = mapboxMap.styleURI?.rawValue,
            let styleURL = URL(string: styleURIString),
            styleURL.scheme == "mapbox",
            styleURL.host == "styles" {

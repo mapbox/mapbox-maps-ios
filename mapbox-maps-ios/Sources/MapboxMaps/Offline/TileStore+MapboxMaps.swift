@@ -80,13 +80,13 @@ extension TileStore {
             return __loadTileRegion(forId: id,
                                     loadOptions: loadOptions,
                                     onProgress: progress,
-                                    onFinished: tileStoreClosureAdapter(for: completion, type: TileRegion.self)).asCancelable()
+                                    onFinished: tileStoreClosureAdapter(for: completion, type: TileRegion.self))
         }
         // Use overloaded version
         else {
             return __loadTileRegion(forId: id,
                                     loadOptions: loadOptions,
-                                    onFinished: tileStoreClosureAdapter(for: completion, type: TileRegion.self)).asCancelable()
+                                    onFinished: tileStoreClosureAdapter(for: completion, type: TileRegion.self))
         }
     }
 

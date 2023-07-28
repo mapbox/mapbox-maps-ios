@@ -1,14 +1,10 @@
-import Foundation
+import MetalKit
 @testable import MapboxMaps
 
 final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
     @Stubbed var notificationCenter: NotificationCenterProtocol = MockNotificationCenter()
 
     @Stubbed var bundle: BundleProtocol = MockBundle()
-
-    @Stubbed var mapboxObservableProvider: (ObservableProtocol) -> MapboxObservableProtocol = { _ in MockMapboxObservable() }
-
-    @Stubbed var cameraAnimatorsRunnerEnablable: MutableEnablableProtocol = Enablable()
 
     // MARK: - Metal view
     struct MakeMetalViewParams {
@@ -78,52 +74,23 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
         return GestureHandler(gestureRecognizer: UIGestureRecognizer())
     }
 
-    // MARK: - Location
-    struct MakeLocationProducerParameteres {
-        let mayRequestWhenInUseAuthorization: Bool
-        let userInterfaceOrientationView: UIView
-    }
-    let makeLocationProducerStub = Stub<MakeLocationProducerParameteres, MockLocationProducer>(defaultReturnValue: MockLocationProducer())
-    func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool, userInterfaceOrientationView: UIView) -> MapboxMaps.LocationProducerProtocol {
-        return makeLocationProducerStub.call(with:
-                .init(
-                    mayRequestWhenInUseAuthorization: mayRequestWhenInUseAuthorization,
-                    userInterfaceOrientationView: userInterfaceOrientationView
-                )
-        )
-    }
-
-    func makeInterpolatedLocationProducer(locationProducer: LocationProducerProtocol,
-                                          displayLinkCoordinator: DisplayLinkCoordinator) -> InterpolatedLocationProducerProtocol {
-        return MockInterpolatedLocationProducer()
-    }
-
-    func makeLocationManager(locationProducer: LocationProducerProtocol,
-                             interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
-                             style: StyleProtocol,
-                             mapboxMap: MapboxMapProtocol,
-                             displayLinkCoordinator: DisplayLinkCoordinator) -> LocationManager {
-        return LocationManager(
-            locationProducer: locationProducer,
-            interpolatedLocationProducer: interpolatedLocationProducer,
-            puckManager: MockPuckManager())
-    }
-
     // MARK: - Viewport
-    struct MakeViewportImplParams {
+    struct MakeViewportManagerImplParams {
         var mapboxMap: MapboxMapProtocol
         var cameraAnimationsManager: CameraAnimationsManagerProtocol
         var anyTouchGestureRecognizer: UIGestureRecognizer
         var doubleTapGestureRecognizer: UIGestureRecognizer
         var doubleTouchGestureRecognizer: UIGestureRecognizer
     }
-    let makeViewportImplStub = Stub<MakeViewportImplParams, ViewportImplProtocol>(defaultReturnValue: MockViewportImpl())
-    func makeViewportImpl(mapboxMap: MapboxMapProtocol,
-                          cameraAnimationsManager: CameraAnimationsManagerProtocol,
-                          anyTouchGestureRecognizer: UIGestureRecognizer,
-                          doubleTapGestureRecognizer: UIGestureRecognizer,
-                          doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol {
-        makeViewportImplStub.call(with: .init(
+    let makeViewportManagerImplStub = Stub<MakeViewportManagerImplParams, ViewportManagerImplProtocol>(defaultReturnValue: MockViewportManagerImpl())
+    func makeViewportManagerImpl(
+        mapboxMap: MapboxMapProtocol,
+        cameraAnimationsManager: CameraAnimationsManagerProtocol,
+        anyTouchGestureRecognizer: UIGestureRecognizer,
+        doubleTapGestureRecognizer: UIGestureRecognizer,
+        doubleTouchGestureRecognizer: UIGestureRecognizer
+    ) -> ViewportManagerImplProtocol {
+        makeViewportManagerImplStub.call(with: .init(
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager,
             anyTouchGestureRecognizer: anyTouchGestureRecognizer,
@@ -154,8 +121,8 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
     }
 
     // MARK: - Events Manager
-    let makeEventsManagerStub = Stub<String, EventsManagerProtocol>(defaultReturnValue: EventsManagerMock())
-    func makeEventsManager(accessToken: String) -> EventsManagerProtocol {
-        makeEventsManagerStub.call(with: accessToken)
+    let makeEventsManagerStub = Stub<Void, EventsManagerProtocol>(defaultReturnValue: EventsManagerMock())
+    func makeEventsManager() -> EventsManagerProtocol {
+        makeEventsManagerStub.call()
     }
 }

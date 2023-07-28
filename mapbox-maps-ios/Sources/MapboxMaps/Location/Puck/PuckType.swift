@@ -129,11 +129,10 @@ public struct Puck2DConfiguration: Equatable {
 
     /// Create a Puck2DConfiguration instance with or without an arrow bearing image. Default without the arrow bearing image.
     public static func makeDefault(showBearing: Bool = false) -> Puck2DConfiguration {
-        let shadowImage = UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!
         return Puck2DConfiguration(
             topImage: UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!,
-            bearingImage: showBearing ? makeBearingImage(size: shadowImage.size) : nil,
-            shadowImage: shadowImage)
+            bearingImage: showBearing ? .bearingImage.value : nil,
+            shadowImage: UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!)
     }
 }
 
@@ -151,79 +150,126 @@ public struct Puck3DConfiguration: Equatable {
     /// The opacity of the model used as the location puck
     public var modelOpacity: Value<Double>?
 
+    /// Enable/disable shadow casting for the puck model
+    @_spi(Experimental) public var modelCastShadows: Value<Bool>?
+
+    /// Enable/disable shadow receiving for the puck model
+    @_spi(Experimental) public var modelReceiveShadows: Value<Bool>?
+
+    /// Defines scaling mode. Only applies to location-indicator type layers. Default to ``ModelScaleMode/viewport``.
+    @_spi(Experimental) public var modelScaleMode: Value<ModelScaleMode>?
+
     /// Initialize a `Puck3DConfiguration` with a model, scale and rotation.
     /// - Parameters:
     ///   - model: The `gltf` model to use for the puck.
     ///   - modelScale: The amount to scale the model by.
     ///   - modelRotation: The rotation of the model in euler angles `[lon, lat, z]`.
     ///   - modelOpacity: The opacity of the model used as the location puck
-    public init(model: Model, modelScale: Value<[Double]>? = nil, modelRotation: Value<[Double]>? = nil, modelOpacity: Value<Double>? = nil) {
+    public init(
+        model: Model,
+        modelScale: Value<[Double]>? = nil,
+        modelRotation: Value<[Double]>? = nil,
+        modelOpacity: Value<Double>? = nil
+    ) {
+        self.init(
+            model: model,
+            modelScale: modelScale,
+            modelRotation: modelRotation,
+            modelOpacity: modelOpacity,
+            modelCastShadows: nil,
+            modelReceiveShadows: nil,
+            modelScaleMode: nil)
+    }
+
+    /// Initialize a `Puck3DConfiguration` with a model, scale, rotation and an parameter to control shadow casting.
+    /// - Parameters:
+    ///   - model: The `gltf` model to use for the puck.
+    ///   - modelScale: The amount to scale the model by.
+    ///   - modelRotation: The rotation of the model in euler angles `[lon, lat, z]`.
+    ///   - modelOpacity: The opacity of the model used as the location puck
+    ///   - modelCastShadows: Enable/disable shadow casting for the puck model
+    ///   - modelReceiveShadows: Enable/disable shadow receiving for the puck model
+    @_spi(Experimental) public init(model: Model,
+                                    modelScale: Value<[Double]>? = nil,
+                                    modelRotation: Value<[Double]>? = nil,
+                                    modelOpacity: Value<Double>? = nil,
+                                    modelCastShadows: Value<Bool>? = nil,
+                                    modelReceiveShadows: Value<Bool>? = nil,
+                                    modelScaleMode: Value<ModelScaleMode>? = nil) {
         self.model = model
         self.modelScale = modelScale
         self.modelRotation = modelRotation
-        self.modelOpacity = modelOpacity
+        self.modelCastShadows = modelCastShadows
+        self.modelReceiveShadows = modelReceiveShadows
+        self.modelScaleMode = modelScaleMode ?? .constant(.viewport)
     }
 }
 
-private func makeBearingImage(size: CGSize) -> UIImage {
-    let gap: CGFloat = 1
-    let arcLength: CGFloat = .pi / 4
-    assert(arcLength <= .pi / 2)
-    let lineWidth: CGFloat = 1
+extension UIImage {
+    static let bearingImage = Ref {
+        makeBearingImage(size: CGSize(width: 22, height: 22))
+    }.weaklyCached()
 
-    // The gap determines how much space we put between the circles and the arrow
-    // strokes are centered on the path, so half of the width of the line is drawn
-    // on either side.
-    let radius = size.height / 2 + lineWidth / 2 + gap
+    private static func makeBearingImage(size: CGSize) -> UIImage {
+        let gap: CGFloat = 1
+        let arcLength: CGFloat = .pi / 4
+        assert(arcLength <= .pi / 2)
+        let lineWidth: CGFloat = 1
 
-    let rightArcPoint = CGPoint(
-        x: radius * cos(.pi / 2 - arcLength / 2),
-        y: -radius * sin(.pi / 2 - arcLength / 2))
+        // The gap determines how much space we put between the circles and the arrow
+        // strokes are centered on the path, so half of the width of the line is drawn
+        // on either side.
+        let radius = size.height / 2 + lineWidth / 2 + gap
 
-    // The top point is always centered at 0. Calculate its height
-    // to produce a right angle between the left and right sides of the arrow
-    let topPoint = CGPoint(x: 0, y: rightArcPoint.y - rightArcPoint.x * tan(.pi / 4))
+        let rightArcPoint = CGPoint(
+            x: radius * cos(.pi / 2 - arcLength / 2),
+            y: -radius * sin(.pi / 2 - arcLength / 2))
 
-    // Create the path
-    let path = UIBezierPath()
-    path.move(to: topPoint)
-    path.addLine(to: rightArcPoint)
-    path.addArc(
-        withCenter: .zero,
-        radius: radius,
-        startAngle: -.pi / 2 + arcLength / 2,
-        endAngle: -.pi / 2 - arcLength / 2,
-        clockwise: false)
-    path.close()
-    path.lineWidth = lineWidth
-    path.lineJoinStyle = .round
+        // The top point is always centered at 0. Calculate its height
+        // to produce a right angle between the left and right sides of the arrow
+        let topPoint = CGPoint(x: 0, y: rightArcPoint.y - rightArcPoint.x * tan(.pi / 4))
 
-    // Create a rectangle to
-    // draw the circles, centering them at the origin
-    let outerImageBounds = CGRect(
-        origin: CGPoint(
-            x: -size.width / 2,
-            y: -size.height / 2),
-        size: size)
+        // Create the path
+        let path = UIBezierPath()
+        path.move(to: topPoint)
+        path.addLine(to: rightArcPoint)
+        path.addArc(
+            withCenter: .zero,
+            radius: radius,
+            startAngle: -.pi / 2 + arcLength / 2,
+            endAngle: -.pi / 2 - arcLength / 2,
+            clockwise: false)
+        path.close()
+        path.lineWidth = lineWidth
+        path.lineJoinStyle = .round
 
-    // Union that rectangle with the bounds
-    // of the arrow, also union it with the arrow
-    // at 90, 180, and 270 degree rotations to ensure that
-    // that the resulting image is square and centered on the origin.
-    // finally, pad the image a little to ensure that
-    // the arrow's stroke is not cut off.
-    let imageBounds = outerImageBounds
-        .union(path.bounds)
-        .union(path.bounds.applying(.init(rotationAngle: .pi / 2)))
-        .union(path.bounds.applying(.init(rotationAngle: .pi)))
-        .union(path.bounds.applying(.init(rotationAngle: 3 * .pi / 2)))
-        .insetBy(dx: -2, dy: -2)
+        // Create a rectangle to
+        // draw the circles, centering them at the origin
+        let outerImageBounds = CGRect(
+            origin: CGPoint(
+                x: -size.width / 2,
+                y: -size.height / 2),
+            size: size)
 
-    // render the image
-    return UIGraphicsImageRenderer(bounds: imageBounds).image { _ in
-        UIColor.systemBlue.setFill()
-        path.fill()
-        UIColor.white.setStroke()
-        path.stroke()
+        // Union that rectangle with the bounds
+        // of the arrow, also union it with the arrow
+        // at 90, 180, and 270 degree rotations to ensure that
+        // that the resulting image is square and centered on the origin.
+        // finally, pad the image a little to ensure that
+        // the arrow's stroke is not cut off.
+        let imageBounds = outerImageBounds
+            .union(path.bounds)
+            .union(path.bounds.applying(.init(rotationAngle: .pi / 2)))
+            .union(path.bounds.applying(.init(rotationAngle: .pi)))
+            .union(path.bounds.applying(.init(rotationAngle: 3 * .pi / 2)))
+            .insetBy(dx: -2, dy: -2)
+
+        // render the image
+        return UIGraphicsImageRenderer(bounds: imageBounds).image { _ in
+            UIColor.systemBlue.setFill()
+            path.fill()
+            UIColor.white.setStroke()
+            path.stroke()
+        }
     }
 }

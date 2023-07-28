@@ -1,52 +1,14 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "CocoaImageHashing",
-        "repositoryURL": "https://github.com/ameingast/cocoaimagehashing",
-        "state": {
-          "branch": null,
-          "revision": "ad01eee3c3f91bd181f7f4eba7f48f7cb211b51c",
-          "version": "1.9.0"
-        }
-      },
-      {
-        "package": "MapboxCommon",
-        "repositoryURL": "https://github.com/mapbox/mapbox-common-ios.git",
-        "state": {
-          "branch": null,
-          "revision": "775d6d749821f41ab25798eeaad1089ae250fd4c",
-          "version": "23.3.0-rc.1"
-        }
-      },
-      {
-        "package": "MapboxCoreMaps",
-        "repositoryURL": "https://github.com/mapbox/mapbox-core-maps-ios.git",
-        "state": {
-          "branch": null,
-          "revision": "d16dc2b0a053611b81b3b2ce4052a8662f849d72",
-          "version": "10.11.0-rc.1"
-        }
-      },
-      {
-        "package": "MapboxMobileEvents",
-        "repositoryURL": "https://github.com/mapbox/mapbox-events-ios.git",
-        "state": {
-          "branch": null,
-          "revision": "91ae071c0232c144251dfe0d0724525deaf293d4",
-          "version": "1.0.10"
-        }
-      },
-      {
-        "package": "Turf",
-        "repositoryURL": "https://github.com/mapbox/turf-swift.git",
-        "state": {
-          "branch": null,
-          "revision": "87b5b37108ba9f37f0885b586d8f6355d8240dd8",
-          "version": "2.6.1"
-        }
+  "pins" : [
+    {
+      "identity" : "turf-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mapbox/turf-swift.git",
+      "state" : {
+        "revision" : "87b5b37108ba9f37f0885b586d8f6355d8240dd8",
+        "version" : "2.6.1"
       }
-    ]
-  },
-  "version": 1
+    }
+  ],
+  "version" : 2
 }

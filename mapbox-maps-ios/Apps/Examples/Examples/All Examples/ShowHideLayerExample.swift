@@ -1,10 +1,10 @@
+import UIKit
 import MapboxMaps
-
-@objc(ShowHideLayerExample)
 
 class ShowHideLayerExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     let museumLayerId = "museum-circle-layer"
     let contourLayerId = "contour-line-layer"
@@ -24,30 +24,24 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
 
         // Once the map has finished loading, add the museum and contour layers to the map's style,
         // then add switches that toggle the visibility for those two layers.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
-            self.addStyleLayers()
-            self.addVisibilitySwitches()
+        mapView.mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
+            self?.addStyleLayers()
+            self?.addVisibilitySwitches()
 
             // The following line is just for testing purposes.
-            self.finish()
-        }
+            self?.finish()
+        }.store(in: &cancelables)
     }
 
     func addStyleLayers() {
-        // Specify the source IDs. They will be assigned to their respective sources when we
-        // add the source to the map's style.
-        let museumSourceId = "museum-source"
-        let contourSourceId = "contour-source"
-
         // Create a custom vector tileset source. This source contains point features
         // that represent museums.
-        var museumsSource = VectorSource()
+        var museumsSource = VectorSource(id: "museum-source")
         museumsSource.url = "mapbox://mapbox.2opop9hr"
 
-        var museumLayer = CircleLayer(id: museumLayerId)
+        // Create CircleLayer with id and source identifier.
+        var museumLayer = CircleLayer(id: museumLayerId, source: museumsSource.id)
 
-        // Assign this layer's source.
-        museumLayer.source = museumSourceId
         // Specify the layer within the vector source to render on the map.
         museumLayer.sourceLayer = "museum-cusco"
 
@@ -60,15 +54,14 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         let museumColor = UIColor(red: 0.22, green: 0.58, blue: 0.70, alpha: 1.00)
         museumLayer.circleColor = .constant(StyleColor(museumColor))
 
-        var contourSource = VectorSource()
+        var contourSource = VectorSource(id: "contour-source")
         // Add the Mapbox Terrain v2 vector tileset. Documentation for this vector tileset
         // can be found at https://docs.mapbox.com/vector-tiles/reference/mapbox-terrain-v2/
         contourSource.url = "mapbox://mapbox.mapbox-terrain-v2"
 
-        var contourLayer = LineLayer(id: contourLayerId)
+        var contourLayer = LineLayer(id: contourLayerId, source: contourSource.id)
 
-        // Assign this layer's source and source layer ID.
-        contourLayer.source = contourSourceId
+        // Assign this layer's source layer ID.
         contourLayer.sourceLayer = "contour"
 
         // Style the contents of the source's contour layer.
@@ -77,28 +70,26 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
 
         // `visibility` is `nil` by default. Set to `visible`.
         contourLayer.visibility = .constant(.visible)
+
         let contourLineColor = UIColor(red: 0.53, green: 0.48, blue: 0.35, alpha: 1.00)
         contourLayer.lineColor = .constant(StyleColor(contourLineColor))
 
-        let style = mapView.mapboxMap.style
-
         // Add the sources and layers to the map's style.
         do {
-            try style.addSource(museumsSource, id: museumSourceId)
-            try style.addSource(contourSource, id: contourSourceId)
-            try style.addLayer(museumLayer)
-            try style.addLayer(contourLayer)
+            try mapView.mapboxMap.addSource(museumsSource)
+            try mapView.mapboxMap.addSource(contourSource)
+            try mapView.mapboxMap.addLayer(museumLayer)
+            try mapView.mapboxMap.addLayer(contourLayer)
         } catch {
             print("Error when adding sources and layers: \(error.localizedDescription)")
         }
     }
 
     @objc func toggleMuseumLayerVisibility(sender: UISwitch) {
-        let style = mapView.mapboxMap.style
         // Update the museum layer's visibility based on whether the switch
         // is on. `visibility` is `nil` by default.
         do {
-            try style.updateLayer(withId: museumLayerId, type: CircleLayer.self) { layer in
+            try mapView.mapboxMap.updateLayer(withId: museumLayerId, type: CircleLayer.self) { layer in
                 layer.visibility = .constant(sender.isOn ? .visible : .none)
             }
         } catch {
@@ -107,11 +98,10 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
     }
 
     @objc func toggleContourLayerVisibility(sender: UISwitch) {
-        let style = mapView.mapboxMap.style
         // Update the contour layer's visibility based on whether the switch
         // is on.
         do {
-            try style.updateLayer(withId: contourLayerId, type: CircleLayer.self) { layer in
+            try mapView.mapboxMap.updateLayer(withId: contourLayerId, type: CircleLayer.self) { layer in
                 layer.visibility = .constant(sender.isOn ? .visible : .none)
             }
         } catch {

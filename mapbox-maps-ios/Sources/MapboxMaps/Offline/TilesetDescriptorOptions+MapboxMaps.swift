@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 
 extension TilesetDescriptorOptions {
     /// Initializes a `TilesetDescriptorOptions` which is used in the creation of
@@ -10,8 +10,10 @@ extension TilesetDescriptorOptions {
     ///   - pixelRatio: Pixel ratio to be accounted for when downloading raster
     ///         tiles. Typically this should match the scale used by the `MapView`,
     ///         most likely `UIScreen.main.scale`, which is the default value.
+    ///   - tilesets: The tilesets associated with the tileset descriptor. An array, each element of which must be either a URI to a TileJSON resource or a JSON string representing the inline tileset. The provided URIs must have "mapbox://" scheme, e.g. "mapbox://mapbox.mapbox-streets-v8".
     ///   - stylePackOptions: Style package load options, associated with the
     ///         tileset descriptor.
+    ///   - extraOptions: Extra tileset descriptor options. Must be a valid JSON object.
     ///
     /// - Note: The implementation loads and stores the loaded tiles in batches,
     ///     each batch has a pre-defined zoom range and it contains all child
@@ -38,14 +40,25 @@ extension TilesetDescriptorOptions {
     ///     If not provided, resolving of the corresponding tileset descriptor
     ///     will not cause creating of a new style package but the loaded
     ///     resources will be stored in the disk cache.
-    public convenience init(styleURI: StyleURI,
-                            zoomRange: ClosedRange<UInt8>,
-                            pixelRatio: Float = Float(UIScreen.main.scale),
-                            stylePackOptions: StylePackLoadOptions? = nil) {
-        self.init(styleURI: styleURI.rawValue,
-                  minZoom: zoomRange.lowerBound,
-                  maxZoom: zoomRange.upperBound,
-                  pixelRatio: pixelRatio,
-                  stylePack: stylePackOptions)
+    ///
+    ///     Style package creation requires nonempty `styleURL`,
+    ///     which will be the created style package identifier.
+    public convenience init(
+        styleURI: StyleURI,
+        zoomRange: ClosedRange<UInt8>,
+        pixelRatio: Float = Float(UIScreen.main.scale),
+        tilesets: [String]?,
+        stylePackOptions: StylePackLoadOptions? = nil,
+        extraOptions: Any? = nil
+    ) {
+        let extraOptions = extraOptions.flatMap { JSONSerialization.isValidJSONObject($0) ? $0 : nil }
+        self.init(
+            styleURI: styleURI.rawValue,
+            minZoom: zoomRange.lowerBound,
+            maxZoom: zoomRange.upperBound,
+            pixelRatio: pixelRatio,
+            tilesets: tilesets,
+            stylePack: stylePackOptions,
+            extraOptions: extraOptions)
     }
 }

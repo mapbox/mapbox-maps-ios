@@ -7,16 +7,34 @@ import Foundation
 public struct RasterLayer: Layer {
 
     // MARK: - Conformance to `Layer` protocol
+    /// Unique layer name
     public var id: String
+
+    /// Rendering type of this layer.
     public let type: LayerType
+
+    /// An expression specifying conditions on source features.
+    /// Only features that match the filter are displayed.
     public var filter: Expression?
+
+    /// Name of a source description to be used for this layer.
+    /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
     public var source: String?
+
+    /// Layer to use from a vector tile source.
+    ///
+    /// Required for vector tile sources.
+    /// Prohibited for all other source types, including GeoJSON sources.
     public var sourceLayer: String?
+
+    /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
     public var minZoom: Double?
+
+    /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
-    public var visibility: Value<Visibility>?
+    public var visibility: Value<Visibility>
 
     /// Increase or reduce the brightness of the image. The value is the maximum brightness.
     public var rasterBrightnessMax: Value<Double>?
@@ -29,6 +47,21 @@ public struct RasterLayer: Layer {
 
     /// Transition options for `rasterBrightnessMin`.
     public var rasterBrightnessMinTransition: StyleTransition?
+
+    /// Defines a color map by which to colorize a raster layer, parameterized by the `["raster-value"]` expression and evaluated at 1024 uniformly spaced steps over the range specified by `raster-color-range`.
+    public var rasterColor: Value<StyleColor>?
+
+    /// When `raster-color` is active, specifies the combination of source RGB channels used to compute the raster value. Computed using the equation `mix.r * src.r + mix.g * src.g + mix.b * src.b + mix.a`. The first three components specify the mix of source red, green, and blue channels, respectively. The fourth component serves as a constant offset and is *not* multipled by source alpha. Source alpha is instead carried through and applied as opacity to the colorized result. Default value corresponds to RGB luminosity.
+    public var rasterColorMix: Value<[Double]>?
+
+    /// Transition options for `rasterColorMix`.
+    public var rasterColorMixTransition: StyleTransition?
+
+    /// When `raster-color` is active, specifies the range over which `raster-color` is tabulated. Units correspond to the computed raster value via `raster-color-mix`.
+    public var rasterColorRange: Value<[Double]>?
+
+    /// Transition options for `rasterColorRange`.
+    public var rasterColorRangeTransition: StyleTransition?
 
     /// Increase or reduce the contrast of the image.
     public var rasterContrast: Value<Double>?
@@ -60,7 +93,8 @@ public struct RasterLayer: Layer {
     /// Transition options for `rasterSaturation`.
     public var rasterSaturationTransition: StyleTransition?
 
-    public init(id: String) {
+    public init(id: String, source: String) {
+        self.source = source
         self.id = id
         self.type = LayerType.raster
         self.visibility = .constant(.visible)
@@ -81,6 +115,11 @@ public struct RasterLayer: Layer {
         try paintContainer.encodeIfPresent(rasterBrightnessMaxTransition, forKey: .rasterBrightnessMaxTransition)
         try paintContainer.encodeIfPresent(rasterBrightnessMin, forKey: .rasterBrightnessMin)
         try paintContainer.encodeIfPresent(rasterBrightnessMinTransition, forKey: .rasterBrightnessMinTransition)
+        try paintContainer.encodeIfPresent(rasterColor, forKey: .rasterColor)
+        try paintContainer.encodeIfPresent(rasterColorMix, forKey: .rasterColorMix)
+        try paintContainer.encodeIfPresent(rasterColorMixTransition, forKey: .rasterColorMixTransition)
+        try paintContainer.encodeIfPresent(rasterColorRange, forKey: .rasterColorRange)
+        try paintContainer.encodeIfPresent(rasterColorRangeTransition, forKey: .rasterColorRangeTransition)
         try paintContainer.encodeIfPresent(rasterContrast, forKey: .rasterContrast)
         try paintContainer.encodeIfPresent(rasterContrastTransition, forKey: .rasterContrastTransition)
         try paintContainer.encodeIfPresent(rasterFadeDuration, forKey: .rasterFadeDuration)
@@ -93,7 +132,7 @@ public struct RasterLayer: Layer {
         try paintContainer.encodeIfPresent(rasterSaturationTransition, forKey: .rasterSaturationTransition)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
+        try layoutContainer.encode(visibility, forKey: .visibility)
     }
 
     public init(from decoder: Decoder) throws {
@@ -111,6 +150,11 @@ public struct RasterLayer: Layer {
             rasterBrightnessMaxTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterBrightnessMaxTransition)
             rasterBrightnessMin = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .rasterBrightnessMin)
             rasterBrightnessMinTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterBrightnessMinTransition)
+            rasterColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .rasterColor)
+            rasterColorMix = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .rasterColorMix)
+            rasterColorMixTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterColorMixTransition)
+            rasterColorRange = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .rasterColorRange)
+            rasterColorRangeTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterColorRangeTransition)
             rasterContrast = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .rasterContrast)
             rasterContrastTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterContrastTransition)
             rasterFadeDuration = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .rasterFadeDuration)
@@ -123,9 +167,11 @@ public struct RasterLayer: Layer {
             rasterSaturationTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .rasterSaturationTransition)
         }
 
+        var visibilityEncoded: Value<Visibility>?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
-            visibility = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
+            visibilityEncoded = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
         }
+        visibility = visibilityEncoded ?? .constant(.visible)
     }
 
     enum RootCodingKeys: String, CodingKey {
@@ -149,6 +195,11 @@ public struct RasterLayer: Layer {
         case rasterBrightnessMaxTransition = "raster-brightness-max-transition"
         case rasterBrightnessMin = "raster-brightness-min"
         case rasterBrightnessMinTransition = "raster-brightness-min-transition"
+        case rasterColor = "raster-color"
+        case rasterColorMix = "raster-color-mix"
+        case rasterColorMixTransition = "raster-color-mix-transition"
+        case rasterColorRange = "raster-color-range"
+        case rasterColorRangeTransition = "raster-color-range-transition"
         case rasterContrast = "raster-contrast"
         case rasterContrastTransition = "raster-contrast-transition"
         case rasterFadeDuration = "raster-fade-duration"

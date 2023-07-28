@@ -1,9 +1,9 @@
 import MapboxMaps
-import Foundation
+import UIKit
 
-@objc(DataJoinExample)
 final class DataJoinExample: UIViewController, ExampleProtocol {
     var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,12 +19,12 @@ final class DataJoinExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Add the data layer once the map has finished loading.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { _ in
             self.addJSONDataLayer()
 
             // The following line is just for testing purposes.
             self.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     func addJSONDataLayer() {
@@ -81,13 +81,11 @@ final class DataJoinExample: UIViewController, ExampleProtocol {
         // Create the source for country polygons using the Mapbox Countries tileset
         // The polygons contain an ISO 3166 alpha-3 code which can be used to for joining the data
         // https://docs.mapbox.com/vector-tiles/reference/mapbox-countries-v1
-        let sourceID = "countries"
-        var source = VectorSource()
+        var source = VectorSource(id: "countries")
         source.url = "mapbox://mapbox.country-boundaries-v1"
 
         // Add layer from the vector tile source to create the choropleth
-        var layer = FillLayer(id: "countries")
-        layer.source = sourceID
+        var layer = FillLayer(id: "countries", source: source.id)
         layer.sourceLayer = "country_boundaries"
 
         // Build a GL match expression that defines the color for every vector tile feature
@@ -129,11 +127,11 @@ final class DataJoinExample: UIViewController, ExampleProtocol {
         // Insert the vector layer below the 'admin-1-boundary-bg' layer in the style
         // Join data to the vector layer
         do {
-            try mapView.mapboxMap.style.addSource(source, id: sourceID)
-            try mapView.mapboxMap.style.addLayer(layer, layerPosition: .below("admin-1-boundary-bg"))
+            try mapView.mapboxMap.addSource(source)
+            try mapView.mapboxMap.addLayer(layer, layerPosition: .below("admin-1-boundary-bg"))
             if let expressionData = jsonExpression.data(using: .utf8) {
                 let expJSONObject = try JSONSerialization.jsonObject(with: expressionData, options: [])
-                try mapView.mapboxMap.style.setLayerProperty(for: "countries",
+                try mapView.mapboxMap.setLayerProperty(for: "countries",
                                                            property: "fill-color",
                                                            value: expJSONObject)
             }

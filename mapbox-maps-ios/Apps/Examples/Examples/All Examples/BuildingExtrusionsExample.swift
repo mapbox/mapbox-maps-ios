@@ -1,8 +1,8 @@
-import Foundation
+import UIKit
 import MapboxMaps
 
-@objc(BuildingExtrusionsExample)
 public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
+    private var cancelables = Set<AnyCancelable>()
 
     private lazy var lightPositionButton: UIButton = {
         let button = UIButton(type: .system)
@@ -40,7 +40,7 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
 
-    private var light = Light()
+    private var light = FlatLight()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -50,9 +50,9 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
+        mapView.mapboxMap.onStyleLoaded.observeNext { _ in
             self.setupExample()
-        }
+        }.store(in: &cancelables)
 
         view.addSubview(lightPositionButton)
         view.addSubview(lightColorButton)
@@ -84,9 +84,8 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
 
     // See https://docs.mapbox.com/mapbox-gl-js/example/3d-buildings/ for equivalent gl-js example
     internal func addBuildingExtrusions() {
-        var layer = FillExtrusionLayer(id: "3d-buildings")
+        var layer = FillExtrusionLayer(id: "3d-buildings", source: "composite")
 
-        layer.source                      = "composite"
         layer.minZoom                     = 15
         layer.sourceLayer                 = "building"
         layer.fillExtrusionColor   = .constant(StyleColor(.lightGray))
@@ -127,35 +126,35 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
 
         layer.fillExtrusionAmbientOcclusionRadius = .constant(3.0)
 
-        try! mapView.mapboxMap.style.addLayer(layer)
+        try! mapView.mapboxMap.addLayer(layer)
     }
 
     // MARK: - Actions
 
     @objc private func lightColorButtonTapped(_ sender: UIButton) {
-        if light.color == StyleColor(.red) {
-            light.color = StyleColor(.blue)
+        if case .constant(let color) = light.color, color == StyleColor(.red) {
+            light.color = .constant(StyleColor(.blue))
             sender.tintColor = .blue
         } else {
-            light.color = StyleColor(.red)
+            light.color = .constant(StyleColor(.red))
             sender.tintColor = .red
         }
 
-        try? mapView.mapboxMap.style.setLight(light)
+        try? mapView.mapboxMap.setLights(light)
     }
 
     @objc private func lightPositionButtonTapped(_ sender: UIButton) {
         let firstPosition = [1.5, 90, 80]
         let secondPosition = [1.15, 210, 30]
 
-        if light.position == firstPosition {
-            light.position = secondPosition
+        if case .constant(let position) = light.position, position == firstPosition {
+            light.position = .constant(secondPosition)
             sender.imageView?.transform = .identity
         } else {
-            light.position = firstPosition
+            light.position = .constant(firstPosition)
             sender.imageView?.transform = CGAffineTransform(rotationAngle: 2.0 * .pi / 3.0)
         }
 
-        try? mapView.mapboxMap.style.setLight(light)
+        try? mapView.mapboxMap.setLights(light)
     }
 }

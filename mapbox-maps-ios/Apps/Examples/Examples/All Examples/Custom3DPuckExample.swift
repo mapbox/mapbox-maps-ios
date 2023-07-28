@@ -1,21 +1,22 @@
 import UIKit
 import MapboxMaps
 
-@objc(Custom3DPuckExample)
-final class Custom3DPuckExample: UIViewController, ExampleProtocol, LocationConsumer {
+final class Custom3DPuckExample: UIViewController, ExampleProtocol {
+    private var cancelables = Set<AnyCancelable>()
 
     private var mapView: MapView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds)
+        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 37.26301831966747, longitude: -121.97647612483807), zoom: 15, pitch: 55)
+        mapView = MapView(frame: view.bounds, mapInitOptions: MapInitOptions(cameraOptions: cameraOptions))
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
+        mapView.mapboxMap.onStyleLoaded.observeNext { _ in
             self.setupExample()
-        }
+        }.store(in: &cancelables)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -67,18 +68,17 @@ final class Custom3DPuckExample: UIViewController, ExampleProtocol, LocationCons
         mapView.location.options.puckType = .puck3D(configuration)
         mapView.location.options.puckBearing = .course
 
-        mapView.location.addLocationConsumer(newConsumer: self)
-    }
-
-    internal func locationUpdate(newLocation: Location) {
-        mapView.camera.ease(
-            to: CameraOptions(
-                center: newLocation.coordinate,
-                zoom: 15,
-                bearing: 0,
-                pitch: 55),
-            duration: 1,
-            curve: .linear,
-            completion: nil)
+        mapView.location.onLocationChange.observe { [weak mapView] newLocation in
+            guard let location = newLocation.last, let mapView else { return }
+            mapView.camera.ease(
+                to: CameraOptions(
+                    center: location.coordinate,
+                    zoom: 15,
+                    bearing: 0,
+                    pitch: 55),
+                duration: 1,
+                curve: .linear,
+                completion: nil)
+        }.store(in: &cancelables)
     }
 }

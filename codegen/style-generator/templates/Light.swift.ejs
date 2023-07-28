@@ -1,22 +1,26 @@
 <%
   const properties = locals.properties
   const doc = locals.doc
+  const name = locals.name
+  const isExperimental = locals.experimental
 -%>
 // This file is generated.
 import Foundation
 
-/// The global light source.
+/// <%- doc %>
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#light)
-public struct Light: Codable {
+<%if (isExperimental) { -%>@_spi(Experimental) <% } -%>public struct <%- camelize(name) %>Light: Codable, StyleEncodable {
+
+    /// Unique light name
+    public let id: String
+
+    /// Type of the light.
+    public let type: LightType = .<%- name %>
     <%_ for (const property of properties) { -%>
 
     /// <%- markdownFriendlyDoc(property) %>
-    <%_ if (["anchor", "color", "intensity", "position"].includes(property.name)) { -%>
-    <% if (property.experimental) { -%>@_spi(Experimental) <% } -%>public var <%- camelizeWithLeadingLowercase(property.name) %>: <%- propertySwiftType(property) %>?
-    <%_ } else { _%>
     <% if (property.experimental) { -%>@_spi(Experimental) <% } -%>public var <%- camelizeWithLeadingLowercase(property.name) %>: <%- propertySwiftValueType(property) %>?
-    <%_ } -%>
     <%_ if (property.transition) { -%>
 
     /// Transition property for `<%- camelizeWithLeadingLowercase(property.name) %>`
@@ -24,9 +28,13 @@ public struct Light: Codable {
     <%_ } -%>
     <%_ } -%>
 
-    public init() {}
+    public init(id: String = UUID().uuidString) {
+        self.id = id
+    }
 
     enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case type = "type"
         <%_ for (const property of properties) { -%>
         case <%- camelizeWithLeadingLowercase(property.name) %> = "<%- property.name %>"
         <%_ if (property.transition) { -%>

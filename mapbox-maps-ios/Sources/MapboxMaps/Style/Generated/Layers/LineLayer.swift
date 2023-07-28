@@ -7,16 +7,34 @@ import Foundation
 public struct LineLayer: Layer {
 
     // MARK: - Conformance to `Layer` protocol
+    /// Unique layer name
     public var id: String
+
+    /// Rendering type of this layer.
     public let type: LayerType
+
+    /// An expression specifying conditions on source features.
+    /// Only features that match the filter are displayed.
     public var filter: Expression?
+
+    /// Name of a source description to be used for this layer.
+    /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
     public var source: String?
+
+    /// Layer to use from a vector tile source.
+    ///
+    /// Required for vector tile sources.
+    /// Prohibited for all other source types, including GeoJSON sources.
     public var sourceLayer: String?
+
+    /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
     public var minZoom: Double?
+
+    /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
-    public var visibility: Value<Visibility>?
+    public var visibility: Value<Visibility>
 
     /// The display of line endings.
     public var lineCap: Value<LineCap>?
@@ -39,6 +57,18 @@ public struct LineLayer: Layer {
     /// Transition options for `lineBlur`.
     public var lineBlurTransition: StyleTransition?
 
+    /// The color of the line border. If line-border-width is greater than zero and the alpha value of this color is 0 (default), the color for the border will be selected automatically based on the line color.
+    public var lineBorderColor: Value<StyleColor>?
+
+    /// Transition options for `lineBorderColor`.
+    public var lineBorderColorTransition: StyleTransition?
+
+    /// The width of the line border. A value of zero means no border.
+    public var lineBorderWidth: Value<Double>?
+
+    /// Transition options for `lineBorderWidth`.
+    public var lineBorderWidthTransition: StyleTransition?
+
     /// The color with which the line will be drawn.
     public var lineColor: Value<StyleColor>?
 
@@ -48,9 +78,29 @@ public struct LineLayer: Layer {
     /// Specifies the lengths of the alternating dashes and gaps that form the dash pattern. The lengths are later scaled by the line width. To convert a dash length to pixels, multiply the length by the current line width. Note that GeoJSON sources with `lineMetrics: true` specified won't render dashed lines to the expected scale. Also note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public var lineDasharray: Value<[Double]>?
 
-    /// Transition options for `lineDasharray`.
-    @available(*, deprecated, message: "This property is deprecated and will be removed in the future. Setting this will have no effect.")
-    public var lineDasharrayTransition: StyleTransition?
+    /// Decrease line layer opacity based on occlusion from 3D objects. Value 0 disables occlusion, value 1 means fully occluded.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public var lineDepthOcclusionFactor: Value<Double>?
+
+    /// Transition options for `lineDepthOcclusionFactor`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public var lineDepthOcclusionFactorTransition: StyleTransition?
+
+    /// Emission strength
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public var lineEmissiveStrength: Value<Double>?
+
+    /// Transition options for `lineEmissiveStrength`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public var lineEmissiveStrengthTransition: StyleTransition?
 
     /// Draws a line casing outside of a line's actual path. Value indicates the width of the inner gap.
     public var lineGapWidth: Value<Double>?
@@ -76,10 +126,6 @@ public struct LineLayer: Layer {
     /// Name of image in sprite to use for drawing image lines. For seamless patterns, image width must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public var linePattern: Value<ResolvedImage>?
 
-    /// Transition options for `linePattern`.
-    @available(*, deprecated, message: "This property is deprecated and will be removed in the future. Setting this will have no effect.")
-    public var linePatternTransition: StyleTransition?
-
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     public var lineTranslate: Value<[Double]>?
 
@@ -98,7 +144,8 @@ public struct LineLayer: Layer {
     /// Transition options for `lineWidth`.
     public var lineWidthTransition: StyleTransition?
 
-    public init(id: String) {
+    public init(id: String, source: String) {
+        self.source = source
         self.id = id
         self.type = LayerType.line
         self.visibility = .constant(.visible)
@@ -117,9 +164,17 @@ public struct LineLayer: Layer {
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
         try paintContainer.encodeIfPresent(lineBlur, forKey: .lineBlur)
         try paintContainer.encodeIfPresent(lineBlurTransition, forKey: .lineBlurTransition)
+        try paintContainer.encodeIfPresent(lineBorderColor, forKey: .lineBorderColor)
+        try paintContainer.encodeIfPresent(lineBorderColorTransition, forKey: .lineBorderColorTransition)
+        try paintContainer.encodeIfPresent(lineBorderWidth, forKey: .lineBorderWidth)
+        try paintContainer.encodeIfPresent(lineBorderWidthTransition, forKey: .lineBorderWidthTransition)
         try paintContainer.encodeIfPresent(lineColor, forKey: .lineColor)
         try paintContainer.encodeIfPresent(lineColorTransition, forKey: .lineColorTransition)
         try paintContainer.encodeIfPresent(lineDasharray, forKey: .lineDasharray)
+        try paintContainer.encodeIfPresent(lineDepthOcclusionFactor, forKey: .lineDepthOcclusionFactor)
+        try paintContainer.encodeIfPresent(lineDepthOcclusionFactorTransition, forKey: .lineDepthOcclusionFactorTransition)
+        try paintContainer.encodeIfPresent(lineEmissiveStrength, forKey: .lineEmissiveStrength)
+        try paintContainer.encodeIfPresent(lineEmissiveStrengthTransition, forKey: .lineEmissiveStrengthTransition)
         try paintContainer.encodeIfPresent(lineGapWidth, forKey: .lineGapWidth)
         try paintContainer.encodeIfPresent(lineGapWidthTransition, forKey: .lineGapWidthTransition)
         try paintContainer.encodeIfPresent(lineGradient, forKey: .lineGradient)
@@ -136,7 +191,7 @@ public struct LineLayer: Layer {
         try paintContainer.encodeIfPresent(lineWidthTransition, forKey: .lineWidthTransition)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
+        try layoutContainer.encode(visibility, forKey: .visibility)
         try layoutContainer.encodeIfPresent(lineCap, forKey: .lineCap)
         try layoutContainer.encodeIfPresent(lineJoin, forKey: .lineJoin)
         try layoutContainer.encodeIfPresent(lineMiterLimit, forKey: .lineMiterLimit)
@@ -157,9 +212,17 @@ public struct LineLayer: Layer {
         if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
             lineBlur = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineBlur)
             lineBlurTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineBlurTransition)
+            lineBorderColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .lineBorderColor)
+            lineBorderColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineBorderColorTransition)
+            lineBorderWidth = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineBorderWidth)
+            lineBorderWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineBorderWidthTransition)
             lineColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .lineColor)
             lineColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineColorTransition)
             lineDasharray = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .lineDasharray)
+            lineDepthOcclusionFactor = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineDepthOcclusionFactor)
+            lineDepthOcclusionFactorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineDepthOcclusionFactorTransition)
+            lineEmissiveStrength = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineEmissiveStrength)
+            lineEmissiveStrengthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineEmissiveStrengthTransition)
             lineGapWidth = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineGapWidth)
             lineGapWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineGapWidthTransition)
             lineGradient = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .lineGradient)
@@ -176,14 +239,16 @@ public struct LineLayer: Layer {
             lineWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineWidthTransition)
         }
 
+        var visibilityEncoded: Value<Visibility>?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
-            visibility = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
+            visibilityEncoded = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
             lineCap = try layoutContainer.decodeIfPresent(Value<LineCap>.self, forKey: .lineCap)
             lineJoin = try layoutContainer.decodeIfPresent(Value<LineJoin>.self, forKey: .lineJoin)
             lineMiterLimit = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .lineMiterLimit)
             lineRoundLimit = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .lineRoundLimit)
             lineSortKey = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .lineSortKey)
         }
+        visibility = visibilityEncoded ?? .constant(.visible)
     }
 
     enum RootCodingKeys: String, CodingKey {
@@ -210,9 +275,17 @@ public struct LineLayer: Layer {
     enum PaintCodingKeys: String, CodingKey {
         case lineBlur = "line-blur"
         case lineBlurTransition = "line-blur-transition"
+        case lineBorderColor = "line-border-color"
+        case lineBorderColorTransition = "line-border-color-transition"
+        case lineBorderWidth = "line-border-width"
+        case lineBorderWidthTransition = "line-border-width-transition"
         case lineColor = "line-color"
         case lineColorTransition = "line-color-transition"
         case lineDasharray = "line-dasharray"
+        case lineDepthOcclusionFactor = "line-depth-occlusion-factor"
+        case lineDepthOcclusionFactorTransition = "line-depth-occlusion-factor-transition"
+        case lineEmissiveStrength = "line-emissive-strength"
+        case lineEmissiveStrengthTransition = "line-emissive-strength-transition"
         case lineGapWidth = "line-gap-width"
         case lineGapWidthTransition = "line-gap-width-transition"
         case lineGradient = "line-gradient"

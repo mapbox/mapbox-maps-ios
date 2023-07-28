@@ -5,7 +5,6 @@ final class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
     var tileStorePathURL: URL!
     var tileStore: TileStore!
-    var resourceOptions: ResourceOptions!
     var offlineManager: OfflineManager!
     var tileRegionId = ""
 
@@ -18,8 +17,6 @@ final class OfflineManagerIntegrationTestCase: IntegrationTestCase {
     }
 
     func setupTileStoreAndOfflineManager() throws {
-        accessToken = try mapboxAccessToken()
-
         tileRegionId = "tile-region-\(name)"
 
         // TileStore
@@ -27,17 +24,15 @@ final class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
         // Cache the created tile store
         tileStore = TileStore.shared(for: tileStorePathURL)
-        tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken!)
 
-        resourceOptions = ResourceOptions(accessToken: accessToken,
-                                          dataPathURL: tileStorePathURL,
-                                          tileStore: tileStore)
+        MapboxMapsOptions.dataPath = tileStorePathURL
+        MapboxMapsOptions.tileStore = tileStore
 
-        offlineManager = OfflineManager(resourceOptions: resourceOptions)
+        offlineManager = OfflineManager()
 
         // Setup TileRegionLoadOptions
         let outdoorsOptions = TilesetDescriptorOptions(styleURI: .outdoors,
-                                                       zoomRange: 0...16)
+                                                       zoomRange: 0...16, tilesets: nil)
 
         let outdoorsDescriptor = offlineManager.createTilesetDescriptor(for: outdoorsOptions)
 
@@ -53,24 +48,16 @@ final class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         tileRegionLoadOptions = nil
         offlineManager = nil
         tileStore = nil
-        clearResourceOptions()
+        clearMapData()
         try super.tearDownWithError()
     }
 
-    private func clearResourceOptions() {
-        defer {
-            resourceOptions = nil
-        }
-
-        guard resourceOptions != nil else {
-            return
-        }
-
-        let expectation = expectation(description: "Clear data")
-        MapboxMap.clearData(for: resourceOptions) { _ in
+    private func clearMapData() {
+        let expectation = self.expectation(description: "Clear map data")
+        MapboxMapsOptions.clearData { _ in
             expectation.fulfill()
         }
-        wait(for: [expectation], timeout: 10)
+        wait(for: [expectation], timeout: 10.0)
     }
 
     // MARK: Test Cases
@@ -270,9 +257,7 @@ final class OfflineManagerIntegrationTestCase: IntegrationTestCase {
             OfflineSwitch.shared.isMapboxStackConnected = false
 
             let cameraOptions = CameraOptions(center: tokyoCoord, zoom: 16)
-            let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions,
-                                                cameraOptions: cameraOptions,
-                                                styleURI: .outdoors)
+            let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .outdoors)
             let mapView = MapView(frame: rootView.bounds, mapInitOptions: mapInitOptions)
             rootView.addSubview(mapView)
 
@@ -289,18 +274,18 @@ final class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
             let mapWasLoaded = XCTestExpectation(description: "Map was loaded")
 
-            let cancelable = mapView.mapboxMap.onEvery(event: .resourceRequest) { event in
-                if event.payload.dataSource == .network {
+            let cancelable = mapView.mapboxMap.onResourceRequest.observe { event in
+                if event.source == .network {
                     XCTFail("Loading is occurring from the network")
                 } else {
                     mapIsUsingDatabase.fulfill()
                 }
             }
 
-            mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+            mapView.mapboxMap.onMapLoaded.observeNext { _ in
                 print("Map was loaded")
                 mapWasLoaded.fulfill()
-            }
+            }.store(in: &cancelables)
 
             let expectations = [mapIsUsingDatabase, mapWasLoaded]
             wait(for: expectations, timeout: 5.0, enforceOrder: true)

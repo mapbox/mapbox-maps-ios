@@ -6,25 +6,18 @@ final class HeatmapLayerTests: XCTestCase {
 
     func testLayerProtocolMembers() {
 
-        var layer = HeatmapLayer(id: "test-id")
-        layer.source = "some-source"
-        layer.sourceLayer = nil
+        var layer = HeatmapLayer(id: "test-id", source: "source")
         layer.minZoom = 10.0
         layer.maxZoom = 20.0
 
-        XCTAssert(layer.id == "test-id")
-        XCTAssert(layer.type == LayerType.heatmap)
-        XCTAssert(layer.filter == nil)
-        XCTAssert(layer.source == "some-source")
-        XCTAssertNil(layer.sourceLayer)
-        XCTAssert(layer.minZoom == 10.0)
-        XCTAssert(layer.maxZoom == 20.0)
+        XCTAssertEqual(layer.id, "test-id")
+        XCTAssertEqual(layer.type, LayerType.heatmap)
+        XCTAssertEqual(layer.minZoom, 10.0)
+        XCTAssertEqual(layer.maxZoom, 20.0)
     }
 
     func testEncodingAndDecodingOfLayerProtocolProperties() {
-        var layer = HeatmapLayer(id: "test-id")
-        layer.source = "some-source"
-        layer.sourceLayer = nil
+        var layer = HeatmapLayer(id: "test-id", source: "source")
         layer.minZoom = 10.0
         layer.maxZoom = 20.0
 
@@ -42,20 +35,18 @@ final class HeatmapLayerTests: XCTestCase {
 
         do {
             let decodedLayer = try JSONDecoder().decode(HeatmapLayer.self, from: validData)
-            XCTAssert(decodedLayer.id == "test-id")
-            XCTAssert(decodedLayer.type == LayerType.heatmap)
-            XCTAssert(decodedLayer.filter == nil)
-            XCTAssert(decodedLayer.source == "some-source")
-            XCTAssertNil(decodedLayer.sourceLayer)
-            XCTAssert(decodedLayer.minZoom == 10.0)
-            XCTAssert(decodedLayer.maxZoom == 20.0)
+            XCTAssertEqual(decodedLayer.id, "test-id")
+            XCTAssertEqual(decodedLayer.type, LayerType.heatmap)
+            XCTAssert(decodedLayer.source == "source")
+            XCTAssertEqual(decodedLayer.minZoom, 10.0)
+            XCTAssertEqual(decodedLayer.maxZoom, 20.0)
         } catch {
             XCTFail("Failed to decode HeatmapLayer")
         }
     }
 
     func testEncodingAndDecodingOfLayoutProperties() {
-        var layer = HeatmapLayer(id: "test-id")
+        var layer = HeatmapLayer(id: "test-id", source: "source")
         layer.visibility = .constant(.visible)
 
         var data: Data?
@@ -79,7 +70,7 @@ final class HeatmapLayerTests: XCTestCase {
     }
 
     func testEncodingAndDecodingOfPaintProperties() {
-       var layer = HeatmapLayer(id: "test-id")
+       var layer = HeatmapLayer(id: "test-id", source: "source")
        layer.heatmapColor = Value<StyleColor>.testConstantValue()
        layer.heatmapIntensity = Value<Double>.testConstantValue()
        layer.heatmapIntensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -104,11 +95,11 @@ final class HeatmapLayerTests: XCTestCase {
        do {
            let decodedLayer = try JSONDecoder().decode(HeatmapLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
-           XCTAssert(layer.heatmapColor == Value<StyleColor>.testConstantValue())
-           XCTAssert(layer.heatmapIntensity == Value<Double>.testConstantValue())
-           XCTAssert(layer.heatmapOpacity == Value<Double>.testConstantValue())
-           XCTAssert(layer.heatmapRadius == Value<Double>.testConstantValue())
-           XCTAssert(layer.heatmapWeight == Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.heatmapColor, Value<StyleColor>.testConstantValue())
+           XCTAssertEqual(layer.heatmapIntensity, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.heatmapOpacity, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.heatmapRadius, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.heatmapWeight, Value<Double>.testConstantValue())
        } catch {
            XCTFail("Failed to decode HeatmapLayer")
        }

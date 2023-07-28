@@ -1,15 +1,13 @@
 import UIKit
 import MapboxMaps
 
-@objc(SwitchStylesExample)
-
 public class SwitchStylesExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
     internal var styleToggle: UISegmentedControl!
     internal var style: Style = .satelliteStreets {
         didSet {
-            mapView.mapboxMap.style.uri = style.uri
+            mapView.mapboxMap.styleURI = style.uri
         }
     }
 

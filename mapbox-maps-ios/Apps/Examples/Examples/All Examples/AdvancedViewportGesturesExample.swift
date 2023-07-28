@@ -7,7 +7,6 @@ import MapboxMaps
 //
 // When trying this example in the simulator, choose Features > Location > Freeway Drive
 // to get a good sense of the resulting user experience.
-@objc(AdvancedViewportGesturesExample)
 final class AdvancedViewportGesturesExample: UIViewController, ExampleProtocol {
 
     private enum State {

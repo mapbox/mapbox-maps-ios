@@ -6,7 +6,6 @@ import MapboxMaps
 //
 // When trying this example in the simulator, choose Features > Location > Freeway Drive
 // to get a good sense of the resulting user experience.
-@objc(ViewportExample)
 final class ViewportExample: UIViewController, ExampleProtocol {
 
     private enum State {

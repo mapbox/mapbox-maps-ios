@@ -1,8 +1,10 @@
-when:
-  not:
-    or:
-      - equal: [main, << pipeline.git.branch >>]
-      - << pipeline.git.tag >> # ignore all tags
+unless:
+  or:
+    - equal: [main, << pipeline.git.branch >>]
+    - equal: [develop, << pipeline.git.branch >>]
+    - << pipeline.git.tag >> # ignore all tags
+    - equal: [scheduled_pipeline, << pipeline.trigger_source >>]
+
 jobs:
   - build-benchmark:
       context:

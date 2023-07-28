@@ -8,7 +8,7 @@ final class AnimationEaseToBenchmark: BaseBenchmark {
 
     func sla_easeTo() {
         benchmark(timeout: 141) {
-            onStyleLoaded { mapView, _ in
+            onStyleLoaded { mapView in
                 mapView.mapboxMap.setCamera(to: CameraOptions(center: self.startPoint))
                 self.easeTo {
                     self.stopBenchmark()

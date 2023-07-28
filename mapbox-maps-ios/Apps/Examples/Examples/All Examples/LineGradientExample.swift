@@ -1,12 +1,12 @@
-import Foundation
+import UIKit
 import MapboxMaps
 
-@objc(LineGradientExample)
 public class LineGradientExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
     internal var lastTrimOffset = 0.0
     let button = UIButton(type: .system)
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -16,15 +16,15 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
-
+        mapView.mapboxMap.onMapLoaded.observeNext { _ in
             self.setupExample()
 
             // Set the center coordinate and zoom level.
             let centerCoordinate = CLLocationCoordinate2D(latitude: 38.875, longitude: -77.035)
             let camera = CameraOptions(center: centerCoordinate, zoom: 12.0)
             self.mapView.mapboxMap.setCamera(to: camera)
-        }
+        }.store(in: &cancelables)
+
         button.setTitle("Increase trim offset", for: .normal)
         button.backgroundColor = .white
         button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
@@ -34,11 +34,10 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
         button.addTarget(self, action: #selector(increaseTrimOffset), for: .touchUpInside)
     }
 
-    @objc
-    func increaseTrimOffset() {
+    @objc func increaseTrimOffset() {
         lastTrimOffset += 0.05
         let trimOffset = Double.minimum(lastTrimOffset, 1.0)
-        try? mapView.mapboxMap.style.setLayerProperty(for: "line-layer", property: "line-trim-offset", value: [0.0, trimOffset])
+        try? mapView.mapboxMap.setLayerProperty(for: "line-layer", property: "line-trim-offset", value: [0.0, trimOffset])
     }
 
     // Load GeoJSON file from local bundle and decode into a `FeatureCollection`.
@@ -65,22 +64,18 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
 
         // Attempt to decode GeoJSON from file bundled with application.
         guard let featureCollection = try? decodeGeoJSON(from: "GradientLine") else { return }
-        let geoJSONDataSourceIdentifier = "geoJSON-data-source"
 
         // Create a GeoJSON data source.
-        var geoJSONSource = GeoJSONSource()
+        var geoJSONSource = GeoJSONSource(id: "geoJSON-data-source")
         geoJSONSource.data = .featureCollection(featureCollection)
         geoJSONSource.lineMetrics = true // MUST be `true` in order to use `lineGradient` expression
 
         // Create a line layer
-        var lineLayer = LineLayer(id: "line-layer")
+        var lineLayer = LineLayer(id: "line-layer", source: geoJSONSource.id)
         lineLayer.filter = Exp(.eq) {
             "$type"
             "LineString"
         }
-
-        // Setting the source
-        lineLayer.source = geoJSONDataSourceIdentifier
 
         // Styling the line
         lineLayer.lineColor = .constant(StyleColor(.red))
@@ -119,7 +114,7 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
         lineLayer.lineJoin = .constant(.round)
 
         // Add the source and style layer to the map style.
-        try! mapView.mapboxMap.style.addSource(geoJSONSource, id: geoJSONDataSourceIdentifier)
-        try! mapView.mapboxMap.style.addLayer(lineLayer, layerPosition: nil)
+        try! mapView.mapboxMap.addSource(geoJSONSource)
+        try! mapView.mapboxMap.addLayer(lineLayer, layerPosition: nil)
     }
 }

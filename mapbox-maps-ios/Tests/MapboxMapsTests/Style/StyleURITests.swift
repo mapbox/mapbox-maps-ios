@@ -12,15 +12,17 @@ class StyleURITests: XCTestCase {
         checkCustomStyleURI(with: "mapbox://styles/mapbox/dark-v9")
         checkCustomStyleURI(with: "mapbox://styles/mapbox/satellite-v8")
         checkCustomStyleURI(with: "mapbox://styles/mapbox/satellite-streets-v10")
+        checkCustomStyleURI(with: "mapbox://styles/mapbox/standard-beta")
     }
 
     func testDefaultStyleURIs() throws {
-        checkDefaultStyleURI(with: "mapbox://styles/mapbox/streets-v11", expected: .streets)
-        checkDefaultStyleURI(with: "mapbox://styles/mapbox/outdoors-v11", expected: .outdoors)
-        checkDefaultStyleURI(with: "mapbox://styles/mapbox/light-v10", expected: .light)
-        checkDefaultStyleURI(with: "mapbox://styles/mapbox/dark-v10", expected: .dark)
+        checkDefaultStyleURI(with: "mapbox://styles/mapbox/streets-v12", expected: .streets)
+        checkDefaultStyleURI(with: "mapbox://styles/mapbox/outdoors-v12", expected: .outdoors)
+        checkDefaultStyleURI(with: "mapbox://styles/mapbox/light-v11", expected: .light)
+        checkDefaultStyleURI(with: "mapbox://styles/mapbox/dark-v11", expected: .dark)
         checkDefaultStyleURI(with: "mapbox://styles/mapbox/satellite-v9", expected: .satellite)
-        checkDefaultStyleURI(with: "mapbox://styles/mapbox/satellite-streets-v11", expected: .satelliteStreets)
+        checkDefaultStyleURI(with: "mapbox://styles/mapbox/satellite-streets-v12", expected: .satelliteStreets)
+        checkDefaultStyleURI(with: "mapbox://styles/mapbox/standard-beta", expected: .standard)
     }
 
     func testInvalidStyleURIs() throws {
@@ -28,6 +30,7 @@ class StyleURITests: XCTestCase {
         checkInvalidStyleURI(with: "mapbox:\\styles/mapbox/streets-v11")
         checkInvalidStyleURI(with: "//styles/mapbox/streets-v11")
         checkInvalidStyleURI(with: "mapbox/styles/mapbox/streets-v11")
+
     }
 
     // MARK: - Helpers

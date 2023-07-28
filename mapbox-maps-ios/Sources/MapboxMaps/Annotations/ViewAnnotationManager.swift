@@ -4,11 +4,20 @@ import UIKit
 @_implementationOnly import MapboxCoreMaps_Private
 import Turf
 
-public enum ViewAnnotationManagerError: Error {
-    case viewIsAlreadyAdded
-    case associatedFeatureIdIsAlreadyInUse
-    case annotationNotFound
-    case geometryFieldMissing
+public struct ViewAnnotationManagerError: Error, Equatable {
+    public let message: String
+
+    /// This view has alread been added
+    public static let viewIsAlreadyAdded = ViewAnnotationManagerError(message: "View is already added")
+
+    /// The specified associated feature Id is already in use
+    public static let associatedFeatureIdIsAlreadyInUse = ViewAnnotationManagerError(message: "Associated feature ID is already in use")
+
+    /// The specified annotation was not found
+    public static let annotationNotFound = ViewAnnotationManagerError(message: "Annotation not found")
+
+    /// The required geometry field is missing
+    public static let geometryFieldMissing = ViewAnnotationManagerError(message: "Geometry field missing")
 }
 
 /// An interface you use to detect when the map view lays out or updates visibility of annotation views.
@@ -364,7 +373,10 @@ public final class ViewAnnotationManager {
         let annotationsToHide = Set<String>(viewsById.keys).subtracting(visibleAnnotationIds)
 
         for id in annotationsToHide {
-            guard let view = viewsById[id] else { fatalError() }
+            guard let view = viewsById[id] else {
+                assertionFailure("Couldn't find annotation view, id: \(id)")
+                continue
+            }
             validate(view)
             if !view.isHidden {
                 viewsWithUpdatedVisibility.insert(view)
@@ -473,7 +485,9 @@ extension ViewAnnotationManager {
             for: innerBounds,
             padding: padding,
             bearing: bearing.map(Double.init),
-            pitch: pitch.map(Double.init))
+            pitch: pitch.map(Double.init),
+            maxZoom: nil,
+            offset: nil)
     }
 
     /// Calculates the ``CoordinateBounds`` of an annotation at the given `zoom` level.

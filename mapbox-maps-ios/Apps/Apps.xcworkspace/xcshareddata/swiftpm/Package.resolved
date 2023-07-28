@@ -1,52 +1,23 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "CocoaImageHashing",
-        "repositoryURL": "https://github.com/ameingast/cocoaimagehashing",
-        "state": {
-          "branch": null,
-          "revision": "ad01eee3c3f91bd181f7f4eba7f48f7cb211b51c",
-          "version": "1.9.0"
-        }
-      },
-      {
-        "package": "MapboxCommon",
-        "repositoryURL": "https://github.com/mapbox/mapbox-common-ios.git",
-        "state": {
-          "branch": null,
-          "revision": "e5cb508f09e80b877a695a0914140d95a41152fc",
-          "version": "23.7.0"
-        }
-      },
-      {
-        "package": "MapboxCoreMaps",
-        "repositoryURL": "https://github.com/mapbox/mapbox-core-maps-ios.git",
-        "state": {
-          "branch": null,
-          "revision": "de58d2110c67f657badae735aacd924ca7349c59",
-          "version": "10.15.0"
-        }
-      },
-      {
-        "package": "MapboxMobileEvents",
-        "repositoryURL": "https://github.com/mapbox/mapbox-events-ios.git",
-        "state": {
-          "branch": null,
-          "revision": "91ae071c0232c144251dfe0d0724525deaf293d4",
-          "version": "1.0.10"
-        }
-      },
-      {
-        "package": "Turf",
-        "repositoryURL": "https://github.com/mapbox/turf-swift.git",
-        "state": {
-          "branch": null,
-          "revision": "87b5b37108ba9f37f0885b586d8f6355d8240dd8",
-          "version": "2.6.1"
-        }
+  "pins" : [
+    {
+      "identity" : "fingertips",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:mapbox/Fingertips.git",
+      "state" : {
+        "revision" : "828349081181608bf67abe53f5881728a14a0f78",
+        "version" : "0.6.0"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "turf-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mapbox/turf-swift.git",
+      "state" : {
+        "revision" : "87b5b37108ba9f37f0885b586d8f6355d8240dd8",
+        "version" : "2.6.1"
+      }
+    }
+  ],
+  "version" : 2
 }

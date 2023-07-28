@@ -1,6 +1,6 @@
 import UIKit
 
-internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimatorProtocol {
+internal final class GestureDecelerationCameraAnimator: CameraAnimatorProtocol {
     private enum InternalState: Equatable {
         case initial
         case running

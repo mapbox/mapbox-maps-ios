@@ -1,6 +1,6 @@
 Pod::Spec.new do |m|
 
-  maps_version = '10.15.0'
+  maps_version = '11.0.0-alpha.1'
 
   m.name = 'MapboxMaps'
   m.version = maps_version
@@ -15,8 +15,8 @@ Pod::Spec.new do |m|
 
   m.source = { :git => 'https://github.com/mapbox/mapbox-maps-ios.git', :tag => "v#{maps_version}" }
   m.platform = :ios
-  m.ios.deployment_target = '11.0'
-  m.swift_version = '5.5'
+  m.ios.deployment_target = '12.0'
+  m.swift_version = '5.7'
 
   m.source_files = 'Sources/MapboxMaps/**/*.{swift,h}'
   m.resource_bundles = { 'MapboxMapsResources' => ['Sources/**/*.{xcassets,strings}', 'Sources/MapboxMaps/MapboxMaps.json'] }
@@ -25,9 +25,8 @@ Pod::Spec.new do |m|
   # TODO: remove after Cocoapods 1.12 is released
   m.pod_target_xcconfig = { 'CODE_SIGNING_ALLOWED' => 'NO' }
 
-  m.dependency 'MapboxCoreMaps', '10.15.0'
-  m.dependency 'MapboxMobileEvents', '1.0.10'
-  m.dependency 'MapboxCommon', '23.7.0'
+  m.dependency 'MapboxCoreMaps', '10.12.0-beta.1'
+  m.dependency 'MapboxCommon', '23.4.0-beta.1'
   m.dependency 'Turf', '~> 2.0'
 
 end

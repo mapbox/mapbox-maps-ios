@@ -8,6 +8,7 @@ parameters:
   scheme:
     type: string
 executor: xcode-latest
+resource_class: macos.x86.medium.gen2
 steps:
   - checkout-root
   - install-gcloud
@@ -37,20 +38,18 @@ steps:
         (
           unzip output/build_products.zip -d testlab_results/
           rsync -R testlab_results/*/CrashLogs/*.ips CrashLogs/
-          make symbolicate \
-            BUILD_DIR=CrashLogs \
-            BUILT_DEVICE_PRODUCTS_DIR=testlab_results/Release-iphoneos/ \
-            APP_NAME=<< parameters.scheme >>
+
+          APP_PATH="testlab_results/Release-iphoneos/<< parameters.scheme >>.app"
+          DEVELOPER_DIR="$(xcode-select -p)" \
+            find CrashLogs -name "*.ips" \
+            -exec \
+              $(xcode-select -p)/../SharedFrameworks/DVTFoundation.framework/Versions/A/Resources/symbolicatecrash {} \
+              "$APP_PATH" "$APP_PATH" "$APP_PATH/Frameworks" "$APP_PATH/PlugIns"
+              -o {}.symbolicated.ips \;
+
           zip -r crashlogs.zip CrashLogs
         ) || true
       when: always
-  - run:
-      name: Update coverage
-      command: |
-        make update-codecov-with-profdata \
-            COVERAGE_ARCH=arm64 \
-            COVERAGE_ROOT_DIR="$(pwd)/testlab_results" \
-            COVERAGE_MAPBOX_MAPS="$(pwd)/$(find . -name "MapboxMaps.o" | xargs)" SCHEME=<< parameters.scheme >>
   - run:
       name: Parsing xcresults for errors
       command: |

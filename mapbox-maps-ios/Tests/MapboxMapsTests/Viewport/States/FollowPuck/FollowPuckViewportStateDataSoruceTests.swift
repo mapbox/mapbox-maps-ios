@@ -4,44 +4,41 @@ import XCTest
 final class FollowPuckViewportStateDataSourceTests: XCTestCase {
 
     var options: FollowPuckViewportStateOptions!
-    var interpolatedLocationProducer: MockInterpolatedLocationProducer!
     var observableCameraOptions: MockObservableCameraOptions!
     var dataSource: FollowPuckViewportStateDataSource!
+    var onPuckRenderSubject: SignalSubject<PuckRenderingData>!
 
     override func setUp() {
         super.setUp()
         options = .random()
-        interpolatedLocationProducer = MockInterpolatedLocationProducer()
         observableCameraOptions = MockObservableCameraOptions()
+        onPuckRenderSubject = .init()
         dataSource = FollowPuckViewportStateDataSource(
             options: options,
-            interpolatedLocationProducer: interpolatedLocationProducer,
+            onPuckRender: onPuckRenderSubject.signal,
             observableCameraOptions: observableCameraOptions)
     }
 
     override func tearDown() {
+        onPuckRenderSubject = nil
         dataSource = nil
         observableCameraOptions = nil
-        interpolatedLocationProducer = nil
         options = nil
         super.tearDown()
     }
 
-    @discardableResult
-    func updateLocation() throws -> InterpolatedLocation {
-        let handler = try XCTUnwrap(interpolatedLocationProducer.observeStub.invocations.first?.parameters)
-        let location = InterpolatedLocation.random()
-        interpolatedLocationProducer.location = location
-        XCTAssertTrue(handler(location))
-        return location
+    func updateRenderingData() -> PuckRenderingData {
+        let data = PuckRenderingData.random()
+        onPuckRenderSubject.send(data)
+        return data
     }
 
-    func makeExpectedCamera(location: InterpolatedLocation, options: FollowPuckViewportStateOptions) -> CameraOptions {
+    func makeExpectedCamera(data: PuckRenderingData, options: FollowPuckViewportStateOptions) -> CameraOptions {
         return CameraOptions(
-            center: location.coordinate,
+            center: data.location.coordinate,
             padding: options.padding,
             zoom: options.zoom,
-            bearing: options.bearing?.evaluate(with: location),
+            bearing: options.bearing?.evaluate(with: data),
             pitch: options.pitch)
     }
 
@@ -49,28 +46,17 @@ final class FollowPuckViewportStateDataSourceTests: XCTestCase {
         XCTAssertEqual(dataSource.options, options)
     }
 
-    func testSettingOptionsWithoutLatestLocation() throws {
+    func testSettingOptionsWithoutLatestLocation() {
         let newOptions = FollowPuckViewportStateOptions.random()
         dataSource.options = newOptions
 
         XCTAssertTrue(observableCameraOptions.notifyStub.invocations.isEmpty)
 
         // new options used to calculate camera when location updates come in
-        let location = try updateLocation()
+        let data = updateRenderingData()
 
-        let expectedCamera = makeExpectedCamera(location: location, options: newOptions)
+        let expectedCamera = makeExpectedCamera(data: data, options: newOptions)
         XCTAssertEqual(observableCameraOptions.notifyStub.invocations.map(\.parameters), [expectedCamera])
-    }
-
-    func testSettingOptionsWithLatestLocationNotifiesObservers() throws {
-        let location = try updateLocation()
-        let newOptions = FollowPuckViewportStateOptions.random()
-        let expectedCameraOptions = makeExpectedCamera(location: location, options: newOptions)
-        observableCameraOptions.notifyStub.reset()
-
-        dataSource.options = newOptions
-
-        XCTAssertEqual(observableCameraOptions.notifyStub.invocations.map(\.parameters), [expectedCameraOptions])
     }
 
     func testObserve() throws {
@@ -102,10 +88,10 @@ final class FollowPuckViewportStateDataSourceTests: XCTestCase {
         XCTAssertEqual(observeCancelable.cancelStub.invocations.count, 1)
     }
 
-    func testLocationUpdateNotifiesObservers() throws {
-        let location = try updateLocation()
+    func testLocationUpdateNotifiesObservers() {
+        let data = updateRenderingData()
 
-        let expectedCamera = makeExpectedCamera(location: location, options: options)
+        let expectedCamera = makeExpectedCamera(data: data, options: options)
         XCTAssertEqual(observableCameraOptions.notifyStub.invocations.map(\.parameters), [expectedCamera])
     }
 }

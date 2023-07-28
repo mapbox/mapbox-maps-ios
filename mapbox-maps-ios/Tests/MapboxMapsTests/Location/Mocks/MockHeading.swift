@@ -23,4 +23,26 @@ final class MockHeading: CLHeading {
             fatalError("unimplemented")
         }
     }
+
+    let headingAccuracyStub = Stub<Void, CLLocationDirection>(defaultReturnValue: 0)
+    override var headingAccuracy: CLLocationDirection {
+        get {
+            headingAccuracyStub.call()
+        }
+        // swiftlint:disable:next unused_setter_value
+        set {
+            fatalError("unimplemented")
+        }
+    }
+
+    let timestampStub = Stub<Void, Date>(defaultReturnValue: Date())
+    override var timestamp: Date {
+        get {
+            timestampStub.call()
+        }
+        // swiftlint:disable:next unused_setter_value
+        set {
+            fatalError("unimplemented")
+        }
+    }
 }

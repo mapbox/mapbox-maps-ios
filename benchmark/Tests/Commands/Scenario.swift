@@ -5,6 +5,7 @@ struct Scenario {
     let name: String
     let setupCommands: [AsyncCommand]
     let benchmarkCommands: [AsyncCommand]
+    let context = Context()
 
     init(filePath: URL, name: String, splitAt condition: ((AsyncCommand) -> Bool)? = nil) throws {
         self.name = name
@@ -43,16 +44,16 @@ struct Scenario {
 
     private func runCommands(_ commands: [AsyncCommand], for metrics: [Metric]) async throws {
         for command in commands {
-            metrics.forEach { $0.commandWillStartExecuting(command) }
+            metrics.forEach { $0.commandWillStartExecuting(command, context: context) }
             print(">> Start command: \(type(of: command))")
-            try await command.execute()
+            try await command.execute(context: context)
             print("<< Finish command: \(type(of: command))\n")
-            metrics.forEach { $0.commandDidFinishExecuting(command) }
+            metrics.forEach { $0.commandDidFinishExecuting(command, context: context) }
         }
     }
 
     func cleanup() {
-       (setupCommands + benchmarkCommands).forEach { $0.cleanup() }
+       (setupCommands + benchmarkCommands).forEach { $0.cleanup(context: context) }
     }
 
     enum SupportedCommands: String {
@@ -63,7 +64,6 @@ struct Scenario {
         case playSequence = "PlaySequence"
         case addRoute = "AddRoute"
         case setMemoryBudget = "SetMemoryBudget"
-        case setRenderCache = "SetRenderCache"
         case enableTerrain = "EnableTerrain"
         case takeSnapshot = "TakeSnapshot"
     }
@@ -101,8 +101,6 @@ struct Scenario {
                     command = try commandContainer.decode(AddRouteCommand.self)
                 case .setMemoryBudget:
                     command = try commandContainer.decode(SetMemoryBudgetCommand.self)
-                case .setRenderCache:
-                    command = try commandContainer.decode(SetRenderCacheCommand.self)
                 case .enableTerrain:
                     command = try commandContainer.decode(EnableTerrainCommand.self)
                 case .takeSnapshot:

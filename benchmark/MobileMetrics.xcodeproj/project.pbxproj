@@ -7,14 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3084B0062A67FAFB008B4C98 /* 3d-munich-drive-tilepack.json in Resources */ = {isa = PBXBuildFile; fileRef = 3084AFFF2A67FAFB008B4C98 /* 3d-munich-drive-tilepack.json */; };
+		3084B0072A67FAFB008B4C98 /* 3d-munich-ttrc-cold.json in Resources */ = {isa = PBXBuildFile; fileRef = 3084B0002A67FAFB008B4C98 /* 3d-munich-ttrc-cold.json */; };
+		3084B0082A67FAFB008B4C98 /* 3d-munich-zoom-tilepack.json in Resources */ = {isa = PBXBuildFile; fileRef = 3084B0012A67FAFB008B4C98 /* 3d-munich-zoom-tilepack.json */; };
+		3084B0092A67FAFB008B4C98 /* 3d-munich-zoom.json in Resources */ = {isa = PBXBuildFile; fileRef = 3084B0022A67FAFB008B4C98 /* 3d-munich-zoom.json */; };
+		3084B00A2A67FAFB008B4C98 /* 3d-new-york-zoom.json in Resources */ = {isa = PBXBuildFile; fileRef = 3084B0032A67FAFB008B4C98 /* 3d-new-york-zoom.json */; };
+		3084B00B2A67FAFB008B4C98 /* 3d-munich-ttrc-warm.json in Resources */ = {isa = PBXBuildFile; fileRef = 3084B0042A67FAFB008B4C98 /* 3d-munich-ttrc-warm.json */; };
+		3084B00C2A67FAFB008B4C98 /* 3d-1tap-munich.json in Resources */ = {isa = PBXBuildFile; fileRef = 3084B0052A67FAFB008B4C98 /* 3d-1tap-munich.json */; };
+		3084B00E2A67FCA1008B4C98 /* zoom-in-out-z10-z20.json in Resources */ = {isa = PBXBuildFile; fileRef = 3084B00D2A67FCA1008B4C98 /* zoom-in-out-z10-z20.json */; };
 		3A011CB728631D6A004713DA /* AddRouteCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A011CB628631D6A004713DA /* AddRouteCommand.swift */; };
 		3A011CBB286343E9004713DA /* nav-day-munich-drive-tilepack.json in Resources */ = {isa = PBXBuildFile; fileRef = 3A011CB8286343E9004713DA /* nav-day-munich-drive-tilepack.json */; };
 		3A011CBC286343E9004713DA /* munich-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 3A011CB9286343E9004713DA /* munich-route.json */; };
 		3A011CBD286343E9004713DA /* munich-animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 3A011CBA286343E9004713DA /* munich-animation.json */; };
 		3A23E3ED28E42B3A00ADC2AD /* 1tap-munich-recording-ios.json.gz in Resources */ = {isa = PBXBuildFile; fileRef = 3A23E3EC28E42B3900ADC2AD /* 1tap-munich-recording-ios.json.gz */; };
 		3A23E3EF28E42D8800ADC2AD /* 1tap-munich.json in Resources */ = {isa = PBXBuildFile; fileRef = 3A23E3EE28E42D8800ADC2AD /* 1tap-munich.json */; };
-		3A33396928B8C0480095E8D0 /* SetRenderCacheCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A33396828B8C0480095E8D0 /* SetRenderCacheCommand.swift */; };
-		3A4D635729DC28E70053FEFC /* ResouceOptions+Update.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4D635629DC28E70053FEFC /* ResouceOptions+Update.swift */; };
 		3A56266C286436C400107E56 /* ExecutionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A56266B286436C400107E56 /* ExecutionError.swift */; };
 		3A56266E28645AE200107E56 /* OnDemandLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A56266D28645AE200107E56 /* OnDemandLocationProvider.swift */; };
 		3A60782F28BE1EA80000BF7A /* EnableTerrainCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A60782E28BE1EA80000BF7A /* EnableTerrainCommand.swift */; };
@@ -73,14 +79,20 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3084AFFF2A67FAFB008B4C98 /* 3d-munich-drive-tilepack.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "3d-munich-drive-tilepack.json"; sourceTree = "<group>"; };
+		3084B0002A67FAFB008B4C98 /* 3d-munich-ttrc-cold.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "3d-munich-ttrc-cold.json"; sourceTree = "<group>"; };
+		3084B0012A67FAFB008B4C98 /* 3d-munich-zoom-tilepack.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "3d-munich-zoom-tilepack.json"; sourceTree = "<group>"; };
+		3084B0022A67FAFB008B4C98 /* 3d-munich-zoom.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "3d-munich-zoom.json"; sourceTree = "<group>"; };
+		3084B0032A67FAFB008B4C98 /* 3d-new-york-zoom.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "3d-new-york-zoom.json"; sourceTree = "<group>"; };
+		3084B0042A67FAFB008B4C98 /* 3d-munich-ttrc-warm.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "3d-munich-ttrc-warm.json"; sourceTree = "<group>"; };
+		3084B0052A67FAFB008B4C98 /* 3d-1tap-munich.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "3d-1tap-munich.json"; sourceTree = "<group>"; };
+		3084B00D2A67FCA1008B4C98 /* zoom-in-out-z10-z20.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "zoom-in-out-z10-z20.json"; sourceTree = "<group>"; };
 		3A011CB628631D6A004713DA /* AddRouteCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRouteCommand.swift; sourceTree = "<group>"; };
 		3A011CB8286343E9004713DA /* nav-day-munich-drive-tilepack.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "nav-day-munich-drive-tilepack.json"; sourceTree = "<group>"; };
 		3A011CB9286343E9004713DA /* munich-route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "munich-route.json"; sourceTree = "<group>"; };
 		3A011CBA286343E9004713DA /* munich-animation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "munich-animation.json"; sourceTree = "<group>"; };
 		3A23E3EC28E42B3900ADC2AD /* 1tap-munich-recording-ios.json.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = "1tap-munich-recording-ios.json.gz"; sourceTree = "<group>"; };
 		3A23E3EE28E42D8800ADC2AD /* 1tap-munich.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "1tap-munich.json"; sourceTree = "<group>"; };
-		3A33396828B8C0480095E8D0 /* SetRenderCacheCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetRenderCacheCommand.swift; sourceTree = "<group>"; };
-		3A4D635629DC28E70053FEFC /* ResouceOptions+Update.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResouceOptions+Update.swift"; sourceTree = "<group>"; };
 		3A56266B286436C400107E56 /* ExecutionError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecutionError.swift; sourceTree = "<group>"; };
 		3A56266D28645AE200107E56 /* OnDemandLocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDemandLocationProvider.swift; sourceTree = "<group>"; };
 		3A60782E28BE1EA80000BF7A /* EnableTerrainCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnableTerrainCommand.swift; sourceTree = "<group>"; };
@@ -151,6 +163,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3084AFFE2A67FAFB008B4C98 /* generated */ = {
+			isa = PBXGroup;
+			children = (
+				3084AFFF2A67FAFB008B4C98 /* 3d-munich-drive-tilepack.json */,
+				3084B0002A67FAFB008B4C98 /* 3d-munich-ttrc-cold.json */,
+				3084B0012A67FAFB008B4C98 /* 3d-munich-zoom-tilepack.json */,
+				3084B0022A67FAFB008B4C98 /* 3d-munich-zoom.json */,
+				3084B0032A67FAFB008B4C98 /* 3d-new-york-zoom.json */,
+				3084B0042A67FAFB008B4C98 /* 3d-munich-ttrc-warm.json */,
+				3084B0052A67FAFB008B4C98 /* 3d-1tap-munich.json */,
+			);
+			path = generated;
+			sourceTree = "<group>";
+		};
 		745D052027C8D130004E7B53 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -172,7 +198,6 @@
 				3A011CB628631D6A004713DA /* AddRouteCommand.swift */,
 				3A56266B286436C400107E56 /* ExecutionError.swift */,
 				3A75F06C28AF792000D26448 /* SetMemoryBudgetCommand.swift */,
-				3A33396828B8C0480095E8D0 /* SetRenderCacheCommand.swift */,
 				3A60782E28BE1EA80000BF7A /* EnableTerrainCommand.swift */,
 			);
 			path = Commands;
@@ -181,6 +206,7 @@
 		74673144282EA6F100B7D044 /* Specs */ = {
 			isa = PBXGroup;
 			children = (
+				3084AFFE2A67FAFB008B4C98 /* generated */,
 				3A23E3EE28E42D8800ADC2AD /* 1tap-munich.json */,
 				3A23E3EC28E42B3900ADC2AD /* 1tap-munich-recording-ios.json.gz */,
 				3A011CBA286343E9004713DA /* munich-animation.json */,
@@ -194,6 +220,7 @@
 				7479AD4728BE347F00538A88 /* pan-zoom-rotate-pitch.json */,
 				FE18AEE5284113F3001B9E6F /* nav-day-munich-zoom-tilepack.json */,
 				FE18AEE3284113F2001B9E6F /* nav-day-munich-zoom.json */,
+				3084B00D2A67FCA1008B4C98 /* zoom-in-out-z10-z20.json */,
 			);
 			name = Specs;
 			path = "../../mapbox-maps-internal/test-spec/tests";
@@ -281,7 +308,6 @@
 				FE18AEE12840ED4D001B9E6F /* StyleURI+Decodable.swift */,
 				FE18AEEC2844F47B001B9E6F /* MapRecorder+Async.swift */,
 				FE79318428E2F6F800C08371 /* URL+Suffix.swift */,
-				3A4D635629DC28E70053FEFC /* ResouceOptions+Update.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -293,10 +319,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7499662827C64ECE00DA186A /* Build configuration list for PBXNativeTarget "MobileMetrics" */;
 			buildPhases = (
+				7499663B27C7AD4100DA186A /* Insert Mapbox Access Token */,
 				7499661027C64ECD00DA186A /* Sources */,
 				7499661127C64ECD00DA186A /* Frameworks */,
 				7499661227C64ECD00DA186A /* Resources */,
-				7499663B27C7AD4100DA186A /* Insert access token */,
 			);
 			buildRules = (
 			);
@@ -378,11 +404,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				FE18AEE8284113F3001B9E6F /* nav-day-munich-zoom-tilepack.json in Resources */,
+				3084B0072A67FAFB008B4C98 /* 3d-munich-ttrc-cold.json in Resources */,
 				3A011CBD286343E9004713DA /* munich-animation.json in Resources */,
 				FE18AEE7284113F3001B9E6F /* munich-zoom-in-out-z10-z20.json in Resources */,
 				3A23E3ED28E42B3A00ADC2AD /* 1tap-munich-recording-ios.json.gz in Resources */,
+				3084B0092A67FAFB008B4C98 /* 3d-munich-zoom.json in Resources */,
+				3084B00B2A67FAFB008B4C98 /* 3d-munich-ttrc-warm.json in Resources */,
 				FE18AEE6284113F3001B9E6F /* nav-day-munich-zoom.json in Resources */,
+				3084B00C2A67FAFB008B4C98 /* 3d-1tap-munich.json in Resources */,
+				3084B0082A67FAFB008B4C98 /* 3d-munich-zoom-tilepack.json in Resources */,
 				3A011CBB286343E9004713DA /* nav-day-munich-drive-tilepack.json in Resources */,
+				3084B00A2A67FAFB008B4C98 /* 3d-new-york-zoom.json in Resources */,
+				3084B0062A67FAFB008B4C98 /* 3d-munich-drive-tilepack.json in Resources */,
 				7467314B282EA6FA00B7D044 /* nav-day-munich-ttrc-warm.json in Resources */,
 				3A011CBC286343E9004713DA /* munich-route.json in Resources */,
 				7467314A282EA6FA00B7D044 /* streets-munich-ttrc-warm.json in Resources */,
@@ -393,6 +426,7 @@
 				7479AD4828BE347F00538A88 /* pan-zoom-rotate-pitch.json in Resources */,
 				7499661F27C64ECD00DA186A /* Main.storyboard in Resources */,
 				3A23E3EF28E42D8800ADC2AD /* 1tap-munich.json in Resources */,
+				3084B00E2A67FCA1008B4C98 /* zoom-in-out-z10-z20.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -406,7 +440,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		7499663B27C7AD4100DA186A /* Insert access token */ = {
+		7499663B27C7AD4100DA186A /* Insert Mapbox Access Token */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -415,16 +449,16 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
 			);
-			name = "Insert access token";
+			name = "Insert Mapbox Access Token";
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"$(INFOPLIST_PREFIX_HEADER)",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/insert_access_token.sh\n";
+			shellScript = "$SRCROOT/../mapbox-maps-ios/scripts/insert_access_token.sh\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -456,9 +490,7 @@
 				3A011CB728631D6A004713DA /* AddRouteCommand.swift in Sources */,
 				7412CF5E27E4A0CF00F03B1C /* AnimationEaseToBenchmark.swift in Sources */,
 				FE555B7E283774EF002751C7 /* SetOnlineStateCommand.swift in Sources */,
-				3A33396928B8C0480095E8D0 /* SetRenderCacheCommand.swift in Sources */,
 				FE18AEE22840ED4D001B9E6F /* StyleURI+Decodable.swift in Sources */,
-				3A4D635729DC28E70053FEFC /* ResouceOptions+Update.swift in Sources */,
 				74F2381327E3730C009F304C /* WarmCacheBenchmark.swift in Sources */,
 				FE555B80283775F3002751C7 /* CameraOptions+Decodable.swift in Sources */,
 				74F237F127E3326E009F304C /* InitSDKBenchmark.swift in Sources */,
@@ -643,6 +675,8 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_PREFIX_HEADER = "$(DERIVED_FILE_DIR)/InfoPlist.Prefix.h";
+				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -675,6 +709,8 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_PREFIX_HEADER = "$(DERIVED_FILE_DIR)/InfoPlist.Prefix.h";
+				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

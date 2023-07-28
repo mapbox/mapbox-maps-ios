@@ -89,8 +89,23 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "MAPBOX_MAPS_SIGNPOSTS_ENABLED"
-            value = ""
+            value = "core,platform"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "MTL_HUD_ENABLED"
+            value = "1"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "MAPBOX_REOPEN_EXAMPLE"
+            value = "1"
             isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "DEBUG_FINGERTIP_WINDOW"
+            value = "1"
+            isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>
    </LaunchAction>

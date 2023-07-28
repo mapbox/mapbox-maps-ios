@@ -23,6 +23,7 @@ extension CLLocationCoordinate2D {
 
 class ViewController: UIViewController {
     var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     lazy var pointAnnotationManager: PointAnnotationManager? = {
         mapView?.annotations.makePointAnnotationManager()
@@ -104,11 +105,11 @@ class ViewController: UIViewController {
         super.viewDidAppear(animated)
 
         // Set initial conditions
-        mapView.mapboxMap.onNext(.styleLoaded) { _ in
+        mapView.mapboxMap.onStyleLoaded.observeNext { _ in
             self.flyToNextCoordinate()
-        }
+        }.store(in: &cancelables)
 
-        mapView.mapboxMap.style.uri = styles[styleStep].0
+        mapView.mapboxMap.uri = styles[styleStep].0
     }
 
     func flyToNextCoordinate() {
@@ -126,7 +127,7 @@ class ViewController: UIViewController {
             removeAnnotations()
 
             // Change the style
-            mapView.mapboxMap.style.uri = styles[styleStep].0
+            mapView.mapboxMap.uri = styles[styleStep].0
             print("Changing style to \(styles[styleStep].0)")
 
             return
@@ -257,12 +258,12 @@ class ViewController: UIViewController {
         do {
             let data = try JSONEncoder().encode(exp.self)
             let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
-            color = mapView.mapboxMap.style.layerProperty(
+            color = mapView.mapboxMap.layerProperty(
                 for: land,
                 property: "background-color")
 
             print("Setting background color expression")
-            try! mapView.mapboxMap.style.setLayerProperty(
+            try! mapView.mapboxMap.setLayerProperty(
                 for: land,
                 property: "background-color",
                 value: jsonObject)
@@ -278,7 +279,7 @@ class ViewController: UIViewController {
 
         if let color = color {
             print("Re-setting background color expression")
-            try! mapView.mapboxMap.style.setLayerProperty(
+            try! mapView.mapboxMap.setLayerProperty(
                 for: land,
                 property: "background-color",
                 value: color)
@@ -293,16 +294,14 @@ class ViewController: UIViewController {
 
         // Configure the snapshotter object with its default access
         // token, size, map style, and camera.
-        let options = MapSnapshotOptions(size: CGSize(width: 300, height: 300),
-                                         pixelRatio: 1,
-                                         resourceOptions: mapInitOptions.resourceOptions)
+        let options = MapSnapshotOptions(size: CGSize(width: 300, height: 300), pixelRatio: 1)
 
         print("Creating snapshotter")
         let snapshotter = Snapshotter(options: options)
-        snapshotter.style.uri = .light
+        snapshotter.uri = .light
         snapshotter.setCamera(to: CameraOptions(cameraState: mapView.cameraState))
 
-        snapshotter.onNext(.styleLoaded) { [weak self] _ in
+        snapshotter.onStyleLoaded.observeNext { [weak self] _ in
             guard let snapshotter = self?.snapshotter else {
                 assertionFailure("Snapshotter does not exist")
                 completion()
@@ -312,7 +311,7 @@ class ViewController: UIViewController {
             snapshotter.start(overlayHandler: nil) { _ in
                 completion()
             }
-        }
+        }.store(in: &cancelables)
 
         self.snapshotter = snapshotter
     }

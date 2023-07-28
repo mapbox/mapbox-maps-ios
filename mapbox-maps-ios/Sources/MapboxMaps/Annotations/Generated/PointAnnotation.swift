@@ -109,6 +109,26 @@ public struct PointAnnotation: Annotation {
         }
     }
 
+    /// Scales the icon to fit around the associated text.
+    public var iconTextFit: IconTextFit? {
+        get {
+            return layerProperties["icon-text-fit"].flatMap { $0 as? String }.flatMap(IconTextFit.init(rawValue:))
+        }
+        set {
+            layerProperties["icon-text-fit"] = newValue?.rawValue
+        }
+    }
+
+    /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
+    public var iconTextFitPadding: [Double]? {
+        get {
+            return layerProperties["icon-text-fit-padding"] as? [Double]
+        }
+        set {
+            layerProperties["icon-text-fit-padding"] = newValue
+        }
+    }
+
     /// Sorts features in ascending order based on this value. Features with lower sort keys are drawn and placed first.  When `icon-allow-overlap` or `text-allow-overlap` is `false`, features with a lower sort key will have priority during placement. When `icon-allow-overlap` or `text-allow-overlap` is set to `true`, features with a higher sort key will overlap over features with a lower sort key.
     public var symbolSortKey: Double? {
         get {
@@ -239,6 +259,16 @@ public struct PointAnnotation: Annotation {
         }
     }
 
+    /// Emission strength
+    public var iconEmissiveStrength: Double? {
+        get {
+            return layerProperties["icon-emissive-strength"] as? Double
+        }
+        set {
+            layerProperties["icon-emissive-strength"] = newValue
+        }
+    }
+
     /// Fade out the halo towards the outside.
     public var iconHaloBlur: Double? {
         get {
@@ -269,6 +299,16 @@ public struct PointAnnotation: Annotation {
         }
     }
 
+    /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together.
+    public var iconImageCrossFade: Double? {
+        get {
+            return layerProperties["icon-image-cross-fade"] as? Double
+        }
+        set {
+            layerProperties["icon-image-cross-fade"] = newValue
+        }
+    }
+
     /// The opacity at which the icon will be drawn.
     public var iconOpacity: Double? {
         get {
@@ -286,6 +326,16 @@ public struct PointAnnotation: Annotation {
         }
         set {
             layerProperties["text-color"] = newValue?.rgbaString
+        }
+    }
+
+    /// Emission strength
+    public var textEmissiveStrength: Double? {
+        get {
+            return layerProperties["text-emissive-strength"] as? Double
+        }
+        set {
+            layerProperties["text-emissive-strength"] = newValue
         }
     }
 

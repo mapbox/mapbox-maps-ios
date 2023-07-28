@@ -11,6 +11,7 @@
 _%>
 // This file is generated.
 import Foundation
+import os
 @_implementationOnly import MapboxCommon_Private
 
 /// An instance of `<%- camelize(type) %>AnnotationManager` is responsible for a collection of `<%- camelize(type) %>Annotation`s.
@@ -115,7 +116,7 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
     internal init(id: String,
                   style: StyleProtocol,
                   layerPosition: LayerPosition?,
-                  displayLinkCoordinator: DisplayLinkCoordinator<%_ if (isPointAnnotationManager) { _%>,
+                  displayLinkCoordinator: DisplayLinkCoordinator?<%_ if (isPointAnnotationManager) { _%>,
                   clusterOptions: ClusterOptions? = nil,
                   imagesManager: AnnotationImagesManagerProtocol<%_ } _%>,
                   <%_ if (type === circle || type === symbol) { _%>
@@ -148,9 +149,10 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
         <%_ } %>
         do {
             // Add the source with empty `data` property
-            var source = GeoJSONSource()
-            source.data = .empty
-            <%_ if (isPointAnnotationManager) { _%>
+            <%_ if (!isPointAnnotationManager) { _%>
+            let source = GeoJSONSource(id: sourceId)
+            <%_ } else { _%>
+            var source = GeoJSONSource(id: sourceId)
 
             // Set cluster options and create clusters if clustering is enabled
             if let clusterOptions = clusterOptions {
@@ -161,7 +163,7 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
             }
 
             <%_ } _%>
-            try style.addSource(source, id: sourceId)
+            try style.addSource(source)
             <%_ if (isPointAnnotationManager) { _%>
 
             if let clusterOptions = clusterOptions {
@@ -170,8 +172,7 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
             <%_ } _%>
 
             // Add the correct backing layer for this annotation type
-            var layer = <%- camelize(originalType) %>Layer(id: layerId)
-            layer.source = sourceId
+            <%- isPointAnnotationManager ? "var" : "let" -%> layer = <%- camelize(originalType) %>Layer(id: layerId, source: sourceId)
             <%_ if (isPointAnnotationManager) { _%>
 
             // Show all icons and texts by default in point annotations.
@@ -189,7 +190,8 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
 
         self.displayLinkParticipant.delegate = self
 
-        displayLinkCoordinator.add(displayLinkParticipant)
+        assert(displayLinkCoordinator != nil, "DisplayLinkCoordinator must be present")
+        displayLinkCoordinator?.add(displayLinkParticipant)
     }
 
     <%_ if (isPointAnnotationManager) { _%>
@@ -215,8 +217,7 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
 
     private func createClusterLevelLayer(clusterOptions: ClusterOptions) -> CircleLayer {
         let layedID = "mapbox-iOS-cluster-circle-layer-manager-" + id
-        var circleLayer = CircleLayer(id: layedID)
-        circleLayer.source = sourceId
+        var circleLayer = CircleLayer(id: layedID, source: sourceId)
         circleLayer.circleColor = clusterOptions.circleColor
         circleLayer.circleRadius = clusterOptions.circleRadius
         circleLayer.filter = Exp(.has) { "point_count" }
@@ -225,8 +226,7 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
 
     private func createClusterTextLayer(clusterOptions: ClusterOptions) -> SymbolLayer {
         let layerID = "mapbox-iOS-cluster-text-layer-manager-" + id
-        var symbolLayer = SymbolLayer(id: layerID)
-        symbolLayer.source = sourceId
+        var symbolLayer = SymbolLayer(id: layerID, source: sourceId)
         symbolLayer.textField = clusterOptions.textField
         symbolLayer.textSize = clusterOptions.textSize
         symbolLayer.textColor = clusterOptions.textColor
@@ -308,7 +308,7 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
         let dataDrivenProperties = Dictionary(
             uniqueKeysWithValues: dataDrivenLayerPropertyKeys
                 .map { (key) -> (String, Any) in
-                    (key, ["get", key, ["get", "layerProperties"]])
+                    (key, ["get", key, ["get", "layerProperties"]] as [Any])
                 })
 
         // Merge the common layer properties
@@ -317,7 +317,7 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
         // Construct the properties dictionary to reset any properties that are no longer used
         let unusedPropertyKeys = previouslySetLayerPropertyKeys.subtracting(newLayerProperties.keys)
         let unusedProperties = Dictionary(uniqueKeysWithValues: unusedPropertyKeys.map { (key) -> (String, Any) in
-            (key, Style.layerPropertyDefaultValue(for: .<%- originalType %>, property: key).value)
+            (key, StyleManager.layerPropertyDefaultValue(for: .<%- originalType %>, property: key).value)
         })
 
         // Store the new set of property keys
@@ -336,14 +336,8 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
         }
 
         // build and update the source data
-        do {
-            let featureCollection = FeatureCollection(features: mainAnnotations.values.map(\.feature))
-            try style.updateGeoJSONSource(withId: sourceId, geoJSON: .featureCollection(featureCollection))
-        } catch {
-            Log.error(
-                forMessage: "Could not update annotations in <%- camelize(type) %>AnnotationManager due to error: \(error)",
-                category: "Annotations")
-        }
+        let featureCollection = FeatureCollection(features: mainAnnotations.values.map(\.feature))
+        style.updateGeoJSONSource(withId: sourceId, geoJSON: .featureCollection(featureCollection))
     }
 
     private func syncDragSourceIfNeeded() {
@@ -370,20 +364,31 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
     }
     <%_ } _%>
     <%_ } _%>
-    <%_ if ( type === "point" ) { _%>
 
-    /// Text leading value for multi-line text.
-    @available(*, deprecated, message: "text-line-height property is now data driven, use `PointAnnotation.textLineHeight` instead.")
-    public var textLineHeight: Double? {
+    <%_ if (isPointAnnotationManager) { _%>
+    /// Scales the icon to fit around the associated text.
+    @available(*, deprecated, message: "icon-text-fit property is now data driven, use `PointAnnotation.iconTextFit` instead.")
+    public var iconTextFit: IconTextFit? {
         get {
-            return layerProperties["text-line-height"] as? Double
+            return layerProperties["icon-text-fit"].flatMap { $0 as? String }.flatMap(IconTextFit.init(rawValue:))
         }
         set {
-            layerProperties["text-line-height"] = newValue
+            layerProperties["icon-text-fit"] = newValue?.rawValue
         }
     }
-    <%_ } _%>
 
+    /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
+    @available(*, deprecated, message: "icon-text-fit-padding property is now data driven, use `PointAnnotation.iconTextFitPadding` instead.")
+    public var iconTextFitPadding: [Double]? {
+        get {
+            return layerProperties["icon-text-fit-padding"] as? [Double]
+        }
+        set {
+            layerProperties["icon-text-fit-padding"] = newValue
+        }
+    }
+
+    <%_ } _%>
     // MARK: - User interaction handling
 
     /// Returns the first annotation matching the set of given `featureIdentifiers`.
@@ -431,14 +436,10 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
     }
 
     private func updateDragSource() {
-        do {
-            if let annotationBeingDragged = annotationBeingDragged {
-                draggedAnnotations[annotationBeingDragged.id] = annotationBeingDragged
-            }
-            try style.updateGeoJSONSource(withId: dragSourceId, geoJSON: .featureCollection(.init(features: draggedAnnotations.values.map(\.feature))))
-        } catch {
-            Log.error(forMessage: "Failed to update drag source. Error: \(error)")
+        if let annotationBeingDragged = annotationBeingDragged {
+            draggedAnnotations[annotationBeingDragged.id] = annotationBeingDragged
         }
+        style.updateGeoJSONSource(withId: dragSourceId, geoJSON: .featureCollection(.init(features: draggedAnnotations.values.map(\.feature))))
     }
 
     private func updateDragLayer() {
@@ -472,9 +473,7 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
 
         do {
             if !style.sourceExists(withId: dragSourceId) {
-                var dragSource = GeoJSONSource()
-                dragSource.data = .empty
-                try style.addSource(dragSource, id: dragSourceId)
+                try style.addSource(GeoJSONSource(id: dragSourceId))
             }
 
             annotationBeingDragged = annotation
@@ -520,8 +519,11 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
 
 extension <%- camelize(type) %>AnnotationManager: DelegatingDisplayLinkParticipantDelegate {
     func participate(for participant: DelegatingDisplayLinkParticipant) {
-        syncSourceAndLayerIfNeeded()
-        syncDragSourceIfNeeded()
+        OSLog.platform.withIntervalSignpost(SignpostName.mapViewDisplayLink,
+                                            "Participant: <%- camelize(type) %>AnnotationManager") {
+            syncSourceAndLayerIfNeeded()
+            syncDragSourceIfNeeded()
+        }
     }
 }
 

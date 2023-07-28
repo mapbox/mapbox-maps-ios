@@ -17,7 +17,7 @@ class InstrumentClusterCarPlaySceneDelegate: NSObject,
     func instrumentClusterControllerDidZoom(in instrumentClusterController: CPInstrumentClusterController) {
         guard let carPlayController = carPlayController else { return }
 
-        let cameraState = carPlayController.mapView.cameraState
+        let cameraState = carPlayController.mapView.mapboxMap.cameraState
         carPlayController.mapView.camera.ease(to: .init(zoom: cameraState.zoom + 1),
                                               duration: 0.3)
     }
@@ -25,7 +25,7 @@ class InstrumentClusterCarPlaySceneDelegate: NSObject,
     func instrumentClusterControllerDidZoomOut(_ instrumentClusterController: CPInstrumentClusterController) {
         guard let carPlayController = carPlayController else { return }
 
-        let cameraState = carPlayController.mapView.cameraState
+        let cameraState = carPlayController.mapView.mapboxMap.cameraState
         carPlayController.mapView.camera.ease(to: .init(zoom: cameraState.zoom - 1),
                                               duration: 0.3)
     }
@@ -38,7 +38,7 @@ class InstrumentClusterCarPlaySceneDelegate: NSObject,
         default:
             style = .light
         }
-        carPlayController?.mapView.mapboxMap.style.uri = style
+        carPlayController?.mapView.mapboxMap.styleURI = style
     }
 
     func instrumentClusterController(_ instrumentClusterController: CPInstrumentClusterController,

@@ -35,6 +35,7 @@ steps:
   - unless:
       condition: << parameters.disable_codecoverage >>
       steps:
+        - mapbox/install-mbx-ci
         - collect-code-coverage
   - run:
       name: Compress XCResult

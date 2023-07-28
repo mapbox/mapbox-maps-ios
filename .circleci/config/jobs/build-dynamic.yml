@@ -1,11 +1,42 @@
+parameters:
+  check-api-breakage:
+    description: Whether api breakage check is needed.
+    type: boolean
+    default: true
+  project-name:
+    description: Project name in SDK Registry.
+    type: string
+  upload-type:
+    description: SDK Registry upload type.
+    type: enum
+    enum:
+        - releases
+        - snapshots
+    default: releases
 executor: xcode-sdk-min
-resource_class: macos.x86.medium.gen2
 steps:
   - checkout-root
   - configure-environment:
       skip-dependencies: true
   - install-xcodegen
   - install-python-dependencies
+  - when:
+      condition:
+        and:
+          - equal: [ snapshots, << parameters.upload-type >>]
+      steps:
+        - install-sdk-ci
+        - run:
+            name: Compute snapshot version
+            command: |
+              VERSION=$(sdk-ci semver compute-snapshot-version)
+              echo "Snapshot version $VERSION"
+              echo "export VERSION=${VERSION}" >> $BASH_ENV
+              echo "export VERSION=${VERSION}" > snapshot-version
+        - persist_to_workspace:
+            root: .
+            paths:
+              - snapshot-version
   - run:
       name: Build dynamic SDK
       command: ./package-mapbox-maps.sh dynamic
@@ -16,14 +47,28 @@ steps:
       root: scripts/release/packager
       paths:
         - MapboxMaps.zip
-  - run:
-      name: Dump the SDK to a JSON file
-      command: scripts/api-compatibility-check/breaking-api-check.py dump scripts/release/packager/MapboxMaps.zip --module MapboxMaps -o latest.api.json
-  - persist_to_workspace:
-      root: .
-      paths:
-        - latest.api.json
+  - when:
+      condition: << parameters.check-api-breakage >>
+      steps:
+        - run:
+            name: Dump the SDK to a JSON file
+            command: scripts/api-compatibility-check/breaking-api-check.py dump scripts/release/packager/MapboxMaps.zip --module MapboxMaps -o latest.api.json
+        - persist_to_workspace:
+            root: .
+            paths:
+                - latest.api.json
   - run:
       name: Upload to S3
-      command: scripts/release/upload-to-registry.sh scripts/release/packager/MapboxMaps.zip mobile-maps-ios "$VERSION" MapboxMaps.zip
-  - slack-notify-failure-if-any
+      command: scripts/release/upload-to-registry.sh scripts/release/packager/MapboxMaps.zip << parameters.project-name >> "$VERSION" MapboxMaps.zip << parameters.upload-type >>
+  - when:
+      condition:
+        and:
+          - equal: [ snapshots, << parameters.upload-type >>]
+      steps:
+          - sdk-cicd/slack-deployment-notification:
+                channel: maps-snapshot-releases
+                version: $VERSION
+                repository: << pipeline.parameters.sdk_ci_repo_name >>
+                author: << pipeline.parameters.sdk_ci_commit_author_name >>
+                commit-sha: << pipeline.parameters.sdk_ci_commit_short_sha >>
+                commit-message: << pipeline.parameters.sdk_ci_commit_message >>

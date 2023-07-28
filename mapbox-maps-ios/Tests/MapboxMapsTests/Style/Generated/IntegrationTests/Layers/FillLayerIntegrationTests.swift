@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class FillLayerIntegrationTests: MapViewIntegrationTestCase {
 
@@ -9,21 +9,17 @@ final class FillLayerIntegrationTests: MapViewIntegrationTestCase {
     }
 
     internal func testWaitForIdle() throws {
-        let style = try XCTUnwrap(self.style)
-
         let successfullyAddedLayerExpectation = XCTestExpectation(description: "Successfully added FillLayer to Map")
         successfullyAddedLayerExpectation.expectedFulfillmentCount = 1
 
         let successfullyRetrievedLayerExpectation = XCTestExpectation(description: "Successfully retrieved FillLayer from Map")
         successfullyRetrievedLayerExpectation.expectedFulfillmentCount = 1
 
-        style.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
-        didFinishLoadingStyle = { _ in
+        didFinishLoadingStyle = { mapView in
 
-            var layer = FillLayer(id: "test-id")
-            layer.source = "some-source"
-            layer.sourceLayer = nil
+            var layer = FillLayer(id: "test-id", source: "source")
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
@@ -32,18 +28,19 @@ final class FillLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.fillAntialias = Value<Bool>.testConstantValue()
             layer.fillColor = Value<StyleColor>.testConstantValue()
             layer.fillColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.fillEmissiveStrength = Value<Double>.testConstantValue()
+            layer.fillEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillOpacity = Value<Double>.testConstantValue()
             layer.fillOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillOutlineColor = Value<StyleColor>.testConstantValue()
             layer.fillOutlineColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillPattern = Value<ResolvedImage>.testConstantValue()
-            layer.fillPatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillTranslateAnchor = Value<FillTranslateAnchor>.testConstantValue()
 
             // Add the layer
             do {
-                try style.addLayer(layer)
+                try mapView.mapboxMap.addLayer(layer)
                 successfullyAddedLayerExpectation.fulfill()
             } catch {
                 XCTFail("Failed to add FillLayer because of error: \(error)")
@@ -51,7 +48,7 @@ final class FillLayerIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the layer
             do {
-                _ = try style.layer(withId: "test-id", type: FillLayer.self)
+                _ = try mapView.mapboxMap.layer(withId: "test-id", type: FillLayer.self)
                 successfullyRetrievedLayerExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve FillLayer because of error: \(error)")

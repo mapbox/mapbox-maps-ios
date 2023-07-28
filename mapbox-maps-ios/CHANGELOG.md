@@ -1,9 +1,129 @@
-# Changelog for Mapbox Maps SDK v10 for iOS
+# Changelog for Mapbox Maps SDK v11 for iOS
 
 Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Introduce `hsl`, `hsla` color expression.
+* Introduce `random` expression.
+* Introduce `measureLight` expression lights configuration property.
+* Introduce `LineLayer/lineBorderColor`, `LineLayer/lineBorderWidth` APIs.
+* Introduce `SymbolLayer/iconImageCrossFade` API.
+* Introduce experimental `BackgroundLayer/backgroundEmissiveStrength`, `CircleLayer/circleEmissiveStrength`, `FillLayer/fillEmissiveStrength`, `LineLayer/lineEmissiveStrength`, `SymbolLayer/iconEmissiveStrength`, `SymbolLayer/textEmissiveStrength`, `ModelLayer/modelEmissiveStrength`, `ModelLayer/modelRoughness`, `ModelLayer/modelHeightBasedEmissiveStrengthMultiplier` APIs.
+* Introduce experimental `FillExtrusionLayer/fillExtrusionAmbientOcclusionWallRadius`, `FillExtrusionLayer/fillExtrusionAmbientOcclusionGroundRadius`, `FillExtrusionLayer/fillExtrusionAmbientOcclusionGroundAttenuation`, `FillExtrusionLayer/fillExtrusionFloodLightColor`, `FillExtrusionLayer/fillExtrusionFloodLightIntensity`, `FillExtrusionLayer/fillExtrusionFloodLightWallRadius`, `FillExtrusionLayer/fillExtrusionFloodLightGroundRadius`, `FillExtrusionLayer/fillExtrusionFloodLightGroundAttenuation`, `FillExtrusionLayer/fillExtrusionVerticalScale` APIs.
+* Rename `Viewport` to `ViewportManager`.
+* Apply `ModelScaleMode.viewport` to Puck3D configuration and remove the custom expression for the `modelScale` of the puck. This means if you are using a constant for `Puck3DConfiguration/modelScale` in v10, you need to adjust this model-scale constant so the puck would be rendered correctly in v11, while this value depends on other configurations of your puck, we have found the new adjusted model-scale to fall between 10x-100x of the old value.
+* Add experimental `tileCover` method to the `Snapshotter` that returns tile ids covering the map.
+* SDK no longer reexport MetalKit and UIKit.
+* Add optional `maxZoom` and `offset` parameters to `MapboxMap.camera(for coordinateBounds:)`. `MapboxMap.camera(for coordinateBounds:)`, `MapboxMap.camera(for coordinates:)`, and `MapboxMap.camera(for geometry:)` no longer return a padding value.
+* `Location` is splitted into `Location` and `Heading` structs, the location and heading data are now animated individually.
+* Replace `loadStyleJSON(_:completion:)`/`loadStyleJSON(_:completion:)` with overloaded `loadStyle(_:completion:)`.
+* Mark `Expression.Operator.activeAnchor` as experimental.
+* Add transition options as a parameter to `loadStyle(...)` methods.
+* `Expression.Operator` is now a struct with static variables instead of enum.
+* Add `MapboxMap.coordinate(s)Info(for:)` for converting offscreen points into geographical coordinates.
+* Fixed an issue when `MapboxMap.point(for:)` could return false negative result.
+* Remove `source`, `sourceLayer`, `filter` properties from the `Layer` protocol requirement.
+* Bump core maps version to 11.0.0-beta.1.
+* Refactor style Light API: introduce `AmbientLight`, `DirectionalLight`, `FlatLight` and methods to set them.
+* Add expression support to `Layer.visibility`.
+
+## 11.0.0-alpha.2 - 21 June, 2023
+
+* Remove unnecessary check before updating a geo json source.
+* Remove deprecated `LocationManager.updateHeadingForCurrentDeviceOrientation()` method.
+* Remove deprecated `MapEvents.EventKind`.
+* Make NSNumber extension internal.
+* Remove experimental `MapboxMap.setRenderCache(_:)` method.
+* Remove deprecated `GestureOptions.pinchRotateEnabled`.
+* Remove deprecated `Location` initializer.
+* Remove deprecated transition properties from layers.
+* Make `easeTo/flyTo` return non-optional cancelable token.
+* Add `rotation` case to `GestureType` to be able to detect rotation separately from other gestures.
+* Enable zoom during a drag gesture.
+* Fix bearing value is fluctuating between initial value and correct value during a rotation gesture.
+* Allows animation during any ongoing gestures.
+* Sync map size to the size of the metal view.
+* Fix missing feature properties for `nil`/`null` values.
+* Added experimental `tileCover` method to `MapboxMap` that returns tile ids covering the map.
+* Expose `owner` property for `CameraAnimator` protocol
+* Updated core styles to the latest versions.
+* Merge `TilesetDescriptorOptions` and `TilesetDescriptorOptionsForTilesets`. To enable tileset descriptor creation for a list of tilesets that are not part of the original style use `TilesetDescriptorOptions`.
+* Use `DataRef` to pass snapshot and style image data by reference, improving performance
+* Bumped min iOS version to 12.0
+* Expose a subset of ModelLayer APIs.
+* Protocol `LocationProvider` now requires class semantic for implementation.
+* The Map events have been reworked:
+  - Now all Map events payloads are serialize-free, which brings more type safety and eliminates possible deserialization errors;
+  - The `MapboxMap` and `Snapshotter` now expose `on`-prefixed properties that allows you to subscribe to map events via `observe` and `observeNext` methods:
+    ```swift
+    mapboxMap.onCameraChanged.observe { [weak self] event in
+      self?.camera = event.cameraState
+    }.store(in: &cancelables)
+
+    mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
+      self?.configureStyle()
+    }.store(in: &cancelables)
+    ```
+  - The `AnyCancelable` object returned from `observe` and `observeNext` should be stored, otherwise the subscription will be immediately canceled;
+  - The same `on`-prefixed properties can now be used as `Combine.Publisher`:
+    ```swift
+    import Combine
+    mapboxMap.onCameraChanged
+      .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
+      .map(\.cameraState)
+      .sink { [weak self] cameraState in
+        self?.camera = cameraState
+      }.store(in: &cancellables)
+    ```
+  - Methods `MapboxMap.onEvery`, `MapboxMap.onNext`, `Snapshotter.onEvery`, `Snapshotter.onNext` have been deprecated;
+  - Methods `MapboxMap.observe` and `Snapshotter.observe` have been removed.
+* Deprecate `PointAnnotationManager.iconTextFit` and `PointAnnotationManager.iconTextFitPadding` in favor of `PointAnnotation.iconTextFit` and `PointAnnotation.iconTextFitPadding`.
+* Remove deprecated `PuckBearingSource`and related APIs.
+* Experimental API `MapboxMap/setMemoryBudget` was renamed to `MapboxMaps/setTileCacheBudget` and promoted to stable.
+* Location consumer methods have been renamed to align with Swift API Design Guidelines. Use `addLocationConsumer(_:)` and `removeLocationConsumer(_:)` rather than `addLocationConsumer(newConsumer:)` and `removeLocationConsumer(consumer:)`.
+* `SourceType` and `LayerType` are now structs with static variables instead of enums
+* Remove `ResourceOptions` and `ResourceOptionsManager`. Introduce `MapboxOptions` and `MapboxMapsOptions` to handle application-level access token and other generic options.
+  - Mapbox's access token can now be set with `MapboxCommon.MapboxOptions`. By default, MapboxMaps SDK will try to read the access token from app bundle's property list or `MapboxAccessToken` file when Maps service are initialized; if you wish to set access token programmatically, it is highly recommended to set it before initializing a `MapView`.
+    ```swift
+    import MapboxMaps
+
+    MapboxOptions.accessToken = accessToken
+    ```
+  - `TileStore`no longer requires `TileStoreOptions.mapboxAccessToken` to be explicitly set.
+  - Configurations for the external resources used by Maps API can now be set with `MapboxMapsOptions`:
+    ```swift
+    import MapboxMaps
+
+    MapboxMapsOptions.dataPath = customDataPathURL
+    MapboxMapsOptions.assetPath = customAssetPathURL
+    MapboxMapsOptions.tileStoreUsageMode = .readOnly
+    MapboxMapsOptions.tileStore = tileStore
+    ```
+  - To clear the temporary map data, you can use `MapboxMap.clearData(completion:)`
+* Expose new 3D Lights API: `AmbientLight` and `DirectionalLight`.
+* `TypeConversionError`, `SnapshotError`, and `ViewAnnotationManagerError` are now structs with static variables instead of enums
+* Extend `Layer` protocol with `visibility` property.
+* Add required `id` property to `Source`. After that change `id` should be specified for source upon creation:
+  ```swift
+  let terrainSource = RasterDemSource(id: "terrain-source")
+  mapView.mapboxMap.addSource(terrainSource)
+  ```
+* Support string option in `GeoJSONSourceData`.
+* Allows passing `extraOptions` (which must be a valid JSON object) when creating `StylePackLoadOptions`and `TilesetDescriptorOptions`.
+* Deprecate `MapboxMap/style` and `Snapshotter/style`, from now on you can access Style APIs directly from `MapboxMap` and `Snapshotter` instance.
+* Add a new API to enable Tracing with `Tracing.status = .enabled`. Checkout `Tracing` reference to see more.
+* Introduce `FillExtrusionLayer.fillExtrusionRoundedRoof` , `FillExtrusionLayer.fillExtrusionEdgeRadius` API.
+* Introduce `line-depth-occlusion` API.
+* Introduce `FillExtrusionLayer/fillExtrusionRoundedRoof`, `FillExtrusionLayer/fillExtrusionEdgeRadius` API.
+* Introduce `lineDepthOcclusionFactor` API for `LineLayer`s and `PolylineAnnotiationManager`.
+* Add `Codable` support to `CameraOptions`, `CameraState`, `FollowPuckViewportStateBearing`, `FollowPuckViewportStateOptions`.
+* Expose new Style APIs for partial GeoJSON update:
+```swift
+MapboxMap.addGeoJSONSourceFeatures(forSourceId:features:dataId:)
+MapboxMap.updateGeoJSONSourceFeatures(forSourceId:features:dataId:)
+MapboxMap.removeGeoJSONSourceFeatures(forSourceId:featureIds:dataId:)
+```
 ## 10.15.0 - July 27, 2023
 
 * Update MapboxCoreMaps to 10.15.0 and MapboxCommon to 23.7.0.
@@ -71,6 +191,13 @@ Mapbox welcomes participation and contributions from everyone.
 * Correct user-agent fragment sent to events/telemetry service.
 * Bump MapboxCoreMaps to 10.12.0-rc.1 and MapboxCommon to 23.4.0-rc.1.
 * Change annotation end-of-drag delay to 0.125 to minimize lagging.
+* Different data types are now used for `querySourceFeatures` and `queryRenderedFeatures`: `QueriedSourceFeature` and `QueriedRenderedFeature`. `QueriedRenderedFeature` has a new field `layer` which contains the queried feature's layer id.
+* Remove deprecated `queryRenderedFeatures()` methods. Use `queryRenderedFeatures(with:options:completion:)` instead.
+* Remove deprecated `queryFeatureExtension()` method. Use `getGeoJsonClusterLeaves()`/`getGeoJsonClusterChildren()`/`getGeoJsonClusterExpansionZoom()` instead.
+* Add the `MapboxMap.resetFeatureState` method.
+* Add `callback` argument to the `MapboxMap` methods `getFeatureState`, `setFeatureState`, `removeFeatureState`.
+* Return `cancelable` from the `MapboxMap` methods : `getFeatureState`, `setFeatureState`, `removeFeatureState`, `querySourceFeatures`, `getGeoJsonClusterLeaves`, `getGeoJsonClusterChildren`, `getGeoJsonClusterExpansionZoom`.
+* The `CameraOptions/padding` field is now optional.
 
 ## 10.12.0-beta.1 - February 22, 2023
 

@@ -2,11 +2,11 @@ import UIKit
 import SceneKit
 import MapboxMaps
 
-@objc(SceneKitExample)
 final class SceneKitExample: UIViewController, ExampleProtocol {
 
     var mapView: MapView!
     let modelOrigin = CLLocationCoordinate2D(latitude: -35.39847, longitude: 148.9819)
+    private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -15,53 +15,53 @@ final class SceneKitExample: UIViewController, ExampleProtocol {
                                    zoom: 18,
                                    bearing: 180,
                                    pitch: 60)
-        let options = MapInitOptions(cameraOptions: camera)
+        let options = MapInitOptions(cameraOptions: camera, styleURI: .streets)
 
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
+        mapView.mapboxMap.onStyleLoaded.observeNext { _ in
             self.addModelAndTerrain()
             // The following line is just for testing purposes.
             self.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     func addModelAndTerrain() {
-        try! mapView.mapboxMap.style.addCustomLayer(
+        try! mapView.mapboxMap.addCustomLayer(
             withId: "Custom",
             layerHost: SceneKitExampleCustomLayerHost(
                 modelOrigin: modelOrigin,
                 renderingWillEndHandler: { [weak self] in self?.finish() }),
             layerPosition: .below("waterway-label"))
 
-        var demSource = RasterDemSource()
+        var demSource = RasterDemSource(id: "mapbox-dem")
         demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
         demSource.tileSize = 512
         demSource.maxzoom = 14.0
 
-        try! mapView.mapboxMap.style.addSource(demSource, id: "mapbox-dem")
+        try! mapView.mapboxMap.addSource(demSource)
 
-        let terrain = Terrain(sourceId: "mapbox-dem")
-        try! mapView.mapboxMap.style.setTerrain(terrain)
+        let terrain = Terrain(sourceId: demSource.id)
+        try! mapView.mapboxMap.setTerrain(terrain)
 
         var skyLayer = SkyLayer(id: "sky-layer")
         skyLayer.skyType = .constant(.atmosphere)
         skyLayer.skyAtmosphereSun = .constant([0, 0])
         skyLayer.skyAtmosphereSunIntensity = .constant(15.0)
 
-        try! mapView.mapboxMap.style.addLayer(skyLayer)
+        try! mapView.mapboxMap.addLayer(skyLayer)
 
         // Re-use terrain source for hillshade
         let properties = [
             "id": "terrain_hillshade",
             "type": "hillshade",
-            "source": "mapbox-dem",
+            "source": demSource.id,
             "hillshade-illumination-anchor": "map"
         ] as [ String: Any ]
 
-        try! mapView.mapboxMap.style.addLayer(with: properties, layerPosition: .below("water"))
+        try! mapView.mapboxMap.addLayer(with: properties, layerPosition: .below("water"))
     }
 }
 

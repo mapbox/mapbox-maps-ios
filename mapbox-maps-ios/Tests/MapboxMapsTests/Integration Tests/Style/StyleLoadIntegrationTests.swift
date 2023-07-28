@@ -6,12 +6,7 @@ class StyleLoadIntegrationTests: MapViewIntegrationTestCase {
 
     // MARK: - Tests
     func testNilStyleDoesNotLoad() {
-        guard let style = style else {
-            XCTFail("Should have a valid Style object")
-            return
-        }
-
-        XCTAssertNil(style.uri, "Current style should be nil.") // As set by setUp
+        XCTAssertNil(mapView.mapboxMap.styleURI, "Current style should be nil.") // As set by setUp
 
         let expectation = self.expectation(description: "Style should not load")
         expectation.expectedFulfillmentCount = 1
@@ -55,11 +50,6 @@ class StyleLoadIntegrationTests: MapViewIntegrationTestCase {
     // MARK: - Helpers
 
     private func loadAndIdle(for styleURI: StyleURI) {
-        guard let style = style else {
-            XCTFail("Should have a valid Style object")
-            return
-        }
-
         let expectation = self.expectation(description: "Wait for \(styleURI) to load")
         expectation.expectedFulfillmentCount = 2
 
@@ -73,7 +63,7 @@ class StyleLoadIntegrationTests: MapViewIntegrationTestCase {
             expectation.fulfill()
         }
 
-        style.uri = styleURI
+        mapView.mapboxMap.styleURI = styleURI
         wait(for: [expectation], timeout: 10)
     }
 }

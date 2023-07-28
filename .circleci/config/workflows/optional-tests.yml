@@ -1,10 +1,19 @@
-unless: << pipeline.parameters.turf-revision >>
+unless:
+  or:
+    - << pipeline.parameters.turf-revision >>
+    - or:
+        - equal: [ << pipeline.git.branch >>, "main" ]
+        - equal: [ << pipeline.git.branch >>, "develop" ]
+    - equal: [scheduled_pipeline, << pipeline.trigger_source >>]
+
 jobs:
   - run-tests?:
       type: approval
       filters:
         branches:
-          ignore: main
+          ignore:
+            - main
+            - develop
   - build-host-tests:
       context:
         - Slack Orb
@@ -29,7 +38,9 @@ jobs:
       type: approval
       filters:
         branches:
-          ignore: main
+          ignore:
+            - main
+            - develop
   - build-examples-tests:
       context:
         - Slack Orb
@@ -49,3 +60,21 @@ jobs:
       requires:
         - Build Examples tests [non-main]
       devices: --device model=iphone13pro,version=15.7
+
+  - run-benchmark?:
+      type: approval
+      filters:
+        branches:
+          ignore:
+            - main
+            - develop
+  - build-benchmark:
+      context:
+        - SDK Registry Token
+        - MapboxCI GitHub UserToken
+        - Maps SDK/Public Mapbox Token
+      requires:
+        - run-benchmark?
+  - run-benchmark:
+      requires:
+        - build-benchmark

@@ -1,22 +1,12 @@
-unless: << pipeline.parameters.turf-revision >>
+unless:
+  or:
+    - << pipeline.parameters.turf-revision >>
+    - equal: [scheduled_pipeline, << pipeline.trigger_source >>]
+
 jobs:
   - sanity-check:
       context:
         - Slack Orb
-  - swiftlint:
-      context:
-        - Slack Orb
-  - depsvalidator:
-      context:
-        - Slack Orb
-      name: Check dependencies versions
-  - build-sdk:
-      context:
-        - Slack Orb
-        - SDK Registry Token
-      name: Build SDK
-      configuration: "Release"
-
   - build-sdk-for-api-compatibility-check:
       context:
         - Slack Orb
@@ -31,14 +21,6 @@ jobs:
       requires:
         - build-sdk-for-api-compatibility-check
         - build-baseline-sdk
-  - create-xcframework:
-      context:
-        - Slack Orb
-        - SDK Registry Token
-  - validate-integrations-for-branch:
-      context:
-        - Slack Orb
-        - SDK Registry Token
 
   # Run unit tests on CI simulator
   - build-tests:
@@ -111,7 +93,9 @@ jobs:
         - Build MapboxTestHost tests
       filters:
         branches:
-          only: main
+          only:
+            - main
+            - develop
 
   # Build and Run tests on Examples scheme.
   # Enabled by-default on 'main' branch
@@ -134,7 +118,9 @@ jobs:
         - Build Examples tests
       filters:
         branches:
-          only: main
+          only:
+            - main
+            - develop
 
   # Configure triggering end-to-end verification
   - sdk-e2e-test:
@@ -145,6 +131,7 @@ jobs:
           branches:
               ignore:
                   - main
+                  - develop
       name: run-sdk-e2e-test-devel
   - sdk-e2e-test:
       context:
@@ -154,6 +141,7 @@ jobs:
           branches:
               only:
                   - main
+                  - develop
           tags:
               only: /^v.*/
       name: run-sdk-e2e-test-validation
@@ -165,7 +153,9 @@ jobs:
         - Maps SDK/Public Mapbox Token
       filters:
         branches:
-          only: main
+          only:
+            - main
+            - develop
   - upload-docc:
       context:
         - Slack Orb
@@ -173,4 +163,13 @@ jobs:
         - generate-docc
       filters:
         branches:
-          only: main
+          only:
+            - main
+            - develop
+
+  - generate-docc:
+      name: Generate Doc (development)
+      version: docc
+      context:
+        - Slack Orb
+        - SDK Registry Token

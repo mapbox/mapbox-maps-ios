@@ -12,18 +12,18 @@ final class FollowPuckViewportStateBearingTests: XCTestCase {
     }
 
     func testHeading() {
-        let location = InterpolatedLocation.random()
+        let data = PuckRenderingData.random()
 
         let bearing = FollowPuckViewportStateBearing.heading
 
-        XCTAssertEqual(bearing.evaluate(with: location), location.heading)
+        XCTAssertEqual(bearing.evaluate(with: data), data.heading?.direction)
     }
 
     func testCourse() {
-        let location = InterpolatedLocation.random()
+        let data = PuckRenderingData.random()
 
         let bearing = FollowPuckViewportStateBearing.course
 
-        XCTAssertEqual(bearing.evaluate(with: location), location.course)
+        XCTAssertEqual(bearing.evaluate(with: data), data.location.bearing)
     }
 }

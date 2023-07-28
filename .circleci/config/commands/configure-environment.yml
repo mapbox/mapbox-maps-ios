@@ -15,8 +15,9 @@ steps:
   - inject-mapbox-public-token
   - declare-default-artifacts-path
   - parse-release-version-if-available
-  - install-mbx-ci
+  - mapbox/install-mbx-ci
   - add-mapbox-submodules-key
+  - inject-xcodebuild-wrapper
   - unless:
       condition: << parameters.skip-dependencies >>
       steps:

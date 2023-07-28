@@ -84,7 +84,6 @@ private final class SettingsViewController: UIViewController, UITableViewDataSou
         MapDebugOptionSetting(debugOption: .depthBuffer, displayTitle: "Show depth buffer"),
         MapDebugOptionSetting(debugOption: .overdraw, displayTitle: "Debug overdraw"),
         MapDebugOptionSetting(debugOption: .parseStatus, displayTitle: "Show tile coordinate"),
-        MapDebugOptionSetting(debugOption: .renderCache, displayTitle: "Render Cache"),
         MapDebugOptionSetting(debugOption: .stencilClip, displayTitle: "Show stencil buffer"),
         MapDebugOptionSetting(debugOption: .tileBorders, displayTitle: "Debug tile clipping"),
         MapDebugOptionSetting(debugOption: .timestamps, displayTitle: "Show tile loaded time"),

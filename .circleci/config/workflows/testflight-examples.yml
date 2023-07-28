@@ -1,0 +1,12 @@
+jobs:
+  - publish-examples?:
+      type: approval
+  - update-examples:
+      context:
+        - Slack Orb
+        - Fastlane Match
+        - SDK Registry Token
+        - Apple Machine account
+        - Maps SDK/Public Mapbox Token
+      requires:
+        - publish-examples?

@@ -21,7 +21,7 @@ struct SwiftUIMapView: UIViewRepresentable {
     /// with the map. Here, we add a `camera` binding
     /// that represents a subset of the available camera functionality.
     /// Your app could customize this to your use case. In this example
-    /// the binding is set via `init(resourceOptions:camera:)`
+    /// the binding is set via `init(mapInitOptions:camera:)`
     @Binding private var camera: Camera
 
     /// Map attributes that can only be configured programmatically
@@ -97,8 +97,8 @@ struct SwiftUIMapView: UIViewRepresentable {
         }
         /// Since setting the style causes some reloading to happen,
         /// we only call the setter if the value has changed.
-        if mapView.mapboxMap.style.uri != styleURI {
-            mapView.mapboxMap.style.uri = styleURI
+        if mapView.mapboxMap.styleURI != styleURI {
+            mapView.mapboxMap.styleURI = styleURI
         }
 
         /// The coordinator exposes the annotation manager so that we can sync the annotations
@@ -127,7 +127,7 @@ final class SwiftUIMapViewCoordinator {
 
             /// The coordinator observes the `.cameraChanged` event, and
             /// whenever the camera changes, it updates the camera binding.
-            cancelable = mapView.mapboxMap.onEvery(event: .cameraChanged) { [unowned self] _ in
+            cancelable = mapView.mapboxMap.onCameraChanged.observe { [unowned self] event in
                 guard !ignoreNotifications else {
                     return
                 }
@@ -135,8 +135,8 @@ final class SwiftUIMapViewCoordinator {
                 /// As the camera changes, we update the binding. SwiftUI
                 /// will propagate this change to any other UI elements connected
                 /// to the same binding.
-                camera.center = mapView.cameraState.center
-                camera.zoom = mapView.cameraState.zoom
+                camera.center = event.cameraState.center
+                camera.zoom = event.cameraState.zoom
             }
 
             pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
@@ -234,7 +234,6 @@ struct ContentView: View {
 }
 
 /// The rest of this example is just some boilerplate to present the ContentView and show the example
-@objc(SwiftUIExample)
 final class SwiftUIExample: UIViewController, NonMapViewExampleProtocol {
 
     override func viewDidLoad() {

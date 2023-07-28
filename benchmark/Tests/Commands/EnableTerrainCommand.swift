@@ -5,16 +5,16 @@ struct EnableTerrainCommand: AsyncCommand {
     private let terrain: Terrain
 
     @MainActor
-    func execute() async throws {
-        guard let mapView = UIViewController.rootController?.findMapView() else {
+    func execute(context: Context) async throws {
+        guard let mapView = context.mapView else {
             throw ExecutionError.cannotFindMapboxMap
         }
 
         if let source = terrain.rasterDemSource {
-            try mapView.mapboxMap.style.addSource(source, id: terrain.source)
+            try mapView.mapboxMap.addSource(source)
         }
 
-        try mapView.mapboxMap.style.setTerrain(terrain)
+        try mapView.mapboxMap.setTerrain(terrain)
     }
 }
 
@@ -27,7 +27,7 @@ extension EnableTerrainCommand: Decodable {
 
 private extension Terrain {
     var rasterDemSource: RasterDemSource? {
-        var source = RasterDemSource()
+        var source = RasterDemSource(id: source)
         source.maxzoom = 14
 
         switch self.source {

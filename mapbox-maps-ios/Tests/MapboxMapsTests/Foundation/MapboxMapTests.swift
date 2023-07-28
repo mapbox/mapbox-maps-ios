@@ -1,38 +1,47 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 @_implementationOnly import MapboxCoreMaps_Private
 
 final class MapboxMapTests: XCTestCase {
 
     var mapClient: MockMapClient!
     var mapInitOptions: MapInitOptions!
-    var mapboxObservableProviderStub: Stub<ObservableProtocol, MapboxObservableProtocol>!
+    var events: MapEvents!
     var mapboxMap: MapboxMap!
+
+    // We don't store fooSubject strongly to test that MapEvents stores the subjects it created.
+    weak private var fooGenericSubject: SignalSubject<GenericEvent>?
 
     override func setUp() {
         super.setUp()
         let size = CGSize(width: 100, height: 200)
+        events = MapEvents(makeGenericSubject: { [weak self] eventName in
+            let s = SignalSubject<GenericEvent>()
+            if eventName == "foo" {
+                if let fooSubject = self?.fooGenericSubject {
+                    return fooSubject
+                } else {
+                    self?.fooGenericSubject = s
+                    return s
+                }
+            }
+            return s
+        })
         mapClient = MockMapClient()
         mapClient.getMetalViewStub.defaultReturnValue = MTKView(frame: CGRect(origin: .zero, size: size))
         mapInitOptions = MapInitOptions(mapOptions: MapOptions(size: size))
-        mapboxObservableProviderStub = Stub(defaultReturnValue: MockMapboxObservable())
-        mapboxMap = MapboxMap(
-            mapClient: mapClient,
-            mapInitOptions: mapInitOptions,
-            mapboxObservableProvider: mapboxObservableProviderStub.call(with:))
+
+        let map = Map(client: mapClient, mapOptions: mapInitOptions.mapOptions)
+        mapboxMap = MapboxMap(map: map, events: events, styleSourceManager: MockStyleSourceManager())
     }
 
     override func tearDown() {
         mapboxMap = nil
-        mapboxObservableProviderStub = nil
         mapInitOptions = nil
         mapClient = nil
+        events = nil
+        fooGenericSubject = nil
         super.tearDown()
-    }
-
-    func testInitializationOfResourceOptions() {
-        let actualResourceOptions = mapboxMap.resourceOptions
-        XCTAssertEqual(actualResourceOptions, mapInitOptions.resourceOptions)
     }
 
     func testInitializationOfMapOptions() {
@@ -54,11 +63,6 @@ final class MapboxMapTests: XCTestCase {
 
     func testInitializationInvokesMapClientGetMetalView() {
         XCTAssertEqual(mapClient.getMetalViewStub.invocations.count, 1)
-    }
-
-    func testInitializationMapboxObservable() {
-        XCTAssertEqual(mapboxObservableProviderStub.invocations.count, 1)
-        XCTAssertIdentical(mapboxObservableProviderStub.invocations.first?.parameters, mapboxMap.__testingMap)
     }
 
     func testSetSize() {
@@ -125,8 +129,53 @@ final class MapboxMapTests: XCTestCase {
         XCTAssertEqual(expectedCenter.latitude, camera.center!.latitude, accuracy: 0.25)
         XCTAssertEqual(expectedCenter.longitude, camera.center!.longitude, accuracy: 0.25)
         XCTAssertEqual(camera.bearing, 0)
-        XCTAssertEqual(camera.padding, .zero)
+        XCTAssertNil(camera.padding)
         XCTAssertEqual(camera.pitch, 0)
+    }
+
+    func testCameraForCoordinateBounds() {
+        let southwest = CLLocationCoordinate2DMake(0, 0)
+        let northeast = CLLocationCoordinate2DMake(4, 4)
+        let southeast = CLLocationCoordinate2DMake(0, 4)
+        let latitudeDelta =  northeast.latitude - southeast.latitude
+        let longitudeDelta = southeast.longitude - southwest.longitude
+        let expectedCenter = CLLocationCoordinate2DMake(northeast.latitude - (latitudeDelta / 2), southeast.longitude - (longitudeDelta / 2))
+        let coordinateBounds = CoordinateBounds(southwest: southwest, northeast: northeast)
+
+        let camera = mapboxMap.camera(for: coordinateBounds,
+                                      padding: .zero,
+                                      bearing: 0,
+                                      pitch: 0,
+                                      maxZoom: 0,
+                                      offset: nil)
+        XCTAssertEqual(expectedCenter.latitude, camera.center!.latitude, accuracy: 0.25)
+        XCTAssertEqual(expectedCenter.longitude, camera.center!.longitude, accuracy: 0.25)
+        XCTAssertEqual(camera.bearing, 0)
+        XCTAssertNil(camera.padding)
+        XCTAssertEqual(camera.pitch, 0)
+    }
+
+    func testCameraForCoordinateBoundsWithValues() {
+        let southwest = CLLocationCoordinate2DMake(0, 0)
+        let northeast = CLLocationCoordinate2DMake(4, 4)
+        let southeast = CLLocationCoordinate2DMake(0, 4)
+        let latitudeDelta =  northeast.latitude - southeast.latitude
+        let longitudeDelta = southeast.longitude - southwest.longitude
+        let expectedCenter = CLLocationCoordinate2DMake(northeast.latitude - (latitudeDelta / 2), southeast.longitude - (longitudeDelta / 2))
+        let coordinateBounds = CoordinateBounds(southwest: southwest, northeast: northeast)
+        let screenCoordinate = CGPoint(x: 1.0, y: 2.0)
+
+        let camera = mapboxMap.camera(for: coordinateBounds,
+                                      padding: UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2),
+                                      bearing: 4,
+                                      pitch: 65,
+                                      maxZoom: 12,
+                                      offset: screenCoordinate)
+        XCTAssertEqual(expectedCenter.latitude, camera.center!.latitude, accuracy: 0.25)
+        XCTAssertEqual(expectedCenter.longitude, camera.center!.longitude, accuracy: 0.25)
+        XCTAssertEqual(camera.bearing, 4)
+        XCTAssertNil(camera.padding)
+        XCTAssertEqual(camera.pitch, 65)
     }
 
     func testCameraForGeometry() {
@@ -160,14 +209,13 @@ final class MapboxMapTests: XCTestCase {
         XCTAssertEqual(expectedCenter.latitude, camera.center!.latitude, accuracy: 0.25)
         XCTAssertEqual(expectedCenter.longitude, camera.center!.longitude, accuracy: 0.25)
         XCTAssertEqual(camera.bearing, 0)
-        XCTAssertEqual(camera.padding, .zero)
+        XCTAssertNil(camera.padding)
         XCTAssertEqual(camera.pitch, 0)
     }
 
     func testProtocolConformance() {
         // Compilation check only
         _ = mapboxMap as MapFeatureQueryable
-        _ = mapboxMap as MapEventsObservable
     }
 
     func testBeginAndEndAnimation() {
@@ -226,195 +274,200 @@ final class MapboxMapTests: XCTestCase {
         XCTAssertFalse(mapboxMap.__testingMap.isGestureInProgress())
     }
 
-    func testSubscribe() throws {
-        let observer = MockObserver()
-        let events: [String] = .random()
-        let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
-
-        mapboxMap.subscribe(observer, events: events)
-
-        XCTAssertEqual(mapboxObservable.subscribeStub.invocations.count, 1)
-        XCTAssertIdentical(mapboxObservable.subscribeStub.invocations.first?.parameters.observer, observer)
-        XCTAssertEqual(mapboxObservable.subscribeStub.invocations.first?.parameters.events, events)
-    }
-
-    func testUnsubscribe() throws {
-        let observer = MockObserver()
-        let events: [String] = .random()
-        let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
-
-        mapboxMap.unsubscribe(observer, events: events)
-
-        XCTAssertEqual(mapboxObservable.unsubscribeStub.invocations.count, 1)
-        XCTAssertIdentical(mapboxObservable.unsubscribeStub.invocations.first?.parameters.observer, observer)
-        XCTAssertEqual(mapboxObservable.unsubscribeStub.invocations.first?.parameters.events, events)
-    }
-
     func testLoadStyleHandlerIsInvokedExactlyOnce() throws {
-        let styleLoadEventOccurred = expectation(description: "style-loaded event occurred")
-        let mapLoadingErrorEventOccurred = expectation(description: "map-loading-error event occurred")
         let completionIsCalledOnce = expectation(description: "loadStyle completion should be called once")
         completionIsCalledOnce.assertForOverFulfill = true
 
-        let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
-        mapboxObservable.onTypedNextStub.defaultSideEffect = { invocation in
-            guard invocation.parameters.eventName == "style-loaded" else { return }
-
-            let event = MapboxCoreMaps.Event(type: "style-loaded", data: NSNull())
-            invocation.parameters.handler(MapEvent<NoPayload>(event: event))
-            styleLoadEventOccurred.fulfill()
-        }
-        mapboxObservable.onTypedEveryStub.defaultSideEffect = { invocation in
-            guard invocation.parameters.eventName == "map-loading-error" else { return }
-
-            let event = MapboxCoreMaps.Event(
-                type: "source",
-                data: ["type": "source", "message": "Cannot load source", "source-id": "dummy-source-id"])
-            invocation.parameters.handler(MapEvent<MapLoadingErrorPayload>(event: event))
-            mapLoadingErrorEventOccurred.fulfill()
-        }
-
-        mapboxMap.loadStyleURI(.dark) { _ in
+        mapboxMap.loadStyle(.dark) { _ in
             completionIsCalledOnce.fulfill()
         }
+        let interval = EventTimeInterval(begin: .init(), end: .init())
+        events.onStyleLoaded.send(StyleLoaded(timeInterval: interval))
+        events.onStyleLoaded.send(StyleLoaded(timeInterval: interval))
 
         waitForExpectations(timeout: 0.3)
     }
 
-    @available(*, deprecated)
-    func testOnNext() throws {
-        let handlerStub = Stub<Event, Void>()
-        let eventType = MapEvents.EventKind.allCases.randomElement()!
-        let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
+    func testTransitionOptionsAppliedUponStyleDataLoaded() {
+        // given
+        let options = TransitionOptions(duration: .random(), delay: .random(), enablePlacementTransitions: .random())
 
-        mapboxMap.onNext(eventType, handler: handlerStub.call(with:))
+        // when
+        mapboxMap.loadStyle(.light, transition: options)
 
-        XCTAssertEqual(mapboxObservable.onNextStub.invocations.count, 1)
-        XCTAssertEqual(mapboxObservable.onNextStub.invocations.first?.parameters.eventTypes, [eventType])
-        // To verify that the handler passed to MapboxMap is effectively the same as the one received by MapboxObservable,
-        // we exercise the received handler and verify that the passed one is invoked. If blocks were identifiable, maybe
-        // we'd just write this as `passedHandler === receivedHandler`.
-        let handler = try XCTUnwrap(mapboxObservable.onNextStub.invocations.first?.parameters.handler)
-        let event = Event(type: "", data: 0)
-        handler(event)
-        XCTAssertEqual(handlerStub.invocations.count, 1)
-        XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
+        // then
+        let interval = EventTimeInterval(begin: .init(), end: .init())
+        events.onStyleLoaded.send(.init(timeInterval: interval))
+        events.onStyleDataLoaded.send(.init(type: .sources, timeInterval: interval))
+        events.onStyleDataLoaded.send(.init(type: .sprite, timeInterval: interval))
+        XCTAssertNil(mapboxMap.styleTransition.duration) // should not be applied just yet
+
+        events.onStyleDataLoaded.send(.init(type: .style, timeInterval: interval))
+        XCTAssertEqual(mapboxMap.styleTransition.duration!, options.duration!, accuracy: 0.1)
+        XCTAssertEqual(mapboxMap.styleTransition.delay!, options.delay!, accuracy: 0.1)
+        XCTAssertEqual(mapboxMap.styleTransition.enablePlacementTransitions, options.enablePlacementTransitions)
     }
 
+    func testEvents() {
+        func checkEvent<T>(
+            _ subjectKeyPath: KeyPath<MapEvents, SignalSubject<T>>,
+            _ signalKeyPath: KeyPath<MapboxMap, Signal<T>>,
+            value: T) {
+                var count = 0
+                let cancelable = mapboxMap[keyPath: signalKeyPath].observe { _ in
+                    count += 1
+                }
+
+                mapboxMap.performWithoutNotifying {
+                    events[keyPath: subjectKeyPath].send(value)
+                }
+                XCTAssertEqual(count, 0, "event not sent due to mute")
+
+                events[keyPath: subjectKeyPath].send(value)
+                XCTAssertEqual(count, 1, "event sent")
+
+                cancelable.cancel()
+
+                events[keyPath: subjectKeyPath].send(value)
+                XCTAssertEqual(count, 1, "event not sent due to cancel")
+        }
+
+        let timeInterval = EventTimeInterval(begin: Date(), end: Date())
+        let mapLoaded = MapLoaded(timeInterval: timeInterval)
+        let mapLoadingError = MapLoadingError(
+            type: .source,
+            message: "message",
+            sourceId: nil,
+            tileId: nil,
+            timestamp: Date())
+        let cameraChanged = CameraChanged(
+            cameraState: CameraState(center: .random(), padding: .random(), zoom: 0, bearing: 0, pitch: 0),
+            timestamp: Date())
+
+        checkEvent(\.onMapIdle, \.onMapIdle, value: MapIdle(timestamp: Date()))
+        checkEvent(\.onMapLoaded, \.onMapLoaded, value: mapLoaded)
+        checkEvent(\.onStyleLoaded, \.onStyleLoaded, value: StyleLoaded(timeInterval: timeInterval))
+        checkEvent(\.onStyleDataLoaded, \.onStyleDataLoaded, value: StyleDataLoaded(type: .style, timeInterval: timeInterval))
+        checkEvent(\.onMapLoadingError, \.onMapLoadingError, value: mapLoadingError)
+        checkEvent(\.onCameraChanged, \.onCameraChanged, value: cameraChanged)
+        checkEvent(\.onSourceAdded, \.onSourceAdded, value: SourceAdded(sourceId: "foo", timestamp: Date()))
+        checkEvent(\.onSourceRemoved, \.onSourceRemoved, value: SourceRemoved(sourceId: "foo", timestamp: Date()))
+        checkEvent(\.onStyleImageMissing, \.onStyleImageMissing, value: StyleImageMissing(imageId: "bar", timestamp: Date()))
+        checkEvent(\.onStyleImageRemoveUnused, \.onStyleImageRemoveUnused, value: StyleImageRemoveUnused(imageId: "bar", timestamp: Date()))
+        checkEvent(\.onRenderFrameStarted, \.onRenderFrameStarted, value: RenderFrameStarted(timestamp: Date()))
+        checkEvent(\.onRenderFrameFinished, \.onRenderFrameFinished, value: RenderFrameFinished(renderMode: .full, needsRepaint: true, placementChanged: true, timeInterval: timeInterval))
+
+        let resourceRequest =  ResourceRequest(
+            source: .network,
+            request: RequestInfo(
+                url: "https://mapbox.com",
+                resource: .glyphs,
+                priority: .regular,
+                loadingMethod: [NSNumber(value: RequestLoadingMethodType.network.rawValue)]),
+            response: nil, cancelled: false, timeInterval: timeInterval)
+        checkEvent(\.onResourceRequest, \.onResourceRequest, value: resourceRequest)
+    }
+
+    func testGenericEvents() {
+        var cancelables = Set<AnyCancelable>()
+        var received = [GenericEvent]()
+        mapboxMap["foo"].observe { received.append($0) }.store(in: &cancelables)
+
+        let timeInterval = EventTimeInterval(begin: Date(), end: Date())
+        let e1 = GenericEvent(name: "foo", data: 0, timeInterval: timeInterval)
+        let e2 = GenericEvent(name: "foo", data: 0, timeInterval: timeInterval)
+
+        fooGenericSubject?.send(e1)
+        XCTAssertIdentical(received.last, e1)
+
+        mapboxMap.performWithoutNotifying {
+            fooGenericSubject?.send(e2)
+        }
+
+        XCTAssertIdentical(received.last, e1, "event not sent due to mute")
+
+        fooGenericSubject?.send(e2)
+        XCTAssertIdentical(received.last, e2)
+    }
+
+    @available(*, deprecated)
     func testOnTypedNext() throws {
-        func verifyInvocation<Payload>(
-            eventType: MapEvents.Event<Payload>,
-            event: MapEvent<Payload> = .init(event: Event(type: "", data: 0)),
-            handlerStub: Stub<MapEvent<Payload>, Void> = .init()
-        ) throws {
-            let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
+        let mapLoadedStub = Stub<MapLoaded, Void>()
+        let token = mapboxMap.onNext(event: .mapLoaded, handler: mapLoadedStub.call(with:))
+        defer { token.cancel() }
 
-            mapboxMap.onNext(event: eventType, handler: handlerStub.call(with:))
+        let mapLoaded1 = MapLoaded(timeInterval: EventTimeInterval(begin: Date(), end: Date()))
+        let mapLoaded2 = MapLoaded(timeInterval: EventTimeInterval(begin: Date(), end: Date()))
+        events.onMapLoaded.send(mapLoaded1)
+        events.onMapLoaded.send(mapLoaded2)
 
-            XCTAssertEqual(mapboxObservable.onTypedNextStub.invocations.count, 1)
-            XCTAssertEqual(mapboxObservable.onTypedNextStub.invocations.first?.parameters.eventName, eventType.name)
-            // To verify that the handler passed to MapboxMap is effectively the same as the one received by MapboxObservable,
-            // we exercise the received handler and verify that the passed one is invoked. If blocks were identifiable, maybe
-            // we'd just write this as `passedHandler === receivedHandler`.
-            let handler = try XCTUnwrap(mapboxObservable.onTypedNextStub.invocations.first?.parameters.handler)
-            handler(event)
-            XCTAssertEqual(handlerStub.invocations.count, 1)
-            XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
-        }
+        XCTAssertEqual(mapLoadedStub.invocations.count, 1)
+        XCTAssertIdentical(mapLoadedStub.invocations[0].parameters, mapLoaded1)
 
-        // swiftlint:disable opening_brace
-        let eventInvocations = [
-            { try verifyInvocation(eventType: .mapLoaded) },
-            { try verifyInvocation(eventType: .mapLoadingError) },
-            { try verifyInvocation(eventType: .mapIdle) },
-            { try verifyInvocation(eventType: .styleDataLoaded) },
-            { try verifyInvocation(eventType: .styleLoaded) },
-            { try verifyInvocation(eventType: .styleImageMissing) },
-            { try verifyInvocation(eventType: .styleImageRemoveUnused) },
-            { try verifyInvocation(eventType: .sourceDataLoaded) },
-            { try verifyInvocation(eventType: .sourceAdded) },
-            { try verifyInvocation(eventType: .sourceRemoved) },
-            { try verifyInvocation(eventType: .renderFrameStarted) },
-            { try verifyInvocation(eventType: .renderFrameFinished) },
-            { try verifyInvocation(eventType: .cameraChanged) },
-            { try verifyInvocation(eventType: .resourceRequest) }
-        ]
-        // swiftlint:enable opening_brace
+        // ignored cancellable
+        let sourceAddedStub = Stub<SourceAdded, Void>()
+        mapboxMap.onNext(event: .sourceAdded, handler: sourceAddedStub.call(with:))
 
-        try eventInvocations.randomElement()!()
+        let sourceAdded1 = SourceAdded(sourceId: "source-id-1", timestamp: Date())
+        let sourceAdded2 = SourceAdded(sourceId: "source-id-2", timestamp: Date())
+        events.onSourceAdded.send(sourceAdded1)
+        events.onSourceAdded.send(sourceAdded2)
+        events.onSourceAdded.send(sourceAdded2)
+
+        XCTAssertEqual(mapLoadedStub.invocations.count, 1)
+        XCTAssertIdentical(sourceAddedStub.invocations[0].parameters, sourceAdded1)
     }
 
     @available(*, deprecated)
-    func testOnEvery() throws {
-        let handlerStub = Stub<Event, Void>()
-        let eventType = MapEvents.EventKind.allCases.randomElement()!
-        let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
-
-        mapboxMap.onEvery(eventType, handler: handlerStub.call(with:))
-
-        XCTAssertEqual(mapboxObservable.onEveryStub.invocations.count, 1)
-        XCTAssertEqual(mapboxObservable.onEveryStub.invocations.first?.parameters.eventTypes, [eventType])
-        // To verify that the handler passed to MapboxMap is effectively the same as the one received by MapboxObservable,
-        // we exercise the received handler and verify that the passed one is invoked. If blocks were identifiable, maybe
-        // we'd just write this as `passedHandler === receivedHandler`.
-        let handler = try XCTUnwrap(mapboxObservable.onEveryStub.invocations.first?.parameters.handler)
-        let event = Event(type: "", data: 0)
-        handler(event)
-        XCTAssertEqual(handlerStub.invocations.count, 1)
-        XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
-    }
-
     func testOnTypedEvery() throws {
-        func verifyInvocation<Payload>(
-            eventType: MapEvents.Event<Payload>,
-            event: MapEvent<Payload> = .init(event: Event(type: "", data: 0)),
-            handlerStub: Stub<MapEvent<Payload>, Void> = .init()
-        ) throws {
-            let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
+        let mapLoadedStub = Stub<MapLoaded, Void>()
+        let token = mapboxMap.onEvery(event: .mapLoaded, handler: mapLoadedStub.call(with:))
+        defer { token.cancel() }
 
-            mapboxMap.onEvery(event: eventType, handler: handlerStub.call(with:))
+        let mapLoaded1 = MapLoaded(timeInterval: EventTimeInterval(begin: Date(), end: Date()))
+        let mapLoaded2 = MapLoaded(timeInterval: EventTimeInterval(begin: Date(), end: Date()))
+        events.onMapLoaded.send(mapLoaded1)
+        events.onMapLoaded.send(mapLoaded2)
 
-            XCTAssertEqual(mapboxObservable.onTypedEveryStub.invocations.count, 1)
-            XCTAssertEqual(mapboxObservable.onTypedEveryStub.invocations.first?.parameters.eventName, eventType.name)
-            // To verify that the handler passed to MapboxMap is effectively the same as the one received by MapboxObservable,
-            // we exercise the received handler and verify that the passed one is invoked. If blocks were identifiable, maybe
-            // we'd just write this as `passedHandler === receivedHandler`.
-            let handler = try XCTUnwrap(mapboxObservable.onTypedEveryStub.invocations.first?.parameters.handler)
-            handler(event)
-            XCTAssertEqual(handlerStub.invocations.count, 1)
-            XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
-        }
+        XCTAssertIdentical(mapLoadedStub.invocations[0].parameters, mapLoaded1)
+        XCTAssertIdentical(mapLoadedStub.invocations[1].parameters, mapLoaded2)
 
-        // swiftlint:disable opening_brace
-        let eventInvocations = [
-            { try verifyInvocation(eventType: .mapLoaded) },
-            { try verifyInvocation(eventType: .mapLoadingError) },
-            { try verifyInvocation(eventType: .mapIdle) },
-            { try verifyInvocation(eventType: .styleDataLoaded) },
-            { try verifyInvocation(eventType: .styleLoaded) },
-            { try verifyInvocation(eventType: .styleImageMissing) },
-            { try verifyInvocation(eventType: .styleImageRemoveUnused) },
-            { try verifyInvocation(eventType: .sourceDataLoaded) },
-            { try verifyInvocation(eventType: .sourceAdded) },
-            { try verifyInvocation(eventType: .sourceRemoved) },
-            { try verifyInvocation(eventType: .renderFrameStarted) },
-            { try verifyInvocation(eventType: .renderFrameFinished) },
-            { try verifyInvocation(eventType: .cameraChanged) },
-            { try verifyInvocation(eventType: .resourceRequest) }
-        ]
-        // swiftlint:enable opening_brace
+        // ignored cancellable
+        let sourceAddedStub = Stub<SourceAdded, Void>()
+        mapboxMap.onEvery(event: .sourceAdded, handler: sourceAddedStub.call(with:))
 
-        try eventInvocations.randomElement()!()
+        let sourceAdded1 = SourceAdded(sourceId: "source-id-1", timestamp: Date())
+        let sourceAdded2 = SourceAdded(sourceId: "source-id-2", timestamp: Date())
+        events.onSourceAdded.send(sourceAdded1)
+        events.onSourceAdded.send(sourceAdded2)
+
+        XCTAssertIdentical(sourceAddedStub.invocations[0].parameters, sourceAdded1)
+        XCTAssertIdentical(sourceAddedStub.invocations[1].parameters, sourceAdded2)
     }
 
     func testPerformWithoutNotifying() throws {
-        let blockStub = Stub<Void, Void>()
-        let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
+        let stub = Stub<MapIdle, Void>()
+        let token = mapboxMap.onMapIdle.observe(stub.call(with:))
+        defer { token.cancel() }
 
-        mapboxMap.performWithoutNotifying(blockStub.call)
+        let mapIdle1 = MapIdle(timestamp: Date())
+        let mapIdle2 = MapIdle(timestamp: Date())
+        events.onMapIdle.send(mapIdle1)
 
-        XCTAssertEqual(mapboxObservable.performWithoutNotifyingInvocationCount, 1)
-        XCTAssertEqual(blockStub.invocations.count, 1)
+        // no block
+        XCTAssertEqual(stub.invocations.count, 1)
+        XCTAssertIdentical(stub.invocations[0].parameters, mapIdle1)
+
+        // block
+        mapboxMap.performWithoutNotifying {
+            events.onMapIdle.send(mapIdle2)
+        }
+        XCTAssertEqual(stub.invocations.count, 1)
+
+        // no block again
+        events.onMapIdle.send(mapIdle2)
+        XCTAssertEqual(stub.invocations.count, 2)
+        XCTAssertIdentical(stub.invocations[1].parameters, mapIdle2)
     }
 
     func testFittingPoint() {

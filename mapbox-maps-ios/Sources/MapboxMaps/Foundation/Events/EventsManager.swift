@@ -37,13 +37,12 @@ internal final class EventsManager: EventsManagerProtocol {
 
     private let metricsEnabledObservation: NSKeyValueObservation
 
-    internal init(accessToken: String) {
+    internal init() {
         let eventsServerOptions = EventsServerOptions(
-            token: accessToken,
-            userAgentFragment: Constants.UserAgent,
+            sdkInformation: .init(name: Constants.MGLAPIClientUserAgentBase, version: Constants.SDKVersion, packageName: nil),
             deferredDeliveryServiceOptions: nil)
         eventsService = EventsService.getOrCreate(for: eventsServerOptions)
-        telemetryService = TelemetryService.getOrCreate(for: eventsServerOptions)
+        telemetryService = TelemetryService.getOrCreate()
 
         UserDefaults.standard.register(defaults: [
             #keyPath(UserDefaults.MGLMapboxMetricsEnabled): true
@@ -138,9 +137,7 @@ internal final class EventsManager: EventsManagerProtocol {
     }
 
     internal func sendTurnstile() {
-        let turnstileEvent = TurnstileEvent(skuId: UserSKUIdentifier.mapsMAUS,
-                                            sdkIdentifier: Constants.MGLAPIClientUserAgentBase,
-                                            sdkVersion: Constants.SDKVersion)
+        let turnstileEvent = TurnstileEvent(skuId: UserSKUIdentifier.mapsMAUS)
         eventsService.sendTurnstileEvent(for: turnstileEvent)
     }
 

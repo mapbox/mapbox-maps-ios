@@ -1,4 +1,5 @@
 import XCTest
+import MetalKit
 @_spi(Metrics) import MapboxMaps
 
 class FPSMetric: NSObject, XCTMetric, MapViewMetricsReporter {
@@ -257,9 +258,9 @@ class FPSMetric: NSObject, XCTMetric, MapViewMetricsReporter {
 }
 
 extension FPSMetric: Metric {
-    func commandDidFinishExecuting(_ command: AsyncCommand) {
-        if let command = command as? CreateMapCommand, let mapView = command.mapView {
-            mapView.metricsReporter = self
+    func commandDidFinishExecuting(_ command: AsyncCommand, context: Context) {
+        if command is CreateMapCommand {
+            context.mapView.metricsReporter = self
         }
     }
 }

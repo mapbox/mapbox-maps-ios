@@ -110,10 +110,10 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.type, SourceType.geoJson)
-        XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.id, manager.id)
+        XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.id, manager.id)
     }
 
-    func testAddLayer() {
+    func testAddLayer() throws {
         style.addSourceStub.reset()
         let initializedManager = <%- camelize(type) %>AnnotationManager(
             id: id,
@@ -136,7 +136,8 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layer.type, LayerType.<%- camelizeWithLeadingLowercase(testLayerForType(type).name) %>)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layer.id, initializedManager.id)
-        XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layer.source, initializedManager.sourceId)
+        let addedLayer = try XCTUnwrap(style.addPersistentLayerStub.invocations.last?.parameters.layer as? <%- camelize(originalType) %>Layer)
+        XCTAssertEqual(addedLayer.source, initializedManager.sourceId)
         XCTAssertNil(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition)
     }
 
@@ -541,7 +542,7 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         XCTAssertNil(clusterOptions.clusterProperties)
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.type, SourceType.geoJson)
-        XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.id, manager.id)
+        XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.id, manager.id)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 3) // symbol layer, one cluster layer, one text layer
         XCTAssertNil(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition)
     }
@@ -826,8 +827,8 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
             PolylineAnnotation(lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)], isSelected: false, isDraggable: true)
             <%_ } else if ( type === fill ) { _%>
             PolygonAnnotation(
-                polygon: .init(outerRing: Ring(coordinates: .random(withLength: 5, generator: LocationCoordinate2D.random))), 
-                isSelected: false, 
+                polygon: .init(outerRing: Ring(coordinates: .random(withLength: 5, generator: LocationCoordinate2D.random))),
+                isSelected: false,
                 isDraggable: true)
             <%_ } _%>
         }
@@ -946,10 +947,10 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         let addLayerParameters = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.last).parameters
         let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
 
-        XCTAssertEqual(addLayerParameters.properties["source"] as? String, addSourceParameters.id)
+        XCTAssertEqual(addLayerParameters.properties["source"] as? String, addSourceParameters.source.id)
         XCTAssertNotEqual(addLayerParameters.properties["id"] as? String, manager.layerId)
 
-        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.id)
+        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.source.id)
     }
 
     func testHandleDragChanged() throws {
@@ -965,15 +966,15 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
         let annotation = PolylineAnnotation(id: "line1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)], isSelected: false, isDraggable: true)
         <%_ } else if ( type === fill ) { _%>
         let annotation = PolygonAnnotation(
-            id: "polygon1", 
+            id: "polygon1",
             polygon: .init([[
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
                 CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
                 CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
                 CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
-            ]]), 
-            isSelected: false, 
+            ]]),
+            isSelected: false,
             isDraggable: true)
         <%_ } _%>
         manager.annotations = [annotation]
@@ -994,7 +995,7 @@ final class <%- camelize(type) %>AnnotationManagerTests: XCTestCase, AnnotationI
 
         manager.handleDragChanged(with: .random())
         let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
-        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.id)
+        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.source.id)
         if case .featureCollection(let collection) = updateSourceParameters.geojson {
             XCTAssertTrue(collection.features.contains(where: { $0.identifier?.rawValue as? String == annotation.id }))
         } else {

@@ -1,11 +1,12 @@
+import UIKit
 import MapboxMaps
 
-@objc(AnimateImageLayerExample)
 class AnimateImageLayerExample: UIViewController, ExampleProtocol {
     var mapView: MapView!
     var sourceId = "radar-source"
     var timer: Timer?
     var imageNumber = 0
+    private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,20 +28,18 @@ class AnimateImageLayerExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { _ in
             self.addImageLayer()
 
             // The following line is just for testing purposes.
             self.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     func addImageLayer() {
-        let style = mapView.mapboxMap.style
-
         // Create an `ImageSource`. This will manage the image displayed in the `RasterLayer` as well
         // as the location of that image on the map.
-        var imageSource = ImageSource()
+        var imageSource = ImageSource(id: sourceId)
 
         // Set the `coordinates` property to an array of longitude, latitude pairs.
         imageSource.coordinates = [
@@ -55,15 +54,14 @@ class AnimateImageLayerExample: UIViewController, ExampleProtocol {
         imageSource.url = path
 
         // Create a `RasterLayer` that will display the images from the `ImageSource`
-        var imageLayer = RasterLayer(id: "radar-layer")
-        imageLayer.source = sourceId
+        var imageLayer = RasterLayer(id: "radar-layer", source: sourceId)
 
         // Set `rasterFadeDuration` to `0`. This prevents visible transitions when the image is updated.
         imageLayer.rasterFadeDuration = .constant(0)
 
         do {
-            try style.addSource(imageSource, id: sourceId)
-            try style.addLayer(imageLayer)
+            try mapView.mapboxMap.addSource(imageSource)
+            try mapView.mapboxMap.addLayer(imageLayer)
 
             // Add a tap gesture recognizer that will allow the animation to be stopped and started.
             let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(manageTimer))
@@ -92,7 +90,7 @@ class AnimateImageLayerExample: UIViewController, ExampleProtocol {
 
                 do {
                     // Update the image used by the `ImageSource`.
-                    try self.mapView.mapboxMap.style.updateImageSource(withId: self.sourceId, image: image!)
+                    try self.mapView.mapboxMap.updateImageSource(withId: self.sourceId, image: image!)
                 } catch {
                     print("Failed to update style image. Error: \(error)")
                 }

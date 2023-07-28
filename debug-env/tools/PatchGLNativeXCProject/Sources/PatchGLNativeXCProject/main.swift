@@ -44,6 +44,7 @@ class GLNativeProject {
             config.buildSettings["SKIP_INSTALL"] = "YES"
             config.buildSettings["ONLY_ACTIVE_ARCH"] = isDebug ? "YES" : "NO"
             config.buildSettings["LLVM_LTO"] = isDebug ? nil : "NO"
+            config.buildSettings["DEBUG_INFORMATION_FORMAT"] = isDebug ? "dwarf" : "dwarf-with-dsym"
         }
     }
 
@@ -64,7 +65,11 @@ class GLNativeProject {
                     "LLVM_LTO",
                     "CLANG_DEBUG_INFORMATION_LEVEL",
                     "EXECUTABLE_PREFIX",
-                    "FRAMEWORK_VERSION"
+                    "FRAMEWORK_VERSION",
+                    "TARGET_TEMP_DIR",
+                    "DEBUG_INFORMATION_FORMAT",
+                    "ENABLE_BITCODE",
+                    "BITCODE_GENERATION_MODE",
                 ]
                 for buildSetting in buildSettingsToNil {
                     buildConfiguration.buildSettings[buildSetting] = nil

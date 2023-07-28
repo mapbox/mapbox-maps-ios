@@ -4,14 +4,14 @@ import MapboxMaps
 extension MapboxMap {
 
     @MainActor
-    public static func clearData(for resourceOptions: ResourceOptions) async throws {
-        return try await withCheckedThrowingContinuation { continuation in
-            clearData(for: resourceOptions) { error in
+    static func clearData() async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            clearData { error in
                 if let error = error {
                     continuation.resume(throwing: error)
-                    return
+                } else {
+                    continuation.resume()
                 }
-                continuation.resume(returning: ())
             }
         }
     }

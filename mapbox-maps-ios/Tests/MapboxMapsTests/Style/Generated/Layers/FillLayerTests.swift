@@ -1,30 +1,23 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class FillLayerTests: XCTestCase {
 
     func testLayerProtocolMembers() {
 
-        var layer = FillLayer(id: "test-id")
-        layer.source = "some-source"
-        layer.sourceLayer = nil
+        var layer = FillLayer(id: "test-id", source: "source")
         layer.minZoom = 10.0
         layer.maxZoom = 20.0
 
-        XCTAssert(layer.id == "test-id")
-        XCTAssert(layer.type == LayerType.fill)
-        XCTAssert(layer.filter == nil)
-        XCTAssert(layer.source == "some-source")
-        XCTAssertNil(layer.sourceLayer)
-        XCTAssert(layer.minZoom == 10.0)
-        XCTAssert(layer.maxZoom == 20.0)
+        XCTAssertEqual(layer.id, "test-id")
+        XCTAssertEqual(layer.type, LayerType.fill)
+        XCTAssertEqual(layer.minZoom, 10.0)
+        XCTAssertEqual(layer.maxZoom, 20.0)
     }
 
     func testEncodingAndDecodingOfLayerProtocolProperties() {
-        var layer = FillLayer(id: "test-id")
-        layer.source = "some-source"
-        layer.sourceLayer = nil
+        var layer = FillLayer(id: "test-id", source: "source")
         layer.minZoom = 10.0
         layer.maxZoom = 20.0
 
@@ -42,20 +35,18 @@ final class FillLayerTests: XCTestCase {
 
         do {
             let decodedLayer = try JSONDecoder().decode(FillLayer.self, from: validData)
-            XCTAssert(decodedLayer.id == "test-id")
-            XCTAssert(decodedLayer.type == LayerType.fill)
-            XCTAssert(decodedLayer.filter == nil)
-            XCTAssert(decodedLayer.source == "some-source")
-            XCTAssertNil(decodedLayer.sourceLayer)
-            XCTAssert(decodedLayer.minZoom == 10.0)
-            XCTAssert(decodedLayer.maxZoom == 20.0)
+            XCTAssertEqual(decodedLayer.id, "test-id")
+            XCTAssertEqual(decodedLayer.type, LayerType.fill)
+            XCTAssert(decodedLayer.source == "source")
+            XCTAssertEqual(decodedLayer.minZoom, 10.0)
+            XCTAssertEqual(decodedLayer.maxZoom, 20.0)
         } catch {
             XCTFail("Failed to decode FillLayer")
         }
     }
 
     func testEncodingAndDecodingOfLayoutProperties() {
-        var layer = FillLayer(id: "test-id")
+        var layer = FillLayer(id: "test-id", source: "source")
         layer.visibility = .constant(.visible)
         layer.fillSortKey = Value<Double>.testConstantValue()
 
@@ -74,17 +65,19 @@ final class FillLayerTests: XCTestCase {
         do {
             let decodedLayer = try JSONDecoder().decode(FillLayer.self, from: validData)
             XCTAssert(decodedLayer.visibility == .constant(.visible))
-            XCTAssert(layer.fillSortKey == Value<Double>.testConstantValue())
+            XCTAssertEqual(layer.fillSortKey, Value<Double>.testConstantValue())
         } catch {
             XCTFail("Failed to decode FillLayer")
         }
     }
 
     func testEncodingAndDecodingOfPaintProperties() {
-       var layer = FillLayer(id: "test-id")
+       var layer = FillLayer(id: "test-id", source: "source")
        layer.fillAntialias = Value<Bool>.testConstantValue()
        layer.fillColor = Value<StyleColor>.testConstantValue()
        layer.fillColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.fillEmissiveStrength = Value<Double>.testConstantValue()
+       layer.fillEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.fillOpacity = Value<Double>.testConstantValue()
        layer.fillOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.fillOutlineColor = Value<StyleColor>.testConstantValue()
@@ -109,13 +102,14 @@ final class FillLayerTests: XCTestCase {
        do {
            let decodedLayer = try JSONDecoder().decode(FillLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
-           XCTAssert(layer.fillAntialias == Value<Bool>.testConstantValue())
-           XCTAssert(layer.fillColor == Value<StyleColor>.testConstantValue())
-           XCTAssert(layer.fillOpacity == Value<Double>.testConstantValue())
-           XCTAssert(layer.fillOutlineColor == Value<StyleColor>.testConstantValue())
-           XCTAssert(layer.fillPattern == Value<ResolvedImage>.testConstantValue())
-           XCTAssert(layer.fillTranslate == Value<[Double]>.testConstantValue())
-           XCTAssert(layer.fillTranslateAnchor == Value<FillTranslateAnchor>.testConstantValue())
+           XCTAssertEqual(layer.fillAntialias, Value<Bool>.testConstantValue())
+           XCTAssertEqual(layer.fillColor, Value<StyleColor>.testConstantValue())
+           XCTAssertEqual(layer.fillEmissiveStrength, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.fillOpacity, Value<Double>.testConstantValue())
+           XCTAssertEqual(layer.fillOutlineColor, Value<StyleColor>.testConstantValue())
+           XCTAssertEqual(layer.fillPattern, Value<ResolvedImage>.testConstantValue())
+           XCTAssertEqual(layer.fillTranslate, Value<[Double]>.testConstantValue())
+           XCTAssertEqual(layer.fillTranslateAnchor, Value<FillTranslateAnchor>.testConstantValue())
        } catch {
            XCTFail("Failed to decode FillLayer")
        }

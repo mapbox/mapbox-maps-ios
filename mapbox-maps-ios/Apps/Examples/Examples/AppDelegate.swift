@@ -1,9 +1,10 @@
 import UIKit
+import Fingertips
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     lazy var window: UIWindow? = {
-        return UIWindow(frame: UIScreen.main.bounds)
+        return FingerTipWindow(frame: UIScreen.main.bounds)
     }()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -34,7 +35,7 @@ final class SceneDelegate: NSObject, UISceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = scene as? UIWindowScene else { return }
 
-        let window = UIWindow(windowScene: windowScene)
+        let window = FingerTipWindow(windowScene: windowScene)
 
         let examplesTableViewController = ExampleTableViewController()
         let navigationController = UINavigationController(rootViewController: examplesTableViewController)

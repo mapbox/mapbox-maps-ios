@@ -1,17 +1,13 @@
-import Foundation
+import UIKit
 import MapboxMaps
 
 public protocol ExampleProtocol: AnyObject {
-    func resourceOptions() -> ResourceOptions
     func finish()
 }
 
 public protocol NonMapViewExampleProtocol: ExampleProtocol { }
 
 extension ExampleProtocol {
-    public func resourceOptions() -> ResourceOptions {
-        return ResourceOptionsManager.default.resourceOptions
-    }
 
     public func finish() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {

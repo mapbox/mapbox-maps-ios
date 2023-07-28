@@ -7,8 +7,11 @@ internal protocol StyleSourceManagerProtocol: AnyObject {
     var allSourceIdentifiers: [SourceInfo] { get }
     func source<T>(withId id: String, type: T.Type) throws -> T where T: Source
     func source(withId id: String) throws -> Source
-    func addSource(_ source: Source, id: String, dataId: String?) throws
-    func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject, dataId: String?) throws
+    func addSource(_ source: Source, dataId: String?) throws
+    func updateGeoJSONSource(withId id: String, data: GeoJSONSourceData, dataId: String?)
+    func addGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String?)
+    func updateGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String?)
+    func removeGeoJSONSourceFeatures(forSourceId sourceId: String, featureIds: [String], dataId: String?)
     func addSource(withId id: String, properties: [String: Any]) throws
     func removeSource(withId id: String) throws
     func sourceExists(withId id: String) -> Bool
@@ -22,26 +25,18 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
     private typealias SourceId = String
 
     internal static func sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue {
-        return StyleManager.getStyleSourcePropertyDefaultValue(forSourceType: sourceType, property: property)
+        return MapboxCoreMaps.StyleManager.getStyleSourcePropertyDefaultValue(forSourceType: sourceType, property: property)
     }
 
     private let styleManager: StyleManagerProtocol
     private let mainQueue: DispatchQueueProtocol
     private let backgroundQueue: DispatchQueueProtocol
-    private var workItems = [SourceId: Cancelable]()
+    private var workItemTracker = WorkItemPerGeoJSONSourceTracker()
 
     internal var allSourceIdentifiers: [SourceInfo] {
-        return styleManager.getStyleSources().compactMap { info in
-            guard let sourceType = SourceType(rawValue: info.type) else {
-                Log.error(forMessage: "Failed to create SourceType from \(info.type)", category: "Example")
-                return nil
-            }
-            return SourceInfo(id: info.id, type: sourceType)
+        return styleManager.getStyleSources().map { info in
+            SourceInfo(id: info.id, type: SourceType(stringLiteral: info.type))
         }
-    }
-
-    deinit {
-        workItems.values.forEach { $0.cancel() }
     }
 
     internal init(
@@ -66,39 +61,114 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
         let sourceProps = try sourceProperties(for: id)
 
         guard let typeString = sourceProps["type"] as? String,
-              let type = SourceType(rawValue: typeString) else {
+              let type = SourceType(rawValue: typeString).sourceType else {
             throw TypeConversionError.invalidObject
         }
-        return try type.sourceType.init(jsonObject: sourceProps)
+
+        return try type.init(jsonObject: sourceProps)
     }
 
-    internal func addSource(_ source: Source, id: String, dataId: String? = nil) throws {
+    internal func addSource(_ source: Source, dataId: String? = nil) throws {
         if let geoJSONSource = source as? GeoJSONSource {
-            try addGeoJSONSource(geoJSONSource, id: id, dataId: dataId)
+            try addGeoJSONSource(geoJSONSource, dataId: dataId)
         } else {
-            try addSourceInternal(source, id: id)
+            try addSourceInternal(source)
         }
     }
 
-    private func addSourceInternal(_ source: Source, id: String) throws {
+    private func addSourceInternal(_ source: Source) throws {
         let sourceDictionary = try source.jsonObject(userInfo: [.nonVolatilePropertiesOnly: true])
-        try addSource(withId: id, properties: sourceDictionary)
+        try addSource(withId: source.id, properties: sourceDictionary)
 
         // volatile properties have to be set after the source has been added to the style
         let volatileProperties = try source.jsonObject(userInfo: [.volatilePropertiesOnly: true])
 
-        try setSourceProperties(for: id, properties: volatileProperties)
+        try setSourceProperties(for: source.id, properties: volatileProperties)
     }
 
-    internal func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject, dataId: String? = nil) throws {
-        applyGeoJSON(data: geoJSON.sourceData, sourceId: id, dataId: dataId)
+    func addGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String?) {
+        let item = DispatchWorkItem { [weak self] in
+            guard let self else { return }
+            do {
+                try handleExpected {
+                    return self.styleManager.addGeoJSONSourceFeatures(forSourceId: sourceId,
+                                                                      dataId: dataId ?? "",
+                                                                      features: features.map(MapboxCommon.Feature.init))
+                }
+            } catch {
+                Log.error(forMessage: "Failed to add features for source with id: \(sourceId), dataId: \(dataId ?? ""), error: \(error)")
+            }
+        }
+        workItemTracker.add(AnyCancelable(item.cancel), for: sourceId)
+        backgroundQueue.async(execute: item)
+    }
+
+    private final class WorkItemPerGeoJSONSourceTracker {
+        private var cancellables = [SourceId: CompositeCancelable]()
+
+        func add(_ cancellable: Cancelable, for sourceId: SourceId) {
+            let compositeCancellable: CompositeCancelable
+
+            if let cached = cancellables[sourceId] {
+                compositeCancellable = cached
+            } else {
+                compositeCancellable = CompositeCancelable()
+            }
+
+            compositeCancellable.add(cancellable)
+            cancellables[sourceId] = compositeCancellable
+        }
+
+        func cancelAll(for sourceId: SourceId) {
+            cancellables.removeValue(forKey: sourceId)?.cancel()
+        }
+
+        deinit {
+            cancellables.values.forEach { $0.cancel() }
+        }
+    }
+
+    func updateGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String?) {
+        let item = DispatchWorkItem { [weak self] in
+            guard let self else { return }
+            do {
+                try handleExpected {
+                    return self.styleManager.updateGeoJSONSourceFeatures(forSourceId: sourceId,
+                                                                    dataId: dataId ?? "",
+                                                                    features: features.map(MapboxCommon.Feature.init))
+                }
+            } catch {
+                Log.error(forMessage: "Failed to update features for source with id: \(sourceId), dataId: \(dataId ?? ""), error: \(error)")
+            }
+        }
+
+        workItemTracker.add(AnyCancelable(item.cancel), for: sourceId)
+        backgroundQueue.async(execute: item)
+    }
+
+    func removeGeoJSONSourceFeatures(forSourceId sourceId: String, featureIds: [String], dataId: String?) {
+        let item = DispatchWorkItem { [weak self] in
+            guard let self else { return }
+            do {
+                try handleExpected {
+                    return self.styleManager.removeGeoJSONSourceFeatures(forSourceId: sourceId,
+                                                                         dataId: dataId ?? "",
+                                                                         featureIds: featureIds)
+                }
+            } catch {
+                Log.error(forMessage: "Failed to remove features for source with id: \(sourceId), dataId: \(dataId ?? ""), error: \(error)")
+            }
+        }
+
+        workItemTracker.add(AnyCancelable(item.cancel), for: sourceId)
+        backgroundQueue.async(execute: item)
     }
 
     // MARK: - Untyped API
 
     internal func addSource(withId id: String, properties: [String: Any]) throws {
         try handleExpected {
-            return styleManager.addStyleSource(forSourceId: id, properties: properties)
+            return styleManager.addStyleSource(forSourceId: id, properties: properties.removingId())
         }
     }
 
@@ -107,7 +177,7 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
             return styleManager.removeStyleSource(forSourceId: id)
         }
 
-        workItems.removeValue(forKey: id)?.cancel()
+        workItemTracker.cancelAll(for: id)
     }
 
     internal func sourceExists(withId id: String) -> Bool {
@@ -119,9 +189,15 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
     }
 
     internal func sourceProperties(for sourceId: String) throws -> [String: Any] {
-        return try handleExpected {
-            return styleManager.getStyleSourceProperties(forSourceId: sourceId)
+        let expected = styleManager.getStyleSourceProperties(forSourceId: sourceId)
+        if expected.isError() {
+            throw StyleError(message: expected.error as String)
         }
+        guard var dict = expected.value as? [String: Any] else {
+            throw TypeConversionError.unexpectedType
+        }
+        dict["id"] = sourceId
+        return dict
     }
 
     internal func setSourceProperty(for sourceId: String, property: String, value: Any) throws {
@@ -132,40 +208,38 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
 
     internal func setSourceProperties(for sourceId: String, properties: [String: Any]) throws {
         try handleExpected {
-            return styleManager.setStyleSourcePropertiesForSourceId(sourceId, properties: properties)
+            return styleManager.setStyleSourcePropertiesForSourceId(sourceId, properties: properties.removingId())
         }
     }
 
     private func setStyleGeoJSONSourceDataForSourceId(_ id: String, dataId: String? = nil, data: MapboxCoreMaps.GeoJSONSourceData) throws {
         try handleExpected { () -> Expected<NSNull, NSString> in
-            if let dataId = dataId {
-                return styleManager.__setStyleGeoJSONSourceDataForSourceId(id, dataId: dataId, data: data)
-            } else {
-                return styleManager.__setStyleGeoJSONSourceDataForSourceId(id, data: data)
-            }
+            return styleManager.__setStyleGeoJSONSourceDataForSourceId(id,
+                                                                       dataId: dataId ?? "",
+                                                                       data: data)
         }
     }
 
     // MARK: - Async GeoJSON source data parsing
 
-    private func addGeoJSONSource(_ source: GeoJSONSource, id: String, dataId: String? = nil) throws {
-        let data = source.data
+    private func addGeoJSONSource(_ source: GeoJSONSource, dataId: String? = nil) throws {
+        // GeoJSON source is being added in two steps:
+        // 1. Add source metadata with empty data on main queue
+        // 2. Apply the data value on background worker queue
 
         var emptySource = source
-        if emptySource.data != nil {
-            emptySource.data = .empty
-        }
+        // Can't pass nil here, Core requires at least empty data for source to be added.
+        emptySource.data = .string("")
+        try addSourceInternal(emptySource)
 
-        try addSourceInternal(emptySource, id: id)
+        guard let data = source.data else { return }
+        if case GeoJSONSourceData.string("") = data { return }
 
-        guard let data = data else { return }
-        if case GeoJSONSourceData.empty = data { return }
-
-        applyGeoJSON(data: data, sourceId: id, dataId: dataId)
+        updateGeoJSONSource(withId: source.id, data: data, dataId: dataId)
     }
 
-    private func applyGeoJSON(data: GeoJSONSourceData, sourceId id: String, dataId: String? = nil) {
-        workItems.removeValue(forKey: id)?.cancel()
+    func updateGeoJSONSource(withId id: String, data: GeoJSONSourceData, dataId: String?) {
+        workItemTracker.cancelAll(for: id)
 
         // This implementation favors the first submitted task and the last, in case of many work items queuing up -
         // the item that started execution will disregard cancellation, queued up items in the middle will get cancelled,
@@ -180,7 +254,18 @@ internal final class StyleSourceManager: StyleSourceManagerProtocol {
             }
         }
 
-        workItems[id] = item
+        workItemTracker.add(AnyCancelable(item.cancel), for: id)
         backgroundQueue.async(execute: item)
+    }
+}
+
+private extension Dictionary where Key == String {
+    func removingId() -> Self {
+        guard keys.contains("id") else {
+            return self
+        }
+        var copy = self
+        copy.removeValue(forKey: "id")
+        return copy
     }
 }

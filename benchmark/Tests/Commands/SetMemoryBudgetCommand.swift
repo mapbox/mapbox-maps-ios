@@ -37,19 +37,19 @@ struct SetMemoryBudgetCommand: AsyncCommand, Decodable {
     }
 
     @MainActor
-    func execute() async throws {
-        guard let mapView = UIViewController.rootController?.findMapView() else {
+    func execute(context: Context) async throws {
+        guard let mapView = context.mapView else {
             throw ExecutionError.cannotFindMapboxMap
         }
 
-        let memoryBudget: MapMemoryBudget
+        let memoryBudget: TileCacheBudget
         switch budget {
         case .megabytes(let megabytes):
-            memoryBudget = .fromMapMemoryBudget(MapMemoryBudgetInMegabytes(size: megabytes))
+            memoryBudget = .fromTileCacheBudget(TileCacheBudgetInMegabytes(size: megabytes))
         case .tiles(let tiles):
-            memoryBudget = .fromMapMemoryBudget(MapMemoryBudgetInTiles(size: tiles))
+            memoryBudget = .fromTileCacheBudget(TileCacheBudgetInTiles(size: tiles))
         }
 
-        mapView.mapboxMap.setMemoryBudget(memoryBudget)
+        mapView.mapboxMap.setTileCacheBudget(memoryBudget)
     }
 }

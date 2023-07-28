@@ -74,6 +74,34 @@ final class PointAnnotationTests: XCTestCase {
         XCTAssertEqual(iconSize, annotation.iconSize)
     }
 
+    func testIconTextFit() {
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+        annotation.iconTextFit =  IconTextFit.testConstantValue()
+
+        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
+            return
+        }
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .string(iconTextFit) = layerProperties["icon-text-fit"] else {
+            return XCTFail("Layer property icon-text-fit should be set to a string.")
+        }
+        XCTAssertEqual(iconTextFit, annotation.iconTextFit?.rawValue)
+    }
+
+    func testIconTextFitPadding() {
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+        annotation.iconTextFitPadding =  [Double].testConstantValue()
+
+        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
+            return
+        }
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .array(iconTextFitPadding) = layerProperties["icon-text-fit-padding"] else {
+            return XCTFail("Layer property icon-text-fit-padding should be set to a array of Doubles.")
+        }
+        XCTAssertEqual(iconTextFitPadding.compactMap { $0?.rawValue } as? [Double], annotation.iconTextFitPadding)
+    }
+
     func testSymbolSortKey() {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.symbolSortKey =  Double.testConstantValue()
@@ -256,6 +284,20 @@ final class PointAnnotationTests: XCTestCase {
         XCTAssertEqual(iconColor, annotation.iconColor.flatMap { $0.rgbaString })
     }
 
+    func testIconEmissiveStrength() {
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+        annotation.iconEmissiveStrength =  Double.testConstantValue()
+
+        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
+            return
+        }
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(iconEmissiveStrength) = layerProperties["icon-emissive-strength"] else {
+            return XCTFail("Layer property icon-emissive-strength should be set to a number.")
+        }
+        XCTAssertEqual(iconEmissiveStrength, annotation.iconEmissiveStrength)
+    }
+
     func testIconHaloBlur() {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.iconHaloBlur =  Double.testConstantValue()
@@ -298,6 +340,20 @@ final class PointAnnotationTests: XCTestCase {
         XCTAssertEqual(iconHaloWidth, annotation.iconHaloWidth)
     }
 
+    func testIconImageCrossFade() {
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+        annotation.iconImageCrossFade =  Double.testConstantValue()
+
+        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
+            return
+        }
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(iconImageCrossFade) = layerProperties["icon-image-cross-fade"] else {
+            return XCTFail("Layer property icon-image-cross-fade should be set to a number.")
+        }
+        XCTAssertEqual(iconImageCrossFade, annotation.iconImageCrossFade)
+    }
+
     func testIconOpacity() {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         annotation.iconOpacity =  Double.testConstantValue()
@@ -324,6 +380,20 @@ final class PointAnnotationTests: XCTestCase {
             return XCTFail("Layer property text-color should be set to a string.")
         }
         XCTAssertEqual(textColor, annotation.textColor.flatMap { $0.rgbaString })
+    }
+
+    func testTextEmissiveStrength() {
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+        annotation.textEmissiveStrength =  Double.testConstantValue()
+
+        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
+            return
+        }
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(textEmissiveStrength) = layerProperties["text-emissive-strength"] else {
+            return XCTFail("Layer property text-emissive-strength should be set to a number.")
+        }
+        XCTAssertEqual(textEmissiveStrength, annotation.textEmissiveStrength)
     }
 
     func testTextHaloBlur() {

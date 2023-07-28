@@ -1,5 +1,6 @@
 // This file is generated.
 import Foundation
+import os
 @_implementationOnly import MapboxCommon_Private
 
 /// An instance of `PointAnnotationManager` is responsible for a collection of `PointAnnotation`s.
@@ -88,7 +89,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     internal init(id: String,
                   style: StyleProtocol,
                   layerPosition: LayerPosition?,
-                  displayLinkCoordinator: DisplayLinkCoordinator,
+                  displayLinkCoordinator: DisplayLinkCoordinator?,
                   clusterOptions: ClusterOptions? = nil,
                   imagesManager: AnnotationImagesManagerProtocol,
                   offsetPointCalculator: OffsetPointCalculator) {
@@ -107,8 +108,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
         do {
             // Add the source with empty `data` property
-            var source = GeoJSONSource()
-            source.data = .empty
+            var source = GeoJSONSource(id: sourceId)
 
             // Set cluster options and create clusters if clustering is enabled
             if let clusterOptions = clusterOptions {
@@ -118,15 +118,14 @@ public class PointAnnotationManager: AnnotationManagerInternal {
                 source.clusterMaxZoom = clusterOptions.clusterMaxZoom
             }
 
-            try style.addSource(source, id: sourceId)
+            try style.addSource(source)
 
             if let clusterOptions = clusterOptions {
                 createClusterLayers(clusterOptions: clusterOptions)
             }
 
             // Add the correct backing layer for this annotation type
-            var layer = SymbolLayer(id: layerId)
-            layer.source = sourceId
+            var layer = SymbolLayer(id: layerId, source: sourceId)
 
             // Show all icons and texts by default in point annotations.
             layer.iconAllowOverlap = .constant(true)
@@ -142,7 +141,8 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
         self.displayLinkParticipant.delegate = self
 
-        displayLinkCoordinator.add(displayLinkParticipant)
+        assert(displayLinkCoordinator != nil, "DisplayLinkCoordinator must be present")
+        displayLinkCoordinator?.add(displayLinkParticipant)
     }
 
     private func createClusterLayers(clusterOptions: ClusterOptions) {
@@ -167,8 +167,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
     private func createClusterLevelLayer(clusterOptions: ClusterOptions) -> CircleLayer {
         let layedID = "mapbox-iOS-cluster-circle-layer-manager-" + id
-        var circleLayer = CircleLayer(id: layedID)
-        circleLayer.source = sourceId
+        var circleLayer = CircleLayer(id: layedID, source: sourceId)
         circleLayer.circleColor = clusterOptions.circleColor
         circleLayer.circleRadius = clusterOptions.circleRadius
         circleLayer.filter = Exp(.has) { "point_count" }
@@ -177,8 +176,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
     private func createClusterTextLayer(clusterOptions: ClusterOptions) -> SymbolLayer {
         let layerID = "mapbox-iOS-cluster-text-layer-manager-" + id
-        var symbolLayer = SymbolLayer(id: layerID)
-        symbolLayer.source = sourceId
+        var symbolLayer = SymbolLayer(id: layerID, source: sourceId)
         symbolLayer.textField = clusterOptions.textField
         symbolLayer.textSize = clusterOptions.textSize
         symbolLayer.textColor = clusterOptions.textColor
@@ -253,7 +251,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         let dataDrivenProperties = Dictionary(
             uniqueKeysWithValues: dataDrivenLayerPropertyKeys
                 .map { (key) -> (String, Any) in
-                    (key, ["get", key, ["get", "layerProperties"]])
+                    (key, ["get", key, ["get", "layerProperties"]] as [Any])
                 })
 
         // Merge the common layer properties
@@ -262,7 +260,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         // Construct the properties dictionary to reset any properties that are no longer used
         let unusedPropertyKeys = previouslySetLayerPropertyKeys.subtracting(newLayerProperties.keys)
         let unusedProperties = Dictionary(uniqueKeysWithValues: unusedPropertyKeys.map { (key) -> (String, Any) in
-            (key, Style.layerPropertyDefaultValue(for: .symbol, property: key).value)
+            (key, StyleManager.layerPropertyDefaultValue(for: .symbol, property: key).value)
         })
 
         // Store the new set of property keys
@@ -281,14 +279,8 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
 
         // build and update the source data
-        do {
-            let featureCollection = FeatureCollection(features: mainAnnotations.values.map(\.feature))
-            try style.updateGeoJSONSource(withId: sourceId, geoJSON: .featureCollection(featureCollection))
-        } catch {
-            Log.error(
-                forMessage: "Could not update annotations in PointAnnotationManager due to error: \(error)",
-                category: "Annotations")
-        }
+        let featureCollection = FeatureCollection(features: mainAnnotations.values.map(\.feature))
+        style.updateGeoJSONSource(withId: sourceId, geoJSON: .featureCollection(featureCollection))
     }
 
     private func syncDragSourceIfNeeded() {
@@ -372,26 +364,6 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    /// Scales the icon to fit around the associated text.
-    public var iconTextFit: IconTextFit? {
-        get {
-            return layerProperties["icon-text-fit"].flatMap { $0 as? String }.flatMap(IconTextFit.init(rawValue:))
-        }
-        set {
-            layerProperties["icon-text-fit"] = newValue?.rawValue
-        }
-    }
-
-    /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
-    public var iconTextFitPadding: [Double]? {
-        get {
-            return layerProperties["icon-text-fit-padding"] as? [Double]
-        }
-        set {
-            layerProperties["icon-text-fit-padding"] = newValue
-        }
-    }
-
     /// If true, the symbols will not cross tile edges to avoid mutual collisions. Recommended in layers that don't have enough padding in the vector tile to prevent collisions, or if it is a point symbol layer placed after a line symbol layer. When using a client that supports global collision detection, like Mapbox GL JS version 0.42.0 or greater, enabling this property is not needed to prevent clipped labels at tile boundaries.
     public var symbolAvoidEdges: Bool? {
         get {
@@ -448,7 +420,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
             return (layerProperties["text-font"] as? [Any])?[1] as? [String]
         }
         set {
-            layerProperties["text-font"] = newValue.map { ["literal", $0] }
+            layerProperties["text-font"] = newValue.map { ["literal", $0] as [Any] }
         }
     }
 
@@ -582,14 +554,25 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    /// Text leading value for multi-line text.
-    @available(*, deprecated, message: "text-line-height property is now data driven, use `PointAnnotation.textLineHeight` instead.")
-    public var textLineHeight: Double? {
+    /// Scales the icon to fit around the associated text.
+    @available(*, deprecated, message: "icon-text-fit property is now data driven, use `PointAnnotation.iconTextFit` instead.")
+    public var iconTextFit: IconTextFit? {
         get {
-            return layerProperties["text-line-height"] as? Double
+            return layerProperties["icon-text-fit"].flatMap { $0 as? String }.flatMap(IconTextFit.init(rawValue:))
         }
         set {
-            layerProperties["text-line-height"] = newValue
+            layerProperties["icon-text-fit"] = newValue?.rawValue
+        }
+    }
+
+    /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
+    @available(*, deprecated, message: "icon-text-fit-padding property is now data driven, use `PointAnnotation.iconTextFitPadding` instead.")
+    public var iconTextFitPadding: [Double]? {
+        get {
+            return layerProperties["icon-text-fit-padding"] as? [Double]
+        }
+        set {
+            layerProperties["icon-text-fit-padding"] = newValue
         }
     }
 
@@ -629,14 +612,10 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     }
 
     private func updateDragSource() {
-        do {
-            if let annotationBeingDragged = annotationBeingDragged {
-                draggedAnnotations[annotationBeingDragged.id] = annotationBeingDragged
-            }
-            try style.updateGeoJSONSource(withId: dragSourceId, geoJSON: .featureCollection(.init(features: draggedAnnotations.values.map(\.feature))))
-        } catch {
-            Log.error(forMessage: "Failed to update drag source. Error: \(error)")
+        if let annotationBeingDragged = annotationBeingDragged {
+            draggedAnnotations[annotationBeingDragged.id] = annotationBeingDragged
         }
+        style.updateGeoJSONSource(withId: dragSourceId, geoJSON: .featureCollection(.init(features: draggedAnnotations.values.map(\.feature))))
     }
 
     private func updateDragLayer() {
@@ -670,9 +649,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
         do {
             if !style.sourceExists(withId: dragSourceId) {
-                var dragSource = GeoJSONSource()
-                dragSource.data = .empty
-                try style.addSource(dragSource, id: dragSourceId)
+                try style.addSource(GeoJSONSource(id: dragSourceId))
             }
 
             annotationBeingDragged = annotation
@@ -702,8 +679,11 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
 extension PointAnnotationManager: DelegatingDisplayLinkParticipantDelegate {
     func participate(for participant: DelegatingDisplayLinkParticipant) {
-        syncSourceAndLayerIfNeeded()
-        syncDragSourceIfNeeded()
+        OSLog.platform.withIntervalSignpost(SignpostName.mapViewDisplayLink,
+                                            "Participant: PointAnnotationManager") {
+            syncSourceAndLayerIfNeeded()
+            syncDragSourceIfNeeded()
+        }
     }
 }
 

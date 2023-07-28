@@ -2,10 +2,10 @@ import UIKit
 import MapboxMaps
 import CoreLocation
 
-@objc(ViewAnnotationBasicExample)
 final class ViewAnnotationBasicExample: UIViewController, ExampleProtocol {
 
     private var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,10 +20,10 @@ final class ViewAnnotationBasicExample: UIViewController, ExampleProtocol {
 
         addViewAnnotation(at: mapView.mapboxMap.coordinate(for: mapView.center))
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
             self.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     // MARK: - Action handlers

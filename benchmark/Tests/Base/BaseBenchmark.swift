@@ -90,10 +90,8 @@ class BaseBenchmark: XCTestCase {
     func onMapReady(cameraOptions: CameraOptions? = nil, handler: (MapView) -> ()) {
         let frame = viewController?.view.frame ?? .zero
 
-        let mapInitOptions = MapInitOptions(
-            resourceOptions: ResourceOptionsManager.default.resourceOptions.tileStoreUsageMode(.disabled),
-            cameraOptions: cameraOptions)
-        mapView = MapView(frame: frame, mapInitOptions: mapInitOptions)
+        MapboxMapsOptions.tileStoreUsageMode = .readOnly
+        mapView = MapView(frame: frame, mapInitOptions: .init(cameraOptions: cameraOptions))
 
         viewController.view.addSubview(mapView)
         handler(mapView)
@@ -105,22 +103,24 @@ class BaseBenchmark: XCTestCase {
     ///   - filePath: A string that represents a file path to the source code file.
     ///   - lineNumber: An integer that represents a line of code in the source code file.
     ///   - handler: A handler that is invoked after the style is loaded.
-    func onStyleLoaded(cameraOptions: CameraOptions? = nil,
-                       filePath: String = #file,
-                       lineNumber: Int = #line,
-                       handler: @escaping (MapView, Style) -> ()) {
+    func onStyleLoaded(
+        cameraOptions: CameraOptions? = nil,
+        filePath: String = #file,
+        lineNumber: Int = #line,
+        handler: @escaping (MapView) -> ()
+    ) {
         onMapReady(cameraOptions: cameraOptions) { mapView in
-            mapView.mapboxMap.loadStyleURI(styleURI) { result in
-                switch result {
-                case .failure(let error):
+            mapView.mapboxMap.loadStyleURI(styleURI) { [weak self] error in
+                if let error {
                     let location = XCTSourceCodeLocation(filePath: filePath, lineNumber: lineNumber)
                     let context = XCTSourceCodeContext(location: location)
-                    let issue = XCTIssue(type: .thrownError,
-                                         compactDescription: error.localizedDescription,
-                                         sourceCodeContext: context)
-                    self.record(issue)
-                case .success(let style):
-                    handler(mapView, style)
+                    let issue = XCTIssue(
+                        type: .thrownError,
+                        compactDescription: error.localizedDescription,
+                        sourceCodeContext: context)
+                    self?.record(issue)
+                } else {
+                    handler(mapView)
                 }
             }
         }
@@ -136,12 +136,14 @@ class BaseBenchmark: XCTestCase {
                      handler: @escaping (MapView) -> (),
                      filePath: String = #file,
                      lineNumber: Int = #line) {
-        onStyleLoaded(cameraOptions: cameraOptions, filePath: filePath, lineNumber: lineNumber) { mapView, style in
-            mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        onStyleLoaded(cameraOptions: cameraOptions, filePath: filePath, lineNumber: lineNumber) { [self] mapView in
+            mapView.mapboxMap.onMapLoaded.observeNext { _ in
                 handler(mapView)
-            }
+            }.store(in: &cancellations)
         }
     }
+
+    var cancellations: Set<AnyCancelable> = []
 
     // MARK: - Private
 

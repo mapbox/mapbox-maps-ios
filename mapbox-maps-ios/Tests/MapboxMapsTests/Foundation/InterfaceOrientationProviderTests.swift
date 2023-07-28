@@ -2,75 +2,119 @@ import Foundation
 @testable import MapboxMaps
 import XCTest
 
-final class UIApplicationInterfaceOrientationProviderTests: XCTestCase {
-    var application: UIApplicationProtocol!
-    var provider: UIApplicationInterfaceOrientationProvider!
-    var view: UIView!
+final class DefaultInterfaceOrientationProviderTests: XCTestCase {
+    var notificationCenter: MockNotificationCenter!
+    var device: MockUIDevice!
+    var orientationProvider: DefaultInterfaceOrientationProvider!
+    @MutableRef var userInterfaceOrientationView: UIView?
+    var cancellables: Set<AnyCancelable>!
 
     override func setUp() {
         super.setUp()
 
-        view = UIView()
-        application = MockUIApplication()
-        provider = UIApplicationInterfaceOrientationProvider(application: application)
+        cancellables = Set<AnyCancelable>()
+        notificationCenter = MockNotificationCenter()
+        device = MockUIDevice()
+        orientationProvider = DefaultInterfaceOrientationProvider(
+            notificationCenter: notificationCenter,
+            device: device)
+        orientationProvider.view = $userInterfaceOrientationView
     }
 
     override func tearDown() {
-        provider = nil
-        view = nil
-        application = nil
         super.tearDown()
+
+        cancellables = nil
+        notificationCenter = nil
+        device = nil
+        orientationProvider = nil
+        userInterfaceOrientationView = nil
     }
 
-    func testOrientationProvider() {
-        let orientations: [UIInterfaceOrientation] = [.portrait, .landscapeLeft, .landscapeRight, .portraitUpsideDown]
-
-        for orientation in orientations {
-            application.statusBarOrientation = orientation
-            let resolvedOrientation = provider.interfaceOrientation(for: view)
-
-            XCTAssertEqual(resolvedOrientation, application.statusBarOrientation)
-        }
-    }
-
-    func testInterfaceToDeviceOrientationConversion() throws {
-        let interfaceOrientations: [UIInterfaceOrientation] =   [.portrait, .landscapeLeft, .landscapeRight, .portraitUpsideDown, .unknown]
-        let deviceOrientations: [CLDeviceOrientation] =         [.portrait, .landscapeRight, .landscapeLeft, .portraitUpsideDown, .portrait]
-
-        for (index, orientation) in interfaceOrientations.enumerated() {
-            let resolvedOrientation = CLDeviceOrientation(interfaceOrientation: orientation)
-
-            let expectedOrientation = deviceOrientations[index]
-            XCTAssertEqual(resolvedOrientation, expectedOrientation)
-        }
-    }
-
-    func testHeadingOrientationWrapperCallsInterfaceOrientation() {
-        let provider = MockInterfaceOrientationProvider()
-        _ = provider.headingOrientation(for: view)
-
-        XCTAssertEqual(provider.interfaceOrientationStub.invocations.count, 1)
-        XCTAssertEqual(provider.interfaceOrientationStub.invocations.first?.parameters, view)
-    }
-}
-
-final class DefaultInterfaceOrientationProviderTests: XCTestCase {
-    func testOrientationProvider() throws {
-        guard #available(iOS 13.0, *) else {
-            throw XCTSkip("Test requires iOS 13 or higher.")
-        }
+    func testOrientationIsTakenFromWindowSceneOrDevice() throws {
+        // given
+        let deviceOrientation = UIDeviceOrientation.portraitUpsideDown
+        device.$orientation.getStub.defaultReturnValue = deviceOrientation
 
         let view = UIView()
         let window = UIWindow()
         let viewController = UIViewController()
         viewController.view.addSubview(view)
+        userInterfaceOrientationView = view
         window.rootViewController = viewController
         window.makeKeyAndVisible()
-        let provider = DefaultInterfaceOrientationProvider()
 
-        let orientation = provider.interfaceOrientation(for: view)
+        // when
+        let orientation = orientationProvider.onInterfaceOrientationChange.latestValue
 
-        XCTAssertNotNil(orientation)
-        XCTAssertEqual(orientation, view.window?.windowScene?.interfaceOrientation)
+        // then
+        if #available(iOS 13, *) {
+            // the default value for iOS 13+ is .unknown, otherwise the orientation is taken from the window scene
+            XCTAssertNotNil(view.window?.windowScene?.interfaceOrientation)
+            XCTAssertEqual(orientation, view.window?.windowScene?.interfaceOrientation)
+        } else {
+            // on iOS 12 the orientation is taken from UIDevice.orientation
+            XCTAssertEqual(orientation, UIInterfaceOrientation(deviceOrientation: deviceOrientation))
+        }
+    }
+
+    func testFallbackDeviceOrientationWhenNoViewProvided() {
+        orientationProvider.view = nil
+
+        device.$orientation.getStub.defaultReturnValue = .portraitUpsideDown
+
+        XCTAssertEqual(orientationProvider.onInterfaceOrientationChange.latestValue, UIInterfaceOrientation(deviceOrientation: .portraitUpsideDown))
+    }
+
+    func testBeginGeneratingDeviceOrientationNotificationsIsCalledWhenUpdating() {
+        // when
+        orientationProvider.onInterfaceOrientationChange.observe { _ in }.store(in: &cancellables)
+
+        XCTAssertEqual(device.beginGeneratingDeviceOrientationNotificationsStub.invocations.count, 1)
+        XCTAssertEqual(device.endGeneratingDeviceOrientationNotificationsStub.invocations.count, 0)
+    }
+
+    func testEndGeneratingDeviceOrientationNotificationsIsCalledWhenNotUpdating() {
+        // when
+        do {
+            _ = orientationProvider.onInterfaceOrientationChange.observe { _ in }
+        }
+
+        // then
+        XCTAssertEqual(device.beginGeneratingDeviceOrientationNotificationsStub.invocations.count, 1)
+        XCTAssertEqual(device.endGeneratingDeviceOrientationNotificationsStub.invocations.count, 1)
+    }
+
+    func testDeviceOrientationDidChangeSubscribedWhenUpdating() {
+        // when
+        orientationProvider.onInterfaceOrientationChange.observe { _ in }.store(in: &cancellables)
+
+        // then
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations.count, 1)
+        XCTAssertIdentical(notificationCenter.addObserverStub.invocations.first?.parameters.observer as? AnyObject, orientationProvider)
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations.first?.parameters.name, UIDevice.orientationDidChangeNotification)
+    }
+
+    func testDeviceOrientationDidChangeUnsubscribedWhenInactive() {
+        // when
+        _ = orientationProvider.onInterfaceOrientationChange.observe { _ in }
+
+        // then
+        XCTAssertEqual(notificationCenter.removeObserverStub.invocations.count, 1)
+        XCTAssertIdentical(notificationCenter.removeObserverStub.invocations.first?.parameters.observer as? AnyObject, orientationProvider)
+        XCTAssertEqual(notificationCenter.removeObserverStub.invocations.first?.parameters.name, UIDevice.orientationDidChangeNotification)
+    }
+
+    func testHeadingOrientationIsUpdatedWhenDeviceOrientationDidChange() {
+        // given
+        @Stubbed var orientation: UIInterfaceOrientation?
+        orientationProvider.onInterfaceOrientationChange.observe { orientation = $0 }.store(in: &cancellables)
+        $orientation.setStub.reset()
+
+        // when
+        notificationCenter.post(name: UIDevice.orientationDidChangeNotification, object: nil)
+
+        // then
+        XCTAssertEqual($orientation.setStub.invocations.count, 1)
     }
 }

@@ -1,8 +1,8 @@
 import MapboxMaps
 import UIKit
 
-@objc(RasterTileSourceExample)
 class RasterTileSourceExample: UIViewController, ExampleProtocol {
+    private var cancelables = Set<AnyCancelable>()
     var mapView: MapView!
     var isTileRequestDelayEnabled = false
 
@@ -22,12 +22,12 @@ class RasterTileSourceExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Once the map has finished loading, add the `RasterSource` and `RasterLayer` to the map's style.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { _ in
             self.addRasterSource()
 
             // The following line is just for testing purposes.
             self.finish()
-        }
+        }.store(in: &cancelables)
 
         button.setTitle("Enable tile request delay", for: .normal)
         button.backgroundColor = .white
@@ -38,36 +38,31 @@ class RasterTileSourceExample: UIViewController, ExampleProtocol {
         button.addTarget(self, action: #selector(toggleTileRequestDelay), for: .touchUpInside)
     }
 
-    @objc
-    func toggleTileRequestDelay() {
+    @objc func toggleTileRequestDelay() {
         isTileRequestDelayEnabled.toggle()
-        try? mapView.mapboxMap.style.setSourceProperty(for: sourceId, property: "tile-requests-delay", value: isTileRequestDelayEnabled ? 5000 : 0)
+        try? mapView.mapboxMap.setSourceProperty(for: sourceId, property: "tile-requests-delay", value: isTileRequestDelayEnabled ? 5000 : 0)
         button.setTitle(isTileRequestDelayEnabled ? "Disable tile request delay" : "Enable tile request delay", for: .normal)
     }
 
     func addRasterSource() {
-        let style = mapView.mapboxMap.style
 
         // This URL points to raster tiles designed by Stamen Design.
         let sourceUrl = "https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg"
 
         // Create a `RasterSource` and set the source's `tiles` to the Stamen watercolor raster tiles.
-        var rasterSource = RasterSource()
+        var rasterSource = RasterSource(id: sourceId)
         rasterSource.tiles = [sourceUrl]
 
         // Specify the tile size for the `RasterSource`.
         rasterSource.tileSize = 256
 
-        var rasterLayer = RasterLayer(id: "raster-layer")
-
         // Specify that the layer should use the source with the ID `raster-source`. This ID will be
         // assigned to the `RasterSource` when it is added to the style.
-
-        rasterLayer.source = sourceId
+        let rasterLayer = RasterLayer(id: "raster-layer", source: sourceId)
 
         do {
-            try style.addSource(rasterSource, id: sourceId)
-            try style.addLayer(rasterLayer)
+            try mapView.mapboxMap.addSource(rasterSource)
+            try mapView.mapboxMap.addLayer(rasterLayer)
         } catch {
             print("Failed to update the style. Error: \(error)")
         }

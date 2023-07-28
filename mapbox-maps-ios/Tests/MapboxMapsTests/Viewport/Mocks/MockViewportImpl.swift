@@ -1,6 +1,6 @@
 @testable import MapboxMaps
 
-final class MockViewportImpl: ViewportImplProtocol {
+final class MockViewportManagerImpl: ViewportManagerImplProtocol {
     @Stubbed var options: ViewportOptions = .random()
 
     @Stubbed var status: ViewportStatus = .random()

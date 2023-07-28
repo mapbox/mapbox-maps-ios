@@ -2,14 +2,12 @@ import UIKit
 import MapboxMaps
 import CoreLocation
 
-@objc(ViewAnnotationMarkerExample)
 final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
 
     private enum Constants {
         static let BLUE_ICON_ID = "blue"
         static let SOURCE_ID = "source_id"
         static let LAYER_ID = "layer_id"
-        static let TERRAIN_SOURCE = "TERRAIN_SOURCE"
         static let TERRAIN_URL_TILE_RESOURCE = "mapbox://mapbox.mapbox-terrain-dem-v1"
         static let MARKER_ID_PREFIX = "view_annotation_"
         static let SELECTED_ADD_COEF_PX: CGFloat = 50
@@ -21,6 +19,7 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
 
     private let image = UIImage(named: "blue_marker_view")!
     private lazy var markerHeight: CGFloat = image.size.height
+    private var cancelables = Set<AnyCancelable>()
 
     lazy var styleChangeButton: UIButton = {
         let button = UIButton(type: .system)
@@ -48,16 +47,16 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
 
         addMarkerAndAnnotation(at: mapView.mapboxMap.coordinate(for: mapView.center))
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
             self.finish()
-        }
+        }.store(in: &cancelables)
 
-        mapView.mapboxMap.onEvery(event: .styleLoaded) { [weak self] _ in
+        mapView.mapboxMap.onStyleLoaded.observe { [weak self] _ in
             self?.prepareStyle()
-        }
+        }.store(in: &cancelables)
 
-        mapView.mapboxMap.style.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
         view.addSubview(styleChangeButton)
 
@@ -82,7 +81,7 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
         mapView.mapboxMap.queryRenderedFeatures(with: screenPoint, options: queryOptions) { [weak self] result in
             if case let .success(queriedFeatures) = result,
                let self = self,
-               let feature = queriedFeatures.first?.feature,
+               let feature = queriedFeatures.first?.queriedFeature.feature,
                let id = feature.identifier,
                case let .string(idString) = id,
                let viewAnnotations = self.mapView.viewAnnotations {
@@ -103,33 +102,31 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
     }
 
     @objc private func styleChangePressed(sender: UIButton) {
-        mapView.mapboxMap.style.uri = mapView.mapboxMap.style.uri == .streets ? .satelliteStreets : .streets
+        mapView.mapboxMap.styleURI = mapView.mapboxMap.styleURI == .streets ? .satelliteStreets : .streets
     }
 
     // MARK: - Style management
 
     private func prepareStyle() {
-        let style = mapView.mapboxMap.style
-        try? style.addImage(image, id: Constants.BLUE_ICON_ID)
+        try? mapView.mapboxMap.addImage(image, id: Constants.BLUE_ICON_ID)
 
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: Constants.SOURCE_ID)
         source.data = .featureCollection(FeatureCollection(features: pointList))
-        try? mapView.mapboxMap.style.addSource(source, id: Constants.SOURCE_ID)
+        try? mapView.mapboxMap.addSource(source)
 
-        if style.uri == .satelliteStreets {
-            var demSource = RasterDemSource()
+        if mapView.mapboxMap.styleURI == .satelliteStreets {
+            var demSource = RasterDemSource(id: "terrain-source")
             demSource.url = Constants.TERRAIN_URL_TILE_RESOURCE
-            try? mapView.mapboxMap.style.addSource(demSource, id: Constants.TERRAIN_SOURCE)
-            let terrain = Terrain(sourceId: Constants.TERRAIN_SOURCE)
-            try? mapView.mapboxMap.style.setTerrain(terrain)
+            try? mapView.mapboxMap.addSource(demSource)
+            let terrain = Terrain(sourceId: demSource.id)
+            try? mapView.mapboxMap.setTerrain(terrain)
         }
 
-        var layer = SymbolLayer(id: Constants.LAYER_ID)
-        layer.source = Constants.SOURCE_ID
+        var layer = SymbolLayer(id: Constants.LAYER_ID, source: Constants.SOURCE_ID)
         layer.iconImage = .constant(.name(Constants.BLUE_ICON_ID))
         layer.iconAnchor = .constant(.bottom)
         layer.iconAllowOverlap = .constant(true)
-        try? mapView.mapboxMap.style.addLayer(layer)
+        try? mapView.mapboxMap.addLayer(layer)
     }
 
     // MARK: - Annotation management
@@ -149,8 +146,8 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
         var feature = Feature(geometry: point)
         feature.identifier = .string(currentId)
         pointList.append(feature)
-        if (try? mapView.mapboxMap.style.source(withId: Constants.SOURCE_ID)) != nil {
-            try? mapView.mapboxMap.style.updateGeoJSONSource(withId: Constants.SOURCE_ID, geoJSON: .featureCollection(FeatureCollection(features: pointList)))
+        if (try? mapView.mapboxMap.source(withId: Constants.SOURCE_ID)) != nil {
+            mapView.mapboxMap.updateGeoJSONSource(withId: Constants.SOURCE_ID, geoJSON: .featureCollection(FeatureCollection(features: pointList)))
         }
         return currentId
     }

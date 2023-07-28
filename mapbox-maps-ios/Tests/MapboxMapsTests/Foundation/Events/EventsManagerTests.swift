@@ -8,7 +8,7 @@ final class EventsManagerTests: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        eventsManager = try EventsManager(accessToken: mapboxAccessToken())
+        eventsManager = EventsManager()
     }
 
     override func tearDown() {

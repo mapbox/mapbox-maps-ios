@@ -12,45 +12,44 @@ struct AddRouteCommand: AsyncCommand {
     private var locationProvider = OnDemandLocationProvider()
 
     @MainActor
-    func execute() async throws {
-        guard let mapView = UIViewController.rootController?.findMapView() else {
+    func execute(context: Context) async throws {
+        guard let mapView = context.mapView else {
             throw ExecutionError.cannotFindMapboxMap
         }
 
         mapView.location.options.puckType = .puck2D(.makeDefault(showBearing: false))
         mapView.location.options.puckBearing = .course
-        mapView.location.overrideLocationProvider(with: locationProvider)
+        mapView.location.override(locationProvider: locationProvider.locations)
 
         // Setup route.
         let route = try getRoute()
 
-        var source = GeoJSONSource()
+        var source = GeoJSONSource(id: ID.routeSource)
         source.data = .geometry(Geometry(route.line))
         source.lineMetrics = true
-        try mapView.mapboxMap.style.addSource(source, id: ID.routeSource)
-        try mapView.mapboxMap.style.addPersistentLayer(makeCasingLayer())
-        try mapView.mapboxMap.style.addPersistentLayer(makeLineLayer())
+        try mapView.mapboxMap.addSource(source)
+        try mapView.mapboxMap.addPersistentLayer(makeCasingLayer())
+        try mapView.mapboxMap.addPersistentLayer(makeLineLayer())
 
-        mapView.mapboxMap.onEvery(event: .cameraChanged) { [weak locationProvider] _ in
-            let newLocation = mapView.cameraState.center
+        mapView.mapboxMap.onCameraChanged.observe { [locationProvider] payload in
+            let newLocation = payload.cameraState.center
             let traveledDistance = route.line.distance(to: newLocation) ?? 0
-            let progess = traveledDistance / route.distance
+            let progress = traveledDistance / route.distance
 
-            locationProvider?.currentCoordination = newLocation
-            try? mapView.mapboxMap.style.setLayerProperty(
+            locationProvider.coordinate = newLocation
+            try? mapView.mapboxMap.setLayerProperty(
                 for: ID.routeLineLayer,
                 property: "line-trim-offset",
-                value: [0, progess])
-            try? mapView.mapboxMap.style.setLayerProperty(
+                value: [0, progress])
+            try? mapView.mapboxMap.setLayerProperty(
                 for: ID.casingLineLayer,
                 property: "line-trim-offset",
-                value: [0, progess])
-        }
+                value: [0, progress])
+        }.store(in: &context.cancellables)
     }
 
     private func makeLineLayer() -> LineLayer {
-        var lineLayer = LineLayer(id: ID.routeLineLayer)
-        lineLayer.source = ID.routeSource
+        var lineLayer = LineLayer(id: ID.routeLineLayer, source: ID.routeSource)
         lineLayer.lineCap = .constant(.round)
         lineLayer.lineJoin = .constant(.round)
         lineLayer.lineWidth = .constant(10)
@@ -77,8 +76,7 @@ struct AddRouteCommand: AsyncCommand {
     }
 
     private func makeCasingLayer() -> LineLayer {
-        var casingLayer = LineLayer(id: ID.casingLineLayer)
-        casingLayer.source = ID.routeSource
+        var casingLayer = LineLayer(id: ID.casingLineLayer, source: ID.routeSource)
         casingLayer.lineCap = .constant(.round)
         casingLayer.lineJoin = .constant(.round)
         casingLayer.lineWidth = .expression(

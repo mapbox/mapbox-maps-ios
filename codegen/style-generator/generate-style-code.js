@@ -6,82 +6,123 @@ const ejs = require('ejs');
 const _ = require('lodash');
 require('./../vendor/mapbox-maps-stylegen/style-code');
 require('./../vendor/mapbox-maps-stylegen/type-utils');
+const styleParser = require('./../vendor/mapbox-maps-stylegen/style-parser');
 
-const generatePremiumApis = process.argv.slice(2).includes("--private-api");
-const style = require('./../vendor/mapbox-maps-stylegen/style-parser')(generatePremiumApis);
-const baseDirectory = generatePremiumApis ? '../mapbox-maps-ios-private' : '../mapbox-maps-ios'
+const privateStyle = _.cloneDeep(styleParser(true));
+const publicStyle = styleParser(false);
 
-// Template processing //
+const writeIfNotMatch = function (fileName, template, privateParamenters, publicParameters) {
+    if (template === undefined) { return; }
 
-// Swift Light
-const lightSwift = ejs.compile(fs.readFileSync('style-generator/templates/Light.swift.ejs', 'utf8'), { strict: true });
-writeIfModified(`${baseDirectory}/Sources/MapboxMaps/Style/Generated/Light/Light.swift`, lightSwift({ properties: style.light.properties }));
+    const privateContent = template(privateParamenters);
+    let publicContent = null
 
-// Swift 3D Light
-const light3DSwift = ejs.compile(fs.readFileSync('style-generator/templates/3DLight.swift.ejs', 'utf8'), { strict: true });
-const light3DTestsSwift = ejs.compile(fs.readFileSync('style-generator/templates/3DLightTests.swift.ejs', 'utf8'), { strict: true });
-for (const light of style.lights3D) {
-  writeIfModified(`${baseDirectory}/Sources/MapboxMaps/Style/Generated/Light/${camelizeWithUndercoreRemoved(light.name)}Light.swift`, light3DSwift(light));
-  writeIfModified(`${baseDirectory}/Tests/MapboxMapsTests/Style/Generated/${camelizeWithUndercoreRemoved(light.name)}LightTests.swift`, light3DTestsSwift(light));
+    if (publicParameters) {
+        publicContent = template(publicParameters);
+        writeIfModified(`../mapbox-maps-ios/${fileName}`, publicContent);
+    }
+
+    if (publicContent !== privateContent)  {
+        writeIfModified(`../private/${fileName}`, privateContent);
+    }
+};
+
+const findPublicStyleProperty = (styleKey, key, styleProperty) => {
+    return publicStyle[styleKey].find(publicProperty => publicProperty[key] === styleProperty[key]);
+};
+
+const compileTemplate = templateName => templateName === undefined ? undefined : ejs.compile(fs.readFileSync(`style-generator/templates/${templateName}`, 'utf8'), { strict: true });
+
+class StyleTemplate {
+    constructor({ key, templateName, testsTemplateName, integrationTestsTemplateName, folderPath, propertyKeyToCompare, wrapInArray = false }) {
+        this.key = key
+        this.template = compileTemplate(templateName);
+        this.testsTemplate = compileTemplate(testsTemplateName);
+        this.integrationTestsTemplate = compileTemplate(integrationTestsTemplateName);
+        this.folderPath = folderPath;
+        this.propertyKeyToCompare = propertyKeyToCompare;
+        this.wrapInArray = wrapInArray;
+    }
+
+    styleProperties(style) {
+        // Wrap single elements in an array so that we can iterate over them as other arrays
+        // There are some cases where we want to wrap in an array (e.g. `sourceEnumProperties`)
+        return this.wrapInArray ? [style[this.key]] : style[this.key]
+    }
+
+    fileName(styleProperty) {
+        let swiftyName = swiftSanitize(styleProperty[this.propertyKeyToCompare] || this.key)
+        return this.folderPath(camelize(swiftyName));
+    }
 }
 
-// Swift Layers
-const layerSwift = ejs.compile(fs.readFileSync('style-generator/templates/Layer.swift.ejs', 'utf8'), { strict: true });
-for (const layer of style.layers) {
-  writeIfModified(`${baseDirectory}/Sources/MapboxMaps/Style/Generated/Layers/${camelize(layer.type)}Layer.swift`, layerSwift(layer));
+const templatesRegistry = [
+    new StyleTemplate({
+        key: 'lights',
+        templateName: 'Light.swift.ejs',
+        folderPath: name => `Light/${name}Light.swift`,
+        testsTemplateName: 'LightTests.swift.ejs',
+        propertyKeyToCompare: 'name'
+    }),
+    new StyleTemplate({
+        key: 'layers',
+        templateName: 'Layer.swift.ejs',
+        testsTemplateName: 'LayerTests.swift.ejs',
+        integrationTestsTemplateName: 'LayerIntegrationTests.swift.ejs',
+        folderPath: name => `Layers/${name}Layer.swift`,
+        propertyKeyToCompare: 'type',
+    }),
+    new StyleTemplate({
+        key: 'sources',
+        templateName: 'Sources.swift.ejs',
+        testsTemplateName: 'SourcesTests.swift.ejs',
+        integrationTestsTemplateName: 'SourceIntegrationTests.swift.ejs',
+        propertyKeyToCompare: 'name',
+        folderPath: name => `Sources/${name}Source.swift`,
+    }),
+    new StyleTemplate({
+        key: 'sourceEnumProperties',
+        templateName: 'SourceProperties.swift.ejs',
+        folderPath: name => 'Sources/SourceProperties.swift',
+        wrapInArray: true
+    }),
+    new StyleTemplate({
+        key: 'enumProperties',
+        templateName: 'Enums.swift.ejs',
+        testsTemplateName: 'EnumsTestFixtures.swift.ejs',
+        folderPath: name => 'Enums/Enums.swift',
+        wrapInArray: true
+    }),
+    new StyleTemplate({
+        key: 'expressions',
+        templateName: 'Expressions.swift.ejs',
+        folderPath: name => 'Expressions/AllExpressions.swift',
+        wrapInArray: true
+    }),
+    new StyleTemplate({
+        key: 'terrainProperties',
+        templateName: 'Terrain.swift.ejs',
+        folderPath: name => 'Terrain.swift',
+        wrapInArray: true
+    }),
+    new StyleTemplate({
+        key: 'atmosphereProperties',
+        templateName: 'Atmosphere.swift.ejs',
+        folderPath: name => 'Atmosphere.swift',
+        wrapInArray: true
+    }),
+];
+
+const baseOutputPath = `Sources/MapboxMaps/Style/Generated`;
+const baseOutputPathTests = `Tests/MapboxMapsTests/Style/Generated`;
+
+for (const template of Object.values(templatesRegistry)) {
+    for (const styleProperty of template.styleProperties(privateStyle)) {
+        let publicValue = template.wrapInArray ? publicStyle[template.key] : findPublicStyleProperty(template.key, template.propertyKeyToCompare, styleProperty);
+        let fileName = template.fileName(styleProperty);
+
+        writeIfNotMatch(`${baseOutputPath}/${fileName}`, template.template, styleProperty, publicValue)
+        writeIfNotMatch(`${baseOutputPathTests}/${fileName.replace(/\.swift$/, 'Tests.swift')}`, template.testsTemplate, styleProperty, publicValue);
+        writeIfNotMatch(`${baseOutputPathTests}/IntegrationTests/${fileName.replace(/\.swift$/, 'IntegrationTests.swift')}`, template.integrationTestsTemplate, styleProperty, publicValue);
+    }
 }
-
-const layerTestsSwift = ejs.compile(fs.readFileSync('style-generator/templates/LayerTests.swift.ejs', 'utf8'), { strict: true });
-for (const layer of style.layers) {
-  writeIfModified(`${baseDirectory}/Tests/MapboxMapsTests/Style/Generated/Layers/${camelize(layer.type)}LayerTests.swift`, layerTestsSwift(layer));
-}
-
-const layerIntegrationTestsSwift = ejs.compile(fs.readFileSync('style-generator/templates/LayerIntegrationTests.swift.ejs', 'utf8'), { strict: true });
-for (const layer of style.layers) {
-  writeIfModified(`${baseDirectory}/Tests/MapboxMapsTests/Style/Generated/IntegrationTests/Layers/${camelize(layer.type)}LayerIntegrationTests.swift`, layerIntegrationTestsSwift(layer));
-}
-
-// Swift Sources
-
-const sourceSwift = ejs.compile(fs.readFileSync('style-generator/templates/Sources.swift.ejs', 'utf8'), {strict: true});
-for (const source of style.sources) {
-  writeIfModified(`${baseDirectory}/Sources/MapboxMaps/Style/Generated/Sources/${camelizeWithUndercoreRemoved(swiftSanitize(source.name))}Source.swift`, sourceSwift(source));
-}
-
-const sourceTestsSwift = ejs.compile(fs.readFileSync('style-generator/templates/SourcesTests.swift.ejs', 'utf8'), {strict: true});
-for (const source of style.sources) {
-  writeIfModified(`${baseDirectory}/Tests/MapboxMapsTests/Style/Generated/Sources/${camelizeWithUndercoreRemoved(swiftSanitize(source.name))}SourceTests.swift`, sourceTestsSwift(source));
-}
-
-const sourceIntegrationTestsSwift = ejs.compile(fs.readFileSync('style-generator/templates/SourceIntegrationTests.swift.ejs', 'utf8'), { strict: true });
-for (const source of style.sources) {
-  writeIfModified(`${baseDirectory}/Tests/MapboxMapsTests/Style/Generated/IntegrationTests/Sources/${camelizeWithUndercoreRemoved(swiftSanitize(source.name))}SourceIntegrationTests.swift`, sourceIntegrationTestsSwift(source));
-}
-
-const sourcePropertiesSwift = ejs.compile(fs.readFileSync('style-generator/templates/SourceProperties.swift.ejs', 'utf8'), {strict: true});
-writeIfModified(`${baseDirectory}/Sources/MapboxMaps/Style/Generated/Sources/SourceProperties.swift`, sourcePropertiesSwift(style.sourceEnumProperties));
-
-// Swift Enums
-const enumPropertySwiftTemplate = ejs.compile(fs.readFileSync('style-generator/templates/Enums.swift.ejs', 'utf8'), { strict: true });
-writeIfModified(
-  `${baseDirectory}/Sources/MapboxMaps/Style/Generated/Enums/Enums.swift`,
-  enumPropertySwiftTemplate({ properties: style.enumProperties })
-);
-
-const enumPropertySwiftTestTemplate = ejs.compile(fs.readFileSync('style-generator/templates/EnumsTestFixtures.swift.ejs', 'utf8'), { strict: true });
-writeIfModified(
-  `${baseDirectory}/Tests/MapboxMapsTests/Style/Fixtures/Enums+Fixtures.swift`,
-  enumPropertySwiftTestTemplate({ properties: style.enumProperties })
-);
-
-// Swift Expressions
-const expressionSwift = ejs.compile(fs.readFileSync('style-generator/templates/Expressions.swift.ejs', 'utf8'), { strict: true });
-writeIfModified(`${baseDirectory}/Sources/MapboxMaps/Style/Generated/Expressions/AllExpressions.swift`, expressionSwift({ expressions: style.expressions }));
-
-// Swift Terrain
-const terrainSwift = ejs.compile(fs.readFileSync('style-generator/templates/Terrain.swift.ejs', 'utf8'), { strict: true });
-writeIfModified(`${baseDirectory}/Sources/MapboxMaps/Style/Generated/Terrain.swift`, terrainSwift({ properties: style.terrainProperties }));
-
-// Swift Atmosphere
-const atmosphereSwift = ejs.compile(fs.readFileSync('style-generator/templates/Atmosphere.swift.ejs', 'utf8'), { strict: true });
-writeIfModified(`${baseDirectory}/Sources/MapboxMaps/Style/Generated/Atmosphere.swift`, atmosphereSwift({ properties: style.atmosphereProperties }));

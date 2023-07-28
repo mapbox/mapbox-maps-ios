@@ -9,6 +9,7 @@ private extension String {
 public class LongTapAnimationExample: UIViewController, ExampleProtocol {
     internal var mapView: MapView!
     private var pointAnnotationManager: PointAnnotationManager!
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -22,17 +23,17 @@ public class LongTapAnimationExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { _ in
             self.setupExample()
 
             // The following line is just for testing purposes.
             self.finish()
-        }
+        }.store(in: &cancelables)
         pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
     }
 
     func setupExample() {
-        try! mapView.mapboxMap.style.addImage(UIImage(named: "blue_marker_view")!, id: .blueMarker)
+        try! mapView.mapboxMap.addImage(UIImage(named: "blue_marker_view")!, id: .blueMarker)
         let tapGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPress))
         mapView.addGestureRecognizer(tapGesture)
     }

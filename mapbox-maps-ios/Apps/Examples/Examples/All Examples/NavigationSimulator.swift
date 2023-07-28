@@ -3,27 +3,30 @@ import CoreLocation
 import MapboxMaps
 
 final class NavigationSimulator: LocationProvider {
+    func addLocationObserver(for observer: LocationObserver) {
+        locationObservers.add(observer)
+    }
 
-    private let viewport: Viewport
+    func removeLocationObserver(for observer: LocationObserver) {
+        locationObservers.remove(observer)
+    }
+
+    func getLastObservedLocation() -> Location? {
+        Location(coordinate: currentLocation, timestamp: Date(), floor: nil, extra: nil)
+    }
+
+    private let viewport: ViewportManager
     private let route: LineString
 
     private lazy var followPuckViewPortState = viewport.makeFollowPuckViewportState(
         options: FollowPuckViewportStateOptions(bearing: .course)
     )
 
-    var locationProviderOptions = LocationOptions()
-    var authorizationStatus: CLAuthorizationStatus = .authorizedAlways
-    var accuracyAuthorization: CLAccuracyAuthorization = .fullAccuracy
-
-    var heading: CLHeading?
-    var headingOrientation: CLDeviceOrientation = .portrait
-
-    private weak var delegate: LocationProviderDelegate?
-
+    private let locationObservers = NSHashTable<AnyObject>.weakObjects()
     private var isStarted = false
     private let routeLength: LocationDistance
     private var routePointsToTravel: [LocationCoordinate2D]
-
+    
     private var direction: LocationDirection
     private var currentLocation: LocationCoordinate2D {
         didSet {
@@ -32,7 +35,7 @@ final class NavigationSimulator: LocationProvider {
         }
     }
 
-    init(viewport: Viewport, route: LineString) {
+    init(viewport: ViewportManager, route: LineString) {
         self.viewport = viewport
         self.route = route
         routeLength = route.distance()!
@@ -57,42 +60,30 @@ final class NavigationSimulator: LocationProvider {
                 }
             }
         }
+
+        startUpdatingLocation()
     }
 
     func progressFromStart(to location: Location) -> Double {
         route.distance(to: location.coordinate)! / routeLength
     }
 
-    // MARK: LocationProvider
-
-    func setDelegate(_ delegate: LocationProviderDelegate) {
-        self.delegate = delegate
-    }
-
-    func requestAlwaysAuthorization() {}
-    func requestWhenInUseAuthorization() {}
-    func requestTemporaryFullAccuracyAuthorization(withPurposeKey purposeKey: String) {}
-
-    func startUpdatingLocation() {
-        let location = CLLocation(
+    private func startUpdatingLocation() {
+        let location = Location(
             coordinate: currentLocation,
+            timestamp: Date(),
             altitude: 0,
             horizontalAccuracy: kCLLocationAccuracyBestForNavigation,
             verticalAccuracy: kCLLocationAccuracyBestForNavigation,
+            speed: 0,
             // Turf calculates bearing in decimal degrees within -180 to 180,
             // while Apple's course requires value in decimal degrees from 0 - 359.9
-            course: direction < 0 ? 360 + direction : direction,
-            speed: 0,
-            timestamp: Date()
-        )
-        delegate?.locationProvider(
-            self,
-            didUpdateLocations: [location]
-        )
-    }
-    func stopUpdatingLocation() {}
+            bearing: direction < 0 ? 360 + direction : direction,
+            floor: nil,
+            extra: nil)
 
-    func startUpdatingHeading() {}
-    func stopUpdatingHeading() {}
-    func dismissHeadingCalibrationDisplay() {}
+        for consumer in locationObservers.allObjects {
+            (consumer as? LocationObserver)?.onLocationUpdateReceived(for: [location])
+        }
+    }
 }

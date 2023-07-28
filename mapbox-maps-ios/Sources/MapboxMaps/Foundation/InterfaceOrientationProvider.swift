@@ -2,52 +2,55 @@ import Foundation
 import UIKit
 import CoreLocation
 
-/// A protocol that supplies current interface orientation for the specified view.
-///
-/// Use this protocol when the map view is used in non-application target (e.g. application extension target).
-@available(iOS, deprecated: 13)
-public protocol InterfaceOrientationProvider {
+internal final class DefaultInterfaceOrientationProvider {
+    var onInterfaceOrientationChange: Signal<UIInterfaceOrientation> { subject.signal }
 
-    /// Asks the provider for the interface orientation of the provided view.
-    ///
-    /// When a device is rotated map view passes current interface orientation to its location producer in order to ensure heading is displayed correctly.
-    /// - Parameters:
-    ///   - view: The view to get interface orientation from.
-    /// - Returns: The interface orientation for the provided view.
-    func interfaceOrientation(for view: UIView) -> UIInterfaceOrientation?
-}
-
-extension InterfaceOrientationProvider {
-    internal func headingOrientation(for view: UIView) -> CLDeviceOrientation? {
-        // locationProvider.headingOrientation should be adjusted based on the
-        // current UIInterfaceOrientation of the containing window, not the
-        // device orientation
-        guard let interfaceOrientation = interfaceOrientation(for: view) else {
-            return nil
+    private lazy var subject: CurrentValueSignalSubject<UIInterfaceOrientation> = {
+        let subject = CurrentValueSignalSubject(calculateInterfaceOrientation())
+        subject.onObserved = { [weak self] observed in
+            if observed {
+                self?.startUpdatingInterfaceOrientation()
+            } else {
+                self?.stopUpdatingInterfaceOrientation()
+            }
         }
+        return subject
+    }()
 
-        return CLDeviceOrientation(interfaceOrientation: interfaceOrientation)
+    var view: Ref<UIView?>?
+    private let notificationCenter: NotificationCenterProtocol
+    private let device: UIDeviceProtocol
+
+    internal init(notificationCenter: NotificationCenterProtocol,
+                  device: UIDeviceProtocol) {
+        self.notificationCenter = notificationCenter
+        self.device = device
     }
-}
 
-@available(iOS, deprecated: 13)
-@available(iOSApplicationExtension, unavailable)
-internal final class UIApplicationInterfaceOrientationProvider: InterfaceOrientationProvider {
-    private let application: UIApplicationProtocol
-
-    init(application: UIApplicationProtocol = UIApplication.shared) {
-        self.application = application
+    private func startUpdatingInterfaceOrientation() {
+        device.beginGeneratingDeviceOrientationNotifications()
+        notificationCenter.addObserver(self,
+                                       selector: #selector(deviceOrientationDidChange),
+                                       name: UIDevice.orientationDidChangeNotification,
+                                       object: nil)
     }
 
-    func interfaceOrientation(for view: UIView) -> UIInterfaceOrientation? {
-        return application.statusBarOrientation
+    private func stopUpdatingInterfaceOrientation() {
+        device.endGeneratingDeviceOrientationNotifications()
+        notificationCenter.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
     }
-}
 
-@available(iOS 13.0, *)
-internal final class DefaultInterfaceOrientationProvider: InterfaceOrientationProvider {
-    func interfaceOrientation(for view: UIView) -> UIInterfaceOrientation? {
-        return view.window?.windowScene?.interfaceOrientation
+    @objc private func deviceOrientationDidChange(_ notification: Notification) {
+        subject.value = calculateInterfaceOrientation()
+    }
+
+    private func calculateInterfaceOrientation() -> UIInterfaceOrientation {
+        if #available(iOS 13.0, *), let view = view?.value {
+            if let orientation = view.window?.windowScene?.interfaceOrientation {
+                return orientation
+            }
+        }
+        return UIInterfaceOrientation(deviceOrientation: device.orientation)
     }
 }
 
@@ -66,6 +69,23 @@ internal extension CLDeviceOrientation {
             self = .landscapeLeft
         case .portraitUpsideDown:
             self = .portraitUpsideDown
+        default:
+            self = .portrait
+        }
+    }
+}
+
+internal extension UIInterfaceOrientation {
+    init(deviceOrientation: UIDeviceOrientation) {
+        switch deviceOrientation {
+        case .portrait:
+            self = .portrait
+        case .portraitUpsideDown:
+            self = .portraitUpsideDown
+        case .landscapeLeft:
+            self = .landscapeLeft
+        case .landscapeRight:
+            self = .landscapeRight
         default:
             self = .portrait
         }

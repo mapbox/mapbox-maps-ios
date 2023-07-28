@@ -1,7 +1,8 @@
 executor: xcode-latest
+resource_class: macos.x86.medium.gen2
 steps:
   - checkout-root
-  - install-mbx-ci
+  - mapbox/install-mbx-ci
   - install-gh
   - run:
       name: Check for up-to-date LICENSE.md
@@ -18,3 +19,21 @@ steps:
           echo "$EXPECTED_LICENSE"
           exit 1
         fi
+  - run:
+        name: Install SwiftLint
+        command: |
+            GITHUB_TOKEN="$(mbx-ci github reader token)" gh -R realm/SwiftLint release download --pattern "SwiftLint.pkg"
+            sudo installer -pkg SwiftLint.pkg -target /
+  - run:
+        name: Run swiftlint
+        command: scripts/run_swiftlint.sh --strict --reporter junit | tee result.xml
+  - store_artifacts:
+      path: result.xml
+  - store_test_results:
+      path: result.xml
+  - run:
+      name: Build depsvalidator
+      command: swift build --package-path scripts/depsvalidator
+  - run:
+      name: Run depsvalidator
+      command: swift run --package-path scripts/depsvalidator depsvalidator

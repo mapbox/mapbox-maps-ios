@@ -16,6 +16,8 @@ jobs:
         - release-precheck
       filters: *release-filters
   - build-dynamic:
+      check-api-breakage: true
+      project-name: mobile-maps-ios
       context:
         - Slack Orb
         - SDK Registry Token
@@ -59,6 +61,7 @@ jobs:
         - build-dynamic
       filters: *release-filters
   - create-registry-pr:
+      project-name: mobile-maps-ios
       context:
         - Slack Orb
       requires:
@@ -69,6 +72,7 @@ jobs:
         - check-api-compatibility
       filters: *release-filters
   - check-registry:
+      project-name: mobile-maps-ios
       context:
         - Slack Orb
         - SDK Registry Token

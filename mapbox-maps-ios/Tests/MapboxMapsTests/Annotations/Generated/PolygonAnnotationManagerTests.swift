@@ -64,10 +64,10 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.type, SourceType.geoJson)
-        XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.id, manager.id)
+        XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.id, manager.id)
     }
 
-    func testAddLayer() {
+    func testAddLayer() throws {
         style.addSourceStub.reset()
         let initializedManager = PolygonAnnotationManager(
             id: id,
@@ -81,7 +81,8 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layer.type, LayerType.fill)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layer.id, initializedManager.id)
-        XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layer.source, initializedManager.sourceId)
+        let addedLayer = try XCTUnwrap(style.addPersistentLayerStub.invocations.last?.parameters.layer as? FillLayer)
+        XCTAssertEqual(addedLayer.source, initializedManager.sourceId)
         XCTAssertNil(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition)
     }
 
@@ -307,7 +308,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
     func testSetToNilFillAntialias() {
         let newFillAntialiasProperty = Bool.random()
-        let defaultValue = Style.layerPropertyDefaultValue(for: .fill, property: "fill-antialias").value as! Bool
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-antialias").value as! Bool
         manager.fillAntialias = newFillAntialiasProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-antialias"])
@@ -317,6 +318,81 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertNil(manager.fillAntialias)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-antialias"] as! Bool, defaultValue)
+    }
+
+    func testInitialFillEmissiveStrength() {
+        let initialValue = manager.fillEmissiveStrength
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetFillEmissiveStrength() {
+        let value = Double.random(in: 0...100000)
+        manager.fillEmissiveStrength = value
+        XCTAssertEqual(manager.fillEmissiveStrength, value)
+
+        // test layer and source synced and properties added
+        manager.syncSourceAndLayerIfNeeded()
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-emissive-strength"] as! Double, value)
+    }
+
+    func testFillEmissiveStrengthAnnotationPropertiesAddedWithoutDuplicate() {
+        let newFillEmissiveStrengthProperty = Double.random(in: 0...100000)
+        let secondFillEmissiveStrengthProperty = Double.random(in: 0...100000)
+
+        manager.fillEmissiveStrength = newFillEmissiveStrengthProperty
+        manager.syncSourceAndLayerIfNeeded()
+        manager.fillEmissiveStrength = secondFillEmissiveStrengthProperty
+        manager.syncSourceAndLayerIfNeeded()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-emissive-strength"] as! Double, secondFillEmissiveStrengthProperty)
+    }
+
+    func testNewFillEmissiveStrengthPropertyMergedWithAnnotationProperties() {
+        var annotations = [PolygonAnnotation]()
+        for _ in 0...5 {
+            let polygonCoords = [
+                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+                CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+                CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+                CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+            ]
+            var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
+            annotation.fillSortKey = Double.random(in: -100000...100000)
+            annotation.fillColor = StyleColor.random()
+            annotation.fillOpacity = Double.random(in: 0...1)
+            annotation.fillOutlineColor = StyleColor.random()
+            annotation.fillPattern = String.randomASCII(withLength: .random(in: 0...100))
+            annotations.append(annotation)
+        }
+        let newFillEmissiveStrengthProperty = Double.random(in: 0...100000)
+
+        manager.annotations = annotations
+        manager.fillEmissiveStrength = newFillEmissiveStrengthProperty
+        manager.syncSourceAndLayerIfNeeded()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-emissive-strength"])
+    }
+
+    func testSetToNilFillEmissiveStrength() {
+        let newFillEmissiveStrengthProperty = Double.random(in: 0...100000)
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-emissive-strength").value as! Double
+        manager.fillEmissiveStrength = newFillEmissiveStrengthProperty
+        manager.syncSourceAndLayerIfNeeded()
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-emissive-strength"])
+
+        manager.fillEmissiveStrength = nil
+        manager.syncSourceAndLayerIfNeeded()
+        XCTAssertNil(manager.fillEmissiveStrength)
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-emissive-strength"] as! Double, defaultValue)
     }
 
     func testInitialFillTranslate() {
@@ -382,7 +458,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
     func testSetToNilFillTranslate() {
         let newFillTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-        let defaultValue = Style.layerPropertyDefaultValue(for: .fill, property: "fill-translate").value as! [Double]
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-translate").value as! [Double]
         manager.fillTranslate = newFillTranslateProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-translate"])
@@ -457,7 +533,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
     func testSetToNilFillTranslateAnchor() {
         let newFillTranslateAnchorProperty = FillTranslateAnchor.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .fill, property: "fill-translate-anchor").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-translate-anchor").value as! String
         manager.fillTranslateAnchor = newFillTranslateAnchorProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-translate-anchor"])
@@ -479,8 +555,8 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     func testGetAnnotations() {
         let annotations = Array.random(withLength: 10) {
             PolygonAnnotation(
-                polygon: .init(outerRing: Ring(coordinates: .random(withLength: 5, generator: LocationCoordinate2D.random))), 
-                isSelected: false, 
+                polygon: .init(outerRing: Ring(coordinates: .random(withLength: 5, generator: LocationCoordinate2D.random))),
+                isSelected: false,
                 isDraggable: true)
         }
         manager.annotations = annotations
@@ -554,10 +630,10 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         let addLayerParameters = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.last).parameters
         let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
 
-        XCTAssertEqual(addLayerParameters.properties["source"] as? String, addSourceParameters.id)
+        XCTAssertEqual(addLayerParameters.properties["source"] as? String, addSourceParameters.source.id)
         XCTAssertNotEqual(addLayerParameters.properties["id"] as? String, manager.layerId)
 
-        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.id)
+        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.source.id)
     }
 
     func testHandleDragChanged() throws {
@@ -566,15 +642,15 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         mapboxMap.cameraState.zoom = 1
 
         let annotation = PolygonAnnotation(
-            id: "polygon1", 
+            id: "polygon1",
             polygon: .init([[
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
                 CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
                 CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
                 CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
-            ]]), 
-            isSelected: false, 
+            ]]),
+            isSelected: false,
             isDraggable: true)
         manager.annotations = [annotation]
 
@@ -586,7 +662,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
         manager.handleDragChanged(with: .random())
         let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
-        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.id)
+        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.source.id)
         if case .featureCollection(let collection) = updateSourceParameters.geojson {
             XCTAssertTrue(collection.features.contains(where: { $0.identifier?.rawValue as? String == annotation.id }))
         } else {

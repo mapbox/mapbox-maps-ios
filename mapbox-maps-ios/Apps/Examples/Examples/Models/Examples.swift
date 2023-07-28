@@ -8,7 +8,7 @@ import MapboxMaps
 
 // swiftlint:disable:next type_body_length
 struct Examples {
-    static let all = [
+    static let all: [[String : Any]] = [
         [
             "title": "Getting started",
             "examples": gettingStartedExamples
@@ -89,7 +89,13 @@ struct Examples {
                 type: BuildingExtrusionsExample.self),
         Example(title: "Add a sky layer",
                 description: "Add a customizable sky layer to simulate natural lighting with a Terrain layer.",
-                type: SkyLayerExample.self)
+                type: SkyLayerExample.self),
+        Example(title: "Display a 3D model in a model layer",
+                description: "Showcase the usage of a 3D model layer.",
+                type: ModelLayerExample.self),
+        Example(title: "Lights 3D",
+                description: "Configure lights in 3D environment",
+                type: Lights3DExample.self)
     ]
 
     // Examples that focus on annotations.
@@ -176,8 +182,24 @@ struct Examples {
                 type: ResizableImageExample.self),
         Example(title: "Geojson performance",
                 description: "Display long route as large geojson",
-                type: LargeGeoJSONPerformanceExample.self)
-    ]
+                type: LargeGeoJSONPerformanceExample.self),
+        Example(title: "Map Events",
+                description: "Print out map events and data",
+                type: MapEventsExample.self)
+    ] + {
+        if #available(iOS 13.0, *) {
+            return [
+                Example(title: "Combine",
+                    description: "Shows how to use map events with Combine framework",
+                    type: CombineExample.self),
+                Example(title: "Combine Location",
+                    description: "Shows how to use Combine framework to drive the location puck",
+                    type: CombineLocationExample.self)
+            ]
+        } else {
+            return []
+        }
+    }()
 
     // Examples that focus on displaying the user's location.
     public static let locationExamples = [
@@ -292,6 +314,9 @@ struct Examples {
         Example(title: "Add a raster tile source",
                 description: "Add third-party raster tiles to a map.",
                 type: RasterTileSourceExample.self),
+        Example(title: "Raster colorization",
+                description: "Display weatcher user raster-color.",
+                type: RasterColorExample.self),
         Example(title: "Show and hide layers",
                 description: "Allow the user to toggle the visibility of a CircleLayer and LineLayer on a map.",
                 type: ShowHideLayerExample.self),

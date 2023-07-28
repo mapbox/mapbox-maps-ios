@@ -1,11 +1,11 @@
 import UIKit
 import MapboxMaps
 
-@objc(PointAnnotationClusteringExample)
 class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
     let clusterLayerID = "fireHydrantClusters"
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -23,9 +23,9 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
         mapView.gestures.singleTapGestureRecognizer.addTarget(self, action: #selector(handleTap(gestureRecognizer:)))
 
         // Add the source and style layers once the map has loaded.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { _ in
             self.addPointAnnotations()
-        }
+        }.store(in: &cancelables)
     }
 
     func addPointAnnotations() {
@@ -133,14 +133,14 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
         // Additional properties on the text and circle layers can be modified like this below
         // To modify the text layer use: "mapbox-iOS-cluster-text-layer-manager-" and SymbolLayer.self
         do {
-            try mapView.mapboxMap.style.updateLayer(withId: "mapbox-iOS-cluster-circle-layer-manager-" + clusterLayerID, type: CircleLayer.self) { layer in
+            try mapView.mapboxMap.updateLayer(withId: "mapbox-iOS-cluster-circle-layer-manager-" + clusterLayerID, type: CircleLayer.self) { layer in
                 layer.circleStrokeColor = .constant(StyleColor(.black))
                 layer.circleStrokeWidth = .constant(3)
             }
         } catch {
             print("Updating the layer failed: \(error.localizedDescription)")
         }
-        
+
         finish()
     }
 
@@ -155,7 +155,7 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
                                                                               filter: nil)) { [weak self] result in
             switch result {
             case .success(let queriedFeatures):
-                if let cluster = queriedFeatures.first?.feature,
+                if let cluster = queriedFeatures.first?.queriedFeature.feature,
                    let sourceID = self?.clusterLayerID,
                    case let .point(clusterCenter) = cluster.geometry {
                     self?.mapView.mapboxMap.getGeoJsonClusterExpansionZoom(forSourceId: sourceID, feature: cluster) { result in
@@ -167,6 +167,9 @@ class PointAnnotationClusteringExample: UIViewController, ExampleProtocol {
                             print("An error occurred: \(error.localizedDescription). Please try another cluster.")
                         }
                     }
+                }
+                if let layers = queriedFeatures.first?.layers {
+                    print("Selected a cluster in layers: \(layers)")
                 }
             case .failure(let error):
                 print("An error occurred: \(error.localizedDescription). Please try another cluster.")

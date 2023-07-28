@@ -5,7 +5,7 @@ import XCTest
 final class RasterDemSourceTests: XCTestCase {
 
     func testEncodingAndDecoding() {
-        var source = RasterDemSource()
+        var source = RasterDemSource(id: "test-source")
         source.url = String.testSourceValue()
         source.tiles = [String].testSourceValue()
         source.bounds = [Double].testSourceValue()

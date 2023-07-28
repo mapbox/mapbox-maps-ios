@@ -9,21 +9,17 @@ final class RasterLayerIntegrationTests: MapViewIntegrationTestCase {
     }
 
     internal func testWaitForIdle() throws {
-        let style = try XCTUnwrap(self.style)
-
         let successfullyAddedLayerExpectation = XCTestExpectation(description: "Successfully added RasterLayer to Map")
         successfullyAddedLayerExpectation.expectedFulfillmentCount = 1
 
         let successfullyRetrievedLayerExpectation = XCTestExpectation(description: "Successfully retrieved RasterLayer from Map")
         successfullyRetrievedLayerExpectation.expectedFulfillmentCount = 1
 
-        style.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
-        didFinishLoadingStyle = { _ in
+        didFinishLoadingStyle = { mapView in
 
-            var layer = RasterLayer(id: "test-id")
-            layer.source = "some-source"
-            layer.sourceLayer = nil
+            var layer = RasterLayer(id: "test-id", source: "source")
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
@@ -32,6 +28,9 @@ final class RasterLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.rasterBrightnessMaxTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.rasterBrightnessMin = Value<Double>.testConstantValue()
             layer.rasterBrightnessMinTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.rasterColor = Value<StyleColor>.testConstantValue()
+            layer.rasterColorMixTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.rasterColorRangeTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.rasterContrast = Value<Double>.testConstantValue()
             layer.rasterContrastTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.rasterFadeDuration = Value<Double>.testConstantValue()
@@ -45,7 +44,7 @@ final class RasterLayerIntegrationTests: MapViewIntegrationTestCase {
 
             // Add the layer
             do {
-                try style.addLayer(layer)
+                try mapView.mapboxMap.addLayer(layer)
                 successfullyAddedLayerExpectation.fulfill()
             } catch {
                 XCTFail("Failed to add RasterLayer because of error: \(error)")
@@ -53,7 +52,7 @@ final class RasterLayerIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the layer
             do {
-                _ = try style.layer(withId: "test-id", type: RasterLayer.self)
+                _ = try mapView.mapboxMap.layer(withId: "test-id", type: RasterLayer.self)
                 successfullyRetrievedLayerExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve RasterLayer because of error: \(error)")

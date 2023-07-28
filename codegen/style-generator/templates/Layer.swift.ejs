@@ -6,7 +6,15 @@
   const doc = locals.doc
   const isExperimental = locals.experimental
   const isInternal = locals.internal
-  const deprecatedTransitionProperties = ["line-dasharray", "line-pattern", "fill-extrusion-pattern", "fill-pattern", "background-pattern"]
+
+  const publicDocumentationNotation = (isExperimental) => isExperimental ?
+`#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+` : ``
+
+  const layersWithoutSource = ['background', 'sky', 'location-indicator']
+  const shouldIncludeSource = !layersWithoutSource.includes(type)
 -%>
 // This file is generated.
 import Foundation
@@ -19,47 +27,80 @@ import Foundation
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#layers-<%- type %>)
 <% } -%>
+<%- publicDocumentationNotation(isExperimental).split('\n').map(line => line.trimLeft()).join('\n') -%>
 <%if (isExperimental) { -%>@_spi(Experimental) <% } -%>public struct <%- camelize(type) %>Layer: Layer {
 
     // MARK: - Conformance to `Layer` protocol
+    /// Unique layer name
+<%- publicDocumentationNotation(isExperimental) -%>
     public var id: String
+
+    /// Rendering type of this layer.
+<%- publicDocumentationNotation(isExperimental) -%>
     public let type: LayerType
+
+<% if (shouldIncludeSource) { -%>
+    /// An expression specifying conditions on source features.
+    /// Only features that match the filter are displayed.
+<%- publicDocumentationNotation(isExperimental) -%>
     public var filter: Expression?
+
+    /// Name of a source description to be used for this layer.
+    /// Required for all layer types except ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``.
+<%- publicDocumentationNotation(isExperimental) -%>
     public var source: String?
+
+    /// Layer to use from a vector tile source.
+    ///
+    /// Required for vector tile sources.
+    /// Prohibited for all other source types, including GeoJSON sources.
+<%- publicDocumentationNotation(isExperimental) -%>
     public var sourceLayer: String?
+
+<% } -%>
+    /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
+<%- publicDocumentationNotation(isExperimental) -%>
     public var minZoom: Double?
+
+    /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
+<%- publicDocumentationNotation(isExperimental) -%>
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
-    public var visibility: Value<Visibility>?
+<%- publicDocumentationNotation(isExperimental) -%>
+    public var visibility: Value<Visibility>
     <%_ for (const property of layoutProperties) { -%>
 
     /// <%- markdownFriendlyDoc(property) %>
+<%- publicDocumentationNotation(isExperimental || property.experimental) -%>
     <%if (!isExperimental && property.experimental) { -%>@_spi(Experimental) <% } -%>public var <%- camelizeWithLeadingLowercase(property.name) %>: <%- propertySwiftValueType(property) %>?
     <%_ if (property.transition) { -%>
 
     /// Transition options for `<%- camelize(property.name) %>`.
+<%- publicDocumentationNotation(isExperimental || property.experimental) %>
     <%if (!isExperimental && property.experimental) { -%>@_spi(Experimental) <% } -%>public var <%- camelizeWithLeadingLowercase(property.name) %>Transition: StyleTransition?
     <%_ } -%>
     <%_ } -%>
     <%_ for (const property of paintProperties) { -%>
 
     /// <%- markdownFriendlyDoc(property) %>
+<%- publicDocumentationNotation(isExperimental || property.experimental) -%>
     <%if (!isExperimental && property.experimental) { -%>@_spi(Experimental) <% } -%>public var <%- camelizeWithLeadingLowercase(property.name) %>: <%- propertySwiftValueType(property) %>?
     <%_ if (property.transition) { -%>
 
     /// Transition options for `<%- camelizeWithLeadingLowercase(property.name) _%>`.
-    <%_ if (deprecatedTransitionProperties.includes(property.name)) { _%>
-    @available(*, deprecated, message: "This property is deprecated and will be removed in the future. Setting this will have no effect.")
-    <%_ } -%>
+<%- publicDocumentationNotation(isExperimental || property.experimental) -%>
     <%if (!isExperimental && property.experimental) { -%>@_spi(Experimental) <% } -%>public var <%- camelizeWithLeadingLowercase(property.name) _%>Transition: StyleTransition?
     <%_ } -%>
     <%_ } -%>
-    <%_ if (type == 'model' && !paintProperties.includes('model-opacity')) { %>
-    internal var modelOpacity: Value<Double>?
-    <%_ } -%>
 
+<%- publicDocumentationNotation(isExperimental) -%>
+<% if (shouldIncludeSource) { -%>
+    public init(id: String, source: String) {
+        self.source = source
+<% } else { -%>
     public init(id: String) {
+<% } -%>
         self.id = id
         self.type = LayerType.<%- camelizeWithLeadingLowercase(type) %>
         self.visibility = .constant(.visible)
@@ -69,25 +110,24 @@ import Foundation
         var container = encoder.container(keyedBy: RootCodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(type, forKey: .type)
+<% if (shouldIncludeSource) { -%>
         try container.encodeIfPresent(filter, forKey: .filter)
         try container.encodeIfPresent(source, forKey: .source)
         try container.encodeIfPresent(sourceLayer, forKey: .sourceLayer)
+<% } -%>
         try container.encodeIfPresent(minZoom, forKey: .minZoom)
         try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
 
         var paintContainer = container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint)
         <%_ for (const property of paintProperties) { -%>
         try paintContainer.encodeIfPresent(<%- camelizeWithLeadingLowercase(property.name) %>, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>)
-        <%_ if (property.transition && !deprecatedTransitionProperties.includes(property.name)) { -%>
+        <%_ if (property.transition) { -%>
         try paintContainer.encodeIfPresent(<%- camelizeWithLeadingLowercase(property.name) %>Transition, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>Transition)
         <%_ } -%>
         <%_ } -%>
-        <%_ if (type == 'model' && !paintProperties.includes('model-opacity')) { %>
-        try paintContainer.encodeIfPresent(modelOpacity, forKey: .modelOpacity)
-        <%_ } -%>
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
+        try layoutContainer.encode(visibility, forKey: .visibility)
         <%_ for (const property of layoutProperties) { -%>
         try layoutContainer.encodeIfPresent(<%- camelizeWithLeadingLowercase(property.name) %>, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>)
         <%_ if (property.transition) { -%>
@@ -100,38 +140,44 @@ import Foundation
         let container = try decoder.container(keyedBy: RootCodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         type = try container.decode(LayerType.self, forKey: .type)
+<% if (shouldIncludeSource) { -%>
         filter = try container.decodeIfPresent(Expression.self, forKey: .filter)
         source = try container.decodeIfPresent(String.self, forKey: .source)
         sourceLayer = try container.decodeIfPresent(String.self, forKey: .sourceLayer)
+<% } -%>
         minZoom = try container.decodeIfPresent(Double.self, forKey: .minZoom)
         maxZoom = try container.decodeIfPresent(Double.self, forKey: .maxZoom)
 
         if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
             <%_ for (const property of paintProperties) { -%>
             <%- camelizeWithLeadingLowercase(property.name) %> = try paintContainer.decodeIfPresent(<%- propertySwiftValueType(property) %>.self, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>)
-            <%_ if (property.transition && !deprecatedTransitionProperties.includes(property.name)) { -%>
+            <%_ if (property.transition) { -%>
             <%- camelizeWithLeadingLowercase(property.name) %>Transition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>Transition)
             <%_ } -%>
             <%_ } -%>
         }
 
+        var visibilityEncoded: Value<Visibility>?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
-            visibility = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
-            <%_ for (const property of layoutProperties) { -%>
+            visibilityEncoded = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
+                <%_ for (const property of layoutProperties) { -%>
             <%- camelizeWithLeadingLowercase(property.name) %> = try layoutContainer.decodeIfPresent(<%- propertySwiftValueType(property) %>.self, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>)
             <%_ if (property.transition) { -%>
             <%- camelizeWithLeadingLowercase(property.name) %>Transition = try layoutContainer.decodeIfPresent(StyleTransition.self, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>Transition)
             <%_ } -%>
             <%_ } -%>
         }
+        visibility = visibilityEncoded ?? .constant(.visible)
     }
 
     enum RootCodingKeys: String, CodingKey {
         case id = "id"
         case type = "type"
+<% if (shouldIncludeSource) { -%>
         case filter = "filter"
         case source = "source"
         case sourceLayer = "source-layer"
+<% } -%>
         case minZoom = "minzoom"
         case maxZoom = "maxzoom"
         case layout = "layout"
@@ -151,12 +197,9 @@ import Foundation
     enum PaintCodingKeys: String, CodingKey {
         <%_ for (const property of paintProperties) { -%>
         case <%- camelizeWithLeadingLowercase(property.name) %> = "<%- property.name %>"
-        <%_ if (property.transition && !deprecatedTransitionProperties.includes(property.name)) { -%>
+        <%_ if (property.transition) { -%>
         case <%- camelizeWithLeadingLowercase(property.name) %>Transition = "<%- property.name %>-transition"
         <%_ } -%>
-        <%_ } -%>
-        <%_ if (type == 'model' && !paintProperties.includes('model-opacity')) { %>
-        case modelOpacity = "model-opacity"
         <%_ } -%>
     }
 }

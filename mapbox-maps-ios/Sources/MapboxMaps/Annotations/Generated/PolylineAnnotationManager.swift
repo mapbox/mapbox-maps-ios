@@ -1,5 +1,6 @@
 // This file is generated.
 import Foundation
+import os
 @_implementationOnly import MapboxCommon_Private
 
 /// An instance of `PolylineAnnotationManager` is responsible for a collection of `PolylineAnnotation`s.
@@ -84,7 +85,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     internal init(id: String,
                   style: StyleProtocol,
                   layerPosition: LayerPosition?,
-                  displayLinkCoordinator: DisplayLinkCoordinator,
+                  displayLinkCoordinator: DisplayLinkCoordinator?,
                   offsetLineStringCalculator: OffsetLineStringCalculator) {
         self.id = id
         self.sourceId = id
@@ -97,13 +98,11 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
         do {
             // Add the source with empty `data` property
-            var source = GeoJSONSource()
-            source.data = .empty
-            try style.addSource(source, id: sourceId)
+            let source = GeoJSONSource(id: sourceId)
+            try style.addSource(source)
 
             // Add the correct backing layer for this annotation type
-            var layer = LineLayer(id: layerId)
-            layer.source = sourceId
+            let layer = LineLayer(id: layerId, source: sourceId)
             try style.addPersistentLayer(layer, layerPosition: layerPosition)
         } catch {
             Log.error(
@@ -113,7 +112,8 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
         self.displayLinkParticipant.delegate = self
 
-        displayLinkCoordinator.add(displayLinkParticipant)
+        assert(displayLinkCoordinator != nil, "DisplayLinkCoordinator must be present")
+        displayLinkCoordinator?.add(displayLinkParticipant)
     }
 
     internal func destroy() {
@@ -159,7 +159,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         let dataDrivenProperties = Dictionary(
             uniqueKeysWithValues: dataDrivenLayerPropertyKeys
                 .map { (key) -> (String, Any) in
-                    (key, ["get", key, ["get", "layerProperties"]])
+                    (key, ["get", key, ["get", "layerProperties"]] as [Any])
                 })
 
         // Merge the common layer properties
@@ -168,7 +168,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         // Construct the properties dictionary to reset any properties that are no longer used
         let unusedPropertyKeys = previouslySetLayerPropertyKeys.subtracting(newLayerProperties.keys)
         let unusedProperties = Dictionary(uniqueKeysWithValues: unusedPropertyKeys.map { (key) -> (String, Any) in
-            (key, Style.layerPropertyDefaultValue(for: .line, property: key).value)
+            (key, StyleManager.layerPropertyDefaultValue(for: .line, property: key).value)
         })
 
         // Store the new set of property keys
@@ -187,14 +187,8 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         }
 
         // build and update the source data
-        do {
-            let featureCollection = FeatureCollection(features: mainAnnotations.values.map(\.feature))
-            try style.updateGeoJSONSource(withId: sourceId, geoJSON: .featureCollection(featureCollection))
-        } catch {
-            Log.error(
-                forMessage: "Could not update annotations in PolylineAnnotationManager due to error: \(error)",
-                category: "Annotations")
-        }
+        let featureCollection = FeatureCollection(features: mainAnnotations.values.map(\.feature))
+        style.updateGeoJSONSource(withId: sourceId, geoJSON: .featureCollection(featureCollection))
     }
 
     private func syncDragSourceIfNeeded() {
@@ -245,6 +239,26 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         }
         set {
             layerProperties["line-dasharray"] = newValue
+        }
+    }
+
+    /// Decrease line layer opacity based on occlusion from 3D objects. Value 0 disables occlusion, value 1 means fully occluded.
+    public var lineDepthOcclusionFactor: Double? {
+        get {
+            return layerProperties["line-depth-occlusion-factor"] as? Double
+        }
+        set {
+            layerProperties["line-depth-occlusion-factor"] = newValue
+        }
+    }
+
+    /// Emission strength
+    public var lineEmissiveStrength: Double? {
+        get {
+            return layerProperties["line-emissive-strength"] as? Double
+        }
+        set {
+            layerProperties["line-emissive-strength"] = newValue
         }
     }
 
@@ -314,14 +328,10 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     }
 
     private func updateDragSource() {
-        do {
-            if let annotationBeingDragged = annotationBeingDragged {
-                draggedAnnotations[annotationBeingDragged.id] = annotationBeingDragged
-            }
-            try style.updateGeoJSONSource(withId: dragSourceId, geoJSON: .featureCollection(.init(features: draggedAnnotations.values.map(\.feature))))
-        } catch {
-            Log.error(forMessage: "Failed to update drag source. Error: \(error)")
+        if let annotationBeingDragged = annotationBeingDragged {
+            draggedAnnotations[annotationBeingDragged.id] = annotationBeingDragged
         }
+        style.updateGeoJSONSource(withId: dragSourceId, geoJSON: .featureCollection(.init(features: draggedAnnotations.values.map(\.feature))))
     }
 
     private func updateDragLayer() {
@@ -355,9 +365,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
         do {
             if !style.sourceExists(withId: dragSourceId) {
-                var dragSource = GeoJSONSource()
-                dragSource.data = .empty
-                try style.addSource(dragSource, id: dragSourceId)
+                try style.addSource(GeoJSONSource(id: dragSourceId))
             }
 
             annotationBeingDragged = annotation
@@ -387,8 +395,11 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
 extension PolylineAnnotationManager: DelegatingDisplayLinkParticipantDelegate {
     func participate(for participant: DelegatingDisplayLinkParticipant) {
-        syncSourceAndLayerIfNeeded()
-        syncDragSourceIfNeeded()
+        OSLog.platform.withIntervalSignpost(SignpostName.mapViewDisplayLink,
+                                            "Participant: PolylineAnnotationManager") {
+            syncSourceAndLayerIfNeeded()
+            syncDragSourceIfNeeded()
+        }
     }
 }
 

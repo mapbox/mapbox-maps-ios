@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class BackgroundLayerIntegrationTests: MapViewIntegrationTestCase {
 
@@ -9,35 +9,32 @@ final class BackgroundLayerIntegrationTests: MapViewIntegrationTestCase {
     }
 
     internal func testWaitForIdle() throws {
-        let style = try XCTUnwrap(self.style)
-
         let successfullyAddedLayerExpectation = XCTestExpectation(description: "Successfully added BackgroundLayer to Map")
         successfullyAddedLayerExpectation.expectedFulfillmentCount = 1
 
         let successfullyRetrievedLayerExpectation = XCTestExpectation(description: "Successfully retrieved BackgroundLayer from Map")
         successfullyRetrievedLayerExpectation.expectedFulfillmentCount = 1
 
-        style.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
-        didFinishLoadingStyle = { _ in
+        didFinishLoadingStyle = { mapView in
 
             var layer = BackgroundLayer(id: "test-id")
-            layer.source = "some-source"
-            layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
 
             layer.backgroundColor = Value<StyleColor>.testConstantValue()
             layer.backgroundColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.backgroundEmissiveStrength = Value<Double>.testConstantValue()
+            layer.backgroundEmissiveStrengthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.backgroundOpacity = Value<Double>.testConstantValue()
             layer.backgroundOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.backgroundPattern = Value<ResolvedImage>.testConstantValue()
-            layer.backgroundPatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
 
             // Add the layer
             do {
-                try style.addLayer(layer)
+                try mapView.mapboxMap.addLayer(layer)
                 successfullyAddedLayerExpectation.fulfill()
             } catch {
                 XCTFail("Failed to add BackgroundLayer because of error: \(error)")
@@ -45,7 +42,7 @@ final class BackgroundLayerIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the layer
             do {
-                _ = try style.layer(withId: "test-id", type: BackgroundLayer.self)
+                _ = try mapView.mapboxMap.layer(withId: "test-id", type: BackgroundLayer.self)
                 successfullyRetrievedLayerExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve BackgroundLayer because of error: \(error)")

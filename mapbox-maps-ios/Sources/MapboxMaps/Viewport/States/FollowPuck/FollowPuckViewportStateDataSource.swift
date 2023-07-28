@@ -5,32 +5,25 @@ internal protocol FollowPuckViewportStateDataSourceProtocol: AnyObject {
 
 internal final class FollowPuckViewportStateDataSource: FollowPuckViewportStateDataSourceProtocol {
 
-    internal var options: FollowPuckViewportStateOptions {
-        didSet {
-            processUpdatedCamera()
-        }
-    }
+    internal var options: FollowPuckViewportStateOptions // TODO: Trigger need repaint?
 
     // MARK: - Private State
 
-    private let interpolatedLocationProducer: InterpolatedLocationProducerProtocol
+    private let onPuckRender: Signal<PuckRenderingData>
     private let observableCameraOptions: ObservableCameraOptionsProtocol
-    private let cancelables = CancelableContainer()
+    private var cancelables = Set<AnyCancelable>()
 
     // MARK: - Initialization
 
     internal init(options: FollowPuckViewportStateOptions,
-                  interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
+                  onPuckRender: Signal<PuckRenderingData>,
                   observableCameraOptions: ObservableCameraOptionsProtocol) {
         self.options = options
-        self.interpolatedLocationProducer = interpolatedLocationProducer
+        self.onPuckRender = onPuckRender
         self.observableCameraOptions = observableCameraOptions
-        interpolatedLocationProducer
-            .observe { [weak self] _ in
-                self?.processUpdatedCamera()
-                return true
-            }
-            .add(to: cancelables)
+        onPuckRender.observe { [weak self] data in
+            self?.processUpdatedCamera(with: data)
+        }.store(in: &cancelables)
     }
 
     // MARK: - Observation
@@ -42,18 +35,13 @@ internal final class FollowPuckViewportStateDataSource: FollowPuckViewportStateD
 
     // MARK: - Private Utilities
 
-    private func cameraOptions(for location: InterpolatedLocation) -> CameraOptions {
-        return CameraOptions(
-            center: location.coordinate,
+    private func processUpdatedCamera(with data: PuckRenderingData) {
+        let cameraOptions = CameraOptions(
+            center: data.location.coordinate,
             padding: options.padding,
             zoom: options.zoom,
-            bearing: options.bearing?.evaluate(with: location),
+            bearing: options.bearing?.evaluate(with: data),
             pitch: options.pitch)
-    }
-
-    private func processUpdatedCamera() {
-        if let cameraOptions = interpolatedLocationProducer.location.map(cameraOptions(for:)) {
-            observableCameraOptions.notify(with: cameraOptions)
-        }
+        observableCameraOptions.notify(with: cameraOptions)
     }
 }

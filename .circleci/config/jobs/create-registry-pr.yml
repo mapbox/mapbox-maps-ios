@@ -1,3 +1,7 @@
+parameters:
+  project-name:
+    description: Project name in SDK Registry.
+    type: string
 executor: xcode-latest
 steps:
   - checkout-root
@@ -17,7 +21,7 @@ steps:
         scripts/release/upload-docs --jazzy-docs api-docs --docc-docs workspace/docc --version "$VERSION"
   - run:
       name: Create SDK Registry PR
-      command: SKIP_PRIVATE=true scripts/release/create-api-downloads-pr.sh mobile-maps-ios "$VERSION"
+      command: scripts/release/create-api-downloads-pr.sh << parameters.project-name >> "$VERSION"
   - persist_to_workspace:
       root: .
       paths:

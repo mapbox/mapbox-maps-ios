@@ -1,5 +1,6 @@
 import XCTest
 @testable import MapboxMaps
+import MetalKit
 
 final class DelegatingMapClientTests: XCTestCase {
 
@@ -24,18 +25,6 @@ final class DelegatingMapClientTests: XCTestCase {
         delegatingMapClient.scheduleRepaint()
 
         XCTAssertEqual(delegate.scheduleRepaintStub.invocations.count, 1)
-    }
-
-    func testScheduleTaskForwardsToDelegate() {
-        var invoked = false
-
-        delegatingMapClient.scheduleTask {
-            invoked = true
-        }
-        delegate.scheduleTaskStub.invocations.first?.parameters()
-
-        XCTAssertEqual(delegate.scheduleTaskStub.invocations.count, 1)
-        XCTAssertTrue(invoked)
     }
 
     func testGetMetalViewForwardsToDelegate() {

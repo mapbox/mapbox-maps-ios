@@ -64,9 +64,7 @@ To add a new example, go through the following steps:
    import MapboxMaps
    import MapboxCoreMaps
    import MapboxCommon
-   
-   @objc(OfflineMapExample) // This must refer to the file name
-   
+      
    public class OfflineMapExample: UIViewController, ExampleProtocol {
    
        override public func viewDidLoad() {

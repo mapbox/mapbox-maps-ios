@@ -1,21 +1,22 @@
 import UIKit
 import MapboxMaps
 
-@objc(CameraAnimationExample)
-
 public class CameraAnimationExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds)
+        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 42.88, longitude: -78.870000), zoom: 6)
+        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
+        mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
         // Allows the delegate to receive information about map events.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { _ in
 
             // Center the map camera over New York City.
             let centerCoordinate = CLLocationCoordinate2D(
@@ -30,6 +31,6 @@ public class CameraAnimationExample: UIViewController, ExampleProtocol {
                 // The below line is used for internal testing purposes only.
                 self?.finish()
             }
-        }
+        }.store(in: &cancelables)
     }
 }

@@ -26,11 +26,9 @@ steps:
       command: |
         brew install mint
         pip3 install gitpython awscli
-        echo "export PATH=\"$HOME/.mint/bin:$PATH\"" >> $BASH_ENV
+        echo "export PATH=\"$HOME/.mint/bin:"'$PATH'"\"" >> $BASH_ENV
         mint install git@github.com:mapbox/ios-binary-size.git
         unzip ~/project/MapboxMaps.zip "artifacts/MapboxMaps.xcframework/*"
-  - checkout-submodule:
-      at: mobile-metrics
   - unless:
       condition: << parameters.upload-size-metrics >>
       steps:
@@ -38,7 +36,7 @@ steps:
             name: Calculate binary size metrics
             command: |
               BASELINE_TOLERANCE=${BASELINE_TOLERANCE:-10}
-              mobile-metrics/scripts/ios-binary-analyzer.py \
+              scripts/ios-binary-analyzer.py \
                   -r . \
                   -g "mapbox-maps-ios" \
                   -x "artifacts/MapboxMaps.xcframework" \
@@ -53,7 +51,7 @@ steps:
         - run:
             name: Calculate and upload binary size metrics
             command: |
-              mobile-metrics/scripts/ios-binary-analyzer.py \
+              scripts/ios-binary-analyzer.py \
                   -r . \
                   -g "mapbox-maps-ios" \
                   -x "artifacts/MapboxMaps.xcframework" \

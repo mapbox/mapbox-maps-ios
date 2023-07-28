@@ -73,21 +73,21 @@ maps_ios_upload_docs() {
     git commit -m "Add documentation for v$VERSION" --quiet
 
     info "Push"
-    git push --force --quiet
+    git push --force --verbose
 
     if [ "$STAGING_ONLY" = true ]; then
-        git push --force
+        git push --force --verbose
     else
         VERSION_BRANCH_NAME="docs/$VERSION"
         git checkout -b "$VERSION_BRANCH_NAME"
-        git push --set-upstream origin "$VERSION_BRANCH_NAME" --force --quiet
+        git push --set-upstream origin "$VERSION_BRANCH_NAME" --force --verbose
     fi
 
     if [ "$EXTRA_EMPTY_COMMIT" = true ]; then
         info "Add empty commit to trigger CI"
         sleep 10 # Avoid CI sometimes cancelling the "Trigger CI" build
         git commit --allow-empty -m "Trigger CI" --quiet
-        git push --force --quiet
+        git push --force --verbose
     fi
 
     popd > /dev/null
@@ -140,7 +140,7 @@ ios_sdk_update_versions() {
     git commit -m "Add Maps SDK for iOS ${VERSION} release" --quiet
 
     info "Push"
-    git push --set-upstream origin "${IOS_SDK_BRANCH_NAME}" --force --quiet
+    git push --set-upstream origin "${IOS_SDK_BRANCH_NAME}" --force
 }
 
 ios_sdk_open_pr() {
@@ -198,4 +198,5 @@ case "${flag}" in
 esac
 done
 
+set -x
 main

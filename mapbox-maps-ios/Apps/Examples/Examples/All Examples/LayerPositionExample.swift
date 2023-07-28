@@ -1,14 +1,13 @@
 import UIKit
 import MapboxMaps
 
-@objc(LayerPositionExample)
-
 public class LayerPositionExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
     private var sourceIdentifier = "ploygon-geojson-source"
     private var source: GeoJSONSource!
     private var layer: FillLayer!
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -23,9 +22,9 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allows the view controller to receive information about map events.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             self?.setupExample()
-        }
+        }.store(in: &cancelables)
 
         // Add a button to change the position of layer
         addLayerPostionChangeButton()
@@ -59,29 +58,29 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
 
         alert.addAction(UIAlertAction(title: "Above state label", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            try? self.mapView.mapboxMap.style.removeLayer(withId: self.layer.id)
-            try? self.mapView.mapboxMap.style.addLayer(self.layer,
+            try? self.mapView.mapboxMap.removeLayer(withId: self.layer.id)
+            try? self.mapView.mapboxMap.addLayer(self.layer,
                                              layerPosition: .above("state-label"))
         }))
 
         alert.addAction(UIAlertAction(title: "Below state label", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            try? self.mapView.mapboxMap.style.removeLayer(withId: self.layer.id)
-            try? self.mapView.mapboxMap.style.addLayer(self.layer,
+            try? self.mapView.mapboxMap.removeLayer(withId: self.layer.id)
+            try? self.mapView.mapboxMap.addLayer(self.layer,
                                              layerPosition: .below("state-label"))
         }))
 
         alert.addAction(UIAlertAction(title: "Above all", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            try? self.mapView.mapboxMap.style.removeLayer(withId: self.layer.id)
-            try? self.mapView.mapboxMap.style.addLayer(self.layer,
+            try? self.mapView.mapboxMap.removeLayer(withId: self.layer.id)
+            try? self.mapView.mapboxMap.addLayer(self.layer,
                                              layerPosition: nil)
         }))
 
         alert.addAction(UIAlertAction(title: "Below all", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            try? self.mapView.mapboxMap.style.removeLayer(withId: self.layer.id)
-            try? self.mapView.mapboxMap.style.addLayer(self.layer,
+            try? self.mapView.mapboxMap.removeLayer(withId: self.layer.id)
+            try? self.mapView.mapboxMap.addLayer(self.layer,
                                              layerPosition: .at(0))
         }))
 
@@ -92,14 +91,13 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
 
     // Wait for the style to load before adding data to it.
     public func setupExample() {
-        layer = FillLayer(id: "polygon-layer")
-        layer.source = sourceIdentifier
+        layer = FillLayer(id: "polygon-layer", source: sourceIdentifier)
         // Apply basic styling to the fill layer.
         layer.fillColor = .constant(StyleColor(#colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)))
         layer.fillOutlineColor = .constant(StyleColor(#colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)))
 
         // Create a new GeoJSON data source which gets its data from a polygon.
-        source = GeoJSONSource()
+        source = GeoJSONSource(id: sourceIdentifier)
         source.data = .geometry(.polygon(.init([[
             CLLocationCoordinate2DMake(32.91648534731439, -114.43359375),
             CLLocationCoordinate2DMake(32.91648534731439, -81.298828125),
@@ -108,10 +106,10 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
             CLLocationCoordinate2DMake(32.91648534731439, -114.43359375)
         ]])))
 
-        try! mapView.mapboxMap.style.addSource(source, id: sourceIdentifier)
+        try! mapView.mapboxMap.addSource(source)
 
         // If a layer position is not supplied, the layer is added above all other layers by default.
-        try! mapView.mapboxMap.style.addLayer(layer, layerPosition: nil)
+        try! mapView.mapboxMap.addLayer(layer, layerPosition: nil)
 
         // The below line is used for internal testing purposes only.
         finish()

@@ -1,3 +1,5 @@
+@testable import MapboxMaps
+
 @propertyWrapper
 final class Stubbed<T>: StubProtocol {
     let getStub: Stub<Void, T>

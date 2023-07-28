@@ -1,43 +1,16 @@
 import Foundation
 import MapboxMaps
+import Combine
 
-final class OnDemandLocationProvider: LocationProvider {
-    var locationProviderOptions = LocationOptions()
-    var authorizationStatus: CLAuthorizationStatus = .authorizedAlways
-    var accuracyAuthorization: CLAccuracyAuthorization = .fullAccuracy
+final class OnDemandLocationProvider {
+    @Published
+    var coordinate: CLLocationCoordinate2D?
 
-    var heading: CLHeading?
-    var headingOrientation: CLDeviceOrientation = .portrait
-
-    private weak var delegate: LocationProviderDelegate?
-
-    var currentCoordination: LocationCoordinate2D! {
-        didSet {
-            startUpdatingLocation()
-        }
+    var locations: Signal<[Location]> {
+        return $coordinate
+            .compactMap { $0 }
+            .map { coordinate in
+                [Location(coordinate: coordinate, timestamp: Date())]
+            }.eraseToSignal()
     }
-
-    init() {}
-
-    func setDelegate(_ delegate: LocationProviderDelegate) {
-        self.delegate = delegate
-    }
-
-    func requestAlwaysAuthorization() {}
-    func requestWhenInUseAuthorization() {}
-    func requestTemporaryFullAccuracyAuthorization(withPurposeKey purposeKey: String) {}
-
-    func startUpdatingLocation() {
-        guard currentCoordination != nil else { return }
-        delegate?.locationProvider(
-            self,
-            didUpdateLocations: [CLLocation(latitude: currentCoordination.latitude, longitude: currentCoordination.longitude)]
-        )
-    }
-
-    func stopUpdatingLocation() {}
-
-    func startUpdatingHeading() {}
-    func stopUpdatingHeading() {}
-    func dismissHeadingCalibrationDisplay() {}
 }

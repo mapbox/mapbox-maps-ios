@@ -19,18 +19,7 @@ final class MockMapboxMap: MapboxMapProtocol {
         maxPitch: 50,
         minPitch: 0)
 
-    var cameraState = CameraState(
-        center: CLLocationCoordinate2D(
-            latitude: 0,
-            longitude: 0),
-        padding: UIEdgeInsets(
-            top: 0,
-            left: 0,
-            bottom: 0,
-            right: 0),
-        zoom: 0,
-        bearing: 0,
-        pitch: 0)
+    var cameraState = CameraState.zero
 
     var anchor = CGPoint.zero
 
@@ -61,17 +50,6 @@ final class MockMapboxMap: MapboxMapProtocol {
     let dragEndStub = Stub<Void, Void>()
     func dragEnd() {
         dragEndStub.call()
-    }
-
-    struct OnEveryParams {
-        var eventName: String
-        var handler: (Any) -> Void
-    }
-    let onEveryStub = Stub<OnEveryParams, Cancelable>(defaultReturnValue: MockCancelable())
-    @discardableResult
-    func onEvery<Payload>(event: MapEvents.Event<Payload>, handler: @escaping (MapEvent<Payload>) -> Void) -> Cancelable {
-        // swiftlint:disable:next force_cast
-        onEveryStub.call(with: OnEveryParams(eventName: event.name, handler: { handler($0 as! MapEvent<Payload>)}))
     }
 
     let beginAnimationStub = Stub<Void, Void>()
@@ -152,10 +130,13 @@ final class MockMapboxMap: MapboxMapProtocol {
         var padding: UIEdgeInsets
         var bearing: Double?
         var pitch: Double?
+        var maxZoom: Double?
+        var offset: CGPoint?
     }
     let cameraForCoordinateBoundsStub = Stub<CameraForCoordinateBoundsParams, MapboxMaps.CameraOptions>(defaultReturnValue: .random())
-    func camera(for coordinateBounds: CoordinateBounds, padding: UIEdgeInsets, bearing: Double?, pitch: Double?) -> MapboxMaps.CameraOptions {
-        cameraForCoordinateBoundsStub.call(with: .init(coordinateBounds: coordinateBounds, padding: padding, bearing: bearing, pitch: pitch))
+    // swiftlint:disable:next function_parameter_count
+    func camera(for coordinateBounds: CoordinateBounds, padding: UIEdgeInsets, bearing: Double?, pitch: Double?, maxZoom: Double?, offset: CGPoint?) -> MapboxMaps.CameraOptions {
+        cameraForCoordinateBoundsStub.call(with: .init(coordinateBounds: coordinateBounds, padding: padding, bearing: bearing, pitch: pitch, maxZoom: maxZoom, offset: offset))
     }
 
     let pointStub = Stub<CLLocationCoordinate2D, CGPoint>(defaultReturnValue: .random())

@@ -7,15 +7,14 @@ parameters:
     default: "14.2.0"
   resource_class:
     type: string
-    default: macos.m1.large.gen1
+    default: macos.m1.medium.gen1
 macos:
   xcode: << parameters.xcode >>
 resource_class: << parameters.resource_class >>
 steps:
   - checkout-root
   - macos/install-rosetta
-  - install-mbx-ci:
-      arch: arm64
+  - mapbox/install-mbx-ci
   - attach_workspace:
       at: build
   - run:

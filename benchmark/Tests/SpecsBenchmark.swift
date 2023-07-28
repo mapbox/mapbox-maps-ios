@@ -12,6 +12,22 @@ class SpecsBenchmark: XCTestCase {
         try measureScenario(scenario)
     }
 
+    func test3dMunichZoom() throws {
+        try runScenarioBenchmark(name: "3d-munich-zoom", extraMetrics: [FPSMetric(testCase: self)], timeout: 120)
+    }
+
+    func test3dNewYorkZoom() throws {
+        try runScenarioBenchmark(name: "3d-new-york-zoom", extraMetrics: [FPSMetric(testCase: self)], timeout: 120)
+    }
+    
+    func test3d1TapMunichRecording() throws {
+        try runScenarioBenchmark(name: "3d-1tap-munich",
+                                 shouldSkipWarmupRun: true,
+                                 iterationCount: 1,
+                                 extraMetrics: [FPSMetric(testCase: self)],
+                                 timeout: 1800)
+    }
+    
     func testNavDayMunichTtrcCold() throws {
         try runScenarioBenchmark(name: "nav-day-munich-ttrc-cold", measureFrom: { $0 is CreateMapCommand })
     }

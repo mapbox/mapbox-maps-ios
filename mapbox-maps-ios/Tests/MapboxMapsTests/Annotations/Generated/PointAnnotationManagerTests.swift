@@ -62,10 +62,10 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.type, SourceType.geoJson)
-        XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.id, manager.id)
+        XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.id, manager.id)
     }
 
-    func testAddLayer() {
+    func testAddLayer() throws {
         style.addSourceStub.reset()
         let initializedManager = PointAnnotationManager(
             id: id,
@@ -80,7 +80,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layer.type, LayerType.symbol)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layer.id, initializedManager.id)
-        XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layer.source, initializedManager.sourceId)
+        let addedLayer = try XCTUnwrap(style.addPersistentLayerStub.invocations.last?.parameters.layer as? SymbolLayer)
+        XCTAssertEqual(addedLayer.source, initializedManager.sourceId)
         XCTAssertNil(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition)
     }
 
@@ -258,6 +259,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -271,11 +274,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -295,7 +301,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilIconAllowOverlap() {
         let newIconAllowOverlapProperty = Bool.random()
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "icon-allow-overlap").value as! Bool
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-allow-overlap").value as! Bool
         manager.iconAllowOverlap = newIconAllowOverlapProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-allow-overlap"])
@@ -348,6 +354,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -361,11 +369,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -385,7 +396,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilIconIgnorePlacement() {
         let newIconIgnorePlacementProperty = Bool.random()
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "icon-ignore-placement").value as! Bool
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-ignore-placement").value as! Bool
         manager.iconIgnorePlacement = newIconIgnorePlacementProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-ignore-placement"])
@@ -438,6 +449,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -451,11 +464,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -475,7 +491,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilIconKeepUpright() {
         let newIconKeepUprightProperty = Bool.random()
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "icon-keep-upright").value as! Bool
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-keep-upright").value as! Bool
         manager.iconKeepUpright = newIconKeepUprightProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-keep-upright"])
@@ -528,6 +544,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -541,11 +559,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -565,7 +586,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilIconOptional() {
         let newIconOptionalProperty = Bool.random()
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "icon-optional").value as! Bool
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-optional").value as! Bool
         manager.iconOptional = newIconOptionalProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-optional"])
@@ -618,6 +639,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -631,11 +654,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -655,7 +681,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilIconPadding() {
         let newIconPaddingProperty = Double.random(in: 0...100000)
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "icon-padding").value as! Double
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-padding").value as! Double
         manager.iconPadding = newIconPaddingProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-padding"])
@@ -708,6 +734,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -721,11 +749,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -745,7 +776,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilIconPitchAlignment() {
         let newIconPitchAlignmentProperty = IconPitchAlignment.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "icon-pitch-alignment").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-pitch-alignment").value as! String
         manager.iconPitchAlignment = newIconPitchAlignmentProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-pitch-alignment"])
@@ -798,6 +829,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -811,11 +844,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -835,7 +871,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilIconRotationAlignment() {
         let newIconRotationAlignmentProperty = IconRotationAlignment.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "icon-rotation-alignment").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-rotation-alignment").value as! String
         manager.iconRotationAlignment = newIconRotationAlignmentProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-rotation-alignment"])
@@ -845,186 +881,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(manager.iconRotationAlignment)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-rotation-alignment"] as! String, defaultValue)
-    }
-
-    func testInitialIconTextFit() {
-        let initialValue = manager.iconTextFit
-        XCTAssertNil(initialValue)
-    }
-
-    func testSetIconTextFit() {
-        let value = IconTextFit.allCases.randomElement()!
-        manager.iconTextFit = value
-        XCTAssertEqual(manager.iconTextFit, value)
-
-        // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-text-fit"] as! String, value.rawValue)
-    }
-
-    func testIconTextFitAnnotationPropertiesAddedWithoutDuplicate() {
-        let newIconTextFitProperty = IconTextFit.allCases.randomElement()!
-        let secondIconTextFitProperty = IconTextFit.allCases.randomElement()!
-
-        manager.iconTextFit = newIconTextFitProperty
-        manager.syncSourceAndLayerIfNeeded()
-        manager.iconTextFit = secondIconTextFitProperty
-        manager.syncSourceAndLayerIfNeeded()
-
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-text-fit"] as! String, secondIconTextFitProperty.rawValue)
-    }
-
-    func testNewIconTextFitPropertyMergedWithAnnotationProperties() {
-        var annotations = [PointAnnotation]()
-        for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
-            annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-            annotation.iconRotate = Double.random(in: -100000...100000)
-            annotation.iconSize = Double.random(in: 0...100000)
-            annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
-            annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
-            annotation.textLetterSpacing = Double.random(in: -100000...100000)
-            annotation.textLineHeight = Double.random(in: -100000...100000)
-            annotation.textMaxWidth = Double.random(in: 0...100000)
-            annotation.textOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-            annotation.textRadialOffset = Double.random(in: -100000...100000)
-            annotation.textRotate = Double.random(in: -100000...100000)
-            annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
-            annotation.iconColor = StyleColor.random()
-            annotation.iconHaloBlur = Double.random(in: 0...100000)
-            annotation.iconHaloColor = StyleColor.random()
-            annotation.iconHaloWidth = Double.random(in: 0...100000)
-            annotation.iconOpacity = Double.random(in: 0...1)
-            annotation.textColor = StyleColor.random()
-            annotation.textHaloBlur = Double.random(in: 0...100000)
-            annotation.textHaloColor = StyleColor.random()
-            annotation.textHaloWidth = Double.random(in: 0...100000)
-            annotation.textOpacity = Double.random(in: 0...1)
-            annotations.append(annotation)
-        }
-        let newIconTextFitProperty = IconTextFit.allCases.randomElement()!
-
-        manager.annotations = annotations
-        manager.iconTextFit = newIconTextFitProperty
-        manager.syncSourceAndLayerIfNeeded()
-
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
-        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-text-fit"])
-    }
-
-    func testSetToNilIconTextFit() {
-        let newIconTextFitProperty = IconTextFit.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "icon-text-fit").value as! String
-        manager.iconTextFit = newIconTextFitProperty
-        manager.syncSourceAndLayerIfNeeded()
-        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-text-fit"])
-
-        manager.iconTextFit = nil
-        manager.syncSourceAndLayerIfNeeded()
-        XCTAssertNil(manager.iconTextFit)
-
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-text-fit"] as! String, defaultValue)
-    }
-
-    func testInitialIconTextFitPadding() {
-        let initialValue = manager.iconTextFitPadding
-        XCTAssertNil(initialValue)
-    }
-
-    func testSetIconTextFitPadding() {
-        let value = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-        manager.iconTextFitPadding = value
-        XCTAssertEqual(manager.iconTextFitPadding, value)
-
-        // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-text-fit-padding"] as! [Double], value)
-    }
-
-    func testIconTextFitPaddingAnnotationPropertiesAddedWithoutDuplicate() {
-        let newIconTextFitPaddingProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-        let secondIconTextFitPaddingProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-
-        manager.iconTextFitPadding = newIconTextFitPaddingProperty
-        manager.syncSourceAndLayerIfNeeded()
-        manager.iconTextFitPadding = secondIconTextFitPaddingProperty
-        manager.syncSourceAndLayerIfNeeded()
-
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-text-fit-padding"] as! [Double], secondIconTextFitPaddingProperty)
-    }
-
-    func testNewIconTextFitPaddingPropertyMergedWithAnnotationProperties() {
-        var annotations = [PointAnnotation]()
-        for _ in 0...5 {
-            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
-            annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-            annotation.iconRotate = Double.random(in: -100000...100000)
-            annotation.iconSize = Double.random(in: 0...100000)
-            annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
-            annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
-            annotation.textLetterSpacing = Double.random(in: -100000...100000)
-            annotation.textLineHeight = Double.random(in: -100000...100000)
-            annotation.textMaxWidth = Double.random(in: 0...100000)
-            annotation.textOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-            annotation.textRadialOffset = Double.random(in: -100000...100000)
-            annotation.textRotate = Double.random(in: -100000...100000)
-            annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
-            annotation.iconColor = StyleColor.random()
-            annotation.iconHaloBlur = Double.random(in: 0...100000)
-            annotation.iconHaloColor = StyleColor.random()
-            annotation.iconHaloWidth = Double.random(in: 0...100000)
-            annotation.iconOpacity = Double.random(in: 0...1)
-            annotation.textColor = StyleColor.random()
-            annotation.textHaloBlur = Double.random(in: 0...100000)
-            annotation.textHaloColor = StyleColor.random()
-            annotation.textHaloWidth = Double.random(in: 0...100000)
-            annotation.textOpacity = Double.random(in: 0...1)
-            annotations.append(annotation)
-        }
-        let newIconTextFitPaddingProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-
-        manager.annotations = annotations
-        manager.iconTextFitPadding = newIconTextFitPaddingProperty
-        manager.syncSourceAndLayerIfNeeded()
-
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
-        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-text-fit-padding"])
-    }
-
-    func testSetToNilIconTextFitPadding() {
-        let newIconTextFitPaddingProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "icon-text-fit-padding").value as! [Double]
-        manager.iconTextFitPadding = newIconTextFitPaddingProperty
-        manager.syncSourceAndLayerIfNeeded()
-        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-text-fit-padding"])
-
-        manager.iconTextFitPadding = nil
-        manager.syncSourceAndLayerIfNeeded()
-        XCTAssertNil(manager.iconTextFitPadding)
-
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-text-fit-padding"] as! [Double], defaultValue)
     }
 
     func testInitialSymbolAvoidEdges() {
@@ -1068,6 +924,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -1081,11 +939,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -1105,7 +966,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilSymbolAvoidEdges() {
         let newSymbolAvoidEdgesProperty = Bool.random()
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "symbol-avoid-edges").value as! Bool
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-avoid-edges").value as! Bool
         manager.symbolAvoidEdges = newSymbolAvoidEdgesProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-avoid-edges"])
@@ -1158,6 +1019,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -1171,11 +1034,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -1195,7 +1061,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilSymbolPlacement() {
         let newSymbolPlacementProperty = SymbolPlacement.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "symbol-placement").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-placement").value as! String
         manager.symbolPlacement = newSymbolPlacementProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-placement"])
@@ -1248,6 +1114,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -1261,11 +1129,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -1285,7 +1156,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilSymbolSpacing() {
         let newSymbolSpacingProperty = Double.random(in: 1...100000)
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "symbol-spacing").value as! Double
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-spacing").value as! Double
         manager.symbolSpacing = newSymbolSpacingProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-spacing"])
@@ -1338,6 +1209,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -1351,11 +1224,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -1375,7 +1251,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilSymbolZOrder() {
         let newSymbolZOrderProperty = SymbolZOrder.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "symbol-z-order").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-z-order").value as! String
         manager.symbolZOrder = newSymbolZOrderProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-z-order"])
@@ -1428,6 +1304,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -1441,11 +1319,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -1465,7 +1346,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextAllowOverlap() {
         let newTextAllowOverlapProperty = Bool.random()
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-allow-overlap").value as! Bool
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-allow-overlap").value as! Bool
         manager.textAllowOverlap = newTextAllowOverlapProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-allow-overlap"])
@@ -1518,6 +1399,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -1531,11 +1414,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -1555,7 +1441,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextFont() {
         let newTextFontProperty = Array.random(withLength: .random(in: 0...10), generator: { String.randomASCII(withLength: .random(in: 0...100)) })
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-font").value as! [String]
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-font").value as! [String]
         manager.textFont = newTextFontProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-font"])
@@ -1608,6 +1494,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -1621,11 +1509,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -1645,7 +1536,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextIgnorePlacement() {
         let newTextIgnorePlacementProperty = Bool.random()
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-ignore-placement").value as! Bool
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-ignore-placement").value as! Bool
         manager.textIgnorePlacement = newTextIgnorePlacementProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-ignore-placement"])
@@ -1698,6 +1589,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -1711,11 +1604,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -1735,7 +1631,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextKeepUpright() {
         let newTextKeepUprightProperty = Bool.random()
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-keep-upright").value as! Bool
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-keep-upright").value as! Bool
         manager.textKeepUpright = newTextKeepUprightProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-keep-upright"])
@@ -1788,6 +1684,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -1801,11 +1699,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -1825,7 +1726,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextMaxAngle() {
         let newTextMaxAngleProperty = Double.random(in: -100000...100000)
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-max-angle").value as! Double
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-max-angle").value as! Double
         manager.textMaxAngle = newTextMaxAngleProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-max-angle"])
@@ -1878,6 +1779,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -1891,11 +1794,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -1915,7 +1821,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextOptional() {
         let newTextOptionalProperty = Bool.random()
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-optional").value as! Bool
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-optional").value as! Bool
         manager.textOptional = newTextOptionalProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-optional"])
@@ -1968,6 +1874,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -1981,11 +1889,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -2005,7 +1916,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextPadding() {
         let newTextPaddingProperty = Double.random(in: 0...100000)
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-padding").value as! Double
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-padding").value as! Double
         manager.textPadding = newTextPaddingProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-padding"])
@@ -2058,6 +1969,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -2071,11 +1984,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -2095,7 +2011,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextPitchAlignment() {
         let newTextPitchAlignmentProperty = TextPitchAlignment.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-pitch-alignment").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-pitch-alignment").value as! String
         manager.textPitchAlignment = newTextPitchAlignmentProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-pitch-alignment"])
@@ -2148,6 +2064,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -2161,11 +2079,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -2185,7 +2106,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextRotationAlignment() {
         let newTextRotationAlignmentProperty = TextRotationAlignment.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-rotation-alignment").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-rotation-alignment").value as! String
         manager.textRotationAlignment = newTextRotationAlignmentProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-rotation-alignment"])
@@ -2240,6 +2161,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -2253,11 +2176,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -2277,7 +2203,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextVariableAnchor() {
         let newTextVariableAnchorProperty = Array.random(withLength: .random(in: 0...10), generator: { TextAnchor.allCases.randomElement()! })
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-variable-anchor").value as! [TextAnchor]
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-variable-anchor").value as! [TextAnchor]
         manager.textVariableAnchor = newTextVariableAnchorProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-variable-anchor"])
@@ -2332,6 +2258,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -2345,11 +2273,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -2369,7 +2300,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextWritingMode() {
         let newTextWritingModeProperty = Array.random(withLength: .random(in: 0...10), generator: { TextWritingMode.allCases.randomElement()! })
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-writing-mode").value as! [TextWritingMode]
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-writing-mode").value as! [TextWritingMode]
         manager.textWritingMode = newTextWritingModeProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-writing-mode"])
@@ -2422,6 +2353,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -2435,11 +2368,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -2459,7 +2395,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilIconTranslate() {
         let newIconTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "icon-translate").value as! [Double]
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-translate").value as! [Double]
         manager.iconTranslate = newIconTranslateProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-translate"])
@@ -2512,6 +2448,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -2525,11 +2463,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -2549,7 +2490,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilIconTranslateAnchor() {
         let newIconTranslateAnchorProperty = IconTranslateAnchor.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "icon-translate-anchor").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-translate-anchor").value as! String
         manager.iconTranslateAnchor = newIconTranslateAnchorProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-translate-anchor"])
@@ -2602,6 +2543,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -2615,11 +2558,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -2639,7 +2585,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextTranslate() {
         let newTextTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-translate").value as! [Double]
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-translate").value as! [Double]
         manager.textTranslate = newTextTranslateProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-translate"])
@@ -2692,6 +2638,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
             annotation.textAnchor = TextAnchor.allCases.randomElement()!
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
@@ -2705,11 +2653,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textSize = Double.random(in: 0...100000)
             annotation.textTransform = TextTransform.allCases.randomElement()!
             annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
             annotation.iconHaloColor = StyleColor.random()
             annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
             annotation.iconOpacity = Double.random(in: 0...1)
             annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
             annotation.textHaloBlur = Double.random(in: 0...100000)
             annotation.textHaloColor = StyleColor.random()
             annotation.textHaloWidth = Double.random(in: 0...100000)
@@ -2729,7 +2680,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSetToNilTextTranslateAnchor() {
         let newTextTranslateAnchorProperty = TextTranslateAnchor.allCases.randomElement()!
-        let defaultValue = Style.layerPropertyDefaultValue(for: .symbol, property: "text-translate-anchor").value as! String
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-translate-anchor").value as! String
         manager.textTranslateAnchor = newTextTranslateAnchorProperty
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-translate-anchor"])
@@ -2891,7 +2842,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertNil(clusterOptions.clusterProperties)
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.type, SourceType.geoJson)
-        XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.id, manager.id)
+        XCTAssertEqual(style.addSourceStub.invocations.last?.parameters.source.id, manager.id)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 3) // symbol layer, one cluster layer, one text layer
         XCTAssertNil(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition)
     }
@@ -3192,10 +3143,10 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let addLayerParameters = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.last).parameters
         let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
 
-        XCTAssertEqual(addLayerParameters.properties["source"] as? String, addSourceParameters.id)
+        XCTAssertEqual(addLayerParameters.properties["source"] as? String, addSourceParameters.source.id)
         XCTAssertNotEqual(addLayerParameters.properties["id"] as? String, manager.layerId)
 
-        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.id)
+        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.source.id)
     }
 
     func testHandleDragChanged() throws {
@@ -3214,7 +3165,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.handleDragChanged(with: .random())
         let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
-        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.id)
+        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.source.id)
         if case .featureCollection(let collection) = updateSourceParameters.geojson {
             XCTAssertTrue(collection.features.contains(where: { $0.identifier?.rawValue as? String == annotation.id }))
         } else {

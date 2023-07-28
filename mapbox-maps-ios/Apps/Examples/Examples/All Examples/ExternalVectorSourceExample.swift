@@ -1,9 +1,9 @@
 import UIKit
 import MapboxMaps
 
-@objc(ExternalVectorSourceExample)
 public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
     internal var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -17,18 +17,15 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allow the view controller to receive information about map events.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             self?.drawLineLayer()
             // The following line is just for testing purposes.
             self?.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     public func drawLineLayer() {
-
-        let sourceIdentifier = "mapillary"
-
-        var vectorSource = VectorSource()
+        var vectorSource = VectorSource(id: "mapillary")
 
         // For sources using the {z}/{x}/{y} URL scheme, use the `tiles`
         // property on `VectorSource` to set the URL.
@@ -36,8 +33,7 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
         vectorSource.minzoom = 6
         vectorSource.maxzoom = 14
 
-        var lineLayer = LineLayer(id: "line-layer")
-        lineLayer.source = sourceIdentifier
+        var lineLayer = LineLayer(id: "line-layer", source: vectorSource.id)
         lineLayer.sourceLayer = "sequence"
         let lineColor = StyleColor(UIColor(red: 0.21, green: 0.69, blue: 0.43, alpha: 1.00))
         lineLayer.lineColor = .constant(lineColor)
@@ -46,7 +42,7 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
         lineLayer.lineCap = .constant(.round)
 
         do {
-            try mapView.mapboxMap.style.addSource(vectorSource, id: sourceIdentifier)
+            try mapView.mapboxMap.addSource(vectorSource)
         } catch {
             showAlert(with: error.localizedDescription)
         }
@@ -54,7 +50,7 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
         // Define the layer's positioning within the layer stack so
         // that it doesn't obscure other important labels.
         do {
-            try mapView.mapboxMap.style.addLayer(lineLayer, layerPosition: .below("waterway-label"))
+            try mapView.mapboxMap.addLayer(lineLayer, layerPosition: .below("waterway-label"))
         } catch let layerError {
             showAlert(with: layerError.localizedDescription)
         }

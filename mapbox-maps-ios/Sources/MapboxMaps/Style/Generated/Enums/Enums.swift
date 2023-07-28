@@ -390,16 +390,16 @@ public enum HillshadeIlluminationAnchor: String, Codable, CaseIterable {
 
 }
 
-// MARK: SKY_TYPE
+// MARK: MODEL_SCALE_MODE
 
-/// The type of the sky
-public enum SkyType: String, Codable, CaseIterable {
+/// Defines scaling mode. Only applies to location-indicator type layers.
+public enum ModelScaleMode: String, Codable, CaseIterable {
 
-    /// Renders the sky with a gradient that can be configured with {@link SKY_GRADIENT_RADIUS} and {@link SKY_GRADIENT}.
-    case gradient = "gradient"
+    /// Model is scaled so that it's always the same size relative to other map features. The property model-scale specifies how many meters each unit in the model file should cover.
+    case map = "map"
 
-    /// Renders the sky with a simulated atmospheric scattering algorithm, the sun direction can be attached to the light position or explicitly set through {@link SKY_ATMOSPHERE_SUN}.
-    case atmosphere = "atmosphere"
+    /// Model is scaled so that it's always the same size on the screen. The property model-scale specifies how many pixels each unit in model file should cover.
+    case viewport = "viewport"
 
 }
 
@@ -413,6 +413,19 @@ public enum ModelType: String, Codable, CaseIterable {
 
     /// Displayed over other 3D content, occluded by terrain.
     case locationIndicator = "location-indicator"
+
+}
+
+// MARK: SKY_TYPE
+
+/// The type of the sky
+public enum SkyType: String, Codable, CaseIterable {
+
+    /// Renders the sky with a gradient that can be configured with {@link SKY_GRADIENT_RADIUS} and {@link SKY_GRADIENT}.
+    case gradient = "gradient"
+
+    /// Renders the sky with a simulated atmospheric scattering algorithm, the sun direction can be attached to the light position or explicitly set through {@link SKY_ATMOSPHERE_SUN}.
+    case atmosphere = "atmosphere"
 
 }
 

@@ -1,96 +1,15 @@
 import XCTest
-import MapboxMaps
+@testable import MapboxMaps
 import MapboxCoreMaps
 import MapboxCommon
-
-/*
-* ├── data-source - String ("resource-loader" | "network" | "database" | "asset" | "file-system")
-* ├── request - Object
-* │   ├── url - String
-* │   ├── kind - String ("unknown" | "style" | "source" | "tile" | "glyphs" | "sprite-image" | "sprite-json" | "image")
-* │   ├── priority - String ("regular" | "low")
-* │   └── loading-method - Array ["cache" | "network"]
-* ├── response - optional Object
-* │   ├── no-content - Boolean
-* │   ├── not-modified - Boolean
-* │   ├── must-revalidate - Boolean
-* │   ├── source - String ("network" | "cache" | "tile-store" | "local-file")
-* │   ├── size - Number (size in bytes)
-* │   ├── modified - optional String, rfc1123 timestamp
-* │   ├── expires - optional String, rfc1123 timestamp
-* │   ├── etag - optional String
-* │   └── error - optional Object
-* │       ├── reason - String ("success" | "not-found" | "server" | "connection" | "rate-limit" | "other")
-* │       └── message - String
-* └── cancelled - Boolean
-*/
-
-internal struct ResourceEventResponseError: Decodable {
-    var reason: String
-    var message: String
-}
-
-internal struct ResourceEventResponse: Decodable {
-    var noContent: Bool
-    var notModified: Bool
-    var mustRevalidate: Bool
-    var source: String
-    var size: Int
-    var modified: String?
-    var expires: String?
-    var etag: String?
-    var error: ResourceEventResponseError?
-
-    enum CodingKeys: String, CodingKey {
-        case noContent = "no-content"
-        case notModified = "not-modified"
-        case mustRevalidate = "must-revalidate"
-        case source
-        case size
-        case modified
-        case expires
-        case etag
-        case error
-    }
-}
-
-internal struct ResourceEventRequest: Decodable {
-    var url: String
-    var kind: String
-    var priority: String
-    var loadingMethod: [String]
-
-    enum CodingKeys: String, CodingKey {
-        case url
-        case kind
-        case priority
-        case loadingMethod = "loading-method"
-    }
-}
-
-internal struct ResourceEvent: Decodable {
-    var dataSource: String
-    var request: ResourceEventRequest
-    var response: ResourceEventResponse?
-    var cancelled: Bool
-
-    enum CodingKeys: String, CodingKey {
-        case dataSource = "data-source"
-        case request = "request"
-        case response
-        case cancelled
-    }
-}
 
 // Modified from MapViewIntegrationTestCase
 internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
 
     internal var mapView: MapView?
     internal var dataPathURL: URL!
-    internal var style: Style?
-    internal var observer: ObservableIntegrationTestsObserver?
 
-    internal var hadResourceEventError: ((MapView, ResourceEventResponseError) -> Void)?
+    internal var hadResourceEventError: ((MapView, ResourceRequestError) -> Void)?
 
     internal override func setUpWithError() throws {
         try super.setUpWithError()
@@ -105,41 +24,14 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
 
         dataPathURL = try temporaryCacheDirectory()
 
-        let resourceOptions = ResourceOptions(accessToken: accessToken,
-                                              dataPathURL: dataPathURL)
-        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions)
-        let view = MapView(frame: window.bounds, mapInitOptions: mapInitOptions)
+        MapboxMapsOptions.dataPath = dataPathURL
+        let view = MapView(frame: window.bounds)
 
-        let observer = ObservableIntegrationTestsObserver(with: { [weak self] (resourceEvent) in
-            guard let self = self else {
-                return
+        view.mapboxMap.onResourceRequest.observe { [weak self, weak view] req in
+            if let error = req.response?.error, let view = view {
+                self?.hadResourceEventError?(view, error)
             }
-
-            guard let eventData = resourceEvent.data as? [String: Any],
-                  let jsonData = try? JSONSerialization.data(withJSONObject: eventData) else {
-                return
-            }
-
-            let event: ResourceEvent
-            do {
-                event = try JSONDecoder().decode(ResourceEvent.self, from: jsonData)
-            } catch {
-                XCTFail("Failed to decode to ResourceEvent: \(error)")
-                return
-            }
-
-            guard let eventError = event.response?.error else {
-                return
-            }
-
-            self.hadResourceEventError?(self.mapView!, eventError)
-        })
-
-        view.mapboxMap.subscribe(observer, events: ["resource-request"])
-
-        self.observer = observer
-
-        style = view.mapboxMap.style
+        }.store(in: &cancelables)
 
         rootView.addSubview(view)
 
@@ -152,23 +44,14 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
     }
 
     internal override func tearDownWithError() throws {
-
-        if let observer = observer {
-            mapView?.mapboxMap.unsubscribe(observer, events: ["resource-request"])
-        }
-
-        let resourceOptions = mapView?.mapboxMap.resourceOptions
         mapView?.removeFromSuperview()
         mapView = nil
-        style = nil
 
-        if let resourceOptions = resourceOptions {
-            let expectation = self.expectation(description: "Clear map data")
-            MapboxMap.clearData(for: resourceOptions) { _ in
-                expectation.fulfill()
-            }
-            wait(for: [expectation], timeout: 10.0)
+        let expectation = self.expectation(description: "Clear map data")
+        MapboxMapsOptions.clearData { _ in
+            expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 10.0)
 
         rootViewController?.viewWillDisappear(false)
         rootViewController?.viewDidDisappear(false)
@@ -177,31 +60,29 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
     }
 
     internal func testWaitForIdle() throws {
-        guard
-            let mapView = mapView,
-            let style = style else {
-            XCTFail("There should be valid MapView and Style objects created by setUp.")
+        guard let mapView = mapView else {
+            XCTFail("There should be valid MapView object created by setUp.")
             return
         }
 
         let expectation = XCTestExpectation(description: "Wait for map to idle")
         expectation.expectedFulfillmentCount = 2
 
-        style.uri = .streets
+        mapView.mapboxMap.styleURI = .streets
 
-        mapView.mapboxMap.onNext(event: .mapLoadingError) { event in
-            XCTFail("Failed to load map with \(String(describing: event.payload))")
-        }
+        mapView.mapboxMap.onMapLoadingError.observeNext { error in
+            XCTFail("Failed to load map with \(String(describing: error))")
+        }.store(in: &cancelables)
 
-        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
+        mapView.mapboxMap.onStyleLoaded.observe { _ in
             expectation.fulfill()
-        }
+        }.store(in: &cancelables)
 
-        mapView.mapboxMap.onNext(event: .mapIdle) { _ in
+        mapView.mapboxMap.onMapIdle.observeNext { _ in
             expectation.fulfill()
-        }
+        }.store(in: &cancelables)
 
-        var eventError: ResourceEventResponseError?
+        var eventError: ResourceRequestError?
         hadResourceEventError = { _, error in
             eventError = error
         }

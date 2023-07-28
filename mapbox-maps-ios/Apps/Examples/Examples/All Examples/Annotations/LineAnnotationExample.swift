@@ -1,27 +1,29 @@
 import UIKit
 import MapboxMaps
 
-@objc(LineAnnotationExample)
 final class LineAnnotationExample: UIViewController, ExampleProtocol {
 
     private var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds)
+        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), zoom: 2)
+        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
+        mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
         // Allows the delegate to receive information about map events.
-        mapView.mapboxMap.onNext(event: .mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
 
             // Set up the example
             self?.setupExample()
 
             // The below line is used for internal testing purposes only.
             self?.finish()
-        }
+        }.store(in: &cancelables)
     }
 
     private func setupExample() {

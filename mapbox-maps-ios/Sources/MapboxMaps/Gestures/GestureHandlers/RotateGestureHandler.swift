@@ -41,14 +41,13 @@ internal protocol RotateGestureHandlerProtocol: FocusableGestureHandlerProtocol 
              }
 
              isMapRotating = true
-             // pretend to be pinch gesture for backwards compatibility
-             delegate?.gestureBegan(for: .pinch)
+             delegate?.gestureBegan(for: .rotation)
              fallthrough
          case (.changed, true):
              updateBearing()
          case (.cancelled, _), (.ended, _):
              if isMapRotating {
-                 delegate?.gestureEnded(for: .pinch, willAnimate: false)
+                 delegate?.gestureEnded(for: .rotation, willAnimate: false)
              }
              isMapRotating = false
              discardedRotationAngle = 0

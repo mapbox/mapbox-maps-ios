@@ -1,37 +1,40 @@
 import Foundation
 
-/// Enum of Source Types
+/// Struct of supported Source Types
 /// Docs : https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/
-public enum SourceType: String, Codable {
+public struct SourceType: ExpressibleByStringLiteral, RawRepresentable, Codable, Hashable {
+
+    /// The raw value of the source type.
+    public let rawValue: String
+
     /// A vector tile source.
-    case vector = "vector"
+    public static let vector: SourceType = "vector"
 
     /// A raster tile source.
-    case raster = "raster"
+    public static let raster: SourceType = "raster"
 
     /// A raster DEM source.
-    case rasterDem = "raster-dem"
+    public static let rasterDem: SourceType = "raster-dem"
 
     /// A GeoJSON source.
-    case geoJson = "geojson"
+    public static let geoJson: SourceType = "geojson"
 
     /// An image source.
-    case image = "image"
+    public static let image: SourceType = "image"
 
-    /// A model source
-    case model = "model"
+    /// A model source.
+    public static let model: SourceType = "model"
 
-    internal enum CodingKeys: String, CodingKey {
-        case vector = "vector"
-        case raster = "raster"
-        case rasterDem = "raster-dem"
-        case geojson = "geojson"
-        case image = "image"
-        case model = "model"
+    public init(stringLiteral type: String) {
+        self.rawValue = type
+    }
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
     }
 
     /// The associated Swift struct type
-    public var sourceType: Source.Type {
+    public var sourceType: Source.Type? {
         switch self {
         case .vector:
             return VectorSource.self
@@ -45,6 +48,8 @@ public enum SourceType: String, Codable {
             return ImageSource.self
         case .model:
             return ModelSource.self
+        default:
+            return nil
         }
     }
 }

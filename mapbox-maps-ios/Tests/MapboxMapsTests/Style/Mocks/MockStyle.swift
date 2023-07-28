@@ -1,6 +1,37 @@
 @testable import MapboxMaps
+import UIKit
 
 final class MockStyle: StyleProtocol {
+    struct AddGeoJSONSourceFeaturesParams {
+        let sourceId: String
+        let features: [Feature]
+        let dataId: String?
+
+    }
+    let addGeoJSONSourceFeaturesStub = Stub<AddGeoJSONSourceFeaturesParams, Void>()
+    func addGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String?) throws {
+        addGeoJSONSourceFeaturesStub.call(with: .init(sourceId: sourceId, features: features, dataId: dataId))
+    }
+
+    struct UpdateGeoJSONSourceFeaturesParams {
+        let sourceId: String
+        let features: [Feature]
+        let dataId: String?
+    }
+    let updateGeoJSONSourceFeaturesStub = Stub<UpdateGeoJSONSourceFeaturesParams, Void>()
+    func updateGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String?) throws {
+        updateGeoJSONSourceFeaturesStub.call(with: .init(sourceId: sourceId, features: features, dataId: dataId))
+    }
+
+    struct RemoveGeoJSONSourceFeaturesParams {
+        let sourceId: String
+        let featureIds: [String]
+        let dataId: String?
+    }
+    let removeGeoJSONSourceFeaturesStub = Stub<RemoveGeoJSONSourceFeaturesParams, Void>()
+    func removeGeoJSONSourceFeatures(forSourceId sourceId: String, featureIds: [String], dataId: String?) throws {
+        removeGeoJSONSourceFeaturesStub.call(with: .init(sourceId: sourceId, featureIds: featureIds, dataId: dataId))
+    }
 
     struct AddLayerParams {
         var layer: Layer
@@ -82,12 +113,11 @@ final class MockStyle: StyleProtocol {
 
     struct AddSourceParams {
         var source: Source
-        var id: String
         var dataId: String?
     }
     let addSourceStub = Stub<AddSourceParams, Void>()
-    func addSource(_ source: Source, id: String, dataId: String? = nil) throws {
-        addSourceStub.call(with: .init(source: source, id: id, dataId: dataId))
+    func addSource(_ source: Source, dataId: String? = nil) throws {
+        addSourceStub.call(with: .init(source: source, dataId: dataId))
     }
 
     let removeSourceStub = Stub<String, Void>()
@@ -157,7 +187,7 @@ final class MockStyle: StyleProtocol {
         let dataId: String?
     }
     let updateGeoJSONSourceStub = Stub<UpdateGeoJSONSourceParams, Void>()
-    func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject, dataId: String? = nil) throws {
+    func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject, dataId: String? = nil) {
         updateGeoJSONSourceStub.call(with: UpdateGeoJSONSourceParams(id: id, geojson: geoJSON, dataId: dataId))
     }
 }

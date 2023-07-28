@@ -4,6 +4,7 @@ import MapboxMaps
 
 /// This example shows a basic usage of sonar-like pulsing circle animation around the 2D puck.
 final class BasicLocationPulsingExample: UIViewController, ExampleProtocol {
+    var cancelables = Set<AnyCancelable>()
 
     private lazy var mapView: MapView = {
         let view = MapView(frame: view.bounds, mapInitOptions: .init(styleURI: .streets))
@@ -26,7 +27,10 @@ final class BasicLocationPulsingExample: UIViewController, ExampleProtocol {
         puckConfiguration.pulsing = .default
         mapView.location.options.puckType = .puck2D(puckConfiguration)
 
-        mapView.location.addLocationConsumer(newConsumer: self)
+        mapView.location.onLocationChange.observe { [weak mapView] newLocation in
+            guard let mapView, let location = newLocation.last else { return }
+            mapView.mapboxMap.setCamera(to: .init(center: location.coordinate, zoom: 18))
+        }.store(in: &cancelables)
 
         if #available(iOS 14.0, *) {
             navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .action)
@@ -137,12 +141,6 @@ final class BasicLocationPulsingExample: UIViewController, ExampleProtocol {
         )
 
         navigationItem.rightBarButtonItem?.menu = menu
-    }
-}
-
-extension BasicLocationPulsingExample: LocationConsumer {
-    func locationUpdate(newLocation: Location) {
-        mapView.mapboxMap.setCamera(to: .init(center: newLocation.coordinate, zoom: 18))
     }
 }
 

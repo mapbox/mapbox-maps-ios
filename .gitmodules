@@ -1,15 +1,9 @@
-[submodule "mobile-metrics"]
-	path = mobile-metrics
-	url = git@github.com:mapbox/mobile-metrics.git
 [submodule "codegen/vendor/mapbox-maps-stylegen"]
 	path = codegen/vendor/mapbox-maps-stylegen
 	url = git@github.com:mapbox/mapbox-maps-stylegen.git
 [submodule "mapbox-maps-internal"]
 	path = mapbox-maps-internal
 	url = git@github.com:mapbox/mapbox-maps-internal.git
-[submodule "mapbox-maps-ios-private"]
-	path = mapbox-maps-ios-private
-	url = git@github.com:mapbox/mapbox-maps-ios-private.git
 [submodule "mapbox-maps-ios/scripts/doc-generation/jazzy-theme"]
 	path = mapbox-maps-ios/scripts/doc-generation/jazzy-theme
 	url = https://github.com/mapbox/jazzy-theme.git

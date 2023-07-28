@@ -13,6 +13,7 @@
 		35F08DE82347987900768B9F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35F08DE62347987900768B9F /* LaunchScreen.storyboard */; };
 		7473C3BA288995B40022279E /* DebugViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7473C3B9288995B40022279E /* DebugViewController.xib */; };
 		B569C20125FEBC2E008B0D92 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = B569C20025FEBC2E008B0D92 /* MapboxMaps */; };
+		FE2755DF2A1241AB00EEC95F /* Fingertips in Frameworks */ = {isa = PBXBuildFile; productRef = FE2755DE2A1241AB00EEC95F /* Fingertips */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -45,6 +46,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B569C20125FEBC2E008B0D92 /* MapboxMaps in Frameworks */,
+				FE2755DF2A1241AB00EEC95F /* Fingertips in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -57,6 +59,7 @@
 				CA5665212447A658006F392C /* Configurations */,
 				35F08DDA2347987700768B9F /* DebugApp */,
 				35F08DD92347987700768B9F /* Products */,
+				FE2755DA2A12363C00EEC95F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -90,6 +93,13 @@
 			path = ../Configurations;
 			sourceTree = "<group>";
 		};
+		FE2755DA2A12363C00EEC95F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -100,7 +110,7 @@
 				35F08DD42347987700768B9F /* Sources */,
 				35F08DD52347987700768B9F /* Frameworks */,
 				35F08DD62347987700768B9F /* Resources */,
-				1F61E3E423AC170100FAE7C2 /* Insert Mapbox Token */,
+				1F61E3E423AC170100FAE7C2 /* Insert Mapbox Access Token */,
 				1F11C1502421BADF00F8397B /* Embed Frameworks */,
 				FE98B42328816F490060C509 /* Run swiftlint */,
 			);
@@ -111,6 +121,7 @@
 			name = DebugApp;
 			packageProductDependencies = (
 				B569C20025FEBC2E008B0D92 /* MapboxMaps */,
+				FE2755DE2A1241AB00EEC95F /* Fingertips */,
 			);
 			productName = DebugApp;
 			productReference = 35F08DD82347987700768B9F /* DebugApp.app */;
@@ -141,6 +152,9 @@
 				Base,
 			);
 			mainGroup = 35F08DCF2347987700768B9F;
+			packageReferences = (
+				FE2755DD2A1241AB00EEC95F /* XCRemoteSwiftPackageReference "Fingertips" */,
+			);
 			productRefGroup = 35F08DD92347987700768B9F /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -164,7 +178,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		1F61E3E423AC170100FAE7C2 /* Insert Mapbox Token */ = {
+		1F61E3E423AC170100FAE7C2 /* Insert Mapbox Access Token */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -173,16 +187,17 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
 			);
-			name = "Insert Mapbox Token";
+			name = "Insert Mapbox Access Token";
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"$(INFOPLIST_PREFIX_HEADER)",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "$SRCROOT/../../scripts/insert_access_token.sh\n";
+			showEnvVarsInLog = 0;
 		};
 		FE98B42328816F490060C509 /* Run swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -266,6 +281,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = DebugApp/Info.plist;
+				INFOPLIST_PREFIX_HEADER = "$(DERIVED_FILE_DIR)/InfoPlist.Prefix.h";
+				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -282,6 +299,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = DebugApp/Info.plist;
+				INFOPLIST_PREFIX_HEADER = "$(DERIVED_FILE_DIR)/InfoPlist.Prefix.h";
+				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -315,10 +334,26 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		FE2755DD2A1241AB00EEC95F /* XCRemoteSwiftPackageReference "Fingertips" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mapbox/Fingertips.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		B569C20025FEBC2E008B0D92 /* MapboxMaps */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MapboxMaps;
+		};
+		FE2755DE2A1241AB00EEC95F /* Fingertips */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FE2755DD2A1241AB00EEC95F /* XCRemoteSwiftPackageReference "Fingertips" */;
+			productName = Fingertips;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

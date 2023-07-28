@@ -7,6 +7,7 @@ final class SpinningGlobeExample: UIViewController, GestureManagerDelegate, Exam
 
     var userInteracting = false
     var mapView: MapView!
+    private var cancelables = Set<AnyCancelable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -14,13 +15,13 @@ final class SpinningGlobeExample: UIViewController, GestureManagerDelegate, Exam
         mapView = MapView(frame: view.bounds, mapInitOptions: .init(styleURI: .satellite))
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.mapboxMap.setCamera(to: .init(center: CLLocationCoordinate2D(latitude: 40, longitude: -90), zoom: 1.0))
-        try! self.mapView.mapboxMap.style.setProjection(StyleProjection(name: .globe))
+        try! self.mapView.mapboxMap.setProjection(StyleProjection(name: .globe))
 
-        mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
-            try! self.mapView.mapboxMap.style.setAtmosphere(Atmosphere())
+        mapView.mapboxMap.onStyleLoaded.observeNext { _ in
+            try! self.mapView.mapboxMap.setAtmosphere(Atmosphere())
             self.spinGlobe()
             self.finish()
-        }
+        }.store(in: &cancelables)
 
         mapView.gestures.delegate = self
 
@@ -35,7 +36,7 @@ final class SpinningGlobeExample: UIViewController, GestureManagerDelegate, Exam
         // Rotate at intermediate speeds between zoom levels 3 and 5.
         let slowSpinZoom = 3.0
 
-        let zoom = mapView.cameraState.zoom
+        let zoom = mapView.mapboxMap.cameraState.zoom
         if !userInteracting && zoom < maxSpinZoom {
             var distancePerSecond = 360.0 / secPerRevolution
             if zoom > slowSpinZoom {
@@ -43,7 +44,7 @@ final class SpinningGlobeExample: UIViewController, GestureManagerDelegate, Exam
                 let zoomDif = (maxSpinZoom - zoom) / (maxSpinZoom - slowSpinZoom)
                 distancePerSecond *= zoomDif
             }
-            let center = mapView.cameraState.center
+            let center = mapView.mapboxMap.cameraState.center
             let targetCenter = CLLocationCoordinate2D(latitude: center.latitude, longitude: center.longitude - distancePerSecond)
 
             // Smoothly animate the map over one second.

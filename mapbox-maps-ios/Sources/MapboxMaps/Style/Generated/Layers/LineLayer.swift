@@ -79,12 +79,18 @@ public struct LineLayer: Layer {
     public var lineDasharray: Value<[Double]>?
 
     /// Decrease line layer opacity based on occlusion from 3D objects. Value 0 disables occlusion, value 1 means fully occluded.
-    public var lineDepthOcclusionFactor: Value<Double>?
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public var lineDepthOcclusionFactor: Value<Double>?
 
     /// Transition options for `lineDepthOcclusionFactor`.
-    public var lineDepthOcclusionFactorTransition: StyleTransition?
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public var lineDepthOcclusionFactorTransition: StyleTransition?
 
-    /// Emission strength.
+    /// Emission strength
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif

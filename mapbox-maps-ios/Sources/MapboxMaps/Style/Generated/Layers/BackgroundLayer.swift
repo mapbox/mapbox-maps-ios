@@ -28,7 +28,7 @@ public struct BackgroundLayer: Layer {
     /// Transition options for `backgroundColor`.
     public var backgroundColorTransition: StyleTransition?
 
-    /// Emission strength.
+    /// Emission strength
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif

@@ -48,7 +48,7 @@ public struct FillLayer: Layer {
     /// Transition options for `fillColor`.
     public var fillColorTransition: StyleTransition?
 
-    /// Emission strength.
+    /// Emission strength
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif

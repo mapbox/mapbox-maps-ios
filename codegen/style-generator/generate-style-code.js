@@ -58,17 +58,11 @@ class StyleTemplate {
 
 const templatesRegistry = [
     new StyleTemplate({
-        key: 'light',
+        key: 'lights',
         templateName: 'Light.swift.ejs',
-        folderPath: name => `Light/${name}.swift`,
-        wrapInArray: true
-    }),
-    new StyleTemplate({
-        key: 'lights3D',
-        templateName: '3DLight.swift.ejs',
-        testsTemplateName: '3DLightTests.swift.ejs',
         folderPath: name => `Light/${name}Light.swift`,
-        propertyKeyToCompare: 'name',
+        testsTemplateName: 'LightTests.swift.ejs',
+        propertyKeyToCompare: 'name'
     }),
     new StyleTemplate({
         key: 'layers',

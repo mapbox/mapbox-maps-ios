@@ -12,7 +12,7 @@ public extension Expression {
         <%_ for (const expression of expressions) { -%>
 
         <%_ %><%- blockDoc(expression, 8) %>
-        case <%- compatibleSwiftExpressionName(expression) %> = "<%- expression.name %>"
+        <%if (expression.experimental === true) { -%>@_spi(Experimental) <% } -%>case <%- compatibleSwiftExpressionName(expression) %> = "<%- expression.name %>"
         <%_ } -%>
 
         /// Interpolates linearly between the pair of stops just less than and just greater than the input

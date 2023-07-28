@@ -536,3 +536,41 @@ Var LocationIndicatorLayer.sourceLayer has been removed
 Var SkyLayer.filter has been removed
 Var SkyLayer.source has been removed
 Var SkyLayer.sourceLayer has been removed
+
+// New lights API adoption
+Struct Light has generic signature change from  to <Self : MapboxMaps.StyleEncodable, Self : Swift.Decodable, Self : Swift.Encodable>
+Constructor Light.init() has been removed
+Constructor Light.init(from:) has been removed
+Func Light.encode(to:) has been removed
+Func Style.lightProperty(_:) has been removed
+Var Light.anchor has been removed
+Var Light.color has been removed
+Var Light.colorTransition has been removed
+Var Light.intensity has been removed
+Var Light.intensityTransition has been removed
+Var Light.position has been removed
+Var Light.positionTransition has been removed
+Struct Light has been changed to a Protocol
+Func Style.lightProperty(_:) has been renamed to Func lightProperty(for:property:)
+Func Style.setLight(_:) has been renamed to Func setLights(_:)
+Func Style.setLight(properties:) has been renamed to Func setLights(ambient:directional:)
+Func Style.setLightProperty(_:value:) has been renamed to Func setLightProperty(for:property:value:)
+Func Style.setLight(_:) has parameter 0 type change from MapboxMaps.Light to MapboxMaps.FlatLight
+Func Style.setLight(properties:) has parameter 0 type change from [Swift.String : Any] to MapboxMaps.AmbientLight
+Func Style.setLightProperty(_:value:) has parameter 1 type change from Any to Swift.String
+Func Style.setLight(properties:) is now with @_spi
+Protocol Light has added inherited protocol StyleEncodable
+Struct Light has been renamed to Struct FlatLight
+Accessor Light.anchor.Get() has return type change from MapboxMaps.Anchor? to MapboxMaps.Value<MapboxMaps.Anchor>?
+Accessor Light.anchor.Set() has parameter 0 type change from MapboxMaps.Anchor? to MapboxMaps.Value<MapboxMaps.Anchor>?
+Accessor Light.color.Get() has return type change from MapboxMaps.StyleColor? to MapboxMaps.Value<MapboxMaps.StyleColor>?
+Accessor Light.color.Set() has parameter 0 type change from MapboxMaps.StyleColor? to MapboxMaps.Value<MapboxMaps.StyleColor>?
+Accessor Light.intensity.Get() has return type change from Swift.Double? to MapboxMaps.Value<Swift.Double>?
+Accessor Light.intensity.Set() has parameter 0 type change from Swift.Double? to MapboxMaps.Value<Swift.Double>?
+Accessor Light.position.Get() has return type change from [Swift.Double]? to MapboxMaps.Value<[Swift.Double]>?
+Accessor Light.position.Set() has parameter 0 type change from [Swift.Double]? to MapboxMaps.Value<[Swift.Double]>?
+Constructor Light.init(from:) has return type change from MapboxMaps.Light to MapboxMaps.FlatLight
+Var Light.anchor has declared type change from MapboxMaps.Anchor? to MapboxMaps.Value<MapboxMaps.Anchor>?
+Var Light.color has declared type change from MapboxMaps.StyleColor? to MapboxMaps.Value<MapboxMaps.StyleColor>?
+Var Light.intensity has declared type change from Swift.Double? to MapboxMaps.Value<Swift.Double>?
+Var Light.position has declared type change from [Swift.Double]? to MapboxMaps.Value<[Swift.Double]>?

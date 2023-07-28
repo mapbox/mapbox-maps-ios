@@ -72,7 +72,7 @@ final class Puck2DTests: XCTestCase {
             source: nil,
             extra: nil)
                 .copyBySetting(accuracyAuthorization: accuracyAuthorization)
-        var data = PuckRenderingData(
+        let data = PuckRenderingData(
             location: location,
             heading: heading.map { Heading(direction: $0,
                                            accuracy: .random(in: 0..<360)) }

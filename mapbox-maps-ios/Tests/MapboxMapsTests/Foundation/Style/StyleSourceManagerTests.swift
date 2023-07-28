@@ -449,7 +449,7 @@ final class StyleSourceManagerTests: XCTestCase {
         backgroundQueue.asyncWorkItemStub.defaultSideEffect = { $0.parameters.perform() }
 
         // when
-        try sourceManager.addGeoJSONSourceFeatures(forSourceId: sourceId, features: [feature], dataId: dataId)
+        sourceManager.addGeoJSONSourceFeatures(forSourceId: sourceId, features: [feature], dataId: dataId)
 
         // then
         XCTAssertEqual(styleManager.addGeoJSONSourceFeaturesStub.invocations.count, 1)
@@ -473,7 +473,7 @@ final class StyleSourceManagerTests: XCTestCase {
         backgroundQueue.asyncWorkItemStub.defaultSideEffect = { $0.parameters.perform() }
 
         // when
-        try sourceManager.updateGeoJSONSourceFeatures(forSourceId: sourceId, features: [feature], dataId: dataId)
+        sourceManager.updateGeoJSONSourceFeatures(forSourceId: sourceId, features: [feature], dataId: dataId)
 
         // then
         XCTAssertEqual(styleManager.updateGeoJSONSourceFeaturesStub.invocations.count, 1)
@@ -496,11 +496,11 @@ final class StyleSourceManagerTests: XCTestCase {
 
         // when
         sourceManager.updateGeoJSONSource(withId: sourceId, data: .emptyFeatureCollection(), dataId: nil)
-        try sourceManager.addGeoJSONSourceFeatures(forSourceId: sourceId, features: [feature], dataId: nil)
-        try sourceManager.updateGeoJSONSourceFeatures(forSourceId: sourceId, features: [feature], dataId: nil)
-        try sourceManager.removeGeoJSONSourceFeatures(forSourceId: sourceId,
-                                                      featureIds: [featureIdentifier.description],
-                                                      dataId: nil)
+        sourceManager.addGeoJSONSourceFeatures(forSourceId: sourceId, features: [feature], dataId: nil)
+        sourceManager.updateGeoJSONSourceFeatures(forSourceId: sourceId, features: [feature], dataId: nil)
+        sourceManager.removeGeoJSONSourceFeatures(forSourceId: sourceId,
+                                                  featureIds: [featureIdentifier.description],
+                                                  dataId: nil)
 
         // then
         XCTAssertEqual(backgroundQueue.asyncWorkItemStub.invocations.count, 4)

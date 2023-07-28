@@ -25,7 +25,6 @@ internal protocol StyleManagerProtocol {
     func styleSourceExists(forSourceId sourceId: String) -> Bool
     func getStyleSources() -> [MapboxCoreMaps.StyleObjectInfo]
 
-    func getStyleLightProperty(forProperty property: String) -> MapboxCoreMaps.StylePropertyValue
     func getStyleTerrainProperty(forProperty property: String) -> MapboxCoreMaps.StylePropertyValue
     func getStyleProjectionProperty(forProperty property: String) -> MapboxCoreMaps.StylePropertyValue
 
@@ -90,12 +89,6 @@ internal protocol StyleManagerProtocol {
         image: Image) -> Expected<NSNull, NSString>
 
     func removeStyleSource(forSourceId sourceId: String) -> Expected<NSNull, NSString>
-
-    func setStyleLightForProperties(_ properties: Any) -> Expected<NSNull, NSString>
-
-    func setStyleLightPropertyForProperty(
-        _ property: String,
-        value: Any) -> Expected<NSNull, NSString>
 
     // 3D Light
     func getStyleLights() -> [StyleObjectInfo]

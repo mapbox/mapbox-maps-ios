@@ -51,7 +51,7 @@ public struct CircleLayer: Layer {
     /// Transition options for `circleColor`.
     public var circleColorTransition: StyleTransition?
 
-    /// Emission strength.
+    /// Emission strength
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif

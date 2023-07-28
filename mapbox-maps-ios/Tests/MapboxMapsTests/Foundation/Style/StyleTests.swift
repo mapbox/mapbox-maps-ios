@@ -331,11 +331,11 @@ final class StyleTests: XCTestCase {
     // MARK: Light
 
     func testStyleCanSetLightSourceProperties() {
-        styleManager.setStyleLightForPropertiesStub.defaultReturnValue = Expected(value: NSNull())
-        XCTAssertNoThrow(try style.setLight(properties: ["foo": "bar"]))
+        styleManager.setStyleLightPropertyForIdStub.defaultReturnValue = Expected(value: NSNull())
+        XCTAssertNoThrow(try style.setLightProperty(for: "id", property: "foo", value: "bar"))
 
-        styleManager.setStyleLightForPropertiesStub.defaultReturnValue = Expected(error: "Cannot set light source properties")
-        XCTAssertThrowsError(try style.setLight(properties: ["foo": "bar"]))
+        styleManager.setStyleLightPropertyForIdStub.defaultReturnValue = Expected(error: "Cannot set light source properties")
+        XCTAssertThrowsError(try style.setLightProperty(for: "id", property: "foo", value: "bar"))
     }
 
     // MARK: Terrain
@@ -487,14 +487,14 @@ final class StyleTests: XCTestCase {
         let directionalLight = DirectionalLight(id: UUID().uuidString)
 
         styleManager.setStyleLightsStub.defaultReturnValue = Expected(value: NSNull())
-        XCTAssertNoThrow(try style.setLights3D(ambientLight: ambientLight, directionalLight: directionalLight))
+        XCTAssertNoThrow(try style.setLights(ambient: ambientLight, directional: directionalLight))
         let lights = try XCTUnwrap(styleManager.setStyleLightsStub.invocations.last?.parameters as? [[String: Any]])
         XCTAssertTrue(lights.contains(where: { $0["id"] as? String == ambientLight.id && $0["type"] as? String == "ambient" }))
         XCTAssertTrue(lights.contains(where: { $0["id"] as? String == directionalLight.id && $0["type"] as? String == "directional" }))
 
         styleManager.setStyleLightsStub.reset()
         styleManager.setStyleLightsStub.defaultReturnValue = Expected(error: "Cannot add 3D lights")
-        XCTAssertThrowsError(try style.setLights3D(ambientLight: ambientLight, directionalLight: directionalLight))
+        XCTAssertThrowsError(try style.setLights(ambient: ambientLight, directional: directionalLight))
     }
 
     func testGet3DLights() {
@@ -502,7 +502,7 @@ final class StyleTests: XCTestCase {
             .init(id: "default-directional-light", type: "directional"),
             .init(id: "default-ambient-light", type: "ambient")
         ]
-        let lights = style.lights3D()
+        let lights = style.allLightIdentifiers
         XCTAssertEqual(styleManager.getStyleLightsStub.invocations.count, 1)
         XCTAssertEqual(lights.map(\.id), ["default-directional-light", "default-ambient-light"])
     }
@@ -513,14 +513,14 @@ final class StyleTests: XCTestCase {
         let value = String.randomASCII(withLength: 19)
 
         styleManager.setStyleLightPropertyForIdStub.defaultReturnValue = Expected(value: NSNull())
-        XCTAssertNoThrow(try style.setLight3DProperty(id: id, property: property, value: value))
+        XCTAssertNoThrow(try style.setLightProperty(for: id, property: property, value: value))
         let invocation = try XCTUnwrap(styleManager.setStyleLightPropertyForIdStub.invocations.last)
         XCTAssertEqual(invocation.parameters.id, id)
         XCTAssertEqual(invocation.parameters.property, property)
         XCTAssertEqual(invocation.parameters.value as? String, value)
 
         styleManager.setStyleLightPropertyForIdStub.defaultReturnValue = Expected(error: "Cannot set property for 3D light")
-        XCTAssertThrowsError(try style.setLight3DProperty(id: id, property: property, value: value))
+        XCTAssertThrowsError(try style.setLightProperty(for: id, property: property, value: value))
     }
 
     func testGet3DLightProperty() throws {
@@ -529,7 +529,7 @@ final class StyleTests: XCTestCase {
         let stringValue = String.randomASCII(withLength: 19)
 
         styleManager.getStyleLightPropertyForIdStub.defaultReturnValue = .init(value: stringValue, kind: .constant)
-        let propertyValue = style.light3DProperty(id: id, property: property)
+        let propertyValue = style.lightProperty(for: id, property: property)
         let invocation = try XCTUnwrap(styleManager.getStyleLightPropertyForIdStub.invocations.last)
         XCTAssertEqual(invocation.parameters.id, id)
         XCTAssertEqual(invocation.parameters.property, property)
@@ -572,7 +572,7 @@ final class StyleTests: XCTestCase {
         feature.identifier = .number(featureIdentifier)
 
         // when
-        try style.addGeoJSONSourceFeatures(forSourceId: sourceId, features: [feature], dataId: dataId)
+        style.addGeoJSONSourceFeatures(forSourceId: sourceId, features: [feature], dataId: dataId)
 
         // then
         XCTAssertEqual(sourceManager.addGeoJSONSourceFeaturesStub.invocations.count, 1)
@@ -592,7 +592,7 @@ final class StyleTests: XCTestCase {
         feature.identifier = .number(featureIdentifier)
 
         // when
-        try style.updateGeoJSONSourceFeatures(forSourceId: sourceId, features: [feature], dataId: dataId)
+        style.updateGeoJSONSourceFeatures(forSourceId: sourceId, features: [feature], dataId: dataId)
 
         // then
         XCTAssertEqual(sourceManager.updateGeoJSONSourceFeaturesStub.invocations.count, 1)
@@ -609,7 +609,7 @@ final class StyleTests: XCTestCase {
         let featureIdentifiers = (0...10).map { String.randomASCII(withLength: $0) }
 
         // when
-        try style.removeGeoJSONSourceFeatures(forSourceId: sourceId, featureIds: featureIdentifiers, dataId: dataId)
+        style.removeGeoJSONSourceFeatures(forSourceId: sourceId, featureIds: featureIdentifiers, dataId: dataId)
 
         // then
         XCTAssertEqual(sourceManager.removeGeoJSONSourceFeaturesStub.invocations.count, 1)

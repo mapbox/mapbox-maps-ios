@@ -336,11 +336,6 @@ class MockStyleManager: StyleManagerProtocol {
         removeStyleSourceStub.call(with: sourceId)
     }
 
-    let setStyleLightForPropertiesStub = Stub<Any, Expected<NSNull, NSString>>(defaultReturnValue: .init(value: NSNull()))
-    func setStyleLightForProperties(_ properties: Any) -> Expected<NSNull, NSString> {
-        setStyleLightForPropertiesStub.call(with: properties)
-    }
-
     struct SetStylePropertyParameters {
         let property: String
         let value: Any

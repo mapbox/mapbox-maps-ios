@@ -36,7 +36,7 @@ else
 fi
 
 ../download-dependency.sh mapbox-common "$COMMON_ARTIFACT" "$COMMON_VERSION"
-../download-dependency.sh mobile-maps-core-internal "$CORE_ARTIFACT" "$CORE_VERSION"
+../download-dependency.sh mobile-maps-core "$CORE_ARTIFACT" "$CORE_VERSION"
 ../build-dependency.sh Turf 'https://github.com/mapbox/turf-swift.git' "$TURF_VERSION" "$LINK_TYPE"
 
 step 'Creating MapboxMaps.xcodeproj'

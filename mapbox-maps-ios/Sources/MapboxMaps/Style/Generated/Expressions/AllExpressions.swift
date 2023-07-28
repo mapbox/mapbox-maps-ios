@@ -53,7 +53,7 @@ public extension Expression {
         case acos = "acos"
 
         /// Returns a string which matches one of the values specified in the text-anchor layout property, depending on the best-fit anchor for the symbol during rendering. Using this expression the content of the layer can be dynamically configured for the specific anchor type.
-        case activeAnchor = "active-anchor"
+        @_spi(Experimental) case activeAnchor = "active-anchor"
 
         /// Returns `true` if all the inputs are `true`, `false` otherwise. The inputs are evaluated in order, and evaluation is short-circuiting: once an input expression evaluates to `false`, the result is `false` and no further input expressions are evaluated.
         case all = "all"
@@ -90,6 +90,9 @@ public extension Expression {
 
         /// Returns a `string` consisting of the concatenation of the inputs. Each input is converted to a string as if by `to-string`.
         case concat = "concat"
+
+        /// Retrieves the configuration value for the given option.
+        case config = "config"
 
         /// Returns the cosine of the input.
         case cos = "cos"
@@ -194,7 +197,7 @@ public extension Expression {
         /// Returns the maximum value of the inputs.
         case max = "max"
 
-        /// Returns a requested property of the light configuration based on the supplied options. Currently the only supported option is `brightness` which returns the global brightness value of the lights on a scale of 0 to 1, where 0 means total darkness and 1 means full brightness.
+        /// Returns a requested property of the light configuration based on the supplied options. Currently the only supported option is `brightness` which returns the global brightness value of the lights on a scale of 0 to 1, where 0 means total darkness and 1 means full brightness. This expression works only with 3D light, i.e. when `lights` root property is defined.
         case measureLight = "measure-light"
 
         /// Returns the minimum value of the inputs.

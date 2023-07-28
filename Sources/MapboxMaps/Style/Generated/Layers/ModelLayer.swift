@@ -59,7 +59,7 @@ import Foundation
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
-    public var visibility: Visibility
+    public var visibility: Value<Visibility>
 
     /// Model to render.
 #if swift(>=5.8)
@@ -218,7 +218,7 @@ import Foundation
         self.source = source
         self.id = id
         self.type = LayerType.model
-        self.visibility = .visible
+        self.visibility = .constant(.visible)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -258,7 +258,7 @@ import Foundation
         try paintContainer.encodeIfPresent(modelType, forKey: .modelType)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
+        try layoutContainer.encode(visibility, forKey: .visibility)
         try layoutContainer.encodeIfPresent(modelId, forKey: .modelId)
     }
 
@@ -299,12 +299,12 @@ import Foundation
             modelType = try paintContainer.decodeIfPresent(Value<ModelType>.self, forKey: .modelType)
         }
 
-        var visibilityEncoded: Visibility?
+        var visibilityEncoded: Value<Visibility>?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
-            visibilityEncoded = try layoutContainer.decodeIfPresent(Visibility.self, forKey: .visibility)
+            visibilityEncoded = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
             modelId = try layoutContainer.decodeIfPresent(Value<String>.self, forKey: .modelId)
         }
-        visibility = visibilityEncoded  ?? .visible
+        visibility = visibilityEncoded ?? .constant(.visible)
     }
 
     enum RootCodingKeys: String, CodingKey {

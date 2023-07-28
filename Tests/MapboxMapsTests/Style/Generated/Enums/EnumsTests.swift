@@ -3,6 +3,12 @@
 import Foundation
 @testable import MapboxMaps
 
+extension Value where T == Visibility {
+    static func testConstantValue() -> Value<Visibility> {
+        return .constant(Visibility.testConstantValue())
+    }
+}
+
 extension Visibility {
     static func testConstantValue() -> Visibility {
         return .visible

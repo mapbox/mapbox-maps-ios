@@ -20,7 +20,7 @@ public struct LocationIndicatorLayer: Layer {
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
-    public var visibility: Visibility
+    public var visibility: Value<Visibility>
 
     /// Name of image in sprite to use as the middle of the location indicator.
     public var bearingImage: Value<ResolvedImage>?
@@ -106,7 +106,7 @@ public struct LocationIndicatorLayer: Layer {
     public init(id: String) {
         self.id = id
         self.type = LayerType.locationIndicator
-        self.visibility = .visible
+        self.visibility = .constant(.visible)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -143,7 +143,7 @@ public struct LocationIndicatorLayer: Layer {
         try paintContainer.encodeIfPresent(topImageSizeTransition, forKey: .topImageSizeTransition)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
+        try layoutContainer.encode(visibility, forKey: .visibility)
         try layoutContainer.encodeIfPresent(bearingImage, forKey: .bearingImage)
         try layoutContainer.encodeIfPresent(shadowImage, forKey: .shadowImage)
         try layoutContainer.encodeIfPresent(topImage, forKey: .topImage)
@@ -183,14 +183,14 @@ public struct LocationIndicatorLayer: Layer {
             topImageSizeTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .topImageSizeTransition)
         }
 
-        var visibilityEncoded: Visibility?
+        var visibilityEncoded: Value<Visibility>?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
-            visibilityEncoded = try layoutContainer.decodeIfPresent(Visibility.self, forKey: .visibility)
+            visibilityEncoded = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
             bearingImage = try layoutContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .bearingImage)
             shadowImage = try layoutContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .shadowImage)
             topImage = try layoutContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .topImage)
         }
-        visibility = visibilityEncoded  ?? .visible
+        visibility = visibilityEncoded ?? .constant(.visible)
     }
 
     enum RootCodingKeys: String, CodingKey {

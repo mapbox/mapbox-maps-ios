@@ -47,7 +47,7 @@ final class SymbolLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfLayoutProperties() {
         var layer = SymbolLayer(id: "test-id", source: "source")
-        layer.visibility = .visible
+        layer.visibility = .constant(.visible)
         layer.iconAllowOverlap = Value<Bool>.testConstantValue()
         layer.iconAnchor = Value<IconAnchor>.testConstantValue()
         layer.iconIgnorePlacement = Value<Bool>.testConstantValue()
@@ -104,7 +104,7 @@ final class SymbolLayerTests: XCTestCase {
 
         do {
             let decodedLayer = try JSONDecoder().decode(SymbolLayer.self, from: validData)
-            XCTAssertEqual(decodedLayer.visibility, .visible)
+            XCTAssert(decodedLayer.visibility == .constant(.visible))
             XCTAssertEqual(layer.iconAllowOverlap, Value<Bool>.testConstantValue())
             XCTAssertEqual(layer.iconAnchor, Value<IconAnchor>.testConstantValue())
             XCTAssertEqual(layer.iconIgnorePlacement, Value<Bool>.testConstantValue())
@@ -200,7 +200,7 @@ final class SymbolLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(SymbolLayer.self, from: validData)
-           XCTAssertEqual(decodedLayer.visibility, .visible)
+           XCTAssert(decodedLayer.visibility == .constant(.visible))
            XCTAssertEqual(layer.iconColor, Value<StyleColor>.testConstantValue())
            XCTAssertEqual(layer.iconEmissiveStrength, Value<Double>.testConstantValue())
            XCTAssertEqual(layer.iconHaloBlur, Value<Double>.testConstantValue())

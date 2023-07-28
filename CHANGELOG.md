@@ -26,6 +26,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Remove `source`, `sourceLayer`, `filter` properties from the `Layer` protocol requirement.
 * Bump core maps version to 11.0.0-beta.1.
 * Refactor style Light API: introduce `AmbientLight`, `DirectionalLight`, `FlatLight` and methods to set them.
+* Add expression support to `Layer.visibility`.
 
 ## 11.0.0-alpha.2 - 21 June, 2023
 

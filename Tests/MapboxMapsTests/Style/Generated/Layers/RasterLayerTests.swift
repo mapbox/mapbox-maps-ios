@@ -47,7 +47,7 @@ final class RasterLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfLayoutProperties() {
         var layer = RasterLayer(id: "test-id", source: "source")
-        layer.visibility = .visible
+        layer.visibility = .constant(.visible)
 
         var data: Data?
         do {
@@ -63,7 +63,7 @@ final class RasterLayerTests: XCTestCase {
 
         do {
             let decodedLayer = try JSONDecoder().decode(RasterLayer.self, from: validData)
-            XCTAssertEqual(decodedLayer.visibility, .visible)
+            XCTAssert(decodedLayer.visibility == .constant(.visible))
         } catch {
             XCTFail("Failed to decode RasterLayer")
         }
@@ -105,7 +105,7 @@ final class RasterLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(RasterLayer.self, from: validData)
-           XCTAssertEqual(decodedLayer.visibility, .visible)
+           XCTAssert(decodedLayer.visibility == .constant(.visible))
            XCTAssertEqual(layer.rasterBrightnessMax, Value<Double>.testConstantValue())
            XCTAssertEqual(layer.rasterBrightnessMin, Value<Double>.testConstantValue())
            XCTAssertEqual(layer.rasterColor, Value<StyleColor>.testConstantValue())

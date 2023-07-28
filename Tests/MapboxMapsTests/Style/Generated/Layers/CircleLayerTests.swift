@@ -47,7 +47,7 @@ final class CircleLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfLayoutProperties() {
         var layer = CircleLayer(id: "test-id", source: "source")
-        layer.visibility = .visible
+        layer.visibility = .constant(.visible)
         layer.circleSortKey = Value<Double>.testConstantValue()
 
         var data: Data?
@@ -64,7 +64,7 @@ final class CircleLayerTests: XCTestCase {
 
         do {
             let decodedLayer = try JSONDecoder().decode(CircleLayer.self, from: validData)
-            XCTAssertEqual(decodedLayer.visibility, .visible)
+            XCTAssert(decodedLayer.visibility == .constant(.visible))
             XCTAssertEqual(layer.circleSortKey, Value<Double>.testConstantValue())
         } catch {
             XCTFail("Failed to decode CircleLayer")
@@ -109,7 +109,7 @@ final class CircleLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(CircleLayer.self, from: validData)
-           XCTAssertEqual(decodedLayer.visibility, .visible)
+           XCTAssert(decodedLayer.visibility == .constant(.visible))
            XCTAssertEqual(layer.circleBlur, Value<Double>.testConstantValue())
            XCTAssertEqual(layer.circleColor, Value<StyleColor>.testConstantValue())
            XCTAssertEqual(layer.circleEmissiveStrength, Value<Double>.testConstantValue())

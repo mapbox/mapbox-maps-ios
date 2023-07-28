@@ -47,7 +47,7 @@ final class FillLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfLayoutProperties() {
         var layer = FillLayer(id: "test-id", source: "source")
-        layer.visibility = .visible
+        layer.visibility = .constant(.visible)
         layer.fillSortKey = Value<Double>.testConstantValue()
 
         var data: Data?
@@ -64,7 +64,7 @@ final class FillLayerTests: XCTestCase {
 
         do {
             let decodedLayer = try JSONDecoder().decode(FillLayer.self, from: validData)
-            XCTAssertEqual(decodedLayer.visibility, .visible)
+            XCTAssert(decodedLayer.visibility == .constant(.visible))
             XCTAssertEqual(layer.fillSortKey, Value<Double>.testConstantValue())
         } catch {
             XCTFail("Failed to decode FillLayer")
@@ -101,7 +101,7 @@ final class FillLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(FillLayer.self, from: validData)
-           XCTAssertEqual(decodedLayer.visibility, .visible)
+           XCTAssert(decodedLayer.visibility == .constant(.visible))
            XCTAssertEqual(layer.fillAntialias, Value<Bool>.testConstantValue())
            XCTAssertEqual(layer.fillColor, Value<StyleColor>.testConstantValue())
            XCTAssertEqual(layer.fillEmissiveStrength, Value<Double>.testConstantValue())

@@ -27,6 +27,8 @@ Mapbox welcomes participation and contributions from everyone.
 * Bump core maps version to 11.0.0-beta.1.
 * Refactor style Light API: introduce `AmbientLight`, `DirectionalLight`, `FlatLight` and methods to set them.
 * Add expression support to `Layer.visibility`.
+* Expose new APIs for working with style importing and configuration: getStyleImports(), removeStyleImport(forImportId:), getStyleImportSchema(forImportId:), getStyleImportConfigProperties(forImportId:), setStyleImportConfigPropertiesForImportId(_:configs:), getStyleImportConfigProperty(forImportId:config:), setStyleImportConfigPropertyForImportId(_:config:value:)
+* Expose `slot` property for all `Layer`s to link layers from imported styles.
 
 ## 11.0.0-alpha.2 - 21 June, 2023
 

@@ -513,8 +513,7 @@ public final class MapboxMap: MapboxMapProtocol {
     /// - Returns: A `CGPoint` relative to the `UIView`. If the point is outside of the bounds
     ///     of `MapView` the returned point contains `-1.0` for both coordinates.
     public func point(for coordinate: CLLocationCoordinate2D) -> CGPoint {
-        let point = __map.pixelForCoordinate(for: coordinate).point
-        return CGRect(origin: .zero, size: size).contains(point) ? point : CGPoint(x: -1.0, y: -1.0)
+        return __map.pixelForCoordinate(for: coordinate).point.fit(to: size)
     }
 
     /// Converts map coordinates to an array of `CGPoint`, relative to the `MapView`.
@@ -1175,5 +1174,26 @@ extension MapboxMap {
 extension MapboxMap {
     internal var __testingMap: Map {
         return __map
+    }
+}
+
+extension CGPoint {
+    func fit(to boundingSize: CGSize) -> CGPoint {
+        var x = self.x
+        var y = self.y
+
+        // Round only when value is out of the bounding box
+        if x < 0 || x > boundingSize.width {
+            x.round(.toNearestOrAwayFromZero)
+        }
+        if y < 0 || y > boundingSize.height {
+            y.round(.toNearestOrAwayFromZero)
+        }
+
+        if (0...boundingSize.width).contains(x) && (0...boundingSize.height).contains(y) {
+            return CGPoint(x: x, y: y)
+        }
+
+        return CGPoint(x: -1, y: -1)
     }
 }

@@ -20,6 +20,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Replace `loadStyleJSON(_:completion:)`/`loadStyleJSON(_:completion:)` with overloaded `loadStyle(_:completion:)`.
 * Mark `Expression.Operator.activeAnchor` as experimental.
 * Add transition options as a parameter to `loadStyle(...)` methods.
+* `Expression.Operator` is now a struct with static variables instead of enum.
 * Add `MapboxMap.coordinate(s)Info(for:)` for converting offscreen points into geographical coordinates.
 * Fixed an issue when `MapboxMap.point(for:)` could return false negative result.
 * Remove `source`, `sourceLayer`, `filter` properties from the `Layer` protocol requirement.

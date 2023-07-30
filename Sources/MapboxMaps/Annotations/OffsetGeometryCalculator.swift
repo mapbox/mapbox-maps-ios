@@ -1,6 +1,10 @@
 import UIKit
 @_implementationOnly import MapboxCommon_Private
 
+#if targetEnvironment(macCatalyst)
+import struct Turf.Polygon
+#endif
+
 internal protocol OffsetGeometryCalculator {
     associatedtype GeometryType: GeometryConvertible
     func geometry(for translation: CGPoint, from geometry: GeometryType) -> GeometryType?

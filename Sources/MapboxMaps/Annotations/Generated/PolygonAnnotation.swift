@@ -1,6 +1,10 @@
 // This file is generated.
 import Foundation
 
+#if targetEnvironment(macCatalyst)
+import struct Turf.Polygon
+#endif
+
 public struct PolygonAnnotation: Annotation {
 
     /// Identifier for this annotation

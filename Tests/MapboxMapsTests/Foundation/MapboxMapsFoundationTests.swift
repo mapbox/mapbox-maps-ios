@@ -302,9 +302,6 @@ class MapboxMapsFoundationTests: XCTestCase {
             return
         }
 
-        let w = roundtripped.cgImage?.dataProvider?.data
-        let wo = original.cgImage?.dataProvider?.data
-
         XCTAssertEqual(original.size, roundtripped.size)
         XCTAssertEqual(original.imageOrientation, roundtripped.imageOrientation)
         XCTAssertEqual(original.ciImage, roundtripped.ciImage)

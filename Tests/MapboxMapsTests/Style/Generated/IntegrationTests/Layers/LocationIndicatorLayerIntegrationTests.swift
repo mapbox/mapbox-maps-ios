@@ -22,7 +22,7 @@ final class LocationIndicatorLayerIntegrationTests: MapViewIntegrationTestCase {
             var layer = LocationIndicatorLayer(id: "test-id")
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.visibility = .visible
+            layer.visibility = .constant(.visible)
             layer.bearingImage = Value<ResolvedImage>.testConstantValue()
             layer.shadowImage = Value<ResolvedImage>.testConstantValue()
             layer.topImage = Value<ResolvedImage>.testConstantValue()

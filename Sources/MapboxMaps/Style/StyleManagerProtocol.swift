@@ -15,6 +15,16 @@ internal protocol StyleManagerProtocol {
     func getStyleTransition() -> MapboxCoreMaps.TransitionOptions
     func setStyleTransitionFor(_ transitionOptions: MapboxCoreMaps.TransitionOptions)
 
+    func getStyleImports() -> [StyleObjectInfo]
+    func removeStyleImport(forImportId importId: String) -> Expected<NSNull, NSString>
+    func getStyleImportSchema(forImportId importId: String) -> Expected<AnyObject, NSString>
+    func getStyleImportConfigProperties(forImportId importId: String) -> Expected<NSDictionary, NSString>
+    func getStyleImportConfigProperty(
+        forImportId importId: String,
+        config: String) -> Expected<MapboxCoreMaps.StylePropertyValue, NSString>
+    func setStyleImportConfigPropertiesForImportId(_ importId: String, configs: [String: Any]) -> Expected<NSNull, NSString>
+    func setStyleImportConfigPropertyForImportId(_  importId: String, config: String, value: Any) -> Expected<NSNull, NSString>
+
     func styleLayerExists(forLayerId layerId: String) -> Bool
     func getStyleLayers() -> [MapboxCoreMaps.StyleObjectInfo]
 
@@ -25,7 +35,6 @@ internal protocol StyleManagerProtocol {
     func styleSourceExists(forSourceId sourceId: String) -> Bool
     func getStyleSources() -> [MapboxCoreMaps.StyleObjectInfo]
 
-    func getStyleLightProperty(forProperty property: String) -> MapboxCoreMaps.StylePropertyValue
     func getStyleTerrainProperty(forProperty property: String) -> MapboxCoreMaps.StylePropertyValue
     func getStyleProjectionProperty(forProperty property: String) -> MapboxCoreMaps.StylePropertyValue
 
@@ -90,12 +99,6 @@ internal protocol StyleManagerProtocol {
         image: Image) -> Expected<NSNull, NSString>
 
     func removeStyleSource(forSourceId sourceId: String) -> Expected<NSNull, NSString>
-
-    func setStyleLightForProperties(_ properties: Any) -> Expected<NSNull, NSString>
-
-    func setStyleLightPropertyForProperty(
-        _ property: String,
-        value: Any) -> Expected<NSNull, NSString>
 
     // 3D Light
     func getStyleLights() -> [StyleObjectInfo]

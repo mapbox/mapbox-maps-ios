@@ -22,7 +22,7 @@ final class FillLayerIntegrationTests: MapViewIntegrationTestCase {
             var layer = FillLayer(id: "test-id", source: "source")
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.visibility = .visible
+            layer.visibility = .constant(.visible)
             layer.fillSortKey = Value<Double>.testConstantValue()
 
             layer.fillAntialias = Value<Bool>.testConstantValue()

@@ -27,6 +27,9 @@ public struct SymbolLayer: Layer {
     /// Prohibited for all other source types, including GeoJSON sources.
     public var sourceLayer: String?
 
+    /// The slot this layer is assigned to. If specified, and a slot with that name exists, it will be placed at that position in the layer order.
+    @_spi(Experimental) public var slot: String?
+
     /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
     public var minZoom: Double?
 
@@ -34,7 +37,7 @@ public struct SymbolLayer: Layer {
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
-    public var visibility: Visibility
+    public var visibility: Value<Visibility>
 
     /// If true, the icon will be visible even if it collides with other previously drawn symbols.
     public var iconAllowOverlap: Value<Bool>?
@@ -165,7 +168,7 @@ public struct SymbolLayer: Layer {
     /// Transition options for `iconColor`.
     public var iconColorTransition: StyleTransition?
 
-    /// Emission strength.
+    /// Emission strength
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -196,10 +199,16 @@ public struct SymbolLayer: Layer {
     public var iconHaloWidthTransition: StyleTransition?
 
     /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together.
-    public var iconImageCrossFade: Value<Double>?
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public var iconImageCrossFade: Value<Double>?
 
     /// Transition options for `iconImageCrossFade`.
-    public var iconImageCrossFadeTransition: StyleTransition?
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public var iconImageCrossFadeTransition: StyleTransition?
 
     /// The opacity at which the icon will be drawn.
     public var iconOpacity: Value<Double>?
@@ -222,7 +231,7 @@ public struct SymbolLayer: Layer {
     /// Transition options for `textColor`.
     public var textColorTransition: StyleTransition?
 
-    /// Emission strength.
+    /// Emission strength
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -271,7 +280,7 @@ public struct SymbolLayer: Layer {
         self.source = source
         self.id = id
         self.type = LayerType.symbol
-        self.visibility = .visible
+        self.visibility = .constant(.visible)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -281,6 +290,7 @@ public struct SymbolLayer: Layer {
         try container.encodeIfPresent(filter, forKey: .filter)
         try container.encodeIfPresent(source, forKey: .source)
         try container.encodeIfPresent(sourceLayer, forKey: .sourceLayer)
+        try container.encodeIfPresent(slot, forKey: .slot)
         try container.encodeIfPresent(minZoom, forKey: .minZoom)
         try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
 
@@ -319,7 +329,7 @@ public struct SymbolLayer: Layer {
         try paintContainer.encodeIfPresent(textTranslateAnchor, forKey: .textTranslateAnchor)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
+        try layoutContainer.encode(visibility, forKey: .visibility)
         try layoutContainer.encodeIfPresent(iconAllowOverlap, forKey: .iconAllowOverlap)
         try layoutContainer.encodeIfPresent(iconAnchor, forKey: .iconAnchor)
         try layoutContainer.encodeIfPresent(iconIgnorePlacement, forKey: .iconIgnorePlacement)
@@ -370,6 +380,7 @@ public struct SymbolLayer: Layer {
         filter = try container.decodeIfPresent(Expression.self, forKey: .filter)
         source = try container.decodeIfPresent(String.self, forKey: .source)
         sourceLayer = try container.decodeIfPresent(String.self, forKey: .sourceLayer)
+        slot = try container.decodeIfPresent(String.self, forKey: .slot)
         minZoom = try container.decodeIfPresent(Double.self, forKey: .minZoom)
         maxZoom = try container.decodeIfPresent(Double.self, forKey: .maxZoom)
 
@@ -408,9 +419,9 @@ public struct SymbolLayer: Layer {
             textTranslateAnchor = try paintContainer.decodeIfPresent(Value<TextTranslateAnchor>.self, forKey: .textTranslateAnchor)
         }
 
-        var visibilityEncoded: Visibility?
+        var visibilityEncoded: Value<Visibility>?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
-            visibilityEncoded = try layoutContainer.decodeIfPresent(Visibility.self, forKey: .visibility)
+            visibilityEncoded = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
             iconAllowOverlap = try layoutContainer.decodeIfPresent(Value<Bool>.self, forKey: .iconAllowOverlap)
             iconAnchor = try layoutContainer.decodeIfPresent(Value<IconAnchor>.self, forKey: .iconAnchor)
             iconIgnorePlacement = try layoutContainer.decodeIfPresent(Value<Bool>.self, forKey: .iconIgnorePlacement)
@@ -453,7 +464,7 @@ public struct SymbolLayer: Layer {
             textVariableAnchor = try layoutContainer.decodeIfPresent(Value<[TextAnchor]>.self, forKey: .textVariableAnchor)
             textWritingMode = try layoutContainer.decodeIfPresent(Value<[TextWritingMode]>.self, forKey: .textWritingMode)
         }
-        visibility = visibilityEncoded  ?? .visible
+        visibility = visibilityEncoded ?? .constant(.visible)
     }
 
     enum RootCodingKeys: String, CodingKey {
@@ -462,6 +473,7 @@ public struct SymbolLayer: Layer {
         case filter = "filter"
         case source = "source"
         case sourceLayer = "source-layer"
+        case slot = "slot"
         case minZoom = "minzoom"
         case maxZoom = "maxzoom"
         case layout = "layout"

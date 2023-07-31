@@ -48,6 +48,9 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         // Use a constant circle radius and color to style the layer.
         museumLayer.circleRadius = .constant(8)
 
+        // `visibility` is `nil` by default. Set to `visible`.
+        museumLayer.visibility = .constant(.visible)
+
         let museumColor = UIColor(red: 0.22, green: 0.58, blue: 0.70, alpha: 1.00)
         museumLayer.circleColor = .constant(StyleColor(museumColor))
 
@@ -64,6 +67,9 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         // Style the contents of the source's contour layer.
         contourLayer.lineCap = .constant(.round)
         contourLayer.lineJoin = .constant(.round)
+
+        // `visibility` is `nil` by default. Set to `visible`.
+        contourLayer.visibility = .constant(.visible)
 
         let contourLineColor = UIColor(red: 0.53, green: 0.48, blue: 0.35, alpha: 1.00)
         contourLayer.lineColor = .constant(StyleColor(contourLineColor))
@@ -84,7 +90,7 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         // is on. `visibility` is `nil` by default.
         do {
             try mapView.mapboxMap.updateLayer(withId: museumLayerId, type: CircleLayer.self) { layer in
-                layer.visibility = sender.isOn ? .visible : .none
+                layer.visibility = .constant(sender.isOn ? .visible : .none)
             }
         } catch {
             print("Failed to update the visibility for layer with id \(museumLayerId). Error: \(error.localizedDescription)")
@@ -96,7 +102,7 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         // is on.
         do {
             try mapView.mapboxMap.updateLayer(withId: contourLayerId, type: CircleLayer.self) { layer in
-                layer.visibility = sender.isOn ? .visible : .none
+                layer.visibility = .constant(sender.isOn ? .visible : .none)
             }
         } catch {
             print("Failed to update the visibility for layer with id \(contourLayerId). Error: \(error.localizedDescription)")

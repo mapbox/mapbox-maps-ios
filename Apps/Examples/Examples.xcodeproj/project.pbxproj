@@ -54,6 +54,10 @@
 		58A28B602869F728006F7D93 /* SpinningGlobeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A28B5F2869F728006F7D93 /* SpinningGlobeExample.swift */; };
 		58A3C0C925C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */; };
 		732A550028DA470E00CDBFB7 /* PitchAndDistanceExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732A54FF28DA470E00CDBFB7 /* PitchAndDistanceExample.swift */; };
+		73620A072A71CD3D00FCC771 /* StandardStyleExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73620A062A71CD3D00FCC771 /* StandardStyleExample.swift */; };
+		73620A0B2A71CD7A00FCC771 /* fragment-realestate-NY.json in Resources */ = {isa = PBXBuildFile; fileRef = 73620A0A2A71CD7A00FCC771 /* fragment-realestate-NY.json */; };
+		73620A0C2A71CD7A00FCC771 /* fragment-realestate-NY.json in Resources */ = {isa = PBXBuildFile; fileRef = 73620A0A2A71CD7A00FCC771 /* fragment-realestate-NY.json */; };
+		73620A0D2A71CD7A00FCC771 /* fragment-realestate-NY.json in Resources */ = {isa = PBXBuildFile; fileRef = 73620A0A2A71CD7A00FCC771 /* fragment-realestate-NY.json */; };
 		73694BD325D4B2CE0064F636 /* TrackingModeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73694BD225D4B2CE0064F636 /* TrackingModeExample.swift */; };
 		7395C38828FEDFCF00071A33 /* PointAnnotationClusteringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7395C38728FEDFCF00071A33 /* PointAnnotationClusteringExample.swift */; };
 		73C5D6CF2A30EA1400C149AE /* ModelLayerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C5D6CE2A30EA1400C149AE /* ModelLayerExample.swift */; };
@@ -237,6 +241,8 @@
 		58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateGeoJSONLineExample.swift; sourceTree = "<group>"; };
 		666E0D4925664EE7000B8AF5 /* LayerPositionExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayerPositionExample.swift; sourceTree = "<group>"; };
 		732A54FF28DA470E00CDBFB7 /* PitchAndDistanceExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchAndDistanceExample.swift; sourceTree = "<group>"; };
+		73620A062A71CD3D00FCC771 /* StandardStyleExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardStyleExample.swift; sourceTree = "<group>"; };
+		73620A0A2A71CD7A00FCC771 /* fragment-realestate-NY.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "fragment-realestate-NY.json"; sourceTree = "<group>"; };
 		73694BD225D4B2CE0064F636 /* TrackingModeExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingModeExample.swift; sourceTree = "<group>"; };
 		7395C38728FEDFCF00071A33 /* PointAnnotationClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointAnnotationClusteringExample.swift; sourceTree = "<group>"; };
 		73C5D6CE2A30EA1400C149AE /* ModelLayerExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelLayerExample.swift; sourceTree = "<group>"; };
@@ -423,6 +429,7 @@
 				587429BF27BBFDA100104CCA /* VoiceOverAccessibilityExample.swift */,
 				7471A4E028D0CEA400C7DFE5 /* LargeGeoJSONExample.swift */,
 				732A54FF28DA470E00CDBFB7 /* PitchAndDistanceExample.swift */,
+				73620A062A71CD3D00FCC771 /* StandardStyleExample.swift */,
 			);
 			path = "All Examples";
 			sourceTree = "<group>";
@@ -498,6 +505,7 @@
 		07B071D12547CF50007F2865 /* Sample Data */ = {
 			isa = PBXGroup;
 			children = (
+				73620A0A2A71CD7A00FCC771 /* fragment-realestate-NY.json */,
 				3A3AF0022836499F0036F483 /* route.geojson */,
 				17B4805B26851C0600CF0D5E /* Radar */,
 				74A2313F27EE243B0065FB7D /* annotations.json */,
@@ -742,6 +750,7 @@
 				17B4806226851C6E00CF0D5E /* radar2.gif in Resources */,
 				077C4EFA252F7E89007636F1 /* LaunchScreen.storyboard in Resources */,
 				74797C1C28F5BA760008BBB9 /* sf_airport_route.geojson in Resources */,
+				73620A0B2A71CD7A00FCC771 /* fragment-realestate-NY.json in Resources */,
 				3A3AF0032836499F0036F483 /* route.geojson in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -750,6 +759,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				73620A0C2A71CD7A00FCC771 /* fragment-realestate-NY.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -757,6 +767,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				73620A0D2A71CD7A00FCC771 /* fragment-realestate-NY.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -897,6 +908,7 @@
 				0333B84F25ED942600D667C9 /* SceneKitExample.swift in Sources */,
 				CADCF72D2584990E0065C51B /* MultipleGeometriesExample.swift in Sources */,
 				30517C6A274BD4D300B706E5 /* ViewAnnotationBasicExample.swift in Sources */,
+				73620A072A71CD3D00FCC771 /* StandardStyleExample.swift in Sources */,
 				A41E590D265C263700D8B946 /* OfflineRegionManagerExample.swift in Sources */,
 				74A2313627EB37EE0065FB7D /* AnimatedMarkerExample.swift in Sources */,
 				95B589BA2982BFE800BF4F31 /* MapSettingsExample.swift in Sources */,

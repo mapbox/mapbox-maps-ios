@@ -46,7 +46,7 @@ final class SkyLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfLayoutProperties() {
         var layer = SkyLayer(id: "test-id")
-        layer.visibility = .visible
+        layer.visibility = .constant(.visible)
 
         var data: Data?
         do {
@@ -62,7 +62,7 @@ final class SkyLayerTests: XCTestCase {
 
         do {
             let decodedLayer = try JSONDecoder().decode(SkyLayer.self, from: validData)
-            XCTAssertEqual(decodedLayer.visibility, .visible)
+            XCTAssert(decodedLayer.visibility == .constant(.visible))
         } catch {
             XCTFail("Failed to decode SkyLayer")
         }
@@ -95,7 +95,7 @@ final class SkyLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(SkyLayer.self, from: validData)
-           XCTAssertEqual(decodedLayer.visibility, .visible)
+           XCTAssert(decodedLayer.visibility == .constant(.visible))
            XCTAssertEqual(layer.skyAtmosphereColor, Value<StyleColor>.testConstantValue())
            XCTAssertEqual(layer.skyAtmosphereHaloColor, Value<StyleColor>.testConstantValue())
            XCTAssertEqual(layer.skyAtmosphereSun, Value<[Double]>.testConstantValue())

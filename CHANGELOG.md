@@ -20,9 +20,15 @@ Mapbox welcomes participation and contributions from everyone.
 * Replace `loadStyleJSON(_:completion:)`/`loadStyleJSON(_:completion:)` with overloaded `loadStyle(_:completion:)`.
 * Mark `Expression.Operator.activeAnchor` as experimental.
 * Add transition options as a parameter to `loadStyle(...)` methods.
+* `Expression.Operator` is now a struct with static variables instead of enum.
 * Add `MapboxMap.coordinate(s)Info(for:)` for converting offscreen points into geographical coordinates.
 * Fixed an issue when `MapboxMap.point(for:)` could return false negative result.
 * Remove `source`, `sourceLayer`, `filter` properties from the `Layer` protocol requirement.
+* Bump core maps version to 11.0.0-beta.1.
+* Refactor style Light API: introduce `AmbientLight`, `DirectionalLight`, `FlatLight` and methods to set them.
+* Add expression support to `Layer.visibility`.
+* Expose new APIs for working with style importing and configuration: getStyleImports(), removeStyleImport(forImportId:), getStyleImportSchema(forImportId:), getStyleImportConfigProperties(forImportId:), setStyleImportConfigPropertiesForImportId(_:configs:), getStyleImportConfigProperty(forImportId:config:), setStyleImportConfigPropertyForImportId(_:config:value:)
+* Expose `slot` property for all `Layer`s to link layers from imported styles.
 
 ## 11.0.0-alpha.2 - 21 June, 2023
 
@@ -120,6 +126,20 @@ MapboxMap.addGeoJSONSourceFeatures(forSourceId:features:dataId:)
 MapboxMap.updateGeoJSONSourceFeatures(forSourceId:features:dataId:)
 MapboxMap.removeGeoJSONSourceFeatures(forSourceId:featureIds:dataId:)
 ```
+## 10.15.0 - July 27, 2023
+
+* Update MapboxCoreMaps to 10.15.0 and MapboxCommon to 23.7.0.
+* Fixed an issue when `MapboxMap.point(for:)` could return false negative result.
+
+## 10.15.0-rc.1 - July 13, 2023
+
+* Update MapboxCoreMaps to 10.15.0-rc.1 and MapboxCommon to 23.7.0-rc.1.  
+* Fixed an issue when `MapboxMap.point(for:)` could return false negative result.
+
+## 10.15.0-beta.1 - June 29, 2023
+
+* Remove unneeded synthesized initializers
+* Update MapboxCoreMaps to 10.15.0-beta.1 and MapboxCommon to 23.7.0-beta.1.
 
 ## 10.14.0 - June 14, 2023
 

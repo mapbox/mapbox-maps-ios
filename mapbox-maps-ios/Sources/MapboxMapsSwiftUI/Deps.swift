@@ -13,6 +13,7 @@ struct MapDependencies {
     var orientation = NorthOrientation.upwards
     var eventsSubscriptions = [AnyEventSubscription]()
     var cameraChangeHandlers = [(CameraChanged) -> Void]()
+    var ornamentOptions = OrnamentOptions()
 }
 
 @available(iOS 13.0, *)

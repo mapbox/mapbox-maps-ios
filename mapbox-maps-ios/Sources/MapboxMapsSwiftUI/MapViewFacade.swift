@@ -9,6 +9,7 @@ struct MapViewFacade {
     var mapboxMap: MapboxMapProtocol
     var gestureManager: GestureManagerProtocol
     var viewportManager: ViewportManagerProtocol
+    var ornaments: OrnamentsManaging
 
     var makeViewportTransition: (MapViewportAnimation) -> ViewportTransition
     var makeViewportState: (Viewport, LayoutDirection) -> ViewportState?
@@ -21,6 +22,7 @@ extension MapViewFacade {
         mapboxMap = mapView.mapboxMap
         gestureManager = mapView.gestures
         viewportManager = mapView.viewport
+        ornaments = mapView.ornaments
 
         makeViewportTransition = { animation in
             animation.makeViewportTransition(mapView)

@@ -7,6 +7,12 @@ struct Settings {
     var gestureOptions: GestureOptions = .init()
     var cameraBounds: CameraBoundsOptions = .init()
     var constrainMode: ConstrainMode = .heightOnly
+    var ornamentSettings = OrnamentSettings()
+
+    struct OrnamentSettings {
+        var isScaleBarVisible = true
+        var isCompassVisible = true
+    }
 }
 
 @available(iOS 14.0, *)
@@ -22,6 +28,10 @@ struct MapSettingsExample : View {
             .gestureOptions(settings.gestureOptions)
             .northOrientation(settings.orientation)
             .constrainMode(settings.constrainMode)
+            .ornamentOptions(OrnamentOptions(
+                scaleBar: ScaleBarViewOptions(visibility: settings.ornamentSettings.isScaleBarVisible ? .visible : .hidden),
+                compass: CompassViewOptions(visibility: settings.ornamentSettings.isCompassVisible ? .visible : .hidden)
+            ))
             .onCameraChanged { event in
                 // NOTE: updating camera @State on every camera change is not recommended
                 // because it will lead to body re-evaluation on every frame if user drags the map.
@@ -81,6 +91,12 @@ struct SettingsView : View {
                 Toggle("Rotate", isOn: $settings.gestureOptions.rotateEnabled)
             } header: {
                 Text("Gestures")
+            }
+            Section {
+                Toggle("Show Scale Bar", isOn: $settings.ornamentSettings.isScaleBarVisible)
+                Toggle("Show Compass", isOn: $settings.ornamentSettings.isCompassVisible)
+            } header: {
+                Text("Ornaments")
             }
         }
     }

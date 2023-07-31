@@ -262,6 +262,11 @@ public extension Map {
     func northOrientation(_ northOrientation: NorthOrientation) -> Self {
         set(\.mapDependencies.orientation, northOrientation)
     }
+
+    /// Sets ``OrnamentOptions`` to the map.
+    func ornamentOptions(_ options: OrnamentOptions) -> Self {
+        set(\.mapDependencies.ornamentOptions, options)
+    }
 }
 
 @available(iOS 13.0, *)

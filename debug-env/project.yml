@@ -159,12 +159,9 @@ targetTemplates:
       - target: MapboxCoreMaps/MapboxCoreMaps
       - target: Turf/Turf
       - target: MapboxMaps
-<<<<<<< HEAD
       - target: MapboxMapsSwiftUI
-=======
       - package: Fingertips
 
->>>>>>> develop
   unitTest:
       type: bundle.unit-test
       platform: iOS

@@ -26,16 +26,12 @@ final class <%- camelizeWithUndercoreRemoved(lightName) %>LightTests: XCTestCase
 
         let decodedLight = try JSONDecoder().decode(<%- camelizeWithUndercoreRemoved(lightName) %>Light.self, from: data)
 
-        XCTAssertEqual(decodedLight.lightType, Light3DType.<%- camelizeWithLeadingLowercase(lightName) %>)
-        <%_ for (const property of properties) { -%>
-        <%_ if (property.name === 'id') { _%>
         XCTAssertEqual(decodedLight.id, lightID)
-        <%_ } else { _%>
+        <%_ for (const property of properties) { -%>
         XCTAssertEqual(decodedLight.<%- camelizeWithLeadingLowercase(property.name) %>, <%- propertySwiftValueType(property) %>.testConstantValue())
         <%_ if (property.transition) { -%>
         XCTAssertEqual(decodedLight.<%- camelizeWithLeadingLowercase(property.name) %>Transition?.duration, 10)
         XCTAssertEqual(decodedLight.<%- camelizeWithLeadingLowercase(property.name) %>Transition?.delay, 10)
-        <%_ } -%>
         <%_ } -%>
         <%_ } -%>
     }

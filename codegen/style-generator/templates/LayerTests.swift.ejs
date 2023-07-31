@@ -60,7 +60,7 @@ final class <%- camelize(type) %>LayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfLayoutProperties() {
         var layer = <%- camelize(type) %>Layer(id: "test-id"<%- shouldIncludeSource ? `, source: "source"` : '' %>)
-        layer.visibility = .visible
+        layer.visibility = .constant(.visible)
         <%_ for (const property of layoutProperties) { -%>
         layer.<%- camelizeWithLeadingLowercase(property.name) %> = <%- propertySwiftValueType(property) %>.testConstantValue()
         <%_ if (property.transition) { -%>
@@ -82,7 +82,7 @@ final class <%- camelize(type) %>LayerTests: XCTestCase {
 
         do {
             let decodedLayer = try JSONDecoder().decode(<%- camelize(type) %>Layer.self, from: validData)
-            XCTAssertEqual(decodedLayer.visibility, .visible)
+            XCTAssert(decodedLayer.visibility == .constant(.visible))
             <%_ for (const property of layoutProperties) { -%>
             XCTAssertEqual(layer.<%- camelizeWithLeadingLowercase(property.name) %>, <%- propertySwiftValueType(property) %>.testConstantValue())
             <%_ } -%>
@@ -114,7 +114,7 @@ final class <%- camelize(type) %>LayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(<%- camelize(type) %>Layer.self, from: validData)
-           XCTAssertEqual(decodedLayer.visibility, .visible)
+           XCTAssert(decodedLayer.visibility == .constant(.visible))
            <%_ for (const property of paintProperties) { -%>
            XCTAssertEqual(layer.<%- camelizeWithLeadingLowercase(property.name) %>, <%- propertySwiftValueType(property) %>.testConstantValue())
            <%_ } -%>

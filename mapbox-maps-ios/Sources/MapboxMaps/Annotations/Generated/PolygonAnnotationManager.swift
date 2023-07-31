@@ -212,7 +212,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    /// Emission strength.
+    /// Emission strength
     public var fillEmissiveStrength: Double? {
         get {
             return layerProperties["fill-emissive-strength"] as? Double

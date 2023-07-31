@@ -47,7 +47,7 @@ final class LineLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfLayoutProperties() {
         var layer = LineLayer(id: "test-id", source: "source")
-        layer.visibility = .visible
+        layer.visibility = .constant(.visible)
         layer.lineCap = Value<LineCap>.testConstantValue()
         layer.lineJoin = Value<LineJoin>.testConstantValue()
         layer.lineMiterLimit = Value<Double>.testConstantValue()
@@ -68,7 +68,7 @@ final class LineLayerTests: XCTestCase {
 
         do {
             let decodedLayer = try JSONDecoder().decode(LineLayer.self, from: validData)
-            XCTAssertEqual(decodedLayer.visibility, .visible)
+            XCTAssert(decodedLayer.visibility == .constant(.visible))
             XCTAssertEqual(layer.lineCap, Value<LineCap>.testConstantValue())
             XCTAssertEqual(layer.lineJoin, Value<LineJoin>.testConstantValue())
             XCTAssertEqual(layer.lineMiterLimit, Value<Double>.testConstantValue())
@@ -123,7 +123,7 @@ final class LineLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(LineLayer.self, from: validData)
-           XCTAssertEqual(decodedLayer.visibility, .visible)
+           XCTAssert(decodedLayer.visibility == .constant(.visible))
            XCTAssertEqual(layer.lineBlur, Value<Double>.testConstantValue())
            XCTAssertEqual(layer.lineBorderColor, Value<StyleColor>.testConstantValue())
            XCTAssertEqual(layer.lineBorderWidth, Value<Double>.testConstantValue())

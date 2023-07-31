@@ -81,8 +81,7 @@ final class StyleColorTests: XCTestCase {
     }
 
     func testExpressionInitFailureWrongOperator() {
-        let op = Expression.Operator.allCases.filter { $0 != .rgba }.randomElement()!
-        let expression = Exp(op) {
+        let expression = Exp(.init(rawValue: .randomASCII(withLength: 10))) {
             red!
             green!
             blue!

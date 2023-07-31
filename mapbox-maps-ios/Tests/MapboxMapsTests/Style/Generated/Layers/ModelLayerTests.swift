@@ -47,7 +47,7 @@ final class ModelLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfLayoutProperties() {
         var layer = ModelLayer(id: "test-id", source: "source")
-        layer.visibility = .visible
+        layer.visibility = .constant(.visible)
         layer.modelId = Value<String>.testConstantValue()
 
         var data: Data?
@@ -64,7 +64,7 @@ final class ModelLayerTests: XCTestCase {
 
         do {
             let decodedLayer = try JSONDecoder().decode(ModelLayer.self, from: validData)
-            XCTAssertEqual(decodedLayer.visibility, .visible)
+            XCTAssert(decodedLayer.visibility == .constant(.visible))
             XCTAssertEqual(layer.modelId, Value<String>.testConstantValue())
         } catch {
             XCTFail("Failed to decode ModelLayer")
@@ -112,7 +112,7 @@ final class ModelLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(ModelLayer.self, from: validData)
-           XCTAssertEqual(decodedLayer.visibility, .visible)
+           XCTAssert(decodedLayer.visibility == .constant(.visible))
            XCTAssertEqual(layer.modelAmbientOcclusionIntensity, Value<Double>.testConstantValue())
            XCTAssertEqual(layer.modelCastShadows, Value<Bool>.testConstantValue())
            XCTAssertEqual(layer.modelColor, Value<StyleColor>.testConstantValue())

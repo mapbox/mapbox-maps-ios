@@ -341,7 +341,6 @@ final class ViewAnnotationManagerTests: XCTestCase {
 
     func testViewAnnotationUpdateDoesNotUnhideHiddenViews() throws {
         let annotationView = addTestAnnotationView()
-        let id = try XCTUnwrap(mapboxMap.addViewAnnotationStub.invocations.last?.parameters.id)
 
         mapboxMap.simulateAnnotationPositionsUpdate([])
 

@@ -68,7 +68,7 @@ public struct StyleColor: Codable, Equatable {
     /// the supported ranges.
     /// - Parameter expression: An rgba expression
     internal init?(expression: Expression) {
-        guard case .rgba = expression.operator,
+        guard expression.operator == .rgba,
               expression.arguments.count == 4,
               case .number(let red) = expression.arguments[0],
               case .number(let green) = expression.arguments[1],

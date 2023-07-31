@@ -6,7 +6,7 @@ public protocol Layer: Codable, StyleEncodable, StyleDecodable {
     var type: LayerType { get }
 
     /// Whether this layer is displayed.
-    var visibility: Visibility { get set }
+    var visibility: Value<Visibility> { get set }
 
     /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
     var minZoom: Double? { get set }

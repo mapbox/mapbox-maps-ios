@@ -33,7 +33,7 @@ final class <%- camelize(type) %>LayerIntegrationTests: MapViewIntegrationTestCa
             var layer = <%- camelize(type) %>Layer(id: "test-id"<%- shouldIncludeSource ? `, source: "source"` : '' -%>)
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.visibility = .visible
+            layer.visibility = .constant(.visible)
             <%_ for (const property of layoutProperties) { -%>
             <%_ if (propertySwiftValueType(property) !== "Value<[Double]>") { -%>
             layer.<%- camelizeWithLeadingLowercase(property.name) %> = <%- propertySwiftValueType(property) %>.testConstantValue()

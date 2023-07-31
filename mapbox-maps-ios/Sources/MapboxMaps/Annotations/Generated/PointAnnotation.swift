@@ -259,7 +259,7 @@ public struct PointAnnotation: Annotation {
         }
     }
 
-    /// Emission strength.
+    /// Emission strength
     public var iconEmissiveStrength: Double? {
         get {
             return layerProperties["icon-emissive-strength"] as? Double
@@ -329,7 +329,7 @@ public struct PointAnnotation: Annotation {
         }
     }
 
-    /// Emission strength.
+    /// Emission strength
     public var textEmissiveStrength: Double? {
         get {
             return layerProperties["text-emissive-strength"] as? Double

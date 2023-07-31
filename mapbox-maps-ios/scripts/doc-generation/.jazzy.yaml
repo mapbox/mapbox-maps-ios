@@ -58,12 +58,20 @@ custom_categories:
       - StyleURI
       - LayerPosition
       - TransitionOptions
-      - Light
       - Terrain
       - StyleDecodable
       - StyleEncodable
       - StyleError
       - TypeConversionError
+
+  - name: Lights
+    children:
+      - Light
+      - AmbientLight
+      - DirectionalLight
+      - FlatLight
+      - LightType
+      - LightInfo
 
   - name: Sources
     children:

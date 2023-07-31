@@ -27,6 +27,9 @@ public struct LineLayer: Layer {
     /// Prohibited for all other source types, including GeoJSON sources.
     public var sourceLayer: String?
 
+    /// The slot this layer is assigned to. If specified, and a slot with that name exists, it will be placed at that position in the layer order.
+    @_spi(Experimental) public var slot: String?
+
     /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
     public var minZoom: Double?
 
@@ -34,7 +37,7 @@ public struct LineLayer: Layer {
     public var maxZoom: Double?
 
     /// Whether this layer is displayed.
-    public var visibility: Visibility
+    public var visibility: Value<Visibility>
 
     /// The display of line endings.
     public var lineCap: Value<LineCap>?
@@ -79,12 +82,18 @@ public struct LineLayer: Layer {
     public var lineDasharray: Value<[Double]>?
 
     /// Decrease line layer opacity based on occlusion from 3D objects. Value 0 disables occlusion, value 1 means fully occluded.
-    public var lineDepthOcclusionFactor: Value<Double>?
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public var lineDepthOcclusionFactor: Value<Double>?
 
     /// Transition options for `lineDepthOcclusionFactor`.
-    public var lineDepthOcclusionFactorTransition: StyleTransition?
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public var lineDepthOcclusionFactorTransition: StyleTransition?
 
-    /// Emission strength.
+    /// Emission strength
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -142,7 +151,7 @@ public struct LineLayer: Layer {
         self.source = source
         self.id = id
         self.type = LayerType.line
-        self.visibility = .visible
+        self.visibility = .constant(.visible)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -152,6 +161,7 @@ public struct LineLayer: Layer {
         try container.encodeIfPresent(filter, forKey: .filter)
         try container.encodeIfPresent(source, forKey: .source)
         try container.encodeIfPresent(sourceLayer, forKey: .sourceLayer)
+        try container.encodeIfPresent(slot, forKey: .slot)
         try container.encodeIfPresent(minZoom, forKey: .minZoom)
         try container.encodeIfPresent(maxZoom, forKey: .maxZoom)
 
@@ -185,7 +195,7 @@ public struct LineLayer: Layer {
         try paintContainer.encodeIfPresent(lineWidthTransition, forKey: .lineWidthTransition)
 
         var layoutContainer = container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout)
-        try layoutContainer.encodeIfPresent(visibility, forKey: .visibility)
+        try layoutContainer.encode(visibility, forKey: .visibility)
         try layoutContainer.encodeIfPresent(lineCap, forKey: .lineCap)
         try layoutContainer.encodeIfPresent(lineJoin, forKey: .lineJoin)
         try layoutContainer.encodeIfPresent(lineMiterLimit, forKey: .lineMiterLimit)
@@ -200,6 +210,7 @@ public struct LineLayer: Layer {
         filter = try container.decodeIfPresent(Expression.self, forKey: .filter)
         source = try container.decodeIfPresent(String.self, forKey: .source)
         sourceLayer = try container.decodeIfPresent(String.self, forKey: .sourceLayer)
+        slot = try container.decodeIfPresent(String.self, forKey: .slot)
         minZoom = try container.decodeIfPresent(Double.self, forKey: .minZoom)
         maxZoom = try container.decodeIfPresent(Double.self, forKey: .maxZoom)
 
@@ -233,16 +244,16 @@ public struct LineLayer: Layer {
             lineWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineWidthTransition)
         }
 
-        var visibilityEncoded: Visibility?
+        var visibilityEncoded: Value<Visibility>?
         if let layoutContainer = try? container.nestedContainer(keyedBy: LayoutCodingKeys.self, forKey: .layout) {
-            visibilityEncoded = try layoutContainer.decodeIfPresent(Visibility.self, forKey: .visibility)
+            visibilityEncoded = try layoutContainer.decodeIfPresent(Value<Visibility>.self, forKey: .visibility)
             lineCap = try layoutContainer.decodeIfPresent(Value<LineCap>.self, forKey: .lineCap)
             lineJoin = try layoutContainer.decodeIfPresent(Value<LineJoin>.self, forKey: .lineJoin)
             lineMiterLimit = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .lineMiterLimit)
             lineRoundLimit = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .lineRoundLimit)
             lineSortKey = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .lineSortKey)
         }
-        visibility = visibilityEncoded  ?? .visible
+        visibility = visibilityEncoded ?? .constant(.visible)
     }
 
     enum RootCodingKeys: String, CodingKey {
@@ -251,6 +262,7 @@ public struct LineLayer: Layer {
         case filter = "filter"
         case source = "source"
         case sourceLayer = "source-layer"
+        case slot = "slot"
         case minZoom = "minzoom"
         case maxZoom = "maxzoom"
         case layout = "layout"

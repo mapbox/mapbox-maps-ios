@@ -9,6 +9,7 @@ struct MockMapView {
     var mapboxMap = MockMapboxMap()
     var gestures = MockGestureManager()
     var viewportManager = MockViewportManager()
+    var ornaments = MockOrnamentsManager()
 
     var makeViewportTransitionStub = Stub<MapViewportAnimation, ViewportTransition>(defaultReturnValue: MockViewportTransition())
     struct MakeViewportParameters {
@@ -24,6 +25,7 @@ struct MockMapView {
             mapboxMap: mapboxMap,
             gestureManager: gestures,
             viewportManager: viewportManager,
+            ornaments: ornaments,
             makeViewportTransition: makeViewportTransitionStub.call(with:),
             makeViewportState: { [makeViewportStateStub] viewport, layoutDirection in
                 makeViewportStateStub.call(with: MakeViewportParameters(viewport: viewport, layoutDirection: layoutDirection))

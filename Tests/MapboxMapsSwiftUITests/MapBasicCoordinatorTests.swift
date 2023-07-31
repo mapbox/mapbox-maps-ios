@@ -87,6 +87,24 @@ final class MapBasicCoordinatorTests: XCTestCase {
         XCTAssertEqual(mapboxMap.northOrientationStub.invocations.first?.parameters, .downwards)
     }
 
+    func testOrnamentOptions() {
+        let ornamentOptions = OrnamentOptions(
+            scaleBar: ScaleBarViewOptions(margins: .random(), useMetricUnits: .random()),
+            compass: CompassViewOptions(margins: .random()),
+            logo: LogoViewOptions(margins: .random()),
+            attributionButton: AttributionButtonOptions(margins: .random())
+        )
+        me.update(
+            viewport: .constant(.idle),
+            deps: MapDependencies(ornamentOptions: ornamentOptions),
+            layoutDirection: .leftToRight,
+            colorScheme: .dark,
+            animationData: nil)
+
+        let ornaments = mapView.ornaments
+        XCTAssertEqual(ornaments.options, ornamentOptions)
+    }
+
     func testTapGesture() {
         let mockActions = MockActions()
         let deps = MapDependencies(actions: mockActions.actions)

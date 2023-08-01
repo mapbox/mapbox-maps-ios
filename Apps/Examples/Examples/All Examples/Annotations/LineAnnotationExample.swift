@@ -2,7 +2,6 @@ import UIKit
 import MapboxMaps
 
 final class LineAnnotationExample: UIViewController, ExampleProtocol {
-
     private var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()
 
@@ -10,7 +9,7 @@ final class LineAnnotationExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), zoom: 2)
-        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
+        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .streets)
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)

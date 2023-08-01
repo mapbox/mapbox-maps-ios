@@ -27,7 +27,7 @@ final class BasicLocationPulsingExample: UIViewController, ExampleProtocol {
         puckConfiguration.pulsing = .default
         mapView.location.options.puckType = .puck2D(puckConfiguration)
 
-        mapView.location.onLocationChange.observe { [weak mapView] newLocation in
+        mapView.location.onLocationChange.observeNext { [weak mapView] newLocation in
             guard let mapView, let location = newLocation.last else { return }
             mapView.mapboxMap.setCamera(to: .init(center: location.coordinate, zoom: 18))
         }.store(in: &cancelables)

@@ -814,3 +814,320 @@ Var LocationIndicatorLayer.visibility has declared type change from MapboxMaps.V
 Var RasterLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
 Var SkyLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
 Var SymbolLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+
+// Convert style enums into structs
+TypeAlias Anchor.AllCases has been removed
+TypeAlias CirclePitchAlignment.AllCases has been removed
+TypeAlias CirclePitchScale.AllCases has been removed
+TypeAlias CircleTranslateAnchor.AllCases has been removed
+TypeAlias FillExtrusionTranslateAnchor.AllCases has been removed
+TypeAlias FillTranslateAnchor.AllCases has been removed
+TypeAlias HillshadeIlluminationAnchor.AllCases has been removed
+TypeAlias IconAnchor.AllCases has been removed
+TypeAlias IconPitchAlignment.AllCases has been removed
+TypeAlias IconRotationAlignment.AllCases has been removed
+TypeAlias IconTextFit.AllCases has been removed
+TypeAlias IconTranslateAnchor.AllCases has been removed
+TypeAlias LineCap.AllCases has been removed
+TypeAlias LineJoin.AllCases has been removed
+TypeAlias LineTranslateAnchor.AllCases has been removed
+TypeAlias RasterResampling.AllCases has been removed
+TypeAlias SkyType.AllCases has been removed
+TypeAlias StyleProjectionName.AllCases has been removed
+TypeAlias SymbolPlacement.AllCases has been removed
+TypeAlias SymbolZOrder.AllCases has been removed
+TypeAlias TextAnchor.AllCases has been removed
+TypeAlias TextJustify.AllCases has been removed
+TypeAlias TextPitchAlignment.AllCases has been removed
+TypeAlias TextRotationAlignment.AllCases has been removed
+TypeAlias TextTransform.AllCases has been removed
+TypeAlias TextTranslateAnchor.AllCases has been removed
+TypeAlias TextWritingMode.AllCases has been removed
+Var Anchor.allCases has been removed
+Var CirclePitchAlignment.allCases has been removed
+Var CirclePitchScale.allCases has been removed
+Var CircleTranslateAnchor.allCases has been removed
+Var FillExtrusionTranslateAnchor.allCases has been removed
+Var FillTranslateAnchor.allCases has been removed
+Var HillshadeIlluminationAnchor.allCases has been removed
+Var IconAnchor.allCases has been removed
+Var IconPitchAlignment.allCases has been removed
+Var IconRotationAlignment.allCases has been removed
+Var IconTextFit.allCases has been removed
+Var IconTranslateAnchor.allCases has been removed
+Var LineCap.allCases has been removed
+Var LineJoin.allCases has been removed
+Var LineTranslateAnchor.allCases has been removed
+Var RasterResampling.allCases has been removed
+Var SkyType.allCases has been removed
+Var StyleProjectionName.allCases has been removed
+Var SymbolPlacement.allCases has been removed
+Var SymbolZOrder.allCases has been removed
+Var TextAnchor.allCases has been removed
+Var TextJustify.allCases has been removed
+Var TextPitchAlignment.allCases has been removed
+Var TextRotationAlignment.allCases has been removed
+Var TextTransform.allCases has been removed
+Var TextTranslateAnchor.allCases has been removed
+Var TextWritingMode.allCases has been removed
+Enum Anchor has been changed to a Struct
+Enum CirclePitchAlignment has been changed to a Struct
+Enum CirclePitchScale has been changed to a Struct
+Enum CircleTranslateAnchor has been changed to a Struct
+Enum FillExtrusionTranslateAnchor has been changed to a Struct
+Enum FillTranslateAnchor has been changed to a Struct
+Enum HillshadeIlluminationAnchor has been changed to a Struct
+Enum IconAnchor has been changed to a Struct
+Enum IconPitchAlignment has been changed to a Struct
+Enum IconRotationAlignment has been changed to a Struct
+Enum IconTextFit has been changed to a Struct
+Enum IconTranslateAnchor has been changed to a Struct
+Enum LineCap has been changed to a Struct
+Enum LineJoin has been changed to a Struct
+Enum LineTranslateAnchor has been changed to a Struct
+Enum RasterResampling has been changed to a Struct
+Enum SkyType has been changed to a Struct
+Enum StyleProjectionName has been changed to a Struct
+Enum SymbolPlacement has been changed to a Struct
+Enum SymbolZOrder has been changed to a Struct
+Enum TextAnchor has been changed to a Struct
+Enum TextJustify has been changed to a Struct
+Enum TextPitchAlignment has been changed to a Struct
+Enum TextRotationAlignment has been changed to a Struct
+Enum TextTransform has been changed to a Struct
+Enum TextTranslateAnchor has been changed to a Struct
+Enum TextWritingMode has been changed to a Struct
+Enum Visibility has been changed to a Struct
+Constructor Anchor.init(rawValue:) has return type change from MapboxMaps.Anchor? to MapboxMaps.Anchor
+Constructor CirclePitchAlignment.init(rawValue:) has return type change from MapboxMaps.CirclePitchAlignment? to MapboxMaps.CirclePitchAlignment
+Constructor CirclePitchScale.init(rawValue:) has return type change from MapboxMaps.CirclePitchScale? to MapboxMaps.CirclePitchScale
+Constructor CircleTranslateAnchor.init(rawValue:) has return type change from MapboxMaps.CircleTranslateAnchor? to MapboxMaps.CircleTranslateAnchor
+Constructor FillExtrusionTranslateAnchor.init(rawValue:) has return type change from MapboxMaps.FillExtrusionTranslateAnchor? to MapboxMaps.FillExtrusionTranslateAnchor
+Constructor FillTranslateAnchor.init(rawValue:) has return type change from MapboxMaps.FillTranslateAnchor? to MapboxMaps.FillTranslateAnchor
+Constructor HillshadeIlluminationAnchor.init(rawValue:) has return type change from MapboxMaps.HillshadeIlluminationAnchor? to MapboxMaps.HillshadeIlluminationAnchor
+Constructor IconAnchor.init(rawValue:) has return type change from MapboxMaps.IconAnchor? to MapboxMaps.IconAnchor
+Constructor IconPitchAlignment.init(rawValue:) has return type change from MapboxMaps.IconPitchAlignment? to MapboxMaps.IconPitchAlignment
+Constructor IconRotationAlignment.init(rawValue:) has return type change from MapboxMaps.IconRotationAlignment? to MapboxMaps.IconRotationAlignment
+Constructor IconTextFit.init(rawValue:) has return type change from MapboxMaps.IconTextFit? to MapboxMaps.IconTextFit
+Constructor IconTranslateAnchor.init(rawValue:) has return type change from MapboxMaps.IconTranslateAnchor? to MapboxMaps.IconTranslateAnchor
+Constructor LineCap.init(rawValue:) has return type change from MapboxMaps.LineCap? to MapboxMaps.LineCap
+Constructor LineJoin.init(rawValue:) has return type change from MapboxMaps.LineJoin? to MapboxMaps.LineJoin
+Constructor LineTranslateAnchor.init(rawValue:) has return type change from MapboxMaps.LineTranslateAnchor? to MapboxMaps.LineTranslateAnchor
+Constructor RasterResampling.init(rawValue:) has return type change from MapboxMaps.RasterResampling? to MapboxMaps.RasterResampling
+Constructor SkyType.init(rawValue:) has return type change from MapboxMaps.SkyType? to MapboxMaps.SkyType
+Constructor StyleProjectionName.init(rawValue:) has return type change from MapboxMaps.StyleProjectionName? to MapboxMaps.StyleProjectionName
+Constructor SymbolPlacement.init(rawValue:) has return type change from MapboxMaps.SymbolPlacement? to MapboxMaps.SymbolPlacement
+Constructor SymbolZOrder.init(rawValue:) has return type change from MapboxMaps.SymbolZOrder? to MapboxMaps.SymbolZOrder
+Constructor TextAnchor.init(rawValue:) has return type change from MapboxMaps.TextAnchor? to MapboxMaps.TextAnchor
+Constructor TextJustify.init(rawValue:) has return type change from MapboxMaps.TextJustify? to MapboxMaps.TextJustify
+Constructor TextPitchAlignment.init(rawValue:) has return type change from MapboxMaps.TextPitchAlignment? to MapboxMaps.TextPitchAlignment
+Constructor TextRotationAlignment.init(rawValue:) has return type change from MapboxMaps.TextRotationAlignment? to MapboxMaps.TextRotationAlignment
+Constructor TextTransform.init(rawValue:) has return type change from MapboxMaps.TextTransform? to MapboxMaps.TextTransform
+Constructor TextTranslateAnchor.init(rawValue:) has return type change from MapboxMaps.TextTranslateAnchor? to MapboxMaps.TextTranslateAnchor
+Constructor TextWritingMode.init(rawValue:) has return type change from MapboxMaps.TextWritingMode? to MapboxMaps.TextWritingMode
+Constructor Visibility.init(rawValue:) has return type change from MapboxMaps.Visibility? to MapboxMaps.Visibility
+EnumElement Anchor.map has declared type change from (MapboxMaps.Anchor.Type) -> MapboxMaps.Anchor to MapboxMaps.Anchor
+EnumElement Anchor.viewport has declared type change from (MapboxMaps.Anchor.Type) -> MapboxMaps.Anchor to MapboxMaps.Anchor
+EnumElement CirclePitchAlignment.map has declared type change from (MapboxMaps.CirclePitchAlignment.Type) -> MapboxMaps.CirclePitchAlignment to MapboxMaps.CirclePitchAlignment
+EnumElement CirclePitchAlignment.viewport has declared type change from (MapboxMaps.CirclePitchAlignment.Type) -> MapboxMaps.CirclePitchAlignment to MapboxMaps.CirclePitchAlignment
+EnumElement CirclePitchScale.map has declared type change from (MapboxMaps.CirclePitchScale.Type) -> MapboxMaps.CirclePitchScale to MapboxMaps.CirclePitchScale
+EnumElement CirclePitchScale.viewport has declared type change from (MapboxMaps.CirclePitchScale.Type) -> MapboxMaps.CirclePitchScale to MapboxMaps.CirclePitchScale
+EnumElement CircleTranslateAnchor.map has declared type change from (MapboxMaps.CircleTranslateAnchor.Type) -> MapboxMaps.CircleTranslateAnchor to MapboxMaps.CircleTranslateAnchor
+EnumElement CircleTranslateAnchor.viewport has declared type change from (MapboxMaps.CircleTranslateAnchor.Type) -> MapboxMaps.CircleTranslateAnchor to MapboxMaps.CircleTranslateAnchor
+EnumElement FillExtrusionTranslateAnchor.map has declared type change from (MapboxMaps.FillExtrusionTranslateAnchor.Type) -> MapboxMaps.FillExtrusionTranslateAnchor to MapboxMaps.FillExtrusionTranslateAnchor
+EnumElement FillExtrusionTranslateAnchor.viewport has declared type change from (MapboxMaps.FillExtrusionTranslateAnchor.Type) -> MapboxMaps.FillExtrusionTranslateAnchor to MapboxMaps.FillExtrusionTranslateAnchor
+EnumElement FillTranslateAnchor.map has declared type change from (MapboxMaps.FillTranslateAnchor.Type) -> MapboxMaps.FillTranslateAnchor to MapboxMaps.FillTranslateAnchor
+EnumElement FillTranslateAnchor.viewport has declared type change from (MapboxMaps.FillTranslateAnchor.Type) -> MapboxMaps.FillTranslateAnchor to MapboxMaps.FillTranslateAnchor
+EnumElement HillshadeIlluminationAnchor.map has declared type change from (MapboxMaps.HillshadeIlluminationAnchor.Type) -> MapboxMaps.HillshadeIlluminationAnchor to MapboxMaps.HillshadeIlluminationAnchor
+EnumElement HillshadeIlluminationAnchor.viewport has declared type change from (MapboxMaps.HillshadeIlluminationAnchor.Type) -> MapboxMaps.HillshadeIlluminationAnchor to MapboxMaps.HillshadeIlluminationAnchor
+EnumElement IconAnchor.bottom has declared type change from (MapboxMaps.IconAnchor.Type) -> MapboxMaps.IconAnchor to MapboxMaps.IconAnchor
+EnumElement IconAnchor.bottomLeft has declared type change from (MapboxMaps.IconAnchor.Type) -> MapboxMaps.IconAnchor to MapboxMaps.IconAnchor
+EnumElement IconAnchor.bottomRight has declared type change from (MapboxMaps.IconAnchor.Type) -> MapboxMaps.IconAnchor to MapboxMaps.IconAnchor
+EnumElement IconAnchor.center has declared type change from (MapboxMaps.IconAnchor.Type) -> MapboxMaps.IconAnchor to MapboxMaps.IconAnchor
+EnumElement IconAnchor.left has declared type change from (MapboxMaps.IconAnchor.Type) -> MapboxMaps.IconAnchor to MapboxMaps.IconAnchor
+EnumElement IconAnchor.right has declared type change from (MapboxMaps.IconAnchor.Type) -> MapboxMaps.IconAnchor to MapboxMaps.IconAnchor
+EnumElement IconAnchor.top has declared type change from (MapboxMaps.IconAnchor.Type) -> MapboxMaps.IconAnchor to MapboxMaps.IconAnchor
+EnumElement IconAnchor.topLeft has declared type change from (MapboxMaps.IconAnchor.Type) -> MapboxMaps.IconAnchor to MapboxMaps.IconAnchor
+EnumElement IconAnchor.topRight has declared type change from (MapboxMaps.IconAnchor.Type) -> MapboxMaps.IconAnchor to MapboxMaps.IconAnchor
+EnumElement IconPitchAlignment.auto has declared type change from (MapboxMaps.IconPitchAlignment.Type) -> MapboxMaps.IconPitchAlignment to MapboxMaps.IconPitchAlignment
+EnumElement IconPitchAlignment.map has declared type change from (MapboxMaps.IconPitchAlignment.Type) -> MapboxMaps.IconPitchAlignment to MapboxMaps.IconPitchAlignment
+EnumElement IconPitchAlignment.viewport has declared type change from (MapboxMaps.IconPitchAlignment.Type) -> MapboxMaps.IconPitchAlignment to MapboxMaps.IconPitchAlignment
+EnumElement IconRotationAlignment.auto has declared type change from (MapboxMaps.IconRotationAlignment.Type) -> MapboxMaps.IconRotationAlignment to MapboxMaps.IconRotationAlignment
+EnumElement IconRotationAlignment.map has declared type change from (MapboxMaps.IconRotationAlignment.Type) -> MapboxMaps.IconRotationAlignment to MapboxMaps.IconRotationAlignment
+EnumElement IconRotationAlignment.viewport has declared type change from (MapboxMaps.IconRotationAlignment.Type) -> MapboxMaps.IconRotationAlignment to MapboxMaps.IconRotationAlignment
+EnumElement IconTextFit.both has declared type change from (MapboxMaps.IconTextFit.Type) -> MapboxMaps.IconTextFit to MapboxMaps.IconTextFit
+EnumElement IconTextFit.height has declared type change from (MapboxMaps.IconTextFit.Type) -> MapboxMaps.IconTextFit to MapboxMaps.IconTextFit
+EnumElement IconTextFit.none has declared type change from (MapboxMaps.IconTextFit.Type) -> MapboxMaps.IconTextFit to MapboxMaps.IconTextFit
+EnumElement IconTextFit.width has declared type change from (MapboxMaps.IconTextFit.Type) -> MapboxMaps.IconTextFit to MapboxMaps.IconTextFit
+EnumElement IconTranslateAnchor.map has declared type change from (MapboxMaps.IconTranslateAnchor.Type) -> MapboxMaps.IconTranslateAnchor to MapboxMaps.IconTranslateAnchor
+EnumElement IconTranslateAnchor.viewport has declared type change from (MapboxMaps.IconTranslateAnchor.Type) -> MapboxMaps.IconTranslateAnchor to MapboxMaps.IconTranslateAnchor
+EnumElement LineCap.butt has declared type change from (MapboxMaps.LineCap.Type) -> MapboxMaps.LineCap to MapboxMaps.LineCap
+EnumElement LineCap.round has declared type change from (MapboxMaps.LineCap.Type) -> MapboxMaps.LineCap to MapboxMaps.LineCap
+EnumElement LineCap.square has declared type change from (MapboxMaps.LineCap.Type) -> MapboxMaps.LineCap to MapboxMaps.LineCap
+EnumElement LineJoin.bevel has declared type change from (MapboxMaps.LineJoin.Type) -> MapboxMaps.LineJoin to MapboxMaps.LineJoin
+EnumElement LineJoin.miter has declared type change from (MapboxMaps.LineJoin.Type) -> MapboxMaps.LineJoin to MapboxMaps.LineJoin
+EnumElement LineJoin.round has declared type change from (MapboxMaps.LineJoin.Type) -> MapboxMaps.LineJoin to MapboxMaps.LineJoin
+EnumElement LineTranslateAnchor.map has declared type change from (MapboxMaps.LineTranslateAnchor.Type) -> MapboxMaps.LineTranslateAnchor to MapboxMaps.LineTranslateAnchor
+EnumElement LineTranslateAnchor.viewport has declared type change from (MapboxMaps.LineTranslateAnchor.Type) -> MapboxMaps.LineTranslateAnchor to MapboxMaps.LineTranslateAnchor
+EnumElement RasterResampling.linear has declared type change from (MapboxMaps.RasterResampling.Type) -> MapboxMaps.RasterResampling to MapboxMaps.RasterResampling
+EnumElement RasterResampling.nearest has declared type change from (MapboxMaps.RasterResampling.Type) -> MapboxMaps.RasterResampling to MapboxMaps.RasterResampling
+EnumElement SkyType.atmosphere has declared type change from (MapboxMaps.SkyType.Type) -> MapboxMaps.SkyType to MapboxMaps.SkyType
+EnumElement SkyType.gradient has declared type change from (MapboxMaps.SkyType.Type) -> MapboxMaps.SkyType to MapboxMaps.SkyType
+EnumElement StyleProjectionName.globe has declared type change from (MapboxMaps.StyleProjectionName.Type) -> MapboxMaps.StyleProjectionName to MapboxMaps.StyleProjectionName
+EnumElement StyleProjectionName.mercator has declared type change from (MapboxMaps.StyleProjectionName.Type) -> MapboxMaps.StyleProjectionName to MapboxMaps.StyleProjectionName
+EnumElement SymbolPlacement.line has declared type change from (MapboxMaps.SymbolPlacement.Type) -> MapboxMaps.SymbolPlacement to MapboxMaps.SymbolPlacement
+EnumElement SymbolPlacement.lineCenter has declared type change from (MapboxMaps.SymbolPlacement.Type) -> MapboxMaps.SymbolPlacement to MapboxMaps.SymbolPlacement
+EnumElement SymbolPlacement.point has declared type change from (MapboxMaps.SymbolPlacement.Type) -> MapboxMaps.SymbolPlacement to MapboxMaps.SymbolPlacement
+EnumElement SymbolZOrder.auto has declared type change from (MapboxMaps.SymbolZOrder.Type) -> MapboxMaps.SymbolZOrder to MapboxMaps.SymbolZOrder
+EnumElement SymbolZOrder.source has declared type change from (MapboxMaps.SymbolZOrder.Type) -> MapboxMaps.SymbolZOrder to MapboxMaps.SymbolZOrder
+EnumElement SymbolZOrder.viewportY has declared type change from (MapboxMaps.SymbolZOrder.Type) -> MapboxMaps.SymbolZOrder to MapboxMaps.SymbolZOrder
+EnumElement TextAnchor.bottom has declared type change from (MapboxMaps.TextAnchor.Type) -> MapboxMaps.TextAnchor to MapboxMaps.TextAnchor
+EnumElement TextAnchor.bottomLeft has declared type change from (MapboxMaps.TextAnchor.Type) -> MapboxMaps.TextAnchor to MapboxMaps.TextAnchor
+EnumElement TextAnchor.bottomRight has declared type change from (MapboxMaps.TextAnchor.Type) -> MapboxMaps.TextAnchor to MapboxMaps.TextAnchor
+EnumElement TextAnchor.center has declared type change from (MapboxMaps.TextAnchor.Type) -> MapboxMaps.TextAnchor to MapboxMaps.TextAnchor
+EnumElement TextAnchor.left has declared type change from (MapboxMaps.TextAnchor.Type) -> MapboxMaps.TextAnchor to MapboxMaps.TextAnchor
+EnumElement TextAnchor.right has declared type change from (MapboxMaps.TextAnchor.Type) -> MapboxMaps.TextAnchor to MapboxMaps.TextAnchor
+EnumElement TextAnchor.top has declared type change from (MapboxMaps.TextAnchor.Type) -> MapboxMaps.TextAnchor to MapboxMaps.TextAnchor
+EnumElement TextAnchor.topLeft has declared type change from (MapboxMaps.TextAnchor.Type) -> MapboxMaps.TextAnchor to MapboxMaps.TextAnchor
+EnumElement TextAnchor.topRight has declared type change from (MapboxMaps.TextAnchor.Type) -> MapboxMaps.TextAnchor to MapboxMaps.TextAnchor
+EnumElement TextJustify.auto has declared type change from (MapboxMaps.TextJustify.Type) -> MapboxMaps.TextJustify to MapboxMaps.TextJustify
+EnumElement TextJustify.center has declared type change from (MapboxMaps.TextJustify.Type) -> MapboxMaps.TextJustify to MapboxMaps.TextJustify
+EnumElement TextJustify.left has declared type change from (MapboxMaps.TextJustify.Type) -> MapboxMaps.TextJustify to MapboxMaps.TextJustify
+EnumElement TextJustify.right has declared type change from (MapboxMaps.TextJustify.Type) -> MapboxMaps.TextJustify to MapboxMaps.TextJustify
+EnumElement TextPitchAlignment.auto has declared type change from (MapboxMaps.TextPitchAlignment.Type) -> MapboxMaps.TextPitchAlignment to MapboxMaps.TextPitchAlignment
+EnumElement TextPitchAlignment.map has declared type change from (MapboxMaps.TextPitchAlignment.Type) -> MapboxMaps.TextPitchAlignment to MapboxMaps.TextPitchAlignment
+EnumElement TextPitchAlignment.viewport has declared type change from (MapboxMaps.TextPitchAlignment.Type) -> MapboxMaps.TextPitchAlignment to MapboxMaps.TextPitchAlignment
+EnumElement TextRotationAlignment.auto has declared type change from (MapboxMaps.TextRotationAlignment.Type) -> MapboxMaps.TextRotationAlignment to MapboxMaps.TextRotationAlignment
+EnumElement TextRotationAlignment.map has declared type change from (MapboxMaps.TextRotationAlignment.Type) -> MapboxMaps.TextRotationAlignment to MapboxMaps.TextRotationAlignment
+EnumElement TextRotationAlignment.viewport has declared type change from (MapboxMaps.TextRotationAlignment.Type) -> MapboxMaps.TextRotationAlignment to MapboxMaps.TextRotationAlignment
+EnumElement TextTransform.lowercase has declared type change from (MapboxMaps.TextTransform.Type) -> MapboxMaps.TextTransform to MapboxMaps.TextTransform
+EnumElement TextTransform.none has declared type change from (MapboxMaps.TextTransform.Type) -> MapboxMaps.TextTransform to MapboxMaps.TextTransform
+EnumElement TextTransform.uppercase has declared type change from (MapboxMaps.TextTransform.Type) -> MapboxMaps.TextTransform to MapboxMaps.TextTransform
+EnumElement TextTranslateAnchor.map has declared type change from (MapboxMaps.TextTranslateAnchor.Type) -> MapboxMaps.TextTranslateAnchor to MapboxMaps.TextTranslateAnchor
+EnumElement TextTranslateAnchor.viewport has declared type change from (MapboxMaps.TextTranslateAnchor.Type) -> MapboxMaps.TextTranslateAnchor to MapboxMaps.TextTranslateAnchor
+EnumElement TextWritingMode.horizontal has declared type change from (MapboxMaps.TextWritingMode.Type) -> MapboxMaps.TextWritingMode to MapboxMaps.TextWritingMode
+EnumElement TextWritingMode.vertical has declared type change from (MapboxMaps.TextWritingMode.Type) -> MapboxMaps.TextWritingMode to MapboxMaps.TextWritingMode
+EnumElement Visibility.none has declared type change from (MapboxMaps.Visibility.Type) -> MapboxMaps.Visibility to MapboxMaps.Visibility
+EnumElement Visibility.visible has declared type change from (MapboxMaps.Visibility.Type) -> MapboxMaps.Visibility to MapboxMaps.Visibility
+EnumElement Anchor.map is now static
+EnumElement Anchor.viewport is now static
+EnumElement CirclePitchAlignment.map is now static
+EnumElement CirclePitchAlignment.viewport is now static
+EnumElement CirclePitchScale.map is now static
+EnumElement CirclePitchScale.viewport is now static
+EnumElement CircleTranslateAnchor.map is now static
+EnumElement CircleTranslateAnchor.viewport is now static
+EnumElement FillExtrusionTranslateAnchor.map is now static
+EnumElement FillExtrusionTranslateAnchor.viewport is now static
+EnumElement FillTranslateAnchor.map is now static
+EnumElement FillTranslateAnchor.viewport is now static
+EnumElement HillshadeIlluminationAnchor.map is now static
+EnumElement HillshadeIlluminationAnchor.viewport is now static
+EnumElement IconAnchor.bottom is now static
+EnumElement IconAnchor.bottomLeft is now static
+EnumElement IconAnchor.bottomRight is now static
+EnumElement IconAnchor.center is now static
+EnumElement IconAnchor.left is now static
+EnumElement IconAnchor.right is now static
+EnumElement IconAnchor.top is now static
+EnumElement IconAnchor.topLeft is now static
+EnumElement IconAnchor.topRight is now static
+EnumElement IconPitchAlignment.auto is now static
+EnumElement IconPitchAlignment.map is now static
+EnumElement IconPitchAlignment.viewport is now static
+EnumElement IconRotationAlignment.auto is now static
+EnumElement IconRotationAlignment.map is now static
+EnumElement IconRotationAlignment.viewport is now static
+EnumElement IconTextFit.both is now static
+EnumElement IconTextFit.height is now static
+EnumElement IconTextFit.none is now static
+EnumElement IconTextFit.width is now static
+EnumElement IconTranslateAnchor.map is now static
+EnumElement IconTranslateAnchor.viewport is now static
+EnumElement LineCap.butt is now static
+EnumElement LineCap.round is now static
+EnumElement LineCap.square is now static
+EnumElement LineJoin.bevel is now static
+EnumElement LineJoin.miter is now static
+EnumElement LineJoin.round is now static
+EnumElement LineTranslateAnchor.map is now static
+EnumElement LineTranslateAnchor.viewport is now static
+EnumElement RasterResampling.linear is now static
+EnumElement RasterResampling.nearest is now static
+EnumElement SkyType.atmosphere is now static
+EnumElement SkyType.gradient is now static
+EnumElement StyleProjectionName.globe is now static
+EnumElement StyleProjectionName.mercator is now static
+EnumElement SymbolPlacement.line is now static
+EnumElement SymbolPlacement.lineCenter is now static
+EnumElement SymbolPlacement.point is now static
+EnumElement SymbolZOrder.auto is now static
+EnumElement SymbolZOrder.source is now static
+EnumElement SymbolZOrder.viewportY is now static
+EnumElement TextAnchor.bottom is now static
+EnumElement TextAnchor.bottomLeft is now static
+EnumElement TextAnchor.bottomRight is now static
+EnumElement TextAnchor.center is now static
+EnumElement TextAnchor.left is now static
+EnumElement TextAnchor.right is now static
+EnumElement TextAnchor.top is now static
+EnumElement TextAnchor.topLeft is now static
+EnumElement TextAnchor.topRight is now static
+EnumElement TextJustify.auto is now static
+EnumElement TextJustify.center is now static
+EnumElement TextJustify.left is now static
+EnumElement TextJustify.right is now static
+EnumElement TextPitchAlignment.auto is now static
+EnumElement TextPitchAlignment.map is now static
+EnumElement TextPitchAlignment.viewport is now static
+EnumElement TextRotationAlignment.auto is now static
+EnumElement TextRotationAlignment.map is now static
+EnumElement TextRotationAlignment.viewport is now static
+EnumElement TextTransform.lowercase is now static
+EnumElement TextTransform.none is now static
+EnumElement TextTransform.uppercase is now static
+EnumElement TextTranslateAnchor.map is now static
+EnumElement TextTranslateAnchor.viewport is now static
+EnumElement TextWritingMode.horizontal is now static
+EnumElement TextWritingMode.vertical is now static
+EnumElement Visibility.none is now static
+EnumElement Visibility.visible is now static
+Enum Anchor has removed conformance to CaseIterable
+Enum CirclePitchAlignment has removed conformance to CaseIterable
+Enum CirclePitchScale has removed conformance to CaseIterable
+Enum CircleTranslateAnchor has removed conformance to CaseIterable
+Enum FillExtrusionTranslateAnchor has removed conformance to CaseIterable
+Enum FillTranslateAnchor has removed conformance to CaseIterable
+Enum HillshadeIlluminationAnchor has removed conformance to CaseIterable
+Enum IconAnchor has removed conformance to CaseIterable
+Enum IconPitchAlignment has removed conformance to CaseIterable
+Enum IconRotationAlignment has removed conformance to CaseIterable
+Enum IconTextFit has removed conformance to CaseIterable
+Enum IconTranslateAnchor has removed conformance to CaseIterable
+Enum LineCap has removed conformance to CaseIterable
+Enum LineJoin has removed conformance to CaseIterable
+Enum LineTranslateAnchor has removed conformance to CaseIterable
+Enum RasterResampling has removed conformance to CaseIterable
+Enum SkyType has removed conformance to CaseIterable
+Enum StyleProjectionName has removed conformance to CaseIterable
+Enum SymbolPlacement has removed conformance to CaseIterable
+Enum SymbolZOrder has removed conformance to CaseIterable
+Enum TextAnchor has removed conformance to CaseIterable
+Enum TextJustify has removed conformance to CaseIterable
+Enum TextPitchAlignment has removed conformance to CaseIterable
+Enum TextRotationAlignment has removed conformance to CaseIterable
+Enum TextTransform has removed conformance to CaseIterable
+Enum TextTranslateAnchor has removed conformance to CaseIterable
+Enum TextWritingMode has removed conformance to CaseIterable
+EnumElement Encoding.mapbox is now static
+EnumElement Encoding.terrarium is now static
+EnumElement Scheme.tms is now static
+EnumElement Scheme.xyz is now static
+Constructor Encoding.init(rawValue:) has return type change from MapboxMaps.Encoding? to MapboxMaps.Encoding
+Constructor Scheme.init(rawValue:) has return type change from MapboxMaps.Scheme? to MapboxMaps.Scheme
+EnumElement Encoding.mapbox has declared type change from (MapboxMaps.Encoding.Type) -> MapboxMaps.Encoding to MapboxMaps.Encoding
+EnumElement Encoding.terrarium has declared type change from (MapboxMaps.Encoding.Type) -> MapboxMaps.Encoding to MapboxMaps.Encoding
+EnumElement Scheme.tms has declared type change from (MapboxMaps.Scheme.Type) -> MapboxMaps.Scheme to MapboxMaps.Scheme
+EnumElement Scheme.xyz has declared type change from (MapboxMaps.Scheme.Type) -> MapboxMaps.Scheme to MapboxMaps.Scheme
+Enum Encoding has been changed to a Struct
+Enum Scheme has been changed to a Struct

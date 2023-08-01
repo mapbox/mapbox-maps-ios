@@ -10,6 +10,11 @@ import Foundation
 /// <%- doc %>
 ///
 /// - SeeAlso: [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-style-spec/#light)
+<%if (isExperimental) { -%>
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+<% } -%>
 <%if (isExperimental) { -%>@_spi(Experimental) <% } -%>public struct <%- camelize(name) %>Light: Codable, StyleEncodable {
 
     /// Unique light name

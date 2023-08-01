@@ -1368,7 +1368,7 @@ extension StyleManager {
             return StyleProjection(name: .mercator)
         } else {
             // swiftlint:disable:next force_cast
-            return StyleProjection(name: StyleProjectionName(rawValue: projectionName.value as! String)!)
+            return StyleProjection(name: StyleProjectionName(rawValue: projectionName.value as! String))
         }
     }
 }

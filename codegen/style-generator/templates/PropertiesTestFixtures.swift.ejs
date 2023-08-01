@@ -31,7 +31,12 @@ extension Value where T == <%- camelize(propertyName) %> {
 
 extension <%- camelize(propertyName) %> {
     static func testConstantValue() -> <%- camelize(propertyName) %> {
-        return <%- camelize(propertyName) %>(rawValue: "<%- Object.keys(property.values)[0] %>")!
+        return .<%- camelizeWithLeadingLowercase(Object.keys(property.values)[0]) %>
+    }
+
+    static func random() -> <%- camelize(propertyName) %> {
+        let allCases: [<%- camelize(propertyName) %>] = [<%- Object.keys(property.values).map(p => `.${camelizeWithLeadingLowercase(p)}`).join(', ') %>]
+        return allCases.randomElement()!
     }
 }
 <% } -%>

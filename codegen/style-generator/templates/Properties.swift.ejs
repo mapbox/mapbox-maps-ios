@@ -19,11 +19,16 @@ public enum Visibility: String, Codable {
 // MARK: <%- snakeCaseUpper(property.name) %>
 
 /// <%- property.doc %>
-public enum <%- camelize(propertyName) %>: String, Codable, CaseIterable {
+public struct <%- camelize(propertyName) %>: RawRepresentable, Codable, Hashable {
+    public let rawValue: String
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
 
     <%_ for (const value of Object.keys(property.values)) { -%>
     /// <%- propertyValueDoc(property, value) %>
-    case <%- camelizeWithLeadingLowercase(value) %> = "<%- value %>"
+    public static let <%- camelizeWithLeadingLowercase(value) %> = <%- camelize(propertyName) %>(rawValue: "<%- value %>")
 
     <%_ } -%>
 }

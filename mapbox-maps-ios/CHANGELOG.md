@@ -29,6 +29,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Add expression support to `Layer.visibility`.
 * Expose new APIs for working with style importing and configuration: getStyleImports(), removeStyleImport(forImportId:), getStyleImportSchema(forImportId:), getStyleImportConfigProperties(forImportId:), setStyleImportConfigPropertiesForImportId(_:configs:), getStyleImportConfigProperty(forImportId:config:), setStyleImportConfigPropertyForImportId(_:config:value:)
 * Expose `slot` property for all `Layer`s to link layers from imported styles.
+* Convert Style properties enums into structs.
 
 ## 11.0.0-alpha.2 - 21 June, 2023
 
@@ -133,7 +134,7 @@ MapboxMap.removeGeoJSONSourceFeatures(forSourceId:featureIds:dataId:)
 
 ## 10.15.0-rc.1 - July 13, 2023
 
-* Update MapboxCoreMaps to 10.15.0-rc.1 and MapboxCommon to 23.7.0-rc.1.  
+* Update MapboxCoreMaps to 10.15.0-rc.1 and MapboxCommon to 23.7.0-rc.1.
 * Fixed an issue when `MapboxMap.point(for:)` could return false negative result.
 
 ## 10.15.0-beta.1 - June 29, 2023

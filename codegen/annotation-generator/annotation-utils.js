@@ -119,11 +119,7 @@ global.randomElement = function randomElement(property) {
         return `Array.random(withLength: .random(in: 0...10), generator: { ${randomElement(elementProperty)} })`;
       }
     case 'enum':
-      if (property.name === "text-variable-anchor") {
-        return `TextAnchor.allCases.randomElement()!`;
-      } else {
-        return `${propertySwiftType(property)}.allCases.randomElement()!`;
-      }
+        return `${propertySwiftType(property)}.random()`;
     case 'color':
       return `StyleColor.random()`;
     default:
@@ -154,7 +150,7 @@ global.defaultValueConstant = function defaultValueConstant(property, originalTy
     case 'array':
       return `.constant(${layerPropertyDefaultValue} as! ${propertySwiftType(property)})`;
     case 'enum':
-      return `.constant(${propertySwiftType(property)}(rawValue: ${layerPropertyDefaultValue} as! String)!)`;
+      return `.constant(${propertySwiftType(property)}(rawValue: ${layerPropertyDefaultValue} as! String))`;
     case 'color':
       return `.constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: ${layerPropertyDefaultValue} as! [Any], options: [])))`;
     default:

@@ -28,47 +28,16 @@ final class Custom3DPuckExample: UIViewController, ExampleProtocol {
     private func setupExample() {
 
         // Fetch the `gltf` asset
-        let uri = Bundle.main.url(forResource: "sportcar",
-                                  withExtension: "glb")
+        let uri = Bundle.main.url(forResource: "sportcar", withExtension: "glb")
 
         // Instantiate the model
         let myModel = Model(uri: uri, orientation: [0, 0, 180])
 
-        // Setting an expression to  scale the model based on camera zoom
-        let scalingExpression = Exp(.interpolate) {
-            Exp(.linear)
-            Exp(.zoom)
-            0
-            Exp(.literal) {
-                [256000.0, 256000.0, 256000.0]
-            }
-            4
-            Exp(.literal) {
-                [40000.0, 40000.0, 40000.0]
-            }
-            8
-            Exp(.literal) {
-                [2000.0, 2000.0, 2000.0]
-            }
-            12
-            Exp(.literal) {
-                [100.0, 100.0, 100.0]
-            }
-            16
-            Exp(.literal) {
-                [7.0, 7.0, 7.0]
-            }
-            20
-            Exp(.literal) {
-                [1.0, 1.0, 1.0]
-            }
-        }
-
-        let configuration = Puck3DConfiguration(model: myModel, modelScale: .expression(scalingExpression), modelOpacity: .constant(0.5))
+        let configuration = Puck3DConfiguration(model: myModel, modelScale: .constant([10, 10, 10]), modelOpacity: .constant(0.5))
         mapView.location.options.puckType = .puck3D(configuration)
         mapView.location.options.puckBearing = .course
 
-        mapView.location.onLocationChange.observe { [weak mapView] newLocation in
+        mapView.location.onLocationChange.observeNext { [weak mapView] newLocation in
             guard let location = newLocation.last, let mapView else { return }
             mapView.camera.ease(
                 to: CameraOptions(

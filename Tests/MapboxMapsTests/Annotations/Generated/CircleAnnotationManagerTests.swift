@@ -287,7 +287,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testSetCirclePitchAlignment() {
-        let value = CirclePitchAlignment.allCases.randomElement()!
+        let value = CirclePitchAlignment.random()
         manager.circlePitchAlignment = value
         XCTAssertEqual(manager.circlePitchAlignment, value)
 
@@ -300,8 +300,8 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testCirclePitchAlignmentAnnotationPropertiesAddedWithoutDuplicate() {
-        let newCirclePitchAlignmentProperty = CirclePitchAlignment.allCases.randomElement()!
-        let secondCirclePitchAlignmentProperty = CirclePitchAlignment.allCases.randomElement()!
+        let newCirclePitchAlignmentProperty = CirclePitchAlignment.random()
+        let secondCirclePitchAlignmentProperty = CirclePitchAlignment.random()
 
         manager.circlePitchAlignment = newCirclePitchAlignmentProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -327,7 +327,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
             annotation.circleStrokeWidth = Double.random(in: 0...100000)
             annotations.append(annotation)
         }
-        let newCirclePitchAlignmentProperty = CirclePitchAlignment.allCases.randomElement()!
+        let newCirclePitchAlignmentProperty = CirclePitchAlignment.random()
 
         manager.annotations = annotations
         manager.circlePitchAlignment = newCirclePitchAlignmentProperty
@@ -339,7 +339,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testSetToNilCirclePitchAlignment() {
-        let newCirclePitchAlignmentProperty = CirclePitchAlignment.allCases.randomElement()!
+        let newCirclePitchAlignmentProperty = CirclePitchAlignment.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-pitch-alignment").value as! String
         manager.circlePitchAlignment = newCirclePitchAlignmentProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -358,7 +358,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testSetCirclePitchScale() {
-        let value = CirclePitchScale.allCases.randomElement()!
+        let value = CirclePitchScale.random()
         manager.circlePitchScale = value
         XCTAssertEqual(manager.circlePitchScale, value)
 
@@ -371,8 +371,8 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testCirclePitchScaleAnnotationPropertiesAddedWithoutDuplicate() {
-        let newCirclePitchScaleProperty = CirclePitchScale.allCases.randomElement()!
-        let secondCirclePitchScaleProperty = CirclePitchScale.allCases.randomElement()!
+        let newCirclePitchScaleProperty = CirclePitchScale.random()
+        let secondCirclePitchScaleProperty = CirclePitchScale.random()
 
         manager.circlePitchScale = newCirclePitchScaleProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -398,7 +398,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
             annotation.circleStrokeWidth = Double.random(in: 0...100000)
             annotations.append(annotation)
         }
-        let newCirclePitchScaleProperty = CirclePitchScale.allCases.randomElement()!
+        let newCirclePitchScaleProperty = CirclePitchScale.random()
 
         manager.annotations = annotations
         manager.circlePitchScale = newCirclePitchScaleProperty
@@ -410,7 +410,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testSetToNilCirclePitchScale() {
-        let newCirclePitchScaleProperty = CirclePitchScale.allCases.randomElement()!
+        let newCirclePitchScaleProperty = CirclePitchScale.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-pitch-scale").value as! String
         manager.circlePitchScale = newCirclePitchScaleProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -500,7 +500,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testSetCircleTranslateAnchor() {
-        let value = CircleTranslateAnchor.allCases.randomElement()!
+        let value = CircleTranslateAnchor.random()
         manager.circleTranslateAnchor = value
         XCTAssertEqual(manager.circleTranslateAnchor, value)
 
@@ -513,8 +513,8 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testCircleTranslateAnchorAnnotationPropertiesAddedWithoutDuplicate() {
-        let newCircleTranslateAnchorProperty = CircleTranslateAnchor.allCases.randomElement()!
-        let secondCircleTranslateAnchorProperty = CircleTranslateAnchor.allCases.randomElement()!
+        let newCircleTranslateAnchorProperty = CircleTranslateAnchor.random()
+        let secondCircleTranslateAnchorProperty = CircleTranslateAnchor.random()
 
         manager.circleTranslateAnchor = newCircleTranslateAnchorProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -540,7 +540,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
             annotation.circleStrokeWidth = Double.random(in: 0...100000)
             annotations.append(annotation)
         }
-        let newCircleTranslateAnchorProperty = CircleTranslateAnchor.allCases.randomElement()!
+        let newCircleTranslateAnchorProperty = CircleTranslateAnchor.random()
 
         manager.annotations = annotations
         manager.circleTranslateAnchor = newCircleTranslateAnchorProperty
@@ -552,7 +552,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
     }
 
     func testSetToNilCircleTranslateAnchor() {
-        let newCircleTranslateAnchorProperty = CircleTranslateAnchor.allCases.randomElement()!
+        let newCircleTranslateAnchorProperty = CircleTranslateAnchor.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-translate-anchor").value as! String
         manager.circleTranslateAnchor = newCircleTranslateAnchorProperty
         manager.syncSourceAndLayerIfNeeded()

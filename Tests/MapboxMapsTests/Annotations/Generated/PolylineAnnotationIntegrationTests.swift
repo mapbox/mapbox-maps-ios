@@ -64,7 +64,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineCap() throws {
         // Test that the setter and getter work
-        let value = LineCap.allCases.randomElement()!
+        let value = LineCap.random()
         manager.lineCap = value
         XCTAssertEqual(manager.lineCap, value)
 
@@ -85,7 +85,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineCap, .constant(LineCap(rawValue: StyleManager.layerPropertyDefaultValue(for: .line, property: "line-cap").value as! String)!))
+        XCTAssertEqual(layer.lineCap, .constant(LineCap(rawValue: StyleManager.layerPropertyDefaultValue(for: .line, property: "line-cap").value as! String)))
     }
 
     func testLineMiterLimit() throws {
@@ -250,7 +250,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testLineTranslateAnchor() throws {
         // Test that the setter and getter work
-        let value = LineTranslateAnchor.allCases.randomElement()!
+        let value = LineTranslateAnchor.random()
         manager.lineTranslateAnchor = value
         XCTAssertEqual(manager.lineTranslateAnchor, value)
 
@@ -271,7 +271,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineTranslateAnchor, .constant(LineTranslateAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .line, property: "line-translate-anchor").value as! String)!))
+        XCTAssertEqual(layer.lineTranslateAnchor, .constant(LineTranslateAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .line, property: "line-translate-anchor").value as! String)))
     }
 
     func testLineTrimOffset() throws {
@@ -306,7 +306,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
         var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = LineJoin.allCases.randomElement()!
+        let value = LineJoin.random()
         annotation.lineJoin = value
         XCTAssertEqual(annotation.lineJoin, value)
 
@@ -336,7 +336,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: LineLayer.self)
-        XCTAssertEqual(layer.lineJoin, .constant(LineJoin(rawValue: StyleManager.layerPropertyDefaultValue(for: .line, property: "line-join").value as! String)!))
+        XCTAssertEqual(layer.lineJoin, .constant(LineJoin(rawValue: StyleManager.layerPropertyDefaultValue(for: .line, property: "line-join").value as! String)))
     }
 
     func testLineSortKey() throws {

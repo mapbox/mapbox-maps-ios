@@ -21,7 +21,7 @@ final class StyleTests: XCTestCase {
     }
 
     func testSetProjection() throws {
-        let projectionName = StyleProjectionName.allCases.randomElement()!
+        let projectionName = StyleProjectionName.random()
 
         try style.setProjection(StyleProjection(name: projectionName))
 
@@ -31,7 +31,7 @@ final class StyleTests: XCTestCase {
     }
 
     func testProjection() {
-        let projectionName = StyleProjectionName.allCases.randomElement()!
+        let projectionName = StyleProjectionName.random()
         styleManager.getStyleProjectionPropertyStub.defaultReturnValue = StylePropertyValue(
             value: projectionName.rawValue,
             kind: .constant

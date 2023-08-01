@@ -476,7 +476,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     }
 
     func testSetFillTranslateAnchor() {
-        let value = FillTranslateAnchor.allCases.randomElement()!
+        let value = FillTranslateAnchor.random()
         manager.fillTranslateAnchor = value
         XCTAssertEqual(manager.fillTranslateAnchor, value)
 
@@ -489,8 +489,8 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     }
 
     func testFillTranslateAnchorAnnotationPropertiesAddedWithoutDuplicate() {
-        let newFillTranslateAnchorProperty = FillTranslateAnchor.allCases.randomElement()!
-        let secondFillTranslateAnchorProperty = FillTranslateAnchor.allCases.randomElement()!
+        let newFillTranslateAnchorProperty = FillTranslateAnchor.random()
+        let secondFillTranslateAnchorProperty = FillTranslateAnchor.random()
 
         manager.fillTranslateAnchor = newFillTranslateAnchorProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -520,7 +520,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
             annotation.fillPattern = String.randomASCII(withLength: .random(in: 0...100))
             annotations.append(annotation)
         }
-        let newFillTranslateAnchorProperty = FillTranslateAnchor.allCases.randomElement()!
+        let newFillTranslateAnchorProperty = FillTranslateAnchor.random()
 
         manager.annotations = annotations
         manager.fillTranslateAnchor = newFillTranslateAnchorProperty
@@ -532,7 +532,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     }
 
     func testSetToNilFillTranslateAnchor() {
-        let newFillTranslateAnchorProperty = FillTranslateAnchor.allCases.randomElement()!
+        let newFillTranslateAnchorProperty = FillTranslateAnchor.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-translate-anchor").value as! String
         manager.fillTranslateAnchor = newFillTranslateAnchorProperty
         manager.syncSourceAndLayerIfNeeded()

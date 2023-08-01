@@ -89,7 +89,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testCirclePitchAlignment() throws {
         // Test that the setter and getter work
-        let value = CirclePitchAlignment.allCases.randomElement()!
+        let value = CirclePitchAlignment.random()
         manager.circlePitchAlignment = value
         XCTAssertEqual(manager.circlePitchAlignment, value)
 
@@ -110,12 +110,12 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circlePitchAlignment, .constant(CirclePitchAlignment(rawValue: StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-pitch-alignment").value as! String)!))
+        XCTAssertEqual(layer.circlePitchAlignment, .constant(CirclePitchAlignment(rawValue: StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-pitch-alignment").value as! String)))
     }
 
     func testCirclePitchScale() throws {
         // Test that the setter and getter work
-        let value = CirclePitchScale.allCases.randomElement()!
+        let value = CirclePitchScale.random()
         manager.circlePitchScale = value
         XCTAssertEqual(manager.circlePitchScale, value)
 
@@ -136,7 +136,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circlePitchScale, .constant(CirclePitchScale(rawValue: StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-pitch-scale").value as! String)!))
+        XCTAssertEqual(layer.circlePitchScale, .constant(CirclePitchScale(rawValue: StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-pitch-scale").value as! String)))
     }
 
     func testCircleTranslate() throws {
@@ -169,7 +169,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testCircleTranslateAnchor() throws {
         // Test that the setter and getter work
-        let value = CircleTranslateAnchor.allCases.randomElement()!
+        let value = CircleTranslateAnchor.random()
         manager.circleTranslateAnchor = value
         XCTAssertEqual(manager.circleTranslateAnchor, value)
 
@@ -190,7 +190,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: CircleLayer.self)
-        XCTAssertEqual(layer.circleTranslateAnchor, .constant(CircleTranslateAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-translate-anchor").value as! String)!))
+        XCTAssertEqual(layer.circleTranslateAnchor, .constant(CircleTranslateAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-translate-anchor").value as! String)))
     }
 
     func testCircleSortKey() throws {

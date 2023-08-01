@@ -254,17 +254,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -272,7 +272,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -349,17 +349,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -367,7 +367,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -444,17 +444,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -462,7 +462,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -539,17 +539,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -557,7 +557,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -634,17 +634,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -652,7 +652,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -699,7 +699,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetIconPitchAlignment() {
-        let value = IconPitchAlignment.allCases.randomElement()!
+        let value = IconPitchAlignment.random()
         manager.iconPitchAlignment = value
         XCTAssertEqual(manager.iconPitchAlignment, value)
 
@@ -712,8 +712,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testIconPitchAlignmentAnnotationPropertiesAddedWithoutDuplicate() {
-        let newIconPitchAlignmentProperty = IconPitchAlignment.allCases.randomElement()!
-        let secondIconPitchAlignmentProperty = IconPitchAlignment.allCases.randomElement()!
+        let newIconPitchAlignmentProperty = IconPitchAlignment.random()
+        let secondIconPitchAlignmentProperty = IconPitchAlignment.random()
 
         manager.iconPitchAlignment = newIconPitchAlignmentProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -729,17 +729,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -747,7 +747,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -763,7 +763,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textOpacity = Double.random(in: 0...1)
             annotations.append(annotation)
         }
-        let newIconPitchAlignmentProperty = IconPitchAlignment.allCases.randomElement()!
+        let newIconPitchAlignmentProperty = IconPitchAlignment.random()
 
         manager.annotations = annotations
         manager.iconPitchAlignment = newIconPitchAlignmentProperty
@@ -775,7 +775,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetToNilIconPitchAlignment() {
-        let newIconPitchAlignmentProperty = IconPitchAlignment.allCases.randomElement()!
+        let newIconPitchAlignmentProperty = IconPitchAlignment.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-pitch-alignment").value as! String
         manager.iconPitchAlignment = newIconPitchAlignmentProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -794,7 +794,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetIconRotationAlignment() {
-        let value = IconRotationAlignment.allCases.randomElement()!
+        let value = IconRotationAlignment.random()
         manager.iconRotationAlignment = value
         XCTAssertEqual(manager.iconRotationAlignment, value)
 
@@ -807,8 +807,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testIconRotationAlignmentAnnotationPropertiesAddedWithoutDuplicate() {
-        let newIconRotationAlignmentProperty = IconRotationAlignment.allCases.randomElement()!
-        let secondIconRotationAlignmentProperty = IconRotationAlignment.allCases.randomElement()!
+        let newIconRotationAlignmentProperty = IconRotationAlignment.random()
+        let secondIconRotationAlignmentProperty = IconRotationAlignment.random()
 
         manager.iconRotationAlignment = newIconRotationAlignmentProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -824,17 +824,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -842,7 +842,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -858,7 +858,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textOpacity = Double.random(in: 0...1)
             annotations.append(annotation)
         }
-        let newIconRotationAlignmentProperty = IconRotationAlignment.allCases.randomElement()!
+        let newIconRotationAlignmentProperty = IconRotationAlignment.random()
 
         manager.annotations = annotations
         manager.iconRotationAlignment = newIconRotationAlignmentProperty
@@ -870,7 +870,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetToNilIconRotationAlignment() {
-        let newIconRotationAlignmentProperty = IconRotationAlignment.allCases.randomElement()!
+        let newIconRotationAlignmentProperty = IconRotationAlignment.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-rotation-alignment").value as! String
         manager.iconRotationAlignment = newIconRotationAlignmentProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -919,17 +919,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -937,7 +937,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -984,7 +984,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetSymbolPlacement() {
-        let value = SymbolPlacement.allCases.randomElement()!
+        let value = SymbolPlacement.random()
         manager.symbolPlacement = value
         XCTAssertEqual(manager.symbolPlacement, value)
 
@@ -997,8 +997,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSymbolPlacementAnnotationPropertiesAddedWithoutDuplicate() {
-        let newSymbolPlacementProperty = SymbolPlacement.allCases.randomElement()!
-        let secondSymbolPlacementProperty = SymbolPlacement.allCases.randomElement()!
+        let newSymbolPlacementProperty = SymbolPlacement.random()
+        let secondSymbolPlacementProperty = SymbolPlacement.random()
 
         manager.symbolPlacement = newSymbolPlacementProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -1014,17 +1014,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -1032,7 +1032,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -1048,7 +1048,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textOpacity = Double.random(in: 0...1)
             annotations.append(annotation)
         }
-        let newSymbolPlacementProperty = SymbolPlacement.allCases.randomElement()!
+        let newSymbolPlacementProperty = SymbolPlacement.random()
 
         manager.annotations = annotations
         manager.symbolPlacement = newSymbolPlacementProperty
@@ -1060,7 +1060,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetToNilSymbolPlacement() {
-        let newSymbolPlacementProperty = SymbolPlacement.allCases.randomElement()!
+        let newSymbolPlacementProperty = SymbolPlacement.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-placement").value as! String
         manager.symbolPlacement = newSymbolPlacementProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -1109,17 +1109,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -1127,7 +1127,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -1174,7 +1174,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetSymbolZOrder() {
-        let value = SymbolZOrder.allCases.randomElement()!
+        let value = SymbolZOrder.random()
         manager.symbolZOrder = value
         XCTAssertEqual(manager.symbolZOrder, value)
 
@@ -1187,8 +1187,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSymbolZOrderAnnotationPropertiesAddedWithoutDuplicate() {
-        let newSymbolZOrderProperty = SymbolZOrder.allCases.randomElement()!
-        let secondSymbolZOrderProperty = SymbolZOrder.allCases.randomElement()!
+        let newSymbolZOrderProperty = SymbolZOrder.random()
+        let secondSymbolZOrderProperty = SymbolZOrder.random()
 
         manager.symbolZOrder = newSymbolZOrderProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -1204,17 +1204,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -1222,7 +1222,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -1238,7 +1238,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textOpacity = Double.random(in: 0...1)
             annotations.append(annotation)
         }
-        let newSymbolZOrderProperty = SymbolZOrder.allCases.randomElement()!
+        let newSymbolZOrderProperty = SymbolZOrder.random()
 
         manager.annotations = annotations
         manager.symbolZOrder = newSymbolZOrderProperty
@@ -1250,7 +1250,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetToNilSymbolZOrder() {
-        let newSymbolZOrderProperty = SymbolZOrder.allCases.randomElement()!
+        let newSymbolZOrderProperty = SymbolZOrder.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-z-order").value as! String
         manager.symbolZOrder = newSymbolZOrderProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -1299,17 +1299,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -1317,7 +1317,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -1394,17 +1394,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -1412,7 +1412,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -1489,17 +1489,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -1507,7 +1507,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -1584,17 +1584,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -1602,7 +1602,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -1679,17 +1679,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -1697,7 +1697,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -1774,17 +1774,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -1792,7 +1792,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -1869,17 +1869,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -1887,7 +1887,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -1934,7 +1934,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetTextPitchAlignment() {
-        let value = TextPitchAlignment.allCases.randomElement()!
+        let value = TextPitchAlignment.random()
         manager.textPitchAlignment = value
         XCTAssertEqual(manager.textPitchAlignment, value)
 
@@ -1947,8 +1947,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testTextPitchAlignmentAnnotationPropertiesAddedWithoutDuplicate() {
-        let newTextPitchAlignmentProperty = TextPitchAlignment.allCases.randomElement()!
-        let secondTextPitchAlignmentProperty = TextPitchAlignment.allCases.randomElement()!
+        let newTextPitchAlignmentProperty = TextPitchAlignment.random()
+        let secondTextPitchAlignmentProperty = TextPitchAlignment.random()
 
         manager.textPitchAlignment = newTextPitchAlignmentProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -1964,17 +1964,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -1982,7 +1982,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -1998,7 +1998,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textOpacity = Double.random(in: 0...1)
             annotations.append(annotation)
         }
-        let newTextPitchAlignmentProperty = TextPitchAlignment.allCases.randomElement()!
+        let newTextPitchAlignmentProperty = TextPitchAlignment.random()
 
         manager.annotations = annotations
         manager.textPitchAlignment = newTextPitchAlignmentProperty
@@ -2010,7 +2010,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetToNilTextPitchAlignment() {
-        let newTextPitchAlignmentProperty = TextPitchAlignment.allCases.randomElement()!
+        let newTextPitchAlignmentProperty = TextPitchAlignment.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-pitch-alignment").value as! String
         manager.textPitchAlignment = newTextPitchAlignmentProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -2029,7 +2029,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetTextRotationAlignment() {
-        let value = TextRotationAlignment.allCases.randomElement()!
+        let value = TextRotationAlignment.random()
         manager.textRotationAlignment = value
         XCTAssertEqual(manager.textRotationAlignment, value)
 
@@ -2042,8 +2042,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testTextRotationAlignmentAnnotationPropertiesAddedWithoutDuplicate() {
-        let newTextRotationAlignmentProperty = TextRotationAlignment.allCases.randomElement()!
-        let secondTextRotationAlignmentProperty = TextRotationAlignment.allCases.randomElement()!
+        let newTextRotationAlignmentProperty = TextRotationAlignment.random()
+        let secondTextRotationAlignmentProperty = TextRotationAlignment.random()
 
         manager.textRotationAlignment = newTextRotationAlignmentProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -2059,17 +2059,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -2077,7 +2077,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -2093,7 +2093,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textOpacity = Double.random(in: 0...1)
             annotations.append(annotation)
         }
-        let newTextRotationAlignmentProperty = TextRotationAlignment.allCases.randomElement()!
+        let newTextRotationAlignmentProperty = TextRotationAlignment.random()
 
         manager.annotations = annotations
         manager.textRotationAlignment = newTextRotationAlignmentProperty
@@ -2105,7 +2105,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetToNilTextRotationAlignment() {
-        let newTextRotationAlignmentProperty = TextRotationAlignment.allCases.randomElement()!
+        let newTextRotationAlignmentProperty = TextRotationAlignment.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-rotation-alignment").value as! String
         manager.textRotationAlignment = newTextRotationAlignmentProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -2124,7 +2124,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetTextVariableAnchor() {
-        let value = Array.random(withLength: .random(in: 0...10), generator: { TextAnchor.allCases.randomElement()! })
+        let value = Array.random(withLength: .random(in: 0...10), generator: { TextAnchor.random() })
         manager.textVariableAnchor = value
         XCTAssertEqual(manager.textVariableAnchor, value)
 
@@ -2138,8 +2138,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testTextVariableAnchorAnnotationPropertiesAddedWithoutDuplicate() {
-        let newTextVariableAnchorProperty = Array.random(withLength: .random(in: 0...10), generator: { TextAnchor.allCases.randomElement()! })
-        let secondTextVariableAnchorProperty = Array.random(withLength: .random(in: 0...10), generator: { TextAnchor.allCases.randomElement()! })
+        let newTextVariableAnchorProperty = Array.random(withLength: .random(in: 0...10), generator: { TextAnchor.random() })
+        let secondTextVariableAnchorProperty = Array.random(withLength: .random(in: 0...10), generator: { TextAnchor.random() })
 
         manager.textVariableAnchor = newTextVariableAnchorProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -2156,17 +2156,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -2174,7 +2174,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -2190,7 +2190,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textOpacity = Double.random(in: 0...1)
             annotations.append(annotation)
         }
-        let newTextVariableAnchorProperty = Array.random(withLength: .random(in: 0...10), generator: { TextAnchor.allCases.randomElement()! })
+        let newTextVariableAnchorProperty = Array.random(withLength: .random(in: 0...10), generator: { TextAnchor.random() })
 
         manager.annotations = annotations
         manager.textVariableAnchor = newTextVariableAnchorProperty
@@ -2202,7 +2202,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetToNilTextVariableAnchor() {
-        let newTextVariableAnchorProperty = Array.random(withLength: .random(in: 0...10), generator: { TextAnchor.allCases.randomElement()! })
+        let newTextVariableAnchorProperty = Array.random(withLength: .random(in: 0...10), generator: { TextAnchor.random() })
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-variable-anchor").value as! [TextAnchor]
         manager.textVariableAnchor = newTextVariableAnchorProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -2221,7 +2221,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetTextWritingMode() {
-        let value = Array.random(withLength: .random(in: 0...10), generator: { TextWritingMode.allCases.randomElement()! })
+        let value = Array.random(withLength: .random(in: 0...10), generator: { TextWritingMode.random() })
         manager.textWritingMode = value
         XCTAssertEqual(manager.textWritingMode, value)
 
@@ -2235,8 +2235,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testTextWritingModeAnnotationPropertiesAddedWithoutDuplicate() {
-        let newTextWritingModeProperty = Array.random(withLength: .random(in: 0...10), generator: { TextWritingMode.allCases.randomElement()! })
-        let secondTextWritingModeProperty = Array.random(withLength: .random(in: 0...10), generator: { TextWritingMode.allCases.randomElement()! })
+        let newTextWritingModeProperty = Array.random(withLength: .random(in: 0...10), generator: { TextWritingMode.random() })
+        let secondTextWritingModeProperty = Array.random(withLength: .random(in: 0...10), generator: { TextWritingMode.random() })
 
         manager.textWritingMode = newTextWritingModeProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -2253,17 +2253,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -2271,7 +2271,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -2287,7 +2287,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textOpacity = Double.random(in: 0...1)
             annotations.append(annotation)
         }
-        let newTextWritingModeProperty = Array.random(withLength: .random(in: 0...10), generator: { TextWritingMode.allCases.randomElement()! })
+        let newTextWritingModeProperty = Array.random(withLength: .random(in: 0...10), generator: { TextWritingMode.random() })
 
         manager.annotations = annotations
         manager.textWritingMode = newTextWritingModeProperty
@@ -2299,7 +2299,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetToNilTextWritingMode() {
-        let newTextWritingModeProperty = Array.random(withLength: .random(in: 0...10), generator: { TextWritingMode.allCases.randomElement()! })
+        let newTextWritingModeProperty = Array.random(withLength: .random(in: 0...10), generator: { TextWritingMode.random() })
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-writing-mode").value as! [TextWritingMode]
         manager.textWritingMode = newTextWritingModeProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -2348,17 +2348,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -2366,7 +2366,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -2413,7 +2413,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetIconTranslateAnchor() {
-        let value = IconTranslateAnchor.allCases.randomElement()!
+        let value = IconTranslateAnchor.random()
         manager.iconTranslateAnchor = value
         XCTAssertEqual(manager.iconTranslateAnchor, value)
 
@@ -2426,8 +2426,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testIconTranslateAnchorAnnotationPropertiesAddedWithoutDuplicate() {
-        let newIconTranslateAnchorProperty = IconTranslateAnchor.allCases.randomElement()!
-        let secondIconTranslateAnchorProperty = IconTranslateAnchor.allCases.randomElement()!
+        let newIconTranslateAnchorProperty = IconTranslateAnchor.random()
+        let secondIconTranslateAnchorProperty = IconTranslateAnchor.random()
 
         manager.iconTranslateAnchor = newIconTranslateAnchorProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -2443,17 +2443,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -2461,7 +2461,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -2477,7 +2477,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textOpacity = Double.random(in: 0...1)
             annotations.append(annotation)
         }
-        let newIconTranslateAnchorProperty = IconTranslateAnchor.allCases.randomElement()!
+        let newIconTranslateAnchorProperty = IconTranslateAnchor.random()
 
         manager.annotations = annotations
         manager.iconTranslateAnchor = newIconTranslateAnchorProperty
@@ -2489,7 +2489,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetToNilIconTranslateAnchor() {
-        let newIconTranslateAnchorProperty = IconTranslateAnchor.allCases.randomElement()!
+        let newIconTranslateAnchorProperty = IconTranslateAnchor.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-translate-anchor").value as! String
         manager.iconTranslateAnchor = newIconTranslateAnchorProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -2538,17 +2538,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -2556,7 +2556,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -2603,7 +2603,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetTextTranslateAnchor() {
-        let value = TextTranslateAnchor.allCases.randomElement()!
+        let value = TextTranslateAnchor.random()
         manager.textTranslateAnchor = value
         XCTAssertEqual(manager.textTranslateAnchor, value)
 
@@ -2616,8 +2616,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testTextTranslateAnchorAnnotationPropertiesAddedWithoutDuplicate() {
-        let newTextTranslateAnchorProperty = TextTranslateAnchor.allCases.randomElement()!
-        let secondTextTranslateAnchorProperty = TextTranslateAnchor.allCases.randomElement()!
+        let newTextTranslateAnchorProperty = TextTranslateAnchor.random()
+        let secondTextTranslateAnchorProperty = TextTranslateAnchor.random()
 
         manager.textTranslateAnchor = newTextTranslateAnchorProperty
         manager.syncSourceAndLayerIfNeeded()
@@ -2633,17 +2633,17 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
-            annotation.iconAnchor = IconAnchor.allCases.randomElement()!
+            annotation.iconAnchor = IconAnchor.random()
             annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
             annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.iconRotate = Double.random(in: -100000...100000)
             annotation.iconSize = Double.random(in: 0...100000)
-            annotation.iconTextFit = IconTextFit.allCases.randomElement()!
+            annotation.iconTextFit = IconTextFit.random()
             annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
             annotation.symbolSortKey = Double.random(in: -100000...100000)
-            annotation.textAnchor = TextAnchor.allCases.randomElement()!
+            annotation.textAnchor = TextAnchor.random()
             annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
-            annotation.textJustify = TextJustify.allCases.randomElement()!
+            annotation.textJustify = TextJustify.random()
             annotation.textLetterSpacing = Double.random(in: -100000...100000)
             annotation.textLineHeight = Double.random(in: -100000...100000)
             annotation.textMaxWidth = Double.random(in: 0...100000)
@@ -2651,7 +2651,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textRadialOffset = Double.random(in: -100000...100000)
             annotation.textRotate = Double.random(in: -100000...100000)
             annotation.textSize = Double.random(in: 0...100000)
-            annotation.textTransform = TextTransform.allCases.randomElement()!
+            annotation.textTransform = TextTransform.random()
             annotation.iconColor = StyleColor.random()
             annotation.iconEmissiveStrength = Double.random(in: 0...100000)
             annotation.iconHaloBlur = Double.random(in: 0...100000)
@@ -2667,7 +2667,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotation.textOpacity = Double.random(in: 0...1)
             annotations.append(annotation)
         }
-        let newTextTranslateAnchorProperty = TextTranslateAnchor.allCases.randomElement()!
+        let newTextTranslateAnchorProperty = TextTranslateAnchor.random()
 
         manager.annotations = annotations
         manager.textTranslateAnchor = newTextTranslateAnchorProperty
@@ -2679,7 +2679,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     }
 
     func testSetToNilTextTranslateAnchor() {
-        let newTextTranslateAnchorProperty = TextTranslateAnchor.allCases.randomElement()!
+        let newTextTranslateAnchorProperty = TextTranslateAnchor.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-translate-anchor").value as! String
         manager.textTranslateAnchor = newTextTranslateAnchorProperty
         manager.syncSourceAndLayerIfNeeded()

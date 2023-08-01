@@ -157,6 +157,9 @@ public struct Puck3DConfiguration: Equatable {
     @_spi(Experimental) public var modelReceiveShadows: Value<Bool>?
 
     /// Defines scaling mode. Only applies to location-indicator type layers. Default to ``ModelScaleMode/viewport``.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var modelScaleMode: Value<ModelScaleMode>?
 
     /// Initialize a `Puck3DConfiguration` with a model, scale and rotation.

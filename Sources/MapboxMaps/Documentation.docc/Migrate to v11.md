@@ -2,12 +2,6 @@
 
 The Mapbox Maps SDK v11 introduces improvements to how Mapbox works on iOS platforms, as well as changes to how developers use the SDK. This document summarizes the most important changes - such as new features, deprecated APIs, and breaking changes - and walks you through how to upgrade an application using v10 of the Mapbox Maps SDK to v11.
 
-## Requirements
-
-- Xcode 14.1+
-- Swift version 5.7.1+
-- iOS 12+
-
 ## Version Compatibility
 
 | Version | Xcode Version | Swift Version | iOS Version |
@@ -16,28 +10,97 @@ The Mapbox Maps SDK v11 introduces improvements to how Mapbox works on iOS platf
 
 ## 1. Update Dependencies
 
-Update your app's dependencies to use 11+ version of the Mapbox Maps SDK for iOS. We distribute the SDK through Swift Package Manager (SPM), CocoaPods, and Direct Download. Full instructions are found [here](https://docs.mapbox.com/ios/maps/guides/install/).
+Update your app's dependencies to use versions 11+ of the Mapbox Maps SDK for iOS. We distribute the SDK through Swift Package Manager (SPM), CocoaPods, and Direct Download. Full instructions are found [here](https://docs.mapbox.com/ios/maps/guides/install/).
 
 ## 2. Explore New Features
 
-### 2.1 The Mapbox Standard style
+### 2.1 The Mapbox Standard Style
 
-We've introduced a new Mapbox styles available to all customers: Mapbox Standard, which features an evolving basemap concept. When you use this style in your application we will continuously update your basemap with the latest features with no additional work required from you. This ensures that your users will always have the best new features of our maps. You can learn more about Mapbox Standard [here](TODO: add link).
+We're excited to announce the launch of Mapbox Standard, our latest Mapbox style, now accessible to all customers in a beta version. The new Mapbox Standard core style enables a highly performant and elegant 3D mapping experience with powerful dynamic lighting capabilities, landmark 3D buildings, and an expertly crafted symbolic aesthetic. With Mapbox Standard, we are also introducing a new paradigm for how to interact with map styles.
 
-To set a Mapbox style for your map in v11 you can use the same StyleURI convenience variables like below:
+To set Mapbox Standard as the style for your map in v11 you can use the same ``StyleURI`` convenience variables from v10 like below. Mapbox Standard is the new default style, so not setting a ``StyleManager/styleURI`` means your map will use Mapbox Standard.
 
 ```swift
 let mapView = MapView()
 mapView.mapboxMap.styleURI = .standard
 ```
 
-TODO: Add image
+The Mapbox Standard style features 4 light presets: Day, Dusk, Dawn, and Night. The style light preset can be changed from the default, “Day”, to another preset with a single line of code:
 
-Our existing Mapbox styles (such as [Streets](https://www.mapbox.com/maps/streets), [Light](https://www.mapbox.com/maps/light), and [Satellite Streets](https://www.mapbox.com/maps/satellite)) and any custom styles you have built in Mapbox Studio will still work just like they do in v10, so no changes are required.
+```swift
+mapView.mapboxMap.setStyleImportConfigProperty(for: "standard", config: "lightPreset", value: "dusk")
+```
+
+Changing the light preset will alter the colors and shadows on your map to reflect the time of day. For more information, check out the <doc:Migrate-to-v11###24-New-3D-Lighting-API> section.
+
+Similarly, you can set other configuration properties on the Standard style such as showing POIs, place labels, or specific fonts:
+
+```swift
+mapView.mapboxMap.setStyleImportConfigProperty(for: "standard", config: "showPointOfInterestLabels", value: false)
+```
+
+The Standard style offers 6 configuration properties for developers to change when they import it into their own style:
+
+Property | Type | Description
+--- | --- | ---
+`showPlaceLabels` | `Bool` | Shows and hides place label layers.
+`showRoadLabels` | `Bool` | Shows and hides all road labels, including road shields.
+`showPointOfInterestLabels` | `Bool` | Shows or hides all POI icons and text.
+`showTransitLabels` | `Bool` | Shows or hides all transit icons and text.
+`lightPreset` | `String` | Switches between 4 time-of-day states: `dusk`, `dawn`, `day`, and `night`.
+`font` | `Array` | Defines font family for the style from predefined options.
+
+In addition, Mapbox Standard is making adding your own data layers easier for you. To add custom layers in the appropriate location in the Standard style layer stack, we added 3 carefully designed slots that you can leverage to place your layer:
+
+Slot | Description
+--- | ---
+`bottom` | Above polygons (land, landuse, water, etc.)
+`middle` | Above lines (roads, etc.) and behind 3D buildings
+`none` | If you add no identifier, your custom layer will be placed on top of everything
+
+Just set the preferred `slot` on the `Layer` object before adding it to your map and your layer will be appropriately placed in the Standard style's layer stack.
+
+```swift
+var layer = LineLayer(id: "line-layer", source: "line-source")
+layer.slot = "middle"
+mapView.mapboxMap.addLayer(layer)
+```
+
+- Important: For the new Standard style, you can only add layers to these three slots (`bottom`, `middle`, `none`) within the Standard style basemap.
+
+Similar to the classic Mapbox styles, you can still use the layer position in ``StyleManager/addLayer(_:layerPosition:)`` method when importing the Standard Style. However, this method is only applicable to custom layers you have added yourself. If you add two layers to the same slot with a specified layer position the latter will define order of the layers in that slot.
+
+When using the Standard style, you get the latest basemap rendering features, map styling trends and data layers as soon as they are available, without requiring any manual migration/integration. On top of this, you'll still have the ability to introduce your own data to the map and control your user's experience. If you have feedback or questions about the Standard beta style please reach out to: `hey-map-design@mapbox.com`.
+
+Our existing, classic Mapbox styles (such as [Mapbox Streets](https://www.mapbox.com/maps/streets), [Mapbox Light](https://www.mapbox.com/maps/light), and [Mapbox Satellite Streets](https://www.mapbox.com/maps/satellite)) and any custom styles you have built in Mapbox Studio will still work just like they do in v10, so no changes are required.
+
+#### 2.1.1 Style Imports
+
+To work with styles like Mapbox Standard, we've introduced new Style APIs that allow you to import other styles into the main style you display to your users. These styles will be imported by reference, so updates to them will be reflected in your main style without additional work needed on your side. For example, imagine you have style A and style B. The Style API will allow you to import A into B. Upon importing, you can set configurations that apply to A. The configuration properties for the imported style A will depend on what the creator of style A chooses to be configurable. For the Standard style, 6 configuration properties are available for setting lighting, fonts, and label display options (see <doc:Migrate-to-v11##21-The-Mapbox-Standard-Style> above).
+
+We've introduced new APIs on the ``StyleManager`` object so you can work with these features:
+
+- ``StyleManager/styleImports``, which returns all of the styles you have imported into your main style
+- ``StyleManager/removeStyleImport(for:)``, which removes the style import with the passed Id
+- ``StyleManager/getStyleImportSchema(for:)``, which returns the full schema describing the style import with the passed Id
+- ``StyleManager/getStyleImportConfigProperties(for:)``, which returns all of the configuration properties of the style import with the passed Id
+- ``StyleManager/getStyleImportConfigProperty(for:config:)``, which returns the specified configuration property of the style import with the passed Id
+- ``StyleManager/setStyleImportConfigProperties(for:configs:)``, which sets all of the configuration properties of the style import with the passed Id
+- ``StyleManager/setStyleImportConfigProperty(for:config:value:)``, which sets the specified configuration property of the style import with the passed Id
+
+In addition to modifying the configuration properties of the imported styles, you can add your own layers to the imported style through the concept of `slot`s. `Slot`s are pre-specified locations in the imported style where your layer will be added to (such as on top of existing land layers, but below all labels). To do this, we've added a new `slot` property to each ``Layer``. This property allows you to identify which `slot` in the imported style your new layer should be placed in.
+
+```swift
+var layer = LineLayer(id: "line-layer", source: "line-source")
+layer.slot = "middle"
+mapView.mapboxMap.addLayer(layer)
+```
+
+For more information, see the [2.1 The Mapbox Standard Style](#21-the-mapbox-standard-style) section above.
 
 ### 2.2 Type-safe Events API
 
-The events reporting ``MapboxMap`` and ``Snapshotter`` lifecycle have been reworked. The new event system is serialization-free, which brings more type safety and eliminates possible deserialization errors that could take place in v10 MapboxMaps SDK.
+The events lifecycle reporting for ``MapboxMap`` and ``Snapshotter`` have been reworked. The new event system is serialization-free, which brings more type safety and eliminates possible deserialization errors that could take place in v10 MapboxMaps SDK.
 
 As a bonus, this new type system supports the `Combine` framework out-of-the box.
 
@@ -72,7 +135,7 @@ mapView.mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
 }.store(in: &cancelables)
 ```
 
-The new event endpoints such as ``MapboxMap/onCameraChanged`` are exposed as ``Signal``s that allow you to observe any events over time. While you are interested in receiving updates corresponding to these events you simply store the cancelation tokens returned from ``Signal/observe(_:)`` or ``Signal/observeNext(_:)`` methods. When the token is deallocated, the subscription will be automatically canceled and you will stop receiveing updates.
+The new event endpoints such as ``MapboxMap/onCameraChanged`` are exposed as ``Signal``s that allow you to observe any events over time. While you are interested in receiving updates corresponding to these events you simply store the cancelation tokens returned from ``Signal/observe(_:)`` or ``Signal/observeNext(_:)`` methods. When the token is deallocated, the subscription will be automatically canceled and you will stop receiving updates.
 
 Additionally, ``Signal`` implements `Combine.Publisher`, so Combine usage in iOS 13+ targets is recommended:
 
@@ -193,7 +256,7 @@ locationProvider.options.distanceFilter = 100
 mapView.location.override(provider: locationProvider)
 ```
 
-The ``LocationManager`` now provides ``Signal`` endpoints such as ``LocationManager/onPuckRender``, ``LocationManager/onLocationChange``, ``LocationManager/onHeadingChange``. You can use them to observe puck in the same way, as Map Events (see section 2.2). 
+The ``LocationManager`` now provides ``Signal`` endpoints such as ``LocationManager/onPuckRender``, ``LocationManager/onLocationChange``, ``LocationManager/onHeadingChange``. You can use them to observe puck in the same way, as Map Events (see section 2.2).
 
 **v10**
 ```swift
@@ -274,7 +337,7 @@ Tracing component | Description
 `core` | Rendering engine (responsible for almost every rendering aspect in the ``MapView`` and ``Snapshotter``).
 `platform` | Maps SDK functionality like gestures, animations, view annotations, and so on.
 
-> Important: SDK generates a lot of event for each frame, so Instruments might skip some of them in `Immediate` record mode. Enable `Last N seconds` mode to preserve full signpost data ([see more](https://help.apple.com/instruments/mac/11.0/index.html?localePath=en.lproj#/dev191fbf48)). 
+> Important: SDK generates a lot of event for each frame, so Instruments might skip some of them in `Immediate` record mode. Enable `Last N seconds` mode to preserve full signpost data ([see more](https://help.apple.com/instruments/mac/11.0/index.html?localePath=en.lproj#/dev191fbf48)).
 
 To limit signposts generation for a single component, please use the following API:
 
@@ -286,18 +349,22 @@ To configure tracing components through environment variable use comma separator
 ```
 MAPBOX_MAPS_SIGNPOSTS_ENABLED=core,platform
 ```
-> Hint: Pass `0` or `disabled` to disable tracing through environment variable. 
+> Hint: Pass `0` or `disabled` to disable tracing through environment variable.
 
 `Tracing.status` API takes precedence over environment variable value. All values are case-insensitive.
 
 ### 2.8 Other minor ergonomic improvements
 
-#### MapboxMap
+#### 2.8.1 MapboxMap
 
-Added experimental `tileCover` method to `MapboxMap` that returns tile ids covering the map.
-TODO: add example code
+We added an experimental `tileCover` method to `MapboxMap` that returns tile Ids covering the map. Use ``TileCoverOptions`` to identify which tile range to return tile Ids for.
 
-#### Sources
+```swift
+let tileCoverOptions = TileCoverOptions(tileSize: 512, minZoom: 4, maxZoom: 8, roundZoom: true)
+let tileIds = mapView.mapboxMap.tileCover(for: tileCoverOptions)
+```
+
+#### 2.8.2 Sources
 
 Sources are now required to specify ``Source/id`` upon creation for easier reference later.
 
@@ -333,7 +400,7 @@ poiSource.data = .string(poiGeoJSON)
 mapView.mapboxMap.addSource(poiSource)
 ```
 
-#### Layers
+#### 2.8.3
 
 Most layers (such as ``LineLayer``, ``CircleLayer``, and others) now require the `source` parameter in the initializer. It will make style manipulation code less error-prone.
 
@@ -354,7 +421,7 @@ mapView.mapboxMap.addLayer(lineLayer)
 
 Contrary to that, some layers (such as ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``) don't need `source`, `sourceLayer`, and `filter` properties. To clean up the code we removed them from those layers and from the ``Layer`` protocol.
 
-#### Support of GeoJSON partial updates.
+#### 2.8.4 Support of GeoJSON partial updates.
 
 Instead of setting the whole new GeoJSON object anew every time a single feature has changed, now you can apply more granular, partial GeoJSON updates.
 If your features have associated identifiers - you can add, update and remove them on individual basis in your ``GeoJSONSource``.
@@ -366,33 +433,28 @@ try mapView.mapboxMap.updateGeoJSONSourceFeatures(forSourceId: sourceId, feature
 try mapView.mapboxMap.removeGeoJSONSourceFeatures(forSourceId: sourceId, featureIds: featureIds)
 ```
 
-#### Gestures
+#### 2.8.5 Gestures
 
-While maintaing the existing gesture approach we made minor improvements. In v11 we
+While maintaing the existing gesture approach we made minor improvements. In v11 we now:
 
-- Allow animation during any ongoing gestures
-- Enable zoom during a drag gesture.
-- Add `rotation` case to `GestureType` to be able to detect rotation separately from other gestures.
+- allow animation during any ongoing gestures
+- enable zoom during a drag gesture
+- added a `rotation` case to `GestureType` to be able to detect rotation separately from other gestures.
 
-#### Expressions
+#### 2.8.6 Expressions
 
-- Introduce `hsl`, `hsla` color expression.
-- Introduce `random` expression.
-- Introduce `measureLight` expression lights configuration property.
+- Introduced `hsl`, `hsla` color expression
+- Introduced `random` expression
+- Introduced `measureLight` expression lights configuration property
 
-#### Cache Management
+#### 2.8.7 Cache Management
 
-Experimental API ``MapboxMap/setMemoryBudget`` was renamed to ``MapboxMaps/setTileCacheBudget`` and promoted to stable.
+Experimental API `MapboxMap/setMemoryBudget` was renamed to ``MapboxMap/setTileCacheBudget`` and promoted to stable.
 
-#### TilesetDescriptorOptions
+#### 2.8.8 Puck3D's scaling behavior
 
-Merge `TilesetDescriptorOptions` and `TilesetDescriptorOptionsForTilesets`. To enable tileset descriptor creation for a list of tilesets that are not part of the original style use `TilesetDescriptorOptions`.
-TODO
-
-#### Puck3D's scaling behavior
-
-To further improve the performance of 3D model layer, we have replaced Puck 3D's default `model-scale` expression with new API ``Puck3DConfiguration/modelScaleMode``; by default this property is ``ModelScaleMode/viewport``, which will keep the 3D model size constant across different zoom levels.
-While this means that Puck 3D's size should render similarly to v10, it does introduces a behavior breaking change - that ``Puck3DConfiguration/modelScale`` needs to be adjusted to correctly render the puck (we found the adjustment to be around 100x of v10 `model-scale` value, but that could vary depending on other properties etc.)
+To further improve the performance of 3D model layer, we have replaced Puck 3D's default `model-scale` expression with a new API ``Puck3DConfiguration/modelScaleMode``. By default this property is ``ModelScaleMode/viewport``, which will keep the 3D model size constant across different zoom levels.
+While this means that Puck 3D's size should render similarly to v10, it does introduces a behavior breaking change - that ``Puck3DConfiguration/modelScale`` needs to be adjusted to correctly render the puck (in testing we found the adjustment to be around 100x of v10 `model-scale` value, but that could vary depending on other properties etc.).
 
 ## 3. Replace Deprecated APIs and Address Breaking Changes
 
@@ -443,29 +505,27 @@ As a result, ``PointAnnotationManager/iconTextFit`` and ``PointAnnotationManager
 
 In v11, `mapView.mapboxMap.onEvery(<eventType>)` and `mapView.mapboxMap.onNext(event: <eventType>)` have been deprecated in favor of `mapboxMap.on<eventType>.observeNext` and `mapboxMap.on<eventType>.observe`.
 
-For more context, please see the 2.2 Type-safe Events API section above.
+For more context, please see the [2.2 Type-safe Events API](#22-type-safe-events-api) section above.
 
 ### 3.4 Replace deprecated MapView properties
 
-In v11 `mapView.cameraState` and `mapView.anchor` have been moved to `mapboxMap`, so the mapView properties have been deprecated. Update your implementation like so:
+In v11 `mapView.cameraState` has been moved to `mapboxMap`, so the mapView property has been deprecated. Update your implementation like so:
 
 **v10:**
 
 ```swift
 let center = mapView.cameraState.center
-mapView.anchor
 ```
 
 **v11:**
 
 ```swift
 let center = mapView.mapboxMap.cameraState.center
-mapView.mapboxMap.anchor // TODO: this is inaccessible due to internal protection. Is this intentaional?
 ```
 
 ### 3.5 Replace deprecated LocationManager properties
 
-We've made several changes and renamings to ``LocationManager``, ``LocationProvider``, ``Location``. See the above Location section for more details.
+We've made several changes and renamed parts of ``LocationManager``. See the above [2.5 Location API](#25-location-api) section for more details.
 
 ### 3.6 Replace deprecated MapboxMap properties
 
@@ -497,9 +557,9 @@ mapboxMap.isStyleLoaded = true
 let defaultCamera = mapboxMap.styleDefaultCamera
 ```
 
-### 3.7 Maps SDK no longer reexport MetalKit and UIKit.
+### 3.7 Maps SDK no longer reexport MetalKit and UIKit
 
-Mapbox Maps SDK no longer reexport MetalKit and UIKit framework. In v10 version you could omit `import UIKit` if you already have an `import MapboxMaps` statement. 
+Mapbox Maps SDK no longer reexports MetalKit and UIKit framework, so you will need to import them as needed for your code. In v10 version you could omit `import UIKit` if you already had an `import MapboxMaps` statement, but that is no longer possible.
 
 **v10:**
 
@@ -534,7 +594,7 @@ If you need to set a HTTP interceptor you can do it via the `HttpServiceFactory.
 ```swift
 let offlineManager = OfflineManager(resourceOptions: aResourceOptions)
 let tilesetDescriptorOptions = TilesetDescriptorOptionsForTilesets(
-    tilesets: ["mapbox://mapbox.mapbox-streets-v8"], 
+    tilesets: ["mapbox://mapbox.mapbox-streets-v8"],
     zoomRange: 0...5)
 
 let tilesetDescriptor = offlineManager.createTilesetDescriptorForTilesetDescriptorOptions(tilesetDescriptorOptions)
@@ -547,7 +607,7 @@ offlineManager.removeStylePack(for: .streets)
 let offlineManager = OfflineManager()
 let tileSetDescriptorOptions = TilesetDescriptorOptions(
     styleURI: .outdoors,
-    zoomRange: 0...16, 
+    zoomRange: 0...16,
     tilesets: ["mapbox://mapbox.mapbox-streets-v8"])
 
 let tilesetDescriptor = offlineManager.createTilesetDescriptor(for: tileSetDescriptorOptions)
@@ -574,7 +634,7 @@ offlineRegionManager.setOfflineRegionObserverFor(observer)
 
 class OfflineRegionObserver: MapboxCoreMaps.OfflineRegionObserver {
 
-    func responseError(forError error: ResponseError) { 
+    func responseError(forError error: ResponseError) {
         // handle error
     }
 
@@ -621,12 +681,17 @@ class OfflineRegionObserver: MapboxCoreMaps.OfflineRegionObserver {
 - Map size is now synced to the size of the Metal view
 - The `easeTo/flyTo` APIs return non-optional cancelable token.
 - The following `GeoJsonSource` cluster APIs now return `Cancelable`: `getGeoJsonClusterLeaves`, `getGeoJsonClusterChildren`, `getGeoJsonClusterExpansionZoom`.
-- `TilesetDescriptorOptions` and `TilesetDescriptorOptionsForTilesets` were merged for better usability. In v11 you can init `TilesetDescriptorOptions` with an optional array of `tilesets` stored as strings.
 
-## 6. Test Your App
+## 7. Test Your App
 
 Test your app thoroughly after making the changes to ensure everything is working as expected.
 
-## Conclusion
+## 8. Conclusion
 
 Following the above steps will help you migrate your app to the latest version of the Mapbox Maps SDK for Android. If you encounter any issues during the migration process, refer to the [Mapbox Maps SDK for iOS documentation](https://docs.mapbox.com/ios/maps/overview/) or reach out to the Mapbox support team for assistance.
+
+## Known Issues
+
+- When using styles with globe projection, such as Standard or Streets:
+    - the ``MapboxMap/camera(for:padding:bearing:pitch:)-1il0f`` and similar methods can return wrong camera options.
+    - the ``OverviewViewportState`` may focus the map camera incorrectly.

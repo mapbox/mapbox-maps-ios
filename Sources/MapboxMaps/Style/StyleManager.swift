@@ -436,6 +436,9 @@ public class StyleManager: StyleProtocol {
     }
 
     /// Returns the list containing information about existing style import objects.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var styleImports: [StyleObjectInfo] {
         return styleManager.getStyleImports()
     }
@@ -447,7 +450,10 @@ public class StyleManager: StyleProtocol {
     ///
     ///  - Throws:
     ///   - An error describing why the operation was unsuccessful.
-    @_spi(Experimental) public func removeStyleImport(forImportId importId: String) throws {
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public func removeStyleImport(for importId: String) throws {
         try handleExpected {
             styleManager.removeStyleImport(forImportId: importId)
         }
@@ -463,7 +469,10 @@ public class StyleManager: StyleProtocol {
     ///           or a string describing an error if the operation was not successful.
     ///  - Throws:
     ///   - A StyleError or decoding error if the operation was not successful.
-    @_spi(Experimental) public func getStyleImportSchema(forImportId importId: String) throws -> Any {
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public func getStyleImportSchema(for importId: String) throws -> Any {
         try handleExpected {
             return styleManager.getStyleImportSchema(forImportId: importId)
         }
@@ -476,7 +485,10 @@ public class StyleManager: StyleProtocol {
     ///
     ///  - Returns:
     ///   - The style import configuration or a string describing an error if the operation was not successful.
-    @_spi(Experimental) public func getStyleImportConfigProperties(forImportId importId: String) throws -> [String: StylePropertyValue] {
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public func getStyleImportConfigProperties(for importId: String) throws -> [String: StylePropertyValue] {
         try handleExpected {
             return styleManager.getStyleImportConfigProperties(forImportId: importId)
         }
@@ -490,7 +502,10 @@ public class StyleManager: StyleProtocol {
     ///
     ///  - Returns:
     ///   - The style import configuration or a string describing an error if the operation was not successful.
-    @_spi(Experimental) public func getStyleImportConfigProperty(forImportId importId: String, config: String) throws -> StylePropertyValue {
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public func getStyleImportConfigProperty(for importId: String, config: String) throws -> StylePropertyValue {
         try handleExpected {
             return styleManager.getStyleImportConfigProperty(forImportId: importId, config: config)
         }
@@ -505,6 +520,9 @@ public class StyleManager: StyleProtocol {
     ///
     ///  - Throws:
     ///   - A string describing an error if the operation was not successful.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public func setStyleImportConfigProperties(for importId: String, configs: [String: Any]) throws {
         try handleExpected {
             return styleManager.setStyleImportConfigPropertiesForImportId(importId, configs: configs)
@@ -520,6 +538,9 @@ public class StyleManager: StyleProtocol {
     ///
     ///  - Throws:
     ///   - A string describing an error if the operation was not successful.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public func setStyleImportConfigProperty(for importId: String, config: String, value: Any) throws {
         try handleExpected {
             return styleManager.setStyleImportConfigPropertyForImportId( importId, config: config, value: value)

@@ -50,7 +50,7 @@ internal class StyleImportIntegrationTests: MapViewIntegrationTestCase {
 
         mapView.mapboxMap.onMapLoaded.observe { [weak self] _ in
             do {
-                try self?.mapView.mapboxMap.removeStyleImport(forImportId: "standard")
+                try self?.mapView.mapboxMap.removeStyleImport(for: "standard")
                 let returnedStyleImports = self?.mapView.mapboxMap.styleImports
                 XCTAssertEqual([], returnedStyleImports)
                 removeStyleImportsExpectation.fulfill()
@@ -69,7 +69,7 @@ internal class StyleImportIntegrationTests: MapViewIntegrationTestCase {
 
         mapView.mapboxMap.onMapLoaded.observe { [weak self] _ in
             do {
-                let returnedSchema = try self?.mapView.mapboxMap.getStyleImportSchema(forImportId: "standard")
+                let returnedSchema = try self?.mapView.mapboxMap.getStyleImportSchema(for: "standard")
                 XCTAssertNotNil(returnedSchema)
                 getSchemaExpectation.fulfill()
             } catch {
@@ -87,7 +87,7 @@ internal class StyleImportIntegrationTests: MapViewIntegrationTestCase {
 
         mapView.mapboxMap.onMapLoaded.observe { [weak self] _ in
             do {
-                _ = try self?.mapView.mapboxMap.getStyleImportSchema(forImportId: "no_id")
+                _ = try self?.mapView.mapboxMap.getStyleImportSchema(for: "no_id")
             } catch {
                 XCTAssertEqual(error.localizedDescription, "Import no_id does not exist")
                 getSchemaIncorrectIdExpectation.fulfill()
@@ -107,7 +107,7 @@ internal class StyleImportIntegrationTests: MapViewIntegrationTestCase {
         mapView.mapboxMap.onMapLoaded.observe { [weak self] _ in
             do {
                 try self?.mapView.mapboxMap.setStyleImportConfigProperty(for: "standard", config: "showTransitLabels", value: false)
-                let returnedProperty = try self?.mapView.mapboxMap.getStyleImportConfigProperty(forImportId: "standard", config: "showTransitLabels")
+                let returnedProperty = try self?.mapView.mapboxMap.getStyleImportConfigProperty(for: "standard", config: "showTransitLabels")
                 XCTAssertEqual(expectedProperty["showTransitLabels"] as? Bool, returnedProperty?.value as? Bool)
                 getConfigPropertyExpectation.fulfill()
             } catch {
@@ -128,7 +128,7 @@ internal class StyleImportIntegrationTests: MapViewIntegrationTestCase {
         mapView.mapboxMap.onMapLoaded.observe { [weak self] _ in
             do {
                 try self?.mapView.mapboxMap.setStyleImportConfigProperties(for: "standard", configs: expectedProperties)
-                let returnedProperties = try self?.mapView.mapboxMap.getStyleImportConfigProperties(forImportId: "standard")
+                let returnedProperties = try self?.mapView.mapboxMap.getStyleImportConfigProperties(for: "standard")
                 XCTAssertEqual(expectedProperties["font"] as? String, returnedProperties?["font"]?.value as? String)
                 XCTAssertEqual(expectedProperties["lightPreset"] as? String, returnedProperties?["lightPreset"]?.value as? String)
                 XCTAssertEqual(expectedProperties["showTransitLabels"] as? Bool, returnedProperties?["showTransitLabels"]?.value as? Bool)

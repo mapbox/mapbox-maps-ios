@@ -11,24 +11,6 @@
         }
       },
       {
-        "package": "MapboxCommon",
-        "repositoryURL": "https://github.com/mapbox/mapbox-common-ios.git",
-        "state": {
-          "branch": null,
-          "revision": "e5cb508f09e80b877a695a0914140d95a41152fc",
-          "version": "23.7.0"
-        }
-      },
-      {
-        "package": "MapboxCoreMaps",
-        "repositoryURL": "https://github.com/mapbox/mapbox-core-maps-ios.git",
-        "state": {
-          "branch": null,
-          "revision": "de58d2110c67f657badae735aacd924ca7349c59",
-          "version": "10.15.0"
-        }
-      },
-      {
         "package": "MapboxMobileEvents",
         "repositoryURL": "https://github.com/mapbox/mapbox-events-ios.git",
         "state": {

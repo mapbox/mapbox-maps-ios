@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.0.0-beta.1 - 2 August, 2023
+
 * Introduce `hsl`, `hsla` color expression.
 * Introduce `random` expression.
 * Introduce `measureLight` expression lights configuration property.

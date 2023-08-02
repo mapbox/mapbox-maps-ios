@@ -1,5 +1,4 @@
 import XCTest
-import MetalKit
 @_spi(Metrics) import MapboxMaps
 
 class FPSMetric: NSObject, XCTMetric, MapViewMetricsReporter {

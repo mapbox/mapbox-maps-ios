@@ -11,7 +11,7 @@ internal enum SignpostName {
 
 /// Enable `os_signpost` generation in some components
 ///
-/// By default, signpost generation is disabled. It's possible to enable some components with ``Tracing.status`` API.
+/// By default, signpost generation is disabled. It's possible to enable some components with ``Tracing/status`` API.
 ///
 /// The `MAPBOX_MAPS_SIGNPOSTS_ENABLED` environment variable can be used to manipulate the initial value of the tracing status
 /// There are a few rules for environment variable:

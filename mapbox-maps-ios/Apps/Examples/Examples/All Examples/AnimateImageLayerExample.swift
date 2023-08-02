@@ -1,4 +1,3 @@
-import UIKit
 import MapboxMaps
 
 class AnimateImageLayerExample: UIViewController, ExampleProtocol {

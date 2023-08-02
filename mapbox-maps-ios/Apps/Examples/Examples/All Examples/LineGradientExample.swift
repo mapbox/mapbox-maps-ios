@@ -1,4 +1,4 @@
-import UIKit
+import Foundation
 import MapboxMaps
 
 public class LineGradientExample: UIViewController, ExampleProtocol {

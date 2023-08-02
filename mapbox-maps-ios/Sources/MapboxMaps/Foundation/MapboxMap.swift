@@ -1029,13 +1029,13 @@ extension MapboxMap {
         /// and / or gesture is in progress (see ``MapboxMap/beginGesture()``, ``MapboxMap/endGesture()``).
     public var onMapIdle: Signal<MapIdle> { events.signal(for: \.onMapIdle) }
 
-        /// The source has been added with ``Style/addSource(_:id:dataId:)`` or ``Style/addSource(withId:properties:)``.
+        /// The source has been added with ``StyleManager/addSource(_:dataId:)``  or ``StyleManager/addSource(withId:properties:)``.
         /// The event is emitted synchronously, therefore, it is possible to immediately
         /// read added source's properties.
     public var onSourceAdded: Signal<SourceAdded> { events.signal(for: \.onSourceAdded) }
 
-        /// The source has been removed with ``Style/removeSource(withId:)``.
-        /// The event is emitted synchronously, thus, ``Style/allSourceIdentifiers`` will be
+        /// The source has been removed with ``StyleManager/removeSource(withId:)``.
+        /// The event is emitted synchronously, thus, ``StyleManager/allSourceIdentifiers`` will be
         /// in sync when the observer receives the notification.
     public var onSourceRemoved: Signal<SourceRemoved> { events.signal(for: \.onSourceRemoved) }
 
@@ -1055,10 +1055,10 @@ extension MapboxMap {
 
         /// A style has a missing image. This event is emitted when the map renders visible tiles and
         /// one of the required images is missing in the sprite sheet. Subscriber has to provide the missing image
-        /// by calling ``Style/addImage(_:id:sdf:contentInsets:)``.
+        /// by calling ``StyleManager/addImage(_:id:sdf:contentInsets:)``.
     public var onStyleImageMissing: Signal<StyleImageMissing> { events.signal(for: \.onStyleImageMissing) }
 
-        /// An image added to the style is no longer needed and can be removed using ``Style/removeImage(withId:)``.
+        /// An image added to the style is no longer needed and can be removed using ``StyleManager/removeImage(withId:)``.
     public var onStyleImageRemoveUnused: Signal<StyleImageRemoveUnused> { events.signal(for: \.onStyleImageRemoveUnused) }
 
         /// The map started rendering a frame.
@@ -1076,6 +1076,9 @@ extension MapboxMap {
 
     /// Returns a ``Signal`` that allows to subscribe to the event with specified string name.
     /// This method is reserved for the future use.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental)
     public subscript(eventName: String) -> Signal<GenericEvent> {
         events[eventName]
@@ -1289,6 +1292,9 @@ extension MapboxMap {
     ///
     /// - Parameters:
     ///  - options: Options for the tile cover method.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental)
     public func tileCover(for options: TileCoverOptions) -> [CanonicalTileID] {
         __map.__tileCover(

@@ -100,7 +100,7 @@ For more information, see the [2.1 The Mapbox Standard Style](#21-the-mapbox-sta
 
 ### 2.2 Type-safe Events API
 
-The events lifecycle reporting for ``MapboxMap`` and ``Snapshotter`` have been reworked. The new event system is serialization-free, which brings more type safety and eliminates possible deserialization errors that could take place in v10 MapboxMaps SDK.
+The events lifecycle reporting for <doc:MapboxMap> and ``Snapshotter`` have been reworked. The new event system is serialization-free, which brings more type safety and eliminates possible deserialization errors that could take place in v10 MapboxMaps SDK.
 
 As a bonus, this new type system supports the `Combine` framework out-of-the box.
 
@@ -202,7 +202,7 @@ The old `LocationProvider` and `Location` were significantly simplified:
 
 - Note: `Location` and ``Heading`` have been separated because their updates can come from the different sources. This also allows us to animate the heading quicker than the location which results in more responsive puck behavior.
 
-In case you need to drive the puck with custom location data, the ``LocationProvider`` protocol is easy to implement in **v11**:
+In case you need to drive the puck with custom location data, the `LocationProvider` protocol is easy to implement in **v11**:
 
 ```swift
 class CustomLocationProvider: LocationProvider {
@@ -241,7 +241,7 @@ let headingProvider = CustomHeadingProvider()
 mapView.location.override(locationProvider: locationProvider, headingProvider: headingProvider)
 ```
 
-The ``LocationManager`` was simplified too. Now it only manages the the location puck, not the ``LocationProvider``. For example, its ``LocationManager/options`` only determine the puck appearance. If you need to fine-tune the location provider itself, do it directly via the default ``AppleLocationProvider`` or your own custom provider implementation.
+The ``LocationManager`` was simplified too. Now it only manages the the location puck, not the `LocationProvider`. For example, its ``LocationManager/options`` only determine the puck appearance. If you need to fine-tune the location provider itself, do it directly via the default ``AppleLocationProvider`` or your own custom provider implementation.
 
 **v10**
 
@@ -449,7 +449,7 @@ While maintaing the existing gesture approach we made minor improvements. In v11
 
 #### 2.8.7 Cache Management
 
-Experimental API `MapboxMap/setMemoryBudget` was renamed to ``MapboxMap/setTileCacheBudget`` and promoted to stable.
+Experimental API `MapboxMap/setMemoryBudget(_:)` was renamed to ``MapboxMap/setTileCacheBudget(_:)`` and promoted to stable.
 
 #### 2.8.8 Puck3D's scaling behavior
 
@@ -462,7 +462,7 @@ Check for any deprecated APIs in your code and replace them with the recommended
 
 ### 3.1 Replace deprecated MapboxMap/style and Snapshot/style
 
-We've simplified MapboxMap and Snapshot so you can now access Style APIs directly from ``MapboxMap`` and ``Snapshotter`` instance rather than going through the deprecated Style object. For example:
+We've simplified MapboxMap and Snapshot so you can now access Style APIs directly from <doc:MapboxMap> and ``Snapshotter`` instance rather than going through the deprecated Style object. For example:
 
 **v10:**
 
@@ -529,7 +529,7 @@ We've made several changes and renamed parts of ``LocationManager``. See the abo
 
 ### 3.6 Replace deprecated MapboxMap properties
 
-Several properties on ``MapboxMap`` were renamed in v11 for clarity. Please update your implementation:
+Several properties on <doc:MapboxMap> were renamed in v11 for clarity. Please update your implementation:
 
 **v10:**
 
@@ -557,26 +557,6 @@ mapboxMap.isStyleLoaded = true
 let defaultCamera = mapboxMap.styleDefaultCamera
 ```
 
-### 3.7 Maps SDK no longer reexport MetalKit and UIKit
-
-Mapbox Maps SDK no longer reexports MetalKit and UIKit framework, so you will need to import them as needed for your code. In v10 version you could omit `import UIKit` if you already had an `import MapboxMaps` statement, but that is no longer possible.
-
-**v10:**
-
-```swift
-import MapboxMaps
-
-class ViewController: UIViewController { }
-```
-
-**v11:**
-
-```swift
-import UIKit
-import MapboxMaps
-
-class ViewController: UIViewController { }
-```
 ### 3.8 Http Stack changes
 `HTTPServiceFactory.reset`, `HttpServiceFactory.setUserDefinedForCustom` and `HttpServiceInterface` have been removed from public visibility. ***It is thus no longer possible to override the HTTP stack.***
 

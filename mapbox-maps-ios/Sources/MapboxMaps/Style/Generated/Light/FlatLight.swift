@@ -33,6 +33,7 @@ public struct FlatLight: Codable, StyleEncodable {
     /// Transition property for `position`
     public var positionTransition: StyleTransition?
 
+    /// Creates a new Flat light.
     public init(id: String = UUID().uuidString) {
         self.id = id
     }

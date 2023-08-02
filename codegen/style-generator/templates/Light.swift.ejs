@@ -18,21 +18,47 @@ import Foundation
 <%if (isExperimental) { -%>@_spi(Experimental) <% } -%>public struct <%- camelize(name) %>Light: Codable, StyleEncodable {
 
     /// Unique light name
+<%if (isExperimental) { -%>
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+<% } -%>
     public let id: String
 
     /// Type of the light.
+<%if (isExperimental) { -%>
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+<% } -%>
     public let type: LightType = .<%- name %>
     <%_ for (const property of properties) { -%>
 
     /// <%- markdownFriendlyDoc(property) %>
+<%if (isExperimental) { -%>
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+<% } -%>
     <% if (property.experimental) { -%>@_spi(Experimental) <% } -%>public var <%- camelizeWithLeadingLowercase(property.name) %>: <%- propertySwiftValueType(property) %>?
     <%_ if (property.transition) { -%>
 
     /// Transition property for `<%- camelizeWithLeadingLowercase(property.name) %>`
+<%if (isExperimental) { -%>
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+<% } -%>
     <% if (property.experimental) { -%>@_spi(Experimental) <% } -%>public var <%- camelizeWithLeadingLowercase(property.name) %>Transition: StyleTransition?
     <%_ } -%>
     <%_ } -%>
 
+    /// Creates a new <%- camelizeWithUndercoreRemoved(name) %> light.
+<%if (isExperimental) { -%>
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+<% } -%>
     public init(id: String = UUID().uuidString) {
         self.id = id
     }

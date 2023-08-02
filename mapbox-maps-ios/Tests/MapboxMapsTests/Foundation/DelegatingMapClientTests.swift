@@ -1,6 +1,5 @@
 import XCTest
 @testable import MapboxMaps
-import MetalKit
 
 final class DelegatingMapClientTests: XCTestCase {
 

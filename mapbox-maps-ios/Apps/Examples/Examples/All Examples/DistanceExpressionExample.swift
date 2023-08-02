@@ -1,5 +1,4 @@
 import MapboxMaps
-import UIKit
 
 class DistanceExpressionExample: UIViewController, ExampleProtocol {
     var mapView: MapView!

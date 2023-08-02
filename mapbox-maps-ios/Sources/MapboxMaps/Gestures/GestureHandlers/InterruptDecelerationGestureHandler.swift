@@ -1,4 +1,4 @@
-import UIKit
+import Foundation
 
 internal class InterruptDecelerationGestureHandler: GestureHandler {
     private let cameraAnimationsManager: CameraAnimationsManagerProtocol

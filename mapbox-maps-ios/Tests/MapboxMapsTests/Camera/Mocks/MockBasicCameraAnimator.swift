@@ -1,5 +1,4 @@
 @testable import MapboxMaps
-import UIKit
 
 final class MockBasicCameraAnimator: BasicCameraAnimatorProtocol {
     @Stubbed var delegate: BasicCameraAnimatorDelegate?

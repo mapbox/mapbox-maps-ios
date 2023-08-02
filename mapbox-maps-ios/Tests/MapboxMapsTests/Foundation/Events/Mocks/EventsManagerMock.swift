@@ -1,6 +1,5 @@
 import Foundation
 @testable import MapboxMaps
-import UIKit
 
 class EventsManagerMock: EventsManagerProtocol {
 

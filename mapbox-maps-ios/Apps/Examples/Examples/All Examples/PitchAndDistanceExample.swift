@@ -2,7 +2,7 @@
 // field of a symbol layer to remove large size POI labels in the far
 // distance at high pitch, freeing up that screen real-estate for smaller road and street labels.
 
-import UIKit
+import Foundation
 import MapboxMaps
 
 final class PitchAndDistanceExample: UIViewController, ExampleProtocol {

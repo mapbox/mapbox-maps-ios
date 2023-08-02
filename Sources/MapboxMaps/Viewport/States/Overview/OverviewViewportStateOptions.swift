@@ -1,5 +1,6 @@
 import Turf
 import CoreLocation
+import UIKit
 
 /// Configuration options for ``OverviewViewportState``.
 public struct OverviewViewportStateOptions: Equatable {

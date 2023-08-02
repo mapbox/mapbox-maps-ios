@@ -1,4 +1,5 @@
 @testable import MapboxMaps
+import UIKit
 
 final class MockSimpleCameraAnimator: SimpleCameraAnimatorProtocol {
     @Stubbed var state: UIViewAnimatingState = .inactive

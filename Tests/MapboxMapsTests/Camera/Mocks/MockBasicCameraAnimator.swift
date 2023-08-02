@@ -1,3 +1,4 @@
+import UIKit
 @testable import MapboxMaps
 
 final class MockBasicCameraAnimator: BasicCameraAnimatorProtocol {

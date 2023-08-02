@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 
 /// `Ref` is read-only reference to arbitrary value captured by closure.
 /// It is used to pass the value, that might be changed over time.

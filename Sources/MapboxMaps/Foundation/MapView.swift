@@ -3,6 +3,7 @@
 @_implementationOnly import MapboxCommon_Private
 import UIKit
 import os
+import MetalKit
 
 // swiftlint:disable:next type_body_length
 open class MapView: UIView {

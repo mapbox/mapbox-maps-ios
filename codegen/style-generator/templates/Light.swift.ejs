@@ -63,9 +63,41 @@ import Foundation
         self.id = id
     }
 
-    enum CodingKeys: String, CodingKey {
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: RootCodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(type, forKey: .type)
+
+        var propertiesContainer = container.nestedContainer(keyedBy: PropertiesCodingKeys.self, forKey: .properties)
+        <%_ for (const property of properties) { -%>
+        try propertiesContainer.encodeIfPresent(<%- camelizeWithLeadingLowercase(property.name) %>, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>)
+        <%_ if (property.transition) { -%>
+        try propertiesContainer.encodeIfPresent(<%- camelizeWithLeadingLowercase(property.name) %>Transition, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>Transition)
+        <%_ } -%>
+        <%_ } -%>
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: RootCodingKeys.self)
+        self.id = try container.decode(String.self, forKey: .id)
+
+        if let propertiesContainer = try? container.nestedContainer(keyedBy: PropertiesCodingKeys.self, forKey: .properties) {
+            <%_ for (const property of properties) { -%>
+            self.<%- camelizeWithLeadingLowercase(property.name) %> = try propertiesContainer.decodeIfPresent(<%- propertySwiftValueType(property) %>.self, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>)
+            <%_ if (property.transition) { -%>
+            self.<%- camelizeWithLeadingLowercase(property.name) %>Transition = try propertiesContainer.decodeIfPresent(StyleTransition.self, forKey: .<%- camelizeWithLeadingLowercase(property.name) %>Transition)
+            <%_ } -%>
+            <%_ } -%>
+        }
+    }
+
+    enum RootCodingKeys: String, CodingKey {
         case id = "id"
         case type = "type"
+        case properties = "properties"
+    }
+
+    enum PropertiesCodingKeys: String, CodingKey {
         <%_ for (const property of properties) { -%>
         case <%- camelizeWithLeadingLowercase(property.name) %> = "<%- property.name %>"
         <%_ if (property.transition) { -%>

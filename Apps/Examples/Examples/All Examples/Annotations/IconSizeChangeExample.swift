@@ -1,4 +1,4 @@
-import UIKit
+import Foundation
 import MapboxMaps
 
 final class IconSizeChangeExample: UIViewController, ExampleProtocol {

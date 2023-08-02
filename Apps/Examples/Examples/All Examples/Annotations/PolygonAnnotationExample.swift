@@ -1,4 +1,3 @@
-import UIKit
 import MapboxMaps
 
 final class PolygonAnnotationExample: UIViewController, ExampleProtocol {

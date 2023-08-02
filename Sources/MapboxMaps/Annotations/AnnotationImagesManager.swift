@@ -1,4 +1,4 @@
-import UIKit
+import Foundation
 
 internal protocol AnnotationImagesManagerProtocol: AnyObject {
     func addImage(_ image: UIImage, id: String, sdf: Bool, contentInsets: UIEdgeInsets)

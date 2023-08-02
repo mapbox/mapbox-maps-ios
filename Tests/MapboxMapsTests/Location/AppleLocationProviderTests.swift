@@ -1,6 +1,5 @@
 import XCTest
 @testable import MapboxMaps
-import UIKit
 
 final class AppleLocationProviderTests: XCTestCase {
 

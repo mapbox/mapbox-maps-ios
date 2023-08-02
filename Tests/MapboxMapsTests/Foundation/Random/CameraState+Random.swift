@@ -1,5 +1,4 @@
 import MapboxMaps
-import UIKit
 
 extension CameraState {
     static func random() -> Self {

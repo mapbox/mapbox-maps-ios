@@ -199,7 +199,7 @@ public class StyleManager: StyleProtocol {
      Adds a `source` to the map
      - Parameter source: The source to add to the map.
      - Parameter identifier: A unique source identifier.
-     - Parameter dataId: An optional data ID to filter ``MapEvents/onSourceDataLoaded`` to only the specified data source. Applies only to ``GeoJSONSource``s.
+     - Parameter dataId: An optional data ID to filter ``MapboxMap/onSourceDataLoaded`` to only the specified data source. Applies only to ``GeoJSONSource``s.
 
      - Throws: ``StyleError`` if there is a problem adding the `source`.
      */
@@ -260,7 +260,7 @@ public class StyleManager: StyleProtocol {
     ///   - id: The identifier representing the GeoJSON source.
     ///   - geoJSON: The new GeoJSON to be associated with the source data. i.e.
     ///   a feature or feature collection.
-    ///   - dataId: An optional data ID to filter ``MapboxMap/sourceDataLoaded`` to only the specified data source.
+    ///   - dataId: An optional data ID to filter ``MapboxMap/onSourceDataLoaded`` to only the specified data source.
     ///
     /// The update will be scheduled and applied on a GeoJSON serialization queue.
     ///
@@ -1048,6 +1048,9 @@ public class StyleManager: StyleProtocol {
     /// - Parameters:
     ///   - ambientLight: The ambient light source.
     ///   - directionalLight: The directional light source.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public func setLights(ambient ambientLight: AmbientLight,
                                               directional directionalLight: DirectionalLight) throws {
         let rawAmbientLight = try ambientLight.allStyleProperties()
@@ -1209,6 +1212,9 @@ public class StyleManager: StyleProtocol {
     ///
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public func addStyleModel(modelId: String, modelUri: String) throws {
         try handleExpected {
             styleManager.addStyleModel(forModelId: modelId, modelUri: modelUri)
@@ -1222,6 +1228,9 @@ public class StyleManager: StyleProtocol {
     ///
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public func removeStyleModel(modelId: String) throws {
         try handleExpected {
             styleManager.removeStyleModel(forModelId: modelId)
@@ -1235,6 +1244,9 @@ public class StyleManager: StyleProtocol {
     ///
     /// - Returns:
     ///     True if model exists, false otherwise.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public func hasStyleModel(modelId: String) -> Bool {
         return styleManager.hasStyleModel(forModelId: modelId)
     }

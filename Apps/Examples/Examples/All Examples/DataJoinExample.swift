@@ -1,5 +1,5 @@
 import MapboxMaps
-import UIKit
+import Foundation
 
 final class DataJoinExample: UIViewController, ExampleProtocol {
     var mapView: MapView!

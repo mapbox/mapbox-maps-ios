@@ -10,23 +10,45 @@ import Foundation
 @_spi(Experimental) public struct AmbientLight: Codable, StyleEncodable {
 
     /// Unique light name
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public let id: String
 
     /// Type of the light.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public let type: LightType = .ambient
 
     /// Color of the ambient light.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public var color: Value<StyleColor>?
 
     /// Transition property for `color`
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public var colorTransition: StyleTransition?
 
     /// A multiplier for the color of the ambient light.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public var intensity: Value<Double>?
 
     /// Transition property for `intensity`
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public var intensityTransition: StyleTransition?
 
+    /// Creates a new Ambient light.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public init(id: String = UUID().uuidString) {
         self.id = id
     }

@@ -18,40 +18,30 @@ The Mapbox Maps SDK for iOS is a public library for displaying interactive, thor
 - ``MapView``
 - ``MapInitOptions``
 - ``MapInitOptionsProvider``
-- ``ResourceOptions-swift.struct``
-- ``ResourceOptionsManager``
-- ``MapOptions``
-- ``GlyphsRasterizationOptions``
 - ``InterfaceOrientationProvider``
 - ``AttributionURLOpener``
 
 ### Snapshotter
 
 - ``Snapshotter``
-- ``MapSnapshotOptions-swift.struct``
+- ``MapSnapshotOptions``
 - ``SnapshotOverlay``
 - ``SnapshotOverlayHandler``
 
 ### MapboxMap
 
 - ``MapboxMap``
-- ``CameraState-swift.struct``
-- ``CameraOptions-swift.struct``
-- ``CameraBounds-swift.struct``
-- ``CameraBoundsOptions-swift.struct``
-- ``CoordinateBounds``
-- ``RenderedQueryOptions``
-- ``QueriedFeature``
-- ``FeatureExtensionValue``
+- ``CameraState``
+- ``CameraOptions``
+- ``CameraBounds``
+- ``CameraBoundsOptions``
+- ``AnyCancelable``
 - ``MapError``
-- ``MapLoadingError``
 
 ### Style
 
-- ``Style``
 - ``StyleURI``
-- ``LayerPosition-swift.enum``
-- ``TransitionOptions``
+- ``LayerPosition``
 - ``Light``
 - ``Terrain``
 - ``StyleDecodable``
@@ -65,13 +55,11 @@ The Mapbox Maps SDK for iOS is a public library for displaying interactive, thor
 - ``SourceType``
 - ``SourceInfo``
 - ``GeoJSONSource``
-- ``GeoJSONSourceData-swift.enum``
+- ``GeoJSONSourceData``
 - ``ImageSource``
 - ``RasterDemSource``
 - ``RasterSource``
 - ``VectorSource``
-- ``CustomGeometrySourceOptions``
-- ``CanonicalTileID``
 - ``PromoteId``
 - ``Scheme``
 - ``Encoding``
@@ -158,7 +146,7 @@ The Mapbox Maps SDK for iOS is a public library for displaying interactive, thor
 
 - ``ViewAnnotationManager``
 - ``ViewAnnotationUpdateObserver``
-- ``ViewAnnotationOptions-swift.struct``
+- ``ViewAnnotationOptions``
 - ``ViewAnnotationManagerError``
 
 ### Camera Animations
@@ -199,11 +187,10 @@ The Mapbox Maps SDK for iOS is a public library for displaying interactive, thor
 - ``Puck3DConfiguration``
 - ``Model``
 - ``PuckBearing``
-- ``Location-swift.struct``
+- ``Location``
 - ``LocationConsumer``
-- ``LocationPermissionsDelegate``
 - ``LocationProvider``
-- ``LocationProviderDelegate``
+- ``AppleLocationProviderDelegate``
 - ``AppleLocationProvider``
 
 ### Viewport
@@ -224,32 +211,10 @@ The Mapbox Maps SDK for iOS is a public library for displaying interactive, thor
 - ``DefaultViewportTransitionOptions``
 - ``ImmediateViewportTransition``
 
-### Offline
-
-- ``OfflineManager``
-- ``OfflineRegion``
-- ``OfflineRegionManager``
-- ``OfflineRegionGeometryDefinition``
-<!--- ``OfflineSwitch-swift.class``-->
-- ``StylePackError-swift.enum``
-- ``StylePackLoadOptions``
-- ``TileRegionError-swift.enum``
-- ``TileRegionLoadOptions``
-- ``TilesetDescriptorOptions``
-- ``TileStore``
-- ``TileStoreObserver``
-
-### Custom Networking Stack
-
-- ``DownloadError``
-- ``DownloadStatus``
-- ``HttpRequestError``
-- ``HttpResponse``
-
 ### GeoJSON
 
-- ``Feature-swift.struct``
-- ``Geometry-swift.enum``
+- ``Feature``
+- ``Geometry``
 
 ### Utilities
 

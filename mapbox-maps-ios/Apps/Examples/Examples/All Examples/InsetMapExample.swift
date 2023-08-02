@@ -70,7 +70,7 @@ final class InsetMapExample: UIViewController, ExampleProtocol {
         insetMapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             guard let self else { return }
 
-            var geoJSONSource = GeoJSONSource(id: "bounds")
+            let geoJSONSource = GeoJSONSource(id: "bounds")
 
             // Create a line layer
             var lineBoundsLayer = LineLayer(id: "line-bounds", source: geoJSONSource.id)

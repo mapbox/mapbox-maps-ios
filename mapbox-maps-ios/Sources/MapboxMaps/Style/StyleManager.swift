@@ -1346,16 +1346,6 @@ internal func handleExpected<Value, Error, ReturnType>(closure: () -> (Expected<
 
 // swiftlint:enable type_body_length
 
-// MARK: - Attribution -
-
-extension StyleManager {
-    internal func sourceAttributions() -> [String] {
-        return allSourceIdentifiers.compactMap {
-            sourceProperty(for: $0.id, property: "attribution").value as? String
-        }
-    }
-}
-
 // MARK: - StyleProjection
 
 extension StyleManager {

@@ -198,6 +198,9 @@ public struct Puck3DConfiguration: Equatable {
     ///   - modelOpacity: The opacity of the model used as the location puck
     ///   - modelCastShadows: Enable/disable shadow casting for the puck model
     ///   - modelReceiveShadows: Enable/disable shadow receiving for the puck model
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public init(model: Model,
                                     modelScale: Value<[Double]>? = nil,
                                     modelRotation: Value<[Double]>? = nil,

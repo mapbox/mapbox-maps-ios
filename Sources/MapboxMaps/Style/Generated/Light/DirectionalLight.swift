@@ -83,9 +83,47 @@ import Foundation
         self.id = id
     }
 
-    enum CodingKeys: String, CodingKey {
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: RootCodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(type, forKey: .type)
+
+        var propertiesContainer = container.nestedContainer(keyedBy: PropertiesCodingKeys.self, forKey: .properties)
+        try propertiesContainer.encodeIfPresent(castShadows, forKey: .castShadows)
+        try propertiesContainer.encodeIfPresent(color, forKey: .color)
+        try propertiesContainer.encodeIfPresent(colorTransition, forKey: .colorTransition)
+        try propertiesContainer.encodeIfPresent(direction, forKey: .direction)
+        try propertiesContainer.encodeIfPresent(directionTransition, forKey: .directionTransition)
+        try propertiesContainer.encodeIfPresent(intensity, forKey: .intensity)
+        try propertiesContainer.encodeIfPresent(intensityTransition, forKey: .intensityTransition)
+        try propertiesContainer.encodeIfPresent(shadowIntensity, forKey: .shadowIntensity)
+        try propertiesContainer.encodeIfPresent(shadowIntensityTransition, forKey: .shadowIntensityTransition)
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: RootCodingKeys.self)
+        self.id = try container.decode(String.self, forKey: .id)
+
+        if let propertiesContainer = try? container.nestedContainer(keyedBy: PropertiesCodingKeys.self, forKey: .properties) {
+            self.castShadows = try propertiesContainer.decodeIfPresent(Value<Bool>.self, forKey: .castShadows)
+            self.color = try propertiesContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .color)
+            self.colorTransition = try propertiesContainer.decodeIfPresent(StyleTransition.self, forKey: .colorTransition)
+            self.direction = try propertiesContainer.decodeIfPresent(Value<[Double]>.self, forKey: .direction)
+            self.directionTransition = try propertiesContainer.decodeIfPresent(StyleTransition.self, forKey: .directionTransition)
+            self.intensity = try propertiesContainer.decodeIfPresent(Value<Double>.self, forKey: .intensity)
+            self.intensityTransition = try propertiesContainer.decodeIfPresent(StyleTransition.self, forKey: .intensityTransition)
+            self.shadowIntensity = try propertiesContainer.decodeIfPresent(Value<Double>.self, forKey: .shadowIntensity)
+            self.shadowIntensityTransition = try propertiesContainer.decodeIfPresent(StyleTransition.self, forKey: .shadowIntensityTransition)
+        }
+    }
+
+    enum RootCodingKeys: String, CodingKey {
         case id = "id"
         case type = "type"
+        case properties = "properties"
+    }
+
+    enum PropertiesCodingKeys: String, CodingKey {
         case castShadows = "cast-shadows"
         case color = "color"
         case colorTransition = "color-transition"

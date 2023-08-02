@@ -1,5 +1,5 @@
-import Foundation
-import MapboxMaps
+import UIKit
+@_spi(Experimental) import MapboxMaps
 
 public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()
@@ -37,10 +37,22 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
         button.addTarget(self, action: #selector(lightColorButtonTapped(_:)), for: .touchUpInside)
         return button
     }()
+    private var ambientLight: AmbientLight = {
+        var light = AmbientLight()
+        light.color = .constant(StyleColor(.blue))
+        light.intensity = .constant(0.9)
+        return light
+    }()
+    private var directionalLight: DirectionalLight = {
+        var light = DirectionalLight()
+        light.color = .constant(StyleColor(.white))
+        light.intensity = .constant(0.9)
+        light.castShadows = .constant(true)
+        light.direction = .constant([0.0, 15.0])
+        return light
+    }()
 
     internal var mapView: MapView!
-
-    private var light = FlatLight()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -76,10 +88,10 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
                                           pitch: 45)
         mapView.mapboxMap.setCamera(to: cameraOptions)
 
+        try! mapView.mapboxMap.setLights(ambient: ambientLight, directional: directionalLight)
+
         // The below lines are used for internal testing purposes only.
-        DispatchQueue.main.asyncAfter(deadline: .now()+5.0) {
-            self.finish()
-        }
+        finish()
     }
 
     // See https://docs.mapbox.com/mapbox-gl-js/example/3d-buildings/ for equivalent gl-js example
@@ -132,29 +144,29 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
     // MARK: - Actions
 
     @objc private func lightColorButtonTapped(_ sender: UIButton) {
-        if case .constant(let color) = light.color, color == StyleColor(.red) {
-            light.color = .constant(StyleColor(.blue))
+        if case .constant(let color) = ambientLight.color, color == StyleColor(.red) {
+            ambientLight.color = .constant(StyleColor(.blue))
             sender.tintColor = .blue
         } else {
-            light.color = .constant(StyleColor(.red))
+            ambientLight.color = .constant(StyleColor(.red))
             sender.tintColor = .red
         }
 
-        try? mapView.mapboxMap.setLights(light)
+        try! mapView.mapboxMap.setLights(ambient: ambientLight, directional: directionalLight)
     }
 
     @objc private func lightPositionButtonTapped(_ sender: UIButton) {
-        let firstPosition = [1.5, 90, 80]
-        let secondPosition = [1.15, 210, 30]
+        let firstPosition: [Double] = [0, 15]
+        let secondPosition: [Double] = [90, 60]
 
-        if case .constant(let position) = light.position, position == firstPosition {
-            light.position = .constant(secondPosition)
+        if case .constant(let position) = directionalLight.direction, position == firstPosition {
+            directionalLight.direction = .constant(secondPosition)
             sender.imageView?.transform = .identity
         } else {
-            light.position = .constant(firstPosition)
+            directionalLight.direction = .constant(firstPosition)
             sender.imageView?.transform = CGAffineTransform(rotationAngle: 2.0 * .pi / 3.0)
         }
 
-        try? mapView.mapboxMap.setLights(light)
+        try! mapView.mapboxMap.setLights(ambient: ambientLight, directional: directionalLight)
     }
 }

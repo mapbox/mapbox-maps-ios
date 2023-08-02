@@ -557,6 +557,27 @@ mapboxMap.isStyleLoaded = true
 let defaultCamera = mapboxMap.styleDefaultCamera
 ```
 
+### 3.7 Maps SDK no longer reexport MetalKit and UIKit
+
+Mapbox Maps SDK no longer reexports MetalKit and UIKit frameworks, so you will need to import them as needed for your code. In v10 version you could omit `import UIKit` if you already had an `import MapboxMaps` statement, but that is no longer possible.
+
+**v10:**
+
+```swift
+import MapboxMaps
+
+class ViewController: UIViewController { }
+```
+
+**v11:**
+
+```swift
+import UIKit
+import MapboxMaps
+
+class ViewController: UIViewController { }
+```
+
 ### 3.8 Http Stack changes
 `HTTPServiceFactory.reset`, `HttpServiceFactory.setUserDefinedForCustom` and `HttpServiceInterface` have been removed from public visibility. ***It is thus no longer possible to override the HTTP stack.***
 

@@ -1,3 +1,4 @@
+import UIKit
 // Consider moving blurring to this view. Unfortunately it doesn't seem
 // possible to use UIVisualEffectView as the base class, as the blurring is not
 // rendered when used with the current Snapshotter implementation.

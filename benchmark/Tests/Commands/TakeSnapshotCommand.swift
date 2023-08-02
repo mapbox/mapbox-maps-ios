@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 import MapboxMaps
 
 struct TakeSnapshotCommand: AsyncCommand, Decodable {

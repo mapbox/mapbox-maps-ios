@@ -1,4 +1,4 @@
-import Foundation
+import MetalKit
 import MapboxMaps
 
 extension CameraOptions: Decodable {

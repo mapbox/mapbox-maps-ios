@@ -1,3 +1,5 @@
+import UIKit
+
 internal extension UIView {
     var parentViewController: UIViewController? {
         var parentResponder: UIResponder? = self

@@ -1,4 +1,5 @@
 import MapboxMaps
+import UIKit
 
 final class LiveDataExample: UIViewController, ExampleProtocol {
     // Display the current location of the International Space Station (ISS)

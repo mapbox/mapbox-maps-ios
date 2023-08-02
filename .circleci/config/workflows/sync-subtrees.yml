@@ -1,0 +1,9 @@
+when:
+  or:
+    - matches:
+        pattern: "release/v*"
+        value: << pipeline.git.branch >>
+    - equal: [ main, << pipeline.git.branch >> ]
+jobs:
+  - sync-subtree
+  

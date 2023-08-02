@@ -3,16 +3,6 @@
 
 import PackageDescription
 
-let coreVersion = "11.0.0-beta.1"
-let coreChecksum = "b8a1450a7b56e2575898bdee884a8ce0e3d5c346ba2f97c91fdda4e66bd3c2cc"
-let commonVersion = "24.0.0-beta.1"
-let commonChecksum = "cd37dd3a3e62e7b21d2242edec36e6172c9675c9e55a0f5c0346da5a93ae10b7"
-
-func folder(_ version: String) -> String { version.contains("SNAPSHOT") ? "snapshots" : "releases" }
-
-let mapboxMapsPath: String? = nil
-let mapboxMapsTestsPath: String? = nil
-
 let package = Package(
     name: "MapboxMaps",
     defaultLocalization: "en",
@@ -24,27 +14,18 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/mapbox/turf-swift.git", from: "2.0.0"),
+        .package(url: "https://github.com/mapbox/mapbox-core-maps-ios.git", exact: "11.0.0-beta.2"),
+        .package(url: "https://github.com/mapbox/mapbox-common-ios.git", exact: "24.0.0-beta.2"),
+        .package(url: "https://github.com/mapbox/turf-swift.git", exact: "2.6.1"),
     ],
     targets: [
-        .binaryTarget(
-            name: "MapboxCoreMaps",
-            url: "https://api.mapbox.com/downloads/v2/mobile-maps-core/\(folder(coreVersion))/ios/packages/\(coreVersion)/MapboxCoreMaps.xcframework-dynamic.zip",
-            checksum: coreChecksum
-        ),
-        .binaryTarget(
-            name: "MapboxCommon",
-            url: "https://api.mapbox.com/downloads/v2/mapbox-common/\(folder(commonVersion))/ios/packages/\(commonVersion)/MapboxCommon.zip",
-            checksum: commonChecksum
-        ),
         .target(
             name: "MapboxMaps",
             dependencies: [
-                "MapboxCoreMaps",
-                .product(name: "Turf", package: "turf-swift"),
-                "MapboxCommon",
+                .product(name: "MapboxCoreMaps", package: "mapbox-core-maps-ios"),
+                .product(name: "MapboxCommon", package: "mapbox-common-ios"),
+                .product(name: "Turf", package: "turf-swift")
             ],
-            path: mapboxMapsPath,
             exclude: [
                 "Info.plist",
             ],
@@ -57,7 +38,6 @@ let package = Package(
             dependencies: [
                 "MapboxMaps",
             ],
-            path: mapboxMapsTestsPath,
             exclude: [
                 "Info.plist",
             ],

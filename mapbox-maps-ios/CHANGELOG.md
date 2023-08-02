@@ -29,6 +29,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Expose new APIs for working with style importing and configuration: getStyleImports(), removeStyleImport(forImportId:), getStyleImportSchema(forImportId:), getStyleImportConfigProperties(forImportId:), setStyleImportConfigPropertiesForImportId(_:configs:), getStyleImportConfigProperty(forImportId:config:), setStyleImportConfigPropertyForImportId(_:config:value:)
 * Expose `slot` property for all `Layer`s to link layers from imported styles.
 * Convert Style properties enums into structs.
+* Bump core maps version to 11.0.0-beta.2 and common sdk to 24.0.0-beta.2.
 
 ## 11.0.0-alpha.2 - 21 June, 2023
 

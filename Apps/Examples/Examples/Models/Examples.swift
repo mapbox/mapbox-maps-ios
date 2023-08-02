@@ -176,6 +176,9 @@ struct Examples {
         Example(title: "Filter symbols based on pitch and distance",
                 description: "Use pitch and distance-from-center expressions in the filter field of a symbol layer to remove large size POI labels in the far distance at high pitch",
                 type: PitchAndDistanceExample.self),
+        Example(title: "Add an Inset Map",
+                description: "Add a smaller inset map that visualizes the viewport of the main map",
+                type: InsetMapExample.self),
     ]
 
     // Miscellaneous examples

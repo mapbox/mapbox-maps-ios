@@ -12,7 +12,7 @@ final class NavigationSimulator: LocationProvider {
     }
 
     func getLastObservedLocation() -> Location? {
-        Location(coordinate: currentLocation, timestamp: Date(), floor: nil, extra: nil)
+        Location(coordinate: currentLocation)
     }
 
     private let viewport: ViewportManager

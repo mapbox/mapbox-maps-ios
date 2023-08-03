@@ -102,13 +102,17 @@ public final class AppleLocationProvider {
     private lazy var locationObservingAdapter = SignalObservingAdapter(signal: onLocationUpdate, notify: notifyLocationObserver(_:_:))
     private lazy var headingObservingAdapter = SignalObservingAdapter(signal: onHeadingUpdate, notify: notifyHeadingObserver(_:_:))
 
-    private var latestAccuracyAuthorization: CLAccuracyAuthorization {
+    private var latestLocationAndAccuracyAuth: ([CLLocation], CLAccuracyAuthorization) {
         didSet {
-            if latestAccuracyAuthorization != oldValue {
-                delegate?.appleLocationProvider(self, didChangeAccuracyAuthorization: latestAccuracyAuthorization)
+            if latestLocationAndAccuracyAuth.1 != oldValue.1 {
+                delegate?.appleLocationProvider(self, didChangeAccuracyAuthorization: latestLocationAndAccuracyAuth.1)
             }
-            if let location = locationSubject.value {
-                doLocationUpdate(location)
+
+            let (locations, accuracyAuth) = latestLocationAndAccuracyAuth
+            if !locations.isEmpty {
+                locationSubject.value = locations.map {
+                    Location(clLocation: $0, extra: Location.makeExtra(for: accuracyAuth))
+                }
             }
         }
     }
@@ -175,7 +179,7 @@ public final class AppleLocationProvider {
                   locationManagerDelegateProxy: CLLocationManagerDelegateProxy) {
         self.locationManager = locationManager
         self.mayRequestWhenInUseAuthorization = mayRequestWhenInUseAuthorization
-        self.latestAccuracyAuthorization = locationManager.compatibleAccuracyAuthorization
+        self.latestLocationAndAccuracyAuth = ([], locationManager.compatibleAccuracyAuthorization)
         self.interfaceOrientation = interfaceOrientation
         self.headingOrientation = locationManager.headingOrientation
         self.locationManagerDelegateProxy = locationManagerDelegateProxy
@@ -269,13 +273,7 @@ extension AppleLocationProvider: HeadingProvider {
 // they may be deinited without ever being explicitly removed.
 extension AppleLocationProvider: CLLocationManagerDelegateProxyDelegate {
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        doLocationUpdate(locations.map(Location.init(clLocation:)))
-    }
-
-    private func doLocationUpdate(_ locations: [Location]) {
-        locationSubject.value = locations.map {
-            $0.copyBySetting(accuracyAuthorization: latestAccuracyAuthorization)
-        }
+        latestLocationAndAccuracyAuth.0 = locations
     }
 
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
@@ -296,7 +294,7 @@ extension AppleLocationProvider: CLLocationManagerDelegateProxyDelegate {
             locationManager.requestTemporaryFullAccuracyAuthorization(
                 withPurposeKey: "LocationAccuracyAuthorizationDescription")
         }
-        latestAccuracyAuthorization = accuracyAuthorization
+        latestLocationAndAccuracyAuth.1 = accuracyAuthorization
     }
 
     public func locationManagerShouldDisplayHeadingCalibration(_ manager: CLLocationManager) -> Bool {

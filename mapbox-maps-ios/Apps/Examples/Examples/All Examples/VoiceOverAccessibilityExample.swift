@@ -50,7 +50,7 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
         mapView.isAccessibilityElement = false
         mapView.accessibilityElements = []
 
-        let location = Location(coordinate: centerCoordinate, timestamp: Date())
+        let location = Location(coordinate: centerCoordinate)
         mapView.location.override(locationProvider: Signal(just: [location]))
         mapView.location.options.puckType = .puck2D(.makeDefault())
 

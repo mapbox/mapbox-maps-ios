@@ -10,7 +10,7 @@ final class OnDemandLocationProvider {
         return $coordinate
             .compactMap { $0 }
             .map { coordinate in
-                [Location(coordinate: coordinate, timestamp: Date())]
+                [Location(coordinate: coordinate)]
             }.eraseToSignal()
     }
 }

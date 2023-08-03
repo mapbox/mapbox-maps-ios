@@ -1,37 +1,21 @@
 import CoreLocation
 
 extension Location {
-    // TODO: Remove this in common v24.0.0-beta.2
-    func copyBySetting(accuracyAuthorization: CLAccuracyAuthorization) -> Location {
-        var extra = extraDictionary
-        extra[accuracyAuthorizationKey] = accuracyAuthorization
-        return Location(
-            coordinate: coordinate,
-            timestamp: timestamp,
-            altitude: altitude,
-            horizontalAccuracy: horizontalAccuracy,
-            verticalAccuracy: verticalAccuracy,
-            speed: speed,
-            speedAccuracy: speedAccuracy,
-            bearing: bearing,
-            bearingAccuracy: bearingAccuracy,
-            floor: floor,
-            source: source,
-            extra: extra)
-    }
-
-    private var extraDictionary: [String: Any] {
-        extra as? [String: Any] ?? [:]
-    }
-
-    private func getExtra(key: String) -> Any? {
-        (extra as? [String: Any])?[key]
-    }
-
     var accuracyAuthorization: CLAccuracyAuthorization {
-        let value = getExtra(key: accuracyAuthorizationKey) as? CLAccuracyAuthorization
-        return value ?? .fullAccuracy
+        let value = getExtra(key: Self.accuracyAuthorizationKey)
+        let casted = (value as? NSNumber).flatMap { CLAccuracyAuthorization(rawValue: $0.intValue) }
+        return casted ?? .fullAccuracy
     }
-}
 
-private let accuracyAuthorizationKey = "accuracyAuthorization"
+    private func getExtra(key: String) -> AnyObject? {
+        (extra as? [String: AnyObject])?[key]
+    }
+
+    static func makeExtra(for accuracyAuthorization: CLAccuracyAuthorization) -> [String: AnyObject] {
+        return [
+            accuracyAuthorizationKey: NSNumber(value: accuracyAuthorization.rawValue)
+        ]
+    }
+
+    private static let accuracyAuthorizationKey = "accuracyAuthorization"
+}

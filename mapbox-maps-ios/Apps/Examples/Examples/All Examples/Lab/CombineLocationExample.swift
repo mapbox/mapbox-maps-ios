@@ -7,7 +7,7 @@ import Turf
 @available(iOS 13.0, *)
 final class CombineLocationExample: UIViewController, ExampleProtocol {
     @Published
-    private var location = Location(coordinate: CLLocationCoordinate2D(latitude: 60.17195694011002, longitude: 24.945389069265598), timestamp: Date())
+    private var location = Location(coordinate: CLLocationCoordinate2D(latitude: 60.17195694011002, longitude: 24.945389069265598))
     @Published
     private var heading = Heading(direction: 0, accuracy: 0)
 
@@ -59,7 +59,7 @@ final class CombineLocationExample: UIViewController, ExampleProtocol {
         // Calculating the angle between the current coordinate, and the target coordinate
         let headingDirection = location.coordinate.direction(to: coordinate)
 
-        location = Location(coordinate: coordinate, timestamp: Date())
+        location = Location(coordinate: coordinate)
         heading = Heading(direction: headingDirection, accuracy: 0)
     }
 

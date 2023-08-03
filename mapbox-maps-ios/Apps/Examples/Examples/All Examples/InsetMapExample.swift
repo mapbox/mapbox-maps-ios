@@ -81,7 +81,7 @@ final class InsetMapExample: UIViewController, ExampleProtocol {
             try! self.insetMapView.mapboxMap.addSource(geoJSONSource)
             try! self.insetMapView.mapboxMap.addLayer(lineBoundsLayer)
 
-            self.updateInsetMap(center: mapView.mapboxMap.cameraState.center)
+            self.updateInsetMap(center: self.mapView.mapboxMap.cameraState.center)
         }.store(in: &cancelables)
 
     }

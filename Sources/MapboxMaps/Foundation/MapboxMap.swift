@@ -492,7 +492,7 @@ public final class MapboxMap: StyleManager, MapboxMapProtocol {
     ///
     /// - Parameters:
     ///   - coordinates: Array of coordinates that should fit within the new viewport.
-    ///   - padding: The amount of padding to add to the given bounds when calculating the camera, in points. This is differnt from camera padding. 
+    ///   - padding: The amount of padding to add to the given bounds when calculating the camera, in points. This is differnt from camera padding.
     ///   - bearing: The new bearing to be used by the camera, in degrees (0°, 360°) clockwise from true north.
     ///   - pitch: The new pitch to be used by the camera, in degrees (0°, 85°) with 0° being a top-down view.
     /// - Returns: A `CameraOptions` that fits the provided constraints

@@ -277,7 +277,7 @@ As a bonus, you now can use a Combine `Publisher` to drive the puck location upd
 ```swift
 class Example {
     @Published
-    private var locations = [Location(coordinate: .init(latitude: 0, longitude: 0), timestamp: Date())]
+    private var locations = [Location(coordinate: .init(latitude: 0, longitude: 0))]
     @Published
     private var heading = Heading(direction: 0, accuracy: 0)
 

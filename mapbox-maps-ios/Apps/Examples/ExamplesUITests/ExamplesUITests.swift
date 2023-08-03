@@ -27,7 +27,7 @@ final class ExamplesUITests: XCTestCase {
         // Navigate to an example that should trigger location permissoon alert to be shown
         let searchField = app.searchFields.firstMatch
         searchField.tap()
-        searchField.typeText("Location")
+        searchField.typeText("User's Location")
         app.tables.firstMatch.cells.firstMatch.tap()
 
         acceptLocationPermissionAlert(timeout: 5)

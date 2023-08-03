@@ -1,4 +1,4 @@
-import UIKit
+import MetalKit
 import MapboxMaps
 
 extension CameraOptions: Decodable {

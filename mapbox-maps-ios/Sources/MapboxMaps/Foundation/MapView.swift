@@ -1,14 +1,9 @@
 // swiftlint:disable file_length
-@_exported import MapboxCoreMaps
-@_exported import MapboxCommon
-@_exported import Turf
-
 @_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
-
-import MetalKit
 import UIKit
 import os
+import MetalKit
 
 // swiftlint:disable:next type_body_length
 open class MapView: UIView {

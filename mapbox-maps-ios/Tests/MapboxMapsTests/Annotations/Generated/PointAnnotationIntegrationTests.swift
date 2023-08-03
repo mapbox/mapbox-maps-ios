@@ -193,7 +193,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testIconPitchAlignment() throws {
         // Test that the setter and getter work
-        let value = IconPitchAlignment.allCases.randomElement()!
+        let value = IconPitchAlignment.random()
         manager.iconPitchAlignment = value
         XCTAssertEqual(manager.iconPitchAlignment, value)
 
@@ -214,12 +214,12 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconPitchAlignment, .constant(IconPitchAlignment(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-pitch-alignment").value as! String)!))
+        XCTAssertEqual(layer.iconPitchAlignment, .constant(IconPitchAlignment(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-pitch-alignment").value as! String)))
     }
 
     func testIconRotationAlignment() throws {
         // Test that the setter and getter work
-        let value = IconRotationAlignment.allCases.randomElement()!
+        let value = IconRotationAlignment.random()
         manager.iconRotationAlignment = value
         XCTAssertEqual(manager.iconRotationAlignment, value)
 
@@ -240,7 +240,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconRotationAlignment, .constant(IconRotationAlignment(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-rotation-alignment").value as! String)!))
+        XCTAssertEqual(layer.iconRotationAlignment, .constant(IconRotationAlignment(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-rotation-alignment").value as! String)))
     }
 
     func testSymbolAvoidEdges() throws {
@@ -271,7 +271,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testSymbolPlacement() throws {
         // Test that the setter and getter work
-        let value = SymbolPlacement.allCases.randomElement()!
+        let value = SymbolPlacement.random()
         manager.symbolPlacement = value
         XCTAssertEqual(manager.symbolPlacement, value)
 
@@ -292,7 +292,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.symbolPlacement, .constant(SymbolPlacement(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-placement").value as! String)!))
+        XCTAssertEqual(layer.symbolPlacement, .constant(SymbolPlacement(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-placement").value as! String)))
     }
 
     func testSymbolSpacing() throws {
@@ -323,7 +323,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testSymbolZOrder() throws {
         // Test that the setter and getter work
-        let value = SymbolZOrder.allCases.randomElement()!
+        let value = SymbolZOrder.random()
         manager.symbolZOrder = value
         XCTAssertEqual(manager.symbolZOrder, value)
 
@@ -344,7 +344,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.symbolZOrder, .constant(SymbolZOrder(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-z-order").value as! String)!))
+        XCTAssertEqual(layer.symbolZOrder, .constant(SymbolZOrder(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-z-order").value as! String)))
     }
 
     func testTextAllowOverlap() throws {
@@ -531,7 +531,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testTextPitchAlignment() throws {
         // Test that the setter and getter work
-        let value = TextPitchAlignment.allCases.randomElement()!
+        let value = TextPitchAlignment.random()
         manager.textPitchAlignment = value
         XCTAssertEqual(manager.textPitchAlignment, value)
 
@@ -552,12 +552,12 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textPitchAlignment, .constant(TextPitchAlignment(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-pitch-alignment").value as! String)!))
+        XCTAssertEqual(layer.textPitchAlignment, .constant(TextPitchAlignment(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-pitch-alignment").value as! String)))
     }
 
     func testTextRotationAlignment() throws {
         // Test that the setter and getter work
-        let value = TextRotationAlignment.allCases.randomElement()!
+        let value = TextRotationAlignment.random()
         manager.textRotationAlignment = value
         XCTAssertEqual(manager.textRotationAlignment, value)
 
@@ -578,12 +578,12 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textRotationAlignment, .constant(TextRotationAlignment(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-rotation-alignment").value as! String)!))
+        XCTAssertEqual(layer.textRotationAlignment, .constant(TextRotationAlignment(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-rotation-alignment").value as! String)))
     }
 
     func testTextVariableAnchor() throws {
         // Test that the setter and getter work
-        let value = Array.random(withLength: .random(in: 0...10), generator: { TextAnchor.allCases.randomElement()! })
+        let value = Array.random(withLength: .random(in: 0...10), generator: { TextAnchor.random() })
         manager.textVariableAnchor = value
         XCTAssertEqual(manager.textVariableAnchor, value)
 
@@ -609,7 +609,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testTextWritingMode() throws {
         // Test that the setter and getter work
-        let value = Array.random(withLength: .random(in: 0...10), generator: { TextWritingMode.allCases.randomElement()! })
+        let value = Array.random(withLength: .random(in: 0...10), generator: { TextWritingMode.random() })
         manager.textWritingMode = value
         XCTAssertEqual(manager.textWritingMode, value)
 
@@ -663,7 +663,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testIconTranslateAnchor() throws {
         // Test that the setter and getter work
-        let value = IconTranslateAnchor.allCases.randomElement()!
+        let value = IconTranslateAnchor.random()
         manager.iconTranslateAnchor = value
         XCTAssertEqual(manager.iconTranslateAnchor, value)
 
@@ -684,7 +684,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconTranslateAnchor, .constant(IconTranslateAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-translate-anchor").value as! String)!))
+        XCTAssertEqual(layer.iconTranslateAnchor, .constant(IconTranslateAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-translate-anchor").value as! String)))
     }
 
     func testTextTranslate() throws {
@@ -717,7 +717,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testTextTranslateAnchor() throws {
         // Test that the setter and getter work
-        let value = TextTranslateAnchor.allCases.randomElement()!
+        let value = TextTranslateAnchor.random()
         manager.textTranslateAnchor = value
         XCTAssertEqual(manager.textTranslateAnchor, value)
 
@@ -738,13 +738,13 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textTranslateAnchor, .constant(TextTranslateAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-translate-anchor").value as! String)!))
+        XCTAssertEqual(layer.textTranslateAnchor, .constant(TextTranslateAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-translate-anchor").value as! String)))
     }
 
     func testIconAnchor() throws {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = IconAnchor.allCases.randomElement()!
+        let value = IconAnchor.random()
         annotation.iconAnchor = value
         XCTAssertEqual(annotation.iconAnchor, value)
 
@@ -774,7 +774,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconAnchor, .constant(IconAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-anchor").value as! String)!))
+        XCTAssertEqual(layer.iconAnchor, .constant(IconAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-anchor").value as! String)))
     }
 
     func testIconImage() throws {
@@ -926,7 +926,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testIconTextFit() throws {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = IconTextFit.allCases.randomElement()!
+        let value = IconTextFit.random()
         annotation.iconTextFit = value
         XCTAssertEqual(annotation.iconTextFit, value)
 
@@ -956,7 +956,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.iconTextFit, .constant(IconTextFit(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-text-fit").value as! String)!))
+        XCTAssertEqual(layer.iconTextFit, .constant(IconTextFit(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-text-fit").value as! String)))
     }
 
     func testIconTextFitPadding() throws {
@@ -1036,7 +1036,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testTextAnchor() throws {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = TextAnchor.allCases.randomElement()!
+        let value = TextAnchor.random()
         annotation.textAnchor = value
         XCTAssertEqual(annotation.textAnchor, value)
 
@@ -1066,7 +1066,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textAnchor, .constant(TextAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-anchor").value as! String)!))
+        XCTAssertEqual(layer.textAnchor, .constant(TextAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-anchor").value as! String)))
     }
 
     func testTextField() throws {
@@ -1112,7 +1112,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testTextJustify() throws {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = TextJustify.allCases.randomElement()!
+        let value = TextJustify.random()
         annotation.textJustify = value
         XCTAssertEqual(annotation.textJustify, value)
 
@@ -1142,7 +1142,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textJustify, .constant(TextJustify(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-justify").value as! String)!))
+        XCTAssertEqual(layer.textJustify, .constant(TextJustify(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-justify").value as! String)))
     }
 
     func testTextLetterSpacing() throws {
@@ -1402,7 +1402,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func testTextTransform() throws {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work
-        let value = TextTransform.allCases.randomElement()!
+        let value = TextTransform.random()
         annotation.textTransform = value
         XCTAssertEqual(annotation.textTransform, value)
 
@@ -1432,7 +1432,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
-        XCTAssertEqual(layer.textTransform, .constant(TextTransform(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-transform").value as! String)!))
+        XCTAssertEqual(layer.textTransform, .constant(TextTransform(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-transform").value as! String)))
     }
 
     func testIconColor() throws {

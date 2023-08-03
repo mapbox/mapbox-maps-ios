@@ -6,11 +6,16 @@ import Foundation
 <%_ for(const property of enums) { -%>
 
 /// <%- property.doc %>
-public enum <%- camelize(property.name) %>: String, Codable {
+public struct <%- camelize(property.name) %>: RawRepresentable, Codable, Hashable {
+    public let rawValue: String
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
     <%_ for(const value of Object.keys(property.values)) { -%>
 
     /// <%- propertyValueDoc(property, value) %>
-    case <%- camelizeWithLeadingLowercase(value) %> = "<%- value %>"
+    public static let <%- camelizeWithLeadingLowercase(value) %> = <%- camelize(property.name) %>(rawValue: "<%- value %>")
     <%_ } %>
 }
 <%_ } -%>

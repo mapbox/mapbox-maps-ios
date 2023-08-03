@@ -150,7 +150,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
     func testFillTranslateAnchor() throws {
         // Test that the setter and getter work
-        let value = FillTranslateAnchor.allCases.randomElement()!
+        let value = FillTranslateAnchor.random()
         manager.fillTranslateAnchor = value
         XCTAssertEqual(manager.fillTranslateAnchor, value)
 
@@ -171,7 +171,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: FillLayer.self)
-        XCTAssertEqual(layer.fillTranslateAnchor, .constant(FillTranslateAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-translate-anchor").value as! String)!))
+        XCTAssertEqual(layer.fillTranslateAnchor, .constant(FillTranslateAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-translate-anchor").value as! String)))
     }
 
     func testFillSortKey() throws {

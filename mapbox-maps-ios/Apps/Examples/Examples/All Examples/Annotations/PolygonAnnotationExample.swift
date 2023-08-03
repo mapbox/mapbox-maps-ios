@@ -1,5 +1,5 @@
-import UIKit
 import MapboxMaps
+import UIKit
 
 final class PolygonAnnotationExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!

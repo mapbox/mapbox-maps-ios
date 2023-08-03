@@ -1,5 +1,5 @@
-import UIKit
 import MapboxMaps
+import UIKit
 
 class ShowHideLayerExample: UIViewController, ExampleProtocol {
 

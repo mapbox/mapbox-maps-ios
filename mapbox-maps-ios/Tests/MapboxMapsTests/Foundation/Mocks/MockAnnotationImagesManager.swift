@@ -1,6 +1,5 @@
-import Foundation
-@testable import MapboxMaps
 import UIKit
+@testable import MapboxMaps
 
 final class MockAnnotationImagesManager: AnnotationImagesManagerProtocol {
 

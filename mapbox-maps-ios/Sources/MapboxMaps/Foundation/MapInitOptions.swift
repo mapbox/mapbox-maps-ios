@@ -10,7 +10,7 @@ import Foundation
 
 /// Options used when initializing `MapView`.
 ///
-/// Contains the ``MapOptions`` (including ``GlyphsRasterizationOptions``)
+/// Contains the `MapOptions` (including `GlyphsRasterizationOptions`)
 /// that are required to initialize a `MapView`.
 public final class MapInitOptions: NSObject {
 

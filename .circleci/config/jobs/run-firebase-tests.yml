@@ -3,7 +3,7 @@ parameters:
     default: |
       --device model=iphone13pro,version=15.7 \
       --device model=iphone11pro,version=14.7 \
-      --device model=iphone11pro,version=16.3 \
+      --device model=iphone11pro,version=16.5 \
     type: string
   scheme:
     type: string

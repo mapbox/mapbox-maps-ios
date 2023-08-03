@@ -33,7 +33,7 @@ public protocol ViewportState: AnyObject {
     /// `ViewportState` implementations so that they start updating their internal state prior to when
     /// they are passed to ``ViewportManager/transition(to:transition:completion:)``.
     ///
-    /// The caller may either cancel the returned ``Cancelable`` *or* return `false` from
+    /// The caller may either cancel the returned `Cancelable` *or* return `false` from
     /// `handler` to indicate that it wishes to stop receiving updates. Following either of these events,
     /// implemenations must no longer invoke `handler` and must release all strong references to it.
     ///
@@ -42,7 +42,7 @@ public protocol ViewportState: AnyObject {
     ///              `true` to stay subscribed and `false` to unsubscribe. `handler` must be
     ///              invoked on the main queue.
     ///   - camera: The `ViewportState`'s most recent camera.
-    /// - Returns: A ``Cancelable`` that the caller can use to unsubscribe.
+    /// - Returns: A `Cancelable` that the caller can use to unsubscribe.
     func observeDataSource(with handler: @escaping (_ camera: CameraOptions) -> Bool) -> Cancelable
 
     /// Tells this state that it is now responsible for updating the camera.

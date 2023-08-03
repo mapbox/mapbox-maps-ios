@@ -88,9 +88,9 @@ const templatesRegistry = [
     }),
     new StyleTemplate({
         key: 'enumProperties',
-        templateName: 'Enums.swift.ejs',
-        testsTemplateName: 'EnumsTestFixtures.swift.ejs',
-        folderPath: name => 'Enums/Enums.swift',
+        templateName: 'Properties.swift.ejs',
+        testsTemplateName: 'PropertiesTestFixtures.swift.ejs',
+        folderPath: name => 'Properties/Properties.swift',
         wrapInArray: true
     }),
     new StyleTemplate({

@@ -306,7 +306,7 @@ public extension Expression {
         /// Interpolates using the cubic bezier curve defined by the given control points.
         public static let cubicBezier = Operator(rawValue: "cubic-bezier")
 
-        public var rawValue: String
+        public let rawValue: String
 
         public init(rawValue: String) {
             self.rawValue = rawValue

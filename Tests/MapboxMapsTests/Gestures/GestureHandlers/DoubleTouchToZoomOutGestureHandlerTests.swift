@@ -1,4 +1,5 @@
 import XCTest
+import UIKit
 @testable import MapboxMaps
 
 final class DoubleTouchToZoomOutGestureHandlerTests: XCTestCase {

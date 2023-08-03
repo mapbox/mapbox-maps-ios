@@ -12,8 +12,7 @@ public class ColorExpressionExample: UIViewController, ExampleProtocol {
         // Center the map over the United States.
         let centerCoordinate = CLLocationCoordinate2D(latitude: 40.58058466412761,
                                                       longitude: -97.734375)
-        let options = MapInitOptions(cameraOptions: CameraOptions(center: centerCoordinate,
-                                                                  zoom: 3))
+        let options = MapInitOptions(cameraOptions: CameraOptions(center: centerCoordinate, zoom: 3), styleURI: .streets)
 
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]

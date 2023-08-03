@@ -111,7 +111,7 @@ public final class ViewportManager {
 
     /// Creates a new instance of ``FollowPuckViewportState`` with the specified options.
     /// - Parameter options: configuration options used when creating ``FollowPuckViewportState``. Defaults to
-    ///                      ``FollowPuckViewportStateOptions/init(padding:zoom:bearing:pitch:animationDuration:)``
+    ///                      ``FollowPuckViewportStateOptions/init(padding:zoom:bearing:pitch:)``
     ///                      with the default value specified for all parameters.
     /// - Returns: The newly-created ``FollowPuckViewportState``.
     public func makeFollowPuckViewportState(options: FollowPuckViewportStateOptions = .init()) -> FollowPuckViewportState {

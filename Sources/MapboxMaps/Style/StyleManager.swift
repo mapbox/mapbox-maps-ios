@@ -203,7 +203,7 @@ public class StyleManager {
      Adds a `source` to the map
      - Parameter source: The source to add to the map.
      - Parameter identifier: A unique source identifier.
-     - Parameter dataId: An optional data ID to filter ``MapEvents/onSourceDataLoaded`` to only the specified data source. Applies only to ``GeoJSONSource``s.
+     - Parameter dataId: An optional data ID to filter ``MapboxMap/onSourceDataLoaded`` to only the specified data source. Applies only to ``GeoJSONSource``s.
 
      - Throws: ``StyleError`` if there is a problem adding the `source`.
      */
@@ -264,7 +264,7 @@ public class StyleManager {
     ///   - id: The identifier representing the GeoJSON source.
     ///   - geoJSON: The new GeoJSON to be associated with the source data. i.e.
     ///   a feature or feature collection.
-    ///   - dataId: An optional data ID to filter ``MapboxMap/sourceDataLoaded`` to only the specified data source.
+    ///   - dataId: An optional data ID to filter ``MapboxMap/onSourceDataLoaded`` to only the specified data source.
     ///
     /// The update will be scheduled and applied on a GeoJSON serialization queue.
     ///
@@ -440,6 +440,9 @@ public class StyleManager {
     }
 
     /// Returns the list containing information about existing style import objects.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var styleImports: [StyleObjectInfo] {
         return styleManager.getStyleImports()
     }
@@ -451,7 +454,10 @@ public class StyleManager {
     ///
     ///  - Throws:
     ///   - An error describing why the operation was unsuccessful.
-    @_spi(Experimental) public func removeStyleImport(forImportId importId: String) throws {
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public func removeStyleImport(for importId: String) throws {
         try handleExpected {
             styleManager.removeStyleImport(forImportId: importId)
         }
@@ -467,7 +473,10 @@ public class StyleManager {
     ///           or a string describing an error if the operation was not successful.
     ///  - Throws:
     ///   - A StyleError or decoding error if the operation was not successful.
-    @_spi(Experimental) public func getStyleImportSchema(forImportId importId: String) throws -> Any {
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public func getStyleImportSchema(for importId: String) throws -> Any {
         try handleExpected {
             return styleManager.getStyleImportSchema(forImportId: importId)
         }
@@ -480,7 +489,10 @@ public class StyleManager {
     ///
     ///  - Returns:
     ///   - The style import configuration or a string describing an error if the operation was not successful.
-    @_spi(Experimental) public func getStyleImportConfigProperties(forImportId importId: String) throws -> [String: StylePropertyValue] {
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public func getStyleImportConfigProperties(for importId: String) throws -> [String: StylePropertyValue] {
         try handleExpected {
             return styleManager.getStyleImportConfigProperties(forImportId: importId)
         }
@@ -494,7 +506,10 @@ public class StyleManager {
     ///
     ///  - Returns:
     ///   - The style import configuration or a string describing an error if the operation was not successful.
-    @_spi(Experimental) public func getStyleImportConfigProperty(forImportId importId: String, config: String) throws -> StylePropertyValue {
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental) public func getStyleImportConfigProperty(for importId: String, config: String) throws -> StylePropertyValue {
         try handleExpected {
             return styleManager.getStyleImportConfigProperty(forImportId: importId, config: config)
         }
@@ -509,6 +524,9 @@ public class StyleManager {
     ///
     ///  - Throws:
     ///   - A string describing an error if the operation was not successful.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public func setStyleImportConfigProperties(for importId: String, configs: [String: Any]) throws {
         try handleExpected {
             return styleManager.setStyleImportConfigPropertiesForImportId(importId, configs: configs)
@@ -524,6 +542,9 @@ public class StyleManager {
     ///
     ///  - Throws:
     ///   - A string describing an error if the operation was not successful.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public func setStyleImportConfigProperty(for importId: String, config: String, value: Any) throws {
         try handleExpected {
             return styleManager.setStyleImportConfigPropertyForImportId( importId, config: config, value: value)
@@ -1031,6 +1052,9 @@ public class StyleManager {
     /// - Parameters:
     ///   - ambientLight: The ambient light source.
     ///   - directionalLight: The directional light source.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public func setLights(ambient ambientLight: AmbientLight,
                                               directional directionalLight: DirectionalLight) throws {
         let rawAmbientLight = try ambientLight.allStyleProperties()
@@ -1192,6 +1216,9 @@ public class StyleManager {
     ///
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public func addStyleModel(modelId: String, modelUri: String) throws {
         try handleExpected {
             styleManager.addStyleModel(forModelId: modelId, modelUri: modelUri)
@@ -1205,6 +1232,9 @@ public class StyleManager {
     ///
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public func removeStyleModel(modelId: String) throws {
         try handleExpected {
             styleManager.removeStyleModel(forModelId: modelId)
@@ -1218,6 +1248,9 @@ public class StyleManager {
     ///
     /// - Returns:
     ///     True if model exists, false otherwise.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public func hasStyleModel(modelId: String) -> Bool {
         return styleManager.hasStyleModel(forModelId: modelId)
     }
@@ -1317,16 +1350,6 @@ internal func handleExpected<Value, Error, ReturnType>(closure: () -> (Expected<
 
 // swiftlint:enable type_body_length
 
-// MARK: - Attribution -
-
-extension StyleManager {
-    internal func sourceAttributions() -> [String] {
-        return allSourceIdentifiers.compactMap {
-            sourceProperty(for: $0.id, property: "attribution").value as? String
-        }
-    }
-}
-
 // MARK: - StyleProjection
 
 extension StyleManager {
@@ -1351,7 +1374,7 @@ extension StyleManager {
             return StyleProjection(name: .mercator)
         } else {
             // swiftlint:disable:next force_cast
-            return StyleProjection(name: StyleProjectionName(rawValue: projectionName.value as! String)!)
+            return StyleProjection(name: StyleProjectionName(rawValue: projectionName.value as! String))
         }
     }
 }

@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.0.0-beta.1 - 2 August, 2023
+
 * Introduce `hsl`, `hsla` color expression.
 * Introduce `random` expression.
 * Introduce `measureLight` expression lights configuration property.
@@ -14,7 +16,6 @@ Mapbox welcomes participation and contributions from everyone.
 * Rename `Viewport` to `ViewportManager`.
 * Apply `ModelScaleMode.viewport` to Puck3D configuration and remove the custom expression for the `modelScale` of the puck. This means if you are using a constant for `Puck3DConfiguration/modelScale` in v10, you need to adjust this model-scale constant so the puck would be rendered correctly in v11, while this value depends on other configurations of your puck, we have found the new adjusted model-scale to fall between 10x-100x of the old value.
 * Add experimental `tileCover` method to the `Snapshotter` that returns tile ids covering the map.
-* SDK no longer reexport MetalKit and UIKit.
 * Add optional `maxZoom` and `offset` parameters to `MapboxMap.camera(for coordinateBounds:)`. `MapboxMap.camera(for coordinateBounds:)`, `MapboxMap.camera(for coordinates:)`, and `MapboxMap.camera(for geometry:)` no longer return a padding value.
 * `Location` is splitted into `Location` and `Heading` structs, the location and heading data are now animated individually.
 * Replace `loadStyleJSON(_:completion:)`/`loadStyleJSON(_:completion:)` with overloaded `loadStyle(_:completion:)`.
@@ -29,6 +30,9 @@ Mapbox welcomes participation and contributions from everyone.
 * Add expression support to `Layer.visibility`.
 * Expose new APIs for working with style importing and configuration: getStyleImports(), removeStyleImport(forImportId:), getStyleImportSchema(forImportId:), getStyleImportConfigProperties(forImportId:), setStyleImportConfigPropertiesForImportId(_:configs:), getStyleImportConfigProperty(forImportId:config:), setStyleImportConfigPropertyForImportId(_:config:value:)
 * Expose `slot` property for all `Layer`s to link layers from imported styles.
+* Convert Style properties enums into structs.
+* Bump core maps version to 11.0.0-beta.2 and common sdk to 24.0.0-beta.2.
+* Remove MetaKit reexport.
 
 ## 11.0.0-alpha.2 - 21 June, 2023
 
@@ -133,7 +137,7 @@ MapboxMap.removeGeoJSONSourceFeatures(forSourceId:featureIds:dataId:)
 
 ## 10.15.0-rc.1 - July 13, 2023
 
-* Update MapboxCoreMaps to 10.15.0-rc.1 and MapboxCommon to 23.7.0-rc.1.  
+* Update MapboxCoreMaps to 10.15.0-rc.1 and MapboxCommon to 23.7.0-rc.1.
 * Fixed an issue when `MapboxMap.point(for:)` could return false negative result.
 
 ## 10.15.0-beta.1 - June 29, 2023

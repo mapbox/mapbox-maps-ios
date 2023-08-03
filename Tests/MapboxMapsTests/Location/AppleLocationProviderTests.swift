@@ -1,5 +1,4 @@
 import XCTest
-import UIKit
 @_spi(Package) @testable import MapboxMaps
 
 final class AppleLocationProviderTests: XCTestCase {

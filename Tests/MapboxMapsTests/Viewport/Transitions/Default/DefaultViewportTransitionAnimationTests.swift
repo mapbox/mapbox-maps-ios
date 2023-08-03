@@ -1,4 +1,5 @@
 @testable import MapboxMaps
+import UIKit
 import XCTest
 
 final class DefaultViewportTransitionAnimationTests: XCTestCase {

@@ -21,7 +21,7 @@ final class StyleTests: XCTestCase {
     }
 
     func testSetProjection() throws {
-        let projectionName = StyleProjectionName.allCases.randomElement()!
+        let projectionName = StyleProjectionName.random()
 
         try style.setProjection(StyleProjection(name: projectionName))
 
@@ -31,7 +31,7 @@ final class StyleTests: XCTestCase {
     }
 
     func testProjection() {
-        let projectionName = StyleProjectionName.allCases.randomElement()!
+        let projectionName = StyleProjectionName.random()
         styleManager.getStyleProjectionPropertyStub.defaultReturnValue = StylePropertyValue(
             value: projectionName.rawValue,
             kind: .constant
@@ -628,7 +628,7 @@ final class StyleTests: XCTestCase {
     func testRemoveStyleImport() {
         let importId = UUID().uuidString
 
-        try? style.removeStyleImport(forImportId: importId)
+        try? style.removeStyleImport(for: importId)
         XCTAssertEqual(styleManager.removeStyleImportStub.invocations.count, 1)
         XCTAssertEqual(styleManager.removeStyleImportStub.invocations.first?.parameters.importId, importId)
     }
@@ -636,7 +636,7 @@ final class StyleTests: XCTestCase {
     func testGetStyleImportSchema() {
         let importId = UUID().uuidString
 
-        let importSchema = try? style.getStyleImportSchema(forImportId: importId)
+        let importSchema = try? style.getStyleImportSchema(for: importId)
         XCTAssertEqual(styleManager.getStyleImportSchemaStub.invocations.count, 1)
         XCTAssertEqual(styleManager.getStyleImportSchemaStub.invocations.first?.parameters.importId, importId)
         XCTAssertEqual(importSchema as? NSDictionary, NSDictionary(dictionary: ["stub": "stub"]))
@@ -645,7 +645,7 @@ final class StyleTests: XCTestCase {
     func testGetStyleImportConfigProperties() {
         let importId = UUID().uuidString
 
-        let importConfigProperties = try? style.getStyleImportConfigProperties(forImportId: importId)
+        let importConfigProperties = try? style.getStyleImportConfigProperties(for: importId)
         XCTAssertEqual(styleManager.getStyleImportConfigPropertiesStub.invocations.count, 1)
         XCTAssertEqual(styleManager.getStyleImportConfigPropertiesStub.invocations.first?.parameters.importId, importId)
         XCTAssertEqual(importConfigProperties?.first?.key, "stub")
@@ -657,7 +657,7 @@ final class StyleTests: XCTestCase {
         let importId = UUID().uuidString
         let config = UUID().uuidString
 
-        let importConfig = try? style.getStyleImportConfigProperty(forImportId: importId, config: config)
+        let importConfig = try? style.getStyleImportConfigProperty(for: importId, config: config)
         XCTAssertEqual(styleManager.getStyleImportConfigPropertyStub.invocations.count, 1)
         XCTAssertEqual(styleManager.getStyleImportConfigPropertyStub.invocations.first?.parameters.importId, importId)
         XCTAssertEqual(styleManager.getStyleImportConfigPropertyStub.invocations.first?.parameters.config, config)

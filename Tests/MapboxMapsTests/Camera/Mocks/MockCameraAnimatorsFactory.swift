@@ -1,5 +1,5 @@
-@testable import MapboxMaps
 import UIKit
+@testable import MapboxMaps
 
 final class MockCameraAnimatorsFactory: CameraAnimatorsFactoryProtocol {
     struct MakeFlyToAnimatorParams {

@@ -1,6 +1,6 @@
 import XCTest
-@testable import MapboxMaps
 import UIKit
+@testable import MapboxMaps
 
 final class CameraAnimatorsRunnerTests: XCTestCase {
     var mapboxMap: MockMapboxMap!

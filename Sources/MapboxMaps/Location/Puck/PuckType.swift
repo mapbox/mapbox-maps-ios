@@ -151,12 +151,21 @@ public struct Puck3DConfiguration: Equatable {
     public var modelOpacity: Value<Double>?
 
     /// Enable/disable shadow casting for the puck model
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var modelCastShadows: Value<Bool>?
 
     /// Enable/disable shadow receiving for the puck model
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var modelReceiveShadows: Value<Bool>?
 
     /// Defines scaling mode. Only applies to location-indicator type layers. Default to ``ModelScaleMode/viewport``.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public var modelScaleMode: Value<ModelScaleMode>?
 
     /// Initialize a `Puck3DConfiguration` with a model, scale and rotation.
@@ -189,6 +198,9 @@ public struct Puck3DConfiguration: Equatable {
     ///   - modelOpacity: The opacity of the model used as the location puck
     ///   - modelCastShadows: Enable/disable shadow casting for the puck model
     ///   - modelReceiveShadows: Enable/disable shadow receiving for the puck model
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental) public init(model: Model,
                                     modelScale: Value<[Double]>? = nil,
                                     modelRotation: Value<[Double]>? = nil,

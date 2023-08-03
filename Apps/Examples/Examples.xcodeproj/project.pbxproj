@@ -63,6 +63,7 @@
 		73C5D6CF2A30EA1400C149AE /* ModelLayerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C5D6CE2A30EA1400C149AE /* ModelLayerExample.swift */; };
 		73E27C2627AF024C0067F277 /* DataJoinExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73E27C2527AF024C0067F277 /* DataJoinExample.swift */; };
 		7406E3702806B66F002CC41F /* ResizableImageExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7406E36F2806B66F002CC41F /* ResizableImageExample.swift */; };
+		740FA29B2A78E2EA000E5A88 /* LayerSlotExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740FA29A2A78E2EA000E5A88 /* LayerSlotExample.swift */; };
 		7412CF6227E8DD1E00F03B1C /* AddOneMarkerSymbolExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF6127E8DD1E00F03B1C /* AddOneMarkerSymbolExample.swift */; };
 		7412CF6427E8EA2A00F03B1C /* CircleAnnotationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF6327E8EA2A00F03B1C /* CircleAnnotationExample.swift */; };
 		7412CF6627E9A7FF00F03B1C /* CLLocationCoordinate2D+Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF6527E9A7FF00F03B1C /* CLLocationCoordinate2D+Random.swift */; };
@@ -86,6 +87,9 @@
 		953290572982C681005E1FE1 /* MapboxMapsSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 953290562982C681005E1FE1 /* MapboxMapsSwiftUI */; };
 		954AF549298A821E00365B6C /* ClusteringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954AF548298A821E00365B6C /* ClusteringExample.swift */; };
 		955B69EF299AAE6700FD4A19 /* RasterColorExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955B69EE299AAE6700FD4A19 /* RasterColorExample.swift */; };
+		74F04A762A7A307400C051BC /* Fingertips in Frameworks */ = {isa = PBXBuildFile; productRef = FE2755D42A12230B00EEC95F /* Fingertips */; };
+		74F04A772A7A358A00C051BC /* Lights3DExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE99952A2A1E05200068AB12 /* Lights3DExample.swift */; };
+		74F04A792A7A35B100C051BC /* RasterColorExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F04A782A7A35B100C051BC /* RasterColorExample.swift */; };
 		95857AC229B7A1A2005D238C /* LongTapAnimationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95857AC129B7A1A2005D238C /* LongTapAnimationExample.swift */; };
 		959EDE5229F5520500AEE16C /* MapEventsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959EDE5129F5520500AEE16C /* MapEventsExample.swift */; };
 		95A7E4F12A6ECBC700C2E81D /* CombineLocationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A7E4F02A6ECBC700C2E81D /* CombineLocationExample.swift */; };
@@ -133,8 +137,7 @@
 		CADCF73C258499200065C51B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077C4EED252F7E88007636F1 /* AppDelegate.swift */; };
 		CADCF743258499570065C51B /* BasicMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADCF742258499570065C51B /* BasicMapExample.swift */; };
 		CAF9A9812583E49B007EF9EC /* TestableExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF9A9802583E49B007EF9EC /* TestableExampleTests.swift */; };
-		FE2755D52A12230B00EEC95F /* Fingertips in Frameworks */ = {isa = PBXBuildFile; productRef = FE2755D42A12230B00EEC95F /* Fingertips */; };
-		FE99952B2A1E05200068AB12 /* Lights3DExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE99952A2A1E05200068AB12 /* Lights3DExample.swift */; };
+		D308F1F32A4F5F6200220E9C /* InsetMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = D308F1F22A4F5F6200220E9C /* InsetMapExample.swift */; };
 		FEA410F02A2630EF002F1816 /* ApplicationCarPlaySceneDelegage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA410EF2A2630EF002F1816 /* ApplicationCarPlaySceneDelegage.swift */; };
 		FEA410F22A263109002F1816 /* DashboardCarPlaySceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA410F12A263109002F1816 /* DashboardCarPlaySceneDelegate.swift */; };
 		FEA410F42A263126002F1816 /* InstrumentClusterCarPlaySceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA410F32A263126002F1816 /* InstrumentClusterCarPlaySceneDelegate.swift */; };
@@ -248,6 +251,7 @@
 		73C5D6CE2A30EA1400C149AE /* ModelLayerExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelLayerExample.swift; sourceTree = "<group>"; };
 		73E27C2527AF024C0067F277 /* DataJoinExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataJoinExample.swift; sourceTree = "<group>"; };
 		7406E36F2806B66F002CC41F /* ResizableImageExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizableImageExample.swift; sourceTree = "<group>"; };
+		740FA29A2A78E2EA000E5A88 /* LayerSlotExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayerSlotExample.swift; sourceTree = "<group>"; };
 		7412CF6127E8DD1E00F03B1C /* AddOneMarkerSymbolExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOneMarkerSymbolExample.swift; sourceTree = "<group>"; };
 		7412CF6327E8EA2A00F03B1C /* CircleAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleAnnotationExample.swift; sourceTree = "<group>"; };
 		7412CF6527E9A7FF00F03B1C /* CLLocationCoordinate2D+Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Random.swift"; sourceTree = "<group>"; };
@@ -271,6 +275,7 @@
 		951693B12A581DFC0083DC4C /* LocateMeExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocateMeExample.swift; sourceTree = "<group>"; };
 		954AF548298A821E00365B6C /* ClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClusteringExample.swift; sourceTree = "<group>"; };
 		955B69EE299AAE6700FD4A19 /* RasterColorExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RasterColorExample.swift; sourceTree = "<group>"; };
+		74F04A782A7A35B100C051BC /* RasterColorExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RasterColorExample.swift; sourceTree = "<group>"; };
 		95857AC129B7A1A2005D238C /* LongTapAnimationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongTapAnimationExample.swift; sourceTree = "<group>"; };
 		959EDE5129F5520500AEE16C /* MapEventsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapEventsExample.swift; sourceTree = "<group>"; };
 		95A7E4F02A6ECBC700C2E81D /* CombineLocationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineLocationExample.swift; sourceTree = "<group>"; };
@@ -302,6 +307,7 @@
 		CAC195B625AC098A00F69FEA /* CameraAnimatorsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraAnimatorsExample.swift; sourceTree = "<group>"; };
 		CADCF742258499570065C51B /* BasicMapExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicMapExample.swift; sourceTree = "<group>"; };
 		CAF9A9802583E49B007EF9EC /* TestableExampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestableExampleTests.swift; sourceTree = "<group>"; };
+		D308F1F22A4F5F6200220E9C /* InsetMapExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetMapExample.swift; sourceTree = "<group>"; };
 		FE355DAD2A275377003AC5DF /* Examples_CarPlay.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Examples_CarPlay.entitlements; sourceTree = "<group>"; };
 		FE355DAF2A275DB4003AC5DF /* Examples.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Examples.xcconfig; sourceTree = "<group>"; };
 		FE99952A2A1E05200068AB12 /* Lights3DExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lights3DExample.swift; sourceTree = "<group>"; };
@@ -317,8 +323,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				953290572982C681005E1FE1 /* MapboxMapsSwiftUI in Frameworks */,
+				74F04A762A7A307400C051BC /* Fingertips in Frameworks */,
 				B5327E9D260124C00095B6BD /* MapboxMaps in Frameworks */,
-				FE2755D52A12230B00EEC95F /* Fingertips in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -391,6 +397,7 @@
 				C69F01EC2543646A001AB49B /* DataDrivenSymbolsExample.swift */,
 				73E27C2527AF024C0067F277 /* DataJoinExample.swift */,
 				3A7432EE27F3096100E06485 /* DebugMapExample.swift */,
+				74F04A782A7A35B100C051BC /* RasterColorExample.swift */,
 				17B48066268A4E9300CF0D5E /* DistanceExpressionExample.swift */,
 				077E3B2B2581810600564A3E /* ExternalVectorSourceExample.swift */,
 				07B0715F254789D6007F2865 /* FeaturesAtPointExample.swift */,
@@ -402,6 +409,7 @@
 				58A28B572869F69B006F7D93 /* HeatmapLayerGlobeExample.swift */,
 				7406E36E2806B659002CC41F /* Lab */,
 				666E0D4925664EE7000B8AF5 /* LayerPositionExample.swift */,
+				740FA29A2A78E2EA000E5A88 /* LayerSlotExample.swift */,
 				0C78AC2825BF70E40057F570 /* LineGradientExample.swift */,
 				17B40D2326A85500000887EF /* LiveDataExample.swift */,
 				C608C106267BC5B1003C86C3 /* LocalizationExample.swift */,
@@ -412,7 +420,6 @@
 				A41E590C265C263700D8B946 /* OfflineRegionManagerExample.swift */,
 				A41E584B26555A3400D8B946 /* PointClusteringExample.swift */,
 				17B4806A268BD91000CF0D5E /* RasterTileSourceExample.swift */,
-				955B69EE299AAE6700FD4A19 /* RasterColorExample.swift */,
 				A4211CE52592549900D215B4 /* RestrictCoordinateBoundsExample.swift */,
 				07B071D12547CF50007F2865 /* Sample Data */,
 				0333B84E25ED942600D667C9 /* SceneKitExample.swift */,
@@ -430,6 +437,7 @@
 				7471A4E028D0CEA400C7DFE5 /* LargeGeoJSONExample.swift */,
 				732A54FF28DA470E00CDBFB7 /* PitchAndDistanceExample.swift */,
 				73620A062A71CD3D00FCC771 /* StandardStyleExample.swift */,
+				D308F1F22A4F5F6200220E9C /* InsetMapExample.swift */,
 			);
 			path = "All Examples";
 			sourceTree = "<group>";
@@ -842,7 +850,6 @@
 				A41E58342654593500D8B946 /* SwitchStylesExample.swift in Sources */,
 				CADCF7272584990E0065C51B /* FitCameraToGeometryExample.swift in Sources */,
 				B5327EC3260277AC0095B6BD /* ExampleProtocol.swift in Sources */,
-				955B69EF299AAE6700FD4A19 /* RasterColorExample.swift in Sources */,
 				7412CF6427E8EA2A00F03B1C /* CircleAnnotationExample.swift in Sources */,
 				9501A5A42A38830B00F2AF92 /* ViewExtensions.swift in Sources */,
 				7471A4E128D0CEA400C7DFE5 /* LargeGeoJSONExample.swift in Sources */,
@@ -890,6 +897,7 @@
 				CADCF7282584990E0065C51B /* LineAnnotationExample.swift in Sources */,
 				74D0803A28A13916008EB69C /* BasicLocationPulsingExample.swift in Sources */,
 				CADCF72F2584990E0065C51B /* SnapshotterCoreGraphicsExample.swift in Sources */,
+				D308F1F32A4F5F6200220E9C /* InsetMapExample.swift in Sources */,
 				FEA410F62A26314A002F1816 /* CarPlayMapViewController.swift in Sources */,
 				304AB3B527439287005B6D09 /* ViewAnnotationMarkerExample.swift in Sources */,
 				CA4F1F7225E815CF00822D2A /* SwiftUIExample.swift in Sources */,
@@ -897,11 +905,12 @@
 				CAC195B725AC098A00F69FEA /* CameraAnimatorsExample.swift in Sources */,
 				3ADF96022992787A00819649 /* ViewAnnotationsExample.swift in Sources */,
 				732A550028DA470E00CDBFB7 /* PitchAndDistanceExample.swift in Sources */,
+				74F04A792A7A35B100C051BC /* RasterColorExample.swift in Sources */,
 				587429C027BBFDA100104CCA /* VoiceOverAccessibilityExample.swift in Sources */,
-				FE99952B2A1E05200068AB12 /* Lights3DExample.swift in Sources */,
 				73E27C2627AF024C0067F277 /* DataJoinExample.swift in Sources */,
 				74A2313127EB306F0065FB7D /* Array+Split.swift in Sources */,
 				9501A5A52A38830B00F2AF92 /* Constants.swift in Sources */,
+				740FA29B2A78E2EA000E5A88 /* LayerSlotExample.swift in Sources */,
 				0C78AC2925BF70E40057F570 /* LineGradientExample.swift in Sources */,
 				17B48067268A4E9300CF0D5E /* DistanceExpressionExample.swift in Sources */,
 				959EDE5229F5520500AEE16C /* MapEventsExample.swift in Sources */,
@@ -918,6 +927,7 @@
 				CADCF736258499170065C51B /* ExampleTableViewController.swift in Sources */,
 				17B4805A2684FB2300CF0D5E /* AnimateImageLayerExample.swift in Sources */,
 				B57E1BAE27B5B6B900E8E3BA /* ViewportExample.swift in Sources */,
+				74F04A772A7A358A00C051BC /* Lights3DExample.swift in Sources */,
 				A4211CE62592549900D215B4 /* RestrictCoordinateBoundsExample.swift in Sources */,
 				0C52BA9825AF8C880054ECA8 /* Custom3DPuckExample.swift in Sources */,
 				CADCF7292584990E0065C51B /* FeaturesAtPointExample.swift in Sources */,

@@ -176,6 +176,9 @@ struct Examples {
         Example(title: "Filter symbols based on pitch and distance",
                 description: "Use pitch and distance-from-center expressions in the filter field of a symbol layer to remove large size POI labels in the far distance at high pitch",
                 type: PitchAndDistanceExample.self),
+        Example(title: "Add an Inset Map",
+                description: "Add a smaller inset map that visualizes the viewport of the main map",
+                type: InsetMapExample.self),
     ]
 
     // Miscellaneous examples
@@ -282,6 +285,9 @@ struct Examples {
         Example(title: "Change the position of a layer",
                 description: "Insert a specific layer above or below other layers.",
                 type: LayerPositionExample.self),
+        Example(title: "Change the slot of a layer",
+                description: "Assign a layer to a slot to make it appear above or below other layers.",
+                type: LayerSlotExample.self),
         Example(title: "Cluster points within a layer",
                 description: "Create a circle layer from a geoJSON source and cluster the points from that source. The clusters will update as the map's camera changes.",
                 type: PointClusteringExample.self),

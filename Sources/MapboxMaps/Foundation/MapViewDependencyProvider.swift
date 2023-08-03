@@ -1,4 +1,3 @@
-import UIKit
 import MetalKit
 
 internal protocol MapViewDependencyProviderProtocol: AnyObject {

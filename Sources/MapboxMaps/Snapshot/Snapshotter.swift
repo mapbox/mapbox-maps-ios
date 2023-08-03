@@ -152,7 +152,7 @@ public class Snapshotter: StyleManager {
             guard let self = self else { return }
 
             // Render attributions over the snapshot
-            Attribution.parse(self.sourceAttributions()) { [weak self] attributions in
+            Attribution.parse(snapshot.attributions()) { [weak self] attributions in
                 self?.overlaySnapshotWith(
                     attributions: attributions,
                     snapshotImage: uiImage,
@@ -314,6 +314,9 @@ public class Snapshotter: StyleManager {
     ///
     /// - Parameters:
     ///  - options: Options for the tile cover method.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @_spi(Experimental)
     public func tileCover(for options: TileCoverOptions) -> [CanonicalTileID] {
         mapSnapshotter.__tileCover(
@@ -348,7 +351,7 @@ extension Snapshotter {
 
     /// A style has a missing image. This event is emitted when the map renders visible tiles and
     /// one of the required images is missing in the sprite sheet. Subscriber has to provide the missing image
-    /// by calling ``Style/addImage(_:id:sdf:contentInsets:)``.
+    /// by calling ``StyleManager/addImage(_:id:sdf:contentInsets:)``.
     public var onStyleImageMissing: Signal<StyleImageMissing> { events.signal(for: \.onStyleImageMissing) }
 
     /// Listen to a single occurrence of a Map event.

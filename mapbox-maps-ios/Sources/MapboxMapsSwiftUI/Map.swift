@@ -38,33 +38,26 @@ public typealias LocationUpdateAction = (Location) -> Void
 @_spi(Experimental)
 @available(iOS 13.0, *)
 public struct Map: UIViewControllerRepresentable {
-    public typealias InitOptionsProvider = () -> MapInitOptions
-
     var viewport: ConstantOrBinding<Viewport>
     var mapDependencies = MapDependencies()
-    private var mapInitOptions: InitOptionsProvider?
     private var locationDependencies = LocationDependencies()
     private var mapContentVisitor = DefaultMapContentVisitor()
 
-    @Environment(\.colorScheme) var colorScheme
     @Environment(\.layoutDirection) var layoutDirection
 
     /// Creates a map that displays annotations.
     ///
     /// - Parameters:
     ///     - viewport: The camera viewport to display.
-    ///     - mapInitOptions: A closure to provide initial map parameters. It gets called only once when `Map` is created.
     ///     - locationOptions: The options to configure ``LocationManager``.
     ///     - content: A map content building closure.
     public init(
         viewport: Binding<Viewport>,
-        mapInitOptions: InitOptionsProvider? = nil,
         locationOptions: LocationOptions = LocationOptions(),
         @MapContentBuilder content: @escaping () -> MapContent
     ) {
         self.init(
             _viewport: .binding(viewport),
-            mapInitOptions: mapInitOptions,
             locationOptions: locationOptions,
             content: content)
     }
@@ -73,50 +66,38 @@ public struct Map: UIViewControllerRepresentable {
     ///
     /// - Parameters:
     ///     - initialViewport: The camera viewport to display.
-    ///     - mapInitOptions: A closure to provide initial map parameters. It gets called only once when `Map` is created.
     ///     - locationOptions: The options to configure ``LocationManager``.
     ///     - content: A map content building closure.
     public init(
         initialViewport: Viewport = .styleDefault,
-        mapInitOptions: InitOptionsProvider? = nil,
         locationOptions: LocationOptions = LocationOptions(),
         @MapContentBuilder content: @escaping () -> MapContent
     ) {
         self.init(
             _viewport: .constant(initialViewport),
-            mapInitOptions: mapInitOptions,
             locationOptions: locationOptions,
             content: content)
     }
 
     private init(
         _viewport: ConstantOrBinding<Viewport>,
-        mapInitOptions: InitOptionsProvider? = nil,
         locationOptions: LocationOptions = LocationOptions(),
         content: (() -> MapContent)? = nil
     ) {
         self.viewport = _viewport
-        self.mapInitOptions = mapInitOptions
         locationDependencies.locationOptions = locationOptions
         content?()._visit(mapContentVisitor)
     }
 
     public func makeCoordinator() -> Coordinator {
-        let mapView = MapView(frame: .zero, mapInitOptions: mapInitOptions?() ?? MapInitOptions())
+        let mapView = MapView(frame: .zero)
         let vc = MapViewController(mapView: mapView)
 
         let basicCoordinator = MapBasicCoordinator(
             setViewport: viewport.setter,
             mapView: MapViewFacade(from: mapView))
 
-        let coordinator = Coordinator(
-            basic: basicCoordinator,
-            viewAnnotation: ViewAnnotationCoordinator(),
-            location: LocationCoordinator(),
-            viewController: vc,
-            mapView: mapView)
-        // TODO: pass deps in initializer.
-        coordinator.viewAnnotation.setup(with: ViewAnnotationCoordinator.Deps(
+        let viewAnnotationCoordinator = ViewAnnotationCoordinator(
             viewAnnotationsManager: mapView.viewAnnotations,
             addViewController: { childVC in
                 vc.addChild(childVC)
@@ -125,10 +106,17 @@ public struct Map: UIViewControllerRepresentable {
             removeViewController: { childVC in
                 childVC.willMove(toParent: nil)
                 childVC.removeFromParent()
-            }))
-        coordinator.location.setup(with: mapView.location)
+            }
+        )
 
-        return coordinator
+        let locationCoordinator = LocationCoordinator(locationManager: mapView.location)
+
+        return Coordinator(
+            basic: basicCoordinator,
+            viewAnnotation: viewAnnotationCoordinator,
+            location: locationCoordinator,
+            viewController: vc,
+            mapView: mapView)
     }
 
     public func makeUIViewController(context: Context) -> UIViewController {
@@ -141,7 +129,6 @@ public struct Map: UIViewControllerRepresentable {
             viewport: viewport,
             deps: mapDependencies,
             layoutDirection: layoutDirection,
-            colorScheme: colorScheme,
             animationData: context.transaction.viewportAnimationData)
         context.coordinator.viewAnnotation.updateAnnotations(to: mapContentVisitor.visitedViewAnnotations)
         context.coordinator.location.update(deps: locationDependencies)
@@ -155,16 +142,13 @@ extension Map {
      ///
      /// - Parameters:
      ///     - viewport: The camera viewport to display.
-     ///     - mapInitOptions: A closure to provide initial map parameters. It gets called only once when `Map` is created.
      ///     - locationOptions: The options to configure ``LocationManager``.
      public init(
          viewport: Binding<Viewport>,
-         mapInitOptions: InitOptionsProvider? = nil,
          locationOptions: LocationOptions = LocationOptions()
      ) {
          self.init(
             _viewport: .binding(viewport),
-            mapInitOptions: mapInitOptions,
             locationOptions: locationOptions,
             content: nil)
      }
@@ -173,16 +157,13 @@ extension Map {
      ///
      /// - Parameters:
      ///     - initialViewport: Initial camera viewport.
-     ///     - mapInitOptions: A closure to provide initial map parameters. It gets called only once when `Map` is created.
      ///     - locationOptions: The options to configure ``LocationManager``.
      public init(
          initialViewport: Viewport = .styleDefault,
-         mapInitOptions: InitOptionsProvider? = nil,
          locationOptions: LocationOptions = LocationOptions()
      ) {
          self.init(
             _viewport: .constant(initialViewport),
-            mapInitOptions: mapInitOptions,
             locationOptions: locationOptions,
             content: nil)
      }
@@ -213,11 +194,9 @@ public extension Map {
     /// Sets style to the map.
     ///
     /// - Parameters:
-    ///     - default: A Style URI to be used by default.
-    ///     - darkMode: A Style URI which will automaticaly be used for dark mode. If not specified,
-    ///         the default option will continue to be used.
-    func styleURI(_ default: StyleURI, darkMode: StyleURI? = nil) -> Self {
-        set(\.mapDependencies.styleURIs, .init(default: `default`, darkMode: darkMode))
+    ///     - uri: An URI of a style.
+    func styleURI(_ uri: StyleURI) -> Self {
+        set(\.mapDependencies.styleURI, uri)
     }
 
     /// Configures gestures options.

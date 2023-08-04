@@ -2,7 +2,7 @@ import SwiftUI
 @_spi(Experimental) import MapboxMapsSwiftUI
 
 struct Settings {
-    var styleURI: StyleURI = .streetsV12
+    var styleURI: StyleURI = .standard
     var orientation: NorthOrientation = .upwards
     var gestureOptions: GestureOptions = .init()
     var cameraBounds: CameraBoundsOptions = .init()

@@ -15,16 +15,15 @@ struct LocationDependencies {
 @available(iOS 13.0, *)
 final class LocationCoordinator {
 
-    private var locationManager: LocationManaging?
+    private var locationManager: LocationManaging
 
-    func setup(with locationManager: LocationManaging) {
-        guard self.locationManager == nil else { return }
+    init(locationManager: LocationManaging) {
         self.locationManager = locationManager
     }
 
     func update(deps: LocationDependencies) {
-        if locationManager?.options != deps.locationOptions {
-            locationManager?.options = deps.locationOptions
+        if locationManager.options != deps.locationOptions {
+            locationManager.options = deps.locationOptions
         }
     }
 }

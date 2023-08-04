@@ -8,7 +8,7 @@ struct FeaturesQueryExample: View {
     var body: some View {
         GeometryReader { geometry in
             MapReader { proxy in
-                Map(viewport: $model.viewport, mapInitOptions: nil) {
+                Map(viewport: $model.viewport) {
                     // Annotations that shows tap location.
                     if let queryResult = model.queryResult {
                         ViewAnnotation(queryResult.coordinate) {

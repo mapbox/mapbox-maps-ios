@@ -3,10 +3,11 @@ import SwiftUI
 
 @available(iOS 14.0, *)
 struct SimpleMapExample: View {
+    @Environment(\.colorScheme) var colorScheme
     var body: some View {
         let polygon = Polygon(center: .helsinki, radius: 10000, vertices: 30)
         Map(initialViewport: .overview(geometry: polygon))
-            .styleURI(.streets, darkMode: .dark)
+            .styleURI(colorScheme == .light ? .streets : .dark)
             .ignoresSafeArea()
     }
 }

@@ -10,9 +10,7 @@ final class LocationCoordinatorTests: XCTestCase {
 
     override func setUpWithError() throws {
         locationManager = MockLocationManager()
-        me = LocationCoordinator()
-
-        me.setup(with: locationManager)
+        me = LocationCoordinator(locationManager: locationManager)
     }
 
     override func tearDownWithError() throws {

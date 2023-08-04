@@ -23,36 +23,31 @@ final class MapBasicCoordinatorTests: XCTestCase {
     }
 
     func testStyleURI() {
-        let uris = MapDependencies.StyleURIs(default: .light, darkMode: .dark)
-
         me.update(
             viewport: .constant(.idle),
-            deps: MapDependencies(styleURIs: uris),
+            deps: MapDependencies(styleURI: .light),
             layoutDirection: .leftToRight,
-            colorScheme: .light,
             animationData: nil)
         var invocations = mapView.style.$uri.setStub.invocations
         XCTAssertEqual(invocations.count, 1)
-        XCTAssertEqual(invocations.first?.parameters, .light)
+        XCTAssertEqual(invocations.last?.parameters, .light)
 
         me.update(
             viewport: .constant(.idle),
-            deps: MapDependencies(styleURIs: uris),
+            deps: MapDependencies(styleURI: .light),
             layoutDirection: .leftToRight,
-            colorScheme: .light,
             animationData: nil)
         invocations = mapView.style.$uri.setStub.invocations
         XCTAssertEqual(invocations.count, 1, "Setting same style URI doesn't change it")
 
         me.update(
             viewport: .constant(.idle),
-            deps: MapDependencies(styleURIs: uris),
+            deps: MapDependencies(styleURI: .dark),
             layoutDirection: .leftToRight,
-            colorScheme: .dark,
             animationData: nil)
         invocations = mapView.style.$uri.setStub.invocations
         XCTAssertEqual(invocations.count, 2)
-        XCTAssertEqual(invocations[1].parameters, .dark)
+        XCTAssertEqual(invocations.last?.parameters, .dark)
     }
 
     func testMapOptions() {
@@ -60,7 +55,6 @@ final class MapBasicCoordinatorTests: XCTestCase {
             viewport: .constant(.idle),
             deps: MapDependencies(),
             layoutDirection: .leftToRight,
-            colorScheme: .dark,
             animationData: nil)
 
         let mapboxMap = mapView.mapboxMap
@@ -76,7 +70,6 @@ final class MapBasicCoordinatorTests: XCTestCase {
                 viewportMode: .flippedY,
                 orientation: .downwards),
             layoutDirection: .leftToRight,
-            colorScheme: .light,
             animationData: nil)
         XCTAssertEqual(mapboxMap.setConstraintModeStub.invocations.count, 1)
         XCTAssertEqual(mapboxMap.setViewportModeStub.invocations.count, 1)
@@ -98,7 +91,6 @@ final class MapBasicCoordinatorTests: XCTestCase {
             viewport: .constant(.idle),
             deps: MapDependencies(ornamentOptions: ornamentOptions),
             layoutDirection: .leftToRight,
-            colorScheme: .dark,
             animationData: nil)
 
         let ornaments = mapView.ornaments
@@ -112,7 +104,6 @@ final class MapBasicCoordinatorTests: XCTestCase {
             viewport: .constant(.idle),
             deps: deps,
             layoutDirection: .leftToRight,
-            colorScheme: .light,
             animationData: nil)
 
         let point = CGPoint.random()
@@ -153,7 +144,6 @@ final class MapBasicCoordinatorTests: XCTestCase {
             viewport: .constant(.idle),
             deps: deps,
             layoutDirection: .leftToRight,
-            colorScheme: .light,
             animationData: nil)
 
         mapView.gestures.singleTapGestureRecognizerMock.sendActions()
@@ -178,7 +168,6 @@ final class MapBasicCoordinatorTests: XCTestCase {
             viewport: .constant(.idle),
             deps: deps,
             layoutDirection: .leftToRight,
-            colorScheme: .light,
             animationData: nil)
         let mapLoaded = MapLoaded(timeInterval: EventTimeInterval(begin: Date(), end: Date()))
 

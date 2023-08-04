@@ -11,7 +11,6 @@ struct MapViewportExample: View {
         MapReader { mapProxy in
             Map(
                 viewport: $viewport,
-                mapInitOptions: nil,
                 locationOptions: .init(puckType: .puck2D(.makeDefault(showBearing: true)))
             ) {
                 ForEvery(parks.coordinates, id: \.latitude) { coord in

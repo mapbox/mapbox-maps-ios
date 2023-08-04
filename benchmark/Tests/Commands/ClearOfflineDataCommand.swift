@@ -5,6 +5,13 @@ import XCTest
 struct ClearOfflineDataCommand: AsyncCommand, Decodable {
     @MainActor
     func execute(context: Context) async throws {
+        let cachedTileStoreUsageMode = MapboxMapsOptions.tileStoreUsageMode
+
+        // enable tile store during the clearing process to be able to remove the style packs
+        MapboxMapsOptions.tileStoreUsageMode = .readOnly
+
+        defer { MapboxMapsOptions.tileStoreUsageMode = cachedTileStoreUsageMode }
+
         let offlineManager = OfflineManager()
         let packs = try await offlineManager.allStylePacks()
 

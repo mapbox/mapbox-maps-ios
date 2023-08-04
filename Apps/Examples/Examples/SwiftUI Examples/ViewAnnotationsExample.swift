@@ -14,10 +14,13 @@ struct ViewAnnotationsExample: View {
 
     var body: some View {
         MapReader { proxy in
-            Map(initialViewport: .camera(center: .helsinki, zoom: 5), mapInitOptions: nil) {
-                ForEvery([CLLocationCoordinate2D.helsinki, .berlin], id: \.latitude) { point in
-                    ViewAnnotation(point) {
-                        Circle().fill(.red).frame(width: 30, height: 30)
+            Map(initialViewport: .camera(center: .helsinki, zoom: 5)) {
+                let citiesCoordinates = [CLLocationCoordinate2D.helsinki, .berlin]
+                ForEvery(citiesCoordinates, id: \.latitude) { coord in
+                    ViewAnnotation(coord) {
+                        Circle()
+                            .fill(.red)
+                            .frame(width: 30, height: 30)
                     }
                 }
 
@@ -33,7 +36,7 @@ struct ViewAnnotationsExample: View {
                     }
                 }
             }
-            .styleURI(.streets, darkMode: .dark)
+            .styleURI(.streets)
             .onMapTapGesture { point in
                 guard let map = proxy.map else { return }
 

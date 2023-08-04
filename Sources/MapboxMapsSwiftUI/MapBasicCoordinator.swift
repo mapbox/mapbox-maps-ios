@@ -63,7 +63,6 @@ final class MapBasicCoordinator {
         viewport: ConstantOrBinding<Viewport>,
         deps: MapDependencies,
         layoutDirection: LayoutDirection,
-        colorScheme: ColorScheme,
         animationData: MapViewportAnimationData?
     ) {
         let mapboxMap = mapView.mapboxMap
@@ -93,7 +92,7 @@ final class MapBasicCoordinator {
             assign(mapOptions.orientation, mapboxMap.setNorthOrientation, value: deps.orientation)
         }
 
-        assign(&mapView, \.styleManager.uri, value: deps.styleURIs.effectiveURI(with: colorScheme))
+        assign(&mapView, \.styleManager.uri, value: deps.styleURI)
         assign(&mapView, \.gestureManager.options, value: deps.gestureOptions)
         assign(&mapView, \.ornaments.options, value: deps.ornamentOptions)
 

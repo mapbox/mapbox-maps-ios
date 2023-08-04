@@ -12,23 +12,23 @@ extension ViewAnnotationManager: ViewAnnotationsManaging {}
 
 @available(iOS 13.0, *)
 class ViewAnnotationCoordinator {
+    typealias ViewControllerHandler = (UIViewController) -> Void
 
-    struct Deps {
-        let viewAnnotationsManager: ViewAnnotationsManaging
-        let addViewController: (UIViewController) -> Void
-        let removeViewController: (UIViewController) -> Void
-    }
+    let viewAnnotationsManager: ViewAnnotationsManaging
+    let addViewController: ViewControllerHandler
+    let removeViewController: ViewControllerHandler
 
-    private var deps: Deps?
     private var annotations: [AnyHashable: DisplayedViewAnnotation] = [:]
 
-    func setup(with deps: Deps) {
-        guard self.deps == nil else { return }
-        self.deps = deps
+    init(viewAnnotationsManager: ViewAnnotationsManaging,
+         addViewController: @escaping ViewControllerHandler,
+         removeViewController: @escaping ViewControllerHandler) {
+        self.viewAnnotationsManager = viewAnnotationsManager
+        self.addViewController = addViewController
+        self.removeViewController = removeViewController
     }
 
     func updateAnnotations(to newAnnotations: [AnyHashable: ViewAnnotation]) {
-        guard let deps else { return }
 
         let oldIds = Set(annotations.keys)
         let newIds = Set(newAnnotations.keys)
@@ -42,7 +42,7 @@ class ViewAnnotationCoordinator {
         removalIds.forEach { id in
             guard let displayedViewAnnotation = annotations.removeValue(forKey: id) else { return }
             displayedViewAnnotation.remove()
-            deps.removeViewController(displayedViewAnnotation.content)
+            removeViewController(displayedViewAnnotation.content)
         }
 
         updateIds.forEach { id in
@@ -54,9 +54,9 @@ class ViewAnnotationCoordinator {
         insertionIds.forEach { id in
             guard let newAnnotation = newAnnotations[id] else { return }
 
-            let annotationToDisplay = DisplayedViewAnnotation(from: newAnnotation, manager: deps.viewAnnotationsManager)
+            let annotationToDisplay = DisplayedViewAnnotation(from: newAnnotation, manager: viewAnnotationsManager)
             annotationToDisplay.add()
-            deps.addViewController(annotationToDisplay.content)
+            addViewController(annotationToDisplay.content)
             annotations[id] = annotationToDisplay
         }
     }

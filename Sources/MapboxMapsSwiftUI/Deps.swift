@@ -5,7 +5,7 @@ import MapboxCoreMaps
 @available(iOS 13.0, *)
 struct MapDependencies {
     var cameraBounds = CameraBoundsOptions()
-    var styleURIs = StyleURIs(default: .standard, darkMode: nil)
+    var styleURI = StyleURI.standard
     var gestureOptions = GestureOptions()
     var actions = Actions()
     var constrainMode = ConstrainMode.heightOnly
@@ -18,26 +18,9 @@ struct MapDependencies {
 
 @available(iOS 13.0, *)
 extension MapDependencies {
-
-    struct StyleURIs {
-        let `default`: StyleURI
-        let darkMode: StyleURI?
-    }
-
     struct Actions {
         var onMapTapGesture: MapTapAction?
         var layerTapActions = [([String], MapLayerTapAction)]()
-    }
-}
-
-@available(iOS 13.0, *)
-extension MapDependencies.StyleURIs {
-
-    func effectiveURI(with colorScheme: ColorScheme) -> StyleURI {
-        if case .dark = colorScheme, let dark = darkMode {
-            return dark
-        }
-        return `default`
     }
 }
 

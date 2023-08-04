@@ -26,6 +26,5 @@ extension CameraBoundsOptions {
 }
 
 extension StyleURI {
-    static let streetsV12 = StyleURI(rawValue: "mapbox://styles/mapbox/streets-v12")!
     static let customStyle = StyleURI(rawValue: "mapbox://styles/examples/cke97f49z5rlg19l310b7uu7j")!
 }

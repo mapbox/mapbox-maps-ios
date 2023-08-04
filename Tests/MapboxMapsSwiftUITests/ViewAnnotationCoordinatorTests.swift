@@ -6,20 +6,26 @@ import SwiftUI
 
 @available(iOS 13.0, *)
 final class ViewAnnotationCoordinatorTests: XCTestCase {
-    var me: ViewAnnotationCoordinator!
     var viewAnnotationsManager: MockViewAnnotationsManager!
 
     override func setUpWithError() throws {
-        me = ViewAnnotationCoordinator()
         viewAnnotationsManager = MockViewAnnotationsManager()
     }
 
     override func tearDownWithError() throws {
         viewAnnotationsManager = nil
-        me = nil
     }
 
     func testUpdateAnnotations() throws {
+        var numberOfViewsAdded = 0
+        let me = ViewAnnotationCoordinator(
+            viewAnnotationsManager: viewAnnotationsManager,
+            addViewController: { _ in
+                numberOfViewsAdded += 1
+            }, removeViewController: { _ in
+                numberOfViewsAdded -= 1
+            }
+        )
         func verifyAnnotationOptions(_ options: ViewAnnotationOptions?, _ config: ViewAnnotationConfig) {
             XCTAssertEqual(options?.geometry, .point(config.point))
             XCTAssertEqual(options?.allowOverlap, config.allowOverlap)
@@ -27,15 +33,6 @@ final class ViewAnnotationCoordinatorTests: XCTestCase {
             XCTAssertEqual(options?.offsetX, config.offsetX)
             XCTAssertEqual(options?.offsetY, config.offsetY)
         }
-
-        var numberOfViewsAdded = 0
-        me.setup(with: ViewAnnotationCoordinator.Deps(
-            viewAnnotationsManager: viewAnnotationsManager,
-            addViewController: { _ in
-                numberOfViewsAdded += 1
-            }, removeViewController: { _ in
-                numberOfViewsAdded -= 1
-            }))
 
         let options = (0...4).map { _ in ViewAnnotation.random() }
         var annotations = [AnyHashable: ViewAnnotation]()

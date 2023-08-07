@@ -127,6 +127,32 @@ final class AnyCancelableTests: XCTestCase {
         collection.removeAll()
         XCTAssertEqual(counter.value, 2)
     }
+
+    @available(iOS 13, *)
+    func testStoreCombineCancellableInSet() {
+        var counter = 0
+        var disposeBag: Set<AnyCancelable> = []
+        Combine.AnyCancellable {
+            counter += 1
+        }.store(in: &disposeBag)
+
+        XCTAssertEqual(counter, 0)
+        disposeBag.removeAll()
+        XCTAssertEqual(counter, 1)
+    }
+
+    @available(iOS 13, *)
+    func testStoreCombineCancellableInCollection() {
+        var counter = 0
+        var disposeBag: [AnyCancelable] = []
+        Combine.AnyCancellable {
+            counter += 1
+        }.store(in: &disposeBag)
+
+        XCTAssertEqual(counter, 0)
+        disposeBag.removeAll()
+        XCTAssertEqual(counter, 1)
+    }
 }
 
 private final class CancelCounter: Cancelable {

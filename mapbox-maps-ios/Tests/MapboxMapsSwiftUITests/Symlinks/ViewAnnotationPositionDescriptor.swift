@@ -1,1 +1,0 @@
-../../MapboxMapsTests/Annotations/ViewAnnotationPositionDescriptor.swift

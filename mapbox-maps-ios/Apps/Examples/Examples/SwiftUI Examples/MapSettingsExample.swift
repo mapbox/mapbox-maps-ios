@@ -1,5 +1,5 @@
 import SwiftUI
-@_spi(Experimental) import MapboxMapsSwiftUI
+@_spi(Experimental) import MapboxMaps
 
 struct Settings {
     var styleURI: StyleURI = .standard

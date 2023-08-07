@@ -1,4 +1,4 @@
-@testable @_spi(Experimental) @_spi(Package) import MapboxMaps
+@testable @_spi(Experimental) import MapboxMaps
 import XCTest
 
 final class LocationManagerTests: XCTestCase {

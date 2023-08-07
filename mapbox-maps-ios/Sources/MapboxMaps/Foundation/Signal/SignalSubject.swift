@@ -1,16 +1,15 @@
 /// `SignalSubject` is used to send events to `Signal` subscribers.
 ///
 /// It doesn't store current values, like `PassthroughSubject` from Combine.
-@_spi(Package)
-public class SignalSubject<Payload> {
+internal class SignalSubject<Payload> {
     typealias Handler = Signal<Payload>.Handler
 
     /// Handles the event of adding first, or removing the last observer.
-    public typealias ObservationHandler = (Bool) -> Void
+    typealias ObservationHandler = (Bool) -> Void
     private typealias Subscription = ObjectWrapper<Handler>
 
     /// Use `signal` to subscribe to events.
-    public let signal: Signal<Payload>
+    let signal: Signal<Payload>
 
     /// A callback that receives `true` when the first observer is added, and `false`
     /// when the last observer is gone.
@@ -27,7 +26,7 @@ public class SignalSubject<Payload> {
     }
 
     /// Creates a signal subject.
-    public init() {
+    init() {
         weak var weakSelf: SignalSubject?
         self.signal = Signal(observeImpl: { handler in
             assert(weakSelf != nil, "Subscription to deallocated subject")
@@ -37,7 +36,7 @@ public class SignalSubject<Payload> {
     }
 
     /// Sends payload to every subscriber.
-    public func send(_ payload: Payload) {
+    func send(_ payload: Payload) {
         let s = subscriptions
         s.forEach {
             $0.subject(payload)

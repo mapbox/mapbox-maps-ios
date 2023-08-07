@@ -1,6 +1,6 @@
 import SwiftUI
 import Turf
-@_spi(Experimental) import MapboxMapsSwiftUI
+@_spi(Experimental) import MapboxMaps
 
 extension Point: Identifiable {
     public var id: String { "\(coordinates)" }

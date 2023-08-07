@@ -45,21 +45,18 @@ extension MapOptions {
 
     /// The map constrain mode. This can be used to limit the map to wrap around
     /// the globe horizontally. Default is `.heightOnly`.
-    @_spi(Package)
-    public var constrainMode: ConstrainMode {
+    var constrainMode: ConstrainMode {
         return __constrainMode?.intValueAsRawRepresentable() ?? .heightOnly
     }
 
     /// The viewport mode. This can be used to flip the vertical orientation of
     /// the map as some devices may use inverted orientation.
-    @_spi(Package)
-    public var viewportMode: ViewportMode? {
+    var viewportMode: ViewportMode? {
         return __viewportMode?.intValueAsRawRepresentable()
     }
 
     /// The orientation of the Map. Default is `.upwards`.
-    @_spi(Package)
-    public var orientation: NorthOrientation {
+    var orientation: NorthOrientation {
         return __orientation?.intValueAsRawRepresentable() ?? .upwards
     }
 

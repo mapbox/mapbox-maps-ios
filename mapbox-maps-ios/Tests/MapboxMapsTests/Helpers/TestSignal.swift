@@ -1,5 +1,5 @@
 import Foundation
-@_spi(Package) @testable import MapboxMaps
+@testable import MapboxMaps
 
 @propertyWrapper
 final class TestSignal<T> {

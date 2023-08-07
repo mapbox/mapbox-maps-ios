@@ -1,6 +1,5 @@
 import SwiftUI
-import MapboxMaps
-@_spi(Experimental) import MapboxMapsSwiftUI
+@_spi(Experimental) import MapboxMaps
 
 @available(iOS 14.0, *)
 struct LocateMeExample: View {

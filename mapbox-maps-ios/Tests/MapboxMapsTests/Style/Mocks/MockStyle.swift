@@ -1,5 +1,5 @@
 import UIKit
-@_spi(Package) @testable import MapboxMaps
+@testable import MapboxMaps
 
 final class MockStyle: StyleProtocol {
     @Stubbed var isStyleLoaded: Bool = false

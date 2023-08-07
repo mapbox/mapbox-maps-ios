@@ -1,6 +1,6 @@
 import XCTest
 
-@_spi(Package) @testable import MapboxMaps
+@testable import MapboxMaps
 
 class MutableRefTests: XCTestCase {
     func testGetSet() {

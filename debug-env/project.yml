@@ -20,11 +20,6 @@ settings:
   DEVELOPMENT_TEAM: GJZR2MEM28
   TARGETED_DEVICE_FAMILY: 1,2
 targets:
-  MapboxMapsSwiftUI:
-    templates:
-      - dynamicFramework
-    dependencies:
-      - target: MapboxMaps
   MapboxMaps:
     templates:
       - dynamicFramework
@@ -159,7 +154,6 @@ targetTemplates:
       - target: MapboxCoreMaps/MapboxCoreMaps
       - target: Turf/Turf
       - target: MapboxMaps
-      - target: MapboxMapsSwiftUI
       - package: Fingertips
 
   unitTest:

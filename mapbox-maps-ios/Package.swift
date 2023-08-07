@@ -11,9 +11,6 @@ let package = Package(
         .library(
             name: "MapboxMaps",
             targets: ["MapboxMaps"]),
-        .library(
-            name: "MapboxMapsSwiftUI",
-            targets: ["MapboxMapsSwiftUI"])
     ],
     dependencies: [
         .package(url: "https://github.com/mapbox/mapbox-core-maps-ios.git", exact: "11.0.0-beta.2"),
@@ -34,10 +31,6 @@ let package = Package(
             resources: [
                 .copy("MapboxMaps.json"),
             ]
-        ),
-        .target(
-            name: "MapboxMapsSwiftUI",
-            dependencies: ["MapboxMaps"]
         ),
         .testTarget(
             name: "MapboxMapsTests",
@@ -65,12 +58,6 @@ let package = Package(
                 .copy("Snapshot/testSnapshotOverlay.png"),
                 .process("Resources/MapInitOptionsTests.xib"),
             ]
-        ),
-        .testTarget(
-            name: "MapboxMapsSwiftUITests",
-            dependencies: [
-                "MapboxMapsSwiftUI",
-                "MapboxMaps"
-            ])
+        )
     ]
 )

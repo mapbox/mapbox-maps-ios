@@ -1,4 +1,4 @@
-@testable @_spi(Package) import MapboxMaps
+@testable import MapboxMaps
 import XCTest
 
 final class ValueAnimatorTests: XCTestCase {

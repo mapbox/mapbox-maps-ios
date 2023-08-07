@@ -21,4 +21,12 @@ extension AnyCancellable {
     public func store(in set: inout Set<AnyCancelable>) {
         set.insert(AnyCancelable(cancel))
     }
+
+    /// Stores this type-erasing cancellable instance in the specified collection.
+    ///
+    /// - Parameter collection: The collection in which to store this ``AnyCancellable``.
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    final public func store<C>(in collection: inout C) where C: RangeReplaceableCollection, C.Element == AnyCancelable {
+        collection.append(AnyCancelable(cancel))
+    }
 }

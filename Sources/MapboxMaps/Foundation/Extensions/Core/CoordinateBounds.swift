@@ -6,7 +6,7 @@ import MapboxCoreMaps
 public extension CoordinateBounds {
 
     /// Returns a bounds covering the entire (unwrapped) world.
-    static var world: CoordinateBounds { Self.__world() }
+    static var world: CoordinateBounds { __world() }
 
     /// Returns the southern latitude of the bounds.
     var south: CLLocationDegrees { __south() }

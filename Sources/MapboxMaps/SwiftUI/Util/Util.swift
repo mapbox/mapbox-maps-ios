@@ -12,7 +12,7 @@ func wrapAssignError(_ body: () throws -> Void) {
     do {
         try body()
     } catch {
-        print("error: \(error)") // TODO: Logger
+        Log.error(forMessage: "Failed to assign property, error: \(error)", category: "swiftui")
     }
 }
 

@@ -9,7 +9,7 @@ public extension CameraState {
     }
 }
 
-/// Represents location and rendered feaures of the tap.
+/// Represents location and rendered features of the tap.
 @_spi(Experimental)
 @available(iOS 13.0, *)
 public struct MapLayerTapPayload {
@@ -45,6 +45,7 @@ public struct Map: UIViewControllerRepresentable {
     var viewport: ConstantOrBinding<Viewport>
     var mapDependencies = MapDependencies()
     private var mapContentVisitor = DefaultMapContentVisitor()
+    private let urlOpenerProvider: URLOpenerProvider
 
     @Environment(\.layoutDirection) var layoutDirection
 
@@ -53,12 +54,14 @@ public struct Map: UIViewControllerRepresentable {
     /// - Parameters:
     ///     - viewport: The camera viewport to display.
     ///     - content: A map content building closure.
+    @available(iOSApplicationExtension, unavailable)
     public init(
         viewport: Binding<Viewport>,
         @MapContentBuilder content: @escaping () -> MapContent
     ) {
         self.init(
             _viewport: .binding(viewport),
+            urlOpenerProvider: URLOpenerProvider(),
             content: content)
     }
 
@@ -67,25 +70,30 @@ public struct Map: UIViewControllerRepresentable {
     /// - Parameters:
     ///     - initialViewport: The camera viewport to display.
     ///     - content: A map content building closure.
+    @available(iOSApplicationExtension, unavailable)
     public init(
         initialViewport: Viewport = .styleDefault,
         @MapContentBuilder content: @escaping () -> MapContent
     ) {
         self.init(
             _viewport: .constant(initialViewport),
+            urlOpenerProvider: URLOpenerProvider(),
             content: content)
     }
 
     private init(
         _viewport: ConstantOrBinding<Viewport>,
+        urlOpenerProvider: URLOpenerProvider,
         content: (() -> MapContent)? = nil
     ) {
         self.viewport = _viewport
+        self.urlOpenerProvider = urlOpenerProvider
         content?()._visit(mapContentVisitor)
     }
 
     public func makeCoordinator() -> Coordinator {
-        let mapView = MapView(frame: .zero, mapInitOptions: .init(), urlOpener: ClosureURLOpener { _ in })
+        let urlOpener = ClosureURLOpener()
+        let mapView = MapView(frame: .zero, urlOpener: urlOpener)
         let vc = MapViewController(mapView: mapView)
 
         let basicCoordinator = MapBasicCoordinator(
@@ -108,10 +116,12 @@ public struct Map: UIViewControllerRepresentable {
             basic: basicCoordinator,
             viewAnnotation: viewAnnotationCoordinator,
             viewController: vc,
+            urlOpener: urlOpener,
             mapView: mapView)
     }
 
     public func makeUIViewController(context: Context) -> UIViewController {
+        context.coordinator.urlOpener.openURL = urlOpenerProvider.resolve(in: context.environment)
         context.environment.mapViewProvider?.mapView = context.coordinator.mapView
         return context.coordinator.viewController
     }
@@ -130,25 +140,77 @@ public struct Map: UIViewControllerRepresentable {
 @available(iOS 13.0, *)
 extension Map {
 
-     /// Creates a map.
-     ///
-     /// - Parameters:
-     ///     - viewport: The camera viewport to display.
-     public init(viewport: Binding<Viewport>) {
-         self.init(
+    /// Creates a map.
+    ///
+    /// - Parameters:
+    ///     - viewport: The camera viewport to display.
+    @available(iOSApplicationExtension, unavailable)
+    public init(
+        viewport: Binding<Viewport>
+    ) {
+        self.init(
             _viewport: .binding(viewport),
+            urlOpenerProvider: URLOpenerProvider(),
             content: nil)
-     }
+    }
 
-     /// Creates a map.
-     ///
-     /// - Parameters:
-     ///     - initialViewport: Initial camera viewport.
-     public init(initialViewport: Viewport = .styleDefault) {
-         self.init(
+    /// Creates a map.
+    ///
+    /// - Parameters:
+    ///     - initialViewport: Initial camera viewport.
+    @available(iOSApplicationExtension, unavailable)
+    public init(
+        initialViewport: Viewport = .styleDefault
+    ) {
+        self.init(
             _viewport: .constant(initialViewport),
+            urlOpenerProvider: URLOpenerProvider(),
             content: nil)
-     }
+    }
+
+    /// Creates a map.
+    ///
+    /// Use this method to create a map in application extension context, or to override default url opening mechanism on iOS < 15.
+    ///
+    /// - Note: Starting from iOS 14  ``Map`` will use standard `OpenURLAction` taken from the `Environment`
+    ///   to open attribution urls, if `urlOpener` is not set.
+    ///
+    /// - Parameters:
+    ///     - viewport: The camera viewport to display.
+    ///     - urlOpener: A closure that handles attribution url opening.
+    ///     - content: A map content building closure.
+    public init(
+        viewport: Binding<Viewport>,
+        urlOpener: @escaping MapURLOpener,
+        @MapContentBuilder content: @escaping () -> MapContent
+    ) {
+        self.init(
+            _viewport: .binding(viewport),
+            urlOpenerProvider: URLOpenerProvider(userUrlOpener: urlOpener),
+            content: content)
+    }
+
+    /// Creates a map.
+    ///
+    /// Use this method to create a map in application extension context, or to override default url opening mechanism on iOS < 15.
+    ///
+    /// - Note: Starting from iOS 14  ``Map`` will use standard `OpenURLAction` taken from the `Environment`
+    ///   to open attribution urls, if `urlOpener` is not set.
+    ///
+    /// - Parameters:
+    ///     - initialViewport: The camera viewport to display.
+    ///     - urlOpener: A closure that handles attribution url opening.
+    ///     - content: A map content building closure.
+    public init(
+        initialViewport: Viewport = .styleDefault,
+        urlOpener: @escaping MapURLOpener,
+        @MapContentBuilder content: @escaping () -> MapContent
+    ) {
+        self.init(
+            _viewport: .constant(initialViewport),
+            urlOpenerProvider: URLOpenerProvider(userUrlOpener: urlOpener),
+            content: content)
+    }
 }
 
 @available(iOS 13.0, *)
@@ -209,7 +271,7 @@ public extension Map {
         return updated
     }
 
-    /// Sets constraint mode to the map. If not set, `heightOnly` wil be in use.
+    /// Sets constraint mode to the map. If not set, `heightOnly` will be in use.
     func constrainMode(_ constrainMode: ConstrainMode) -> Self {
         set(\.mapDependencies.constrainMode, constrainMode)
     }
@@ -238,17 +300,20 @@ extension Map {
         let basic: MapBasicCoordinator
         let viewAnnotation: ViewAnnotationCoordinator
         let viewController: UIViewController
+        let urlOpener: ClosureURLOpener
         let mapView: MapView
 
         init(
             basic: MapBasicCoordinator,
             viewAnnotation: ViewAnnotationCoordinator,
             viewController: UIViewController,
+            urlOpener: ClosureURLOpener,
             mapView: MapView
         ) {
             self.basic = basic
             self.viewAnnotation = viewAnnotation
             self.viewController = viewController
+            self.urlOpener = urlOpener
             self.mapView = mapView
         }
     }

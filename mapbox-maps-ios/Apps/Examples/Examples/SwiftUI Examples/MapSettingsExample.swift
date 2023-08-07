@@ -102,7 +102,7 @@ struct SettingsView : View {
     }
 }
 
-@available(iOS 14.0, *)
+@available(iOS 15.0, *)
 struct MapSettingsExample_Preveiw: PreviewProvider {
     static var previews: some View {
         NavigationView {

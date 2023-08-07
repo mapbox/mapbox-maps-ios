@@ -75,3 +75,16 @@ extension View {
         }
     }
 }
+
+@available(iOS 13.0, *)
+extension View {
+    func simpleAlert(message: Binding<String?>, title: String = "Alert") -> some View {
+        return alert(item: message) { item in
+            Alert(title: Text("\(title)"), message: Text("\(item)"))
+        }
+    }
+}
+
+extension String: Identifiable {
+    public var id: String { self }
+}

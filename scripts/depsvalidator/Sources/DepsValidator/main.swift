@@ -1,3 +1,0 @@
-import DepsValidatorLibrary
-
-DepsValidator.main()

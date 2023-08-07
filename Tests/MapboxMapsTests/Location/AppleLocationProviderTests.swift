@@ -209,24 +209,10 @@ final class AppleLocationProviderTests: XCTestCase {
 
         locationManager.compatibleAccuracyAuthorization = accuracyAuthorization
 
-        // TODO: Compare Location here after updating Common to 24.0.0-beta.2
-        struct Loc: Equatable {
-            let coord: CLLocationCoordinate2D
-            let auth: CLAccuracyAuthorization
-            init(coord: CLLocationCoordinate2D, auth: CLAccuracyAuthorization) {
-                self.coord = coord
-                self.auth = auth
-            }
-            init(_ location: Location) {
-                self.coord = location.coordinate
-                self.auth = location.accuracyAuthorization
-            }
-        }
-
         // observe via signal api
-        var observed = [[Loc]]()
+        var observed = [[Location]]()
         locationProvider.onLocationUpdate.observe {
-            observed.append($0.map(Loc.init(_:)))
+            observed.append($0)
         }.store(in: &cancelables)
 
         XCTAssertEqual(observed, [])
@@ -234,11 +220,11 @@ final class AppleLocationProviderTests: XCTestCase {
         locationProvider.locationManagerDidChangeAuthorization(CLLocationManager())
         locationProvider.locationManager(CLLocationManager(), didUpdateLocations: [clLocation])
 
-        let expected = Loc(coord: coordinate, auth: accuracyAuthorization)
+        let expected = Location(clLocation: clLocation, extra: Location.makeExtra(for: accuracyAuthorization))
         XCTAssertEqual(observed, [[expected]])
 
         locationManager.compatibleAccuracyAuthorization = .fullAccuracy
-        let expected2 = Loc(coord: coordinate, auth: .fullAccuracy)
+        let expected2 = Location(clLocation: clLocation, extra: Location.makeExtra(for: .fullAccuracy))
         locationProvider.locationManagerDidChangeAuthorization(CLLocationManager())
         XCTAssertEqual(observed, [[expected], [expected2]])
 

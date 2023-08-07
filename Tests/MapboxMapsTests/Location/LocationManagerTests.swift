@@ -130,7 +130,7 @@ final class LocationManagerTests: XCTestCase {
     func testPuckRenderingData() throws {
         // set initial location to 0, 0
         let beginCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-        location = [Location(coordinate: beginCoordinate, timestamp: Date())]
+        location = [Location(coordinate: beginCoordinate)]
         heading = Heading(direction: 0, accuracy: 0)
 
         var observedData = [PuckRenderingData]()
@@ -146,7 +146,7 @@ final class LocationManagerTests: XCTestCase {
         XCTAssertEqual(observedData1.heading?.direction, 0)
 
         let endCoordinate = CLLocationCoordinate2D(latitude: 10, longitude: 10)
-        location = [Location(coordinate: endCoordinate, timestamp: Date())]
+        location = [Location(coordinate: endCoordinate)]
         heading = Heading(direction: 10, accuracy: 10)
 
         now = Date(timeIntervalSince1970: 0.2)
@@ -171,7 +171,7 @@ final class LocationManagerTests: XCTestCase {
 
     func testPuck2dIsAddedToMap() throws {
         let coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-        location = [Location(coordinate: coordinate, timestamp: Date())]
+        location = [Location(coordinate: coordinate)]
         heading = Heading(direction: 20, accuracy: 0)
 
         me.options = .init(puckType: .puck2D())
@@ -188,7 +188,7 @@ final class LocationManagerTests: XCTestCase {
 
     func testPuck3dIsAddedToMap() throws {
         let coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-        location = [Location(coordinate: coordinate, timestamp: Date())]
+        location = [Location(coordinate: coordinate)]
         heading = Heading(direction: 20, accuracy: 0)
 
         let model = Model(uri: URL(string: "file://foo.glb"))

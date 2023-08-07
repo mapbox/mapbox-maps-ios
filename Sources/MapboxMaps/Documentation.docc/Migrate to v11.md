@@ -31,7 +31,7 @@ The Mapbox Standard style features 4 light presets: Day, Dusk, Dawn, and Night. 
 mapView.mapboxMap.setStyleImportConfigProperty(for: "standard", config: "lightPreset", value: "dusk")
 ```
 
-Changing the light preset will alter the colors and shadows on your map to reflect the time of day. For more information, check out the <doc:Migrate-to-v11###24-New-3D-Lighting-API> section.
+Changing the light preset will alter the colors and shadows on your map to reflect the time of day. For more information, check out the New-3D Lighting API section.
 
 Similarly, you can set other configuration properties on the Standard style such as showing POIs, place labels, or specific fonts:
 
@@ -76,7 +76,7 @@ Our existing, classic Mapbox styles (such as [Mapbox Streets](https://www.mapbox
 
 #### 2.1.1 Style Imports
 
-To work with styles like Mapbox Standard, we've introduced new Style APIs that allow you to import other styles into the main style you display to your users. These styles will be imported by reference, so updates to them will be reflected in your main style without additional work needed on your side. For example, imagine you have style A and style B. The Style API will allow you to import A into B. Upon importing, you can set configurations that apply to A. The configuration properties for the imported style A will depend on what the creator of style A chooses to be configurable. For the Standard style, 6 configuration properties are available for setting lighting, fonts, and label display options (see <doc:Migrate-to-v11##21-The-Mapbox-Standard-Style> above).
+To work with styles like Mapbox Standard, we've introduced new Style APIs that allow you to import other styles into the main style you display to your users. These styles will be imported by reference, so updates to them will be reflected in your main style without additional work needed on your side. For example, imagine you have style A and style B. The Style API will allow you to import A into B. Upon importing, you can set configurations that apply to A. The configuration properties for the imported style A will depend on what the creator of style A chooses to be configurable. For the Standard style, 6 configuration properties are available for setting lighting, fonts, and label display options (see The Mapbox Standard Style section above).
 
 We've introduced new APIs on the ``StyleManager`` object so you can work with these features:
 
@@ -96,11 +96,11 @@ layer.slot = "middle"
 mapView.mapboxMap.addLayer(layer)
 ```
 
-For more information, see the [2.1 The Mapbox Standard Style](#21-the-mapbox-standard-style) section above.
+For more information, see the The Mapbox Standard Style section above.
 
 ### 2.2 Type-safe Events API
 
-The events lifecycle reporting for <doc:MapboxMap> and ``Snapshotter`` have been reworked. The new event system is serialization-free, which brings more type safety and eliminates possible deserialization errors that could take place in v10 MapboxMaps SDK.
+The events lifecycle reporting for ``MapboxMap`` and ``Snapshotter`` have been reworked. The new event system is serialization-free, which brings more type safety and eliminates possible deserialization errors that could take place in v10 MapboxMaps SDK.
 
 As a bonus, this new type system supports the `Combine` framework out-of-the box.
 
@@ -277,7 +277,7 @@ As a bonus, you now can use a Combine `Publisher` to drive the puck location upd
 ```swift
 class Example {
     @Published
-    private var locations = [Location(coordinate: .init(latitude: 0, longitude: 0), timestamp: Date())]
+    private var locations = [Location(coordinate: .init(latitude: 0, longitude: 0))]
     @Published
     private var heading = Heading(direction: 0, accuracy: 0)
 
@@ -462,7 +462,7 @@ Check for any deprecated APIs in your code and replace them with the recommended
 
 ### 3.1 Replace deprecated MapboxMap/style and Snapshot/style
 
-We've simplified MapboxMap and Snapshot so you can now access Style APIs directly from <doc:MapboxMap> and ``Snapshotter`` instance rather than going through the deprecated Style object. For example:
+We've simplified MapboxMap and Snapshot so you can now access Style APIs directly from ``MapboxMap`` and ``Snapshotter`` instance rather than going through the deprecated Style object. For example:
 
 **v10:**
 
@@ -505,7 +505,7 @@ As a result, ``PointAnnotationManager/iconTextFit`` and ``PointAnnotationManager
 
 In v11, `mapView.mapboxMap.onEvery(<eventType>)` and `mapView.mapboxMap.onNext(event: <eventType>)` have been deprecated in favor of `mapboxMap.on<eventType>.observeNext` and `mapboxMap.on<eventType>.observe`.
 
-For more context, please see the [2.2 Type-safe Events API](#22-type-safe-events-api) section above.
+For more context, please see the Type-safe Events API section above.
 
 ### 3.4 Replace deprecated MapView properties
 
@@ -525,11 +525,11 @@ let center = mapView.mapboxMap.cameraState.center
 
 ### 3.5 Replace deprecated LocationManager properties
 
-We've made several changes and renamed parts of ``LocationManager``. See the above [2.5 Location API](#25-location-api) section for more details.
+We've made several changes and renamed parts of ``LocationManager``. See the above Location API section for more details.
 
 ### 3.6 Replace deprecated MapboxMap properties
 
-Several properties on <doc:MapboxMap> were renamed in v11 for clarity. Please update your implementation:
+Several properties on ``MapboxMap`` were renamed in v11 for clarity. Please update your implementation:
 
 **v10:**
 
@@ -587,7 +587,7 @@ If you need to set a HTTP interceptor you can do it via the `HttpServiceFactory.
 
 #### 3.9.1 ``OfflineManager`` API changes
 
-- Due to changes documented in [Access Token and Map Options management](#23-access-token-and-map-options-management), you no longer need to provide a resource options when initializing an instance of ``OfflineManager``.
+- Due to changes documented in Access Token and Map Options management, you no longer need to provide a resource options when initializing an instance of ``OfflineManager``.
 - `TilesetDescriptorOptionsForTilesets` and `OfflineManager/createTilesetDescriptorForTilesetDescriptorOptions(_:)` has been removed. Instead you can provide an optional list of `tilesets` when initializing an instance of ``TilesetDescriptorOptions`` and use it to create a `TilesetDescriptor` using `OfflineManager/createTilesetDescriptor(_:)`.
 - You can now observe when a style pack is removed with a completion handler.
 
@@ -620,7 +620,7 @@ offlineManager.removeStylePack(for: .streets) { result in
 
 #### 3.9.2 Legacy ``OfflineRegionManager`` changes
 
-- Due to changes documented in [Access Token and Map Options management](#23-access-token-and-map-options-management), you no longer need to provide a resource options when initializing an instance of ``OfflineRegionManager``.
+- Due to changes documented in Access Token and Map Options management, you no longer need to provide a resource options when initializing an instance of ``OfflineRegionManager``.
 - `ResponseError` has been renamed to ``OfflineRegionError``, with new flag named `isFatal` indicating that the error is fatal i.e. the region cannot proceed downloading of any resources and it will be put to inactive state.
 - ``OfflineRegionObserver`` no longer requires function `responseError(forError:)`, instead you can implement function `errorOccurred(forError:)` to be notified of errors encountered while downloading regional resources.
 - `ResponseErrorReason` is renamed to `OfflineRegionErrorType`.
@@ -668,7 +668,7 @@ class OfflineRegionObserver: MapboxCoreMaps.OfflineRegionObserver {
 - `PuckBearingSource` has been renamed to ``PuckBearing`` and removed in v11. Along with this, constructor `LocationOptions.init(distanceFilter:desiredAccuracy:activityType:puckType:puckBearingSource:puckBearingEnabled:)` has also been removed, instead please use ``LocationOptions/init(puckType:puckBearing:puckBearingEnabled:)``
 - `pinchRotateEnabled` property has been removed from ``GestureOptions``. Instead, use the renamed ``GestureOptions/rotateEnabled``.
 - Experimental `MapboxMap.setRenderCache(_:)` has been removed.
-- `MapEvents.EventKind` and `MapEvents.Event` have been removed, however, we have provided a shim to smoothen the migration process from v10 to v11. Please refer to [Type-safe Events API](#22-type-safe-events-api) to update your events code.
+- `MapEvents.EventKind` and `MapEvents.Event` have been removed, however, we have provided a shim to smoothen the migration process from v10 to v11. Please refer to the Type-safe Events API section to update your events code.
 - The following transition properties have been removed from our layers:
     * `backgroundPatternTransition` has been removed from ``BackgroundLayer``
     * `fillExtrusionPatternTransition` has been removed from ``FillExtrusionLayer``

@@ -1144,7 +1144,6 @@ extension MapboxMap {
         events.onEvery(event: event, handler: handler)
     }
 
-    /// :nodoc:
     func performWithoutNotifying(_ block: () throws -> Void) rethrows {
         try events.performWithoutNotifying(block)
     }
@@ -1269,15 +1268,12 @@ extension MapboxMap {
 // MARK: - View Annotations
 
 extension MapboxMap {
-
-    /// :nodoc:
     func setViewAnnotationPositionsUpdateCallback(_ callback: ViewAnnotationPositionsUpdateCallback?) {
         __map.setViewAnnotationPositionsUpdateListenerFor(callback.map {
             ViewAnnotationPositionsUpdateListenerImpl(callback: $0)
         })
     }
 
-    /// :nodoc:
     func addViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws {
         let expected = __map.addViewAnnotation(forIdentifier: id, options: MapboxCoreMaps.ViewAnnotationOptions(options))
         if expected.isError(), let reason = expected.error {
@@ -1285,7 +1281,6 @@ extension MapboxMap {
         }
     }
 
-    /// :nodoc:
     func updateViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws {
         let expected = __map.updateViewAnnotation(forIdentifier: id, options: MapboxCoreMaps.ViewAnnotationOptions(options))
         if expected.isError(), let reason = expected.error {
@@ -1293,7 +1288,6 @@ extension MapboxMap {
         }
     }
 
-    /// :nodoc:
     func removeViewAnnotation(withId id: String) throws {
         let expected = __map.removeViewAnnotation(forIdentifier: id)
         if expected.isError(), let reason = expected.error {
@@ -1301,7 +1295,6 @@ extension MapboxMap {
         }
     }
 
-    /// :nodoc:
     func options(forViewAnnotationWithId id: String) throws -> ViewAnnotationOptions {
         let expected = __map.getViewAnnotationOptions(forIdentifier: id)
         if expected.isError(), let reason = expected.error {

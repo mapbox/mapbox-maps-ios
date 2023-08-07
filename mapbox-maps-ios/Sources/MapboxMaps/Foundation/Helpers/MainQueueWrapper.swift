@@ -4,7 +4,6 @@ import Dispatch
 protocol MainQueueProtocol: DispatchQueueProtocol { }
 
 final class MainQueueWrapper: MainQueueProtocol {
-    init() {}
     func async(
         group: DispatchGroup?,
         qos: DispatchQoS,

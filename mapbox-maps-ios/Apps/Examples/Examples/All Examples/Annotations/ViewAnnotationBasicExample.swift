@@ -44,7 +44,7 @@ final class ViewAnnotationBasicExample: UIViewController, ExampleProtocol {
         let options = ViewAnnotationOptions(
             geometry: Point(coordinate),
             allowOverlap: true,
-            anchor: .bottom
+            anchor: .center
         )
         let annotationView = AnnotationView(frame: CGRect(x: 0, y: 0, width: 100, height: 80))
         annotationView.title = String(format: "lat=%.2f\nlon=%.2f", coordinate.latitude, coordinate.longitude)

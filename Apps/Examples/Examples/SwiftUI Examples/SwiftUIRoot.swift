@@ -23,12 +23,16 @@ struct SwiftUIRoot: View {
                 } header: { Text("Use cases") }
 
                 Section {
-                    ExampleLink("Basic View annotations example", note: "Add/remove view annotation on tap", destination: ViewAnnotationsExample())
+                    ExampleLink("Basic View annotations example", note: "Add/remove view annotation on tap.", destination: ViewAnnotationsExample())
                 } header: { Text("View Annotations") }
 
                 Section {
                     ExampleLink("Puck playground", note: "Display user location using puck", destination: PuckPlayground())
-                } header: { Text("Location") }
+                    ExampleLink("AttributionURL open (iOS 13+)", note: "Override attribution url opener.", destination: URLOpenIOS13())
+                    if #available(iOS 15.0, *) {
+                        ExampleLink("AttributionURL open (iOS 15+)", note: "Override attribution url opener.", destination: URLOpenIOS15())
+                    }
+                } header: { Text("Testing Examples") }
             }
             .listStyle(.plain)
             .navigationTitle(title)

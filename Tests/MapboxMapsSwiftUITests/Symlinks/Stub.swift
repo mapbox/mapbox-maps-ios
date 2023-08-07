@@ -1,1 +1,0 @@
-../../MapboxMapsTests/Helpers/Stub.swift

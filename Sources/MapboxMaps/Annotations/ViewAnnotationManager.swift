@@ -421,9 +421,7 @@ public final class ViewAnnotationManager {
 }
 
 extension ViewAnnotationPositionDescriptor {
-    /// :nodoc:
-    @_spi(Package)
-    public var frame: CGRect {
+    var frame: CGRect {
         CGRect(origin: leftTopCoordinate.point, size: CGSize(width: CGFloat(width), height: CGFloat(height)))
     }
 }

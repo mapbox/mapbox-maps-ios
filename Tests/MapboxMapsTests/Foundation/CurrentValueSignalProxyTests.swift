@@ -1,5 +1,5 @@
 import XCTest
-@testable @_spi(Package) import MapboxMaps
+@testable import MapboxMaps
 
 class CurrentValueSignalProxyTests: XCTestCase {
     func testProxy() {

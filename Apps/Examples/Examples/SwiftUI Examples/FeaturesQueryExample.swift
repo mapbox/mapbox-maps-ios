@@ -1,5 +1,5 @@
 import SwiftUI
-@_spi(Experimental) import MapboxMapsSwiftUI
+@_spi(Experimental) import MapboxMaps
 
 /// This example shows how to use `MapReader` in order to access underlying `MapboxMap` API in SwiftUI.
 @available(iOS 14.0, *)

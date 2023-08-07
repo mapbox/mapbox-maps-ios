@@ -1,5 +1,5 @@
 import SwiftUI
-@_spi(Experimental) import MapboxMapsSwiftUI
+@_spi(Experimental) import MapboxMaps
 
 @available(iOS 14.0, *)
 struct Puck3DExample: View {

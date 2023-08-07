@@ -1,4 +1,4 @@
-@_spi(Package) @testable import MapboxMaps
+@testable import MapboxMaps
 
 final class MockMainQueue: MainQueueProtocol {
     struct AsyncParams {

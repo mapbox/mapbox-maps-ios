@@ -4,8 +4,7 @@ import UIKit
 @_implementationOnly import MapboxCoreMaps_Private
 import Turf
 
-@_spi(Package)
-public protocol MapboxMapProtocol: AnyObject {
+protocol MapboxMapProtocol: AnyObject {
     var cameraBounds: CameraBounds { get }
     var cameraState: CameraState { get }
     var size: CGSize { get }
@@ -161,7 +160,7 @@ public protocol MapboxMapProtocol: AnyObject {
 /// - Important: MapboxMap should only be used from the main thread.
 public final class MapboxMap: StyleManager {
     /// The underlying renderer object responsible for rendering the map.
-    private let __map: Map
+    private let __map: MapboxCoreMaps.Map
     private var cancelables = Set<AnyCancelable>()
 
     /// The `style` object supports run time styling.
@@ -175,7 +174,7 @@ public final class MapboxMap: StyleManager {
         __map.destroyRenderer()
     }
 
-    internal init(map: Map, events: MapEvents, styleSourceManager: StyleSourceManagerProtocol) {
+    internal init(map: MapboxCoreMaps.Map, events: MapEvents, styleSourceManager: StyleSourceManagerProtocol) {
         self.__map = map
         self.events = events
 
@@ -185,7 +184,7 @@ public final class MapboxMap: StyleManager {
     }
 
     internal convenience init(mapClient: MapClient, mapInitOptions: MapInitOptions, styleSourceManager: StyleSourceManagerProtocol? = nil) {
-        let map = Map(
+        let map = MapboxCoreMaps.Map(
             client: mapClient,
             mapOptions: mapInitOptions.mapOptions)
         self.init(
@@ -422,8 +421,7 @@ public final class MapboxMap: StyleManager {
     }
 
     /// Gets the size of the map in points
-    @_spi(Package)
-    public var size: CGSize {
+    var size: CGSize {
         get {
             CGSize(__map.getSize())
         }
@@ -463,24 +461,21 @@ public final class MapboxMap: StyleManager {
     /// Set the map north orientation
     ///
     /// - Parameter northOrientation: The map north orientation to set
-    @_spi(Package)
-    public func setNorthOrientation(northOrientation: NorthOrientation) {
+    func setNorthOrientation(northOrientation: NorthOrientation) {
         __map.setNorthOrientationFor(northOrientation)
     }
 
     /// Set the map constrain mode
     ///
     /// - Parameter constrainMode: The map constraint mode to set
-    @_spi(Package)
-    public func setConstrainMode(_ constrainMode: ConstrainMode) {
+    func setConstrainMode(_ constrainMode: ConstrainMode) {
         __map.setConstrainModeFor(constrainMode)
     }
 
     /// Set the map viewport mode
     ///
     /// - Parameter viewportMode: The map viewport mode to set
-    @_spi(Package)
-    public func setViewportMode(_ viewportMode: ViewportMode) {
+    func setViewportMode(_ viewportMode: ViewportMode) {
         __map.setViewportModeFor(viewportMode)
     }
 
@@ -518,7 +513,7 @@ public final class MapboxMap: StyleManager {
     ///
     /// - Parameters:
     ///   - coordinates: Array of coordinates that should fit within the new viewport.
-    ///   - padding: The amount of padding to add to the given bounds when calculating the camera, in points. This is differnt from camera padding. 
+    ///   - padding: The amount of padding to add to the given bounds when calculating the camera, in points. This is differnt from camera padding.
     ///   - bearing: The new bearing to be used by the camera, in degrees (0°, 360°) clockwise from true north.
     ///   - pitch: The new pitch to be used by the camera, in degrees (0°, 85°) with 0° being a top-down view.
     /// - Returns: A `CameraOptions` that fits the provided constraints
@@ -741,8 +736,7 @@ public final class MapboxMap: StyleManager {
     }
 
     /// The map's current anchor, calculated after applying padding (if it exists)
-    @_spi(Package)
-    public var anchor: CGPoint {
+    var anchor: CGPoint {
         let rect = CGRect(origin: .zero, size: size).inset(by: cameraState.padding)
         return CGPoint(x: rect.midX, y: rect.midY)
     }
@@ -817,8 +811,7 @@ public final class MapboxMap: StyleManager {
     }
 
     /// :nodoc:
-    @_spi(Package)
-    public func pointIsAboveHorizon(_ point: CGPoint) -> Bool {
+    func pointIsAboveHorizon(_ point: CGPoint) -> Bool {
         guard projection.name == .mercator else {
             return false
         }
@@ -876,7 +869,6 @@ public final class MapboxMap: StyleManager {
     }
 }
 
-@_spi(Package)
 extension MapboxMap: MapboxMapProtocol {}
 
 // swiftlint:enable type_body_length
@@ -1153,8 +1145,7 @@ extension MapboxMap {
     }
 
     /// :nodoc:
-    @_spi(Package)
-    public func performWithoutNotifying(_ block: () throws -> Void) rethrows {
+    func performWithoutNotifying(_ block: () throws -> Void) rethrows {
         try events.performWithoutNotifying(block)
     }
 }
@@ -1280,16 +1271,14 @@ extension MapboxMap {
 extension MapboxMap {
 
     /// :nodoc:
-    @_spi(Package)
-    public func setViewAnnotationPositionsUpdateCallback(_ callback: ViewAnnotationPositionsUpdateCallback?) {
+    func setViewAnnotationPositionsUpdateCallback(_ callback: ViewAnnotationPositionsUpdateCallback?) {
         __map.setViewAnnotationPositionsUpdateListenerFor(callback.map {
             ViewAnnotationPositionsUpdateListenerImpl(callback: $0)
         })
     }
 
     /// :nodoc:
-    @_spi(Package)
-    public func addViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws {
+    func addViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws {
         let expected = __map.addViewAnnotation(forIdentifier: id, options: MapboxCoreMaps.ViewAnnotationOptions(options))
         if expected.isError(), let reason = expected.error {
             throw MapError(coreError: reason)
@@ -1297,8 +1286,7 @@ extension MapboxMap {
     }
 
     /// :nodoc:
-    @_spi(Package)
-    public func updateViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws {
+    func updateViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws {
         let expected = __map.updateViewAnnotation(forIdentifier: id, options: MapboxCoreMaps.ViewAnnotationOptions(options))
         if expected.isError(), let reason = expected.error {
             throw MapError(coreError: reason)
@@ -1306,8 +1294,7 @@ extension MapboxMap {
     }
 
     /// :nodoc:
-    @_spi(Package)
-    public func removeViewAnnotation(withId id: String) throws {
+    func removeViewAnnotation(withId id: String) throws {
         let expected = __map.removeViewAnnotation(forIdentifier: id)
         if expected.isError(), let reason = expected.error {
             throw MapError(coreError: reason)
@@ -1315,8 +1302,7 @@ extension MapboxMap {
     }
 
     /// :nodoc:
-    @_spi(Package)
-    public func options(forViewAnnotationWithId id: String) throws -> ViewAnnotationOptions {
+    func options(forViewAnnotationWithId id: String) throws -> ViewAnnotationOptions {
         let expected = __map.getViewAnnotationOptions(forIdentifier: id)
         if expected.isError(), let reason = expected.error {
             throw MapError(coreError: reason)
@@ -1361,7 +1347,7 @@ extension MapboxMap {
 // MARK: - Testing only!
 
 extension MapboxMap {
-    internal var __testingMap: Map {
+    internal var __testingMap: MapboxCoreMaps.Map {
         return __map
     }
 }

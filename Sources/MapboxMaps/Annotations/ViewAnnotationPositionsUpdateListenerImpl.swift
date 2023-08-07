@@ -1,9 +1,7 @@
 import MapboxCoreMaps
 @_implementationOnly import MapboxCoreMaps_Private
 
-/// :nodoc:
-@_spi(Package)
-public typealias ViewAnnotationPositionsUpdateCallback = ([ViewAnnotationPositionDescriptor]) -> Void
+typealias ViewAnnotationPositionsUpdateCallback = ([ViewAnnotationPositionDescriptor]) -> Void
 
 internal final class ViewAnnotationPositionsUpdateListenerImpl: ViewAnnotationPositionsUpdateListener {
     private let callback: ViewAnnotationPositionsUpdateCallback

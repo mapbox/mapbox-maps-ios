@@ -24,3 +24,17 @@ internal final class DefaultAttributionURLOpener: AttributionURLOpener {
         application.open(url)
     }
 }
+
+internal final class ClosureURLOpener: AttributionURLOpener {
+    func openAttributionURL(_ url: URL) {
+        closure(url)
+    }
+
+    typealias OpenURL = (URL) -> Void
+
+    let closure: OpenURL
+
+    init(closure: @escaping OpenURL) {
+        self.closure = closure
+    }
+}

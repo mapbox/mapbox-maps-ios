@@ -1,1 +1,0 @@
-../../MapboxMapsTests/Helpers/Random/CGPoint+Random.swift

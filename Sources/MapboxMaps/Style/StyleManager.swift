@@ -3,7 +3,6 @@
 @_implementationOnly import MapboxCoreMaps_Private
 import UIKit
 
-@_spi(Package)
 public protocol StyleProtocol: AnyObject {
     var isStyleLoaded: Bool { get }
     var styleDefaultCamera: CameraOptions { get }
@@ -1423,5 +1422,4 @@ public struct StyleTransition: Codable {
     }
 }
 
-@_spi(Package)
 extension StyleManager: StyleProtocol {}

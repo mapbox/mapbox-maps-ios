@@ -1,5 +1,6 @@
 import SwiftUI
-@_spi(Experimental) import MapboxMapsSwiftUI
+@_spi(Experimental) import MapboxMaps
+
 
 private enum Id {
     static let clusterCircle = "clustered-circle-layer"

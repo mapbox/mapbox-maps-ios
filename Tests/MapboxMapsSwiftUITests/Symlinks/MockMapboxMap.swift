@@ -1,1 +1,0 @@
-../../MapboxMapsTests/Foundation/Mocks/MockMapboxMap.swift

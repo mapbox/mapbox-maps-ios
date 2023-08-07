@@ -4,6 +4,7 @@ steps:
   - checkout
   - mapbox/add-mapbox-ssh-key
   - mapbox/install-mbx-ci
+  - inject-netrc-credentials
   - run:
       name: Install AWSCLI
       command: pip3 install awscli requests
@@ -24,13 +25,11 @@ steps:
           -r . \
           --single-run-test-ids "SpecsBenchmark/testStreetsMunichTtrcCold()" \
           --output "$CIRCLE_WORKING_DIRECTORY/ios-maps-carbon-v2.json"
-      working_directory: mapbox-maps-ios/scripts/xcparty
   - store_artifacts:
       path: ios-maps-carbon-v2.json
   - run:
       name: Test failures
       command: swift run xcparty failures "$CIRCLE_WORKING_DIRECTORY/workspace/metrics.xcresult"
-      working_directory: mapbox-maps-ios/scripts/xcparty
       when: on_fail
   - run:
       name: Upload metrics to AWS
@@ -38,3 +37,4 @@ steps:
         gzip ios-maps-carbon-v2.json
         mv ios-maps-carbon-v2.json.gz ios-maps-carbon-v2-${CIRCLE_BUILD_NUM-1}.json.gz
         sh scripts/publish_to_aws.sh mobile_production.performance ios-maps-carbon-v2-${CIRCLE_BUILD_NUM-1}.json.gz
+  - slack-notify-failure-if-any

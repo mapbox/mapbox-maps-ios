@@ -122,7 +122,7 @@ def main():
     else:
         patch_flags = ""
 
-    os.system(f"swift run --package-path tools/PatchGLNativeXCProject patch-cmake-xcproject build/mapbox-gl-native-internal/build/ios/Mapbox\ GL\ Native.xcodeproj {patch_flags}")
+    os.system(f"swift run --package-path .. patch-cmake-xcproject build/mapbox-gl-native-internal/build/ios/Mapbox\ GL\ Native.xcodeproj {patch_flags}")
 
     print_phase(f"Create {maps_path}/developer.xcconfig")
     with open(f"build/{maps_path}/developer.xcconfig", "w") as f:

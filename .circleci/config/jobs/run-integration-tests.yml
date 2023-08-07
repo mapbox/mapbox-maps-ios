@@ -43,5 +43,4 @@ steps:
       path: xcodebuild.log
   - store_artifacts:
       path: ~/Library/Logs/DiagnosticReports
-  - report-failure:
-      message: "Integration test failed: << parameters.destination >>, Xcode: << parameters.xcode >>"
+  - slack-notify-failure-if-any

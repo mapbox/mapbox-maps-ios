@@ -19,6 +19,8 @@ jobs:
         - build-benchmark
       filters: *benchmark-filters
   - collect-metrics:
+      context:
+        - SDK Registry Token
       requires:
         - run-benchmark
       filters: *benchmark-filters

@@ -31,9 +31,10 @@ steps:
       path: result.xml
   - store_test_results:
       path: result.xml
+  - inject-netrc-credentials
   - run:
       name: Build depsvalidator
-      command: swift build --package-path scripts/depsvalidator
+      command: swift build --package-path .. --product depsvalidator
   - run:
       name: Run depsvalidator
-      command: swift run --package-path scripts/depsvalidator depsvalidator
+      command: swift run --package-path .. depsvalidator

@@ -16,15 +16,35 @@ let mapboxMapsTestsPath: String? = "mapbox-maps-ios/Tests/MapboxMapsTests"
 let package = Package(
     name: "MapboxMaps",
     defaultLocalization: "en",
-    platforms: [.iOS(.v12)],
+    platforms: [.iOS(.v12), .macOS(.v10_15)],
     products: [
         .library(
             name: "MapboxMaps",
             targets: ["MapboxMaps"]
         ),
+        .executable(
+            name: "xcparty",
+            targets: ["xcparty"]
+        ),
+        .executable(
+            name: "patch-cmake-xcproject",
+            targets: ["PatchGLNativeXCProject"]
+        ),
+        .executable(
+            name: "depsvalidator",
+            targets: ["DepsValidator"]
+        ),
+        .library(
+            name: "DepsValidatorLibrary",
+            targets: ["DepsValidatorLibrary"]
+        )
     ],
     dependencies: [
         .package(url: "https://github.com/mapbox/turf-swift.git", from: "2.0.0"),
+        .package(url: "https://github.com/jpsim/Yams", from: "4.0.6"),
+        .package(url: "https://github.com/tuist/XcodeProj.git", .upToNextMajor(from: "8.8.0")),
+        .package(url: "https://github.com/davidahouse/XCResultKit", from: "1.0.0"),
+                .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.0.0")
     ],
     targets: [
         .binaryTarget(
@@ -80,5 +100,36 @@ let package = Package(
                 .process("Resources/MapInitOptionsTests.xib"),
             ]
         ),
+        .executableTarget(
+            name: "xcparty",
+            dependencies: [
+                "XCResultKit",
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+            ]),
+        .executableTarget(
+            name: "PatchGLNativeXCProject",
+            dependencies: [
+                "XcodeProj"
+            ]),
+        .executableTarget(
+            name: "DepsValidator",
+            dependencies: [
+                .target(name: "DepsValidatorLibrary"),
+            ]),
+        .target(
+            name: "DepsValidatorLibrary",
+            dependencies: [
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "Yams", package: "Yams"),
+            ]),
+        .testTarget(
+            name: "DepsValidatorTests",
+            dependencies: [
+                "DepsValidatorLibrary",
+            ],
+            resources: [
+                .copy("Example Manifests/Package.swift.example"),
+                .copy("Example Manifests/Example.podspec"),
+            ]),
     ]
 )

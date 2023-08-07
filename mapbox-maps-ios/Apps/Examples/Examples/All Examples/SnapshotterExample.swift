@@ -60,17 +60,20 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        if snapshotter == nil {
-            initializeSnapshotter()
-        }
-    }
 
-    private func initializeSnapshotter() {
-        // Configure the snapshotter object with its default access
-        // token, size, map style, and camera.
         let size = CGSize(
             width: view.safeAreaLayoutGuide.layoutFrame.width,
             height: (view.safeAreaLayoutGuide.layoutFrame.height - stackView.spacing) / 2)
+
+        if let snapshotter {
+            snapshotter.snapshotSize = size
+        } else {
+            initializeSnapshotter(with: size)
+        }
+    }
+
+    private func initializeSnapshotter(with size: CGSize) {
+        // Configure the snapshotter object with its size, map style, and camera.
         let options = MapSnapshotOptions(
             size: size,
             pixelRatio: UIScreen.main.scale)

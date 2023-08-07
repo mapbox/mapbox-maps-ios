@@ -78,3 +78,8 @@ jobs:
   - run-benchmark:
       requires:
         - build-benchmark
+  - collect-metrics:
+      context:
+        - SDK Registry Token
+      requires:
+        - run-benchmark

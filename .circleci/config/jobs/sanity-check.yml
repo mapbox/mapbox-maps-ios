@@ -38,3 +38,4 @@ steps:
   - run:
       name: Run depsvalidator
       command: swift run --package-path .. depsvalidator
+  - slack-notify-failure-if-any

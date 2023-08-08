@@ -20,6 +20,7 @@ jobs:
       filters: *benchmark-filters
   - collect-metrics:
       context:
+        - Slack Orb
         - SDK Registry Token
       requires:
         - run-benchmark

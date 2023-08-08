@@ -81,5 +81,6 @@ jobs:
   - collect-metrics:
       context:
         - SDK Registry Token
+        - Slack Orb
       requires:
         - run-benchmark

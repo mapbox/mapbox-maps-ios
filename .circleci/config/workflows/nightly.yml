@@ -6,6 +6,7 @@ jobs:
   - sanity-check:
       context:
         - Slack Orb
+        - SDK Registry Token
   - build-sdk-for-api-compatibility-check:
       context:
         - Slack Orb

@@ -14,6 +14,7 @@
 		7473C3BA288995B40022279E /* DebugViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7473C3B9288995B40022279E /* DebugViewController.xib */; };
 		B569C20125FEBC2E008B0D92 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = B569C20025FEBC2E008B0D92 /* MapboxMaps */; };
 		FE2755DF2A1241AB00EEC95F /* Fingertips in Frameworks */ = {isa = PBXBuildFile; productRef = FE2755DE2A1241AB00EEC95F /* Fingertips */; };
+		FE5FD8082A811A67009769BF /* DebugViewController+StateRestoration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5FD8072A811A67009769BF /* DebugViewController+StateRestoration.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -38,6 +39,7 @@
 		35F08DE92347987900768B9F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7473C3B9288995B40022279E /* DebugViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DebugViewController.xib; sourceTree = "<group>"; };
 		CA56651F24479764006F392C /* base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = base.xcconfig; sourceTree = "<group>"; };
+		FE5FD8072A811A67009769BF /* DebugViewController+StateRestoration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DebugViewController+StateRestoration.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +79,7 @@
 				35F08DE92347987900768B9F /* Info.plist */,
 				35F08DDB2347987700768B9F /* AppDelegate.swift */,
 				35F08DDF2347987700768B9F /* DebugViewController.swift */,
+				FE5FD8072A811A67009769BF /* DebugViewController+StateRestoration.swift */,
 				7473C3B9288995B40022279E /* DebugViewController.xib */,
 				35F08DE42347987900768B9F /* Assets.xcassets */,
 				35F08DE62347987900768B9F /* LaunchScreen.storyboard */,
@@ -227,6 +230,7 @@
 			files = (
 				35F08DE02347987700768B9F /* DebugViewController.swift in Sources */,
 				35F08DDC2347987700768B9F /* AppDelegate.swift in Sources */,
+				FE5FD8082A811A67009769BF /* DebugViewController+StateRestoration.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

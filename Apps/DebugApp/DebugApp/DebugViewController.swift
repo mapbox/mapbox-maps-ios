@@ -11,10 +11,22 @@ final class DebugViewController: UIViewController {
 
     var mapView: MapView!
 
+    var cancellables: Set<AnyCancelable> = []
+
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView = MapView(frame: view.bounds)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.insertSubview(mapView, at: 0)
+
+        configureStateRestoration(mapView: mapView)
+
+        mapView.mapboxMap.onStyleLoaded.observeNext { [weak self] styleLoaded in
+            self?.mapStyleDidLoad(styleLoaded)
+        }.store(in: &cancellables)
+    }
+
+    func mapStyleDidLoad(_ styleLoaded: StyleLoaded) {
+
     }
 }

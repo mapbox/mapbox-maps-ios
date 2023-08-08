@@ -1,5 +1,6 @@
 import UIKit
 import Fingertips
+import os
 
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -11,5 +12,12 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = DebugViewController()
         window?.makeKeyAndVisible()
         return true
+    }
+
+    func applicationWillTerminate(_ application: UIApplication) {
+        if let debugViewController = window?.rootViewController as? DebugViewController {
+            os_log("Save camera state on applicationWillTerminate")
+            debugViewController.saveCameraState()
+        }
     }
 }

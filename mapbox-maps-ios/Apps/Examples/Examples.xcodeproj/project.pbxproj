@@ -40,8 +40,7 @@
 		3A7432EF27F3096100E06485 /* DebugMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7432EE27F3096100E06485 /* DebugMapExample.swift */; };
 		3A7CE986282511C900C3A0B8 /* NavigationSimulatorExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CE985282511C900C3A0B8 /* NavigationSimulatorExample.swift */; };
 		3A7CE98B282AB0DE00C3A0B8 /* NavigationSimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CE98A282AB0DE00C3A0B8 /* NavigationSimulator.swift */; };
-		3AA5FAF329BF132800758AC0 /* Puck2DExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5FAF229BF132800758AC0 /* Puck2DExample.swift */; };
-		3AA5FAF529C0786A00758AC0 /* Puck3DExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5FAF429C0786A00758AC0 /* Puck3DExample.swift */; };
+		3AA5FAF529C0786A00758AC0 /* PuckPlayground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5FAF429C0786A00758AC0 /* PuckPlayground.swift */; };
 		3ADF96022992787A00819649 /* ViewAnnotationsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADF96012992787A00819649 /* ViewAnnotationsExample.swift */; };
 		5812B55127C5A0E500E10063 /* CustomLocationProviderExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5812B55027C5A0E500E10063 /* CustomLocationProviderExample.swift */; };
 		58248C2F2695FF24009AC598 /* StoryboardMapViewExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58248C2E2695FF24009AC598 /* StoryboardMapViewExample.swift */; };
@@ -227,8 +226,7 @@
 		3A7432EE27F3096100E06485 /* DebugMapExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugMapExample.swift; sourceTree = "<group>"; };
 		3A7CE985282511C900C3A0B8 /* NavigationSimulatorExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSimulatorExample.swift; sourceTree = "<group>"; };
 		3A7CE98A282AB0DE00C3A0B8 /* NavigationSimulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSimulator.swift; sourceTree = "<group>"; };
-		3AA5FAF229BF132800758AC0 /* Puck2DExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Puck2DExample.swift; sourceTree = "<group>"; };
-		3AA5FAF429C0786A00758AC0 /* Puck3DExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Puck3DExample.swift; sourceTree = "<group>"; };
+		3AA5FAF429C0786A00758AC0 /* PuckPlayground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuckPlayground.swift; sourceTree = "<group>"; };
 		3ADF96012992787A00819649 /* ViewAnnotationsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAnnotationsExample.swift; sourceTree = "<group>"; };
 		5812B55027C5A0E500E10063 /* CustomLocationProviderExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLocationProviderExample.swift; sourceTree = "<group>"; };
 		58248C2E2695FF24009AC598 /* StoryboardMapViewExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardMapViewExample.swift; sourceTree = "<group>"; };
@@ -603,8 +601,7 @@
 				95B589B42982BFE800BF4F31 /* MapSettingsExample.swift */,
 				95B589B32982BFE800BF4F31 /* FeaturesQueryExample.swift */,
 				954AF548298A821E00365B6C /* ClusteringExample.swift */,
-				3AA5FAF229BF132800758AC0 /* Puck2DExample.swift */,
-				3AA5FAF429C0786A00758AC0 /* Puck3DExample.swift */,
+				3AA5FAF429C0786A00758AC0 /* PuckPlayground.swift */,
 				3ADF96012992787A00819649 /* ViewAnnotationsExample.swift */,
 				951693B12A581DFC0083DC4C /* LocateMeExample.swift */,
 				9501A5942A3882D800F2AF92 /* Util */,
@@ -877,7 +874,6 @@
 				17B40D2426A85500000887EF /* LiveDataExample.swift in Sources */,
 				95B589B62982BFE800BF4F31 /* SimpleMapExample.swift in Sources */,
 				CADCF7242584990E0065C51B /* AnimateLayerExample.swift in Sources */,
-				3AA5FAF329BF132800758AC0 /* Puck2DExample.swift in Sources */,
 				073475D725AFAE520049B0B8 /* CustomLayerExample.swift in Sources */,
 				7412CF6827E9A8D600F03B1C /* UIColor+Random.swift in Sources */,
 				0CC4ECEA25B8AD3000F998B8 /* Custom2DPuckExample.swift in Sources */,
@@ -926,7 +922,7 @@
 				A4211CE62592549900D215B4 /* RestrictCoordinateBoundsExample.swift in Sources */,
 				0C52BA9825AF8C880054ECA8 /* Custom3DPuckExample.swift in Sources */,
 				CADCF7292584990E0065C51B /* FeaturesAtPointExample.swift in Sources */,
-				3AA5FAF529C0786A00758AC0 /* Puck3DExample.swift in Sources */,
+				3AA5FAF529C0786A00758AC0 /* PuckPlayground.swift in Sources */,
 				CADCF71E2584990E0065C51B /* ExternalVectorSourceExample.swift in Sources */,
 				3A44669E28F6EA1600664AF5 /* FrameViewAnnotationsExample.swift in Sources */,
 				7412CF6227E8DD1E00F03B1C /* AddOneMarkerSymbolExample.swift in Sources */,

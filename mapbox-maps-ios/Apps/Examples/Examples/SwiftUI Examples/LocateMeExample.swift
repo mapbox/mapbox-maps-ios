@@ -6,10 +6,9 @@ struct LocateMeExample: View {
     @State var viewport: Viewport = .followPuck(zoom: 13, bearing: .constant(0))
 
     var body: some View {
-            Map(
-                viewport: $viewport,
-                locationOptions: .init(puckType: .puck2D(.makeDefault(showBearing: true)))
-            )
+        Map(viewport: $viewport) {
+            PuckAnnotation2D(bearing: .heading)
+        }
             .styleURI(.standard)
             .ignoresSafeArea()
             .safeOverlay(alignment: .trailing) {

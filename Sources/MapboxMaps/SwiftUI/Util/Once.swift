@@ -15,10 +15,16 @@ struct Once {
         happened = false
     }
 
-    mutating func callAsFunction(_ action: () -> Void) {
+    mutating func reset(if condition: Bool) {
+        if condition {
+            happened = false
+        }
+    }
+
+    mutating func callAsFunction(_ action: () throws -> Void) rethrows {
         guard !happened else { return }
 
         happened = true
-        action()
+        try action()
     }
 }

@@ -3,7 +3,7 @@ import XCTest
 
 final class OnceTests: XCTestCase {
 
-    func testOnceExecuteExactlyOnce() {
+    func testExecuteExactlyOnce() {
         var once = Once()
         var isExecuted = false
 
@@ -17,7 +17,7 @@ final class OnceTests: XCTestCase {
         XCTAssertTrue(isExecuted)
     }
 
-    func testOnceCanBeReset() {
+    func testReset() {
         var once = Once()
         var executionCount = 0
 
@@ -30,6 +30,26 @@ final class OnceTests: XCTestCase {
         }
         once {
             XCTFail("Once should not be executed more than once unless reset")
+        }
+
+        XCTAssertEqual(executionCount, 2)
+    }
+
+    func testResetIf() {
+        var once = Once()
+        var executionCount = 0
+
+        once {
+            executionCount += 1
+        }
+        once.reset(if: false)
+        once {
+            XCTFail("shouldn't be reset")
+        }
+
+        once.reset(if: true)
+        once {
+            executionCount += 1
         }
 
         XCTAssertEqual(executionCount, 2)

@@ -9,10 +9,9 @@ struct MapViewportExample: View {
     @State var styleURI: StyleURI = .standard
     var body: some View {
         MapReader { mapProxy in
-            Map(
-                viewport: $viewport,
-                locationOptions: .init(puckType: .puck2D(.makeDefault(showBearing: true)))
-            ) {
+            Map(viewport: $viewport) {
+                PuckAnnotation2D(bearing: .heading)
+
                 ForEvery(parks.coordinates, id: \.latitude) { coord in
                     ViewAnnotation(coord, allowOverlap: true) {
                         Image(systemName: "tree")

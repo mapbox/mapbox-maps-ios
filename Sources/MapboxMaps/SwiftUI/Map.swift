@@ -44,7 +44,6 @@ public typealias LocationUpdateAction = (Location) -> Void
 public struct Map: UIViewControllerRepresentable {
     var viewport: ConstantOrBinding<Viewport>
     var mapDependencies = MapDependencies()
-    private var locationDependencies = LocationDependencies()
     private var mapContentVisitor = DefaultMapContentVisitor()
 
     @Environment(\.layoutDirection) var layoutDirection
@@ -53,16 +52,13 @@ public struct Map: UIViewControllerRepresentable {
     ///
     /// - Parameters:
     ///     - viewport: The camera viewport to display.
-    ///     - locationOptions: The options to configure ``LocationManager``.
     ///     - content: A map content building closure.
     public init(
         viewport: Binding<Viewport>,
-        locationOptions: LocationOptions = LocationOptions(),
         @MapContentBuilder content: @escaping () -> MapContent
     ) {
         self.init(
             _viewport: .binding(viewport),
-            locationOptions: locationOptions,
             content: content)
     }
 
@@ -70,26 +66,21 @@ public struct Map: UIViewControllerRepresentable {
     ///
     /// - Parameters:
     ///     - initialViewport: The camera viewport to display.
-    ///     - locationOptions: The options to configure ``LocationManager``.
     ///     - content: A map content building closure.
     public init(
         initialViewport: Viewport = .styleDefault,
-        locationOptions: LocationOptions = LocationOptions(),
         @MapContentBuilder content: @escaping () -> MapContent
     ) {
         self.init(
             _viewport: .constant(initialViewport),
-            locationOptions: locationOptions,
             content: content)
     }
 
     private init(
         _viewport: ConstantOrBinding<Viewport>,
-        locationOptions: LocationOptions = LocationOptions(),
         content: (() -> MapContent)? = nil
     ) {
         self.viewport = _viewport
-        locationDependencies.locationOptions = locationOptions
         content?()._visit(mapContentVisitor)
     }
 
@@ -113,12 +104,9 @@ public struct Map: UIViewControllerRepresentable {
             }
         )
 
-        let locationCoordinator = LocationCoordinator(locationManager: mapView.location)
-
         return Coordinator(
             basic: basicCoordinator,
             viewAnnotation: viewAnnotationCoordinator,
-            location: locationCoordinator,
             viewController: vc,
             mapView: mapView)
     }
@@ -135,7 +123,7 @@ public struct Map: UIViewControllerRepresentable {
             layoutDirection: layoutDirection,
             animationData: context.transaction.viewportAnimationData)
         context.coordinator.viewAnnotation.updateAnnotations(to: mapContentVisitor.visitedViewAnnotations)
-        context.coordinator.location.update(deps: locationDependencies)
+        context.coordinator.mapView.location.options = mapContentVisitor.locationOptions
     }
 }
 
@@ -146,14 +134,9 @@ extension Map {
      ///
      /// - Parameters:
      ///     - viewport: The camera viewport to display.
-     ///     - locationOptions: The options to configure ``LocationManager``.
-     public init(
-         viewport: Binding<Viewport>,
-         locationOptions: LocationOptions = LocationOptions()
-     ) {
+     public init(viewport: Binding<Viewport>) {
          self.init(
             _viewport: .binding(viewport),
-            locationOptions: locationOptions,
             content: nil)
      }
 
@@ -161,14 +144,9 @@ extension Map {
      ///
      /// - Parameters:
      ///     - initialViewport: Initial camera viewport.
-     ///     - locationOptions: The options to configure ``LocationManager``.
-     public init(
-         initialViewport: Viewport = .styleDefault,
-         locationOptions: LocationOptions = LocationOptions()
-     ) {
+     public init(initialViewport: Viewport = .styleDefault) {
          self.init(
             _viewport: .constant(initialViewport),
-            locationOptions: locationOptions,
             content: nil)
      }
 }
@@ -259,20 +237,17 @@ extension Map {
     public final class Coordinator {
         let basic: MapBasicCoordinator
         let viewAnnotation: ViewAnnotationCoordinator
-        let location: LocationCoordinator
         let viewController: UIViewController
         let mapView: MapView
 
         init(
             basic: MapBasicCoordinator,
             viewAnnotation: ViewAnnotationCoordinator,
-            location: LocationCoordinator,
             viewController: UIViewController,
             mapView: MapView
         ) {
             self.basic = basic
             self.viewAnnotation = viewAnnotation
-            self.location = location
             self.viewController = viewController
             self.mapView = mapView
         }

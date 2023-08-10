@@ -7,6 +7,7 @@ protocol StyleProtocol: AnyObject {
     var isStyleLoaded: Bool { get }
     var styleDefaultCamera: CameraOptions { get }
     var uri: StyleURI? { get set }
+    var mapStyle: MapStyle? { get set }
     func addLayer(_ layer: Layer, layerPosition: LayerPosition?) throws
     func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition?) throws
     func addPersistentLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws
@@ -60,14 +61,18 @@ internal extension StyleProtocol {
 public class StyleManager {
     private let sourceManager: StyleSourceManagerProtocol
     private let styleManager: StyleManagerProtocol
+    private let styleReconciler: MapStyleReconciler
 
-    internal init(with styleManager: StyleManagerProtocol, sourceManager: StyleSourceManagerProtocol) {
+    internal init(
+        with styleManager: StyleManagerProtocol,
+        sourceManager: StyleSourceManagerProtocol,
+        onStyleDataLoaded: Signal<StyleDataLoaded>
+    ) {
         self.styleManager = styleManager
         self.sourceManager = sourceManager
-
-        if let uri = StyleURI(rawValue: styleManager.getStyleURI()) {
-            self.styleURI = uri
-        }
+        styleReconciler = MapStyleReconciler(
+            coreStyleManager: styleManager,
+            onStyleDataLoaded: onStyleDataLoaded)
     }
 
     // MARK: - Layers
@@ -368,6 +373,18 @@ public class StyleManager {
         return styleManager.isStyleLoaded()
     }
 
+    /// MapStyle represents style configuration to load the style.
+    ///
+    /// It comprises from a StyleURI or style JSON complemented by style import configuration.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental)
+    public var mapStyle: MapStyle? {
+        get { styleReconciler.mapStyle }
+        set { styleReconciler.mapStyle = newValue }
+    }
+
     /// Get or set the style URI
     ///
     /// Setting a new style is asynchronous. In order to get the result of this
@@ -388,8 +405,8 @@ public class StyleManager {
             return StyleURI(rawValue: uriString)
         }
         set {
-            if let uriString = newValue?.rawValue {
-                styleManager.setStyleURIForUri(uriString)
+            if let newValue {
+                styleReconciler.mapStyle = MapStyle(uri: newValue)
             }
         }
     }
@@ -401,7 +418,7 @@ public class StyleManager {
     ///     object is initialized.
     public var styleJSON: String {
         get { styleManager.getStyleJSON() }
-        set { styleManager.setStyleJSONForJson(newValue) }
+        set { styleReconciler.mapStyle = MapStyle(json: newValue) }
     }
 
     /// The map `style`'s default camera, if any, or a default camera otherwise.

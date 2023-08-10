@@ -2,7 +2,7 @@ import SwiftUI
 @_spi(Experimental) import MapboxMaps
 
 struct Settings {
-    var styleURI: StyleURI = .standard
+    var mapStyle: MapStyle = .standard
     var orientation: NorthOrientation = .upwards
     var gestureOptions: GestureOptions = .init()
     var cameraBounds: CameraBoundsOptions = .init()
@@ -24,7 +24,7 @@ struct MapSettingsExample : View {
     var body: some View {
         Map(initialViewport: .camera(center: .berlin, zoom: 12))
             .cameraBounds(settings.cameraBounds)
-            .styleURI(settings.styleURI)
+            .mapStyle(settings.mapStyle)
             .gestureOptions(settings.gestureOptions)
             .northOrientation(settings.orientation)
             .constrainMode(settings.constrainMode)
@@ -45,7 +45,7 @@ struct MapSettingsExample : View {
             }
             .cameraDebugOverlay(alignment: .bottom, camera: cameraState)
             .safeOverlay(alignment: .trailing, content: {
-                MapStyleSelectorButton(styleURI: $settings.styleURI)
+                MapStyleSelectorButton(mapStyle: $settings.mapStyle)
             })
             .toolbar {
                 Button("Settings") {

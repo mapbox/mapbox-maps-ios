@@ -34,7 +34,7 @@ struct ViewAnnotationsExample: View {
                     }
                 }
             }
-            .styleURI(.streets)
+            .mapStyle(.streets)
             .onMapTapGesture { point in
                 guard let map = proxy.map else { return }
 

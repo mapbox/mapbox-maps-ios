@@ -6,10 +6,11 @@ import MapboxMaps
 struct MapViewportExample: View {
     @State var viewport: Viewport = .styleDefault
     @State var camera = CameraState(center: .zero, zoom: 0)
-    @State var styleURI: StyleURI = .standard
+    @State var mapStyle: MapStyle = .standard
+
     var body: some View {
         Map(viewport: $viewport) {
-            Puck2D(bearing: .heading)
+            Puck2D(bearing: .course)
 
             ForEvery(parks.coordinates, id: \.latitude) { coord in
                 ViewAnnotation(coord, allowOverlap: true) {
@@ -28,7 +29,7 @@ struct MapViewportExample: View {
                 .fillColor(StyleColor(red: 0, green: 128, blue: 255, alpha: 0.5)!)
                 .fillOutlineColor(StyleColor(.black))
         }
-        .styleURI(styleURI)
+        .mapStyle(mapStyle)
         .onCameraChanged { event in
             // NOTE: updating camera @State on every camera change is not recommended
             // because it will lead to body re-evaluation on every frame if user drags the map.
@@ -48,7 +49,7 @@ struct MapViewportExample: View {
             .padding(.bottom, 30)
         }
         .safeOverlay(alignment: .trailing) {
-            MapStyleSelectorButton(styleURI: $styleURI)
+            MapStyleSelectorButton(mapStyle: $mapStyle)
         }
         .toolbar {
             ToolbarItem {

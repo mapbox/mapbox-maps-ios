@@ -4,7 +4,7 @@ import MapboxCoreMaps
 @available(iOS 13.0, *)
 struct MapDependencies {
     var cameraBounds = CameraBoundsOptions()
-    var styleURI = StyleURI.standard
+    var mapStyle: MapStyle = .standard
     var gestureOptions = GestureOptions()
     var actions = Actions()
     var constrainMode = ConstrainMode.heightOnly

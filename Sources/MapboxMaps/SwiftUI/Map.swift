@@ -240,9 +240,9 @@ public extension Map {
     /// Sets style to the map.
     ///
     /// - Parameters:
-    ///     - uri: An URI of a style.
-    func styleURI(_ uri: StyleURI) -> Self {
-        set(\.mapDependencies.styleURI, uri)
+    ///     - config: A configuration of style.
+    func mapStyle(_ mapStyle: MapStyle) -> Self {
+        set(\.mapDependencies.mapStyle, mapStyle)
     }
 
     /// Configures gesture options.

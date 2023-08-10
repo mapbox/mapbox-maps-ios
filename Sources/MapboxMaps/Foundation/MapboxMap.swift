@@ -178,7 +178,7 @@ public final class MapboxMap: StyleManager {
         self.__map = map
         self.events = events
 
-        super.init(with: map, sourceManager: styleSourceManager)
+        super.init(with: map, sourceManager: styleSourceManager, onStyleDataLoaded: events.onStyleDataLoaded.signal)
 
         __map.createRenderer()
     }

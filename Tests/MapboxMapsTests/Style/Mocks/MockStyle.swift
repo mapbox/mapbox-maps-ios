@@ -1,7 +1,9 @@
 import UIKit
-@testable import MapboxMaps
+@testable @_spi(Experimental) import MapboxMaps
 
 final class MockStyle: StyleProtocol {
+    var mapStyle: MapStyle?
+
     @Stubbed var isStyleLoaded: Bool = false
     @Stubbed var styleDefaultCamera: MapboxMaps.CameraOptions = .init()
     @Stubbed var uri: StyleURI? = .streets

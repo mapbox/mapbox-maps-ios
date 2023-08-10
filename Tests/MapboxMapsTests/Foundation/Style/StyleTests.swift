@@ -7,11 +7,12 @@ final class StyleTests: XCTestCase {
     var style: MapboxMaps.StyleManager!
     var styleManager: MockStyleManager!
     var sourceManager: MockStyleSourceManager!
+    @TestSignal var onStyleLoaded: Signal<StyleDataLoaded>
 
     override func setUp() {
         styleManager = MockStyleManager()
         sourceManager = MockStyleSourceManager()
-        style = StyleManager(with: styleManager, sourceManager: sourceManager)
+        style = StyleManager(with: styleManager, sourceManager: sourceManager, onStyleDataLoaded: onStyleLoaded)
     }
 
     override func tearDown() {

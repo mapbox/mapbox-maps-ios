@@ -6,25 +6,36 @@ internal class StandardStyleExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()
 
-    private enum LightPresets: String {
-        case day
-        case dawn
-        case dusk
-        case night
-    }
-
-    private var lightSetting = LightPresets.day
+    private var lightPreset = StandardLightPreset.night
     private var labelsSetting = true
 
+    // The fragment-realestate-NY.json style imports standard style with "standard" import id.
+    // Here we specify import config to that style.
+    private var mapStyle: MapStyle {
+        MapStyle(
+            uri: StyleURI(url: styleURL)!,
+            importConfigurations: [
+                .standard(
+                    importId: "standard",
+                    lightPreset: lightPreset,
+                    showPointOfInterestLabels: labelsSetting,
+                    showTransitLabels: labelsSetting,
+                    showPlaceLabels: labelsSetting,
+                    showRoadLabels: labelsSetting)
+            ]
+        )
+    }
+
     // Load a style which imports Mapbox Standard as a basemap
-    let styleURL = Bundle.main.url(forResource: "fragment-realestate-NY", withExtension: "json")!
+    private let styleURL = Bundle.main.url(forResource: "fragment-realestate-NY", withExtension: "json")!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Set the camera options to center on New York City
-        let options = MapInitOptions(cameraOptions: CameraOptions(center: CLLocationCoordinate2D(latitude: 40.72, longitude: -73.99), zoom: 11, pitch: 45), styleURI: StyleURI(url: styleURL))
+        let options = MapInitOptions(cameraOptions: CameraOptions(center: CLLocationCoordinate2D(latitude: 40.72, longitude: -73.99), zoom: 11, pitch: 45))
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
+        mapView.mapboxMap.mapStyle = mapStyle
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
@@ -82,36 +93,19 @@ internal class StandardStyleExample: UIViewController, ExampleProtocol {
     }
 
     @objc private func changeLightSetting() {
-        switch lightSetting {
-        case .day:
-            lightSetting = .dawn
-        case .dawn:
-            lightSetting = .dusk
-        case .dusk:
-            lightSetting = .night
-        case .night:
-            lightSetting = .day
-        }
+        // When a user clicks the light setting button change the `lightPreset` config property on the Standard style import.
 
-        // When a user clicks the light setting button change the `lightPreset` config property on the Standard style import
-        do {
-            try self.mapView.mapboxMap.setStyleImportConfigProperty(for: "standard", config: "lightPreset", value: lightSetting.rawValue)
-        } catch {
-            print(error)
-        }
+        let presets = [StandardLightPreset.dawn, .day, .dusk, .night]
+        let currentIndex = presets.firstIndex(of: lightPreset) ?? presets.startIndex
+        lightPreset = presets[(currentIndex + 1) % presets.endIndex] // select next preset
+
+        mapView.mapboxMap.mapStyle = mapStyle
     }
 
     @objc private func changeLabelsSetting() {
+        // When a user clicks the labels setting button change the label config properties on the Standard style import to show/hide them
         labelsSetting.toggle()
 
-        // When a user clicks the labels setting button change the label config properties on the Standard style import to show/hide them
-        do {
-            try self.mapView.mapboxMap.setStyleImportConfigProperty(for: "standard", config: "showPlaceLabels", value: labelsSetting)
-            try self.mapView.mapboxMap.setStyleImportConfigProperty(for: "standard", config: "showRoadLabels", value: labelsSetting)
-            try self.mapView.mapboxMap.setStyleImportConfigProperty(for: "standard", config: "showPointInterestLabels", value: labelsSetting)
-            try self.mapView.mapboxMap.setStyleImportConfigProperty(for: "standard", config: "showTransitLabels", value: labelsSetting)
-        } catch {
-            print(error)
-        }
+        mapView.mapboxMap.mapStyle = mapStyle
     }
 }

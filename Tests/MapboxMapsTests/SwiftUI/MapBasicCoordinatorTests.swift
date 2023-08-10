@@ -24,29 +24,17 @@ final class MapBasicCoordinatorTests: XCTestCase {
     func testStyleURI() {
         me.update(
             viewport: .constant(.idle),
-            deps: MapDependencies(styleURI: .light),
+            deps: MapDependencies(mapStyle: .light),
             layoutDirection: .leftToRight,
             animationData: nil)
-        var invocations = mapView.style.$uri.setStub.invocations
-        XCTAssertEqual(invocations.count, 1)
-        XCTAssertEqual(invocations.last?.parameters, .light)
+        XCTAssertEqual(mapView.style.mapStyle, .light)
 
         me.update(
             viewport: .constant(.idle),
-            deps: MapDependencies(styleURI: .light),
+            deps: MapDependencies(mapStyle: .dark),
             layoutDirection: .leftToRight,
             animationData: nil)
-        invocations = mapView.style.$uri.setStub.invocations
-        XCTAssertEqual(invocations.count, 1, "Setting same style URI doesn't change it")
-
-        me.update(
-            viewport: .constant(.idle),
-            deps: MapDependencies(styleURI: .dark),
-            layoutDirection: .leftToRight,
-            animationData: nil)
-        invocations = mapView.style.$uri.setStub.invocations
-        XCTAssertEqual(invocations.count, 2)
-        XCTAssertEqual(invocations.last?.parameters, .dark)
+        XCTAssertEqual(mapView.style.mapStyle, .dark)
     }
 
     func testMapOptions() {

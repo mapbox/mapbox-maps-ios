@@ -18,6 +18,11 @@ struct SwiftUIRoot: View {
                 } header: { Text("Getting started") }
 
                 Section {
+                    ExampleLink("Locations", note: "New look of locations, configure standard style parameters", destination: StandardStyleLocationsExample())
+                    ExampleLink("Standard Style Import", note: "Import Mapbox Standard style into your custom style.", destination: StandardStyleImportExample())
+                } header: { Text("Standard Style") }
+
+                Section {
                     ExampleLink("Query Rendered Features on tap", note: "Use MapReader and MapboxMap to query rendered features.", destination: FeaturesQueryExample())
                     ExampleLink("Clustering data", note: "Display GeoJSON data with clustering using custom layers and handle interactions with them.", destination: ClusteringExample())
                 } header: { Text("Use cases") }

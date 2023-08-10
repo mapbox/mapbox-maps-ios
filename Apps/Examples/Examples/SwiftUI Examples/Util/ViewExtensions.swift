@@ -25,6 +25,13 @@ extension View {
         }
     }
 
+    @ViewBuilder
+    func toggleStyleButton() -> some View {
+        if #available(iOS 15, *) {
+            toggleStyle(.button)
+        }
+    }
+
     func debug(_ closure: () -> Void) -> some View {
         closure()
         return self

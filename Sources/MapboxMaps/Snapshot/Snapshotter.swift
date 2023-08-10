@@ -73,7 +73,7 @@ public class Snapshotter: StyleManager {
         self.mapSnapshotter = mapSnapshotter
         self.events = events
 
-        super.init(with: mapSnapshotter, sourceManager: StyleSourceManager(styleManager: mapSnapshotter))
+        super.init(with: mapSnapshotter, sourceManager: StyleSourceManager(styleManager: mapSnapshotter), onStyleDataLoaded: events.onStyleDataLoaded.signal)
 
         eventsManager.sendTurnstile()
     }

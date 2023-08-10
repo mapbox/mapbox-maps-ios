@@ -9,7 +9,7 @@ struct LocateMeExample: View {
         Map(viewport: $viewport) {
             Puck2D(bearing: .heading)
         }
-            .styleURI(.standard)
+            .mapStyle(.standard)
             .ignoresSafeArea()
             .safeOverlay(alignment: .trailing) {
                 VStack(alignment: .leading) {

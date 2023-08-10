@@ -286,10 +286,14 @@ open class MapView: UIView {
                 size: Size(width: Float(bounds.width), height: Float(bounds.height)),
                 pixelRatio: original.pixelRatio,
                 glyphsRasterizationOptions: original.glyphsRasterizationOptions)
+
+            // Use the overriding style URI if provided (currently from IB)
+            let resolvedStyleURI = overridingStyleURI.map { StyleURI(url: $0) } ?? mapInitOptions.styleURI
+
             resolvedMapInitOptions = MapInitOptions(
                 mapOptions: resolvedMapOptions,
                 cameraOptions: mapInitOptions.cameraOptions,
-                styleURI: mapInitOptions.styleURI,
+                styleURI: resolvedStyleURI,
                 styleJSON: mapInitOptions.styleJSON)
         } else {
             resolvedMapInitOptions = mapInitOptions
@@ -309,14 +313,10 @@ open class MapView: UIView {
                                        name: UIApplication.didReceiveMemoryWarningNotification,
                                        object: nil)
 
-        // Use the overriding style URI if provided (currently from IB)
-        if let initialStyleURI = overridingStyleURI,
-           let styleURI = StyleURI(url: initialStyleURI) {
-            mapboxMap.loadStyle(styleURI)
-        } else if let initialStyleJSON = resolvedMapInitOptions.styleJSON {
-            mapboxMap.loadStyle(initialStyleJSON)
+        if let initialStyleJSON = resolvedMapInitOptions.styleJSON {
+            mapboxMap.mapStyle = MapStyle(json: initialStyleJSON)
         } else if let initialStyleURI = resolvedMapInitOptions.styleURI {
-            mapboxMap.loadStyle(initialStyleURI)
+            mapboxMap.mapStyle = MapStyle(uri: initialStyleURI)
         }
 
         if let cameraOptions = resolvedMapInitOptions.cameraOptions {

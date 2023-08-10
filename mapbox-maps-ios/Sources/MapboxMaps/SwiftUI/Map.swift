@@ -88,7 +88,7 @@ public struct Map: UIViewControllerRepresentable {
     ) {
         self.viewport = _viewport
         self.urlOpenerProvider = urlOpenerProvider
-        content?()._visit(mapContentVisitor)
+        content?().visit(mapContentVisitor)
     }
 
     public func makeCoordinator() -> Coordinator {

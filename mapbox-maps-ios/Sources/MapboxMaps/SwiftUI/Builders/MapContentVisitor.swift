@@ -1,22 +1,13 @@
 import SwiftUI
 
-/// :nodoc:
-@_spi(Experimental)
-public protocol _MapContentVisitor: AnyObject {
-    /// :nodoc:
+protocol MapContentVisitor: AnyObject {
     func push(_ idPart: AnyHashable)
-
-    /// :nodoc:
     func pop()
-
-    /// :nodoc:
     func add(viewAnnotation: ViewAnnotation)
-
-    /// :nodoc:
     var locationOptions: LocationOptions { get set }
 }
 
-final class DefaultMapContentVisitor: _MapContentVisitor {
+final class DefaultMapContentVisitor: MapContentVisitor {
     var locationOptions: LocationOptions = LocationOptions()
 
     private var id: [AnyHashable] = []

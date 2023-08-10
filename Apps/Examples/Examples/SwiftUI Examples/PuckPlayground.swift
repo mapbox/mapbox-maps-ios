@@ -64,16 +64,14 @@ struct PuckPlayground: View {
         Map(initialViewport: .followPuck(zoom: 17, bearing: .heading, pitch: 60)) {
             switch puckType {
             case .d2:
-                PuckAnnotation2D(bearing: bearingType) {
-                    $0.pulsing = puck2dSettings.pulsing.asPuckPulsing
-                    $0.showsAccuracyRing = puck2dSettings.accuracyRing
-                    $0.opacity = opacity
-                }
+                PuckAnnotation2D(bearing: bearingType)
+                    .pulsing(puck2dSettings.pulsing.asPuckPulsing)
+                    .showsAccuracyRing(puck2dSettings.accuracyRing)
+                    .opacity(opacity)
             case .d3:
-                PuckAnnotation3D(model: sportCar, bearing: bearingType) {
-                    $0.modelScale = .constant([puck3dSettings.scale, puck3dSettings.scale, puck3dSettings.scale])
-                    $0.modelOpacity = .constant(opacity)
-                }
+                PuckAnnotation3D(model: sportCar, bearing: bearingType)
+                    .modelScale([puck3dSettings.scale, puck3dSettings.scale, puck3dSettings.scale])
+                    .modelOpacity(opacity)
             }
         }
         .ignoresSafeArea()

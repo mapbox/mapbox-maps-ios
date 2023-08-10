@@ -17,12 +17,14 @@ public struct ForEvery<Data: RandomAccessCollection, ID: Hashable, Content: MapC
         idGenerator = { $0[keyPath: id] }
     }
 
-    public func _visit(_ visitor: _MapContentVisitor) {
+    func _visit(_ visitor: MapContentVisitor) {
         for item in data {
             let id = idGenerator(item)
             visitor.push(id)
-            content(item)._visit(visitor)
+            content(item).visit(visitor)
             visitor.pop()
         }
     }
 }
+
+extension ForEvery: PrimitiveMapContent {}

@@ -10,7 +10,6 @@ public struct ViewAnnotation: MapContent {
     ///
     /// - Parameters:
     ///   - coordinate: Coordinate the view annotation is bound to.
-    ///   - size: Size of the annotation. It will be the maximun size the annotation can occupy.
     ///   - allowOverlap: If true, the annotation will be visible even if it collides with other annotations. Defaults to false.
     ///   - anchor: Specifies where the annotation will be located relatively to the given coordinate.
     ///   - offsetX: Additional X offset, positive values move annotation to right.
@@ -36,7 +35,7 @@ public struct ViewAnnotation: MapContent {
         }
     }
 
-    public func _visit(_ visitor: _MapContentVisitor) {
+    func _visit(_ visitor: MapContentVisitor) {
         visitor.add(viewAnnotation: self)
     }
 }
@@ -49,3 +48,5 @@ struct ViewAnnotationConfig: Equatable {
     var offsetX: CGFloat?
     var offsetY: CGFloat?
 }
+
+extension ViewAnnotation: PrimitiveMapContent {}

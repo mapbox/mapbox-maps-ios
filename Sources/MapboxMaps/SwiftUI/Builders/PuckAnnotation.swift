@@ -60,7 +60,7 @@ public struct PuckAnnotation2D: MapContent {
         copyAssigned(self, \.configuration.accuracyRingBorderColor, accuracyRingBorderColor)
     }
 
-    public func _visit(_ visitor: _MapContentVisitor) {
+    func _visit(_ visitor: MapContentVisitor) {
         visitor.locationOptions = LocationOptions(
             puckType: .puck2D(configuration),
             puckBearing: bearing ?? .heading,
@@ -140,7 +140,7 @@ public struct PuckAnnotation3D: MapContent {
         copyAssigned(self, \.configuration.modelScaleMode, .expression(modelScaleMode))
     }
 
-    public func _visit(_ visitor: _MapContentVisitor) {
+    func _visit(_ visitor: MapContentVisitor) {
         visitor.locationOptions = LocationOptions(
             puckType: .puck3D(configuration),
             puckBearing: bearing ?? .heading,
@@ -153,3 +153,6 @@ private func copyAssigned<Root, T>(_ s: Root, _ keyPath: WritableKeyPath<Root, T
     copy[keyPath: keyPath] = value
     return copy
 }
+
+extension PuckAnnotation2D: PrimitiveMapContent {}
+extension PuckAnnotation3D: PrimitiveMapContent {}

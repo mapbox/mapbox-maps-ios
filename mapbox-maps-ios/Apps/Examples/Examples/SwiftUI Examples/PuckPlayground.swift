@@ -1,47 +1,6 @@
 import SwiftUI
 @_spi(Experimental) import MapboxMaps
 
-extension Puck2DConfiguration {
-    static func makeDefault(
-        showBearing: Bool,
-        pulsing: Puck2DConfiguration.Pulsing,
-        showAccuracyRing: Bool,
-        opacity: Double
-    ) -> Puck2DConfiguration {
-        var config = Puck2DConfiguration.makeDefault(showBearing: showBearing)
-        config.pulsing = pulsing
-        config.showsAccuracyRing = showAccuracyRing
-        config.opacity = opacity
-        return config
-    }
-}
-
-private struct Puck3DSettings {
-    var scale = 15.0
-}
-
-private struct Puck2DSettings {
-    enum Pulsing: String, CaseIterable {
-        case none
-        case accuracy
-        case `default`
-        var asPuckPulsing: Puck2DConfiguration.Pulsing {
-            var pulsing = Puck2DConfiguration.Pulsing()
-            switch self {
-            case .none:
-                pulsing.isEnabled = false
-            case .accuracy:
-                pulsing.radius = .accuracy
-            case .`default`: ()
-            }
-            return pulsing
-        }
-    }
-    var bearing = true
-    var accuracyRing = false
-    var pulsing: Pulsing = .default
-}
-
 @available(iOS 14.0, *)
 struct PuckPlayground: View {
     enum PuckType: String, CaseIterable, CustomStringConvertible {
@@ -61,7 +20,7 @@ struct PuckPlayground: View {
     @State private var puck2dSettings = Puck2DSettings()
 
     var body: some View {
-        Map(initialViewport: .followPuck(zoom: 17, bearing: .heading, pitch: 60)) {
+        Map(initialViewport: .followPuck(zoom: 18, bearing: .heading, pitch: 60)) {
             switch puckType {
             case .d2:
                 PuckAnnotation2D(bearing: bearingType)
@@ -69,8 +28,8 @@ struct PuckPlayground: View {
                     .showsAccuracyRing(puck2dSettings.accuracyRing)
                     .opacity(opacity)
             case .d3:
-                PuckAnnotation3D(model: sportCar, bearing: bearingType)
-                    .modelScale([puck3dSettings.scale, puck3dSettings.scale, puck3dSettings.scale])
+                PuckAnnotation3D(model: puck3dSettings.modelType.model, bearing: bearingType)
+                    .modelScale(puck3dSettings.modelScale)
                     .modelOpacity(opacity)
             }
         }
@@ -80,7 +39,8 @@ struct PuckPlayground: View {
         }
     }
 
-    @ViewBuilder var settingsBody: some View {
+    @ViewBuilder
+    private var settingsBody: some View {
         VStack(alignment: .leading) {
             RadioButtonSettingView(title: "Puck Type", value: $puckType)
             RadioButtonSettingView(title: "Bearing", value: $bearingType)
@@ -93,7 +53,8 @@ struct PuckPlayground: View {
                     RadioButtonSettingView(title: "Pulsing", value: $puck2dSettings.pulsing)
                 }
             case.d3:
-                SliderSettingView(title: "Scale", value: $puck3dSettings.scale, range: 15...45, step: 5)
+                RadioButtonSettingView(title: "Model", value: $puck3dSettings.modelType)
+                SliderSettingView(title: "Scale", value: $puck3dSettings.scale, range: 1...3, step: 0.25)
             }
         }
         .padding(10)
@@ -141,14 +102,64 @@ private struct SliderSettingView: View {
     }
 }
 
+private struct Puck3DSettings {
+    enum ModelType: String, CaseIterable {
+        case sportcar
+        case duck
+        var model: Model {
+            switch self {
+            case .sportcar: return .sportcar
+            case .duck: return .duck
+            }
+        }
+        var initialScale: Double {
+            switch self {
+            case .sportcar: return 15
+            case .duck: return 25
+            }
+        }
+    }
+    var scale = 1.0
+    var modelScale: [Double] { .init(repeating: scale * modelType.initialScale, count: 3) }
+    var modelType = ModelType.sportcar
+}
+
+private struct Puck2DSettings {
+    enum Pulsing: String, CaseIterable {
+        case none
+        case accuracy
+        case `default`
+        var asPuckPulsing: Puck2DConfiguration.Pulsing {
+            var pulsing = Puck2DConfiguration.Pulsing()
+            switch self {
+            case .none:
+                pulsing.isEnabled = false
+            case .accuracy:
+                pulsing.radius = .accuracy
+            case .`default`: ()
+            }
+            return pulsing
+        }
+    }
+    var bearing = true
+    var accuracyRing = false
+    var pulsing: Pulsing = .default
+}
+
 extension PuckBearing: CaseIterable {
     public static var allCases: [PuckBearing] = [.course, .heading]
 }
 
-private let sportCar = Model(
-    uri: Bundle.main.url(forResource: "sportcar", withExtension: "glb"),
-    orientation: [0, 0, 180] // orient source model to point the bearing property
-)
+private extension Model {
+    static let sportcar = Model(
+        uri: Bundle.main.url(forResource: "sportcar", withExtension: "glb"),
+        orientation: [0, 0, 180] // orient source model to point the bearing property
+    )
+    static let duck = Model(
+        uri: URL(string: "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF-Embedded/Duck.gltf")!,
+        orientation: [0, 0, -90] // orient source model to point the bearing property
+    )
+}
 
 @available(iOS 14.0, *)
 struct PuckPlayground_Preview: PreviewProvider {

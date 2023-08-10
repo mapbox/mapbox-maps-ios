@@ -16,7 +16,7 @@ struct FeaturesQueryExample: View {
                             .circleRadius(8)
                     }
                 }
-                .styleURI(.streets) // In standard style the layers are opaque
+                .mapStyle(.streets) // In the Streets style you can access the layers
                 .onMapTapGesture { point in
                     model.mapTapped(at: point, map: proxy.map, bottomInset: geometry.size.height * 0.33)
                 }

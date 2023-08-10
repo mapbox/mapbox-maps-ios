@@ -22,7 +22,7 @@ struct ClusteringExample : View {
     var body: some View {
         MapReader { proxy in
             Map(initialViewport: .camera(center: .dc, zoom: 10))
-                .styleURI(.dark)
+                .mapStyle(.dark)
                 .onStyleLoaded { _ in
                     // This example uses direct style manipulation with MapboxMap
                     guard let map = proxy.map else { return }

@@ -91,7 +91,7 @@ final class MapBasicCoordinator {
             assign(mapOptions.orientation, mapboxMap.setNorthOrientation, value: deps.orientation)
         }
 
-        assign(&mapView, \.styleManager.uri, value: deps.styleURI)
+        mapView.styleManager.mapStyle = deps.mapStyle
         assign(&mapView, \.gestureManager.options, value: deps.gestureOptions)
         assign(&mapView, \.ornaments.options, value: deps.ornamentOptions)
 

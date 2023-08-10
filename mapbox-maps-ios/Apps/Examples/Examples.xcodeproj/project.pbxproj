@@ -87,7 +87,9 @@
 		9501A5A72A38830B00F2AF92 /* CameraDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9501A5A22A38830B00F2AF92 /* CameraDebugView.swift */; };
 		9501A5A82A38830B00F2AF92 /* SwiftExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9501A5A32A38830B00F2AF92 /* SwiftExtensions.swift */; };
 		951693B22A581DFC0083DC4C /* LocateMeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951693B12A581DFC0083DC4C /* LocateMeExample.swift */; };
+		954425282A86BDFB00DC6CBB /* StandardStyleImportExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954425272A86BDFB00DC6CBB /* StandardStyleImportExample.swift */; };
 		954AF549298A821E00365B6C /* ClusteringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954AF548298A821E00365B6C /* ClusteringExample.swift */; };
+		957A4C462A85249700B101D7 /* StandardStyleLocationsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 957A4C452A85249700B101D7 /* StandardStyleLocationsExample.swift */; };
 		95857AC229B7A1A2005D238C /* LongTapAnimationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95857AC129B7A1A2005D238C /* LongTapAnimationExample.swift */; };
 		959EDE5229F5520500AEE16C /* MapEventsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959EDE5129F5520500AEE16C /* MapEventsExample.swift */; };
 		95A693AE2A8BC756008BE566 /* AnnotationsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A693AD2A8BC756008BE566 /* AnnotationsExample.swift */; };
@@ -273,7 +275,9 @@
 		9501A5A22A38830B00F2AF92 /* CameraDebugView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraDebugView.swift; sourceTree = "<group>"; };
 		9501A5A32A38830B00F2AF92 /* SwiftExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftExtensions.swift; sourceTree = "<group>"; };
 		951693B12A581DFC0083DC4C /* LocateMeExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocateMeExample.swift; sourceTree = "<group>"; };
+		954425272A86BDFB00DC6CBB /* StandardStyleImportExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardStyleImportExample.swift; sourceTree = "<group>"; };
 		954AF548298A821E00365B6C /* ClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClusteringExample.swift; sourceTree = "<group>"; };
+		957A4C452A85249700B101D7 /* StandardStyleLocationsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardStyleLocationsExample.swift; sourceTree = "<group>"; };
 		95857AC129B7A1A2005D238C /* LongTapAnimationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongTapAnimationExample.swift; sourceTree = "<group>"; };
 		959EDE5129F5520500AEE16C /* MapEventsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapEventsExample.swift; sourceTree = "<group>"; };
 		95A693AD2A8BC756008BE566 /* AnnotationsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationsExample.swift; sourceTree = "<group>"; };
@@ -597,6 +601,8 @@
 			isa = PBXGroup;
 			children = (
 				95B589B22982BFE800BF4F31 /* SwiftUIRoot.swift */,
+				957A4C452A85249700B101D7 /* StandardStyleLocationsExample.swift */,
+				954425272A86BDFB00DC6CBB /* StandardStyleImportExample.swift */,
 				95AFCFC02A4AF30E00395A86 /* MapViewportExample.swift */,
 				95B589B02982BFE800BF4F31 /* SimpleMapExample.swift */,
 				95B589B42982BFE800BF4F31 /* MapSettingsExample.swift */,
@@ -843,6 +849,7 @@
 				CADCF7392584991C0065C51B /* UIViewController+Extensions.swift in Sources */,
 				95A693AE2A8BC756008BE566 /* AnnotationsExample.swift in Sources */,
 				CADCF7392584991C0065C51B /* UIViewController+Extensions.swift in Sources */,
+				954425282A86BDFB00DC6CBB /* StandardStyleImportExample.swift in Sources */,
 				58248C2F2695FF24009AC598 /* StoryboardMapViewExample.swift in Sources */,
 				74A2313827EC6B360065FB7D /* IconSizeChangeExample.swift in Sources */,
 				B58E470927BABE0E00D87FD6 /* AdvancedViewportGesturesExample.swift in Sources */,
@@ -888,6 +895,7 @@
 				954AF549298A821E00365B6C /* ClusteringExample.swift in Sources */,
 				CADCF743258499570065C51B /* BasicMapExample.swift in Sources */,
 				7406E3702806B66F002CC41F /* ResizableImageExample.swift in Sources */,
+				957A4C462A85249700B101D7 /* StandardStyleLocationsExample.swift in Sources */,
 				17B40D2426A85500000887EF /* LiveDataExample.swift in Sources */,
 				95B589B62982BFE800BF4F31 /* SimpleMapExample.swift in Sources */,
 				CADCF7242584990E0065C51B /* AnimateLayerExample.swift in Sources */,

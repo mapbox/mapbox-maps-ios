@@ -19,7 +19,7 @@ steps:
         - run:
             name: Set Turf Revision
             command: |
-              sed -i '' 's/turf-swift.git", from: "2.0.0"/turf-swift.git", .revision("<< parameters.turf-revision >>")/' Package.swift
+              sed -i '' -E 's/(turf-swift.git",).*/\1 revision: "<< parameters.turf-revision >>")/' Package.swift
   - run:
       name: Checkout xcodebuild deps
       command: xcodebuild -resolvePackageDependencies -scheme MapboxMaps -derivedDataPath build

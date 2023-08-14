@@ -1,6 +1,5 @@
 unless:
   or:
-    - << pipeline.parameters.turf-revision >>
     - or:
         - equal: [ << pipeline.git.branch >>, "main" ]
         - equal: [ << pipeline.git.branch >>, "develop" ]

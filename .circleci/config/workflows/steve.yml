@@ -1,6 +1,5 @@
 unless:
   or:
-    - << pipeline.parameters.turf-revision >>
     - equal: [scheduled_pipeline, << pipeline.trigger_source >>]
 
 jobs:
@@ -55,23 +54,6 @@ jobs:
       requires:
           - Build tests
       name: Run integration tests
-
-  - build-tests:
-      context:
-        - Slack Orb
-        - SDK Registry Token
-        - Maps SDK/Public Mapbox Token
-      name: build-tests-min-turf
-      turf-revision: v2.0.0
-
-  - run-unit-tests:
-      context:
-        - Slack Orb
-      name: run-unit-tests-min-turf
-      xcode: 14.1.0
-      destination: OS=16.1,name=iPhone 14
-      requires:
-        - build-tests-min-turf
 
   # Build all tests with host application
   # Run on main by default

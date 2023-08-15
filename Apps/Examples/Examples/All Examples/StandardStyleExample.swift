@@ -31,7 +31,7 @@ internal class StandardStyleExample: UIViewController, ExampleProtocol {
         // When the style has finished loading add a line layer representing the border between New York and New Jersey
         mapView.mapboxMap.onStyleLoaded.observe { [weak self] _ in
 
-            // Create and apply basic styling to the fill layer, assign the layer to the "middle" slot
+            // Create and apply basic styling to the line layer, assign the layer to the "middle" slot
             var layer = LineLayer(id: "line-layer", source: "line-layer")
             layer.lineColor = .constant(StyleColor.init(UIColor.orange))
             layer.lineWidth = .constant(8)

@@ -16,7 +16,7 @@ Update your app's dependencies to use versions 11+ of the Mapbox Maps SDK for iO
 
 ### 2.1 The Mapbox Standard Style
 
-We're excited to announce the launch of Mapbox Standard, our latest Mapbox style, now accessible to all customers in a beta version. The new Mapbox Standard core style enables a highly performant and elegant 3D mapping experience with powerful dynamic lighting capabilities, landmark 3D buildings, and an expertly crafted symbolic aesthetic. With Mapbox Standard, we are also introducing a new paradigm for how to interact with map styles.
+We're excited to announce the launch of Mapbox Standard, our latest Mapbox style, now accessible to all customers in a beta version. The new Mapbox Standard core style enables a highly performant and elegant 3D mapping experience with powerful dynamic lighting capabilities, landmark 3D buildings, and an expertly crafted symbolic aesthetic. With Mapbox Standard, we are also introducing a new paradigm for how to interact with map styles based around style importing (see below section for more details).
 
 To set Mapbox Standard as the style for your map in v11 you can use the same ``StyleURI`` convenience variables from v10 like below. Mapbox Standard is the new default style, so not setting a ``StyleManager/styleURI`` means your map will use Mapbox Standard.
 
@@ -25,13 +25,14 @@ let mapView = MapView()
 mapView.mapboxMap.styleURI = .standard
 ```
 
-The Mapbox Standard style features 4 light presets: Day, Dusk, Dawn, and Night. The style light preset can be changed from the default, “Day”, to another preset with a single line of code:
+The Mapbox Standard style features 4 light presets: `day`, `dusk`, `dawn`, and `night`. The style light preset can be changed from the default, `day`, to another preset with a single line of code. Here you identify which imported style (`basemap`) you want to change the `lightPresent` config on, as well as the value (`dusk`) you want to change it to. 
+
 
 ```swift
 mapView.mapboxMap.setStyleImportConfigProperty(for: "basemap", config: "lightPreset", value: "dusk")
 ```
 
-Changing the light preset will alter the colors and shadows on your map to reflect the time of day. For more information, check out the New-3D Lighting API section.
+Changing the light preset will alter the colors and shadows on your map to reflect the time of day. For more information, check out the New 3D Lighting API section.
 
 Similarly, you can set other configuration properties on the Standard style such as showing POIs, place labels, or specific fonts:
 
@@ -50,15 +51,13 @@ Property | Type | Description
 `lightPreset` | `String` | Switches between 4 time-of-day states: `dusk`, `dawn`, `day`, and `night`.
 `font` | `Array` | Defines font family for the style from predefined options.
 
-In addition, Mapbox Standard is making adding your own data layers easier for you. To add custom layers in the appropriate location in the Standard style layer stack, we added 3 carefully designed slots that you can leverage to place your layer:
+In addition, Mapbox Standard makes adding your own data layers easier with the new concept of `slot`s. `Slot`s are pre-specified locations in the imported style where your custom layer will be added to (see the below section on Style Importing for more information). Standard has 3 carefully designed slots that you can leverage to place your custom layer within the Standard style's layer stack. Just set the preferred `slot` on the `Layer` object before adding it to your map and your layer will be appropriately placed. 
 
 Slot | Description
 --- | ---
 `bottom` | Above polygons (land, landuse, water, etc.)
 `middle` | Above lines (roads, etc.) and behind 3D buildings
 `none` | If you add no identifier, your custom layer will be placed on top of everything
-
-Just set the preferred `slot` on the `Layer` object before adding it to your map and your layer will be appropriately placed in the Standard style's layer stack.
 
 ```swift
 var layer = LineLayer(id: "line-layer", source: "line-source")
@@ -68,7 +67,7 @@ mapView.mapboxMap.addLayer(layer)
 
 - Important: For the new Standard style, you can only add layers to these three slots (`bottom`, `middle`, `none`) within the Standard style basemap.
 
-Similar to the classic Mapbox styles, you can still use the layer position in ``StyleManager/addLayer(_:layerPosition:)`` method when importing the Standard Style. However, this method is only applicable to custom layers you have added yourself. If you add two layers to the same slot with a specified layer position the latter will define order of the layers in that slot.
+Similar to the classic Mapbox styles, you can still use the layer position in ``StyleManager/addLayer(_:layerPosition:)`` method when importing the Standard Style. However, this method is only applicable to custom layers you have added yourself. If you add two layers to the same slot with a specified layer position the latter will define the order of the layers in that slot.
 
 When using the Standard style, you get the latest basemap rendering features, map styling trends and data layers as soon as they are available, without requiring any manual migration/integration. On top of this, you'll still have the ability to introduce your own data to the map and control your user's experience. If you have feedback or questions about the Standard beta style please reach out to: `hey-map-design@mapbox.com`.
 
@@ -76,9 +75,30 @@ Our existing, classic Mapbox styles (such as [Mapbox Streets](https://www.mapbox
 
 #### 2.1.1 Style Imports
 
-To work with styles like Mapbox Standard, we've introduced new Style APIs that allow you to import other styles into the main style you display to your users. These styles will be imported by reference, so updates to them will be reflected in your main style without additional work needed on your side. For example, imagine you have style A and style B. The Style API will allow you to import A into B. Upon importing, you can set configurations that apply to A. The configuration properties for the imported style A will depend on what the creator of style A chooses to be configurable. For the Standard style, 6 configuration properties are available for setting lighting, fonts, and label display options (see The Mapbox Standard Style section above).
+To work with styles like Mapbox Standard, we've introduced new Style APIs that allow you to import other styles into the main style you display to your users. These styles will be imported by reference, so updates to them will be reflected in your main style without additional work needed on your side. For example, imagine you have style A and style B. The Style API will allow you to import A into B. Upon importing, you can set configurations that apply to A and adjust them at runtime. The configuration properties for the imported style A will depend on what the creator of style A chooses to be configurable. For the Standard style, 6 configuration properties are available for setting lighting, fonts, and label display options (see The Mapbox Standard Style section above).
 
-We've introduced new APIs on the ``StyleManager`` object so you can work with these features:
+To import a style, you should add an "imports" section to your [Style JSON](https://docs.mapbox.com/help/glossary/style/). In the above example, you would add this "imports" section to your Style JSON for B to import style A and set various configurations such as `Montserrat` for the `font` and `dusk` for the `lightPreset`.
+
+```
+...
+"imports": [
+    {
+        "id": "A",
+        "url": "STYLE_URL_FOR_A",
+        "config": {
+            "font": "Montserrat",
+            "lightPreset": "dusk",
+            "showPointOfInterestLabels": true,
+            "showTransitLabels": false,
+            "showPlaceLabels": true,
+            "showRoadLabels": false
+        }
+    }
+],
+...
+```
+
+For a full example of importing a style, please check out our [Standard Style Example](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/Examples/All%20Examples/StandardStyleExample.swift). This example imports the Standard style into another style [Real Estate New York](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/Examples/All%20Examples/Sample%20Data/fragment-realestate-NY.json). It then modifies the configurations for the imported Standard style at runtime using the following APIs we've introduced on the ``StyleManager`` object:
 
 - ``StyleManager/styleImports``, which returns all of the styles you have imported into your main style
 - ``StyleManager/removeStyleImport(for:)``, which removes the style import with the passed Id
@@ -95,8 +115,6 @@ var layer = LineLayer(id: "line-layer", source: "line-source")
 layer.slot = "middle"
 mapView.mapboxMap.addLayer(layer)
 ```
-
-For more information, see the The Mapbox Standard Style section above.
 
 ### 2.2 Type-safe Events API
 
@@ -189,7 +207,7 @@ The TileStore also no longer accepts access token as part of its options.
 
 ### 2.4 New 3D Lighting API
 
-In v11 we've introduced new experimental lighting APIs to give you control of lighting and shadows in your map when using 3D objects: ``AmbientLight`` and ``DirectionalLight``. We've also added new APIs on ``FillExtrusionLayer`` and ``LineLayer``s to support this 3D lighting styling and enhance your ability to work with 3D model layers. Together, these properties can illuminate your 3D objects such as buildings and terrain to provide a more realistic and immersive map experience for your users. These properties can be set at runtime to follow the time of day, a particular mood, or other lighting goals in your map. Check out our example [here](mapbox-maps-ios/Apps/Examples/Examples/All Examples/Lab/Lights3DExample.swift) for implementation recommendations.
+In v11 we've introduced new experimental lighting APIs to give you control of lighting and shadows in your map when using 3D objects: ``AmbientLight`` and ``DirectionalLight``. We've also added new APIs on ``FillExtrusionLayer`` and ``LineLayer``s to support this 3D lighting styling and enhance your ability to work with 3D model layers. Together, these properties can illuminate your 3D objects such as buildings and terrain to provide a more realistic and immersive map experience for your users. These properties can be set at runtime to follow the time of day, a particular mood, or other lighting goals in your map. Check out our example [here](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/Examples/All%20Examples/Lab/Lights3DExample.swift) for implementation recommendations.
 
 ### 2.5 Location API
 
@@ -293,7 +311,7 @@ class Example {
     }
 ```
 
-Please check out a more detailed example [here](mapbox-maps-ios/Apps/Examples/Examples/All Examples/Lab/CombineLocationExample.swift).
+Please check out a more detailed example [here](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/Examples/All%20Examples/Lab/CombineLocationExample.swift).
 
 ### 2.6 Camera API
 

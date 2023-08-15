@@ -28,7 +28,7 @@ mapView.mapboxMap.styleURI = .standard
 The Mapbox Standard style features 4 light presets: Day, Dusk, Dawn, and Night. The style light preset can be changed from the default, “Day”, to another preset with a single line of code:
 
 ```swift
-mapView.mapboxMap.setStyleImportConfigProperty(for: "standard", config: "lightPreset", value: "dusk")
+mapView.mapboxMap.setStyleImportConfigProperty(for: "basemap", config: "lightPreset", value: "dusk")
 ```
 
 Changing the light preset will alter the colors and shadows on your map to reflect the time of day. For more information, check out the New-3D Lighting API section.
@@ -36,7 +36,7 @@ Changing the light preset will alter the colors and shadows on your map to refle
 Similarly, you can set other configuration properties on the Standard style such as showing POIs, place labels, or specific fonts:
 
 ```swift
-mapView.mapboxMap.setStyleImportConfigProperty(for: "standard", config: "showPointOfInterestLabels", value: false)
+mapView.mapboxMap.setStyleImportConfigProperty(for: "basemap", config: "showPointOfInterestLabels", value: false)
 ```
 
 The Standard style offers 6 configuration properties for developers to change when they import it into their own style:

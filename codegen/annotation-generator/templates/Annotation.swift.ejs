@@ -80,6 +80,7 @@ public struct <%- camelize(type) %>Annotation: Annotation, Equatable {
         return feature
     }
 
+    var tapHandler: AlwaysEqual<() -> Void>?
     <%_ if (type === symbol) { _%>
 
     /// Create a point annotation with a `Point` and an optional identifier.
@@ -178,6 +179,11 @@ public struct <%- camelize(type) %>Annotation: Annotation, Equatable {
         with(self, setter(\.image, image))
     }
     <%_ } _%>
+
+    /// Handles tap gesture.
+    public func onTapGesture(handler: @escaping () -> Void) -> Self {
+        with(self, setter(\.tapHandler, AlwaysEqual(value: handler)))
+    }
 }
 
 // End of generated file.

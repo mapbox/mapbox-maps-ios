@@ -3,7 +3,7 @@ import SwiftUI
 
 @available(iOS 14.0, *)
 struct AnnotationsExample: View {
-    struct Item: Identifiable {
+    struct Tap: Identifiable {
         var coordinate: CLLocationCoordinate2D
         var id = UUID().uuidString
     }
@@ -31,11 +31,11 @@ struct AnnotationsExample: View {
         ])
     ]
 
-    @State private var data = [Item]()
+    @State private var taps = [Tap]()
+    @State private var alert: String?
     var body: some View {
         MapReader { proxy in
             Map(initialViewport: .camera(center: .init(latitude: 27.2, longitude: -26.9), zoom: 1.53, bearing: 0, pitch: 0)) {
-
                 ForEvery(Self.flights, id: \.name) { flight in
                     CircleAnnotationGroup(flight.airports, id: \.name) { airport in
                         CircleAnnotation(centerCoordinate: airport.coordinate)
@@ -43,19 +43,18 @@ struct AnnotationsExample: View {
                             .circleRadius(10)
                             .circleStrokeColor(.init(.black))
                             .circleStrokeWidth(1)
+                            .onTapGesture {
+                                alert = "Airport: \(airport.name)"
+                            }
                     }
 
                     PolylineAnnotation(lineCoordinates: flight.airports.map(\.coordinate))
                         .lineColor(.init(flight.color))
                         .lineWidth(3)
+                        .onTapGesture {
+                            alert = "Flight: \(flight.name)"
+                        }
                 }
-
-                PointAnnotationGroup(data) { item in
-                    PointAnnotation(coordinate: item.coordinate)
-                        .image(.init(image: UIImage(named: "blue_marker_view")!, name: "blue-icon"))
-                        .iconAnchor(.bottom)
-                }
-                .clusterOptions(clusterOptions)
 
                 PolygonAnnotation(polygon: Polygon([
                     [
@@ -84,10 +83,24 @@ struct AnnotationsExample: View {
                 .fillColor(StyleColor(.systemBlue))
                 .fillOpacity(0.5)
                 .fillOutlineColor(StyleColor(.black))
+                .onTapGesture {
+                    alert = "Maine"
+                }
+
+                PointAnnotationGroup(taps) { tap in
+                    PointAnnotation(coordinate: tap.coordinate)
+                        .image(.init(image: UIImage(named: "blue_marker_view")!, name: "blue-icon"))
+                        .iconAnchor(.bottom)
+                        // TODO: MAPSIOS-1028
+                        // .onTapGesture {
+                        //     taps.removeAll(where: { $0.id == tap.id })
+                        // }
+                }
+                .clusterOptions(clusterOptions)
             }
             .onMapTapGesture { point in
                 guard let coord = proxy.map?.coordinate(for: point) else { return }
-                data.append(Item(coordinate: coord))
+                taps.append(Tap(coordinate: coord))
             }
             .ignoresSafeArea()
             .safeOverlay(alignment: .bottom) {
@@ -95,6 +108,7 @@ struct AnnotationsExample: View {
                     .floating()
                     .padding(.bottom, 30)
             }
+            .simpleAlert(message: $alert, title: "Clicked")
         }
     }
 

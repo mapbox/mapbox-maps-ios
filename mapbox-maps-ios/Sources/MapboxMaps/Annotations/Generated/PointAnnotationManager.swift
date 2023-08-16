@@ -40,7 +40,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     private(set) internal var allImages = Set<String>()
     private let imagesManager: AnnotationImagesManagerProtocol
     private var clusterOptions: ClusterOptions?
-    
+
     private var userInfo: [AnyHashable: JSONValue] = [:]
 
     // MARK: - Interaction
@@ -611,6 +611,10 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         delegate?.annotationManager(
             self,
             didDetectTappedAnnotations: tappedAnnotations)
+
+        for annotation in tappedAnnotations {
+            annotation.tapHandler?.value()
+        }
     }
 
     private func updateDragSource() {

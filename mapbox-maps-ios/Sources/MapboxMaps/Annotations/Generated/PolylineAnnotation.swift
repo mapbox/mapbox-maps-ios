@@ -60,6 +60,7 @@ public struct PolylineAnnotation: Annotation, Equatable {
         return feature
     }
 
+    var tapHandler: AlwaysEqual<() -> Void>?
 
     /// Create a polyline annotation with a `LineString` and an optional identifier.
     public init(id: String = UUID().uuidString, lineString: LineString, isSelected: Bool = false, isDraggable: Bool = false) {
@@ -169,6 +170,11 @@ public struct PolylineAnnotation: Annotation, Equatable {
         with(self, setter(\.lineWidth, newValue))
     }
 
+
+    /// Handles tap gesture.
+    public func onTapGesture(handler: @escaping () -> Void) -> Self {
+        with(self, setter(\.tapHandler, AlwaysEqual(value: handler)))
+    }
 }
 
 // End of generated file.

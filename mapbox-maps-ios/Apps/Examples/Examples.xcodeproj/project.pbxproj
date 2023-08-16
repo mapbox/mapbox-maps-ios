@@ -89,6 +89,7 @@
 		954AF549298A821E00365B6C /* ClusteringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954AF548298A821E00365B6C /* ClusteringExample.swift */; };
 		95857AC229B7A1A2005D238C /* LongTapAnimationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95857AC129B7A1A2005D238C /* LongTapAnimationExample.swift */; };
 		959EDE5229F5520500AEE16C /* MapEventsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959EDE5129F5520500AEE16C /* MapEventsExample.swift */; };
+		95A693AE2A8BC756008BE566 /* AnnotationsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A693AD2A8BC756008BE566 /* AnnotationsExample.swift */; };
 		95A7E4F12A6ECBC700C2E81D /* CombineLocationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A7E4F02A6ECBC700C2E81D /* CombineLocationExample.swift */; };
 		95A8C6A32A1A60E900D0FB48 /* CombineExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A8C6A22A1A60E900D0FB48 /* CombineExample.swift */; };
 		95AFCFC12A4AF30E00395A86 /* MapViewportExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95AFCFC02A4AF30E00395A86 /* MapViewportExample.swift */; };
@@ -274,6 +275,7 @@
 		954AF548298A821E00365B6C /* ClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClusteringExample.swift; sourceTree = "<group>"; };
 		95857AC129B7A1A2005D238C /* LongTapAnimationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongTapAnimationExample.swift; sourceTree = "<group>"; };
 		959EDE5129F5520500AEE16C /* MapEventsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapEventsExample.swift; sourceTree = "<group>"; };
+		95A693AD2A8BC756008BE566 /* AnnotationsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationsExample.swift; sourceTree = "<group>"; };
 		95A7E4F02A6ECBC700C2E81D /* CombineLocationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineLocationExample.swift; sourceTree = "<group>"; };
 		95A8C6A22A1A60E900D0FB48 /* CombineExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineExample.swift; sourceTree = "<group>"; };
 		95AFCFC02A4AF30E00395A86 /* MapViewportExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewportExample.swift; sourceTree = "<group>"; };
@@ -608,6 +610,7 @@
 				951693B12A581DFC0083DC4C /* LocateMeExample.swift */,
 				95B9CBDE2A813BDA007E44F1 /* URLOpenExamples.swift */,
 				9501A5942A3882D800F2AF92 /* Util */,
+				95A693AD2A8BC756008BE566 /* AnnotationsExample.swift */,
 			);
 			path = "SwiftUI Examples";
 			sourceTree = "<group>";
@@ -829,6 +832,7 @@
 				CADCF73C258499200065C51B /* AppDelegate.swift in Sources */,
 				95B589B92982BFE800BF4F31 /* FeaturesQueryExample.swift in Sources */,
 				CADCF7392584991C0065C51B /* UIViewController+Extensions.swift in Sources */,
+				95A693AE2A8BC756008BE566 /* AnnotationsExample.swift in Sources */,
 				CADCF7392584991C0065C51B /* UIViewController+Extensions.swift in Sources */,
 				58248C2F2695FF24009AC598 /* StoryboardMapViewExample.swift in Sources */,
 				74A2313827EC6B360065FB7D /* IconSizeChangeExample.swift in Sources */,

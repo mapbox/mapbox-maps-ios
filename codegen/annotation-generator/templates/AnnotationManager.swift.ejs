@@ -53,6 +53,8 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
     private let imagesManager: AnnotationImagesManagerProtocol
     private var clusterOptions: ClusterOptions?
     <%_ } _%>
+    
+    private var userInfo: [AnyHashable: JSONValue] = [:]
 
     // MARK: - Interaction
 
@@ -74,7 +76,7 @@ public class <%- camelize(type) %>AnnotationManager: AnnotationManagerInternal {
     private let style: StyleProtocol
 
     /// Storage for common layer properties
-    private var layerProperties: [String: Any] = [:] {
+    internal var layerProperties: [String: Any] = [:] {
         didSet {
             needsSyncSourceAndLayer = true
         }

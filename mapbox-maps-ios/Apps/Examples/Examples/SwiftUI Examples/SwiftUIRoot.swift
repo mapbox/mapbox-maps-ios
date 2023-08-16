@@ -23,8 +23,9 @@ struct SwiftUIRoot: View {
                 } header: { Text("Use cases") }
 
                 Section {
-                    ExampleLink("Basic View annotations example", note: "Add/remove view annotation on tap.", destination: ViewAnnotationsExample())
-                } header: { Text("View Annotations") }
+                    ExampleLink("View Annotations", note: "Add/remove view annotation on tap.", destination: ViewAnnotationsExample())
+                    ExampleLink("Layer Annotations", note: "Add/remove layer annotation on tap.", destination: AnnotationsExample())
+                } header: { Text("Annotations") }
 
                 Section {
                     ExampleLink("Puck playground", note: "Display user location using puck", destination: PuckPlayground())

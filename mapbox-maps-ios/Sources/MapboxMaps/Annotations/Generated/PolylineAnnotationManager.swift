@@ -36,6 +36,8 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
     private var needsSyncSourceAndLayer = false
     private var needsSyncDragSource = false
+    
+    private var userInfo: [AnyHashable: JSONValue] = [:]
 
     // MARK: - Interaction
 
@@ -57,7 +59,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     private let style: StyleProtocol
 
     /// Storage for common layer properties
-    private var layerProperties: [String: Any] = [:] {
+    internal var layerProperties: [String: Any] = [:] {
         didSet {
             needsSyncSourceAndLayer = true
         }

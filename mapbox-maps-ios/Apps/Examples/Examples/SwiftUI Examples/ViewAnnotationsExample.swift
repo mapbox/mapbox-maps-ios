@@ -16,12 +16,10 @@ struct ViewAnnotationsExample: View {
         MapReader { proxy in
             Map(initialViewport: .camera(center: .helsinki, zoom: 5)) {
                 let citiesCoordinates = [CLLocationCoordinate2D.helsinki, .berlin]
-                ForEvery(citiesCoordinates, id: \.latitude) { coord in
-                    ViewAnnotation(coord) {
-                        Circle()
-                            .fill(.red)
-                            .frame(width: 30, height: 30)
-                    }
+                CircleAnnotationGroup(citiesCoordinates, id: \.latitude) { coordinate in
+                    CircleAnnotation(centerCoordinate: coordinate)
+                        .circleColor(StyleColor(.red))
+                        .circleRadius(9)
                 }
 
                 ForEvery(points) { point in

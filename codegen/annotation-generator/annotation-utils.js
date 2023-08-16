@@ -188,3 +188,28 @@ global.defaultValue = function defaultValue(property, originalType) {
       throw new Error(`unknown type for ${property.name}. Property type = ${property.type}`);
   }
 }
+
+global.annotationPropertySwiftTypeToJSONValueConvertor = function propertySwiftTypeToJSONValueConvertor(property) {
+  switch (property.type) {
+    case 'boolean':
+    case 'string':
+    case 'resolvedImage':
+    case 'number':
+    case 'formatted':
+      return `${camelizeWithLeadingLowercase(property.name)}`;
+    case 'array':
+      if (property.value === "enum") {
+        return `${camelizeWithLeadingLowercase(property.name)}.map(\\.rawValue)`;
+      } else if (property.value === "string") {
+        return `${camelizeWithLeadingLowercase(property.name)}.map { ["literal", $0] as [Any] }`;
+      } else {
+        return `${camelizeWithLeadingLowercase(property.name)}`;
+      }
+    case 'enum':
+      return `${camelizeWithLeadingLowercase(property.name)}?.rawValue`;
+    case 'color':
+      return `${camelizeWithLeadingLowercase(property.name)}?.rgbaString`;
+    default:
+      throw new Error(`unknown type for ${property.name} . Property type = ${property.type}`);
+  }
+}

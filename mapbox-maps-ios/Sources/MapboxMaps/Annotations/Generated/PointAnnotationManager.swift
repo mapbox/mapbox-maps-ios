@@ -40,6 +40,8 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     private(set) internal var allImages = Set<String>()
     private let imagesManager: AnnotationImagesManagerProtocol
     private var clusterOptions: ClusterOptions?
+    
+    private var userInfo: [AnyHashable: JSONValue] = [:]
 
     // MARK: - Interaction
 
@@ -61,7 +63,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     private let style: StyleProtocol
 
     /// Storage for common layer properties
-    private var layerProperties: [String: Any] = [:] {
+    internal var layerProperties: [String: Any] = [:] {
         didSet {
             needsSyncSourceAndLayer = true
         }

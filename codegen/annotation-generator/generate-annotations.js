@@ -69,6 +69,7 @@ const render = function render(filename, layer, filePath) {
 
 for (const layer of style.layers) {
     if (layer.orignalType === "symbol" || layer.orignalType === "circle" || layer.orignalType === "fill" || layer.orignalType === "line") {
+        render('AnnotationGroup', layer, "Sources/MapboxMaps/SwiftUI/Annotations/Generated/")
         render('AnnotationManager', layer, "Sources/MapboxMaps/Annotations/Generated/");
         render('Annotation', layer, "Sources/MapboxMaps/Annotations/Generated/");
         render('AnnotationIntegrationTests', layer, "Tests/MapboxMapsTests/Annotations/Generated/");

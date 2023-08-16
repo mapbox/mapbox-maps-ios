@@ -36,7 +36,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
     private var needsSyncSourceAndLayer = false
     private var needsSyncDragSource = false
-    
+
     private var userInfo: [AnyHashable: JSONValue] = [:]
 
     // MARK: - Interaction
@@ -327,6 +327,10 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         delegate?.annotationManager(
             self,
             didDetectTappedAnnotations: tappedAnnotations)
+
+        for annotation in tappedAnnotations {
+            annotation.tapHandler?.value()
+        }
     }
 
     private func updateDragSource() {

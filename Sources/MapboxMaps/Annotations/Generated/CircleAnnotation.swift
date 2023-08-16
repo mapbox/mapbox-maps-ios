@@ -57,6 +57,7 @@ public struct CircleAnnotation: Annotation, Equatable {
         return feature
     }
 
+    var tapHandler: AlwaysEqual<() -> Void>?
 
     /// Create a circle annotation with a `Point` and an optional identifier.
     public init(id: String = UUID().uuidString, point: Point, isSelected: Bool = false, isDraggable: Bool = false) {
@@ -145,6 +146,11 @@ public struct CircleAnnotation: Annotation, Equatable {
         with(self, setter(\.circleStrokeWidth, newValue))
     }
 
+
+    /// Handles tap gesture.
+    public func onTapGesture(handler: @escaping () -> Void) -> Self {
+        with(self, setter(\.tapHandler, AlwaysEqual(value: handler)))
+    }
 }
 
 // End of generated file.

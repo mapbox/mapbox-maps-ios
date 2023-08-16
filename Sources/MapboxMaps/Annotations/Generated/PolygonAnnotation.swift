@@ -54,6 +54,7 @@ public struct PolygonAnnotation: Annotation, Equatable {
         return feature
     }
 
+    var tapHandler: AlwaysEqual<() -> Void>?
 
     /// Create a polygon annotation with a `Polygon` and an optional identifier.
     public init(id: String = UUID().uuidString, polygon: Polygon, isSelected: Bool = false, isDraggable: Bool = false) {
@@ -109,6 +110,11 @@ public struct PolygonAnnotation: Annotation, Equatable {
         with(self, setter(\.fillPattern, newValue))
     }
 
+
+    /// Handles tap gesture.
+    public func onTapGesture(handler: @escaping () -> Void) -> Self {
+        with(self, setter(\.tapHandler, AlwaysEqual(value: handler)))
+    }
 }
 
 // End of generated file.

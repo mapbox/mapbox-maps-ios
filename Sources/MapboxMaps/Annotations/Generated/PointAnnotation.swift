@@ -81,6 +81,7 @@ public struct PointAnnotation: Annotation, Equatable {
         return feature
     }
 
+    var tapHandler: AlwaysEqual<() -> Void>?
 
     /// Create a point annotation with a `Point` and an optional identifier.
     public init(id: String = UUID().uuidString, point: Point, isSelected: Bool = false, isDraggable: Bool = false) {
@@ -370,6 +371,11 @@ public struct PointAnnotation: Annotation, Equatable {
 
     public func image(_ image: Image?) -> Self {
         with(self, setter(\.image, image))
+    }
+
+    /// Handles tap gesture.
+    public func onTapGesture(handler: @escaping () -> Void) -> Self {
+        with(self, setter(\.tapHandler, AlwaysEqual(value: handler)))
     }
 }
 

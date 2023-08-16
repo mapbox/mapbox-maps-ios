@@ -36,7 +36,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
 
     private var needsSyncSourceAndLayer = false
     private var needsSyncDragSource = false
-    
+
     private var userInfo: [AnyHashable: JSONValue] = [:]
 
     // MARK: - Interaction
@@ -287,6 +287,10 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
         delegate?.annotationManager(
             self,
             didDetectTappedAnnotations: tappedAnnotations)
+
+        for annotation in tappedAnnotations {
+            annotation.tapHandler?.value()
+        }
     }
 
     private func updateDragSource() {

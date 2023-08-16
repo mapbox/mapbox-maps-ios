@@ -8,36 +8,34 @@ struct MapViewportExample: View {
     @State var camera = CameraState(center: .zero, zoom: 0)
     @State var styleURI: StyleURI = .standard
     var body: some View {
-        MapReader { mapProxy in
-            Map(viewport: $viewport) {
-                PuckAnnotation2D(bearing: .heading)
+        Map(viewport: $viewport) {
+            PuckAnnotation2D(bearing: .heading)
 
-                ForEvery(parks.coordinates, id: \.latitude) { coord in
-                    ViewAnnotation(coord, allowOverlap: true) {
-                        Image(systemName: "tree")
-                            .foregroundColor(.white)
-                            .padding(.all, 5)
-                            .background(
-                                Circle()
-                                    .strokeBorder(.black, lineWidth: 0.5)
-                                    .background(Circle().fill(Color(.systemGreen)))
-                            )
-                    }
+            ForEvery(parks.coordinates, id: \.latitude) { coord in
+                ViewAnnotation(coord, allowOverlap: true) {
+                    Image(systemName: "tree")
+                        .foregroundColor(.white)
+                        .padding(.all, 5)
+                        .background(
+                            Circle()
+                                .strokeBorder(.black, lineWidth: 0.5)
+                                .background(Circle().fill(Color(.systemGreen)))
+                        )
                 }
             }
-            .onStyleLoaded { _ in
-                guard let map = mapProxy.map else { return }
-                setupStyle(map)
-            }
-            .styleURI(styleURI)
-            .onCameraChanged { event in
-                // NOTE: updating camera @State on every camera change is not recommended
-                // because it will lead to body re-evaluation on every frame if user drags the map.
-                // Here it is used for demonstration purposes.
-                camera = event.cameraState
-            }
-            .ignoresSafeArea()
+
+            PolygonAnnotation(id: "polygon", polygon: maineBoundaries)
+                .fillColor(StyleColor(red: 0, green: 128, blue: 255, alpha: 0.5)!)
+                .fillOutlineColor(StyleColor(.black))
         }
+        .styleURI(styleURI)
+        .onCameraChanged { event in
+            // NOTE: updating camera @State on every camera change is not recommended
+            // because it will lead to body re-evaluation on every frame if user drags the map.
+            // Here it is used for demonstration purposes.
+            camera = event.cameraState
+        }
+        .ignoresSafeArea()
         .safeOverlay(alignment: .bottomTrailing) {
             VStack(alignment: .leading) {
                 Text("viewport: \(viewportShortDescription)")
@@ -57,22 +55,6 @@ struct MapViewportExample: View {
                 ViewportMenu(viewport: $viewport)
             }
         }
-    }
-
-    private func setupStyle(_ map: MapboxMap) {
-        var source = GeoJSONSource(id: "maine")
-        source.data = .geometry(.polygon(maineBoundaries))
-
-        var fillLayer = FillLayer(id: "fill", source: source.id)
-        fillLayer.fillColor = .constant(StyleColor(red: 0, green: 128, blue: 255, alpha: 0.5)!)
-
-        var outlineLayer = LineLayer(id: "outline", source: source.id)
-        outlineLayer.lineColor = .constant(StyleColor(.black))
-        outlineLayer.lineWidth = .constant(1.5)
-
-        try! map.addLayer(fillLayer)
-        try! map.addLayer(outlineLayer)
-        try! map.addSource(source)
     }
 
     var viewportShortDescription: String {

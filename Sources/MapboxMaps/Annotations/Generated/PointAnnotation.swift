@@ -1,10 +1,10 @@
 // This file is generated.
 import Foundation
 
-public struct PointAnnotation: Annotation {
+public struct PointAnnotation: Annotation, Equatable {
 
     /// Identifier for this annotation
-    public let id: String
+    internal(set) public var id: String
 
     /// The geometry backing this annotation
     public var geometry: Geometry {
@@ -14,12 +14,6 @@ public struct PointAnnotation: Annotation {
     /// The point backing this annotation
     public var point: Point
 
-    /// Properties associated with the annotation
-    public var userInfo: [String: Any]?
-
-    /// Storage for layer properties
-    internal var layerProperties: [String: Any] = [:]
-
     /// Toggles the annotation's selection state.
     /// If the annotation is deselected, it becomes selected.
     /// If the annotation is selected, it becomes deselected.
@@ -28,17 +22,65 @@ public struct PointAnnotation: Annotation {
     /// Property to determine whether annotation can be manually moved around map
     public var isDraggable: Bool = false
 
+    /// Properties associated with the annotation
+    public var userInfo: [String: Any]? {
+        get { _userInfo?.rawValue as? [String: Any] }
+        set {
+            let newValue = newValue ?? [:]
+            _userInfo = JSONObject(rawValue: newValue)
+        }
+    }
+    private var _userInfo: JSONObject?
+
+    internal var layerProperties: [String: Any] {
+        var properties: [String: Any] = [:]
+        properties["icon-anchor"] = iconAnchor?.rawValue
+        properties["icon-image"] = iconImage
+        properties["icon-offset"] = iconOffset
+        properties["icon-rotate"] = iconRotate
+        properties["icon-size"] = iconSize
+        properties["icon-text-fit"] = iconTextFit?.rawValue
+        properties["icon-text-fit-padding"] = iconTextFitPadding
+        properties["symbol-sort-key"] = symbolSortKey
+        properties["text-anchor"] = textAnchor?.rawValue
+        properties["text-field"] = textField
+        properties["text-justify"] = textJustify?.rawValue
+        properties["text-letter-spacing"] = textLetterSpacing
+        properties["text-line-height"] = textLineHeight
+        properties["text-max-width"] = textMaxWidth
+        properties["text-offset"] = textOffset
+        properties["text-radial-offset"] = textRadialOffset
+        properties["text-rotate"] = textRotate
+        properties["text-size"] = textSize
+        properties["text-transform"] = textTransform?.rawValue
+        properties["icon-color"] = iconColor?.rgbaString
+        properties["icon-emissive-strength"] = iconEmissiveStrength
+        properties["icon-halo-blur"] = iconHaloBlur
+        properties["icon-halo-color"] = iconHaloColor?.rgbaString
+        properties["icon-halo-width"] = iconHaloWidth
+        properties["icon-image-cross-fade"] = iconImageCrossFade
+        properties["icon-opacity"] = iconOpacity
+        properties["text-color"] = textColor?.rgbaString
+        properties["text-emissive-strength"] = textEmissiveStrength
+        properties["text-halo-blur"] = textHaloBlur
+        properties["text-halo-color"] = textHaloColor?.rgbaString
+        properties["text-halo-width"] = textHaloWidth
+        properties["text-opacity"] = textOpacity
+        return properties
+    }
+
     internal var feature: Feature {
         var feature = Feature(geometry: geometry)
         feature.identifier = .string(id)
         var properties = JSONObject()
         properties["layerProperties"] = JSONValue(rawValue: layerProperties)
-        if let userInfoValue = userInfo.flatMap(JSONValue.init(rawValue:)) {
-            properties["userInfo"] = userInfoValue
+        if let _userInfo {
+            properties["userInfo"] = .object(_userInfo)
         }
         feature.properties = properties
         return feature
     }
+
 
     /// Create a point annotation with a `Point` and an optional identifier.
     public init(id: String = UUID().uuidString, point: Point, isSelected: Bool = false, isDraggable: Bool = false) {
@@ -60,324 +102,100 @@ public struct PointAnnotation: Annotation {
     // MARK: - Style Properties -
 
     /// Part of the icon placed closest to the anchor.
-    public var iconAnchor: IconAnchor? {
-        get {
-            return layerProperties["icon-anchor"].flatMap { $0 as? String }.flatMap(IconAnchor.init(rawValue:))
-        }
-        set {
-            layerProperties["icon-anchor"] = newValue?.rawValue
-        }
-    }
+    public var iconAnchor: IconAnchor?
 
     /// Name of image in sprite to use for drawing an image background.
-    public var iconImage: String? {
-        get {
-            return layerProperties["icon-image"] as? String
-        }
-        set {
-            layerProperties["icon-image"] = newValue
-        }
-    }
+    public var iconImage: String?
 
     /// Offset distance of icon from its anchor. Positive values indicate right and down, while negative values indicate left and up. Each component is multiplied by the value of `icon-size` to obtain the final offset in pixels. When combined with `icon-rotate` the offset will be as if the rotated direction was up.
-    public var iconOffset: [Double]? {
-        get {
-            return layerProperties["icon-offset"] as? [Double]
-        }
-        set {
-            layerProperties["icon-offset"] = newValue
-        }
-    }
+    public var iconOffset: [Double]?
 
     /// Rotates the icon clockwise.
-    public var iconRotate: Double? {
-        get {
-            return layerProperties["icon-rotate"] as? Double
-        }
-        set {
-            layerProperties["icon-rotate"] = newValue
-        }
-    }
+    public var iconRotate: Double?
 
     /// Scales the original size of the icon by the provided factor. The new pixel size of the image will be the original pixel size multiplied by `icon-size`. 1 is the original size; 3 triples the size of the image.
-    public var iconSize: Double? {
-        get {
-            return layerProperties["icon-size"] as? Double
-        }
-        set {
-            layerProperties["icon-size"] = newValue
-        }
-    }
+    public var iconSize: Double?
 
     /// Scales the icon to fit around the associated text.
-    public var iconTextFit: IconTextFit? {
-        get {
-            return layerProperties["icon-text-fit"].flatMap { $0 as? String }.flatMap(IconTextFit.init(rawValue:))
-        }
-        set {
-            layerProperties["icon-text-fit"] = newValue?.rawValue
-        }
-    }
+    public var iconTextFit: IconTextFit?
 
     /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
-    public var iconTextFitPadding: [Double]? {
-        get {
-            return layerProperties["icon-text-fit-padding"] as? [Double]
-        }
-        set {
-            layerProperties["icon-text-fit-padding"] = newValue
-        }
-    }
+    public var iconTextFitPadding: [Double]?
 
     /// Sorts features in ascending order based on this value. Features with lower sort keys are drawn and placed first.  When `icon-allow-overlap` or `text-allow-overlap` is `false`, features with a lower sort key will have priority during placement. When `icon-allow-overlap` or `text-allow-overlap` is set to `true`, features with a higher sort key will overlap over features with a lower sort key.
-    public var symbolSortKey: Double? {
-        get {
-            return layerProperties["symbol-sort-key"] as? Double
-        }
-        set {
-            layerProperties["symbol-sort-key"] = newValue
-        }
-    }
+    public var symbolSortKey: Double?
 
     /// Part of the text placed closest to the anchor.
-    public var textAnchor: TextAnchor? {
-        get {
-            return layerProperties["text-anchor"].flatMap { $0 as? String }.flatMap(TextAnchor.init(rawValue:))
-        }
-        set {
-            layerProperties["text-anchor"] = newValue?.rawValue
-        }
-    }
+    public var textAnchor: TextAnchor?
 
     /// Value to use for a text label. If a plain `string` is provided, it will be treated as a `formatted` with default/inherited formatting options. SDF images are not supported in formatted text and will be ignored.
-    public var textField: String? {
-        get {
-            return layerProperties["text-field"] as? String
-        }
-        set {
-            layerProperties["text-field"] = newValue
-        }
-    }
+    public var textField: String?
 
     /// Text justification options.
-    public var textJustify: TextJustify? {
-        get {
-            return layerProperties["text-justify"].flatMap { $0 as? String }.flatMap(TextJustify.init(rawValue:))
-        }
-        set {
-            layerProperties["text-justify"] = newValue?.rawValue
-        }
-    }
+    public var textJustify: TextJustify?
 
     /// Text tracking amount.
-    public var textLetterSpacing: Double? {
-        get {
-            return layerProperties["text-letter-spacing"] as? Double
-        }
-        set {
-            layerProperties["text-letter-spacing"] = newValue
-        }
-    }
+    public var textLetterSpacing: Double?
 
     /// Text leading value for multi-line text.
-    public var textLineHeight: Double? {
-        get {
-            return layerProperties["text-line-height"] as? Double
-        }
-        set {
-            layerProperties["text-line-height"] = newValue
-        }
-    }
+    public var textLineHeight: Double?
 
     /// The maximum line width for text wrapping.
-    public var textMaxWidth: Double? {
-        get {
-            return layerProperties["text-max-width"] as? Double
-        }
-        set {
-            layerProperties["text-max-width"] = newValue
-        }
-    }
+    public var textMaxWidth: Double?
 
     /// Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up. If used with text-variable-anchor, input values will be taken as absolute values. Offsets along the x- and y-axis will be applied automatically based on the anchor position.
-    public var textOffset: [Double]? {
-        get {
-            return layerProperties["text-offset"] as? [Double]
-        }
-        set {
-            layerProperties["text-offset"] = newValue
-        }
-    }
+    public var textOffset: [Double]?
 
     /// Radial offset of text, in the direction of the symbol's anchor. Useful in combination with `text-variable-anchor`, which defaults to using the two-dimensional `text-offset` if present.
-    public var textRadialOffset: Double? {
-        get {
-            return layerProperties["text-radial-offset"] as? Double
-        }
-        set {
-            layerProperties["text-radial-offset"] = newValue
-        }
-    }
+    public var textRadialOffset: Double?
 
     /// Rotates the text clockwise.
-    public var textRotate: Double? {
-        get {
-            return layerProperties["text-rotate"] as? Double
-        }
-        set {
-            layerProperties["text-rotate"] = newValue
-        }
-    }
+    public var textRotate: Double?
 
     /// Font size.
-    public var textSize: Double? {
-        get {
-            return layerProperties["text-size"] as? Double
-        }
-        set {
-            layerProperties["text-size"] = newValue
-        }
-    }
+    public var textSize: Double?
 
     /// Specifies how to capitalize text, similar to the CSS `text-transform` property.
-    public var textTransform: TextTransform? {
-        get {
-            return layerProperties["text-transform"].flatMap { $0 as? String }.flatMap(TextTransform.init(rawValue:))
-        }
-        set {
-            layerProperties["text-transform"] = newValue?.rawValue
-        }
-    }
+    public var textTransform: TextTransform?
 
     /// The color of the icon. This can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
-    public var iconColor: StyleColor? {
-        get {
-            return layerProperties["icon-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rgbaString:))
-        }
-        set {
-            layerProperties["icon-color"] = newValue?.rgbaString
-        }
-    }
+    public var iconColor: StyleColor?
 
     /// Emission strength
-    public var iconEmissiveStrength: Double? {
-        get {
-            return layerProperties["icon-emissive-strength"] as? Double
-        }
-        set {
-            layerProperties["icon-emissive-strength"] = newValue
-        }
-    }
+    public var iconEmissiveStrength: Double?
 
     /// Fade out the halo towards the outside.
-    public var iconHaloBlur: Double? {
-        get {
-            return layerProperties["icon-halo-blur"] as? Double
-        }
-        set {
-            layerProperties["icon-halo-blur"] = newValue
-        }
-    }
+    public var iconHaloBlur: Double?
 
     /// The color of the icon's halo. Icon halos can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
-    public var iconHaloColor: StyleColor? {
-        get {
-            return layerProperties["icon-halo-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rgbaString:))
-        }
-        set {
-            layerProperties["icon-halo-color"] = newValue?.rgbaString
-        }
-    }
+    public var iconHaloColor: StyleColor?
 
     /// Distance of halo to the icon outline.
-    public var iconHaloWidth: Double? {
-        get {
-            return layerProperties["icon-halo-width"] as? Double
-        }
-        set {
-            layerProperties["icon-halo-width"] = newValue
-        }
-    }
+    public var iconHaloWidth: Double?
 
     /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together.
-    public var iconImageCrossFade: Double? {
-        get {
-            return layerProperties["icon-image-cross-fade"] as? Double
-        }
-        set {
-            layerProperties["icon-image-cross-fade"] = newValue
-        }
-    }
+    public var iconImageCrossFade: Double?
 
     /// The opacity at which the icon will be drawn.
-    public var iconOpacity: Double? {
-        get {
-            return layerProperties["icon-opacity"] as? Double
-        }
-        set {
-            layerProperties["icon-opacity"] = newValue
-        }
-    }
+    public var iconOpacity: Double?
 
     /// The color with which the text will be drawn.
-    public var textColor: StyleColor? {
-        get {
-            return layerProperties["text-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rgbaString:))
-        }
-        set {
-            layerProperties["text-color"] = newValue?.rgbaString
-        }
-    }
+    public var textColor: StyleColor?
 
     /// Emission strength
-    public var textEmissiveStrength: Double? {
-        get {
-            return layerProperties["text-emissive-strength"] as? Double
-        }
-        set {
-            layerProperties["text-emissive-strength"] = newValue
-        }
-    }
+    public var textEmissiveStrength: Double?
 
     /// The halo's fadeout distance towards the outside.
-    public var textHaloBlur: Double? {
-        get {
-            return layerProperties["text-halo-blur"] as? Double
-        }
-        set {
-            layerProperties["text-halo-blur"] = newValue
-        }
-    }
+    public var textHaloBlur: Double?
 
     /// The color of the text's halo, which helps it stand out from backgrounds.
-    public var textHaloColor: StyleColor? {
-        get {
-            return layerProperties["text-halo-color"].flatMap { $0 as? String }.flatMap(StyleColor.init(rgbaString:))
-        }
-        set {
-            layerProperties["text-halo-color"] = newValue?.rgbaString
-        }
-    }
+    public var textHaloColor: StyleColor?
 
     /// Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
-    public var textHaloWidth: Double? {
-        get {
-            return layerProperties["text-halo-width"] as? Double
-        }
-        set {
-            layerProperties["text-halo-width"] = newValue
-        }
-    }
+    public var textHaloWidth: Double?
 
     /// The opacity at which the text will be drawn.
-    public var textOpacity: Double? {
-        get {
-            return layerProperties["text-opacity"] as? Double
-        }
-        set {
-            layerProperties["text-opacity"] = newValue
-        }
-    }
+    public var textOpacity: Double?
 
     // MARK: - Image Convenience -
 
@@ -385,6 +203,173 @@ public struct PointAnnotation: Annotation {
         didSet {
             self.iconImage = image?.name
         }
+    }
+}
+
+@_spi(Experimental) extension PointAnnotation {
+
+    /// Part of the icon placed closest to the anchor.
+    public func iconAnchor(_ newValue: IconAnchor) -> Self {
+        with(self, setter(\.iconAnchor, newValue))
+    }
+
+    /// Name of image in sprite to use for drawing an image background.
+    public func iconImage(_ newValue: String) -> Self {
+        with(self, setter(\.iconImage, newValue))
+    }
+
+    /// Offset distance of icon from its anchor. Positive values indicate right and down, while negative values indicate left and up. Each component is multiplied by the value of `icon-size` to obtain the final offset in pixels. When combined with `icon-rotate` the offset will be as if the rotated direction was up.
+    public func iconOffset(_ newValue: [Double]) -> Self {
+        with(self, setter(\.iconOffset, newValue))
+    }
+
+    /// Rotates the icon clockwise.
+    public func iconRotate(_ newValue: Double) -> Self {
+        with(self, setter(\.iconRotate, newValue))
+    }
+
+    /// Scales the original size of the icon by the provided factor. The new pixel size of the image will be the original pixel size multiplied by `icon-size`. 1 is the original size; 3 triples the size of the image.
+    public func iconSize(_ newValue: Double) -> Self {
+        with(self, setter(\.iconSize, newValue))
+    }
+
+    /// Scales the icon to fit around the associated text.
+    public func iconTextFit(_ newValue: IconTextFit) -> Self {
+        with(self, setter(\.iconTextFit, newValue))
+    }
+
+    /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
+    public func iconTextFitPadding(_ newValue: [Double]) -> Self {
+        with(self, setter(\.iconTextFitPadding, newValue))
+    }
+
+    /// Sorts features in ascending order based on this value. Features with lower sort keys are drawn and placed first.  When `icon-allow-overlap` or `text-allow-overlap` is `false`, features with a lower sort key will have priority during placement. When `icon-allow-overlap` or `text-allow-overlap` is set to `true`, features with a higher sort key will overlap over features with a lower sort key.
+    public func symbolSortKey(_ newValue: Double) -> Self {
+        with(self, setter(\.symbolSortKey, newValue))
+    }
+
+    /// Part of the text placed closest to the anchor.
+    public func textAnchor(_ newValue: TextAnchor) -> Self {
+        with(self, setter(\.textAnchor, newValue))
+    }
+
+    /// Value to use for a text label. If a plain `string` is provided, it will be treated as a `formatted` with default/inherited formatting options. SDF images are not supported in formatted text and will be ignored.
+    public func textField(_ newValue: String) -> Self {
+        with(self, setter(\.textField, newValue))
+    }
+
+    /// Text justification options.
+    public func textJustify(_ newValue: TextJustify) -> Self {
+        with(self, setter(\.textJustify, newValue))
+    }
+
+    /// Text tracking amount.
+    public func textLetterSpacing(_ newValue: Double) -> Self {
+        with(self, setter(\.textLetterSpacing, newValue))
+    }
+
+    /// Text leading value for multi-line text.
+    public func textLineHeight(_ newValue: Double) -> Self {
+        with(self, setter(\.textLineHeight, newValue))
+    }
+
+    /// The maximum line width for text wrapping.
+    public func textMaxWidth(_ newValue: Double) -> Self {
+        with(self, setter(\.textMaxWidth, newValue))
+    }
+
+    /// Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up. If used with text-variable-anchor, input values will be taken as absolute values. Offsets along the x- and y-axis will be applied automatically based on the anchor position.
+    public func textOffset(_ newValue: [Double]) -> Self {
+        with(self, setter(\.textOffset, newValue))
+    }
+
+    /// Radial offset of text, in the direction of the symbol's anchor. Useful in combination with `text-variable-anchor`, which defaults to using the two-dimensional `text-offset` if present.
+    public func textRadialOffset(_ newValue: Double) -> Self {
+        with(self, setter(\.textRadialOffset, newValue))
+    }
+
+    /// Rotates the text clockwise.
+    public func textRotate(_ newValue: Double) -> Self {
+        with(self, setter(\.textRotate, newValue))
+    }
+
+    /// Font size.
+    public func textSize(_ newValue: Double) -> Self {
+        with(self, setter(\.textSize, newValue))
+    }
+
+    /// Specifies how to capitalize text, similar to the CSS `text-transform` property.
+    public func textTransform(_ newValue: TextTransform) -> Self {
+        with(self, setter(\.textTransform, newValue))
+    }
+
+    /// The color of the icon. This can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
+    public func iconColor(_ newValue: StyleColor) -> Self {
+        with(self, setter(\.iconColor, newValue))
+    }
+
+    /// Emission strength
+    public func iconEmissiveStrength(_ newValue: Double) -> Self {
+        with(self, setter(\.iconEmissiveStrength, newValue))
+    }
+
+    /// Fade out the halo towards the outside.
+    public func iconHaloBlur(_ newValue: Double) -> Self {
+        with(self, setter(\.iconHaloBlur, newValue))
+    }
+
+    /// The color of the icon's halo. Icon halos can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
+    public func iconHaloColor(_ newValue: StyleColor) -> Self {
+        with(self, setter(\.iconHaloColor, newValue))
+    }
+
+    /// Distance of halo to the icon outline.
+    public func iconHaloWidth(_ newValue: Double) -> Self {
+        with(self, setter(\.iconHaloWidth, newValue))
+    }
+
+    /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together.
+    public func iconImageCrossFade(_ newValue: Double) -> Self {
+        with(self, setter(\.iconImageCrossFade, newValue))
+    }
+
+    /// The opacity at which the icon will be drawn.
+    public func iconOpacity(_ newValue: Double) -> Self {
+        with(self, setter(\.iconOpacity, newValue))
+    }
+
+    /// The color with which the text will be drawn.
+    public func textColor(_ newValue: StyleColor) -> Self {
+        with(self, setter(\.textColor, newValue))
+    }
+
+    /// Emission strength
+    public func textEmissiveStrength(_ newValue: Double) -> Self {
+        with(self, setter(\.textEmissiveStrength, newValue))
+    }
+
+    /// The halo's fadeout distance towards the outside.
+    public func textHaloBlur(_ newValue: Double) -> Self {
+        with(self, setter(\.textHaloBlur, newValue))
+    }
+
+    /// The color of the text's halo, which helps it stand out from backgrounds.
+    public func textHaloColor(_ newValue: StyleColor) -> Self {
+        with(self, setter(\.textHaloColor, newValue))
+    }
+
+    /// Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
+    public func textHaloWidth(_ newValue: Double) -> Self {
+        with(self, setter(\.textHaloWidth, newValue))
+    }
+
+    /// The opacity at which the text will be drawn.
+    public func textOpacity(_ newValue: Double) -> Self {
+        with(self, setter(\.textOpacity, newValue))
+    }
+
+    public func image(_ image: Image?) -> Self {
+        with(self, setter(\.image, image))
     }
 }
 

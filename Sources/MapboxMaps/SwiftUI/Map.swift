@@ -112,9 +112,12 @@ public struct Map: UIViewControllerRepresentable {
             }
         )
 
+        let layerAnnotationCoordinator = LayerAnnotationCoordinator(annotationOrchestrator: mapView.annotations)
+
         return Coordinator(
             basic: basicCoordinator,
             viewAnnotation: viewAnnotationCoordinator,
+            layerAnnotation: layerAnnotationCoordinator,
             viewController: vc,
             urlOpener: urlOpener,
             mapView: mapView)
@@ -134,6 +137,7 @@ public struct Map: UIViewControllerRepresentable {
             animationData: context.transaction.viewportAnimationData)
         context.coordinator.viewAnnotation.updateAnnotations(to: mapContentVisitor.visitedViewAnnotations)
         context.coordinator.mapView.location.options = mapContentVisitor.locationOptions
+        context.coordinator.layerAnnotation.update(annotations: mapContentVisitor.annotationGroups)
     }
 }
 
@@ -216,9 +220,7 @@ extension Map {
 @available(iOS 13.0, *)
 extension Map {
     func set<T>(_ keyPath: WritableKeyPath<Map, T>, _ value: T) -> Self {
-        var updated = self
-        updated[keyPath: keyPath] = value
-        return updated
+        with(self, setter(keyPath, value))
     }
 
     func append<T>(_ keyPath: WritableKeyPath<Map, T>, _ newElement: T.Element) -> Self where T: RangeReplaceableCollection {
@@ -299,6 +301,7 @@ extension Map {
     public final class Coordinator {
         let basic: MapBasicCoordinator
         let viewAnnotation: ViewAnnotationCoordinator
+        let layerAnnotation: LayerAnnotationCoordinator
         let viewController: UIViewController
         let urlOpener: ClosureURLOpener
         let mapView: MapView
@@ -306,12 +309,14 @@ extension Map {
         init(
             basic: MapBasicCoordinator,
             viewAnnotation: ViewAnnotationCoordinator,
+            layerAnnotation: LayerAnnotationCoordinator,
             viewController: UIViewController,
             urlOpener: ClosureURLOpener,
             mapView: MapView
         ) {
             self.basic = basic
             self.viewAnnotation = viewAnnotation
+            self.layerAnnotation = layerAnnotation
             self.viewController = viewController
             self.urlOpener = urlOpener
             self.mapView = mapView

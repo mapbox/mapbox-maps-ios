@@ -168,6 +168,16 @@ final class PolylineAnnotationTests: XCTestCase {
         }
         XCTAssertEqual(lineWidth, annotation.lineWidth)
     }
+
+    func testUserInfo() throws {
+        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+        let userInfo = ["foo": "bar"]
+        annotation.userInfo = userInfo
+
+        let featureProperties = try XCTUnwrap(annotation.feature.properties)
+        let actualUserInfo = featureProperties["userInfo"]??.rawValue as? [String: Any]
+        XCTAssertEqual(actualUserInfo?["foo"] as? String, userInfo["foo"])
+    }
 }
 
 // End of generated file

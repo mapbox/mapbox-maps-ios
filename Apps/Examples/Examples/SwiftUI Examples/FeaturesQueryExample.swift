@@ -11,11 +11,9 @@ struct FeaturesQueryExample: View {
                 Map(viewport: $model.viewport) {
                     // Annotations that shows tap location.
                     if let queryResult = model.queryResult {
-                        ViewAnnotation(queryResult.coordinate) {
-                            Circle()
-                                .fill(.red)
-                                .frame(width: 8, height: 8)
-                        }
+                        CircleAnnotation(centerCoordinate: queryResult.coordinate)
+                            .circleColor(.init(.red))
+                            .circleRadius(8)
                     }
                 }
                 .styleURI(.streets) // In standard style the layers are opaque

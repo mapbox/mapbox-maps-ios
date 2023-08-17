@@ -6,14 +6,14 @@ public struct ViewAnnotation: MapContent {
     var viewAnnotationConfig: ViewAnnotationConfig
     var makeViewController: (@escaping (CGSize) -> Void) -> UIViewController
 
-    /// Creates an annotaion with specified options and content builder.
+    /// Creates an annotation with specified options and content builder.
     ///
     /// - Parameters:
     ///   - coordinate: Coordinate the view annotation is bound to.
     ///   - allowOverlap: If true, the annotation will be visible even if it collides with other annotations. Defaults to false.
     ///   - anchor: Specifies where the annotation will be located relatively to the given coordinate.
     ///   - offsetX: Additional X offset, positive values move annotation to right.
-    ///   - offsetY: Additional Y offset, positive values move annotation to right.
+    ///   - offsetY: Additional Y offset, positive values move annotation to top.
     @available(iOS 13.0, *)
     public init<Content: View>(
         _ coordinate: CLLocationCoordinate2D,

@@ -4,10 +4,11 @@ import SwiftUI
 /// This is for access to full-featured Mapbox API from SwiftUI.
 ///
 ///     var body: some View {
-///         MapboxViewReader { proxy in
-///             MapboxView().onTapGesture {
-///                 updateStyle(proxy.style)
-///             }
+///         MapReader { proxy in
+///             Map()
+///                 .onTapGesture {
+///                     configureUnderlyingMap(proxy.map)
+///                 }
 ///         }
 ///     }
 @_spi(Experimental)

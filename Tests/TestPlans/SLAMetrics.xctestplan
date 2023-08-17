@@ -1,0 +1,36 @@
+{
+  "configurations" : [
+    {
+      "id" : "5619A59C-5585-4A99-BB37-F95AB720E40C",
+      "name" : "Performance measurements",
+      "options" : {
+        "addressSanitizer" : {
+          "enabled" : false
+        },
+        "guardMallocEnabled" : false,
+        "mainThreadCheckerEnabled" : false,
+        "mallocGuardEdgesEnabled" : false,
+        "mallocScribbleEnabled" : false,
+        "mallocStackLoggingOptions" : null,
+        "nsZombieEnabled" : false,
+        "threadSanitizerEnabled" : false,
+        "uiTestingScreenshotsLifetime" : "keepNever",
+        "undefinedBehaviorSanitizerEnabled" : false
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "testRepetitionMode" : "retryOnFailure"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:MapboxMaps.xcodeproj",
+        "identifier" : "6F26E9D083B10126C0BBC5A8",
+        "name" : "MobileMetricsTests"
+      }
+    }
+  ],
+  "version" : 1
+}

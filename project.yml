@@ -1,0 +1,86 @@
+---
+name: MapboxMaps
+include:
+  - mapbox-maps-ios/project.yml
+targets:
+  Examples:
+    entitlements:
+      path: Sources/Examples/CarPlay.entitlements
+      properties:
+        com.apple.developer.carplay-maps: YES
+
+  DebugApp:
+    templates:
+      - installTokenScript
+      - assetCatalog
+      - application
+    type: application
+    platform: iOS
+    settings:
+      SKIP_INSTALL: NO
+      INFOPLIST_FILE: Sources/DebugApp/Info.plist
+      IPHONEOS_DEPLOYMENT_TARGET: 13.0
+    sources:
+      - path: Sources/DebugApp/
+        excludes: Info.plist
+    scheme:
+      environmentVariables:
+        - variable: MTL_HUD_ENABLED
+          value: 1
+        - variable: MAPBOX_MAPS_SIGNPOSTS_ENABLED
+          value: 1
+          isEnabled: false
+        - variable: MAPBOX_REOPEN_EXAMPLE
+          value: 1
+
+  MobileMetricsTests:
+    templates:
+      - unit-test
+    sources:
+      - path: Tests/SLAMetrics
+        excludes:
+        - testspec.yml
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 13.0
+    dependencies:
+      - target: MapboxTestHost
+
+  MapboxTestHost:
+    scheme:
+      testPlans:
+        - path: Tests/TestPlans/GestureTests.xctestplan
+        - path: Tests/TestPlans/IntegrationTests.xctestplan
+        - path: Tests/TestPlans/MapsTests.xctestplan
+        - path: Tests/TestPlans/UnitTests.xctestplan
+          defaultPlan: true
+    dependencies:
+      - target: TestSpecifications
+
+
+  TestSpecifications:
+    platform: iOS
+    type: bundle
+    settings:
+      GENERATE_INFOPLIST_FILE: YES
+      PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.test-spec
+    sources:
+      - path: mapbox-maps-internal/test-spec/tests
+        includes:
+          - "**/*.json"
+          - "**/*-ios.json.gz"
+        excludes:
+          - "templates"
+
+schemes:
+  SLAMetrics:
+    build:
+      targets:
+        MapboxTestHost: all
+    test:
+      config: Release
+      targets:
+        - MobileMetricsTests
+      testPlans:
+        - path: Tests/TestPlans/SLAMetrics.xctestplan

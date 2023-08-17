@@ -15,5 +15,5 @@ steps:
         - generate-sla-tests
         - build-benchmark
         - mapbox/prepare-build-for-device-testing:
-            derivedDataPath: benchmark/DerivedData
+            derivedDataPath: DerivedData
             outputPath: output

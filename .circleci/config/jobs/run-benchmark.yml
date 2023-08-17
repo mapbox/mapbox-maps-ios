@@ -23,7 +23,7 @@ steps:
           --ipa "Products/App.ipa" \
           --tests "Products/App.ipa" \
           --test-type XCTEST_UI \
-          --spec benchmark/testspec.yml \
+          --spec Tests/SLAMetrics/testspec.yml \
           --output benchmark_waiter.json
   - store_artifacts:
       path: benchmark_waiter.json

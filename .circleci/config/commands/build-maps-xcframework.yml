@@ -43,7 +43,7 @@ steps:
                   --name "ios-maps-v10-benchmark" \
                   --build ${CIRCLE_BUILD_NUM} \
                   -t ${BASELINE_TOLERANCE} \
-                  --baseline mapbox-maps-ios/baselines/binary-size/MapboxMaps.json \
+                  --baseline Resources/baselines/binary-size/MapboxMaps.json \
                   --dryrun
   - when:
       condition: << parameters.upload-size-metrics >>

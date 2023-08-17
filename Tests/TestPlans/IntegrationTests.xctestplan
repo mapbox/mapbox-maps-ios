@@ -1,0 +1,83 @@
+{
+  "configurations" : [
+    {
+      "id" : "86BCF7AC-2BA2-468F-BE79-EDD42CCF1C4F",
+      "name" : "Address Sanitizer",
+      "options" : {
+        "addressSanitizer" : {
+          "detectStackUseAfterReturn" : true,
+          "enabled" : true
+        }
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "environmentVariableEntries" : [
+      {
+        "key" : "MAPBOX_MAPS_SIGNPOSTS_ENABLED",
+        "value" : ""
+      }
+    ],
+    "language" : "en",
+    "testRepetitionMode" : "retryOnFailure"
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "selectedTests" : [
+        "BackgroundLayerIntegrationTests",
+        "BasicCameraAnimatorImplIntegrationTests",
+        "CircleAnnotationIntegrationTests",
+        "CircleLayerIntegrationTests",
+        "DidIdleFailureIntegrationTest",
+        "ExampleIntegrationTest",
+        "FeatureQueryingTest",
+        "FeatureStateIntegrationTests",
+        "FillExtrusionLayerIntegrationTests",
+        "FillLayerIntegrationTests",
+        "GeoJSONSourceIntegrationTests",
+        "GeoJSONUpdateIntegrationTests",
+        "HeatmapLayerIntegrationTests",
+        "HillshadeLayerIntegrationTests",
+        "ImageSourceIntegrationTests",
+        "LineLayerIntegrationTests",
+        "LocationIndicatorLayerIntegrationTests",
+        "MapInitOptionsIntegrationTests",
+        "MapViewIntegrationTests",
+        "MapViewRenderedSnapshotIntegrationTests",
+        "MapboxMapIntegrationTests",
+        "MapboxMapsSnapshotTests",
+        "MigrationGuideIntegrationTests",
+        "ModelLayerIntegrationTests",
+        "ObservableIntegrationTests",
+        "OfflineGuideIntegrationTests",
+        "OfflineManagerIntegrationTestCase",
+        "PointAnnotationIntegrationTests",
+        "PolygonAnnotationIntegrationTests",
+        "PolylineAnnotationIntegrationTests",
+        "RasterDemSourceIntegrationTests",
+        "RasterLayerIntegrationTests",
+        "RasterSourceIntegrationTests",
+        "SkyLayerIntegrationTests",
+        "StyleImportIntegrationTests\/testGetSchema()",
+        "StyleImportIntegrationTests\/testGetSchemaIncorrectId()",
+        "StyleImportIntegrationTests\/testGetStyleImports()",
+        "StyleImportIntegrationTests\/testRemoveStyleImports()",
+        "StyleImportIntegrationTests\/testSetAndGetConfigProperties()",
+        "StyleImportIntegrationTests\/testSetAndGetConfigProperty()",
+        "StyleIntegrationTests",
+        "StyleLoadIntegrationTests",
+        "StyleLocalizationTests",
+        "SymbolLayerIntegrationTests",
+        "TileCoverIntegrationTests\/testTileCover()",
+        "VectorSourceIntegrationTests"
+      ],
+      "target" : {
+        "containerPath" : "container:MapboxMaps.xcodeproj",
+        "identifier" : "86A60EEC97F04E1DF2BB7D80",
+        "name" : "MapboxMapsTests"
+      }
+    }
+  ],
+  "version" : 1
+}

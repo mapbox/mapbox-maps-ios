@@ -70,7 +70,7 @@ internal class IntegrationTestCase: XCTestCase {
             MapboxOptions.accessToken = tokenFromPlist
         } else if let tokenFromFile = try Bundle.mapboxMapsTests.path(forResource: "MapboxAccessToken", ofType: nil).map(String.init(contentsOfFile:)) {
             MapboxOptions.accessToken = tokenFromFile.trimmingCharacters(in: .newlines)
-        } else {
+        } else if Bundle.main.object(forInfoDictionaryKey: "MBXAccessToken") == nil {
             XCTFail("Missing access token in Test bundle")
         }
     }

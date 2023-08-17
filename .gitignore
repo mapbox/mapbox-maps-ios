@@ -10,3 +10,6 @@ codegen/style-generator/generate-style-code.list
 codegen/node_modules
 
 .vscode
+Carthage
+MapboxMaps.xcodeproj
+Sources/Examples/CarPlay.entitlements

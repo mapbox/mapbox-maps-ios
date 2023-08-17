@@ -1,7 +1,10 @@
 steps:
+  - install-xcodegen
   - run:
       name: Build Benchmark
       command: |
-        xcodebuild -resolvePackageDependencies -scheme MobileMetrics -derivedDataPath DerivedData
-        xcodebuild build-for-testing -scheme MobileMetrics -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO ENABLE_TESTABILITY=YES -derivedDataPath DerivedData
-      working_directory: benchmark/
+        xcodegen
+        xcodebuild -resolvePackageDependencies -scheme SLAMetrics -derivedDataPath DerivedData
+        xcodebuild build-for-testing -scheme SLAMetrics -destination "generic/platform=iOS" \
+          -derivedDataPath DerivedData \
+          CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO ENABLE_TESTABILITY=YES

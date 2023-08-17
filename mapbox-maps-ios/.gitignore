@@ -6,6 +6,7 @@ xcuserdata
 node_modules
 developer.xcconfig
 Carthage
+Cartfile*
 api-docs
 MapboxAccessToken
 scripts/release/packager/artifacts

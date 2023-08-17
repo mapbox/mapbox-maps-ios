@@ -83,7 +83,7 @@ public struct Viewport: Equatable {
         return Viewport(storage: .idle)
     }
 
-    /// Sets camera to the default camera to options defined in the current style.
+    /// Sets camera to the default camera options defined in the current style.
     ///
     /// See more in the [Mapbox Style Specification](https://docs.mapbox.com/mapbox-gl-js/style-spec/root/#center).
     public static var styleDefault: Viewport {
@@ -171,7 +171,7 @@ public struct Viewport: Equatable {
     /// This method can be called multiple times to configure different edges.
     ///
     /// - Parameters:
-    ///   - edges: Edges for which set the additional.
+    ///   - edges: Edges for which to set the additional inset.
     ///   - length: The length of inset.
     ///   - ignoringSafeArea: If safe area's contribution should be ignored for the specified edges.
     /// - Returns: A viewport with modified inset options.

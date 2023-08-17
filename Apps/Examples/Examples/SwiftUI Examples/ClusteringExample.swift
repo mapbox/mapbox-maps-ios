@@ -66,7 +66,7 @@ private func setupClusteringLayer(_ map: MapboxMap) throws {
     // The image's rendering mode can be set programmatically or in the asset catalogue.
     let image = UIImage(named: "fire-station-11")!.withRenderingMode(.alwaysTemplate)
 
-    // Add the image tp the map's style. Set `sdf` to `true`. This allows the icon images to be recolored.
+    // Add the image to the map's style. Set `sdf` to `true`. This allows the icon images to be recolored.
     // For more information about `SDF`, or Signed Distance Fields, see
     // https://docs.mapbox.com/help/troubleshooting/using-recolorable-images-in-mapbox-maps/#what-are-signed-distance-fields-sdf
     try! map.addImage(image, id: "fire-station-icon", sdf: true)
@@ -83,12 +83,12 @@ private func setupClusteringLayer(_ map: MapboxMap) throws {
     source.cluster = true
     source.clusterRadius = 75
 
-    var clusteredLayer = createClusteredLayer()
+    let clusteredLayer = createClusteredLayer()
 
-    var unclusteredLayer = createUnclusteredLayer()
+    let unclusteredLayer = createUnclusteredLayer()
 
     // `clusterCountLayer` is a `SymbolLayer` that represents the point count within individual clusters.
-    var clusterCountLayer = createNumberLayer()
+    let clusterCountLayer = createNumberLayer()
 
     // Add the source and two layers to the map.
     try map.addSource(source)
@@ -108,7 +108,7 @@ private func createClusteredLayer() -> CircleLayer {
     // for `cluster_id`.
     clusteredLayer.filter = Exp(.has) { "point_count" }
 
-    // Set the color of the icons based on the number of points within
+    // Set the color of the circles based on the number of points within
     // a given cluster. The first value is a default value.
     clusteredLayer.circleColor = .expression(Exp(.step) {
         Exp(.get) { "point_count" }

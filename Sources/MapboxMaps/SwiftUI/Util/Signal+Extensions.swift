@@ -4,7 +4,7 @@ extension Signal {
     /// Creates a signal that:
     /// - Proxies payloads from the source signal unless condition is false.
     /// - When condition is true, the payloads are blocked
-    /// - When condition is false, the the signal sends the latest blocked payload.
+    /// - When condition is false, the signal sends the latest blocked payload.
     ///
     /// Note: This is the encapsulated algorithm for blocking camera updates while batch camera update is in progress
     /// used in `MapBasicCoordinator`.

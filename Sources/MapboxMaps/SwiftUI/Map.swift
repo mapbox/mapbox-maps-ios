@@ -245,7 +245,7 @@ public extension Map {
         set(\.mapDependencies.styleURI, uri)
     }
 
-    /// Configures gestures options.
+    /// Configures gesture options.
     func gestureOptions(_ options: GestureOptions) -> Self {
         set(\.mapDependencies.gestureOptions, options)
     }
@@ -262,7 +262,7 @@ public extension Map {
 
     /// Adds tap action to layers with specified `layerIds`.
     ///
-    /// The action will only be called when at least one of specified layers are at the tap viewport.
+    /// The action will only be called when at least one of specified layers are in the tap viewport.
     ///
     /// - Parameters:
     ///  - layerIds: The identifiers of layers where to perform features lookup.

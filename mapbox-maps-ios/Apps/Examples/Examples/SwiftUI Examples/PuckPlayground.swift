@@ -23,12 +23,12 @@ struct PuckPlayground: View {
         Map(initialViewport: .followPuck(zoom: 18, bearing: .heading, pitch: 60)) {
             switch puckType {
             case .d2:
-                PuckAnnotation2D(bearing: bearingType)
+                Puck2D(bearing: bearingType)
                     .pulsing(puck2dSettings.pulsing.asPuckPulsing)
                     .showsAccuracyRing(puck2dSettings.accuracyRing)
                     .opacity(opacity)
             case .d3:
-                PuckAnnotation3D(model: puck3dSettings.modelType.model, bearing: bearingType)
+                Puck3D(model: puck3dSettings.modelType.model, bearing: bearingType)
                     .modelScale(puck3dSettings.modelScale)
                     .modelOpacity(opacity)
             }

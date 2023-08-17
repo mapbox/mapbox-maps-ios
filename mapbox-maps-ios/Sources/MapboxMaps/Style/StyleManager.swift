@@ -3,7 +3,7 @@
 @_implementationOnly import MapboxCoreMaps_Private
 import UIKit
 
-public protocol StyleProtocol: AnyObject {
+protocol StyleProtocol: AnyObject {
     var isStyleLoaded: Bool { get }
     var styleDefaultCamera: CameraOptions { get }
     var uri: StyleURI? { get set }

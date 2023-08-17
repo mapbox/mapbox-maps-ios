@@ -41,8 +41,6 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     private let imagesManager: AnnotationImagesManagerProtocol
     private var clusterOptions: ClusterOptions?
 
-    private var userInfo: [AnyHashable: JSONValue] = [:]
-
     // MARK: - Interaction
 
     /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.

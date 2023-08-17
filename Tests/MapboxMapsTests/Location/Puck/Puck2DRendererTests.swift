@@ -1,11 +1,11 @@
 import XCTest
 @testable import MapboxMaps
 
-final class Puck2DTests: XCTestCase {
+final class Puck2DRendererTests: XCTestCase {
     var configuration: Puck2DConfiguration!
     var style: MockStyle!
     var puckRenderDataSubject: CurrentValueSignalSubject<PuckRenderingData?>!
-    var puck2D: Puck2D!
+    var puck2D: Puck2DRenderer!
     var mapboxMap: MockMapboxMap!
     var renderDataObserved = false
     var timeProvider: MockTimeProvider!
@@ -43,7 +43,7 @@ final class Puck2DTests: XCTestCase {
     }
 
     func recreatePuck() {
-        puck2D = Puck2D(
+        puck2D = Puck2DRenderer(
             configuration: configuration,
             style: style,
             renderingData: puckRenderDataSubject.signal.skipNil(),

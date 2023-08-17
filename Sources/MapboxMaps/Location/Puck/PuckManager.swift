@@ -11,10 +11,10 @@ internal protocol PuckManagerProtocol: AnyObject {
 internal final class PuckManager: PuckManagerProtocol {
     private enum State {
         case none
-        case puck2D(Puck2DProtocol)
-        case puck3D(Puck3DProtocol)
+        case puck2D(Puck2DRendererProtocol)
+        case puck3D(Puck3DRendererProtocol)
 
-        var puck: Puck? {
+        var puck: PuckRenderer? {
             switch self {
             case .none: return nil
             case let .puck2D(p): return p
@@ -67,11 +67,11 @@ internal final class PuckManager: PuckManagerProtocol {
         }
     }
 
-    private let puck2DProvider: (Puck2DConfiguration) -> Puck2DProtocol
-    private let puck3DProvider: (Puck3DConfiguration) -> Puck3DProtocol
+    private let puck2DProvider: (Puck2DConfiguration) -> Puck2DRendererProtocol
+    private let puck3DProvider: (Puck3DConfiguration) -> Puck3DRendererProtocol
 
-    internal init(puck2DProvider: @escaping (Puck2DConfiguration) -> Puck2DProtocol,
-                  puck3DProvider: @escaping (Puck3DConfiguration) -> Puck3DProtocol) {
+    internal init(puck2DProvider: @escaping (Puck2DConfiguration) -> Puck2DRendererProtocol,
+                  puck3DProvider: @escaping (Puck3DConfiguration) -> Puck3DRendererProtocol) {
         self.puck2DProvider = puck2DProvider
         self.puck3DProvider = puck3DProvider
     }

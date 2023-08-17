@@ -121,7 +121,7 @@ public final class LocationManager {
 
         puckManager = PuckManager(
             puck2DProvider: { [onPuckRender] configuration in
-                Puck2D(
+                Puck2DRenderer(
                     configuration: configuration,
                     style: styleManager,
                     renderingData: onPuckRender,
@@ -129,7 +129,7 @@ public final class LocationManager {
                     timeProvider: DefaultTimeProvider())
             },
             puck3DProvider: { [onPuckRender] configuration in
-                Puck3D(
+                Puck3DRenderer(
                     configuration: configuration,
                     style: styleManager,
                     renderingData: onPuckRender)

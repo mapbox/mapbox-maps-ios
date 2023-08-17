@@ -7,7 +7,7 @@ final class Puck3DTests: XCTestCase {
     var style: MockStyle!
     var puckRenderDataSubject: CurrentValueSignalSubject<PuckRenderingData?>!
     var renderDataObserved = false
-    var puck3D: Puck3D!
+    var puck3D: Puck3DRenderer!
 
     override func setUp() {
         super.setUp()
@@ -28,7 +28,7 @@ final class Puck3DTests: XCTestCase {
     }
 
     func recreatePuck() {
-        puck3D = Puck3D(
+        puck3D = Puck3DRenderer(
             configuration: configuration,
             style: style,
             renderingData: puckRenderDataSubject.signal.skipNil())

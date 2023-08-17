@@ -32,6 +32,12 @@ func assign<U, T: Equatable>(_ object: U, _ keyPath: ReferenceWritableKeyPath<U,
     assign(object[keyPath: keyPath], { object[keyPath: keyPath] = $0 }, value: value)
 }
 
+func copyAssigned<Root, T>(_ s: Root, _ keyPath: WritableKeyPath<Root, T>, _ value: T) -> Root {
+    var copy = s
+    copy[keyPath: keyPath] = value
+    return copy
+}
+
 /// - Returns: The result of `f` applied to `a`.
 func with<A, B>(_ a: A, _ f: (A) throws -> B) rethrows -> B {
     return try f(a)

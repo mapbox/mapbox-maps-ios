@@ -1,6 +1,6 @@
 @_implementationOnly import MapboxCommon_Private
 
-internal final class Puck3D: Puck3DProtocol {
+internal final class Puck3DRenderer: Puck3DRendererProtocol {
     private static let sourceID = "puck-model-source"
     internal static let layerID = "puck-model-layer"
 

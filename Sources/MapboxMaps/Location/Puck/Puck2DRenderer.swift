@@ -4,7 +4,7 @@ import UIKit
 import os
 
 // swiftlint:disable:next type_body_length
-internal final class Puck2D: Puck2DProtocol {
+internal final class Puck2DRenderer: Puck2DRendererProtocol {
     private static let layerID = "puck"
     private static let topImageId = "locationIndicatorLayerTopImage"
     private static let bearingImageId = "locationIndicatorLayerBearingImage"

@@ -2,7 +2,7 @@ import Dispatch
 
 // depending on this protocol instead of on DispatchQueue directly
 // allow mocking the main queue in tests which avoids the need for waits
-internal protocol DispatchQueueProtocol: AnyObject {
+protocol DispatchQueueProtocol: AnyObject {
     func async(
         group: DispatchGroup?,
         qos: DispatchQoS,

@@ -10,8 +10,7 @@ let package = Package(
     products: [
         .library(
             name: "MapboxMaps",
-            targets: ["MapboxMaps"]
-        ),
+            targets: ["MapboxMaps"]),
     ],
     dependencies: [
         .package(url: "https://github.com/mapbox/mapbox-core-maps-ios.git", exact: "11.0.0-beta.2"),
@@ -59,6 +58,6 @@ let package = Package(
                 .copy("Snapshot/testSnapshotOverlay.png"),
                 .process("Resources/MapInitOptionsTests.xib"),
             ]
-        ),
+        )
     ]
 )

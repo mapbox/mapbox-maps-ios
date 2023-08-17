@@ -11,7 +11,7 @@ public enum PuckType: Equatable {
 
 public struct Puck2DConfiguration: Equatable {
 
-    /// The configration parameters for sonar-like pulsing circle animation shown around the 2D puck.
+    /// The configuration parameters for sonar-like pulsing circle animation shown around the 2D puck.
     public struct Pulsing: Equatable {
         public static let `default` = Pulsing()
 
@@ -211,6 +211,7 @@ public struct Puck3DConfiguration: Equatable {
         self.model = model
         self.modelScale = modelScale
         self.modelRotation = modelRotation
+        self.modelOpacity = modelOpacity
         self.modelCastShadows = modelCastShadows
         self.modelReceiveShadows = modelReceiveShadows
         self.modelScaleMode = modelScaleMode ?? .constant(.viewport)

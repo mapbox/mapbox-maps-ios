@@ -65,7 +65,7 @@ public extension Map {
         append(\.mapDependencies.eventsSubscriptions, AnyEventSubscription(keyPath: \.onRenderFrameFinished, perform: action))
     }
 
-    /// Adds an action to perform when  resource request is performed.
+    /// Adds an action to perform when a resource request is performed.
     func onResourceRequest(action: @escaping (ResourceRequest) -> Void) -> Self {
         append(\.mapDependencies.eventsSubscriptions, AnyEventSubscription(keyPath: \.onResourceRequest, perform: action))
     }

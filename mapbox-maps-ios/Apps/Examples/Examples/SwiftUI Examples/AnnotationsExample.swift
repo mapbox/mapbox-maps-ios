@@ -129,7 +129,7 @@ struct AnnotationsExample: View {
             UIColor.red
         }
 
-        // Create expression to get the total count of hydrants in a cluster
+        // Create expression to get the total count of annotations in a cluster
         let sumExpression = Exp {
             Exp(.sum) {
                 Exp(.accumulated)

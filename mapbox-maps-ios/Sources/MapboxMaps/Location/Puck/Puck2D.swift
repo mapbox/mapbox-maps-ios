@@ -84,7 +84,7 @@ internal final class Puck2D: Puck2DProtocol {
     }
     private var forceLongPath = true
 
-    /// The keys of the style properties that we`1` set during the previous sync.
+    /// The keys of the style properties that were set during the previous sync.
     /// Used to identify which styles need to be restored to their default values in
     /// the subsequent sync.
     private var previouslySetLayerPropertyKeys: Set<String> = []

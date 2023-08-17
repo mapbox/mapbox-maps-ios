@@ -68,16 +68,16 @@ final class MapBasicCoordinator {
 
         groupCameraUpdates(mapboxMap) {
             // Methods in this block can immediately produce multiple `onCameraChanged` notifications.
-            // This may trigger SwiftUI's warnings if the user saves cameraState in @State in response to that camera change:
+            // This may trigger SwiftUI's warnings if you save cameraState in @State in response to that camera change like this:
             //
             // @State var cameraState: CameraState
             // Map().onCameraChange { event in cameraState = event.cameraState }
             //
-            // To avoid this, we
-            // 1. group the `onCameraChanged` events (block them until the update is in progress);
-            // 2. If the camera is actually changed, post notification about it in the next runloop.
+            // To avoid this:
+            // 1. the SDK groups the `onCameraChanged` events (by blocking them until the update is in progress); and
+            // 2. if the camera is actually changed, posts notification about it in the next runloop.
             //
-            // More details is in the `groupCameraUpdates`.
+            // More details are in the `groupCameraUpdates` function.
             updateCamera(position: viewport, layoutDirection: layoutDirection, animationData: animationData)
 
             assign(self.cameraBoundsOptions, {

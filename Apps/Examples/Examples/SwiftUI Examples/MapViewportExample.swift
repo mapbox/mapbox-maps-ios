@@ -9,7 +9,7 @@ struct MapViewportExample: View {
     @State var styleURI: StyleURI = .standard
     var body: some View {
         Map(viewport: $viewport) {
-            PuckAnnotation2D(bearing: .heading)
+            Puck2D(bearing: .heading)
 
             ForEvery(parks.coordinates, id: \.latitude) { coord in
                 ViewAnnotation(coord, allowOverlap: true) {

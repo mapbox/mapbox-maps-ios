@@ -1,0 +1,111 @@
+<%_
+  const type = locals.type
+  const properties = locals.properties
+  const symbol = "point"
+  const circle = "circle"
+  const fill = "polygon"
+  const line = "polyline"
+  const supportsClustering = type === symbol
+  const isPointAnnotationManager = type === "point"
+_%>
+// This file is generated
+
+extension <%- camelize(type) %>Annotation: PrimitiveMapContent {
+    func _visit(_ visitor: MapContentVisitor) {
+        let group = <%- camelize(type) %>AnnotationGroup([0], id: \.self) { _ in
+            self
+        }
+        visitor.add(annotationGroup: group.eraseToAny(visitor.id))
+    }
+}
+
+/// Displays a group of <%- type %> annotations.
+///
+/// Always prefer to use annotation group over individual annotation if more than one annotation of the same type is displayed.
+/// The annotation group is usually more performant, since only one underlying layer is used to draw multiple annotations.
+///
+/// Annotation group allows to configure group-related options, such as clustering (only for point annotations) and others.
+@_spi(Experimental)
+public struct <%- camelize(type) %>AnnotationGroup<Data: RandomAccessCollection, ID: Hashable>: PrimitiveMapContent {
+    public typealias Content = <%- camelize(type) %>Annotation
+    var data: Data
+    var idGenerator: (Data.Element) -> ID
+    var content: (Data.Element) -> Content
+
+    public init(_ data: Data, id: KeyPath<Data.Element, ID>, content: @escaping (Data.Element) -> Content) {
+        self.data = data
+        self.idGenerator = { $0[keyPath: id] }
+        self.content = content
+    }
+
+    @available(iOS 13.0, *)
+    public init(_ data: Data, content: @escaping (Data.Element) -> Content) where Data.Element: Identifiable, Data.Element.ID == ID {
+        self.init(data, id: \.id, content: content)
+    }
+
+    func _visit(_ visitor: MapContentVisitor) {
+        let anyGroup = eraseToAny(visitor.id)
+        visitor.add(annotationGroup: anyGroup)
+    }
+
+    func eraseToAny(_ prefixId: [AnyHashable]) -> AnyAnnotationGroup {
+        AnyAnnotationGroup { orchestrator, id, idMap in
+            let manager = orchestrator.annotationManagersById[id]
+                as? <%- camelize(type) %>AnnotationManager
+            ?? orchestrator.make<%- camelize(type) %>AnnotationManager(id: id, layerPosition: self.layerPosition<%_ if (isPointAnnotationManager) { _%>, clusterOptions: self.clusterOptions<%_ } _%>)
+            self.updateProperties(manager: manager)
+
+            let annotations = data.map { element in
+                var annotation = content(element)
+                let id = prefixId + [idGenerator(element)]
+                let stringId = idMap[id] ?? annotation.id
+                idMap[id] = stringId
+                annotation.id = stringId
+                return annotation
+            }
+            manager.annotations = annotations
+        }
+    }
+
+    private func updateProperties(manager: <%- camelize(type) %>AnnotationManager) {
+        <%_ for (const property of properties) { _%>
+        <%_ if (!supportsPropertyFunction(property) && !shouldSkipAnnotationProperty(type, property)) { _%>
+        assign(manager, \.<%- camelizeWithLeadingLowercase(property.name) %>, value: <%- camelizeWithLeadingLowercase(property.name) %>)
+        <%_ } _%>
+        <%_ } _%>
+    }
+
+    // MARK: - Common layer properties
+    <%_ for (const property of properties) { _%>
+    <%_ if (!supportsPropertyFunction(property) && !shouldSkipAnnotationProperty(type, property)) { _%>
+
+    /// <%- markdownFriendlyDoc(property) %>
+    private var <%- camelizeWithLeadingLowercase(property.name) %>: <%- propertySwiftType(property) %>?
+    public func <%- camelizeWithLeadingLowercase(property.name) %>(_ newValue: <%- propertySwiftType(property) %>) -> Self {
+        with(self, setter(\.<%- camelizeWithLeadingLowercase(property.name) %>, newValue))
+    }
+    <%_ } _%>
+    <%_ } _%>
+
+    <%_ if (isPointAnnotationManager) { _%>
+    private var clusterOptions: ClusterOptions?
+
+    /// Defines point annotation clustering options.
+    ///
+    /// - NOTE: Clustering options aren't updatable. Only the first value passed to this function set will take effect.
+    public func clusterOptions(_ newValue: ClusterOptions) -> Self {
+        with(self, setter(\.clusterOptions, newValue))
+    }
+    <%_ } _%>
+
+    private var layerPosition: LayerPosition?
+
+    /// Defines relative position of the layers drawing the annotations managed by the current group.
+    ///
+    /// - NOTE: Layer position isn't updatable. Only the first value passed to this function set will take effect.
+    public func layerPosition(_ newValue: LayerPosition) -> Self {
+        with(self, setter(\.layerPosition, newValue))
+    }
+}
+
+// End of generated file.

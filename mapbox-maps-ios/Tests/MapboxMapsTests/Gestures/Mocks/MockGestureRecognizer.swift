@@ -31,4 +31,13 @@ final class MockGestureRecognizer: UIGestureRecognizer {
             _ = (param.target as AnyObject).perform(param.action, with: self)
         }
     }
+
+    var mockLocation: CGPoint?
+    override func location(in view: UIView?) -> CGPoint {
+        if let mockLocation, view == self.view {
+            return mockLocation
+        } else {
+            return super.location(in: view)
+        }
+    }
 }

@@ -1,13 +1,15 @@
 import UIKit
 
-/// `Ref` is read-only reference to arbitrary value captured by closure.
+/// `Ref` is a read-only reference to an arbitrary value captured by closure.
 /// It is used to pass the value, that might be changed over time.
-internal struct Ref<Value> {
+struct Ref<Value> {
     let getter: () -> Value
 
-    internal var value: Value { getter() }
+    /// The referenced value.
+    var value: Value { getter() }
 
-    internal init(_ getter: @escaping () -> Value) {
+    /// Creates a reference from the given closure.
+    init(_ getter: @escaping () -> Value) {
         self.getter = getter
     }
 }

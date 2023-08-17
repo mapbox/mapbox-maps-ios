@@ -5,7 +5,7 @@ import Foundation
 @_spi(Internal) public final class MapRecorder {
     let recorder: MapboxCoreMaps_Private.MapRecorder
 
-    internal init(mapView: Map) {
+    internal init(mapView: MapboxCoreMaps.Map) {
         recorder = MapboxCoreMaps_Private.MapRecorder(map: mapView)
     }
 

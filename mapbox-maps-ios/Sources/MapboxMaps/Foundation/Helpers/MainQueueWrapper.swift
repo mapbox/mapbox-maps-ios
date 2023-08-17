@@ -1,9 +1,9 @@
 import Foundation
 import Dispatch
 
-internal protocol MainQueueProtocol: DispatchQueueProtocol { }
+protocol MainQueueProtocol: DispatchQueueProtocol { }
 
-internal final class MainQueueWrapper: MainQueueProtocol {
+final class MainQueueWrapper: MainQueueProtocol {
     func async(
         group: DispatchGroup?,
         qos: DispatchQoS,

@@ -201,7 +201,7 @@ final class Puck3DTests: XCTestCase {
         XCTAssertEqual(actualLayer.modelOpacity, configuration.modelOpacity)
     }
 
-    func testUpdateExistingSource() throws {
+    func testUpdateExistingSourceAndLayer() throws {
         let location = Location.random()
         puckRenderDataSubject.value = PuckRenderingData(location: location)
 
@@ -215,6 +215,8 @@ final class Puck3DTests: XCTestCase {
             location.coordinate.longitude,
             location.coordinate.latitude]
         expectedModel.orientation = [0, 0, 0]
+
+        // Source
         var expectedSource = ModelSource(id: "puck-model-source")
         expectedSource.models = ["puck-model": expectedModel]
         XCTAssertEqual(style.addSourceStub.invocations.count, 0)
@@ -224,9 +226,17 @@ final class Puck3DTests: XCTestCase {
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
         XCTAssertEqual(style.setSourcePropertiesStub.invocations.first?.parameters.sourceId, "puck-model-source")
 
+        /// Layer
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 0)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+
+        puckRenderDataSubject.value = PuckRenderingData(location: .random())
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1, "doesn't update layer without config change")
+
+        puck3D.configuration.modelOpacity = .constant(0.5)
+        puckRenderDataSubject.value = PuckRenderingData(location: .random())
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2, "updates layer with config change")
     }
 
     func testSettingPuckBearingWhenInactive() {

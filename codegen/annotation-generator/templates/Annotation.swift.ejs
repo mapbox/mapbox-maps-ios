@@ -5,14 +5,15 @@
   const circle = "circle"
   const fill = "polygon"
   const line = "polyline"
+  const supportedProperties = properties.filter((property) => (supportsPropertyFunction(property) && !shouldSkipAnnotationProperty(type, property)))
 _%>
 // This file is generated.
 import Foundation
 
-public struct <%- camelize(type) %>Annotation: Annotation {
+public struct <%- camelize(type) %>Annotation: Annotation, Equatable {
 
     /// Identifier for this annotation
-    public let id: String
+    internal(set) public var id: String
 
     /// The geometry backing this annotation
     public var geometry: Geometry {
@@ -41,12 +42,6 @@ public struct <%- camelize(type) %>Annotation: Annotation {
     public var lineString: LineString
     <%_ } _%>
 
-    /// Properties associated with the annotation
-    public var userInfo: [String: Any]?
-
-    /// Storage for layer properties
-    internal var layerProperties: [String: Any] = [:]
-
     /// Toggles the annotation's selection state.
     /// If the annotation is deselected, it becomes selected.
     /// If the annotation is selected, it becomes deselected.
@@ -55,17 +50,37 @@ public struct <%- camelize(type) %>Annotation: Annotation {
     /// Property to determine whether annotation can be manually moved around map
     public var isDraggable: Bool = false
 
+    /// Properties associated with the annotation
+    public var userInfo: [String: Any]? {
+        get { _userInfo?.rawValue as? [String: Any] }
+        set {
+            let newValue = newValue ?? [:]
+            _userInfo = JSONObject(rawValue: newValue)
+        }
+    }
+    private var _userInfo: JSONObject?
+
+    internal var layerProperties: [String: Any] {
+        var properties: [String: Any] = [:]
+        <%_ for (const property of supportedProperties) { _%>
+        properties["<%- property.name %>"] = <%- annotationPropertySwiftTypeToJSONValueConvertor(property) %>
+        <%_ } _%>
+        return properties
+    }
+
     internal var feature: Feature {
         var feature = Feature(geometry: geometry)
         feature.identifier = .string(id)
         var properties = JSONObject()
         properties["layerProperties"] = JSONValue(rawValue: layerProperties)
-        if let userInfoValue = userInfo.flatMap(JSONValue.init(rawValue:)) {
-            properties["userInfo"] = userInfoValue
+        if let _userInfo {
+            properties["userInfo"] = .object(_userInfo)
         }
         feature.properties = properties
         return feature
     }
+
+    var tapHandler: AlwaysEqual<() -> Void>?
     <%_ if (type === symbol) { _%>
 
     /// Create a point annotation with a `Point` and an optional identifier.
@@ -133,14 +148,7 @@ public struct <%- camelize(type) %>Annotation: Annotation {
     <%_ if (supportsPropertyFunction(property) && !shouldSkipAnnotationProperty(type, property)) { _%>
 
     /// <%- markdownFriendlyDoc(property) %>
-    public var <%- camelizeWithLeadingLowercase(property.name) %>: <%- propertySwiftType(property) %>? {
-        get {
-            return <%- propertyJSONValueToSwiftTypeConvertor(property) %>
-        }
-        set {
-            layerProperties["<%- property.name %>"] = <%- propertySwiftTypeToJSONValueConvertor(property) %>
-        }
-    }
+    public var <%- camelizeWithLeadingLowercase(property.name) %>: <%- propertySwiftType(property) %>?
     <%_ } _%>
     <%_ } _%>
 
@@ -153,6 +161,29 @@ public struct <%- camelize(type) %>Annotation: Annotation {
         }
     }
     <%_ } _%>
+}
+
+@_spi(Experimental) extension <%- camelize(type) %>Annotation {
+    <%_ for (const property of properties) { _%>
+    <%_ if (supportsPropertyFunction(property) && !shouldSkipAnnotationProperty(type, property)) { _%>
+
+    /// <%- markdownFriendlyDoc(property) %>
+    public func <%- camelizeWithLeadingLowercase(property.name) %>(_ newValue: <%- propertySwiftType(property) %>) -> Self {
+        with(self, setter(\.<%- camelizeWithLeadingLowercase(property.name) %>, newValue))
+    }
+    <%_ } _%>
+    <%_ } _%>
+
+    <%_ if (type === symbol) { _%>
+    public func image(_ image: Image?) -> Self {
+        with(self, setter(\.image, image))
+    }
+    <%_ } _%>
+
+    /// Handles tap gesture.
+    public func onTapGesture(handler: @escaping () -> Void) -> Self {
+        with(self, setter(\.tapHandler, AlwaysEqual(value: handler)))
+    }
 }
 
 // End of generated file.

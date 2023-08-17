@@ -4,11 +4,46 @@ configFiles:
   Debug: Configurations/base.xcconfig
   Release: Configurations/base.xcconfig
 options:
+  bundleIdPrefix: com.mapbox
   defaultConfig: Release
   parallelizeBuild: false
+  preGenCommand: |
+    [[ -d "mapbox-maps-ios" ]] && pushd "mapbox-maps-ios"
+
+    VERSIONS_PATH="scripts/release/packager/versions.json"
+    MAPBOX_CORE_MAPS_VERSION="$(jq -r .MapboxCoreMaps $VERSIONS_PATH)"
+    MAPBOX_COMMON_VERSION="$(jq -r .MapboxCommon $VERSIONS_PATH)"
+
+    cat <<EOF > Cartfile.MapboxCoreMaps.json
+    {"$MAPBOX_CORE_MAPS_VERSION": "https://api.mapbox.com/downloads/v2/mobile-maps-core/releases/ios/packages/11.0.0-beta.2/MapboxCoreMaps.xcframework-dynamic.zip"}
+    EOF
+
+    cat <<EOF > Cartfile.MapboxCommon.json
+    {"$MAPBOX_COMMON_VERSION": "https://api.mapbox.com/downloads/v2/mapbox-common/releases/ios/packages/$MAPBOX_COMMON_VERSION/MapboxCommon.zip"}
+    EOF
+
+    cat <<EOF > Cartfile
+    binary "Cartfile.MapboxCoreMaps.json" == $MAPBOX_CORE_MAPS_VERSION
+    binary "Cartfile.MapboxCommon.json" == $MAPBOX_COMMON_VERSION
+    github "mapbox/turf-swift" == $(jq -r .Turf $VERSIONS_PATH | sed 's/^v//')
+
+    EOF
+
+    cat <<EOF > Cartfile.xcconfig
+    BUILD_LIBRARY_FOR_DISTRIBUTION=YES
+    EOF
+
+    if [[ $(command -v "carthage") ]]; then
+      CARTHAGE_BINARY="carthage"
+    elif [[ $(command -v "mint") ]]; then
+      CARTHAGE_BINARY="mint run Carthage/Carthage"
+    else
+      echo "error: Carthage not found"
+      exit 1
+    fi
+    $CARTHAGE_BINARY update --use-netrc --platform ios --verbose --use-xcframeworks --cache-builds --configuration Cartfile.xcconfig
+    rm -f Cartfile Cartfile.resolved Cartfile.xcconfig Cartfile.MapboxCoreMaps.json Cartfile.MapboxCommon.json
 packages:
-  MapboxMaps:
-    path: ./
   Fingertips:
     url: git@github.com:mapbox/Fingertips.git
     from: 0.6.0
@@ -17,63 +52,62 @@ packages:
     from: 0.14.3
 settings:
   base:
-    VALIDATE_WORKSPACE: "NO"
-    COPY_PHASE_STRIP: "NO"
-    GCC_WARN_64_TO_32_BIT_CONVERSION: $(GCC_WARN_64_TO_32_BIT_CONVERSION)
-    CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: "YES"
-    MTL_FAST_MATH: "YES"
-  configs:
-    Debug:
-      ONLY_ACTIVE_ARCH: "YES"
-      DEBUG_INFORMATION_FORMAT: dwarf
-      ENABLE_TESTABILITY: "YES"
-      MTL_ENABLE_DEBUG_INFO: INCLUDE_SOURCE
-    Release:
-      DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
-      VALIDATE_PRODUCT: "YES"
-      ENABLE_NS_ASSERTIONS: "NO"
-      SWIFT_COMPILATION_MODE: wholemodule
-      MTL_ENABLE_DEBUG_INFO: "NO"
+    DEVELOPMENT_TEAM: GJZR2MEM28
+    TARGETED_DEVICE_FAMILY: 1,2
 targets:
-  MapboxMapsTestsWithHost:
-    templates:
-      - installTokenScript
-    type: bundle.unit-test
+  MapboxMaps:
+    type: framework
     platform: iOS
     settings:
       base:
-        ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: "YES"
-        TARGETED_DEVICE_FAMILY: "1,2"
-        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @loader_path/Frameworks"
-        INFOPLIST_FILE: "Tests/MapboxMapsTests/Info.plist"
-        PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxTests"
-        PRODUCT_NAME: "$(TARGET_NAME)"
-        CODE_SIGN_STYLE: "Automatic"
-        COMPRESS_PNG_FILES: "NO"
-        STRIP_PNG_TEXT: "NO"
+        PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.MapboxMaps
+        SKIP_INSTALL: "NO"
+        LD_RUNPATH_SEARCH_PATHS: $(inherited) @executable_path/Frameworks @loader_path/Frameworks
+        SWIFT_EMIT_PRIVATE_MODULE_INTERFACE: YES
+        RUN_DOCUMENTATION_COMPILER: YES
+      configs:
+        Debug:
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) USING_TURF_WITH_LIBRARY_EVOLUTION
+        Release:
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) RELEASE USING_TURF_WITH_LIBRARY_EVOLUTION
     configFiles:
-      Debug: Configurations/unitTests.xcconfig
-      Release: Configurations/unitTests.xcconfig
+      Debug: "Configurations/base.xcconfig"
+      Release: "Configurations/base.xcconfig"
     sources:
-      - path: "Tests/MapboxMapsTests"
+      - path: "Sources/MapboxMaps/"
+        includes: "*.swift"
+        excludes:
+          - "**/*.plist"
+          - "**/*.h"
+          - "**/.swiftlint.yml"
+      - path: "Sources/MapboxMaps/Info.plist"
+      - path: "Sources/MapboxMaps/MapboxMaps.h"
+    dependencies:
+      - framework: Carthage/Build/MapboxCoreMaps.xcframework
+      - framework: Carthage/Build/Turf.xcframework
+      - framework: Carthage/Build/MapboxCommon.xcframework
+
+  MapboxMapsTests:
+    templates:
+      - installTokenScript
+      - unit-test
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxTests"
+    sources: Tests/MapboxMapsTests
     dependencies:
       - target: MapboxTestHost
+
   GestureTests:
     templates:
       - installTokenScript
-    type: bundle.unit-test
-    platform: iOS
+      - unit-test
     settings:
       base:
-        ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: "YES"
-        TARGETED_DEVICE_FAMILY: "1,2"
-        INFOPLIST_FILE: "Tests/MapboxMapsTests/Info.plist"
         PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxTests"
-        PRODUCT_NAME: "$(TARGET_NAME)"
-        IPHONEOS_DEPLOYMENT_TARGET: "13.0"
-    configFiles:
-      Debug: Configurations/unitTests.xcconfig
-      Release: Configurations/unitTests.xcconfig
+        IPHONEOS_DEPLOYMENT_TARGET: 13.0
+        GENERATE_INFOPLIST_FILE: YES
     sources:
       - path: "Tests/MapboxMapsTests"
         includes:
@@ -88,38 +122,85 @@ targets:
     dependencies:
       - target: MapboxTestHost
       - package: Hammer
-    postBuildScripts:
-      - script: scripts/run_swiftlint.sh
-        name: Run swiftlint
-        basedOnDependencyAnalysis: false
-        showEnvVars: false
 
   MapboxTestHost:
-    type: application
+    templates:
+      - installTokenScript
+      - assetCatalog
+      - application
     platform: iOS
-    deploymentTarget: "12.0"
+    deploymentTarget: 12.0
     settings:
       base:
-        TARGETED_DEVICE_FAMILY: "1,2"
-        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks"
-        INFOPLIST_FILE: "MapboxTestHost/Info.plist"
         PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxMapsTestHost"
-        PRODUCT_NAME: "$(TARGET_NAME)"
-        SYSTEM_FRAMEWORK_SEARCH_PATHS: "$(PLATFORM_DEVELOPER_LIBRARY_DIR)/PrivateFrameworks"
-        CODE_SIGN_STYLE: "Automatic"
-        ASSETCATALOG_COMPILER_APPICON_NAME: "AppIcon"
-        SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Test Host
+        INFOPLIST_KEY_UIMainStoryboardFile: Main
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
     sources:
-      - path: MapboxTestHost
-    dependencies:
-      - package: MapboxMaps
-        product: MapboxMaps
-      - package: Fingertips
+      - path: Sources/MapboxTestHost
     scheme:
       testTargets:
-          - MapboxMapsTestsWithHost
+          - MapboxMapsTests
           - GestureTests
       gatherCoverageData: true
+      coverageTargets:
+        - MapboxMaps
+
+  Examples:
+    templates:
+      - installTokenScript
+      - assetCatalog
+      - application
+    type: application
+    platform: iOS
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.examples
+    scheme:
+      testTargets:
+        - MapboxMapsTests
+        - ExamplesTests
+        - ExamplesUITests
+      environmentVariables:
+        - variable: MTL_HUD_ENABLED
+          value: 1
+        - variable: MAPBOX_MAPS_SIGNPOSTS_ENABLED
+          value: 1
+          isEnabled: false
+        - variable: MAPBOX_REOPEN_EXAMPLE
+          value: 1
+    sources:
+      - path: Apps/Examples/Examples/
+
+
+  ExamplesTests:
+    templates:
+      - installTokenScript
+      - unit-test
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxTests"
+    sources:
+      - path: "Tests/ExamplesTests"
+    dependencies:
+      - target: Examples
+
+  ExamplesUITests:
+    templates:
+      - unit-test
+    type: bundle.ui-testing
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: "mapbox.ExamplesUITests"
+    sources: Tests/ExamplesUITests
+    dependencies:
+      - target: Examples
+
 targetTemplates:
   installTokenScript:
     settings:
@@ -133,3 +214,52 @@ targetTemplates:
         basedOnDependencyAnalysis: false
         outputFiles:
           - $(INFOPLIST_PREFIX_HEADER)
+
+  assetCatalog:
+    settings:
+      ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+      ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+
+  application:
+    templates:
+      - swiftlint-script
+    type: application
+    platform: iOS
+    configFiles:
+      Debug: "Configurations/apps.xcconfig"
+      Release: "Configurations/apps.xcconfig"
+    settings:
+      LD_RUNPATH_SEARCH_PATHS: $(inherited) @executable_path/Frameworks
+      PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.examples
+    dependencies:
+      - target: MapboxMaps
+      - framework: Carthage/Build/MapboxCoreMaps.xcframework
+      - framework: Carthage/Build/Turf.xcframework
+      - framework: Carthage/Build/MapboxCommon.xcframework
+      - package: Fingertips
+
+  unit-test:
+    templates:
+      - installTokenScript
+    type: bundle.unit-test
+    platform: iOS
+    settings:
+      base:
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @loader_path/Frameworks"
+    configFiles:
+      Debug: Configurations/unitTests.xcconfig
+      Release: Configurations/unitTests.xcconfig
+
+  swiftlint-script:
+    postBuildScripts:
+      - script: |
+          if [[ -f "scripts/run_swiftlint.sh" ]]; then
+            scripts/run_swiftlint.sh
+          elif [[ -f "mapbox-maps-ios/scripts/run_swiftlint.sh" ]]; then
+            mapbox-maps-ios/scripts/run_swiftlint.sh
+          else
+            find . -name "run_swiftlint.sh" -exec {} \; -quit
+          fi
+        name: Run swiftlint
+        basedOnDependencyAnalysis: false
+        showEnvVars: false

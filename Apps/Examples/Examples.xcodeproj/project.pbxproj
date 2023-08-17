@@ -192,7 +192,6 @@
 		077C4F0B252F7E89007636F1 /* ExamplesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExamplesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		077C4F0F252F7E89007636F1 /* ExamplesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamplesUITests.swift; sourceTree = "<group>"; };
 		077C4F11252F7E89007636F1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		077C4F4B252FA7CD007636F1 /* base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = base.xcconfig; sourceTree = "<group>"; };
 		077E3B2B2581810600564A3E /* ExternalVectorSourceExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalVectorSourceExample.swift; sourceTree = "<group>"; };
 		077E3B8F2581966300564A3E /* FitCameraToGeometryExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitCameraToGeometryExample.swift; sourceTree = "<group>"; };
 		07A2E03C25CB64E20082BC31 /* SwiftUIExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIExample.swift; sourceTree = "<group>"; };
@@ -308,12 +307,15 @@
 		CAF9A9802583E49B007EF9EC /* TestableExampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestableExampleTests.swift; sourceTree = "<group>"; };
 		D308F1F22A4F5F6200220E9C /* InsetMapExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetMapExample.swift; sourceTree = "<group>"; };
 		FE355DAD2A275377003AC5DF /* Examples_CarPlay.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Examples_CarPlay.entitlements; sourceTree = "<group>"; };
-		FE355DAF2A275DB4003AC5DF /* Examples.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Examples.xcconfig; sourceTree = "<group>"; };
 		FE99952A2A1E05200068AB12 /* Lights3DExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lights3DExample.swift; sourceTree = "<group>"; };
 		FEA410EF2A2630EF002F1816 /* ApplicationCarPlaySceneDelegage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationCarPlaySceneDelegage.swift; sourceTree = "<group>"; };
 		FEA410F12A263109002F1816 /* DashboardCarPlaySceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardCarPlaySceneDelegate.swift; sourceTree = "<group>"; };
 		FEA410F32A263126002F1816 /* InstrumentClusterCarPlaySceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstrumentClusterCarPlaySceneDelegate.swift; sourceTree = "<group>"; };
 		FEA410F52A26314A002F1816 /* CarPlayMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayMapViewController.swift; sourceTree = "<group>"; };
+		FEF25E702A8B918500E581D8 /* unitTests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = unitTests.xcconfig; sourceTree = "<group>"; };
+		FEF25E712A8B918500E581D8 /* apps.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = apps.xcconfig; sourceTree = "<group>"; };
+		FEF25E722A8B918500E581D8 /* Examples.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Examples.xcconfig; sourceTree = "<group>"; };
+		FEF25E732A8B918500E581D8 /* base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = base.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -443,7 +445,7 @@
 		077C4EE1252F7E88007636F1 = {
 			isa = PBXGroup;
 			children = (
-				077C4F4A252FA7A5007636F1 /* Configurations */,
+				FEF25E6F2A8B918500E581D8 /* Configurations */,
 				077C4EEC252F7E88007636F1 /* Examples */,
 				077C4F03252F7E89007636F1 /* ExamplesTests */,
 				077C4F0E252F7E89007636F1 /* ExamplesUITests */,
@@ -486,7 +488,8 @@
 				077C4F04252F7E89007636F1 /* ExamplesTests.swift */,
 				CAF9A9802583E49B007EF9EC /* TestableExampleTests.swift */,
 			);
-			path = ExamplesTests;
+			name = ExamplesTests;
+			path = ../../Tests/ExamplesTests;
 			sourceTree = "<group>";
 		};
 		077C4F0E252F7E89007636F1 /* ExamplesUITests */ = {
@@ -495,17 +498,8 @@
 				077C4F0F252F7E89007636F1 /* ExamplesUITests.swift */,
 				077C4F11252F7E89007636F1 /* Info.plist */,
 			);
-			path = ExamplesUITests;
-			sourceTree = "<group>";
-		};
-		077C4F4A252FA7A5007636F1 /* Configurations */ = {
-			isa = PBXGroup;
-			children = (
-				FE355DAF2A275DB4003AC5DF /* Examples.xcconfig */,
-				077C4F4B252FA7CD007636F1 /* base.xcconfig */,
-			);
-			name = Configurations;
-			path = ../Configurations;
+			name = ExamplesUITests;
+			path = ../../Tests/ExamplesUITests;
 			sourceTree = "<group>";
 		};
 		07B071D12547CF50007F2865 /* Sample Data */ = {
@@ -624,6 +618,18 @@
 				FEA410F52A26314A002F1816 /* CarPlayMapViewController.swift */,
 			);
 			path = CarPlay;
+			sourceTree = "<group>";
+		};
+		FEF25E6F2A8B918500E581D8 /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				FEF25E702A8B918500E581D8 /* unitTests.xcconfig */,
+				FEF25E712A8B918500E581D8 /* apps.xcconfig */,
+				FEF25E722A8B918500E581D8 /* Examples.xcconfig */,
+				FEF25E732A8B918500E581D8 /* base.xcconfig */,
+			);
+			name = Configurations;
+			path = ../../Configurations;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -986,7 +992,7 @@
 /* Begin XCBuildConfiguration section */
 		077C4F12252F7E89007636F1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 077C4F4B252FA7CD007636F1 /* base.xcconfig */;
+			baseConfigurationReference = FEF25E732A8B918500E581D8 /* base.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1048,7 +1054,7 @@
 		};
 		077C4F13252F7E89007636F1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 077C4F4B252FA7CD007636F1 /* base.xcconfig */;
+			baseConfigurationReference = FEF25E732A8B918500E581D8 /* base.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1103,7 +1109,7 @@
 		};
 		077C4F15252F7E89007636F1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FE355DAF2A275DB4003AC5DF /* Examples.xcconfig */;
+			baseConfigurationReference = FEF25E712A8B918500E581D8 /* apps.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1130,7 +1136,7 @@
 		};
 		077C4F16252F7E89007636F1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FE355DAF2A275DB4003AC5DF /* Examples.xcconfig */;
+			baseConfigurationReference = FEF25E712A8B918500E581D8 /* apps.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1157,12 +1163,13 @@
 		};
 		077C4F18252F7E89007636F1 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FEF25E702A8B918500E581D8 /* unitTests.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
-				INFOPLIST_FILE = ExamplesTests/Info.plist;
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1179,12 +1186,13 @@
 		};
 		077C4F19252F7E89007636F1 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FEF25E702A8B918500E581D8 /* unitTests.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
-				INFOPLIST_FILE = ExamplesTests/Info.plist;
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1201,11 +1209,12 @@
 		};
 		077C4F1B252F7E89007636F1 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FEF25E702A8B918500E581D8 /* unitTests.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
-				INFOPLIST_FILE = ExamplesUITests/Info.plist;
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1222,11 +1231,12 @@
 		};
 		077C4F1C252F7E89007636F1 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FEF25E702A8B918500E581D8 /* unitTests.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
-				INFOPLIST_FILE = ExamplesUITests/Info.plist;
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

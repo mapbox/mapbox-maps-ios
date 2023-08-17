@@ -1,12 +1,12 @@
 import XCTest
 @testable import Examples
 
-//swiftlint:disable force_cast
 class ExamplesTests: XCTestCase {
 
     func testExampleClassExists() throws {
 
         for category in Examples.all {
+            // swiftlint:disable:next force_cast
             for example in category["examples"] as! [Example] {
                 // Check view controller can be extrapolated from the example file name.
                 XCTAssert(example.type is UIViewController.Type)

@@ -3,7 +3,6 @@ import ObjectiveC.runtime
 @testable import Examples
 import MapboxMaps
 
-//swiftlint:disable force_cast
 class TestableExampleTests: XCTestCase {
     private var example: Example!
     private weak var weakExampleViewController: UIViewController?
@@ -20,6 +19,7 @@ class TestableExampleTests: XCTestCase {
         let existingImpl = method_getImplementation(method)
 
         for category in Examples.all {
+            // swiftlint:disable:next force_cast
             for example in category["examples"] as! [Example] {
                 // Add a method for this test, but using the same implementation
                 let selectorName = "test\(example.type)"

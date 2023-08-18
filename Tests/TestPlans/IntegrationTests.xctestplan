@@ -43,6 +43,8 @@
         "LineLayerIntegrationTests",
         "LocationIndicatorLayerIntegrationTests",
         "MapInitOptionsIntegrationTests",
+        "MapRecorderIntegrationTests\/testPauseMapRecording()",
+        "MapRecorderIntegrationTests\/testReplayMapRecording()",
         "MapViewIntegrationTests",
         "MapViewRenderedSnapshotIntegrationTests",
         "MapboxMapIntegrationTests",

@@ -191,7 +191,10 @@ struct Examples {
                 type: LargeGeoJSONPerformanceExample.self),
         Example(title: "Map Events",
                 description: "Print out map events and data",
-                type: MapEventsExample.self)
+                type: MapEventsExample.self),
+        Example(title: "Map Recorder",
+                description: "Record and replay map animations and actions",
+                type: MapRecorderExample.self)
     ] + {
         if #available(iOS 13.0, *) {
             return [

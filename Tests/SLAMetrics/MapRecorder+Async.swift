@@ -1,11 +1,11 @@
-@_spi(Internal) import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 
 extension MapRecorder {
 
     @MainActor
-    func replay(content: String, playbackCount: Int = 1, playbackSpeedMultiplier: Double = 1.0) async {
+    func replay(recordedSequence: Data, options: MapPlayerOptions = MapPlayerOptions(playbackCount: 1, playbackSpeedMultiplier: 1.0, avoidPlaybackPauses: false)) async {
         return await withCheckedContinuation { continuation in
-            replay(content: content, playbackCount: playbackCount, playbackSpeedMultiplier: playbackSpeedMultiplier) {
+            replay(recordedSequence: recordedSequence, options: options) {
                 continuation.resume(returning: ())
             }
         }

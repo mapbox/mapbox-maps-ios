@@ -1,5 +1,5 @@
 import Foundation
-@_spi(Internal) import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 import XCTest
 
 struct PlaySequenceCommand: AsyncCommand, Decodable {
@@ -37,12 +37,12 @@ struct PlaySequenceCommand: AsyncCommand, Decodable {
     @MainActor
     func execute(context: Context) async throws {
         let recorder = context.mapView.mapboxMap.makeRecorder()
-        await recorder.replay(content: playbackContent.content, playbackCount: playbackCount)
+        await recorder.replay(recordedSequence: playbackContent.content, options: MapPlayerOptions(playbackCount: playbackCount, playbackSpeedMultiplier: 1.0, avoidPlaybackPauses: false))
     }
 }
 
 private struct PlaybackContent {
-    let content: String
+    let content: Data
 
     enum FileExtension: String {
         case json, gz
@@ -55,14 +55,14 @@ private struct PlaybackContent {
 
         switch FileExtension(rawValue: url.pathExtension) {
         case .json:
-            self.content = try String(contentsOf: url)
+            self.content = url.dataRepresentation
         case .gz:
             // If the data at the given url is compressed data, we assume it is using gzip format,
             // and will first decompress the data to pass it to MapRecorder/.
             // GL-Native 10.9.0-beta-1 will support gzip data for MapRecorder, by then we will be
             // using that new API and dismiss this implementation.
-            if let data = try Data(contentsOf: url).gunzip(), let content = String(data: data, encoding: .utf8) {
-                self.content = content
+            if let data = try Data(contentsOf: url).gunzip() {
+                self.content = data
             } else {
                 fallthrough
             }

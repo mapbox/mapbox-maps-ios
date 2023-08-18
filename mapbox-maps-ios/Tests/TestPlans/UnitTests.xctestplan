@@ -54,6 +54,7 @@
         "LineLayerIntegrationTests",
         "LocationIndicatorLayerIntegrationTests",
         "MapInitOptionsIntegrationTests",
+        "MapRecorderIntegrationTests",
         "MapViewIntegrationTestCase",
         "MapViewIntegrationTests",
         "MapViewRenderedSnapshotIntegrationTests",

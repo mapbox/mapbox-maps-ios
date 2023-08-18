@@ -1,7 +1,7 @@
 parameters:
-  destination:
+  device:
     type: string
-    default: "name=iPhone 14"
+    default: "iPhone 14"
   xcode:
     type: string
     default: "14.2.0"
@@ -12,20 +12,23 @@ macos:
   xcode: << parameters.xcode >>
 resource_class: << parameters.resource_class >>
 steps:
+  - macos/preboot-simulator:
+      device: "<< parameters.device >>"
+      version: "16.2"
   - checkout-root
   - macos/install-rosetta
   - mapbox/install-mbx-ci
   - attach_workspace:
       at: build
   - run:
-      name: Run MapboxMaps integration tests on << parameters.destination >>  simulator
+      name: Run MapboxMaps integration tests on << parameters.device >>  simulator
       command: |
         XCTESTRUN_PATH=$(find build -type f -name 'MapboxMaps_IntegrationTests*.xctestrun' | head -1)
         xcodebuild \
           test-without-building \
           -xctestrun "$XCTESTRUN_PATH" \
           -parallel-testing-enabled NO \
-          -destination 'platform=iOS Simulator,<< parameters.destination >>' \
+          -destination 'platform=iOS Simulator,name=<< parameters.device >>' \
           -resultBundlePath MapboxMapsTests.xcresult | tee -a xcodebuild.log | xcpretty --report junit --output junit.xml
 
         find "${HOME}/Library/Developer/Xcode/DerivedData" -name '*.profdata' -exec cp {} . \;

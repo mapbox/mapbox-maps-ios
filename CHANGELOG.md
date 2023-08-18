@@ -4,6 +4,10 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Features ✨ and improvements 🏁
+
+* Introduce experimental `MapboxRecorder`, which allows recording of the map and replaying custom scenarios.
+
 ## 11.0.0-beta.1 - 2 August, 2023
 
 * Introduce `hsl`, `hsla` color expression.

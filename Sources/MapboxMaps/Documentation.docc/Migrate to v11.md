@@ -371,9 +371,13 @@ MAPBOX_MAPS_SIGNPOSTS_ENABLED=core,platform
 
 `Tracing.status` API takes precedence over environment variable value. All values are case-insensitive.
 
-### 2.8 Other minor ergonomic improvements
+### 2.8 Mapbox Maps Recorder
 
-#### 2.8.1 MapboxMap
+``MapboxMapRecorder`` provides an experimental API to record and replay map interaction sessions. Such recordings can be used to debug issues which require multiple steps to reproduce. Usage example can be found [here](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/Examples/All%20Examples/Lab/MapRecorderExample.swift).
+
+### 2.9 Other minor ergonomic improvements
+
+#### 2.9.1 MapboxMap
 
 We added an experimental `tileCover` method to `MapboxMap` that returns tile Ids covering the map. Use ``TileCoverOptions`` to identify which tile range to return tile Ids for.
 
@@ -382,7 +386,7 @@ let tileCoverOptions = TileCoverOptions(tileSize: 512, minZoom: 4, maxZoom: 8, r
 let tileIds = mapView.mapboxMap.tileCover(for: tileCoverOptions)
 ```
 
-#### 2.8.2 Sources
+#### 2.9.2 Sources
 
 Sources are now required to specify ``Source/id`` upon creation for easier reference later.
 
@@ -418,7 +422,7 @@ poiSource.data = .string(poiGeoJSON)
 mapView.mapboxMap.addSource(poiSource)
 ```
 
-#### 2.8.3
+#### 2.9.3
 
 Most layers (such as ``LineLayer``, ``CircleLayer``, and others) now require the `source` parameter in the initializer. It will make style manipulation code less error-prone.
 
@@ -439,7 +443,7 @@ mapView.mapboxMap.addLayer(lineLayer)
 
 Contrary to that, some layers (such as ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``) don't need `source`, `sourceLayer`, and `filter` properties. To clean up the code we removed them from those layers and from the ``Layer`` protocol.
 
-#### 2.8.4 Support of GeoJSON partial updates.
+#### 2.9.4 Support of GeoJSON partial updates.
 
 Instead of setting the whole new GeoJSON object anew every time a single feature has changed, now you can apply more granular, partial GeoJSON updates.
 If your features have associated identifiers - you can add, update and remove them on individual basis in your ``GeoJSONSource``.
@@ -451,7 +455,7 @@ try mapView.mapboxMap.updateGeoJSONSourceFeatures(forSourceId: sourceId, feature
 try mapView.mapboxMap.removeGeoJSONSourceFeatures(forSourceId: sourceId, featureIds: featureIds)
 ```
 
-#### 2.8.5 Gestures
+#### 2.9.5 Gestures
 
 While maintaing the existing gesture approach we made minor improvements. In v11 we now:
 
@@ -459,17 +463,17 @@ While maintaing the existing gesture approach we made minor improvements. In v11
 - enable zoom during a drag gesture
 - added a `rotation` case to `GestureType` to be able to detect rotation separately from other gestures.
 
-#### 2.8.6 Expressions
+#### 2.9.6 Expressions
 
 - Introduced `hsl`, `hsla` color expression
 - Introduced `random` expression
 - Introduced `measureLight` expression lights configuration property
 
-#### 2.8.7 Cache Management
+#### 2.9.7 Cache Management
 
 Experimental API `MapboxMap/setMemoryBudget(_:)` was renamed to ``MapboxMap/setTileCacheBudget(_:)`` and promoted to stable.
 
-#### 2.8.8 Puck3D's scaling behavior
+#### 2.9.8 Puck3D's scaling behavior
 
 To further improve the performance of 3D model layer, we have replaced Puck 3D's default `model-scale` expression with a new API ``Puck3DConfiguration/modelScaleMode``. By default this property is ``ModelScaleMode/viewport``, which will keep the 3D model size constant across different zoom levels.
 While this means that Puck 3D's size should render similarly to v10, it does introduces a behavior breaking change - that ``Puck3DConfiguration/modelScale`` needs to be adjusted to correctly render the puck (in testing we found the adjustment to be around 100x of v10 `model-scale` value, but that could vary depending on other properties etc.).

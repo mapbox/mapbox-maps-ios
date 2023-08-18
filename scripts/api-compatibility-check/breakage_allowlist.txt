@@ -1131,3 +1131,11 @@ EnumElement Scheme.tms has declared type change from (MapboxMaps.Scheme.Type) ->
 EnumElement Scheme.xyz has declared type change from (MapboxMaps.Scheme.Type) -> MapboxMaps.Scheme to MapboxMaps.Scheme
 Enum Encoding has been changed to a Struct
 Enum Scheme has been changed to a Struct
+
+Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:) has been renamed to Func replay(recordedSequence:options:completion:) 
+Func MapRecorder.start() has been renamed to Func start(options:) 
+Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:) has parameter 0 type change from Swift.String to Foundation.Data 
+Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:) has parameter 1 type change from Swift.Int to MapboxMaps.MapPlayerOptions 
+Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:) has parameter 2 type change from Swift.Double to () -> Swift.Void 
+Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:) has removed default argument from parameter 2 
+Func MapRecorder.stop() has return type change from Swift.String to Foundation.Data 

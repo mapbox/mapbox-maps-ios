@@ -1,4 +1,5 @@
-executor: xcode-sdk-min
+macos:
+  xcode: 15.0.0
 resource_class: macos.x86.medium.gen2
 steps:
   - checkout
@@ -7,4 +8,6 @@ steps:
       name: Push git subtree changes
       command: |
         GITHUB_TOKEN=$(mbx-ci github writer public token)
-        git subtree push --prefix=mapbox-maps-ios "https://x-access-token:$GITHUB_TOKEN@github.com/mapbox/mapbox-maps-ios.git" "$CIRCLE_BRANCH"
+        git subtree push -d --prefix=mapbox-maps-ios "https://x-access-token:$GITHUB_TOKEN@github.com/mapbox/mapbox-maps-ios.git" "$CIRCLE_BRANCH" &> subtree.log
+  - store_artifacts:
+      path: subtree.log

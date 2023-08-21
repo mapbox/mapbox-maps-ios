@@ -15,6 +15,10 @@ steps:
   - macos/preboot-simulator:
       device: "<< parameters.device >>"
       version: "16.2"
+  - run:
+      name: check system log
+      command: tail -f /private/var/log/**/*.log
+      background: true
   - checkout-root
   - macos/install-rosetta
   - mapbox/install-mbx-ci

@@ -23,7 +23,6 @@
   },
   "testTargets" : [
     {
-      "parallelizable" : true,
       "selectedTests" : [
         "BackgroundLayerIntegrationTests",
         "BasicCameraAnimatorImplIntegrationTests",

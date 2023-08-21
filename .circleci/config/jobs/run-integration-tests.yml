@@ -31,7 +31,6 @@ steps:
         xcodebuild \
           test-without-building \
           -xctestrun "$XCTESTRUN_PATH" \
-          -parallel-testing-enabled NO \
           -destination 'platform=iOS Simulator,name=<< parameters.device >>' \
           -resultBundlePath MapboxMapsTests.xcresult | tee -a xcodebuild.log | xcpretty --report junit --output junit.xml
 

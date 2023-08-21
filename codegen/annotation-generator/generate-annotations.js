@@ -72,6 +72,7 @@ for (const layer of style.layers) {
         render('AnnotationGroup', layer, "Sources/MapboxMaps/SwiftUI/Annotations/Generated/")
         render('AnnotationManager', layer, "Sources/MapboxMaps/Annotations/Generated/");
         render('Annotation', layer, "Sources/MapboxMaps/Annotations/Generated/");
+        render('AnnotationGroupTests', layer, "Tests/MapboxMapsTests/SwiftUI/Annotations/Generated/");
         render('AnnotationIntegrationTests', layer, "Tests/MapboxMapsTests/Annotations/Generated/");
         render('AnnotationTests', layer, "Tests/MapboxMapsTests/Annotations/Generated/");
         render('AnnotationManagerTests', layer, "Tests/MapboxMapsTests/Annotations/Generated/");

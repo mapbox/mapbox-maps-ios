@@ -54,4 +54,13 @@ final class OnceTests: XCTestCase {
 
         XCTAssertEqual(executionCount, 2)
     }
+
+    func testTry() {
+        var once = Once()
+        XCTAssertEqual(once.continueOnce(), true)
+        XCTAssertEqual(once.continueOnce(), false)
+
+        once.reset()
+        XCTAssertEqual(once.continueOnce(), true)
+    }
 }

@@ -14,7 +14,7 @@ final class MockStyle: StyleProtocol {
 
     }
     let addGeoJSONSourceFeaturesStub = Stub<AddGeoJSONSourceFeaturesParams, Void>()
-    func addGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String?) throws {
+    func addGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String?) {
         addGeoJSONSourceFeaturesStub.call(with: .init(sourceId: sourceId, features: features, dataId: dataId))
     }
 
@@ -24,7 +24,7 @@ final class MockStyle: StyleProtocol {
         let dataId: String?
     }
     let updateGeoJSONSourceFeaturesStub = Stub<UpdateGeoJSONSourceFeaturesParams, Void>()
-    func updateGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String?) throws {
+    func updateGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String?) {
         updateGeoJSONSourceFeaturesStub.call(with: .init(sourceId: sourceId, features: features, dataId: dataId))
     }
 
@@ -34,7 +34,7 @@ final class MockStyle: StyleProtocol {
         let dataId: String?
     }
     let removeGeoJSONSourceFeaturesStub = Stub<RemoveGeoJSONSourceFeaturesParams, Void>()
-    func removeGeoJSONSourceFeatures(forSourceId sourceId: String, featureIds: [String], dataId: String?) throws {
+    func removeGeoJSONSourceFeatures(forSourceId sourceId: String, featureIds: [String], dataId: String?) {
         removeGeoJSONSourceFeaturesStub.call(with: .init(sourceId: sourceId, featureIds: featureIds, dataId: dataId))
     }
 

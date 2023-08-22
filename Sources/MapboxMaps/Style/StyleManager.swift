@@ -23,9 +23,9 @@ protocol StyleProtocol: AnyObject {
     func setSourceProperty(for sourceId: String, property: String, value: Any) throws
     func setSourceProperties(for sourceId: String, properties: [String: Any]) throws
     func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject, dataId: String?)
-    func addGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String?) throws
-    func updateGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String?) throws
-    func removeGeoJSONSourceFeatures(forSourceId sourceId: String, featureIds: [String], dataId: String?) throws
+    func addGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String?)
+    func updateGeoJSONSourceFeatures(forSourceId sourceId: String, features: [Feature], dataId: String?)
+    func removeGeoJSONSourceFeatures(forSourceId sourceId: String, featureIds: [String], dataId: String?)
 
     //swiftlint:disable:next function_parameter_count
     func addImage(_ image: UIImage,

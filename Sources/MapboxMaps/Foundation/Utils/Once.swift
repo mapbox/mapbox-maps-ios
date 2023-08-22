@@ -1,6 +1,7 @@
 import Foundation
 
 /// ``Once`` ensures that its operation will be executed exactly once until it is reset.
+///
 /// ```
 /// var once = Once()
 /// once {
@@ -9,7 +10,11 @@ import Foundation
 /// once.reset() // Reset Once will make sure the next operation can be executed.
 /// ```
 struct Once {
-    private var happened = false
+    private(set) var happened: Bool
+
+    init(happened: Bool = false) {
+        self.happened = happened
+    }
 
     mutating func reset() {
         happened = false
@@ -22,9 +27,25 @@ struct Once {
     }
 
     mutating func callAsFunction(_ action: () throws -> Void) rethrows {
-        guard !happened else { return }
+        guard continueOnce() else { return }
 
-        happened = true
         try action()
+    }
+
+    /// Checks if the condition is not happened.
+    ///
+    /// Use this method with guard:
+    ///
+    ///    ```swift
+    ///    guard once.continueOnce() else { return }
+    ///    // code here will be executed only once, or until once is reset.
+    ///    ```
+    mutating func continueOnce() -> Bool {
+        if happened {
+            return false
+        } else {
+            happened = true
+            return true
+        }
     }
 }

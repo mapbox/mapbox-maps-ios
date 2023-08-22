@@ -16,21 +16,21 @@ class LayerAnnotationCoordinator {
     }
 
     func update(annotations newAnnotations: [(AnyHashable, AnyAnnotationGroup)]) {
-        var oldIdTable = Dictionary(uniqueKeysWithValues: annotations.map { ($0.id, $0) })
+        let displayedIds = annotations.map(\.id)
+        let newIds = newAnnotations.map(\.0)
 
-        // TODO: keep layers ordering.
-        let resultAnnotations = newAnnotations.map { id, group in
-            var displayedGroup = oldIdTable.removeValue(forKey: id) ?? DisplayedAnnotationGroup(id: id)
+        let diff = newIds.diff(from: displayedIds, id: { $0 })
+
+        var oldIdTable = Dictionary(uniqueKeysWithValues: annotations.map { ($0.id, $0) })
+        for removeId in diff.remove {
+            guard let stringId = oldIdTable.removeValue(forKey: removeId)?.stringId else { continue }
+            annotationOrchestrator.removeAnnotationManager(withId: stringId)
+        }
+
+        self.annotations = newAnnotations.map { id, group in
+            var displayedGroup = oldIdTable[id] ?? DisplayedAnnotationGroup(id: id)
             group.update(self.annotationOrchestrator, displayedGroup.stringId, &displayedGroup.idsMap)
             return displayedGroup
         }
-
-        // Remove the annotations groups, no longer displayed
-        for s in oldIdTable.values {
-            self.annotationOrchestrator.removeAnnotationManager(withId: s.stringId)
-        }
-
-        self.annotations = resultAnnotations
-
     }
 }

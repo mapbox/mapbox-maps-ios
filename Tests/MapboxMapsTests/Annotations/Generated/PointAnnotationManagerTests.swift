@@ -11,9 +11,8 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     var expectation: XCTestExpectation?
     var delegateAnnotations: [Annotation]?
     var imagesManager: MockAnnotationImagesManager!
-    var offsetPointCalculator: OffsetPointCalculator!
-
-    var mapboxMap = MockMapboxMap()
+    var offsetCalculator: OffsetPointCalculator!
+    var mapboxMap: MockMapboxMap!
 
     override func setUp() {
         super.setUp()
@@ -21,14 +20,15 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         style = MockStyle()
         displayLinkCoordinator = MockDisplayLinkCoordinator()
         imagesManager = MockAnnotationImagesManager()
-        offsetPointCalculator = OffsetPointCalculator(mapboxMap: mapboxMap)
+        mapboxMap = MockMapboxMap()
+        offsetCalculator = OffsetPointCalculator(mapboxMap: mapboxMap)
         manager = PointAnnotationManager(
             id: id,
             style: style,
             layerPosition: nil,
             displayLinkCoordinator: displayLinkCoordinator,
             imagesManager: imagesManager,
-            offsetPointCalculator: offsetPointCalculator
+            offsetCalculator: offsetCalculator
         )
 
         for _ in 0...10 {
@@ -40,10 +40,12 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     override func tearDown() {
         style = nil
         displayLinkCoordinator = nil
-        manager = nil
         expectation = nil
         delegateAnnotations = nil
         imagesManager = nil
+        mapboxMap = nil
+        offsetCalculator = nil
+        manager = nil
 
         super.tearDown()
     }
@@ -57,7 +59,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             layerPosition: nil,
             displayLinkCoordinator: displayLinkCoordinator,
             imagesManager: imagesManager,
-            offsetPointCalculator: offsetPointCalculator
+            offsetCalculator: offsetCalculator
         )
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
@@ -73,7 +75,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             layerPosition: nil,
             displayLinkCoordinator: displayLinkCoordinator,
             imagesManager: imagesManager,
-            offsetPointCalculator: offsetPointCalculator
+            offsetCalculator: offsetCalculator
         )
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
@@ -99,7 +101,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             layerPosition: nil,
             displayLinkCoordinator: displayLinkCoordinator,
             imagesManager: imagesManager,
-            offsetPointCalculator: offsetPointCalculator
+            offsetCalculator: offsetCalculator
         )
         manager2.annotations = annotations2
 
@@ -114,24 +116,39 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             layerPosition: LayerPosition.at(4),
             displayLinkCoordinator: displayLinkCoordinator,
             imagesManager: imagesManager,
-            offsetPointCalculator: offsetPointCalculator
+            offsetCalculator: offsetCalculator
         )
         manager3.annotations = annotations
 
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition, LayerPosition.at(4))
     }
 
-    func testDestroyManager() {
+    func testDestroy() {
         manager.destroy()
 
-        XCTAssertEqual(style.removeLayerStub.invocations.map(\.parameters), [id + "_drag-layer", id])
-        XCTAssertEqual(style.removeSourceStub.invocations.map(\.parameters), [id + "_drag-source", id])
+        XCTAssertEqual(style.removeLayerStub.invocations.map(\.parameters), [id])
+        XCTAssertEqual(style.removeSourceStub.invocations.map(\.parameters), [id])
+
+        style.removeLayerStub.reset()
+        style.removeSourceStub.reset()
+
+        manager.destroy()
+        XCTAssertTrue(style.removeLayerStub.invocations.isEmpty)
+        XCTAssertTrue(style.removeSourceStub.invocations.isEmpty)
     }
 
-    func testDestroyManagerTwice() {
+    func testDestroyManagerWithDraggedAnnotations() {
+        var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+        annotation.isDraggable = true
+        manager.annotations = [annotation]
+        // adds drag source/layer
+        manager.handleDragBegin(with: [annotation.id])
+
         manager.destroy()
-        XCTAssertEqual(style.removeLayerStub.invocations.map(\.parameters), [id + "_drag-layer", id])
-        XCTAssertEqual(style.removeSourceStub.invocations.map(\.parameters), [id + "_drag-source", id])
+
+        XCTAssertEqual(style.removeLayerStub.invocations.map(\.parameters), [id, id + "_drag"])
+        XCTAssertEqual(style.removeSourceStub.invocations.map(\.parameters), [id, id + "_drag"])
+
         style.removeLayerStub.reset()
         style.removeSourceStub.reset()
 
@@ -145,14 +162,12 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         manager.syncSourceAndLayerIfNeeded()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
     }
 
     func testDoNotSyncSourceAndLayerWhenNotNeeded() {
         manager.syncSourceAndLayerIfNeeded()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 0)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 0)
     }
 
     func testManagerSubscribestoDisplayLinkCoordinator() {
@@ -166,23 +181,31 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(displayLinkCoordinator.removeStub.invocations.count, 1)
     }
 
-    func testFeatureCollectionPassedtoGeoJSON() {
+    func testFeatureCollectionPassedtoGeoJSON() throws {
         var annotations = [PointAnnotation]()
         for _ in 0...5 {
             let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
-        let expectedFeatureCollection = FeatureCollection(features: annotations.map(\.feature))
+        let expectedFeatures = annotations.map(\.feature)
 
         manager.annotations = annotations
         manager.syncSourceAndLayerIfNeeded()
 
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.last?.parameters.id, manager.id)
-        if case .featureCollection(let collection) = style.updateGeoJSONSourceStub.invocations[0].parameters.geojson {
-            XCTAssertTrue(collection.features.allSatisfy(expectedFeatureCollection.features.contains(_:)))
-        } else {
-            XCTFail("GeoJSON object should be a feature collection")
+        var invocation = try XCTUnwrap(style.addGeoJSONSourceFeaturesStub.invocations.last)
+        XCTAssertEqual(invocation.parameters.features, expectedFeatures)
+        XCTAssertEqual(invocation.parameters.sourceId, manager.id)
+
+        do {
+            let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+            annotations.append(annotation)
+
+            manager.annotations = annotations
+            manager.syncSourceAndLayerIfNeeded()
+
+            invocation = try XCTUnwrap(style.addGeoJSONSourceFeaturesStub.invocations.last)
+            XCTAssertEqual(invocation.parameters.features, [annotation].map(\.feature))
+            XCTAssertEqual(invocation.parameters.sourceId, manager.id)
         }
     }
 
@@ -231,7 +254,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-allow-overlap"] as! Bool, value)
     }
@@ -326,7 +348,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-ignore-placement"] as! Bool, value)
     }
@@ -421,7 +442,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-keep-upright"] as! Bool, value)
     }
@@ -516,7 +536,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-optional"] as! Bool, value)
     }
@@ -611,7 +630,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-padding"] as! Double, value)
     }
@@ -706,7 +724,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-pitch-alignment"] as! String, value.rawValue)
     }
@@ -801,7 +818,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-rotation-alignment"] as! String, value.rawValue)
     }
@@ -896,7 +912,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-avoid-edges"] as! Bool, value)
     }
@@ -991,7 +1006,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-placement"] as! String, value.rawValue)
     }
@@ -1086,7 +1100,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-spacing"] as! Double, value)
     }
@@ -1181,7 +1194,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-z-order"] as! String, value.rawValue)
     }
@@ -1276,7 +1288,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-allow-overlap"] as! Bool, value)
     }
@@ -1371,7 +1382,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual((style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-font"] as! [Any])[1] as! [String], value)
     }
@@ -1466,7 +1476,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-ignore-placement"] as! Bool, value)
     }
@@ -1561,7 +1570,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-keep-upright"] as! Bool, value)
     }
@@ -1656,7 +1664,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-max-angle"] as! Double, value)
     }
@@ -1751,7 +1758,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-optional"] as! Bool, value)
     }
@@ -1846,7 +1852,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-padding"] as! Double, value)
     }
@@ -1941,7 +1946,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-pitch-alignment"] as! String, value.rawValue)
     }
@@ -2036,7 +2040,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-rotation-alignment"] as! String, value.rawValue)
     }
@@ -2131,7 +2134,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         let valueAsString = value.map { $0.rawValue }
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-variable-anchor"] as! [String], valueAsString)
@@ -2228,7 +2230,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         let valueAsString = value.map { $0.rawValue }
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-writing-mode"] as! [String], valueAsString)
@@ -2325,7 +2326,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-translate"] as! [Double], value)
     }
@@ -2420,7 +2420,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-translate-anchor"] as! String, value.rawValue)
     }
@@ -2515,7 +2514,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-translate"] as! [Double], value)
     }
@@ -2610,7 +2608,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-translate-anchor"] as! String, value.rawValue)
     }
@@ -2827,7 +2824,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             displayLinkCoordinator: displayLinkCoordinator,
             clusterOptions: clusterOptions,
             imagesManager: imagesManager,
-            offsetPointCalculator: offsetPointCalculator
+            offsetCalculator: offsetCalculator
         )
         pointAnnotationManager.annotations = annotations
 
@@ -2871,7 +2868,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             displayLinkCoordinator: displayLinkCoordinator,
             clusterOptions: clusterOptions,
             imagesManager: imagesManager,
-            offsetPointCalculator: offsetPointCalculator
+            offsetCalculator: offsetCalculator
         )
         pointAnnotationManager.annotations = annotations
         let geoJSONSource = style.addSourceStub.invocations.last?.parameters.source as! GeoJSONSource
@@ -2907,7 +2904,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             displayLinkCoordinator: displayLinkCoordinator,
             clusterOptions: clusterOptions,
             imagesManager: imagesManager,
-            offsetPointCalculator: offsetPointCalculator
+            offsetCalculator: offsetCalculator
         )
         pointAnnotationManager.annotations = annotations
 
@@ -2950,7 +2947,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             displayLinkCoordinator: displayLinkCoordinator,
             clusterOptions: clusterOptions,
             imagesManager: imagesManager,
-            offsetPointCalculator: offsetPointCalculator
+            offsetCalculator: offsetCalculator
         )
         pointAnnotationManager.annotations = annotations
 
@@ -2985,7 +2982,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             displayLinkCoordinator: displayLinkCoordinator,
             clusterOptions: clusterOptions,
             imagesManager: imagesManager,
-            offsetPointCalculator: offsetPointCalculator
+            offsetCalculator: offsetCalculator
         )
         pointAnnotationManager.annotations = annotations
 
@@ -3003,20 +3000,16 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
     }
 
-    func testChangeAnnotations() {
+    func testChangeAnnotations() throws {
         style.addSourceStub.reset()
         style.addPersistentLayerStub.reset()
         // given
         let clusterOptions = ClusterOptions()
-        var annotations = [PointAnnotation]()
-        for _ in 0...500 {
-            let annotation = PointAnnotation(coordinate: .random(), isSelected: false, isDraggable: false)
-            annotations.append(annotation)
+        var annotations = (0..<500).map { _ in
+            PointAnnotation(coordinate: .random(), isSelected: false, isDraggable: false)
         }
-        var newAnnotations = [PointAnnotation]()
-        for _ in 0...100 {
-            let annotation = PointAnnotation(coordinate: .random(), isSelected: false, isDraggable: false)
-            newAnnotations.append(annotation)
+        var newAnnotations = (0..<100).map { _ in
+            PointAnnotation(coordinate: .random(), isSelected: false, isDraggable: false)
         }
 
         // when
@@ -3027,29 +3020,21 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             displayLinkCoordinator: displayLinkCoordinator,
             clusterOptions: clusterOptions,
             imagesManager: imagesManager,
-            offsetPointCalculator: offsetPointCalculator
+            offsetCalculator: offsetCalculator
         )
         pointAnnotationManager.annotations = annotations
         pointAnnotationManager.syncSourceAndLayerIfNeeded()
-        var sourceGeoJSON = style.updateGeoJSONSourceStub.invocations.last?.parameters.geojson
-        switch sourceGeoJSON {
-        case .featureCollection(let data):
-            XCTAssertEqual(data.features.count, 501)
-        default:
-            XCTFail("GeoJSON did not update correctly")
-        }
+        var parameters = try XCTUnwrap(style.addGeoJSONSourceFeaturesStub.invocations.last).parameters
+        XCTAssertEqual(parameters.features, annotations.map(\.feature))
 
         // then
         pointAnnotationManager.annotations = newAnnotations
         pointAnnotationManager.syncSourceAndLayerIfNeeded()
-        sourceGeoJSON = style.updateGeoJSONSourceStub.invocations.last?.parameters.geojson
-        switch sourceGeoJSON {
-        case .featureCollection(let data):
-            XCTAssertEqual(data.features.count, 101)
-        default:
-            XCTFail("GeoJSON did not update correctly")
-        }
-        XCTAssertEqual(style.addSourceStub.invocations.count, 1)
+        var addParameters = try XCTUnwrap(style.addGeoJSONSourceFeaturesStub.invocations.last).parameters
+        XCTAssertEqual(addParameters.features, newAnnotations.map(\.feature))
+
+        var removeParameters = try XCTUnwrap(style.removeGeoJSONSourceFeaturesStub.invocations.last).parameters
+        XCTAssertEqual(removeParameters.featureIds, annotations.map(\.id))
     }
 
     func testDestroyAnnotationManager() {
@@ -3064,7 +3049,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             displayLinkCoordinator: displayLinkCoordinator,
             clusterOptions: clusterOptions,
             imagesManager: imagesManager,
-            offsetPointCalculator: offsetPointCalculator
+            offsetCalculator: offsetCalculator
         )
         pointAnnotationManager.annotations = annotations
         pointAnnotationManager.destroy()
@@ -3075,7 +3060,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(removeLayerInvocations.map(\.parameters), [
             "mapbox-iOS-cluster-circle-layer-manager-" + id,
             "mapbox-iOS-cluster-text-layer-manager-" + id,
-            id + "_drag-layer",
             id,
         ])
     }
@@ -3098,72 +3082,64 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         ]
 
         style.addSourceStub.reset()
-        style.addPersistentLayerWithPropertiesStub.reset()
+        style.addPersistentLayerStub.reset()
 
         manager.handleDragBegin(with: ["point1"])
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 0)
-        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 0)
+        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
     }
 
     func testHandleDragBeginNoFeatureId() {
         style.addSourceStub.reset()
-        style.addPersistentLayerWithPropertiesStub.reset()
+        style.addPersistentLayerStub.reset()
 
         manager.handleDragBegin(with: [])
 
         XCTAssertTrue(style.addSourceStub.invocations.isEmpty)
-        XCTAssertTrue(style.addLayerStub.invocations.isEmpty)
-        XCTAssertTrue(style.updateGeoJSONSourceStub.invocations.isEmpty)
+        XCTAssertTrue(style.addPersistentLayerStub.invocations.isEmpty)
     }
 
     func testHandleDragBeginInvalidFeatureId() {
         style.addSourceStub.reset()
-        style.addPersistentLayerWithPropertiesStub.reset()
+        style.addPersistentLayerStub.reset()
 
         manager.handleDragBegin(with: ["not-a-feature"])
 
         XCTAssertTrue(style.addSourceStub.invocations.isEmpty)
-        XCTAssertTrue(style.addPersistentLayerWithPropertiesStub.invocations.isEmpty)
-        XCTAssertTrue(style.updateGeoJSONSourceStub.invocations.isEmpty)
+        XCTAssertTrue(style.addPersistentLayerStub.invocations.isEmpty)
     }
 
-    func testHandleDragBegin() throws {
-        manager.annotations = [
-            PointAnnotation(id: "point1", coordinate: .random(), isSelected: false, isDraggable: true)
-        ]
+    func testDrag() throws {
+        let annotation = PointAnnotation(id: "point1", coordinate: .random(), isSelected: false, isDraggable: true)
+        manager.annotations = [annotation]
 
         style.addSourceStub.reset()
-        style.addPersistentLayerWithPropertiesStub.reset()
+        style.addPersistentLayerStub.reset()
 
         manager.handleDragBegin(with: ["point1"])
 
         let addSourceParameters = try XCTUnwrap(style.addSourceStub.invocations.last).parameters
-        let addLayerParameters = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.last).parameters
-        let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
+        let addLayerParameters = try XCTUnwrap(style.addPersistentLayerStub.invocations.last).parameters
 
-        XCTAssertEqual(addLayerParameters.properties["source"] as? String, addSourceParameters.source.id)
-        XCTAssertNotEqual(addLayerParameters.properties["id"] as? String, manager.layerId)
+        let addedLayer = try XCTUnwrap(addLayerParameters.layer as? SymbolLayer)
+        XCTAssertEqual(addedLayer.source, addSourceParameters.source.id)
+        XCTAssertEqual(addLayerParameters.layerPosition, .above(manager.id))
+        XCTAssertEqual(addedLayer.id, manager.id + "_drag")
 
-        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.source.id)
-    }
+        manager.handleDragBegin(with: ["point1"])
 
-    func testHandleDragChanged() throws {
+        XCTAssertEqual(style.addSourceStub.invocations.count, 1)
+        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 1)
+
         mapboxMap.pointStub.defaultReturnValue = CGPoint(x: 0, y: 0)
         mapboxMap.coordinateForPointStub.defaultReturnValue = .random()
         mapboxMap.cameraState.zoom = 1
 
-        let annotation = PointAnnotation(id: "point1", coordinate: .init(latitude: 0, longitude: 0), isSelected: false, isDraggable: true)
-        manager.annotations = [annotation]
-
         manager.handleDragChanged(with: .random())
-        XCTAssertTrue(style.updateGeoJSONSourceStub.invocations.isEmpty)
 
-        manager.handleDragBegin(with: ["point1"])
-        let addSourceParameters = try XCTUnwrap(style.addSourceStub.invocations.last).parameters
+        manager.syncSourceAndLayerIfNeeded()
 
-        manager.handleDragChanged(with: .random())
         let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
         XCTAssertTrue(updateSourceParameters.id == addSourceParameters.source.id)
         if case .featureCollection(let collection) = updateSourceParameters.geojson {

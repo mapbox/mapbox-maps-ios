@@ -44,6 +44,7 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
                 as? PolygonAnnotationManager
             ?? orchestrator.makePolygonAnnotationManager(id: id, layerPosition: self.layerPosition)
             self.updateProperties(manager: manager)
+            manager.isSwiftUI = true
 
             let annotations = data.map { element in
                 var annotation = content(element)
@@ -51,6 +52,8 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
                 let stringId = idMap[id] ?? annotation.id
                 idMap[id] = stringId
                 annotation.id = stringId
+                annotation.isDraggable = false
+                annotation.isSelected = false
                 return annotation
             }
             manager.annotations = annotations

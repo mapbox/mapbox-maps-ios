@@ -38,7 +38,7 @@ struct AnnotationsExample: View {
             Map(initialViewport: .camera(center: .init(latitude: 27.2, longitude: -26.9), zoom: 1.53, bearing: 0, pitch: 0)) {
                 ForEvery(Self.flights, id: \.name) { flight in
                     CircleAnnotationGroup(flight.airports, id: \.name) { airport in
-                        CircleAnnotation(centerCoordinate: airport.coordinate)
+                        CircleAnnotation(centerCoordinate: airport.coordinate, isDraggable: true)
                             .circleColor(StyleColor(flight.color))
                             .circleRadius(10)
                             .circleStrokeColor(.init(.black))
@@ -119,7 +119,7 @@ struct AnnotationsExample: View {
             5
             40
         }
-        
+
         let circleColorExpression = Exp(.step) {
             Exp(.get) {"point_count"}
             UIColor.yellow

@@ -44,6 +44,7 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
                 as? PolylineAnnotationManager
             ?? orchestrator.makePolylineAnnotationManager(id: id, layerPosition: self.layerPosition)
             self.updateProperties(manager: manager)
+            manager.isSwiftUI = true
 
             let annotations = data.map { element in
                 var annotation = content(element)
@@ -51,6 +52,8 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
                 let stringId = idMap[id] ?? annotation.id
                 idMap[id] = stringId
                 annotation.id = stringId
+                annotation.isDraggable = false
+                annotation.isSelected = false
                 return annotation
             }
             manager.annotations = annotations

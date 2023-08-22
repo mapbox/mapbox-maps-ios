@@ -5,61 +5,53 @@ import os
 
 /// An instance of `PolylineAnnotationManager` is responsible for a collection of `PolylineAnnotation`s.
 public class PolylineAnnotationManager: AnnotationManagerInternal {
+    typealias OffsetCalculatorType = OffsetLineStringCalculator
 
-    // MARK: - Annotations
+    public var sourceId: String { id }
+
+    public var layerId: String { id }
+
+    public let id: String
 
     /// The collection of ``PolylineAnnotation`` being managed.
     public var annotations: [PolylineAnnotation] {
-        get {
-            let allAnnotations = mainAnnotations.merging(draggedAnnotations) { $1 }
-            return Array(allAnnotations.values)
-        }
+        get { mainAnnotations + draggedAnnotations }
         set {
-            mainAnnotations = newValue.reduce(into: [:]) { partialResult, annotation in
-                partialResult[annotation.id] = annotation
-            }
-
-            draggedAnnotations = [:]
-            annotationBeingDragged = nil
-            needsSyncDragSource = true
+            mainAnnotations = newValue
+            draggedAnnotations.removeAll(keepingCapacity: true)
+            draggedAnnotationIndex = nil
         }
     }
-
-    /// The collection of ``PolylineAnnotation`` that has been dragged.
-    private var draggedAnnotations: [String: PolylineAnnotation] = [:]
-    /// The collection of ``PolylineAnnotation`` in the main source.
-    private var mainAnnotations: [String: PolylineAnnotation] = [:] {
-        didSet {
-            needsSyncSourceAndLayer = true
-        }
-    }
-
-    private var needsSyncSourceAndLayer = false
-    private var needsSyncDragSource = false
-
-    // MARK: - Interaction
 
     /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
     /// - NOTE: This annotation manager listens to tap events via the `GestureManager.singleTapGestureRecognizer`.
     public weak var delegate: AnnotationInteractionDelegate?
 
-    // MARK: - AnnotationManager protocol conformance
-
-    public let sourceId: String
-
-    public let layerId: String
-
-    public let id: String
-
-    // MARK: - Setup / Lifecycle
-
-    /// Dependency required to add sources/layers to the map
+    // Deps
     private let style: StyleProtocol
+    private let offsetCalculator: OffsetCalculatorType
+    private let displayLinkParticipant = DelegatingDisplayLinkParticipant()
+    private weak var displayLinkCoordinator: DisplayLinkCoordinator?
+
+    // Private state
+
+    /// Currently displayed annotations
+    private var displayedAnnotations: [PolylineAnnotation] = []
+
+    /// Updated, non-moved annotations. On next display link they will be diffed with `displayedAnnotations` and updated.
+    private var mainAnnotations = [PolylineAnnotation]() {
+        didSet { syncSourceOnce.reset() }
+    }
+
+    /// When annotation is moved for the first time, it migrates to this array from mainAnnotations.
+    private var draggedAnnotations = [PolylineAnnotation]() {
+        didSet { syncDragSourceOnce.reset() }
+    }
 
     /// Storage for common layer properties
     internal var layerProperties: [String: Any] = [:] {
         didSet {
-            needsSyncSourceAndLayer = true
+            syncLayerOnce.reset()
         }
     }
 
@@ -68,33 +60,28 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     /// the subsequent sync.
     private var previouslySetLayerPropertyKeys: Set<String> = []
 
-    private let displayLinkParticipant = DelegatingDisplayLinkParticipant()
+    private var draggedAnnotationIndex: Array<PolylineAnnotation>.Index?
+    private var destroyOnce = Once()
+    private var syncSourceOnce = Once(happened: true)
+    private var syncDragSourceOnce = Once(happened: true)
+    private var syncLayerOnce = Once(happened: true)
+    private var insertDraggedLayerAndSourceOnce = Once()
+    private var dragId: String { id + "_drag" }
 
-    private weak var displayLinkCoordinator: DisplayLinkCoordinator?
+    var allLayerIds: [String] { [layerId, dragId] }
 
-    private let offsetLineStringCalculator: OffsetLineStringCalculator
-
-    private var annotationBeingDragged: PolylineAnnotation?
-
-    private var isDestroyed = false
-    private let dragLayerId: String
-    private let dragSourceId: String
-
-    var allLayerIds: [String] { [layerId, dragLayerId] }
+    /// In SwiftUI isDraggable and isSelected are disabled.
+    var isSwiftUI = false
 
     internal init(id: String,
                   style: StyleProtocol,
                   layerPosition: LayerPosition?,
                   displayLinkCoordinator: DisplayLinkCoordinator?,
-                  offsetLineStringCalculator: OffsetLineStringCalculator) {
+                  offsetCalculator: OffsetCalculatorType) {
         self.id = id
-        self.sourceId = id
-        self.layerId = id
         self.style = style
         self.displayLinkCoordinator = displayLinkCoordinator
-        self.offsetLineStringCalculator = offsetLineStringCalculator
-        self.dragLayerId = id + "_drag-layer"
-        self.dragSourceId = id + "_drag-source"
+        self.offsetCalculator = offsetCalculator
 
         do {
             // Add the source with empty `data` property
@@ -117,45 +104,63 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     }
 
     internal func destroy() {
-        guard !isDestroyed else {
-            return
-        }
-        isDestroyed = true
+        guard destroyOnce.continueOnce() else { return }
 
-        removeDragSourceAndLayer()
-
-        do {
-            try style.removeLayer(withId: layerId)
-        } catch {
-            Log.warning(
-                forMessage: "Failed to remove layer for PolylineAnnotationManager with id \(id) due to error: \(error)",
-                category: "Annotations")
-        }
-        do {
-            try style.removeSource(withId: sourceId)
-        } catch {
-            Log.warning(
-                forMessage: "Failed to remove source for PolylineAnnotationManager with id \(id) due to error: \(error)",
-                category: "Annotations")
-        }
         displayLinkCoordinator?.remove(displayLinkParticipant)
+
+        func wrapError(_ what: String, _ body: () throws -> Void) {
+            do {
+                try body()
+            } catch {
+                Log.warning(
+                    forMessage: "Failed to remove \(what) for CircleAnnotationManager with id \(id) due to error: \(error)",
+                    category: "Annotations")
+            }
+        }
+
+        wrapError("layer") {
+            try style.removeLayer(withId: layerId)
+        }
+
+        wrapError("source") {
+            try style.removeSource(withId: sourceId)
+        }
+
+        if insertDraggedLayerAndSourceOnce.happened {
+            wrapError("drag source and layer") {
+                try style.removeLayer(withId: dragId)
+                try style.removeSource(withId: dragId)
+            }
+        }
     }
 
     // MARK: - Sync annotations to map
+
+    private func syncSource() {
+        guard syncSourceOnce.continueOnce() else { return }
+
+        let diff = mainAnnotations.diff(from: displayedAnnotations, id: \.id)
+        syncLayerOnce.reset(if: !diff.isEmpty)
+        style.apply(annotationsDiff: diff, sourceId: sourceId, feature: \.feature)
+        displayedAnnotations = mainAnnotations
+    }
+
+    private func syncDragSource() {
+        guard syncDragSourceOnce.continueOnce() else { return }
+
+        let fc = FeatureCollection(features: draggedAnnotations.map(\.feature))
+        style.updateGeoJSONSource(withId: dragId, geoJSON: .featureCollection(fc))
+    }
 
     /// Synchronizes the backing source and layer with the current `annotations`
     /// and common layer properties. This method is called automatically with
     /// each display link, but it may also be called manually in situations
     /// where the backing source and layer need to be updated earlier.
-    public func syncSourceAndLayerIfNeeded() {
-        guard needsSyncSourceAndLayer, !isDestroyed else {
-            return
-        }
-        needsSyncSourceAndLayer = false
-        let allAnnotations = annotations
+    private func syncLayer() {
+        guard syncLayerOnce.continueOnce() else { return }
 
         // Construct the properties dictionary from the annotations
-        let dataDrivenLayerPropertyKeys = Set(allAnnotations.flatMap(\.layerProperties.keys))
+        let dataDrivenLayerPropertyKeys = Set(annotations.flatMap(\.layerProperties.keys))
         let dataDrivenProperties = Dictionary(
             uniqueKeysWithValues: dataDrivenLayerPropertyKeys
                 .map { (key) -> (String, Any) in
@@ -180,24 +185,26 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         // make a single call into MapboxCoreMaps to set layer properties
         do {
             try style.setLayerProperties(for: layerId, properties: allLayerProperties)
+            if !draggedAnnotations.isEmpty {
+                try style.setLayerProperties(for: dragId, properties: allLayerProperties)
+            }
         } catch {
             Log.error(
                 forMessage: "Could not set layer properties in PolylineAnnotationManager due to error \(error)",
                 category: "Annotations")
         }
-
-        // build and update the source data
-        let featureCollection = FeatureCollection(features: mainAnnotations.values.map(\.feature))
-        style.updateGeoJSONSource(withId: sourceId, geoJSON: .featureCollection(featureCollection))
     }
 
-    private func syncDragSourceIfNeeded() {
-        guard !isDestroyed, needsSyncDragSource else { return }
+    /// Synchronizes the backing source and layer with the current `annotations`
+    /// and common layer properties. This method is called automatically with
+    /// each display link, but it may also be called manually in situations
+    /// where the backing source and layer need to be updated earlier.
+    public func syncSourceAndLayerIfNeeded() {
+        guard !destroyOnce.happened else { return }
 
-        needsSyncDragSource = false
-        if style.sourceExists(withId: dragSourceId) {
-            updateDragSource()
-        }
+        syncSource()
+        syncDragSource()
+        syncLayer()
     }
 
     // MARK: - Common layer properties
@@ -294,16 +301,6 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
     // MARK: - User interaction handling
 
-    /// Returns the first annotation matching the set of given `featureIdentifiers`.
-    private func findAnnotation(from featureIdentifiers: [String], where predicate: (PolylineAnnotation) -> Bool) -> PolylineAnnotation? {
-        for featureIdentifier in featureIdentifiers {
-            if let annotation = mainAnnotations[featureIdentifier] ?? draggedAnnotations[featureIdentifier], predicate(annotation) {
-                return annotation
-            }
-        }
-        return nil
-    }
-
     internal func handleQueriedFeatureIds(_ queriedFeatureIds: [String]) {
         guard annotations.map(\.id).contains(where: queriedFeatureIds.contains(_:)) else {
             return
@@ -320,7 +317,9 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
             annotations.append(annotation)
         }
 
-        self.annotations = annotations
+        if !isSwiftUI {
+            self.annotations = annotations
+        }
 
         delegate?.annotationManager(
             self,
@@ -331,69 +330,51 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    private func updateDragSource() {
-        if let annotationBeingDragged = annotationBeingDragged {
-            draggedAnnotations[annotationBeingDragged.id] = annotationBeingDragged
-        }
-        style.updateGeoJSONSource(withId: dragSourceId, geoJSON: .featureCollection(.init(features: draggedAnnotations.values.map(\.feature))))
-    }
-
-    private func updateDragLayer() {
-        do {
-            // copy the existing layer as the drag layer
-            var properties = try style.layerProperties(for: layerId)
-            properties[SymbolLayer.RootCodingKeys.id.rawValue] = dragLayerId
-            properties[SymbolLayer.RootCodingKeys.source.rawValue] = dragSourceId
-
-            if style.layerExists(withId: dragLayerId) {
-                try style.setLayerProperties(for: dragLayerId, properties: properties)
-            } else {
-                try style.addPersistentLayer(with: properties, layerPosition: .above(layerId))
-            }
-        } catch {
-            Log.error(forMessage: "Failed to update the layer to style. Error: \(error)")
-        }
-    }
-
-    private func removeDragSourceAndLayer() {
-        do {
-            try style.removeLayer(withId: dragLayerId)
-            try style.removeSource(withId: dragSourceId)
-        } catch {
-            Log.error(forMessage: "Failed to remove drag layer. Error: \(error)")
-        }
-    }
-
     internal func handleDragBegin(with featureIdentifiers: [String]) {
-        guard let annotation = findAnnotation(from: featureIdentifiers, where: { $0.isDraggable }) else { return }
+        guard !isSwiftUI else { return }
+        let ids = Set(featureIdentifiers)
 
-        do {
-            if !style.sourceExists(withId: dragSourceId) {
-                try style.addSource(GeoJSONSource(id: dragSourceId))
+        let predicate = { (annotation: PolylineAnnotation) -> Bool in
+            ids.contains(annotation.id) && annotation.isDraggable
+        }
+
+        if let idx = draggedAnnotations.lastIndex(where: predicate) {
+            draggedAnnotationIndex = idx
+            return
+        }
+
+        if let idx = mainAnnotations.lastIndex(where: predicate) {
+            let annotation = mainAnnotations.remove(at: idx)
+            draggedAnnotations.append(annotation)
+            draggedAnnotationIndex = draggedAnnotations.endIndex - 1
+
+            insertDraggedLayerAndSourceOnce {
+                let source = GeoJSONSource(id: dragId)
+                let layer = LineLayer(id: dragId, source: dragId)
+                do {
+                    try style.addSource(source)
+                    try style.addPersistentLayer(layer, layerPosition: .above(layerId))
+                } catch {
+                    Log.error(forMessage: "Add drag source/layer \(error)", category: "Annotations")
+                }
             }
-
-            annotationBeingDragged = annotation
-            mainAnnotations[annotation.id] = nil
-
-            updateDragSource()
-            updateDragLayer()
-        } catch {
-            Log.error(forMessage: "Failed to create the drag source to style. Error: \(error)")
         }
     }
 
     internal func handleDragChanged(with translation: CGPoint) {
-        guard let annotationBeingDragged = annotationBeingDragged,
-        let offsetPoint = offsetLineStringCalculator.geometry(for: translation, from: annotationBeingDragged.lineString) else {
+        guard !isSwiftUI,
+              let draggedAnnotationIndex,
+              draggedAnnotationIndex < draggedAnnotations.endIndex,
+              let lineString = offsetCalculator.geometry(for: translation, from: draggedAnnotations[draggedAnnotationIndex].lineString) else {
             return
         }
 
-        self.annotationBeingDragged?.lineString = offsetPoint
-        updateDragSource()
+        draggedAnnotations[draggedAnnotationIndex].lineString = lineString
     }
 
     internal func handleDragEnded() {
-        annotationBeingDragged = nil
+        guard !isSwiftUI else { return }
+        draggedAnnotationIndex = nil
     }
 }
 
@@ -402,7 +383,6 @@ extension PolylineAnnotationManager: DelegatingDisplayLinkParticipantDelegate {
         OSLog.platform.withIntervalSignpost(SignpostName.mapViewDisplayLink,
                                             "Participant: PolylineAnnotationManager") {
             syncSourceAndLayerIfNeeded()
-            syncDragSourceIfNeeded()
         }
     }
 }

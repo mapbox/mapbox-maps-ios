@@ -55,7 +55,7 @@ internal final class AnnotationManagerFactory: AnnotationManagerFactoryProtocol 
                 displayLinkCoordinator: displayLinkCoordinator,
                 clusterOptions: clusterOptions,
                 imagesManager: imagesManager,
-                offsetPointCalculator: offsetPointCalculator)
+                offsetCalculator: offsetPointCalculator)
         }
 
     internal func makePolygonAnnotationManager(
@@ -66,7 +66,7 @@ internal final class AnnotationManagerFactory: AnnotationManagerFactoryProtocol 
                 style: style,
                 layerPosition: layerPosition,
                 displayLinkCoordinator: displayLinkCoordinator,
-                offsetPolygonCalculator: offsetPolygonCalculator)
+                offsetCalculator: offsetPolygonCalculator)
         }
 
     internal func makePolylineAnnotationManager(
@@ -77,7 +77,7 @@ internal final class AnnotationManagerFactory: AnnotationManagerFactoryProtocol 
                 style: style,
                 layerPosition: layerPosition,
                 displayLinkCoordinator: displayLinkCoordinator,
-                offsetLineStringCalculator: offsetLineStringCalculator)
+                offsetCalculator: offsetLineStringCalculator)
         }
 
     internal func makeCircleAnnotationManager(
@@ -88,6 +88,6 @@ internal final class AnnotationManagerFactory: AnnotationManagerFactoryProtocol 
                 style: style,
                 layerPosition: layerPosition,
                 displayLinkCoordinator: displayLinkCoordinator,
-                offsetPointCalculator: offsetPointCalculator)
+                offsetCalculator: offsetPointCalculator)
         }
 }

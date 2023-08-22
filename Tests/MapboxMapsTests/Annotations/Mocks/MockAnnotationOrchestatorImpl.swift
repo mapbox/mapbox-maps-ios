@@ -17,7 +17,7 @@ final class MockAnnotationOrchestatorImpl: AnnotationOrchestratorImplProtocol {
             layerPosition: .default,
             displayLinkCoordinator: MockDisplayLinkCoordinator(),
             imagesManager: MockAnnotationImagesManager(),
-            offsetPointCalculator: .init(mapboxMap: MockMapboxMap())
+            offsetCalculator: .init(mapboxMap: MockMapboxMap())
         )
     )
     func makePointAnnotationManager(
@@ -40,7 +40,7 @@ final class MockAnnotationOrchestatorImpl: AnnotationOrchestratorImplProtocol {
             style: MockStyle(),
             layerPosition: .default,
             displayLinkCoordinator: MockDisplayLinkCoordinator(),
-            offsetPolygonCalculator: .init(mapboxMap: MockMapboxMap())))
+            offsetCalculator: .init(mapboxMap: MockMapboxMap())))
     func makePolygonAnnotationManager(
         id: String,
         layerPosition: LayerPosition?) -> AnnotationManagerInternal {
@@ -59,7 +59,7 @@ final class MockAnnotationOrchestatorImpl: AnnotationOrchestratorImplProtocol {
             style: MockStyle(),
             layerPosition: .default,
             displayLinkCoordinator: MockDisplayLinkCoordinator(),
-            offsetLineStringCalculator: .init(mapboxMap: MockMapboxMap())))
+            offsetCalculator: .init(mapboxMap: MockMapboxMap())))
     func makePolylineAnnotationManager(
         id: String,
         layerPosition: LayerPosition?) -> AnnotationManagerInternal {
@@ -78,7 +78,7 @@ final class MockAnnotationOrchestatorImpl: AnnotationOrchestratorImplProtocol {
             style: MockStyle(),
             layerPosition: .default,
             displayLinkCoordinator: MockDisplayLinkCoordinator(),
-            offsetPointCalculator: .init(mapboxMap: MockMapboxMap())))
+            offsetCalculator: .init(mapboxMap: MockMapboxMap())))
     func makeCircleAnnotationManager(
         id: String,
         layerPosition: LayerPosition?) -> AnnotationManagerInternal {

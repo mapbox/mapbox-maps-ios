@@ -10,22 +10,22 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     var annotations = [PolygonAnnotation]()
     var expectation: XCTestExpectation?
     var delegateAnnotations: [Annotation]?
-    var offsetPolygonCalculator: OffsetPolygonCalculator!
-
-    var mapboxMap = MockMapboxMap()
+    var offsetCalculator: OffsetPolygonCalculator!
+    var mapboxMap: MockMapboxMap!
 
     override func setUp() {
         super.setUp()
 
         style = MockStyle()
         displayLinkCoordinator = MockDisplayLinkCoordinator()
-        offsetPolygonCalculator = OffsetPolygonCalculator(mapboxMap: mapboxMap)
+        mapboxMap = MockMapboxMap()
+        offsetCalculator = OffsetPolygonCalculator(mapboxMap: mapboxMap)
         manager = PolygonAnnotationManager(
             id: id,
             style: style,
             layerPosition: nil,
             displayLinkCoordinator: displayLinkCoordinator,
-            offsetPolygonCalculator: offsetPolygonCalculator
+            offsetCalculator: offsetCalculator
         )
 
         for _ in 0...10 {
@@ -44,9 +44,11 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
     override func tearDown() {
         style = nil
         displayLinkCoordinator = nil
-        manager = nil
         expectation = nil
         delegateAnnotations = nil
+        mapboxMap = nil
+        offsetCalculator = nil
+        manager = nil
 
         super.tearDown()
     }
@@ -59,7 +61,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
             style: style,
             layerPosition: nil,
             displayLinkCoordinator: displayLinkCoordinator,
-            offsetPolygonCalculator: offsetPolygonCalculator
+            offsetCalculator: offsetCalculator
         )
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
@@ -74,7 +76,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
             style: style,
             layerPosition: nil,
             displayLinkCoordinator: displayLinkCoordinator,
-            offsetPolygonCalculator: offsetPolygonCalculator
+            offsetCalculator: offsetCalculator
         )
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
@@ -106,7 +108,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
             style: style,
             layerPosition: nil,
             displayLinkCoordinator: displayLinkCoordinator,
-            offsetPolygonCalculator: offsetPolygonCalculator
+            offsetCalculator: offsetCalculator
         )
         manager2.annotations = annotations2
 
@@ -120,24 +122,46 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
             style: style,
             layerPosition: LayerPosition.at(4),
             displayLinkCoordinator: displayLinkCoordinator,
-            offsetPolygonCalculator: offsetPolygonCalculator
+            offsetCalculator: offsetCalculator
         )
         manager3.annotations = annotations
 
         XCTAssertEqual(style.addPersistentLayerStub.invocations.last?.parameters.layerPosition, LayerPosition.at(4))
     }
 
-    func testDestroyManager() {
+    func testDestroy() {
         manager.destroy()
 
-        XCTAssertEqual(style.removeLayerStub.invocations.map(\.parameters), [id + "_drag-layer", id])
-        XCTAssertEqual(style.removeSourceStub.invocations.map(\.parameters), [id + "_drag-source", id])
+        XCTAssertEqual(style.removeLayerStub.invocations.map(\.parameters), [id])
+        XCTAssertEqual(style.removeSourceStub.invocations.map(\.parameters), [id])
+
+        style.removeLayerStub.reset()
+        style.removeSourceStub.reset()
+
+        manager.destroy()
+        XCTAssertTrue(style.removeLayerStub.invocations.isEmpty)
+        XCTAssertTrue(style.removeSourceStub.invocations.isEmpty)
     }
 
-    func testDestroyManagerTwice() {
+    func testDestroyManagerWithDraggedAnnotations() {
+        let polygonCoords = [
+                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+                CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+                CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+                CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+            ]
+            var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
+        annotation.isDraggable = true
+        manager.annotations = [annotation]
+        // adds drag source/layer
+        manager.handleDragBegin(with: [annotation.id])
+
         manager.destroy()
-        XCTAssertEqual(style.removeLayerStub.invocations.map(\.parameters), [id + "_drag-layer", id])
-        XCTAssertEqual(style.removeSourceStub.invocations.map(\.parameters), [id + "_drag-source", id])
+
+        XCTAssertEqual(style.removeLayerStub.invocations.map(\.parameters), [id, id + "_drag"])
+        XCTAssertEqual(style.removeSourceStub.invocations.map(\.parameters), [id, id + "_drag"])
+
         style.removeLayerStub.reset()
         style.removeSourceStub.reset()
 
@@ -151,14 +175,12 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         manager.syncSourceAndLayerIfNeeded()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
     }
 
     func testDoNotSyncSourceAndLayerWhenNotNeeded() {
         manager.syncSourceAndLayerIfNeeded()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 0)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 0)
     }
 
     func testManagerSubscribestoDisplayLinkCoordinator() {
@@ -172,7 +194,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(displayLinkCoordinator.removeStub.invocations.count, 1)
     }
 
-    func testFeatureCollectionPassedtoGeoJSON() {
+    func testFeatureCollectionPassedtoGeoJSON() throws {
         var annotations = [PolygonAnnotation]()
         for _ in 0...5 {
             let polygonCoords = [
@@ -185,17 +207,32 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
             let annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
-        let expectedFeatureCollection = FeatureCollection(features: annotations.map(\.feature))
+        let expectedFeatures = annotations.map(\.feature)
 
         manager.annotations = annotations
         manager.syncSourceAndLayerIfNeeded()
 
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.last?.parameters.id, manager.id)
-        if case .featureCollection(let collection) = style.updateGeoJSONSourceStub.invocations[0].parameters.geojson {
-            XCTAssertTrue(collection.features.allSatisfy(expectedFeatureCollection.features.contains(_:)))
-        } else {
-            XCTFail("GeoJSON object should be a feature collection")
+        var invocation = try XCTUnwrap(style.addGeoJSONSourceFeaturesStub.invocations.last)
+        XCTAssertEqual(invocation.parameters.features, expectedFeatures)
+        XCTAssertEqual(invocation.parameters.sourceId, manager.id)
+
+        do {
+            let polygonCoords = [
+                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+                CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+                CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+                CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+            ]
+            let annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
+            annotations.append(annotation)
+
+            manager.annotations = annotations
+            manager.syncSourceAndLayerIfNeeded()
+
+            invocation = try XCTUnwrap(style.addGeoJSONSourceFeaturesStub.invocations.last)
+            XCTAssertEqual(invocation.parameters.features, [annotation].map(\.feature))
+            XCTAssertEqual(invocation.parameters.sourceId, manager.id)
         }
     }
 
@@ -258,7 +295,6 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-antialias"] as! Bool, value)
     }
@@ -333,7 +369,6 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-emissive-strength"] as! Double, value)
     }
@@ -408,7 +443,6 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-translate"] as! [Double], value)
     }
@@ -483,7 +517,6 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         // test layer and source synced and properties added
         manager.syncSourceAndLayerIfNeeded()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-translate-anchor"] as! String, value.rawValue)
     }
@@ -579,88 +612,70 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         ]
 
         style.addSourceStub.reset()
-        style.addPersistentLayerWithPropertiesStub.reset()
+        style.addPersistentLayerStub.reset()
 
         manager.handleDragBegin(with: ["polygon1"])
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 0)
-        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
-        XCTAssertEqual(style.updateGeoJSONSourceStub.invocations.count, 0)
+        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
     }
 
     func testHandleDragBeginNoFeatureId() {
         style.addSourceStub.reset()
-        style.addPersistentLayerWithPropertiesStub.reset()
+        style.addPersistentLayerStub.reset()
 
         manager.handleDragBegin(with: [])
 
         XCTAssertTrue(style.addSourceStub.invocations.isEmpty)
-        XCTAssertTrue(style.addLayerStub.invocations.isEmpty)
-        XCTAssertTrue(style.updateGeoJSONSourceStub.invocations.isEmpty)
+        XCTAssertTrue(style.addPersistentLayerStub.invocations.isEmpty)
     }
 
     func testHandleDragBeginInvalidFeatureId() {
         style.addSourceStub.reset()
-        style.addPersistentLayerWithPropertiesStub.reset()
+        style.addPersistentLayerStub.reset()
 
         manager.handleDragBegin(with: ["not-a-feature"])
 
         XCTAssertTrue(style.addSourceStub.invocations.isEmpty)
-        XCTAssertTrue(style.addPersistentLayerWithPropertiesStub.invocations.isEmpty)
-        XCTAssertTrue(style.updateGeoJSONSourceStub.invocations.isEmpty)
+        XCTAssertTrue(style.addPersistentLayerStub.invocations.isEmpty)
     }
 
-    func testHandleDragBegin() throws {
-        manager.annotations = [
-            PolygonAnnotation(id: "polygon1", polygon: .init([[
+    func testDrag() throws {
+        let annotation = PolygonAnnotation(id: "polygon1", polygon: .init([[
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
                 CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
                 CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
                 CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
             ]]), isSelected: false, isDraggable: true)
-        ]
+        manager.annotations = [annotation]
 
         style.addSourceStub.reset()
-        style.addPersistentLayerWithPropertiesStub.reset()
+        style.addPersistentLayerStub.reset()
 
         manager.handleDragBegin(with: ["polygon1"])
 
         let addSourceParameters = try XCTUnwrap(style.addSourceStub.invocations.last).parameters
-        let addLayerParameters = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.last).parameters
-        let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
+        let addLayerParameters = try XCTUnwrap(style.addPersistentLayerStub.invocations.last).parameters
 
-        XCTAssertEqual(addLayerParameters.properties["source"] as? String, addSourceParameters.source.id)
-        XCTAssertNotEqual(addLayerParameters.properties["id"] as? String, manager.layerId)
+        let addedLayer = try XCTUnwrap(addLayerParameters.layer as? FillLayer)
+        XCTAssertEqual(addedLayer.source, addSourceParameters.source.id)
+        XCTAssertEqual(addLayerParameters.layerPosition, .above(manager.id))
+        XCTAssertEqual(addedLayer.id, manager.id + "_drag")
 
-        XCTAssertTrue(updateSourceParameters.id == addSourceParameters.source.id)
-    }
+        manager.handleDragBegin(with: ["polygon1"])
 
-    func testHandleDragChanged() throws {
+        XCTAssertEqual(style.addSourceStub.invocations.count, 1)
+        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 1)
+
         mapboxMap.pointStub.defaultReturnValue = CGPoint(x: 0, y: 0)
         mapboxMap.coordinateForPointStub.defaultReturnValue = .random()
         mapboxMap.cameraState.zoom = 1
 
-        let annotation = PolygonAnnotation(
-            id: "polygon1",
-            polygon: .init([[
-                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
-                CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
-                CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
-                CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
-                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
-            ]]),
-            isSelected: false,
-            isDraggable: true)
-        manager.annotations = [annotation]
-
         manager.handleDragChanged(with: .random())
-        XCTAssertTrue(style.updateGeoJSONSourceStub.invocations.isEmpty)
 
-        manager.handleDragBegin(with: ["polygon1"])
-        let addSourceParameters = try XCTUnwrap(style.addSourceStub.invocations.last).parameters
+        manager.syncSourceAndLayerIfNeeded()
 
-        manager.handleDragChanged(with: .random())
         let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
         XCTAssertTrue(updateSourceParameters.id == addSourceParameters.source.id)
         if case .featureCollection(let collection) = updateSourceParameters.geojson {

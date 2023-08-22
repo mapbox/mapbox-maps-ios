@@ -52,8 +52,8 @@ internal class IntegrationTestCase: XCTestCase {
             // Load the view
             _ = rootViewController.view
             window.makeKeyAndVisible()
-            rootViewController.viewWillAppear(false)
-            rootViewController.viewDidAppear(false)
+            rootViewController.beginAppearanceTransition(true, animated: false)
+            rootViewController.endAppearanceTransition()
 
             self.window = window
             self.rootViewController = rootViewController

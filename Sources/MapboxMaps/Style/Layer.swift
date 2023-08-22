@@ -13,6 +13,9 @@ public protocol Layer: Codable, StyleEncodable, StyleDecodable {
 
     /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
     var maxZoom: Double? { get set }
+
+    /// The slot this layer is assigned to. If specified, and a slot with that name exists, it will be placed at that position in the layer order.
+    var slot: String? { get set }
 }
 
 extension Layer {

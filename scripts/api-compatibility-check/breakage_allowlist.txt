@@ -1139,3 +1139,6 @@ Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:avoidPlayb
 Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:) has parameter 2 type change from Swift.Double to () -> Swift.Void 
 Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:) has removed default argument from parameter 2 
 Func MapRecorder.stop() has return type change from Swift.String to Foundation.Data 
+
+// Add slot property to Layer protocol
+Var Layer.slot has been added as a protocol requirement

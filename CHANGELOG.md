@@ -7,6 +7,7 @@ Mapbox welcomes participation and contributions from everyone.
 ### Features ✨ and improvements 🏁
 
 * Introduce experimental `MapboxRecorder`, which allows recording of the map and replaying custom scenarios.
+* Expose `slot` property on `Layer` protocol.
 
 ## 11.0.0-beta.1 - 2 August, 2023
 

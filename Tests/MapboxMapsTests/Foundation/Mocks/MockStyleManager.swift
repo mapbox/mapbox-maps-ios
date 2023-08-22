@@ -637,6 +637,7 @@ struct NonEncodableLayer: Layer {
     var sourceLayer: String?
     var minZoom: Double?
     var maxZoom: Double?
+    var slot: String?
 
     init() {}
 

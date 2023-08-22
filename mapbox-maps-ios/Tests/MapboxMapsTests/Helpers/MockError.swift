@@ -1,2 +1,0 @@
-final class MockError: Error {
-}

@@ -1,5 +1,0 @@
----
-disabled_rules:
-  - force_cast
-  - file_length
-  - type_body_length

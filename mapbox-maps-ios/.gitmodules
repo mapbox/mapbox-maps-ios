@@ -1,3 +1,0 @@
-[submodule "jazzy-theme"]
-	path = scripts/doc-generation/jazzy-theme
-	url = https://github.com/mapbox/jazzy-theme.git

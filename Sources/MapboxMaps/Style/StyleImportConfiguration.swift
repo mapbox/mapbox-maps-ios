@@ -57,9 +57,6 @@ public struct StyleImportConfiguration: Equatable {
         if let showPointOfInterestLabels {
             config["showPointOfInterestLabels"] = .boolean(showPointOfInterestLabels)
         }
-        if let showPointOfInterestLabels {
-            config["showPointOfInterestLabels"] = .boolean(showPointOfInterestLabels)
-        }
         if let showTransitLabels {
             config["showTransitLabels"] = .boolean(showTransitLabels)
         }

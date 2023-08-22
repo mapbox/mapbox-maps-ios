@@ -9,6 +9,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Introduce experimental `MapboxRecorder`, which allows recording of the map and replaying custom scenarios.
 * Expose `slot` property on `Layer` protocol.
 * Bump core maps version to 11.0.0-beta.3 and common sdk to 24.0.0-beta.3.
+* Add privacy policy attribution dialog action.
 
 ## 11.0.0-beta.1 - 2 August, 2023
 

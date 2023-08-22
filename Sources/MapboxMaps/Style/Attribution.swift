@@ -21,6 +21,7 @@ internal struct Attribution: Hashable {
         "https://www.mapbox.com/map-feedback/",
         "https://apps.mapbox.com/feedback/"
     ]
+    private static let privacyPolicyURL = URL(string: "https://www.mapbox.com/legal/privacy#product-privacy-policy")
 
     var title: String
     var kind: Kind
@@ -44,6 +45,15 @@ internal struct Attribution: Hashable {
         case .none:
             return nil
         }
+    }
+
+    static func makePrivacyPolicyAttribution() -> Attribution {
+        let title = NSLocalizedString("ATTRIBUTION_PRIVACY_POLICY",
+                                      tableName: Ornaments.localizableTableName,
+                                      bundle: .mapboxMaps,
+                                      value: "Mapbox Privacy Policy",
+                                      comment: "Privacy policy action in attribution sheet")
+        return .init(title: title, url: Self.privacyPolicyURL)
     }
 
     internal init(title: String, url: URL?) {

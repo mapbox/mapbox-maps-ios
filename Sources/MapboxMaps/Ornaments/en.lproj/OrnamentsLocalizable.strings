@@ -36,3 +36,6 @@
 
 /* Telemetry prompt title */
 "TELEMETRY_TITLE" = "Make Mapbox Maps Better";
+
+/* Privacy policy action in attribution sheet */
+"ATTRIBUTION_PRIVACY_POLICY" = "Mapbox Privacy Policy";

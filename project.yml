@@ -15,7 +15,7 @@ options:
     MAPBOX_COMMON_VERSION="$(jq -r .MapboxCommon $VERSIONS_PATH)"
 
     cat <<EOF > Cartfile.MapboxCoreMaps.json
-    {"$MAPBOX_CORE_MAPS_VERSION": "https://api.mapbox.com/downloads/v2/mobile-maps-core/snapshots/ios/packages/$MAPBOX_CORE_MAPS_VERSION/MapboxCoreMaps.xcframework-dynamic.zip"}
+    {"$MAPBOX_CORE_MAPS_VERSION": "https://api.mapbox.com/downloads/v2/mobile-maps-core/releases/ios/packages/$MAPBOX_CORE_MAPS_VERSION/MapboxCoreMaps.xcframework-dynamic.zip"}
     EOF
 
     cat <<EOF > Cartfile.MapboxCommon.json

@@ -3,66 +3,38 @@
 
 import PackageDescription
 
-let coreVersion = "11.0.0-SNAPSHOT.0720T1134Z.5f428d0"
-let coreChecksum = "787859831128cf21c69d64f97ed88eae19ef7e2baa21e310e9100f796f2d387e"
-let commonVersion = "24.0.0-beta.1"
-let commonChecksum = "cd37dd3a3e62e7b21d2242edec36e6172c9675c9e55a0f5c0346da5a93ae10b7"
+let coreVersion = "11.0.0-SNAPSHOT.0814T1456Z.1da3352"
+let coreChecksum = "61ce0cb2fc41204bff3d7aadeb4c44b3538af38f73e0c9a74ac59c9ebb42ed58"
 
 func folder(_ version: String) -> String { version.contains("SNAPSHOT") ? "snapshots" : "releases" }
 
-let mapboxMapsPath: String? = "mapbox-maps-ios/Sources/MapboxMaps"
-let mapboxMapsTestsPath: String? = "mapbox-maps-ios/Tests/MapboxMapsTests"
+let mapboxMapsPath: String? = nil
 
 let package = Package(
     name: "MapboxMaps",
     defaultLocalization: "en",
-    platforms: [.iOS(.v12), .macOS(.v10_15)],
+    platforms: [.iOS(.v12)],
     products: [
         .library(
             name: "MapboxMaps",
-            targets: ["MapboxMaps"]
-        ),
-        .executable(
-            name: "xcparty",
-            targets: ["xcparty"]
-        ),
-        .executable(
-            name: "patch-cmake-xcproject",
-            targets: ["PatchGLNativeXCProject"]
-        ),
-        .executable(
-            name: "depsvalidator",
-            targets: ["DepsValidator"]
-        ),
-        .library(
-            name: "DepsValidatorLibrary",
-            targets: ["DepsValidatorLibrary"]
-        )
+            targets: ["MapboxMaps"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/mapbox/turf-swift.git", from: "2.0.0"),
-        .package(url: "https://github.com/jpsim/Yams", from: "4.0.6"),
-        .package(url: "https://github.com/tuist/XcodeProj.git", .upToNextMajor(from: "8.8.0")),
-        .package(url: "https://github.com/davidahouse/XCResultKit", from: "1.0.0"),
-                .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.0.0")
+        .package(url: "https://github.com/mapbox/mapbox-common-ios.git", exact: "24.0.0-beta.2"),
+        .package(url: "https://github.com/mapbox/turf-swift.git", exact: "2.6.1"),
     ],
     targets: [
         .binaryTarget(
             name: "MapboxCoreMaps",
-            url: "https://api.mapbox.com/downloads/v2/mobile-maps-core-internal/\(folder(coreVersion))/ios/packages/\(coreVersion)/MapboxCoreMaps.xcframework-dynamic.zip",
+            url: "https://api.mapbox.com/downloads/v2/mobile-maps-core/\(folder(coreVersion))/ios/packages/\(coreVersion)/MapboxCoreMaps.xcframework-dynamic.zip",
             checksum: coreChecksum
-        ),
-        .binaryTarget(
-            name: "MapboxCommon",
-            url: "https://api.mapbox.com/downloads/v2/mapbox-common/\(folder(commonVersion))/ios/packages/\(commonVersion)/MapboxCommon.zip",
-            checksum: commonChecksum
         ),
         .target(
             name: "MapboxMaps",
             dependencies: [
                 "MapboxCoreMaps",
-                .product(name: "Turf", package: "turf-swift"),
-                "MapboxCommon",
+                .product(name: "MapboxCommon", package: "mapbox-common-ios"),
+                .product(name: "Turf", package: "turf-swift")
             ],
             path: mapboxMapsPath,
             exclude: [
@@ -77,7 +49,6 @@ let package = Package(
             dependencies: [
                 "MapboxMaps",
             ],
-            path: mapboxMapsTestsPath,
             exclude: [
                 "Info.plist",
             ],
@@ -99,37 +70,6 @@ let package = Package(
                 .copy("Snapshot/testSnapshotOverlay.png"),
                 .process("Resources/MapInitOptionsTests.xib"),
             ]
-        ),
-        .executableTarget(
-            name: "xcparty",
-            dependencies: [
-                "XCResultKit",
-                .product(name: "ArgumentParser", package: "swift-argument-parser"),
-            ]),
-        .executableTarget(
-            name: "PatchGLNativeXCProject",
-            dependencies: [
-                "XcodeProj"
-            ]),
-        .executableTarget(
-            name: "DepsValidator",
-            dependencies: [
-                .target(name: "DepsValidatorLibrary"),
-            ]),
-        .target(
-            name: "DepsValidatorLibrary",
-            dependencies: [
-                .product(name: "ArgumentParser", package: "swift-argument-parser"),
-                .product(name: "Yams", package: "Yams"),
-            ]),
-        .testTarget(
-            name: "DepsValidatorTests",
-            dependencies: [
-                "DepsValidatorLibrary",
-            ],
-            resources: [
-                .copy("Example Manifests/Package.swift.example"),
-                .copy("Example Manifests/Example.podspec"),
-            ]),
+        )
     ]
 )

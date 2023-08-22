@@ -1,0 +1,36 @@
+{
+  "configurations" : [
+    {
+      "id" : "E3C143EB-7F82-4493-BCCE-19876476264C",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "addressSanitizer" : {
+      "detectStackUseAfterReturn" : true,
+      "enabled" : true
+    },
+    "environmentVariableEntries" : [
+      {
+        "key" : "MAPBOX_MAPS_SIGNPOSTS_ENABLED",
+        "value" : ""
+      }
+    ],
+    "language" : "en",
+    "testRepetitionMode" : "retryOnFailure"
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "MapboxMapsTests",
+        "name" : "MapboxMapsTests"
+      }
+    }
+  ],
+  "version" : 1
+}

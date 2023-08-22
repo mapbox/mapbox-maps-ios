@@ -1,4 +1,0 @@
-steps:
-  - run:
-      name: Create documentation pull requests
-      command: scripts/release/create-docs-prs.sh -p api-docs

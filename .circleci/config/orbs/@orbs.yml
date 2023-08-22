@@ -1,3 +1,0 @@
-# https://circleci.com/orbs/registry/orb/circleci/slack
-slack: circleci/slack@4
-macos: circleci/macos@2

@@ -1,0 +1,95 @@
+/* East, long */
+"E" = "Öst";
+
+/* East by north, long */
+"EbN" = "Ost till Nord";
+
+/* East by south, long */
+"EbS" = "Ost till Syd";
+
+/* East-northeast, long */
+"ENE" = "Ostnordost";
+
+/* East-southeast, long */
+"ESE" = "Ostsydost";
+
+/* North, long */
+"N" = "Nord";
+
+/* North by east, long */
+"NbE" = "Nord till Ost";
+
+/* North by west, long */
+"NbW" = "Nord till Väst";
+
+/* Northeast, long */
+"NE" = "Nordost";
+
+/* Northeast by east, long */
+"NEbE" = "Nordost till ost";
+
+/* Northeast by north, long */
+"NEbN" = "Nordost till nord";
+
+/* North-northeast, long */
+"NNE" = "Nordnordost";
+
+/* North-northwest, long */
+"NNW" = "Nordnordväst";
+
+/* Northwest, long */
+"NW" = "Nordväst";
+
+/* Northwest by north, long */
+"NWbN" = "Nordväst till nord";
+
+/* Northwest by west, long */
+"NWbW" = "Nordväst till väst";
+
+/* South, long */
+"S" = "Syd";
+
+/* South by east, long */
+"SbE" = "Syd till ost";
+
+/* South by west, long */
+"SbW" = "Syd till väst";
+
+/* Southeast, long */
+"SE" = "Sydost";
+
+/* Southeast by east, long */
+"SEbE" = "Sydost till ost";
+
+/* Southeast by south, long */
+"SEbS" = "Sydost till syd";
+
+/* South-southeast, long */
+"SSE" = "Sydsydost";
+
+/* South-southwest, long */
+"SSW" = "Sydsydväst";
+
+/* Southwest, long */
+"SW" = "Sydväst";
+
+/* Southwest by south, long */
+"SWbS" = "Sydväst till syd";
+
+/* Southwest by west, long */
+"SWbW" = "Sydväst till väst";
+
+/* West, long */
+"W" = "Väst";
+
+/* West by north, long */
+"WbN" = "Väst till nord";
+
+/* West by south, long */
+"WbS" = "Väst till syd";
+
+/* West-northwest, long */
+"WNW" = "Västnordväst";
+
+/* West-southwest, long */
+"WSW" = "Västsydväst";

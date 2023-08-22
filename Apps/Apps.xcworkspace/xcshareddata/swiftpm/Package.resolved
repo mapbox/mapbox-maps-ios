@@ -1,0 +1,32 @@
+{
+  "pins" : [
+    {
+      "identity" : "fingertips",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:mapbox/Fingertips.git",
+      "state" : {
+        "revision" : "828349081181608bf67abe53f5881728a14a0f78",
+        "version" : "0.6.0"
+      }
+    },
+    {
+      "identity" : "mapbox-common-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mapbox/mapbox-common-ios.git",
+      "state" : {
+        "revision" : "e3e6a3341879197851f1d09664846e07ac1f5c43",
+        "version" : "24.0.0-beta.2"
+      }
+    },
+    {
+      "identity" : "turf-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mapbox/turf-swift.git",
+      "state" : {
+        "revision" : "87b5b37108ba9f37f0885b586d8f6355d8240dd8",
+        "version" : "2.6.1"
+      }
+    }
+  ],
+  "version" : 2
+}

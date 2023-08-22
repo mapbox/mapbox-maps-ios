@@ -1,6 +1,0 @@
-steps:
-  - run:
-      name: Create default artifacts folder
-      command: |
-        echo "export DEFAULT_ARTIFACTS_DIR='$(mktemp -d)'" >> $BASH_ENV
-        cat $BASH_ENV

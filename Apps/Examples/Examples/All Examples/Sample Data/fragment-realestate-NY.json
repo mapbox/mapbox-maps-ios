@@ -1,0 +1,346 @@
+{
+    "imports": [
+        {
+            "id": "standard",
+            "url": "mapbox://styles/mapbox/standard-beta",
+            "config": {
+                "font": "Montserrat",
+                "lightPreset": "dusk",
+                "showPointOfInterestLabels": true,
+                "showTransitLabels": false,
+                "showPlaceLabels": true,
+                "showRoadLabels": false
+            }
+        }
+    ],
+    "version": 8,
+    "sprite": "mapbox://sprites/examples/clkiip5x600b501pb4al5g7wv/du1h5vs55f48z8rgjod0dggl9",
+    "projection": { "name": "globe" },
+    "sources": {
+        "water_source": {
+            "type": "vector",
+            "url": "mapbox://mapbox.mapbox-streets-v8"
+        },
+        "ny_subway": {
+            "url": "mapbox://examples.clkicyt9103ld2hnxxfo3vpnm-3wmoh",
+            "type": "vector"
+        },
+        "hotels_data": {
+            "type": "vector",
+            "url": "mapbox://examples.clkiiizwk04l62jo3rjx61lgj-7xsxp"
+        }
+    },
+    "layers": [
+        {
+            "id": "water",
+            "type": "fill",
+            "slot": "middle",
+            "source": "water_source",
+            "source-layer": "water",
+            "layout": { },
+            "paint": {
+                "fill-emissive-strength": 1,
+                "fill-color": [
+                    "interpolate",
+                    [ "linear" ],
+                    [ "measure-light", "brightness" ],
+                    0.1,
+                    "hsl(250, 50%, 40%)",
+                    0.4,
+                    "hsl(250, 50%, 80%)"
+                ]
+            }
+        },
+        {
+            "id": "subway-lines",
+            "type": "line",
+            "slot": "middle",
+            "source": "ny_subway",
+            "source-layer": "NY_subway",
+            "minzoom": 9,
+            "layout": {},
+            "paint": {
+                "line-emissive-strength": 1,
+                "line-depth-occlusion-factor": 0.9,
+                "line-color": [
+                    "match",
+                    ["get", "name"],
+                    ["A", "C", "E"],
+                    "#0039a6",
+                    ["B", "D", "F", "M"],
+                    "#ff6319",
+                    ["N-Q-R-W"],
+                    "hsl(245, 65%, 55%)",
+                    ["N-R", "Q", "W"],
+                    "#fccc0a",
+                    ["1", "2-3"],
+                    "#EE352e",
+                    ["G"],
+                    "#6cbe45",
+                    ["L"],
+                    "#a7a9ac",
+                    ["6", "4-5"],
+                    "#00933c",
+                    ["7"],
+                    "#b933ad",
+                    ["J-Z"],
+                    "#996333",
+                    ["S"],
+                    "#808183",
+                    ["T"],
+                    "#00add0",
+                    "#000000"
+                ],
+                "line-opacity": [
+                    "interpolate",
+                    [ "linear" ],
+                    [ "zoom" ],
+                    9,
+                    0,
+                    10,
+                    1
+                ],
+                "line-width": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    9,
+                    1,
+                    13,
+                    2,
+                    22,
+                    7
+                ]
+            }
+        },
+        {
+            "id": "subway-entrances",
+            "type": "symbol",
+            "slot": "top",
+            "source": "ny_subway",
+            "source-layer": "NY_subway",
+            "minzoom":16,
+            "filter":[
+                "all",
+                [
+                    "match",
+                    ["geometry-type"],
+                    ["Point"],
+                    true,
+                    false
+                ]
+            ],
+            "layout": {
+                "text-size": 12,
+                "icon-image": "new-york-subway",
+                "text-font": [
+                    "DIN Pro Medium",
+                    "Arial Unicode MS Regular"
+                ],
+                "text-justify": [
+                    "match",
+                    [
+                        "get",
+                        "stop_type"
+                    ],
+                    "entrance",
+                    "left",
+                    "center"
+                ],
+                "text-offset": [
+                    "match",
+                    [
+                        "get",
+                        "stop_type"
+                    ],
+                    "entrance",
+                    [
+                        "literal",
+                        [
+                            1,
+                            0
+                        ]
+                    ],
+                    [
+                        "literal",
+                        [
+                            0,
+                            0.8
+                        ]
+                    ]
+                ],
+                "text-anchor": [
+                    "match",
+                    [
+                        "get",
+                        "stop_type"
+                    ],
+                    "entrance",
+                    "left",
+                    "top"
+                ],
+                "text-field": [
+                    "to-string",
+                    [
+                        "get",
+                        "name"
+                    ]
+                ],
+                "text-letter-spacing": 0.01,
+                "text-max-width": [
+                    "match",
+                    [
+                        "get",
+                        "stop_type"
+                    ],
+                    "entrance",
+                    15,
+                    9
+                ]
+            },
+            "paint": {
+                "text-halo-color": [
+                    "interpolate",
+                    [ "linear" ],
+                    [ "measure-light", "brightness" ],
+                    0.25,
+                    "hsl(0, 0%, 0%)",
+                    0.3,
+                    "hsl(0, 0%, 100%)"
+                ],
+                "text-halo-blur": 0.5,
+                "text-halo-width": 0.5,
+                "text-color":
+                [ "interpolate",
+                    [ "linear" ],
+                    [ "measure-light", "brightness" ],
+                    0.25,
+                    "hsl(225, 80%, 90%)",
+                    0.3,
+                "hsl(225, 60%, 58%)" ]
+            }
+        },
+        {
+            "id": "subway-lines-text",
+            "type": "symbol",
+            "slot": "middle",
+            "source": "ny_subway",
+            "source-layer": "NY_subway",
+            "minzoom": 12,
+            "layout": {
+                "text-field": ["to-string", ["get", "name"]],
+                "text-font": ["Montserrat Bold", "Arial Unicode MS Regular"],
+                "text-size": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    12,
+                    8,
+                    22,
+                    12
+                ],
+                "text-opacity": [
+                    "interpolate",
+                    [ "linear" ],
+                    [ "zoom" ],
+                    11.5,
+                    0,
+                    12,
+                    1
+                ],
+                "symbol-placement": "line",
+                "symbol-spacing": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    0,
+                    50,
+                    16,
+                    200
+                ],
+                "text-pitch-alignment": "viewport"
+            },
+            "paint": {
+                "text-halo-color": [
+                    "match",
+                    ["get", "name"],
+                    ["A", "C", "E"],
+                    "#0039a6",
+                    ["B", "D", "F", "M"],
+                    "#ff6319",
+                    ["N-Q-R-W"],
+                    "hsl(245, 65%, 55%)",
+                    ["N-R", "Q", "W"],
+                    "#fccc0a",
+                    ["1", "2-3"],
+                    "#EE352e",
+                    ["G"],
+                    "#6cbe45",
+                    ["L"],
+                    "#a7a9ac",
+                    ["6", "4-5"],
+                    "#00933c",
+                    ["7"],
+                    "#b933ad",
+                    ["J-Z"],
+                    "#996333",
+                    ["S"],
+                    "#808183",
+                    ["T"],
+                    "#00add0",
+                    "#000000"
+                ],
+                "text-halo-width": 40,
+                "text-color": "#ffffff"
+            }
+        },
+        {
+            "id": "NY-hotels",
+            "type": "circle",
+            "slot": "top",
+            "source": "hotels_data",
+            "source-layer": "NY_hotels",
+            "minzoom": 9,
+            "paint": {
+                "circle-emissive-strength": 1,
+                "circle-radius": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    8,
+                    2,
+                    22,
+                    4
+                ],
+                "circle-color": "hsl(220, 100%, 100%)",
+                "circle-stroke-color":
+                [
+                    "interpolate",
+                    [ "linear" ],
+                    [ "measure-light", "brightness" ],
+                    0.25,
+                    "hsl(0, 0%, 0%)",
+                    0.3,
+                    "hsl(220, 100%, 20%)"
+                ],
+                "circle-stroke-width": 1
+            }
+        },
+        {
+            "id": "NY-hotels-price",
+            "type": "symbol",
+            "slot": "top",
+            "source": "hotels_data",
+            "source-layer": "NY_hotels",
+            "minzoom": 9,
+            "layout": {
+                "text-field": ["to-string", ["concat", "$ ", ["get", "price"]]],
+                "text-offset": [0, -0.2],
+                "text-size": 14,
+                "icon-image": "price_1.2",
+                "text-font": ["Open Sans ExtraBold", "Arial Unicode MS Regular"]
+            },
+            "paint": {"text-color": "hsl(220, 100%, 20%)"}
+        }
+    ]
+}

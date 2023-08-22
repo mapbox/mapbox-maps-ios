@@ -54,6 +54,7 @@
         "LineLayerIntegrationTests",
         "LocationIndicatorLayerIntegrationTests",
         "MapInitOptionsIntegrationTests",
+        "MapRecorderIntegrationTests",
         "MapViewIntegrationTestCase",
         "MapViewIntegrationTests",
         "MapViewRenderedSnapshotIntegrationTests",
@@ -80,8 +81,8 @@
         "VectorSourceIntegrationTests"
       ],
       "target" : {
-        "containerPath" : "container:MapboxMaps.xcodeproj",
-        "identifier" : "86A60EEC97F04E1DF2BB7D80",
+        "containerPath" : "container:",
+        "identifier" : "MapboxMapsTests",
         "name" : "MapboxMapsTests"
       }
     }

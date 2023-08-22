@@ -1,0 +1,25 @@
+---
+manifests:
+  - type: Package.swift
+  - type: Package.resolved
+  - type: Package.resolved
+    path: Apps/Apps.xcworkspace/xcshareddata/swiftpm/Package.resolved
+  - type: Podspec
+  - type: packager
+dependencies:
+  # Temporary disabled since we use .binaryTarget instead of SPM dependency for MapboxCoreMaps
+  # - name: MapboxCoreMaps
+  #   variations:
+  #     Package.swift: mapbox-core-maps-ios
+  # - name: MapboxCommon
+  #   variations:
+  #     Package.swift: mapbox-common-ios
+  - name: Turf
+    variations:
+      Package.swift: turf-swift
+      Package.resolved: turf-swift
+manifest_definitions:
+  - name: packager
+    type: SemanticVersion
+    default_path: scripts/release/packager/versions.json
+    command: jq -r ".$DEPSVALIDATOR_DEPENDENCY_NAME" "$DEPSVALIDATOR_MANIFEST_PATH"

@@ -1,0 +1,95 @@
+/* East, short */
+"E" = "Сх";
+
+/* East by north, short */
+"EbN" = "ПнСх";
+
+/* East by south, short */
+"EbS" = "ПдСх";
+
+/* East-northeast, short */
+"ENE" = "Сх-ПнСх";
+
+/* East-southeast, short */
+"ESE" = "Сх-ПдСх";
+
+/* North, short */
+"N" = "Пн";
+
+/* North by east, short */
+"NbE" = "ПнСх";
+
+/* North by west, short */
+"NbW" = "ПнЗх";
+
+/* Northeast, short */
+"NE" = "ПнСх";
+
+/* Northeast by east, short */
+"NEbE" = "ПнСх-Сх";
+
+/* Northeast by north, short */
+"NEbN" = "ПнСх-Пн";
+
+/* North-northeast, short */
+"NNE" = "Пн-ПнСх";
+
+/* North-northwest, short */
+"NNW" = "Пн-ПнЗх";
+
+/* Northwest, short */
+"NW" = "ПнЗх";
+
+/* Northwest by north, short */
+"NWbN" = "ПнЗх-Пн";
+
+/* Northwest by west, short */
+"NWbW" = "ПнЗх-Зх";
+
+/* South, short */
+"S" = "Пд";
+
+/* South by east, short */
+"SbE" = "ПдСх";
+
+/* South by west, short */
+"SbW" = "ПдЗх";
+
+/* Southeast, short */
+"SE" = "ПдСх";
+
+/* Southeast by east, short */
+"SEbE" = "ПдСх-Сх";
+
+/* Southeast by south, short */
+"SEbS" = "ПдСх-Пд";
+
+/* South-southeast, short */
+"SSE" = "Пд-ПдСх";
+
+/* South-southwest, short */
+"SSW" = "Пд-ПдЗх";
+
+/* Southwest, short */
+"SW" = "ПдЗх";
+
+/* Southwest by south, short */
+"SWbS" = "ПдЗх-Пд";
+
+/* Southwest by west, short */
+"SWbW" = "ПдЗх-Зх";
+
+/* West, short */
+"W" = "Зх";
+
+/* West by north, short */
+"WbN" = "ПнЗх";
+
+/* West by south, short */
+"WbS" = "ПдЗх";
+
+/* West-northwest, short */
+"WNW" = "Зх-ПнЗх";
+
+/* West-southwest, short */
+"WSW" = "Зх-ПдЗх";

@@ -1,5 +1,0 @@
-description: "Install gh from Homebrew"
-steps:
-  - run:
-      name: Install gh
-      command: brew install gh

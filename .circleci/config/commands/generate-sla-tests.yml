@@ -1,6 +1,0 @@
-steps:
-- run:
-    name: Create SLA test variants
-    command: |
-        cd mapbox-maps-internal/test-spec/tests
-        python3 configure-spec.py --platform ios --name 3d --style mapbox://styles/mapbox/standard-beta

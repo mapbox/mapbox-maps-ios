@@ -3,13 +3,15 @@
 .build
 /Packages
 xcuserdata
+node_modules
 developer.xcconfig
-
-codegen/annotation-generator/generate-annotations.list
-codegen/style-generator/generate-style-code.list
-codegen/node_modules
+Carthage
+Cartfile*
+api-docs
+MapboxAccessToken
+scripts/release/packager/artifacts
+scripts/release/packager/build
+scripts/xcparty/.swiftpm
+MapboxMaps.xcodeproj
 
 .vscode
-Carthage
-MapboxMaps.xcodeproj
-Sources/Examples/CarPlay.entitlements

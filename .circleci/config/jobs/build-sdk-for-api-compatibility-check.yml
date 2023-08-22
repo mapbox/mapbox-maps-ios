@@ -1,5 +1,0 @@
-executor: xcode-sdk-min
-steps:
-  - dump-sdk-api:
-      baseline: false
-      output: latest.api.json

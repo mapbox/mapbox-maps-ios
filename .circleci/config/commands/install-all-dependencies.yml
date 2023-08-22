@@ -1,6 +1,0 @@
-description: "Install Dependencies"
-steps:
-  - install-python-dependencies
-  - install-xcodegen
-  - install-gh
-  - install-ccache

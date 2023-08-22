@@ -1,0 +1,1141 @@
+// v10 Changes
+// Converted parametreless constructors into a parametrized one
+Constructor GestureOptions.init() has been removed
+Constructor LocationOptions.init() has been removed
+
+// Annotation initializers changed to incorporate isSelected and isDraggable
+Constructor CircleAnnotation.init(id:centerCoordinate:) has been removed
+Constructor CircleAnnotation.init(id:point:) has been removed
+Constructor PointAnnotation.init(id:coordinate:) has been removed
+Constructor PointAnnotation.init(id:point:) has been removed
+Constructor PolygonAnnotation.init(id:polygon:) has been removed
+Constructor PolylineAnnotation.init(id:lineCoordinates:) has been removed
+Constructor PolylineAnnotation.init(id:lineString:) has been removed
+
+// Allow filtering sourceDataLoaded events by dataID
+Func Style.addSource(_:id:) has been renamed to Func addSource(_:id:dataId:)
+Func Style.updateGeoJSONSource(withId:geoJSON:) has been renamed to Func updateGeoJSONSource(withId:geoJSON:dataId:)
+// Add renamed flag for PuckBearingSource
+Constructor LocationOptions.init(distanceFilter:desiredAccuracy:activityType:puckType:puckBearingSource:puckBearingEnabled:) has removed default argument from parameter 4
+
+
+// v11 Changes
+Constructor Location.init(with:heading:) has been removed
+Func LocationManager.locationProvider(_:didFailWithError:) has been removed
+Func LocationManager.locationProvider(_:didUpdateHeading:) has been removed
+Func LocationManager.locationProvider(_:didUpdateLocations:) has been removed
+Func LocationManager.locationProviderDidChangeAuthorization(_:) has been removed
+Func LocationManager.updateHeadingForCurrentDeviceOrientation() has been removed
+Func MapboxMap.queryFeatureExtension(for:feature:extension:extensionField:args:completion:) has been removed
+Func MapboxMap.setRenderCache(_:) has been removed
+Protocol MapEventsObservable has been removed
+Protocol OrnamentOptionsProtocol has been removed
+Var NSNumber.CGFloat has been removed
+Var NSNumber.CLLocationDirection has been removed
+Class LocationManager has removed conformance to LocationProviderDelegate
+Class MapboxMap has removed conformance to MapEventsObservable
+Class Snapshotter has removed conformance to MapEventsObservable
+Struct AttributionButtonOptions has removed conformance to OrnamentOptionsProtocol
+Struct CompassViewOptions has removed conformance to OrnamentOptionsProtocol
+Struct LogoViewOptions has removed conformance to OrnamentOptionsProtocol
+Struct ScaleBarViewOptions has removed conformance to OrnamentOptionsProtocol
+Func CameraAnimationsManager.ease(to:duration:curve:completion:) has return type change from MapboxMaps.Cancelable? to MapboxMaps.Cancelable
+Func CameraAnimationsManager.fly(to:duration:completion:) has return type change from MapboxMaps.Cancelable? to MapboxMaps.Cancelable
+
+Var Snapshotter.tileMode has been removed
+Func MapboxMap.removeFeatureState(sourceId:sourceLayerId:featureId:stateKey:) has been renamed to Func removeFeatureState(sourceId:sourceLayerId:featureId:stateKey:callback:)
+Func MapboxMap.setFeatureState(sourceId:sourceLayerId:featureId:state:) has been renamed to Func setFeatureState(sourceId:sourceLayerId:featureId:state:callback:)
+Func MapboxMap.getFeatureState(sourceId:sourceLayerId:featureId:callback:) has return type change from () to MapboxMaps.Cancelable
+Func MapboxMap.getGeoJsonClusterChildren(forSourceId:feature:completion:) has return type change from () to MapboxMaps.Cancelable
+Func MapboxMap.getGeoJsonClusterExpansionZoom(forSourceId:feature:completion:) has return type change from () to MapboxMaps.Cancelable
+Func MapboxMap.getGeoJsonClusterLeaves(forSourceId:feature:limit:offset:completion:) has return type change from () to MapboxMaps.Cancelable
+Func MapboxMap.queryRenderedFeatures(with:options:completion:) has parameter 2 type change from (Swift.Result<[MapboxCoreMaps.QueriedFeature], Swift.Error>) -> Swift.Void to (Swift.Result<[MapboxCoreMaps.QueriedRenderedFeature], Swift.Error>) -> Swift.Void
+Func MapboxMap.querySourceFeatures(for:options:completion:) has parameter 2 type change from (Swift.Result<[MapboxCoreMaps.QueriedFeature], Swift.Error>) -> Swift.Void to (Swift.Result<[MapboxCoreMaps.QueriedSourceFeature], Swift.Error>) -> Swift.Void
+Func MapboxMap.querySourceFeatures(for:options:completion:) has return type change from () to MapboxMaps.Cancelable
+Func MapboxMap.removeFeatureState(sourceId:sourceLayerId:featureId:stateKey:) has return type change from () to MapboxMaps.Cancelable
+Func MapboxMap.setFeatureState(sourceId:sourceLayerId:featureId:state:) has return type change from () to MapboxMaps.Cancelable
+Func LocationManager.addLocationConsumer(newConsumer:) has been renamed to Func addLocationConsumer(_:)
+Func LocationManager.removeLocationConsumer(consumer:) has been renamed to Func removeLocationConsumer(_:)
+
+// Making Layer.visibility a required variable with no Expression support
+Accessor BackgroundLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Accessor BackgroundLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Accessor CircleLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Accessor CircleLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Accessor FillExtrusionLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Accessor FillExtrusionLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Accessor FillLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Accessor FillLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Accessor HeatmapLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Accessor HeatmapLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Accessor HillshadeLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Accessor HillshadeLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Accessor LineLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Accessor LineLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Accessor LocationIndicatorLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Accessor LocationIndicatorLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Accessor RasterLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Accessor RasterLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Accessor SkyLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Accessor SkyLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Accessor SymbolLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Accessor SymbolLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Var BackgroundLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Var CircleLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Var FillExtrusionLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Var FillLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Var HeatmapLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Var HillshadeLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Var LineLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Var LocationIndicatorLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Var RasterLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Var SkyLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+Var SymbolLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Visibility
+
+// Make Padding argument optional
+Func MapboxMap.camera(for:padding:bearing:pitch:) has parameter 1 type change from UIKit.UIEdgeInsets to UIKit.UIEdgeInsets?
+Func Snapshotter.camera(for:padding:bearing:pitch:) has parameter 1 type change from UIKit.UIEdgeInsets to UIKit.UIEdgeInsets?
+
+// Expose CameraAnimator.owner
+Var CameraAnimator.owner has been added as a protocol requirement
+
+// Merge TilesetDescriptorOptions and TilesetDescriptorOptionsForTilesets
+Constructor TilesetDescriptorOptions.init(styleURI:zoomRange:pixelRatio:stylePackOptions:) has been removed
+Constructor TilesetDescriptorOptionsForTilesets.init(tilesets:zoomRange:pixelRatio:) has been removed
+
+// Make LocationProvider require AnyObject
+Protocol LocationProvider has generic signature change from  to <Self : AnyObject>
+
+// New detections by Xcode 14.1
+Enum MapEvents.EventKind has been removed
+EnumElement LayerType.model has been removed
+Func MapboxMap.onEvery(_:handler:) has been removed
+Func MapboxMap.onNext(_:handler:) has been removed
+Func MapboxMap.queryRenderedFeatures(at:options:completion:) has been removed
+Func MapboxMap.queryRenderedFeatures(for:options:completion:) has been removed
+Func MapboxMap.queryRenderedFeatures(in:options:completion:) has been removed
+Func Snapshotter.onEvery(_:handler:) has been removed
+Func Snapshotter.onNext(_:handler:) has been removed
+Var BackgroundLayer.backgroundPatternTransition has been removed
+Var FillExtrusionLayer.fillExtrusionPatternTransition has been removed
+Var FillLayer.fillPatternTransition has been removed
+Var GestureOptions.pinchRotateEnabled has been removed
+Var LineLayer.lineDasharrayTransition has been removed
+Var LineLayer.linePatternTransition has been removed
+Var PointAnnotationManager.textLineHeight has been removed
+
+// Convert location to a struct
+Class Location has been changed to a Struct
+Func LocationConsumer.locationUpdate(newLocation:) has ObjC name change from locationUpdateWithNewLocation: to
+Func PuckLocationConsumer.puckLocationUpdate(newLocation:) has ObjC name change from puckLocationUpdateWithNewLocation: to
+Accessor LocationManager.consumers.Get() has return type change from Foundation.NSHashTable<MapboxMaps.LocationConsumer> to [MapboxMaps.LocationConsumer]
+Var LocationManager.consumers has declared type change from Foundation.NSHashTable<MapboxMaps.LocationConsumer> to [MapboxMaps.LocationConsumer]
+Class Location has removed conformance to CVarArg
+Class Location has removed conformance to CustomDebugStringConvertible
+Class Location has removed conformance to CustomStringConvertible
+Class Location has removed conformance to Hashable
+Class Location has removed conformance to NSObjectProtocol
+Class Location has removed conformance to Equatable
+
+// Remove unnecessary NSObject inheritances and @objc attributes
+Class BasicCameraAnimator has removed conformance to CVarArg
+Class BasicCameraAnimator has removed conformance to CustomDebugStringConvertible
+Class BasicCameraAnimator has removed conformance to CustomStringConvertible
+Class BasicCameraAnimator has removed conformance to Equatable
+Class BasicCameraAnimator has removed conformance to Hashable
+Class BasicCameraAnimator has removed conformance to NSObjectProtocol
+Class FlyToCameraAnimator has removed conformance to CVarArg
+Class FlyToCameraAnimator has removed conformance to CustomDebugStringConvertible
+Class FlyToCameraAnimator has removed conformance to CustomStringConvertible
+Class FlyToCameraAnimator has removed conformance to Equatable
+Class FlyToCameraAnimator has removed conformance to Hashable
+Class FlyToCameraAnimator has removed conformance to NSObjectProtocol
+Class LocationManager has removed conformance to CVarArg
+Class LocationManager has removed conformance to CustomDebugStringConvertible
+Class LocationManager has removed conformance to CustomStringConvertible
+Class LocationManager has removed conformance to Equatable
+Class LocationManager has removed conformance to Hashable
+Class LocationManager has removed conformance to NSObjectProtocol
+Class OrnamentsManager has removed conformance to CVarArg
+Class OrnamentsManager has removed conformance to CustomDebugStringConvertible
+Class OrnamentsManager has removed conformance to CustomStringConvertible
+Class OrnamentsManager has removed conformance to Equatable
+Class OrnamentsManager has removed conformance to Hashable
+Class OrnamentsManager has removed conformance to NSObjectProtocol
+Func LocationPermissionsDelegate.locationManager(_:didChangeAccuracyAuthorization:) is no longer an optional requirement
+Func LocationPermissionsDelegate.locationManager(_:didFailToLocateUserWithError:) is no longer an optional requirement
+Func LocationPermissionsDelegate.locationManagerShouldDisplayHeadingCalibration(_:) is no longer an optional requirement
+Class BasicCameraAnimator has removed its super class ObjectiveC.NSObject
+Class BasicCameraAnimator no longer inherits convenience inits from its superclass
+Class FlyToCameraAnimator has removed its super class ObjectiveC.NSObject
+Class LocationManager has removed its super class ObjectiveC.NSObject
+Class LocationManager no longer inherits convenience inits from its superclass
+Class OrnamentsManager has removed its super class ObjectiveC.NSObject
+Class OrnamentsManager no longer inherits convenience inits from its superclass
+
+// Typesafe Events
+Func MapboxMap.onEvery(event:handler:) has parameter 0 type change from MapboxCoreMaps.MapEvents.Event<Payload> to MapboxMaps.MapEventType<Payload>
+Func MapboxMap.onNext(event:handler:) has parameter 0 type change from MapboxCoreMaps.MapEvents.Event<Payload> to MapboxMaps.MapEventType<Payload>
+Func Snapshotter.onEvery(event:handler:) has parameter 0 type change from MapboxCoreMaps.MapEvents.Event<Payload> to MapboxMaps.MapEventType<Payload>
+Func Snapshotter.onNext(event:handler:) has parameter 0 type change from MapboxCoreMaps.MapEvents.Event<Payload> to MapboxMaps.MapEventType<Payload>
+Class MapEvent has been removed
+Enum RenderMode has been removed
+Enum ResourceDataSource has been removed
+Enum SourceDataType has been removed
+Enum StyleDataType has been removed
+EnumElement MapLoadingError.glyphs has been removed
+EnumElement MapLoadingError.source has been removed
+EnumElement MapLoadingError.sprite has been removed
+EnumElement MapLoadingError.style has been removed
+EnumElement MapLoadingError.tile has been removed
+Func MapboxMap.subscribe(_:events:) has been removed
+Func MapboxMap.unsubscribe(_:events:) has been removed
+Func Snapshotter.subscribe(_:events:) has been removed
+Func Snapshotter.unsubscribe(_:events:) has been removed
+Struct MapLoadingErrorPayload has been removed
+Struct NoPayload has been removed
+Struct RenderFrameFinishedPayload has been removed
+Struct ResourceRequest has been removed
+Struct ResourceRequestPayload has been removed
+Struct ResourceResponse has been removed
+Struct SourceAddedPayload has been removed
+Struct SourceDataLoadedPayload has been removed
+Struct SourceRemovedPayload has been removed
+Struct StyleDataLoadedPayload has been removed
+Struct StyleImageMissingPayload has been removed
+Struct StyleImageUnusedPayload has been removed
+Struct MapEvents.Event has been removed
+TypeAlias Event has been removed
+Enum MapLoadingError has been changed to a Class
+Enum MapLoadingError has ObjC name change from  to MBMMapLoadingError
+Func MapboxMap.loadStyleJSON(_:completion:) has parameter 1 type change from ((Swift.Result<MapboxMaps.Style, Swift.Error>) -> Swift.Void)? to ((Swift.Result<MapboxMaps.Style, MapboxCoreMaps.MapLoadingError>) -> Swift.Void)?
+Func MapboxMap.loadStyleURI(_:completion:) has parameter 1 type change from ((Swift.Result<MapboxMaps.Style, Swift.Error>) -> Swift.Void)? to ((Swift.Result<MapboxMaps.Style, MapboxCoreMaps.MapLoadingError>) -> Swift.Void)?
+Func MapboxMap.onEvery(event:handler:) has parameter 1 type change from (MapboxMaps.MapEvent<Payload>) -> Swift.Void to (Payload) -> Swift.Void
+Func MapboxMap.onNext(event:handler:) has parameter 1 type change from (MapboxMaps.MapEvent<Payload>) -> Swift.Void to (Payload) -> Swift.Void
+Func Snapshotter.onEvery(event:handler:) has parameter 1 type change from (MapboxMaps.MapEvent<Payload>) -> Swift.Void to (Payload) -> Swift.Void
+Func Snapshotter.onNext(event:handler:) has parameter 1 type change from (MapboxMaps.MapEvent<Payload>) -> Swift.Void to (Payload) -> Swift.Void
+Func MapboxMap.onEvery(event:handler:) has generic signature change from <Payload where Payload : Swift.Decodable> to <Payload>
+Func MapboxMap.onNext(event:handler:) has generic signature change from <Payload where Payload : Swift.Decodable> to <Payload>
+Func Snapshotter.onEvery(event:handler:) has generic signature change from <Payload where Payload : Swift.Decodable> to <Payload>
+Func Snapshotter.onNext(event:handler:) has generic signature change from <Payload where Payload : Swift.Decodable> to <Payload>
+Var MapEvents.Event.cameraChanged has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.NoPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.CameraChanged>
+Var MapEvents.Event.mapIdle has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.NoPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.MapIdle>
+Var MapEvents.Event.mapLoaded has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.NoPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.MapLoaded>
+Var MapEvents.Event.mapLoadingError has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.MapLoadingErrorPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.MapLoadingError>
+Var MapEvents.Event.renderFrameFinished has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.RenderFrameFinishedPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.RenderFrameFinished>
+Var MapEvents.Event.renderFrameStarted has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.NoPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.RenderFrameStarted>
+Var MapEvents.Event.resourceRequest has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.ResourceRequestPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.ResourceRequest>
+Var MapEvents.Event.sourceAdded has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.SourceAddedPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.SourceAdded>
+Var MapEvents.Event.sourceDataLoaded has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.SourceDataLoadedPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.SourceDataLoaded>
+Var MapEvents.Event.sourceRemoved has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.SourceRemovedPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.SourceRemoved>
+Var MapEvents.Event.styleDataLoaded has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.StyleDataLoadedPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.StyleDataLoaded>
+Var MapEvents.Event.styleImageMissing has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.StyleImageMissingPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.StyleImageMissing>
+Var MapEvents.Event.styleImageRemoveUnused has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.StyleImageUnusedPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.StyleImageRemoveUnused>
+Var MapEvents.Event.styleLoaded has declared type change from MapboxCoreMaps.MapEvents.Event<MapboxMaps.NoPayload> to MapboxMaps.MapEvents.Event<MapboxCoreMaps.StyleLoaded>
+Extension MapEvents has ObjC name change from MBMMapEvents to
+Extension MapEvents has removed conformance to CVarArg
+Extension MapEvents has removed conformance to CustomDebugStringConvertible
+Extension MapEvents has removed conformance to CustomStringConvertible
+Extension MapEvents has removed conformance to Equatable
+Extension MapEvents has removed conformance to Hashable
+Extension MapEvents has removed conformance to NSObjectProtocol
+Class MapEvents no longer inherits convenience inits from its superclass
+Extension MapEvents has removed its super class ObjectiveC.NSObject
+Extension MapEvents is no longer open for subclassing
+Constructor ResourceRequest.init(from:) has been removed
+Enum ResourceRequest.Kind has been removed
+Enum ResourceRequest.LoadingMethod has been removed
+Enum ResourceRequest.Priority has been removed
+Var ResourceRequest.kind has been removed
+Var ResourceRequest.loadingMethod has been removed
+Var ResourceRequest.priority has been removed
+Var ResourceRequest.url has been removed
+Struct ResourceRequest has been changed to a Class
+EnumElement MapLoadingError.source has been renamed to EnumElement sourceId
+EnumElement MapLoadingError.tile has been renamed to EnumElement tileId
+Extension MapEvents has ObjC name change from MBMMapEvents to
+Struct ResourceRequest has ObjC name change from  to MBMResourceRequest
+EnumElement MapLoadingError.source has declared type change from (MapboxMaps.MapLoadingError.Type) -> (Swift.String) -> MapboxMaps.MapLoadingError to Swift.String?
+EnumElement MapLoadingError.tile has declared type change from (MapboxMaps.MapLoadingError.Type) -> (Swift.String) -> MapboxMaps.MapLoadingError to MapboxCoreMaps.CanonicalTileID?
+Struct ResourceRequest has removed conformance to Decodable
+
+// Add renamed flag for PuckBearingSource
+Constructor LocationOptions.init(distanceFilter:desiredAccuracy:activityType:puckType:puckBearingSource:puckBearingEnabled:) has been removed
+Enum PuckBearingSource has been renamed to Enum PuckBearing
+Var LocationOptions.puckBearingSource has been renamed to Var puckBearing
+EnumElement PuckBearingSource.course has declared type change from (MapboxMaps.PuckBearingSource.Type) -> MapboxMaps.PuckBearingSource to (MapboxMaps.PuckBearing.Type) -> MapboxMaps.PuckBearing
+EnumElement PuckBearingSource.heading has declared type change from (MapboxMaps.PuckBearingSource.Type) -> MapboxMaps.PuckBearingSource to (MapboxMaps.PuckBearing.Type) -> MapboxMaps.PuckBearing
+Func PuckBearingSource.==(_:_:) has parameter 0 type change from MapboxMaps.PuckBearingSource to MapboxMaps.PuckBearing
+Func PuckBearingSource.==(_:_:) has parameter 1 type change from MapboxMaps.PuckBearingSource to MapboxMaps.PuckBearing
+Var LocationOptions.puckBearingSource has declared type change from MapboxMaps.PuckBearingSource to MapboxMaps.PuckBearing
+Accessor LocationOptions.puckBearingSource.Get() has return type change from MapboxMaps.PuckBearingSource to MapboxMaps.PuckBearing
+Accessor LocationOptions.puckBearingSource.Set() has parameter 0 type change from MapboxMaps.PuckBearingSource to MapboxMaps.PuckBearing
+
+// Rename MemoryBudget API
+Func MapboxMap.setMemoryBudget(_:) has been removed
+
+// Remove public access to the internal StyleManager
+Var Style.styleManager has been removed
+
+// Adopt MapboxCommon.Cancelable protocol
+Protocol CameraAnimator has generic signature change from <Self : MapboxMaps.Cancelable> to <Self : MapboxCommon.Cancelable>
+Protocol Cancelable has been removed
+Func BasicCameraAnimator.cancel() has ObjC name change from  to cancel
+Func FlyToCameraAnimator.cancel() has ObjC name change from  to cancel
+Func CameraAnimationsManager.ease(to:duration:curve:completion:) has return type change from MapboxMaps.Cancelable? to MapboxCommon.Cancelable
+Func CameraAnimationsManager.fly(to:duration:completion:) has return type change from MapboxMaps.Cancelable? to MapboxCommon.Cancelable
+Func MapboxMap.getFeatureState(sourceId:sourceLayerId:featureId:callback:) has return type change from () to MapboxCommon.Cancelable
+Func MapboxMap.getGeoJsonClusterChildren(forSourceId:feature:completion:) has return type change from () to MapboxCommon.Cancelable
+Func MapboxMap.getGeoJsonClusterExpansionZoom(forSourceId:feature:completion:) has return type change from () to MapboxCommon.Cancelable
+Func MapboxMap.getGeoJsonClusterLeaves(forSourceId:feature:limit:offset:completion:) has return type change from () to MapboxCommon.Cancelable
+Func MapboxMap.querySourceFeatures(for:options:completion:) has return type change from () to MapboxCommon.Cancelable
+Func MapboxMap.removeFeatureState(sourceId:sourceLayerId:featureId:stateKey:) has return type change from () to MapboxCommon.Cancelable
+Func MapboxMap.setFeatureState(sourceId:sourceLayerId:featureId:state:) has return type change from () to MapboxCommon.Cancelable
+// `SourceType` and `LayerType` are now Structs with static variables instead of Enums
+Constructor LayerType.init(rawValue:) has return type change from MapboxMaps.LayerType? to MapboxMaps.LayerType
+Constructor SourceType.init(rawValue:) has return type change from MapboxMaps.SourceType? to MapboxMaps.SourceType
+Enum LayerType has been changed to a Struct
+Enum SourceType has been changed to a Struct
+EnumElement LayerType.background has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.circle has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.fill has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.fillExtrusion has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.heatmap has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.hillshade has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.line has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.locationIndicator has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.model has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.raster has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.sky has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement LayerType.symbol has declared type change from (MapboxMaps.LayerType.Type) -> MapboxMaps.LayerType to MapboxMaps.LayerType
+EnumElement SourceType.geoJson has declared type change from (MapboxMaps.SourceType.Type) -> MapboxMaps.SourceType to MapboxMaps.SourceType
+EnumElement SourceType.image has declared type change from (MapboxMaps.SourceType.Type) -> MapboxMaps.SourceType to MapboxMaps.SourceType
+EnumElement SourceType.model has declared type change from (MapboxMaps.SourceType.Type) -> MapboxMaps.SourceType to MapboxMaps.SourceType
+EnumElement SourceType.raster has declared type change from (MapboxMaps.SourceType.Type) -> MapboxMaps.SourceType to MapboxMaps.SourceType
+EnumElement SourceType.rasterDem has declared type change from (MapboxMaps.SourceType.Type) -> MapboxMaps.SourceType to MapboxMaps.SourceType
+EnumElement SourceType.vector has declared type change from (MapboxMaps.SourceType.Type) -> MapboxMaps.SourceType to MapboxMaps.SourceType
+Accessor LayerType.layerType.Get() has return type change from MapboxMaps.Layer.Type to MapboxMaps.Layer.Type?
+Accessor SourceType.sourceType.Get() has return type change from MapboxMaps.Source.Type to MapboxMaps.Source.Type?
+Var LayerType.layerType has declared type change from MapboxMaps.Layer.Type to MapboxMaps.Layer.Type?
+Var SourceType.sourceType has declared type change from MapboxMaps.Source.Type to MapboxMaps.Source.Type?
+EnumElement LayerType.background is now static
+EnumElement LayerType.circle is now static
+EnumElement LayerType.fill is now static
+EnumElement LayerType.fillExtrusion is now static
+EnumElement LayerType.heatmap is now static
+EnumElement LayerType.hillshade is now static
+EnumElement LayerType.line is now static
+EnumElement LayerType.locationIndicator is now static
+EnumElement LayerType.model is now static
+EnumElement LayerType.raster is now static
+EnumElement LayerType.sky is now static
+EnumElement LayerType.symbol is now static
+EnumElement SourceType.geoJson is now static
+EnumElement SourceType.image is now static
+EnumElement SourceType.model is now static
+EnumElement SourceType.raster is now static
+EnumElement SourceType.rasterDem is now static
+EnumElement SourceType.vector is now static
+
+// Add id field to Source
+Constructor GeoJSONSource.init() has been removed
+Constructor ImageSource.init() has been removed
+Constructor RasterDemSource.init() has been removed
+Constructor RasterSource.init() has been removed
+Constructor VectorSource.init() has been removed
+Func Style.addSource(_:id:dataId:) has been renamed to Func addSource(_:dataId:)
+Func Style.addSource(_:id:dataId:) has parameter 1 type change from Swift.String to Swift.String?
+Var Source.id has been added as a protocol requirement
+
+// New settings for Access token and Resource options
+Class ResourceOptionsManager has been removed
+Constructor MapInitOptions.init(resourceOptions:mapOptions:cameraOptions:styleURI:styleJSON:) has been removed
+Constructor MapSnapshotOptions.init(size:pixelRatio:glyphsRasterizationOptions:resourceOptions:showsLogo:showsAttribution:) has been removed
+Constructor OfflineManager.init(resourceOptions:) has been removed
+Constructor OfflineRegionManager.init(resourceOptions:) has been removed
+Func MapboxMap.clearData(for:completion:) has been removed
+Struct ResourceOptions has been removed
+Var MapInitOptions.resourceOptions has been removed
+Var MapSnapshotOptions.resourceOptions has been removed
+Var MapboxMap.resourceOptions has been removed
+Func MapboxMap.clearData(completion:) is now static
+
+// Add visibility to Layer protocol requirements.
+Var Layer.visibility has been added as a protocol requirement
+
+// Support string option in GeoJSONSourceData
+EnumElement GeoJSONSourceData.empty has been removed
+EnumElement GeoJSONSourceData.url has been removed
+
+// `TypeConversionError`, `SnapshotError`, and `ViewAnnotationManagerError` are now structs with static variables instead of enums
+Enum MapView.SnapshotError has been changed to a Struct
+Enum TypeConversionError has been changed to a Struct
+Enum ViewAnnotationManagerError has been changed to a Struct
+EnumElement MapView.SnapshotError.missingImageData has declared type change from (MapboxMaps.MapView.SnapshotError.Type) -> MapboxMaps.MapView.SnapshotError to MapboxMaps.MapView.SnapshotError
+EnumElement MapView.SnapshotError.noMetalView has declared type change from (MapboxMaps.MapView.SnapshotError.Type) -> MapboxMaps.MapView.SnapshotError to MapboxMaps.MapView.SnapshotError
+EnumElement TypeConversionError.invalidObject has declared type change from (MapboxMaps.TypeConversionError.Type) -> MapboxMaps.TypeConversionError to MapboxMaps.TypeConversionError
+EnumElement TypeConversionError.unexpectedType has declared type change from (MapboxMaps.TypeConversionError.Type) -> MapboxMaps.TypeConversionError to MapboxMaps.TypeConversionError
+EnumElement TypeConversionError.unsuccessfulConversion has declared type change from (MapboxMaps.TypeConversionError.Type) -> MapboxMaps.TypeConversionError to MapboxMaps.TypeConversionError
+EnumElement ViewAnnotationManagerError.annotationNotFound has declared type change from (MapboxMaps.ViewAnnotationManagerError.Type) -> MapboxMaps.ViewAnnotationManagerError to MapboxMaps.ViewAnnotationManagerError
+EnumElement ViewAnnotationManagerError.associatedFeatureIdIsAlreadyInUse has declared type change from (MapboxMaps.ViewAnnotationManagerError.Type) -> MapboxMaps.ViewAnnotationManagerError to MapboxMaps.ViewAnnotationManagerError
+EnumElement ViewAnnotationManagerError.geometryFieldMissing has declared type change from (MapboxMaps.ViewAnnotationManagerError.Type) -> MapboxMaps.ViewAnnotationManagerError to MapboxMaps.ViewAnnotationManagerError
+EnumElement ViewAnnotationManagerError.viewIsAlreadyAdded has declared type change from (MapboxMaps.ViewAnnotationManagerError.Type) -> MapboxMaps.ViewAnnotationManagerError to MapboxMaps.ViewAnnotationManagerError
+EnumElement MapView.SnapshotError.missingImageData is now static
+EnumElement MapView.SnapshotError.noMetalView is now static
+EnumElement TypeConversionError.invalidObject is now static
+EnumElement TypeConversionError.unexpectedType is now static
+EnumElement TypeConversionError.unsuccessfulConversion is now static
+EnumElement ViewAnnotationManagerError.annotationNotFound is now static
+EnumElement ViewAnnotationManagerError.associatedFeatureIdIsAlreadyInUse is now static
+EnumElement ViewAnnotationManagerError.geometryFieldMissing is now static
+EnumElement ViewAnnotationManagerError.viewIsAlreadyAdded is now static
+Enum MapView.SnapshotError has removed conformance to Hashable
+Enum TypeConversionError has removed conformance to Hashable
+Enum ViewAnnotationManagerError has removed conformance to Hashable
+Func MapView.SnapshotError.hash(into:) has been removed
+Func TypeConversionError.hash(into:) has been removed
+Func ViewAnnotationManagerError.hash(into:) has been removed
+Var MapView.SnapshotError.hashValue has been removed
+Var TypeConversionError.hashValue has been removed
+Var ViewAnnotationManagerError.hashValue has been removed
+
+// Offline APIs - add extraOptions in load options
+Constructor StylePackLoadOptions.init(glyphsRasterizationMode:metadata:acceptExpired:) has been removed
+Constructor TileRegionLoadOptions.init(geometry:descriptors:metadata:acceptExpired:networkRestriction:averageBytesPerSecond:) has been removed
+
+// Style APIs
+Var Style.isLoaded has been removed
+Class Style has been renamed to Class StyleManager
+Var Style.JSON has been renamed to Var styleJSON
+Var Style.defaultCamera has been renamed to Var styleDefaultCamera
+Var Style.transition has been renamed to Var styleTransition
+Var Style.uri has been renamed to Var styleURI
+Accessor MapboxMap.style.Get() has return type change from MapboxMaps.Style to MapboxMaps.StyleManager
+Accessor Snapshotter.style.Get() has return type change from MapboxMaps.Style to MapboxMaps.StyleManager
+Func MapboxMap.loadStyleJSON(_:completion:) has parameter 1 type change from ((Swift.Result<MapboxMaps.Style, Swift.Error>) -> Swift.Void)? to ((MapboxCoreMaps.MapLoadingError?) -> Swift.Void)?
+Func MapboxMap.loadStyleURI(_:completion:) has parameter 1 type change from ((Swift.Result<MapboxMaps.Style, Swift.Error>) -> Swift.Void)? to ((MapboxCoreMaps.MapLoadingError?) -> Swift.Void)?
+Var MapboxMap.style has declared type change from MapboxMaps.Style to MapboxMaps.StyleManager
+Var Snapshotter.style has declared type change from MapboxMaps.Style to MapboxMaps.StyleManager
+
+// Expose Model layer as experimental
+EnumElement LayerType.model is now with @_spi
+
+// Simplify location provider
+Func LocationProviderDelegate.locationProvider(_:didUpdateHeading:) has generic signature change from <Self where Self : MapboxMaps.LocationProviderDelegate> to <Self where Self : MapboxMaps.AppleLocationProviderDelegate>
+Func LocationProviderDelegate.locationProvider(_:didUpdateLocations:) has generic signature change from <Self where Self : MapboxMaps.LocationProviderDelegate> to <Self where Self : MapboxMaps.AppleLocationProviderDelegate>
+Constructor AppleLocationProvider.init() has been removed
+Constructor MapView.init(frame:mapInitOptions:orientationProvider:urlOpener:) has been removed
+Func AppleLocationProvider.dismissHeadingCalibrationDisplay() has been removed
+Func AppleLocationProvider.requestAlwaysAuthorization() has been removed
+Func AppleLocationProvider.requestWhenInUseAuthorization() has been removed
+Func AppleLocationProvider.setDelegate(_:) has been removed
+Func AppleLocationProvider.startUpdatingHeading() has been removed
+Func AppleLocationProvider.startUpdatingLocation() has been removed
+Func AppleLocationProvider.stopUpdatingHeading() has been removed
+Func AppleLocationProvider.stopUpdatingLocation() has been removed
+Func InterfaceOrientationProvider.interfaceOrientation(for:) has been removed
+Func LocationManager.requestTemporaryFullAccuracyPermissions(withPurposeKey:) has been removed
+Func LocationProvider.dismissHeadingCalibrationDisplay() has been removed
+Func LocationProvider.requestAlwaysAuthorization() has been removed
+Func LocationProvider.requestTemporaryFullAccuracyAuthorization(withPurposeKey:) has been removed
+Func LocationProvider.requestWhenInUseAuthorization() has been removed
+Func LocationProvider.setDelegate(_:) has been removed
+Func LocationProvider.startUpdatingHeading() has been removed
+Func LocationProvider.startUpdatingLocation() has been removed
+Func LocationProvider.stopUpdatingHeading() has been removed
+Func LocationProvider.stopUpdatingLocation() has been removed
+Func LocationProviderDelegate.locationProvider(_:didFailWithError:) has been removed
+Func LocationProviderDelegate.locationProviderDidChangeAuthorization(_:) has been removed
+Protocol LocationPermissionsDelegate has been removed
+Var AppleLocationProvider.accuracyAuthorization has been removed
+Var AppleLocationProvider.authorizationStatus has been removed
+Var AppleLocationProvider.heading has been removed
+Var AppleLocationProvider.headingOrientation has been removed
+Var LocationManager.consumers has been removed
+Var LocationManager.delegate has been removed
+Var LocationOptions.activityType has been removed
+Var LocationOptions.desiredAccuracy has been removed
+Var LocationOptions.distanceFilter has been removed
+Var LocationProvider.accuracyAuthorization has been removed
+Var LocationProvider.authorizationStatus has been removed
+Var LocationProvider.heading has been removed
+Var LocationProvider.headingOrientation has been removed
+Var LocationProvider.locationProviderOptions has been removed
+Func AppleLocationProvider.locationManager(_:didFailWithError:) has ObjC name change from locationManager:didFailWithError: to
+Func AppleLocationProvider.locationManager(_:didUpdateHeading:) has ObjC name change from locationManager:didUpdateHeading: to
+Func AppleLocationProvider.locationManager(_:didUpdateLocations:) has ObjC name change from locationManager:didUpdateLocations: to
+Func AppleLocationProvider.locationManagerDidChangeAuthorization(_:) has ObjC name change from locationManagerDidChangeAuthorization: to
+Func AppleLocationProvider.locationManagerShouldDisplayHeadingCalibration(_:) has ObjC name change from locationManagerShouldDisplayHeadingCalibration: to
+Func LocationProviderDelegate.locationProvider(_:didUpdateHeading:) has been renamed to Func appleLocationProvider(_:didChangeAccuracyAuthorization:)
+Func LocationProviderDelegate.locationProvider(_:didUpdateLocations:) has been renamed to Func appleLocationProvider(_:didFailWithError:)
+Protocol LocationProviderDelegate has been renamed to Protocol AppleLocationProviderDelegate
+Var AppleLocationProvider.locationProviderOptions has been renamed to Var options
+Accessor AppleLocationProvider.locationProviderOptions.Get() has return type change from MapboxMaps.LocationOptions to MapboxMaps.AppleLocationProvider.Options
+Accessor AppleLocationProvider.locationProviderOptions.Set() has parameter 0 type change from MapboxMaps.LocationOptions to MapboxMaps.AppleLocationProvider.Options
+Accessor LocationManager.locationProvider.Get() has return type change from MapboxMaps.LocationProvider! to MapboxMaps.LocationProvider
+Func LocationProviderDelegate.locationProvider(_:didUpdateHeading:) has parameter 0 type change from MapboxMaps.LocationProvider to MapboxMaps.AppleLocationProvider
+Func LocationProviderDelegate.locationProvider(_:didUpdateHeading:) has parameter 1 type change from CoreLocation.CLHeading to CoreLocation.CLAccuracyAuthorization
+Func LocationProviderDelegate.locationProvider(_:didUpdateLocations:) has parameter 0 type change from MapboxMaps.LocationProvider to MapboxMaps.AppleLocationProvider
+Func LocationProviderDelegate.locationProvider(_:didUpdateLocations:) has parameter 1 type change from [CoreLocation.CLLocation] to Swift.Error
+Var AppleLocationProvider.locationProviderOptions has declared type change from MapboxMaps.LocationOptions to MapboxMaps.AppleLocationProvider.Options
+Var LocationManager.locationProvider has declared type change from MapboxMaps.LocationProvider! to MapboxMaps.LocationProvider
+Class AppleLocationProvider has removed conformance to CLLocationManagerDelegate
+Class AppleLocationProvider has removed conformance to CVarArg
+Class AppleLocationProvider has removed conformance to CustomDebugStringConvertible
+Class AppleLocationProvider has removed conformance to CustomStringConvertible
+Class AppleLocationProvider has removed conformance to Equatable
+Class AppleLocationProvider has removed conformance to Hashable
+Class AppleLocationProvider has removed conformance to NSObjectProtocol
+Func AppleLocationProviderDelegate.appleLocationProviderShouldDisplayHeadingCalibration(_:) has been added as a protocol requirement
+Func LocationProvider.add(consumer:) has been added as a protocol requirement
+Func LocationProvider.remove(consumer:) has been added as a protocol requirement
+Var InterfaceOrientationProvider.onInterfaceOrientationChange has been added as a protocol requirement
+Var LocationProvider.latestLocation has been added as a protocol requirement
+Class AppleLocationProvider has removed its super class ObjectiveC.NSObject
+Class AppleLocationProvider no longer inherits convenience inits from its superclass
+
+// MapRecorder replay API changes
+Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:completion:) has been renamed to Func replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:)
+Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:completion:) has parameter 3 type change from () -> Swift.Void to Swift.Bool
+
+// Rename Viewport to ViewportManager
+Class Viewport has been renamed to Class ViewportManager
+Accessor MapView.viewport.Get() has return type change from MapboxMaps.Viewport! to MapboxMaps.ViewportManager!
+Var MapView.viewport has declared type change from MapboxMaps.Viewport! to MapboxMaps.ViewportManager!
+
+// OfflineManager + remove style packs
+Func OfflineManager.removeStylePack(for:) has been renamed to Func removeStylePack(for:completion:)
+
+// New Layer inits with source (when applies)
+Accessor Layer.source.Set() has been removed
+Accessor Layer.sourceLayer.Set() has been removed
+Constructor CircleLayer.init(id:) has been removed
+Constructor FillExtrusionLayer.init(id:) has been removed
+Constructor FillLayer.init(id:) has been removed
+Constructor HeatmapLayer.init(id:) has been removed
+Constructor HillshadeLayer.init(id:) has been removed
+Constructor LineLayer.init(id:) has been removed
+Constructor RasterLayer.init(id:) has been removed
+Constructor SymbolLayer.init(id:) has been removed
+
+// cameraForCoordinateBounds
+Func MapboxMap.camera(for:padding:bearing:pitch:) has been renamed to Func camera(for:padding:bearing:pitch:maxZoom:offset:)
+Func MapboxMap.camera(for:padding:bearing:pitch:) has parameter 0 type change from MapboxCoreMaps.CoordinateBounds to [CoreLocation.CLLocationCoordinate2D]
+Func MapboxMap.camera(for:padding:bearing:pitch:) has parameter 0 type change from [CoreLocation.CLLocationCoordinate2D] to MapboxCoreMaps.CoordinateBounds
+
+// Split Location into Location and Heading
+Class Location has been removed
+Func LocationManager.addLocationConsumer(newConsumer:) has been removed
+Func LocationManager.addPuckLocationConsumer(_:) has been removed
+Func LocationManager.removeLocationConsumer(consumer:) has been removed
+Func LocationManager.removePuckLocationConsumer(_:) has been removed
+Protocol LocationConsumer has been removed
+Protocol LocationProvider has been removed
+Protocol PuckLocationConsumer has been removed
+Protocol InterfaceOrientationProvider has been removed
+Var LocationManager.locationProvider has been removed
+Func LocationManager.overrideLocationProvider(with:) has been renamed to Func override(locationProvider:headingProvider:)
+Func LocationManager.overrideLocationProvider(with:) has parameter 0 type change from MapboxMaps.LocationProvider to MapboxMaps.Signal<[MapboxCommon.Location]>
+Class AppleLocationProvider has removed conformance to LocationProvider
+Func LocationManager.overrideLocationProvider(with:) has been renamed to Func override(provider:)
+Var AppleLocationProvider.heading has been renamed to Var latestHeading
+Accessor AppleLocationProvider.heading.Get() has return type change from CoreLocation.CLHeading? to MapboxMaps.Heading?
+Func LocationManager.overrideLocationProvider(with:) has parameter 0 type change from MapboxMaps.LocationProvider to MapboxCommon.LocationProvider & MapboxMaps.HeadingProvider
+Var AppleLocationProvider.heading has declared type change from CoreLocation.CLHeading? to MapboxMaps.Heading?
+Constructor AppleLocationProvider.init() has ObjC name change from init to
+
+// Remove source, sourceLayer, filter from the Layer protocol
+Var BackgroundLayer.filter has been removed
+Var BackgroundLayer.source has been removed
+Var BackgroundLayer.sourceLayer has been removed
+Var Layer.filter has been removed
+Var Layer.source has been removed
+Var Layer.sourceLayer has been removed
+Var LocationIndicatorLayer.filter has been removed
+Var LocationIndicatorLayer.source has been removed
+Var LocationIndicatorLayer.sourceLayer has been removed
+Var SkyLayer.filter has been removed
+Var SkyLayer.source has been removed
+Var SkyLayer.sourceLayer has been removed
+
+// New lights API adoption
+Struct Light has generic signature change from  to <Self : MapboxMaps.StyleEncodable, Self : Swift.Decodable, Self : Swift.Encodable>
+Constructor Light.init() has been removed
+Constructor Light.init(from:) has been removed
+Func Light.encode(to:) has been removed
+Func Style.lightProperty(_:) has been removed
+Var Light.anchor has been removed
+Var Light.color has been removed
+Var Light.colorTransition has been removed
+Var Light.intensity has been removed
+Var Light.intensityTransition has been removed
+Var Light.position has been removed
+Var Light.positionTransition has been removed
+Struct Light has been changed to a Protocol
+Func Style.lightProperty(_:) has been renamed to Func lightProperty(for:property:)
+Func Style.setLight(_:) has been renamed to Func setLights(_:)
+Func Style.setLight(properties:) has been renamed to Func setLights(ambient:directional:)
+Func Style.setLightProperty(_:value:) has been renamed to Func setLightProperty(for:property:value:)
+Func Style.setLight(_:) has parameter 0 type change from MapboxMaps.Light to MapboxMaps.FlatLight
+Func Style.setLight(properties:) has parameter 0 type change from [Swift.String : Any] to MapboxMaps.AmbientLight
+Func Style.setLightProperty(_:value:) has parameter 1 type change from Any to Swift.String
+Func Style.setLight(properties:) is now with @_spi
+Protocol Light has added inherited protocol StyleEncodable
+Struct Light has been renamed to Struct FlatLight
+Accessor Light.anchor.Get() has return type change from MapboxMaps.Anchor? to MapboxMaps.Value<MapboxMaps.Anchor>?
+Accessor Light.anchor.Set() has parameter 0 type change from MapboxMaps.Anchor? to MapboxMaps.Value<MapboxMaps.Anchor>?
+Accessor Light.color.Get() has return type change from MapboxMaps.StyleColor? to MapboxMaps.Value<MapboxMaps.StyleColor>?
+Accessor Light.color.Set() has parameter 0 type change from MapboxMaps.StyleColor? to MapboxMaps.Value<MapboxMaps.StyleColor>?
+Accessor Light.intensity.Get() has return type change from Swift.Double? to MapboxMaps.Value<Swift.Double>?
+Accessor Light.intensity.Set() has parameter 0 type change from Swift.Double? to MapboxMaps.Value<Swift.Double>?
+Accessor Light.position.Get() has return type change from [Swift.Double]? to MapboxMaps.Value<[Swift.Double]>?
+Accessor Light.position.Set() has parameter 0 type change from [Swift.Double]? to MapboxMaps.Value<[Swift.Double]>?
+Constructor Light.init(from:) has return type change from MapboxMaps.Light to MapboxMaps.FlatLight
+Var Light.anchor has declared type change from MapboxMaps.Anchor? to MapboxMaps.Value<MapboxMaps.Anchor>?
+Var Light.color has declared type change from MapboxMaps.StyleColor? to MapboxMaps.Value<MapboxMaps.StyleColor>?
+Var Light.intensity has declared type change from Swift.Double? to MapboxMaps.Value<Swift.Double>?
+Var Light.position has declared type change from [Swift.Double]? to MapboxMaps.Value<[Swift.Double]>?
+
+// Convert Expression.Operator from an enum to a struct with static lets
+TypeAlias Expression.Operator.AllCases has been removed
+Var Expression.Operator.allCases has been removed
+Enum Expression.Operator has been changed to a Struct
+Constructor Expression.Operator.init(rawValue:) has return type change from MapboxMaps.Expression.Operator? to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.abs has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.accumulated has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.acos has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.all has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.any has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.array has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.asin has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.at has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.atan has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.boolean has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.ceil has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.coalesce has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.collator has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.concat has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.cos has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.cubicBezier has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.distance has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.distanceFromCenter has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.division has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.downcase has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.e has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.eq has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.exponential has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.featureState has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.floor has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.format has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.geometryType has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.get has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.gt has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.gte has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.has has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.heatmapDensity has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.id has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.image has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.inExpression has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.indexOf has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.interpolate has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.isSupportedScript has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.length has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.letExpression has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.lineProgress has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.linear has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.literal has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.ln has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.ln2 has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.log10 has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.log2 has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.lt has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.lte has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.match has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.max has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.min has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.mod has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.neq has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.not has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.number has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.numberFormat has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.objectExpression has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.pi has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.pitch has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.pow has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.product has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.properties has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.rasterValue has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.resolvedLocale has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.rgb has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.rgba has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.round has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.sin has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.skyRadialProgress has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.slice has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.sqrt has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.step has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.string has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.subtract has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.sum has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.switchCase has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.tan has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.toBoolean has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.toColor has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.toNumber has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.toRgba has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.toString has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.typeofExpression has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.upcase has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.varExpression has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.within has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.zoom has declared type change from (MapboxMaps.Expression.Operator.Type) -> MapboxMaps.Expression.Operator to MapboxMaps.Expression.Operator
+EnumElement Expression.Operator.abs is now static
+EnumElement Expression.Operator.accumulated is now static
+EnumElement Expression.Operator.acos is now static
+EnumElement Expression.Operator.all is now static
+EnumElement Expression.Operator.any is now static
+EnumElement Expression.Operator.array is now static
+EnumElement Expression.Operator.asin is now static
+EnumElement Expression.Operator.at is now static
+EnumElement Expression.Operator.atan is now static
+EnumElement Expression.Operator.boolean is now static
+EnumElement Expression.Operator.ceil is now static
+EnumElement Expression.Operator.coalesce is now static
+EnumElement Expression.Operator.collator is now static
+EnumElement Expression.Operator.concat is now static
+EnumElement Expression.Operator.cos is now static
+EnumElement Expression.Operator.cubicBezier is now static
+EnumElement Expression.Operator.distance is now static
+EnumElement Expression.Operator.distanceFromCenter is now static
+EnumElement Expression.Operator.division is now static
+EnumElement Expression.Operator.downcase is now static
+EnumElement Expression.Operator.e is now static
+EnumElement Expression.Operator.eq is now static
+EnumElement Expression.Operator.exponential is now static
+EnumElement Expression.Operator.featureState is now static
+EnumElement Expression.Operator.floor is now static
+EnumElement Expression.Operator.format is now static
+EnumElement Expression.Operator.geometryType is now static
+EnumElement Expression.Operator.get is now static
+EnumElement Expression.Operator.gt is now static
+EnumElement Expression.Operator.gte is now static
+EnumElement Expression.Operator.has is now static
+EnumElement Expression.Operator.heatmapDensity is now static
+EnumElement Expression.Operator.id is now static
+EnumElement Expression.Operator.image is now static
+EnumElement Expression.Operator.inExpression is now static
+EnumElement Expression.Operator.indexOf is now static
+EnumElement Expression.Operator.interpolate is now static
+EnumElement Expression.Operator.isSupportedScript is now static
+EnumElement Expression.Operator.length is now static
+EnumElement Expression.Operator.letExpression is now static
+EnumElement Expression.Operator.lineProgress is now static
+EnumElement Expression.Operator.linear is now static
+EnumElement Expression.Operator.literal is now static
+EnumElement Expression.Operator.ln is now static
+EnumElement Expression.Operator.ln2 is now static
+EnumElement Expression.Operator.log10 is now static
+EnumElement Expression.Operator.log2 is now static
+EnumElement Expression.Operator.lt is now static
+EnumElement Expression.Operator.lte is now static
+EnumElement Expression.Operator.match is now static
+EnumElement Expression.Operator.max is now static
+EnumElement Expression.Operator.min is now static
+EnumElement Expression.Operator.mod is now static
+EnumElement Expression.Operator.neq is now static
+EnumElement Expression.Operator.not is now static
+EnumElement Expression.Operator.number is now static
+EnumElement Expression.Operator.numberFormat is now static
+EnumElement Expression.Operator.objectExpression is now static
+EnumElement Expression.Operator.pi is now static
+EnumElement Expression.Operator.pitch is now static
+EnumElement Expression.Operator.pow is now static
+EnumElement Expression.Operator.product is now static
+EnumElement Expression.Operator.properties is now static
+EnumElement Expression.Operator.rasterValue is now static
+EnumElement Expression.Operator.resolvedLocale is now static
+EnumElement Expression.Operator.rgb is now static
+EnumElement Expression.Operator.rgba is now static
+EnumElement Expression.Operator.round is now static
+EnumElement Expression.Operator.sin is now static
+EnumElement Expression.Operator.skyRadialProgress is now static
+EnumElement Expression.Operator.slice is now static
+EnumElement Expression.Operator.sqrt is now static
+EnumElement Expression.Operator.step is now static
+EnumElement Expression.Operator.string is now static
+EnumElement Expression.Operator.subtract is now static
+EnumElement Expression.Operator.sum is now static
+EnumElement Expression.Operator.switchCase is now static
+EnumElement Expression.Operator.tan is now static
+EnumElement Expression.Operator.toBoolean is now static
+EnumElement Expression.Operator.toColor is now static
+EnumElement Expression.Operator.toNumber is now static
+EnumElement Expression.Operator.toRgba is now static
+EnumElement Expression.Operator.toString is now static
+EnumElement Expression.Operator.typeofExpression is now static
+EnumElement Expression.Operator.upcase is now static
+EnumElement Expression.Operator.varExpression is now static
+EnumElement Expression.Operator.within is now static
+EnumElement Expression.Operator.zoom is now static
+Enum Expression.Operator has removed conformance to CaseIterable
+Enum Expression.Operator has removed conformance to Hashable
+
+// Layer visibility expression support
+Accessor BackgroundLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor BackgroundLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor CircleLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor CircleLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor FillExtrusionLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor FillExtrusionLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor FillLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor FillLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor HeatmapLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor HeatmapLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor HillshadeLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor HillshadeLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor LineLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor LineLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor LocationIndicatorLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor LocationIndicatorLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor RasterLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor RasterLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor SkyLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor SkyLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor SymbolLayer.visibility.Get() has return type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Accessor SymbolLayer.visibility.Set() has parameter 0 type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Var BackgroundLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Var CircleLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Var FillExtrusionLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Var FillLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Var HeatmapLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Var HillshadeLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Var LineLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Var LocationIndicatorLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Var RasterLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Var SkyLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+Var SymbolLayer.visibility has declared type change from MapboxMaps.Value<MapboxMaps.Visibility>? to MapboxMaps.Value<MapboxMaps.Visibility>
+
+// Convert style enums into structs
+TypeAlias Anchor.AllCases has been removed
+TypeAlias CirclePitchAlignment.AllCases has been removed
+TypeAlias CirclePitchScale.AllCases has been removed
+TypeAlias CircleTranslateAnchor.AllCases has been removed
+TypeAlias FillExtrusionTranslateAnchor.AllCases has been removed
+TypeAlias FillTranslateAnchor.AllCases has been removed
+TypeAlias HillshadeIlluminationAnchor.AllCases has been removed
+TypeAlias IconAnchor.AllCases has been removed
+TypeAlias IconPitchAlignment.AllCases has been removed
+TypeAlias IconRotationAlignment.AllCases has been removed
+TypeAlias IconTextFit.AllCases has been removed
+TypeAlias IconTranslateAnchor.AllCases has been removed
+TypeAlias LineCap.AllCases has been removed
+TypeAlias LineJoin.AllCases has been removed
+TypeAlias LineTranslateAnchor.AllCases has been removed
+TypeAlias RasterResampling.AllCases has been removed
+TypeAlias SkyType.AllCases has been removed
+TypeAlias StyleProjectionName.AllCases has been removed
+TypeAlias SymbolPlacement.AllCases has been removed
+TypeAlias SymbolZOrder.AllCases has been removed
+TypeAlias TextAnchor.AllCases has been removed
+TypeAlias TextJustify.AllCases has been removed
+TypeAlias TextPitchAlignment.AllCases has been removed
+TypeAlias TextRotationAlignment.AllCases has been removed
+TypeAlias TextTransform.AllCases has been removed
+TypeAlias TextTranslateAnchor.AllCases has been removed
+TypeAlias TextWritingMode.AllCases has been removed
+Var Anchor.allCases has been removed
+Var CirclePitchAlignment.allCases has been removed
+Var CirclePitchScale.allCases has been removed
+Var CircleTranslateAnchor.allCases has been removed
+Var FillExtrusionTranslateAnchor.allCases has been removed
+Var FillTranslateAnchor.allCases has been removed
+Var HillshadeIlluminationAnchor.allCases has been removed
+Var IconAnchor.allCases has been removed
+Var IconPitchAlignment.allCases has been removed
+Var IconRotationAlignment.allCases has been removed
+Var IconTextFit.allCases has been removed
+Var IconTranslateAnchor.allCases has been removed
+Var LineCap.allCases has been removed
+Var LineJoin.allCases has been removed
+Var LineTranslateAnchor.allCases has been removed
+Var RasterResampling.allCases has been removed
+Var SkyType.allCases has been removed
+Var StyleProjectionName.allCases has been removed
+Var SymbolPlacement.allCases has been removed
+Var SymbolZOrder.allCases has been removed
+Var TextAnchor.allCases has been removed
+Var TextJustify.allCases has been removed
+Var TextPitchAlignment.allCases has been removed
+Var TextRotationAlignment.allCases has been removed
+Var TextTransform.allCases has been removed
+Var TextTranslateAnchor.allCases has been removed
+Var TextWritingMode.allCases has been removed
+Enum Anchor has been changed to a Struct
+Enum CirclePitchAlignment has been changed to a Struct
+Enum CirclePitchScale has been changed to a Struct
+Enum CircleTranslateAnchor has been changed to a Struct
+Enum FillExtrusionTranslateAnchor has been changed to a Struct
+Enum FillTranslateAnchor has been changed to a Struct
+Enum HillshadeIlluminationAnchor has been changed to a Struct
+Enum IconAnchor has been changed to a Struct
+Enum IconPitchAlignment has been changed to a Struct
+Enum IconRotationAlignment has been changed to a Struct
+Enum IconTextFit has been changed to a Struct
+Enum IconTranslateAnchor has been changed to a Struct
+Enum LineCap has been changed to a Struct
+Enum LineJoin has been changed to a Struct
+Enum LineTranslateAnchor has been changed to a Struct
+Enum RasterResampling has been changed to a Struct
+Enum SkyType has been changed to a Struct
+Enum StyleProjectionName has been changed to a Struct
+Enum SymbolPlacement has been changed to a Struct
+Enum SymbolZOrder has been changed to a Struct
+Enum TextAnchor has been changed to a Struct
+Enum TextJustify has been changed to a Struct
+Enum TextPitchAlignment has been changed to a Struct
+Enum TextRotationAlignment has been changed to a Struct
+Enum TextTransform has been changed to a Struct
+Enum TextTranslateAnchor has been changed to a Struct
+Enum TextWritingMode has been changed to a Struct
+Enum Visibility has been changed to a Struct
+Constructor Anchor.init(rawValue:) has return type change from MapboxMaps.Anchor? to MapboxMaps.Anchor
+Constructor CirclePitchAlignment.init(rawValue:) has return type change from MapboxMaps.CirclePitchAlignment? to MapboxMaps.CirclePitchAlignment
+Constructor CirclePitchScale.init(rawValue:) has return type change from MapboxMaps.CirclePitchScale? to MapboxMaps.CirclePitchScale
+Constructor CircleTranslateAnchor.init(rawValue:) has return type change from MapboxMaps.CircleTranslateAnchor? to MapboxMaps.CircleTranslateAnchor
+Constructor FillExtrusionTranslateAnchor.init(rawValue:) has return type change from MapboxMaps.FillExtrusionTranslateAnchor? to MapboxMaps.FillExtrusionTranslateAnchor
+Constructor FillTranslateAnchor.init(rawValue:) has return type change from MapboxMaps.FillTranslateAnchor? to MapboxMaps.FillTranslateAnchor
+Constructor HillshadeIlluminationAnchor.init(rawValue:) has return type change from MapboxMaps.HillshadeIlluminationAnchor? to MapboxMaps.HillshadeIlluminationAnchor
+Constructor IconAnchor.init(rawValue:) has return type change from MapboxMaps.IconAnchor? to MapboxMaps.IconAnchor
+Constructor IconPitchAlignment.init(rawValue:) has return type change from MapboxMaps.IconPitchAlignment? to MapboxMaps.IconPitchAlignment
+Constructor IconRotationAlignment.init(rawValue:) has return type change from MapboxMaps.IconRotationAlignment? to MapboxMaps.IconRotationAlignment
+Constructor IconTextFit.init(rawValue:) has return type change from MapboxMaps.IconTextFit? to MapboxMaps.IconTextFit
+Constructor IconTranslateAnchor.init(rawValue:) has return type change from MapboxMaps.IconTranslateAnchor? to MapboxMaps.IconTranslateAnchor
+Constructor LineCap.init(rawValue:) has return type change from MapboxMaps.LineCap? to MapboxMaps.LineCap
+Constructor LineJoin.init(rawValue:) has return type change from MapboxMaps.LineJoin? to MapboxMaps.LineJoin
+Constructor LineTranslateAnchor.init(rawValue:) has return type change from MapboxMaps.LineTranslateAnchor? to MapboxMaps.LineTranslateAnchor
+Constructor RasterResampling.init(rawValue:) has return type change from MapboxMaps.RasterResampling? to MapboxMaps.RasterResampling
+Constructor SkyType.init(rawValue:) has return type change from MapboxMaps.SkyType? to MapboxMaps.SkyType
+Constructor StyleProjectionName.init(rawValue:) has return type change from MapboxMaps.StyleProjectionName? to MapboxMaps.StyleProjectionName
+Constructor SymbolPlacement.init(rawValue:) has return type change from MapboxMaps.SymbolPlacement? to MapboxMaps.SymbolPlacement
+Constructor SymbolZOrder.init(rawValue:) has return type change from MapboxMaps.SymbolZOrder? to MapboxMaps.SymbolZOrder
+Constructor TextAnchor.init(rawValue:) has return type change from MapboxMaps.TextAnchor? to MapboxMaps.TextAnchor
+Constructor TextJustify.init(rawValue:) has return type change from MapboxMaps.TextJustify? to MapboxMaps.TextJustify
+Constructor TextPitchAlignment.init(rawValue:) has return type change from MapboxMaps.TextPitchAlignment? to MapboxMaps.TextPitchAlignment
+Constructor TextRotationAlignment.init(rawValue:) has return type change from MapboxMaps.TextRotationAlignment? to MapboxMaps.TextRotationAlignment
+Constructor TextTransform.init(rawValue:) has return type change from MapboxMaps.TextTransform? to MapboxMaps.TextTransform
+Constructor TextTranslateAnchor.init(rawValue:) has return type change from MapboxMaps.TextTranslateAnchor? to MapboxMaps.TextTranslateAnchor
+Constructor TextWritingMode.init(rawValue:) has return type change from MapboxMaps.TextWritingMode? to MapboxMaps.TextWritingMode
+Constructor Visibility.init(rawValue:) has return type change from MapboxMaps.Visibility? to MapboxMaps.Visibility
+EnumElement Anchor.map has declared type change from (MapboxMaps.Anchor.Type) -> MapboxMaps.Anchor to MapboxMaps.Anchor
+EnumElement Anchor.viewport has declared type change from (MapboxMaps.Anchor.Type) -> MapboxMaps.Anchor to MapboxMaps.Anchor
+EnumElement CirclePitchAlignment.map has declared type change from (MapboxMaps.CirclePitchAlignment.Type) -> MapboxMaps.CirclePitchAlignment to MapboxMaps.CirclePitchAlignment
+EnumElement CirclePitchAlignment.viewport has declared type change from (MapboxMaps.CirclePitchAlignment.Type) -> MapboxMaps.CirclePitchAlignment to MapboxMaps.CirclePitchAlignment
+EnumElement CirclePitchScale.map has declared type change from (MapboxMaps.CirclePitchScale.Type) -> MapboxMaps.CirclePitchScale to MapboxMaps.CirclePitchScale
+EnumElement CirclePitchScale.viewport has declared type change from (MapboxMaps.CirclePitchScale.Type) -> MapboxMaps.CirclePitchScale to MapboxMaps.CirclePitchScale
+EnumElement CircleTranslateAnchor.map has declared type change from (MapboxMaps.CircleTranslateAnchor.Type) -> MapboxMaps.CircleTranslateAnchor to MapboxMaps.CircleTranslateAnchor
+EnumElement CircleTranslateAnchor.viewport has declared type change from (MapboxMaps.CircleTranslateAnchor.Type) -> MapboxMaps.CircleTranslateAnchor to MapboxMaps.CircleTranslateAnchor
+EnumElement FillExtrusionTranslateAnchor.map has declared type change from (MapboxMaps.FillExtrusionTranslateAnchor.Type) -> MapboxMaps.FillExtrusionTranslateAnchor to MapboxMaps.FillExtrusionTranslateAnchor
+EnumElement FillExtrusionTranslateAnchor.viewport has declared type change from (MapboxMaps.FillExtrusionTranslateAnchor.Type) -> MapboxMaps.FillExtrusionTranslateAnchor to MapboxMaps.FillExtrusionTranslateAnchor
+EnumElement FillTranslateAnchor.map has declared type change from (MapboxMaps.FillTranslateAnchor.Type) -> MapboxMaps.FillTranslateAnchor to MapboxMaps.FillTranslateAnchor
+EnumElement FillTranslateAnchor.viewport has declared type change from (MapboxMaps.FillTranslateAnchor.Type) -> MapboxMaps.FillTranslateAnchor to MapboxMaps.FillTranslateAnchor
+EnumElement HillshadeIlluminationAnchor.map has declared type change from (MapboxMaps.HillshadeIlluminationAnchor.Type) -> MapboxMaps.HillshadeIlluminationAnchor to MapboxMaps.HillshadeIlluminationAnchor
+EnumElement HillshadeIlluminationAnchor.viewport has declared type change from (MapboxMaps.HillshadeIlluminationAnchor.Type) -> MapboxMaps.HillshadeIlluminationAnchor to MapboxMaps.HillshadeIlluminationAnchor
+EnumElement IconAnchor.bottom has declared type change from (MapboxMaps.IconAnchor.Type) -> MapboxMaps.IconAnchor to MapboxMaps.IconAnchor
+EnumElement IconAnchor.bottomLeft has declared type change from (MapboxMaps.IconAnchor.Type) -> MapboxMaps.IconAnchor to MapboxMaps.IconAnchor
+EnumElement IconAnchor.bottomRight has declared type change from (MapboxMaps.IconAnchor.Type) -> MapboxMaps.IconAnchor to MapboxMaps.IconAnchor
+EnumElement IconAnchor.center has declared type change from (MapboxMaps.IconAnchor.Type) -> MapboxMaps.IconAnchor to MapboxMaps.IconAnchor
+EnumElement IconAnchor.left has declared type change from (MapboxMaps.IconAnchor.Type) -> MapboxMaps.IconAnchor to MapboxMaps.IconAnchor
+EnumElement IconAnchor.right has declared type change from (MapboxMaps.IconAnchor.Type) -> MapboxMaps.IconAnchor to MapboxMaps.IconAnchor
+EnumElement IconAnchor.top has declared type change from (MapboxMaps.IconAnchor.Type) -> MapboxMaps.IconAnchor to MapboxMaps.IconAnchor
+EnumElement IconAnchor.topLeft has declared type change from (MapboxMaps.IconAnchor.Type) -> MapboxMaps.IconAnchor to MapboxMaps.IconAnchor
+EnumElement IconAnchor.topRight has declared type change from (MapboxMaps.IconAnchor.Type) -> MapboxMaps.IconAnchor to MapboxMaps.IconAnchor
+EnumElement IconPitchAlignment.auto has declared type change from (MapboxMaps.IconPitchAlignment.Type) -> MapboxMaps.IconPitchAlignment to MapboxMaps.IconPitchAlignment
+EnumElement IconPitchAlignment.map has declared type change from (MapboxMaps.IconPitchAlignment.Type) -> MapboxMaps.IconPitchAlignment to MapboxMaps.IconPitchAlignment
+EnumElement IconPitchAlignment.viewport has declared type change from (MapboxMaps.IconPitchAlignment.Type) -> MapboxMaps.IconPitchAlignment to MapboxMaps.IconPitchAlignment
+EnumElement IconRotationAlignment.auto has declared type change from (MapboxMaps.IconRotationAlignment.Type) -> MapboxMaps.IconRotationAlignment to MapboxMaps.IconRotationAlignment
+EnumElement IconRotationAlignment.map has declared type change from (MapboxMaps.IconRotationAlignment.Type) -> MapboxMaps.IconRotationAlignment to MapboxMaps.IconRotationAlignment
+EnumElement IconRotationAlignment.viewport has declared type change from (MapboxMaps.IconRotationAlignment.Type) -> MapboxMaps.IconRotationAlignment to MapboxMaps.IconRotationAlignment
+EnumElement IconTextFit.both has declared type change from (MapboxMaps.IconTextFit.Type) -> MapboxMaps.IconTextFit to MapboxMaps.IconTextFit
+EnumElement IconTextFit.height has declared type change from (MapboxMaps.IconTextFit.Type) -> MapboxMaps.IconTextFit to MapboxMaps.IconTextFit
+EnumElement IconTextFit.none has declared type change from (MapboxMaps.IconTextFit.Type) -> MapboxMaps.IconTextFit to MapboxMaps.IconTextFit
+EnumElement IconTextFit.width has declared type change from (MapboxMaps.IconTextFit.Type) -> MapboxMaps.IconTextFit to MapboxMaps.IconTextFit
+EnumElement IconTranslateAnchor.map has declared type change from (MapboxMaps.IconTranslateAnchor.Type) -> MapboxMaps.IconTranslateAnchor to MapboxMaps.IconTranslateAnchor
+EnumElement IconTranslateAnchor.viewport has declared type change from (MapboxMaps.IconTranslateAnchor.Type) -> MapboxMaps.IconTranslateAnchor to MapboxMaps.IconTranslateAnchor
+EnumElement LineCap.butt has declared type change from (MapboxMaps.LineCap.Type) -> MapboxMaps.LineCap to MapboxMaps.LineCap
+EnumElement LineCap.round has declared type change from (MapboxMaps.LineCap.Type) -> MapboxMaps.LineCap to MapboxMaps.LineCap
+EnumElement LineCap.square has declared type change from (MapboxMaps.LineCap.Type) -> MapboxMaps.LineCap to MapboxMaps.LineCap
+EnumElement LineJoin.bevel has declared type change from (MapboxMaps.LineJoin.Type) -> MapboxMaps.LineJoin to MapboxMaps.LineJoin
+EnumElement LineJoin.miter has declared type change from (MapboxMaps.LineJoin.Type) -> MapboxMaps.LineJoin to MapboxMaps.LineJoin
+EnumElement LineJoin.round has declared type change from (MapboxMaps.LineJoin.Type) -> MapboxMaps.LineJoin to MapboxMaps.LineJoin
+EnumElement LineTranslateAnchor.map has declared type change from (MapboxMaps.LineTranslateAnchor.Type) -> MapboxMaps.LineTranslateAnchor to MapboxMaps.LineTranslateAnchor
+EnumElement LineTranslateAnchor.viewport has declared type change from (MapboxMaps.LineTranslateAnchor.Type) -> MapboxMaps.LineTranslateAnchor to MapboxMaps.LineTranslateAnchor
+EnumElement RasterResampling.linear has declared type change from (MapboxMaps.RasterResampling.Type) -> MapboxMaps.RasterResampling to MapboxMaps.RasterResampling
+EnumElement RasterResampling.nearest has declared type change from (MapboxMaps.RasterResampling.Type) -> MapboxMaps.RasterResampling to MapboxMaps.RasterResampling
+EnumElement SkyType.atmosphere has declared type change from (MapboxMaps.SkyType.Type) -> MapboxMaps.SkyType to MapboxMaps.SkyType
+EnumElement SkyType.gradient has declared type change from (MapboxMaps.SkyType.Type) -> MapboxMaps.SkyType to MapboxMaps.SkyType
+EnumElement StyleProjectionName.globe has declared type change from (MapboxMaps.StyleProjectionName.Type) -> MapboxMaps.StyleProjectionName to MapboxMaps.StyleProjectionName
+EnumElement StyleProjectionName.mercator has declared type change from (MapboxMaps.StyleProjectionName.Type) -> MapboxMaps.StyleProjectionName to MapboxMaps.StyleProjectionName
+EnumElement SymbolPlacement.line has declared type change from (MapboxMaps.SymbolPlacement.Type) -> MapboxMaps.SymbolPlacement to MapboxMaps.SymbolPlacement
+EnumElement SymbolPlacement.lineCenter has declared type change from (MapboxMaps.SymbolPlacement.Type) -> MapboxMaps.SymbolPlacement to MapboxMaps.SymbolPlacement
+EnumElement SymbolPlacement.point has declared type change from (MapboxMaps.SymbolPlacement.Type) -> MapboxMaps.SymbolPlacement to MapboxMaps.SymbolPlacement
+EnumElement SymbolZOrder.auto has declared type change from (MapboxMaps.SymbolZOrder.Type) -> MapboxMaps.SymbolZOrder to MapboxMaps.SymbolZOrder
+EnumElement SymbolZOrder.source has declared type change from (MapboxMaps.SymbolZOrder.Type) -> MapboxMaps.SymbolZOrder to MapboxMaps.SymbolZOrder
+EnumElement SymbolZOrder.viewportY has declared type change from (MapboxMaps.SymbolZOrder.Type) -> MapboxMaps.SymbolZOrder to MapboxMaps.SymbolZOrder
+EnumElement TextAnchor.bottom has declared type change from (MapboxMaps.TextAnchor.Type) -> MapboxMaps.TextAnchor to MapboxMaps.TextAnchor
+EnumElement TextAnchor.bottomLeft has declared type change from (MapboxMaps.TextAnchor.Type) -> MapboxMaps.TextAnchor to MapboxMaps.TextAnchor
+EnumElement TextAnchor.bottomRight has declared type change from (MapboxMaps.TextAnchor.Type) -> MapboxMaps.TextAnchor to MapboxMaps.TextAnchor
+EnumElement TextAnchor.center has declared type change from (MapboxMaps.TextAnchor.Type) -> MapboxMaps.TextAnchor to MapboxMaps.TextAnchor
+EnumElement TextAnchor.left has declared type change from (MapboxMaps.TextAnchor.Type) -> MapboxMaps.TextAnchor to MapboxMaps.TextAnchor
+EnumElement TextAnchor.right has declared type change from (MapboxMaps.TextAnchor.Type) -> MapboxMaps.TextAnchor to MapboxMaps.TextAnchor
+EnumElement TextAnchor.top has declared type change from (MapboxMaps.TextAnchor.Type) -> MapboxMaps.TextAnchor to MapboxMaps.TextAnchor
+EnumElement TextAnchor.topLeft has declared type change from (MapboxMaps.TextAnchor.Type) -> MapboxMaps.TextAnchor to MapboxMaps.TextAnchor
+EnumElement TextAnchor.topRight has declared type change from (MapboxMaps.TextAnchor.Type) -> MapboxMaps.TextAnchor to MapboxMaps.TextAnchor
+EnumElement TextJustify.auto has declared type change from (MapboxMaps.TextJustify.Type) -> MapboxMaps.TextJustify to MapboxMaps.TextJustify
+EnumElement TextJustify.center has declared type change from (MapboxMaps.TextJustify.Type) -> MapboxMaps.TextJustify to MapboxMaps.TextJustify
+EnumElement TextJustify.left has declared type change from (MapboxMaps.TextJustify.Type) -> MapboxMaps.TextJustify to MapboxMaps.TextJustify
+EnumElement TextJustify.right has declared type change from (MapboxMaps.TextJustify.Type) -> MapboxMaps.TextJustify to MapboxMaps.TextJustify
+EnumElement TextPitchAlignment.auto has declared type change from (MapboxMaps.TextPitchAlignment.Type) -> MapboxMaps.TextPitchAlignment to MapboxMaps.TextPitchAlignment
+EnumElement TextPitchAlignment.map has declared type change from (MapboxMaps.TextPitchAlignment.Type) -> MapboxMaps.TextPitchAlignment to MapboxMaps.TextPitchAlignment
+EnumElement TextPitchAlignment.viewport has declared type change from (MapboxMaps.TextPitchAlignment.Type) -> MapboxMaps.TextPitchAlignment to MapboxMaps.TextPitchAlignment
+EnumElement TextRotationAlignment.auto has declared type change from (MapboxMaps.TextRotationAlignment.Type) -> MapboxMaps.TextRotationAlignment to MapboxMaps.TextRotationAlignment
+EnumElement TextRotationAlignment.map has declared type change from (MapboxMaps.TextRotationAlignment.Type) -> MapboxMaps.TextRotationAlignment to MapboxMaps.TextRotationAlignment
+EnumElement TextRotationAlignment.viewport has declared type change from (MapboxMaps.TextRotationAlignment.Type) -> MapboxMaps.TextRotationAlignment to MapboxMaps.TextRotationAlignment
+EnumElement TextTransform.lowercase has declared type change from (MapboxMaps.TextTransform.Type) -> MapboxMaps.TextTransform to MapboxMaps.TextTransform
+EnumElement TextTransform.none has declared type change from (MapboxMaps.TextTransform.Type) -> MapboxMaps.TextTransform to MapboxMaps.TextTransform
+EnumElement TextTransform.uppercase has declared type change from (MapboxMaps.TextTransform.Type) -> MapboxMaps.TextTransform to MapboxMaps.TextTransform
+EnumElement TextTranslateAnchor.map has declared type change from (MapboxMaps.TextTranslateAnchor.Type) -> MapboxMaps.TextTranslateAnchor to MapboxMaps.TextTranslateAnchor
+EnumElement TextTranslateAnchor.viewport has declared type change from (MapboxMaps.TextTranslateAnchor.Type) -> MapboxMaps.TextTranslateAnchor to MapboxMaps.TextTranslateAnchor
+EnumElement TextWritingMode.horizontal has declared type change from (MapboxMaps.TextWritingMode.Type) -> MapboxMaps.TextWritingMode to MapboxMaps.TextWritingMode
+EnumElement TextWritingMode.vertical has declared type change from (MapboxMaps.TextWritingMode.Type) -> MapboxMaps.TextWritingMode to MapboxMaps.TextWritingMode
+EnumElement Visibility.none has declared type change from (MapboxMaps.Visibility.Type) -> MapboxMaps.Visibility to MapboxMaps.Visibility
+EnumElement Visibility.visible has declared type change from (MapboxMaps.Visibility.Type) -> MapboxMaps.Visibility to MapboxMaps.Visibility
+EnumElement Anchor.map is now static
+EnumElement Anchor.viewport is now static
+EnumElement CirclePitchAlignment.map is now static
+EnumElement CirclePitchAlignment.viewport is now static
+EnumElement CirclePitchScale.map is now static
+EnumElement CirclePitchScale.viewport is now static
+EnumElement CircleTranslateAnchor.map is now static
+EnumElement CircleTranslateAnchor.viewport is now static
+EnumElement FillExtrusionTranslateAnchor.map is now static
+EnumElement FillExtrusionTranslateAnchor.viewport is now static
+EnumElement FillTranslateAnchor.map is now static
+EnumElement FillTranslateAnchor.viewport is now static
+EnumElement HillshadeIlluminationAnchor.map is now static
+EnumElement HillshadeIlluminationAnchor.viewport is now static
+EnumElement IconAnchor.bottom is now static
+EnumElement IconAnchor.bottomLeft is now static
+EnumElement IconAnchor.bottomRight is now static
+EnumElement IconAnchor.center is now static
+EnumElement IconAnchor.left is now static
+EnumElement IconAnchor.right is now static
+EnumElement IconAnchor.top is now static
+EnumElement IconAnchor.topLeft is now static
+EnumElement IconAnchor.topRight is now static
+EnumElement IconPitchAlignment.auto is now static
+EnumElement IconPitchAlignment.map is now static
+EnumElement IconPitchAlignment.viewport is now static
+EnumElement IconRotationAlignment.auto is now static
+EnumElement IconRotationAlignment.map is now static
+EnumElement IconRotationAlignment.viewport is now static
+EnumElement IconTextFit.both is now static
+EnumElement IconTextFit.height is now static
+EnumElement IconTextFit.none is now static
+EnumElement IconTextFit.width is now static
+EnumElement IconTranslateAnchor.map is now static
+EnumElement IconTranslateAnchor.viewport is now static
+EnumElement LineCap.butt is now static
+EnumElement LineCap.round is now static
+EnumElement LineCap.square is now static
+EnumElement LineJoin.bevel is now static
+EnumElement LineJoin.miter is now static
+EnumElement LineJoin.round is now static
+EnumElement LineTranslateAnchor.map is now static
+EnumElement LineTranslateAnchor.viewport is now static
+EnumElement RasterResampling.linear is now static
+EnumElement RasterResampling.nearest is now static
+EnumElement SkyType.atmosphere is now static
+EnumElement SkyType.gradient is now static
+EnumElement StyleProjectionName.globe is now static
+EnumElement StyleProjectionName.mercator is now static
+EnumElement SymbolPlacement.line is now static
+EnumElement SymbolPlacement.lineCenter is now static
+EnumElement SymbolPlacement.point is now static
+EnumElement SymbolZOrder.auto is now static
+EnumElement SymbolZOrder.source is now static
+EnumElement SymbolZOrder.viewportY is now static
+EnumElement TextAnchor.bottom is now static
+EnumElement TextAnchor.bottomLeft is now static
+EnumElement TextAnchor.bottomRight is now static
+EnumElement TextAnchor.center is now static
+EnumElement TextAnchor.left is now static
+EnumElement TextAnchor.right is now static
+EnumElement TextAnchor.top is now static
+EnumElement TextAnchor.topLeft is now static
+EnumElement TextAnchor.topRight is now static
+EnumElement TextJustify.auto is now static
+EnumElement TextJustify.center is now static
+EnumElement TextJustify.left is now static
+EnumElement TextJustify.right is now static
+EnumElement TextPitchAlignment.auto is now static
+EnumElement TextPitchAlignment.map is now static
+EnumElement TextPitchAlignment.viewport is now static
+EnumElement TextRotationAlignment.auto is now static
+EnumElement TextRotationAlignment.map is now static
+EnumElement TextRotationAlignment.viewport is now static
+EnumElement TextTransform.lowercase is now static
+EnumElement TextTransform.none is now static
+EnumElement TextTransform.uppercase is now static
+EnumElement TextTranslateAnchor.map is now static
+EnumElement TextTranslateAnchor.viewport is now static
+EnumElement TextWritingMode.horizontal is now static
+EnumElement TextWritingMode.vertical is now static
+EnumElement Visibility.none is now static
+EnumElement Visibility.visible is now static
+Enum Anchor has removed conformance to CaseIterable
+Enum CirclePitchAlignment has removed conformance to CaseIterable
+Enum CirclePitchScale has removed conformance to CaseIterable
+Enum CircleTranslateAnchor has removed conformance to CaseIterable
+Enum FillExtrusionTranslateAnchor has removed conformance to CaseIterable
+Enum FillTranslateAnchor has removed conformance to CaseIterable
+Enum HillshadeIlluminationAnchor has removed conformance to CaseIterable
+Enum IconAnchor has removed conformance to CaseIterable
+Enum IconPitchAlignment has removed conformance to CaseIterable
+Enum IconRotationAlignment has removed conformance to CaseIterable
+Enum IconTextFit has removed conformance to CaseIterable
+Enum IconTranslateAnchor has removed conformance to CaseIterable
+Enum LineCap has removed conformance to CaseIterable
+Enum LineJoin has removed conformance to CaseIterable
+Enum LineTranslateAnchor has removed conformance to CaseIterable
+Enum RasterResampling has removed conformance to CaseIterable
+Enum SkyType has removed conformance to CaseIterable
+Enum StyleProjectionName has removed conformance to CaseIterable
+Enum SymbolPlacement has removed conformance to CaseIterable
+Enum SymbolZOrder has removed conformance to CaseIterable
+Enum TextAnchor has removed conformance to CaseIterable
+Enum TextJustify has removed conformance to CaseIterable
+Enum TextPitchAlignment has removed conformance to CaseIterable
+Enum TextRotationAlignment has removed conformance to CaseIterable
+Enum TextTransform has removed conformance to CaseIterable
+Enum TextTranslateAnchor has removed conformance to CaseIterable
+Enum TextWritingMode has removed conformance to CaseIterable
+EnumElement Encoding.mapbox is now static
+EnumElement Encoding.terrarium is now static
+EnumElement Scheme.tms is now static
+EnumElement Scheme.xyz is now static
+Constructor Encoding.init(rawValue:) has return type change from MapboxMaps.Encoding? to MapboxMaps.Encoding
+Constructor Scheme.init(rawValue:) has return type change from MapboxMaps.Scheme? to MapboxMaps.Scheme
+EnumElement Encoding.mapbox has declared type change from (MapboxMaps.Encoding.Type) -> MapboxMaps.Encoding to MapboxMaps.Encoding
+EnumElement Encoding.terrarium has declared type change from (MapboxMaps.Encoding.Type) -> MapboxMaps.Encoding to MapboxMaps.Encoding
+EnumElement Scheme.tms has declared type change from (MapboxMaps.Scheme.Type) -> MapboxMaps.Scheme to MapboxMaps.Scheme
+EnumElement Scheme.xyz has declared type change from (MapboxMaps.Scheme.Type) -> MapboxMaps.Scheme to MapboxMaps.Scheme
+Enum Encoding has been changed to a Struct
+Enum Scheme has been changed to a Struct
+
+Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:) has been renamed to Func replay(recordedSequence:options:completion:) 
+Func MapRecorder.start() has been renamed to Func start(options:) 
+Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:) has parameter 0 type change from Swift.String to Foundation.Data 
+Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:) has parameter 1 type change from Swift.Int to MapboxMaps.MapPlayerOptions 
+Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:) has parameter 2 type change from Swift.Double to () -> Swift.Void 
+Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:) has removed default argument from parameter 2 
+Func MapRecorder.stop() has return type change from Swift.String to Foundation.Data 

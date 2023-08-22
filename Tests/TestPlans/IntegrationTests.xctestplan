@@ -23,7 +23,6 @@
   },
   "testTargets" : [
     {
-      "parallelizable" : true,
       "selectedTests" : [
         "BackgroundLayerIntegrationTests",
         "BasicCameraAnimatorImplIntegrationTests",
@@ -43,6 +42,8 @@
         "LineLayerIntegrationTests",
         "LocationIndicatorLayerIntegrationTests",
         "MapInitOptionsIntegrationTests",
+        "MapRecorderIntegrationTests\/testPauseMapRecording()",
+        "MapRecorderIntegrationTests\/testReplayMapRecording()",
         "MapViewIntegrationTests",
         "MapViewRenderedSnapshotIntegrationTests",
         "MapboxMapIntegrationTests",
@@ -73,8 +74,8 @@
         "VectorSourceIntegrationTests"
       ],
       "target" : {
-        "containerPath" : "container:MapboxMaps.xcodeproj",
-        "identifier" : "86A60EEC97F04E1DF2BB7D80",
+        "containerPath" : "container:",
+        "identifier" : "MapboxMapsTests",
         "name" : "MapboxMapsTests"
       }
     }

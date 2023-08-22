@@ -1,0 +1,95 @@
+/* East, short */
+"E" = "東";
+
+/* East by north, short */
+"EbN" = "東微北";
+
+/* East by south, short */
+"EbS" = "東微南";
+
+/* East-northeast, short */
+"ENE" = "東北東";
+
+/* East-southeast, short */
+"ESE" = "東南東";
+
+/* North, short */
+"N" = "北";
+
+/* North by east, short */
+"NbE" = "北微東";
+
+/* North by west, short */
+"NbW" = "北微西";
+
+/* Northeast, short */
+"NE" = "東北";
+
+/* Northeast by east, short */
+"NEbE" = "東北微東";
+
+/* Northeast by north, short */
+"NEbN" = "東北微北";
+
+/* North-northeast, short */
+"NNE" = "北北東";
+
+/* North-northwest, short */
+"NNW" = "北北西";
+
+/* Northwest, short */
+"NW" = "西北";
+
+/* Northwest by north, short */
+"NWbN" = "西北微北";
+
+/* Northwest by west, short */
+"NWbW" = "西北微西";
+
+/* South, short */
+"S" = "南";
+
+/* South by east, short */
+"SbE" = "南微東";
+
+/* South by west, short */
+"SbW" = "南微西";
+
+/* Southeast, short */
+"SE" = "東南";
+
+/* Southeast by east, short */
+"SEbE" = "東南微東";
+
+/* Southeast by south, short */
+"SEbS" = "東南微南";
+
+/* South-southeast, short */
+"SSE" = "南南東";
+
+/* South-southwest, short */
+"SSW" = "南南西";
+
+/* Southwest, short */
+"SW" = "西南";
+
+/* Southwest by south, short */
+"SWbS" = "西南微南";
+
+/* Southwest by west, short */
+"SWbW" = "西南微西";
+
+/* West, short */
+"W" = "西";
+
+/* West by north, short */
+"WbN" = "西微北";
+
+/* West by south, short */
+"WbS" = "西微南";
+
+/* West-northwest, short */
+"WNW" = "西北西";
+
+/* West-southwest, short */
+"WSW" = "西南西";

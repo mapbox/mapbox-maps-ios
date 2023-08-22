@@ -1,9 +1,0 @@
-executor: xcode-latest
-steps:
-  - checkout-root
-  - configure-environment:
-      skip-dependencies: true
-  - run:
-      name: Build Studio Preview with new branch
-      command: scripts/validate-integrations/validate-studio-preview.sh
-  - slack-notify-failure-if-any

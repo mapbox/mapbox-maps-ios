@@ -1,6 +1,0 @@
-# Note that `create-github-draft-release.sh` depends on this file structure and location to parse the minimum supported Xcode version.
-# Please keep them in sync if this structure changes.
-macos:
-  xcode: 14.1.0
-resource_class: macos.m1.medium.gen1
-working_directory: ~/project/mapbox-maps-ios

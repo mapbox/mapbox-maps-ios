@@ -1,9 +1,3 @@
-[submodule "codegen/vendor/mapbox-maps-stylegen"]
-	path = codegen/vendor/mapbox-maps-stylegen
-	url = git@github.com:mapbox/mapbox-maps-stylegen.git
-[submodule "mapbox-maps-internal"]
-	path = mapbox-maps-internal
-	url = git@github.com:mapbox/mapbox-maps-internal.git
-[submodule "mapbox-maps-ios/scripts/doc-generation/jazzy-theme"]
-	path = mapbox-maps-ios/scripts/doc-generation/jazzy-theme
+[submodule "jazzy-theme"]
+	path = scripts/doc-generation/jazzy-theme
 	url = https://github.com/mapbox/jazzy-theme.git

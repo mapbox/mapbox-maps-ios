@@ -160,7 +160,7 @@ final class ViewportTests: XCTestCase {
     }
 
     func testMakeImmediateViewportTransition() {
-        _ = viewport.makeImmediateViewportTransition()
+        let _: ImmediateViewportTransition = viewport.makeImmediateViewportTransition()
 
         // doesn't crash; no interface to verify
     }

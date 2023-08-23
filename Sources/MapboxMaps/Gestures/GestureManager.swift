@@ -14,6 +14,11 @@ public protocol GestureManagerDelegate: AnyObject {
     func gestureManager(_ gestureManager: GestureManager, didEndAnimatingFor gestureType: GestureType)
 }
 
+protocol GestureManagerProtocol: AnyObject {
+    var options: GestureOptions { get set }
+    var singleTapGestureRecognizer: UIGestureRecognizer { get }
+}
+
 public final class GestureManager: GestureHandlerDelegate {
 
     /// Configuration options for the built-in gestures
@@ -175,3 +180,5 @@ public final class GestureManager: GestureHandlerDelegate {
         delegate?.gestureManager(self, didEndAnimatingFor: gestureType)
     }
 }
+
+extension GestureManager: GestureManagerProtocol {}

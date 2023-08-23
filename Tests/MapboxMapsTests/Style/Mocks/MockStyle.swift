@@ -2,6 +2,9 @@ import UIKit
 @testable import MapboxMaps
 
 final class MockStyle: StyleProtocol {
+    @Stubbed var isStyleLoaded: Bool = false
+    @Stubbed var styleDefaultCamera: MapboxMaps.CameraOptions = .init()
+    @Stubbed var uri: StyleURI? = .streets
     struct AddGeoJSONSourceFeaturesParams {
         let sourceId: String
         let features: [Feature]

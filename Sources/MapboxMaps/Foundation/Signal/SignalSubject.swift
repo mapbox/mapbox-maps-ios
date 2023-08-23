@@ -3,6 +3,8 @@
 /// It doesn't store current values, like `PassthroughSubject` from Combine.
 internal class SignalSubject<Payload> {
     typealias Handler = Signal<Payload>.Handler
+
+    /// Handles the event of adding first, or removing the last observer.
     typealias ObservationHandler = (Bool) -> Void
     private typealias Subscription = ObjectWrapper<Handler>
 
@@ -23,6 +25,7 @@ internal class SignalSubject<Payload> {
         }
     }
 
+    /// Creates a signal subject.
     init() {
         weak var weakSelf: SignalSubject?
         self.signal = Signal(observeImpl: { handler in

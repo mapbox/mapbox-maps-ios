@@ -3,7 +3,8 @@ import CoreGraphics
 import UIKit
 import os
 
-internal final class Puck2D: Puck {
+// swiftlint:disable:next type_body_length
+internal final class Puck2D: Puck2DProtocol {
     private static let layerID = "puck"
     private static let topImageId = "locationIndicatorLayerTopImage"
     private static let bearingImageId = "locationIndicatorLayerBearingImage"
@@ -26,41 +27,62 @@ internal final class Puck2D: Puck {
                 try? style.removeImage(withId: Self.shadowImageId)
                 previouslySetLayerPropertyKeys.removeAll()
                 currentAccuracyAuthorization = nil
+                forceLongPath = true
+                pulsingAnimationStartTimestamp = nil
             }
         }
     }
 
     // The change in this properties will be handled in the next render call (renderingData update).
     // TODO: Those properties should come as part of rendering data.
-    internal var puckBearing: PuckBearing = .heading
-    internal var puckBearingEnabled: Bool = true
-
-    private func render(with data: PuckRenderingData) {
-        let newAccuracyAuthorization = data.location.accuracyAuthorization
-        if currentAccuracyAuthorization != newAccuracyAuthorization {
-            currentAccuracyAuthorization = newAccuracyAuthorization
-            updateLayer(with: data)
-        } else {
-            updateLayerFastPath(with: data)
-        }
-
-        if let pulsing = configuration.pulsing, pulsing.isEnabled {
-            renderPulsing(with: data)
+    var puckBearing: PuckBearing = .heading
+    var puckBearingEnabled: Bool = true
+    var configuration: Puck2DConfiguration {
+        didSet {
+            if configuration != oldValue {
+                forceLongPath = true
+            }
         }
     }
 
-    private let configuration: Puck2DConfiguration
+    private func render(with data: PuckRenderingData) {
+        self.currentAccuracyAuthorization = data.location.accuracyAuthorization
+
+        defer {
+            // Next time render will take fast path (only location update) until configuration is updated.
+            forceLongPath = false
+        }
+
+        do {
+            if forceLongPath {
+                try updateLayer(with: data)
+            } else {
+                try updateLayerFastPath(with: data)
+            }
+            try renderPulsing(with: data)
+        } catch {
+            Log.error(forMessage: "Failed to update Puck2D Layer properties, \(error)")
+        }
+    }
+
     private let style: StyleProtocol
     private let mapboxMap: MapboxMapProtocol
     private var cancelables = Set<AnyCancelable>()
     private let timeProvider: TimeProvider
     private let renderingData: Signal<PuckRenderingData>
     // cache the encoded configuration.resolvedScale to avoid work at every location update
-    private let encodedScale: Any
+    private let encodedScale: Any?
     private let pulsingAnimationDuration: CFTimeInterval = 3
     private let pulsingAnimationTimingCurve = UnitBezier(p1: .zero, p2: CGPoint(x: 0.25, y: 1))
     private var pulsingAnimationStartTimestamp: CFTimeInterval?
-    private var currentAccuracyAuthorization: CLAccuracyAuthorization?
+    private var currentAccuracyAuthorization: CLAccuracyAuthorization? {
+        didSet {
+            if oldValue != currentAccuracyAuthorization {
+                forceLongPath = true
+            }
+        }
+    }
+    private var forceLongPath = true
 
     /// The keys of the style properties that were set during the previous sync.
     /// Used to identify which styles need to be restored to their default values in
@@ -77,11 +99,11 @@ internal final class Puck2D: Puck {
         self.renderingData = renderingData
         self.mapboxMap = mapboxMap
         self.timeProvider = timeProvider
-        self.encodedScale = try! configuration.resolvedScale.toJSON()
+        self.encodedScale = try? configuration.resolvedScale.toJSON()
     }
 
-    private func addImages() {
-        try! style.addImage(
+    private func addImages() throws {
+        try style.addImage(
             configuration.resolvedTopImage,
             id: Self.topImageId,
             sdf: false,
@@ -89,7 +111,7 @@ internal final class Puck2D: Puck {
             stretchY: [],
             content: nil)
         if let bearingImage = configuration.bearingImage {
-            try! style.addImage(
+            try style.addImage(
                 bearingImage,
                 id: Self.bearingImageId,
                 sdf: false,
@@ -97,7 +119,7 @@ internal final class Puck2D: Puck {
                 stretchY: [],
                 content: nil)
         }
-        try! style.addImage(
+        try style.addImage(
             configuration.resolvedShadowImage,
             id: Self.shadowImageId,
             sdf: false,
@@ -107,7 +129,7 @@ internal final class Puck2D: Puck {
     }
 
     // swiftlint:disable:next function_body_length
-    private func updateLayer(with data: PuckRenderingData) {
+    private func updateLayer(with data: PuckRenderingData) throws {
         guard isActive else { return }
 
         var newLayerLayoutProperties = [LocationIndicatorLayer.LayoutCodingKeys: Any]()
@@ -130,9 +152,11 @@ internal final class Puck2D: Puck {
 
             newLayerLayoutProperties[.shadowImage] = Self.shadowImageId
             newLayerPaintProperties[.locationTransition] = immediateTransition
-            newLayerPaintProperties[.topImageSize] = encodedScale
-            newLayerPaintProperties[.bearingImageSize] = encodedScale
-            newLayerPaintProperties[.shadowImageSize] = encodedScale
+            if let encodedScale {
+                newLayerPaintProperties[.topImageSize] = encodedScale
+                newLayerPaintProperties[.bearingImageSize] = encodedScale
+                newLayerPaintProperties[.shadowImageSize] = encodedScale
+            }
             newLayerPaintProperties[.emphasisCircleRadiusTransition] = immediateTransition
             newLayerPaintProperties[.bearingTransition] = immediateTransition
             newLayerPaintProperties[.locationIndicatorOpacity] = configuration.opacity
@@ -234,21 +258,21 @@ internal final class Puck2D: Puck {
 
         // Update or add the layer
         if style.layerExists(withId: Self.layerID) {
-            try! style.setLayerProperties(for: Self.layerID, properties: allLayerProperties)
+            try style.setLayerProperties(for: Self.layerID, properties: allLayerProperties)
         } else {
             // add the images at the same time as adding the layer. doing it earlier results
             // in the images getting removed if the style reloads in between when the images
             // were added and when the persistent layer is added. The presence of a persistent
             // layer causes MapboxCoreMaps to skip clearing images when the style reloads.
             // https://github.com/mapbox/mapbox-maps-ios/issues/860
-            addImages()
+            try addImages()
             allLayerProperties[LocationIndicatorLayer.RootCodingKeys.id.rawValue] = Self.layerID
             allLayerProperties[LocationIndicatorLayer.RootCodingKeys.type.rawValue] = LayerType.locationIndicator.rawValue
-            try! style.addPersistentLayer(with: allLayerProperties, layerPosition: nil)
+            try style.addPersistentLayer(with: allLayerProperties, layerPosition: nil)
         }
     }
 
-    private func updateLayerFastPath(with data: PuckRenderingData) {
+    private func updateLayerFastPath(with data: PuckRenderingData) throws {
         guard isActive else { return }
         var layerProperties: [String: Any] = [
             LocationIndicatorLayer.PaintCodingKeys.location.rawValue: [
@@ -277,16 +301,23 @@ internal final class Puck2D: Puck {
             break
         }
 
-        try! style.setLayerProperties(for: Self.layerID, properties: layerProperties)
+        try style.setLayerProperties(for: Self.layerID, properties: layerProperties)
     }
 
-    private func renderPulsing(with data: PuckRenderingData) {
+    private func renderPulsing(with data: PuckRenderingData) throws {
         let participantTrace = OSLog.platform.beginInterval(SignpostName.mapViewDisplayLink,
                                                             beginMessage: "Participant: Puck2D Pulsing")
         defer { participantTrace?.end() }
 
-        guard style.layerExists(withId: Self.layerID),
-              let pulsing = configuration.pulsing else {
+        guard let pulsing = configuration.pulsing,
+              pulsing.isEnabled else {
+            // Remove the pulsing when it became disabled.
+            if pulsingAnimationStartTimestamp != nil {
+                try style.setLayerProperties(for: Self.layerID, properties: [
+                  LocationIndicatorLayer.PaintCodingKeys.emphasisCircleRadius.rawValue: 0
+                ])
+                pulsingAnimationStartTimestamp = nil
+            }
             return
         }
         guard let startTimestamp = pulsingAnimationStartTimestamp else {
@@ -310,7 +341,7 @@ internal final class Puck2D: Puck {
         if progress >= 1 {
             pulsingAnimationStartTimestamp = currentTime
         }
-        try! style.setLayerProperties(for: Self.layerID, properties: properties.mapKeys(\.rawValue))
+        try style.setLayerProperties(for: Self.layerID, properties: properties.mapKeys(\.rawValue))
     }
 }
 

@@ -164,3 +164,18 @@ public final class ViewportManager {
         return ImmediateViewportTransition(mapboxMap: mapboxMap)
     }
 }
+
+protocol ViewportManagerProtocol {
+    func addStatusObserver(_ observer: ViewportStatusObserver)
+    func removeStatusObserver(_ observer: ViewportStatusObserver)
+    func idle()
+    func transition(to toState: ViewportState, transition: ViewportTransition?, completion: ((Bool) -> Void)?)
+    func makeImmediateViewportTransition() -> ViewportTransition
+}
+
+extension ViewportManager: ViewportManagerProtocol {
+    func makeImmediateViewportTransition() -> ViewportTransition {
+        let transition: ImmediateViewportTransition = makeImmediateViewportTransition()
+        return transition
+    }
+}

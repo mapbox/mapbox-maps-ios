@@ -3,6 +3,26 @@
 import CoreLocation
 
 final class MockMapboxMap: MapboxMapProtocol {
+    var options: MapOptions = MapOptions()
+
+    let events = MapEvents(makeGenericSubject: { _ in
+        return SignalSubject<GenericEvent>()
+    })
+
+    var onMapLoaded: Signal<MapLoaded> { events.signal(for: \.onMapLoaded) }
+    var onMapLoadingError: Signal<MapLoadingError> { events.signal(for: \.onMapLoadingError) }
+    var onStyleLoaded: Signal<StyleLoaded> { events.signal(for: \.onStyleLoaded) }
+    var onStyleDataLoaded: Signal<StyleDataLoaded> { events.signal(for: \.onStyleDataLoaded) }
+    var onCameraChanged: Signal<CameraChanged> { events.signal(for: \.onCameraChanged) }
+    var onMapIdle: Signal<MapIdle> { events.signal(for: \.onMapIdle) }
+    var onSourceAdded: Signal<SourceAdded> { events.signal(for: \.onSourceAdded) }
+    var onSourceRemoved: Signal<SourceRemoved> { events.signal(for: \.onSourceRemoved) }
+    var onSourceDataLoaded: Signal<SourceDataLoaded> { events.signal(for: \.onSourceDataLoaded) }
+    var onStyleImageMissing: Signal<StyleImageMissing> { events.signal(for: \.onStyleImageMissing) }
+    var onStyleImageRemoveUnused: Signal<StyleImageRemoveUnused> { events.signal(for: \.onStyleImageRemoveUnused) }
+    var onRenderFrameStarted: Signal<RenderFrameStarted> { events.signal(for: \.onRenderFrameStarted) }
+    var onRenderFrameFinished: Signal<RenderFrameFinished> { events.signal(for: \.onRenderFrameFinished) }
+    var onResourceRequest: Signal<ResourceRequest> { events.signal(for: \.onResourceRequest) }
 
     var size: CGSize = .zero
 
@@ -72,9 +92,14 @@ final class MockMapboxMap: MapboxMapProtocol {
         endGestureStub.call()
     }
 
-    let setViewAnnotationPositionsUpdateListenerStub = Stub<ViewAnnotationPositionsUpdateListener?, Void>()
-    func setViewAnnotationPositionsUpdateListener(_ listener: ViewAnnotationPositionsUpdateListener?) {
-        setViewAnnotationPositionsUpdateListenerStub.call(with: listener)
+    let setViewAnnotationPositionsUpdateCallbackStub = Stub<ViewAnnotationPositionsUpdateCallback?, Void>()
+
+    func setViewAnnotationPositionsUpdateCallback(_ callback: ViewAnnotationPositionsUpdateCallback?) {
+        setViewAnnotationPositionsUpdateCallbackStub.call(with: callback)
+    }
+
+    func simulateAnnotationPositionsUpdate(_ positions: [ViewAnnotationPositionDescriptor]) {
+        setViewAnnotationPositionsUpdateCallbackStub.invocations.last?.parameters?(positions)
     }
 
     struct ViewAnnotationModificationOptions: Equatable {
@@ -148,10 +173,40 @@ final class MockMapboxMap: MapboxMapProtocol {
     var performWithoutNotifyingInvocationCount = 0
     var performWithoutNotifyingWillInvokeBlock = {}
     var performWithoutNotifyingDidInvokeBlock = {}
-    func performWithoutNotifying(_ block: () -> Void) {
+    func performWithoutNotifying(_ block: () throws -> Void) rethrows {
         performWithoutNotifyingInvocationCount += 1
         performWithoutNotifyingWillInvokeBlock()
-        block()
+        try block()
         performWithoutNotifyingDidInvokeBlock()
+    }
+
+    let setCameraBoundsStub = Stub<MapboxMaps.CameraBoundsOptions, Void>()
+    func setCameraBounds(with options: MapboxMaps.CameraBoundsOptions) throws {
+        setCameraBoundsStub.call(with: options)
+    }
+
+    let northOrientationStub = Stub<NorthOrientation, Void>()
+    func setNorthOrientation(northOrientation: NorthOrientation) {
+        northOrientationStub.call(with: northOrientation)
+    }
+
+    let setConstraintModeStub = Stub<ConstrainMode, Void>()
+    func setConstrainMode(_ constrainMode: ConstrainMode) {
+        setConstraintModeStub.call(with: constrainMode)
+    }
+
+    let setViewportModeStub = Stub<ViewportMode, Void>()
+    func setViewportMode(_ viewportMode: ViewportMode) {
+        setViewportModeStub.call(with: viewportMode)
+    }
+
+    struct QRFParameters {
+        var point: CGPoint
+        var options: RenderedQueryOptions?
+        var completion: (Result<[QueriedRenderedFeature], Error>) -> Void
+    }
+    let qrfStub = Stub<QRFParameters, Cancelable>(defaultReturnValue: MockCancelable())
+    func queryRenderedFeatures(with point: CGPoint, options: RenderedQueryOptions?, completion: @escaping (Result<[QueriedRenderedFeature], Error>) -> Void) -> Cancelable {
+        qrfStub.call(with: QRFParameters(point: point, options: options, completion: completion))
     }
 }

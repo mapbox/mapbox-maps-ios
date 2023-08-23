@@ -81,7 +81,7 @@ extension Signal {
     }
 
     /// Creates a signal that triggers if `condition` is `true`.
-    internal func filter(_ condition: @escaping (Payload) -> Bool) -> Signal {
+    func filter(_ condition: @escaping (Payload) -> Bool) -> Signal {
         Signal(observeImpl: { handle in
             observeImpl { payload in
                 if condition(payload) {

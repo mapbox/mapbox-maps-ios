@@ -61,7 +61,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     private let style: StyleProtocol
 
     /// Storage for common layer properties
-    private var layerProperties: [String: Any] = [:] {
+    internal var layerProperties: [String: Any] = [:] {
         didSet {
             needsSyncSourceAndLayer = true
         }
@@ -609,6 +609,10 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         delegate?.annotationManager(
             self,
             didDetectTappedAnnotations: tappedAnnotations)
+
+        for annotation in tappedAnnotations {
+            annotation.tapHandler?.value()
+        }
     }
 
     private func updateDragSource() {

@@ -274,7 +274,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
     // MARK: Test placeAnnotations
 
     func testPlacementMissingAnnotation() {
-        manager.onViewAnnotationPositionsUpdate(forPositions: [ViewAnnotationPositionDescriptor(
+        mapboxMap.simulateAnnotationPositionsUpdate([ViewAnnotationPositionDescriptor(
             identifier: "arbitraryId",
             width: 0,
             height: 0,
@@ -287,7 +287,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         XCTAssertEqual(container.subviews.count, 1)
         XCTAssertEqual(annotationView.frame, CGRect.zero)
 
-        manager.onViewAnnotationPositionsUpdate(forPositions: [ViewAnnotationPositionDescriptor(
+        mapboxMap.simulateAnnotationPositionsUpdate([ViewAnnotationPositionDescriptor(
             identifier: "test-id",
             width: 100,
             height: 50,
@@ -303,7 +303,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
 
         XCTAssertEqual(container.subviews, [annotationViewA, annotationViewB])
 
-        manager.onViewAnnotationPositionsUpdate(forPositions: [ViewAnnotationPositionDescriptor(
+        mapboxMap.simulateAnnotationPositionsUpdate([ViewAnnotationPositionDescriptor(
             identifier: "test-id2",
             width: 100,
             height: 50,
@@ -327,7 +327,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         XCTAssertTrue(annotationViewB.isHidden)
         XCTAssertTrue(annotationViewC.isHidden)
 
-        manager.onViewAnnotationPositionsUpdate(forPositions: [ViewAnnotationPositionDescriptor(
+        mapboxMap.simulateAnnotationPositionsUpdate([ViewAnnotationPositionDescriptor(
             identifier: "test-id",
             width: 100,
             height: 50,
@@ -342,7 +342,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
     func testViewAnnotationUpdateDoesNotUnhideHiddenViews() throws {
         let annotationView = addTestAnnotationView()
 
-        manager.onViewAnnotationPositionsUpdate(forPositions: [])
+        mapboxMap.simulateAnnotationPositionsUpdate([])
 
         try manager.update(annotationView, options: ViewAnnotationOptions())
 
@@ -378,7 +378,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         let observer = MockViewAnnotationUpdateObserver()
         manager.addViewAnnotationUpdateObserver(observer)
 
-        manager.onViewAnnotationPositionsUpdate(forPositions: [])
+        mapboxMap.simulateAnnotationPositionsUpdate([])
 
         XCTAssertTrue(annotationView.isHidden)
         XCTAssertTrue(observer.visibilityDidChangeStub.invocations.isEmpty)
@@ -407,7 +407,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         // triggers frame did change observation
         triggerPositionUpdate(forId: id)
         // triggers visibility update observation
-        manager.onViewAnnotationPositionsUpdate(forPositions: [])
+        mapboxMap.simulateAnnotationPositionsUpdate([])
 
         XCTAssertTrue(observer.framesDidChangeStub.invocations.isEmpty)
         XCTAssertTrue(observer.visibilityDidChangeStub.invocations.isEmpty)
@@ -468,7 +468,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
     }
 
     private func triggerPositionUpdate(forId id: String) {
-        manager.onViewAnnotationPositionsUpdate(forPositions: [ViewAnnotationPositionDescriptor(
+        mapboxMap.simulateAnnotationPositionsUpdate([ViewAnnotationPositionDescriptor(
             identifier: id,
             width: 100,
             height: 50,

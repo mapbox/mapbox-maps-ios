@@ -23,12 +23,14 @@ class InfoButtonOrnamentTests: XCTestCase {
         let firstAlert = try XCTUnwrap(parentViewController.currentAlert, "The first alert controller could not be found.")
         XCTAssertNotNil(firstAlert)
 
-        XCTAssertEqual(firstAlert.actions.count, 2, "There should be two alerts present.")
+        XCTAssertEqual(firstAlert.actions.count, 3, "There should be three actions present.")
         let telemetryTitle = NSLocalizedString("Mapbox Telemetry", comment: "Action in attribution sheet")
         XCTAssertEqual(firstAlert.actions[0].title!, telemetryTitle)
 
+        XCTAssertEqual(firstAlert.actions[1].title, Attribution.makePrivacyPolicyAttribution().title)
+
         let cancelTitle = NSLocalizedString("Cancel", comment: "Title of button for dismissing attribution action sheet")
-        XCTAssertEqual(firstAlert.actions[1].title, cancelTitle)
+        XCTAssertEqual(firstAlert.actions[2].title, cancelTitle)
     }
 
     func testTelemetryOptOut() throws {

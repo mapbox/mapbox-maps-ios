@@ -163,6 +163,13 @@ extension AttributionDialogManager: InfoButtonOrnamentDelegate {
 
         alert.addAction(telemetryAction)
 
+        let privacyPolicyAttribution = Attribution.makePrivacyPolicyAttribution()
+        let privacyPolicyAction = UIAlertAction(title: privacyPolicyAttribution.title, style: .default) { _ in
+            self.delegate?.attributionDialogManager(self, didTriggerActionFor: privacyPolicyAttribution)
+        }
+
+        alert.addAction(privacyPolicyAction)
+
         let cancelTitle = NSLocalizedString("CANCEL",
                                             tableName: Ornaments.localizableTableName,
                                             bundle: bundle,

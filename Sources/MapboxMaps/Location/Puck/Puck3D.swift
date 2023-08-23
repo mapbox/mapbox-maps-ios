@@ -1,6 +1,6 @@
 @_implementationOnly import MapboxCommon_Private
 
-internal final class Puck3D: Puck {
+internal final class Puck3D: Puck3DProtocol {
     private static let sourceID = "puck-model-source"
     internal static let layerID = "puck-model-layer"
 
@@ -15,24 +15,26 @@ internal final class Puck3D: Puck {
                 }.store(in: &cancelables)
             } else {
                 cancelables.removeAll()
-                if style.layerExists(withId: Self.layerID) {
-                    try! style.removeLayer(withId: Self.layerID)
-                }
-                if style.sourceExists(withId: Self.sourceID) {
-                    try! style.removeSource(withId: Self.sourceID)
-                }
+                try? style.removeLayer(withId: Self.layerID)
+                try? style.removeSource(withId: Self.sourceID)
+                onceConfigurationUpdated.reset()
             }
         }
     }
 
     // The change in this properties will be handled in the next render call (renderingData update).
     // TODO: Those properties should come as part of rendering data.
-    internal var puckBearing: PuckBearing = .heading
-    internal var puckBearingEnabled: Bool = true
+    var puckBearing: PuckBearing = .heading
+    var puckBearingEnabled: Bool = true
+    var configuration: Puck3DConfiguration {
+        didSet {
+            onceConfigurationUpdated.reset(if: configuration != oldValue)
+        }
+    }
 
-    private let configuration: Puck3DConfiguration
     private let style: StyleProtocol
     private let renderingData: Signal<PuckRenderingData>
+    private var onceConfigurationUpdated = Once()
 
     private var cancelables = Set<AnyCancelable>()
 
@@ -44,6 +46,7 @@ internal final class Puck3D: Puck {
         self.renderingData = renderingData
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func render(with data: PuckRenderingData) {
         guard isActive else { return }
 
@@ -76,22 +79,39 @@ internal final class Puck3D: Puck {
         var source = ModelSource(id: Self.sourceID)
         source.models = ["puck-model": model]
 
-        // update or create the source
-        if style.sourceExists(withId: Self.sourceID) {
-            try! style.setSourceProperties(for: Self.sourceID, properties: source.jsonObject())
-        } else {
-            try! style.addSource(source)
+        do {
+            // update or create the source
+            if style.sourceExists(withId: Self.sourceID) {
+                try style.setSourceProperties(for: Self.sourceID, properties: source.jsonObject())
+            } else {
+                try style.addSource(source)
+            }
+        } catch {
+            Log.error(forMessage: "Failed to update Puck3D Source properties, \(error)")
         }
 
-        // create the layer if needed
-        if !style.layerExists(withId: Self.layerID) {
-            var modelLayer = ModelLayer(id: Self.layerID, source: Self.sourceID)
-            modelLayer.modelScale = configuration.modelScale
-            modelLayer.modelScaleMode = configuration.modelScaleMode
-            modelLayer.modelType = .constant(.locationIndicator)
-            modelLayer.modelRotation = configuration.modelRotation
-            modelLayer.modelOpacity = configuration.modelOpacity
-            try! style.addPersistentLayer(modelLayer, layerPosition: nil)
+        var modelLayer = ModelLayer(id: Self.layerID, source: Self.sourceID)
+        modelLayer.modelScale = configuration.modelScale
+        modelLayer.modelScaleMode = configuration.modelScaleMode
+        modelLayer.modelType = .constant(.locationIndicator)
+        modelLayer.modelRotation = configuration.modelRotation
+        modelLayer.modelOpacity = configuration.modelOpacity
+
+        do {
+            // create the layer if needed
+            if !style.layerExists(withId: Self.layerID) {
+                try style.addPersistentLayer(modelLayer, layerPosition: nil)
+            } else {
+                try onceConfigurationUpdated {
+                    var properties = try modelLayer.allStyleProperties()
+                    properties.removeValue(forKey: "id")
+                    properties.removeValue(forKey: "type")
+                    properties.removeValue(forKey: "source")
+                    try style.setLayerProperties(for: Self.layerID, properties: properties)
+                }
+            }
+        } catch {
+            Log.error(forMessage: "Failed to update Puck3D Layer properties, \(error)")
         }
     }
 }

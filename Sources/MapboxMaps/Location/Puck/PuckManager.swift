@@ -9,59 +9,83 @@ internal protocol PuckManagerProtocol: AnyObject {
 }
 
 internal final class PuckManager: PuckManagerProtocol {
+    private enum State {
+        case none
+        case puck2D(Puck2DProtocol)
+        case puck3D(Puck3DProtocol)
+
+        var puck: Puck? {
+            switch self {
+            case .none: return nil
+            case let .puck2D(p): return p
+            case let .puck3D(p): return p
+            }
+        }
+    }
 
     internal var puckType: PuckType? {
         didSet {
             // if puckType is nil, set puck to nil and return early
-            guard let puckType = puckType else {
-                puck = nil
+            guard let puckType else {
+                state = .none
                 return
             }
             // if the non-nil puckType hasn't changed, return early
             guard puckType != oldValue else {
                 return
             }
-            // otherwise, recreate the puck
-            let puck: Puck
-            switch puckType {
-            case .puck2D(let configuration):
-                puck = puck2DProvider(configuration)
-            case .puck3D(let configuration):
-                puck = puck3DProvider(configuration)
+
+            switch (state, puckType) {
+            case let (.puck2D(puck2D), .puck2D(config)):
+                puck2D.configuration = config
+            case let (.puck3D(puck3D), .puck3D(config)):
+                puck3D.configuration = config
+            default:
+                recreatePuck(with: puckType)
             }
-            puck.puckBearing = puckBearing
-            puck.puckBearingEnabled = puckBearingEnabled
-            self.puck = puck
         }
     }
 
     internal var puckBearing: PuckBearing = .heading {
         didSet {
-            puck?.puckBearing = puckBearing
+            state.puck?.puckBearing = puckBearing
         }
     }
 
     internal var puckBearingEnabled: Bool = true {
         didSet {
-            puck?.puckBearingEnabled = puckBearingEnabled
+            state.puck?.puckBearingEnabled = puckBearingEnabled
         }
     }
 
-    private var puck: Puck? {
+    private var state: State = .none {
         didSet {
             // this order is important so that if they're the same type of puck,
             // the old one doesn't remove the layer/source added by the new one.
-            oldValue?.isActive = false
-            puck?.isActive = true
+            oldValue.puck?.isActive = false
+            state.puck?.isActive = true
         }
     }
 
-    private let puck2DProvider: (Puck2DConfiguration) -> Puck
-    private let puck3DProvider: (Puck3DConfiguration) -> Puck
+    private let puck2DProvider: (Puck2DConfiguration) -> Puck2DProtocol
+    private let puck3DProvider: (Puck3DConfiguration) -> Puck3DProtocol
 
-    internal init(puck2DProvider: @escaping (Puck2DConfiguration) -> Puck,
-                  puck3DProvider: @escaping (Puck3DConfiguration) -> Puck) {
+    internal init(puck2DProvider: @escaping (Puck2DConfiguration) -> Puck2DProtocol,
+                  puck3DProvider: @escaping (Puck3DConfiguration) -> Puck3DProtocol) {
         self.puck2DProvider = puck2DProvider
         self.puck3DProvider = puck3DProvider
+    }
+
+    private func recreatePuck(with type: PuckType) {
+        let newState: State
+        switch type {
+        case .puck2D(let configuration):
+            newState = .puck2D(puck2DProvider(configuration))
+        case .puck3D(let configuration):
+            newState = .puck3D(puck3DProvider(configuration))
+        }
+        newState.puck?.puckBearing = puckBearing
+        newState.puck?.puckBearingEnabled = puckBearingEnabled
+        self.state = newState
     }
 }

@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Add privacy policy attribution dialog action.
+
 ## 10.15.0-rc.1 - July 13, 2023
 
 * Update MapboxCoreMaps to 10.15.0-rc.1 and MapboxCommon to 23.7.0-rc.1.  

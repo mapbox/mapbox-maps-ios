@@ -81,13 +81,13 @@ public final class ViewAnnotationManager {
     internal init(containerView: UIView, mapboxMap: MapboxMapProtocol) {
         self.containerView = containerView
         self.mapboxMap = mapboxMap
-        let delegatingPositionsListener = DelegatingViewAnnotationPositionsUpdateListener()
-        delegatingPositionsListener.delegate = self
-        mapboxMap.setViewAnnotationPositionsUpdateListener(delegatingPositionsListener)
+        mapboxMap.setViewAnnotationPositionsUpdateCallback { [weak self] positions in
+            self?.placeAnnotations(positions: positions)
+        }
     }
 
     deinit {
-        mapboxMap.setViewAnnotationPositionsUpdateListener(nil)
+        mapboxMap.setViewAnnotationPositionsUpdateCallback(nil)
     }
 
     // MARK: - Public APIs
@@ -420,14 +420,7 @@ public final class ViewAnnotationManager {
     }
 }
 
-extension ViewAnnotationManager: DelegatingViewAnnotationPositionsUpdateListenerDelegate {
-
-    internal func onViewAnnotationPositionsUpdate(forPositions positions: [ViewAnnotationPositionDescriptor]) {
-        placeAnnotations(positions: positions)
-    }
-}
-
-private extension ViewAnnotationPositionDescriptor {
+extension ViewAnnotationPositionDescriptor {
     var frame: CGRect {
         CGRect(origin: leftTopCoordinate.point, size: CGSize(width: CGFloat(width), height: CGFloat(height)))
     }

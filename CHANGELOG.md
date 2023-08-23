@@ -4,7 +4,6 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
-* Add privacy policy attribution dialog action.
 ## 10.16.0-rc.1 - August 23, 2023
 
 * Add privacy policy attribution dialog action.
@@ -14,14 +13,6 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Update MapboxCoreMaps to 10.16.0-beta.1 and MapboxCommon to 23.8.0-beta.1.
 
-## 10.15.0-rc.1 - July 13, 2023
-
-* Update MapboxCoreMaps to 10.15.0-rc.1 and MapboxCommon to 23.7.0-rc.1.  
-
-## 10.15.0-beta.1 - June 29, 2023
-
-* Remove unneeded synthesized initializers 
-* Update MapboxCoreMaps to 10.15.0-beta.1 and MapboxCommon to 23.7.0-beta.1.  
 ## 10.15.0 - July 27, 2023
 
 * Update MapboxCoreMaps to 10.15.0 and MapboxCommon to 23.7.0.
@@ -29,7 +20,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## 10.15.0-rc.1 - July 13, 2023
 
-* Update MapboxCoreMaps to 10.15.0-rc.1 and MapboxCommon to 23.7.0-rc.1.  
+* Update MapboxCoreMaps to 10.15.0-rc.1 and MapboxCommon to 23.7.0-rc.1.
 * Fixed an issue when `MapboxMap.point(for:)` could return false negative result.
 
 ## 10.15.0-beta.1 - June 29, 2023

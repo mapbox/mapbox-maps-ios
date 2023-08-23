@@ -4,10 +4,14 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
-## 10.16.0-beta.1 - Aug 9, 2023
+## 10.16.0-rc.1 - August 23, 2023
+
+* Add privacy policy attribution dialog action.
+* Update MapboxCoreMaps to 10.16.0-rc.2 and MapboxCommon to 23.8.0-rc.2.
+
+## 10.16.0-beta.1 - August 9, 2023
 
 * Update MapboxCoreMaps to 10.16.0-beta.1 and MapboxCommon to 23.8.0-beta.1.
-* Add privacy policy attribution dialog action.
 
 ## 10.15.0-rc.1 - July 13, 2023
 

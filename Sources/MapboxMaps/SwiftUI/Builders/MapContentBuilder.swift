@@ -1,4 +1,7 @@
 /// A result builder that creates map content from closures you provide.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
 @_spi(Experimental)
 @resultBuilder public struct MapContentBuilder {
 

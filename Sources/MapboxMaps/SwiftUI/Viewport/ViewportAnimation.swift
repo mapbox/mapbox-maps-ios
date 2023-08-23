@@ -1,23 +1,35 @@
 import SwiftUI
 import UIKit
 
-/// Specifies the animation for the map Viewport.
+/// Specifies the animation for the map ``Viewport``.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
 @_spi(Experimental)
-public struct MapViewportAnimation {
+public struct ViewportAnimation {
     /// Viewport transition factory closure.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public typealias ViewportTransitionFactory = (MapView) -> ViewportTransition
 
     /// A closure that creates a viewport transition using the MapView.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public var makeViewportTransition: ViewportTransitionFactory
 
     /// A default viewport animation.
     ///
     /// The default animation tries to provide best-looking animation for every viewport transition.
     ///
-    /// - Note: It's recommended to use the default animation with ``MapViewport/followPuck(zoom:bearing:pitch:)``
+    /// - Note: It's recommended to use the default animation with ``Viewport/followPuck(zoom:bearing:pitch:)``
     /// viewport, because it supports moving animation target (user location puck).
-    public static var `default`: MapViewportAnimation {
-        return MapViewportAnimation { mapView in
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public static var `default`: ViewportAnimation {
+        return ViewportAnimation { mapView in
             return mapView.viewport.makeDefaultViewportTransition(options: .init())
         }
     }
@@ -26,14 +38,17 @@ public struct MapViewportAnimation {
     ///
     /// The default animation tries to provide best-looking animation for every viewport transition.
     ///
-    /// - Note: It's recommended to use the default animation with ``MapViewport/followPuck(zoom:bearing:pitch:)``
+    /// - Note: It's recommended to use the default animation with ``Viewport/followPuck(zoom:bearing:pitch:)``
     /// viewport, because it supports moving animation target (user location puck).
     ///
     /// - Parameters:
     ///   - maxDuration: The maximum duration of the animation, measured in seconds.
     /// - Returns: A default viewport animation.
-    public static func `default`(maxDuration: TimeInterval) -> MapViewportAnimation {
-        return MapViewportAnimation { mapView in
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public static func `default`(maxDuration: TimeInterval) -> ViewportAnimation {
+        return ViewportAnimation { mapView in
             return mapView.viewport.makeDefaultViewportTransition(options: .init(maxDuration: maxDuration))
         }
     }
@@ -42,8 +57,11 @@ public struct MapViewportAnimation {
     ///
     /// The fly animation usually follows the zoom-out, flight, zoom-in pattern in animation.
     /// The duration of the animation will be calculated automatically.
-    public static var fly: MapViewportAnimation {
-        return MapViewportAnimation { mapView in
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public static var fly: ViewportAnimation {
+        return ViewportAnimation { mapView in
             GenericViewportTransition { cameraOptions, completion in
                 mapView.camera.fly(to: cameraOptions, duration: nil, completion: completion)
             }
@@ -57,8 +75,11 @@ public struct MapViewportAnimation {
     /// - Parameters:
     ///   - duration: Duration of the animation, measured in seconds.
     /// - Returns: A fly animation.
-    public static func fly(duration: TimeInterval) -> MapViewportAnimation {
-        return MapViewportAnimation { mapView in
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public static func fly(duration: TimeInterval) -> ViewportAnimation {
+        return ViewportAnimation { mapView in
             GenericViewportTransition { cameraOptions, completion in
                 mapView.camera.fly(to: cameraOptions, duration: duration, completion: completion)
             }
@@ -70,7 +91,10 @@ public struct MapViewportAnimation {
     /// - Parameters:
     ///   - duration: Duration of the animation, measured in seconds.
     /// - Returns: An ease-out animation.
-    public static func easeOut(duration: TimeInterval) -> MapViewportAnimation {
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public static func easeOut(duration: TimeInterval) -> ViewportAnimation {
         return .ease(curve: .easeOut, duration: duration)
     }
 
@@ -79,7 +103,10 @@ public struct MapViewportAnimation {
     /// - Parameters:
     ///   - duration: Duration of the animation, measured in seconds.
     /// - Returns: An ease-in animation.
-    public static func easeIn(duration: TimeInterval) -> MapViewportAnimation {
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public static func easeIn(duration: TimeInterval) -> ViewportAnimation {
         return .ease(curve: .easeIn, duration: duration)
     }
 
@@ -88,7 +115,10 @@ public struct MapViewportAnimation {
     /// - Parameters:
     ///   - duration: Duration of the animation, measured in seconds.
     /// - Returns: An ease-in-out animation.
-    public static func easeInOut(duration: TimeInterval) -> MapViewportAnimation {
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public static func easeInOut(duration: TimeInterval) -> ViewportAnimation {
         return .ease(curve: .easeInOut, duration: duration)
     }
 
@@ -97,12 +127,15 @@ public struct MapViewportAnimation {
     /// - Parameters:
     ///   - duration: Duration of the animation, measured in seconds.
     /// - Returns: A linear animation.
-    public static func linear(duration: TimeInterval) -> MapViewportAnimation {
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public static func linear(duration: TimeInterval) -> ViewportAnimation {
         return .ease(curve: .linear, duration: duration)
     }
 
-    private static func ease(curve: UIView.AnimationCurve, duration: TimeInterval) -> MapViewportAnimation {
-        return MapViewportAnimation { mapView in
+    private static func ease(curve: UIView.AnimationCurve, duration: TimeInterval) -> ViewportAnimation {
+        return ViewportAnimation { mapView in
             GenericViewportTransition { cameraOptions, completion in
                 mapView.camera.ease(to: cameraOptions, duration: duration, curve: curve, completion: completion)
             }
@@ -129,21 +162,40 @@ private final class GenericViewportTransition: ViewportTransition {
     }
 }
 
-struct MapViewportAnimationData {
-    var animation: MapViewportAnimation
+struct ViewportAnimationData {
+    var animation: ViewportAnimation
     var completion: ((Bool) -> Void)?
 }
 
 /// Applies the animation to the map viewport.
+///
+/// Use this function to apply animation to viewport change.
+///
+/// ```swift
+/// @Binding viewport: Viewport
+///
+/// var body: some View {
+///     Button("Animate viewport") {
+///         withViewportAnimation {
+///             viewport = .camera(...)
+///         }
+///     }
+/// }
+/// ```
+///
+/// See ``Viewport`` and ``ViewportAnimation`` documentation for more details.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
 @available(iOS 13.0, *)
 @_spi(Experimental)
 public func withViewportAnimation<Result>(
-    _ animation: MapViewportAnimation = .default,
+    _ animation: ViewportAnimation = .default,
     body: () throws -> Result,
     completion: ((Bool) -> Void)? = nil
 ) rethrows -> Result {
     var transaction = Transaction()
-    transaction.viewportAnimationData = MapViewportAnimationData(animation: animation, completion: completion)
+    transaction.viewportAnimationData = ViewportAnimationData(animation: animation, completion: completion)
     return try withTransaction(transaction, body)
 }
 
@@ -151,14 +203,14 @@ public func withViewportAnimation<Result>(
 
 @available(iOS 17.0, *)
 private struct MapAnimationTransactionKey: TransactionKey {
-    static let defaultValue: MapViewportAnimationData? = nil
+    static let defaultValue: ViewportAnimationData? = nil
 }
 
 #endif
 
 @available(iOS 13.0, *)
 extension Transaction {
-    var viewportAnimationData: MapViewportAnimationData? {
+    var viewportAnimationData: ViewportAnimationData? {
         get {
             // Custom Transaction properties via subscript are only supported starting from iOS 17 and Xcode 15.
             // For older iOS versions we use the `GlobalAnimationStore` to carry the animations options
@@ -188,5 +240,5 @@ extension Transaction {
 }
 
 private struct GlobalAnimationStore {
-    static var viewportAnimationData: MapViewportAnimationData?
+    static var viewportAnimationData: ViewportAnimationData?
 }

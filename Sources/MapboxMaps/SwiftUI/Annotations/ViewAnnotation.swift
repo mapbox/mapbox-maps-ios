@@ -1,12 +1,26 @@
 import SwiftUI
 
-/// Represents view annotation.
+/// Displays view annotation.
+///
+/// Create a view annotation to display SwiftUI view in ``Map-swift.struct`` content.
+///
+/// ```swift
+/// Map {
+///     ViewAnnotation(CLLocationCoordinate2D(...)) {
+///        Text("🚀")
+///           .background(Circle().fill(.red))
+///     }
+/// }
+/// ```
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
 @_spi(Experimental)
 public struct ViewAnnotation: MapContent {
     var viewAnnotationConfig: ViewAnnotationConfig
     var makeViewController: (@escaping (CGSize) -> Void) -> UIViewController
 
-    /// Creates an annotation with specified options and content builder.
+    /// Creates a view annotation.
     ///
     /// - Parameters:
     ///   - coordinate: Coordinate the view annotation is bound to.
@@ -14,6 +28,9 @@ public struct ViewAnnotation: MapContent {
     ///   - anchor: Specifies where the annotation will be located relatively to the given coordinate.
     ///   - offsetX: Additional X offset, positive values move annotation to right.
     ///   - offsetY: Additional Y offset, positive values move annotation to top.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @available(iOS 13.0, *)
     public init<Content: View>(
         _ coordinate: CLLocationCoordinate2D,

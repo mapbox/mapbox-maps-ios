@@ -5,7 +5,7 @@ import MapboxMaps
 @available(iOS 14.0, *)
 struct MapViewportExample: View {
     @State var viewport: Viewport = .styleDefault
-    @State var camera = CameraState(center: .zero, zoom: 0)
+    @State var camera = CameraState(center: .init(), padding: .zero, zoom: 0, bearing: 0, pitch: 0)
     @State var mapStyle: MapStyle = .standard
 
     var body: some View {

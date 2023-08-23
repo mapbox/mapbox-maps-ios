@@ -7,7 +7,7 @@ struct SimpleMapExample: View {
     var body: some View {
         let polygon = Polygon(center: .helsinki, radius: 10000, vertices: 30)
         Map(initialViewport: .overview(geometry: polygon))
-            .mapStyle(colorScheme == .light ? .streets : .dark)
+            .mapStyle(.standard(lightPreset: colorScheme == .light ? .day : .dusk))
             .ignoresSafeArea()
     }
 }

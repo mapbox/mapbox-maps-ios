@@ -10,7 +10,7 @@ struct MockMapView {
     var viewportManager = MockViewportManager()
     var ornaments = MockOrnamentsManager()
 
-    var makeViewportTransitionStub = Stub<MapViewportAnimation, ViewportTransition>(defaultReturnValue: MockViewportTransition())
+    var makeViewportTransitionStub = Stub<ViewportAnimation, ViewportTransition>(defaultReturnValue: MockViewportTransition())
     struct MakeViewportParameters {
         var viewport: Viewport
         var layoutDirection: SwiftUI.LayoutDirection

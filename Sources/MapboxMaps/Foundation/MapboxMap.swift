@@ -595,7 +595,7 @@ public final class MapboxMap: StyleManager {
             forCamera: MapboxCoreMaps.CameraOptions(camera))
     }
 
-    /// Returns the unwrapped coordinate bounds to a given ``CameraOptions``.
+    /// Returns the unwrapped coordinate bounds to a given ``CameraOptions-swift.struct``.
     ///
     /// This function is particularly useful, if the camera shows the antimeridian.
     ///

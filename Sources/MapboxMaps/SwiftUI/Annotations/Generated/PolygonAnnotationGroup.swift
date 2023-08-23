@@ -15,21 +15,32 @@ extension PolygonAnnotation: PrimitiveMapContent {
 /// The annotation group is usually more performant, since only one underlying layer is used to draw multiple annotations.
 ///
 /// Annotation group allows to configure group-related options, such as clustering (only for point annotations) and others.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
 @_spi(Experimental)
 public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>: PrimitiveMapContent {
-    public typealias Content = PolygonAnnotation
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     var data: Data
     var idGenerator: (Data.Element) -> ID
-    var content: (Data.Element) -> Content
+    var content: (Data.Element) -> PolygonAnnotation
 
-    public init(_ data: Data, id: KeyPath<Data.Element, ID>, content: @escaping (Data.Element) -> Content) {
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public init(_ data: Data, id: KeyPath<Data.Element, ID>, content: @escaping (Data.Element) -> PolygonAnnotation) {
         self.data = data
         self.idGenerator = { $0[keyPath: id] }
         self.content = content
     }
 
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @available(iOS 13.0, *)
-    public init(_ data: Data, content: @escaping (Data.Element) -> Content) where Data.Element: Identifiable, Data.Element.ID == ID {
+    public init(_ data: Data, content: @escaping (Data.Element) -> PolygonAnnotation) where Data.Element: Identifiable, Data.Element.ID == ID {
         self.init(data, id: \.id, content: content)
     }
 
@@ -69,26 +80,38 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
 
     // MARK: - Common layer properties
 
-    /// Whether or not the fill should be antialiased.
     private var fillAntialias: Bool?
+    /// Whether or not the fill should be antialiased.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public func fillAntialias(_ newValue: Bool) -> Self {
         with(self, setter(\.fillAntialias, newValue))
     }
 
-    /// Emission strength
     private var fillEmissiveStrength: Double?
+    /// Emission strength
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public func fillEmissiveStrength(_ newValue: Double) -> Self {
         with(self, setter(\.fillEmissiveStrength, newValue))
     }
 
-    /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     private var fillTranslate: [Double]?
+    /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public func fillTranslate(_ newValue: [Double]) -> Self {
         with(self, setter(\.fillTranslate, newValue))
     }
 
-    /// Controls the frame of reference for `fill-translate`.
     private var fillTranslateAnchor: FillTranslateAnchor?
+    /// Controls the frame of reference for `fill-translate`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public func fillTranslateAnchor(_ newValue: FillTranslateAnchor) -> Self {
         with(self, setter(\.fillTranslateAnchor, newValue))
     }
@@ -99,6 +122,9 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
     /// Defines relative position of the layers drawing the annotations managed by the current group.
     ///
     /// - NOTE: Layer position isn't updatable. Only the first value passed to this function set will take effect.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public func layerPosition(_ newValue: LayerPosition) -> Self {
         with(self, setter(\.layerPosition, newValue))
     }

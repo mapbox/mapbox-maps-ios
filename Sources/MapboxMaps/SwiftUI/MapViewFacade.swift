@@ -10,7 +10,7 @@ struct MapViewFacade {
     var viewportManager: ViewportManagerProtocol
     var ornaments: OrnamentsManaging
 
-    var makeViewportTransition: (MapViewportAnimation) -> ViewportTransition
+    var makeViewportTransition: (ViewportAnimation) -> ViewportTransition
     var makeViewportState: (Viewport, LayoutDirection) -> ViewportState?
 }
 

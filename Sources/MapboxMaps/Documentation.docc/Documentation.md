@@ -12,6 +12,21 @@ The Mapbox Maps SDK for iOS is a public library for displaying interactive, thor
 ### Articles
 
 - <doc:Migrate-to-v11>
+- <doc:SwiftUI-User-Guide>
+
+### SwiftUI
+- ``Map-swift.struct``
+- ``MapStyle``
+- ``Viewport``
+- ``withViewportAnimation(_:body:completion:)``
+- ``ViewAnnotation``
+- ``PointAnnotationGroup``
+- ``CircleAnnotationGroup``
+- ``PolygonAnnotationGroup``
+- ``PolylineAnnotationGroup``
+- ``Puck2D``
+- ``Puck3D``
+- ``MapReader``
 
 ### MapView
 

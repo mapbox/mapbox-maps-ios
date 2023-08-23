@@ -29,7 +29,7 @@ import Turf
 ///           Map(viewport: $viewport)
 ///               .overlay {
 ///                   Button("Locate the user") {
-///                       withViewportMapAnimation {
+///                       withViewportAnimation {
 ///                           viewport = .followPuck(zoom: 16, bearing: .heading, pitch: 60)
 ///                       }
 ///                   }
@@ -37,6 +37,9 @@ import Turf
 ///       }
 ///   }
 /// ```
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
 @_spi(Experimental)
 @available(iOS 13.0, *)
 public struct Viewport: Equatable {
@@ -49,36 +52,87 @@ public struct Viewport: Equatable {
     }
 
     /// Options for the overview viewport.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public struct OverviewOptions: Equatable {
+        /// Geometry to overview.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
         public var geometry: Geometry
+        /// Camera bearing.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
         public var bearing: CGFloat
+
+        /// Camera pitch.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
         public var pitch: CGFloat
     }
 
     /// Options for the follow puck viewport.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public struct FollowPuckOptions: Equatable {
+        /// Camera zoom.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
         public var zoom: CGFloat
+
+        /// Camera bearing.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
         public var bearing: FollowPuckViewportStateBearing
+
+        /// Camera pitch.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
         public var pitch: CGFloat
     }
 
     /// Represent insets configuration.
     ///
-    /// Inset configuration is applicable to every kind of viewport configuration except ``MapViewport/idle``.
+    /// Inset configuration is applicable to every kind of viewport configuration except ``Viewport/idle``.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public struct InsetOptions: Equatable {
+        /// Insets of viewport.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
         var insets: SwiftUI.EdgeInsets = .init()
+
+        /// Set of edges that which safe area contribution to padding will be ignored.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
         var ignoredSafeAreaEdges: Edge.Set = []
     }
 
     let storage: Storage
 
     /// Configures insets of viewport.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public var insetOptions = InsetOptions()
 
     /// Idle viewport represents the state when user freely drags the map.
     ///
     /// The viewport is automatically switches to `idle` state when the user starts dragging the map.
     /// Setting the `idle` viewport results in cancelling any ongoing camera animation.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public static var idle: Viewport {
         return Viewport(storage: .idle)
     }
@@ -86,6 +140,9 @@ public struct Viewport: Equatable {
     /// Sets camera to the default camera options defined in the current style.
     ///
     /// See more in the [Mapbox Style Specification](https://docs.mapbox.com/mapbox-gl-js/style-spec/root/#center).
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public static var styleDefault: Viewport {
         Viewport(storage: .styleDefault)
     }
@@ -99,6 +156,9 @@ public struct Viewport: Equatable {
     ///   - bearing: The bearing of the map, measured in degrees clockwise from true north.
     ///   - pitch: Pitch toward the horizon measured in degrees, with 0 degrees resulting in a top-down view for a two-dimensional map.
     /// - Returns: A viewport configured with given camera settings.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public static func camera(center: CLLocationCoordinate2D? = nil,
                               anchor: CGPoint? = nil,
                               zoom: CGFloat? = nil,
@@ -120,6 +180,9 @@ public struct Viewport: Equatable {
     ///   - bearing: The bearing of the map, measured in degrees clockwise from true north.
     ///   - pitch: Pitch toward the horizon measured in degrees, with 0 degrees resulting in a top-down view for a two-dimensional map.
     /// - Returns: A viewport configured with given overview settings.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public static func overview(
         geometry: GeometryConvertible,
         bearing: CGFloat = 0,
@@ -131,7 +194,7 @@ public struct Viewport: Equatable {
 
     /// Configures camera to follow the user location indicator.
     ///
-    /// - Note: It's recommended to use only the ``MapViewportAnimation/default`` animation option for transition
+    /// - Note: It's recommended to use only the ``ViewportAnimation/default`` animation option for transition
     /// to the `followPuck` viewport, because it handles the moving user location puck.
     /// Other animation options such as `easeIn`, `easeOut`, `easeInOut`,  `linear`, or `fly` don't support this.
     ///
@@ -140,6 +203,9 @@ public struct Viewport: Equatable {
     ///   - bearing: Bearing of the map.
     ///   - pitch: Pitch toward the horizon measured in degrees, with 0 degrees resulting in a top-down view for a two-dimensional map.
     /// - Returns: A viewport configured to follow the user location puck.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public static func followPuck(zoom: CGFloat,
                                   bearing: FollowPuckViewportStateBearing = .constant(0),
                                   pitch: CGFloat = 0) -> Viewport {
@@ -157,6 +223,9 @@ public struct Viewport: Equatable {
     ///   - insets: Additional insets, that will be summarized with existing safe area insets.
     ///   - ignoringSafeArea: A set of edges where safe area's contribution to the resulting inset should be ignored.
     /// - Returns: A viewport with modified inset options.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public func inset(by insets: SwiftUI.EdgeInsets, ignoringSafeArea: Edge.Set = []) -> Viewport {
         var copy = self
         copy.insetOptions = .init(insets: insets, ignoredSafeAreaEdges: ignoringSafeArea)
@@ -175,6 +244,9 @@ public struct Viewport: Equatable {
     ///   - length: The length of inset.
     ///   - ignoringSafeArea: If safe area's contribution should be ignored for the specified edges.
     /// - Returns: A viewport with modified inset options.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public func inset(edges: Edge.Set, length: CGFloat, ignoringSafeArea: Bool = false) -> Viewport {
         var copy = self
 
@@ -191,18 +263,27 @@ public struct Viewport: Equatable {
     }
 
     /// Is `true` when viewport is idle.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public var isIdle: Bool {
         return storage == .idle
     }
 
     /// Is `true` when camera is configured from the default style camera properties.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public var isStyleDefault: Bool {
         return storage == .styleDefault
     }
 
     /// Returns the camera options if viewport is configured with camera options.
     ///
-    /// - Note: The ``CameraOptions/padding`` is ignored, it is replaced with ``insetConfig``, see ``inset(by:ignoringSafeArea:)``.
+    /// - Note: The ``CameraOptions-swift.struct/padding`` is ignored, it is replaced with ``Viewport/insetOptions-swift.property``, see ``inset(by:ignoringSafeArea:)``.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public var camera: CameraOptions? {
         switch storage {
         case .camera(let camera):
@@ -213,6 +294,9 @@ public struct Viewport: Equatable {
     }
 
     /// Returns the overview options if viewport is configured to overview the specified geometry.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public var overview: OverviewOptions? {
         switch storage {
         case .overview(let options):
@@ -223,6 +307,9 @@ public struct Viewport: Equatable {
     }
 
     /// Returns the follow puck options if viewport is configured to follow the user location puck.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public var followPuck: FollowPuckOptions? {
         switch storage {
         case .followPuck(let options):

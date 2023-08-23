@@ -62,7 +62,7 @@ final class MapBasicCoordinator {
         viewport: ConstantOrBinding<Viewport>,
         deps: MapDependencies,
         layoutDirection: LayoutDirection,
-        animationData: MapViewportAnimationData?
+        animationData: ViewportAnimationData?
     ) {
         let mapboxMap = mapView.mapboxMap
 
@@ -122,7 +122,7 @@ final class MapBasicCoordinator {
         }
     }
 
-    private func updateCamera(position: ConstantOrBinding<Viewport>, layoutDirection: LayoutDirection, animationData: MapViewportAnimationData?) {
+    private func updateCamera(position: ConstantOrBinding<Viewport>, layoutDirection: LayoutDirection, animationData: ViewportAnimationData?) {
         switch position {
         case .constant(let position):
             updateCameraOnce {
@@ -133,7 +133,7 @@ final class MapBasicCoordinator {
         }
     }
 
-    private func updateCurrentViewport(viewport: Viewport, layoutDirection: LayoutDirection, animationData: MapViewportAnimationData?) {
+    private func updateCurrentViewport(viewport: Viewport, layoutDirection: LayoutDirection, animationData: ViewportAnimationData?) {
         guard viewport != currentViewport else {
             return
         }

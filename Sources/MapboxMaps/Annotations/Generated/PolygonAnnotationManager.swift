@@ -35,7 +35,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
 
     // Private state
 
-    /// Currently displayed annotations
+    /// Currently displayed (synced) annotations.
     private var displayedAnnotations: [PolygonAnnotation] = []
 
     /// Updated, non-moved annotations. On next display link they will be diffed with `displayedAnnotations` and updated.
@@ -113,7 +113,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
                 try body()
             } catch {
                 Log.warning(
-                    forMessage: "Failed to remove \(what) for CircleAnnotationManager with id \(id) due to error: \(error)",
+                    forMessage: "Failed to remove \(what) for PolygonAnnotationManager with id \(id) due to error: \(error)",
                     category: "Annotations")
             }
         }

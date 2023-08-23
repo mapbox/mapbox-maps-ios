@@ -35,7 +35,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
 
     // Private state
 
-    /// Currently displayed annotations
+    /// Currently displayed (synced) annotations.
     private var displayedAnnotations: [CircleAnnotation] = []
 
     /// Updated, non-moved annotations. On next display link they will be diffed with `displayedAnnotations` and updated.

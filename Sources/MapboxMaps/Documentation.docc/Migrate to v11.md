@@ -25,7 +25,7 @@ let mapView = MapView()
 mapView.mapboxMap.styleURI = .standard
 ```
 
-The Mapbox Standard style features 4 light presets: `day`, `dusk`, `dawn`, and `night`. The style light preset can be changed from the default, `day`, to another preset with a single line of code. Here you identify which imported style (`basemap`) you want to change the `lightPresent` config on, as well as the value (`dusk`) you want to change it to. 
+The Mapbox Standard style features 4 light presets: `day`, `dusk`, `dawn`, and `night`. The style light preset can be changed from the default, `day`, to another preset with a single line of code. Here you identify which imported style (`basemap`) you want to change the `lightPresent` config on, as well as the value (`dusk`) you want to change it to.
 
 
 ```swift
@@ -51,7 +51,7 @@ Property | Type | Description
 `lightPreset` | `String` | Switches between 4 time-of-day states: `dusk`, `dawn`, `day`, and `night`.
 `font` | `Array` | Defines font family for the style from predefined options.
 
-In addition, Mapbox Standard makes adding your own data layers easier with the new concept of `slot`s. `Slot`s are pre-specified locations in the imported style where your custom layer will be added to (see the below section on Style Importing for more information). Standard has 3 carefully designed slots that you can leverage to place your custom layer within the Standard style's layer stack. Just set the preferred `slot` on the `Layer` object before adding it to your map and your layer will be appropriately placed. 
+In addition, Mapbox Standard makes adding your own data layers easier with the new concept of `slot`s. `Slot`s are pre-specified locations in the imported style where your custom layer will be added to (see the below section on Style Importing for more information). Standard has 3 carefully designed slots that you can leverage to place your custom layer within the Standard style's layer stack. Just set the preferred `slot` on the `Layer` object before adding it to your map and your layer will be appropriately placed.
 
 Slot | Description
 --- | ---
@@ -116,7 +116,27 @@ layer.slot = "middle"
 mapView.mapboxMap.addLayer(layer)
 ```
 
-### 2.2 Type-safe Events API
+### 2.2 SwiftUI support
+
+We're excited to announce the launch of SwiftUI support in Mapbox Maps SDK. SwiftUI makes it even easier to integrate Mapbox Maps in your application.
+
+**v11:**
+
+```swift
+import SwiftUI
+@_spi(Experimental) import MapboxMaps
+
+struct ContentView: View {
+    var body: some View {
+        Map()
+          .ignoresSafeArea()
+    }
+}
+```
+
+For more details, please read the <doc:SwiftUI-User-Guide>.
+
+### 2.3 Type-safe Events API
 
 The events lifecycle reporting for ``MapboxMap`` and ``Snapshotter`` have been reworked. The new event system is serialization-free, which brings more type safety and eliminates possible deserialization errors that could take place in v10 MapboxMaps SDK.
 
@@ -170,7 +190,7 @@ mapboxMap.onCameraChanged
 
 Following these changes, methods `MapboxMap.onEvery`, `MapboxMap.onNext`, `Snapshotter.onEvery`, `Snapshotter.onNext` have been deprecated while methods `MapboxMap.observe` and `Snapshotter.observe` have been removed.
 
-### 2.3 Access Token and Map Options management
+### 2.4 Access Token and Map Options management
 
 The access token for every Mapbox SDK can now be set via single call of `MapboxOptions/accessToken`. By default, Mapbox SDKs will try to initialize it upon framework initialization time from:
 
@@ -205,11 +225,11 @@ To clear the temporary map data, use the ``MapboxMap/clearData(completion:)`` me
 As part of this change `ResourceOptions` and `ResourceOptionsManager` have been removed.
 The TileStore also no longer accepts access token as part of its options.
 
-### 2.4 New 3D Lighting API
+### 2.5 New 3D Lighting API
 
 In v11 we've introduced new experimental lighting APIs to give you control of lighting and shadows in your map when using 3D objects: ``AmbientLight`` and ``DirectionalLight``. We've also added new APIs on ``FillExtrusionLayer`` and ``LineLayer``s to support this 3D lighting styling and enhance your ability to work with 3D model layers. Together, these properties can illuminate your 3D objects such as buildings and terrain to provide a more realistic and immersive map experience for your users. These properties can be set at runtime to follow the time of day, a particular mood, or other lighting goals in your map. Check out our example [here](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/Examples/All%20Examples/Lab/Lights3DExample.swift) for implementation recommendations.
 
-### 2.5 Location API
+### 2.6 Location API
 
 We introduced several changes to the location-related classes and protocols that will make working with location easier.
 
@@ -313,7 +333,7 @@ class Example {
 
 Please check out a more detailed example [here](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/Examples/All%20Examples/Lab/CombineLocationExample.swift).
 
-### 2.6 Camera API
+### 2.7 Camera API
 
 In v11, we have refined the Camera API introduced in v10 to improve developer ergonomics. These changes include several minor updates to usability:
 
@@ -333,7 +353,7 @@ mapView.cameraState.center
 mapView.mapboxMap.cameraState.center
 ```
 
-### 2.7 Tracing
+### 2.8 Tracing
 
 The Maps SDK introduces signpost recording support. Signposts are important instruments for analyzing performance and detecting bottlenecks in your code.
 
@@ -371,13 +391,13 @@ MAPBOX_MAPS_SIGNPOSTS_ENABLED=core,platform
 
 `Tracing.status` API takes precedence over environment variable value. All values are case-insensitive.
 
-### 2.8 Mapbox Maps Recorder
+### 2.9 Mapbox Maps Recorder
 
 ``MapboxMapRecorder`` provides an experimental API to record and replay map interaction sessions. Such recordings can be used to debug issues which require multiple steps to reproduce. Usage example can be found [here](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/Examples/All%20Examples/Lab/MapRecorderExample.swift).
 
-### 2.9 Other minor ergonomic improvements
+### 2.10 Other minor ergonomic improvements
 
-#### 2.9.1 MapboxMap
+#### 2.10.1 MapboxMap
 
 We added an experimental `tileCover` method to `MapboxMap` that returns tile Ids covering the map. Use ``TileCoverOptions`` to identify which tile range to return tile Ids for.
 
@@ -386,7 +406,7 @@ let tileCoverOptions = TileCoverOptions(tileSize: 512, minZoom: 4, maxZoom: 8, r
 let tileIds = mapView.mapboxMap.tileCover(for: tileCoverOptions)
 ```
 
-#### 2.9.2 Sources
+#### 2.10.2 Sources
 
 Sources are now required to specify ``Source/id`` upon creation for easier reference later.
 
@@ -422,7 +442,7 @@ poiSource.data = .string(poiGeoJSON)
 mapView.mapboxMap.addSource(poiSource)
 ```
 
-#### 2.9.3
+#### 2.10.3
 
 Most layers (such as ``LineLayer``, ``CircleLayer``, and others) now require the `source` parameter in the initializer. It will make style manipulation code less error-prone.
 
@@ -443,7 +463,7 @@ mapView.mapboxMap.addLayer(lineLayer)
 
 Contrary to that, some layers (such as ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``) don't need `source`, `sourceLayer`, and `filter` properties. To clean up the code we removed them from those layers and from the ``Layer`` protocol.
 
-#### 2.9.4 Support of GeoJSON partial updates.
+#### 2.10.4 Support of GeoJSON partial updates.
 
 Instead of setting the whole new GeoJSON object anew every time a single feature has changed, now you can apply more granular, partial GeoJSON updates.
 If your features have associated identifiers - you can add, update and remove them on individual basis in your ``GeoJSONSource``.
@@ -455,7 +475,7 @@ try mapView.mapboxMap.updateGeoJSONSourceFeatures(forSourceId: sourceId, feature
 try mapView.mapboxMap.removeGeoJSONSourceFeatures(forSourceId: sourceId, featureIds: featureIds)
 ```
 
-#### 2.9.5 Gestures
+#### 2.10.5 Gestures
 
 While maintaing the existing gesture approach we made minor improvements. In v11 we now:
 
@@ -463,17 +483,17 @@ While maintaing the existing gesture approach we made minor improvements. In v11
 - enable zoom during a drag gesture
 - added a `rotation` case to `GestureType` to be able to detect rotation separately from other gestures.
 
-#### 2.9.6 Expressions
+#### 2.10.6 Expressions
 
 - Introduced `hsl`, `hsla` color expression
 - Introduced `random` expression
 - Introduced `measureLight` expression lights configuration property
 
-#### 2.9.7 Cache Management
+#### 2.10.7 Cache Management
 
 Experimental API `MapboxMap/setMemoryBudget(_:)` was renamed to ``MapboxMap/setTileCacheBudget(_:)`` and promoted to stable.
 
-#### 2.9.8 Puck3D's scaling behavior
+#### 2.10.8 Puck3D's scaling behavior
 
 To further improve the performance of 3D model layer, we have replaced Puck 3D's default `model-scale` expression with a new API ``Puck3DConfiguration/modelScaleMode``. By default this property is ``ModelScaleMode/viewport``, which will keep the 3D model size constant across different zoom levels.
 While this means that Puck 3D's size should render similarly to v10, it does introduces a behavior breaking change - that ``Puck3DConfiguration/modelScale`` needs to be adjusted to correctly render the puck (in testing we found the adjustment to be around 100x of v10 `model-scale` value, but that could vary depending on other properties etc.).

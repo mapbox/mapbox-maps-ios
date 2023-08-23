@@ -1,23 +1,35 @@
 import SwiftUI
 
-/// Provides access to underlying Mapbox map via proxy.
-/// This is for access to full-featured Mapbox API from SwiftUI.
+/// Provides access to the underlying ``MapView`` map via proxy.
 ///
-///     var body: some View {
-///         MapReader { proxy in
-///             Map()
-///                 .onTapGesture {
-///                     configureUnderlyingMap(proxy.map)
-///                 }
-///         }
+/// Wrap ``Map-swift.struct`` into a map reader to get access to the underlying map implementation.
+///
+/// ```swift
+/// var body: some View {
+///     MapReader { proxy in
+///         Map()
+///             .onAppear {
+///                 configureUnderlyingMap(proxy.map)
+///             }
 ///     }
+/// }
+/// ```
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
 @_spi(Experimental)
 @available(iOS 13.0, *)
 public struct MapReader<Content: View>: View {
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public typealias ContentProvider = (MapProxy) -> Content
     @State private var mapViewProvider = MapViewProvider()
     public var content: ContentProvider
 
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public init(content: @escaping ContentProvider) {
         self.content = content
     }

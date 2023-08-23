@@ -1,15 +1,11 @@
+// swiftlint:disable file_length
+
 import SwiftUI
 
-@_spi(Experimental)
-@available(iOS 13.0, *)
-public extension CameraState {
-    /// Initializes CameraState with center and zoom.
-    init(center: CLLocationCoordinate2D, zoom: CGFloat) {
-        self.init(center: center, padding: .zero, zoom: zoom, bearing: 0, pitch: 0)
-    }
-}
-
 /// Represents location and rendered features of the tap.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
 @_spi(Experimental)
 @available(iOS 13.0, *)
 public struct MapLayerTapPayload {
@@ -24,21 +20,68 @@ public struct MapLayerTapPayload {
 }
 
 /// An action called when the map is tapped.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
 @_spi(Experimental)
 @available(iOS 13.0, *)
 public typealias MapTapAction = (CGPoint) -> Void
 
 /// An action called when the specified layer is tapped.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
 @_spi(Experimental)
 @available(iOS 13.0, *)
 public typealias MapLayerTapAction = (MapLayerTapPayload) -> Void
 
 /// An action called when a new location is emitted.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
 @_spi(Experimental)
 @available(iOS 13.0, *)
 public typealias LocationUpdateAction = (Location) -> Void
 
-/// A view that displays Mapbox Map.
+/// A SwiftUI view that displays Mapbox Map.
+///
+/// Use `Map` do display Mapbox Map in SwiftUI application.
+///
+/// ```swift
+/// struct ContentView: View {
+///     static let polygon = Polygon(...)
+///
+///     // COnfigures map camera to overview the given polygon.
+///     @State var viewport = Viewport.overview(geometry: Self.polygon)
+///
+///     var body: some View {
+///         Map(viewport: $viewport) {
+///             // Displays user location
+///             Puck2D(heading: bearing)
+///
+///             // Displays view annotation.
+///             ViewAnnotation(CLLocationCoordinate(...))
+///                 Text("🚀")
+///                     .background(Circle().fill(.red))
+///             }
+///
+///             // Displays polygon annotation.
+///             PolygonAnnotation(polygon: Self.polygon)
+///                 .fillColor(StyleColor(.systemBlue))
+///                 .fillOpacity(0.5)
+///                 .fillOutlineColor(StyleColor(.black))
+///                 .onTapGesture {
+///                     print("Polygon is tapped")
+///                 }
+///          }
+///          // Configures Mapbox Standard style to use "Dusk" preset.
+///          .mapStyle(.standard(lightPreset: .dusk))
+///     }
+/// }
+/// ```
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
 @_spi(Experimental)
 @available(iOS 13.0, *)
 public struct Map: UIViewControllerRepresentable {
@@ -54,6 +97,9 @@ public struct Map: UIViewControllerRepresentable {
     /// - Parameters:
     ///     - viewport: The camera viewport to display.
     ///     - content: A map content building closure.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @available(iOSApplicationExtension, unavailable)
     public init(
         viewport: Binding<Viewport>,
@@ -70,6 +116,9 @@ public struct Map: UIViewControllerRepresentable {
     /// - Parameters:
     ///     - initialViewport: The camera viewport to display.
     ///     - content: A map content building closure.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @available(iOSApplicationExtension, unavailable)
     public init(
         initialViewport: Viewport = .styleDefault,
@@ -148,6 +197,9 @@ extension Map {
     ///
     /// - Parameters:
     ///     - viewport: The camera viewport to display.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @available(iOSApplicationExtension, unavailable)
     public init(
         viewport: Binding<Viewport>
@@ -162,6 +214,9 @@ extension Map {
     ///
     /// - Parameters:
     ///     - initialViewport: Initial camera viewport.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     @available(iOSApplicationExtension, unavailable)
     public init(
         initialViewport: Viewport = .styleDefault
@@ -183,6 +238,9 @@ extension Map {
     ///     - viewport: The camera viewport to display.
     ///     - urlOpener: A closure that handles attribution url opening.
     ///     - content: A map content building closure.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public init(
         viewport: Binding<Viewport>,
         urlOpener: @escaping MapURLOpener,
@@ -205,6 +263,9 @@ extension Map {
     ///     - initialViewport: The camera viewport to display.
     ///     - urlOpener: A closure that handles attribution url opening.
     ///     - content: A map content building closure.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public init(
         initialViewport: Viewport = .styleDefault,
         urlOpener: @escaping MapURLOpener,
@@ -230,9 +291,15 @@ extension Map {
     }
 }
 
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
 @available(iOS 13.0, *)
 public extension Map {
     /// Sets camera bounds.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     func cameraBounds(_ cameraBounds: CameraBoundsOptions) -> Self {
         set(\.mapDependencies.cameraBounds, cameraBounds)
     }
@@ -240,12 +307,18 @@ public extension Map {
     /// Sets style to the map.
     ///
     /// - Parameters:
-    ///     - config: A configuration of style.
+    ///     - mapStyle: A map style configuration.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     func mapStyle(_ mapStyle: MapStyle) -> Self {
         set(\.mapDependencies.mapStyle, mapStyle)
     }
 
     /// Configures gesture options.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     func gestureOptions(_ options: GestureOptions) -> Self {
         set(\.mapDependencies.gestureOptions, options)
     }
@@ -256,6 +329,9 @@ public extension Map {
     ///
     /// - Parameters:
     ///  - action: The action to perform.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     func onMapTapGesture(perform action: @escaping MapTapAction) -> Self {
         set(\.mapDependencies.actions.onMapTapGesture, action)
     }
@@ -267,6 +343,9 @@ public extension Map {
     /// - Parameters:
     ///  - layerIds: The identifiers of layers where to perform features lookup.
     ///  - action: The action to perform.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     func onLayerTapGesture(_ layerIds: String..., perform action: @escaping MapLayerTapAction) -> Self {
         var updated = self
         updated.mapDependencies.actions.layerTapActions.append((layerIds, action))
@@ -274,21 +353,33 @@ public extension Map {
     }
 
     /// Sets constraint mode to the map. If not set, `heightOnly` will be in use.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     func constrainMode(_ constrainMode: ConstrainMode) -> Self {
         set(\.mapDependencies.constrainMode, constrainMode)
     }
 
-    /// Sets viewport mode to the map
+    /// Sets viewport mode to the map.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     func viewportMode(_ viewportMode: ViewportMode) -> Self {
         set(\.mapDependencies.viewportMode, viewportMode)
     }
 
     /// Sets ``NorthOrientation`` to the map. If not set, `upwards` will be in use.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     func northOrientation(_ northOrientation: NorthOrientation) -> Self {
         set(\.mapDependencies.orientation, northOrientation)
     }
 
     /// Sets ``OrnamentOptions`` to the map.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     func ornamentOptions(_ options: OrnamentOptions) -> Self {
         set(\.mapDependencies.ornamentOptions, options)
     }

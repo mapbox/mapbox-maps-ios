@@ -11,7 +11,14 @@ final class Puck3DTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        configuration = Puck3DConfiguration(model: Model())
+        configuration = Puck3DConfiguration(
+            model: Model(),
+            modelScale: .constant([Double.random(in: 0...1000)]),
+            modelRotation: .constant([Double.random(in: 0...1000)]),
+            modelOpacity: .constant(Double.random(in: 0...1000)),
+            modelCastShadows: .constant(.random()),
+            modelReceiveShadows: .constant(.testConstantValue())
+        )
         style = MockStyle()
         puckRenderDataSubject = .init()
         puckRenderDataSubject.onObserved = { [weak self] in self?.renderDataObserved = $0 }
@@ -94,6 +101,8 @@ final class Puck3DTests: XCTestCase {
         XCTAssertEqual(actualLayer.source, "puck-model-source")
         XCTAssertEqual(actualLayer.modelScale, configuration.modelScale)
         XCTAssertEqual(actualLayer.modelScaleMode, configuration.modelScaleMode)
+        XCTAssertEqual(actualLayer.modelCastShadows, configuration.modelCastShadows)
+        XCTAssertEqual(actualLayer.modelReceiveShadows, configuration.modelReceiveShadows)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.first?.parameters.layerPosition, nil)
     }
 

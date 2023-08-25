@@ -92,10 +92,12 @@ internal final class Puck3DRenderer: Puck3DRendererProtocol {
 
         var modelLayer = ModelLayer(id: Self.layerID, source: Self.sourceID)
         modelLayer.modelScale = configuration.modelScale
-        modelLayer.modelScaleMode = configuration.modelScaleMode
         modelLayer.modelType = .constant(.locationIndicator)
         modelLayer.modelRotation = configuration.modelRotation
         modelLayer.modelOpacity = configuration.modelOpacity
+        modelLayer.modelCastShadows = configuration.modelCastShadows
+        modelLayer.modelReceiveShadows = configuration.modelReceiveShadows
+        modelLayer.modelScaleMode = configuration.modelScaleMode
 
         do {
             // create the layer if needed

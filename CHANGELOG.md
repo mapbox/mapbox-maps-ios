@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Fix `modelCastShadows` and `modelReceiveShadows` options of `Puck3DConfiguration` being ignored.
+
 ## 11.0.0-beta.2 - 23 August, 2023
 
 * Introduce experimental `MapboxRecorder`, which allows recording of the map and replaying custom scenarios.

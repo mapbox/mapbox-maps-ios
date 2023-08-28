@@ -1,7 +1,7 @@
 import XCTest
 @_spi(Experimental) @testable import MapboxMaps
 
-final class Puck3DTests: XCTestCase {
+final class Puck3DRendererTests: XCTestCase {
 
     var configuration: Puck3DConfiguration!
     var style: MockStyle!

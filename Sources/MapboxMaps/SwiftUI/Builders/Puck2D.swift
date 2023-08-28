@@ -64,7 +64,7 @@ public struct Puck2D: PrimitiveMapContent {
     @_documentation(visibility: public)
 #endif
     public func scale(_ scale: Double) -> Puck2D {
-        copyAssigned(self, \.configuration.scale, .constant(scale))
+        self.scale(.constant(scale))
     }
 
     /// The size of the images, as a scale factor applied to the size of the specified image.
@@ -72,7 +72,11 @@ public struct Puck2D: PrimitiveMapContent {
     @_documentation(visibility: public)
 #endif
     public func scale(_ scale: Expression) -> Puck2D {
-        copyAssigned(self, \.configuration.scale, .expression(scale))
+        self.scale(.expression(scale))
+    }
+
+    func scale(_ scale: Value<Double>) -> Puck2D {
+        copyAssigned(self, \.configuration.scale, scale)
     }
 
     /// Location puck pulsing configuration is pulsing on the map.

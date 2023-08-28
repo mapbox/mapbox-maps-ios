@@ -41,7 +41,6 @@ protocol MapboxMapProtocol: AnyObject {
                 offset: CGPoint?) -> CameraOptions
     func coordinate(for point: CGPoint) -> CLLocationCoordinate2D
     func point(for coordinate: CLLocationCoordinate2D) -> CGPoint
-    func performWithoutNotifying(_ block: () throws -> Void) rethrows
 
     var onMapLoaded: Signal<MapLoaded> { get }
     var onMapLoadingError: Signal<MapLoadingError> { get }
@@ -1142,10 +1141,6 @@ extension MapboxMap {
     @discardableResult
     public func onEvery<Payload>(event: MapEventType<Payload>, handler: @escaping (Payload) -> Void) -> Cancelable {
         events.onEvery(event: event, handler: handler)
-    }
-
-    func performWithoutNotifying(_ block: () throws -> Void) rethrows {
-        try events.performWithoutNotifying(block)
     }
 }
 

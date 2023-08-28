@@ -4,9 +4,11 @@ internal protocol PanGestureHandlerProtocol: GestureHandler {
     var decelerationFactor: CGFloat { get set }
 
     var panMode: PanMode { get set }
+
+    var multiFingerPanEnabled: Bool { get set }
 }
 
-/// `PanGestureHandler` updates the map camera in response to a single-touch pan gesture
+/// `PanGestureHandler` updates the map camera in response to a pan gesture
 internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtocol {
 
     /// A constant factor that influences how long a pan gesture takes to decelerate
@@ -15,6 +17,12 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
     /// A setting configures the direction in which the map is allowed to move
     /// during a pan gesture
     internal var panMode: PanMode = .horizontalAndVertical
+
+    internal var multiFingerPanEnabled: Bool = true {
+        didSet {
+            (gestureRecognizer as? UIPanGestureRecognizer)?.maximumNumberOfTouches = multiFingerPanEnabled ? .max : 1
+        }
+    }
 
     /// The touch location in the gesture's view when the gesture began
     private var previousTouchLocation: CGPoint?
@@ -31,16 +39,17 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
     private let dateProvider: DateProvider
 
     private var isPanning = false
+    private var numberOfTouches = 0
 
     internal init(gestureRecognizer: UIPanGestureRecognizer,
                   mapboxMap: MapboxMapProtocol,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol,
                   dateProvider: DateProvider) {
-        gestureRecognizer.maximumNumberOfTouches = 1
         self.mapboxMap = mapboxMap
         self.cameraAnimationsManager = cameraAnimationsManager
         self.dateProvider = dateProvider
         super.init(gestureRecognizer: gestureRecognizer)
+        gestureRecognizer.delegate = self
         gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
     }
 
@@ -51,7 +60,7 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
             return
         }
 
-        let touchLocation = gestureRecognizer.location(in: view)
+        let touchLocation = gestureRecognizer.centroid(in: view)
         let velocity = gestureRecognizer.velocity(in: view)
         let state = gestureRecognizer.state
 
@@ -79,7 +88,16 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
             if !mapboxMap.pointIsAboveHorizon(touchLocation) {
                 beginInteraction(withTouchLocation: touchLocation)
             }
+            numberOfTouches = gestureRecognizer.numberOfTouches
         case .changed:
+            // update reference(previous) touch location when number of touches changes,
+            // so the map doesn't jump suddenly
+            if numberOfTouches != gestureRecognizer.numberOfTouches {
+                previousTouchLocation = touchLocation
+                numberOfTouches = gestureRecognizer.numberOfTouches
+                return
+            }
+
             guard let previousTouchLocation = previousTouchLocation else {
                 return
             }
@@ -153,6 +171,14 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
     }
 }
 
+extension PanGestureHandler: UIGestureRecognizerDelegate {
+    internal func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                                    shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return self.gestureRecognizer === gestureRecognizer &&
+        (otherGestureRecognizer is UIRotationGestureRecognizer || otherGestureRecognizer is UIPinchGestureRecognizer)
+    }
+}
+
 private extension CGPoint {
     func clamped(to point: CGPoint, panMode: PanMode) -> CGPoint {
         switch panMode {
@@ -163,5 +189,22 @@ private extension CGPoint {
         case .horizontalAndVertical:
             return self
         }
+    }
+}
+
+internal extension UIPanGestureRecognizer {
+    func centroid(in view: UIView?) -> CGPoint {
+        let numberOfTouches = self.numberOfTouches
+
+        let sum = (0..<numberOfTouches)
+            .map { index in location(ofTouch: index, in: view) }
+            .reduce(into: CGPoint()) { partialResult, location in
+                partialResult.x += location.x
+                partialResult.y += location.y
+            }
+        guard numberOfTouches > 0 else {
+            return location(in: view)
+        }
+        return CGPoint(x: sum.x / CGFloat(numberOfTouches), y: sum.y / CGFloat(numberOfTouches))
     }
 }

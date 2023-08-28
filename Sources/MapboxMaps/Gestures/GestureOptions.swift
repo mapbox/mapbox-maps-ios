@@ -22,7 +22,7 @@ public struct GestureOptions: Equatable {
     /// Defaults to `true`.
     public var panEnabled: Bool
 
-    /// Whether the pinch gesture is enabled. Allows panning, rotating, and zooming.
+    /// Whether the pinch gesture is enabled.
     ///
     /// Defaults to `true`.
     public var pinchEnabled: Bool
@@ -32,7 +32,7 @@ public struct GestureOptions: Equatable {
     /// Defaults to `true`.
     public var rotateEnabled: Bool
 
-    /// Whether rotation is enabled for the pinch to zoom gesture.
+    /// Whether rotation is enabled during the pinch gesture.
     ///
     /// Defaults to `true`.
     public var simultaneousRotateAndPinchZoomEnabled: Bool
@@ -89,9 +89,9 @@ public struct GestureOptions: Equatable {
     ///   - panEnabled: Whether the single-touch pan gesture is enabled.
     ///   - pinchEnabled: Whether the pinch gesture is enabled.
     ///   - rotateEnabled: Whether rotation gesture is enabled.
-    ///   - simultaneousRotateAndPinchZoomEnabled: Whether rotation is enabled for the pinch to zoom gesture.
+    ///   - simultaneousRotateAndPinchZoomEnabled: Whether rotation is enabled during the pinch gesture.
     ///   - pinchZoomEnabled: Whether zoom is enabled for the pinch gesture.
-    ///   - pinchPanEnabled: Whether pan is enabled for the pinch gesture.
+    ///   - pinchPanEnabled: Whether pan is enabled during the pinch gesture.
     ///   - pitchEnabled: Whether the pitch gesture is enabled.
     ///   - doubleTapToZoomInEnabled: Whether double tapping the map with one touch results in a zoom-in animation.
     ///   - doubleTouchToZoomOutEnabled: Whether single tapping the map with two touches results in a zoom-out animation.

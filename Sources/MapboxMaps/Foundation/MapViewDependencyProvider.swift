@@ -90,11 +90,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                                          mapboxMap: MapboxMapProtocol) -> PinchGestureHandlerProtocol {
         let gestureRecognizer = UIPinchGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
-        return PinchGestureHandler(
-            gestureRecognizer: gestureRecognizer,
-            mapboxMap: mapboxMap,
-            pinchBehaviorProvider: PinchBehaviorProvider(
-                mapboxMap: mapboxMap))
+        return PinchGestureHandler(gestureRecognizer: gestureRecognizer, mapboxMap: mapboxMap)
     }
 
     private func makeRotateGestureHandler(view: UIView, mapboxMap: MapboxMapProtocol) -> RotateGestureHandler {

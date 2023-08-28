@@ -28,7 +28,7 @@ public final class GestureManager: GestureHandlerDelegate {
             pinchGestureRecognizer.isEnabled = newValue.pinchEnabled
             rotateGestureRecognizer.isEnabled = newValue.rotateEnabled
             pinchGestureHandler.zoomEnabled = newValue.pinchZoomEnabled
-            pinchGestureHandler.panEnabled = newValue.pinchPanEnabled
+            panGestureHandler.multiFingerPanEnabled = newValue.pinchPanEnabled
             pinchGestureHandler.simultaneousRotateAndPinchZoomEnabled = newValue.simultaneousRotateAndPinchZoomEnabled
             rotateGestureHandler.simultaneousRotateAndPinchZoomEnabled = newValue.simultaneousRotateAndPinchZoomEnabled
             pitchGestureRecognizer.isEnabled = newValue.pitchEnabled
@@ -49,7 +49,7 @@ public final class GestureManager: GestureHandlerDelegate {
             gestureOptions.pinchEnabled = pinchGestureRecognizer.isEnabled
             gestureOptions.rotateEnabled = rotateGestureRecognizer.isEnabled
             gestureOptions.pinchZoomEnabled = pinchGestureHandler.zoomEnabled
-            gestureOptions.pinchPanEnabled = pinchGestureHandler.panEnabled
+            gestureOptions.pinchPanEnabled = panGestureHandler.multiFingerPanEnabled
             gestureOptions.simultaneousRotateAndPinchZoomEnabled = pinchGestureHandler.simultaneousRotateAndPinchZoomEnabled
             gestureOptions.pitchEnabled = pitchGestureRecognizer.isEnabled
             gestureOptions.doubleTapToZoomInEnabled = doubleTapToZoomInGestureRecognizer.isEnabled
@@ -156,7 +156,7 @@ public final class GestureManager: GestureHandlerDelegate {
         quickZoomGestureHandler.delegate = self
         singleTapGestureHandler.delegate = self
 
-        pitchGestureHandler.gestureRecognizer.require(toFail: panGestureHandler.gestureRecognizer)
+        panGestureHandler.gestureRecognizer.require(toFail: pitchGestureHandler.gestureRecognizer)
         quickZoomGestureHandler.gestureRecognizer.require(toFail: doubleTapToZoomInGestureHandler.gestureRecognizer)
         singleTapGestureHandler.gestureRecognizer.require(toFail: doubleTapToZoomInGestureHandler.gestureRecognizer)
 

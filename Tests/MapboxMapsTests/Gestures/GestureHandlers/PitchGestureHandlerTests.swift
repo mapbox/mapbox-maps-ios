@@ -34,7 +34,9 @@ final class PitchGestureHandlerTests: XCTestCase {
 
     func testInitialization() {
         XCTAssertTrue(gestureRecognizer === pitchGestureHandler.gestureRecognizer)
-        XCTAssertEqual(gestureRecognizer.minimumNumberOfTouches, 2)
+        // pitch is not possible with one touch, but this allows pitch recognizer to fail for one-touch pans,
+        // giving the opportunity for other recognizers(pan) to require pitch recognition failure before they step in
+        XCTAssertEqual(gestureRecognizer.minimumNumberOfTouches, 1)
         XCTAssertEqual(gestureRecognizer.maximumNumberOfTouches, 2)
     }
 
@@ -64,6 +66,11 @@ final class PitchGestureHandlerTests: XCTestCase {
         gestureRecognizer.locationOfTouchStub.returnValueQueue = [
             CGPoint(x: 0, y: .random(in: 100...200)),
             CGPoint(x: 100, y: 0)]
+
+        XCTAssertFalse(pitchGestureHandler.gestureRecognizerShouldBegin(gestureRecognizer))
+
+        // one-touch pitch
+        gestureRecognizer.getNumberOfTouchesStub.defaultReturnValue = 1
 
         XCTAssertFalse(pitchGestureHandler.gestureRecognizerShouldBegin(gestureRecognizer))
     }

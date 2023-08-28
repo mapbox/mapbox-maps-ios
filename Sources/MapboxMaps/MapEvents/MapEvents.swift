@@ -26,13 +26,6 @@ internal final class MapEvents {
     private var genericSubjects = [String: SignalSubject<GenericEvent>]()
     var cancelables = Set<AnyCancelable>()
 
-    @MutableRef private var isMuted = false
-    private var mutedCount = 0 {
-        didSet {
-            isMuted = mutedCount > 0
-        }
-    }
-
     init(observable: Observable) {
         onMapLoaded = .from(method: observable.subscribe(forMapLoaded:))
         onMapLoadingError = .from(method: observable.subscribe(forMapLoadingError:))
@@ -72,14 +65,8 @@ internal final class MapEvents {
         self.makeGenericSubject = makeGenericSubject
     }
 
-    func performWithoutNotifying(_ action: () throws -> Void) rethrows {
-        mutedCount += 1
-        defer { mutedCount -= 1 }
-        try action()
-    }
-
     func signal<T>(for keyPath: KeyPath<MapEvents, SignalSubject<T>>) -> Signal<T> {
-        return self[keyPath: keyPath].signal.conditional($isMuted.map(!))
+        return self[keyPath: keyPath].signal
     }
 
     /// Subscribes to a generic event by a string name.
@@ -92,6 +79,6 @@ internal final class MapEvents {
             subject = makeGenericSubject(eventName)
             genericSubjects[eventName] = subject
         }
-        return subject.signal.conditional($isMuted.map(!))
+        return subject.signal
     }
 }

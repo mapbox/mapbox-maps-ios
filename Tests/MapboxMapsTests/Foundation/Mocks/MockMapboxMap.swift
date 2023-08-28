@@ -169,17 +169,6 @@ final class MockMapboxMap: MapboxMapProtocol {
         pointStub.call(with: coordinate)
     }
 
-    // not using Stub here since the block is not escaping
-    var performWithoutNotifyingInvocationCount = 0
-    var performWithoutNotifyingWillInvokeBlock = {}
-    var performWithoutNotifyingDidInvokeBlock = {}
-    func performWithoutNotifying(_ block: () throws -> Void) rethrows {
-        performWithoutNotifyingInvocationCount += 1
-        performWithoutNotifyingWillInvokeBlock()
-        try block()
-        performWithoutNotifyingDidInvokeBlock()
-    }
-
     let setCameraBoundsStub = Stub<MapboxMaps.CameraBoundsOptions, Void>()
     func setCameraBounds(with options: MapboxMaps.CameraBoundsOptions) throws {
         setCameraBoundsStub.call(with: options)

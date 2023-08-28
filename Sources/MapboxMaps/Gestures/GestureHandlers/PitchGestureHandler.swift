@@ -9,7 +9,6 @@ internal final class PitchGestureHandler: GestureHandler, UIGestureRecognizerDel
 
     internal init(gestureRecognizer: UIPanGestureRecognizer,
                   mapboxMap: MapboxMapProtocol) {
-        gestureRecognizer.minimumNumberOfTouches = 2
         gestureRecognizer.maximumNumberOfTouches = 2
         self.mapboxMap = mapboxMap
         super.init(gestureRecognizer: gestureRecognizer)

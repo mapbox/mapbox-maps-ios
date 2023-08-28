@@ -143,12 +143,12 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertTrue(quickZoomGestureHandler.delegate === gestureManager)
     }
 
-    func testPitchGestureRecognizerRequiresPanGestureRecognizerToFail() throws {
-        let pitchGestureRecognizer = try XCTUnwrap(pitchGestureHandler.gestureRecognizer as? MockGestureRecognizer)
+    func testPanGestureRecognizerRequiresPitchGestureRecognizerToFail() throws {
+        let panGestureRecognizer = try XCTUnwrap(panGestureHandler.gestureRecognizer as? MockGestureRecognizer)
 
-        XCTAssertEqual(pitchGestureRecognizer.requireToFailStub.invocations.count, 1)
-        XCTAssertTrue(pitchGestureRecognizer.requireToFailStub.invocations.first?.parameters
-                        === panGestureHandler.gestureRecognizer)
+        XCTAssertEqual(panGestureRecognizer.requireToFailStub.invocations.count, 1)
+        XCTAssertTrue(panGestureRecognizer.requireToFailStub.invocations.first?.parameters
+                        === pitchGestureHandler.gestureRecognizer)
     }
 
     func testQuickZoomGestureRecognizerRequiresDoubleTapToZoomInGestureRecognizerToFail() throws {
@@ -453,27 +453,27 @@ final class GestureManagerTests: XCTestCase {
 
     func testOptionsPinchPanEnabled() {
         XCTAssertTrue(gestureManager.options.pinchPanEnabled)
-        XCTAssertTrue(pinchGestureHandler.panEnabled)
+        XCTAssertTrue(panGestureHandler.multiFingerPanEnabled)
 
         gestureManager.options.pinchPanEnabled = false
 
         XCTAssertFalse(gestureManager.options.pinchPanEnabled)
-        XCTAssertFalse(pinchGestureHandler.panEnabled)
+        XCTAssertFalse(panGestureHandler.multiFingerPanEnabled)
 
         gestureManager.options.pinchPanEnabled = true
 
         XCTAssertTrue(gestureManager.options.pinchPanEnabled)
-        XCTAssertTrue(pinchGestureHandler.panEnabled)
+        XCTAssertTrue(panGestureHandler.multiFingerPanEnabled)
 
-        pinchGestureHandler.panEnabled = false
+        panGestureHandler.multiFingerPanEnabled = false
 
         XCTAssertFalse(gestureManager.options.pinchPanEnabled)
-        XCTAssertFalse(pinchGestureHandler.panEnabled)
+        XCTAssertFalse(panGestureHandler.multiFingerPanEnabled)
 
-        pinchGestureHandler.panEnabled = true
+        panGestureHandler.multiFingerPanEnabled = true
 
         XCTAssertTrue(gestureManager.options.pinchPanEnabled)
-        XCTAssertTrue(pinchGestureHandler.panEnabled)
+        XCTAssertTrue(panGestureHandler.multiFingerPanEnabled)
     }
 
     func testOptionsFocalPoint() {

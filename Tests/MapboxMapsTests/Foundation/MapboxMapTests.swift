@@ -318,11 +318,6 @@ final class MapboxMapTests: XCTestCase {
                     count += 1
                 }
 
-                mapboxMap.performWithoutNotifying {
-                    events[keyPath: subjectKeyPath].send(value)
-                }
-                XCTAssertEqual(count, 0, "event not sent due to mute")
-
                 events[keyPath: subjectKeyPath].send(value)
                 XCTAssertEqual(count, 1, "event sent")
 
@@ -379,12 +374,6 @@ final class MapboxMapTests: XCTestCase {
 
         fooGenericSubject?.send(e1)
         XCTAssertIdentical(received.last, e1)
-
-        mapboxMap.performWithoutNotifying {
-            fooGenericSubject?.send(e2)
-        }
-
-        XCTAssertIdentical(received.last, e1, "event not sent due to mute")
 
         fooGenericSubject?.send(e2)
         XCTAssertIdentical(received.last, e2)
@@ -443,31 +432,6 @@ final class MapboxMapTests: XCTestCase {
 
         XCTAssertIdentical(sourceAddedStub.invocations[0].parameters, sourceAdded1)
         XCTAssertIdentical(sourceAddedStub.invocations[1].parameters, sourceAdded2)
-    }
-
-    func testPerformWithoutNotifying() throws {
-        let stub = Stub<MapIdle, Void>()
-        let token = mapboxMap.onMapIdle.observe(stub.call(with:))
-        defer { token.cancel() }
-
-        let mapIdle1 = MapIdle(timestamp: Date())
-        let mapIdle2 = MapIdle(timestamp: Date())
-        events.onMapIdle.send(mapIdle1)
-
-        // no block
-        XCTAssertEqual(stub.invocations.count, 1)
-        XCTAssertIdentical(stub.invocations[0].parameters, mapIdle1)
-
-        // block
-        mapboxMap.performWithoutNotifying {
-            events.onMapIdle.send(mapIdle2)
-        }
-        XCTAssertEqual(stub.invocations.count, 1)
-
-        // no block again
-        events.onMapIdle.send(mapIdle2)
-        XCTAssertEqual(stub.invocations.count, 2)
-        XCTAssertIdentical(stub.invocations[1].parameters, mapIdle2)
     }
 
     func testFittingPoint() {

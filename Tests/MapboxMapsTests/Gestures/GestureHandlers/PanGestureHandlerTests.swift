@@ -42,7 +42,9 @@ final class PanGestureHandlerTests: XCTestCase {
     }
 
     func testInitialization() {
-        XCTAssertEqual(gestureRecognizer.maximumNumberOfTouches, 1)
+        XCTAssertEqual(panGestureHandler.multiFingerPanEnabled, true)
+        XCTAssertTrue(gestureRecognizer.maximumNumberOfTouches > 10)
+        XCTAssertEqual(gestureRecognizer.minimumNumberOfTouches, 1)
         XCTAssertTrue(gestureRecognizer === panGestureHandler.gestureRecognizer)
     }
 
@@ -301,6 +303,133 @@ final class PanGestureHandlerTests: XCTestCase {
         XCTAssertEqual(delegate.gestureEndedStub.invocations.map(\.parameters), [.init(gestureType: .pan, willAnimate: false)])
     }
 
+    func testOneToTwoNumberOfTouchesTransitionIsSmooth() throws {
+        // given
+        let panStartPoint = CGPoint(x: 0, y: 0)
+        let panPoint1 = CGPoint(x: 100, y: 100)
+        let panPoint2 = CGPoint(x: 101, y: 101)
+
+        panGestureHandler.panMode = .horizontalAndVertical
+        mapboxMap.pointIsAboveHorizonStub.defaultReturnValue = false
+        gestureRecognizer.getStateStub.defaultReturnValue = .began
+        gestureRecognizer.sendActions()
+
+        gestureRecognizer.getNumberOfTouchesStub.defaultReturnValue = 1
+        gestureRecognizer.locationOfTouchStub.defaultReturnValue = panStartPoint
+        gestureRecognizer.getStateStub.defaultReturnValue = .changed
+        gestureRecognizer.sendActions()
+
+        mapboxMap.dragCameraOptionsStub.reset()
+
+        // when
+        // number of touches changes from 1 to 2 - this change should be ignored
+        gestureRecognizer.getNumberOfTouchesStub.defaultReturnValue = 2
+        gestureRecognizer.locationOfTouchStub.defaultReturnValue = panPoint1
+        gestureRecognizer.getStateStub.defaultReturnValue = .changed
+        gestureRecognizer.sendActions()
+
+        // then
+        XCTAssertEqual(mapboxMap.dragCameraOptionsStub.invocations.count, 0)
+
+        // when
+        // two-finger gesture emits another event - camera drags from the previous two-figer touch point to the current one
+        gestureRecognizer.getNumberOfTouchesStub.defaultReturnValue = 2
+        gestureRecognizer.locationOfTouchStub.defaultReturnValue = panPoint2
+        gestureRecognizer.getStateStub.defaultReturnValue = .changed
+        gestureRecognizer.sendActions()
+
+        // then
+        XCTAssertEqual(mapboxMap.dragCameraOptionsStub.invocations.count, 1)
+        let params = try XCTUnwrap(mapboxMap.dragCameraOptionsStub.invocations.first?.parameters)
+        XCTAssertEqual(params.from, panPoint1)
+        XCTAssertEqual(params.to, panPoint2)
+    }
+
+    func testTwoToOneNumberOfTouchesTransitionIsSmooth() throws {
+        // given
+        let panStartPoint = CGPoint(x: 0, y: 0)
+        let panPoint1 = CGPoint(x: 100, y: 100)
+        let panPoint2 = CGPoint(x: 101, y: 101)
+
+        panGestureHandler.panMode = .horizontalAndVertical
+        mapboxMap.pointIsAboveHorizonStub.defaultReturnValue = false
+        gestureRecognizer.getStateStub.defaultReturnValue = .began
+        gestureRecognizer.sendActions()
+
+        gestureRecognizer.getNumberOfTouchesStub.defaultReturnValue = 2
+        gestureRecognizer.locationOfTouchStub.defaultReturnValue = panStartPoint
+        gestureRecognizer.getStateStub.defaultReturnValue = .changed
+        gestureRecognizer.sendActions()
+
+        mapboxMap.dragCameraOptionsStub.reset()
+
+        // when
+        // number of touches changes from 2 to 1 - this change should be ignored
+        gestureRecognizer.getNumberOfTouchesStub.defaultReturnValue = 1
+        gestureRecognizer.locationOfTouchStub.defaultReturnValue = panPoint1
+        gestureRecognizer.getStateStub.defaultReturnValue = .changed
+        gestureRecognizer.sendActions()
+
+        // then
+        XCTAssertEqual(mapboxMap.dragCameraOptionsStub.invocations.count, 0)
+
+        // when
+        // one-finger gesture emits another event - camera drags from the previous one-figer touch point to the current one
+        gestureRecognizer.getNumberOfTouchesStub.defaultReturnValue = 1
+        gestureRecognizer.locationOfTouchStub.defaultReturnValue = panPoint2
+        gestureRecognizer.getStateStub.defaultReturnValue = .changed
+        gestureRecognizer.sendActions()
+
+        // then
+        XCTAssertEqual(mapboxMap.dragCameraOptionsStub.invocations.count, 1)
+        let params = try XCTUnwrap(mapboxMap.dragCameraOptionsStub.invocations.first?.parameters)
+        XCTAssertEqual(params.from, panPoint1)
+        XCTAssertEqual(params.to, panPoint2)
+    }
+
+    func testMultiTouchPanUsesCentroidOfTouches() throws {
+        // given
+        let numberOfTouches = Int.random(in: 2...1000)
+        let initialTouches: [CGPoint] = (0..<numberOfTouches).map { _ in .random() }
+        func centroid(_ touches: [CGPoint]) -> CGPoint {
+            let touchSum = touches.reduce(into: CGPoint.zero) { partialResult, touchLocation in
+                partialResult.x += touchLocation.x
+                partialResult.y += touchLocation.y
+            }
+            return CGPoint(x: touchSum.x / CGFloat(numberOfTouches), y: touchSum.y / CGFloat(numberOfTouches))
+        }
+        let initialCentroid = centroid(initialTouches)
+        let changedTouches: [CGPoint] = (0..<numberOfTouches).map { _ in .random() }
+        let changedCentroid = centroid(changedTouches)
+
+        panGestureHandler.panMode = .horizontalAndVertical
+        mapboxMap.pointIsAboveHorizonStub.defaultReturnValue = false
+        gestureRecognizer.getNumberOfTouchesStub.defaultReturnValue = numberOfTouches
+
+        // when
+        // drag begins with initial set of touches
+        gestureRecognizer.locationOfTouchStub.returnValueQueue = initialTouches
+        gestureRecognizer.getStateStub.defaultReturnValue = .began
+        gestureRecognizer.sendActions()
+
+        // then
+        XCTAssertEqual(mapboxMap.dragStartStub.invocations.count, 1)
+        let dragStartLocation = try XCTUnwrap(mapboxMap.dragStartStub.invocations.first?.parameters)
+        XCTAssertEqual(dragStartLocation, initialCentroid)
+
+        // when
+        // drag changes with a new set of touches
+        gestureRecognizer.locationOfTouchStub.returnValueQueue = changedTouches
+        gestureRecognizer.getStateStub.defaultReturnValue = .changed
+        gestureRecognizer.sendActions()
+
+        // then
+        XCTAssertEqual(mapboxMap.dragCameraOptionsStub.invocations.count, 1)
+        let dragCameraOptions = try XCTUnwrap(mapboxMap.dragCameraOptionsStub.invocations.first?.parameters)
+        XCTAssertEqual(dragCameraOptions.from, initialCentroid)
+        XCTAssertEqual(dragCameraOptions.to, changedCentroid)
+    }
+
     func testGestureWithDelayedStartCanStillDecelerate() {
         mapboxMap.pointIsAboveHorizonStub.defaultReturnValue = true
         gestureRecognizer.getStateStub.defaultReturnValue = .began
@@ -341,5 +470,51 @@ final class PanGestureHandlerTests: XCTestCase {
 
         XCTAssertTrue(mapboxMap.dragEndStub.invocations.isEmpty)
         XCTAssertTrue(cameraAnimationsManager.decelerateStub.invocations.isEmpty)
+    }
+
+    func testDisableTwoFingerPan() {
+        // when
+        panGestureHandler.multiFingerPanEnabled = false
+
+        // then
+        XCTAssertEqual(gestureRecognizer.maximumNumberOfTouches, 1)
+        XCTAssertEqual(gestureRecognizer.minimumNumberOfTouches, 1)
+    }
+
+    func testEnableTwoFingerPan() {
+        // given
+        panGestureHandler.multiFingerPanEnabled = false
+        // when
+        panGestureHandler.multiFingerPanEnabled = true
+
+        // then
+        XCTAssertTrue(gestureRecognizer.maximumNumberOfTouches > 10)
+        XCTAssertEqual(gestureRecognizer.minimumNumberOfTouches, 1)
+    }
+
+    func testPanRecognizesSimultaneouslyWithRotationAndPinch() {
+        let recognizers = [UIRotationGestureRecognizer(), UIPinchGestureRecognizer()]
+
+        for recognizer in recognizers {
+            let shouldRecognizeSimultaneously = panGestureHandler.gestureRecognizer(
+                gestureRecognizer,
+                shouldRecognizeSimultaneouslyWith: recognizer
+            )
+
+            XCTAssertTrue(shouldRecognizeSimultaneously)
+        }
+    }
+
+    func testPinchShouldNotRecognizeSimultaneouslyWithNonRotationAndPinch() {
+        let recognizers = [UILongPressGestureRecognizer(), UISwipeGestureRecognizer(), UIScreenEdgePanGestureRecognizer(), UITapGestureRecognizer()]
+
+        for recognizer in recognizers {
+            let shouldRecognizeSimultaneously = panGestureHandler.gestureRecognizer(
+                gestureRecognizer,
+                shouldRecognizeSimultaneouslyWith: recognizer
+            )
+
+            XCTAssertFalse(shouldRecognizeSimultaneously)
+        }
     }
 }

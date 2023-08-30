@@ -167,6 +167,31 @@ final class SignalSubjectTests: XCTestCase {
         XCTAssertEqual(fooValues, ["a", "c", "d"])
         XCTAssertEqual(barValues, ["b", "e", "f"])
     }
+
+    func testForEach() {
+        let store = ClosureHandlersStore<Int, Bool>()
+
+        var observed1 = [Int]()
+        store.add { value in
+            observed1.append(value)
+            return value < 0 // Don't let the following observers to handle negative values.
+        }.store(in: &cancellables)
+
+        var observed2 = [Int]()
+        store.add { value in
+            observed2.append(value)
+            return true
+        }.store(in: &cancellables)
+
+        store.forEach { $0(-21) }
+        store.forEach { $0(2) }
+        store.forEach { $0(3) }
+        store.forEach { $0(-1) }
+        store.forEach { $0(5) }
+
+        XCTAssertEqual(observed1, [-21, 2, 3, -1, 5])
+        XCTAssertEqual(observed2, [2, 3, 5])
+    }
 }
 
 private class MockEventsProducer {

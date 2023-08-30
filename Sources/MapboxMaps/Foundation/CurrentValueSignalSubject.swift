@@ -14,39 +14,36 @@
 ///     ```
 /// Conceptually, this is iOS 12-compatible alternative to Combine's `CurrentValueSubject`.
 internal class CurrentValueSignalSubject<Value> {
-    private let passthrough = SignalSubject<Value>()
+    typealias ObservationHandler = (Bool) -> Void
+    private let store = ClosureHandlersStore<Value, Void>()
 
-    let signal: Signal<Value>
+    var signal: Signal<Value> {
+        Signal { [weak self] handler in
+            guard let self else { return .empty }
+            defer {
+                // Send the first value upon observing.
+                handler(self.value)
+            }
+            return self.store.add(handler: handler)
+        }
+    }
     var value: Value {
         didSet {
-            passthrough.send(value)
+            store.send(value)
         }
     }
 
-    var onObserved: SignalSubject.ObservationHandler? {
-        get { passthrough.onObserved }
-        set { passthrough.onObserved = newValue }
+    var onObserved: ObservationHandler? {
+        get { store.onObserved }
+        set { store.onObserved = newValue }
     }
 
     /// Creates the subject with an initial value.
     ///
     /// - Parameters:
     ///    - value: Initial value.
-    ///    - onObserved: A callback that receives `true` when the first observer is added, or `false` when last observer is gone.
     init(_ value: Value) {
         self.value = value
-
-        weak var weakSelf: CurrentValueSignalSubject?
-        self.signal = Signal<Value>(observeImpl: { handler in
-            guard let self = weakSelf else {
-                return .empty
-            }
-            let token = self.passthrough.signal.observe(handler)
-            // Send the first value upon observing.
-            handler(self.value)
-            return token
-        })
-        weakSelf = self
     }
 }
 

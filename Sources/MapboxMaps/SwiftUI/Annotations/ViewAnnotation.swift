@@ -48,7 +48,7 @@ public struct ViewAnnotation: MapContent {
             offsetY: offsetY
         )
         self.makeViewController = { onSizeChange in
-            UIHostingController(rootView: content().onChangeOfSize(perform: onSizeChange))
+            UIHostingController(rootView: content().fixedSize().onChangeOfSize(perform: onSizeChange))
         }
     }
 

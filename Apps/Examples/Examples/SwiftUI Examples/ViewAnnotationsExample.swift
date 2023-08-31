@@ -74,21 +74,20 @@ private struct ViewAnnotationContent: View {
     @State var appeared = false
 
     var body: some View {
-        VStack {
-            let latlon = String(format: "%.2f, %.2f", point.coordinates.latitude, point.coordinates.longitude)
-            HStack(alignment: .firstTextBaseline) {
-                Text("(\(latlon))")
-                    .font(.safeMonospaced)
-                Image(systemName: "clear.fill")
-                    .onTapGesture(perform: onRemove)
-            }
-            .padding(5)
-            .background(Color.blue)
-            .foregroundColor(.white)
-            .opacity(appeared ? 1 : 0)
-            .scaleEffect(appeared ? 1 : 0.2)
-            .animation(.spring(), value: appeared)
-        }.onAppear {
+        let latlon = String(format: "%.2f, %.2f", point.coordinates.latitude, point.coordinates.longitude)
+        HStack(alignment: .firstTextBaseline) {
+            Text("(\(latlon))")
+                .font(.safeMonospaced)
+            Image(systemName: "clear.fill")
+                .onTapGesture(perform: onRemove)
+        }
+        .padding(5)
+        .background(Color.random)
+        .foregroundColor(.white)
+        .opacity(appeared ? 1 : 0)
+        .scaleEffect(appeared ? 1 : 0.2)
+        .animation(.spring(), value: appeared)
+        .onAppear {
             appeared = true
         }
     }

@@ -17,7 +17,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/mapbox/mapbox-core-maps-ios.git", exact: "11.0.0-beta.3"),
         .package(url: "https://github.com/mapbox/mapbox-common-ios.git", exact: "24.0.0-beta.3"),
-        .package(url: "https://github.com/mapbox/turf-swift.git", exact: "2.6.1"),
+        .package(url: "https://github.com/mapbox/turf-swift.git", exact: "2.7.0"),
     ],
     targets: [
         .target(

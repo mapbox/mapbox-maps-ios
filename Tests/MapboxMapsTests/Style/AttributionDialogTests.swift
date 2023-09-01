@@ -129,11 +129,10 @@ class AttributionDialogTests: XCTestCase {
         attributionDialogManager.didTap(InfoButtonOrnament())
 
         let alert = try XCTUnwrap(viewController.presentedViewController as? UIAlertController)
-        let sdkName = NSLocalizedString("SDK_NAME",
-                                        tableName: nil,
-                                        value: "Powered by Mapbox Maps",
-                                        comment: "")
-        let alertTitle = "\(sdkName) \(Bundle.mapboxMapsMetadata.version)"
+        let alertTitle = NSLocalizedString("SDK_NAME",
+                                           tableName: nil,
+                                           value: "Powered by Mapbox Maps",
+                                           comment: "")
         XCTAssertEqual(alert.title, alertTitle)
         XCTAssertNil(alert.message)
 
@@ -172,11 +171,10 @@ class AttributionDialogTests: XCTestCase {
         attributionDialogManager.didTap(InfoButtonOrnament())
 
         let alert = try XCTUnwrap(viewController.presentedViewController as? UIAlertController)
-        let sdkName = NSLocalizedString("SDK_NAME",
-                                        tableName: nil,
-                                        value: "Powered by Mapbox Maps",
-                                        comment: "")
-        let alertTitle = "\(sdkName) \(Bundle.mapboxMapsMetadata.version)"
+        let alertTitle = NSLocalizedString("SDK_NAME",
+                                           tableName: nil,
+                                           value: "Powered by Mapbox Maps",
+                                           comment: "")
 
         // Alert dialog should still have just the telemetry and cancel actions
         // Single, non-actionable attribution should be displayed as alert's message
@@ -205,11 +203,10 @@ class AttributionDialogTests: XCTestCase {
         attributionDialogManager.didTap(InfoButtonOrnament())
 
         let alert = try XCTUnwrap(viewController.presentedViewController as? UIAlertController)
-        let sdkName = NSLocalizedString("SDK_NAME",
-                                        tableName: nil,
-                                        value: "Powered by Mapbox Maps",
-                                        comment: "")
-        let alertTitle = "\(sdkName) \(Bundle.mapboxMapsMetadata.version)"
+        let alertTitle = NSLocalizedString("SDK_NAME",
+                                           tableName: nil,
+                                           value: "Powered by Mapbox Maps",
+                                           comment: "")
 
         XCTAssertEqual(alert.title, alertTitle)
         XCTAssertNil(alert.message)

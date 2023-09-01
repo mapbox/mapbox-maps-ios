@@ -124,11 +124,10 @@ extension AttributionDialogManager: InfoButtonOrnamentDelegate {
             fatalError("No view controller found")
         }
 
-        let sdkName = NSLocalizedString("SDK_NAME",
-                                        tableName: nil,
-                                        value: "Powered by Mapbox Maps",
-                                        comment: "Action sheet title")
-        let title = "\(sdkName) \(Bundle.mapboxMapsMetadata.version)"
+        let title = NSLocalizedString("SDK_NAME",
+                                      tableName: nil,
+                                      value: "Powered by Mapbox Maps",
+                                      comment: "Action sheet title")
 
         let alert: UIAlertController
 

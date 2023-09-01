@@ -3,6 +3,11 @@
 
 import PackageDescription
 
+let coreVersion = "11.0.0-SNAPSHOT.0829T0802Z.mpulkki-terrain-camera-controls.1aa3f6a"
+let coreChecksum = "4c39eec8defe0666cfe875e7667b6955a9cbf8a912de551843a0425832c738ee"
+
+func folder(_ version: String) -> String { version.contains("SNAPSHOT") ? "snapshots" : "releases" }
+
 let mapboxMapsPath: String? = nil
 
 let package = Package(
@@ -15,18 +20,23 @@ let package = Package(
             targets: ["MapboxMaps"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/mapbox/mapbox-core-maps-ios.git", exact: "11.0.0-beta.3"),
         .package(url: "https://github.com/mapbox/mapbox-common-ios.git", exact: "24.0.0-beta.3"),
         .package(url: "https://github.com/mapbox/turf-swift.git", exact: "2.7.0"),
     ],
     targets: [
+        .binaryTarget(
+            name: "MapboxCoreMaps",
+            url: "https://api.mapbox.com/downloads/v2/mobile-maps-core/\(folder(coreVersion))/ios/packages/\(coreVersion)/MapboxCoreMaps.xcframework-dynamic.zip",
+            checksum: coreChecksum
+        ),
         .target(
             name: "MapboxMaps",
             dependencies: [
-                .product(name: "MapboxCoreMaps", package: "mapbox-core-maps-ios"),
+                "MapboxCoreMaps",
                 .product(name: "MapboxCommon", package: "mapbox-common-ios"),
                 .product(name: "Turf", package: "turf-swift")
             ],
+            path: mapboxMapsPath,
             exclude: [
                 "Info.plist",
             ],

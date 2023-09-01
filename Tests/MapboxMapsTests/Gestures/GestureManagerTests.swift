@@ -175,7 +175,7 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertEqual(delegate.gestureDidBeginStub.invocations.count, 1, "GestureBegan should have been invoked once. It was called \(delegate.gestureDidBeginStub.invocations.count) times.")
         XCTAssertTrue(delegate.gestureDidBeginStub.invocations.first?.parameters.gestureManager === gestureManager)
         XCTAssertEqual(delegate.gestureDidBeginStub.invocations.first?.parameters.gestureType, gestureType)
-        XCTAssertEqual(mapboxMap.beginGestureStub.invocations.count, 1)
+        XCTAssertEqual(mapboxMap.beginGestureStub.invocations.count, gestureType.isContinuous ? 1 : 0)
     }
 
     func testGestureEnded() throws {
@@ -189,7 +189,7 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertEqual(delegate.gestureDidEndStub.invocations.first?.parameters.gestureType, gestureType)
         let willAnimateValue = try XCTUnwrap(delegate.gestureDidEndStub.invocations.first?.parameters.willAnimate)
         XCTAssertEqual(willAnimateValue, willAnimate)
-        XCTAssertEqual(mapboxMap.endGestureStub.invocations.count, 1)
+        XCTAssertEqual(mapboxMap.endGestureStub.invocations.count, (gestureType.isContinuous && !willAnimate) ? 1 : 0)
     }
 
     func testAnimationEnded() {
@@ -200,6 +200,7 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertEqual(delegate.gestureDidEndAnimatingStub.invocations.count, 1, "animationEnded should have been invoked once. It was called \(delegate.gestureDidEndAnimatingStub.invocations.count) times.")
         XCTAssertTrue(delegate.gestureDidEndAnimatingStub.invocations.first?.parameters.gestureManager === gestureManager)
         XCTAssertEqual(delegate.gestureDidEndAnimatingStub.invocations.first?.parameters.gestureType, gestureType)
+        XCTAssertEqual(mapboxMap.endGestureStub.invocations.count, gestureType.isContinuous ? 1 : 0)
     }
 
     func testOptionsPanEnabled() {
@@ -512,5 +513,49 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertFalse(gestureManager.options.simultaneousRotateAndPinchZoomEnabled)
         XCTAssertFalse(rotateGestureHandler.simultaneousRotateAndPinchZoomEnabled)
         XCTAssertFalse(pinchGestureHandler.simultaneousRotateAndPinchZoomEnabled)
+    }
+
+    func testPropagatesBeginGestureWhenGestureBegins() {
+        let gestureTypes = GestureType.allCases
+
+        for type in gestureTypes {
+            mapboxMap.beginGestureStub.reset()
+            gestureManager.gestureBegan(for: type)
+
+            XCTAssertEqual(mapboxMap.beginGestureStub.invocations.count, type.isContinuous ? 1 : 0)
+        }
+    }
+
+    func testPropagatesEndGestureWhenGestureEndsWithoutAnimation() {
+        let gestureTypes = GestureType.allCases
+
+        for type in gestureTypes {
+            mapboxMap.endGestureStub.reset()
+            gestureManager.gestureEnded(for: type, willAnimate: false)
+
+            XCTAssertEqual(mapboxMap.endGestureStub.invocations.count, type.isContinuous ? 1 : 0)
+        }
+    }
+
+    func testDoesNotPropagateEndGestureWhenGestureEndsWithAnimation() {
+        let gestureTypes = GestureType.allCases
+
+        for type in gestureTypes {
+            mapboxMap.endGestureStub.reset()
+            gestureManager.gestureEnded(for: type, willAnimate: true)
+
+            XCTAssertEqual(mapboxMap.endGestureStub.invocations.count, 0)
+        }
+    }
+
+    func testPropagatesEndGestureWhenGestureAnimationEnds() {
+        let gestureTypes = GestureType.allCases
+
+        for type in gestureTypes {
+            mapboxMap.endGestureStub.reset()
+            gestureManager.animationEnded(for: type)
+
+            XCTAssertEqual(mapboxMap.endGestureStub.invocations.count, type.isContinuous ? 1 : 0)
+        }
     }
 }

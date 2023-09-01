@@ -4,6 +4,16 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Breaking changes ⚠️
+
+* `MapboxMap.dragStart()` and `MapboxMap.dragEnd()` are not in use anymore and got removed.
+
+### Features ✨ and improvements 🏁
+
+* Improve map camera and gestures when terrain is used to fix camera bumpiness and map flickering.
+
+### Bug fixes 🐞
+
 * Fix `modelCastShadows` and `modelReceiveShadows` options of `Puck3DConfiguration` being ignored.
 
 ## 11.0.0-beta.2 - 23 August, 2023

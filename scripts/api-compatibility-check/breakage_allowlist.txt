@@ -1142,3 +1142,7 @@ Func MapRecorder.stop() has return type change from Swift.String to Foundation.D
 
 // Add slot property to Layer protocol
 Var Layer.slot has been added as a protocol requirement
+
+// Improve terrain camera handling
+Func MapboxMap.dragEnd() has been removed
+Func MapboxMap.dragStart(for:) has been removed

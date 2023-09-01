@@ -53,11 +53,6 @@ final class MockMapboxMap: MapboxMapProtocol {
         coordinateForPointStub.call(with: point)
     }
 
-    let dragStartStub = Stub<CGPoint, Void>()
-    func dragStart(for point: CGPoint) {
-        dragStartStub.call(with: point)
-    }
-
     struct DragCameraOptionsParams: Equatable {
         var from: CGPoint
         var to: CGPoint
@@ -65,11 +60,6 @@ final class MockMapboxMap: MapboxMapProtocol {
     let dragCameraOptionsStub = Stub<DragCameraOptionsParams, MapboxMaps.CameraOptions>(defaultReturnValue: CameraOptions())
     func dragCameraOptions(from: CGPoint, to: CGPoint) -> MapboxMaps.CameraOptions {
         dragCameraOptionsStub.call(with: DragCameraOptionsParams(from: from, to: to))
-    }
-
-    let dragEndStub = Stub<Void, Void>()
-    func dragEnd() {
-        dragEndStub.call()
     }
 
     let beginAnimationStub = Stub<Void, Void>()

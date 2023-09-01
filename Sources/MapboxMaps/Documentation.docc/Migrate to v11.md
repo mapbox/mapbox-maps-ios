@@ -477,6 +477,11 @@ try mapView.mapboxMap.removeGeoJSONSourceFeatures(forSourceId: sourceId, feature
 
 #### 2.10.5 Gestures
 
+##### Breaking change ⚠️
+
+`MapboxMap.dragStart()` and `MapboxMap.dragEnd()` are not in use anymore and got removed.
+
+
 While maintaing the existing gesture approach we made minor improvements. In v11 we now:
 
 - allow animation during any ongoing gestures

@@ -15,9 +15,7 @@ protocol MapboxMapProtocol: AnyObject {
     func setNorthOrientation(northOrientation: NorthOrientation)
     func setConstrainMode(_ constrainMode: ConstrainMode)
     func setViewportMode(_ viewportMode: ViewportMode)
-    func dragStart(for point: CGPoint)
     func dragCameraOptions(from: CGPoint, to: CGPoint) -> CameraOptions
-    func dragEnd()
     func beginAnimation()
     func endAnimation()
     func beginGesture()
@@ -429,29 +427,6 @@ public final class MapboxMap: StyleManager {
         }
     }
 
-    /// Notify map about gesture being in progress.
-    internal var isGestureInProgress: Bool {
-        get {
-            return __map.isGestureInProgress()
-        }
-        set {
-            __map.setGestureInProgressForInProgress(newValue)
-        }
-    }
-
-    /// Tells the map rendering engine that the animation is currently performed
-    /// by the user (e.g. with a `setCamera()` calls series). It adjusts the
-    /// engine for the animation use case.
-    /// In particular, it brings more stability to symbol placement and rendering.
-    internal var isUserAnimationInProgress: Bool {
-        get {
-            return __map.isUserAnimationInProgress()
-        }
-        set {
-            __map.setUserAnimationInProgressForInProgress(newValue)
-        }
-    }
-
     /// Returns the map's options
     public var options: MapOptions {
         return __map.getOptions()
@@ -778,16 +753,6 @@ public final class MapboxMap: StyleManager {
 
     // MARK: - Drag API
 
-    /// Prepares the drag gesture to use the provided screen coordinate as a pivot
-    /// point. This function should be called each time when user starts a
-    /// dragging action (e.g. by clicking on the map). The following dragging
-    /// will be relative to the pivot.
-    ///
-    /// - Parameter point: Screen point
-    public func dragStart(for point: CGPoint) {
-        __map.dragStart(forPoint: point.screenCoordinate)
-    }
-
     /// Calculates target point where camera should move after drag. The method
     /// should be called after `dragStart` and before `dragEnd`.
     ///
@@ -798,15 +763,8 @@ public final class MapboxMap: StyleManager {
     /// - Returns:
     ///     The camera options object showing end point.
     public func dragCameraOptions(from: CGPoint, to: CGPoint) -> CameraOptions {
-        let options = __map.getDragCameraOptionsFor(fromPoint: from.screenCoordinate,
-                                                    toPoint: to.screenCoordinate)
+        let options = __map.cameraForDrag(forStart: from.screenCoordinate, end: to.screenCoordinate)
         return CameraOptions(options)
-    }
-
-    /// Ends the ongoing drag gesture. This function should be called always after
-    /// the user has ended a drag gesture initiated by `dragStart`.
-    public func dragEnd() {
-        __map.dragEnd()
     }
 
     /// :nodoc:
@@ -854,6 +812,7 @@ public final class MapboxMap: StyleManager {
         gestureCount += 1
         if gestureCount == 1 {
             __map.setGestureInProgressForInProgress(true)
+            __map.setCenterAltitudeModeFor(.sea)
         }
     }
 
@@ -864,6 +823,7 @@ public final class MapboxMap: StyleManager {
         gestureCount -= 1
         if gestureCount == 0 {
             __map.setGestureInProgressForInProgress(false)
+            __map.setCenterAltitudeModeFor(.terrain)
         }
     }
 }

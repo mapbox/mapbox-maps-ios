@@ -144,7 +144,6 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
     private func beginInteraction(withTouchLocation touchLocation: CGPoint) {
         isPanning = true
         previousTouchLocation = touchLocation
-        mapboxMap.dragStart(for: touchLocation)
         delegate?.gestureBegan(for: .pan)
     }
 
@@ -152,14 +151,10 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
         isPanning = false
         previousTouchLocation = nil
         lastChangedDate = nil
-        if !willAnimate {
-            mapboxMap.dragEnd()
-        }
         delegate?.gestureEnded(for: .pan, willAnimate: willAnimate)
     }
 
     private func endAnimation() {
-        mapboxMap.dragEnd()
         delegate?.animationEnded(for: .pan)
     }
 

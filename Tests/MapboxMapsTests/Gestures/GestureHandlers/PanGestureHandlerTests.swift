@@ -56,7 +56,6 @@ final class PanGestureHandlerTests: XCTestCase {
 
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(mapboxMap.dragStartStub.invocations.map(\.parameters), [touchLocation])
         XCTAssertEqual(delegate.gestureBeganStub.invocations.map(\.parameters), [.pan])
     }
 
@@ -152,9 +151,7 @@ final class PanGestureHandlerTests: XCTestCase {
         gestureRecognizer.sendActions()
         gestureRecognizer.getStateStub.defaultReturnValue = .changed
         gestureRecognizer.sendActions()
-        mapboxMap.dragStartStub.reset()
         mapboxMap.dragCameraOptionsStub.reset()
-        mapboxMap.dragEndStub.reset()
         mapboxMap.setCameraStub.reset()
         mapboxMap.dragCameraOptionsStub.defaultReturnValue = .random()
 
@@ -192,7 +189,6 @@ final class PanGestureHandlerTests: XCTestCase {
         let animationEndedCompletion = try XCTUnwrap(decelerateParams?.completion)
         animationEndedCompletion(.end)
 
-        XCTAssertEqual(mapboxMap.dragEndStub.invocations.count, 1)
         XCTAssertEqual(delegate.animationEndedStub.invocations.map(\.parameters), [.pan])
     }
 
@@ -231,7 +227,6 @@ final class PanGestureHandlerTests: XCTestCase {
         gestureRecognizer.sendActions()
 
         XCTAssertEqual(cameraAnimationsManager.decelerateStub.invocations.count, 0, "Cancelled pan should not trigger deceleration")
-        XCTAssertEqual(mapboxMap.dragEndStub.invocations.count, 1)
         XCTAssertEqual(delegate.gestureEndedStub.invocations.map(\.parameters), [.init(gestureType: .pan, willAnimate: false)])
     }
 
@@ -263,13 +258,11 @@ final class PanGestureHandlerTests: XCTestCase {
         gestureRecognizer.getStateStub.defaultReturnValue = .began
         gestureRecognizer.sendActions()
 
-        XCTAssertTrue(mapboxMap.dragStartStub.invocations.isEmpty)
         XCTAssertTrue(delegate.gestureBeganStub.invocations.isEmpty)
 
         gestureRecognizer.getStateStub.defaultReturnValue = .changed
         gestureRecognizer.sendActions()
 
-        XCTAssertTrue(mapboxMap.dragStartStub.invocations.isEmpty)
         XCTAssertTrue(delegate.gestureBeganStub.invocations.isEmpty)
         XCTAssertTrue(mapboxMap.dragCameraOptionsStub.invocations.isEmpty)
         XCTAssertTrue(mapboxMap.setCameraStub.invocations.isEmpty)
@@ -277,7 +270,6 @@ final class PanGestureHandlerTests: XCTestCase {
         mapboxMap.pointIsAboveHorizonStub.defaultReturnValue = false
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(mapboxMap.dragStartStub.invocations.count, 1)
         XCTAssertEqual(delegate.gestureBeganStub.invocations.map(\.parameters), [.pan])
         XCTAssertTrue(mapboxMap.dragCameraOptionsStub.invocations.isEmpty)
         XCTAssertTrue(mapboxMap.setCameraStub.invocations.isEmpty)
@@ -298,7 +290,6 @@ final class PanGestureHandlerTests: XCTestCase {
         gestureRecognizer.getStateStub.defaultReturnValue = .ended
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(mapboxMap.dragEndStub.invocations.count, 1)
         XCTAssertTrue(cameraAnimationsManager.decelerateStub.invocations.isEmpty)
         XCTAssertEqual(delegate.gestureEndedStub.invocations.map(\.parameters), [.init(gestureType: .pan, willAnimate: false)])
     }
@@ -412,11 +403,6 @@ final class PanGestureHandlerTests: XCTestCase {
         gestureRecognizer.getStateStub.defaultReturnValue = .began
         gestureRecognizer.sendActions()
 
-        // then
-        XCTAssertEqual(mapboxMap.dragStartStub.invocations.count, 1)
-        let dragStartLocation = try XCTUnwrap(mapboxMap.dragStartStub.invocations.first?.parameters)
-        XCTAssertEqual(dragStartLocation, initialCentroid)
-
         // when
         // drag changes with a new set of touches
         gestureRecognizer.locationOfTouchStub.returnValueQueue = changedTouches
@@ -443,7 +429,6 @@ final class PanGestureHandlerTests: XCTestCase {
         gestureRecognizer.getStateStub.defaultReturnValue = .ended
         gestureRecognizer.sendActions()
 
-        XCTAssertTrue(mapboxMap.dragEndStub.invocations.isEmpty)
         XCTAssertEqual(cameraAnimationsManager.decelerateStub.invocations.count, 1)
         XCTAssertEqual(delegate.gestureEndedStub.invocations.map(\.parameters), [.init(gestureType: .pan, willAnimate: true)])
     }
@@ -456,7 +441,6 @@ final class PanGestureHandlerTests: XCTestCase {
         gestureRecognizer.getStateStub.defaultReturnValue = .ended
         gestureRecognizer.sendActions()
 
-        XCTAssertTrue(mapboxMap.dragEndStub.invocations.isEmpty)
         XCTAssertTrue(cameraAnimationsManager.decelerateStub.invocations.isEmpty)
     }
 
@@ -468,7 +452,6 @@ final class PanGestureHandlerTests: XCTestCase {
         gestureRecognizer.getStateStub.defaultReturnValue = .cancelled
         gestureRecognizer.sendActions()
 
-        XCTAssertTrue(mapboxMap.dragEndStub.invocations.isEmpty)
         XCTAssertTrue(cameraAnimationsManager.decelerateStub.invocations.isEmpty)
     }
 

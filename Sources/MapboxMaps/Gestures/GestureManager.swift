@@ -166,17 +166,26 @@ public final class GestureManager: GestureHandlerDelegate {
 
     internal func gestureBegan(for gestureType: GestureType) {
         OSLog.poi.signpostEvent("Gesture began", message: "type: \(gestureType)")
-        mapboxMap.beginGesture()
+
+        if gestureType.isContinuous {
+            mapboxMap.beginGesture()
+        }
         delegate?.gestureManager(self, didBegin: gestureType)
     }
 
     internal func gestureEnded(for gestureType: GestureType, willAnimate: Bool) {
         OSLog.poi.signpostEvent("Gesture ended", message: "type: \(gestureType)")
-        mapboxMap.endGesture()
+
+        if gestureType.isContinuous, false == willAnimate {
+            mapboxMap.endGesture()
+        }
         delegate?.gestureManager(self, didEnd: gestureType, willAnimate: willAnimate)
     }
 
     internal func animationEnded(for gestureType: GestureType) {
+        if gestureType.isContinuous {
+            mapboxMap.endGesture()
+        }
         delegate?.gestureManager(self, didEndAnimatingFor: gestureType)
     }
 }

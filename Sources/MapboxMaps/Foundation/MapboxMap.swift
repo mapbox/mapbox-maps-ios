@@ -497,7 +497,7 @@ public final class MapboxMap: StyleManager {
                        pitch: Double?) -> CameraOptions {
         return CameraOptions(
             __map.cameraForCoordinates(
-                forCoordinates: coordinates.map(\.location),
+                for: coordinates.map { Coordinate2D(value: $0) },
                 padding: padding?.toMBXEdgeInsetsValue(),
                 bearing: bearing?.NSNumber,
                 pitch: pitch?.NSNumber))
@@ -529,7 +529,7 @@ public final class MapboxMap: StyleManager {
                        rect: CGRect) -> CameraOptions {
         return CameraOptions(
             __map.cameraForCoordinates(
-                forCoordinates: coordinates.map(\.location),
+                for: coordinates.map { Coordinate2D(value: $0) },
                 camera: MapboxCoreMaps.CameraOptions(camera),
                 box: ScreenBox(rect)))
     }
@@ -639,8 +639,8 @@ public final class MapboxMap: StyleManager {
     /// If a coordinate's point is outside of map view's bounds, it will be `(-1, -1)`
     public func points(for coordinates: [CLLocationCoordinate2D]) -> [CGPoint] {
         let bounds = CGRect(origin: .zero, size: size)
-        let locations = coordinates.map { CLLocation(latitude: $0.latitude, longitude: $0.longitude) }
-        let screenCoords = __map.pixelsForCoordinates(forCoordinates: locations)
+        let locations = coordinates.map { Coordinate2D(value: $0) }
+        let screenCoords = __map.pixelsForCoordinates(for: locations)
         return screenCoords.map { bounds.contains($0.point) ? $0.point : CGPoint(x: -1.0, y: -1.0) }
     }
 
@@ -656,7 +656,7 @@ public final class MapboxMap: StyleManager {
     public func coordinates(for points: [CGPoint]) -> [CLLocationCoordinate2D] {
         let screenCoords = points.map { $0.screenCoordinate }
         let locations = __map.coordinatesForPixels(forPixels: screenCoords)
-        return locations.map { $0.coordinate }
+        return locations.map { $0.value }
     }
 
     /// Obtains the geographical coordinate information that corresponds to a given point.

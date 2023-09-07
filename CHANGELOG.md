@@ -7,6 +7,7 @@ Mapbox welcomes participation and contributions from everyone.
 ### Breaking changes ⚠️
 
 * `MapboxMap.dragStart()` and `MapboxMap.dragEnd()` are not in use anymore and got removed.
+* Remove `MapOptions/optimizeForTerrain` option. Whenever terrain is present layer order is automatically adjusted for better performance.
 
 ### Features ✨ and improvements 🏁
 

@@ -282,7 +282,6 @@ open class MapView: UIView {
                 viewportMode: original.__viewportMode,
                 orientation: original.__orientation,
                 crossSourceCollisions: original.__crossSourceCollisions,
-                optimizeForTerrain: original.__optimizeForTerrain,
                 size: Size(width: Float(bounds.width), height: Float(bounds.height)),
                 pixelRatio: original.pixelRatio,
                 glyphsRasterizationOptions: original.glyphsRasterizationOptions)

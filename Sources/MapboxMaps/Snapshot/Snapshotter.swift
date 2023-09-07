@@ -19,8 +19,7 @@ internal protocol MapSnapshotterProtocol: StyleManagerProtocol {
 
     func cancel()
 
-    func cameraForCoordinates(forCoordinates
-                              coordinates: [CLLocation],
+    func cameraForCoordinates(for coordinates: [Coordinate2D],
                               padding: EdgeInsets?,
                               bearing: NSNumber?,
                               pitch: NSNumber?) -> MapboxCoreMaps.CameraOptions
@@ -304,7 +303,7 @@ public class Snapshotter: StyleManager {
                        bearing: Double?,
                        pitch: Double?) -> CameraOptions {
         return CameraOptions(mapSnapshotter.cameraForCoordinates(
-            forCoordinates: coordinates.map(\.location),
+            for: coordinates.map { Coordinate2D(value: $0) },
             padding: padding?.toMBXEdgeInsetsValue(),
             bearing: bearing?.NSNumber,
             pitch: pitch?.NSNumber))

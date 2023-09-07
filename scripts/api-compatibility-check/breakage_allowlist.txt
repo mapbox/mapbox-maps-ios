@@ -1146,3 +1146,7 @@ Var Layer.slot has been added as a protocol requirement
 // Improve terrain camera handling
 Func MapboxMap.dragEnd() has been removed
 Func MapboxMap.dragStart(for:) has been removed
+
+// Remove optimizeForTerrain
+Var MapOptions.optimizeForTerrain has been removed
+Constructor MapOptions.init(constrainMode:viewportMode:orientation:crossSourceCollisions:optimizeForTerrain:size:pixelRatio:glyphsRasterizationOptions:) has been removed

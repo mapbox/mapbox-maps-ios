@@ -729,6 +729,7 @@ class OfflineRegionObserver: MapboxCoreMaps.OfflineRegionObserver {
 - Map size is now synced to the size of the Metal view
 - The `easeTo/flyTo` APIs return non-optional cancelable token.
 - The following `GeoJsonSource` cluster APIs now return `Cancelable`: `getGeoJsonClusterLeaves`, `getGeoJsonClusterChildren`, `getGeoJsonClusterExpansionZoom`.
+- The `MapOptions/optimizeForTerrain` option was removed, whenever terrain is present layer order is now automatically adjusted for better performance. Previously, optimization was the default. 
 
 ## 7. Test Your App
 

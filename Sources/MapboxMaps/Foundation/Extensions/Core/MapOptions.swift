@@ -15,11 +15,36 @@ extension MapOptions {
     ///   - size: Size of the map, if nil (the default), a minimal default size will be used.
     ///   - pixelRatio: Pixel scale of the map view; default is the main screen's native scale.
     ///   - glyphsRasterizationOptions: A `GlyphsRasterizationOptions` object.
+    @available(*, unavailable, message: "'optimizeForTerrain' is obsolete and has no effect. Layer order is automatically adjusted for better performance based on the presence of terrain.")
     public convenience init(constrainMode: ConstrainMode = .heightOnly,
                             viewportMode: ViewportMode = .default,
                             orientation: NorthOrientation = .upwards,
                             crossSourceCollisions: Bool = true,
                             optimizeForTerrain: Bool = true,
+                            size: CGSize? = nil,
+                            pixelRatio: CGFloat = UIScreen.main.nativeScale,
+                            glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions(fontFamilies: [])) {
+        fatalError()
+    }
+
+    /// Initialize a `MapOptions` object that is used when initializing a Map.
+    ///
+    /// For initializing a `MapView` please see `MapInitOptions`, and
+    /// `MapOptions.default` for a convenient object that can be used in
+    /// conjunction.
+    ///
+    /// - Parameters:
+    ///   - constrainMode: The map constrain mode; default is `.heightOnly`.
+    ///   - viewportMode: The viewport mode; default is `.default`.
+    ///   - orientation: The view orientation; default is `.upwards`.
+    ///   - crossSourceCollisions: Whether cross-source symbol collision detection should be enabled; default is `true`
+    ///   - size: Size of the map, if nil (the default), a minimal default size will be used.
+    ///   - pixelRatio: Pixel scale of the map view; default is the main screen's native scale.
+    ///   - glyphsRasterizationOptions: A `GlyphsRasterizationOptions` object.
+    public convenience init(constrainMode: ConstrainMode = .heightOnly,
+                            viewportMode: ViewportMode = .default,
+                            orientation: NorthOrientation = .upwards,
+                            crossSourceCollisions: Bool = true,
                             size: CGSize? = nil,
                             pixelRatio: CGFloat = UIScreen.main.nativeScale,
                             glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions(fontFamilies: [])) {
@@ -37,7 +62,6 @@ extension MapOptions {
                   viewportMode: viewportMode.NSNumber,
                   orientation: orientation.NSNumber,
                   crossSourceCollisions: crossSourceCollisions.NSNumber,
-                  optimizeForTerrain: optimizeForTerrain.NSNumber,
                   size: mbmSize,
                   pixelRatio: Float(pixelRatio),
                   glyphsRasterizationOptions: glyphsRasterizationOptions)
@@ -66,16 +90,10 @@ extension MapOptions {
         return __crossSourceCollisions?.boolValue ?? true
     }
 
-    /// With terrain on, if `true`, the map will render for performance priority,
-    /// which may lead to layer reordering allowing to maximize performance
-    /// (layers that are draped over terrain will be drawn first, including fill,
-    /// line, background, hillshade and raster). Any layers that are positioned
-    /// after symbols are draped last, over symbols. Otherwise, if set to `false`,
-    /// the map will always be drawn for layer order priority.
-    ///
-    /// By default, it is set to true.
+    /// Unavailable: whenever terrain is present layer order is automatically adjusted for better performance.
+    @available(*, unavailable, message: "Not needed anymore, layer order is automatically adjusted for better performance based on the presence of terrain.")
     public var optimizeForTerrain: Bool {
-        return __optimizeForTerrain?.boolValue ?? true
+        fatalError()
     }
 
     /// The size of the map object and renderer backend. For Apple platforms this

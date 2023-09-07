@@ -51,7 +51,6 @@ final class MapboxMapTests: XCTestCase {
             viewportMode: mapInitOptions.mapOptions.viewportMode.map { NSNumber(value: $0.rawValue) },
             orientation: NSNumber(value: mapInitOptions.mapOptions.orientation.rawValue),
             crossSourceCollisions: mapInitOptions.mapOptions.crossSourceCollisions.NSNumber,
-            optimizeForTerrain: mapInitOptions.mapOptions.optimizeForTerrain.NSNumber,
             size: mapInitOptions.mapOptions.size.map(Size.init),
             pixelRatio: mapInitOptions.mapOptions.pixelRatio,
             glyphsRasterizationOptions: nil) // __map.getOptions() always returns nil for glyphsRasterizationOptions
@@ -300,7 +299,7 @@ final class MapboxMapTests: XCTestCase {
         events.onStyleLoaded.send(.init(timeInterval: interval))
         events.onStyleDataLoaded.send(.init(type: .sources, timeInterval: interval))
         events.onStyleDataLoaded.send(.init(type: .sprite, timeInterval: interval))
-        XCTAssertNil(mapboxMap.styleTransition.duration) // should not be applied just yet
+        XCTAssertEqual(mapboxMap.styleTransition.duration, 0.3) // default value
 
         events.onStyleDataLoaded.send(.init(type: .style, timeInterval: interval))
         XCTAssertEqual(mapboxMap.styleTransition.duration!, options.duration!, accuracy: 0.1)

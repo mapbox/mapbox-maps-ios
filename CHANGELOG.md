@@ -13,6 +13,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Improve map camera and gestures when terrain is used to fix camera bumpiness and map flickering.
 * Expose a method to remove tile region with a completion: `TileStore.removeTileRegion(forId:completion:)`.
+* Bump core maps version to 11.0.0-beta.4 and common sdk to 24.0.0-beta.4.
 
 ### Bug fixes 🐞
 

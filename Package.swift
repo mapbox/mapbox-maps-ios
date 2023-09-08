@@ -3,8 +3,8 @@
 
 import PackageDescription
 
-let coreVersion = "11.0.0-SNAPSHOT.0906T1249Z.im029-changelog11-beta-4.69f1dec"
-let coreChecksum = "841438962e8fd546c74f1f23c6baaaab13c4cfef7602006ae2da46f2754bdee3"
+let coreVersion = "11.0.0-beta.4"
+let coreChecksum = "656578f1b634858c75cc31944852293999622d1d47ce184053030b2ed80e5df9"
 
 func folder(_ version: String) -> String { version.contains("SNAPSHOT") ? "snapshots" : "releases" }
 

@@ -7,6 +7,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## 10.16.0 - September 6, 2023
 
 * Update MapboxCoreMaps to 10.16.0 and MapboxCommon to 23.8.0.
+* Expose a method to remove tile region with a completion: `TileStore.removeTileRegion(forId:completion:)`.
 
 ## 10.16.0-rc.1 - August 23, 2023
 

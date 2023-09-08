@@ -1,7 +1,11 @@
 import Foundation
 @_implementationOnly import MapboxCommon_Private
 
-extension TileStore {
+internal protocol TileStoreProtocol: AnyObject {
+    func __removeObserver(for observer: MapboxCommon_Private.TileStoreObserver)
+}
+
+extension TileStore: TileStoreProtocol {
 
     /// Returns a shared `TileStore` instance at the default location. Creates a
     /// new one if one doesn't yet exist.
@@ -184,6 +188,15 @@ extension TileStore {
         let wrapper = TileStoreObserverWrapper(observer)
         __addObserver(for: wrapper)
         return TileStoreObserverCancelable(observer: wrapper, tileStore: self)
+    }
+
+    /// An overloaded version of `removeTileRegion(forId:)` with a callback for feedback.
+    /// On successful tile region removal, the given callback is invoked with the removed tile region.
+    /// Otherwise, the given callback is invoked with an error.
+    /// - Parameter id: The tile region identifier.
+    /// - Parameter callback A callback to be invoked when a tile region was removed.
+    public func removeRegion(forId id: String, completion: @escaping (Result<TileRegion, Error>) -> Void) {
+        __removeTileRegion(forId: id, callback: tileStoreClosureAdapter(for: completion, type: TileRegion.self))
     }
 }
 

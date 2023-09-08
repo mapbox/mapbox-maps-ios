@@ -1,4 +1,4 @@
----
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Kila2/XcodeGen/master/Assets/json-schema/project.json
 name: MapboxMaps
 configFiles:
   Debug: Configurations/base.xcconfig
@@ -7,42 +7,14 @@ options:
   bundleIdPrefix: com.mapbox
   defaultConfig: Release
   parallelizeBuild: false
-  preGenCommand: |
-    [[ -d "mapbox-maps-ios" ]] && pushd "mapbox-maps-ios"
-
-    VERSIONS_PATH="scripts/release/packager/versions.json"
-    MAPBOX_CORE_MAPS_VERSION="$(jq -r .MapboxCoreMaps $VERSIONS_PATH)"
-    MAPBOX_COMMON_VERSION="$(jq -r .MapboxCommon $VERSIONS_PATH)"
-
-    cat <<EOF > Cartfile.MapboxCoreMaps.json
-    {"$MAPBOX_CORE_MAPS_VERSION": "https://api.mapbox.com/downloads/v2/mobile-maps-core/snapshots/ios/packages/$MAPBOX_CORE_MAPS_VERSION/MapboxCoreMaps.xcframework-dynamic.zip"}
-    EOF
-
-    cat <<EOF > Cartfile.MapboxCommon.json
-    {"$MAPBOX_COMMON_VERSION": "https://api.mapbox.com/downloads/v2/mapbox-common/releases/ios/packages/$MAPBOX_COMMON_VERSION/MapboxCommon.zip"}
-    EOF
-
-    cat <<EOF > Cartfile
-    binary "Cartfile.MapboxCoreMaps.json" == $MAPBOX_CORE_MAPS_VERSION
-    binary "Cartfile.MapboxCommon.json" == $MAPBOX_COMMON_VERSION
-    github "mapbox/turf-swift" == $(jq -r .Turf $VERSIONS_PATH | sed 's/^v//')
-
-    EOF
-
-    cat <<EOF > Cartfile.xcconfig
-    BUILD_LIBRARY_FOR_DISTRIBUTION=YES
-    EOF
-
-    if [[ $(command -v "carthage") ]]; then
-      CARTHAGE_BINARY="carthage"
-    elif [[ $(command -v "mint") ]]; then
-      CARTHAGE_BINARY="mint run Carthage/Carthage"
-    else
-      echo "error: Carthage not found"
-      exit 1
-    fi
-    $CARTHAGE_BINARY update --use-netrc --platform ios --verbose --use-xcframeworks --cache-builds --configuration Cartfile.xcconfig
-    rm -f Cartfile Cartfile.resolved Cartfile.xcconfig Cartfile.MapboxCoreMaps.json Cartfile.MapboxCommon.json
+  groupOrdering:
+    - order:
+      - General
+      - Examples
+      - DebugApp
+      - MapboxMaps
+      - MapboxMapsTests
+  preGenCommand: scripts/prepare_binary_dependencies.sh
 packages:
   Fingertips:
     url: git@github.com:mapbox/Fingertips.git
@@ -58,6 +30,8 @@ targets:
   MapboxMaps:
     type: framework
     platform: iOS
+    templates:
+      - maps-dependencies
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.MapboxMaps
@@ -75,17 +49,21 @@ targets:
       Release: "Configurations/base.xcconfig"
     sources:
       - path: "Sources/MapboxMaps/"
-        includes: "*.swift"
+        includes:
+          - "*.swift"
         excludes:
           - "**/*.plist"
           - "**/*.h"
           - "**/.swiftlint.yml"
-      - path: "Sources/MapboxMaps/Info.plist"
       - path: "Sources/MapboxMaps/MapboxMaps.h"
-    dependencies:
-      - framework: Carthage/Build/MapboxCoreMaps.xcframework
-      - framework: Carthage/Build/Turf.xcframework
-      - framework: Carthage/Build/MapboxCommon.xcframework
+      - path: .
+        excludes:
+          - "**/*.xcodeproj"
+          - Apps
+          - Carthage/Checkouts
+          - .build
+        buildPhase: none
+        group: General
 
   MapboxMapsTests:
     templates:
@@ -175,7 +153,6 @@ targets:
     sources:
       - path: Apps/Examples/Examples/
 
-
   ExamplesTests:
     templates:
       - installTokenScript
@@ -202,6 +179,12 @@ targets:
       - target: Examples
 
 targetTemplates:
+  maps-dependencies:
+    dependencies:
+      - framework: Carthage/Build/MapboxCoreMaps.xcframework
+      - framework: Carthage/Build/Turf.xcframework
+      - framework: Carthage/Build/MapboxCommon.xcframework
+
   installTokenScript:
     settings:
       base:
@@ -223,6 +206,7 @@ targetTemplates:
   application:
     templates:
       - swiftlint-script
+      - maps-dependencies
     type: application
     platform: iOS
     configFiles:
@@ -233,9 +217,6 @@ targetTemplates:
       PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.examples
     dependencies:
       - target: MapboxMaps
-      - framework: Carthage/Build/MapboxCoreMaps.xcframework
-      - framework: Carthage/Build/Turf.xcframework
-      - framework: Carthage/Build/MapboxCommon.xcframework
       - package: Fingertips
 
   unit-test:

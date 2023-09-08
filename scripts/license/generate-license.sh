@@ -5,8 +5,13 @@ if [ -z "${GITHUB_TOKEN}" ]; then
     exit 1
 fi
 
-# COREMAPS_VERSION=$(jq -r .MapboxCoreMaps scripts/release/packager/versions.json)
-COREMAPS_VERSION=11.0.0-alpha.1
+COREMAPS_VERSION=$(jq -r .MapboxCoreMaps scripts/release/packager/versions.json)
+
+if [[ $COREMAPS_VERSION = *"SNAPSHOT"* ]]; then
+    # Skipping license check for GL Native snapshots.
+    exit 0
+fi
+
 TURF_VERSION=$(jq -r .Turf scripts/release/packager/versions.json)
 MAPS_SDK_VERSION=$(jq -r .version Sources/MapboxMaps/MapboxMaps.json)
 CURRENT_YEAR=$(date +%Y)

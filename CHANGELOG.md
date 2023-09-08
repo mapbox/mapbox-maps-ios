@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.0.0-beta.3 - 8 September, 2023
+
 ### Breaking changes ⚠️
 
 * `MapboxMap.dragStart()` and `MapboxMap.dragEnd()` are not in use anymore and got removed.

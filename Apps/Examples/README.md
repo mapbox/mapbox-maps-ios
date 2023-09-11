@@ -19,6 +19,8 @@ The Examples project needs to be able to access Mapbox services to install
 dependencies and load maps. Follow the instructions in the docs to
 [Configure credentials](https://docs.mapbox.com/ios/maps/guides/install/).
 
+The `main` branch is unstable, so please switch to a stable branch like `git checkout v10.16.0`.
+
 **Important**
 
 1. Place the .netrc file in your home directory.
@@ -30,6 +32,8 @@ your public token in the file `~/.mapbox` instead of modifying the Example app's
 `Info.plist`. A build phase will read the public token from that file and
 populate it in the `Info.plist` of the built product. This helps to ensure that
 your public token does not end up in any of your commits.
+
+In Xcode, go to File -> Packages -> Reset Package Caches.
 
 Next, open `Apps/Apps.xcworkspace` and select the Examples scheme to build and
 run the Examples app.

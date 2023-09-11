@@ -42,6 +42,7 @@ let package = Package(
             ],
             resources: [
                 .copy("MapboxMaps.json"),
+                .copy("PrivacyInfo.xcprivacy"),
             ]
         ),
         .testTarget(

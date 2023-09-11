@@ -19,6 +19,12 @@ The Examples project needs to be able to access Mapbox services to install
 dependencies and load maps. Follow the instructions in the docs to
 [Configure credentials](https://docs.mapbox.com/ios/maps/guides/install/).
 
+**Important**
+
+1. Place the .netrc file in your home directory.
+1. When you're downloading your **private** key, ensure it's the `YOUR_SECRET_MAPBOX_ACCESS_TOKEN` and not the **public** one.
+1. Don't forget to check the `DOWNLOADS:READ` option when downloading the private key.
+
 When you get to the "Configure your public token" step, you can optionally place
 your public token in the file `~/.mapbox` instead of modifying the Example app's
 `Info.plist`. A build phase will read the public token from that file and

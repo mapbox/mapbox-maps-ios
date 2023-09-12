@@ -234,8 +234,6 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testLocalizeLabelsv7() throws {
-        throw XCTSkip("TODO: Re-enable once https://mapbox.atlassian.net/browse/MAPSNAT-1279 is fixed.")
-
         let mapView = MapView(frame: UIScreen.main.bounds)
 
         let styleJSONObject: [String: Any] = [
@@ -372,8 +370,6 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testLocalizeLabelsv8() throws {
-        throw XCTSkip("TODO: Re-enable once https://mapbox.atlassian.net/browse/MAPSNAT-1279 is fixed.")
-
         let mapView = MapView(frame: UIScreen.main.bounds)
 
         let styleJSONObject: [String: Any] = [

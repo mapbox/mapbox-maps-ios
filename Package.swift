@@ -28,7 +28,8 @@ let package = Package(
                 "Info.plist"
             ],
             resources: [
-                .copy("MapboxMaps.json")
+                .copy("MapboxMaps.json"),
+                .copy("PrivacyInfo.xcprivacy"),
             ]
         ),
         .testTarget(

@@ -19,7 +19,7 @@ Pod::Spec.new do |m|
   m.swift_version = '5.5'
 
   m.source_files = 'Sources/MapboxMaps/**/*.{swift,h}'
-  m.resource_bundles = { 'MapboxMapsResources' => ['Sources/**/*.{xcassets,strings}', 'Sources/MapboxMaps/MapboxMaps.json'] }
+  m.resource_bundles = { 'MapboxMapsResources' => ['Sources/**/*.{xcassets,strings}', 'Sources/MapboxMaps/MapboxMaps.json', 'Sources/MapboxMaps/PrivacyInfo.xcprivacy'] }
 
   # Xcode 14.x throws an error about code signing on resource bundles, turn it off for now.
   # TODO: remove after Cocoapods 1.12 is released

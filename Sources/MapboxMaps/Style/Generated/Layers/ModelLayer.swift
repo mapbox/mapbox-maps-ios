@@ -42,12 +42,12 @@ import Foundation
     @_documentation(visibility: public)
 #endif
     public var sourceLayer: String?
-
+    
     /// The slot this layer is assigned to. If specified, and a slot with that name exists, it will be placed at that position in the layer order.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
-    @_spi(Experimental) public var slot: String?
+    public var slot: String?
 
     /// The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.
 #if swift(>=5.8)

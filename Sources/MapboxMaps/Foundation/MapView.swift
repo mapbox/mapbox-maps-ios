@@ -88,6 +88,11 @@ open class MapView: UIView {
     /// getting a `MetalView`, and intializing a `MapView`
     private var pixelRatio: CGFloat = 0.0
 
+    /// Sample count to control multisample anti-aliasing (MSAA) option for rendering.
+    ///
+    /// - SeeAlso: ``MapInitOptions/antialiasingSampleCount``
+    private let antialiasingSampleCount: Int
+
     @IBInspectable private var styleURI__: String = ""
 
     /// Outlet that can be used when initializing a MapView with a Storyboard or
@@ -194,6 +199,7 @@ open class MapView: UIView {
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         eventsManager = dependencyProvider.makeEventsManager()
+        self.antialiasingSampleCount = mapInitOptions.antialiasingSampleCount
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
@@ -226,6 +232,7 @@ open class MapView: UIView {
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         eventsManager = dependencyProvider.makeEventsManager()
+        antialiasingSampleCount = mapInitOptions.antialiasingSampleCount
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
@@ -241,6 +248,10 @@ open class MapView: UIView {
         attributionUrlOpener = DefaultAttributionURLOpener()
         applicationStateProvider = .global
         eventsManager = dependencyProvider.makeEventsManager()
+
+        let defaultMapInitOptions = MapInitOptions()
+        antialiasingSampleCount = defaultMapInitOptions.antialiasingSampleCount
+
         super.init(coder: coder)
     }
 
@@ -257,6 +268,7 @@ open class MapView: UIView {
         notificationCenter = dependencyProvider.notificationCenter
         bundle = dependencyProvider.bundle
         eventsManager = dependencyProvider.makeEventsManager()
+        antialiasingSampleCount = mapInitOptions.antialiasingSampleCount
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
@@ -674,6 +686,7 @@ extension MapView: DelegatingMapClientDelegate {
         metalView.isPaused = true
         metalView.enableSetNeedsDisplay = false
         metalView.presentsWithTransaction = false
+        metalView.sampleCount = antialiasingSampleCount
 
         insertSubview(metalView, at: 0)
 

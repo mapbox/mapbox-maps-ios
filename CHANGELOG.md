@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Add MSAA support with the `MapInitOptions/antialiasingSampleCount` property.
+
 ## 11.0.0-beta.3 - 8 September, 2023
 
 ### Breaking changes ⚠️

@@ -1132,13 +1132,13 @@ EnumElement Scheme.xyz has declared type change from (MapboxMaps.Scheme.Type) ->
 Enum Encoding has been changed to a Struct
 Enum Scheme has been changed to a Struct
 
-Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:) has been renamed to Func replay(recordedSequence:options:completion:) 
-Func MapRecorder.start() has been renamed to Func start(options:) 
-Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:) has parameter 0 type change from Swift.String to Foundation.Data 
-Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:) has parameter 1 type change from Swift.Int to MapboxMaps.MapPlayerOptions 
-Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:) has parameter 2 type change from Swift.Double to () -> Swift.Void 
-Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:) has removed default argument from parameter 2 
-Func MapRecorder.stop() has return type change from Swift.String to Foundation.Data 
+Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:) has been renamed to Func replay(recordedSequence:options:completion:)
+Func MapRecorder.start() has been renamed to Func start(options:)
+Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:) has parameter 0 type change from Swift.String to Foundation.Data
+Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:) has parameter 1 type change from Swift.Int to MapboxMaps.MapPlayerOptions
+Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:) has parameter 2 type change from Swift.Double to () -> Swift.Void
+Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:) has removed default argument from parameter 2
+Func MapRecorder.stop() has return type change from Swift.String to Foundation.Data
 
 // Add slot property to Layer protocol
 Var Layer.slot has been added as a protocol requirement
@@ -1150,3 +1150,6 @@ Func MapboxMap.dragStart(for:) has been removed
 // Remove optimizeForTerrain
 Var MapOptions.optimizeForTerrain has been removed
 Constructor MapOptions.init(constrainMode:viewportMode:orientation:crossSourceCollisions:optimizeForTerrain:size:pixelRatio:glyphsRasterizationOptions:) has been removed
+
+// Add antialiasingSampleCount parameter with the default value so not's a source code breaking
+Constructor MapInitOptions.init(mapOptions:cameraOptions:styleURI:styleJSON:) has been removed

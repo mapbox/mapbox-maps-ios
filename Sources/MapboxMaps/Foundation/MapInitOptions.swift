@@ -26,6 +26,13 @@ public final class MapInitOptions: NSObject {
     /// Camera options for initializing the map. CameraOptions default to 0.0 for each value.
     public let cameraOptions: CameraOptions?
 
+    /// Sample count to control multisample anti-aliasing (MSAA) option for rendering.
+    ///
+    /// Passing 4 enables MSAA x4 if it is supported. Default is 1 (MSAA turned off).
+    /// - SeeAlso: [`MTKView/sampleCount`](https://developer.apple.com/documentation/metalkit/mtkview/1535991-samplecount)
+    /// - SeeAlso: [`Improving edge-rendering quality with multisample antialiasing (MSAA)`](https://developer.apple.com/documentation/metal/metal_sample_code_library/improving_edge-rendering_quality_with_multisample_antialiasing_msaa)
+    public let antialiasingSampleCount: Int
+
     /// Creates new instance of ``MapInitOptions``.
     ///
     /// - Parameters:
@@ -40,12 +47,14 @@ public final class MapInitOptions: NSObject {
         mapOptions: MapOptions = MapOptions(),
         cameraOptions: CameraOptions? = nil,
         styleURI: StyleURI? = .standard,
-        styleJSON: String? = nil
+        styleJSON: String? = nil,
+        antialiasingSampleCount: Int = 1
     ) {
         self.mapOptions      = mapOptions
         self.cameraOptions   = cameraOptions
         self.styleURI        = styleURI
         self.styleJSON       = styleJSON
+        self.antialiasingSampleCount = antialiasingSampleCount
     }
 
     /// :nodoc:
@@ -62,7 +71,8 @@ public final class MapInitOptions: NSObject {
 
         return mapOptions == other.mapOptions &&
             cameraOptions == other.cameraOptions &&
-            styleURI == other.styleURI
+            styleURI == other.styleURI &&
+            styleJSON == other.styleJSON
     }
 
     public override var hash: Int {
@@ -70,6 +80,7 @@ public final class MapInitOptions: NSObject {
         hasher.combine(mapOptions)
         hasher.combine(cameraOptions)
         hasher.combine(styleURI)
+        hasher.combine(styleJSON)
         return hasher.finalize()
     }
 }

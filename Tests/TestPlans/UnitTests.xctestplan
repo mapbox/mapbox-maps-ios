@@ -53,6 +53,7 @@
         "IntegrationTestCase",
         "LineLayerIntegrationTests",
         "LocationIndicatorLayerIntegrationTests",
+        "MSAAIntegrationTests",
         "MapInitOptionsIntegrationTests",
         "MapRecorderIntegrationTests",
         "MapViewIntegrationTestCase",

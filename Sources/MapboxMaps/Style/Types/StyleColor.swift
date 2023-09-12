@@ -43,21 +43,21 @@ public struct StyleColor: Codable, Equatable {
         var red: CGFloat = 0.0
         var green: CGFloat = 0.0
         var blue: CGFloat = 0.0
-        var alpha: CGFloat = 0.0
-        if !color.getRed(&red, green: &green, blue: &blue, alpha: &alpha) {
-            assertionFailure("Invalid color")
+        var alpha: CGFloat = 1.0
+
+        if let components = color.sRGBComponents, components.count == 4 {
+            red = components[0]
+            green = components[1]
+            blue = components[2]
+            alpha = components[3]
+        } else {
+            Log.error(forMessage: "Failed to convert the color \(color) to sRGB color space. Falling back to black.")
         }
-        func clamped(_ value: CGFloat, multiplier: Double = 1) -> Double {
-            var value = Double(value)
-            if value.clamp(to: 0...1) {
-                assertionFailure("Please use a color in the sRGB color space")
-            }
-            return value * multiplier
-        }
-        self.red = clamped(red, multiplier: 255)
-        self.green = clamped(green, multiplier: 255)
-        self.blue = clamped(blue, multiplier: 255)
-        self.alpha = clamped(alpha)
+
+        self.red = Double(red * 255)
+        self.green = Double(green * 255)
+        self.blue = Double(blue * 255)
+        self.alpha = Double(alpha)
     }
 
     // MARK: - Expression
@@ -141,5 +141,14 @@ public struct StyleColor: Codable, Equatable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(rgbaString)
+    }
+}
+
+private extension UIColor {
+    var sRGBComponents: [CGFloat]? {
+        guard let sRGBSpace = CGColorSpace(name: CGColorSpace.sRGB) else {
+            return nil
+        }
+        return cgColor.converted(to: sRGBSpace, intent: .relativeColorimetric, options: nil)?.components
     }
 }

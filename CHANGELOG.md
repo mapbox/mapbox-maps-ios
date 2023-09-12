@@ -20,6 +20,7 @@ Mapbox welcomes participation and contributions from everyone.
 ### Bug fixes 🐞
 
 * Fix `modelCastShadows` and `modelReceiveShadows` options of `Puck3DConfiguration` being ignored.
+* Fix `StyleColor` failing to initialize with non-sRGB color spaces by converting supplied `UIColor`s to `sRGB` color space by default.
 
 ## 11.0.0-beta.2 - 23 August, 2023
 

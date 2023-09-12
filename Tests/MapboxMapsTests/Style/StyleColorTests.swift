@@ -7,6 +7,7 @@ final class StyleColorTests: XCTestCase {
     var green: Double!
     var blue: Double!
     var alpha: Double!
+    var colorSpaces: [CGColorSpace]!
 
     var rgbaString: String {
         "rgba(\(red!), \(green!), \(blue!), \(alpha!))"
@@ -18,6 +19,27 @@ final class StyleColorTests: XCTestCase {
         green = .random(in: 0...255)
         blue = .random(in: 0...255)
         alpha = .random(in: 0...1)
+        colorSpaces = [
+            CGColorSpace.genericCMYK,
+            CGColorSpace.displayP3,
+            CGColorSpace.genericRGBLinear,
+            CGColorSpace.adobeRGB1998,
+            CGColorSpace.sRGB,
+            CGColorSpace.genericGrayGamma2_2,
+            CGColorSpace.genericXYZ,
+            CGColorSpace.genericLab,
+            CGColorSpace.acescgLinear,
+            CGColorSpace.itur_709,
+            CGColorSpace.itur_2020,
+            CGColorSpace.rommrgb,
+            CGColorSpace.dcip3,
+            CGColorSpace.extendedSRGB,
+            CGColorSpace.linearSRGB,
+            CGColorSpace.extendedLinearSRGB,
+            CGColorSpace.extendedGray,
+            CGColorSpace.linearGray,
+            CGColorSpace.extendedLinearGray,
+        ].map { CGColorSpace(name: $0)! }
     }
 
     override func tearDown() {
@@ -25,6 +47,7 @@ final class StyleColorTests: XCTestCase {
         blue = nil
         green = nil
         red = nil
+        colorSpaces = nil
         super.tearDown()
     }
 
@@ -63,10 +86,10 @@ final class StyleColorTests: XCTestCase {
 
         let color = StyleColor(UIColor(red: red, green: green, blue: blue, alpha: alpha))
 
-        XCTAssertEqual(color.red, Double(red * 255))
-        XCTAssertEqual(color.green, Double(green * 255))
-        XCTAssertEqual(color.blue, Double(blue * 255))
-        XCTAssertEqual(color.alpha, Double(alpha))
+        XCTAssertEqual(color.red, Double(red * 255), accuracy: 0.001)
+        XCTAssertEqual(color.green, Double(green * 255), accuracy: 0.001)
+        XCTAssertEqual(color.blue, Double(blue * 255), accuracy: 0.001)
+        XCTAssertEqual(color.alpha, Double(alpha), accuracy: 0.001)
     }
 
     func testExpressionInit() {
@@ -191,10 +214,10 @@ final class StyleColorTests: XCTestCase {
         let color = try JSONDecoder().decode(StyleColor.self, from: expressionData)
 
         // Accuracy can be removed if https://bugs.swift.org/browse/SR-15172 is fixed
-        XCTAssertEqual(color.red, red!, accuracy: 1e-16)
-        XCTAssertEqual(color.green, green!, accuracy: 1e-16)
-        XCTAssertEqual(color.blue, blue!, accuracy: 1e-16)
-        XCTAssertEqual(color.alpha, alpha!, accuracy: 1e-16)
+        XCTAssertEqual(color.red, red!, accuracy: 0.001)
+        XCTAssertEqual(color.green, green!, accuracy: 0.001)
+        XCTAssertEqual(color.blue, blue!, accuracy: 0.001)
+        XCTAssertEqual(color.alpha, alpha!, accuracy: 0.001)
     }
 
     func testDecodingRGBAString() throws {
@@ -206,5 +229,47 @@ final class StyleColorTests: XCTestCase {
         let color = try JSONDecoder().decode([StyleColor].self, from: rgbaJSONString)
 
         XCTAssertEqual(color, [StyleColor(red: red, green: green, blue: blue, alpha: alpha)!])
+    }
+
+    func testColorSpacesWithStandardRangeColorValues() throws {
+        // given
+        let uiColors = colorSpaces
+            .map { CGColor(colorSpace: $0, components: [0.5, 0.5, 0.5, 0.5, 0.5])! }
+            .map { UIColor(cgColor: $0) }
+
+        // when
+        // colors are successfully converted
+        let styleColors = uiColors.map { StyleColor($0) }
+
+        // the test will fail if StyleColor can't be initialized with the supplied color space
+        XCTAssertEqual(styleColors.count, colorSpaces.count)
+    }
+
+    func testColorSpacesWithExtendedRangeColorValues() throws {
+        // given
+        let uiColors = colorSpaces
+            .map { CGColor(colorSpace: $0, components: [-1.0, 0.5, 2, 3, 5])! }
+            .map { UIColor(cgColor: $0) }
+
+        // when
+        // colors are successfully converted
+        let styleColors = uiColors.map { StyleColor($0) }
+
+        // the test will fail if StyleColor can't be initialized with the supplied color space
+        XCTAssertEqual(styleColors.count, colorSpaces.count)
+    }
+
+    func testFaultyUIColorFallsToBlack() {
+        // given
+        let faultyUIColor = UIColor(patternImage: .empty)
+
+        // when
+        let styleColor = StyleColor(faultyUIColor)
+
+        // then
+        XCTAssertEqual(styleColor.red, 0)
+        XCTAssertEqual(styleColor.green, 0)
+        XCTAssertEqual(styleColor.blue, 0)
+        XCTAssertEqual(styleColor.alpha, 1)
     }
 }

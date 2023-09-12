@@ -7,7 +7,6 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
     var longPressGestureRecognizer: MockLongPressGestureRecognizer!
     var mapFeatureQueryable: MockMapFeatureQueryable!
     var style: MockStyle!
-    var displayLinkCoordinator: MockDisplayLinkCoordinator!
     var offsetPointCalculator: OffsetPointCalculator!
     var offsetLineStringCalculator: OffsetLineStringCalculator!
     var offsetPolygonCalculator: OffsetPolygonCalculator!
@@ -21,7 +20,6 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
         longPressGestureRecognizer = MockLongPressGestureRecognizer()
         mapFeatureQueryable = MockMapFeatureQueryable()
         style = MockStyle()
-        displayLinkCoordinator = MockDisplayLinkCoordinator()
         offsetPointCalculator = OffsetPointCalculator(mapboxMap: MockMapboxMap())
         offsetLineStringCalculator = OffsetLineStringCalculator(mapboxMap: MockMapboxMap())
         offsetPolygonCalculator = OffsetPolygonCalculator(mapboxMap: MockMapboxMap())
@@ -40,7 +38,6 @@ final class AnnotationOrchestratorImplTests: XCTestCase {
         longPressGestureRecognizer = nil
         mapFeatureQueryable = nil
         style = nil
-        displayLinkCoordinator = nil
         offsetPointCalculator = nil
         offsetLineStringCalculator = nil
         offsetPolygonCalculator = nil

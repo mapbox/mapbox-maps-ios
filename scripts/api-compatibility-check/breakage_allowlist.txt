@@ -1153,3 +1153,9 @@ Constructor MapOptions.init(constrainMode:viewportMode:orientation:crossSourceCo
 
 // Add antialiasingSampleCount parameter with the default value so not's a source code breaking
 Constructor MapInitOptions.init(mapOptions:cameraOptions:styleURI:styleJSON:) has been removed
+
+// make syncSourceAndLayerIfNeeded internal
+Func CircleAnnotationManager.syncSourceAndLayerIfNeeded() has been removed
+Func PointAnnotationManager.syncSourceAndLayerIfNeeded() has been removed
+Func PolygonAnnotationManager.syncSourceAndLayerIfNeeded() has been removed
+Func PolylineAnnotationManager.syncSourceAndLayerIfNeeded() has been removed

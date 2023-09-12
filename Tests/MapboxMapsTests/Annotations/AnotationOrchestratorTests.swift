@@ -20,7 +20,7 @@ final class AnnotationOrchestratorTests: XCTestCase {
         annotationOrchestrator = nil
     }
 
-    func testPointAnnotationnManagerInit() {
+    func testPointAnnotationnManagerInit() throws {
         //given
         let id = "managerId"
         let layerPosition: LayerPosition? = .random(.at(.random(in: 0...10)))
@@ -31,13 +31,13 @@ final class AnnotationOrchestratorTests: XCTestCase {
 
         //then
         XCTAssertEqual(orchestratorImpl.makePointAnnotationManagerStub.invocations.count, 1)
-        let param = try! XCTUnwrap(orchestratorImpl.makePointAnnotationManagerStub.invocations.first?.parameters)
+        let param = try XCTUnwrap(orchestratorImpl.makePointAnnotationManagerStub.invocations.first?.parameters)
         XCTAssertEqual(param.id, id)
         XCTAssertEqual(param.layerPosition, layerPosition)
         XCTAssertEqual(param.clusterOptions, clusterOptions)
     }
 
-    func testPolygonAnnotationManagerInit() {
+    func testPolygonAnnotationManagerInit() throws {
         //given
         let id = "managerId"
         let layerPosition: LayerPosition? = .random(.at(.random(in: 0...10)))
@@ -47,12 +47,12 @@ final class AnnotationOrchestratorTests: XCTestCase {
 
         //then
         XCTAssertEqual(orchestratorImpl.makePolygonAnnotationManagerStub.invocations.count, 1)
-        let param = try! XCTUnwrap(orchestratorImpl.makePolygonAnnotationManagerStub.invocations.first?.parameters)
+        let param = try XCTUnwrap(orchestratorImpl.makePolygonAnnotationManagerStub.invocations.first?.parameters)
         XCTAssertEqual(param.id, id)
         XCTAssertEqual(param.layerPosition, layerPosition)
     }
 
-    func testPolylineAnnotationManagerInit() {
+    func testPolylineAnnotationManagerInit() throws {
         //given
         let id = "managerId"
         let layerPosition: LayerPosition? = .random(.at(.random(in: 0...10)))
@@ -62,12 +62,12 @@ final class AnnotationOrchestratorTests: XCTestCase {
 
         //then
         XCTAssertEqual(orchestratorImpl.makePolylineAnnotationManagerStub.invocations.count, 1)
-        let param = try! XCTUnwrap(orchestratorImpl.makePolylineAnnotationManagerStub.invocations.first?.parameters)
+        let param = try XCTUnwrap(orchestratorImpl.makePolylineAnnotationManagerStub.invocations.first?.parameters)
         XCTAssertEqual(param.id, id)
         XCTAssertEqual(param.layerPosition, layerPosition)
     }
 
-    func testCircleAnnotationManagerInit() {
+    func testCircleAnnotationManagerInit() throws {
         //given
         let id = "managerId"
         let layerPosition: LayerPosition? = .random(.at(.random(in: 0...10)))
@@ -78,7 +78,7 @@ final class AnnotationOrchestratorTests: XCTestCase {
         //then
         XCTAssertEqual(orchestratorImpl.makeCircleAnnotationManagerStub.invocations.count, 1)
 
-        let param = try! XCTUnwrap(orchestratorImpl.makeCircleAnnotationManagerStub.invocations.first?.parameters)
+        let param = try XCTUnwrap(orchestratorImpl.makeCircleAnnotationManagerStub.invocations.first?.parameters)
         XCTAssertEqual(param.id, id)
         XCTAssertEqual(param.layerPosition, layerPosition)
     }

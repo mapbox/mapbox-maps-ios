@@ -211,36 +211,22 @@ final class MapViewTests: XCTestCase {
     }
 
     func testDisplayLinkInvokesParticipants() throws {
-        let participant1 = MockDisplayLinkParticipant()
-        let participant2 = MockDisplayLinkParticipant()
+        var count = 0
+        let token = mapView.__displayLinkSignalForTests.observe { _ in
+            count += 1
+        }
 
-        mapView.add(participant1)
-
-        try invokeDisplayLinkCallback()
-
-        XCTAssertEqual(participant1.participateStub.invocations.count, 1)
-        XCTAssertEqual(participant2.participateStub.invocations.count, 0)
-
-        mapView.add(participant2)
+        XCTAssertEqual(count, 0)
 
         try invokeDisplayLinkCallback()
 
-        XCTAssertEqual(participant1.participateStub.invocations.count, 2)
-        XCTAssertEqual(participant2.participateStub.invocations.count, 1)
+        XCTAssertEqual(count, 1)
 
-        mapView.remove(participant2)
-
-        try invokeDisplayLinkCallback()
-
-        XCTAssertEqual(participant1.participateStub.invocations.count, 3)
-        XCTAssertEqual(participant2.participateStub.invocations.count, 1)
-
-        mapView.remove(participant1)
+        token.cancel()
 
         try invokeDisplayLinkCallback()
 
-        XCTAssertEqual(participant1.participateStub.invocations.count, 3)
-        XCTAssertEqual(participant2.participateStub.invocations.count, 1)
+        XCTAssertEqual(count, 1)
     }
 
     func testDisplayLinkInvokesCameraAnimatorsRunner() throws {

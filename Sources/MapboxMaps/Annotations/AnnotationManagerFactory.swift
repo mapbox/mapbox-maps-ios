@@ -24,8 +24,8 @@ internal protocol AnnotationManagerFactoryProtocol: AnyObject {
 }
 
 internal final class AnnotationManagerFactory: AnnotationManagerFactoryProtocol {
+    private var displayLink: Signal<Void>
     private let style: StyleProtocol
-    private weak var displayLinkCoordinator: DisplayLinkCoordinator?
     private let offsetPointCalculator: OffsetPointCalculator
     private let offsetPolygonCalculator: OffsetPolygonCalculator
     private let offsetLineStringCalculator: OffsetLineStringCalculator
@@ -33,12 +33,12 @@ internal final class AnnotationManagerFactory: AnnotationManagerFactoryProtocol 
     private lazy var imagesManager = AnnotationImagesManager(style: style)
 
     internal init(style: StyleProtocol,
-                  displayLinkCoordinator: DisplayLinkCoordinator,
+                  displayLink: Signal<Void>,
                   offsetPointCalculator: OffsetPointCalculator,
                   offsetPolygonCalculator: OffsetPolygonCalculator,
                   offsetLineStringCalculator: OffsetLineStringCalculator) {
         self.style = style
-        self.displayLinkCoordinator = displayLinkCoordinator
+        self.displayLink = displayLink
         self.offsetPointCalculator = offsetPointCalculator
         self.offsetPolygonCalculator = offsetPolygonCalculator
         self.offsetLineStringCalculator = offsetLineStringCalculator
@@ -52,7 +52,7 @@ internal final class AnnotationManagerFactory: AnnotationManagerFactoryProtocol 
                 id: id,
                 style: style,
                 layerPosition: layerPosition,
-                displayLinkCoordinator: displayLinkCoordinator,
+                displayLink: displayLink,
                 clusterOptions: clusterOptions,
                 imagesManager: imagesManager,
                 offsetCalculator: offsetPointCalculator)
@@ -65,7 +65,7 @@ internal final class AnnotationManagerFactory: AnnotationManagerFactoryProtocol 
                 id: id,
                 style: style,
                 layerPosition: layerPosition,
-                displayLinkCoordinator: displayLinkCoordinator,
+                displayLink: displayLink,
                 offsetCalculator: offsetPolygonCalculator)
         }
 
@@ -76,7 +76,7 @@ internal final class AnnotationManagerFactory: AnnotationManagerFactoryProtocol 
                 id: id,
                 style: style,
                 layerPosition: layerPosition,
-                displayLinkCoordinator: displayLinkCoordinator,
+                displayLink: displayLink,
                 offsetCalculator: offsetLineStringCalculator)
         }
 
@@ -87,7 +87,7 @@ internal final class AnnotationManagerFactory: AnnotationManagerFactoryProtocol 
                 id: id,
                 style: style,
                 layerPosition: layerPosition,
-                displayLinkCoordinator: displayLinkCoordinator,
+                displayLink: displayLink,
                 offsetCalculator: offsetPointCalculator)
         }
 }

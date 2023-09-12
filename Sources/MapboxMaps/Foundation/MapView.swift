@@ -101,7 +101,6 @@ open class MapView: UIView {
 
     private let dependencyProvider: MapViewDependencyProviderProtocol
 
-    private let displayLinkParticipants = WeakSet<DisplayLinkParticipant>()
     private let displayLinkSignalSubject = SignalSubject<Void>()
 
     private let notificationCenter: NotificationCenterProtocol
@@ -409,7 +408,7 @@ open class MapView: UIView {
                 mapboxMap: mapboxMap,
                 mapFeatureQueryable: mapboxMap,
                 style: mapboxMap,
-                displayLinkCoordinator: self
+                displayLink: displayLinkSignalSubject.signal
             )
         )
 
@@ -575,9 +574,6 @@ open class MapView: UIView {
         }
 
         OSLog.platform.withIntervalSignpost(SignpostName.mapViewDisplayLink, "DisplayLink participants") {
-            for participant in displayLinkParticipants.allObjects {
-                participant.participate()
-            }
             displayLinkSignalSubject.send()
         }
 
@@ -717,12 +713,6 @@ extension MapView: DelegatingMapClientDelegate {
     }
 }
 
-extension MapView: DisplayLinkCoordinator {
-    func add(_ participant: DisplayLinkParticipant) {
-        displayLinkParticipants.add(participant)
-    }
-
-    func remove(_ participant: DisplayLinkParticipant) {
-        displayLinkParticipants.remove(participant)
-    }
+extension MapView {
+    var __displayLinkSignalForTests: Signal<Void> { displayLinkSignalSubject.signal }
 }

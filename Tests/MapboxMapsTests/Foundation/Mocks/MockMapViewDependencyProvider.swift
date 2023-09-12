@@ -105,20 +105,20 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
         let mapboxMap: MapboxMapProtocol
         let mapFeatureQueryable: MapFeatureQueryable
         let style: StyleProtocol
-        let displayLinkCoordinator: DisplayLinkCoordinator
+        let displayLink: Signal<Void>
     }
     let makeAnnotationOrchestratorStub = Stub<MakeAnnotationOrchestratorImplParams, AnnotationOrchestratorImplProtocol>(defaultReturnValue: MockAnnotationOrchestatorImpl())
     func makeAnnotationOrchestratorImpl(in view: UIView,
                                         mapboxMap: MapboxMapProtocol,
                                         mapFeatureQueryable: MapFeatureQueryable,
                                         style: StyleProtocol,
-                                        displayLinkCoordinator: DisplayLinkCoordinator) -> AnnotationOrchestratorImplProtocol {
+                                        displayLink: Signal<Void>) -> AnnotationOrchestratorImplProtocol {
         makeAnnotationOrchestratorStub.call(with: .init(
             view: view,
             mapboxMap: mapboxMap,
             mapFeatureQueryable: mapFeatureQueryable,
             style: style,
-            displayLinkCoordinator: displayLinkCoordinator))
+            displayLink: displayLink))
     }
 
     // MARK: - Events Manager

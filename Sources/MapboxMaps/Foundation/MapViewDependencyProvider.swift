@@ -21,7 +21,7 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
                                         mapboxMap: MapboxMapProtocol,
                                         mapFeatureQueryable: MapFeatureQueryable,
                                         style: StyleProtocol,
-                                        displayLinkCoordinator: DisplayLinkCoordinator) -> AnnotationOrchestratorImplProtocol
+                                        displayLink: Signal<Void>) -> AnnotationOrchestratorImplProtocol
 
     func makeEventsManager() -> EventsManagerProtocol
 }
@@ -218,7 +218,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                                                  mapboxMap: MapboxMapProtocol,
                                                  mapFeatureQueryable: MapFeatureQueryable,
                                                  style: StyleProtocol,
-                                                 displayLinkCoordinator: DisplayLinkCoordinator) -> AnnotationOrchestratorImplProtocol {
+                                                 displayLink: Signal<Void>) -> AnnotationOrchestratorImplProtocol {
         let tapGetureRecognizer = UITapGestureRecognizer()
         let longPressGestureRecognizer = MapboxLongPressGestureRecognizer()
         view.addGestureRecognizer(tapGetureRecognizer)
@@ -229,7 +229,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
         let offsetPolygonCalculator = OffsetPolygonCalculator(mapboxMap: mapboxMap)
         let factory = AnnotationManagerFactory(
             style: style,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             offsetPointCalculator: offsetPointCalculator,
             offsetPolygonCalculator: offsetPolygonCalculator,
             offsetLineStringCalculator: offsetLineStringCalculator)

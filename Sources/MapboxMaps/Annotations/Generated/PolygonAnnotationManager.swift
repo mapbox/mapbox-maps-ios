@@ -30,8 +30,6 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
     // Deps
     private let style: StyleProtocol
     private let offsetCalculator: OffsetCalculatorType
-    private let displayLinkParticipant = DelegatingDisplayLinkParticipant()
-    private weak var displayLinkCoordinator: DisplayLinkCoordinator?
 
     // Private state
 
@@ -67,6 +65,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
     private var syncLayerOnce = Once(happened: true)
     private var insertDraggedLayerAndSourceOnce = Once()
     private var dragId: String { id + "_drag" }
+    private var displayLinkToken: AnyCancelable?
 
     var allLayerIds: [String] { [layerId, dragId] }
 
@@ -76,11 +75,10 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
     internal init(id: String,
                   style: StyleProtocol,
                   layerPosition: LayerPosition?,
-                  displayLinkCoordinator: DisplayLinkCoordinator?,
+                  displayLink: Signal<Void>,
                   offsetCalculator: OffsetCalculatorType) {
         self.id = id
         self.style = style
-        self.displayLinkCoordinator = displayLinkCoordinator
         self.offsetCalculator = offsetCalculator
 
         do {
@@ -97,16 +95,15 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
                 category: "Annotations")
         }
 
-        self.displayLinkParticipant.delegate = self
-
-        assert(displayLinkCoordinator != nil, "DisplayLinkCoordinator must be present")
-        displayLinkCoordinator?.add(displayLinkParticipant)
+        displayLinkToken = displayLink.observe { [weak self] in
+            self?.syncSourceAndLayerIfNeeded()
+        }
     }
 
     internal func destroy() {
         guard destroyOnce.continueOnce() else { return }
 
-        displayLinkCoordinator?.remove(displayLinkParticipant)
+        displayLinkToken?.cancel()
 
         func wrapError(_ what: String, _ body: () throws -> Void) {
             do {
@@ -152,10 +149,6 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         style.updateGeoJSONSource(withId: dragId, geoJSON: .featureCollection(fc))
     }
 
-    /// Synchronizes the backing source and layer with the current `annotations`
-    /// and common layer properties. This method is called automatically with
-    /// each display link, but it may also be called manually in situations
-    /// where the backing source and layer need to be updated earlier.
     private func syncLayer() {
         guard syncLayerOnce.continueOnce() else { return }
 
@@ -195,16 +188,14 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    /// Synchronizes the backing source and layer with the current `annotations`
-    /// and common layer properties. This method is called automatically with
-    /// each display link, but it may also be called manually in situations
-    /// where the backing source and layer need to be updated earlier.
-    public func syncSourceAndLayerIfNeeded() {
+    func syncSourceAndLayerIfNeeded() {
         guard !destroyOnce.happened else { return }
 
-        syncSource()
-        syncDragSource()
-        syncLayer()
+        OSLog.platform.withIntervalSignpost(SignpostName.mapViewDisplayLink, "Participant: PolygonAnnotationManager") {
+            syncSource()
+            syncDragSource()
+            syncLayer()
+        }
     }
 
     // MARK: - Common layer properties
@@ -325,15 +316,6 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
     internal func handleDragEnded() {
         guard !isSwiftUI else { return }
         draggedAnnotationIndex = nil
-    }
-}
-
-extension PolygonAnnotationManager: DelegatingDisplayLinkParticipantDelegate {
-    func participate(for participant: DelegatingDisplayLinkParticipant) {
-        OSLog.platform.withIntervalSignpost(SignpostName.mapViewDisplayLink,
-                                            "Participant: PolygonAnnotationManager") {
-            syncSourceAndLayerIfNeeded()
-        }
     }
 }
 

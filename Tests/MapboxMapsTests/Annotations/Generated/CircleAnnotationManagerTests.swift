@@ -5,26 +5,25 @@ import XCTest
 final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDelegate {
     var manager: CircleAnnotationManager!
     var style: MockStyle!
-    var displayLinkCoordinator: MockDisplayLinkCoordinator!
     var id = UUID().uuidString
     var annotations = [CircleAnnotation]()
     var expectation: XCTestExpectation?
     var delegateAnnotations: [Annotation]?
     var offsetCalculator: OffsetPointCalculator!
     var mapboxMap: MockMapboxMap!
+    @TestSignal var displayLink: Signal<Void>
 
     override func setUp() {
         super.setUp()
 
         style = MockStyle()
-        displayLinkCoordinator = MockDisplayLinkCoordinator()
         mapboxMap = MockMapboxMap()
         offsetCalculator = OffsetPointCalculator(mapboxMap: mapboxMap)
         manager = CircleAnnotationManager(
             id: id,
             style: style,
             layerPosition: nil,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             offsetCalculator: offsetCalculator
         )
 
@@ -36,7 +35,6 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
     override func tearDown() {
         style = nil
-        displayLinkCoordinator = nil
         expectation = nil
         delegateAnnotations = nil
         mapboxMap = nil
@@ -53,7 +51,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
             id: id,
             style: style,
             layerPosition: nil,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             offsetCalculator: offsetCalculator
         )
 
@@ -68,7 +66,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
             id: id,
             style: style,
             layerPosition: nil,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             offsetCalculator: offsetCalculator
         )
 
@@ -93,7 +91,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
             id: manager.id,
             style: style,
             layerPosition: nil,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             offsetCalculator: offsetCalculator
         )
         manager2.annotations = annotations2
@@ -107,7 +105,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
             id: id,
             style: style,
             layerPosition: LayerPosition.at(4),
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             offsetCalculator: offsetCalculator
         )
         manager3.annotations = annotations
@@ -151,26 +149,15 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
     func testSyncSourceAndLayer() {
         manager.annotations = annotations
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
     }
 
     func testDoNotSyncSourceAndLayerWhenNotNeeded() {
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 0)
-    }
-
-    func testManagerSubscribestoDisplayLinkCoordinator() {
-        XCTAssertEqual(displayLinkCoordinator.addStub.invocations.count, 1)
-        XCTAssertEqual(displayLinkCoordinator.removeStub.invocations.count, 0)
-    }
-
-    func testDestroyManagerRemovesDisplayLinkParticipant() {
-        manager.destroy()
-
-        XCTAssertEqual(displayLinkCoordinator.removeStub.invocations.count, 1)
     }
 
     func testFeatureCollectionPassedtoGeoJSON() throws {
@@ -182,7 +169,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         let expectedFeatures = annotations.map(\.feature)
 
         manager.annotations = annotations
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         var invocation = try XCTUnwrap(style.addGeoJSONSourceFeaturesStub.invocations.last)
         XCTAssertEqual(invocation.parameters.features, expectedFeatures)
@@ -193,7 +180,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
             annotations.append(annotation)
 
             manager.annotations = annotations
-            manager.syncSourceAndLayerIfNeeded()
+            $displayLink.send()
 
             invocation = try XCTUnwrap(style.addGeoJSONSourceFeaturesStub.invocations.last)
             XCTAssertEqual(invocation.parameters.features, [annotation].map(\.feature))
@@ -244,7 +231,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(manager.circleEmissiveStrength, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-emissive-strength"] as! Double, value)
@@ -255,9 +242,9 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         let secondCircleEmissiveStrengthProperty = Double.random(in: 0...100000)
 
         manager.circleEmissiveStrength = newCircleEmissiveStrengthProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.circleEmissiveStrength = secondCircleEmissiveStrengthProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -282,7 +269,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
         manager.annotations = annotations
         manager.circleEmissiveStrength = newCircleEmissiveStrengthProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -293,11 +280,11 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         let newCircleEmissiveStrengthProperty = Double.random(in: 0...100000)
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-emissive-strength").value as! Double
         manager.circleEmissiveStrength = newCircleEmissiveStrengthProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-emissive-strength"])
 
         manager.circleEmissiveStrength = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.circleEmissiveStrength)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-emissive-strength"] as! Double, defaultValue)
@@ -314,7 +301,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(manager.circlePitchAlignment, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-pitch-alignment"] as! String, value.rawValue)
@@ -325,9 +312,9 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         let secondCirclePitchAlignmentProperty = CirclePitchAlignment.random()
 
         manager.circlePitchAlignment = newCirclePitchAlignmentProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.circlePitchAlignment = secondCirclePitchAlignmentProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -352,7 +339,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
         manager.annotations = annotations
         manager.circlePitchAlignment = newCirclePitchAlignmentProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -363,11 +350,11 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         let newCirclePitchAlignmentProperty = CirclePitchAlignment.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-pitch-alignment").value as! String
         manager.circlePitchAlignment = newCirclePitchAlignmentProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-pitch-alignment"])
 
         manager.circlePitchAlignment = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.circlePitchAlignment)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-pitch-alignment"] as! String, defaultValue)
@@ -384,7 +371,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(manager.circlePitchScale, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-pitch-scale"] as! String, value.rawValue)
@@ -395,9 +382,9 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         let secondCirclePitchScaleProperty = CirclePitchScale.random()
 
         manager.circlePitchScale = newCirclePitchScaleProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.circlePitchScale = secondCirclePitchScaleProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -422,7 +409,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
         manager.annotations = annotations
         manager.circlePitchScale = newCirclePitchScaleProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -433,11 +420,11 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         let newCirclePitchScaleProperty = CirclePitchScale.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-pitch-scale").value as! String
         manager.circlePitchScale = newCirclePitchScaleProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-pitch-scale"])
 
         manager.circlePitchScale = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.circlePitchScale)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-pitch-scale"] as! String, defaultValue)
@@ -454,7 +441,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(manager.circleTranslate, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-translate"] as! [Double], value)
@@ -465,9 +452,9 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         let secondCircleTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
 
         manager.circleTranslate = newCircleTranslateProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.circleTranslate = secondCircleTranslateProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -492,7 +479,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
         manager.annotations = annotations
         manager.circleTranslate = newCircleTranslateProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -503,11 +490,11 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         let newCircleTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-translate").value as! [Double]
         manager.circleTranslate = newCircleTranslateProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-translate"])
 
         manager.circleTranslate = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.circleTranslate)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-translate"] as! [Double], defaultValue)
@@ -524,7 +511,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         XCTAssertEqual(manager.circleTranslateAnchor, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-translate-anchor"] as! String, value.rawValue)
@@ -535,9 +522,9 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         let secondCircleTranslateAnchorProperty = CircleTranslateAnchor.random()
 
         manager.circleTranslateAnchor = newCircleTranslateAnchorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.circleTranslateAnchor = secondCircleTranslateAnchorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -562,7 +549,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
         manager.annotations = annotations
         manager.circleTranslateAnchor = newCircleTranslateAnchorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -573,11 +560,11 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
         let newCircleTranslateAnchorProperty = CircleTranslateAnchor.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .circle, property: "circle-translate-anchor").value as! String
         manager.circleTranslateAnchor = newCircleTranslateAnchorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-translate-anchor"])
 
         manager.circleTranslateAnchor = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.circleTranslateAnchor)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["circle-translate-anchor"] as! String, defaultValue)
@@ -664,7 +651,7 @@ final class CircleAnnotationManagerTests: XCTestCase, AnnotationInteractionDeleg
 
         manager.handleDragChanged(with: .random())
 
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
         XCTAssertTrue(updateSourceParameters.id == addSourceParameters.source.id)

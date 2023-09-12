@@ -15,7 +15,7 @@ final class MockAnnotationOrchestatorImpl: AnnotationOrchestratorImplProtocol {
             id: "test",
             style: MockStyle(),
             layerPosition: .default,
-            displayLinkCoordinator: MockDisplayLinkCoordinator(),
+            displayLink: Signal { _ in .empty },
             imagesManager: MockAnnotationImagesManager(),
             offsetCalculator: .init(mapboxMap: MockMapboxMap())
         )
@@ -39,7 +39,7 @@ final class MockAnnotationOrchestatorImpl: AnnotationOrchestratorImplProtocol {
             id: "test",
             style: MockStyle(),
             layerPosition: .default,
-            displayLinkCoordinator: MockDisplayLinkCoordinator(),
+            displayLink: Signal { _ in .empty },
             offsetCalculator: .init(mapboxMap: MockMapboxMap())))
     func makePolygonAnnotationManager(
         id: String,
@@ -58,7 +58,7 @@ final class MockAnnotationOrchestatorImpl: AnnotationOrchestratorImplProtocol {
             id: "test",
             style: MockStyle(),
             layerPosition: .default,
-            displayLinkCoordinator: MockDisplayLinkCoordinator(),
+            displayLink: Signal { _ in .empty },
             offsetCalculator: .init(mapboxMap: MockMapboxMap())))
     func makePolylineAnnotationManager(
         id: String,
@@ -77,7 +77,7 @@ final class MockAnnotationOrchestatorImpl: AnnotationOrchestratorImplProtocol {
             id: "test",
             style: MockStyle(),
             layerPosition: .default,
-            displayLinkCoordinator: MockDisplayLinkCoordinator(),
+            displayLink: Signal { _ in .empty },
             offsetCalculator: .init(mapboxMap: MockMapboxMap())))
     func makeCircleAnnotationManager(
         id: String,

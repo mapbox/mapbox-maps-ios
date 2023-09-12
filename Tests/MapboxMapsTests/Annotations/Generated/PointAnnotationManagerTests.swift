@@ -5,7 +5,6 @@ import XCTest
 final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelegate {
     var manager: PointAnnotationManager!
     var style: MockStyle!
-    var displayLinkCoordinator: MockDisplayLinkCoordinator!
     var id = UUID().uuidString
     var annotations = [PointAnnotation]()
     var expectation: XCTestExpectation?
@@ -13,12 +12,12 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
     var imagesManager: MockAnnotationImagesManager!
     var offsetCalculator: OffsetPointCalculator!
     var mapboxMap: MockMapboxMap!
+    @TestSignal var displayLink: Signal<Void>
 
     override func setUp() {
         super.setUp()
 
         style = MockStyle()
-        displayLinkCoordinator = MockDisplayLinkCoordinator()
         imagesManager = MockAnnotationImagesManager()
         mapboxMap = MockMapboxMap()
         offsetCalculator = OffsetPointCalculator(mapboxMap: mapboxMap)
@@ -26,7 +25,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             id: id,
             style: style,
             layerPosition: nil,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             imagesManager: imagesManager,
             offsetCalculator: offsetCalculator
         )
@@ -39,7 +38,6 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     override func tearDown() {
         style = nil
-        displayLinkCoordinator = nil
         expectation = nil
         delegateAnnotations = nil
         imagesManager = nil
@@ -57,7 +55,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             id: id,
             style: style,
             layerPosition: nil,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             imagesManager: imagesManager,
             offsetCalculator: offsetCalculator
         )
@@ -73,7 +71,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             id: id,
             style: style,
             layerPosition: nil,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             imagesManager: imagesManager,
             offsetCalculator: offsetCalculator
         )
@@ -99,7 +97,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             id: manager.id,
             style: style,
             layerPosition: nil,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             imagesManager: imagesManager,
             offsetCalculator: offsetCalculator
         )
@@ -114,7 +112,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             id: id,
             style: style,
             layerPosition: LayerPosition.at(4),
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             imagesManager: imagesManager,
             offsetCalculator: offsetCalculator
         )
@@ -159,26 +157,15 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
     func testSyncSourceAndLayer() {
         manager.annotations = annotations
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
     }
 
     func testDoNotSyncSourceAndLayerWhenNotNeeded() {
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 0)
-    }
-
-    func testManagerSubscribestoDisplayLinkCoordinator() {
-        XCTAssertEqual(displayLinkCoordinator.addStub.invocations.count, 1)
-        XCTAssertEqual(displayLinkCoordinator.removeStub.invocations.count, 0)
-    }
-
-    func testDestroyManagerRemovesDisplayLinkParticipant() {
-        manager.destroy()
-
-        XCTAssertEqual(displayLinkCoordinator.removeStub.invocations.count, 1)
     }
 
     func testFeatureCollectionPassedtoGeoJSON() throws {
@@ -190,7 +177,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let expectedFeatures = annotations.map(\.feature)
 
         manager.annotations = annotations
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         var invocation = try XCTUnwrap(style.addGeoJSONSourceFeaturesStub.invocations.last)
         XCTAssertEqual(invocation.parameters.features, expectedFeatures)
@@ -201,7 +188,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             annotations.append(annotation)
 
             manager.annotations = annotations
-            manager.syncSourceAndLayerIfNeeded()
+            $displayLink.send()
 
             invocation = try XCTUnwrap(style.addGeoJSONSourceFeaturesStub.invocations.last)
             XCTAssertEqual(invocation.parameters.features, [annotation].map(\.feature))
@@ -252,7 +239,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.iconAllowOverlap, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-allow-overlap"] as! Bool, value)
@@ -263,9 +250,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondIconAllowOverlapProperty = Bool.random()
 
         manager.iconAllowOverlap = newIconAllowOverlapProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.iconAllowOverlap = secondIconAllowOverlapProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -314,7 +301,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.iconAllowOverlap = newIconAllowOverlapProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -325,11 +312,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newIconAllowOverlapProperty = Bool.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-allow-overlap").value as! Bool
         manager.iconAllowOverlap = newIconAllowOverlapProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-allow-overlap"])
 
         manager.iconAllowOverlap = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.iconAllowOverlap)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-allow-overlap"] as! Bool, defaultValue)
@@ -346,7 +333,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.iconIgnorePlacement, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-ignore-placement"] as! Bool, value)
@@ -357,9 +344,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondIconIgnorePlacementProperty = Bool.random()
 
         manager.iconIgnorePlacement = newIconIgnorePlacementProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.iconIgnorePlacement = secondIconIgnorePlacementProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -408,7 +395,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.iconIgnorePlacement = newIconIgnorePlacementProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -419,11 +406,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newIconIgnorePlacementProperty = Bool.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-ignore-placement").value as! Bool
         manager.iconIgnorePlacement = newIconIgnorePlacementProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-ignore-placement"])
 
         manager.iconIgnorePlacement = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.iconIgnorePlacement)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-ignore-placement"] as! Bool, defaultValue)
@@ -440,7 +427,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.iconKeepUpright, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-keep-upright"] as! Bool, value)
@@ -451,9 +438,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondIconKeepUprightProperty = Bool.random()
 
         manager.iconKeepUpright = newIconKeepUprightProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.iconKeepUpright = secondIconKeepUprightProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -502,7 +489,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.iconKeepUpright = newIconKeepUprightProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -513,11 +500,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newIconKeepUprightProperty = Bool.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-keep-upright").value as! Bool
         manager.iconKeepUpright = newIconKeepUprightProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-keep-upright"])
 
         manager.iconKeepUpright = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.iconKeepUpright)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-keep-upright"] as! Bool, defaultValue)
@@ -534,7 +521,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.iconOptional, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-optional"] as! Bool, value)
@@ -545,9 +532,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondIconOptionalProperty = Bool.random()
 
         manager.iconOptional = newIconOptionalProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.iconOptional = secondIconOptionalProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -596,7 +583,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.iconOptional = newIconOptionalProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -607,11 +594,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newIconOptionalProperty = Bool.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-optional").value as! Bool
         manager.iconOptional = newIconOptionalProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-optional"])
 
         manager.iconOptional = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.iconOptional)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-optional"] as! Bool, defaultValue)
@@ -628,7 +615,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.iconPadding, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-padding"] as! Double, value)
@@ -639,9 +626,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondIconPaddingProperty = Double.random(in: 0...100000)
 
         manager.iconPadding = newIconPaddingProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.iconPadding = secondIconPaddingProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -690,7 +677,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.iconPadding = newIconPaddingProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -701,11 +688,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newIconPaddingProperty = Double.random(in: 0...100000)
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-padding").value as! Double
         manager.iconPadding = newIconPaddingProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-padding"])
 
         manager.iconPadding = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.iconPadding)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-padding"] as! Double, defaultValue)
@@ -722,7 +709,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.iconPitchAlignment, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-pitch-alignment"] as! String, value.rawValue)
@@ -733,9 +720,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondIconPitchAlignmentProperty = IconPitchAlignment.random()
 
         manager.iconPitchAlignment = newIconPitchAlignmentProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.iconPitchAlignment = secondIconPitchAlignmentProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -784,7 +771,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.iconPitchAlignment = newIconPitchAlignmentProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -795,11 +782,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newIconPitchAlignmentProperty = IconPitchAlignment.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-pitch-alignment").value as! String
         manager.iconPitchAlignment = newIconPitchAlignmentProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-pitch-alignment"])
 
         manager.iconPitchAlignment = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.iconPitchAlignment)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-pitch-alignment"] as! String, defaultValue)
@@ -816,7 +803,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.iconRotationAlignment, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-rotation-alignment"] as! String, value.rawValue)
@@ -827,9 +814,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondIconRotationAlignmentProperty = IconRotationAlignment.random()
 
         manager.iconRotationAlignment = newIconRotationAlignmentProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.iconRotationAlignment = secondIconRotationAlignmentProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -878,7 +865,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.iconRotationAlignment = newIconRotationAlignmentProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -889,11 +876,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newIconRotationAlignmentProperty = IconRotationAlignment.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-rotation-alignment").value as! String
         manager.iconRotationAlignment = newIconRotationAlignmentProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-rotation-alignment"])
 
         manager.iconRotationAlignment = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.iconRotationAlignment)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-rotation-alignment"] as! String, defaultValue)
@@ -910,7 +897,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.symbolAvoidEdges, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-avoid-edges"] as! Bool, value)
@@ -921,9 +908,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondSymbolAvoidEdgesProperty = Bool.random()
 
         manager.symbolAvoidEdges = newSymbolAvoidEdgesProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.symbolAvoidEdges = secondSymbolAvoidEdgesProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -972,7 +959,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.symbolAvoidEdges = newSymbolAvoidEdgesProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -983,11 +970,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newSymbolAvoidEdgesProperty = Bool.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-avoid-edges").value as! Bool
         manager.symbolAvoidEdges = newSymbolAvoidEdgesProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-avoid-edges"])
 
         manager.symbolAvoidEdges = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.symbolAvoidEdges)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-avoid-edges"] as! Bool, defaultValue)
@@ -1004,7 +991,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.symbolPlacement, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-placement"] as! String, value.rawValue)
@@ -1015,9 +1002,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondSymbolPlacementProperty = SymbolPlacement.random()
 
         manager.symbolPlacement = newSymbolPlacementProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.symbolPlacement = secondSymbolPlacementProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -1066,7 +1053,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.symbolPlacement = newSymbolPlacementProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -1077,11 +1064,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newSymbolPlacementProperty = SymbolPlacement.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-placement").value as! String
         manager.symbolPlacement = newSymbolPlacementProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-placement"])
 
         manager.symbolPlacement = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.symbolPlacement)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-placement"] as! String, defaultValue)
@@ -1098,7 +1085,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.symbolSpacing, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-spacing"] as! Double, value)
@@ -1109,9 +1096,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondSymbolSpacingProperty = Double.random(in: 1...100000)
 
         manager.symbolSpacing = newSymbolSpacingProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.symbolSpacing = secondSymbolSpacingProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -1160,7 +1147,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.symbolSpacing = newSymbolSpacingProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -1171,11 +1158,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newSymbolSpacingProperty = Double.random(in: 1...100000)
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-spacing").value as! Double
         manager.symbolSpacing = newSymbolSpacingProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-spacing"])
 
         manager.symbolSpacing = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.symbolSpacing)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-spacing"] as! Double, defaultValue)
@@ -1192,7 +1179,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.symbolZOrder, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-z-order"] as! String, value.rawValue)
@@ -1203,9 +1190,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondSymbolZOrderProperty = SymbolZOrder.random()
 
         manager.symbolZOrder = newSymbolZOrderProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.symbolZOrder = secondSymbolZOrderProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -1254,7 +1241,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.symbolZOrder = newSymbolZOrderProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -1265,11 +1252,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newSymbolZOrderProperty = SymbolZOrder.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-z-order").value as! String
         manager.symbolZOrder = newSymbolZOrderProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-z-order"])
 
         manager.symbolZOrder = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.symbolZOrder)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-z-order"] as! String, defaultValue)
@@ -1286,7 +1273,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.textAllowOverlap, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-allow-overlap"] as! Bool, value)
@@ -1297,9 +1284,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondTextAllowOverlapProperty = Bool.random()
 
         manager.textAllowOverlap = newTextAllowOverlapProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.textAllowOverlap = secondTextAllowOverlapProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -1348,7 +1335,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.textAllowOverlap = newTextAllowOverlapProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -1359,11 +1346,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newTextAllowOverlapProperty = Bool.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-allow-overlap").value as! Bool
         manager.textAllowOverlap = newTextAllowOverlapProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-allow-overlap"])
 
         manager.textAllowOverlap = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.textAllowOverlap)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-allow-overlap"] as! Bool, defaultValue)
@@ -1380,7 +1367,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.textFont, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual((style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-font"] as! [Any])[1] as! [String], value)
@@ -1391,9 +1378,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondTextFontProperty = Array.random(withLength: .random(in: 0...10), generator: { String.randomASCII(withLength: .random(in: 0...100)) })
 
         manager.textFont = newTextFontProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.textFont = secondTextFontProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -1442,7 +1429,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.textFont = newTextFontProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -1453,11 +1440,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newTextFontProperty = Array.random(withLength: .random(in: 0...10), generator: { String.randomASCII(withLength: .random(in: 0...100)) })
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-font").value as! [String]
         manager.textFont = newTextFontProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-font"])
 
         manager.textFont = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.textFont)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-font"] as! [String], defaultValue)
@@ -1474,7 +1461,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.textIgnorePlacement, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-ignore-placement"] as! Bool, value)
@@ -1485,9 +1472,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondTextIgnorePlacementProperty = Bool.random()
 
         manager.textIgnorePlacement = newTextIgnorePlacementProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.textIgnorePlacement = secondTextIgnorePlacementProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -1536,7 +1523,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.textIgnorePlacement = newTextIgnorePlacementProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -1547,11 +1534,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newTextIgnorePlacementProperty = Bool.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-ignore-placement").value as! Bool
         manager.textIgnorePlacement = newTextIgnorePlacementProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-ignore-placement"])
 
         manager.textIgnorePlacement = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.textIgnorePlacement)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-ignore-placement"] as! Bool, defaultValue)
@@ -1568,7 +1555,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.textKeepUpright, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-keep-upright"] as! Bool, value)
@@ -1579,9 +1566,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondTextKeepUprightProperty = Bool.random()
 
         manager.textKeepUpright = newTextKeepUprightProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.textKeepUpright = secondTextKeepUprightProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -1630,7 +1617,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.textKeepUpright = newTextKeepUprightProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -1641,11 +1628,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newTextKeepUprightProperty = Bool.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-keep-upright").value as! Bool
         manager.textKeepUpright = newTextKeepUprightProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-keep-upright"])
 
         manager.textKeepUpright = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.textKeepUpright)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-keep-upright"] as! Bool, defaultValue)
@@ -1662,7 +1649,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.textMaxAngle, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-max-angle"] as! Double, value)
@@ -1673,9 +1660,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondTextMaxAngleProperty = Double.random(in: -100000...100000)
 
         manager.textMaxAngle = newTextMaxAngleProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.textMaxAngle = secondTextMaxAngleProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -1724,7 +1711,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.textMaxAngle = newTextMaxAngleProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -1735,11 +1722,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newTextMaxAngleProperty = Double.random(in: -100000...100000)
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-max-angle").value as! Double
         manager.textMaxAngle = newTextMaxAngleProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-max-angle"])
 
         manager.textMaxAngle = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.textMaxAngle)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-max-angle"] as! Double, defaultValue)
@@ -1756,7 +1743,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.textOptional, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-optional"] as! Bool, value)
@@ -1767,9 +1754,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondTextOptionalProperty = Bool.random()
 
         manager.textOptional = newTextOptionalProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.textOptional = secondTextOptionalProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -1818,7 +1805,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.textOptional = newTextOptionalProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -1829,11 +1816,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newTextOptionalProperty = Bool.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-optional").value as! Bool
         manager.textOptional = newTextOptionalProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-optional"])
 
         manager.textOptional = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.textOptional)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-optional"] as! Bool, defaultValue)
@@ -1850,7 +1837,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.textPadding, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-padding"] as! Double, value)
@@ -1861,9 +1848,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondTextPaddingProperty = Double.random(in: 0...100000)
 
         manager.textPadding = newTextPaddingProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.textPadding = secondTextPaddingProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -1912,7 +1899,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.textPadding = newTextPaddingProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -1923,11 +1910,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newTextPaddingProperty = Double.random(in: 0...100000)
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-padding").value as! Double
         manager.textPadding = newTextPaddingProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-padding"])
 
         manager.textPadding = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.textPadding)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-padding"] as! Double, defaultValue)
@@ -1944,7 +1931,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.textPitchAlignment, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-pitch-alignment"] as! String, value.rawValue)
@@ -1955,9 +1942,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondTextPitchAlignmentProperty = TextPitchAlignment.random()
 
         manager.textPitchAlignment = newTextPitchAlignmentProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.textPitchAlignment = secondTextPitchAlignmentProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -2006,7 +1993,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.textPitchAlignment = newTextPitchAlignmentProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -2017,11 +2004,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newTextPitchAlignmentProperty = TextPitchAlignment.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-pitch-alignment").value as! String
         manager.textPitchAlignment = newTextPitchAlignmentProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-pitch-alignment"])
 
         manager.textPitchAlignment = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.textPitchAlignment)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-pitch-alignment"] as! String, defaultValue)
@@ -2038,7 +2025,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.textRotationAlignment, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-rotation-alignment"] as! String, value.rawValue)
@@ -2049,9 +2036,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondTextRotationAlignmentProperty = TextRotationAlignment.random()
 
         manager.textRotationAlignment = newTextRotationAlignmentProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.textRotationAlignment = secondTextRotationAlignmentProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -2100,7 +2087,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.textRotationAlignment = newTextRotationAlignmentProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -2111,11 +2098,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newTextRotationAlignmentProperty = TextRotationAlignment.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-rotation-alignment").value as! String
         manager.textRotationAlignment = newTextRotationAlignmentProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-rotation-alignment"])
 
         manager.textRotationAlignment = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.textRotationAlignment)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-rotation-alignment"] as! String, defaultValue)
@@ -2132,7 +2119,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.textVariableAnchor, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         let valueAsString = value.map { $0.rawValue }
@@ -2144,9 +2131,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondTextVariableAnchorProperty = Array.random(withLength: .random(in: 0...10), generator: { TextAnchor.random() })
 
         manager.textVariableAnchor = newTextVariableAnchorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.textVariableAnchor = secondTextVariableAnchorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -2196,7 +2183,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.textVariableAnchor = newTextVariableAnchorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -2207,11 +2194,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newTextVariableAnchorProperty = Array.random(withLength: .random(in: 0...10), generator: { TextAnchor.random() })
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-variable-anchor").value as! [TextAnchor]
         manager.textVariableAnchor = newTextVariableAnchorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-variable-anchor"])
 
         manager.textVariableAnchor = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.textVariableAnchor)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-variable-anchor"] as! [TextAnchor], defaultValue)
@@ -2228,7 +2215,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.textWritingMode, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         let valueAsString = value.map { $0.rawValue }
@@ -2240,9 +2227,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondTextWritingModeProperty = Array.random(withLength: .random(in: 0...10), generator: { TextWritingMode.random() })
 
         manager.textWritingMode = newTextWritingModeProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.textWritingMode = secondTextWritingModeProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -2292,7 +2279,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.textWritingMode = newTextWritingModeProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -2303,11 +2290,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newTextWritingModeProperty = Array.random(withLength: .random(in: 0...10), generator: { TextWritingMode.random() })
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-writing-mode").value as! [TextWritingMode]
         manager.textWritingMode = newTextWritingModeProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-writing-mode"])
 
         manager.textWritingMode = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.textWritingMode)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-writing-mode"] as! [TextWritingMode], defaultValue)
@@ -2324,7 +2311,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.iconTranslate, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-translate"] as! [Double], value)
@@ -2335,9 +2322,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondIconTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
 
         manager.iconTranslate = newIconTranslateProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.iconTranslate = secondIconTranslateProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -2386,7 +2373,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.iconTranslate = newIconTranslateProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -2397,11 +2384,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newIconTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-translate").value as! [Double]
         manager.iconTranslate = newIconTranslateProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-translate"])
 
         manager.iconTranslate = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.iconTranslate)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-translate"] as! [Double], defaultValue)
@@ -2418,7 +2405,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.iconTranslateAnchor, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-translate-anchor"] as! String, value.rawValue)
@@ -2429,9 +2416,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondIconTranslateAnchorProperty = IconTranslateAnchor.random()
 
         manager.iconTranslateAnchor = newIconTranslateAnchorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.iconTranslateAnchor = secondIconTranslateAnchorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -2480,7 +2467,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.iconTranslateAnchor = newIconTranslateAnchorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -2491,11 +2478,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newIconTranslateAnchorProperty = IconTranslateAnchor.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "icon-translate-anchor").value as! String
         manager.iconTranslateAnchor = newIconTranslateAnchorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-translate-anchor"])
 
         manager.iconTranslateAnchor = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.iconTranslateAnchor)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["icon-translate-anchor"] as! String, defaultValue)
@@ -2512,7 +2499,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.textTranslate, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-translate"] as! [Double], value)
@@ -2523,9 +2510,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondTextTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
 
         manager.textTranslate = newTextTranslateProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.textTranslate = secondTextTranslateProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -2574,7 +2561,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.textTranslate = newTextTranslateProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -2585,11 +2572,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newTextTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-translate").value as! [Double]
         manager.textTranslate = newTextTranslateProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-translate"])
 
         manager.textTranslate = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.textTranslate)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-translate"] as! [Double], defaultValue)
@@ -2606,7 +2593,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(manager.textTranslateAnchor, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-translate-anchor"] as! String, value.rawValue)
@@ -2617,9 +2604,9 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let secondTextTranslateAnchorProperty = TextTranslateAnchor.random()
 
         manager.textTranslateAnchor = newTextTranslateAnchorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.textTranslateAnchor = secondTextTranslateAnchorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -2668,7 +2655,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.annotations = annotations
         manager.textTranslateAnchor = newTextTranslateAnchorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -2679,11 +2666,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         let newTextTranslateAnchorProperty = TextTranslateAnchor.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-translate-anchor").value as! String
         manager.textTranslateAnchor = newTextTranslateAnchorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-translate-anchor"])
 
         manager.textTranslateAnchor = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.textTranslateAnchor)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-translate-anchor"] as! String, defaultValue)
@@ -2704,7 +2691,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         // when
         manager.annotations = annotations
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         // then
         XCTAssertEqual(imagesManager.addImageStub.invocations.count, annotations.count)
@@ -2726,14 +2713,14 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             PointAnnotation(image: .init(image: UIImage(), name: UUID().uuidString))
         }
         manager.annotations = allAnnotations
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         imagesManager.addImageStub.reset()
         XCTAssertTrue(allAnnotations.compactMap(\.image?.name).allSatisfy(manager.isUsingStyleImage(_:)))
 
         // when
         let (unusedAnnotations, remainingAnnotations) = (allAnnotations[0..<3], allAnnotations[3...])
         manager.annotations = Array(remainingAnnotations)
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         // then
         XCTAssertEqual(imagesManager.addImageStub.invocations.count, remainingAnnotations.count)
@@ -2760,11 +2747,11 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             .map { _ in PointAnnotation.Image(image: UIImage(), name: UUID().uuidString) }
             .map(PointAnnotation.init)
         manager.annotations = annotations
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         // when
         manager.annotations = []
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         // then
         XCTAssertEqual(imagesManager.addImageStub.invocations.count, annotations.count)
@@ -2790,7 +2777,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             .map { _ in PointAnnotation.Image(image: UIImage(), name: UUID().uuidString) }
             .map(PointAnnotation.init)
         manager.annotations = annotations
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         // when
         manager.destroy()
@@ -2821,7 +2808,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             id: id,
             style: style,
             layerPosition: nil,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             clusterOptions: clusterOptions,
             imagesManager: imagesManager,
             offsetCalculator: offsetCalculator
@@ -2865,7 +2852,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             id: id,
             style: style,
             layerPosition: nil,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             clusterOptions: clusterOptions,
             imagesManager: imagesManager,
             offsetCalculator: offsetCalculator
@@ -2901,7 +2888,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             id: id,
             style: style,
             layerPosition: nil,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             clusterOptions: clusterOptions,
             imagesManager: imagesManager,
             offsetCalculator: offsetCalculator
@@ -2944,7 +2931,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             id: id,
             style: style,
             layerPosition: nil,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             clusterOptions: clusterOptions,
             imagesManager: imagesManager,
             offsetCalculator: offsetCalculator
@@ -2979,7 +2966,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             id: id,
             style: style,
             layerPosition: nil,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             clusterOptions: clusterOptions,
             imagesManager: imagesManager,
             offsetCalculator: offsetCalculator
@@ -3017,19 +3004,19 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             id: id,
             style: style,
             layerPosition: nil,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             clusterOptions: clusterOptions,
             imagesManager: imagesManager,
             offsetCalculator: offsetCalculator
         )
         pointAnnotationManager.annotations = annotations
-        pointAnnotationManager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         var parameters = try XCTUnwrap(style.addGeoJSONSourceFeaturesStub.invocations.last).parameters
         XCTAssertEqual(parameters.features, annotations.map(\.feature))
 
         // then
         pointAnnotationManager.annotations = newAnnotations
-        pointAnnotationManager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         var addParameters = try XCTUnwrap(style.addGeoJSONSourceFeaturesStub.invocations.last).parameters
         XCTAssertEqual(addParameters.features, newAnnotations.map(\.feature))
 
@@ -3046,7 +3033,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
             id: id,
             style: style,
             layerPosition: nil,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             clusterOptions: clusterOptions,
             imagesManager: imagesManager,
             offsetCalculator: offsetCalculator
@@ -3138,7 +3125,7 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
 
         manager.handleDragChanged(with: .random())
 
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
         XCTAssertTrue(updateSourceParameters.id == addSourceParameters.source.id)

@@ -30,8 +30,6 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     // Deps
     private let style: StyleProtocol
     private let offsetCalculator: OffsetCalculatorType
-    private let displayLinkParticipant = DelegatingDisplayLinkParticipant()
-    private weak var displayLinkCoordinator: DisplayLinkCoordinator?
 
     // Private state
 
@@ -67,6 +65,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     private var syncLayerOnce = Once(happened: true)
     private var insertDraggedLayerAndSourceOnce = Once()
     private var dragId: String { id + "_drag" }
+    private var displayLinkToken: AnyCancelable?
 
     /// List of images used by this ``PointAnnotationManager``.
     private(set) internal var allImages = Set<String>()
@@ -81,7 +80,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     internal init(id: String,
                   style: StyleProtocol,
                   layerPosition: LayerPosition?,
-                  displayLinkCoordinator: DisplayLinkCoordinator?,
+                  displayLink: Signal<Void>,
                   clusterOptions: ClusterOptions? = nil,
                   imagesManager: AnnotationImagesManagerProtocol,
                   offsetCalculator: OffsetCalculatorType) {
@@ -89,7 +88,6 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         self.style = style
         self.clusterOptions = clusterOptions
         self.imagesManager = imagesManager
-        self.displayLinkCoordinator = displayLinkCoordinator
         self.offsetCalculator = offsetCalculator
 
         imagesManager.register(imagesConsumer: self)
@@ -127,10 +125,9 @@ public class PointAnnotationManager: AnnotationManagerInternal {
                 category: "Annotations")
         }
 
-        self.displayLinkParticipant.delegate = self
-
-        assert(displayLinkCoordinator != nil, "DisplayLinkCoordinator must be present")
-        displayLinkCoordinator?.add(displayLinkParticipant)
+        displayLinkToken = displayLink.observe { [weak self] in
+            self?.syncSourceAndLayerIfNeeded()
+        }
     }
 
     private func createClusterLayers(clusterOptions: ClusterOptions) {
@@ -185,7 +182,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     internal func destroy() {
         guard destroyOnce.continueOnce() else { return }
 
-        displayLinkCoordinator?.remove(displayLinkParticipant)
+        displayLinkToken?.cancel()
 
         if clusterOptions != nil {
             destroyClusterLayers()
@@ -237,10 +234,6 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         style.updateGeoJSONSource(withId: dragId, geoJSON: .featureCollection(fc))
     }
 
-    /// Synchronizes the backing source and layer with the current `annotations`
-    /// and common layer properties. This method is called automatically with
-    /// each display link, but it may also be called manually in situations
-    /// where the backing source and layer need to be updated earlier.
     private func syncLayer() {
         guard syncLayerOnce.continueOnce() else { return }
 
@@ -289,16 +282,14 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    /// Synchronizes the backing source and layer with the current `annotations`
-    /// and common layer properties. This method is called automatically with
-    /// each display link, but it may also be called manually in situations
-    /// where the backing source and layer need to be updated earlier.
-    public func syncSourceAndLayerIfNeeded() {
+    func syncSourceAndLayerIfNeeded() {
         guard !destroyOnce.happened else { return }
 
-        syncSource()
-        syncDragSource()
-        syncLayer()
+        OSLog.platform.withIntervalSignpost(SignpostName.mapViewDisplayLink, "Participant: PointAnnotationManager") {
+            syncSource()
+            syncDragSource()
+            syncLayer()
+        }
     }
 
     // MARK: - Common layer properties
@@ -661,15 +652,6 @@ public class PointAnnotationManager: AnnotationManagerInternal {
     internal func handleDragEnded() {
         guard !isSwiftUI else { return }
         draggedAnnotationIndex = nil
-    }
-}
-
-extension PointAnnotationManager: DelegatingDisplayLinkParticipantDelegate {
-    func participate(for participant: DelegatingDisplayLinkParticipant) {
-        OSLog.platform.withIntervalSignpost(SignpostName.mapViewDisplayLink,
-                                            "Participant: PointAnnotationManager") {
-            syncSourceAndLayerIfNeeded()
-        }
     }
 }
 

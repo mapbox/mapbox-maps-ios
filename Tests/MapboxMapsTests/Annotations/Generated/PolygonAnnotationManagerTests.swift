@@ -5,26 +5,25 @@ import XCTest
 final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDelegate {
     var manager: PolygonAnnotationManager!
     var style: MockStyle!
-    var displayLinkCoordinator: MockDisplayLinkCoordinator!
     var id = UUID().uuidString
     var annotations = [PolygonAnnotation]()
     var expectation: XCTestExpectation?
     var delegateAnnotations: [Annotation]?
     var offsetCalculator: OffsetPolygonCalculator!
     var mapboxMap: MockMapboxMap!
+    @TestSignal var displayLink: Signal<Void>
 
     override func setUp() {
         super.setUp()
 
         style = MockStyle()
-        displayLinkCoordinator = MockDisplayLinkCoordinator()
         mapboxMap = MockMapboxMap()
         offsetCalculator = OffsetPolygonCalculator(mapboxMap: mapboxMap)
         manager = PolygonAnnotationManager(
             id: id,
             style: style,
             layerPosition: nil,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             offsetCalculator: offsetCalculator
         )
 
@@ -43,7 +42,6 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
     override func tearDown() {
         style = nil
-        displayLinkCoordinator = nil
         expectation = nil
         delegateAnnotations = nil
         mapboxMap = nil
@@ -60,7 +58,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
             id: id,
             style: style,
             layerPosition: nil,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             offsetCalculator: offsetCalculator
         )
 
@@ -75,7 +73,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
             id: id,
             style: style,
             layerPosition: nil,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             offsetCalculator: offsetCalculator
         )
 
@@ -107,7 +105,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
             id: manager.id,
             style: style,
             layerPosition: nil,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             offsetCalculator: offsetCalculator
         )
         manager2.annotations = annotations2
@@ -121,7 +119,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
             id: id,
             style: style,
             layerPosition: LayerPosition.at(4),
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             offsetCalculator: offsetCalculator
         )
         manager3.annotations = annotations
@@ -172,26 +170,15 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
     func testSyncSourceAndLayer() {
         manager.annotations = annotations
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
     }
 
     func testDoNotSyncSourceAndLayerWhenNotNeeded() {
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 0)
-    }
-
-    func testManagerSubscribestoDisplayLinkCoordinator() {
-        XCTAssertEqual(displayLinkCoordinator.addStub.invocations.count, 1)
-        XCTAssertEqual(displayLinkCoordinator.removeStub.invocations.count, 0)
-    }
-
-    func testDestroyManagerRemovesDisplayLinkParticipant() {
-        manager.destroy()
-
-        XCTAssertEqual(displayLinkCoordinator.removeStub.invocations.count, 1)
     }
 
     func testFeatureCollectionPassedtoGeoJSON() throws {
@@ -210,7 +197,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         let expectedFeatures = annotations.map(\.feature)
 
         manager.annotations = annotations
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         var invocation = try XCTUnwrap(style.addGeoJSONSourceFeaturesStub.invocations.last)
         XCTAssertEqual(invocation.parameters.features, expectedFeatures)
@@ -228,7 +215,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
             annotations.append(annotation)
 
             manager.annotations = annotations
-            manager.syncSourceAndLayerIfNeeded()
+            $displayLink.send()
 
             invocation = try XCTUnwrap(style.addGeoJSONSourceFeaturesStub.invocations.last)
             XCTAssertEqual(invocation.parameters.features, [annotation].map(\.feature))
@@ -293,7 +280,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(manager.fillAntialias, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-antialias"] as! Bool, value)
@@ -304,9 +291,9 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         let secondFillAntialiasProperty = Bool.random()
 
         manager.fillAntialias = newFillAntialiasProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.fillAntialias = secondFillAntialiasProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -335,7 +322,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
         manager.annotations = annotations
         manager.fillAntialias = newFillAntialiasProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -346,11 +333,11 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         let newFillAntialiasProperty = Bool.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-antialias").value as! Bool
         manager.fillAntialias = newFillAntialiasProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-antialias"])
 
         manager.fillAntialias = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.fillAntialias)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-antialias"] as! Bool, defaultValue)
@@ -367,7 +354,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(manager.fillEmissiveStrength, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-emissive-strength"] as! Double, value)
@@ -378,9 +365,9 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         let secondFillEmissiveStrengthProperty = Double.random(in: 0...100000)
 
         manager.fillEmissiveStrength = newFillEmissiveStrengthProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.fillEmissiveStrength = secondFillEmissiveStrengthProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -409,7 +396,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
         manager.annotations = annotations
         manager.fillEmissiveStrength = newFillEmissiveStrengthProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -420,11 +407,11 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         let newFillEmissiveStrengthProperty = Double.random(in: 0...100000)
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-emissive-strength").value as! Double
         manager.fillEmissiveStrength = newFillEmissiveStrengthProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-emissive-strength"])
 
         manager.fillEmissiveStrength = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.fillEmissiveStrength)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-emissive-strength"] as! Double, defaultValue)
@@ -441,7 +428,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(manager.fillTranslate, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-translate"] as! [Double], value)
@@ -452,9 +439,9 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         let secondFillTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
 
         manager.fillTranslate = newFillTranslateProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.fillTranslate = secondFillTranslateProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -483,7 +470,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
         manager.annotations = annotations
         manager.fillTranslate = newFillTranslateProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -494,11 +481,11 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         let newFillTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-translate").value as! [Double]
         manager.fillTranslate = newFillTranslateProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-translate"])
 
         manager.fillTranslate = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.fillTranslate)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-translate"] as! [Double], defaultValue)
@@ -515,7 +502,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(manager.fillTranslateAnchor, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-translate-anchor"] as! String, value.rawValue)
@@ -526,9 +513,9 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         let secondFillTranslateAnchorProperty = FillTranslateAnchor.random()
 
         manager.fillTranslateAnchor = newFillTranslateAnchorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.fillTranslateAnchor = secondFillTranslateAnchorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -557,7 +544,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
         manager.annotations = annotations
         manager.fillTranslateAnchor = newFillTranslateAnchorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -568,11 +555,11 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         let newFillTranslateAnchorProperty = FillTranslateAnchor.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "fill-translate-anchor").value as! String
         manager.fillTranslateAnchor = newFillTranslateAnchorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-translate-anchor"])
 
         manager.fillTranslateAnchor = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.fillTranslateAnchor)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-translate-anchor"] as! String, defaultValue)
@@ -674,7 +661,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
         manager.handleDragChanged(with: .random())
 
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
         XCTAssertTrue(updateSourceParameters.id == addSourceParameters.source.id)

@@ -4,23 +4,22 @@ import XCTest
 
 final class AnnotationManagerFactoryTests: XCTestCase {
     var style: MockStyle!
-    var displayLinkCoordinator: MockDisplayLinkCoordinator!
     var offsetPointCalculator: OffsetPointCalculator!
     var offsetLineStringCalculator: OffsetLineStringCalculator!
     var offsetPolygonCalculator: OffsetPolygonCalculator!
     var factory: AnnotationManagerFactory!
+    @TestSignal var displayLink: Signal<Void>
 
     override func setUp() {
         super.setUp()
 
         style = MockStyle()
-        displayLinkCoordinator = MockDisplayLinkCoordinator()
         offsetPointCalculator = OffsetPointCalculator(mapboxMap: MockMapboxMap())
         offsetLineStringCalculator = OffsetLineStringCalculator(mapboxMap: MockMapboxMap())
         offsetPolygonCalculator = OffsetPolygonCalculator(mapboxMap: MockMapboxMap())
         factory = AnnotationManagerFactory(
             style: style,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             offsetPointCalculator: offsetPointCalculator,
             offsetPolygonCalculator: offsetPolygonCalculator,
             offsetLineStringCalculator: offsetLineStringCalculator)
@@ -30,7 +29,6 @@ final class AnnotationManagerFactoryTests: XCTestCase {
         super.tearDown()
 
         style = nil
-        displayLinkCoordinator = nil
         offsetPointCalculator = nil
         offsetLineStringCalculator = nil
         offsetPolygonCalculator = nil

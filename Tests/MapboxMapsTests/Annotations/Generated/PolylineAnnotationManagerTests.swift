@@ -5,26 +5,25 @@ import XCTest
 final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDelegate {
     var manager: PolylineAnnotationManager!
     var style: MockStyle!
-    var displayLinkCoordinator: MockDisplayLinkCoordinator!
     var id = UUID().uuidString
     var annotations = [PolylineAnnotation]()
     var expectation: XCTestExpectation?
     var delegateAnnotations: [Annotation]?
     var offsetCalculator: OffsetLineStringCalculator!
     var mapboxMap: MockMapboxMap!
+    @TestSignal var displayLink: Signal<Void>
 
     override func setUp() {
         super.setUp()
 
         style = MockStyle()
-        displayLinkCoordinator = MockDisplayLinkCoordinator()
         mapboxMap = MockMapboxMap()
         offsetCalculator = OffsetLineStringCalculator(mapboxMap: mapboxMap)
         manager = PolylineAnnotationManager(
             id: id,
             style: style,
             layerPosition: nil,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             offsetCalculator: offsetCalculator
         )
 
@@ -37,7 +36,6 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
     override func tearDown() {
         style = nil
-        displayLinkCoordinator = nil
         expectation = nil
         delegateAnnotations = nil
         mapboxMap = nil
@@ -54,7 +52,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             id: id,
             style: style,
             layerPosition: nil,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             offsetCalculator: offsetCalculator
         )
 
@@ -69,7 +67,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             id: id,
             style: style,
             layerPosition: nil,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             offsetCalculator: offsetCalculator
         )
 
@@ -95,7 +93,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             id: manager.id,
             style: style,
             layerPosition: nil,
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             offsetCalculator: offsetCalculator
         )
         manager2.annotations = annotations2
@@ -109,7 +107,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             id: id,
             style: style,
             layerPosition: LayerPosition.at(4),
-            displayLinkCoordinator: displayLinkCoordinator,
+            displayLink: displayLink,
             offsetCalculator: offsetCalculator
         )
         manager3.annotations = annotations
@@ -154,26 +152,15 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
     func testSyncSourceAndLayer() {
         manager.annotations = annotations
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
     }
 
     func testDoNotSyncSourceAndLayerWhenNotNeeded() {
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 0)
-    }
-
-    func testManagerSubscribestoDisplayLinkCoordinator() {
-        XCTAssertEqual(displayLinkCoordinator.addStub.invocations.count, 1)
-        XCTAssertEqual(displayLinkCoordinator.removeStub.invocations.count, 0)
-    }
-
-    func testDestroyManagerRemovesDisplayLinkParticipant() {
-        manager.destroy()
-
-        XCTAssertEqual(displayLinkCoordinator.removeStub.invocations.count, 1)
     }
 
     func testFeatureCollectionPassedtoGeoJSON() throws {
@@ -186,7 +173,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         let expectedFeatures = annotations.map(\.feature)
 
         manager.annotations = annotations
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         var invocation = try XCTUnwrap(style.addGeoJSONSourceFeaturesStub.invocations.last)
         XCTAssertEqual(invocation.parameters.features, expectedFeatures)
@@ -198,7 +185,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
             annotations.append(annotation)
 
             manager.annotations = annotations
-            manager.syncSourceAndLayerIfNeeded()
+            $displayLink.send()
 
             invocation = try XCTUnwrap(style.addGeoJSONSourceFeaturesStub.invocations.last)
             XCTAssertEqual(invocation.parameters.features, [annotation].map(\.feature))
@@ -251,7 +238,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.lineCap, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-cap"] as! String, value.rawValue)
@@ -262,9 +249,9 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         let secondLineCapProperty = LineCap.random()
 
         manager.lineCap = newLineCapProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.lineCap = secondLineCapProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -293,7 +280,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
         manager.annotations = annotations
         manager.lineCap = newLineCapProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -304,11 +291,11 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         let newLineCapProperty = LineCap.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-cap").value as! String
         manager.lineCap = newLineCapProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-cap"])
 
         manager.lineCap = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.lineCap)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-cap"] as! String, defaultValue)
@@ -325,7 +312,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.lineMiterLimit, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-miter-limit"] as! Double, value)
@@ -336,9 +323,9 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         let secondLineMiterLimitProperty = Double.random(in: -100000...100000)
 
         manager.lineMiterLimit = newLineMiterLimitProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.lineMiterLimit = secondLineMiterLimitProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -367,7 +354,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
         manager.annotations = annotations
         manager.lineMiterLimit = newLineMiterLimitProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -378,11 +365,11 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         let newLineMiterLimitProperty = Double.random(in: -100000...100000)
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-miter-limit").value as! Double
         manager.lineMiterLimit = newLineMiterLimitProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-miter-limit"])
 
         manager.lineMiterLimit = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.lineMiterLimit)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-miter-limit"] as! Double, defaultValue)
@@ -399,7 +386,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.lineRoundLimit, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-round-limit"] as! Double, value)
@@ -410,9 +397,9 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         let secondLineRoundLimitProperty = Double.random(in: -100000...100000)
 
         manager.lineRoundLimit = newLineRoundLimitProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.lineRoundLimit = secondLineRoundLimitProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -441,7 +428,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
         manager.annotations = annotations
         manager.lineRoundLimit = newLineRoundLimitProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -452,11 +439,11 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         let newLineRoundLimitProperty = Double.random(in: -100000...100000)
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-round-limit").value as! Double
         manager.lineRoundLimit = newLineRoundLimitProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-round-limit"])
 
         manager.lineRoundLimit = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.lineRoundLimit)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-round-limit"] as! Double, defaultValue)
@@ -473,7 +460,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.lineDasharray, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-dasharray"] as! [Double], value)
@@ -484,9 +471,9 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         let secondLineDasharrayProperty = Array.random(withLength: .random(in: 0...10), generator: { Double.random(in: -100000...100000) })
 
         manager.lineDasharray = newLineDasharrayProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.lineDasharray = secondLineDasharrayProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -515,7 +502,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
         manager.annotations = annotations
         manager.lineDasharray = newLineDasharrayProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -526,11 +513,11 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         let newLineDasharrayProperty = Array.random(withLength: .random(in: 0...10), generator: { Double.random(in: -100000...100000) })
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-dasharray").value as! [Double]
         manager.lineDasharray = newLineDasharrayProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-dasharray"])
 
         manager.lineDasharray = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.lineDasharray)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-dasharray"] as! [Double], defaultValue)
@@ -547,7 +534,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.lineDepthOcclusionFactor, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-depth-occlusion-factor"] as! Double, value)
@@ -558,9 +545,9 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         let secondLineDepthOcclusionFactorProperty = Double.random(in: 0...1)
 
         manager.lineDepthOcclusionFactor = newLineDepthOcclusionFactorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.lineDepthOcclusionFactor = secondLineDepthOcclusionFactorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -589,7 +576,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
         manager.annotations = annotations
         manager.lineDepthOcclusionFactor = newLineDepthOcclusionFactorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -600,11 +587,11 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         let newLineDepthOcclusionFactorProperty = Double.random(in: 0...1)
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-depth-occlusion-factor").value as! Double
         manager.lineDepthOcclusionFactor = newLineDepthOcclusionFactorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-depth-occlusion-factor"])
 
         manager.lineDepthOcclusionFactor = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.lineDepthOcclusionFactor)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-depth-occlusion-factor"] as! Double, defaultValue)
@@ -621,7 +608,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.lineEmissiveStrength, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-emissive-strength"] as! Double, value)
@@ -632,9 +619,9 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         let secondLineEmissiveStrengthProperty = Double.random(in: 0...100000)
 
         manager.lineEmissiveStrength = newLineEmissiveStrengthProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.lineEmissiveStrength = secondLineEmissiveStrengthProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -663,7 +650,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
         manager.annotations = annotations
         manager.lineEmissiveStrength = newLineEmissiveStrengthProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -674,11 +661,11 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         let newLineEmissiveStrengthProperty = Double.random(in: 0...100000)
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-emissive-strength").value as! Double
         manager.lineEmissiveStrength = newLineEmissiveStrengthProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-emissive-strength"])
 
         manager.lineEmissiveStrength = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.lineEmissiveStrength)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-emissive-strength"] as! Double, defaultValue)
@@ -695,7 +682,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.lineTranslate, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-translate"] as! [Double], value)
@@ -706,9 +693,9 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         let secondLineTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
 
         manager.lineTranslate = newLineTranslateProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.lineTranslate = secondLineTranslateProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -737,7 +724,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
         manager.annotations = annotations
         manager.lineTranslate = newLineTranslateProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -748,11 +735,11 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         let newLineTranslateProperty = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-translate").value as! [Double]
         manager.lineTranslate = newLineTranslateProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-translate"])
 
         manager.lineTranslate = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.lineTranslate)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-translate"] as! [Double], defaultValue)
@@ -769,7 +756,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.lineTranslateAnchor, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-translate-anchor"] as! String, value.rawValue)
@@ -780,9 +767,9 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         let secondLineTranslateAnchorProperty = LineTranslateAnchor.random()
 
         manager.lineTranslateAnchor = newLineTranslateAnchorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.lineTranslateAnchor = secondLineTranslateAnchorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -811,7 +798,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
         manager.annotations = annotations
         manager.lineTranslateAnchor = newLineTranslateAnchorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -822,11 +809,11 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         let newLineTranslateAnchorProperty = LineTranslateAnchor.random()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-translate-anchor").value as! String
         manager.lineTranslateAnchor = newLineTranslateAnchorProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-translate-anchor"])
 
         manager.lineTranslateAnchor = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.lineTranslateAnchor)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-translate-anchor"] as! String, defaultValue)
@@ -843,7 +830,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(manager.lineTrimOffset, value)
 
         // test layer and source synced and properties added
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-trim-offset"] as! [Double], value)
@@ -854,9 +841,9 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         let secondLineTrimOffsetProperty = [Double.random(in: 0...1), Double.random(in: 0...1)].sorted()
 
         manager.lineTrimOffset = newLineTrimOffsetProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         manager.lineTrimOffset = secondLineTrimOffsetProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
@@ -885,7 +872,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
         manager.annotations = annotations
         manager.lineTrimOffset = newLineTrimOffsetProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
@@ -896,11 +883,11 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         let newLineTrimOffsetProperty = [Double.random(in: 0...1), Double.random(in: 0...1)].sorted()
         let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "line-trim-offset").value as! [Double]
         manager.lineTrimOffset = newLineTrimOffsetProperty
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-trim-offset"])
 
         manager.lineTrimOffset = nil
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
         XCTAssertNil(manager.lineTrimOffset)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-trim-offset"] as! [Double], defaultValue)
@@ -987,7 +974,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
         manager.handleDragChanged(with: .random())
 
-        manager.syncSourceAndLayerIfNeeded()
+        $displayLink.send()
 
         let updateSourceParameters = try XCTUnwrap(style.updateGeoJSONSourceStub.invocations.last).parameters
         XCTAssertTrue(updateSourceParameters.id == addSourceParameters.source.id)

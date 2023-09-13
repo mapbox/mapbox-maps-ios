@@ -2992,10 +2992,10 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         style.addPersistentLayerStub.reset()
         // given
         let clusterOptions = ClusterOptions()
-        var annotations = (0..<500).map { _ in
+        let annotations = (0..<500).map { _ in
             PointAnnotation(coordinate: .random(), isSelected: false, isDraggable: false)
         }
-        var newAnnotations = (0..<100).map { _ in
+        let newAnnotations = (0..<100).map { _ in
             PointAnnotation(coordinate: .random(), isSelected: false, isDraggable: false)
         }
 
@@ -3011,16 +3011,16 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         )
         pointAnnotationManager.annotations = annotations
         $displayLink.send()
-        var parameters = try XCTUnwrap(style.addGeoJSONSourceFeaturesStub.invocations.last).parameters
+        let parameters = try XCTUnwrap(style.addGeoJSONSourceFeaturesStub.invocations.last).parameters
         XCTAssertEqual(parameters.features, annotations.map(\.feature))
 
         // then
         pointAnnotationManager.annotations = newAnnotations
         $displayLink.send()
-        var addParameters = try XCTUnwrap(style.addGeoJSONSourceFeaturesStub.invocations.last).parameters
+        let addParameters = try XCTUnwrap(style.addGeoJSONSourceFeaturesStub.invocations.last).parameters
         XCTAssertEqual(addParameters.features, newAnnotations.map(\.feature))
 
-        var removeParameters = try XCTUnwrap(style.removeGeoJSONSourceFeaturesStub.invocations.last).parameters
+        let removeParameters = try XCTUnwrap(style.removeGeoJSONSourceFeaturesStub.invocations.last).parameters
         XCTAssertEqual(removeParameters.featureIds, annotations.map(\.id))
     }
 

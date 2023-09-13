@@ -516,9 +516,9 @@ final class StyleSourceManagerTests: XCTestCase {
         feature.identifier = .number(featureIdentifier)
 
         sourceManager.updateGeoJSONSource(withId: sourceId, data: .emptyFeatureCollection(), dataId: nil)
-        try sourceManager.addGeoJSONSourceFeatures(forSourceId: sourceId, features: [feature], dataId: nil)
-        try sourceManager.updateGeoJSONSourceFeatures(forSourceId: sourceId, features: [feature], dataId: nil)
-        try sourceManager.removeGeoJSONSourceFeatures(forSourceId: sourceId,
+        sourceManager.addGeoJSONSourceFeatures(forSourceId: sourceId, features: [feature], dataId: nil)
+        sourceManager.updateGeoJSONSourceFeatures(forSourceId: sourceId, features: [feature], dataId: nil)
+        sourceManager.removeGeoJSONSourceFeatures(forSourceId: sourceId,
                                                       featureIds: [featureIdentifier.description],
                                                       dataId: nil)
 
@@ -539,7 +539,7 @@ final class StyleSourceManagerTests: XCTestCase {
         backgroundQueue.asyncWorkItemStub.defaultSideEffect = { $0.parameters.perform() }
 
         // when
-        try sourceManager.removeGeoJSONSourceFeatures(forSourceId: sourceId, featureIds: featureIdentifiers, dataId: dataId)
+        sourceManager.removeGeoJSONSourceFeatures(forSourceId: sourceId, featureIds: featureIdentifiers, dataId: dataId)
 
         // then
         XCTAssertEqual(styleManager.removeGeoJSONSourceFeaturesStub.invocations.count, 1)

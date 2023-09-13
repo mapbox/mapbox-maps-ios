@@ -96,7 +96,6 @@ final class MapContentBuilderTests: XCTestCase {
 
     func testForEvery() throws {
         var visitorIds: [AnyHashable] = []
-        var condition = true
         let data = Array.random(withLength: 5, generator: { UUID().uuidString })
 
         @MapContentBuilder func content() -> MapContent {

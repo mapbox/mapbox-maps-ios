@@ -6,6 +6,7 @@ configFiles:
 options:
   bundleIdPrefix: com.mapbox
   defaultConfig: Release
+  xcodeVersion: "15.0"
   parallelizeBuild: false
   groupOrdering:
     - order:

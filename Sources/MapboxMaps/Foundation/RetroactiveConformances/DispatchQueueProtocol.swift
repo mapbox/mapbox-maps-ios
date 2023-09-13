@@ -3,21 +3,21 @@ import Dispatch
 // depending on this protocol instead of on DispatchQueue directly
 // allow mocking the main queue in tests which avoids the need for waits
 protocol DispatchQueueProtocol: AnyObject {
-    func async(
+    @preconcurrency func async(
         group: DispatchGroup?,
         qos: DispatchQoS,
         flags: DispatchWorkItemFlags,
-        execute work: @escaping @convention(block) () -> Void
+        execute work: @Sendable @escaping @convention(block) () -> Void
     )
     func async(execute workItem: DispatchWorkItem)
 }
 
 extension DispatchQueueProtocol {
-    func async(execute work: @escaping @convention(block) () -> Void) {
+    @preconcurrency func async(execute work: @escaping @convention(block) () -> Void) {
         async(group: nil, qos: .unspecified, flags: [], execute: work)
     }
 
-    func async(
+    @preconcurrency func async(
         qos: DispatchQoS,
         execute work: @escaping @convention(block) () -> Void
     ) {

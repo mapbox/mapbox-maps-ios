@@ -4,8 +4,8 @@ import XCTest
 final class ViewAnnotationPositionsUpdateListenerImplTests: XCTestCase {
 
     func testOnViewAnnotationPositionsUpdate() {
-        var stub = Stub<[ViewAnnotationPositionDescriptor], Void>()
-        var me = ViewAnnotationPositionsUpdateListenerImpl(callback: stub.call(with:))
+        let stub = Stub<[ViewAnnotationPositionDescriptor], Void>()
+        let me = ViewAnnotationPositionsUpdateListenerImpl(callback: stub.call(with:))
 
         let descriptor = ViewAnnotationPositionDescriptor(
             identifier: "test",

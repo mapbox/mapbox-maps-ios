@@ -1,15 +1,15 @@
 /// Expresses the different ways that ``FollowPuckViewportState`` can obtain values to use when
-/// setting ``CameraOptions/bearing``.
+/// setting ``CameraOptions-swift.struct/bearing``.
 ///
 /// - SeeAlso: ``LocationOptions/puckBearing``
 public enum FollowPuckViewportStateBearing: Codable, Hashable {
 
-    /// ``FollowPuckViewportState`` sets ``CameraOptions/bearing`` to a constant value.
+    /// ``FollowPuckViewportState`` sets ``CameraOptions-swift.struct/bearing`` to a constant value.
     ///
     /// - Parameter bearing: the constant value that should be used to set the camera bearing.
     case constant(_ bearing: CLLocationDirection)
 
-    /// ``FollowPuckViewportState`` sets ``CameraOptions/bearing`` based on the current
+    /// ``FollowPuckViewportState`` sets ``CameraOptions-swift.struct/bearing`` based on the current
     /// heading.
     ///
     /// - SeeAlso:
@@ -17,7 +17,7 @@ public enum FollowPuckViewportStateBearing: Codable, Hashable {
     ///   - ``Location/heading``
     case heading
 
-    /// ``FollowPuckViewportState`` sets ``CameraOptions/bearing`` based on the current
+    /// ``FollowPuckViewportState`` sets ``CameraOptions-swift.struct/bearing`` based on the current
     /// course.
     ///
     /// - SeeAlso:

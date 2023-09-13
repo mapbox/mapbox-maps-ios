@@ -576,7 +576,7 @@ public final class MapboxMap: StyleManager {
     /// This API isn't supported by Globe projection.
     ///
     /// - Parameter camera: The camera for which the coordinate bounds will be returned.
-    /// - Returns: `CoordinateBounds` for the given ``CameraOptions``.
+    /// - Returns: `CoordinateBounds` for the given ``CameraOptions-swift.struct``.
     public func coordinateBoundsUnwrapped(for camera: CameraOptions) -> CoordinateBounds {
         return __map.coordinateBoundsForCameraUnwrapped(forCamera: MapboxCoreMaps.CameraOptions(camera))
     }
@@ -991,7 +991,7 @@ extension MapboxMap {
     public var onStyleLoaded: Signal<StyleLoaded> { events.signal(for: \.onStyleLoaded) }
 
         /// The requested style data has been loaded. The `type` property defines what kind of style data has been loaded.
-        /// Event may be emitted synchronously, for example, when ``MapboxMap/loadStyle(_:completion:)`` is used to load style.
+        /// Event may be emitted synchronously, for example, when ``MapboxMap/loadStyle(_:transition:completion:)-7w69x`` is used to load style.
         ///
         /// Based on an event data `type` property value, following use-cases may be implemented:
         /// - `style`: Style is parsed, style layer properties could be read and modified, style layers and sources could be

@@ -100,6 +100,9 @@ extension GeoJSONObject {
             return .feature(feature)
         case .featureCollection(let collection):
             return .featureCollection(collection)
+        @unknown default:
+            Log.info(forMessage: "Unexpected \(GeoJSONObject.self) type: \(self)")
+            return .featureCollection(FeatureCollection(features: []))
         }
     }
 }

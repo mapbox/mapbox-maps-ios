@@ -39,6 +39,7 @@ targets:
         LD_RUNPATH_SEARCH_PATHS: $(inherited) @executable_path/Frameworks @loader_path/Frameworks
         SWIFT_EMIT_PRIVATE_MODULE_INTERFACE: YES
         RUN_DOCUMENTATION_COMPILER: YES
+        OTHER_DOCC_FLAGS: "--warnings-as-errors"
       configs:
         Debug:
           SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) USING_TURF_WITH_LIBRARY_EVOLUTION

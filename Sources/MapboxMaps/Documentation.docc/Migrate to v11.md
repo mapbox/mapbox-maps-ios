@@ -98,7 +98,7 @@ To import a style, you should add an "imports" section to your [Style JSON](http
 ...
 ```
 
-For a full example of importing a style, please check out our [Standard Style Example](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/Examples/All%20Examples/StandardStyleExample.swift). This example imports the Standard style into another style [Real Estate New York](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/Examples/All%20Examples/Sample%20Data/fragment-realestate-NY.json). It then modifies the configurations for the imported Standard style at runtime using the following APIs we've introduced on the ``StyleManager`` object:
+For a full example of importing a style, please check out our [Standard Style Example](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/Examples/All%20Examples/StandardStyleExample.swift). This example imports the Standard style into another style [Real Estate New York](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/Examples/All%20Examples/Sample%20Data/fragment-realestate-NY.json). It then modifies the configurations for the imported Standard style at runtime using the following APIs we've introduced on the ``StyleManager-46yjd`` object:
 
 - ``StyleManager/styleImports``, which returns all of the styles you have imported into your main style
 - ``StyleManager/removeStyleImport(for:)``, which removes the style import with the passed Id
@@ -393,13 +393,13 @@ MAPBOX_MAPS_SIGNPOSTS_ENABLED=core,platform
 
 ### 2.9 Mapbox Maps Recorder
 
-``MapboxMapRecorder`` provides an experimental API to record and replay map interaction sessions. Such recordings can be used to debug issues which require multiple steps to reproduce. Usage example can be found [here](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/Examples/All%20Examples/Lab/MapRecorderExample.swift).
+``MapRecorder`` provides an experimental API to record and replay map interaction sessions. Such recordings can be used to debug issues which require multiple steps to reproduce. Usage example can be found [here](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/Examples/All%20Examples/Lab/MapRecorderExample.swift).
 
 ### 2.10 Other minor ergonomic improvements
 
 #### 2.10.1 MapboxMap
 
-We added an experimental `tileCover` method to `MapboxMap` that returns tile Ids covering the map. Use ``TileCoverOptions`` to identify which tile range to return tile Ids for.
+We added an experimental `tileCover` method to `MapboxMap` that returns tile Ids covering the map. Use ``TileCoverOptions-swift.struct`` to identify which tile range to return tile Ids for.
 
 ```swift
 let tileCoverOptions = TileCoverOptions(tileSize: 512, minZoom: 4, maxZoom: 8, roundZoom: true)

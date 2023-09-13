@@ -2,14 +2,14 @@ import UIKit
 
 /// Configuration options for ``FollowPuckViewportState``.
 ///
-/// Each of the ``CameraOptions``-related properties is optional, so that the state can be configured to
+/// Each of the ``CameraOptions-swift.struct``-related properties is optional, so that the state can be configured to
 /// only modify certain aspects of the camera if desired. This can be used, to achieve effects like allowing
 /// zoom gestures to work simultaneously with ``FollowPuckViewportState``.
 ///
 /// - SeeAlso: ``ViewportOptions/transitionsToIdleUponUserInteraction``
 public struct FollowPuckViewportStateOptions: Codable, Hashable {
 
-    /// The value to use for ``CameraOptions/padding`` when setting the camera. If `nil`, padding
+    /// The value to use for ``CameraOptions-swift.struct/padding`` when setting the camera. If `nil`, padding
     /// will not be modified.
     public var padding: UIEdgeInsets? {
         get { paddingCodable?.edgeInsets }
@@ -18,15 +18,15 @@ public struct FollowPuckViewportStateOptions: Codable, Hashable {
 
     private var paddingCodable: UIEdgeInsetsCodable?
 
-    /// The value to use for ``CameraOptions/zoom`` when setting the camera. If `nil`, zoom will
+    /// The value to use for ``CameraOptions-swift.struct/zoom`` when setting the camera. If `nil`, zoom will
     /// not be modified.
     public var zoom: CGFloat?
 
-    /// Indicates how to obtain the value to use for ``CameraOptions/bearing`` when setting the
+    /// Indicates how to obtain the value to use for ``CameraOptions-swift.struct/bearing`` when setting the
     /// camera. If `nil`, bearing will not be modified.
     public var bearing: FollowPuckViewportStateBearing?
 
-    /// The value to use for ``CameraOptions/pitch`` when setting the camera. If `nil`, pitch will
+    /// The value to use for ``CameraOptions-swift.struct/pitch`` when setting the camera. If `nil`, pitch will
     /// not be modified.
     public var pitch: CGFloat?
 

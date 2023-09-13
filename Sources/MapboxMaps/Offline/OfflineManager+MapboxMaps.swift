@@ -101,7 +101,7 @@ extension OfflineManager {
     /// Removes a style package.
     ///
     /// - Parameter styleURI: The URI of the style package's associated style
-    /// - Parameter completion: The result callback. Any `Result` error could be of type ``StylePackError``.
+    /// - Parameter completion: The result callback. Any `Result` error could be of type ``StylePackError-swift.enum``.
     ///
     /// Removes a style package from the existing packages list. The actual
     /// resources eviction might be deferred. All pending loading operations for

@@ -246,6 +246,8 @@ extension FeatureIdentifier: CustomStringConvertible {
             return number.description
         case .string(let string):
             return string
+        @unknown default:
+            return String(describing: self)
         }
     }
 }

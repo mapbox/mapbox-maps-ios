@@ -85,8 +85,8 @@ class MapInitOptionsIntegrationTests: XCTestCase {
             return
         }
 
-        let destCenter = view.cameraState.center
-        let destZoom = view.cameraState.zoom
+        let destCenter = view.mapboxMap.cameraState.center
+        let destZoom = view.mapboxMap.cameraState.zoom
 
         XCTAssertEqual(sourceCenter[0], destCenter.longitude, accuracy: 0.0000001)
         XCTAssertEqual(sourceCenter[1], destCenter.latitude, accuracy: 0.0000001)
@@ -114,8 +114,8 @@ class MapInitOptionsIntegrationTests: XCTestCase {
         let sourceCenter = sourceCamera.center!
         let sourceZoom = sourceCamera.zoom!
 
-        let destCenter = view.cameraState.center
-        let destZoom = view.cameraState.zoom
+        let destCenter = view.mapboxMap.cameraState.center
+        let destZoom = view.mapboxMap.cameraState.zoom
 
         XCTAssertEqual(sourceCenter.longitude, destCenter.longitude, accuracy: 0.0000001)
         XCTAssertEqual(sourceCenter.latitude, destCenter.latitude, accuracy: 0.0000001)

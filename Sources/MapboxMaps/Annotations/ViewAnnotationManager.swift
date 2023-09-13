@@ -52,7 +52,7 @@ public protocol ViewAnnotationUpdateObserver: AnyObject {
 /// View annotations are invariant to map camera transformations however such properties as size, visibility etc
 /// could be controlled by the user using update operation.
 ///
-/// View annotations are not explicitly bound to any sources however ``ViewAnnotationOptions/associatedFeatureId`` could be
+/// View annotations are not explicitly bound to any sources however ``ViewAnnotationOptions-swift.struct/associatedFeatureId`` could be
 /// used to bind given view annotation with some `Feature` by `Feature.identifier` meaning visibility of view annotation will be driven
 /// by visibility of given feature.
 public final class ViewAnnotationManager {
@@ -94,7 +94,7 @@ public final class ViewAnnotationManager {
 
     /// Add a `UIView` instance which will be displayed as an annotation.
     /// View dimensions will be taken as width / height from the bounds of the view
-    /// unless they are not specified explicitly with ``ViewAnnotationOptions/width`` and ``ViewAnnotationOptions/height``.
+    /// unless they are not specified explicitly with ``ViewAnnotationOptions-swift.struct/width`` and ``ViewAnnotationOptions-swift.struct/height``.
     ///
     /// Annotation `options` must include Geometry where we want to bind our view annotation.
     ///
@@ -109,7 +109,7 @@ public final class ViewAnnotationManager {
     ///
     /// - Parameters:
     ///   - view: `UIView` to be added to the map
-    ///   - options: ``ViewAnnotationOptions`` to control the layout and visibility of the annotation
+    ///   - options: ``ViewAnnotationOptions-swift.struct`` to control the layout and visibility of the annotation
     ///
     /// - Throws:
     ///   -  ``ViewAnnotationManagerError/viewIsAlreadyAdded`` if the supplied view is already added as an annotation
@@ -123,7 +123,7 @@ public final class ViewAnnotationManager {
 
     /// Add a `UIView` instance which will be displayed as an annotation.
     /// View dimensions will be taken as width / height from the bounds of the view
-    /// unless they are not specified explicitly with ``ViewAnnotationOptions/width`` and ``ViewAnnotationOptions/height``.
+    /// unless they are not specified explicitly with ``ViewAnnotationOptions-swift.struct/width`` and ``ViewAnnotationOptions-swift.struct/height``.
     ///
     /// Annotation `options` must include Geometry where we want to bind our view annotation.
     ///
@@ -139,7 +139,7 @@ public final class ViewAnnotationManager {
     /// - Parameters:
     ///   - view: `UIView` to be added to the map
     ///   - id: The unique string for the `view`.
-    ///   - options: ``ViewAnnotationOptions`` to control the layout and visibility of the annotation
+    ///   - options: ``ViewAnnotationOptions-swift.struct`` to control the layout and visibility of the annotation
     ///
     /// - Throws:
     ///   -  ``ViewAnnotationManagerError/viewIsAlreadyAdded`` if the supplied view is already added as an annotation, or there is an existing annotation view with the same `id`.
@@ -212,7 +212,7 @@ public final class ViewAnnotationManager {
         viewsByFeatureIds.removeAll()
     }
 
-    /// Update given `UIView` with ``ViewAnnotationOptions``.
+    /// Update given `UIView` with ``ViewAnnotationOptions-swift.struct``.
     /// Important thing to keep in mind that only properties present in `options` will be updated,
     /// all other will remain the same as specified before.
     ///
@@ -259,7 +259,7 @@ public final class ViewAnnotationManager {
         viewsById[id]
     }
 
-    /// Find `UIView` by feature id if it was specified as part of ``ViewAnnotationOptions/associatedFeatureId``.
+    /// Find `UIView` by feature id if it was specified as part of ``ViewAnnotationOptions-swift.struct/associatedFeatureId``.
     ///
     /// - Parameters:
     ///   - identifier: the identifier of the feature which will be used for finding the associated `UIView`
@@ -269,22 +269,22 @@ public final class ViewAnnotationManager {
         return viewsByFeatureIds[identifier]
     }
 
-    /// Find ``ViewAnnotationOptions`` of view annotation by feature id if it was specified as part of ``ViewAnnotationOptions/associatedFeatureId``.
+    /// Find ``ViewAnnotationOptions-swift.struct`` of view annotation by feature id if it was specified as part of ``ViewAnnotationOptions-swift.struct/associatedFeatureId``.
     ///
     /// - Parameters:
-    ///   - identifier: the identifier of the feature which will be used for finding the associated ``ViewAnnotationOptions``
+    ///   - identifier: the identifier of the feature which will be used for finding the associated ``ViewAnnotationOptions-swift.struct``
     ///
-    /// - Returns: ``ViewAnnotationOptions`` if view was found and `nil` otherwise.
+    /// - Returns: ``ViewAnnotationOptions-swift.struct`` if view was found and `nil` otherwise.
     public func options(forFeatureId identifier: String) -> ViewAnnotationOptions? {
         return viewsByFeatureIds[identifier].flatMap { idsByView[$0] }.flatMap { try? mapboxMap.options(forViewAnnotationWithId: $0) }
     }
 
-    /// Get current ``ViewAnnotationOptions`` for given `UIView`.
+    /// Get current ``ViewAnnotationOptions-swift.struct`` for given `UIView`.
     ///
     /// - Parameters:
-    ///   - view: an `UIView` for which the associated ``ViewAnnotationOptions`` is looked up
+    ///   - view: an `UIView` for which the associated ``ViewAnnotationOptions-swift.struct`` is looked up
     ///
-    /// - Returns: ``ViewAnnotationOptions`` if view was found and `nil` otherwise.
+    /// - Returns: ``ViewAnnotationOptions-swift.struct`` if view was found and `nil` otherwise.
     public func options(for view: UIView) -> ViewAnnotationOptions? {
         return idsByView[view].flatMap { try? mapboxMap.options(forViewAnnotationWithId: $0) }
     }
@@ -307,14 +307,14 @@ public final class ViewAnnotationManager {
 
     // MARK: Framing
 
-    /// Calculates ``CameraOptions`` to fit the list of view annotations.
+    /// Calculates ``CameraOptions-swift.struct`` to fit the list of view annotations.
     ///
     /// - Important: This API isn't supported by Globe projection.
     ///
     /// - Parameter ids: The list of annotations ids to be framed.
-    /// - Parameter padding: See ``CameraOptions/padding``.
-    /// - Parameter bearing: See ``CameraOptions/bearing``.
-    /// - Parameter pitch: See ``CameraOptions/pitch``.
+    /// - Parameter padding: See ``CameraOptions-swift.struct/padding``.
+    /// - Parameter bearing: See ``CameraOptions-swift.struct/bearing``.
+    /// - Parameter pitch: See ``CameraOptions-swift.struct/pitch``.
     public func camera(
         forAnnotations identifiers: [String],
         padding: UIEdgeInsets = .zero,

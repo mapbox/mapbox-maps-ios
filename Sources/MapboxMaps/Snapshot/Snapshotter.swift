@@ -35,7 +35,7 @@ extension MapSnapshotter: MapSnapshotterProtocol {
 /// A utility class for capturing styled map snapshots.
 ///
 /// Use a `MapSnapshotter` when you need to capture a static snapshot of a map without using the actual ``MapView``.
-/// You can configure the final result via ``MapSnapshotOptions`` upon construction time and take.
+/// You can configure the final result via ``MapSnapshotOptions-swift.struct`` upon construction time and take.
 public class Snapshotter: StyleManager {
 
     /// Internal `MapboxCoreMaps.MBMMapSnapshotter` object that takes care of
@@ -339,7 +339,7 @@ extension Snapshotter {
     public var onStyleLoaded: Signal<StyleLoaded> { events.signal(for: \.onStyleLoaded) }
 
     /// The requested style data has been loaded. The `type` property defines what kind of style data has been loaded.
-    /// Event may be emitted synchronously, for example, when ``MapboxMap/loadStyle(_:completion:)`` is used to load style.
+    /// Event may be emitted synchronously, for example, when ``MapboxMap/loadStyle(_:transition:completion:)-7w69x`` is used to load style.
     ///
     /// Based on an event data `type` property value, following use-cases may be implemented:
     /// - `style`: Style is parsed, style layer properties could be read and modified, style layers and sources could be

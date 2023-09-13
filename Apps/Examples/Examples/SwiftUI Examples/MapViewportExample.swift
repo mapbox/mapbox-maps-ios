@@ -82,6 +82,8 @@ struct MapViewportExample: View {
                 geometryType = "multiPolygon"
             case .geometryCollection(_):
                 geometryType = "geometryCollection"
+            @unknown default:
+                geometryType = "unknownType"
             }
             return "overview(\(geometryType))"
         }

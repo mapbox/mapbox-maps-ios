@@ -1151,6 +1151,21 @@ Func MapboxMap.dragStart(for:) has been removed
 Var MapOptions.optimizeForTerrain has been removed
 Constructor MapOptions.init(constrainMode:viewportMode:orientation:crossSourceCollisions:optimizeForTerrain:size:pixelRatio:glyphsRasterizationOptions:) has been removed
 
+// Support expression for FormatOptions
+Accessor FormatOptions.fontScale.Get() has return type change from Swift.Double? to MapboxMaps.Value<Swift.Double>?
+Accessor FormatOptions.fontScale.Set() has parameter 0 type change from Swift.Double? to MapboxMaps.Value<Swift.Double>?
+Accessor FormatOptions.textColor.Get() has return type change from MapboxMaps.StyleColor? to MapboxMaps.Value<MapboxMaps.StyleColor>?
+Accessor FormatOptions.textColor.Set() has parameter 0 type change from MapboxMaps.StyleColor? to MapboxMaps.Value<MapboxMaps.StyleColor>?
+Accessor FormatOptions.textFont.Get() has return type change from [Swift.String]? to MapboxMaps.Value<[Swift.String]>?
+Accessor FormatOptions.textFont.Set() has parameter 0 type change from [Swift.String]? to MapboxMaps.Value<[Swift.String]>?
+Var FormatOptions.fontScale has declared type change from Swift.Double? to MapboxMaps.Value<Swift.Double>?
+Var FormatOptions.textColor has declared type change from MapboxMaps.StyleColor? to MapboxMaps.Value<MapboxMaps.StyleColor>?
+Var FormatOptions.textFont has declared type change from [Swift.String]? to MapboxMaps.Value<[Swift.String]>?
+Constructor FormatOptions.init(fontScale:textFont:textColor:) has been removed
+Var FormatOptions.fontScaleValue has been removed
+Var FormatOptions.textColorValue has been removed
+Var FormatOptions.textFontValue has been removed
+
 // Add antialiasingSampleCount parameter with the default value so not's a source code breaking
 Constructor MapInitOptions.init(mapOptions:cameraOptions:styleURI:styleJSON:) has been removed
 

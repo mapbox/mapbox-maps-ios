@@ -43,7 +43,7 @@ final class CircleAnnotationTests: XCTestCase {
               case let .string(circleColor) = layerProperties["circle-color"] else {
             return XCTFail("Layer property circle-color should be set to a string.")
         }
-        XCTAssertEqual(circleColor, annotation.circleColor.flatMap { $0.rgbaString })
+        XCTAssertEqual(circleColor, annotation.circleColor.flatMap { $0.rawValue })
     }
 
     func testCircleOpacity() {
@@ -85,7 +85,7 @@ final class CircleAnnotationTests: XCTestCase {
               case let .string(circleStrokeColor) = layerProperties["circle-stroke-color"] else {
             return XCTFail("Layer property circle-stroke-color should be set to a string.")
         }
-        XCTAssertEqual(circleStrokeColor, annotation.circleStrokeColor.flatMap { $0.rgbaString })
+        XCTAssertEqual(circleStrokeColor, annotation.circleStrokeColor.flatMap { $0.rawValue })
     }
 
     func testCircleStrokeOpacity() {

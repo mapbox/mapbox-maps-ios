@@ -37,9 +37,9 @@ public struct PolylineAnnotation: Annotation, Equatable {
         properties["line-join"] = lineJoin?.rawValue
         properties["line-sort-key"] = lineSortKey
         properties["line-blur"] = lineBlur
-        properties["line-border-color"] = lineBorderColor?.rgbaString
+        properties["line-border-color"] = lineBorderColor?.rawValue
         properties["line-border-width"] = lineBorderWidth
-        properties["line-color"] = lineColor?.rgbaString
+        properties["line-color"] = lineColor?.rawValue
         properties["line-gap-width"] = lineGapWidth
         properties["line-offset"] = lineOffset
         properties["line-opacity"] = lineOpacity

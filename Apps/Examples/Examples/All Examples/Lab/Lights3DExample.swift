@@ -83,8 +83,7 @@ final class Lights3DExample: UIViewController, ExampleProtocol {
             )
 
             let color = StyleColor(generateSunColor(progress: animationProgress))
-            let colorValue = "rgba(\(color.red), \(color.green), \(color.blue), \(color.alpha))"
-            try mapView.mapboxMap.setLightProperty(for: ambientLightId, property: "color", value: colorValue)
+            try mapView.mapboxMap.setLightProperty(for: ambientLightId, property: "color", value: color.rawValue)
             try mapView.mapboxMap.setLightProperty(for: ambientLightId, property: "intensity", value: lightIntensity)
         } catch {
             print("Failed to update sun light due to:", error)

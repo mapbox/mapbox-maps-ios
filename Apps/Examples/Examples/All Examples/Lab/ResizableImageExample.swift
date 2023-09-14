@@ -18,7 +18,6 @@ final class ResizableImageExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()
 
     private var appendTextCounter = 1
-    private var symbolLayer: SymbolLayer!
     private weak var timer: Timer? {
         didSet { oldValue?.invalidate() }
     }
@@ -67,7 +66,7 @@ final class ResizableImageExample: UIViewController, ExampleProtocol {
         try? mapView.mapboxMap.addSource(source)
 
         // add a symbol layer with the resizable icon image
-        symbolLayer = SymbolLayer(id: Self.layerId, source: geoJSONSourceId)
+        var symbolLayer = SymbolLayer(id: Self.layerId, source: geoJSONSourceId)
         symbolLayer.iconImage = .constant(.name("circle"))
         // make sure the icon image is stretched both vertically and horizontally
         symbolLayer.iconTextFit = .constant(.both)

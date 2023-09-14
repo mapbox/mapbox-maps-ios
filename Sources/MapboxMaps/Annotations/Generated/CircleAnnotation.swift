@@ -36,10 +36,10 @@ public struct CircleAnnotation: Annotation, Equatable {
         var properties: [String: Any] = [:]
         properties["circle-sort-key"] = circleSortKey
         properties["circle-blur"] = circleBlur
-        properties["circle-color"] = circleColor?.rgbaString
+        properties["circle-color"] = circleColor?.rawValue
         properties["circle-opacity"] = circleOpacity
         properties["circle-radius"] = circleRadius
-        properties["circle-stroke-color"] = circleStrokeColor?.rgbaString
+        properties["circle-stroke-color"] = circleStrokeColor?.rawValue
         properties["circle-stroke-opacity"] = circleStrokeOpacity
         properties["circle-stroke-width"] = circleStrokeWidth
         return properties

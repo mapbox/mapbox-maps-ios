@@ -53,17 +53,17 @@ public struct PointAnnotation: Annotation, Equatable {
         properties["text-rotate"] = textRotate
         properties["text-size"] = textSize
         properties["text-transform"] = textTransform?.rawValue
-        properties["icon-color"] = iconColor?.rgbaString
+        properties["icon-color"] = iconColor?.rawValue
         properties["icon-emissive-strength"] = iconEmissiveStrength
         properties["icon-halo-blur"] = iconHaloBlur
-        properties["icon-halo-color"] = iconHaloColor?.rgbaString
+        properties["icon-halo-color"] = iconHaloColor?.rawValue
         properties["icon-halo-width"] = iconHaloWidth
         properties["icon-image-cross-fade"] = iconImageCrossFade
         properties["icon-opacity"] = iconOpacity
-        properties["text-color"] = textColor?.rgbaString
+        properties["text-color"] = textColor?.rawValue
         properties["text-emissive-strength"] = textEmissiveStrength
         properties["text-halo-blur"] = textHaloBlur
-        properties["text-halo-color"] = textHaloColor?.rgbaString
+        properties["text-halo-color"] = textHaloColor?.rawValue
         properties["text-halo-width"] = textHaloWidth
         properties["text-opacity"] = textOpacity
         return properties

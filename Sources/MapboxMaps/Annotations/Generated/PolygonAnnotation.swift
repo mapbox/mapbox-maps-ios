@@ -35,9 +35,9 @@ public struct PolygonAnnotation: Annotation, Equatable {
     internal var layerProperties: [String: Any] {
         var properties: [String: Any] = [:]
         properties["fill-sort-key"] = fillSortKey
-        properties["fill-color"] = fillColor?.rgbaString
+        properties["fill-color"] = fillColor?.rawValue
         properties["fill-opacity"] = fillOpacity
-        properties["fill-outline-color"] = fillOutlineColor?.rgbaString
+        properties["fill-outline-color"] = fillOutlineColor?.rawValue
         properties["fill-pattern"] = fillPattern
         return properties
     }

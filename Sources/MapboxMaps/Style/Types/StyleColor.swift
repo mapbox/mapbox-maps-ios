@@ -1,21 +1,38 @@
 import UIKit
+import RegexBuilder
 
-/// Represents a color as defined by the Mapbox Style Spec
-public struct StyleColor: Codable, Equatable {
+/// Represents a color as defined by the [Mapbox Style Spec](https://docs.mapbox.com/style-spec/reference/types/#color)
+public struct StyleColor: Codable, Equatable, RawRepresentable, ExpressibleByStringInterpolation {
+
+    /// A color string as defined by the [Mapbox Style Spec](https://docs.mapbox.com/style-spec/reference/types/#color).
+    public let rawValue: String
 
     // MARK: - Component-wise
 
     /// A value from 0 to 255, as required by the Mapbox Style Spec
-    public let red: Double
+    @available(*, unavailable, message: "Inspect color components by accessing the 'rawValue' property.")
+    public var red: Double { fatalError() }
 
     /// A value from 0 to 255, as required by the Mapbox Style Spec
-    public let green: Double
+    @available(*, unavailable, message: "Inspect color components by accessing the 'rawValue' property.")
+    public var green: Double { fatalError() }
 
     /// A value from 0 to 255, as required by the Mapbox Style Spec
-    public let blue: Double
+    @available(*, unavailable, message: "Inspect color components by accessing the 'rawValue' property.")
+    public var blue: Double { fatalError() }
 
-    /// A value from 0 to 1, as required by the Mapbox Style Spec
-    public let alpha: Double
+    /// Creates a `StyleColor` from individually-provided color components. Returns nil
+    /// if any of the channel values are out of the supported ranges.
+    /// - Parameters:
+    ///   - red: A value from 0 to 255, as required by the Mapbox Style Spec
+    ///   - green: A value from 0 to 255, as required by the Mapbox Style Spec
+    ///   - blue: A value from 0 to 255, as required by the Mapbox Style Spec
+    public init?(red: Double, green: Double, blue: Double) {
+        guard [red, green, blue].allSatisfy((0.0...255.0).contains) else {
+            return nil
+        }
+        self.rawValue = String(format: "rgb(%.2f, %.2f, %.2f)", red, green, blue)
+    }
 
     /// Creates a `StyleColor` from individually-provided color components. Returns nil
     /// if any of the channel values are out of the supported ranges.
@@ -29,10 +46,35 @@ public struct StyleColor: Codable, Equatable {
               (0.0...1.0).contains(alpha) else {
             return nil
         }
-        self.red = red
-        self.green = green
-        self.blue = blue
-        self.alpha = alpha
+        self.rawValue = String(format: "rgba(%.2f, %.2f, %.2f, %.2f)", red, green, blue, alpha)
+    }
+
+    /// Creates a `StyleColor` from individually-provided color components. Returns nil
+    /// if any of the channel values are out of the supported ranges.
+    /// - Parameters:
+    ///   - hue: A value from 0 to 360, as required by the Mapbox Style Spec
+    ///   - saturation: A value from 0 to 100, as required by the Mapbox Style Spec
+    ///   - lightness: A value from 0 to 100, as required by the Mapbox Style Spec
+    public init?(hue: Double, saturation: Double, lightness: Double) {
+        guard (0.0...360.0).contains(hue), [saturation, lightness].allSatisfy((0.0...100.0).contains) else {
+            return nil
+        }
+        self.rawValue = String(format: "hsl(%.2f, %.2f, %.2f)", hue, saturation, lightness)
+    }
+
+    /// Creates a `StyleColor` from individually-provided color components. Returns nil
+    /// if any of the channel values are out of the supported ranges.
+    /// - Parameters:
+    ///   - hue: A value from 0 to 360, as required by the Mapbox Style Spec
+    ///   - saturation: A value from 0 to 100, as required by the Mapbox Style Spec
+    ///   - lightness: A value from 0 to 100, as required by the Mapbox Style Spec
+    ///   - alpha: A value from 0 to 1, as required by the Mapbox Style Spec
+    public init?(hue: Double, saturation: Double, lightness: Double, alpha: Double) {
+        guard (0.0...360.0).contains(hue), [saturation, lightness].allSatisfy((0.0...100.0).contains),
+              (0.0...1.0).contains(alpha) else {
+            return nil
+        }
+        self.rawValue = String(format: "hsla(%.2f, %.2f, %.2f, %.2f)", hue, saturation, lightness, alpha)
     }
 
     // MARK: - UIColor
@@ -54,61 +96,55 @@ public struct StyleColor: Codable, Equatable {
             Log.error(forMessage: "Failed to convert the color \(color) to sRGB color space. Falling back to black.")
         }
 
-        self.red = Double(red * 255)
-        self.green = Double(green * 255)
-        self.blue = Double(blue * 255)
-        self.alpha = Double(alpha)
+        self.rawValue = String(format: "rgba(%.2f, %.2f, %.2f, %.2f)", red * 255, green * 255, blue * 255, alpha)
     }
 
     // MARK: - Expression
 
     /// Creates a `StyleColor` from an `Expression`. Returns nil if
-    /// the expression operator is not `rgba`, if the expression does not
-    /// have four number-type arguments, or if the arguments are out of
-    /// the supported ranges.
-    /// - Parameter expression: An rgba expression
+    /// the expression operator is not `rgb`, `rgba`, `hsl` or `hsla`, if the expression does not
+    /// have four number-type arguments(for `rgba` and `hsla`) or three number-type arguments(for `rgb` and `hsl`),
+    /// or if the arguments are out of the supported ranges.
+    /// - Parameter expression: An rgb(a) or hsl(a)  expression.
     internal init?(expression: Expression) {
-        guard expression.operator == .rgba,
-              expression.arguments.count == 4,
-              case .number(let red) = expression.arguments[0],
-              case .number(let green) = expression.arguments[1],
-              case .number(let blue) = expression.arguments[2],
-              case .number(let alpha) = expression.arguments[3] else {
+        guard case 3..<5 = expression.arguments.count,
+              case .number(let component0) = expression.arguments[0],
+              case .number(let component1) = expression.arguments[1],
+              case .number(let component2) = expression.arguments[2] else {
             return nil
         }
-        self.init(red: red, green: green, blue: blue, alpha: alpha)
+
+        let alpha: Double?
+        if expression.arguments.count >= 4, case .number(let a) = expression.arguments[3] {
+            alpha = a
+        } else {
+            alpha = nil
+        }
+
+        switch (expression.operator, alpha) {
+        case (.rgb, .none):
+            self.init(red: component0, green: component1, blue: component2)
+        case (.hsl, .none):
+            self.init(hue: component0, saturation: component1, lightness: component2)
+        case (.rgba, .some(let alpha)):
+            self.init(red: component0, green: component1, blue: component2, alpha: alpha)
+        case (.hsla, .some(let alpha)):
+            self.init(hue: component0, saturation: component1, lightness: component2, alpha: alpha)
+        default:
+            return nil
+        }
     }
 
-    // MARK: - RGBA String
+    // MARK: - To/from string conversion
 
-    /// Creates a `StyleColor` from an rgba color string as defined
-    /// in the Mapbox Style Spec. Returns nil if the string is not a valid
-    /// rgba color string.
-    /// - Parameter rgbaString: An rgba color string
-    internal init?(rgbaString: String) {
-        let nsString = NSString(string: rgbaString)
-        let numberRegex = "(-?(?:0|[1-9][0-9]*)(?:.[0-9]+)?(?:[eE][+-]?[0-9]+)?)"
-        let regex = try! NSRegularExpression(pattern: "^ *rgba\\( *\(numberRegex) *, *\(numberRegex) *, *\(numberRegex) *, *\(numberRegex) *\\) *$", options: [])
-        let matches = regex.matches(in: rgbaString, options: [], range: NSRange(location: 0, length: nsString.length))
-        guard matches.count == 1, let firstMatch = matches.first else {
-            return nil
-        }
-        let redString = nsString.substring(with: firstMatch.range(at: 1))
-        let greenString = nsString.substring(with: firstMatch.range(at: 2))
-        let blueString = nsString.substring(with: firstMatch.range(at: 3))
-        let alphaString = nsString.substring(with: firstMatch.range(at: 4))
-        guard let red = Double(redString),
-              let green = Double(greenString),
-              let blue = Double(blueString),
-              let alpha = Double(alphaString) else {
-            return nil
-        }
-        self.init(red: red, green: green, blue: blue, alpha: alpha)
+    /// Creates a `StyleColor` from a color string as defined in the [Mapbox Style Spec](https://docs.mapbox.com/style-spec/reference/types/#color).
+    /// - Parameter rawValue: A color string.
+    public init(rawValue: String) {
+        self.rawValue = rawValue
     }
 
-    /// An rgba color string in the form `rgba(red, green, blue, alpha)` as defined by the Mapbox Style Spec
-    internal var rgbaString: String {
-        return "rgba(\(red), \(green), \(blue), \(alpha))"
+    public init(stringLiteral value: StringLiteralType) {
+        self.init(rawValue: value)
     }
 
     // MARK: - Codable
@@ -123,14 +159,14 @@ public struct StyleColor: Codable, Equatable {
         if let expression = try? container.decode(Expression.self) {
             optionalColor = StyleColor(expression: expression)
         } else if let string = try? container.decode(String.self) {
-            optionalColor = StyleColor(rgbaString: string)
+            optionalColor = StyleColor(rawValue: string)
         } else {
             optionalColor = nil
         }
         guard let color = optionalColor else {
             throw DecodingError.dataCorruptedError(
                 in: container,
-                debugDescription: "Expected rgba expression or rgba color value as defined by the Mapbox Style Spec.")
+                debugDescription: "Expected a color value as defined by the Mapbox Style Spec.")
         }
         self = color
     }
@@ -140,7 +176,7 @@ public struct StyleColor: Codable, Equatable {
     /// - Throws: Throws if the provided encoder does not allow encoding the rgba color string.
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
-        try container.encode(rgbaString)
+        try container.encode(rawValue)
     }
 }
 

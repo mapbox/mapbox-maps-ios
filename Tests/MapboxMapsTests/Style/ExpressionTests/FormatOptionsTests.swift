@@ -62,7 +62,7 @@ final class FormatOptionsTests: XCTestCase {
         let formatOptions = try JSONDecoder().decode(FormatOptions.self, from: try XCTUnwrap(formatOptionsData))
         XCTAssertEqual(formatOptions.fontScale?.asConstant, 1)
         XCTAssertEqual(formatOptions.textFont?.asConstant, ["Open Sans Semibold", "Arial Unicode MS Bold"])
-        XCTAssertEqual(formatOptions.textColor?.asConstant?.rgbaString, "rgba(0.0, 0.0, 0.0, 0.0)")
+        XCTAssertEqual(formatOptions.textColor?.asConstant?.rawValue, "rgba(0,0,0,0)")
     }
 
     func testEncodeWithValue() throws {
@@ -74,7 +74,7 @@ final class FormatOptionsTests: XCTestCase {
 
         XCTAssertEqual(encoded["font-scale"] as? Double, 1)
         XCTAssertEqual(encoded["text-font"] as? [String], ["Open Sans Semibold", "Arial Unicode MS Bold"])
-        XCTAssertEqual(encoded["text-color"] as? String, "rgba(0.0, 0.0, 0.0, 1.0)")
+        XCTAssertEqual(encoded["text-color"] as? String, "rgba(0.00, 0.00, 0.00, 1.00)")
     }
 
     func testEncodeWithExpression() throws {

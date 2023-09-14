@@ -279,8 +279,8 @@ final class Puck2DRendererTests: XCTestCase {
 
         var expectedProperties = makeExpectedLayerProperties(with: data)
         expectedProperties["accuracy-radius"] = data.location.horizontalAccuracy
-        expectedProperties["accuracy-radius-color"] = StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
-        expectedProperties["accuracy-radius-border-color"] = StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
+        expectedProperties["accuracy-radius-color"] = StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rawValue
+        expectedProperties["accuracy-radius-border-color"] = StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rawValue
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
@@ -412,31 +412,31 @@ final class Puck2DRendererTests: XCTestCase {
         expectedProperties["accuracy-radius-color"] = [
             "step",
             ["zoom"],
-            StyleColor(UIColor.clear).rgbaString,
+            StyleColor(UIColor.clear).rawValue,
             cutoffZoomLevel,
-            StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
+            StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rawValue
         ] as [Any]
         expectedProperties["accuracy-radius-border-color"] = [
             "step",
             ["zoom"],
-            StyleColor(UIColor.clear).rgbaString,
+            StyleColor(UIColor.clear).rawValue,
             cutoffZoomLevel,
-            StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
+            StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rawValue
         ] as [Any]
         expectedProperties["emphasis-circle-color"] = [
             "step",
             ["zoom"],
-            StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString,
+            StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rawValue,
             cutoffZoomLevel,
-            StyleColor(UIColor.clear).rgbaString
+            StyleColor(UIColor.clear).rawValue
         ] as [Any]
         expectedProperties["emphasis-circle-radius"] = 11
         expectedProperties["emphasis-circle-color"] = [
             "step",
             ["zoom"],
-            StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString,
+            StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rawValue,
             cutoffZoomLevel,
-            StyleColor(UIColor.clear).rgbaString
+            StyleColor(UIColor.clear).rawValue
         ] as [Any]
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
@@ -484,31 +484,31 @@ final class Puck2DRendererTests: XCTestCase {
         expectedProperties["accuracy-radius-color"] = [
             "step",
             ["zoom"],
-            StyleColor(UIColor.clear).rgbaString,
+            StyleColor(UIColor.clear).rawValue,
             cutoffZoomLevel,
-            StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
+            StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rawValue
         ] as [Any]
         expectedProperties["accuracy-radius-border-color"] = [
             "step",
             ["zoom"],
-            StyleColor(UIColor.clear).rgbaString,
+            StyleColor(UIColor.clear).rawValue,
             cutoffZoomLevel,
-            StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
+            StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rawValue
         ] as [Any]
         expectedProperties["emphasis-circle-color"] = [
             "step",
             ["zoom"],
-            StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString,
+            StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rawValue,
             cutoffZoomLevel,
-            StyleColor(UIColor.clear).rgbaString
+            StyleColor(UIColor.clear).rawValue
         ] as [Any]
         expectedProperties["emphasis-circle-radius"] = 11
         expectedProperties["emphasis-circle-color"] = [
             "step",
             ["zoom"],
-            StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString,
+            StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rawValue,
             cutoffZoomLevel,
-            StyleColor(UIColor.clear).rgbaString
+            StyleColor(UIColor.clear).rawValue
         ] as [Any]
         for key in originalKeys where expectedProperties[key] == nil {
             expectedProperties[key] = StyleManager.layerPropertyDefaultValue(for: .locationIndicator, property: key).value
@@ -678,7 +678,7 @@ final class Puck2DRendererTests: XCTestCase {
             style.setLayerPropertiesStub.invocations.last?
                 .parameters.properties[LocationIndicatorLayer.PaintCodingKeys.emphasisCircleColor.rawValue] as? String
         )
-        XCTAssertEqual(StyleColor(expectedColor.withAlphaComponent(0)).rgbaString, color)
+        XCTAssertEqual(StyleColor(expectedColor.withAlphaComponent(0)).rawValue, color)
         XCTAssertEqual(expectedRadius, radius)
     }
 
@@ -707,7 +707,7 @@ final class Puck2DRendererTests: XCTestCase {
             style.setLayerPropertiesStub.invocations.last?
                 .parameters.properties[LocationIndicatorLayer.PaintCodingKeys.emphasisCircleColor.rawValue] as? String
         )
-        XCTAssertEqual(StyleColor(expectedColor.withAlphaComponent(1 - curvedProgress)).rgbaString, color)
+        XCTAssertEqual(StyleColor(expectedColor.withAlphaComponent(1 - curvedProgress)).rawValue, color)
         XCTAssertEqual(expectedRadius * curvedProgress, radius)
     }
 
@@ -739,7 +739,7 @@ final class Puck2DRendererTests: XCTestCase {
             style.setLayerPropertiesStub.invocations.last?
                 .parameters.properties[LocationIndicatorLayer.PaintCodingKeys.emphasisCircleColor.rawValue] as? String
         )
-        XCTAssertEqual(StyleColor(expectedColor.withAlphaComponent(1 - curvedProgress)).rgbaString, color)
+        XCTAssertEqual(StyleColor(expectedColor.withAlphaComponent(1 - curvedProgress)).rawValue, color)
         XCTAssertEqual(expectedRadius * curvedProgress, radius)
     }
 
@@ -768,7 +768,7 @@ final class Puck2DRendererTests: XCTestCase {
             style.setLayerPropertiesStub.invocations.last?
                 .parameters.properties[LocationIndicatorLayer.PaintCodingKeys.emphasisCircleColor.rawValue] as? String
         )
-        XCTAssertEqual(StyleColor(expectedColor.withAlphaComponent(0)).rgbaString, color)
+        XCTAssertEqual(StyleColor(expectedColor.withAlphaComponent(0)).rawValue, color)
         XCTAssertEqual(expectedRadius, radius)
     }
 }

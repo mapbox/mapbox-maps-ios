@@ -102,7 +102,7 @@ extension Dictionary: ExpressionArgumentConvertible where Key == Double,
 /// This API enables the Expressions DSL syntax and is not designed to be called directly.
 extension UIColor: ExpressionArgumentConvertible {
     public var expressionArguments: [Expression.Argument] {
-        return [.string(StyleColor(self).rgbaString)]
+        return [.string(StyleColor(self).rawValue)]
     }
 }
 

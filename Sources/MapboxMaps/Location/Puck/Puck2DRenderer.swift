@@ -163,8 +163,8 @@ internal final class Puck2DRenderer: Puck2DRendererProtocol {
             newLayerPaintProperties[.locationIndicatorOpacityTransition] = immediateTransition
             if configuration.showsAccuracyRing {
                 newLayerPaintProperties[.accuracyRadius] = data.location.horizontalAccuracy
-                newLayerPaintProperties[.accuracyRadiusColor] = StyleColor(configuration.accuracyRingColor).rgbaString
-                newLayerPaintProperties[.accuracyRadiusBorderColor] = StyleColor(configuration.accuracyRingBorderColor).rgbaString
+                newLayerPaintProperties[.accuracyRadiusColor] = StyleColor(configuration.accuracyRingColor).rawValue
+                newLayerPaintProperties[.accuracyRadiusBorderColor] = StyleColor(configuration.accuracyRingBorderColor).rawValue
             }
 
             if puckBearingEnabled {
@@ -210,21 +210,21 @@ internal final class Puck2DRenderer: Puck2DRendererProtocol {
             newLayerPaintProperties[.accuracyRadiusColor] = [
                 Expression.Operator.step.rawValue,
                 [Expression.Operator.zoom.rawValue],
-                StyleColor(UIColor.clear).rgbaString,
+                StyleColor(UIColor.clear).rawValue,
                 cutoffZoomLevel,
-                StyleColor(configuration.accuracyRingColor).rgbaString] as [Any]
+                StyleColor(configuration.accuracyRingColor).rawValue] as [Any]
             newLayerPaintProperties[.accuracyRadiusBorderColor] = [
                 Expression.Operator.step.rawValue,
                 [Expression.Operator.zoom.rawValue],
-                StyleColor(UIColor.clear).rgbaString,
+                StyleColor(UIColor.clear).rawValue,
                 cutoffZoomLevel,
-                StyleColor(configuration.accuracyRingBorderColor).rgbaString] as [Any]
+                StyleColor(configuration.accuracyRingBorderColor).rawValue] as [Any]
             newLayerPaintProperties[.emphasisCircleColor] = [
                 Expression.Operator.step.rawValue,
                 [Expression.Operator.zoom.rawValue],
-                StyleColor(configuration.accuracyRingColor).rgbaString,
+                StyleColor(configuration.accuracyRingColor).rawValue,
                 cutoffZoomLevel,
-                StyleColor(UIColor.clear).rgbaString] as [Any]
+                StyleColor(UIColor.clear).rawValue] as [Any]
             newLayerPaintProperties[.emphasisCircleRadius] = minPuckRadiusInPoints
         }
 
@@ -335,7 +335,7 @@ internal final class Puck2DRenderer: Puck2DRendererProtocol {
         let color = pulsing.color.withAlphaComponent(curvedProgress <= 0.1 ? 0 : alpha)
         let properties: [LocationIndicatorLayer.PaintCodingKeys: Any] = [
             .emphasisCircleRadius: radius,
-            .emphasisCircleColor: StyleColor(color).rgbaString,
+            .emphasisCircleColor: StyleColor(color).rawValue,
         ]
 
         if progress >= 1 {

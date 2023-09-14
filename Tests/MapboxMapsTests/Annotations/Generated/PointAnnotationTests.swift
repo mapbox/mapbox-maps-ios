@@ -281,7 +281,7 @@ final class PointAnnotationTests: XCTestCase {
               case let .string(iconColor) = layerProperties["icon-color"] else {
             return XCTFail("Layer property icon-color should be set to a string.")
         }
-        XCTAssertEqual(iconColor, annotation.iconColor.flatMap { $0.rgbaString })
+        XCTAssertEqual(iconColor, annotation.iconColor.flatMap { $0.rawValue })
     }
 
     func testIconEmissiveStrength() {
@@ -323,7 +323,7 @@ final class PointAnnotationTests: XCTestCase {
               case let .string(iconHaloColor) = layerProperties["icon-halo-color"] else {
             return XCTFail("Layer property icon-halo-color should be set to a string.")
         }
-        XCTAssertEqual(iconHaloColor, annotation.iconHaloColor.flatMap { $0.rgbaString })
+        XCTAssertEqual(iconHaloColor, annotation.iconHaloColor.flatMap { $0.rawValue })
     }
 
     func testIconHaloWidth() {
@@ -379,7 +379,7 @@ final class PointAnnotationTests: XCTestCase {
               case let .string(textColor) = layerProperties["text-color"] else {
             return XCTFail("Layer property text-color should be set to a string.")
         }
-        XCTAssertEqual(textColor, annotation.textColor.flatMap { $0.rgbaString })
+        XCTAssertEqual(textColor, annotation.textColor.flatMap { $0.rawValue })
     }
 
     func testTextEmissiveStrength() {
@@ -421,7 +421,7 @@ final class PointAnnotationTests: XCTestCase {
               case let .string(textHaloColor) = layerProperties["text-halo-color"] else {
             return XCTFail("Layer property text-halo-color should be set to a string.")
         }
-        XCTAssertEqual(textHaloColor, annotation.textHaloColor.flatMap { $0.rgbaString })
+        XCTAssertEqual(textHaloColor, annotation.textHaloColor.flatMap { $0.rawValue })
     }
 
     func testTextHaloWidth() {

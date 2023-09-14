@@ -61,7 +61,7 @@ final class PolylineAnnotationTests: XCTestCase {
               case let .string(lineBorderColor) = layerProperties["line-border-color"] else {
             return XCTFail("Layer property line-border-color should be set to a string.")
         }
-        XCTAssertEqual(lineBorderColor, annotation.lineBorderColor.flatMap { $0.rgbaString })
+        XCTAssertEqual(lineBorderColor, annotation.lineBorderColor.flatMap { $0.rawValue })
     }
 
     func testLineBorderWidth() {
@@ -91,7 +91,7 @@ final class PolylineAnnotationTests: XCTestCase {
               case let .string(lineColor) = layerProperties["line-color"] else {
             return XCTFail("Layer property line-color should be set to a string.")
         }
-        XCTAssertEqual(lineColor, annotation.lineColor.flatMap { $0.rgbaString })
+        XCTAssertEqual(lineColor, annotation.lineColor.flatMap { $0.rawValue })
     }
 
     func testLineGapWidth() {

@@ -1174,3 +1174,10 @@ Func CircleAnnotationManager.syncSourceAndLayerIfNeeded() has been removed
 Func PointAnnotationManager.syncSourceAndLayerIfNeeded() has been removed
 Func PolygonAnnotationManager.syncSourceAndLayerIfNeeded() has been removed
 Func PolylineAnnotationManager.syncSourceAndLayerIfNeeded() has been removed
+
+// Add support for string-based colors for StyleColor
+Func StyleColor.==(_:_:) has been removed
+Var StyleColor.alpha has been removed
+Var StyleColor.blue has been removed
+Var StyleColor.green has been removed
+Var StyleColor.red has been removed

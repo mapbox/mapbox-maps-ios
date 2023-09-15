@@ -92,12 +92,12 @@ extension Signal {
     }
 
     /// Creates a signal that is enabled only when `isEnabled` value is `true`.
-    internal func conditional(_ isEnabled: Ref<Bool>) -> Signal {
+    func conditional(_ isEnabled: Ref<Bool>) -> Signal {
         filter { _ in isEnabled.value }
     }
 
     /// Creates  a Signal that joins values and errors signals into a resulting signal.
-    internal func join<E>(withError other: Signal<E>) -> Signal<Result<Payload, E>> {
+    func join<E>(withError other: Signal<E>) -> Signal<Result<Payload, E>> {
         return Signal<Result<Payload, E>> { handler in
             AnyCancelable([
                 self.observe { payload in
@@ -112,7 +112,15 @@ extension Signal {
 }
 
 extension Signal {
-    internal func compactMap<U>(_ transform: @escaping (Payload) -> U?) -> Signal<U> {
+    func map<U>(_ transform: @escaping (Payload) -> U) -> Signal<U> {
+        Signal<U> { handler in
+            return self.observe { payload in
+                handler(transform(payload))
+            }
+        }
+    }
+
+    func compactMap<U>(_ transform: @escaping (Payload) -> U?) -> Signal<U> {
         return Signal<U> { handler in
             return self.observe { payload in
                 if let transformed = transform(payload) {
@@ -122,8 +130,15 @@ extension Signal {
         }
     }
 
-    internal func skipNil<U>() -> Signal<U> where Payload == U? {
+    func skipNil<U>() -> Signal<U> where Payload == U? {
         compactMap { $0 }
+    }
+
+    /// Returns signal that retains object while signal subscription is alive.
+    func retaining(_ object: AnyObject) -> Signal {
+        map { payload in
+            withExtendedLifetime(object) { payload }
+        }
     }
 }
 
@@ -136,5 +151,15 @@ extension Signal {
         var payload: Payload?
         _ = observe { payload = $0 }
         return payload
+    }
+}
+
+extension Signal {
+    func handle<Root: AnyObject>(in method: @escaping (Root) -> (Payload) -> Void, ofWeak root: Root) -> AnyCancelable {
+        observe { [weak root] payload in
+            guard let root else { return }
+            let handler = method(root)
+            handler(payload)
+        }
     }
 }

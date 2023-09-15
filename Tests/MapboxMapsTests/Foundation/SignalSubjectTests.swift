@@ -67,32 +67,51 @@ final class SignalSubjectTests: XCTestCase {
     }
 
     func testCancellationUponNotification() {
-        weak var cancellable: AnyCancelable?
+        weak var weakToken1: AnyCancelable?
+        weak var weakToken2: AnyCancelable?
 
-        var observedValues = [Bool]()
-        var values = [Int]()
+        var values1 = [Int]()
+        var values2 = [Int]()
+        var values3 = [Int]()
 
         let subject = SignalSubject<Int>()
-        subject.onObserved = { observed in
-            observedValues.append(observed)
-        }
 
-        let c = subject.signal.observe { newValue in
-            values.append(newValue)
-            cancellable?.cancel()
+        let token1 = subject.signal.observe { payload in
+            values1.append(payload)
+            if payload == 1 {
+                weakToken1?.cancel()
+                weakToken2?.cancel()
+            }
         }
-        cancellable = c
-        cancellables.insert(c)
+        weakToken1 = token1
+        cancellables.insert(token1)
 
-        XCTAssertEqual(observedValues, [true])
-        XCTAssertEqual(values, [])
+        let token2 = subject.signal.observe { payload in
+            values2.append(payload)
+        }
+        weakToken2 = token2
+        cancellables.insert(token2)
+
+        subject.signal.observe { payload in
+            values3.append(payload)
+        }.store(in: &cancellables)
 
         subject.send(0)
-        XCTAssertEqual(observedValues, [true, false])
-        XCTAssertEqual(values, [0])
+        XCTAssertEqual(values1, [0])
+        XCTAssertEqual(values2, [0])
+        XCTAssertEqual(values3, [0])
 
+        // sending 1 cancels observer 1 and 2
         subject.send(1)
-        XCTAssertEqual(values, [0])
+        XCTAssertEqual(values1, [0, 1])
+        XCTAssertEqual(values2, [0, 1])
+        XCTAssertEqual(values3, [0, 1])
+
+        subject.send(2)
+        subject.send(3)
+        XCTAssertEqual(values1, [0, 1])
+        XCTAssertEqual(values2, [0, 1])
+        XCTAssertEqual(values3, [0, 1, 2, 3])
     }
 
     func testNewSubscriptionUponNotification() {
@@ -183,14 +202,13 @@ final class SignalSubjectTests: XCTestCase {
             return true
         }.store(in: &cancellables)
 
-        store.forEach { $0(-21) }
-        store.forEach { $0(2) }
-        store.forEach { $0(3) }
-        store.forEach { $0(-1) }
-        store.forEach { $0(5) }
+        let result1 = store.map { $0(-21) }
+        let result2 = store.map { $0(2) }
 
-        XCTAssertEqual(observed1, [-21, 2, 3, -1, 5])
-        XCTAssertEqual(observed2, [2, 3, 5])
+        XCTAssertEqual(observed1, [-21, 2])
+        XCTAssertEqual(observed2, [-21, 2])
+        XCTAssertEqual(result1, [true, true])
+        XCTAssertEqual(result2, [false, true])
     }
 }
 

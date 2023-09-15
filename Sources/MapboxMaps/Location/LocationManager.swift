@@ -83,8 +83,8 @@ public final class LocationManager {
         self.init(styleManager: styleManager,
                   mapboxMap: mapboxMap,
                   displayLink: displayLink,
-                  locationProvider: Signal { provider.onLocationUpdate.observe($0) }, // retains provider
-                  headingProvider: Signal { provider.onHeadingUpdate.observe($0) },
+                  locationProvider: provider.onLocationUpdate.retaining(provider),
+                  headingProvider: provider.onHeadingUpdate.retaining(provider),
                   nowTimestamp: .now)
         self.interfaceOrientationView = interfaceOrientationView
     }

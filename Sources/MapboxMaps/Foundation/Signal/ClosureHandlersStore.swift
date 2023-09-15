@@ -27,16 +27,25 @@ class ClosureHandlersStore<Payload, ReturnType> {
         }
     }
 
-    /// Iterates over the handlers, stops when `perform` closure returns true.
-    func forEach(_ perform: (Handler) -> Bool) {
-        let objectHandlers = objectHandlers // copy to avoid modification during iteration
-        for objectHandler in objectHandlers where perform(objectHandler.subject) {
-            break
+    private func cancel(handler: ObjectHandler) {
+        objectHandlers.removeAll(where: { $0 === handler })
+    }
+}
+
+extension ClosureHandlersStore: Sequence {
+    struct Iterator: IteratorProtocol {
+        private var proxy: Array<ObjectHandler>.Iterator
+        init(proxy: Array<ObjectHandler>.Iterator) {
+            self.proxy = proxy
+        }
+
+        mutating func next() -> Handler? {
+            proxy.next()?.subject
         }
     }
 
-    private func cancel(handler: ObjectHandler) {
-        objectHandlers.removeAll(where: { $0 === handler })
+    func makeIterator() -> Iterator {
+        return Iterator(proxy: objectHandlers.makeIterator())
     }
 }
 
@@ -50,9 +59,8 @@ extension ClosureHandlersStore where ReturnType == Void {
 
     /// Sends payload to every handler.
     func send(_ payload: Payload) {
-        forEach {
-            $0(payload)
-            return false // do not stop iteration
+        for handler in self {
+            handler(payload)
         }
     }
 }

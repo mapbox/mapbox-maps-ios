@@ -33,14 +33,6 @@ extension Signal {
             ])
         }
     }
-
-    func map<U>(_ transform: @escaping (Payload) -> U) -> Signal<U> {
-        Signal<U> { handler in
-            return self.observe { payload in
-                handler(transform(payload))
-            }
-        }
-    }
 }
 
 extension Signal where Payload: UIGestureRecognizer {

@@ -210,6 +210,42 @@ final class SignalTests: XCTestCase {
         XCTAssertEqual(observedError, [true, false], "unsubscribed from error signal")
     }
 
+    func testMap() {
+        let subj = SignalSubject<Int>()
+
+        var received = [Int]()
+        subj.signal
+            .map { $0 * 2 }
+            .observe { received.append($0) }
+            .store(in: &cancellables)
+
+        subj.send(1)
+        XCTAssertEqual(received, [2])
+
+        subj.send(2)
+        XCTAssertEqual(received, [2, 4])
+    }
+
+    func testHandle() {
+        class Handler {
+            var received = [Int]()
+            var token: AnyCancelable?
+            init(_ signal: Signal<Int>) {
+                token = signal.handle(in: Handler.handle, ofWeak: self)
+            }
+            func handle(_ payload: Int) {
+                received.append(payload)
+            }
+        }
+
+        let subj = SignalSubject<Int>()
+        let handler = Handler(subj.signal)
+        subj.send(0)
+        subj.send(1)
+        subj.send(2)
+        XCTAssertEqual(handler.received, [0, 1, 2])
+    }
+
     func testCompactMap() {
         let subj = SignalSubject<String>()
 
@@ -248,6 +284,30 @@ final class SignalTests: XCTestCase {
 
         subj.send("b")
         XCTAssertEqual(received, ["a", "b"])
+    }
+
+    func testRetaining() {
+        let subj = SignalSubject<Int>()
+
+        weak var weakObject: ObjectWrapper<Int>?
+        do {
+            var object = ObjectWrapper(subject: 1)
+            weakObject = object
+
+            var received = [Int]()
+            let token = subj.signal
+                .retaining(object)
+                .map { $0 * 2 }
+                .observe { received.append($0) }
+
+            subj.send(2)
+            XCTAssertEqual(received, [4])
+
+            XCTAssertNotNil(weakObject)
+            token.cancel()
+        }
+
+        XCTAssertNil(weakObject)
     }
 
     func testJust() {

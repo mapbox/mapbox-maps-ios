@@ -35,11 +35,8 @@ struct ViewAnnotationsExample: View {
                 }
             }
             .mapStyle(.streets)
-            .onMapTapGesture { point in
-                guard let map = proxy.map else { return }
-
-                let coordinate = map.coordinate(for: point)
-                points.append(Point(coordinate))
+            .onMapTapGesture { context in
+                points.append(Point(context.coordinate))
             }
             .ignoresSafeArea(edges: [.leading, .trailing, .bottom])
             .safeOverlay(alignment: .bottom) {

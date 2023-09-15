@@ -153,7 +153,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         annotation.isDraggable = true
         manager.annotations = [annotation]
         // adds drag source/layer
-        manager.handleDragBegin(with: [annotation.id])
+        _ = manager.handleDragBegin(with: annotation.id, context: .zero)
 
         manager.destroy()
 
@@ -223,7 +223,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         }
     }
 
-    func testHandleQueriedFeatureIdsPassesNotificationToDelegate() throws {
+    func testHandleTap() throws {
         var annotations = [PolygonAnnotation]()
         for _ in 0...5 {
             let polygonCoords = [
@@ -236,37 +236,45 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
             let annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
-        let queriedFeatureIds = [annotations[0].id]
+        var taps = [MapContentGestureContext]()
+        annotations[0].tapHandler = { context in
+            taps.append(context)
+            return true
+        }
+        annotations[1].tapHandler = { context in
+            return false // skips handling
+        }
         manager.delegate = self
 
         manager.annotations = annotations
-        manager.handleQueriedFeatureIds(queriedFeatureIds)
 
-        let result = try XCTUnwrap(delegateAnnotations)
+        // first annotation, handles tap
+        let context = MapContentGestureContext(point: .init(x: 1, y: 2), coordinate: .init(latitude: 3, longitude: 4))
+        var handled = manager.handleTap(with: annotations[0].id, context: context)
+
+        var result = try XCTUnwrap(delegateAnnotations)
         XCTAssertEqual(result[0].id, annotations[0].id)
-    }
+        XCTAssertEqual(handled, true)
 
-    func testHandleQueriedFeatureIdsDoesNotPassNotificationToDelegateWhenNoMatch() throws {
-        var annotations = [PolygonAnnotation]()
-        for _ in 0...5 {
-            let polygonCoords = [
-                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
-                CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
-                CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
-                CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
-                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
-            ]
-            let annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
-            annotations.append(annotation)
-        }
-        let queriedFeatureIds = ["NotAnAnnotationID"]
-        manager.delegate = self
+        XCTAssertEqual(taps.count, 1)
+        XCTAssertEqual(taps.first?.point, context.point)
+        XCTAssertEqual(taps.first?.coordinate, context.coordinate)
 
-        expectation?.isInverted = true
-        manager.annotations = annotations
-        manager.handleQueriedFeatureIds(queriedFeatureIds)
+        // second annotation, skips handling tap
+        delegateAnnotations = nil
+        handled = manager.handleTap(with: annotations[1].id, context: context)
+
+        result = try XCTUnwrap(delegateAnnotations)
+        XCTAssertEqual(result[0].id, annotations[1].id)
+        XCTAssertEqual(handled, false)
+
+        // invalid id
+        delegateAnnotations = nil
+        handled = manager.handleTap(with: "invalid-id", context: context)
 
         XCTAssertNil(delegateAnnotations)
+        XCTAssertEqual(handled, false)
+        XCTAssertEqual(taps.count, 1)
     }
 
     func testInitialFillAntialias() {
@@ -583,7 +591,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
 
         // Dragged annotation will be added to internal list of dragged annotations.
         let annotationToDrag = annotations.randomElement()!
-        manager.handleDragBegin(with: [annotationToDrag.id])
+        _ = manager.handleDragBegin(with: annotationToDrag.id, context: .zero)
         XCTAssertTrue(manager.annotations.contains(where: { $0.id == annotationToDrag.id }))
     }
 
@@ -601,27 +609,16 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         style.addSourceStub.reset()
         style.addPersistentLayerStub.reset()
 
-        manager.handleDragBegin(with: ["polygon1"])
+        _ = manager.handleDragBegin(with: "polygon1", context: .zero)
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
     }
-
-    func testHandleDragBeginNoFeatureId() {
-        style.addSourceStub.reset()
-        style.addPersistentLayerStub.reset()
-
-        manager.handleDragBegin(with: [])
-
-        XCTAssertTrue(style.addSourceStub.invocations.isEmpty)
-        XCTAssertTrue(style.addPersistentLayerStub.invocations.isEmpty)
-    }
-
     func testHandleDragBeginInvalidFeatureId() {
         style.addSourceStub.reset()
         style.addPersistentLayerStub.reset()
 
-        manager.handleDragBegin(with: ["not-a-feature"])
+        _ = manager.handleDragBegin(with: "not-a-feature", context: .zero)
 
         XCTAssertTrue(style.addSourceStub.invocations.isEmpty)
         XCTAssertTrue(style.addPersistentLayerStub.invocations.isEmpty)
@@ -640,7 +637,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         style.addSourceStub.reset()
         style.addPersistentLayerStub.reset()
 
-        manager.handleDragBegin(with: ["polygon1"])
+        _ = manager.handleDragBegin(with: "polygon1", context: .zero)
 
         let addSourceParameters = try XCTUnwrap(style.addSourceStub.invocations.last).parameters
         let addLayerParameters = try XCTUnwrap(style.addPersistentLayerStub.invocations.last).parameters
@@ -650,7 +647,7 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(addLayerParameters.layerPosition, .above(manager.id))
         XCTAssertEqual(addedLayer.id, manager.id + "_drag")
 
-        manager.handleDragBegin(with: ["polygon1"])
+        _ = manager.handleDragBegin(with: "polygon1", context: .zero)
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 1)

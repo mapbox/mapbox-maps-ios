@@ -84,64 +84,57 @@ final class MapBasicCoordinatorTests: XCTestCase {
         XCTAssertEqual(ornaments.options, ornamentOptions)
     }
 
-    func testTapGesture() {
-        let mockActions = MockActions()
-        let deps = MapDependencies(actions: mockActions.actions)
+    func testContentGestures() {
+        let onTapGesture = Stub<MapContentGestureContext, Void>()
+        let onLongPressGesture = Stub<MapContentGestureContext, Void>()
+        let onLayerTapGesture = Stub<(QueriedFeature, MapContentGestureContext), Bool>(defaultReturnValue: true)
+        let onLayerLongPressGesture = Stub<(QueriedFeature, MapContentGestureContext), Bool>(defaultReturnValue: true)
+
+        let deps = MapDependencies(
+            onMapTap: onTapGesture.call(with:),
+            onMapLongPress: onLongPressGesture.call(with:),
+            onLayerTap: ["layer1": { onLayerTapGesture.call(with: ($0, $1)) }],
+            onLayerLongPress: ["layer1": { onLayerLongPressGesture.call(with: ($0, $1)) }]
+        )
         me.update(
             viewport: .constant(.idle),
             deps: deps,
             layoutDirection: .leftToRight,
             animationData: nil)
 
-        let point = CGPoint.random()
-        let coordinate = CLLocationCoordinate2D.random()
+        let contentGestures = mapView.gestures.contentManager
+        let point = CGPoint(x: 10, y: 20)
+        let coordinate = CLLocationCoordinate2D(latitude: 30, longitude: 40)
+        let context = MapContentGestureContext(point: point, coordinate: coordinate)
 
-        mapView.gestures.singleTapGestureRecognizerMock.mockLocation = point
-        mapView.mapboxMap.coordinateForPointStub.defaultReturnValue = coordinate
+        contentGestures.$onMapTap.send(context)
+        XCTAssertEqual(onTapGesture.invocations.count, 1)
+        XCTAssertEqual(onTapGesture.invocations.first?.parameters.point, point)
+        XCTAssertEqual(onTapGesture.invocations.first?.parameters.coordinate, coordinate)
 
-        mapView.gestures.singleTapGestureRecognizerMock.sendActions()
-
-        XCTAssertEqual(mockActions.onMapTapGesture.invocations.count, 1)
-        XCTAssertEqual(mockActions.onMapTapGesture.invocations.first?.parameters, point)
-
-        let qrfStub = mapView.mapboxMap.qrfStub
-        XCTAssertEqual(qrfStub.invocations.count, 1)
-        XCTAssertEqual(qrfStub.invocations.first?.parameters.point, point)
-        XCTAssertEqual(qrfStub.invocations.first?.parameters.options?.layerIds, ["layer-foo"])
+        contentGestures.$onMapLongPress.send(context)
+        XCTAssertEqual(onLongPressGesture.invocations.count, 1)
+        XCTAssertEqual(onLongPressGesture.invocations.first?.parameters.point, point)
+        XCTAssertEqual(onLongPressGesture.invocations.first?.parameters.coordinate, coordinate)
 
         let feature = Feature(geometry: Point(coordinate))
-        let queriedRenderedFeature = QueriedRenderedFeature(
-            __queriedFeature: QueriedFeature(
-                __feature: MapboxCommon.Feature(feature),
-                source: "src",
-                sourceLayer: "src-layer",
-                state: [String: Any]()),
-            layers: [])
-        qrfStub.invocations.first?.parameters.completion(.success([queriedRenderedFeature]))
-        XCTAssertEqual(mockActions.onLayerTapAction.invocations.count, 1)
-        XCTAssertEqual(mockActions.onLayerTapAction.invocations.first?.parameters.point, point)
-        XCTAssertEqual(mockActions.onLayerTapAction.invocations.first?.parameters.features, [queriedRenderedFeature])
-        XCTAssertEqual(mockActions.onLayerTapAction.invocations.first?.parameters.coordinate, coordinate)
-    }
+        let queriedFeature = QueriedFeature(
+            __feature: MapboxCommon.Feature(feature),
+            source: "src",
+            sourceLayer: "src-layer",
+            state: [String: Any]())
 
-    func testTapGestureMissLayer() {
-        let mockActions = MockActions()
-        let deps = MapDependencies(actions: mockActions.actions)
-        me.update(
-            viewport: .constant(.idle),
-            deps: deps,
-            layoutDirection: .leftToRight,
-            animationData: nil)
+        contentGestures.simulateLayerTap(layerId: "layer1", queriedFeature: queriedFeature, context: context)
+        XCTAssertEqual(onLayerTapGesture.invocations.count, 1)
+        XCTAssertEqual(onLayerTapGesture.invocations.first?.parameters.0, queriedFeature)
+        XCTAssertEqual(onLayerTapGesture.invocations.first?.parameters.1.point, point)
+        XCTAssertEqual(onLayerTapGesture.invocations.first?.parameters.1.coordinate, coordinate)
 
-        mapView.gestures.singleTapGestureRecognizerMock.sendActions()
-
-        mapView.mapboxMap.qrfStub.invocations.first?.parameters.completion(.success([]))
-        XCTAssertEqual(mockActions.onLayerTapAction.invocations.count, 0)
-
-        mapView.gestures.singleTapGestureRecognizerMock.sendActions()
-
-        mapView.mapboxMap.qrfStub.invocations[1].parameters.completion(.failure(MapError(coreError: "foo")))
-        XCTAssertEqual(mockActions.onLayerTapAction.invocations.count, 0)
+        contentGestures.simulateLayerLongPress(layerId: "layer1", queriedFeature: queriedFeature, context: context)
+        XCTAssertEqual(onLayerLongPressGesture.invocations.count, 1)
+        XCTAssertEqual(onLayerLongPressGesture.invocations.first?.parameters.0, queriedFeature)
+        XCTAssertEqual(onLayerLongPressGesture.invocations.first?.parameters.1.point, point)
+        XCTAssertEqual(onLayerLongPressGesture.invocations.first?.parameters.1.coordinate, coordinate)
     }
 
     func testNotifyMapEventsToObservers() {
@@ -160,19 +153,5 @@ final class MapBasicCoordinatorTests: XCTestCase {
 
         mapView.mapboxMap.events.onMapLoaded.send(mapLoaded)
         XCTAssertEqual(mapLoaded, observedMapLoaded)
-    }
-}
-
-@available(iOS 13.0, *)
-struct MockActions {
-    var onMapTapGesture = Stub<CGPoint, Void>()
-    var onLayerTapAction = Stub<MapLayerTapPayload, Void>()
-
-    var actions: MapDependencies.Actions {
-        .init(
-            onMapTapGesture: onMapTapGesture.call(with:),
-            layerTapActions: [
-                (["layer-foo"], onLayerTapAction.call(with:))
-            ])
     }
 }

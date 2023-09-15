@@ -16,7 +16,10 @@ public protocol GestureManagerDelegate: AnyObject {
 
 protocol GestureManagerProtocol: AnyObject {
     var options: GestureOptions { get set }
-    var singleTapGestureRecognizer: UIGestureRecognizer { get }
+    var onMapTap: Signal<MapContentGestureContext> { get }
+    var onMapLongPress: Signal<MapContentGestureContext> { get }
+    func onLayerTap(_ layerId: String, handler: @escaping MapLayerGestureHandler) -> AnyCancelable
+    func onLayerLongPress(_ layerId: String, handler: @escaping MapLayerGestureHandler) -> AnyCancelable
 }
 
 public final class GestureManager: GestureHandlerDelegate {
@@ -109,6 +112,30 @@ public final class GestureManager: GestureHandlerDelegate {
         return anyTouchGestureHandler.gestureRecognizer
     }
 
+    /// A stream of single tap events on the map.
+    ///
+    //// This event is called when the user taps the map and no annotations or layers handled the gesture.
+    public var onMapTap: Signal<MapContentGestureContext> { mapContentGestureManager.onMapTap }
+
+    /// A stream of long press events.
+    ///
+    /// This event is called when the user long-presses the map and no annotations or layers handled the gesture.
+    public var onMapLongPress: Signal<MapContentGestureContext> { mapContentGestureManager.onMapLongPress }
+
+    /// Adds a tap handler to the specified layer.
+    ///
+    /// The handler will be called in the event, starting with the topmost layer and propagating down to each layer under the tap in order.
+    public func onLayerTap(_ layerId: String, handler: @escaping MapLayerGestureHandler) -> AnyCancelable {
+        mapContentGestureManager.onLayerTap(layerId, handler: handler)
+    }
+
+    /// Adds a long press handler for the layer with `layerId`.
+    ///
+    /// The handler will be called in the event, starting with the topmost layer and propagating down to each layer under the tap in order. 
+    public func onLayerLongPress(_ layerId: String, handler: @escaping MapLayerGestureHandler) -> AnyCancelable {
+        mapContentGestureManager.onLayerLongPress(layerId, handler: handler)
+    }
+
     /// Set this delegate to be called back if a gesture begins
     public weak var delegate: GestureManagerDelegate?
 
@@ -123,6 +150,7 @@ public final class GestureManager: GestureHandlerDelegate {
     private let anyTouchGestureHandler: GestureHandler
     private let interruptDecelerationGestureHandler: GestureHandler
     private let mapboxMap: MapboxMapProtocol
+    private let mapContentGestureManager: MapContentGestureManagerProtocol
 
     internal init(panGestureHandler: PanGestureHandlerProtocol,
                   pinchGestureHandler: PinchGestureHandlerProtocol,
@@ -134,7 +162,8 @@ public final class GestureManager: GestureHandlerDelegate {
                   singleTapGestureHandler: GestureHandler,
                   anyTouchGestureHandler: GestureHandler,
                   interruptDecelerationGestureHandler: GestureHandler,
-                  mapboxMap: MapboxMapProtocol) {
+                  mapboxMap: MapboxMapProtocol,
+                  mapContentGestureManager: MapContentGestureManagerProtocol) {
         self.panGestureHandler = panGestureHandler
         self.pinchGestureHandler = pinchGestureHandler
         self.pitchGestureHandler = pitchGestureHandler
@@ -146,6 +175,7 @@ public final class GestureManager: GestureHandlerDelegate {
         self.rotateGestureHandler = rotateGestureHandler
         self.interruptDecelerationGestureHandler = interruptDecelerationGestureHandler
         self.mapboxMap = mapboxMap
+        self.mapContentGestureManager = mapContentGestureManager
 
         panGestureHandler.delegate = self
         pinchGestureHandler.delegate = self

@@ -91,16 +91,14 @@ struct AnnotationsExample: View {
                     PointAnnotation(coordinate: tap.coordinate)
                         .image(.init(image: UIImage(named: "blue_marker_view")!, name: "blue-icon"))
                         .iconAnchor(.bottom)
-                        // TODO: MAPSIOS-1028
-                        // .onTapGesture {
-                        //     taps.removeAll(where: { $0.id == tap.id })
-                        // }
+                        .onTapGesture {
+                            taps.removeAll(where: { $0.id == tap.id })
+                        }
                 }
                 .clusterOptions(clusterOptions)
             }
-            .onMapTapGesture { point in
-                guard let coord = proxy.map?.coordinate(for: point) else { return }
-                taps.append(Tap(coordinate: coord))
+            .onMapTapGesture { context in
+                taps.append(Tap(coordinate: context.coordinate))
             }
             .ignoresSafeArea()
             .safeOverlay(alignment: .bottom) {
@@ -108,7 +106,7 @@ struct AnnotationsExample: View {
                     .floating()
                     .padding(.bottom, 30)
             }
-            .simpleAlert(message: $alert, title: "Clicked")
+            .simpleAlert(message: $alert, title: "Tapped")
         }
     }
 

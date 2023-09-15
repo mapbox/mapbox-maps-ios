@@ -134,7 +134,7 @@ extension Signal {
         compactMap { $0 }
     }
 
-    /// Returns signal that retains object while signal subscription is alive.
+    /// Returns Signal that retains the given object while signal subscription is alive.
     func retaining(_ object: AnyObject) -> Signal {
         map { payload in
             withExtendedLifetime(object) { payload }

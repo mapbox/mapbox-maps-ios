@@ -35,7 +35,7 @@ struct SwiftUIRoot: View {
 
                 Section {
                     ExampleLink("Puck playground", note: "Display user location using puck", destination: PuckPlayground())
-                    ExampleLink("Annotation Stability", destination: AnnotationsStabilityTestExample())
+                    ExampleLink("Annotation Order", destination: AnnotationsOrderTestExample())
                     ExampleLink("AttributionURL open (iOS 13+)", note: "Override attribution url opener.", destination: URLOpenIOS13())
                     if #available(iOS 15.0, *) {
                         ExampleLink("AttributionURL open (iOS 15+)", note: "Override attribution url opener.", destination: URLOpenIOS15())

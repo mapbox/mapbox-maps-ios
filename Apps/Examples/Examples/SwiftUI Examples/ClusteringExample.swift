@@ -28,8 +28,17 @@ struct ClusteringExample : View {
                     guard let map = proxy.map else { return }
                     try! setupClusteringLayer(map)
                 }
-                .onLayerTapGesture(Id.clusterCircle, Id.point) {
-                    details = Detail(features: $0.features)
+                .onLayerTapGesture(Id.clusterCircle) { feature, _ in
+                    details = Detail(queriedFeature: feature)
+                    return true
+                }
+                .onLayerTapGesture(Id.point) { feature, _ in
+                    details = Detail(queriedFeature: feature)
+                    return true
+                }
+                .onMapTapGesture { context in
+                    let latLon = String(format: "%.4f, %.4f", context.coordinate.latitude, context.coordinate.longitude)
+                    details = Detail(title: "Map Tapped", message: "\(latLon)")
                 }
                 .ignoresSafeArea()
                 .alert(item: $details) {
@@ -41,8 +50,12 @@ struct ClusteringExample : View {
 
 @available(iOS 14.0, *)
 extension ClusteringExample.Detail {
-    init?(features: [QueriedRenderedFeature]) {
-        guard let properties = features.first?.queriedFeature.feature.properties else {
+    init(title: String, message: String) {
+        self.title = title
+        self.message = message
+    }
+    init?(queriedFeature: QueriedFeature) {
+        guard let properties = queriedFeature.feature.properties else {
             return nil
         }
         if case let .string(assetnum) = properties["ASSETNUM"],

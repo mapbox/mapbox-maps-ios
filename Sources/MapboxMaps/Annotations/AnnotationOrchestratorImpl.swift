@@ -3,6 +3,7 @@ import UIKit
 @_implementationOnly import MapboxCommon_Private
 
 internal protocol AnnotationOrchestratorImplProtocol: AnyObject {
+    var managersByLayerId: [String: AnnotationManagerInternal] { get }
     var annotationManagersById: [String: AnnotationManager] { get }
     func makePointAnnotationManager(id: String,
                                     layerPosition: LayerPosition?,
@@ -15,29 +16,17 @@ internal protocol AnnotationOrchestratorImplProtocol: AnyObject {
 
 internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestratorImplProtocol {
 
-    private let tapGestureRecognizer: UIGestureRecognizer
-
-    private let longPressGestureRecognizer: MapboxLongPressGestureRecognizer
+    private(set) var managersByLayerId: [String: AnnotationManagerInternal] = [:]
 
     private let mapFeatureQueryable: MapFeatureQueryable
 
     private let factory: AnnotationManagerFactoryProtocol
 
-    internal init(tapGestureRecognizer: UIGestureRecognizer,
-                  longPressGestureRecognizer: MapboxLongPressGestureRecognizer,
-                  mapFeatureQueryable: MapFeatureQueryable,
+    internal init(mapFeatureQueryable: MapFeatureQueryable,
                   factory: AnnotationManagerFactoryProtocol) {
-        self.tapGestureRecognizer = tapGestureRecognizer
-        self.longPressGestureRecognizer = longPressGestureRecognizer
         self.mapFeatureQueryable = mapFeatureQueryable
         self.factory = factory
         super.init()
-        tapGestureRecognizer.addTarget(self, action: #selector(handleTap(_:)))
-        longPressGestureRecognizer.addTarget(self, action: #selector(handleDrag(_:)))
-        longPressGestureRecognizer.delegate = self
-        tapGestureRecognizer.delegate = self
-        longPressGestureRecognizer.isEnabled = false
-        tapGestureRecognizer.isEnabled = false
     }
 
     /// Dictionary of annotation managers keyed by their identifiers.
@@ -47,8 +36,11 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
 
     private var annotationManagersByIdInternal = [String: AnnotationManagerInternal]() {
         didSet {
-            longPressGestureRecognizer.isEnabled = !annotationManagersByIdInternal.isEmpty
-            tapGestureRecognizer.isEnabled = !annotationManagersByIdInternal.isEmpty
+            // calculate (layerId, manager) pairs
+            let pairs = annotationManagersByIdInternal.values.flatMap { manager in
+                manager.allLayerIds.map { ($0, manager) }
+            }
+            self.managersByLayerId = Dictionary(uniqueKeysWithValues: pairs)
         }
     }
 
@@ -145,101 +137,6 @@ internal final class AnnotationOrchestratorImpl: NSObject, AnnotationOrchestrato
             Log.warning(
                 forMessage: "\(type(of: annotationManager)) with id \(id) was removed implicitly when invoking \(function) with the same id.",
                 category: "Annotations")
-        }
-    }
-
-    @objc private func handleTap(_ tap: UITapGestureRecognizer) {
-        let managers = annotationManagersByIdInternal.values
-        guard !managers.isEmpty else { return }
-
-        let layerIds = managers.map(\.layerId)
-        let options = RenderedQueryOptions(layerIds: layerIds, filter: nil)
-        mapFeatureQueryable.queryRenderedFeatures(
-            with: tap.location(in: tap.view),
-            options: options) { (result) in
-
-                switch result {
-
-                case .success(let queriedFeatures):
-
-                    // Get the identifiers of all the queried features
-                    let queriedFeatureIds: [String] = queriedFeatures.compactMap {
-                        guard case let .string(featureId) = $0.queriedFeature.feature.identifier else {
-                            return nil
-                        }
-                        return featureId
-                    }
-
-                    for manager in managers {
-                        manager.handleQueriedFeatureIds(queriedFeatureIds)
-                    }
-                case .failure(let error):
-                    Log.warning(forMessage: "Failed to query map for annotations due to error: \(error)",
-                                category: "Annotations")
-                }
-            }
-    }
-
-    // swiftlint:disable:next cyclomatic_complexity
-    @objc private func handleDrag(_ recognizer: MapboxLongPressGestureRecognizer) {
-        let managers = annotationManagersByIdInternal.values
-        guard !managers.isEmpty else { return }
-
-        switch recognizer.state {
-        case .began:
-            let layerIdentifiers = managers.flatMap(\.allLayerIds)
-            let options = RenderedQueryOptions(layerIds: layerIdentifiers, filter: nil)
-            let gestureLocation = recognizer.location(in: recognizer.view)
-            mapFeatureQueryable.queryRenderedFeatures(with: gestureLocation, options: options) { result in
-
-                switch result {
-                case .success(let queriedFeatures):
-                    let queriedFeatureIds: [String] = queriedFeatures.compactMap {
-                        guard case let .string(featureId) = $0.queriedFeature.feature.identifier else {
-                            return nil
-                        }
-                        return featureId
-                    }
-
-                    for manager in managers {
-                        manager.handleDragBegin(with: queriedFeatureIds)
-                    }
-
-                case .failure(let error):
-                    Log.error(forMessage: error.localizedDescription, category: "Gestures")
-                }
-            }
-
-        case .changed:
-            let translation = recognizer.translation(in: recognizer.view)
-
-            for manager in managers {
-                manager.handleDragChanged(with: translation)
-            }
-            recognizer.setTranslation(.zero, in: recognizer.view)
-
-        case .ended, .cancelled:
-            for manager in managers {
-                manager.handleDragEnded()
-            }
-
-        case .possible, .failed:
-            fallthrough
-        @unknown default:
-            break
-        }
-    }
-}
-
-extension AnnotationOrchestratorImpl: UIGestureRecognizerDelegate {
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        switch gestureRecognizer {
-        case self.tapGestureRecognizer where otherGestureRecognizer is UITapGestureRecognizer:
-            return true
-        case self.longPressGestureRecognizer where otherGestureRecognizer is UILongPressGestureRecognizer:
-            return true
-        default:
-            return false
         }
     }
 }

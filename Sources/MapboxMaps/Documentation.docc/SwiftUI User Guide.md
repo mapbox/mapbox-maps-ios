@@ -53,7 +53,7 @@ struct ContentView: View {
 }
 ```
 
-Please note, that you have to set the Mapbox Access Token at any time before using the ``Map-swift.struct``. You can do it either by setting `MapboxOptions.accessToken` or any option listed in <doc:Migrate-to-v11##24-Access-Token-and-Map-Options-management>.
+Please note, that you have to set the Mapbox Access Token at any time before using the ``Map-swift.struct``. You can do it either by setting `MapboxOptions.accessToken` or any option listed in <doc:Migrate-to-v11##25-Access-Token-and-Map-Options-management>.
 
 ## Tutorials
 
@@ -77,7 +77,6 @@ struct ContentView: View {
     }
 }
 ```
-![SwiftUI Dark Mode demonstation](https://static-assets.mapbox.com/maps/ios/documentation/color_scheme_swiftui.mov)
 
 Also, you always can use your custom Mapbox Styles built with [Mapbox Studio](https://studio.mapbox.com/).
 

@@ -50,9 +50,12 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
     }
 
     // MARK: - Gestures
+
     func makeGestureManager(
         view: UIView,
         mapboxMap: MapboxMapProtocol,
+        mapFeatureQueryable: MapFeatureQueryable,
+        annotations: AnnotationOrchestratorImplProtocol,
         cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager {
         return GestureManager(
             panGestureHandler: MockPanGestureHandler(
@@ -68,7 +71,8 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
             singleTapGestureHandler: makeGestureHandler(),
             anyTouchGestureHandler: makeGestureHandler(),
             interruptDecelerationGestureHandler: makeGestureHandler(),
-            mapboxMap: mapboxMap)
+            mapboxMap: mapboxMap,
+            mapContentGestureManager: MockMapContentGestureManager())
     }
 
     func makeGestureHandler() -> GestureHandler {

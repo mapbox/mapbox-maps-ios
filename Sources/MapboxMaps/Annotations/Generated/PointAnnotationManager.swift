@@ -25,6 +25,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
     /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
     /// - NOTE: This annotation manager listens to tap events via the `GestureManager.singleTapGestureRecognizer`.
+    @available(*, deprecated, message: "Use tapHandler property of Annotation")
     public weak var delegate: AnnotationInteractionDelegate?
 
     // Deps
@@ -578,46 +579,41 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
     // MARK: - User interaction handling
 
-    internal func handleQueriedFeatureIds(_ queriedFeatureIds: [String]) {
-        guard annotations.map(\.id).contains(where: queriedFeatureIds.contains(_:)) else {
-            return
-        }
-
-        var tappedAnnotations: [PointAnnotation] = []
-        var annotations: [PointAnnotation] = []
-
-        for var annotation in self.annotations {
-            if queriedFeatureIds.contains(annotation.id) {
-                annotation.isSelected.toggle()
-                tappedAnnotations.append(annotation)
-            }
-            annotations.append(annotation)
-        }
+    internal func handleTap(with featureId: String, context: MapContentGestureContext) -> Bool {
+        let tappedIndex = annotations.firstIndex { $0.id == featureId }
+        guard let tappedIndex else { return false }
+        var tappedAnnotation = annotations[tappedIndex]
+        tappedAnnotation.isSelected.toggle()
 
         if !isSwiftUI {
-            self.annotations = annotations
+            // In-place update of annotations is not supported in SwiftUI.
+            // Use the .onTapGesture {} to update annotations on call side.
+            self.annotations[tappedIndex] = tappedAnnotation
         }
 
         delegate?.annotationManager(
             self,
-            didDetectTappedAnnotations: tappedAnnotations)
+            didDetectTappedAnnotations: [tappedAnnotation])
 
-        for annotation in tappedAnnotations {
-            annotation.tapHandler?.value()
-        }
+        return tappedAnnotation.tapHandler?(context) ?? false
     }
 
-    internal func handleDragBegin(with featureIdentifiers: [String]) {
-        guard !isSwiftUI else { return }
-        let ids = Set(featureIdentifiers)
+    func handleLongPress(with featureId: String, context: MapContentGestureContext) -> Bool {
+        annotations.first {
+            $0.id == featureId
+        }?.longPressHandler?(context) ?? false
+    }
+
+    internal func handleDragBegin(with featureIdentifier: String, context: MapContentGestureContext) -> Bool {
+        guard !isSwiftUI else { return false }
 
         let predicate = { (annotation: PointAnnotation) -> Bool in
-            ids.contains(annotation.id) && annotation.isDraggable
+            annotation.id == featureIdentifier && annotation.isDraggable
         }
 
-        if let idx = draggedAnnotations.lastIndex(where: predicate) {
+        if let idx = draggedAnnotations.firstIndex(where: predicate) {
             draggedAnnotationIndex = idx
-            return
+            return true
         }
 
         if let idx = mainAnnotations.lastIndex(where: predicate) {
@@ -635,7 +631,9 @@ public class PointAnnotationManager: AnnotationManagerInternal {
                     Log.error(forMessage: "Add drag source/layer \(error)", category: "Annotations")
                 }
             }
+            return true
         }
+        return false
     }
 
     internal func handleDragChanged(with translation: CGPoint) {

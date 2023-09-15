@@ -12,7 +12,6 @@ final class MapBasicCoordinator {
     private var mapView: MapViewFacade
 
     // Update params
-    private var actions: MapDependencies.Actions?
     private var cameraChangeHandlers = [(CameraChanged) -> Void]()
     private var cameraBoundsOptions = CameraBoundsOptions()
 
@@ -23,7 +22,6 @@ final class MapBasicCoordinator {
     private var onCameraUpdateInProgress = SignalSubject<Bool>()
 
     private var cancellables = Set<AnyCancellable>()
-    private var qrfCancellables = Set<AnyCancellable>()
 
     init(
         setViewport: ViewportSetter?,
@@ -33,15 +31,6 @@ final class MapBasicCoordinator {
         self.setViewport = setViewport
         self.mapView = mapView
         self.mainQueue = mainQueue
-
-        Signal(gesture: mapView.gestureManager.singleTapGestureRecognizer)
-            .map { recognizer in
-                recognizer.location(in: recognizer.view)
-            }
-            .observe { [weak self] point in
-                self?.onTapGesture(point)
-            }
-            .store(in: &cancellables)
 
         mapView.mapboxMap.onCameraChanged
             .blockUpdates(while: onCameraUpdateInProgress.signal)
@@ -95,12 +84,32 @@ final class MapBasicCoordinator {
         assign(&mapView, \.gestureManager.options, value: deps.gestureOptions)
         assign(&mapView, \.ornaments.options, value: deps.ornamentOptions)
 
-        actions = deps.actions
-
         cameraChangeHandlers = deps.cameraChangeHandlers
         subscribeOnce {
             for subscription in deps.eventsSubscriptions {
                 subscription.observe(mapboxMap).store(in: &cancellables)
+            }
+
+            for (layerId, action) in deps.onLayerTap {
+                mapView.gestureManager.onLayerTap(layerId, handler: action)
+                    .store(in: &cancellables)
+            }
+
+            for (layerId, action) in deps.onLayerLongPress {
+                mapView.gestureManager.onLayerLongPress(layerId, handler: action)
+                    .store(in: &cancellables)
+            }
+
+            if let onMapTap = deps.onMapTap {
+                mapView.gestureManager.onMapTap
+                    .observe(onMapTap)
+                    .store(in: &cancellables)
+            }
+
+            if let onMapLongPress = deps.onMapLongPress {
+                mapView.gestureManager.onMapLongPress
+                    .observe(onMapLongPress)
+                    .store(in: &cancellables)
             }
         }
     }
@@ -152,31 +161,6 @@ final class MapBasicCoordinator {
         }
 
         mapView.viewportManager.transition(to: state, transition: transition, completion: animationData?.completion)
-    }
-
-    private func onTapGesture(_ point: CGPoint) {
-        qrfCancellables.removeAll(keepingCapacity: true)
-        guard let actions = actions else {
-            return
-        }
-        let coordinate = mapView.mapboxMap.coordinate(for: point)
-        actions.onMapTapGesture?(point)
-
-        actions.layerTapActions.map { layerIds, action in
-            let options = RenderedQueryOptions(layerIds: layerIds, filter: nil)
-            return mapView.mapboxMap.queryRenderedFeatures(with: point, options: options) { result in
-                if let features = try? result.get(),
-                   !features.isEmpty {
-                    let payload = MapLayerTapPayload(
-                        point: point,
-                        coordinate: coordinate,
-                        features: features)
-                    action(payload)
-                }
-            }
-        }.forEach { token in
-            AnyCancelable(token).store(in: &qrfCancellables)
-        }
     }
 }
 

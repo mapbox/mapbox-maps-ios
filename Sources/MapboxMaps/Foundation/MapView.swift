@@ -371,10 +371,23 @@ open class MapView: UIView {
             cameraAnimatorsRunner: cameraAnimatorsRunner)
         camera = CameraAnimationsManager(impl: internalCamera)
 
+        let annotationsImpl = dependencyProvider.makeAnnotationOrchestratorImpl(
+            in: self,
+            mapboxMap: mapboxMap,
+            mapFeatureQueryable: mapboxMap,
+            style: mapboxMap,
+            displayLink: displayLinkSignalSubject.signal
+        )
+        annotations = AnnotationOrchestrator(
+            impl: annotationsImpl
+        )
+
         // Initialize/Configure gesture manager
         gestures = dependencyProvider.makeGestureManager(
             view: self,
             mapboxMap: mapboxMap,
+            mapFeatureQueryable: mapboxMap,
+            annotations: annotationsImpl,
             cameraAnimationsManager: internalCamera)
 
         // Initialize the attribution manager
@@ -400,16 +413,6 @@ open class MapView: UIView {
             displayLink: displayLinkSignalSubject.signal,
             styleManager: mapboxMap,
             mapboxMap: mapboxMap
-        )
-
-        annotations = AnnotationOrchestrator(
-            impl: dependencyProvider.makeAnnotationOrchestratorImpl(
-                in: self,
-                mapboxMap: mapboxMap,
-                mapFeatureQueryable: mapboxMap,
-                style: mapboxMap,
-                displayLink: displayLinkSignalSubject.signal
-            )
         )
 
         // Initialize/Configure view annotations manager

@@ -135,7 +135,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         annotation.isDraggable = true
         manager.annotations = [annotation]
         // adds drag source/layer
-        manager.handleDragBegin(with: [annotation.id])
+        _ = manager.handleDragBegin(with: annotation.id, context: .zero)
 
         manager.destroy()
 
@@ -193,38 +193,52 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         }
     }
 
-    func testHandleQueriedFeatureIdsPassesNotificationToDelegate() throws {
+    func testHandleTap() throws {
         var annotations = [PolylineAnnotation]()
         for _ in 0...5 {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
             let annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
             annotations.append(annotation)
         }
-        let queriedFeatureIds = [annotations[0].id]
+        var taps = [MapContentGestureContext]()
+        annotations[0].tapHandler = { context in
+            taps.append(context)
+            return true
+        }
+        annotations[1].tapHandler = { context in
+            return false // skips handling
+        }
         manager.delegate = self
 
         manager.annotations = annotations
-        manager.handleQueriedFeatureIds(queriedFeatureIds)
 
-        let result = try XCTUnwrap(delegateAnnotations)
+        // first annotation, handles tap
+        let context = MapContentGestureContext(point: .init(x: 1, y: 2), coordinate: .init(latitude: 3, longitude: 4))
+        var handled = manager.handleTap(with: annotations[0].id, context: context)
+
+        var result = try XCTUnwrap(delegateAnnotations)
         XCTAssertEqual(result[0].id, annotations[0].id)
-    }
+        XCTAssertEqual(handled, true)
 
-    func testHandleQueriedFeatureIdsDoesNotPassNotificationToDelegateWhenNoMatch() throws {
-        var annotations = [PolylineAnnotation]()
-        for _ in 0...5 {
-            let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-            let annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
-            annotations.append(annotation)
-        }
-        let queriedFeatureIds = ["NotAnAnnotationID"]
-        manager.delegate = self
+        XCTAssertEqual(taps.count, 1)
+        XCTAssertEqual(taps.first?.point, context.point)
+        XCTAssertEqual(taps.first?.coordinate, context.coordinate)
 
-        expectation?.isInverted = true
-        manager.annotations = annotations
-        manager.handleQueriedFeatureIds(queriedFeatureIds)
+        // second annotation, skips handling tap
+        delegateAnnotations = nil
+        handled = manager.handleTap(with: annotations[1].id, context: context)
+
+        result = try XCTUnwrap(delegateAnnotations)
+        XCTAssertEqual(result[0].id, annotations[1].id)
+        XCTAssertEqual(handled, false)
+
+        // invalid id
+        delegateAnnotations = nil
+        handled = manager.handleTap(with: "invalid-id", context: context)
 
         XCTAssertNil(delegateAnnotations)
+        XCTAssertEqual(handled, false)
+        XCTAssertEqual(taps.count, 1)
     }
 
     func testInitialLineCap() {
@@ -908,52 +922,41 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
 
         // Dragged annotation will be added to internal list of dragged annotations.
         let annotationToDrag = annotations.randomElement()!
-        manager.handleDragBegin(with: [annotationToDrag.id])
+        _ = manager.handleDragBegin(with: annotationToDrag.id, context: .zero)
         XCTAssertTrue(manager.annotations.contains(where: { $0.id == annotationToDrag.id }))
     }
 
     func testHandleDragBeginIsDraggableFalse() throws {
         manager.annotations = [
-            PolylineAnnotation(id: "line1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)], isSelected: false, isDraggable: false)
+            PolylineAnnotation(id: "polyline1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)], isSelected: false, isDraggable: false)
         ]
 
         style.addSourceStub.reset()
         style.addPersistentLayerStub.reset()
 
-        manager.handleDragBegin(with: ["line1"])
+        _ = manager.handleDragBegin(with: "polyline1", context: .zero)
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
     }
-
-    func testHandleDragBeginNoFeatureId() {
-        style.addSourceStub.reset()
-        style.addPersistentLayerStub.reset()
-
-        manager.handleDragBegin(with: [])
-
-        XCTAssertTrue(style.addSourceStub.invocations.isEmpty)
-        XCTAssertTrue(style.addPersistentLayerStub.invocations.isEmpty)
-    }
-
     func testHandleDragBeginInvalidFeatureId() {
         style.addSourceStub.reset()
         style.addPersistentLayerStub.reset()
 
-        manager.handleDragBegin(with: ["not-a-feature"])
+        _ = manager.handleDragBegin(with: "not-a-feature", context: .zero)
 
         XCTAssertTrue(style.addSourceStub.invocations.isEmpty)
         XCTAssertTrue(style.addPersistentLayerStub.invocations.isEmpty)
     }
 
     func testDrag() throws {
-        let annotation = PolylineAnnotation(id: "line1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)], isSelected: false, isDraggable: true)
+        let annotation = PolylineAnnotation(id: "polyline1", lineCoordinates: [ CLLocationCoordinate2D(latitude: 0, longitude: 0), CLLocationCoordinate2D(latitude: 10, longitude: 10)], isSelected: false, isDraggable: true)
         manager.annotations = [annotation]
 
         style.addSourceStub.reset()
         style.addPersistentLayerStub.reset()
 
-        manager.handleDragBegin(with: ["line1"])
+        _ = manager.handleDragBegin(with: "polyline1", context: .zero)
 
         let addSourceParameters = try XCTUnwrap(style.addSourceStub.invocations.last).parameters
         let addLayerParameters = try XCTUnwrap(style.addPersistentLayerStub.invocations.last).parameters
@@ -963,7 +966,7 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(addLayerParameters.layerPosition, .above(manager.id))
         XCTAssertEqual(addedLayer.id, manager.id + "_drag")
 
-        manager.handleDragBegin(with: ["line1"])
+        _ = manager.handleDragBegin(with: "polyline1", context: .zero)
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 1)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 1)

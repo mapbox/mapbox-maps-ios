@@ -11,6 +11,8 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
                                          cameraAnimatorsRunner: CameraAnimatorsRunnerProtocol) -> CameraAnimationsManagerProtocol
     func makeGestureManager(view: UIView,
                             mapboxMap: MapboxMapProtocol,
+                            mapFeatureQueryable: MapFeatureQueryable,
+                            annotations: AnnotationOrchestratorImplProtocol,
                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager
      func makeViewportManagerImpl(mapboxMap: MapboxMapProtocol,
                                   cameraAnimationsManager: CameraAnimationsManagerProtocol,
@@ -140,7 +142,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     }
 
     private func makeSingleTapGestureHandler(view: UIView,
-                                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
+                                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> SingleTapGestureHandler {
         let gestureRecognizer = UITapGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         return SingleTapGestureHandler(
@@ -179,7 +181,23 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
 
     internal func makeGestureManager(view: UIView,
                                      mapboxMap: MapboxMapProtocol,
+                                     mapFeatureQueryable: MapFeatureQueryable,
+                                     annotations: AnnotationOrchestratorImplProtocol,
                                      cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager {
+        let singleTap = makeSingleTapGestureHandler(
+            view: view,
+            cameraAnimationsManager: cameraAnimationsManager)
+
+        let longPress = LongPressGestureHandler()
+        view.addGestureRecognizer(longPress.recognizer)
+
+        let mapContentGestureManager = MapContentGestureManager(
+            annotations: annotations,
+            mapboxMap: mapboxMap,
+            mapFeatureQueryable: mapFeatureQueryable,
+            onTap: singleTap.onTap,
+            onLongPress: longPress.signal.retaining(longPress))
+
         return GestureManager(
             panGestureHandler: makePanGestureHandler(
                 view: view,
@@ -203,15 +221,14 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             quickZoomGestureHandler: makeQuickZoomGestureHandler(
                 view: view,
                 mapboxMap: mapboxMap),
-            singleTapGestureHandler: makeSingleTapGestureHandler(
-                view: view,
-                cameraAnimationsManager: cameraAnimationsManager),
+            singleTapGestureHandler: singleTap,
             anyTouchGestureHandler: makeAnyTouchGestureHandler(view: view,
                                                                cameraAnimationsManager: cameraAnimationsManager),
             interruptDecelerationGestureHandler: makeInterruptDecelerationGestureHandler(
                 view: view,
                 cameraAnimationsManager: cameraAnimationsManager),
-            mapboxMap: mapboxMap)
+            mapboxMap: mapboxMap,
+            mapContentGestureManager: mapContentGestureManager)
     }
 
     internal func makeAnnotationOrchestratorImpl(in view: UIView,
@@ -219,11 +236,6 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                                                  mapFeatureQueryable: MapFeatureQueryable,
                                                  style: StyleProtocol,
                                                  displayLink: Signal<Void>) -> AnnotationOrchestratorImplProtocol {
-        let tapGetureRecognizer = UITapGestureRecognizer()
-        let longPressGestureRecognizer = MapboxLongPressGestureRecognizer()
-        view.addGestureRecognizer(tapGetureRecognizer)
-        view.addGestureRecognizer(longPressGestureRecognizer)
-
         let offsetPointCalculator = OffsetPointCalculator(mapboxMap: mapboxMap)
         let offsetLineStringCalculator = OffsetLineStringCalculator(mapboxMap: mapboxMap)
         let offsetPolygonCalculator = OffsetPolygonCalculator(mapboxMap: mapboxMap)
@@ -234,8 +246,6 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             offsetPolygonCalculator: offsetPolygonCalculator,
             offsetLineStringCalculator: offsetLineStringCalculator)
         return AnnotationOrchestratorImpl(
-            tapGestureRecognizer: tapGetureRecognizer,
-            longPressGestureRecognizer: longPressGestureRecognizer,
             mapFeatureQueryable: mapFeatureQueryable,
             factory: factory)
     }

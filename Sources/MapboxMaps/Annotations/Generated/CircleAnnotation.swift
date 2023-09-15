@@ -22,6 +22,22 @@ public struct CircleAnnotation: Annotation, Equatable {
     /// Property to determine whether annotation can be manually moved around map
     public var isDraggable: Bool = false
 
+    /// Handles tap gesture on this annotation.
+    ///
+    /// Should return `true` if the gesture is handled, or `false` to propagate it to the annotations or layers below.
+    public var tapHandler: ((MapContentGestureContext) -> Bool)? {
+        get { gestureHandlers.tap }
+        set { gestureHandlers.tap = newValue }
+    }
+
+    /// Handles long press gesture on this annotation.
+    ///
+    /// Should return `true` if the gesture is handled, or `false` to propagate it to the annotations or layers below.
+    public var longPressHandler: ((MapContentGestureContext) -> Bool)? {
+        get { gestureHandlers.longPress }
+        set { gestureHandlers.longPress = newValue }
+    }
+
     /// Properties associated with the annotation
     public var userInfo: [String: Any]? {
         get { _userInfo?.rawValue as? [String: Any] }
@@ -57,7 +73,7 @@ public struct CircleAnnotation: Annotation, Equatable {
         return feature
     }
 
-    var tapHandler: AlwaysEqual<() -> Void>?
+    private var gestureHandlers = AnnotationGestureHandlers()
 
     /// Create a circle annotation with a `Point` and an optional identifier.
     public init(id: String = UUID().uuidString, point: Point, isSelected: Bool = false, isDraggable: Bool = false) {
@@ -174,12 +190,58 @@ public struct CircleAnnotation: Annotation, Equatable {
     }
 
 
-    /// Handles annotation tap gesture.
+    /// Adds a handler for tap gesture on current annotation.
+    ///
+    /// The handler should return `true` if the gesture is handled, or `false` to propagate it to the annotations or layers below.
+    ///
+    /// Parameters:
+    ///   - handler: A handler for tap gesture.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
+    public func onTapGesture(handler: @escaping (MapContentGestureContext) -> Bool) -> Self {
+        with(self, setter(\.tapHandler, handler))
+    }
+
+    /// Adds a handler for tap gesture on current annotation.
+    ///
+    /// Parameters:
+    ///   - handler: A handler for tap gesture.
+    #if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     public func onTapGesture(handler: @escaping () -> Void) -> Self {
-        with(self, setter(\.tapHandler, AlwaysEqual(value: handler)))
+        onTapGesture { _ in
+            handler()
+            return true
+        }
+    }
+
+    /// Adds a handler for long press gesture on current annotation.
+    ///
+    /// The handler should return `true` if the gesture is handled, or `false` to propagate it to the annotations or layers below.
+    ///
+    /// Parameters:
+    ///   - handler: A handler for long press gesture.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func onLongPressGesture(handler: @escaping (MapContentGestureContext) -> Bool) -> Self {
+        with(self, setter(\.longPressHandler, handler))
+    }
+
+    /// Adds a handler for long press gesture on current annotation.
+    ///
+    /// Parameters:
+    ///   - handler: A handler for long press gesture.
+    #if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func onLongPressGesture(handler: @escaping () -> Void) -> Self {
+        onLongPressGesture { _ in
+            handler()
+            return true
+        }
     }
 }
 

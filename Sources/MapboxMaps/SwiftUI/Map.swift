@@ -1,39 +1,4 @@
-// swiftlint:disable file_length
-
 import SwiftUI
-
-/// Represents location and rendered features of the tap.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-@_spi(Experimental)
-@available(iOS 13.0, *)
-public struct MapLayerTapPayload {
-    /// Point in Map coordinates.
-    public var point: CGPoint
-
-    /// Coordinate under tap.
-    public var coordinate: CLLocationCoordinate2D
-
-    /// Rendered features under tap.
-    public var features: [QueriedRenderedFeature]
-}
-
-/// An action called when the map is tapped.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-@_spi(Experimental)
-@available(iOS 13.0, *)
-public typealias MapTapAction = (CGPoint) -> Void
-
-/// An action called when the specified layer is tapped.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-@_spi(Experimental)
-@available(iOS 13.0, *)
-public typealias MapLayerTapAction = (MapLayerTapPayload) -> Void
 
 /// An action called when a new location is emitted.
 #if swift(>=5.8)
@@ -51,12 +16,12 @@ public typealias LocationUpdateAction = (Location) -> Void
 /// struct ContentView: View {
 ///     static let polygon = Polygon(...)
 ///
-///     // COnfigures map camera to overview the given polygon.
+///     // Configures map camera to overview the given polygon.
 ///     @State var viewport = Viewport.overview(geometry: Self.polygon)
 ///
 ///     var body: some View {
 ///         Map(viewport: $viewport) {
-///             // Displays user location
+///             // Displays user location.
 ///             Puck2D(heading: bearing)
 ///
 ///             // Displays view annotation.
@@ -321,35 +286,6 @@ public extension Map {
 #endif
     func gestureOptions(_ options: GestureOptions) -> Self {
         set(\.mapDependencies.gestureOptions, options)
-    }
-
-    /// Adds tap handler to the map.
-    ///
-    /// Prefer using this handler instead of `onTapGesture` since it waits for the failure of other map gestures like quick-zoom.
-    ///
-    /// - Parameters:
-    ///  - action: The action to perform.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    func onMapTapGesture(perform action: @escaping MapTapAction) -> Self {
-        set(\.mapDependencies.actions.onMapTapGesture, action)
-    }
-
-    /// Adds tap action to layers with specified `layerIds`.
-    ///
-    /// The action will only be called when at least one of specified layers are in the tap viewport.
-    ///
-    /// - Parameters:
-    ///  - layerIds: The identifiers of layers where to perform features lookup.
-    ///  - action: The action to perform.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    func onLayerTapGesture(_ layerIds: String..., perform action: @escaping MapLayerTapAction) -> Self {
-        var updated = self
-        updated.mapDependencies.actions.layerTapActions.append((layerIds, action))
-        return updated
     }
 
     /// Sets constraint mode to the map. If not set, `heightOnly` will be in use.

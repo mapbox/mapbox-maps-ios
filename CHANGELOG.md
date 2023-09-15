@@ -7,12 +7,14 @@ Mapbox welcomes participation and contributions from everyone.
 ### Breaking changes ⚠️
 
 * `StyleColor.red`, `StyleColor.green`, `StyleColor.blue`, `StyleColor.alpha` are not in use anymore and got removed.
+* The `syncSourceAndLayerIfNeeded` method in every annotation manager (e.g`PointAnnotationManager` and others) was removed from the public API.
 
 ### Features ✨ and improvements 🏁
 
 * Add MSAA support with the `MapInitOptions/antialiasingSampleCount` property.
 * `StyleColor` - add support for all color formats as defined by [Mapbox Style Spec](https://docs.mapbox.com/style-spec/reference/types/#color).
-* Introduce experimental Custom Raster Source APIs: `StyleManager/addCustomRasterSource`, `StyleManager/setCustomRasterSourceTileData`, `StyleManager/invalidateCustomRasterSourceTile`, `StyleManager/invalidateCustomRasterSourceRegion`. 
+* Introduce experimental Custom Raster Source APIs: `StyleManager/addCustomRasterSource`, `StyleManager/setCustomRasterSourceTileData`, `StyleManager/invalidateCustomRasterSourceTile`, `StyleManager/invalidateCustomRasterSourceRegion`.
+* Introduce new Map Content Gesture System.
 
 ## 11.0.0-beta.3 - 8 September, 2023
 

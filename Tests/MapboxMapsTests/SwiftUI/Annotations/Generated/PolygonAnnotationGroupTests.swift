@@ -85,9 +85,8 @@ final class PolygonAnnotationGroupTests: XCTestCase {
         }
 
         // When
-        let dummyAnnotationManager = DummyAnnotationManager()
         let annotationManagerId = UUID().uuidString
-        mockAnnotationOrchestratorImpl.annotationManagersById[annotationManagerId] = dummyAnnotationManager
+        mockAnnotationOrchestratorImpl.annotationManagersById[annotationManagerId] = MockAnnotationManager()
         var annotationIds: [AnyHashable: String] = [:]
 
         let erased = group.eraseToAny([0])

@@ -6,21 +6,17 @@ struct MapDependencies {
     var cameraBounds = CameraBoundsOptions()
     var mapStyle: MapStyle = .standard
     var gestureOptions = GestureOptions()
-    var actions = Actions()
     var constrainMode = ConstrainMode.heightOnly
     var viewportMode = ViewportMode.default
     var orientation = NorthOrientation.upwards
     var eventsSubscriptions = [AnyEventSubscription]()
     var cameraChangeHandlers = [(CameraChanged) -> Void]()
     var ornamentOptions = OrnamentOptions()
-}
 
-@available(iOS 13.0, *)
-extension MapDependencies {
-    struct Actions {
-        var onMapTapGesture: MapTapAction?
-        var layerTapActions = [([String], MapLayerTapAction)]()
-    }
+    var onMapTap: ((MapContentGestureContext) -> Void)?
+    var onMapLongPress: ((MapContentGestureContext) -> Void)?
+    var onLayerTap = [String: MapLayerGestureHandler]()
+    var onLayerLongPress = [String: MapLayerGestureHandler]()
 }
 
 struct AnyEventSubscription {

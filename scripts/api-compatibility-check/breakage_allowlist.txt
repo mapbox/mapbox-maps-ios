@@ -1181,3 +1181,11 @@ Var StyleColor.alpha has been removed
 Var StyleColor.blue has been removed
 Var StyleColor.green has been removed
 Var StyleColor.red has been removed
+
+// Map Content Gesture system
+Struct MapLayerTapPayload has been removed
+TypeAlias MapLayerTapAction has been removed
+TypeAlias MapTapAction has been removed
+Func Map.onLayerTapGesture(_:perform:) has parameter 0 type change from Swift.String... to Swift.String
+Func Map.onLayerTapGesture(_:perform:) has parameter 1 type change from MapboxMaps.MapLayerTapAction to MapboxMaps.MapLayerGestureHandler
+Func Map.onMapTapGesture(perform:) has parameter 0 type change from MapboxMaps.MapTapAction to (MapboxMaps.MapContentGestureContext) -> Swift.Void

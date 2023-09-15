@@ -5,13 +5,14 @@ import SwiftUI
 struct StandardStyleImportExample: View {
     @State private var lightPreset: StandardLightPreset = .night
     @State private var showLabels = true
+    @State private var priceAlertMessage: String?
 
     var style: MapStyle {
         let styleURI = StyleURI(url: styleURL)!
         return MapStyle(
             uri: styleURI,
             importConfigurations: [
-                // The fragment-realestate-NY.json style imports standard style with "standard" import id.
+                // The 'fragment-realestate-NY.json' style imports standard style with "standard" import id.
                 // Here we specify import config to that style.
                 .standard(
                     importId: "standard",
@@ -27,10 +28,19 @@ struct StandardStyleImportExample: View {
     var body: some View {
         Map(initialViewport: .camera(center: .init(latitude: 40.72, longitude: -73.99), zoom: 11, pitch: 45))
             .mapStyle(style)
+            .onLayerTapGesture("NY-hotels-price") { queriedFeature, _ in
+                // Show house price by tap to the 'NY-hotels-price' layer defined in 'fragment-realestate-NY.json' style.
+                // The QueriedFeature represents the rendered GeoJSON feature that was tapped.
+                guard let price = queriedFeature.feature.properties?["price"],
+                      case .number(let priceNum) = price else { return true }
+                priceAlertMessage = "Price: $\(String(format: "%.2f", priceNum))"
+                return true
+            }
             .ignoresSafeArea()
             .safeOverlay(alignment: .bottom) {
                 settingsPanel
             }
+            .simpleAlert(message: $priceAlertMessage)
     }
 
     @ViewBuilder

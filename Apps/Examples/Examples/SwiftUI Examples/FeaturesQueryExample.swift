@@ -17,8 +17,8 @@ struct FeaturesQueryExample: View {
                     }
                 }
                 .mapStyle(.streets) // In the Streets style you can access the layers
-                .onMapTapGesture { point in
-                    model.mapTapped(at: point, map: proxy.map, bottomInset: geometry.size.height * 0.33)
+                .onMapTapGesture { context in
+                    model.mapTapped(context, map: proxy.map, bottomInset: geometry.size.height * 0.33)
                 }
                 .ignoresSafeArea()
                 .sheet(item: $model.queryResult, onDismiss: {
@@ -46,21 +46,20 @@ private class Model: ObservableObject {
 
     private var cancellable: Cancelable? = nil
 
-    func mapTapped(at point: CGPoint, map: MapboxMap?, bottomInset: CGFloat) {
+    func mapTapped(_ context: MapContentGestureContext, map: MapboxMap?, bottomInset: CGFloat) {
         cancellable?.cancel()
         guard let map = map else {
             return
         }
-        cancellable = map.queryRenderedFeatures(with: point) { [self] result in
+        cancellable = map.queryRenderedFeatures(with: context.point) { [self] result in
             cancellable = nil
-            let coordinate = map.coordinate(for: point)
             guard let queryResult = try? QueryResult(
                 features: result.get(),
-                coordinate: coordinate) else {return}
+                coordinate: context.coordinate) else {return}
             self.queryResult = queryResult
 
             withViewportAnimation(.easeOut(duration: 0.5)) {
-                viewport = .camera(center: coordinate)
+                viewport = .camera(center: context.coordinate)
                     .inset(edges: .bottom, length: bottomInset, ignoringSafeArea: true)
             }
         }

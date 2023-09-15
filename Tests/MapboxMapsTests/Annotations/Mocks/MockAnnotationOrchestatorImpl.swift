@@ -3,6 +3,9 @@ import Foundation
 
 final class MockAnnotationOrchestatorImpl: AnnotationOrchestratorImplProtocol {
     @Stubbed
+    var managersByLayerId: [String: AnnotationManagerInternal] = [:]
+
+    @Stubbed
     var annotationManagersById: [String: AnnotationManager] = [:]
 
     struct MakePointAnnotationManagerParams {

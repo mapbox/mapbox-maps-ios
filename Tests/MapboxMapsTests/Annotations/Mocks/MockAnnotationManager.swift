@@ -16,14 +16,24 @@ internal final class MockAnnotationManager: AnnotationManagerInternal {
         destroyStub.call()
     }
 
-    let handlequeriedFeatureIdsStub = Stub<[String], Void>()
-    func handleQueriedFeatureIds(_ queriedFeatureIds: [String]) {
-        handlequeriedFeatureIdsStub.call(with: queriedFeatureIds)
+    struct GestureParams {
+        var featureId: String
+        var context: MapContentGestureContext
     }
 
-    let handleDragBeginStub = Stub<[String], Void>()
-    func handleDragBegin(with featureIdentifiers: [String]) {
-        handleDragBeginStub.call(with: featureIdentifiers)
+    let handleTapStub = Stub<GestureParams, Bool>(defaultReturnValue: false)
+    func handleTap(with featureId: String, context: MapContentGestureContext) -> Bool {
+        handleTapStub.call(with: GestureParams(featureId: featureId, context: context))
+    }
+
+    let handleLongPressStub = Stub<GestureParams, Bool>(defaultReturnValue: false)
+    func handleLongPress(with featureId: String, context: MapContentGestureContext) -> Bool {
+        handleLongPressStub.call(with: GestureParams(featureId: featureId, context: context))
+    }
+
+    let handleDragBeginStub = Stub<GestureParams, Bool>(defaultReturnValue: false)
+    func handleDragBegin(with featureId: String, context: MapContentGestureContext) -> Bool {
+        handleDragBeginStub.call(with: GestureParams(featureId: featureId, context: context))
     }
 
     let handleDragChangedStub = Stub<CGPoint, Void>()

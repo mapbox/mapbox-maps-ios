@@ -30,16 +30,28 @@ internal protocol AnnotationManagerInternal: AnnotationManager {
 
     func destroy()
 
-    func handleQueriedFeatureIds(_ queriedFeatureIds: [String])
+    func handleTap(with featureId: String, context: MapContentGestureContext) -> Bool
 
-    func handleDragBegin(with featureIdentifiers: [String])
+    func handleLongPress(with featureId: String, context: MapContentGestureContext) -> Bool
+
+    func handleDragBegin(with featureId: String, context: MapContentGestureContext) -> Bool
 
     func handleDragChanged(with translation: CGPoint)
 
     func handleDragEnded()
 }
 
+struct AnnotationGestureHandlers: Equatable {
+    static func == (lhs: AnnotationGestureHandlers, rhs: AnnotationGestureHandlers) -> Bool {
+        return true
+    }
+
+    var tap: ((MapContentGestureContext) -> Bool)?
+    var longPress: ((MapContentGestureContext) -> Bool)?
+}
+
 /// A delegate that is called when a tap is detected on an annotation (or on several of them).
+@available(*, deprecated, message: "Use tapHandler property of Annotation")
 public protocol AnnotationInteractionDelegate: AnyObject {
 
     /// This method is invoked when a tap gesture is detected on an annotation

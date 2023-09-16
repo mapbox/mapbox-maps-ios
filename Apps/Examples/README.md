@@ -27,6 +27,7 @@ The `main` branch includes the latest changes to the SDK before they are release
 1. When you're downloading your **private** key, ensure it's the `YOUR_SECRET_MAPBOX_ACCESS_TOKEN` and not the **public** one.
 1. Don't forget to check the `DOWNLOADS:READ` option when downloading the private key.
 
+For more information, please read the [configure credentials](https://docs.mapbox.com/ios/maps/guides/install/#configure-credentials) guide in our documentation.
 When you get to the "Configure your public token" step, you can optionally place
 your public token in the file `~/.mapbox` instead of modifying the Example app's
 `Info.plist`. A build phase will read the public token from that file and

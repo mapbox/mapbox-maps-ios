@@ -19,7 +19,7 @@ The Examples project needs to be able to access Mapbox services to install
 dependencies and load maps. Follow the instructions in the docs to
 [Configure credentials](https://docs.mapbox.com/ios/maps/guides/install/).
 
-The `main` branch is unstable, so please switch to a stable branch like `git checkout v10.16.0`.
+The `main` branch includes the latest changes to the SDK before they are released. If you want to run the examples app with the code of a specific release switch to that release before building the app. For example: `git checkout v10.16.0`.
 
 **Important**
 

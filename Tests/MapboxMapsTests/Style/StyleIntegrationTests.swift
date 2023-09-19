@@ -540,7 +540,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         sourceTerrainProperty = mapView.mapboxMap.terrainProperty(sourcePropertyName)
         exaggerationTerrainProperty = mapView.mapboxMap.terrainProperty(exaggerationPropertyName)
 
-        XCTAssertTrue(sourceTerrainProperty is NSNull)
+        XCTAssertEqual(sourceTerrainProperty as? String, "")
         XCTAssertTrue(exaggerationTerrainProperty is NSNull)
     }
 

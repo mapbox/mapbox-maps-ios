@@ -1312,6 +1312,75 @@ public class StyleManager {
             return styleManager.invalidateStyleCustomGeometrySourceRegion(forSourceId: sourceId, bounds: bounds)
         }
     }
+
+    /// Note! This is an experimental feature. It can be changed or removed in future versions.
+    /// Adds a custom raster source to be used in the style. To add the data, implement the `fetchTileFunction`
+    /// callback in the options and call `setCustomRasterSourceTileData(forSourceId:tileId:image:)`.
+    /// Note: Functions provided in `CustomRasterSourceOptions` for fetching & cancelling tiles are executed on worker threads.
+    ///
+    /// - Parameters:
+    ///   - sourceId: A Style source identifier
+    ///   - options: The `custom raster source options` for the custom raster source.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    @_spi(Experimental) public func addCustomRasterSource(forSourceId sourceId: String, options: CustomRasterSourceOptions) throws {
+        try handleExpected {
+            return styleManager.addStyleCustomRasterSource(forSourceId: sourceId, options: options)
+        }
+    }
+
+    /// Note! This is an experimental feature. It can be changed or removed in future versions.
+    /// Set tile data for a raster tile. For custom raster source, we accept 32-bit RGBA data format.
+    /// This method can be used in conjunction with `fetchTileFunction` provided in `CustomRasterSourceOptions`,
+    /// i.e., fetch tile fetches the required data and then sets the data for the tile using this API.
+    /// Note: This API should be called from main thread.
+    ///
+    /// - Parameters:
+    ///   - sourceId: A Style source identifier
+    ///   - tileId: A `canonicalTileId` of the tile.
+    ///   - square: `Image` content of the tile.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    @_spi(Experimental) public func setCustomRasterSourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, image: UIImage) throws {
+        guard let mbmImage = Image(uiImage: image) else {
+            throw TypeConversionError.unexpectedType
+        }
+        try handleExpected {
+            return styleManager.setStyleCustomRasterSourceTileDataForSourceId(sourceId, tileId: tileId, image: mbmImage)
+        }
+    }
+
+    /// Note! This is an experimental feature. It can be changed or removed in future versions.
+    /// Invalidate tile for provided custom raster source. This will make the source re-fetch the tile.
+    ///
+    /// - Parameters:
+    ///   - sourceId: A Style source identifier
+    ///   - tileId : A `canonicalTileId` of the tile.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    @_spi(Experimental) public func invalidateCustomRasterSourceTile(forSourceId sourceId: String, tileId: CanonicalTileID) throws {
+        try handleExpected {
+            return styleManager.invalidateStyleCustomRasterSourceTile(forSourceId: sourceId, tileId: tileId)
+        }
+    }
+
+    /// Note! This is an experimental feature. It can be changed or removed in future versions.
+    /// Invalidates all the tiles in the given region for the provided custom raster source.
+    ///
+    /// - Parameters:
+    ///   - sourceId: A Style source identifier
+    ///   - bounds: A `coordinateBounds` object.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    @_spi(Experimental) public func invalidateCustomRasterSourceRegion(forSourceId sourceId: String, bounds: CoordinateBounds) throws {
+        try handleExpected {
+            return styleManager.invalidateStyleCustomRasterSourceRegion(forSourceId: sourceId, bounds: bounds)
+        }
+    }
 }
 
 // MARK: - Conversion helpers

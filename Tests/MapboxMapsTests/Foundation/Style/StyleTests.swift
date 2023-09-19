@@ -408,6 +408,72 @@ final class StyleTests: XCTestCase {
         )
     }
 
+    func testStyleCanAddCustomRasterSource() {
+        let options = CustomRasterSourceOptions(
+            fetchTileFunction: { _ in },
+            cancelTileFunction: { _ in })
+
+        styleManager.addStyleCustomRasterSourceStub.defaultReturnValue = Expected(value: NSNull())
+        XCTAssertNoThrow(try style.addCustomRasterSource(
+            forSourceId: "dummy-source-id",
+            options: options)
+        )
+
+        styleManager.addStyleCustomRasterSourceStub.defaultReturnValue = Expected(error: "Cannot add custom raster source")
+        XCTAssertThrowsError(try style.addCustomRasterSource(
+            forSourceId: "dummy-source-id",
+            options: options)
+        )
+    }
+
+    func testStyleCanSetCustomRasterSourceTileData() {
+        styleManager.setStyleCustomRasterSourceTileDataStub.defaultReturnValue = Expected(value: NSNull())
+        XCTAssertNoThrow(try style.setCustomRasterSourceTileData(
+            forSourceId: "dummy-source-id",
+            tileId: CanonicalTileID(z: 0, x: 0, y: 0),
+            image: UIImage.empty)
+        )
+
+        styleManager.setStyleCustomRasterSourceTileDataStub.defaultReturnValue = Expected(error: "Cannot set custom raster source tile data")
+        XCTAssertThrowsError(try style.setCustomRasterSourceTileData(
+            forSourceId: "dummy-source-id",
+            tileId: CanonicalTileID(z: 0, x: 0, y: 0),
+            image: UIImage.empty)
+        )
+    }
+
+    func testStyleCanInvalidateCustomRasterSourceTile() {
+        styleManager.invalidateStyleCustomRasterSourceTileStub.defaultReturnValue = Expected(value: NSNull())
+        XCTAssertNoThrow(try style.invalidateCustomRasterSourceTile(
+            forSourceId: "dummy-source-id",
+            tileId: CanonicalTileID(z: 0, x: 0, y: 0))
+        )
+
+        styleManager.invalidateStyleCustomRasterSourceTileStub.defaultReturnValue = Expected(error: "Cannot invalidate customer raster source tile")
+        XCTAssertThrowsError(try style.invalidateCustomRasterSourceTile(
+            forSourceId: "dummy-source-id",
+            tileId: CanonicalTileID(z: 0, x: 0, y: 0))
+        )
+    }
+
+    func testStyleCanInvalidateCustomRasterSourceRegion() {
+        styleManager.invalidateStyleCustomRasterSourceRegionStub.defaultReturnValue = Expected(value: NSNull())
+        XCTAssertNoThrow(try style.invalidateCustomRasterSourceRegion(
+            forSourceId: "dummy-source-id",
+            bounds: CoordinateBounds(
+                southwest: CLLocationCoordinate2D(latitude: -90.0, longitude: -180.0),
+                northeast: CLLocationCoordinate2D(latitude: 90.0, longitude: 180.0)))
+        )
+
+        styleManager.invalidateStyleCustomRasterSourceRegionStub.defaultReturnValue = Expected(error: "Cannot invalidate customer raster source region")
+        XCTAssertThrowsError(try style.invalidateCustomRasterSourceRegion(
+            forSourceId: "dummy-source-id",
+            bounds: CoordinateBounds(
+                southwest: CLLocationCoordinate2D(latitude: -90.0, longitude: -180.0),
+                northeast: CLLocationCoordinate2D(latitude: 90.0, longitude: 180.0)))
+        )
+    }
+
     func testStyleCanUpdateLayer() throws {
         styleManager.getStyleLayerPropertiesStub.defaultReturnValue = Expected(value: NSDictionary(dictionary: [
             "id": "dummy-layer-id",

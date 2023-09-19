@@ -539,6 +539,56 @@ class MockStyleManager: StyleManagerProtocol {
         invalidateStyleCustomGeometrySourceRegionStub.call(with: .init(sourceId: sourceId, bounds: bounds))
     }
 
+    struct AddStyleCustomRasterSourceParameters {
+        let sourceID: String
+        let options: CustomRasterSourceOptions
+    }
+    let addStyleCustomRasterSourceStub = Stub<AddStyleCustomRasterSourceParameters, Expected<NSNull, NSString>>(defaultReturnValue: .init(value: NSNull()))
+    func addStyleCustomRasterSource(
+        forSourceId sourceId: String,
+        options: CustomRasterSourceOptions
+    ) -> Expected<NSNull, NSString> {
+        addStyleCustomRasterSourceStub.call(with: .init(sourceID: sourceId, options: options))
+    }
+
+    struct SetStyleCustomRasterSourceTileDataParameters {
+        let sourceID: String
+        let tileId: CanonicalTileID
+        let image: Image
+    }
+    let setStyleCustomRasterSourceTileDataStub = Stub<SetStyleCustomRasterSourceTileDataParameters, Expected<NSNull, NSString>>(defaultReturnValue: .init(value: NSNull()))
+    func setStyleCustomRasterSourceTileDataForSourceId(
+        _ sourceId: String,
+        tileId: CanonicalTileID,
+        image: Image
+    ) -> Expected<NSNull, NSString> {
+        setStyleCustomRasterSourceTileDataStub.call(with: .init(sourceID: sourceId, tileId: tileId, image: image))
+    }
+
+    struct InvalidateStyleCustomRasterSourceTileParameters {
+        let sourceID: String
+        let tileId: CanonicalTileID
+    }
+    let invalidateStyleCustomRasterSourceTileStub = Stub<InvalidateStyleCustomRasterSourceTileParameters, Expected<NSNull, NSString>>(defaultReturnValue: .init(value: NSNull()))
+    func invalidateStyleCustomRasterSourceTile(
+        forSourceId sourceId: String,
+        tileId: CanonicalTileID
+    ) -> Expected<NSNull, NSString> {
+        invalidateStyleCustomRasterSourceTileStub.call(with: .init(sourceID: sourceId, tileId: tileId))
+    }
+
+    struct InvalidateStyleCustomRasterSourceRegionParameters {
+        let sourceID: String
+        let bounds: CoordinateBounds
+    }
+    let invalidateStyleCustomRasterSourceRegionStub = Stub<InvalidateStyleCustomRasterSourceRegionParameters, Expected<NSNull, NSString>>(defaultReturnValue: .init(value: NSNull()))
+    func invalidateStyleCustomRasterSourceRegion(
+        forSourceId sourceId: String,
+        bounds: CoordinateBounds
+    ) -> Expected<NSNull, NSString> {
+        invalidateStyleCustomRasterSourceRegionStub.call(with: .init(sourceID: sourceId, bounds: bounds))
+    }
+
     struct SetStyleGeoJSONSourceDataForSourceIdDataIDParams {
         let sourceId: String
         let dataId: String?

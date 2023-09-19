@@ -153,6 +153,23 @@ internal protocol StyleManagerProtocol {
         forSourceId sourceId: String,
         bounds: CoordinateBounds) -> Expected<NSNull, NSString>
 
+    func addStyleCustomRasterSource(
+        forSourceId: String,
+        options: CustomRasterSourceOptions) -> Expected<NSNull, NSString>
+
+    func setStyleCustomRasterSourceTileDataForSourceId(
+        _ sourceId: String,
+        tileId: CanonicalTileID,
+        image: MapboxCoreMaps.Image) -> Expected<NSNull, NSString>
+
+    func invalidateStyleCustomRasterSourceTile(
+        forSourceId: String,
+        tileId: CanonicalTileID) -> Expected<NSNull, NSString>
+
+    func invalidateStyleCustomRasterSourceRegion(
+        forSourceId: String,
+        bounds: CoordinateBounds) -> Expected<NSNull, NSString>
+
     func __setStyleGeoJSONSourceDataForSourceId(
         _ sourceId: String,
         dataId: String,

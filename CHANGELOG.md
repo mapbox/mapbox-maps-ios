@@ -12,6 +12,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Add MSAA support with the `MapInitOptions/antialiasingSampleCount` property.
 * `StyleColor` - add support for all color formats as defined by [Mapbox Style Spec](https://docs.mapbox.com/style-spec/reference/types/#color).
+* Introduce experimental Custom Raster Source APIs: `StyleManager/addCustomRasterSource`, `StyleManager/setCustomRasterSourceTileData`, `StyleManager/invalidateCustomRasterSourceTile`, `StyleManager/invalidateCustomRasterSourceRegion`. 
 
 ## 11.0.0-beta.3 - 8 September, 2023
 

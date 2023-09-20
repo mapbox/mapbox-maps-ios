@@ -3,8 +3,8 @@
 
 import PackageDescription
 
-let coreVersion = "11.0.0-SNAPSHOT.0912T1257Z.3b906b3"
-let coreChecksum = "f40f26c41cab0b379b44d94a37ea22b44368667a137104f99f2871f04d016ec0"
+let coreVersion = "11.0.0-beta.5"
+let coreChecksum = "ccad8d5974e4a0766cf23a1e5c1d2974572bf12a4971195507fb77f59ec55673"
 
 func folder(_ version: String) -> String { version.contains("SNAPSHOT") ? "snapshots" : "releases" }
 
@@ -20,7 +20,7 @@ let package = Package(
             targets: ["MapboxMaps"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/mapbox/mapbox-common-ios.git", exact: "24.0.0-beta.4"),
+        .package(url: "https://github.com/mapbox/mapbox-common-ios.git", exact: "24.0.0-beta.5"),
         .package(url: "https://github.com/mapbox/turf-swift.git", exact: "2.7.0"),
     ],
     targets: [

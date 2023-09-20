@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.0.0-beta.4 - 20 September, 2023
+
 ### Breaking changes ⚠️
 
 * `StyleColor.red`, `StyleColor.green`, `StyleColor.blue`, `StyleColor.alpha` are not in use anymore and got removed.

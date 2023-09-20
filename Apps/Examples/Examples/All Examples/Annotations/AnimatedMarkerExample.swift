@@ -57,8 +57,10 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
 
         mapView.mapboxMap.loadStyle(.satelliteStreets)
 
-        // add a tap gesture recognizer that will allow the marker to be animated
-        mapView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(updatePosition(_:))))
+        // add a tap gesture handler that will allow the marker to be animated
+        mapView.gestures.onMapTap.observe {[weak self] context in
+            self?.updatePosition(newCoordinate: context.coordinate)
+        }.store(in: &cancelables)
     }
 
     private func setupExample() {
@@ -113,9 +115,7 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
 
     }
 
-    @objc private func updatePosition(_ sender: UITapGestureRecognizer) {
-        let newCoordinate = mapView.mapboxMap.coordinate(for: sender.location(in: mapView))
-
+    private func updatePosition(newCoordinate: CLLocationCoordinate2D) {
         // save marker's origin and destination to interpolate between them during the animation
         destination = newCoordinate
         origin = currentPosition

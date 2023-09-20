@@ -63,16 +63,19 @@ class AnimateImageLayerExample: UIViewController, ExampleProtocol {
             try mapView.mapboxMap.addSource(imageSource)
             try mapView.mapboxMap.addLayer(imageLayer)
 
-            // Add a tap gesture recognizer that will allow the animation to be stopped and started.
-            let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(manageTimer))
-            mapView.addGestureRecognizer(tapGestureRecognizer)
         } catch {
             print("Failed to add the source or layer to style. Error: \(error)")
         }
+
+        // Add a tap gesture handler that will allow the animation to be stopped and started.
+        mapView.gestures.onMapTap.observe {[weak self] _ in
+            self?.manageTimer()
+        }.store(in: &cancelables)
+
         manageTimer()
     }
 
-    @objc func manageTimer() {
+    func manageTimer() {
         if timer == nil {
             timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
                 guard let self = self else { return }

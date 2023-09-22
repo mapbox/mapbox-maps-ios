@@ -135,7 +135,10 @@ extension ExampleTableViewController {
         if searchText.isEmpty {
             filteredExamples = flatExamples
         } else {
-            filteredExamples = flatExamples.filter { $0.title.lowercased().contains(searchText.lowercased()) }
+            filteredExamples = flatExamples.filter { example in
+                example.title.lowercased().contains(searchText.lowercased()) ||
+                String(describing: example.type).lowercased().contains(searchText.lowercased())
+            }
         }
 
         tableView.reloadData()

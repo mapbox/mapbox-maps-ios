@@ -25,7 +25,7 @@ extension XCTestCase {
 
             let expectedImageAttachment = XCTAttachment(image: expectedImage, quality: .original)
             expectedImageAttachment.name = "Expected image"
-            add(attachment)
+            add(expectedImageAttachment)
 
             guard observedImage.scale == expectedImage.scale,
                   observedImage.imageOrientation == expectedImage.imageOrientation,

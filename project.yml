@@ -215,8 +215,9 @@ targetTemplates:
       Debug: "Configurations/apps.xcconfig"
       Release: "Configurations/apps.xcconfig"
     settings:
-      LD_RUNPATH_SEARCH_PATHS: $(inherited) @executable_path/Frameworks
-      PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.examples
+      base:
+        CURRENT_PROJECT_VERSION: "1"
+        MARKETING_VERSION: "1.0.0"
     dependencies:
       - target: MapboxMaps
       - package: Fingertips

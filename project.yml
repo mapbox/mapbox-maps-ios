@@ -144,6 +144,9 @@ targets:
         - MapboxMapsTests
         - ExamplesTests
         - ExamplesUITests
+      gatherCoverageData: true
+      coverageTargets:
+        - MapboxMaps
       environmentVariables:
         - variable: MTL_HUD_ENABLED
           value: 1

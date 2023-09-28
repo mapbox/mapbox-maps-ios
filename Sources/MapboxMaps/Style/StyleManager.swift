@@ -85,6 +85,9 @@ public class StyleManager {
     ///
     /// - Throws: ``StyleError`` if there is a problem adding the given `layer` at the given `position`.
     public func addLayer(_ layer: Layer, layerPosition: LayerPosition? = nil) throws {
+        if let customLayer = layer as? CustomLayer {
+            return try addCustomLayer(customLayer, persistent: false, layerPosition: layerPosition)
+        }
         // Attempt to encode the provided layer into a dictionary and apply it to the map.
         let layerProperties = try layer.allStyleProperties()
         try addLayer(with: layerProperties, layerPosition: layerPosition)
@@ -99,9 +102,38 @@ public class StyleManager {
     ///
     /// - Throws: ``StyleError`` if there is a problem adding the persistent layer.
     public func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition? = nil) throws {
+        if let customLayer = layer as? CustomLayer {
+            return try addCustomLayer(customLayer, persistent: true, layerPosition: layerPosition)
+        }
         // Attempt to encode the provided layer into a dictionary and apply it to the map.
         let layerProperties = try layer.allStyleProperties()
         try addPersistentLayer(with: layerProperties, layerPosition: layerPosition)
+    }
+
+    internal func addCustomLayer(_ customLayer: CustomLayer, persistent: Bool, layerPosition: LayerPosition? = nil) throws {
+        guard (customLayer.renderer as? EmptyCustomRenderer)?.shouldWarnBeforeUsage != true else {
+            throw StyleError(message: """
+                No renderer assigned to the custom layer [id=\(customLayer.id)].
+                Create a new layer with CustomLayer.init(id:renderer:))
+                """)
+        }
+
+        if persistent {
+            try addPersistentCustomLayer(
+                withId: customLayer.id,
+                layerHost: customLayer.renderer,
+                layerPosition: layerPosition
+            )
+        } else {
+            try addCustomLayer(
+                withId: customLayer.id,
+                layerHost: customLayer.renderer,
+                layerPosition: layerPosition
+            )
+        }
+
+        let layerProperties = try customLayer.allStyleProperties()
+        try setLayerProperties(for: customLayer.id, properties: layerProperties)
     }
 
     /**

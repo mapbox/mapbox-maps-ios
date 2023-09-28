@@ -59,6 +59,12 @@ extension Stub where ParametersType == Void {
     }
 }
 
+extension Stub where ParametersType == Void, ReturnType == Void {
+    convenience init(file: String = #file, line: Int = #line) {
+        self.init(file: file, line: line, defaultReturnValue: ())
+    }
+}
+
 extension Stub.Invocation: Equatable where ParametersType: Equatable, ReturnType: Equatable {
     static func == (lhs: Stub.Invocation, rhs: Stub.Invocation) -> Bool {
         return (lhs.parameters == rhs.parameters &&

@@ -569,4 +569,67 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
 
         wait(for: [expectation], timeout: 3.0)
     }
+
+    func testCustomLayerAdd() throws {
+        let customLayer = CustomLayer(id: "test-layer", renderer: MockCustomRenderer(), slot: "test-slot")
+
+        try mapView.mapboxMap.addLayer(customLayer)
+        let decodedLayer = try mapView.mapboxMap.layer(withId: customLayer.id, type: type(of: customLayer))
+
+        XCTAssertEqual(decodedLayer.id, customLayer.id)
+        XCTAssertEqual(decodedLayer.slot, customLayer.slot)
+        XCTAssertFalse(try mapView.mapboxMap.isPersistentLayer(id: customLayer.id))
+    }
+
+    func testCustomLayerAddPersistent() throws {
+        let customLayer = CustomLayer(id: "test-layer", renderer: MockCustomRenderer(), slot: "test-slot")
+
+        try mapView.mapboxMap.addPersistentLayer(customLayer)
+        let decodedLayer = try mapView.mapboxMap.layer(withId: customLayer.id, type: type(of: customLayer))
+
+        XCTAssertEqual(decodedLayer.id, customLayer.id)
+        XCTAssertEqual(decodedLayer.slot, customLayer.slot)
+        XCTAssertTrue(try mapView.mapboxMap.isPersistentLayer(id: customLayer.id))
+    }
+
+    func testCustomLayerThrowsOnEmptyCustomRenderer() throws {
+        let customLayer = CustomLayer(id: "test-layer", renderer: EmptyCustomRenderer())
+
+        // Do not throw when we are adding `EmptyCustomRenderer` explicitly
+        XCTAssertThrowsError(try mapView.mapboxMap.addLayer(customLayer)) { error in
+            XCTAssert(error is StyleError)
+            XCTAssert(error.localizedDescription.contains("CustomLayer"))
+        }
+    }
+
+    func testCustomLayerThrowsOnReadd() throws {
+        let customLayer = CustomLayer(id: "test-layer", renderer: EmptyCustomRenderer(shouldWarnBeforeUsage: false))
+
+        // Do not throw when we are adding `EmptyCustomRenderer` explicitly
+        XCTAssertNoThrow(try mapView.mapboxMap.addLayer(customLayer))
+
+        let decodedLayer = try mapView.mapboxMap.layer(withId: customLayer.id, type: type(of: customLayer))
+
+        XCTAssertNotIdentical(decodedLayer.renderer, customLayer.renderer)
+
+        try mapView.mapboxMap.removeLayer(withId: decodedLayer.id)
+
+        XCTAssertThrowsError(try mapView.mapboxMap.addLayer(decodedLayer)) { error in
+            XCTAssert(error is StyleError)
+            XCTAssert(error.localizedDescription.contains("CustomLayer"))
+        }
+    }
+
+    func testEmptyCustomRenderer() throws {
+        let customLayer = CustomLayer(id: "test-layer", renderer: EmptyCustomRenderer(shouldWarnBeforeUsage: false))
+
+        try mapView.mapboxMap.addLayer(customLayer)
+
+        let renderExpectation = expectation(description: "Wait for render call")
+        DispatchQueue.main.async {
+            renderExpectation.fulfill()
+        }
+
+        wait(for: [renderExpectation], timeout: 1)
+    }
 }

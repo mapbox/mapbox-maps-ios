@@ -99,6 +99,7 @@ The Mapbox Maps SDK for iOS is a public library for displaying interactive, thor
 - ``SkyLayer``
 - ``SymbolLayer``
 - ``ModelLayer``
+- ``CustomLayer``
 
 ### Layer Property Values
 

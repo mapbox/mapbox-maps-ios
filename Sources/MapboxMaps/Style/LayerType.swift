@@ -48,6 +48,11 @@ public struct LayerType: ExpressibleByStringLiteral, RawRepresentable, Codable, 
     @_spi(Experimental)
     public static let model: LayerType = "model"
 
+    /// Layer with custom rendering implementation (``CustomLayerHost``)
+    ///
+    /// - SeeAlso: ``CustomLayer``
+    public static let custom: LayerType = "custom"
+
     public init(stringLiteral type: String) {
         self.rawValue = type
     }

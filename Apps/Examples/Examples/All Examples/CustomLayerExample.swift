@@ -28,10 +28,12 @@ final class CustomLayerExample: UIViewController, ExampleProtocol {
 
     func addCustomLayer() {
         // Position the custom layer above the water layer and below all other layers.
-        try! mapView.mapboxMap.addCustomLayer(
-            withId: "Custom",
-            layerHost: CustomLayerExampleCustomLayerHost(),
-            layerPosition: .above("water"))
+        var customLayer = CustomLayer(id: "custom-layer-example", renderer: CustomLayerExampleCustomLayerHost())
+        customLayer.minZoom = 3
+        customLayer.maxZoom = 7
+        customLayer.slot = "bottom"
+
+        try! mapView.mapboxMap.addLayer(customLayer)
     }
 }
 

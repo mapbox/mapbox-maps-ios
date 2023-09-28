@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Add a new CustomLayer API to simplify manipulation of layers with custom rendering (aka "CustomLayerHost").
+
 ## 11.0.0-beta.4 - 20 September, 2023
 
 ### Breaking changes ⚠️

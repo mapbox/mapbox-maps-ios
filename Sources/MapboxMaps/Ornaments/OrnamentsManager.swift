@@ -68,6 +68,24 @@ public final class OrnamentsManager {
         return _attributionButton
     }
 
+    private weak var cameraDebugView: CameraDebugView?
+
+    internal var showCameraDebugView: Bool = false {
+        didSet {
+            if showCameraDebugView {
+                let debugView = CameraDebugView()
+                debugView.translatesAutoresizingMaskIntoConstraints = false
+                view?.addSubview(debugView)
+                cameraDebugView = debugView
+                updateOrnaments()
+            } else {
+                cameraDebugView?.removeFromSuperview()
+                cameraDebugView = nil
+            }
+        }
+    }
+
+    private weak var view: UIView?
     private let _logoView: LogoView
     private let _scaleBarView: MapboxScaleBarOrnamentView
     private let _compassView: MapboxCompassOrnamentView
@@ -86,6 +104,7 @@ public final class OrnamentsManager {
                   compassView: MapboxCompassOrnamentView,
                   attributionButton: InfoButtonOrnament) {
         self.options = options
+        self.view = view
 
         // Logo View
         logoView.translatesAutoresizingMaskIntoConstraints = false
@@ -122,20 +141,19 @@ public final class OrnamentsManager {
 
         updateOrnaments()
 
-        onCameraChanged.observe { [weak scaleBarView, weak compassView] event in
-            guard let scaleBarView = scaleBarView,
-                  let compassView = compassView else {
-                return
-            }
-            let cameraState = event.cameraState
+        onCameraChanged.observe { [weak self] event in
+            guard let self else { return }
 
             // Update the scale bar
-            scaleBarView.metersPerPoint = Projection.metersPerPoint(
-                for: cameraState.center.latitude,
-                zoom: cameraState.zoom)
+            self._scaleBarView.metersPerPoint = Projection.metersPerPoint(
+                for: event.cameraState.center.latitude,
+                zoom: event.cameraState.zoom)
 
             // Update the compass
-            compassView.currentBearing = Double(cameraState.bearing)
+            self._compassView.currentBearing = Double(event.cameraState.bearing)
+
+            // Update the camera debug view
+            self.cameraDebugView?.cameraState = event.cameraState
         }.store(in: &cancellables)
     }
 
@@ -166,6 +184,13 @@ public final class OrnamentsManager {
                                                        position: options.attributionButton.position,
                                                        margins: options.attributionButton.margins)
         constraints.append(contentsOf: attributionButtonConstraints)
+
+        if let cameraDebugView {
+            let cameraDebugViewConstraints = constraints(with: cameraDebugView,
+                                                         position: .topLeft,
+                                                         margins: CGPoint(x: 8, y: 48))
+            constraints.append(contentsOf: cameraDebugViewConstraints)
+        }
 
         // Update the image of compass
         _compassView.updateImage(image: options.compass.image)

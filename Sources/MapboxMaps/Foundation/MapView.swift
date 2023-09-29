@@ -177,6 +177,20 @@ open class MapView: UIView {
         return mapboxMap.anchor
     }
 
+    /// Debug options for the current ``MapView`` and it's native ``MapboxMap``
+    public var debugOptions: MapViewDebugOptions {
+        get {
+            MapViewDebugOptions(
+                mapOptions: mapboxMap.debugOptions,
+                cameraView: ornaments.showCameraDebugView
+            )
+        }
+        set {
+            mapboxMap.debugOptions = newValue.nativeDebugOptions
+            ornaments.showCameraDebugView = newValue.contains(.camera)
+        }
+    }
+
     internal let attributionUrlOpener: AttributionURLOpener
 
     internal let applicationStateProvider: Ref<UIApplication.State>?

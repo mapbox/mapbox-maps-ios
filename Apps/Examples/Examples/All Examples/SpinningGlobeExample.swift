@@ -1,6 +1,6 @@
 import Foundation
 import UIKit
-import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 import CoreLocation
 
 final class SpinningGlobeExample: UIViewController, GestureManagerDelegate, ExampleProtocol {
@@ -24,6 +24,10 @@ final class SpinningGlobeExample: UIViewController, GestureManagerDelegate, Exam
         }.store(in: &cancelables)
 
         mapView.gestures.delegate = self
+
+        // Enable the camera debug option to see camera state
+        let debugOptions: MapViewDebugOptions = [.camera]
+        mapView.debugOptions = debugOptions
 
         view.addSubview(mapView)
     }

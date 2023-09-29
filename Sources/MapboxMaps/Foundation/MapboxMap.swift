@@ -400,9 +400,10 @@ public final class MapboxMap: StyleManager {
     }
 
     // MARK: Debug options
-    /// The array of `MapDebugOptions`. Setting this property to an empty array
+    /// The array of `MapDebugOptions` for the native map. Setting this property to an empty array
     /// disables previously enabled `MapDebugOptions`.
     /// The default value is an empty array.
+    @available(*, deprecated, message: "Use mapView.debugOptions instead.")
     public var debugOptions: [MapDebugOptions] {
         get {
             return __map.getDebug().compactMap { MapDebugOptions(rawValue: $0.intValue) }

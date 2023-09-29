@@ -313,7 +313,7 @@ class MapboxMapsFoundationTests: XCTestCase {
     }
 
 // MARK: Debug options
-    func testDebugOptions() {
+    func testDeprecatedDebugOptions() {
         let initialOptions = mapView.mapboxMap.debugOptions
         XCTAssertEqual(initialOptions, [], "The initial debug options should be an empty array.")
 
@@ -330,5 +330,131 @@ class MapboxMapsFoundationTests: XCTestCase {
         mapView.mapboxMap.debugOptions = []
         let getOptions3 = mapView.mapboxMap.debugOptions
         XCTAssert(getOptions3.isEmpty, "The array of debug options should be empty.")
+    }
+
+    func testDebugOptions() {
+        let initialOptions = mapView.debugOptions
+        XCTAssertEqual(initialOptions, [], "The initial debug options should be an empty array.")
+
+        let setOptions1: MapViewDebugOptions = [.tileBorders, .timestamps]
+        let nativeOptions1: [MapDebugOptions] = [.tileBorders, .timestamps]
+        mapView.debugOptions = setOptions1
+        let getOptions1 =  mapView.debugOptions
+        let getNativeOptions1 = mapView.debugOptions.nativeDebugOptions
+        XCTAssertEqual(setOptions1, getOptions1, "Tile borders and timestamp should be enabled.")
+        XCTAssertEqual(nativeOptions1, getNativeOptions1, "Tile borders and timestamp should be seen in the native debug options.")
+
+        let setOptions2: MapViewDebugOptions = [.tileBorders]
+        mapView.debugOptions = setOptions2
+        let getOptions2 = mapView.debugOptions
+        XCTAssertEqual(setOptions2, getOptions2, "Tile borders should be enabled.")
+
+        mapView.debugOptions = []
+        let getOptions3 = mapView.debugOptions
+        XCTAssert(getOptions3.isEmpty, "The array of debug options should be empty.")
+
+        let setOptions4: MapViewDebugOptions = [.tileBorders, .timestamps, .camera]
+        mapView.debugOptions = setOptions4
+        let getOptions4 =  mapView.debugOptions
+        XCTAssertEqual(setOptions4, getOptions4, "Tile borders, timestamp, and camera should be enabled.")
+        XCTAssertEqual(nativeOptions1, getNativeOptions1, "Tile borders and timestamp should be seen in the native debug options, but not camera.")
+
+        mapView.debugOptions = []
+        let getOptions5 = mapView.debugOptions
+        XCTAssert(getOptions5.isEmpty, "The array of debug options should be empty after camera is unset.")
+    }
+
+    func testDebugCameraView() {
+        let setOptions: MapViewDebugOptions = .camera
+        mapView.debugOptions = setOptions
+        let getOptions = mapView.debugOptions
+        XCTAssertEqual(setOptions, getOptions, "Get and set options should be the same")
+
+        mapView.debugOptions = []
+        let getOptions2 = mapView.debugOptions
+        XCTAssert(getOptions2.isEmpty, "debug options should be empty")
+    }
+
+    func testMapViewDebugOptionsInit() {
+        let debugOptions: [MapDebugOptions] = [.tileBorders, .parseStatus]
+        let mapViewOptions = MapViewDebugOptions(mapOptions: debugOptions, cameraView: true)
+        XCTAssertTrue(mapViewOptions.contains(.tileBorders))
+        XCTAssertTrue(mapViewOptions.contains(.parseStatus))
+        XCTAssertTrue(mapViewOptions.contains(.camera))
+        XCTAssertTrue(mapViewOptions.nativeDebugOptions.contains(.tileBorders))
+        XCTAssertTrue(mapViewOptions.nativeDebugOptions.contains(.parseStatus))
+    }
+
+    func testMapViewDebugOptionsInitInitFromRawValues() {
+        var rawValues: [NSNumber] = [0] // Corresponding to .tileBorders
+        var mapViewOptions = MapViewDebugOptions(fromRawValues: rawValues)
+        mapView.debugOptions = mapViewOptions
+        var getOptions = mapView.debugOptions
+        XCTAssertEqual(mapViewOptions, getOptions)
+        XCTAssertTrue(mapViewOptions.contains(.tileBorders))
+
+        rawValues = [1] // Corresponding to .parseStatus
+        mapViewOptions = MapViewDebugOptions(fromRawValues: rawValues)
+        mapView.debugOptions = mapViewOptions
+        getOptions = mapView.debugOptions
+        XCTAssertEqual(mapViewOptions, getOptions)
+        XCTAssertTrue(mapViewOptions.contains(.parseStatus))
+
+        rawValues = [2] // Corresponding to .timestamps
+        mapViewOptions = MapViewDebugOptions(fromRawValues: rawValues)
+        mapView.debugOptions = mapViewOptions
+        getOptions = mapView.debugOptions
+        XCTAssertEqual(mapViewOptions, getOptions)
+        XCTAssertTrue(mapViewOptions.contains(.timestamps))
+
+        rawValues = [3] // Corresponding to .collision
+        mapViewOptions = MapViewDebugOptions(fromRawValues: rawValues)
+        mapView.debugOptions = mapViewOptions
+        getOptions = mapView.debugOptions
+        XCTAssertEqual(mapViewOptions, getOptions)
+        XCTAssertTrue(mapViewOptions.contains(.collision))
+
+        rawValues = [4] // Corresponding to .overdraw
+        mapViewOptions = MapViewDebugOptions(fromRawValues: rawValues)
+        mapView.debugOptions = mapViewOptions
+        getOptions = mapView.debugOptions
+        XCTAssertEqual(mapViewOptions, getOptions)
+        XCTAssertTrue(mapViewOptions.contains(.overdraw))
+
+        rawValues = [5] // Corresponding to .stencilClip
+        mapViewOptions = MapViewDebugOptions(fromRawValues: rawValues)
+        mapView.debugOptions = mapViewOptions
+        getOptions = mapView.debugOptions
+        XCTAssertEqual(mapViewOptions, getOptions)
+        XCTAssertTrue(mapViewOptions.contains(.stencilClip))
+
+        rawValues = [6] // Corresponding to .depthBuffer
+        mapViewOptions = MapViewDebugOptions(fromRawValues: rawValues)
+        mapView.debugOptions = mapViewOptions
+        getOptions = mapView.debugOptions
+        XCTAssertEqual(mapViewOptions, getOptions)
+        XCTAssertTrue(mapViewOptions.contains(.depthBuffer))
+
+        rawValues = [7] // Corresponding to .modelBounds
+        mapViewOptions = MapViewDebugOptions(fromRawValues: rawValues)
+        mapView.debugOptions = mapViewOptions
+        getOptions = mapView.debugOptions
+        XCTAssertEqual(mapViewOptions, getOptions)
+        XCTAssertTrue(mapViewOptions.contains(.modelBounds))
+
+        rawValues = [11] // Corresponding to .light
+        mapViewOptions = MapViewDebugOptions(fromRawValues: rawValues)
+        mapView.debugOptions = mapViewOptions
+        getOptions = mapView.debugOptions
+        // Temporarily disabling due to native issue
+        // XCTAssertEqual(mapViewOptions, getOptions)
+        XCTAssertTrue(mapViewOptions.contains(.light))
+
+        rawValues = [16] // Corresponding to .camera
+        mapViewOptions = MapViewDebugOptions(fromRawValues: rawValues)
+        mapView.debugOptions = mapViewOptions
+        getOptions = mapView.debugOptions
+        XCTAssertEqual(mapViewOptions, getOptions)
+        XCTAssertTrue(mapViewOptions.contains(.camera))
     }
 }

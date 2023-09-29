@@ -19,6 +19,8 @@ Mapbox welcomes participation and contributions from everyone.
 * `StyleColor` - add support for all color formats as defined by [Mapbox Style Spec](https://docs.mapbox.com/style-spec/reference/types/#color).
 * Introduce experimental Custom Raster Source APIs: `StyleManager/addCustomRasterSource`, `StyleManager/setCustomRasterSourceTileData`, `StyleManager/invalidateCustomRasterSourceTile`, `StyleManager/invalidateCustomRasterSourceRegion`.
 * Introduce new Map Content Gesture System.
+* Add an experimental `MapView/cameraDebugOverlay` which returns a UIView displaying the current state of the camera.
+* Add `MapView/debugOptions` which wraps the debugOptions on the underlying map in `MapViewDebugOptions`. An additional `.camera` debug option has been added, which adds a `CameraDebugView` to the map to see the current camera state. `MapboxMap/debugOptions` has been deprecated; access the underlying map debug options through `mapView.debugOptions.nativeDebugOptions` instead.
 
 ## 11.0.0-beta.3 - 8 September, 2023
 

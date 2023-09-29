@@ -6,7 +6,7 @@ private protocol DebugOptionSettingsDelegate: AnyObject {
 }
 
 private struct MapDebugOptionSetting {
-    let debugOption: MapDebugOptions
+    let debugOption: MapViewDebugOptions
     let displayTitle: String
 }
 
@@ -51,7 +51,7 @@ final class DebugMapExample: UIViewController, ExampleProtocol, DebugOptionSetti
     }
 
     @objc private func openDebugOptionsMenu(_ sender: UIBarButtonItem) {
-        let settingsViewController = SettingsViewController(debugOptions: mapView.mapboxMap.debugOptions)
+        let settingsViewController = SettingsViewController(debugOptions: mapView.debugOptions)
         settingsViewController.delegate = self
 
         let navigationController = UINavigationController(rootViewController: settingsViewController)
@@ -69,7 +69,7 @@ final class DebugMapExample: UIViewController, ExampleProtocol, DebugOptionSetti
 
     fileprivate func debugOptionSettingsDidChange(_ controller: SettingsViewController) {
         controller.dismiss(animated: true, completion: nil)
-        mapView.mapboxMap.debugOptions = Array(controller.enabledDebugOptions)
+        mapView.debugOptions = controller.enabledDebugOptions
     }
 }
 
@@ -78,7 +78,7 @@ private final class SettingsViewController: UIViewController, UITableViewDataSou
     weak var delegate: DebugOptionSettingsDelegate?
     private var listView: UITableView!
 
-    private(set) var enabledDebugOptions: Set<MapDebugOptions>
+    private(set) var enabledDebugOptions: MapViewDebugOptions
     private let allSettings: [MapDebugOptionSetting] = [
         MapDebugOptionSetting(debugOption: .collision, displayTitle: "Debug collision"),
         MapDebugOptionSetting(debugOption: .depthBuffer, displayTitle: "Show depth buffer"),
@@ -87,10 +87,13 @@ private final class SettingsViewController: UIViewController, UITableViewDataSou
         MapDebugOptionSetting(debugOption: .stencilClip, displayTitle: "Show stencil buffer"),
         MapDebugOptionSetting(debugOption: .tileBorders, displayTitle: "Debug tile clipping"),
         MapDebugOptionSetting(debugOption: .timestamps, displayTitle: "Show tile loaded time"),
+        MapDebugOptionSetting(debugOption: .modelBounds, displayTitle: "Show 3D model bounding boxes"),
+        MapDebugOptionSetting(debugOption: .light, displayTitle: "Show light conditions"),
+        MapDebugOptionSetting(debugOption: .camera, displayTitle: "Show camera debug view")
     ]
 
-    init(debugOptions: [MapDebugOptions]) {
-        enabledDebugOptions = Set(debugOptions)
+    init(debugOptions: MapViewDebugOptions) {
+        enabledDebugOptions = debugOptions
         super.init(nibName: nil, bundle: nil)
     }
 

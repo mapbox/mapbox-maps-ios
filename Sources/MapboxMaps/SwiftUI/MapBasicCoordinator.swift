@@ -168,7 +168,7 @@ final class MapBasicCoordinator {
 extension MapBasicCoordinator: ViewportStatusObserver {
     func viewportStatusDidChange(from fromStatus: ViewportStatus, to toStatus: ViewportStatus, reason: ViewportStatusChangeReason) {
         switch (fromStatus, toStatus, reason) {
-        case (_, .idle, .userInteraction):
+        case (_, .idle, _):
             currentViewport = .idle
             setViewport?(.idle)
         case (_, _, _):

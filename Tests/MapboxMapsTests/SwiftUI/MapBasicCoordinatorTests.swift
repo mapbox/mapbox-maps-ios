@@ -154,4 +154,19 @@ final class MapBasicCoordinatorTests: XCTestCase {
         mapView.mapboxMap.events.onMapLoaded.send(mapLoaded)
         XCTAssertEqual(mapLoaded, observedMapLoaded)
     }
+
+    func testResetToIdleViewport() {
+        let state1 = MockViewportState()
+        mapView.viewportManager.simulateViewportStatusDidChange(from: .state(state1), to: .idle, reason: .userInteraction)
+        XCTAssertEqual(setViewportStub.invocations.count, 1)
+        XCTAssertEqual(setViewportStub.invocations.last?.parameters, .idle)
+
+        mapView.viewportManager.simulateViewportStatusDidChange(from: .state(state1), to: .idle, reason: .transitionFailed)
+        XCTAssertEqual(setViewportStub.invocations.count, 2)
+        XCTAssertEqual(setViewportStub.invocations.last?.parameters, .idle)
+
+        mapView.viewportManager.simulateViewportStatusDidChange(from: .state(state1), to: .idle, reason: .idleRequested)
+        XCTAssertEqual(setViewportStub.invocations.count, 3)
+        XCTAssertEqual(setViewportStub.invocations.last?.parameters, .idle)
+    }
 }

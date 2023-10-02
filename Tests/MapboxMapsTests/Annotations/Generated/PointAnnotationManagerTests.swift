@@ -1183,6 +1183,100 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-spacing"] as! Double, defaultValue)
     }
 
+    func testInitialSymbolZElevate() {
+        let initialValue = manager.symbolZElevate
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetSymbolZElevate() {
+        let value = Bool.random()
+        manager.symbolZElevate = value
+        XCTAssertEqual(manager.symbolZElevate, value)
+
+        // test layer and source synced and properties added
+        $displayLink.send()
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-z-elevate"] as! Bool, value)
+    }
+
+    func testSymbolZElevateAnnotationPropertiesAddedWithoutDuplicate() {
+        let newSymbolZElevateProperty = Bool.random()
+        let secondSymbolZElevateProperty = Bool.random()
+
+        manager.symbolZElevate = newSymbolZElevateProperty
+        $displayLink.send()
+        manager.symbolZElevate = secondSymbolZElevateProperty
+        $displayLink.send()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-z-elevate"] as! Bool, secondSymbolZElevateProperty)
+    }
+
+    func testNewSymbolZElevatePropertyMergedWithAnnotationProperties() {
+        var annotations = [PointAnnotation]()
+        for _ in 0...5 {
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+            annotation.iconAnchor = IconAnchor.random()
+            annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
+            annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+            annotation.iconRotate = Double.random(in: -100000...100000)
+            annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.random()
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+            annotation.symbolSortKey = Double.random(in: -100000...100000)
+            annotation.textAnchor = TextAnchor.random()
+            annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
+            annotation.textJustify = TextJustify.random()
+            annotation.textLetterSpacing = Double.random(in: -100000...100000)
+            annotation.textLineHeight = Double.random(in: -100000...100000)
+            annotation.textMaxWidth = Double.random(in: 0...100000)
+            annotation.textOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+            annotation.textRadialOffset = Double.random(in: -100000...100000)
+            annotation.textRotate = Double.random(in: -100000...100000)
+            annotation.textSize = Double.random(in: 0...100000)
+            annotation.textTransform = TextTransform.random()
+            annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
+            annotation.iconHaloBlur = Double.random(in: 0...100000)
+            annotation.iconHaloColor = StyleColor.random()
+            annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
+            annotation.iconOpacity = Double.random(in: 0...1)
+            annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
+            annotation.textHaloBlur = Double.random(in: 0...100000)
+            annotation.textHaloColor = StyleColor.random()
+            annotation.textHaloWidth = Double.random(in: 0...100000)
+            annotation.textOpacity = Double.random(in: 0...1)
+            annotations.append(annotation)
+        }
+        let newSymbolZElevateProperty = Bool.random()
+
+        manager.annotations = annotations
+        manager.symbolZElevate = newSymbolZElevateProperty
+        $displayLink.send()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-z-elevate"])
+    }
+
+    func testSetToNilSymbolZElevate() {
+        let newSymbolZElevateProperty = Bool.random()
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-z-elevate").value as! Bool
+        manager.symbolZElevate = newSymbolZElevateProperty
+        $displayLink.send()
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-z-elevate"])
+
+        manager.symbolZElevate = nil
+        $displayLink.send()
+        XCTAssertNil(manager.symbolZElevate)
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["symbol-z-elevate"] as! Bool, defaultValue)
+    }
+
     func testInitialSymbolZOrder() {
         let initialValue = manager.symbolZOrder
         XCTAssertNil(initialValue)
@@ -3007,10 +3101,10 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         style.addPersistentLayerStub.reset()
         // given
         let clusterOptions = ClusterOptions()
-        let annotations = (0..<500).map { _ in
+        var annotations = (0..<500).map { _ in
             PointAnnotation(coordinate: .random(), isSelected: false, isDraggable: false)
         }
-        let newAnnotations = (0..<100).map { _ in
+        var newAnnotations = (0..<100).map { _ in
             PointAnnotation(coordinate: .random(), isSelected: false, isDraggable: false)
         }
 
@@ -3026,16 +3120,16 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         )
         pointAnnotationManager.annotations = annotations
         $displayLink.send()
-        let parameters = try XCTUnwrap(style.addGeoJSONSourceFeaturesStub.invocations.last).parameters
+        var parameters = try XCTUnwrap(style.addGeoJSONSourceFeaturesStub.invocations.last).parameters
         XCTAssertEqual(parameters.features, annotations.map(\.feature))
 
         // then
         pointAnnotationManager.annotations = newAnnotations
         $displayLink.send()
-        let addParameters = try XCTUnwrap(style.addGeoJSONSourceFeaturesStub.invocations.last).parameters
+        var addParameters = try XCTUnwrap(style.addGeoJSONSourceFeaturesStub.invocations.last).parameters
         XCTAssertEqual(addParameters.features, newAnnotations.map(\.feature))
 
-        let removeParameters = try XCTUnwrap(style.removeGeoJSONSourceFeaturesStub.invocations.last).parameters
+        var removeParameters = try XCTUnwrap(style.removeGeoJSONSourceFeaturesStub.invocations.last).parameters
         XCTAssertEqual(removeParameters.featureIds, annotations.map(\.id))
     }
 

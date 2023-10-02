@@ -395,6 +395,16 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
     }
 
+    /// Position symbol on buildings (both fill extrusions and models) roof tops. In order to have minimal impact on performance, this is supported only when `fill-extrusion-height` is not zoom-dependent and not edited after initial bucket creation. For fading in buildings when zooming in, fill-extrusion-vertical-scale should be used and symbols would raise with building roofs. Symbols are sorted by elevation, except in case when `viewport-y` sorting or `symbol-sort-key` are applied.
+    public var symbolZElevate: Bool? {
+        get {
+            return layerProperties["symbol-z-elevate"] as? Bool
+        }
+        set {
+            layerProperties["symbol-z-elevate"] = newValue
+        }
+    }
+
     /// Determines whether overlapping symbols in the same layer are rendered in the order that they appear in the data source or by their y-position relative to the viewport. To control the order and prioritization of symbols otherwise, use `symbol-sort-key`.
     public var symbolZOrder: SymbolZOrder? {
         get {

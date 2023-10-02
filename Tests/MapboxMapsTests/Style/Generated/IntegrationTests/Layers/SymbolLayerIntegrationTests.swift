@@ -39,6 +39,7 @@ final class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.symbolPlacement = Value<SymbolPlacement>.testConstantValue()
             layer.symbolSortKey = Value<Double>.testConstantValue()
             layer.symbolSpacing = Value<Double>.testConstantValue()
+            layer.symbolZElevate = Value<Bool>.testConstantValue()
             layer.symbolZOrder = Value<SymbolZOrder>.testConstantValue()
             layer.textAllowOverlap = Value<Bool>.testConstantValue()
             layer.textAnchor = Value<TextAnchor>.testConstantValue()

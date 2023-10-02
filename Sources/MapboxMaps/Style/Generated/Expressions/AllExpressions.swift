@@ -61,7 +61,7 @@ public extension Expression {
         /// Returns `true` if any of the inputs are `true`, `false` otherwise. The inputs are evaluated in order, and evaluation is short-circuiting: once an input expression evaluates to `true`, the result is `true` and no further input expressions are evaluated.
         public static let any = Operator(rawValue: "any")
 
-        /// Asserts that the input is an array (optionally with a specific item type and length).  If, when the input expression is evaluated, it is not of the asserted type, then this assertion will cause the whole expression to be aborted.
+        /// Asserts that the input is an array (optionally with a specific item type and length). If, when the input expression is evaluated, it is not of the asserted type, then this assertion will cause the whole expression to be aborted.
         public static let array = Operator(rawValue: "array")
 
         /// Returns the arcsine of the input.
@@ -218,7 +218,7 @@ public extension Expression {
         /// Returns the current pitch in degrees. `["pitch"]` may only be used in the `filter` expression for a `symbol` layer.
         public static let pitch = Operator(rawValue: "pitch")
 
-        /// Returns the feature properties object.  Note that in some cases, it may be more efficient to use `["get", "property_name"]` directly.
+        /// Returns the feature properties object. Note that in some cases, it may be more efficient to use `["get", "property_name"]` directly.
         public static let properties = Operator(rawValue: "properties")
 
         /// Returns a random value in the specified range (first two input numbers) based on a supplied seed (third input). The seed can be an expression or a constant number or string value.
@@ -289,7 +289,7 @@ public extension Expression {
         /// - `LineString`: Returns `false` if any part of a line falls outside the boundary, the line intersects the boundary, or a line's endpoint is on the boundary.
         public static let within = Operator(rawValue: "within")
 
-        /// Returns the current zoom level.  Note that in style layout and paint properties, ["zoom"] may only appear as the input to a top-level "step" or "interpolate" expression.
+        /// Returns the current zoom level. Note that in style layout and paint properties, ["zoom"] may only appear as the input to a top-level "step" or "interpolate" expression.
         public static let zoom = Operator(rawValue: "zoom")
 
         /// Interpolates linearly between the pair of stops just less than and just greater than the input

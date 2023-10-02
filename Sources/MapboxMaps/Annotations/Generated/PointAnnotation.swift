@@ -139,7 +139,7 @@ public struct PointAnnotation: Annotation, Equatable {
     /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
     public var iconTextFitPadding: [Double]?
 
-    /// Sorts features in ascending order based on this value. Features with lower sort keys are drawn and placed first.  When `icon-allow-overlap` or `text-allow-overlap` is `false`, features with a lower sort key will have priority during placement. When `icon-allow-overlap` or `text-allow-overlap` is set to `true`, features with a higher sort key will overlap over features with a lower sort key.
+    /// Sorts features in ascending order based on this value. Features with lower sort keys are drawn and placed first. When `icon-allow-overlap` or `text-allow-overlap` is `false`, features with a lower sort key will have priority during placement. When `icon-allow-overlap` or `text-allow-overlap` is set to `true`, features with a higher sort key will overlap over features with a lower sort key.
     public var symbolSortKey: Double?
 
     /// Part of the text placed closest to the anchor.
@@ -178,7 +178,7 @@ public struct PointAnnotation: Annotation, Equatable {
     /// The color of the icon. This can only be used with [SDF icons](/help/troubleshooting/using-recolorable-images-in-mapbox-maps/).
     public var iconColor: StyleColor?
 
-    /// Emission strength
+    /// Controls the intensity of light emitted on the source features. This property works only with 3D light, i.e. when `lights` root property is defined.
     public var iconEmissiveStrength: Double?
 
     /// Fade out the halo towards the outside.
@@ -199,7 +199,7 @@ public struct PointAnnotation: Annotation, Equatable {
     /// The color with which the text will be drawn.
     public var textColor: StyleColor?
 
-    /// Emission strength
+    /// Controls the intensity of light emitted on the source features. This property works only with 3D light, i.e. when `lights` root property is defined.
     public var textEmissiveStrength: Double?
 
     /// The halo's fadeout distance towards the outside.
@@ -284,7 +284,7 @@ public struct PointAnnotation: Annotation, Equatable {
         with(self, setter(\.iconTextFitPadding, newValue))
     }
 
-    /// Sorts features in ascending order based on this value. Features with lower sort keys are drawn and placed first.  When `icon-allow-overlap` or `text-allow-overlap` is `false`, features with a lower sort key will have priority during placement. When `icon-allow-overlap` or `text-allow-overlap` is set to `true`, features with a higher sort key will overlap over features with a lower sort key.
+    /// Sorts features in ascending order based on this value. Features with lower sort keys are drawn and placed first. When `icon-allow-overlap` or `text-allow-overlap` is `false`, features with a lower sort key will have priority during placement. When `icon-allow-overlap` or `text-allow-overlap` is set to `true`, features with a higher sort key will overlap over features with a lower sort key.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -388,7 +388,7 @@ public struct PointAnnotation: Annotation, Equatable {
         with(self, setter(\.iconColor, newValue))
     }
 
-    /// Emission strength
+    /// Controls the intensity of light emitted on the source features. This property works only with 3D light, i.e. when `lights` root property is defined.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -444,7 +444,7 @@ public struct PointAnnotation: Annotation, Equatable {
         with(self, setter(\.textColor, newValue))
     }
 
-    /// Emission strength
+    /// Controls the intensity of light emitted on the source features. This property works only with 3D light, i.e. when `lights` root property is defined.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif

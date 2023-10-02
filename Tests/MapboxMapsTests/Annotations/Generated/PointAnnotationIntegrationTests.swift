@@ -321,6 +321,32 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(layer.symbolSpacing, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-spacing").value as! NSNumber).doubleValue))
     }
 
+    func testSymbolZElevate() throws {
+        // Test that the setter and getter work
+        let value = Bool.random()
+        manager.symbolZElevate = value
+        XCTAssertEqual(manager.symbolZElevate, value)
+
+        // Test that the value is synced to the layer
+        manager.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        if case .constant(let actualValue) = layer.symbolZElevate {
+            XCTAssertEqual(actualValue, value)
+        } else {
+            XCTFail("Expected constant")
+        }
+
+        // Test that the property can be reset to nil
+        manager.symbolZElevate = nil
+        XCTAssertNil(manager.symbolZElevate)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        XCTAssertEqual(layer.symbolZElevate, .constant((StyleManager.layerPropertyDefaultValue(for: .symbol, property: "symbol-z-elevate").value as! NSNumber).boolValue))
+    }
+
     func testSymbolZOrder() throws {
         // Test that the setter and getter work
         let value = SymbolZOrder.random()

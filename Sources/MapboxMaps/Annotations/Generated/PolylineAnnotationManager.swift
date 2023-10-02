@@ -251,7 +251,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    /// Emission strength
+    /// Controls the intensity of light emitted on the source features. This property works only with 3D light, i.e. when `lights` root property is defined.
     public var lineEmissiveStrength: Double? {
         get {
             return layerProperties["line-emissive-strength"] as? Double

@@ -105,6 +105,9 @@ public struct FillExtrusionLayer: Layer {
     /// Transition options for `fillExtrusionColor`.
     public var fillExtrusionColorTransition: StyleTransition?
 
+    /// This parameter defines the range for the fade-out effect before an automatic content cutoff on pitched map views. The automatic cutoff range is calculated according to the minimum required zoom level of the source and layer. The fade range is expressed in relation to the height of the map view. A value of 1.0 indicates that the content is faded to the same extent as the map's height in pixels, while a value close to zero represents a sharp cutoff. When the value is set to 0.0, the cutoff is completely disabled. Note: The property has no effect on the map if terrain is enabled.
+    public var fillExtrusionCutoffFadeRange: Value<Double>?
+
     /// The color of the flood light effect on the walls of the extruded buildings. This property works only with 3D light, i.e. when `lights` root property is defined.
 #if swift(>=5.8)
     @_documentation(visibility: public)
@@ -243,6 +246,7 @@ public struct FillExtrusionLayer: Layer {
         try paintContainer.encodeIfPresent(fillExtrusionBaseTransition, forKey: .fillExtrusionBaseTransition)
         try paintContainer.encodeIfPresent(fillExtrusionColor, forKey: .fillExtrusionColor)
         try paintContainer.encodeIfPresent(fillExtrusionColorTransition, forKey: .fillExtrusionColorTransition)
+        try paintContainer.encodeIfPresent(fillExtrusionCutoffFadeRange, forKey: .fillExtrusionCutoffFadeRange)
         try paintContainer.encodeIfPresent(fillExtrusionFloodLightColor, forKey: .fillExtrusionFloodLightColor)
         try paintContainer.encodeIfPresent(fillExtrusionFloodLightColorTransition, forKey: .fillExtrusionFloodLightColorTransition)
         try paintContainer.encodeIfPresent(fillExtrusionFloodLightGroundAttenuation, forKey: .fillExtrusionFloodLightGroundAttenuation)
@@ -297,6 +301,7 @@ public struct FillExtrusionLayer: Layer {
             fillExtrusionBaseTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionBaseTransition)
             fillExtrusionColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .fillExtrusionColor)
             fillExtrusionColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionColorTransition)
+            fillExtrusionCutoffFadeRange = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionCutoffFadeRange)
             fillExtrusionFloodLightColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .fillExtrusionFloodLightColor)
             fillExtrusionFloodLightColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionFloodLightColorTransition)
             fillExtrusionFloodLightGroundAttenuation = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionFloodLightGroundAttenuation)
@@ -362,6 +367,7 @@ public struct FillExtrusionLayer: Layer {
         case fillExtrusionBaseTransition = "fill-extrusion-base-transition"
         case fillExtrusionColor = "fill-extrusion-color"
         case fillExtrusionColorTransition = "fill-extrusion-color-transition"
+        case fillExtrusionCutoffFadeRange = "fill-extrusion-cutoff-fade-range"
         case fillExtrusionFloodLightColor = "fill-extrusion-flood-light-color"
         case fillExtrusionFloodLightColorTransition = "fill-extrusion-flood-light-color-transition"
         case fillExtrusionFloodLightGroundAttenuation = "fill-extrusion-flood-light-ground-attenuation"

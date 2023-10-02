@@ -39,7 +39,7 @@ public struct HeatmapLayer: Layer {
     /// Whether this layer is displayed.
     public var visibility: Value<Visibility>
 
-    /// Defines the color of each pixel based on its density value in a heatmap.  Should be an expression that uses `["heatmap-density"]` as input.
+    /// Defines the color of each pixel based on its density value in a heatmap. Should be an expression that uses `["heatmap-density"]` as input.
     public var heatmapColor: Value<StyleColor>?
 
     /// Similar to `heatmap-weight` but controls the intensity of the heatmap globally. Primarily used for adjusting the heatmap based on zoom level.

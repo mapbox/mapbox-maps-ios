@@ -51,7 +51,7 @@ public struct FillLayer: Layer {
     /// Transition options for `fillColor`.
     public var fillColorTransition: StyleTransition?
 
-    /// Emission strength
+    /// Controls the intensity of light emitted on the source features. This property works only with 3D light, i.e. when `lights` root property is defined.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif

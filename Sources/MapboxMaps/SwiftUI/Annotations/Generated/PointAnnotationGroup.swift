@@ -82,6 +82,7 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>: 
         assign(manager, \.symbolAvoidEdges, value: symbolAvoidEdges)
         assign(manager, \.symbolPlacement, value: symbolPlacement)
         assign(manager, \.symbolSpacing, value: symbolSpacing)
+        assign(manager, \.symbolZElevate, value: symbolZElevate)
         assign(manager, \.symbolZOrder, value: symbolZOrder)
         assign(manager, \.textAllowOverlap, value: textAllowOverlap)
         assign(manager, \.textFont, value: textFont)
@@ -190,6 +191,15 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>: 
 #endif
     public func symbolSpacing(_ newValue: Double) -> Self {
         with(self, setter(\.symbolSpacing, newValue))
+    }
+
+    private var symbolZElevate: Bool?
+    /// Position symbol on buildings (both fill extrusions and models) roof tops. In order to have minimal impact on performance, this is supported only when `fill-extrusion-height` is not zoom-dependent and not edited after initial bucket creation. For fading in buildings when zooming in, fill-extrusion-vertical-scale should be used and symbols would raise with building roofs. Symbols are sorted by elevation, except in case when `viewport-y` sorting or `symbol-sort-key` are applied.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func symbolZElevate(_ newValue: Bool) -> Self {
+        with(self, setter(\.symbolZElevate, newValue))
     }
 
     private var symbolZOrder: SymbolZOrder?

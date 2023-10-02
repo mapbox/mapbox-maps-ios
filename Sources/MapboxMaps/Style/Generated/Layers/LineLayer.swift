@@ -93,7 +93,7 @@ public struct LineLayer: Layer {
 #endif
     @_spi(Experimental) public var lineDepthOcclusionFactorTransition: StyleTransition?
 
-    /// Emission strength
+    /// Controls the intensity of light emitted on the source features. This property works only with 3D light, i.e. when `lights` root property is defined.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -111,7 +111,7 @@ public struct LineLayer: Layer {
     /// Transition options for `lineGapWidth`.
     public var lineGapWidthTransition: StyleTransition?
 
-    /// Defines a gradient with which to color a line feature. Can only be used with GeoJSON sources that specify `"lineMetrics": true`.
+    /// A gradient used to color a line feature at various distances along its length. Defined using a `step` or `interpolate` expression which outputs a color for each corresponding `line-progress` input value. `line-progress` is a percentage of the line feature's total length as measured on the webmercator projected coordinate plane (a `number` between `0` and `1`). Can only be used with GeoJSON sources that specify `"lineMetrics": true`.
     public var lineGradient: Value<StyleColor>?
 
     /// The line's offset. For linear features, a positive value offsets the line to the right, relative to the direction of the line, and a negative value to the left. For polygon features, a positive value results in an inset, and a negative value results in an outset.

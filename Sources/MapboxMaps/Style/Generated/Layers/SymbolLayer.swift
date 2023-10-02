@@ -87,11 +87,14 @@ public struct SymbolLayer: Layer {
     /// Label placement relative to its geometry.
     public var symbolPlacement: Value<SymbolPlacement>?
 
-    /// Sorts features in ascending order based on this value. Features with lower sort keys are drawn and placed first.  When `icon-allow-overlap` or `text-allow-overlap` is `false`, features with a lower sort key will have priority during placement. When `icon-allow-overlap` or `text-allow-overlap` is set to `true`, features with a higher sort key will overlap over features with a lower sort key.
+    /// Sorts features in ascending order based on this value. Features with lower sort keys are drawn and placed first. When `icon-allow-overlap` or `text-allow-overlap` is `false`, features with a lower sort key will have priority during placement. When `icon-allow-overlap` or `text-allow-overlap` is set to `true`, features with a higher sort key will overlap over features with a lower sort key.
     public var symbolSortKey: Value<Double>?
 
     /// Distance between two symbol anchors.
     public var symbolSpacing: Value<Double>?
+
+    /// Position symbol on buildings (both fill extrusions and models) roof tops. In order to have minimal impact on performance, this is supported only when `fill-extrusion-height` is not zoom-dependent and not edited after initial bucket creation. For fading in buildings when zooming in, fill-extrusion-vertical-scale should be used and symbols would raise with building roofs. Symbols are sorted by elevation, except in case when `viewport-y` sorting or `symbol-sort-key` are applied.
+    public var symbolZElevate: Value<Bool>?
 
     /// Determines whether overlapping symbols in the same layer are rendered in the order that they appear in the data source or by their y-position relative to the viewport. To control the order and prioritization of symbols otherwise, use `symbol-sort-key`.
     public var symbolZOrder: Value<SymbolZOrder>?
@@ -168,7 +171,7 @@ public struct SymbolLayer: Layer {
     /// Transition options for `iconColor`.
     public var iconColorTransition: StyleTransition?
 
-    /// Emission strength
+    /// Controls the intensity of light emitted on the source features. This property works only with 3D light, i.e. when `lights` root property is defined.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -231,7 +234,7 @@ public struct SymbolLayer: Layer {
     /// Transition options for `textColor`.
     public var textColorTransition: StyleTransition?
 
-    /// Emission strength
+    /// Controls the intensity of light emitted on the source features. This property works only with 3D light, i.e. when `lights` root property is defined.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -348,6 +351,7 @@ public struct SymbolLayer: Layer {
         try layoutContainer.encodeIfPresent(symbolPlacement, forKey: .symbolPlacement)
         try layoutContainer.encodeIfPresent(symbolSortKey, forKey: .symbolSortKey)
         try layoutContainer.encodeIfPresent(symbolSpacing, forKey: .symbolSpacing)
+        try layoutContainer.encodeIfPresent(symbolZElevate, forKey: .symbolZElevate)
         try layoutContainer.encodeIfPresent(symbolZOrder, forKey: .symbolZOrder)
         try layoutContainer.encodeIfPresent(textAllowOverlap, forKey: .textAllowOverlap)
         try layoutContainer.encodeIfPresent(textAnchor, forKey: .textAnchor)
@@ -440,6 +444,7 @@ public struct SymbolLayer: Layer {
             symbolPlacement = try layoutContainer.decodeIfPresent(Value<SymbolPlacement>.self, forKey: .symbolPlacement)
             symbolSortKey = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .symbolSortKey)
             symbolSpacing = try layoutContainer.decodeIfPresent(Value<Double>.self, forKey: .symbolSpacing)
+            symbolZElevate = try layoutContainer.decodeIfPresent(Value<Bool>.self, forKey: .symbolZElevate)
             symbolZOrder = try layoutContainer.decodeIfPresent(Value<SymbolZOrder>.self, forKey: .symbolZOrder)
             textAllowOverlap = try layoutContainer.decodeIfPresent(Value<Bool>.self, forKey: .textAllowOverlap)
             textAnchor = try layoutContainer.decodeIfPresent(Value<TextAnchor>.self, forKey: .textAnchor)
@@ -499,6 +504,7 @@ public struct SymbolLayer: Layer {
         case symbolPlacement = "symbol-placement"
         case symbolSortKey = "symbol-sort-key"
         case symbolSpacing = "symbol-spacing"
+        case symbolZElevate = "symbol-z-elevate"
         case symbolZOrder = "symbol-z-order"
         case textAllowOverlap = "text-allow-overlap"
         case textAnchor = "text-anchor"

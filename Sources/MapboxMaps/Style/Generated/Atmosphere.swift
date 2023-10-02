@@ -43,6 +43,12 @@ public struct Atmosphere: Codable  {
     /// Transition property for `starIntensity`
     public var starIntensityTransition: StyleTransition?
 
+    /// An array of two number values, specifying the vertical range, measured in meters, over which the fog should gradually fade out. When both parameters are set to zero, the fog will be rendered without any vertical constraints.
+    public var verticalRange: Value<[Double]>?
+
+    /// Transition property for `verticalRange`
+    public var verticalRangeTransition: StyleTransition?
+
     public init() {}
 
     enum CodingKeys: String, CodingKey {
@@ -58,6 +64,8 @@ public struct Atmosphere: Codable  {
         case spaceColorTransition = "space-color-transition"
         case starIntensity = "star-intensity"
         case starIntensityTransition = "star-intensity-transition"
+        case verticalRange = "vertical-range"
+        case verticalRangeTransition = "vertical-range-transition"
     }
 }
 

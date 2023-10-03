@@ -1,6 +1,6 @@
 ## License
 
-Mapbox Maps for iOS version 10.16.0
+Mapbox Maps for iOS version 10.16.1
 Mapbox Maps iOS SDK
 
 Copyright &copy; 2021 - 2023 Mapbox, Inc. All rights reserved.
@@ -14,7 +14,7 @@ This application makes use of the following third party libraries:
 ### turf-swift, https://github.com/mapbox/turf-swift
 
 ```
-Copyright © 2014–2022, Mapbox
+Copyright © 2014–2023, Mapbox
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ---
 
-### MapboxCoreMaps,10.16.0,Mapbox ToS,Mapbox,https://www.mapbox.com/
+### MapboxCoreMaps,10.16.1,Mapbox ToS,Mapbox,https://www.mapbox.com/
 
 ```
 Mapbox Core Maps version 10.0

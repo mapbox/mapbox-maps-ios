@@ -7,9 +7,9 @@ final class MapBasicCoordinator {
     typealias ViewportSetter = (Viewport) -> Void
 
     // Deps
-    private var setViewport: ViewportSetter?
     private let mainQueue: MainQueueProtocol
     private var mapView: MapViewFacade
+    private let idleObserver = IdleViewportObserver()
 
     // Update params
     private var cameraChangeHandlers = [(CameraChanged) -> Void]()
@@ -28,7 +28,6 @@ final class MapBasicCoordinator {
         mapView: MapViewFacade,
         mainQueue: MainQueueProtocol = MainQueueWrapper()
     ) {
-        self.setViewport = setViewport
         self.mapView = mapView
         self.mainQueue = mainQueue
 
@@ -40,11 +39,16 @@ final class MapBasicCoordinator {
                 }
             }.store(in: &cancellables)
 
-        mapView.viewportManager.addStatusObserver(self)
+        idleObserver.onIdle = { [weak self] in
+            self?.currentViewport = .idle
+            setViewport?(.idle)
+        }
+
+        mapView.viewportManager.addStatusObserver(idleObserver)
     }
 
     deinit {
-        mapView.viewportManager.removeStatusObserver(self)
+        mapView.viewportManager.removeStatusObserver(idleObserver)
     }
 
     func update(
@@ -164,13 +168,13 @@ final class MapBasicCoordinator {
     }
 }
 
-@available(iOS 13.0, *)
-extension MapBasicCoordinator: ViewportStatusObserver {
+private final class IdleViewportObserver: ViewportStatusObserver {
+    var onIdle: (() -> Void)?
+
     func viewportStatusDidChange(from fromStatus: ViewportStatus, to toStatus: ViewportStatus, reason: ViewportStatusChangeReason) {
         switch (fromStatus, toStatus, reason) {
         case (_, .idle, _):
-            currentViewport = .idle
-            setViewport?(.idle)
+            onIdle?()
         case (_, _, _):
             break
         }

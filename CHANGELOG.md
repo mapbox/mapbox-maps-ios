@@ -6,6 +6,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Add a new CustomLayer API to simplify manipulation of layers with custom rendering (aka "CustomLayerHost").
 * Fix memory leak in SwiftUI.
+* Expose `MapViewDebugOptions` in SwiftUI.
 
 ## 11.0.0-beta.4 - 20 September, 2023
 

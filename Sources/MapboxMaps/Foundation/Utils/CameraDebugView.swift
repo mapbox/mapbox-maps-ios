@@ -13,17 +13,21 @@ final class CameraDebugView: UIView {
 
     init() {
         super.init(frame: .zero)
-        addSubview(cameraStateLabel)
 
         if #available(iOS 13.0, *) {
-            self.backgroundColor = UIColor.systemBackground
+            backgroundColor = UIColor.systemBackground
         } else {
-            self.backgroundColor = .white
+            backgroundColor = .white
         }
-        self.layer.cornerRadius = 5
+        layer.cornerRadius = 5
+        layer.shadowRadius = 1.4
+        layer.shadowOffset = CGSize(width: 0, height: 0.7)
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowOpacity = 0.3
 
         cameraStateLabel.translatesAutoresizingMaskIntoConstraints = false
         cameraStateLabel.numberOfLines = 0
+        addSubview(cameraStateLabel)
 
         let padding: CGFloat = 4.0
         NSLayoutConstraint.activate([

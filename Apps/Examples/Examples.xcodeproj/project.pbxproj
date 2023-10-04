@@ -86,7 +86,6 @@
 		9501A5A42A38830B00F2AF92 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9501A59F2A38830B00F2AF92 /* ViewExtensions.swift */; };
 		9501A5A52A38830B00F2AF92 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9501A5A02A38830B00F2AF92 /* Constants.swift */; };
 		9501A5A62A38830B00F2AF92 /* ButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9501A5A12A38830B00F2AF92 /* ButtonStyle.swift */; };
-		9501A5A72A38830B00F2AF92 /* CameraDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9501A5A22A38830B00F2AF92 /* CameraDebugView.swift */; };
 		9501A5A82A38830B00F2AF92 /* SwiftExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9501A5A32A38830B00F2AF92 /* SwiftExtensions.swift */; };
 		951693B22A581DFC0083DC4C /* LocateMeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951693B12A581DFC0083DC4C /* LocateMeExample.swift */; };
 		954425282A86BDFB00DC6CBB /* StandardStyleImportExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954425272A86BDFB00DC6CBB /* StandardStyleImportExample.swift */; };
@@ -275,7 +274,6 @@
 		9501A59F2A38830B00F2AF92 /* ViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
 		9501A5A02A38830B00F2AF92 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		9501A5A12A38830B00F2AF92 /* ButtonStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonStyle.swift; sourceTree = "<group>"; };
-		9501A5A22A38830B00F2AF92 /* CameraDebugView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraDebugView.swift; sourceTree = "<group>"; };
 		9501A5A32A38830B00F2AF92 /* SwiftExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftExtensions.swift; sourceTree = "<group>"; };
 		951693B12A581DFC0083DC4C /* LocateMeExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocateMeExample.swift; sourceTree = "<group>"; };
 		954425272A86BDFB00DC6CBB /* StandardStyleImportExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardStyleImportExample.swift; sourceTree = "<group>"; };
@@ -593,7 +591,6 @@
 			isa = PBXGroup;
 			children = (
 				9501A5A12A38830B00F2AF92 /* ButtonStyle.swift */,
-				9501A5A22A38830B00F2AF92 /* CameraDebugView.swift */,
 				9501A5A02A38830B00F2AF92 /* Constants.swift */,
 				9501A5A32A38830B00F2AF92 /* SwiftExtensions.swift */,
 				9501A59F2A38830B00F2AF92 /* ViewExtensions.swift */,
@@ -858,7 +855,6 @@
 				58248C2F2695FF24009AC598 /* StoryboardMapViewExample.swift in Sources */,
 				74A2313827EC6B360065FB7D /* IconSizeChangeExample.swift in Sources */,
 				B58E470927BABE0E00D87FD6 /* AdvancedViewportGesturesExample.swift in Sources */,
-				9501A5A72A38830B00F2AF92 /* CameraDebugView.swift in Sources */,
 				A495049B2667D64F00130A8F /* SkyLayerExample.swift in Sources */,
 				CADCF7262584990E0065C51B /* SnapshotterExample.swift in Sources */,
 				5812B55127C5A0E500E10063 /* CustomLocationProviderExample.swift in Sources */,

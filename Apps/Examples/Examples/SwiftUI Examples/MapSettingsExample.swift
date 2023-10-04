@@ -8,6 +8,7 @@ struct Settings {
     var cameraBounds: CameraBoundsOptions = .init()
     var constrainMode: ConstrainMode = .heightOnly
     var ornamentSettings = OrnamentSettings()
+    var debugOptions: MapViewDebugOptions = [.camera]
 
     struct OrnamentSettings {
         var isScaleBarVisible = true
@@ -17,7 +18,6 @@ struct Settings {
 
 @available(iOS 14.0, *)
 struct MapSettingsExample : View {
-    @State private var cameraState = CameraState(center: .berlin, padding: .zero, zoom: 12, bearing: 0, pitch: 0)
     @State private var settingsOpened = false
     @State private var settings = Settings()
 
@@ -32,18 +32,12 @@ struct MapSettingsExample : View {
                 scaleBar: ScaleBarViewOptions(visibility: settings.ornamentSettings.isScaleBarVisible ? .visible : .hidden),
                 compass: CompassViewOptions(visibility: settings.ornamentSettings.isCompassVisible ? .visible : .hidden)
             ))
-            .onCameraChanged { event in
-                // NOTE: updating camera @State on every camera change is not recommended
-                // because it will lead to body re-evaluation on every frame if user drags the map.
-                // Here it is used for demonstration purposes.
-                cameraState = event.cameraState
-            }
+            .debugOptions(settings.debugOptions)
             .ignoresSafeArea()
             .sheet(isPresented: $settingsOpened) {
                 SettingsView(settings: $settings)
                     .defaultDetents()
             }
-            .cameraDebugOverlay(alignment: .bottom, camera: cameraState)
             .safeOverlay(alignment: .trailing, content: {
                 MapStyleSelectorButton(mapStyle: $settings.mapStyle)
             })
@@ -97,6 +91,42 @@ struct SettingsView : View {
                 Toggle("Show Compass", isOn: $settings.ornamentSettings.isCompassVisible)
             } header: {
                 Text("Ornaments")
+            }
+            Section {
+                let options = [
+                    ("Camera", MapViewDebugOptions.camera),
+                    ("Tile Borders", .tileBorders),
+                    ("Parse Status", .parseStatus),
+                    ("Timestamps", .timestamps),
+                    ("Collision", .collision),
+                    ("Overdraw", .overdraw),
+                    ("Stencil Clip", .stencilClip),
+                    ("Depth Buffer", .depthBuffer),
+                    ("Model Bounds", .modelBounds),
+                    ("Light", .light)
+                ]
+                ForEach(options, id: \.0) { option in
+                    Toggle(option.0, isOn: $settings.debugOptions.contains(option: option.1))
+                }
+
+            } header: {
+                Text("Debug Options")
+            }
+        }
+    }
+}
+
+@available(iOS 13.0, *)
+private extension Binding where Value: OptionSet {
+    func contains(option: Value.Element) -> Binding<Bool> {
+        Binding<Bool> {
+            self.wrappedValue.contains(option)
+        }
+        set: {
+            if $0 {
+                self.wrappedValue.insert(option)
+            } else {
+                self.wrappedValue.remove(option)
             }
         }
     }

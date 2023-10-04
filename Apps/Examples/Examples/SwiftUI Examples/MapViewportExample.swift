@@ -5,7 +5,6 @@ import MapboxMaps
 @available(iOS 14.0, *)
 struct MapViewportExample: View {
     @State var viewport: Viewport = .styleDefault
-    @State var camera = CameraState(center: .init(), padding: .zero, zoom: 0, bearing: 0, pitch: 0)
     @State var mapStyle: MapStyle = .standard
 
     var body: some View {
@@ -30,23 +29,13 @@ struct MapViewportExample: View {
                 .fillOutlineColor(StyleColor(.black))
         }
         .mapStyle(mapStyle)
-        .onCameraChanged { event in
-            // NOTE: updating camera @State on every camera change is not recommended
-            // because it will lead to body re-evaluation on every frame if user drags the map.
-            // Here it is used for demonstration purposes.
-            camera = event.cameraState
-        }
+        .debugOptions(.camera)
         .ignoresSafeArea()
-        .safeOverlay(alignment: .bottomTrailing) {
-            VStack(alignment: .leading) {
-                Text("viewport: \(viewportShortDescription)")
-                Divider().frame(width: 50)
-                Text("real camera: ")
-                CameraDebugView(camera: camera)
-            }
-            .font(.safeMonospaced)
-            .floating()
-            .padding(.bottom, 30)
+        .safeOverlay(alignment: .bottomLeading) {
+            Text("viewport: \(viewportShortDescription)")
+                .font(.safeMonospaced)
+                .floating()
+                .padding(.bottom, 30)
         }
         .safeOverlay(alignment: .trailing) {
             MapStyleSelectorButton(mapStyle: $mapStyle)

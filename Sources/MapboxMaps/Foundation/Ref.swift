@@ -93,3 +93,14 @@ extension Ref {
         Ref { [weak object] in object }
     }
 }
+
+extension MutableRef {
+    /// Creates a mutable reference to a property in the `root` object accessed by the `keyPath`.
+    init<Root: AnyObject>(root: Root, keyPath: ReferenceWritableKeyPath<Root, Value>) {
+        self.init {
+            root[keyPath: keyPath]
+        } set: {
+            root[keyPath: keyPath] = $0
+        }
+    }
+}

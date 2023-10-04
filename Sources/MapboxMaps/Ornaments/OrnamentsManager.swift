@@ -67,14 +67,17 @@ public final class OrnamentsManager {
     public var attributionButton: UIView {
         return _attributionButton
     }
+    private var cachedCamera: CameraState?
 
-    private weak var cameraDebugView: CameraDebugView?
+    private var cameraDebugView: CameraDebugView?
 
     internal var showCameraDebugView: Bool = false {
         didSet {
+            guard showCameraDebugView != oldValue else { return }
             if showCameraDebugView {
                 let debugView = CameraDebugView()
                 debugView.translatesAutoresizingMaskIntoConstraints = false
+                debugView.cameraState = cachedCamera
                 view?.addSubview(debugView)
                 cameraDebugView = debugView
                 updateOrnaments()
@@ -143,6 +146,7 @@ public final class OrnamentsManager {
 
         onCameraChanged.observe { [weak self] event in
             guard let self else { return }
+            self.cachedCamera = event.cameraState
 
             // Update the scale bar
             self._scaleBarView.metersPerPoint = Projection.metersPerPoint(

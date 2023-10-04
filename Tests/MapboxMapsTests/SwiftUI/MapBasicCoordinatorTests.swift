@@ -84,6 +84,18 @@ final class MapBasicCoordinatorTests: XCTestCase {
         XCTAssertEqual(ornaments.options, ornamentOptions)
     }
 
+    func testDebugOptions() {
+        XCTAssertEqual(mapView.facade.debugOptions, [])
+        let debugOptions: MapViewDebugOptions = [.camera, .collision]
+        me.update(
+            viewport: .constant(.idle),
+            deps: MapDependencies(debugOptions: debugOptions),
+            layoutDirection: .leftToRight,
+            animationData: nil)
+
+        XCTAssertEqual(mapView.facade.debugOptions, debugOptions)
+    }
+
     func testContentGestures() {
         let onTapGesture = Stub<MapContentGestureContext, Void>()
         let onLongPressGesture = Stub<MapContentGestureContext, Void>()

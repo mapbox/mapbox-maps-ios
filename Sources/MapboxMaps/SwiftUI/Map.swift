@@ -319,6 +319,14 @@ public extension Map {
     func ornamentOptions(_ options: OrnamentOptions) -> Self {
         set(\.mapDependencies.ornamentOptions, options)
     }
+
+    /// Sets ``MapViewDebugOptions`` to the map.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    func debugOptions(_ debugOptions: MapViewDebugOptions) -> Self {
+        set(\.mapDependencies.debugOptions, debugOptions)
+    }
 }
 
 @available(iOS 13.0, *)

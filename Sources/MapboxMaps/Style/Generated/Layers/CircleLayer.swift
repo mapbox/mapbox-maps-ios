@@ -55,16 +55,10 @@ public struct CircleLayer: Layer {
     public var circleColorTransition: StyleTransition?
 
     /// Controls the intensity of light emitted on the source features. This property works only with 3D light, i.e. when `lights` root property is defined.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    @_spi(Experimental) public var circleEmissiveStrength: Value<Double>?
+    public var circleEmissiveStrength: Value<Double>?
 
     /// Transition options for `circleEmissiveStrength`.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    @_spi(Experimental) public var circleEmissiveStrengthTransition: StyleTransition?
+    public var circleEmissiveStrengthTransition: StyleTransition?
 
     /// The opacity at which the circle will be drawn.
     public var circleOpacity: Value<Double>?

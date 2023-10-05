@@ -82,28 +82,16 @@ public struct LineLayer: Layer {
     public var lineDasharray: Value<[Double]>?
 
     /// Decrease line layer opacity based on occlusion from 3D objects. Value 0 disables occlusion, value 1 means fully occluded.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    @_spi(Experimental) public var lineDepthOcclusionFactor: Value<Double>?
+    public var lineDepthOcclusionFactor: Value<Double>?
 
     /// Transition options for `lineDepthOcclusionFactor`.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    @_spi(Experimental) public var lineDepthOcclusionFactorTransition: StyleTransition?
+    public var lineDepthOcclusionFactorTransition: StyleTransition?
 
     /// Controls the intensity of light emitted on the source features. This property works only with 3D light, i.e. when `lights` root property is defined.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    @_spi(Experimental) public var lineEmissiveStrength: Value<Double>?
+    public var lineEmissiveStrength: Value<Double>?
 
     /// Transition options for `lineEmissiveStrength`.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    @_spi(Experimental) public var lineEmissiveStrengthTransition: StyleTransition?
+    public var lineEmissiveStrengthTransition: StyleTransition?
 
     /// Draws a line casing outside of a line's actual path. Value indicates the width of the inner gap.
     public var lineGapWidth: Value<Double>?

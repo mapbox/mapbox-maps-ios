@@ -1079,11 +1079,7 @@ public class StyleManager {
     /// - Parameters:
     ///   - ambientLight: The ambient light source.
     ///   - directionalLight: The directional light source.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    @_spi(Experimental) public func setLights(ambient ambientLight: AmbientLight,
-                                              directional directionalLight: DirectionalLight) throws {
+    public func setLights(ambient ambientLight: AmbientLight, directional directionalLight: DirectionalLight) throws {
         let rawAmbientLight = try ambientLight.allStyleProperties()
         let rawDirectionalLight = try directionalLight.allStyleProperties()
         try handleExpected {

@@ -52,16 +52,10 @@ public struct FillLayer: Layer {
     public var fillColorTransition: StyleTransition?
 
     /// Controls the intensity of light emitted on the source features. This property works only with 3D light, i.e. when `lights` root property is defined.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    @_spi(Experimental) public var fillEmissiveStrength: Value<Double>?
+    public var fillEmissiveStrength: Value<Double>?
 
     /// Transition options for `fillEmissiveStrength`.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    @_spi(Experimental) public var fillEmissiveStrengthTransition: StyleTransition?
+    public var fillEmissiveStrengthTransition: StyleTransition?
 
     /// The opacity of the entire fill layer. In contrast to the `fill-color`, this value will also affect the 1px stroke around the fill, if the stroke is used.
     public var fillOpacity: Value<Double>?

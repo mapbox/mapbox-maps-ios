@@ -172,16 +172,10 @@ public struct SymbolLayer: Layer {
     public var iconColorTransition: StyleTransition?
 
     /// Controls the intensity of light emitted on the source features. This property works only with 3D light, i.e. when `lights` root property is defined.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    @_spi(Experimental) public var iconEmissiveStrength: Value<Double>?
+    public var iconEmissiveStrength: Value<Double>?
 
     /// Transition options for `iconEmissiveStrength`.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    @_spi(Experimental) public var iconEmissiveStrengthTransition: StyleTransition?
+    public var iconEmissiveStrengthTransition: StyleTransition?
 
     /// Fade out the halo towards the outside.
     public var iconHaloBlur: Value<Double>?
@@ -202,16 +196,10 @@ public struct SymbolLayer: Layer {
     public var iconHaloWidthTransition: StyleTransition?
 
     /// Controls the transition progress between the image variants of icon-image. Zero means the first variant is used, one is the second, and in between they are blended together.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    @_spi(Experimental) public var iconImageCrossFade: Value<Double>?
+    public var iconImageCrossFade: Value<Double>?
 
     /// Transition options for `iconImageCrossFade`.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    @_spi(Experimental) public var iconImageCrossFadeTransition: StyleTransition?
+    public var iconImageCrossFadeTransition: StyleTransition?
 
     /// The opacity at which the icon will be drawn.
     public var iconOpacity: Value<Double>?
@@ -235,16 +223,10 @@ public struct SymbolLayer: Layer {
     public var textColorTransition: StyleTransition?
 
     /// Controls the intensity of light emitted on the source features. This property works only with 3D light, i.e. when `lights` root property is defined.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    @_spi(Experimental) public var textEmissiveStrength: Value<Double>?
+    public var textEmissiveStrength: Value<Double>?
 
     /// Transition options for `textEmissiveStrength`.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    @_spi(Experimental) public var textEmissiveStrengthTransition: StyleTransition?
+    public var textEmissiveStrengthTransition: StyleTransition?
 
     /// The halo's fadeout distance towards the outside.
     public var textHaloBlur: Value<Double>?

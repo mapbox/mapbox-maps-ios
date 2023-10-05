@@ -5,6 +5,13 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 * Add a new CustomLayer API to simplify manipulation of layers with custom rendering (aka "CustomLayerHost").
+* The following APIs have been promoted to stable:
+  - `LineLayer/lineDepthOcclusionFactor`, `LineLayer/lineDepthOcclusionFactorTransition`, `LineLayer/lineEmissiveStrength` and `LineLayer/lineEmissiveStrengthTransition`
+  - `SymbolLayer/iconImageCrossFade`, `SymbolLayer/iconImageCrossFadeTransition`, `SymbolLayer/iconEmissiveStrength`, `SymbolLayer/iconEmissiveStrengthTransition`, `SymbolLayer/textEmissiveStrength` and `SymbolLayer/textEmissiveStrengthTransition`
+  - `BackgroundLayer/backgroundEmissiveStrength` and `BackgroundLayer/backgroundEmissiveStrengthTransition`
+  - `CircleLayer/circleEmissiveStrength` and `CircleLayer/circleEmissiveStrengthTransition`
+  - `FillLayer/fillEmissiveStrength` and `FillLayer/fillEmissiveStrengthTransition`
+  - `AmbientLight`, `DirectionalLight` and related APIs.
 * Fix memory leak in SwiftUI.
 * Expose `MapViewDebugOptions` in SwiftUI.
 

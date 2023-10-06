@@ -160,7 +160,7 @@ internal protocol StyleManagerProtocol {
     func setStyleCustomRasterSourceTileDataForSourceId(
         _ sourceId: String,
         tileId: CanonicalTileID,
-        image: MapboxCoreMaps.Image) -> Expected<NSNull, NSString>
+        image: MapboxCoreMaps.Image?) -> Expected<NSNull, NSString>
 
     func invalidateStyleCustomRasterSourceTile(
         forSourceId: String,

@@ -1,5 +1,5 @@
 import Foundation
-import MapboxCoreMaps
+@_implementationOnly import MapboxCoreMaps_Private
 
 /// MapboxRecorder provides functions to record and replay API calls of a ``MapboxMap`` instance.
 /// These recordings can be used to debug issues which require multiple steps to reproduce.
@@ -10,8 +10,10 @@ import MapboxCoreMaps
 @_spi(Experimental) public final class MapRecorder {
     let recorder: MapboxCoreMaps.MapRecorder
 
-    internal init(mapView: MapboxCoreMaps.Map) {
-        recorder = MapboxCoreMaps.MapRecorder(map: mapView)
+    internal init(mapView: MapboxCoreMaps.Map) throws {
+        recorder = try handleExpected {
+            MapboxCoreMaps.MapRecorder.createInstance(for: mapView)
+        }
     }
 
     // MARK: Recording

@@ -497,6 +497,7 @@ Class AppleLocationProvider no longer inherits convenience inits from its superc
 // MapRecorder replay API changes
 Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:completion:) has been renamed to Func replay(content:playbackCount:playbackSpeedMultiplier:avoidPlaybackPauses:completion:)
 Func MapRecorder.replay(content:playbackCount:playbackSpeedMultiplier:completion:) has parameter 3 type change from () -> Swift.Void to Swift.Bool
+Func MapboxMap.makeRecorder() is now throwing
 
 // Rename Viewport to ViewportManager
 Class Viewport has been renamed to Class ViewportManager

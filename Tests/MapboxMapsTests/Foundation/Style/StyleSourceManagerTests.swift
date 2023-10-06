@@ -137,8 +137,7 @@ final class StyleSourceManagerTests: XCTestCase {
         XCTAssertEqual(styleManager.setStyleGeoJSONSourceDataForSourceIdDataIDStub.invocations.count, 1)
         let setGeoJSONParams = try XCTUnwrap(styleManager.setStyleGeoJSONSourceDataForSourceIdDataIDStub.invocations.first?.parameters)
         XCTAssertEqual(setGeoJSONParams.sourceId, id)
-        // swiftlint:disable:next force_cast
-        XCTAssertTrue((setGeoJSONParams.data.value as! [Any]).isEmpty)
+        XCTAssertTrue((setGeoJSONParams.data.getNSArray()).isEmpty)
     }
 
     func testDirectAsyncUpdateGeoJSONCallsPassesConvertedDataOnBackgroundWithDataID() throws {
@@ -153,8 +152,7 @@ final class StyleSourceManagerTests: XCTestCase {
         XCTAssertEqual(styleManager.setStyleGeoJSONSourceDataForSourceIdDataIDStub.invocations.count, 1)
         let setGeoJSONParams = try XCTUnwrap(styleManager.setStyleGeoJSONSourceDataForSourceIdDataIDStub.invocations.first?.parameters)
         XCTAssertEqual(setGeoJSONParams.sourceId, id)
-        // swiftlint:disable:next force_cast
-        XCTAssertTrue((setGeoJSONParams.data.value as! [Any]).isEmpty)
+        XCTAssertTrue((setGeoJSONParams.data.getNSArray()).isEmpty)
         XCTAssertEqual(setGeoJSONParams.dataId, dataId)
     }
 
@@ -392,7 +390,7 @@ final class StyleSourceManagerTests: XCTestCase {
         XCTAssertEqual(styleManager.setStyleGeoJSONSourceDataForSourceIdDataIDStub.invocations.count, 1)
         let setStyleGeoJSONSourceDataForSourceIdParams = try XCTUnwrap(styleManager.setStyleGeoJSONSourceDataForSourceIdDataIDStub.invocations.first?.parameters)
         XCTAssertEqual(setStyleGeoJSONSourceDataForSourceIdParams.sourceId, id)
-        XCTAssertEqual(setStyleGeoJSONSourceDataForSourceIdParams.data.value as? String, url.absoluteString)
+        XCTAssertEqual(setStyleGeoJSONSourceDataForSourceIdParams.data.getNSString(), url.absoluteString)
     }
 
     func testAddGeoJSONSourceWithString() throws {
@@ -419,7 +417,7 @@ final class StyleSourceManagerTests: XCTestCase {
         XCTAssertEqual(styleManager.setStyleGeoJSONSourceDataForSourceIdDataIDStub.invocations.count, 1)
         let setStyleGeoJSONSourceDataForSourceIdParams = try XCTUnwrap(styleManager.setStyleGeoJSONSourceDataForSourceIdDataIDStub.invocations.first?.parameters)
         XCTAssertEqual(setStyleGeoJSONSourceDataForSourceIdParams.sourceId, id)
-        XCTAssertEqual(setStyleGeoJSONSourceDataForSourceIdParams.data.value as? String, geoJSON)
+        XCTAssertEqual(setStyleGeoJSONSourceDataForSourceIdParams.data.getNSString(), geoJSON)
     }
 
     func testAddGeoJSONSourceWithNilData() throws {

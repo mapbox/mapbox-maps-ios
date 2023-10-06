@@ -17,7 +17,7 @@ final class MapRecorderExample: UIViewController, ExampleProtocol {
 
         mapView.mapboxMap.onStyleLoaded.observeNext { _ in
             // Once the Style is loaded, create the ``MapRecorder`` and start the recording
-            let recorder = self.mapView.mapboxMap.makeRecorder()
+            guard let recorder = try? self.mapView.mapboxMap.makeRecorder() else { return }
             recorder.start()
 
             // Build a new set of CameraOptions for the map to fly to

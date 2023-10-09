@@ -1,5 +1,6 @@
 import UIKit
 import ObjectiveC
+import os
 
 //swiftlint:disable force_cast
 final class ExampleTableViewController: UITableViewController {
@@ -37,6 +38,7 @@ final class ExampleTableViewController: UITableViewController {
                 .first(where: { $0.title == exampleTitleToStart })
             if let initialExample = initialExample {
                 open(example: initialExample, animated: false)
+                os_log("Restored example class \"%@\" (%@)", exampleTitleToStart, "\(initialExample.type)")
             } else {
                 removeExampleForReopening()
             }

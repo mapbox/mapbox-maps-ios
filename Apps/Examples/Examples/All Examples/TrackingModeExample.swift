@@ -3,11 +3,13 @@ import MapboxMaps
 
 public class TrackingModeExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()
+    private var locationTrackingCancellation: AnyCancelable?
 
     private var mapView: MapView!
     private lazy var toggleBearingImageButton = UIButton(frame: .zero)
+    private lazy var trackingButton = UIButton(frame: .zero)
     private lazy var styleToggle = UISegmentedControl(items: Style.allCases.map(\.name))
-    private var style: Style = .satelliteStreets {
+    private var style: Style = .standard {
         didSet {
             mapView.mapboxMap.styleURI = style.uri
         }
@@ -21,6 +23,8 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
     private enum Style: Int, CaseIterable {
         var name: String {
             switch self {
+            case .standard:
+                return "Standard"
             case .light:
                 return "Light"
             case .satelliteStreets:
@@ -32,6 +36,8 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
 
         var uri: StyleURI {
             switch self {
+            case .standard:
+                return .standard
             case .light:
                 return .light
             case .satelliteStreets:
@@ -42,6 +48,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
             }
         }
 
+        case standard
         case light
         case satelliteStreets
         case customUri
@@ -62,17 +69,15 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
 
         // Setup and create button for toggling show bearing image
         setupToggleShowBearingImageButton()
+        setupLocationButton()
 
         // Add user position icon to the map with location indicator layer
         mapView.location.options.puckType = .puck2D()
 
+        mapView.gestures.delegate = self
+
         // Update the camera's centerCoordinate when a locationUpdate is received.
-        mapView.location.onLocationChange.observe { [weak mapView] newLocation in
-            guard let location = newLocation.last, let mapView else { return }
-            mapView.camera.ease(
-                to: CameraOptions(center: location.coordinate, zoom: 15),
-                duration: 1.3)
-        }.store(in: &cancelables)
+        startTracking()
     }
 
     public override func viewDidAppear(_ animated: Bool) {
@@ -116,8 +121,67 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         syncPuckAndButton()
     }
 
+    private func setupLocationButton() {
+        trackingButton.addTarget(self, action: #selector(switchTracking), for: .touchUpInside)
+
+        if #available(iOS 13.0, *) {
+            trackingButton.setImage(UIImage(systemName: "location.fill"), for: .normal)
+        } else {
+            trackingButton.setTitle("No tracking", for: .normal)
+        }
+
+        let buttonWidth = 44.0
+        trackingButton.translatesAutoresizingMaskIntoConstraints = false
+        trackingButton.backgroundColor = UIColor(white: 0.97, alpha: 1)
+        trackingButton.layer.cornerRadius = buttonWidth/2
+        trackingButton.layer.shadowOffset = CGSize(width: -1, height: 1)
+        trackingButton.layer.shadowColor = UIColor.black.cgColor
+        trackingButton.layer.shadowOpacity = 0.5
+        view.addSubview(trackingButton)
+
+        NSLayoutConstraint.activate([
+            trackingButton.trailingAnchor.constraint(equalTo: toggleBearingImageButton.trailingAnchor),
+            trackingButton.bottomAnchor.constraint(equalTo: toggleBearingImageButton.topAnchor, constant: -20),
+            trackingButton.widthAnchor.constraint(equalTo: trackingButton.heightAnchor),
+            trackingButton.widthAnchor.constraint(equalToConstant: buttonWidth)
+        ])
+    }
+
     @objc func switchStyle(sender: UISegmentedControl) {
         style = Style(rawValue: sender.selectedSegmentIndex) ?? . satelliteStreets
+    }
+
+    @objc func switchTracking() {
+        let isTrackingNow = locationTrackingCancellation != nil
+        if isTrackingNow {
+            stopTracking()
+        } else {
+            startTracking()
+        }
+    }
+
+    private func startTracking() {
+        locationTrackingCancellation = mapView.location.onLocationChange.observe { [weak mapView] newLocation in
+            guard let location = newLocation.last, let mapView else { return }
+            mapView.camera.ease(
+                to: CameraOptions(center: location.coordinate, zoom: 15),
+                duration: 1.3)
+        }
+
+        if #available(iOS 13.0, *) {
+            trackingButton.setImage(UIImage(systemName: "location.fill"), for: .normal)
+        } else {
+            trackingButton.setTitle("No tracking", for: .normal)
+        }
+    }
+
+    func stopTracking() {
+        if #available(iOS 13.0, *) {
+            trackingButton.setImage(UIImage(systemName: "location"), for: .normal)
+        } else {
+            trackingButton.setTitle("Track", for: .normal)
+        }
+        locationTrackingCancellation = nil
     }
 
     func addStyleToggle() {
@@ -129,4 +193,14 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         // set the segmented control as the title view
         navigationItem.titleView = styleToggle
     }
+}
+
+extension TrackingModeExample: GestureManagerDelegate {
+    public func gestureManager(_ gestureManager: MapboxMaps.GestureManager, didBegin gestureType: MapboxMaps.GestureType) {
+        stopTracking()
+    }
+
+    public func gestureManager(_ gestureManager: MapboxMaps.GestureManager, didEnd gestureType: MapboxMaps.GestureType, willAnimate: Bool) {}
+
+    public func gestureManager(_ gestureManager: MapboxMaps.GestureManager, didEndAnimatingFor gestureType: MapboxMaps.GestureType) {}
 }

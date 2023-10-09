@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.0.0-beta.5 - 9 October, 2023
+
 * Add a new CustomLayer API to simplify manipulation of layers with custom rendering (aka "CustomLayerHost").
 * The following APIs have been promoted to stable:
   - `LineLayer/lineDepthOcclusionFactor`, `LineLayer/lineDepthOcclusionFactorTransition`, `LineLayer/lineEmissiveStrength` and `LineLayer/lineEmissiveStrengthTransition`

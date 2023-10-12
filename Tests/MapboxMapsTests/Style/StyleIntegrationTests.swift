@@ -632,4 +632,14 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
 
         wait(for: [renderExpectation], timeout: 1)
     }
+
+    func testUpdateProjection() throws {
+        mapView.mapboxMap.styleURI = .satelliteStreets
+
+        let projection = StyleProjection(name: .globe)
+
+        try mapView.mapboxMap.setProjection(projection)
+
+        XCTAssertEqual(projection, mapView.mapboxMap.projection)
+    }
 }

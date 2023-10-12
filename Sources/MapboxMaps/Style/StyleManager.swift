@@ -1450,20 +1450,20 @@ extension StyleManager {
     /// - Parameter projection: The ``StyleProjection`` to apply to the style.
     /// - Throws: ``StyleError`` if the projection could not be applied.
     public func setProjection(_ projection: StyleProjection) throws {
-        let expected = styleManager.setStyleProjectionPropertyForProperty(
-            StyleProjection.CodingKeys.name.rawValue,
-            value: projection.name.rawValue)
+        let projectionDictionary = try projection.allStyleProperties()
+        let expected = styleManager.setStyleProjectionForProperties(projectionDictionary)
+
         if expected.isError() {
             throw StyleError(message: expected.error as String)
         }
     }
 
     /// The current projection.
-    public var projection: StyleProjection {
+    public var projection: StyleProjection? {
         let projectionName = styleManager.getStyleProjectionProperty(
             forProperty: StyleProjection.CodingKeys.name.rawValue)
         if projectionName.kind == .undefined {
-            return StyleProjection(name: .mercator)
+            return nil
         } else {
             // swiftlint:disable:next force_cast
             return StyleProjection(name: StyleProjectionName(rawValue: projectionName.value as! String))

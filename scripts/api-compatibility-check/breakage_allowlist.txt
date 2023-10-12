@@ -1190,3 +1190,7 @@ TypeAlias MapTapAction has been removed
 Func Map.onLayerTapGesture(_:perform:) has parameter 0 type change from Swift.String... to Swift.String
 Func Map.onLayerTapGesture(_:perform:) has parameter 1 type change from MapboxMaps.MapLayerTapAction to MapboxMaps.MapLayerGestureHandler
 Func Map.onMapTapGesture(perform:) has parameter 0 type change from MapboxMaps.MapTapAction to (MapboxMaps.MapContentGestureContext) -> Swift.Void
+
+// Projection getter turned optional
+Accessor StyleManager.projection.Get() has return type change from MapboxMaps.StyleProjection to MapboxMaps.StyleProjection?
+Var StyleManager.projection has declared type change from MapboxMaps.StyleProjection to MapboxMaps.StyleProjection?

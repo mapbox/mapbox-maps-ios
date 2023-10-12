@@ -4,6 +4,10 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Breaking changes ⚠️
+
+* Style projection can be undefined for styles that do not explicitly specify it, so `MapboxMap.projection` has become optional.
+
 ## 11.0.0-beta.5 - 9 October, 2023
 
 * Add a new CustomLayer API to simplify manipulation of layers with custom rendering (aka "CustomLayerHost").

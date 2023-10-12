@@ -23,12 +23,15 @@ final class StyleTests: XCTestCase {
 
     func testSetProjection() throws {
         let projectionName = StyleProjectionName.random()
+        let projection = StyleProjection(name: projectionName)
 
-        try style.setProjection(StyleProjection(name: projectionName))
+        try style.setProjection(projection)
 
-        XCTAssertEqual(styleManager.setStyleProjectionPropertyStub.invocations.count, 1)
-        XCTAssertEqual(styleManager.setStyleProjectionPropertyStub.invocations.first?.parameters.property, "name")
-        XCTAssertEqual(styleManager.setStyleProjectionPropertyStub.invocations.first?.parameters.value as? String, projectionName.rawValue)
+        XCTAssertEqual(styleManager.setStyleProjectionPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(
+            styleManager.setStyleProjectionPropertiesStub.invocations.first?.parameters as? [String: String],
+            ["name": projectionName.rawValue]
+        )
     }
 
     func testProjection() {
@@ -38,14 +41,14 @@ final class StyleTests: XCTestCase {
             kind: .constant
         )
 
-        XCTAssertEqual(style.projection.name, projectionName)
+        XCTAssertEqual(style.projection?.name, projectionName)
 
         styleManager.getStyleProjectionPropertyStub.defaultReturnValue = StylePropertyValue(
             value: projectionName.rawValue,
             kind: .undefined
         )
 
-        XCTAssertEqual(style.projection.name, .mercator)
+        XCTAssertNil(style.projection?.name)
     }
 
     func testStyleIsLoaded() {

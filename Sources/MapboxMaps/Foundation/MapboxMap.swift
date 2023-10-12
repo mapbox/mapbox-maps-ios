@@ -770,7 +770,7 @@ public final class MapboxMap: StyleManager {
 
     /// :nodoc:
     func pointIsAboveHorizon(_ point: CGPoint) -> Bool {
-        guard projection.name == .mercator else {
+        guard projection?.name == .mercator else {
             return false
         }
         let topMargin = 0.04 * size.height

@@ -12,7 +12,7 @@ struct MapViewportExample: View {
             Puck2D(bearing: .course)
 
             ForEvery(parks.coordinates, id: \.latitude) { coord in
-                ViewAnnotation(coord, allowOverlap: true) {
+                MapViewAnnotation(coord) {
                     Image(systemName: "tree")
                         .foregroundColor(.white)
                         .padding(.all, 5)
@@ -22,6 +22,7 @@ struct MapViewportExample: View {
                                 .background(Circle().fill(Color(.systemGreen)))
                         )
                 }
+                .allowOverlap(true)
             }
 
             PolygonAnnotation(id: "polygon", polygon: maineBoundaries)

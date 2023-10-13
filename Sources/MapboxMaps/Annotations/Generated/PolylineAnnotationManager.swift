@@ -26,7 +26,11 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
     /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
     /// - NOTE: This annotation manager listens to tap events via the `GestureManager.singleTapGestureRecognizer`.
     @available(*, deprecated, message: "Use tapHandler property of Annotation")
-    public weak var delegate: AnnotationInteractionDelegate?
+    public weak var delegate: AnnotationInteractionDelegate? {
+        get { _delegate }
+        set { _delegate = newValue }
+    }
+    private weak var _delegate: AnnotationInteractionDelegate?
 
     // Deps
     private let style: StyleProtocol
@@ -305,7 +309,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
             self.annotations[tappedIndex] = tappedAnnotation
         }
 
-        delegate?.annotationManager(
+        _delegate?.annotationManager(
             self,
             didDetectTappedAnnotations: [tappedAnnotation])
 

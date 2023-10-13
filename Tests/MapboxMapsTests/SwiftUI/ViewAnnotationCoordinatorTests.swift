@@ -26,15 +26,15 @@ final class ViewAnnotationCoordinatorTests: XCTestCase {
             }
         )
         func verifyAnnotationOptions(_ options: ViewAnnotationOptions?, _ config: ViewAnnotationConfig) {
-            XCTAssertEqual(options?.geometry, .point(config.point))
+            XCTAssertEqual(options?.annotatedFeature, config.annotatedFeature)
             XCTAssertEqual(options?.allowOverlap, config.allowOverlap)
-            XCTAssertEqual(options?.anchor, config.anchor)
-            XCTAssertEqual(options?.offsetX, config.offsetX)
-            XCTAssertEqual(options?.offsetY, config.offsetY)
+            XCTAssertEqual(options?.visible, config.visible)
+            XCTAssertEqual(options?.selected, config.selected)
+            XCTAssertEqual(options?.variableAnchors, config.variableAnchors)
         }
 
-        let options = (0...4).map { _ in ViewAnnotation.random() }
-        var annotations = [AnyHashable: ViewAnnotation]()
+        let options = (0...4).map { _ in MapViewAnnotation.random() }
+        var annotations = [AnyHashable: MapViewAnnotation]()
         annotations[0] = options[0]
 
         me.updateAnnotations(to: annotations)
@@ -42,7 +42,7 @@ final class ViewAnnotationCoordinatorTests: XCTestCase {
         XCTAssertEqual(numberOfViewsAdded, 1, "added total 1 annotation view")
         XCTAssertEqual(viewAnnotationsManager.addViewStub.invocations.count, 1)
         let opt0Invocation = try XCTUnwrap(viewAnnotationsManager.addViewStub.invocations.last)
-        verifyAnnotationOptions(opt0Invocation.parameters.options, options[0].viewAnnotationConfig)
+        verifyAnnotationOptions(opt0Invocation.parameters.options, options[0].config)
         let option0InternalView = opt0Invocation.parameters.view
 
         annotations[1] = options[1]
@@ -67,7 +67,7 @@ final class ViewAnnotationCoordinatorTests: XCTestCase {
         XCTAssertEqual(numberOfViewsAdded, 4, "added total 4 annotation views")
         XCTAssertEqual(viewAnnotationsManager.addViewStub.invocations.count, 4)
         let opt3Invocation = try XCTUnwrap(viewAnnotationsManager.addViewStub.invocations.last)
-        verifyAnnotationOptions(opt3Invocation.parameters.options, options[3].viewAnnotationConfig)
+        verifyAnnotationOptions(opt3Invocation.parameters.options, options[3].config)
         let option3InternalView = opt3Invocation.parameters.view
 
         annotations.removeValue(forKey: 3)
@@ -77,20 +77,21 @@ final class ViewAnnotationCoordinatorTests: XCTestCase {
 
         XCTAssertEqual(numberOfViewsAdded, 2)
         XCTAssertEqual(viewAnnotationsManager.addViewStub.invocations.count, 4, "nothing added")
-        verifyAnnotationOptions(viewAnnotationsManager.updateViewStub.invocations.last?.parameters.options, options[4].viewAnnotationConfig)
+        verifyAnnotationOptions(viewAnnotationsManager.updateViewStub.invocations.last?.parameters.options, options[4].config)
         let removedViews = Set(viewAnnotationsManager.removeViewStub.invocations.map(\.parameters))
         XCTAssertEqual(removedViews, Set([option0InternalView, option3InternalView]))
     }
 }
 
 @available(iOS 13.0, *)
-extension ViewAnnotation {
-    static func random() -> ViewAnnotation {
-        ViewAnnotation(
-            CLLocationCoordinate2D.random(),
-            allowOverlap: .random(),
-            offsetX: .random(in: 0...100),
-            offsetY: .random(in: 0...100)
-        ) {}
+extension MapViewAnnotation {
+    static func random() -> MapViewAnnotation {
+        MapViewAnnotation(CLLocationCoordinate2D.random()) {}
+            .allowOverlap(.random())
+            .variableAnchors([
+                ViewAnnotationAnchorConfig(
+                    anchor: .center,
+                    offsetX: .random(in: 0..<100),
+                    offsetY: .random(in: 0..<100))])
     }
 }

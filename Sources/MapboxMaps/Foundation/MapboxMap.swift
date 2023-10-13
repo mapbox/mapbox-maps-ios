@@ -403,14 +403,18 @@ public final class MapboxMap: StyleManager {
     /// The array of `MapDebugOptions` for the native map. Setting this property to an empty array
     /// disables previously enabled `MapDebugOptions`.
     /// The default value is an empty array.
-    @available(*, deprecated, message: "Use mapView.debugOptions instead.")
+    @available(*, deprecated, message: "Use MapView.debugOptions instead.")
     public var debugOptions: [MapDebugOptions] {
+        get { _debugOptions }
+        set { _debugOptions = newValue }
+    }
+    var _debugOptions: [MapDebugOptions] {
         get {
             return __map.getDebug().compactMap { MapDebugOptions(rawValue: $0.intValue) }
         }
         set {
             // Remove the previously visible options, then update the debug options to the new array.
-            let oldOptions = debugOptions.map { NSNumber(value: $0.rawValue) }
+            let oldOptions = _debugOptions.map { NSNumber(value: $0.rawValue) }
             __map.setDebugForDebugOptions(oldOptions, value: false)
 
             let options = newValue.map { NSNumber(value: $0.rawValue) }

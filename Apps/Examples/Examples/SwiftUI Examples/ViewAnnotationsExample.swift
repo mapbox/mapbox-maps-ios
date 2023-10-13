@@ -23,15 +23,13 @@ struct ViewAnnotationsExample: View {
                 }
 
                 ForEvery(points) { point in
-                    ViewAnnotation(
-                        point.coordinates,
-                        allowOverlap: allowOverlap,
-                        anchor: anchor
-                    ) {
+                    MapViewAnnotation(.geometry(point)) {
                         ViewAnnotationContent(point: point) {
                             points.removeAll(where: { $0 == point })
                         }
                     }
+                    .allowOverlap(allowOverlap)
+                    .variableAnchors([.init(anchor: anchor)])
                 }
             }
             .mapStyle(.streets)

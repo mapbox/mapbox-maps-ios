@@ -51,7 +51,8 @@ struct AnnotationGestureHandlers: Equatable {
 }
 
 /// A delegate that is called when a tap is detected on an annotation (or on several of them).
-@available(*, deprecated, message: "Use tapHandler property of Annotation")
+///
+/// - Important: This protocol is deprecated, use`tapHandler` property of `Annotation`.
 public protocol AnnotationInteractionDelegate: AnyObject {
 
     /// This method is invoked when a tap gesture is detected on an annotation

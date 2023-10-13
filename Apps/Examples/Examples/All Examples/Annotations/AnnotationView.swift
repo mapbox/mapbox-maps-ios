@@ -1,20 +1,17 @@
 import Foundation
 import UIKit
 
-protocol AnnotationViewDelegate: AnyObject {
-    func annotationViewDidSelect(_ annotationView: AnnotationView)
-    func annotationViewDidUnselect(_ annotationView: AnnotationView)
-    func annotationViewDidPressClose(_ annotationView: AnnotationView)
-}
-
 // `AnnotationView` is a custom `UIView` subclass which is used only for annotation demonstration
 final class AnnotationView: UIView {
 
-    weak var delegate: AnnotationViewDelegate?
+    var onSelect: ((Bool) -> Void)?
+    var onClose: (() -> Void)?
 
     var selected: Bool = false {
         didSet {
             selectButton.setTitle(selected ? "Deselect" : "Select", for: .normal)
+            vStack.spacing = selected ? 20 : 4
+            onSelect?(selected)
         }
     }
 
@@ -44,31 +41,36 @@ final class AnnotationView: UIView {
         button.setTitle("Select", for: .normal)
         return button
     }()
+    private let vStack: UIStackView
 
     override init(frame: CGRect) {
+        vStack = UIStackView()
         super.init(frame: frame)
-        self.backgroundColor = .green
+        backgroundColor = .white
+        layer.shadowOpacity = 0.25
+        layer.shadowRadius = 8
+        layer.shadowOffset = CGSize(width: 0, height: 2)
+        layer.cornerRadius = 8
+
+
+        let hStack = UIStackView(arrangedSubviews: [centerLabel, closeButton])
+        hStack.spacing = 4
+
+        vStack.addArrangedSubview(hStack)
+        vStack.addArrangedSubview(selectButton)
+        vStack.axis = .vertical
+        vStack.translatesAutoresizingMaskIntoConstraints = false
+        vStack.spacing = 4
+        addSubview(vStack)
+        NSLayoutConstraint.activate([
+            vStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 4),
+            vStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -4),
+            vStack.topAnchor.constraint(equalTo: topAnchor, constant: 4),
+            vStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4),
+        ])
 
         closeButton.addTarget(self, action: #selector(closePressed(sender:)), for: .touchUpInside)
         selectButton.addTarget(self, action: #selector(selectPressed(sender:)), for: .touchUpInside)
-
-        [centerLabel, closeButton, selectButton].forEach { item in
-            item.translatesAutoresizingMaskIntoConstraints = false
-            self.addSubview(item)
-        }
-
-        NSLayoutConstraint.activate([
-            closeButton.topAnchor.constraint(equalTo: topAnchor, constant: 4),
-            closeButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -4),
-
-            centerLabel.topAnchor.constraint(equalTo: topAnchor, constant: 4),
-            centerLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -4),
-            centerLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 4),
-
-            selectButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4),
-            selectButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -4),
-            selectButton.leftAnchor.constraint(equalTo: leftAnchor, constant: 4)
-        ])
     }
 
     required init?(coder: NSCoder) {
@@ -78,16 +80,10 @@ final class AnnotationView: UIView {
     // MARK: - Action handlers
 
     @objc private func closePressed(sender: UIButton) {
-        delegate?.annotationViewDidPressClose(self)
+        onClose?()
     }
 
     @objc private func selectPressed(sender: UIButton) {
-        if selected {
-            selected = false
-            delegate?.annotationViewDidUnselect(self)
-        } else {
-            selected = true
-            delegate?.annotationViewDidSelect(self)
-        }
+        selected.toggle()
     }
 }

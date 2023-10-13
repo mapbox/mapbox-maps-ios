@@ -9,9 +9,7 @@ final class ViewAnnotationPositionsUpdateListenerImplTests: XCTestCase {
 
         let descriptor = ViewAnnotationPositionDescriptor(
             identifier: "test",
-            width: 100,
-            height: 50,
-            leftTopCoordinate: CGPoint(x: 100.0, y: 100.0)
+            frame: .init(x: 100, y: 100, width: 100, height: 50)
         )
 
         me.onViewAnnotationPositionsUpdate(forPositions: [descriptor])

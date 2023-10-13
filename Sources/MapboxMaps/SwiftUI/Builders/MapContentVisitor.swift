@@ -9,7 +9,7 @@ protocol MapContentVisitor: AnyObject {
     var id: [AnyHashable] { get }
     func push(_ idPart: AnyHashable)
     func pop()
-    func add(viewAnnotation: ViewAnnotation)
+    func add(viewAnnotation: MapViewAnnotation)
     var locationOptions: LocationOptions { get set }
     func add(annotationGroup: AnyAnnotationGroup)
 }
@@ -18,7 +18,7 @@ final class DefaultMapContentVisitor: MapContentVisitor {
     var locationOptions: LocationOptions = LocationOptions()
 
     private(set) var id: [AnyHashable] = []
-    private(set) var visitedViewAnnotations: [AnyHashable: ViewAnnotation] = [:]
+    private(set) var visitedViewAnnotations: [AnyHashable: MapViewAnnotation] = [:]
 
     private(set) var annotationGroups: [(AnyHashable, AnyAnnotationGroup)] = []
 
@@ -30,7 +30,7 @@ final class DefaultMapContentVisitor: MapContentVisitor {
         id.removeLast()
     }
 
-    func add(viewAnnotation: ViewAnnotation) {
+    func add(viewAnnotation: MapViewAnnotation) {
         visitedViewAnnotations[id] = viewAnnotation
     }
 

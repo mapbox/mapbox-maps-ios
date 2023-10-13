@@ -181,12 +181,12 @@ open class MapView: UIView {
     public var debugOptions: MapViewDebugOptions {
         get {
             MapViewDebugOptions(
-                mapOptions: mapboxMap.debugOptions,
+                mapOptions: mapboxMap._debugOptions,
                 cameraView: ornaments.showCameraDebugView
             )
         }
         set {
-            mapboxMap.debugOptions = newValue.nativeDebugOptions
+            mapboxMap._debugOptions = newValue.nativeDebugOptions
             ornaments.showCameraDebugView = newValue.contains(.camera)
         }
     }
@@ -432,7 +432,8 @@ open class MapView: UIView {
         // Initialize/Configure view annotations manager
         viewAnnotations = ViewAnnotationManager(
             containerView: viewAnnotationContainerView,
-            mapboxMap: mapboxMap)
+            mapboxMap: mapboxMap,
+            displayLink: displayLinkSignalSubject.signal)
 
         viewport = ViewportManager(
             impl: dependencyProvider.makeViewportManagerImpl(

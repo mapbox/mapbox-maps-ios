@@ -16,6 +16,7 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
     private var pointList: [Feature] = []
     private var markerId = 0
+    private var annotations = [String: ViewAnnotation]()
 
     private let image = UIImage(named: "blue_marker_view")!
     private lazy var markerHeight: CGFloat = image.size.height
@@ -41,19 +42,25 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
 
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        mapView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onMapClick)))
-        mapView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(onMapLongClick)))
         view.addSubview(mapView)
-
-        addMarkerAndAnnotation(at: mapView.mapboxMap.coordinate(for: mapView.center))
 
         mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
             self.finish()
         }.store(in: &cancelables)
 
-        mapView.mapboxMap.onStyleLoaded.observe { [weak self] _ in
-            self?.prepareStyle()
+        mapView.mapboxMap.onStyleLoaded.observe { [weak self, weak mapView] _ in
+            guard let self, let mapView else { return }
+            self.prepareStyle()
+            self.addMarker(at: mapView.mapboxMap.coordinate(for: mapView.center), viewAnnotation: true)
+        }.store(in: &cancelables)
+
+        mapView.gestures.onMapLongPress.observe { [weak self] context in
+            self?.addMarker(at: context.coordinate)
+        }.store(in: &cancelables)
+
+        mapView.gestures.onLayerTap(Constants.LAYER_ID) { [weak self] feature, _ in
+            self?.handleMarkerTap(feature.feature) ?? false
         }.store(in: &cancelables)
 
         mapView.mapboxMap.styleURI = .streets
@@ -67,38 +74,14 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
         ])
     }
 
-    // MARK: - Action handlers
+    private func handleMarkerTap(_ feature: Feature) -> Bool {
+        guard case let .string(id) = feature.identifier else { return false }
 
-    @objc private func onMapLongClick(_ sender: UILongPressGestureRecognizer) {
-        guard sender.state == .ended else { return }
-        let point = Point(mapView.mapboxMap.coordinate(for: sender.location(in: mapView)))
-        _ = addMarker(at: point)
-    }
-
-    @objc private func onMapClick(_ sender: UITapGestureRecognizer) {
-        let screenPoint = sender.location(in: mapView)
-        let queryOptions = RenderedQueryOptions(layerIds: [Constants.LAYER_ID], filter: nil)
-        mapView.mapboxMap.queryRenderedFeatures(with: screenPoint, options: queryOptions) { [weak self] result in
-            if case let .success(queriedFeatures) = result,
-               let self = self,
-               let feature = queriedFeatures.first?.queriedFeature.feature,
-               let id = feature.identifier,
-               case let .string(idString) = id,
-               let viewAnnotations = self.mapView.viewAnnotations {
-                if let annotationView = viewAnnotations.view(forFeatureId: idString) {
-                    let visible = viewAnnotations.options(for: annotationView)?.visible ?? true
-                    try? viewAnnotations.update(annotationView, options: ViewAnnotationOptions(visible: !visible))
-                } else {
-                    let markerCoordinates: CLLocationCoordinate2D
-                    if let geometry = feature.geometry, case let Geometry.point(point) = geometry {
-                        markerCoordinates = point.coordinates
-                    } else {
-                        markerCoordinates = self.mapView.mapboxMap.coordinate(for: screenPoint)
-                    }
-                    self.addViewAnnotation(at: markerCoordinates, withMarkerId: idString)
-                }
-            }
+        if let annotation = annotations[id] {
+            annotation.visible.toggle()
+            return true
         }
+        return addViewAnnotation(to: feature)
     }
 
     @objc private func styleChangePressed(sender: UIButton) {
@@ -131,72 +114,48 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
 
     // MARK: - Annotation management
 
-    private func addMarkerAndAnnotation(at coordinate: CLLocationCoordinate2D) {
-        let point = Point(coordinate)
-        let markerId = addMarker(at: point)
-        addViewAnnotation(at: coordinate, withMarkerId: markerId)
-    }
-
     // Add a marker to a custom GeoJSON source:
     // This is an optional step to demonstrate the automatic alignment of view annotations
     // with features in a data source
-    private func addMarker(at point: Point) -> String {
+    private func addMarker(at coordinate: CLLocationCoordinate2D, viewAnnotation: Bool = false) {
         let currentId = "\(Constants.MARKER_ID_PREFIX)\(markerId)"
         markerId += 1
-        var feature = Feature(geometry: point)
+        var feature = Feature(geometry: Point(coordinate))
         feature.identifier = .string(currentId)
         pointList.append(feature)
         if (try? mapView.mapboxMap.source(withId: Constants.SOURCE_ID)) != nil {
             mapView.mapboxMap.updateGeoJSONSource(withId: Constants.SOURCE_ID, geoJSON: .featureCollection(FeatureCollection(features: pointList)))
         }
-        return currentId
+
+        if viewAnnotation {
+            addViewAnnotation(to: feature)
+        }
     }
 
     // Add a view annotation at a specified location and optionally bind it to an ID of a marker
-    private func addViewAnnotation(at coordinate: CLLocationCoordinate2D, withMarkerId markerId: String? = nil) {
-        let options = ViewAnnotationOptions(
-            geometry: Point(coordinate),
-            width: 128,
-            height: 64,
-            associatedFeatureId: markerId,
-            allowOverlap: false,
-            anchor: .bottom
-        )
-        let annotationView = AnnotationView(frame: CGRect(x: 0, y: 0, width: 128, height: 64))
-        annotationView.title = String(format: "lat=%.2f\nlon=%.2f", coordinate.latitude, coordinate.longitude)
-        annotationView.delegate = self
-        try? mapView.viewAnnotations.add(annotationView, options: options)
+    @discardableResult
+    private func addViewAnnotation(to feature: Feature) -> Bool {
+        guard case let .string(id) = feature.identifier,
+              case let .point(point) = feature.geometry else { return false }
+        let annotationView = AnnotationView(frame: .zero)
+        annotationView.title = String(format: "lat=%.2f\nlon=%.2f", point.coordinates.latitude, point.coordinates.longitude)
 
-        // Set the vertical offset of the annotation view to be placed above the marker
-        try? mapView.viewAnnotations.update(annotationView, options: ViewAnnotationOptions(offsetY: markerHeight))
-    }
-}
+        let annotation = ViewAnnotation(
+            annotatedFeature: .layerFeature(layerId: Constants.LAYER_ID, featureId: id),
+            view: annotationView)
+        annotation.variableAnchors = [ViewAnnotationAnchorConfig(anchor: .bottom, offsetY: markerHeight)]
+        mapView.viewAnnotations.add(annotation)
 
-extension ViewAnnotationMarkerExample: AnnotationViewDelegate {
-    func annotationViewDidSelect(_ annotationView: AnnotationView) {
-        guard let options = self.mapView.viewAnnotations.options(for: annotationView) else { return }
+        annotationView.onClose = { [weak annotation, weak self] in
+            annotation?.remove()
+            self?.annotations.removeValue(forKey: id)
+        }
+        annotationView.onSelect = { [weak annotation] selected in
+            annotation?.selected = selected
+            annotation?.setNeedsUpdateSize()
+        }
 
-        let updateOptions = ViewAnnotationOptions(
-            width: (options.width ?? 0.0) + Constants.SELECTED_ADD_COEF_PX,
-            height: (options.height ?? 0.0) + Constants.SELECTED_ADD_COEF_PX,
-            selected: true
-        )
-        try? self.mapView.viewAnnotations.update(annotationView, options: updateOptions)
-    }
-
-    func annotationViewDidUnselect(_ annotationView: AnnotationView) {
-        guard let options = self.mapView.viewAnnotations.options(for: annotationView) else { return }
-
-        let updateOptions = ViewAnnotationOptions(
-            width: (options.width ?? 0.0) - Constants.SELECTED_ADD_COEF_PX,
-            height: (options.height ?? 0.0) - Constants.SELECTED_ADD_COEF_PX,
-            selected: false
-        )
-        try? self.mapView.viewAnnotations.update(annotationView, options: updateOptions)
-    }
-
-    // Handle the actions for the button clicks inside the `SampleView` instance
-    func annotationViewDidPressClose(_ annotationView: AnnotationView) {
-        mapView.viewAnnotations.remove(annotationView)
+        annotations[id] = annotation
+        return true
     }
 }

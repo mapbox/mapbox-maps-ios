@@ -53,11 +53,10 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
         try! mapView.mapboxMap.addLayer(layer)
 
         let options = ViewAnnotationOptions(
-            geometry: Point(route.coordinates.first!),
+            annotatedFeature: .geometry(Point(route.coordinates.first!)),
             width: 50,
             height: 50,
-            anchor: .bottom,
-            offsetY: -5
+            variableAnchors: [.init(anchor: .bottom, offsetY: -5)]
         )
         try! mapView.viewAnnotations.add(annotationView, options: options)
     }
@@ -101,7 +100,7 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
             }
         }
         let currentCoordinate = route.coordinateFromStart(distance: currentDistanceOffset)!
-        let options = ViewAnnotationOptions(geometry: Point(currentCoordinate))
+        let options = ViewAnnotationOptions(annotatedFeature: .geometry(Point(currentCoordinate)))
         try! mapView.viewAnnotations.update(annotationView, options: options)
     }
 }

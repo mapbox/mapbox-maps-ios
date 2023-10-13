@@ -27,7 +27,7 @@ class ViewAnnotationCoordinator {
         self.removeViewController = removeViewController
     }
 
-    func updateAnnotations(to newAnnotations: [AnyHashable: ViewAnnotation]) {
+    func updateAnnotations(to newAnnotations: [AnyHashable: MapViewAnnotation]) {
 
         let oldIds = Set(annotations.keys)
         let newIds = Set(newAnnotations.keys)
@@ -35,7 +35,7 @@ class ViewAnnotationCoordinator {
         let removalIds = oldIds.subtracting(newIds)
         let insertionIds = newIds.subtracting(oldIds)
         let updateIds = oldIds.intersection(newIds).filter {
-            annotations[$0]?.config != newAnnotations[$0]?.viewAnnotationConfig
+            annotations[$0]?.config != newAnnotations[$0]?.config
         }
 
         removalIds.forEach { id in
@@ -45,7 +45,7 @@ class ViewAnnotationCoordinator {
         }
 
         updateIds.forEach { id in
-            guard var displayedAnnotation = annotations[id], let newAnnotationConfig = newAnnotations[id]?.viewAnnotationConfig else { return }
+            guard var displayedAnnotation = annotations[id], let newAnnotationConfig = newAnnotations[id]?.config else { return }
             displayedAnnotation.update(with: newAnnotationConfig)
             annotations[id] = displayedAnnotation
         }
@@ -75,12 +75,17 @@ private struct DisplayedViewAnnotation {
     private let manager: ViewAnnotationsManaging
 
     private var annotationOptions: ViewAnnotationOptions {
-        ViewAnnotationOptions(geometry: config.point, allowOverlap: config.allowOverlap, anchor: config.anchor, offsetX: config.offsetX, offsetY: config.offsetY)
+        ViewAnnotationOptions(
+            annotatedFeature: config.annotatedFeature,
+            allowOverlap: config.allowOverlap,
+            visible: config.visible,
+            selected: config.selected,
+            variableAnchors: config.variableAnchors)
     }
 
-    init(from viewAnnotation: ViewAnnotation, manager: ViewAnnotationsManaging) {
+    init(from viewAnnotation: MapViewAnnotation, manager: ViewAnnotationsManaging) {
         self.manager = manager
-        self.config = viewAnnotation.viewAnnotationConfig
+        self.config = viewAnnotation.config
 
         weak var contentView: UIView?
         self.content = viewAnnotation.makeViewController { [weak manager] size in

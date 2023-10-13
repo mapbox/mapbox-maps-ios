@@ -1194,3 +1194,20 @@ Func Map.onMapTapGesture(perform:) has parameter 0 type change from MapboxMaps.M
 // Projection getter turned optional
 Accessor StyleManager.projection.Get() has return type change from MapboxMaps.StyleProjection to MapboxMaps.StyleProjection?
 Var StyleManager.projection has declared type change from MapboxMaps.StyleProjection to MapboxMaps.StyleProjection?
+
+// Dynamic View Annotations
+Constructor ViewAnnotation.init(_:allowOverlap:anchor:offsetX:offsetY:content:) has been removed
+Func ViewAnnotationManager.options(forFeatureId:) has been removed
+Func ViewAnnotationManager.view(forFeatureId:) has been removed
+Func ViewAnnotationOptions.hash(into:) has been removed
+Var ViewAnnotationManagerError.associatedFeatureIdIsAlreadyInUse has been removed
+Var ViewAnnotationManagerError.geometryFieldMissing has been removed
+Var ViewAnnotationOptions.anchor has been removed
+Var ViewAnnotationOptions.associatedFeatureId has been removed
+Var ViewAnnotationOptions.geometry has been removed
+Var ViewAnnotationOptions.hashValue has been removed
+Var ViewAnnotationOptions.offsetX has been removed
+Var ViewAnnotationOptions.offsetY has been removed
+Struct ViewAnnotation has been changed to a Class
+Struct ViewAnnotation has removed conformance to MapContent
+Struct ViewAnnotationOptions has removed conformance to Hashable

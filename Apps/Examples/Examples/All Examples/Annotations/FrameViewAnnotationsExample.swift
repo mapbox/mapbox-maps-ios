@@ -13,6 +13,8 @@ final class FrameViewAnnotationsExample: UIViewController, ExampleProtocol {
     private var viewportButton: UIButton!
     private var resetButton: UIButton!
 
+    private var annotations = [ViewAnnotation]()
+
     private var mapView: MapView!
     private let initialCamera = CameraOptions(
         center: .random,
@@ -28,6 +30,8 @@ final class FrameViewAnnotationsExample: UIViewController, ExampleProtocol {
         view.backgroundColor = .white
 
         mapView = MapView(frame: view.bounds, mapInitOptions: MapInitOptions(cameraOptions: initialCamera))
+        // Camera
+        try! mapView.mapboxMap.setProjection(StyleProjection(name: .mercator))
         let buttonsView = makeButtonsView()
 
         view.addSubview(mapView)
@@ -91,6 +95,7 @@ final class FrameViewAnnotationsExample: UIViewController, ExampleProtocol {
     }
 
     @objc private func resetButtonTapped(_ sender: UIButton) {
+        mapView.viewport.idle()
         mapView.mapboxMap.setCamera(to: initialCamera)
         resetButton.isHidden = true
         flyToButton.isHidden = false
@@ -105,7 +110,7 @@ final class FrameViewAnnotationsExample: UIViewController, ExampleProtocol {
         resetButton.isHidden = false
 
         let camera = self.mapView.viewAnnotations.camera(
-            forAnnotations: Array(annotations.keys),
+            forAnnotations: annotations,
             padding: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10),
             bearing: nil,
             pitch: nil
@@ -131,47 +136,61 @@ final class FrameViewAnnotationsExample: UIViewController, ExampleProtocol {
     }
 
     private func addAnnotations() {
-        func makeView(_ bgColor: UIColor) -> UIView {
+        func makeView(text: String) -> UIView {
             let view = UIView()
-            view.backgroundColor = bgColor
+            view.backgroundColor = .white
+            view.layer.shadowOpacity = 0.25
+            view.layer.shadowRadius = 8
+            view.layer.shadowOffset = CGSize(width: 0, height: 2)
+            view.layer.cornerRadius = 8
+            let label = UILabel()
+            label.text = text
+            label.textColor = .black
+            label.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(label)
+            NSLayoutConstraint.activate([
+                label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 4),
+                label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -4),
+                label.topAnchor.constraint(equalTo: view.topAnchor, constant: 4),
+                label.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -4),
+            ])
             return view
         }
 
-        for (id, annotationOptions) in annotations {
-            try! mapView.viewAnnotations.add(makeView(.green), id: id, options: annotationOptions)
+        self.annotations = annotationData.map {
+            let view = makeView(text: $0.name)
+            let annotation = ViewAnnotation(coordinate: $0.coordinate, view: view)
+            annotation.variableAnchors = [.init(anchor: $0.anchor)]
+            self.mapView.viewAnnotations.add(annotation)
+            return annotation
         }
     }
 
-    private let annotations: [String: ViewAnnotationOptions] = [
-        "Saigon": .init(
-            geometry: Point(LocationCoordinate2D(latitude: 10.823099, longitude: 106.629662)),
-            width: 179,
-            height: 40,
-            allowOverlap: true,
+    private struct AnnotationInfo {
+        var name: String
+        var coordinate: CLLocationCoordinate2D
+        var anchor: ViewAnnotationAnchor
+    }
+
+    private let annotationData: [AnnotationInfo] = [
+        AnnotationInfo(name: "Saigon", coordinate: .init(latitude: 10.823099, longitude: 106.629662),
             anchor: .top),
-        "Hanoi": .init(
-            geometry: Point(LocationCoordinate2D(latitude: 21.027763, longitude: 105.834160)),
-            width: 152,
-            height: 40,
-            allowOverlap: true,
+        AnnotationInfo(name: "Hanoi", coordinate: .init(latitude: 21.027763, longitude: 105.834160),
             anchor: .bottomLeft),
-        "Tokyo": .init(
-            geometry: Point(LocationCoordinate2D(latitude: 35.689487, longitude: 139.691711)),
-            width: 102,
-            height: 40,
-            allowOverlap: true,
+        AnnotationInfo(name: "Tokyo", coordinate: .init(latitude: 35.689487, longitude: 139.691711),
             anchor: .right),
-        "Bangkok": .init(
-            geometry: Point(LocationCoordinate2D(latitude: 13.756331, longitude: 100.501762)),
-            width: 191,
-            height: 40,
-            allowOverlap: true,
+        AnnotationInfo(name: "Bangkok", coordinate: .init(latitude: 13.756331, longitude: 100.501762),
             anchor: .topRight),
-        "Jakarta": .init(
-            geometry: Point(LocationCoordinate2D(latitude: -6.175110, longitude: 106.865036)),
-            width: 95,
-            height: 40,
-            allowOverlap: true,
-            anchor: .topLeft),
+        AnnotationInfo(name: "Jakarta", coordinate: .init(latitude: -6.175110, longitude: 106.865036),
+            anchor: .topLeft)
     ]
+}
+
+private func annotation(geometry: GeometryConvertible, width: CGFloat, height: CGFloat, anchor: ViewAnnotationAnchor) -> ViewAnnotationOptions {
+    .init(
+        annotatedFeature: .geometry(geometry),
+        width: width,
+        height: height,
+        allowOverlap: true,
+        variableAnchors: [ViewAnnotationAnchorConfig(anchor: anchor)])
 }

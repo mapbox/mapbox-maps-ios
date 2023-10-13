@@ -154,7 +154,10 @@ struct Examples {
         Example(title: "View annotations: animation",
                 description: "Animate a view annotation along a route",
                 testTimeout: 60,
-                type: ViewAnnotationAnimationExample.self)
+                type: ViewAnnotationAnimationExample.self),
+        Example(title: "Dynamic View annotations",
+                description: "Use Dynamic View Annotations, Style, and Viewport API to create navigation experience",
+                type: DynamicViewAnnotationExample.self)
     ]
 
     // Examples that focus on setting, animating, or otherwise changing the map's camera and viewport.

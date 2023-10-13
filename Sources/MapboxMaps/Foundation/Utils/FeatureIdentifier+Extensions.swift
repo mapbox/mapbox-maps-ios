@@ -3,7 +3,7 @@ extension FeatureIdentifier {
         switch self {
         case .string(let s):
             return s
-        case .number(let _):
+        default:
             return nil
         }
     }

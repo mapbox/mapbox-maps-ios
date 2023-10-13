@@ -177,7 +177,7 @@ final class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         wait(for: [allTileRegionsCompletionBlockInvoked], timeout: 120.0)
     }
 
-    func testMapCanBeLoadedWithoutNetworkConnectivity() throws {
+    func testMapCanBeLoadediWithoutNetworkConnectivity() throws {
         try guardForMetalDevice()
 
         let rootView = try XCTUnwrap(rootViewController?.view)

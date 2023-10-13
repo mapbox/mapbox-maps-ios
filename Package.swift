@@ -3,9 +3,9 @@
 
 import PackageDescription
 
-let commonVersion = "24.0.0-beta.6"
-let coreVersion = "11.0.0-beta.6"
-let coreChecksum = "d378a8264840341b768a08f16175288dcb04b89bfe310dab2550971ba59fad95"
+let commonVersion = "24.0.0-beta.7"
+let coreVersion = "11.0.0-beta.7"
+let coreChecksum = "f4d65d3c81d3a93744158dd6453ef36b2a414eadf90fbb94a08ffe9192b19001"
 
 func folder(_ version: String) -> String { version.contains("SNAPSHOT") ? "snapshots" : "releases" }
 

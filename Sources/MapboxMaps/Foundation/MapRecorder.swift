@@ -39,7 +39,7 @@ import Foundation
     /// Replay a supplied sequence from a map recording
     ///
     /// - Parameters:
-    ///   - recordedSequence: A data reference which should contain a re-playable sequence as a gzip compressed or plain JSON string. 
+    ///   - recordedSequence: A data reference which should contain a re-playable sequence as a gzip compressed or plain JSON string.
     ///   This is the recorded content captured in the return of ``stop()``
     ///   - options: Options to customize the behavior of the playback, see ``MapPlayerOptions``. Optional.
     ///   - completion: Completion handler be called when replay finishes

@@ -163,8 +163,8 @@ The Mapbox Maps SDK for iOS is a public library for displaying interactive, thor
 
 ### View Annotations
 
+- ``ViewAnnotation``
 - ``ViewAnnotationManager``
-- ``ViewAnnotationUpdateObserver``
 - ``ViewAnnotationOptions-swift.struct``
 - ``ViewAnnotationManagerError``
 

@@ -1,12 +1,16 @@
 import UIKit
-import MapboxCoreMaps
 import Turf
 
-/// Stores layout and visibilty settings for a `ViewAnnotation`
-public struct ViewAnnotationOptions: Hashable {
+/// Stores layout and visibility settings for a view annotation.
+///
+/// - Important: `ViewAnnotationOptions` is deprecated and will be removed in future releases. Use ``ViewAnnotation`` instead.
+public struct ViewAnnotationOptions: Equatable {
     /// Geometry the view annotation is bound to. Currently only support 'point' geometry type.
     /// Note: geometry must be set when adding a new view annotation, otherwise an operation error will be returned from the call that is associated to this option.
-    public var geometry: Geometry?
+    @available(*, unavailable, message: "Use annotatedFeature instead.")
+    public var geometry: Geometry? { fatalError() }
+
+    public var annotatedFeature: AnnotatedFeature?
 
     /// View annotation width in pixels.
     public var width: CGFloat?
@@ -20,7 +24,8 @@ public struct ViewAnnotationOptions: Hashable {
     /// E.g. if the bounded symbol is not visible view annotation also becomes not visible.
     ///
     /// Note: Invalid associatedFeatureId (meaning no actual symbol has such feature id) will lead to the cooresponding annotation to be invisible.
-    public var associatedFeatureId: String?
+    @available(*, unavailable, message: "Use annotatedFeature instead.")
+    public var associatedFeatureId: String? { fatalError() }
 
     /// If true, the annotation will be visible even if it collides with other previously drawn annotations.
     /// If allowOverlap is null, default value `false` will be applied.
@@ -36,23 +41,48 @@ public struct ViewAnnotationOptions: Hashable {
     /// If visible is null, default value `true` will be applied.
     public var visible: Bool?
 
+    public var variableAnchors: [ViewAnnotationAnchorConfig]?
+
     /// Anchor describing where the view annotation will be located relatively to given geometry.
     /// If anchor is null, default value `CENTER` will be applied.
-    public var anchor: ViewAnnotationAnchor?
+    @available(*, unavailable, message: "Use variableAnchors instead.")
+    public var anchor: ViewAnnotationAnchor? { fatalError() }
 
     /// Extra X offset in `platform pixels`.
     /// Providing positive value moves view annotation to the right while negative moves it to the left.
-    public var offsetX: CGFloat?
+    @available(*, unavailable, message: "Use variableAnchors instead.")
+    public var offsetX: CGFloat? { fatalError() }
 
     /// Extra Y offset in `platform pixels`.
     /// Providing positive value moves view annotation to the top while negative moves it to the bottom.
-    public var offsetY: CGFloat?
+    @available(*, unavailable, message: "Use variableAnchors instead.")
+    public var offsetY: CGFloat? { fatalError() }
 
     /// Specifies if this view annotation is selected meaning it should be placed on top of others.
     /// If selected in null, default value `false` will be applied.
     public var selected: Bool?
 
     /// Initializes a `ViewAnnotationOptions`
+    public init(
+        annotatedFeature: AnnotatedFeature? = nil,
+        width: CGFloat? = nil,
+        height: CGFloat? = nil,
+        allowOverlap: Bool? = nil,
+        visible: Bool? = nil,
+        selected: Bool? = nil,
+        variableAnchors: [ViewAnnotationAnchorConfig]? = nil
+    ) {
+        self.annotatedFeature = annotatedFeature
+        self.width = width
+        self.height = height
+        self.variableAnchors = variableAnchors
+        self.allowOverlap = allowOverlap
+        self.visible = visible
+        self.selected = selected
+    }
+
+    /// Initializes a `ViewAnnotationOptions` with geometry.
+    @available(*, deprecated, message: "Use ViewAnnotation to create view annotations.")
     public init(geometry: GeometryConvertible? = nil,
                 width: CGFloat? = nil,
                 height: CGFloat? = nil,
@@ -63,51 +93,44 @@ public struct ViewAnnotationOptions: Hashable {
                 offsetX: CGFloat? = nil,
                 offsetY: CGFloat? = nil,
                 selected: Bool? = nil) {
-        self.geometry = geometry?.geometry
-        self.width = width
-        self.height = height
-        self.associatedFeatureId = associatedFeatureId
-        self.allowOverlap = allowOverlap
-        self.visible = visible
-        self.anchor = anchor
-        self.offsetX = offsetX
-        self.offsetY = offsetY
-        self.selected = selected
+        var anchorConfig: ViewAnnotationAnchorConfig?
+        if anchor != nil || offsetX != nil || offsetY != nil {
+            anchorConfig = ViewAnnotationAnchorConfig(
+                anchor: anchor ?? .center,
+                offsetX: offsetX ?? 0,
+                offsetY: offsetY ?? 0)
+        }
+
+        self.init(
+            annotatedFeature: geometry.map { .geometry($0) },
+            width: width,
+            height: height,
+            allowOverlap: allowOverlap,
+            visible: visible,
+            selected: selected,
+            variableAnchors: anchorConfig.map { [$0] })
     }
 
     internal init(_ objcValue: MapboxCoreMaps.ViewAnnotationOptions) {
+        let annotatedFeature = objcValue.annotatedFeature.flatMap(AnnotatedFeature.from(core:))
         self.init(
-            geometry: objcValue.__geometry.flatMap(Geometry.init(_:)),
+            annotatedFeature: annotatedFeature,
             width: objcValue.__width?.CGFloat,
             height: objcValue.__height?.CGFloat,
-            associatedFeatureId: objcValue.__associatedFeatureId,
             allowOverlap: objcValue.__allowOverlap?.boolValue,
             visible: objcValue.__visible?.boolValue,
-            anchor: objcValue.__anchor.flatMap { ViewAnnotationAnchor(rawValue: $0.intValue) },
-            offsetX: objcValue.__offsetX?.CGFloat,
-            offsetY: objcValue.__offsetY?.CGFloat,
-            selected: objcValue.__selected?.boolValue
+            selected: objcValue.__selected?.boolValue,
+            variableAnchors: objcValue.variableAnchors
         )
     }
 
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(width)
-        hasher.combine(height)
-        hasher.combine(associatedFeatureId)
-        hasher.combine(allowOverlap)
-        hasher.combine(visible)
-        hasher.combine(anchor)
-        hasher.combine(offsetX)
-        hasher.combine(offsetY)
-        hasher.combine(selected)
-    }
-
-    internal var frame: CGRect {
+    internal func frame(with chosenAnchorConfig: ViewAnnotationAnchorConfig?) -> CGRect {
         guard let width = width, let height = height else { return .zero }
 
         let offset: (x: CGFloat, y: CGFloat) = (width * 0.5, height * 0.5)
         var frame = CGRect(x: -offset.x, y: -offset.y, width: width, height: height)
-        let anchor = anchor ?? .center
+        let anchorConfig = chosenAnchorConfig ?? variableAnchors?.first
+        let anchor = anchorConfig?.anchor ?? .center
 
         switch anchor {
         case .top:
@@ -132,21 +155,18 @@ public struct ViewAnnotationOptions: Hashable {
             break
         }
 
-        return frame.offsetBy(dx: offsetX ?? 0, dy: offsetY ?? 0)
+        return frame.offsetBy(dx: anchorConfig?.offsetX ?? 0, dy: anchorConfig?.offsetY ?? 0)
     }
 }
 
 extension MapboxCoreMaps.ViewAnnotationOptions {
     internal convenience init(_ swiftValue: ViewAnnotationOptions) {
-        self.init(__geometry: swiftValue.geometry.map(MapboxCommon.Geometry.init),
-                  associatedFeatureId: swiftValue.associatedFeatureId,
+        self.init(__annotatedFeature: swiftValue.annotatedFeature?.asCoreFeature,
                   width: swiftValue.width as NSNumber?,
                   height: swiftValue.height as NSNumber?,
                   allowOverlap: swiftValue.allowOverlap as NSNumber?,
                   visible: swiftValue.visible as NSNumber?,
-                  anchor: swiftValue.anchor?.rawValue as NSNumber?,
-                  offsetX: swiftValue.offsetX as NSNumber?,
-                  offsetY: swiftValue.offsetY as NSNumber?,
+                  variableAnchors: swiftValue.variableAnchors,
                   selected: swiftValue.selected as NSNumber?)
     }
 }

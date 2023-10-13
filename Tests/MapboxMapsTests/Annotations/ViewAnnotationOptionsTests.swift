@@ -4,100 +4,68 @@ import XCTest
 
 final class ViewAnnotationOptionsTests: XCTestCase {
 
-    let geometry: Point = .init(.init(latitude: 10.0, longitude: 20.0))
+    let annotatedLayerFeature = AnnotatedFeature.layerFeature(layerId: "foo", featureId: "gar")
+    let point = Point(CLLocationCoordinate2D(latitude: 10, longitude: 20))
     let width: CGFloat = 25.0
     let height: CGFloat = 50.0
-    let associatedFeatureId: String = "test"
     let allowOverlap: Bool = true
     let visible: Bool = true
     let anchor: ViewAnnotationAnchor = .right
     let offsetX: CGFloat = 100.0
     let offsetY: CGFloat = 200.0
     let selected: Bool = true
+    var variableAnchors: [ViewAnnotationAnchorConfig] {
+        [ViewAnnotationAnchorConfig(anchor: anchor, offsetX: offsetX, offsetY: offsetY)]
+    }
 
     func testMemberwiseInit() {
         let options = ViewAnnotationOptions(
-            geometry: geometry,
+            annotatedFeature: annotatedLayerFeature,
             width: width,
             height: height,
-            associatedFeatureId: associatedFeatureId,
             allowOverlap: allowOverlap,
             visible: visible,
-            anchor: anchor,
-            offsetX: offsetX,
-            offsetY: offsetY,
-            selected: selected
-        )
+            selected: selected,
+            variableAnchors: variableAnchors)
 
-        XCTAssertEqual(options.geometry, .point(geometry))
+        XCTAssertEqual(options.annotatedFeature, annotatedLayerFeature)
         XCTAssertEqual(options.width, width)
         XCTAssertEqual(options.height, height)
-        XCTAssertEqual(options.associatedFeatureId, associatedFeatureId)
         XCTAssertEqual(options.allowOverlap, allowOverlap)
         XCTAssertEqual(options.visible, visible)
-        XCTAssertEqual(options.anchor, anchor)
-        XCTAssertEqual(options.offsetX, offsetX)
-        XCTAssertEqual(options.offsetY, offsetY)
+        XCTAssertEqual(options.variableAnchors?.first?.anchor, anchor)
+        XCTAssertEqual(options.variableAnchors?.first?.offsetX, offsetX)
+        XCTAssertEqual(options.variableAnchors?.first?.offsetY, offsetY)
         XCTAssertEqual(options.selected, selected)
     }
 
     func testCoreInit() {
         let swiftValue = ViewAnnotationOptions(
-            geometry: geometry,
+            annotatedFeature: .geometry(point),
             width: width,
             height: height,
-            associatedFeatureId: associatedFeatureId,
             allowOverlap: allowOverlap,
             visible: visible,
-            anchor: anchor,
-            offsetX: offsetX,
-            offsetY: offsetY,
-            selected: selected
-        )
+            selected: selected,
+            variableAnchors: [ViewAnnotationAnchorConfig(anchor: anchor, offsetX: offsetX, offsetY: offsetY)])
 
         let objcValue = MapboxCoreMaps.ViewAnnotationOptions(
-            __geometry: MapboxCommon.Geometry(geometry),
-            associatedFeatureId: associatedFeatureId,
+            __annotatedFeature: .fromGeometry(MapboxCommon.Geometry(point)),
             width: width as NSNumber?,
             height: height as NSNumber?,
             allowOverlap: allowOverlap as NSNumber?,
             visible: visible as NSNumber?,
-            anchor: anchor.rawValue as NSNumber?,
-            offsetX: offsetX as NSNumber?,
-            offsetY: offsetY as NSNumber?,
+            variableAnchors: variableAnchors,
             selected: selected as NSNumber?
         )
 
         let convertedOptions = ViewAnnotationOptions(objcValue)
         XCTAssertEqual(convertedOptions, swiftValue)
-    }
 
-    func testCoreConversion() {
-        let swiftValue = ViewAnnotationOptions(
-            geometry: geometry,
-            width: width,
-            height: height,
-            associatedFeatureId: associatedFeatureId,
-            allowOverlap: allowOverlap,
-            visible: visible,
-            anchor: anchor,
-            offsetX: offsetX,
-            offsetY: offsetY,
-            selected: selected
-        )
+        let convertedObjcValue = MapboxCoreMaps.ViewAnnotationOptions(swiftValue)
+        let convertedBack = ViewAnnotationOptions(convertedObjcValue)
 
-        let convertedOptions = MapboxCoreMaps.ViewAnnotationOptions(swiftValue)
-
-        XCTAssertEqual(Geometry(convertedOptions.__geometry!), .point(geometry))
-        XCTAssertEqual(convertedOptions.__associatedFeatureId, associatedFeatureId)
-        XCTAssertEqual(convertedOptions.__width, width as NSNumber?)
-        XCTAssertEqual(convertedOptions.__height, height as NSNumber?)
-        XCTAssertEqual(convertedOptions.__allowOverlap, allowOverlap as NSNumber?)
-        XCTAssertEqual(convertedOptions.__visible, visible as NSNumber?)
-        XCTAssertEqual(convertedOptions.__anchor, anchor.rawValue as NSNumber?)
-        XCTAssertEqual(convertedOptions.__offsetX, offsetX as NSNumber?)
-        XCTAssertEqual(convertedOptions.__offsetY, offsetY as NSNumber?)
-        XCTAssertEqual(convertedOptions.__selected, selected as NSNumber)
+        XCTAssertEqual(convertedBack, swiftValue)
     }
 
     func testFrame() {
@@ -114,51 +82,52 @@ final class ViewAnnotationOptionsTests: XCTestCase {
         let offsetY = CGFloat.random(in: -100...100)
 
         var sut = ViewAnnotationOptions(
+            annotatedFeature: .layerFeature(layerId: "foo"),
             width: width,
-            height: height,
-            offsetX: offsetX,
-            offsetY: offsetY
+            height: height
         )
 
+        let frame = sut.frame(with: nil)
+
         // center
-        sut.anchor = .center
-        verifyFrame(sut.frame, expectedOrigin: CGPoint(x: offsetX - width * 0.5, y: offsetY - height * 0.5))
+        sut.variableAnchors = [ViewAnnotationAnchorConfig(anchor: .center, offsetX: offsetX, offsetY: offsetY)]
+        verifyFrame(sut.frame(with: nil), expectedOrigin: CGPoint(x: offsetX - width * 0.5, y: offsetY - height * 0.5))
 
         // top
-        sut.anchor = .top
-        verifyFrame(sut.frame, expectedOrigin: CGPoint(x: offsetX - width * 0.5, y: offsetY))
+        sut.variableAnchors = [ViewAnnotationAnchorConfig(anchor: .top, offsetX: offsetX, offsetY: offsetY)]
+        verifyFrame(sut.frame(with: nil), expectedOrigin: CGPoint(x: offsetX - width * 0.5, y: offsetY))
 
         // top-left
-        sut.anchor = .topLeft
-        verifyFrame(sut.frame, expectedOrigin: CGPoint(x: offsetX, y: offsetY))
+        sut.variableAnchors = [ViewAnnotationAnchorConfig(anchor: .topLeft, offsetX: offsetX, offsetY: offsetY)]
+        verifyFrame(sut.frame(with: nil), expectedOrigin: CGPoint(x: offsetX, y: offsetY))
 
         // top-right
-        sut.anchor = .topRight
-        verifyFrame(sut.frame, expectedOrigin: CGPoint(x: offsetX - width, y: offsetY))
+        sut.variableAnchors = [ViewAnnotationAnchorConfig(anchor: .topRight, offsetX: offsetX, offsetY: offsetY)]
+        verifyFrame(sut.frame(with: nil), expectedOrigin: CGPoint(x: offsetX - width, y: offsetY))
 
         // bottom
-        sut.anchor = .bottom
-        verifyFrame(sut.frame, expectedOrigin: CGPoint(x: offsetX - width * 0.5, y: offsetY - height))
+        sut.variableAnchors = [ViewAnnotationAnchorConfig(anchor: .bottom, offsetX: offsetX, offsetY: offsetY)]
+        verifyFrame(sut.frame(with: nil), expectedOrigin: CGPoint(x: offsetX - width * 0.5, y: offsetY - height))
 
         // bottom-left
-        sut.anchor = .bottomLeft
-        verifyFrame(sut.frame, expectedOrigin: CGPoint(x: offsetX, y: offsetY - height))
+        sut.variableAnchors = [ViewAnnotationAnchorConfig(anchor: .bottomLeft, offsetX: offsetX, offsetY: offsetY)]
+        verifyFrame(sut.frame(with: nil), expectedOrigin: CGPoint(x: offsetX, y: offsetY - height))
 
         // bottom-right
-        sut.anchor = .bottomRight
-        verifyFrame(sut.frame, expectedOrigin: CGPoint(x: offsetX - width, y: offsetY - height))
+        sut.variableAnchors = [ViewAnnotationAnchorConfig(anchor: .bottomRight, offsetX: offsetX, offsetY: offsetY)]
+        verifyFrame(sut.frame(with: nil), expectedOrigin: CGPoint(x: offsetX - width, y: offsetY - height))
 
         // left
-        sut.anchor = .left
-        verifyFrame(sut.frame, expectedOrigin: CGPoint(x: offsetX, y: offsetY - height * 0.5))
+        sut.variableAnchors = [ViewAnnotationAnchorConfig(anchor: .left, offsetX: offsetX, offsetY: offsetY)]
+        verifyFrame(sut.frame(with: nil), expectedOrigin: CGPoint(x: offsetX, y: offsetY - height * 0.5))
 
         // right
-        sut.anchor = .right
-        verifyFrame(sut.frame, expectedOrigin: CGPoint(x: offsetX - width, y: offsetY - height * 0.5))
+        sut.variableAnchors = [ViewAnnotationAnchorConfig(anchor: .right, offsetX: offsetX, offsetY: offsetY)]
+        verifyFrame(sut.frame(with: nil), expectedOrigin: CGPoint(x: offsetX - width, y: offsetY - height * 0.5))
 
         // Empty frame if width and height are missing
         sut.width = nil
         sut.height = nil
-        XCTAssertEqual(sut.frame, .zero)
+        XCTAssertEqual(sut.frame(with: nil), .zero)
     }
 }

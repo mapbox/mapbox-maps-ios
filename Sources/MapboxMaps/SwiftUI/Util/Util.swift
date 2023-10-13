@@ -38,6 +38,10 @@ func copyAssigned<Root, T>(_ s: Root, _ keyPath: WritableKeyPath<Root, T>, _ val
     return copy
 }
 
+func copyAppended<Root, T>(_ s: Root, _ keyPath: WritableKeyPath<Root, T>, _ newElement: T.Element) -> Root where T: RangeReplaceableCollection {
+    copyAssigned(s, keyPath, s[keyPath: keyPath] + [newElement])
+}
+
 /// - Returns: The result of `f` applied to `a`.
 func with<A, B>(_ a: A, _ f: (A) throws -> B) rethrows -> B {
     return try f(a)

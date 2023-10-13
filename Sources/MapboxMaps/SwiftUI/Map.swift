@@ -50,7 +50,7 @@ public typealias LocationUpdateAction = (Location) -> Void
 @_spi(Experimental)
 @available(iOS 13.0, *)
 public struct Map: UIViewControllerRepresentable {
-    var viewport: ConstantOrBinding<Viewport>
+    private var viewport: ConstantOrBinding<Viewport>
     var mapDependencies = MapDependencies()
     private var mapContentVisitor = DefaultMapContentVisitor()
     private let urlOpenerProvider: URLOpenerProvider
@@ -243,19 +243,6 @@ extension Map {
     }
 }
 
-@available(iOS 13.0, *)
-extension Map {
-    func set<T>(_ keyPath: WritableKeyPath<Map, T>, _ value: T) -> Self {
-        with(self, setter(keyPath, value))
-    }
-
-    func append<T>(_ keyPath: WritableKeyPath<Map, T>, _ newElement: T.Element) -> Self where T: RangeReplaceableCollection {
-        var updated = self
-        updated[keyPath: keyPath].append(newElement)
-        return updated
-    }
-}
-
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -266,7 +253,7 @@ public extension Map {
     @_documentation(visibility: public)
 #endif
     func cameraBounds(_ cameraBounds: CameraBoundsOptions) -> Self {
-        set(\.mapDependencies.cameraBounds, cameraBounds)
+        copyAssigned(self, \.mapDependencies.cameraBounds, cameraBounds)
     }
 
     /// Sets style to the map.
@@ -277,7 +264,7 @@ public extension Map {
     @_documentation(visibility: public)
 #endif
     func mapStyle(_ mapStyle: MapStyle) -> Self {
-        set(\.mapDependencies.mapStyle, mapStyle)
+        copyAssigned(self, \.mapDependencies.mapStyle, mapStyle)
     }
 
     /// Configures gesture options.
@@ -285,7 +272,7 @@ public extension Map {
     @_documentation(visibility: public)
 #endif
     func gestureOptions(_ options: GestureOptions) -> Self {
-        set(\.mapDependencies.gestureOptions, options)
+        copyAssigned(self, \.mapDependencies.gestureOptions, options)
     }
 
     /// Sets constraint mode to the map. If not set, `heightOnly` will be in use.
@@ -293,7 +280,7 @@ public extension Map {
     @_documentation(visibility: public)
 #endif
     func constrainMode(_ constrainMode: ConstrainMode) -> Self {
-        set(\.mapDependencies.constrainMode, constrainMode)
+        copyAssigned(self, \.mapDependencies.constrainMode, constrainMode)
     }
 
     /// Sets viewport mode to the map.
@@ -301,7 +288,7 @@ public extension Map {
     @_documentation(visibility: public)
 #endif
     func viewportMode(_ viewportMode: ViewportMode) -> Self {
-        set(\.mapDependencies.viewportMode, viewportMode)
+        copyAssigned(self, \.mapDependencies.viewportMode, viewportMode)
     }
 
     /// Sets ``NorthOrientation`` to the map. If not set, `upwards` will be in use.
@@ -309,7 +296,7 @@ public extension Map {
     @_documentation(visibility: public)
 #endif
     func northOrientation(_ northOrientation: NorthOrientation) -> Self {
-        set(\.mapDependencies.orientation, northOrientation)
+        copyAssigned(self, \.mapDependencies.orientation, northOrientation)
     }
 
     /// Sets ``OrnamentOptions`` to the map.
@@ -317,7 +304,7 @@ public extension Map {
     @_documentation(visibility: public)
 #endif
     func ornamentOptions(_ options: OrnamentOptions) -> Self {
-        set(\.mapDependencies.ornamentOptions, options)
+        copyAssigned(self, \.mapDependencies.ornamentOptions, options)
     }
 
     /// Sets ``MapViewDebugOptions`` to the map.
@@ -325,7 +312,7 @@ public extension Map {
     @_documentation(visibility: public)
 #endif
     func debugOptions(_ debugOptions: MapViewDebugOptions) -> Self {
-        set(\.mapDependencies.debugOptions, debugOptions)
+        copyAssigned(self, \.mapDependencies.debugOptions, debugOptions)
     }
 }
 
@@ -370,8 +357,20 @@ extension Map {
             fatalError("init(coder:) has not been implemented")
         }
 
-        override func loadView() {
-            view = mapView
+        override func viewDidLoad() {
+            super.viewDidLoad()
+
+            view.addSubview(mapView)
+
+            mapView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                mapView.topAnchor.constraint(equalTo: view.topAnchor),
+                mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            ])
+
+            mapView.mapboxMap.size = view.bounds.size
         }
     }
 }

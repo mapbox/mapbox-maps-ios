@@ -15,7 +15,7 @@ public extension Map {
     @_documentation(visibility: public)
 #endif
     func onMapTapGesture(perform action: @escaping (MapContentGestureContext) -> Void) -> Self {
-        set(\.mapDependencies.onMapTap, action)
+        copyAssigned(self, \.mapDependencies.onMapTap, action)
     }
 
     /// Adds a long press gesture handler to the map.
@@ -28,7 +28,7 @@ public extension Map {
     @_documentation(visibility: public)
 #endif
     func onMapLongPressGesture(perform action: @escaping (MapContentGestureContext) -> Void) -> Self {
-        set(\.mapDependencies.onMapLongPress, action)
+        copyAssigned(self, \.mapDependencies.onMapLongPress, action)
     }
 
     /// Adds a tap action to the specified layer.

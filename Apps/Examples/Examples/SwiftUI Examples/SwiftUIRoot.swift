@@ -29,7 +29,7 @@ struct SwiftUIRoot: View {
 
                 Section {
                     ExampleLink("View Annotations", note: "Add/remove view annotation on tap.", destination: ViewAnnotationsExample())
-                    ExampleLink("View annotations with dynamic content", note: "Show view annotations with contents changed on selection", destination: DynamicViewAnnotationsExample())
+                    ExampleLink("Weather annotations", note: "Show view annotations with contents changed on selection", destination: WeatherAnnotationExample())
                     ExampleLink("Layer Annotations", note: "Add/remove layer annotation on tap.", destination: AnnotationsExample())
                 } header: { Text("Annotations") }
 

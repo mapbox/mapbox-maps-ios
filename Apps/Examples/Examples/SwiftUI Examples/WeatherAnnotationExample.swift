@@ -9,7 +9,7 @@ private struct WeatherData: Identifiable, Equatable {
 }
 
 @available(iOS 14.0, *)
-struct DynamicViewAnnotationsExample: View {
+struct WeatherAnnotationExample: View {
     @State private var viewport: Viewport = .camera(center: .berlin, zoom: 1.5)
 
     @State private var selectedData: WeatherData?
@@ -34,6 +34,7 @@ struct DynamicViewAnnotationsExample: View {
                 viewport = .camera(center: center, zoom: 2.5)
             }
         }
+        .ignoresSafeArea()
     }
 }
 
@@ -76,9 +77,9 @@ private struct WeatherIconView: View {
     }
 }
 @available(iOS 14.0, *)
-struct DynamicViewAnnotationsExample_Preview: PreviewProvider {
+struct WeatherAnnotationExample_Preview: PreviewProvider {
 
     static var previews: some View {
-        DynamicViewAnnotationsExample()
+        WeatherAnnotationExample()
     }
 }

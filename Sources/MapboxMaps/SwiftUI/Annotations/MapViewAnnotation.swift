@@ -1,12 +1,12 @@
 import SwiftUI
 
-/// Displays view annotation.
+/// Displays a view annotation.
 ///
-/// Create a view annotation to display SwiftUI vieapp in preview modew in ``Map-swift.struct`` content.
+/// Create a view annotation to display an interactive SwiftUI view bound to geographical coordinate or map feature. `MapViewAnnotation` is a SwiftUI analog to ``ViewAnnotation``.
 ///
 /// ```swift
 /// Map {
-///     ViewAnnotation(CLLocationCoordinate2D(...)) {
+///     MapViewAnnotation(coordinate: CLLocationCoordinate2D(...)) {
 ///        Text("🚀")
 ///           .background(Circle().fill(.red))
 ///     }
@@ -16,41 +16,70 @@ import SwiftUI
     @_documentation(visibility: public)
 #endif
 @_spi(Experimental)
+@available(iOS 13.0, *)
 public struct MapViewAnnotation: MapContent {
-    var config: ViewAnnotationConfig
-    var makeViewController: (@escaping (CGSize) -> Void) -> UIViewController
+    struct Actions {
+        var visibility: ((Bool) -> Void)?
+        var anchor: ((ViewAnnotationAnchorConfig) -> Void)?
+        var anchorCoordinate: ((CLLocationCoordinate2D) -> Void)?
+    }
+    var annotatedFeature: AnnotatedFeature
+    var allowOverlap: Bool = false
+    var visible: Bool = true
+    var selected: Bool = false
+    var variableAnchors: [ViewAnnotationAnchorConfig] = .center
+    var actions = Actions()
+    var content: AnyView
 
-    /// Creates a view annotation.
+    /// Creates a view annotation at geographical coordinate.
     ///
     /// - Parameters:
     ///   - coordinate: Coordinate the view annotation is bound to.
+    ///   - content: The view to place on the map.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
     @available(iOS 13.0, *)
     public init<Content: View>(
-        _ coordinate: CLLocationCoordinate2D,
+        coordinate: CLLocationCoordinate2D,
         @ViewBuilder content: @escaping () -> Content
     ) {
-        self.init(.geometry(Point(coordinate)), content: content)
+        self.init(annotatedFeature: .geometry(Point(coordinate)), content: content)
+    }
+
+    /// Creates a view annotation on feature rendered on a layer.
+    ///
+    /// - Parameters:
+    ///   - layerId: Layer identifier which renders the feature.
+    ///   - featureId: Feature identifier. If not specified, the annotation will appear on any feature from that layer.
+    ///   - content: The view to place on the map.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @available(iOS 13.0, *)
+    public init<Content: View>(
+        layerId: String,
+        featureId: String? = nil,
+        @ViewBuilder content: @escaping () -> Content
+    ) {
+        self.init(annotatedFeature: .layerFeature(layerId: layerId, featureId: featureId), content: content)
     }
 
     /// Creates a view annotation.
     ///
     /// - Parameters:
     ///   - annotatedFeature: Associates the view annotation with the feature geometry. The geometry may be any `Geometry`, or a feature rendered on a specified layer.
+    ///   - content: The view to place on the map.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
     @available(iOS 13.0, *)
     public init<Content: View>(
-        _ annotatedFeature: AnnotatedFeature,
+        annotatedFeature: AnnotatedFeature,
         @ViewBuilder content: @escaping () -> Content
     ) {
-        config = ViewAnnotationConfig(annotatedFeature: annotatedFeature)
-        makeViewController = { onSizeChange in
-            UIHostingController(rootView: content().fixedSize().onChangeOfSize(perform: onSizeChange))
-        }
+        self.annotatedFeature = annotatedFeature
+        self.content = AnyView(content())
     }
 
     func _visit(_ visitor: MapContentVisitor) {
@@ -62,7 +91,7 @@ public struct MapViewAnnotation: MapContent {
     @_documentation(visibility: public)
 #endif
     public func allowOverlap(_ allowOverlap: Bool) -> MapViewAnnotation {
-        with(self, setter(\.config.allowOverlap, allowOverlap))
+        with(self, setter(\.allowOverlap, allowOverlap))
     }
 
     /// Specifies if this view annotation is visible or not. Defaults to `true`.
@@ -70,7 +99,7 @@ public struct MapViewAnnotation: MapContent {
     @_documentation(visibility: public)
 #endif
     public func visible(_ visible: Bool) -> MapViewAnnotation {
-        with(self, setter(\.config.visible, visible))
+        with(self, setter(\.visible, visible))
     }
 
     /// Specifies if this view annotation is selected meaning it should be placed on top of others. Defaults to `false`.
@@ -78,27 +107,57 @@ public struct MapViewAnnotation: MapContent {
     @_documentation(visibility: public)
 #endif
     public func selected(_ selected: Bool = false) -> MapViewAnnotation {
-        with(self, setter(\.config.selected, selected))
+        with(self, setter(\.selected, selected))
     }
 
-    /// Available anchor choices for annotation placement.
+    /// A list of anchor configurations available.
     ///
-    /// The first anchor in the list that allows the view annotation to be placed in the view is picked.
-    /// By default, the annotation will be placed in center.
+    /// The annotation will automatically pick the first best anchor position depending on position
+    /// relative to other elements on the map.
+    ///
+    /// The ``ViewAnnotation/onAnchorChanged`` is called when the
+    /// effective position is updated.
+    ///
+    /// If not specified, the annotation will be placed in center.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
     public func variableAnchors(_ variableAnchors: [ViewAnnotationAnchorConfig]) -> MapViewAnnotation {
-        with(self, setter(\.config.variableAnchors, variableAnchors))
+        with(self, setter(\.variableAnchors, variableAnchors))
+    }
+
+    /// Called when anchor configuration is changed.
+    ///
+    /// See ``variableAnchors(_:)``.
+    ///
+    /// The callback takes the `anchorConfig` parameter which represents the selected anchor configuration.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func onAnchorChanged(action: @escaping (ViewAnnotationAnchorConfig) -> Void) -> MapViewAnnotation {
+        with(self, setter(\.actions.anchor, action))
+    }
+
+    /// Called when visibility of annotation is changed.
+    ///
+    /// The annotation becomes hidden when it goes out of MapView's bounds or ``visible(_:)`` is changed.
+    ///
+    /// The callback takes `true` when annotation is visible.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func onVisibilityChanged(action: @escaping (Bool) -> Void) -> MapViewAnnotation {
+        with(self, setter(\.actions.visibility, action))
+    }
+
+    /// Called when geographical coordinate of annotation anchor is changed.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func onAnchorCoordinateChanged(action: @escaping (CLLocationCoordinate2D) -> Void) -> MapViewAnnotation {
+        with(self, setter(\.actions.anchorCoordinate, action))
     }
 }
 
-struct ViewAnnotationConfig: Equatable {
-    var annotatedFeature: AnnotatedFeature
-    var allowOverlap: Bool = false
-    var visible: Bool = true
-    var selected: Bool = false
-    var variableAnchors: [ViewAnnotationAnchorConfig] = .center
-}
-
+@available(iOS 13.0, *)
 extension MapViewAnnotation: PrimitiveMapContent {}

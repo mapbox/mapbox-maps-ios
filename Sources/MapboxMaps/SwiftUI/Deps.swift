@@ -13,6 +13,7 @@ struct MapDependencies {
     var cameraChangeHandlers = [(CameraChanged) -> Void]()
     var ornamentOptions = OrnamentOptions()
     var debugOptions = MapViewDebugOptions()
+    var presentsWithTransaction = false
 
     var onMapTap: ((MapContentGestureContext) -> Void)?
     var onMapLongPress: ((MapContentGestureContext) -> Void)?

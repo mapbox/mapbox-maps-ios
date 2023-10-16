@@ -22,7 +22,7 @@ Viewport | ✅
 View Annotations | ✅
 Layer Annotations | ✅ | `isDraggable`, `isSelected` are not supported
 Annotations Clustering | ✅ |
-View Annotations | ✅ | `associatedFeatureId` is not supported
+View Annotations | ✅ |
 Puck 2D/3D | ✅
 Map Events | ✅
 Gesture Configuration | ✅
@@ -53,7 +53,7 @@ struct ContentView: View {
 }
 ```
 
-Please note, that you have to set the Mapbox Access Token at any time before using the ``Map-swift.struct``. You can do it either by setting `MapboxOptions.accessToken` or any option listed in <doc:Migrate-to-v11##25-Access-Token-and-Map-Options-management>.
+Please note, that you have to set the Mapbox Access Token at any time before using the ``Map-swift.struct``. You can do it either by setting `MapboxOptions.accessToken` or any option listed in <doc:Migrate-to-v11##26-Access-Token-and-Map-Options-management>.
 
 ## Tutorials
 
@@ -166,40 +166,61 @@ Please consult the ``ViewportAnimation`` documentation to learn more about suppo
 
 ### Annotations
 
-There are two kinds of annotations in Maps SDK - ``ViewAnnotation``s and Layer Annotations (a.k.a ``PointAnnotation``, ``CircleAnnotation``, etc).
+There are two kinds of annotations in Maps SDK - View Annotations (``MapViewAnnotation``) and Layer Annotations (a.k.a ``PointAnnotation``, ``CircleAnnotation``, etc).
 
 #### View Annotations
 
-View annotation allow you to display any SwiftUI view on top of the map. They give you endless possibility for customization, but may be less performant. Also, they are always displayed above all map content.
-
+View annotation allow you to display any SwiftUI view on top of the map. They give you endless possibility for customization, but may be less performant. Also, they are always displayed above all map content, you cannot place them in between map layers.
 
 The example below displays multiple view annotations.
 
 ```swift
 struct ContentView: View {
-    struct Item {...}
+    struct Item: Identifiable {...}
     @state var items = [Item]()
 
     var body: some View {
         Map {
-            // Displays a single view annotation
-            ViewAnnotation(CLLocationCoordinate(...))
+            // Displays a single view annotation at specified coordinate.
+            MapViewAnnotation(coordinate: CLLocationCoordinate(...))
                 Text("🚀")
+                    .frame(width: 20, height: 20)
                     .background(Circle().fill(.red))
             }
 
             // Displays multiple data-driven view annotations.
-            ForEvery(items, id: \.id) { item in
-                ViewAnnotation(item.coordinate) {
+            ForEvery(items) { item in
+                MapViewAnnotation(coordinate: item.coordinate) {
                     ItemContentView(item)
                 }
+            }
+
+            // Displays annotation on the layer feature.
+            // The annotation will be dynamically positioned along the route line
+            // that is displayed by "route" layer.
+            MapViewAnnotation(layerId: "route") {
+                ETAView(text: "55 min")
             }
         }
     }
 }
 ```
 
-- Note: The ``ForEvery`` above is similar to `ForEach` in SwiftUI, but works with Map content.
+- Note: The ``ForEvery`` in the above example is similar to `ForEach` in SwiftUI, but works with Map content.
+
+All View annotations may be configured via modifier functions (see ``MapViewAnnotation`` for the full list):
+
+```swift
+MapViewAnnotation(coordinate: CLLocationCoordinate(...))
+    Text("🚀")
+        .frame(width: 20, height: 20)
+        .background(Circle().fill(.red))
+}
+.allowOverlap(true) // will overlap with outer annotations
+.variableAnchors([
+    ViewAnnotationAnchorConfig(anchor: .bottom) // Anchor will be at the bottom
+])
+```
 
 #### Layer Annotations
 

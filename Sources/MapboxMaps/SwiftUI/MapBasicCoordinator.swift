@@ -88,6 +88,7 @@ final class MapBasicCoordinator {
         assign(&mapView, \.gestureManager.options, value: deps.gestureOptions)
         assign(&mapView, \.ornaments.options, value: deps.ornamentOptions)
         assign(&mapView, \.debugOptions, value: deps.debugOptions)
+        assign(&mapView, \.presentsWithTransaction, value: deps.presentsWithTransaction)
 
         cameraChangeHandlers = deps.cameraChangeHandlers
         subscribeOnce {

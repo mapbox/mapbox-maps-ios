@@ -15,7 +15,7 @@ In order to handle gestures on view annotations, use any `UIGestureHandler` in U
 ```swift
 var body: some View {
     Map {
-        ViewAnnotation(coordinate) {
+        MapViewAnnotation(coordinate: coordinate) {
             Text("🍔")
                 .padding()
                 .background(Circle().fill(.green))

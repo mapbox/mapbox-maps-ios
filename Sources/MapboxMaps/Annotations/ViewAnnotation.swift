@@ -193,6 +193,18 @@ public final class ViewAnnotation {
         self.init(annotatedFeature: .geometry(Point(coordinate)), view: view)
     }
 
+    /// Creates a view annotation on feature rendered on a layer.
+    ///
+    /// - Parameters:
+    ///   - layerId: Layer identifier which renders the feature.
+    ///   - featureId: Feature identifier. If not specified, the annotation will appear on any feature from that layer.
+    ///   - content: The view to place on the map.
+    public convenience init(layerId: String, featureId: String? = nil, view: UIView) {
+        self.init(
+            annotatedFeature: .layerFeature(layerId: layerId, featureId: featureId),
+            view: view)
+    }
+
     /// Removes view annotation.
     ///
     /// This method removes the view from its superview.

@@ -25,68 +25,61 @@ final class ViewAnnotationCoordinatorTests: XCTestCase {
                 numberOfViewsAdded -= 1
             }
         )
-        func verifyAnnotationOptions(_ options: ViewAnnotationOptions?, _ config: ViewAnnotationConfig) {
-            XCTAssertEqual(options?.annotatedFeature, config.annotatedFeature)
-            XCTAssertEqual(options?.allowOverlap, config.allowOverlap)
-            XCTAssertEqual(options?.visible, config.visible)
-            XCTAssertEqual(options?.selected, config.selected)
-            XCTAssertEqual(options?.variableAnchors, config.variableAnchors)
+        func verifyAnnotationOptions(_ annotation: ViewAnnotation, _ mapViewAnnotation: MapViewAnnotation) {
+            XCTAssertEqual(annotation.annotatedFeature, mapViewAnnotation.annotatedFeature)
+            XCTAssertEqual(annotation.allowOverlap, mapViewAnnotation.allowOverlap)
+            XCTAssertEqual(annotation.visible, mapViewAnnotation.visible)
+            XCTAssertEqual(annotation.selected, mapViewAnnotation.selected)
+            XCTAssertEqual(annotation.variableAnchors, mapViewAnnotation.variableAnchors)
         }
 
         let options = (0...4).map { _ in MapViewAnnotation.random() }
         var annotations = [AnyHashable: MapViewAnnotation]()
-        annotations[0] = options[0]
 
+        // Add 1 annotation
+        annotations[0] = options[0]
         me.updateAnnotations(to: annotations)
 
         XCTAssertEqual(numberOfViewsAdded, 1, "added total 1 annotation view")
-        XCTAssertEqual(viewAnnotationsManager.addViewStub.invocations.count, 1)
-        let opt0Invocation = try XCTUnwrap(viewAnnotationsManager.addViewStub.invocations.last)
-        verifyAnnotationOptions(opt0Invocation.parameters.options, options[0].config)
-        let option0InternalView = opt0Invocation.parameters.view
+        XCTAssertEqual(viewAnnotationsManager.addStub.invocations.count, 1)
+        let annotation0 = try XCTUnwrap(viewAnnotationsManager.addStub.invocations.last?.parameters)
+        verifyAnnotationOptions(annotation0, options[0])
 
+        // Add 2 annotations
         annotations[1] = options[1]
         annotations[2] = options[2]
         me.updateAnnotations(to: annotations)
 
-        XCTAssertEqual(numberOfViewsAdded, 3, "added total 2 annotation views")
-        XCTAssertEqual(viewAnnotationsManager.addViewStub.invocations.count, 3, "added 2 annotations")
-        XCTAssertEqual(viewAnnotationsManager.updateViewStub.invocations.count, 0, "no updates")
-        XCTAssertEqual(viewAnnotationsManager.removeViewStub.invocations.count, 0, "no removals")
+        XCTAssertEqual(numberOfViewsAdded, 3, "added total 3 annotation views")
+        XCTAssertEqual(viewAnnotationsManager.addStub.invocations.count, 3, "added 3 annotations")
+        let annotation1 = viewAnnotationsManager.addStub.invocations[1].parameters
+        let annotation2 = viewAnnotationsManager.addStub.invocations[2].parameters
 
         me.updateAnnotations(to: annotations)
 
         XCTAssertEqual(numberOfViewsAdded, 3, "no additions")
-        XCTAssertEqual(viewAnnotationsManager.addViewStub.invocations.count, 3, "no additions")
-        XCTAssertEqual(viewAnnotationsManager.updateViewStub.invocations.count, 0, "no updates")
-        XCTAssertEqual(viewAnnotationsManager.removeViewStub.invocations.count, 0, "no removals")
+        XCTAssertEqual(viewAnnotationsManager.addStub.invocations.count, 3, "no additions")
 
-        annotations[3] = options[3]
+        // Update 1 anotation
+        annotations[0] = options[3]
         me.updateAnnotations(to: annotations)
 
-        XCTAssertEqual(numberOfViewsAdded, 4, "added total 4 annotation views")
-        XCTAssertEqual(viewAnnotationsManager.addViewStub.invocations.count, 4)
-        let opt3Invocation = try XCTUnwrap(viewAnnotationsManager.addViewStub.invocations.last)
-        verifyAnnotationOptions(opt3Invocation.parameters.options, options[3].config)
-        let option3InternalView = opt3Invocation.parameters.view
+        XCTAssertEqual(numberOfViewsAdded, 3, "updated")
+        XCTAssertEqual(viewAnnotationsManager.addStub.invocations.count, 3)
+        verifyAnnotationOptions(annotation0, options[3])
 
-        annotations.removeValue(forKey: 3)
-        annotations.removeValue(forKey: 0)
-        annotations[1] = options[4]
+        annotations = [0: options[3]]
         me.updateAnnotations(to: annotations)
 
-        XCTAssertEqual(numberOfViewsAdded, 2)
-        XCTAssertEqual(viewAnnotationsManager.addViewStub.invocations.count, 4, "nothing added")
-        verifyAnnotationOptions(viewAnnotationsManager.updateViewStub.invocations.last?.parameters.options, options[4].config)
-        let removedViews = Set(viewAnnotationsManager.removeViewStub.invocations.map(\.parameters))
-        XCTAssertEqual(removedViews, Set([option0InternalView, option3InternalView]))
+        XCTAssertEqual(numberOfViewsAdded, 1)
+        XCTAssertEqual(Set(viewAnnotationsManager.removedAnnotations), Set([annotation1.id, annotation2.id]))
     }
 }
 
 @available(iOS 13.0, *)
 extension MapViewAnnotation {
     static func random() -> MapViewAnnotation {
-        MapViewAnnotation(CLLocationCoordinate2D.random()) {}
+        MapViewAnnotation(coordinate: CLLocationCoordinate2D.random()) {}
             .allowOverlap(.random())
             .variableAnchors([
                 ViewAnnotationAnchorConfig(

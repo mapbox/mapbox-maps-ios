@@ -91,6 +91,7 @@
 		9501A5A82A38830B00F2AF92 /* SwiftExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9501A5A32A38830B00F2AF92 /* SwiftExtensions.swift */; };
 		950889882ADDABB700D099C4 /* DynamicViewAnnotationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950889872ADDABB700D099C4 /* DynamicViewAnnotationExample.swift */; };
 		951693B22A581DFC0083DC4C /* LocateMeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951693B12A581DFC0083DC4C /* LocateMeExample.swift */; };
+		9531765F2AE15AC100A15AE8 /* CalloutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9531765E2AE15AC100A15AE8 /* CalloutView.swift */; };
 		954425282A86BDFB00DC6CBB /* StandardStyleImportExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954425272A86BDFB00DC6CBB /* StandardStyleImportExample.swift */; };
 		954AF549298A821E00365B6C /* ClusteringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954AF548298A821E00365B6C /* ClusteringExample.swift */; };
 		957A4C462A85249700B101D7 /* StandardStyleLocationsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 957A4C452A85249700B101D7 /* StandardStyleLocationsExample.swift */; };
@@ -284,6 +285,7 @@
 		9501A5A32A38830B00F2AF92 /* SwiftExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftExtensions.swift; sourceTree = "<group>"; };
 		950889872ADDABB700D099C4 /* DynamicViewAnnotationExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicViewAnnotationExample.swift; sourceTree = "<group>"; };
 		951693B12A581DFC0083DC4C /* LocateMeExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocateMeExample.swift; sourceTree = "<group>"; };
+		9531765E2AE15AC100A15AE8 /* CalloutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalloutView.swift; sourceTree = "<group>"; };
 		954425272A86BDFB00DC6CBB /* StandardStyleImportExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardStyleImportExample.swift; sourceTree = "<group>"; };
 		954AF548298A821E00365B6C /* ClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClusteringExample.swift; sourceTree = "<group>"; };
 		957A4C452A85249700B101D7 /* StandardStyleLocationsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardStyleLocationsExample.swift; sourceTree = "<group>"; };
@@ -386,6 +388,7 @@
 				7412CF6527E9A7FF00F03B1C /* CLLocationCoordinate2D+Random.swift */,
 				7412CF6727E9A8D600F03B1C /* UIColor+Random.swift */,
 				74A2313027EB306F0065FB7D /* Array+Split.swift */,
+				9531765E2AE15AC100A15AE8 /* CalloutView.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -953,6 +956,7 @@
 				30517C6A274BD4D300B706E5 /* ViewAnnotationBasicExample.swift in Sources */,
 				73620A072A71CD3D00FCC771 /* StandardStyleExample.swift in Sources */,
 				A41E590D265C263700D8B946 /* OfflineRegionManagerExample.swift in Sources */,
+				9531765F2AE15AC100A15AE8 /* CalloutView.swift in Sources */,
 				74A2313627EB37EE0065FB7D /* AnimatedMarkerExample.swift in Sources */,
 				95B589BA2982BFE800BF4F31 /* MapSettingsExample.swift in Sources */,
 				58A3C0C925C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift in Sources */,

@@ -2,6 +2,7 @@ import SwiftUI
 
 /// Type erasure wrapper for AnnotationsGroup.
 struct AnyAnnotationGroup {
+    var layerId: String?
     var update: (AnnotationOrchestrator, String, inout [AnyHashable: String]) -> Void
 }
 
@@ -9,11 +10,13 @@ protocol MapContentVisitor: AnyObject {
     var id: [AnyHashable] { get }
     func push(_ idPart: AnyHashable)
     func pop()
+    @available(iOS 13.0, *)
     func add(viewAnnotation: MapViewAnnotation)
     var locationOptions: LocationOptions { get set }
     func add(annotationGroup: AnyAnnotationGroup)
 }
 
+@available(iOS 13.0, *)
 final class DefaultMapContentVisitor: MapContentVisitor {
     var locationOptions: LocationOptions = LocationOptions()
 
@@ -30,6 +33,7 @@ final class DefaultMapContentVisitor: MapContentVisitor {
         id.removeLast()
     }
 
+    @available(iOS 13.0, *)
     func add(viewAnnotation: MapViewAnnotation) {
         visitedViewAnnotations[id] = viewAnnotation
     }

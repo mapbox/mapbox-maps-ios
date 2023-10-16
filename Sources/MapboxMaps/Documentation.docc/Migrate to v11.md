@@ -194,7 +194,48 @@ mapboxMap.onCameraChanged
 
 Following these changes, methods `MapboxMap.onEvery`, `MapboxMap.onNext`, `Snapshotter.onEvery`, `Snapshotter.onNext` have been deprecated while methods `MapboxMap.observe` and `Snapshotter.observe` have been removed.
 
-### 2.4 Map Content Gesture System
+### 2.4 New View Annotations API
+
+We introduce support for Dynamic View Annotations that automatically position themselves at any geometry (`Point`, `Polyline`, or `Polygon`). For example, you can visualize ETA labels attached to the route line that is rendered by ``LineLayer``.
+
+To make View Annotations simpler to use, we introduce new ``ViewAnnotation`` object, that helps create an annotation from any UIView:
+
+**v11**
+```swift
+// Create annotation
+let view = CustomView(text: "🏠")
+let annotation = ViewAnnotation(coordinate: coordinate, view: view)
+annotation.allowOverlap = true
+mapView.viewAnnotations.add(annotation)
+
+// Update annotation
+annotation.visible = false
+
+// Remove annotation
+annotation.remove()
+```
+
+The following example uses a dynamic ``ViewAnnotation`` to display route details:
+
+**v11**
+```swift
+let view = ETAView(text: "55 min")
+let annotation = ViewAnnotation(layerId: "route", view: view)
+annotation.variableAnchors = .all // Allow anchor to be displayed in all directions.
+annotation.onAnchorChanged = { config in
+    // Update anchor position.
+    etaView.anchor = config.anchor
+}
+mapView.viewAnnotations.add(annotation)
+
+// When annotation content is changed, call `setNeedsUpdateSize()` for proper positioning.
+view.text = "1h 05min"
+annotation.setNeedsUpdateSize()
+```
+
+The new Dynamic View Annotations are supported in SwiftUI, check out the <doc:SwiftUI-User-Guide#View-Annotations> guide.
+
+### 2.5 Map Content Gesture System
 
 The new API allows you to assign Tap and Long Press gestures handlers to Annotations, Layers, and the Map. The handlers are called according to the rendered layer position starting from the top-most. The map handler is called when neither annotation nor layer handle the gesture.
 
@@ -221,7 +262,7 @@ mapView.gestures.onMapTap.observe { context in
 
 For more details, please read the <doc:Map-Content-Gestures-User-Guide>.
 
-### 2.5 Access Token and Map Options management
+### 2.6 Access Token and Map Options management
 
 The access token for every Mapbox SDK can now be set via single call of `MapboxOptions/accessToken`. By default, Mapbox SDKs will try to initialize it upon framework initialization time from:
 
@@ -256,11 +297,11 @@ To clear the temporary map data, use the ``MapboxMap/clearData(completion:)`` me
 As part of this change `ResourceOptions` and `ResourceOptionsManager` have been removed.
 The TileStore also no longer accepts access token as part of its options.
 
-### 2.6 New 3D Lighting API
+### 2.7 New 3D Lighting API
 
 In v11 we've introduced new experimental lighting APIs to give you control of lighting and shadows in your map when using 3D objects: ``AmbientLight`` and ``DirectionalLight``. We've also added new APIs on ``FillExtrusionLayer`` and ``LineLayer``s to support this 3D lighting styling and enhance your ability to work with 3D model layers. Together, these properties can illuminate your 3D objects such as buildings and terrain to provide a more realistic and immersive map experience for your users. These properties can be set at runtime to follow the time of day, a particular mood, or other lighting goals in your map. Check out our example [here](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/Examples/All%20Examples/Lab/Lights3DExample.swift) for implementation recommendations.
 
-### 2.7 Location API
+### 2.8 Location API
 
 We introduced several changes to the location-related classes and protocols that will make working with location easier.
 
@@ -364,7 +405,7 @@ class Example {
 
 Please check out a more detailed example [here](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/Examples/All%20Examples/Lab/CombineLocationExample.swift).
 
-### 2.8 Camera API
+### 2.9 Camera API
 
 In v11, we have refined the Camera API introduced in v10 to improve developer ergonomics. These changes include several minor updates to usability:
 
@@ -384,7 +425,7 @@ mapView.cameraState.center
 mapView.mapboxMap.cameraState.center
 ```
 
-### 2.9 Tracing
+### 2.10 Tracing
 
 The Maps SDK introduces signpost recording support. Signposts are important instruments for analyzing performance and detecting bottlenecks in your code.
 
@@ -422,13 +463,13 @@ MAPBOX_MAPS_SIGNPOSTS_ENABLED=core,platform
 
 `Tracing.status` API takes precedence over environment variable value. All values are case-insensitive.
 
-### 2.10 Mapbox Maps Recorder
+### 2.11 Mapbox Maps Recorder
 
 ``MapRecorder`` provides an experimental API to record and replay map interaction sessions. Such recordings can be used to debug issues which require multiple steps to reproduce. Usage example can be found [here](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/Examples/All%20Examples/Lab/MapRecorderExample.swift).
 
-### 2.11 Other minor ergonomic improvements
+### 2.12 Other minor ergonomic improvements
 
-#### 2.11.1 MapboxMap
+#### 2.12.1 MapboxMap
 
 We added an experimental `tileCover` method to `MapboxMap` that returns tile Ids covering the map. Use ``TileCoverOptions-swift.struct`` to identify which tile range to return tile Ids for.
 
@@ -437,7 +478,7 @@ let tileCoverOptions = TileCoverOptions(tileSize: 512, minZoom: 4, maxZoom: 8, r
 let tileIds = mapView.mapboxMap.tileCover(for: tileCoverOptions)
 ```
 
-#### 2.11.2 Sources
+#### 2.12.2 Sources
 
 Sources are now required to specify ``Source/id`` upon creation for easier reference later.
 
@@ -473,7 +514,7 @@ poiSource.data = .string(poiGeoJSON)
 mapView.mapboxMap.addSource(poiSource)
 ```
 
-#### 2.11.3
+#### 2.12.3
 
 Most layers (such as ``LineLayer``, ``CircleLayer``, and others) now require the `source` parameter in the initializer. It will make style manipulation code less error-prone.
 
@@ -494,7 +535,7 @@ mapView.mapboxMap.addLayer(lineLayer)
 
 Contrary to that, some layers (such as ``BackgroundLayer``, ``SkyLayer``, and ``LocationIndicatorLayer``) don't need `source`, `sourceLayer`, and `filter` properties. To clean up the code we removed them from those layers and from the ``Layer`` protocol.
 
-#### 2.11.4 Support of GeoJSON partial updates.
+#### 2.12.4 Support of GeoJSON partial updates.
 
 Instead of setting the whole new GeoJSON object anew every time a single feature has changed, now you can apply more granular, partial GeoJSON updates.
 If your features have associated identifiers - you can add, update and remove them on individual basis in your ``GeoJSONSource``.
@@ -506,7 +547,7 @@ try mapView.mapboxMap.updateGeoJSONSourceFeatures(forSourceId: sourceId, feature
 try mapView.mapboxMap.removeGeoJSONSourceFeatures(forSourceId: sourceId, featureIds: featureIds)
 ```
 
-#### 2.11.5 Gestures
+#### 2.12.5 Gestures
 
 ##### Breaking change ⚠️
 
@@ -519,17 +560,17 @@ While maintaing the existing gesture approach we made minor improvements. In v11
 - enable zoom during a drag gesture
 - added a `rotation` case to `GestureType` to be able to detect rotation separately from other gestures.
 
-#### 2.11.6 Expressions
+#### 2.12.6 Expressions
 
 - Introduced `hsl`, `hsla` color expression
 - Introduced `random` expression
 - Introduced `measureLight` expression lights configuration property
 
-#### 2.11.7 Cache Management
+#### 2.12.7 Cache Management
 
 Experimental API `MapboxMap/setMemoryBudget(_:)` was renamed to ``MapboxMap/setTileCacheBudget(_:)`` and promoted to stable.
 
-#### 2.11.8 Puck3D's scaling behavior
+#### 2.12.8 Puck3D's scaling behavior
 
 To further improve the performance of 3D model layer, we have replaced Puck 3D's default `model-scale` expression with a new API ``Puck3DConfiguration/modelScaleMode``. By default this property is ``ModelScaleMode/viewport``, which will keep the 3D model size constant across different zoom levels.
 While this means that Puck 3D's size should render similarly to v10, it does introduces a behavior breaking change - that ``Puck3DConfiguration/modelScale`` needs to be adjusted to correctly render the puck (in testing we found the adjustment to be around 100x of v10 `model-scale` value, but that could vary depending on other properties etc.).

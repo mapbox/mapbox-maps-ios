@@ -149,9 +149,9 @@ public struct Map: UIViewControllerRepresentable {
             deps: mapDependencies,
             layoutDirection: layoutDirection,
             animationData: context.transaction.viewportAnimationData)
+        context.coordinator.layerAnnotation.update(annotations: mapContentVisitor.annotationGroups)
         context.coordinator.viewAnnotation.updateAnnotations(to: mapContentVisitor.visitedViewAnnotations)
         context.coordinator.mapView.location.options = mapContentVisitor.locationOptions
-        context.coordinator.layerAnnotation.update(annotations: mapContentVisitor.annotationGroups)
     }
 }
 
@@ -313,6 +313,14 @@ public extension Map {
 #endif
     func debugOptions(_ debugOptions: MapViewDebugOptions) -> Self {
         copyAssigned(self, \.mapDependencies.debugOptions, debugOptions)
+    }
+
+    /// A Boolean value that indicates whether the underlying `CAMetalLayer` of the `MapView`
+    /// presents its content using a CoreAnimation transaction
+    ///
+    /// See ``MapView/presentsWithTransaction``.
+    func presentsWithTransaction(_ value: Bool) -> Self {
+        copyAssigned(self, \.mapDependencies.presentsWithTransaction, value)
     }
 }
 

@@ -3,7 +3,7 @@ class LayerAnnotationCoordinator {
 
     private struct DisplayedAnnotationGroup {
         var id: AnyHashable
-        var stringId: String = String(UUID().uuidString.prefix(5))
+        var stringId: String
         // Maps stable id to string ID for every annotation
         var idsMap: [AnyHashable: String] = [:]
     }
@@ -28,7 +28,8 @@ class LayerAnnotationCoordinator {
         }
 
         self.annotations = newAnnotations.map { id, group in
-            var displayedGroup = oldIdTable[id] ?? DisplayedAnnotationGroup(id: id)
+            let layerId = group.layerId ?? String(UUID().uuidString.prefix(5))
+            var displayedGroup = oldIdTable[id] ?? DisplayedAnnotationGroup(id: id, stringId: layerId)
             group.update(self.annotationOrchestrator, displayedGroup.stringId, &displayedGroup.idsMap)
             return displayedGroup
         }

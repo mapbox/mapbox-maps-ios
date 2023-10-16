@@ -50,7 +50,7 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     }
 
     func eraseToAny(_ prefixId: [AnyHashable]) -> AnyAnnotationGroup {
-        AnyAnnotationGroup { orchestrator, id, idMap in
+        AnyAnnotationGroup(layerId: layerId) { orchestrator, id, idMap in
             let manager = orchestrator.annotationManagersById[id]
                 as? PolylineAnnotationManager
             ?? orchestrator.makePolylineAnnotationManager(id: id, layerPosition: self.layerPosition)
@@ -177,6 +177,16 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
 #endif
     public func layerPosition(_ newValue: LayerPosition) -> Self {
         with(self, setter(\.layerPosition, newValue))
+    }
+
+    var layerId: String?
+
+    /// Specifies identifier for underlying implementation layer.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func layerId(_ newValue: String) -> Self {
+        with(self, setter(\.layerId, newValue))
     }
 }
 

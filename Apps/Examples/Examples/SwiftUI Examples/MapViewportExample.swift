@@ -12,7 +12,7 @@ struct MapViewportExample: View {
             Puck2D(bearing: .course)
 
             ForEvery(parks.coordinates, id: \.latitude) { coord in
-                MapViewAnnotation(coord) {
+                MapViewAnnotation(coordinate: coord) {
                     Image(systemName: "tree")
                         .foregroundColor(.white)
                         .padding(.all, 5)

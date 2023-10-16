@@ -1,6 +1,7 @@
 import XCTest
 @_spi(Experimental) @testable import MapboxMaps
 
+@available(iOS 13.0, *)
 final class MapContentBuilderTests: XCTestCase {
 
     func testCompositeMapContent() throws {

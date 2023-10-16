@@ -2,15 +2,13 @@ import UIKit
 import SwiftUI
 
 protocol ViewAnnotationsManaging: AnyObject {
-    func add(_ view: UIView, id: String?, options: ViewAnnotationOptions) throws
-    func update(_ view: UIView, options: ViewAnnotationOptions) throws
-    func remove(_ view: UIView)
+    func add(_ annotation: ViewAnnotation)
 }
 
 extension ViewAnnotationManager: ViewAnnotationsManaging {}
 
 @available(iOS 13.0, *)
-class ViewAnnotationCoordinator {
+final class ViewAnnotationCoordinator {
     typealias ViewControllerHandler = (UIViewController) -> Void
 
     let viewAnnotationsManager: ViewAnnotationsManaging
@@ -34,35 +32,32 @@ class ViewAnnotationCoordinator {
 
         let removalIds = oldIds.subtracting(newIds)
         let insertionIds = newIds.subtracting(oldIds)
-        let updateIds = oldIds.intersection(newIds).filter {
-            annotations[$0]?.config != newAnnotations[$0]?.config
-        }
+        let updateIds = oldIds.intersection(newIds)
 
         removalIds.forEach { id in
             guard let displayedViewAnnotation = annotations.removeValue(forKey: id) else { return }
-            displayedViewAnnotation.remove()
-            removeViewController(displayedViewAnnotation.content)
+            displayedViewAnnotation.annotation.remove()
+            removeViewController(displayedViewAnnotation.viewController)
         }
 
         updateIds.forEach { id in
-            guard var displayedAnnotation = annotations[id], let newAnnotationConfig = newAnnotations[id]?.config else { return }
-            displayedAnnotation.update(with: newAnnotationConfig)
-            annotations[id] = displayedAnnotation
+            guard let newAnnotation = newAnnotations[id] else { return }
+            annotations[id]?.update(with: newAnnotation)
         }
 
         insertionIds.forEach { id in
             guard let newAnnotation = newAnnotations[id] else { return }
 
-            let annotationToDisplay = DisplayedViewAnnotation(from: newAnnotation, manager: viewAnnotationsManager)
-            annotationToDisplay.add()
-            addViewController(annotationToDisplay.content)
+            let annotationToDisplay = DisplayedViewAnnotation(from: newAnnotation)
+            viewAnnotationsManager.add(annotationToDisplay.annotation)
+            addViewController(annotationToDisplay.viewController)
             annotations[id] = annotationToDisplay
         }
     }
 
     deinit {
-        for (_, displayedViewAnnotation) in annotations {
-            displayedViewAnnotation.remove()
+        for annotation in annotations.values {
+            annotation.annotation.remove()
         }
         annotations = [:]
     }
@@ -70,48 +65,41 @@ class ViewAnnotationCoordinator {
 
 @available(iOS 13.0, *)
 private struct DisplayedViewAnnotation {
-    let content: UIViewController
-    private(set) var config: ViewAnnotationConfig
-    private let manager: ViewAnnotationsManaging
+    let viewController: UIViewController
+    let annotation: ViewAnnotation
+    let _update: (AnyView) -> Void
 
-    private var annotationOptions: ViewAnnotationOptions {
-        ViewAnnotationOptions(
-            annotatedFeature: config.annotatedFeature,
-            allowOverlap: config.allowOverlap,
-            visible: config.visible,
-            selected: config.selected,
-            variableAnchors: config.variableAnchors)
-    }
+    init(from viewAnnotation: MapViewAnnotation) {
+        weak var annotation: ViewAnnotation?
 
-    init(from viewAnnotation: MapViewAnnotation, manager: ViewAnnotationsManaging) {
-        self.manager = manager
-        self.config = viewAnnotation.config
-
-        weak var contentView: UIView?
-        self.content = viewAnnotation.makeViewController { [weak manager] size in
-            guard let contentView, let manager else { return }
-            wrapAssignError {
-                try manager.update(contentView, options: ViewAnnotationOptions(width: size.width, height: size.height))
+        let wrapContent = { (content: AnyView) in
+            content.fixedSize().onChangeOfSize { _ in
+                annotation?.setNeedsUpdateSize()
             }
         }
-        content.view.backgroundColor = .clear
-        contentView = content.view
-    }
 
-    func add() {
-        wrapAssignError {
-            try manager.add(content.view, id: UUID().uuidString, options: annotationOptions)
+        let vc = UIHostingController(rootView: wrapContent(viewAnnotation.content))
+        self.viewController = vc
+        self._update = { content in
+            vc.rootView = wrapContent(content)
         }
+
+        self.annotation = ViewAnnotation(annotatedFeature: viewAnnotation.annotatedFeature, view: vc.view)
+        annotation = self.annotation
+        update(with: viewAnnotation)
+
+        vc.view.backgroundColor = .clear
     }
 
-    func remove() {
-        manager.remove(content.view)
-    }
-
-    mutating func update(with newAnnotationOptions: ViewAnnotationConfig) {
-        config = newAnnotationOptions
-        wrapAssignError {
-            try manager.update(content.view, options: annotationOptions)
-        }
+    func update(with viewAnnotation: MapViewAnnotation) {
+        annotation.annotatedFeature = viewAnnotation.annotatedFeature
+        annotation.allowOverlap = viewAnnotation.allowOverlap
+        annotation.visible = viewAnnotation.visible
+        annotation.selected = viewAnnotation.selected
+        annotation.variableAnchors = viewAnnotation.variableAnchors
+        annotation.onAnchorChanged = viewAnnotation.actions.anchor
+        annotation.onVisibilityChanged = viewAnnotation.actions.visibility
+        annotation.onAnchorCoordinateChanged = viewAnnotation.actions.anchorCoordinate
+        _update(viewAnnotation.content)
     }
 }

@@ -245,10 +245,7 @@ private final class Route {
         let etaView = ETAView(text: time)
         self.etaView = etaView
 
-        let etaAnnotation = ViewAnnotation(
-            annotatedFeature: .layerFeature(layerId: layerId, featureId: name),
-            view: etaView
-        )
+        let etaAnnotation = ViewAnnotation(layerId: layerId, view: etaView)
         etaAnnotation.onAnchorChanged = { config in
             etaView.anchor = config.anchor
         }
@@ -469,33 +466,6 @@ final class ETAView: UIView {
         Layout(availableSize: size, text: attributedText, showIcon: hint != nil, tailSize: tailSize, padding: padding).size
     }
 
-    private func calcTail(size: CGSize) -> [CGPoint] {
-        let p = tailSize
-        let h = size.height
-        let w = size.width
-        let r = cornerRadius
-        switch anchor {
-        case .topLeft:
-            return [CGPoint(x: 0, y: 0), CGPoint(x: (p + r), y: p), CGPoint(x: p, y: (p + r))]
-        case .top:
-            return [CGPoint(x: w / 2, y: 0), CGPoint(x: w / 2 - p, y: p), CGPoint(x: w / 2 + p, y: p)]
-        case .topRight:
-            return [CGPoint(x: w, y: 0), CGPoint(x: w - p, y: (p + r)), CGPoint(x: w - 3 * p, y: p)]
-        case .bottomLeft:
-            return [CGPoint(x: 0, y: h), CGPoint(x: p, y: h - (p + r)), CGPoint(x: (p + r), y: h - p)]
-        case .bottom:
-            return [CGPoint(x: w / 2, y: h), CGPoint(x: w / 2 - p, y: h - p), CGPoint(x: w / 2 + p, y: h - p)]
-        case .bottomRight:
-            return [CGPoint(x: w, y: h), CGPoint(x: w - (p + r), y: h - p), CGPoint(x: w - p, y: h - (p + r))]
-        case .left:
-            return [CGPoint(x: 0, y: h / 2), CGPoint(x: p, y: h / 2 - p), CGPoint(x: p, y: h / 2 + p)]
-        case .right:
-            return [CGPoint(x: w, y: h / 2), CGPoint(x: w - p, y: h / 2 - p), CGPoint(x: w - p, y: h / 2 + p)]
-        default: return []
-
-        }
-    }
-
     override func layoutSubviews() {
         super.layoutSubviews()
 
@@ -503,22 +473,8 @@ final class ETAView: UIView {
         label.frame = layout.label
         iconView.frame = layout.icon
 
-        let path = UIBezierPath(roundedRect: layout.bubble,
-                                cornerRadius: 8.0)
-        let tilePath = UIBezierPath()
-
-        let tilePoints = calcTail(size: layout.size)
-        for (i, point) in tilePoints.enumerated() {
-            if i == 0 {
-                tilePath.move(to: point)
-            } else {
-                tilePath.addLine(to: point)
-            }
-        }
-        tilePath.close()
-
-        path.append(tilePath)
-        backgroundShape.path = path.cgPath
+        let calloutPath = UIBezierPath.calloutPath(size: bounds.size, tailSize: tailSize, cornerRadius: cornerRadius, anchor: anchor ?? .center)
+        backgroundShape.path = calloutPath.cgPath
         backgroundShape.frame = bounds
     }
 }

@@ -15,11 +15,18 @@ public struct AnnotatedFeature: Equatable {
     public var layerFeature: LayerFeature?
 
     /// Creates Annotated feature from layer feature.
+    /// 
+    /// - Parameters:
+    ///   - layerId: Layer identifier which renders the feature.
+    ///   - featureId: Feature identifier. If not specified, the annotation will appear on any feature from that layer.
     public static func layerFeature(layerId: String, featureId: String? = nil) -> AnnotatedFeature {
         return .init(layerFeature: .init(layerId: layerId, featureId: featureId))
     }
 
     /// Creates Annotated feature from GeoJSON geometry.
+    ///
+    /// - Parameters:
+    ///  - geometry: A geometry-convertible object, such as `Point`, `LineString` and others.
     public static func geometry(_ geometry: GeometryConvertible) -> AnnotatedFeature {
         return .init(geometry: geometry.geometry)
     }

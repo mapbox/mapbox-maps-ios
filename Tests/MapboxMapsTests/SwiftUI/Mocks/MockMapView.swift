@@ -26,6 +26,7 @@ struct MockMapView {
             viewportManager: viewportManager,
             ornaments: ornaments,
             debugOptions: [],
+            presentsWithTransaction: false,
             makeViewportTransition: makeViewportTransitionStub.call(with:),
             makeViewportState: { [makeViewportStateStub] viewport, layoutDirection in
                 makeViewportStateStub.call(with: MakeViewportParameters(viewport: viewport, layoutDirection: layoutDirection))

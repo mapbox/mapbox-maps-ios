@@ -22,7 +22,7 @@ struct WeatherAnnotationExample: View {
     var body: some View {
         Map(viewport: $viewport) {
             ForEvery(weatherData) { data in
-                MapViewAnnotation(data.coordinate) {
+                MapViewAnnotation(coordinate: data.coordinate) {
                     WeatherIconView(data: data, selectedData: $selectedData)
                 }
             }

@@ -11,6 +11,8 @@ struct MapViewFacade {
     var ornaments: OrnamentsManaging
     @MutableRef
     var debugOptions: MapViewDebugOptions
+    @MutableRef
+    var presentsWithTransaction: Bool
 
     var makeViewportTransition: (ViewportAnimation) -> ViewportTransition
     var makeViewportState: (Viewport, LayoutDirection) -> ViewportState?
@@ -25,6 +27,7 @@ extension MapViewFacade {
         viewportManager = mapView.viewport
         ornaments = mapView.ornaments
         _debugOptions = MutableRef(root: mapView, keyPath: \.debugOptions)
+        _presentsWithTransaction = MutableRef(root: mapView, keyPath: \.presentsWithTransaction)
 
         makeViewportTransition = { animation in
             animation.makeViewportTransition(mapView)

@@ -139,6 +139,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.examples
+        SWIFT_OBJC_BRIDGING_HEADER: mapbox-maps-ios/Apps/Examples/Examples/Examples-Bridging-Header.h
+
     scheme:
       testTargets:
         - MapboxMapsTests

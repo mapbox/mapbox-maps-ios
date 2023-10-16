@@ -71,6 +71,7 @@
 		7412CF6827E9A8D600F03B1C /* UIColor+Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF6727E9A8D600F03B1C /* UIColor+Random.swift */; };
 		7412CF6C27E9D48700F03B1C /* AddMarkersSymbolExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7412CF6B27E9D48700F03B1C /* AddMarkersSymbolExample.swift */; };
 		7471A4E128D0CEA400C7DFE5 /* LargeGeoJSONExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7471A4E028D0CEA400C7DFE5 /* LargeGeoJSONExample.swift */; };
+		7473AE432AD7C5BB0069557D /* CustomLayerExampleShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 7473AE412AD7C5BB0069557D /* CustomLayerExampleShaders.metal */; };
 		74797C1A28F5B72F0008BBB9 /* ViewAnnotationAnimationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74797C1928F5B72F0008BBB9 /* ViewAnnotationAnimationExample.swift */; };
 		74797C1C28F5BA760008BBB9 /* sf_airport_route.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 74797C1B28F5B7F90008BBB9 /* sf_airport_route.geojson */; };
 		74A2313127EB306F0065FB7D /* Array+Split.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A2313027EB306F0065FB7D /* Array+Split.swift */; };
@@ -261,6 +262,9 @@
 		7412CF6727E9A8D600F03B1C /* UIColor+Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Random.swift"; sourceTree = "<group>"; };
 		7412CF6B27E9D48700F03B1C /* AddMarkersSymbolExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMarkersSymbolExample.swift; sourceTree = "<group>"; };
 		7471A4E028D0CEA400C7DFE5 /* LargeGeoJSONExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeGeoJSONExample.swift; sourceTree = "<group>"; };
+		7473AE412AD7C5BB0069557D /* CustomLayerExampleShaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = CustomLayerExampleShaders.metal; sourceTree = "<group>"; };
+		7473AE422AD7C5BB0069557D /* CustomLayerShaderTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomLayerShaderTypes.h; sourceTree = "<group>"; };
+		7473AE442AD7C5FA0069557D /* Examples-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Examples-Bridging-Header.h"; sourceTree = "<group>"; };
 		74797C1928F5B72F0008BBB9 /* ViewAnnotationAnimationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAnnotationAnimationExample.swift; sourceTree = "<group>"; };
 		74797C1B28F5B7F90008BBB9 /* sf_airport_route.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = sf_airport_route.geojson; sourceTree = "<group>"; };
 		74A2313027EB306F0065FB7D /* Array+Split.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Split.swift"; sourceTree = "<group>"; };
@@ -485,6 +489,7 @@
 				077C4EFB252F7E89007636F1 /* Info.plist */,
 				FE355DAD2A275377003AC5DF /* Examples_CarPlay.entitlements */,
 				58882E5C26962A7200E5C1C6 /* StoryboardMapViewExample.storyboard */,
+				7473AE442AD7C5FA0069557D /* Examples-Bridging-Header.h */,
 			);
 			path = Examples;
 			sourceTree = "<group>";
@@ -513,6 +518,8 @@
 		07B071D12547CF50007F2865 /* Sample Data */ = {
 			isa = PBXGroup;
 			children = (
+				7473AE412AD7C5BB0069557D /* CustomLayerExampleShaders.metal */,
+				7473AE422AD7C5BB0069557D /* CustomLayerShaderTypes.h */,
 				73620A0A2A71CD7A00FCC771 /* fragment-realestate-NY.json */,
 				3A3AF0022836499F0036F483 /* route.geojson */,
 				17B4805B26851C0600CF0D5E /* Radar */,
@@ -867,6 +874,7 @@
 				CADCF7272584990E0065C51B /* FitCameraToGeometryExample.swift in Sources */,
 				B5327EC3260277AC0095B6BD /* ExampleProtocol.swift in Sources */,
 				7412CF6427E8EA2A00F03B1C /* CircleAnnotationExample.swift in Sources */,
+				7473AE432AD7C5BB0069557D /* CustomLayerExampleShaders.metal in Sources */,
 				9501A5A42A38830B00F2AF92 /* ViewExtensions.swift in Sources */,
 				7471A4E128D0CEA400C7DFE5 /* LargeGeoJSONExample.swift in Sources */,
 				58A28B602869F728006F7D93 /* SpinningGlobeExample.swift in Sources */,
@@ -1143,6 +1151,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.examples;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "Examples/Examples-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_WORKSPACE = YES;
@@ -1170,6 +1179,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.examples;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "Examples/Examples-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_WORKSPACE = YES;

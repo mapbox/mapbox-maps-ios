@@ -27,6 +27,7 @@ settings:
   base:
     DEVELOPMENT_TEAM: GJZR2MEM28
     TARGETED_DEVICE_FAMILY: 1,2
+    MAPBOXMAPS_PATH: .
 targets:
   MapboxMaps:
     type: framework
@@ -139,7 +140,7 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.examples
-        SWIFT_OBJC_BRIDGING_HEADER: mapbox-maps-ios/Apps/Examples/Examples/Examples-Bridging-Header.h
+        SWIFT_OBJC_BRIDGING_HEADER: $(MAPBOXMAPS_PATH)/Apps/Examples/Examples/Examples-Bridging-Header.h
 
     scheme:
       testTargets:

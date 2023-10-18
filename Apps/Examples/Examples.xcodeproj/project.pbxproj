@@ -38,6 +38,7 @@
 		3A347BAE2A9F676300EF9B39 /* WeatherAnnotationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A347BAD2A9F676300EF9B39 /* WeatherAnnotationExample.swift */; };
 		3A3AF0032836499F0036F483 /* route.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 3A3AF0022836499F0036F483 /* route.geojson */; };
 		3A44669E28F6EA1600664AF5 /* FrameViewAnnotationsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A44669D28F6EA1600664AF5 /* FrameViewAnnotationsExample.swift */; };
+		3A44F3662ACAE83900A592D5 /* CustomRasterSourceExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A44F3652ACAE83900A592D5 /* CustomRasterSourceExample.swift */; };
 		3A7432EF27F3096100E06485 /* DebugMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7432EE27F3096100E06485 /* DebugMapExample.swift */; };
 		3A7CE986282511C900C3A0B8 /* NavigationSimulatorExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CE985282511C900C3A0B8 /* NavigationSimulatorExample.swift */; };
 		3A7CE98B282AB0DE00C3A0B8 /* NavigationSimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CE98A282AB0DE00C3A0B8 /* NavigationSimulator.swift */; };
@@ -230,6 +231,7 @@
 		3A347BAD2A9F676300EF9B39 /* WeatherAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherAnnotationExample.swift; sourceTree = "<group>"; };
 		3A3AF0022836499F0036F483 /* route.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = route.geojson; sourceTree = "<group>"; };
 		3A44669D28F6EA1600664AF5 /* FrameViewAnnotationsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameViewAnnotationsExample.swift; sourceTree = "<group>"; };
+		3A44F3652ACAE83900A592D5 /* CustomRasterSourceExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomRasterSourceExample.swift; sourceTree = "<group>"; };
 		3A7432EE27F3096100E06485 /* DebugMapExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugMapExample.swift; sourceTree = "<group>"; };
 		3A7CE985282511C900C3A0B8 /* NavigationSimulatorExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSimulatorExample.swift; sourceTree = "<group>"; };
 		3A7CE98A282AB0DE00C3A0B8 /* NavigationSimulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSimulator.swift; sourceTree = "<group>"; };
@@ -389,6 +391,7 @@
 		0746C182252FB0F4001638BD /* All Examples */ = {
 			isa = PBXGroup;
 			children = (
+				3A44F3652ACAE83900A592D5 /* CustomRasterSourceExample.swift */,
 				FE355DB02A276C1F003AC5DF /* CarPlay */,
 				B58E470827BABE0E00D87FD6 /* AdvancedViewportGesturesExample.swift */,
 				58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */,
@@ -953,6 +956,7 @@
 				B5327EBF260277930095B6BD /* Example.swift in Sources */,
 				CADCF736258499170065C51B /* ExampleTableViewController.swift in Sources */,
 				17B4805A2684FB2300CF0D5E /* AnimateImageLayerExample.swift in Sources */,
+				3A44F3662ACAE83900A592D5 /* CustomRasterSourceExample.swift in Sources */,
 				B57E1BAE27B5B6B900E8E3BA /* ViewportExample.swift in Sources */,
 				74F04A772A7A358A00C051BC /* Lights3DExample.swift in Sources */,
 				A4211CE62592549900D215B4 /* RestrictCoordinateBoundsExample.swift in Sources */,

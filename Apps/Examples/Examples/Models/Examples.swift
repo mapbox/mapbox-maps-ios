@@ -338,7 +338,11 @@ struct Examples {
         Example(title: "Join data to vector geometry",
                 description: "Join local JSON data with vector tile geometries.",
                 type: DataJoinExample.self),
-        Example(title: "Use a distance expression", description: "Use a distance style expression to show features within a specific radius.", type: DistanceExpressionExample.self)
+        Example(title: "Use a distance expression", description: "Use a distance style expression to show features within a specific radius.", type: DistanceExpressionExample.self),
+        Example(
+            title: "Add custom raster source",
+            description: "Load a custom raster source to Style and display it on a map as animated weather data using RasterLayer",
+            type: CustomRasterSourceExample.self),
     ]
 
     // Examples that show use cases related to user interaction with the map.

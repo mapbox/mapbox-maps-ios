@@ -539,6 +539,39 @@ public final class MapboxMap: StyleManager {
                 box: ScreenBox(rect)))
     }
 
+    /// Convenience method that returns the `camera options` object for given parameters.
+    ///
+    /// - Parameters:
+    ///   - coordinates: The `coordinates` representing the bounds of the camera.
+    ///   - camera: The `camera options` which will be applied before calculating the camera for the coordinates.
+    ///   If any of the fields in camera options is not provided then the current value from the map for that field will be used.
+    ///   - coordinatesPadding: The amount of padding in screen points to add to the given `coordinates`.
+    ///   This padding is not applied to the map but to the coordinates provided. If you want to apply padding to the map use `camera` parameter.
+    ///   - maxZoom: The maximum zoom level allowed in the returned camera options.
+    ///   - offset: The center of the given bounds relative to map center in screen points.
+    /// - Returns: A `CameraOptions` object representing the provided parameters. Padding is absent in the returned `camera options` as the zoom level already accounts for the padding.
+    public func camera(for coordinates: [CLLocationCoordinate2D],
+                       camera: CameraOptions,
+                       padding: UIEdgeInsets?,
+                       maxZoom: Float,
+                       offset: CGPoint) throws -> CameraOptions {
+        let expected = __map.cameraForCoordinates(
+            for: coordinates.map { Coordinate2D(value: $0) },
+            camera: MapboxCoreMaps.CameraOptions(camera),
+            coordinatesPadding: padding?.toMBXEdgeInsetsValue(),
+            maxZoom: NSNumber(value: maxZoom),
+            offset: offset.screenCoordinate
+        )
+
+        if expected.isError(), let reason = expected.error {
+            throw MapError(coreError: reason)
+        }
+        guard let options = expected.value else {
+            throw MapError(coreError: "Failed to unwrap CameraOptions")
+        }
+        return CameraOptions(options)
+    }
+
     /// Calculates a `CameraOptions` to fit a geometry
     ///
     /// This API isn't supported by Globe projection.

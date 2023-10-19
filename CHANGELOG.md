@@ -17,6 +17,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Add new `ViewAnnotation` class to manage view annotations. The `ViewAnnotation` is a simple to use replacement of the old `ViewAnnotationOptions`. It automatically updates size and other properties of annotations, and provides new features:
   - Automatic anchor position from specified configurations.
   - Supports displaying not only at point features, but also at lines and polygons.
+  - Add `MapboxMaps.camera(for:camera:padding:maxZoom:offset)`.
 
 ## 11.0.0-beta.5 - 9 October, 2023
 

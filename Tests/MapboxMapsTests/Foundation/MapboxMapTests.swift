@@ -177,6 +177,38 @@ final class MapboxMapTests: XCTestCase {
         XCTAssertEqual(camera.pitch, 65)
     }
 
+    func testCameraForCoordinates() throws {
+        // A 1:1 square
+        let southwest = CLLocationCoordinate2DMake(0, 0)
+        let northwest = CLLocationCoordinate2DMake(4, 0)
+        let northeast = CLLocationCoordinate2DMake(4, 4)
+        let southeast = CLLocationCoordinate2DMake(0, 4)
+        let latitudeDelta =  northeast.latitude - southeast.latitude
+        let longitudeDelta = southeast.longitude - southwest.longitude
+
+        let expectedCenter = CLLocationCoordinate2DMake(northeast.latitude - (latitudeDelta / 2),
+                                                        southeast.longitude - (longitudeDelta / 2))
+
+        let camera = try mapboxMap.camera(
+            for: [
+                southwest,
+                northwest,
+                northeast,
+                southeast
+            ],
+            camera: CameraOptions(),
+            padding: nil,
+            maxZoom: 100,
+            offset: .zero
+        )
+
+        XCTAssertEqual(expectedCenter.latitude, camera.center!.latitude, accuracy: 0.25)
+        XCTAssertEqual(expectedCenter.longitude, camera.center!.longitude, accuracy: 0.25)
+        XCTAssertEqual(camera.bearing, 0)
+        XCTAssertNil(camera.padding)
+        XCTAssertEqual(camera.pitch, 0)
+    }
+
     func testCameraForGeometry() {
         // A 1:1 square
         let southwest = CLLocationCoordinate2DMake(0, 0)

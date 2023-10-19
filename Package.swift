@@ -3,6 +3,7 @@
 
 import PackageDescription
 
+let commonVersion = "24.0.0-beta.6"
 let coreVersion = "11.0.0-beta.6"
 let coreChecksum = "d378a8264840341b768a08f16175288dcb04b89bfe310dab2550971ba59fad95"
 
@@ -20,7 +21,7 @@ let package = Package(
             targets: ["MapboxMaps"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/mapbox/mapbox-common-ios.git", exact: "24.0.0-beta.6"),
+        .package(url: "https://github.com/mapbox/mapbox-common-ios.git", exact: Version(stringLiteral: commonVersion)),
         .package(url: "https://github.com/mapbox/turf-swift.git", exact: "2.7.0"),
     ],
     targets: [

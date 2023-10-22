@@ -72,6 +72,26 @@ public struct Viewport: Equatable {
     @_documentation(visibility: public)
 #endif
         public var pitch: CGFloat
+
+        /// Extra padding that is added for the geometry during bounding box calculation.
+        ///
+        /// Note: This different to inset ``Viewport/insetOptions-swift.property``.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+        public var coordinatesPadding: SwiftUI.EdgeInsets
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+        /// The maximum zoom level to allow.
+        public var maxZoom: Double?
+
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+        /// The center of the given bounds relative to the map's center, measured in points.
+        public var offset: CGPoint?
     }
 
     /// Options for the follow puck viewport.
@@ -179,6 +199,9 @@ public struct Viewport: Equatable {
     ///   - geometry: Geometry to show.
     ///   - bearing: The bearing of the map, measured in degrees clockwise from true north.
     ///   - pitch: Pitch toward the horizon measured in degrees, with 0 degrees resulting in a top-down view for a two-dimensional map.
+    ///   - coordinatesPadding: Extra padding to add to geometry coordinates.
+    ///   - maxZoom: The maximum zoom level to allow.
+    ///   - offset: The center of the given bounds relative to the map's center, measured in points.
     /// - Returns: A viewport configured with given overview settings.
 #if swift(>=5.8)
     @_documentation(visibility: public)
@@ -186,9 +209,18 @@ public struct Viewport: Equatable {
     public static func overview(
         geometry: GeometryConvertible,
         bearing: CGFloat = 0,
-        pitch: CGFloat = 0
+        pitch: CGFloat = 0,
+        coordinatesPadding: SwiftUI.EdgeInsets = .init(),
+        maxZoom: Double? = nil,
+        offset: CGPoint? = nil
     ) -> Viewport {
-        let options = OverviewOptions(geometry: geometry.geometry, bearing: bearing, pitch: pitch)
+        let options = OverviewOptions(
+            geometry: geometry.geometry,
+            bearing: bearing,
+            pitch: pitch,
+            coordinatesPadding: coordinatesPadding,
+            maxZoom: maxZoom,
+            offset: offset)
         return Viewport(storage: .overview(options))
     }
 
@@ -324,29 +356,33 @@ public struct Viewport: Equatable {
 extension Viewport {
     func makeState(with mapView: MapView, layoutDirection: LayoutDirection) -> ViewportState? {
         // TODO: mapView's safeAreaInsets don't reflect the real safe area added by SwiftUI views (such as toolbars).
-        let padding = padding(with: layoutDirection, safeAreaInsets: mapView.safeAreaInsets)
+        let insets = padding(with: layoutDirection, safeAreaInsets: mapView.safeAreaInsets)
         switch storage {
         case .idle:
             return nil
         case .camera(var cameraOptions):
-            cameraOptions.padding = padding
+            cameraOptions.padding = insets
             return CameraViewportState(cameraOptions: cameraOptions)
         case .overview(let options):
+            let coordinatesPadding = UIEdgeInsets(insets: options.coordinatesPadding, layoutDirection: layoutDirection)
             let options = OverviewViewportStateOptions(
                 geometry: options.geometry,
-                padding: padding,
+                coordinatesPadding: coordinatesPadding,
                 bearing: options.bearing,
                 pitch: options.pitch,
+                padding: insets,
+                maxZoom: options.maxZoom,
+                offset: options.offset,
                 animationDuration: 0)
             return mapView.viewport.makeOverviewViewportState(options: options)
         case .styleDefault:
             return DefaultStyleViewportState(
                 mapboxMap: mapView.mapboxMap,
                 styleManager: mapView.mapboxMap,
-                padding: padding)
+                padding: insets)
         case .followPuck(let options):
             let options = FollowPuckViewportStateOptions(
-                padding: padding,
+                padding: insets,
                 zoom: options.zoom,
                 bearing: options.bearing,
                 pitch: options.pitch)

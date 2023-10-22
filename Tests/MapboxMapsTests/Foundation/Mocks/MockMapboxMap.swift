@@ -122,24 +122,6 @@ final class MockMapboxMap: MapboxMapProtocol {
         pointIsAboveHorizonStub.call(with: point)
     }
 
-    struct CameraForGeometryParams {
-        var geometry: Geometry
-        var padding: UIEdgeInsets
-        var bearing: CGFloat?
-        var pitch: CGFloat?
-    }
-    let cameraForGeometryStub = Stub<CameraForGeometryParams, MapboxMaps.CameraOptions>(defaultReturnValue: .random())
-    func camera(for geometry: Geometry,
-                padding: UIEdgeInsets,
-                bearing: CGFloat?,
-                pitch: CGFloat?) -> MapboxMaps.CameraOptions {
-        cameraForGeometryStub.call(with: .init(
-            geometry: geometry,
-            padding: padding,
-            bearing: bearing,
-            pitch: pitch))
-    }
-
     struct CameraForCoordinateBoundsParams {
         var coordinateBounds: CoordinateBounds
         var padding: UIEdgeInsets
@@ -152,6 +134,22 @@ final class MockMapboxMap: MapboxMapProtocol {
     // swiftlint:disable:next function_parameter_count
     func camera(for coordinateBounds: CoordinateBounds, padding: UIEdgeInsets, bearing: Double?, pitch: Double?, maxZoom: Double?, offset: CGPoint?) -> MapboxMaps.CameraOptions {
         cameraForCoordinateBoundsStub.call(with: .init(coordinateBounds: coordinateBounds, padding: padding, bearing: bearing, pitch: pitch, maxZoom: maxZoom, offset: offset))
+    }
+
+    struct CameraForCoordinatesParams {
+        var coordinates: [CLLocationCoordinate2D]
+        var camera: MapboxMaps.CameraOptions
+        var coordinatesPadding: UIEdgeInsets?
+        var maxZoom: Double?
+        var offset: CGPoint?
+    }
+    let cameraForCoordinatesStub = Stub<CameraForCoordinatesParams, MapboxMaps.CameraOptions>(defaultReturnValue: .random())
+    func camera(for coordinates: [CLLocationCoordinate2D],
+                camera: MapboxMaps.CameraOptions,
+                coordinatesPadding: UIEdgeInsets?,
+                maxZoom: Double?,
+                offset: CGPoint?) throws -> MapboxMaps.CameraOptions {
+        return cameraForCoordinatesStub.call(with: .init(coordinates: coordinates, camera: camera, coordinatesPadding: coordinatesPadding, maxZoom: maxZoom, offset: offset))
     }
 
     let pointStub = Stub<CLLocationCoordinate2D, CGPoint>(defaultReturnValue: .random())

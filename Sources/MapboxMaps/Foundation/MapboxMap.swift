@@ -29,7 +29,6 @@ protocol MapboxMapProtocol: AnyObject {
     func removeViewAnnotation(withId id: String) throws
     func options(forViewAnnotationWithId id: String) throws -> ViewAnnotationOptions
     func pointIsAboveHorizon(_ point: CGPoint) -> Bool
-    func camera(for geometry: Geometry, padding: UIEdgeInsets, bearing: CGFloat?, pitch: CGFloat?) -> CameraOptions
     // swiftlint:disable:next function_parameter_count
     func camera(for coordinateBounds: CoordinateBounds,
                 padding: UIEdgeInsets,
@@ -37,6 +36,11 @@ protocol MapboxMapProtocol: AnyObject {
                 pitch: Double?,
                 maxZoom: Double?,
                 offset: CGPoint?) -> CameraOptions
+    func camera(for coordinates: [CLLocationCoordinate2D],
+                camera: CameraOptions,
+                coordinatesPadding: UIEdgeInsets?,
+                maxZoom: Double?,
+                offset: CGPoint?) throws -> CameraOptions
     func coordinate(for point: CGPoint) -> CLLocationCoordinate2D
     func point(for coordinate: CLLocationCoordinate2D) -> CGPoint
 
@@ -552,15 +556,15 @@ public final class MapboxMap: StyleManager {
     /// - Returns: A `CameraOptions` object representing the provided parameters. Padding is absent in the returned `camera options` as the zoom level already accounts for the padding.
     public func camera(for coordinates: [CLLocationCoordinate2D],
                        camera: CameraOptions,
-                       padding: UIEdgeInsets?,
-                       maxZoom: Float,
-                       offset: CGPoint) throws -> CameraOptions {
+                       coordinatesPadding: UIEdgeInsets?,
+                       maxZoom: Double?,
+                       offset: CGPoint?) throws -> CameraOptions {
         let expected = __map.cameraForCoordinates(
             for: coordinates.map { Coordinate2D(value: $0) },
             camera: MapboxCoreMaps.CameraOptions(camera),
-            coordinatesPadding: padding?.toMBXEdgeInsetsValue(),
-            maxZoom: NSNumber(value: maxZoom),
-            offset: offset.screenCoordinate
+            coordinatesPadding: coordinatesPadding?.toMBXEdgeInsetsValue(),
+            maxZoom: maxZoom as? NSNumber,
+            offset: offset?.screenCoordinate
         )
 
         if expected.isError(), let reason = expected.error {

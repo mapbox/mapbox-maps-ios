@@ -197,7 +197,7 @@ final class MapboxMapTests: XCTestCase {
                 southeast
             ],
             camera: CameraOptions(),
-            padding: nil,
+            coordinatesPadding: nil,
             maxZoom: 100,
             offset: .zero
         )

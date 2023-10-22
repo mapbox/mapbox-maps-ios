@@ -30,7 +30,7 @@ struct MapViewportExample: View {
                 .fillOutlineColor(StyleColor(.black))
         }
         .mapStyle(mapStyle)
-        .debugOptions(.camera)
+        .debugOptions([.camera, .padding])
         .ignoresSafeArea()
         .safeOverlay(alignment: .bottomLeading) {
             Text("viewport: \(viewportShortDescription)")
@@ -100,10 +100,11 @@ private struct ViewportMenu: View {
                 viewport = .camera(center: CLLocationCoordinate2D(latitude: 41.8915, longitude:  -87.6087), zoom: 16.52, bearing: 290, pitch: 68.5)
             }
             Button(".overview(.multiPoint())") {
-                viewport = .overview(geometry: parks).inset(edges: .all, length: 40)
+                viewport = viewport(for: parks, coordinatePadding: 20)
             }
             Button(".overview(.polygon())") {
-                viewport = .overview(geometry: maineBoundaries).inset(edges: .all, length: 20)
+                viewport = viewport(for: maineBoundaries, coordinatePadding: 10)
+                    .inset(edges: .all, length: 10)
             }
             Button(".followPuck(bearing: .course)") {
                 viewport = .followPuck(zoom: 13, bearing: .course, pitch: 55)
@@ -126,13 +127,14 @@ private struct ViewportMenu: View {
                 }
                 Button("[fly] .overview(.multiPoint())") {
                     withViewportAnimation(.fly(duration: 1)) {
-                        viewport = .overview(geometry: parks).inset(edges: .all, length: 40)
+                        viewport = viewport(for: parks, coordinatePadding: 20)
                     }
 
                 }
                 Button("[fly] .overview(.polygon())") {
                     withViewportAnimation(.fly(duration: 1)) {
-                        viewport = .overview(geometry: maineBoundaries).inset(edges: .all, length: 20)
+                        viewport = viewport(for: maineBoundaries, coordinatePadding: 10)
+                            .inset(edges: .all, length: 10)
                     }
                 }
                 Button("[default] .followPuck(bearing: .heading)") {
@@ -150,6 +152,15 @@ private struct ViewportMenu: View {
         } label: {
             Text("Set viewport")
         }
+    }
+
+    private func viewport(for geometry: GeometryConvertible, coordinatePadding: CGFloat) -> Viewport {
+        let padding = EdgeInsets(
+            top: coordinatePadding,
+            leading: coordinatePadding,
+            bottom: coordinatePadding,
+            trailing: coordinatePadding)
+        return .overview(geometry: geometry, coordinatesPadding: padding)
     }
 }
 

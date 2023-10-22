@@ -65,6 +65,7 @@ final class DynamicViewAnnotationExample: UIViewController, ExampleProtocol {
             ]),
             headingProvider: Signal(just: Heading(direction: 180, accuracy: 0)))
         mapView.location.options = LocationOptions(puckType: .puck2D(.init(topImage: UIImage(named: "user_puck_icon"))))
+        mapView.debugOptions = .padding
 
         mapView.mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }
@@ -141,7 +142,9 @@ final class DynamicViewAnnotationExample: UIViewController, ExampleProtocol {
             viewportState = mapView.viewport.makeFollowPuckViewportState(options: .init(padding: padding, zoom: 17, bearing: .course, pitch: 49))
         } else {
             if let route = routes.first(where: \.selected), let geometry = route.feature.geometry {
-                viewportState = mapView.viewport.makeOverviewViewportState(options: OverviewViewportStateOptions(geometry: geometry, padding: padding))
+                let coordPadding = UIEdgeInsets(allEdges: 20)
+                let options = OverviewViewportStateOptions(geometry: geometry, coordinatesPadding: coordPadding, padding: padding)
+                viewportState = mapView.viewport.makeOverviewViewportState(options: options)
             }
         }
 

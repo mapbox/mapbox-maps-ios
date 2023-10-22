@@ -11,7 +11,7 @@ final class OverviewViewportStateOptionsTests: XCTestCase {
         let options = OverviewViewportStateOptions(geometry: geometry)
 
         XCTAssertEqual(options.geometry, geometry.geometry)
-        XCTAssertEqual(options.padding, .zero)
+        XCTAssertEqual(options.padding, nil)
         XCTAssertEqual(options.bearing, 0)
         XCTAssertEqual(options.pitch, 0)
         XCTAssertEqual(options.animationDuration, 1)
@@ -22,6 +22,7 @@ final class OverviewViewportStateOptionsTests: XCTestCase {
             Point(.random()),
             LineString([.random(), .random()])
         ].randomElement()!
+        let coordinatesPadding = UIEdgeInsets.random()
         let padding = UIEdgeInsets.random()
         let bearing = CLLocationDirection?.random(.random(in: 0..<360))
         let pitch = CGFloat?.random(.random(in: 0...80))
@@ -29,12 +30,14 @@ final class OverviewViewportStateOptionsTests: XCTestCase {
 
         let options = OverviewViewportStateOptions(
             geometry: geometry,
-            padding: padding,
+            coordinatesPadding: coordinatesPadding,
             bearing: bearing,
             pitch: pitch,
+            padding: padding,
             animationDuration: animationDuration)
 
         XCTAssertEqual(options.geometry, geometry.geometry)
+        XCTAssertEqual(options.coordinatesPadding, coordinatesPadding)
         XCTAssertEqual(options.padding, padding)
         XCTAssertEqual(options.bearing, bearing)
         XCTAssertEqual(options.pitch, pitch)

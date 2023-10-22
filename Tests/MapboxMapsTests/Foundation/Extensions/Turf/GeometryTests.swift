@@ -332,4 +332,57 @@ final class GeometryTests: XCTestCase {
         XCTAssertEqual(geometryCollectionPointCoordinate, pointCoordinate)
         XCTAssertEqual(geometryCollectionPolygonCoordinates, [polygonCoordinates])
     }
+
+    func testCoordinatesPoint() {
+        let coord = CLLocationCoordinate2D(latitude: 1, longitude: 2)
+        let geom = Point(coord)
+        XCTAssertEqual(geom.geometry.coordinates, [coord])
+    }
+
+    func testCoordinatesLineString() {
+        let coord1 = CLLocationCoordinate2D(latitude: 1, longitude: 2)
+        let coord2 = CLLocationCoordinate2D(latitude: 3, longitude: 4)
+        let geom = LineString([coord1, coord2])
+        XCTAssertEqual(geom.geometry.coordinates, [coord1, coord2])
+    }
+
+    func testCoordinatesPolygon() {
+        let coord1 = CLLocationCoordinate2D(latitude: 1, longitude: 2)
+        let coord2 = CLLocationCoordinate2D(latitude: 3, longitude: 4)
+        let geom = Polygon([[coord1], [coord2]])
+        XCTAssertEqual(geom.geometry.coordinates, [coord1, coord2])
+    }
+
+    func testCoordinatesMultipoint() {
+        let coord1 = CLLocationCoordinate2D(latitude: 1, longitude: 2)
+        let coord2 = CLLocationCoordinate2D(latitude: 3, longitude: 4)
+        let geom = MultiPoint([coord1, coord2])
+        XCTAssertEqual(geom.geometry.coordinates, [coord1, coord2])
+    }
+
+    func testCoordinatesMultiLineString() {
+        let coord1 = CLLocationCoordinate2D(latitude: 1, longitude: 2)
+        let coord2 = CLLocationCoordinate2D(latitude: 3, longitude: 4)
+        let geom = MultiLineString([[coord1], [coord2]])
+        XCTAssertEqual(geom.geometry.coordinates, [coord1, coord2])
+    }
+
+    func testCoordinatesMultipolygon() {
+        let coord1 = CLLocationCoordinate2D(latitude: 1, longitude: 2)
+        let coord2 = CLLocationCoordinate2D(latitude: 3, longitude: 4)
+        let coord3 = CLLocationCoordinate2D(latitude: 3, longitude: 4)
+        let geom = MultiPolygon([[[coord1], [coord2]], [[coord3]]])
+        XCTAssertEqual(geom.geometry.coordinates, [coord1, coord2, coord3])
+    }
+
+    func testCoordinatesGeometryCollection() {
+        let coord1 = CLLocationCoordinate2D(latitude: 1, longitude: 2)
+        let coord2 = CLLocationCoordinate2D(latitude: 3, longitude: 4)
+
+        let geom = GeometryCollection(geometries: [
+            Point(coord1).geometry,
+            Point(coord2).geometry
+        ])
+        XCTAssertEqual(geom.geometry.coordinates, [coord1, coord2])
+    }
 }

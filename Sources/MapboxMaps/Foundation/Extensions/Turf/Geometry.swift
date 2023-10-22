@@ -75,3 +75,27 @@ extension MapboxCommon.Geometry {
         }
     }
 }
+
+extension Geometry {
+    /// Collects all coordinates for this geometry.
+    var coordinates: [CLLocationCoordinate2D] {
+        switch self {
+        case .point(let point):
+            return [point.coordinates]
+        case .lineString(let lineString):
+            return lineString.coordinates
+        case .polygon(let polygon):
+            return polygon.coordinates.flatMap { $0 }
+        case .multiPoint(let multipoint):
+            return multipoint.coordinates
+        case .multiLineString(let multiLineString):
+            return multiLineString.coordinates.flatMap { $0 }
+        case .multiPolygon(let multiPolygon):
+            return multiPolygon.coordinates.flatMap { $0.flatMap { $0 } }
+        case .geometryCollection(let geometryCollection):
+            return geometryCollection.geometries.flatMap { $0.coordinates }
+        @unknown default:
+            return []
+        }
+    }
+}

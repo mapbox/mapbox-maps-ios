@@ -40,18 +40,22 @@ final class OverviewViewportStateTest: XCTestCase {
     }
 
     func verifyCameraOptionsUpdate(with options: OverviewViewportStateOptions) throws {
-        XCTAssertEqual(mapboxMap.cameraForGeometryStub.invocations.count, 1)
-        let cameraForInvocation = try XCTUnwrap(mapboxMap.cameraForGeometryStub.invocations.first)
-        XCTAssertEqual(cameraForInvocation.parameters.geometry, options.geometry)
-        XCTAssertEqual(cameraForInvocation.parameters.padding, options.padding)
-        XCTAssertEqual(cameraForInvocation.parameters.bearing, options.bearing.map(CGFloat.init(_:)))
-        XCTAssertEqual(cameraForInvocation.parameters.pitch, options.pitch)
+        XCTAssertEqual(mapboxMap.cameraForCoordinatesStub.invocations.count, 1)
+        let cameraForInvocation = try XCTUnwrap(mapboxMap.cameraForCoordinatesStub.invocations.first)
+        XCTAssertEqual(cameraForInvocation.parameters.coordinates, options.geometry.coordinates)
+        XCTAssertEqual(cameraForInvocation.parameters.camera.padding, options.padding)
+        XCTAssertEqual(cameraForInvocation.parameters.camera.bearing, options.bearing)
+        XCTAssertEqual(cameraForInvocation.parameters.camera.pitch, options.pitch)
+        XCTAssertEqual(cameraForInvocation.parameters.maxZoom, options.maxZoom)
+        XCTAssertEqual(cameraForInvocation.parameters.offset, options.offset)
 
-        XCTAssertEqual(observableCameraOptions.notifyStub.invocations.map(\.parameters), [cameraForInvocation.returnValue])
+        var expectedCameraOptions = cameraForInvocation.returnValue
+        expectedCameraOptions.padding = options.padding
+        XCTAssertEqual(observableCameraOptions.notifyStub.invocations.map(\.parameters), [expectedCameraOptions])
     }
 
     func testSetOptionsRecalculatesCameraOptions() throws {
-        mapboxMap.cameraForGeometryStub.reset()
+        mapboxMap.cameraForCoordinatesStub.reset()
         observableCameraOptions.notifyStub.reset()
         let newOptions = OverviewViewportStateOptions.random()
 

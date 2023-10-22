@@ -125,7 +125,6 @@ final class FrameViewAnnotationsExample: UIViewController, ExampleProtocol {
             let bounds = mapView.mapboxMap.coordinateBounds(for: camera)
             let overviewViewportStateOptions = OverviewViewportStateOptions(
                 geometry: MultiPoint([bounds.northeast, bounds.southeast, bounds.southwest, bounds.northwest]),
-                padding: .zero,
                 bearing: camera.bearing,
                 pitch: camera.pitch,
                 animationDuration: 1

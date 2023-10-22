@@ -1211,3 +1211,10 @@ Var ViewAnnotationOptions.offsetY has been removed
 Struct ViewAnnotation has been changed to a Class
 Struct ViewAnnotation has removed conformance to MapContent
 Struct ViewAnnotationOptions has removed conformance to Hashable
+
+// Add coordinatesPadding to OverviewViewport state,
+Constructor OverviewViewportStateOptions.init(geometry:padding:bearing:pitch:animationDuration:) has been removed
+Func Viewport.overview(geometry:bearing:pitch:) has been renamed to Func overview(geometry:bearing:pitch:coordinatesPadding:maxZoom:offset:)
+Accessor OverviewViewportStateOptions.padding.Get() has return type change from UIKit.UIEdgeInsets to UIKit.UIEdgeInsets?
+Accessor OverviewViewportStateOptions.padding.Set() has parameter 0 type change from UIKit.UIEdgeInsets to UIKit.UIEdgeInsets?
+Var OverviewViewportStateOptions.padding has declared type change from UIKit.UIEdgeInsets to UIKit.UIEdgeInsets?

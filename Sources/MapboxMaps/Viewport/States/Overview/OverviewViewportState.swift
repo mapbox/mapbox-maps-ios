@@ -49,11 +49,19 @@ public final class OverviewViewportState {
     // MARK: - Private Utilities
 
     private func recalculateCameraOptions() {
-        observableCameraOptions.notify(with: mapboxMap.camera(
-            for: options.geometry,
-            padding: options.padding,
-            bearing: options.bearing.map(CGFloat.init(_:)),
-            pitch: options.pitch))
+        var camera = try? mapboxMap.camera(
+            for: options.geometry.coordinates,
+            camera: .init(
+                padding: options.padding,
+                bearing: options.bearing,
+                pitch: options.pitch),
+            coordinatesPadding: options.coordinatesPadding,
+            maxZoom: options.maxZoom,
+            offset: options.offset)
+        camera?.padding = options.padding // TODO: fix this in core
+        if let camera {
+            observableCameraOptions.notify(with: camera)
+        }
     }
 
     private func animate(to cameraOptions: CameraOptions) {

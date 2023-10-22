@@ -11,6 +11,7 @@ Mapbox welcomes participation and contributions from everyone.
   - Instead of manually managing `ViewAnnotationOptions` use new `ViewAnnotation`.
   - Instead of `ViewAnnotationOptions.associatedFeatureId` use new `AnnotatedFeature.layerFeature(layerId:featureId:)` to bind View annotation to features rendered by any layer.
   - [SwiftUI] Use `MapViewAnnotation` instead of `ViewAnnotation` to display view annotations in SwiftUI.
+* `OverviewViewportStateOptions.padding` is renamed to `OverviewViewportStateOptions.coordinatePadding`, the `OverviewViewportStateOptions.padding` now represents the camera padding.
 
 ### Features ✨ and improvements 🏁
 
@@ -18,8 +19,13 @@ Mapbox welcomes participation and contributions from everyone.
   - Automatic anchor position from specified configurations.
   - Supports displaying not only at point features, but also at lines and polygons.
 * Support Dynamic View Annotations in SwiftUI.
-* Add `MapboxMaps.camera(for:camera:padding:maxZoom:offset)`.
+* Add `MapboxMaps.camera(for:camera:coordinatesPadding:maxZoom:offset)`.
 * Add `MapViewDebugOptions.padding` debug option.
+* Add `maxZoom` and `offset` parameters to `OverviewViewportStateOptions`.
+
+### Bug fixes 🐞
+
+* Fix issue when transitioning to Overview viewport results in double padding.
 
 ## 11.0.0-beta.5 - 9 October, 2023
 

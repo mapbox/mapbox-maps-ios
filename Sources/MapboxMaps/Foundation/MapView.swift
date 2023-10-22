@@ -177,17 +177,12 @@ open class MapView: UIView {
         return mapboxMap.anchor
     }
 
-    /// Debug options for the current ``MapView`` and it's native ``MapboxMap``
-    public var debugOptions: MapViewDebugOptions {
-        get {
-            MapViewDebugOptions(
-                mapOptions: mapboxMap._debugOptions,
-                cameraView: ornaments.showCameraDebugView
-            )
-        }
-        set {
-            mapboxMap._debugOptions = newValue.nativeDebugOptions
-            ornaments.showCameraDebugView = newValue.contains(.camera)
+    /// Debug options for the current ``MapView`` and it's native ``MapboxMap``.
+    public var debugOptions: MapViewDebugOptions = [] {
+        didSet {
+            mapboxMap._debugOptions = debugOptions.nativeDebugOptions
+            ornaments.showCameraDebug = debugOptions.contains(.camera)
+            ornaments.showPaddingDebug = debugOptions.contains(.padding)
         }
     }
 

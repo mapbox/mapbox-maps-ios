@@ -95,6 +95,7 @@ struct SettingsView : View {
             Section {
                 let options = [
                     ("Camera", MapViewDebugOptions.camera),
+                    ("Padding", .padding),
                     ("Tile Borders", .tileBorders),
                     ("Parse Status", .parseStatus),
                     ("Timestamps", .timestamps),

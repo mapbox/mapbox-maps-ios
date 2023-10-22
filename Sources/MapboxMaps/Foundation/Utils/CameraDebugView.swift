@@ -3,7 +3,7 @@ import UIKit
 final class CameraDebugView: UIView {
     var cameraState: CameraState? {
         didSet {
-            if let cameraState {
+            if let cameraState, cameraState != oldValue {
                 self.cameraStateLabel.attributedText = .formatted(cameraState: cameraState)
             }
         }
@@ -44,12 +44,10 @@ final class CameraDebugView: UIView {
 }
 
 private extension NSAttributedString {
-    static func logString(_ text: String, bold: Bool = false) -> NSAttributedString {
-        var attributes = [NSAttributedString.Key: Any]()
-        if #available(iOS 13.0, *) {
-            attributes[.font] = UIFont.monospacedSystemFont(ofSize: 13, weight: bold ? .bold : .regular)
-        }
-        return NSAttributedString(string: text, attributes: attributes)
+    private static func logString(_ text: String, bold: Bool = false) -> NSAttributedString {
+        NSAttributedString(string: text, attributes: [
+            .font: UIFont.safeMonospacedSystemFont(size: 13, weight: bold ? .bold : .regular)
+        ])
     }
 
     static func formatted(cameraState: CameraState) -> NSAttributedString {

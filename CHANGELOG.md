@@ -19,6 +19,7 @@ Mapbox welcomes participation and contributions from everyone.
   - Supports displaying not only at point features, but also at lines and polygons.
 * Support Dynamic View Annotations in SwiftUI.
 * Add `MapboxMaps.camera(for:camera:padding:maxZoom:offset)`.
+* Add `MapViewDebugOptions.padding` debug option.
 
 ## 11.0.0-beta.5 - 9 October, 2023
 

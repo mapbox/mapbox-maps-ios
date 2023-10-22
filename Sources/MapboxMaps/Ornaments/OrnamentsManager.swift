@@ -71,10 +71,10 @@ public final class OrnamentsManager {
 
     private var cameraDebugView: CameraDebugView?
 
-    internal var showCameraDebugView: Bool = false {
+    internal var showCameraDebug: Bool = false {
         didSet {
-            guard showCameraDebugView != oldValue else { return }
-            if showCameraDebugView {
+            guard showCameraDebug != oldValue else { return }
+            if showCameraDebug {
                 let debugView = CameraDebugView()
                 debugView.translatesAutoresizingMaskIntoConstraints = false
                 debugView.cameraState = cachedCamera
@@ -84,6 +84,23 @@ public final class OrnamentsManager {
             } else {
                 cameraDebugView?.removeFromSuperview()
                 cameraDebugView = nil
+            }
+        }
+    }
+
+    private var paddingDebugView: PaddingDebugView?
+    var showPaddingDebug: Bool = false {
+        didSet {
+            guard showPaddingDebug != oldValue else { return }
+            if showPaddingDebug, let superview = self.view {
+                let view = PaddingDebugView(padding: cachedCamera?.padding)
+                self.paddingDebugView = view
+                view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                view.frame = superview.bounds
+                superview.addSubview(view)
+            } else {
+                paddingDebugView?.removeFromSuperview()
+                paddingDebugView = nil
             }
         }
     }
@@ -156,8 +173,9 @@ public final class OrnamentsManager {
             // Update the compass
             self._compassView.currentBearing = Double(event.cameraState.bearing)
 
-            // Update the camera debug view
+            // Update debug views
             self.cameraDebugView?.cameraState = event.cameraState
+            self.paddingDebugView?.padding = event.cameraState.padding
         }.store(in: &cancellables)
     }
 

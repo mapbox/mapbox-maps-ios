@@ -89,7 +89,8 @@ private final class SettingsViewController: UIViewController, UITableViewDataSou
         MapDebugOptionSetting(debugOption: .timestamps, displayTitle: "Show tile loaded time"),
         MapDebugOptionSetting(debugOption: .modelBounds, displayTitle: "Show 3D model bounding boxes"),
         MapDebugOptionSetting(debugOption: .light, displayTitle: "Show light conditions"),
-        MapDebugOptionSetting(debugOption: .camera, displayTitle: "Show camera debug view")
+        MapDebugOptionSetting(debugOption: .camera, displayTitle: "Show camera debug view"),
+        MapDebugOptionSetting(debugOption: .padding, displayTitle: "Camera padding")
     ]
 
     init(debugOptions: MapViewDebugOptions) {

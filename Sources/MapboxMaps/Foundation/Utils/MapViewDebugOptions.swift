@@ -38,6 +38,9 @@ public struct MapViewDebugOptions: OptionSet, Hashable {
     /// including lat, long, zoom, pitch, & bearing.
     public static let camera = MapViewDebugOptions(rawValue: 1 << 16)
 
+    /// Draws camera padding frame.
+    public static let padding = MapViewDebugOptions(rawValue: 1 << 17)
+
     var nativeDebugOptions: [MapDebugOptions] {
         var nativeDebugOptions = [MapDebugOptions]()
         if contains(.tileBorders) { nativeDebugOptions.append( .tileBorders ) }
@@ -54,26 +57,5 @@ public struct MapViewDebugOptions: OptionSet, Hashable {
 
     public init(rawValue: Int) {
         self.rawValue = rawValue
-    }
-}
-
-extension MapViewDebugOptions {
-    init(mapOptions: [MapDebugOptions], cameraView: Bool) {
-        var mapViewDebugOptions = mapOptions.map { Foundation.NSNumber(value: $0.rawValue) }
-        if cameraView {
-            mapViewDebugOptions.append( Foundation.NSNumber(value: 16 ))
-        }
-        self.init(fromRawValues: mapViewDebugOptions)
-    }
-
-    init(fromRawValues rawValues: [NSNumber]) {
-        var combinedValue: Int = 0
-
-        for rawValue in rawValues {
-            let bitValue = pow(2, Double(truncating: rawValue))
-            combinedValue |= Int(bitValue)
-        }
-
-        self.init(rawValue: combinedValue)
     }
 }

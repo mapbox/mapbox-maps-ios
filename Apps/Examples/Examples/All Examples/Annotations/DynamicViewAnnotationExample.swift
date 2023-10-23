@@ -65,7 +65,6 @@ final class DynamicViewAnnotationExample: UIViewController, ExampleProtocol {
             ]),
             headingProvider: Signal(just: Heading(direction: 180, accuracy: 0)))
         mapView.location.options = LocationOptions(puckType: .puck2D(.init(topImage: UIImage(named: "user_puck_icon"))))
-        mapView.debugOptions = .padding
 
         mapView.mapboxMap.onStyleLoaded.observeNext { [weak self] _ in
             guard let self = self else { return }

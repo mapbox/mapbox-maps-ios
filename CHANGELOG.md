@@ -4,19 +4,21 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 11.0.0-beta.6 - 23 October, 2023
+
 ### Breaking changes ⚠️
 
 * Style projection can be undefined for styles that do not explicitly specify it, so `MapboxMap.projection` has become optional.
 * View Annotation API is changed:
-  - Instead of manually managing `ViewAnnotationOptions` use new `ViewAnnotation`.
-  - Instead of `ViewAnnotationOptions.associatedFeatureId` use new `AnnotatedFeature.layerFeature(layerId:featureId:)` to bind View annotation to features rendered by any layer.
+  - `ViewAnnotationOptions.geometry` was removed in favor of `ViewAnnotationOptions.annotatedFeature`.
+  - `ViewAnnotationOptions.associatedFeatureId` was removed. Use `AnnotatedFeature.layerFeature(layerId:featureId:)` with `ViewAnnotationOptions.annotatedFeature` to bind View Annotation to features rendered by any layer.
   - [SwiftUI] Use `MapViewAnnotation` instead of `ViewAnnotation` to display view annotations in SwiftUI.
 * `OverviewViewportStateOptions.padding` is renamed to `OverviewViewportStateOptions.coordinatePadding`, the `OverviewViewportStateOptions.padding` now represents the camera padding.
 
 ### Features ✨ and improvements 🏁
 
-* Add new `ViewAnnotation` class to manage view annotations. The `ViewAnnotation` is a simple to use replacement of the old `ViewAnnotationOptions`. It automatically updates size and other properties of annotations, and provides new features:
-  - Automatic anchor position from specified configurations.
+* New `ViewAnnotation` class is added for simplifying View Annotation management. It is a simple to use replacement for the old `ViewAnnotationOptions`. It automatically updates size and other properties of annotations, and provides new features:
+  - Automatic anchor position from specified `ViewAnnotation.variableAnchor` configurations.
   - Supports displaying not only at point features, but also at lines and polygons.
 * Support Dynamic View Annotations in SwiftUI.
 * Add `MapboxMaps.camera(for:camera:coordinatesPadding:maxZoom:offset)`.
@@ -25,7 +27,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Bug fixes 🐞
 
-* Fix issue when transitioning to Overview viewport results in double padding.
+* Fix issue when transition to Overview Viewport resulted in double padding.
+* [SwiftUI] Fix issue when Overview Viewport is incorrect if set as initial viewport.
 
 ## 11.0.0-beta.5 - 9 October, 2023
 

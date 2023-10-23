@@ -57,7 +57,8 @@ Slot | Description
 --- | ---
 `bottom` | Above polygons (land, landuse, water, etc.)
 `middle` | Above lines (roads, etc.) and behind 3D buildings
-`top` | Above all existing layers in the style
+`top` | Above POI labels and behind Place and Transit labels
+not specified | Above all existing layers in the style
 
 ```swift
 var layer = LineLayer(id: "line-layer", source: "line-source")

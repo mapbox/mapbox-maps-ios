@@ -4,6 +4,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Bug fixes 🐞
+
+* Fix issue where 2D puck images are not getting updates.
+* [SwiftUI] Fixed issue when viewport inset with safe area is calculated incorrectly.
+
 ## 11.0.0-beta.6 - 23 October, 2023
 
 ### Breaking changes ⚠️
@@ -29,10 +34,6 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Fix issue when transition to Overview Viewport resulted in double padding.
 * [SwiftUI] Fix issue when Overview Viewport is incorrect if set as initial viewport.
-
-### Bug fixes 🐞
-
-* Fix issue where 2D puck images are not getting updates.
 
 ## 11.0.0-beta.5 - 9 October, 2023
 

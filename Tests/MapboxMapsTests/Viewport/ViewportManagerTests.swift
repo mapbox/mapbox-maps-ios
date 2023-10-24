@@ -1,7 +1,7 @@
 import XCTest
 @testable import MapboxMaps
 
-final class ViewportTests: XCTestCase {
+final class ViewportManagerTests: XCTestCase {
     var impl: MockViewportManagerImpl!
     var puckRenderDataSubject = SignalSubject<PuckRenderingData>()
     var cameraAnimationsManager: MockCameraAnimationsManager!

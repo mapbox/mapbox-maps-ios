@@ -285,9 +285,9 @@ public struct Viewport: Equatable {
         for (edge, keyPath) in edgeToInsetMapping where edges.contains(edge) {
             copy.insetOptions.insets[keyPath: keyPath] = length
             if ignoringSafeArea {
-                copy.insetOptions.ignoredSafeAreaEdges.remove(edge)
-            } else {
                 copy.insetOptions.ignoredSafeAreaEdges.insert(edge)
+            } else {
+                copy.insetOptions.ignoredSafeAreaEdges.remove(edge)
             }
         }
 
@@ -364,16 +364,7 @@ extension Viewport {
             cameraOptions.padding = insets
             return CameraViewportState(cameraOptions: cameraOptions)
         case .overview(let options):
-            let coordinatesPadding = UIEdgeInsets(insets: options.coordinatesPadding, layoutDirection: layoutDirection)
-            let options = OverviewViewportStateOptions(
-                geometry: options.geometry,
-                coordinatesPadding: coordinatesPadding,
-                bearing: options.bearing,
-                pitch: options.pitch,
-                padding: insets,
-                maxZoom: options.maxZoom,
-                offset: options.offset,
-                animationDuration: 0)
+            let options = options.resolve(layoutDirection: layoutDirection, padding: insets)
             return mapView.viewport.makeOverviewViewportState(options: options)
         case .styleDefault:
             return DefaultStyleViewportState(
@@ -381,16 +372,12 @@ extension Viewport {
                 styleManager: mapView.mapboxMap,
                 padding: insets)
         case .followPuck(let options):
-            let options = FollowPuckViewportStateOptions(
-                padding: insets,
-                zoom: options.zoom,
-                bearing: options.bearing,
-                pitch: options.pitch)
+            let options = options.resolve(padding: insets)
             return mapView.viewport.makeFollowPuckViewportState(options: options)
         }
     }
 
-    private func padding(with layoutDirection: LayoutDirection, safeAreaInsets: UIEdgeInsets) -> UIEdgeInsets {
+    func padding(with layoutDirection: LayoutDirection, safeAreaInsets: UIEdgeInsets) -> UIEdgeInsets {
         var result = SwiftUI.EdgeInsets(uiInsets: safeAreaInsets, layoutDirection: layoutDirection)
 
         for (edge, keyPath) in edgeToInsetMapping where insetOptions.ignoredSafeAreaEdges.contains(edge) {
@@ -400,5 +387,32 @@ extension Viewport {
         result += insetOptions.insets
 
         return UIEdgeInsets(insets: result, layoutDirection: layoutDirection)
+    }
+}
+
+@available(iOS 13.0, *)
+extension Viewport.OverviewOptions {
+    func resolve(layoutDirection: LayoutDirection, padding: UIEdgeInsets) -> OverviewViewportStateOptions {
+        let coordinatesPadding = UIEdgeInsets(insets: coordinatesPadding, layoutDirection: layoutDirection)
+        return OverviewViewportStateOptions(
+            geometry: geometry,
+            coordinatesPadding: coordinatesPadding,
+            bearing: bearing,
+            pitch: pitch,
+            padding: padding,
+            maxZoom: maxZoom,
+            offset: offset,
+            animationDuration: 0)
+    }
+}
+
+@available(iOS 13.0, *)
+extension Viewport.FollowPuckOptions {
+    func resolve(padding: UIEdgeInsets) -> FollowPuckViewportStateOptions {
+        FollowPuckViewportStateOptions(
+            padding: padding,
+            zoom: zoom,
+            bearing: bearing,
+            pitch: pitch)
     }
 }

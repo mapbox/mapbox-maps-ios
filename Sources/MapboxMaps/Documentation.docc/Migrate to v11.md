@@ -701,7 +701,39 @@ class ViewController: UIViewController { }
 ### 3.8 Http Stack changes
 `HTTPServiceFactory.reset`, `HttpServiceFactory.setUserDefinedForCustom` and `HttpServiceInterface` have been removed from public visibility. ***It is thus no longer possible to override the HTTP stack.***
 
-If you need to set a HTTP interceptor you can do it via the `HttpServiceFactory.setHttpServiceInterceptor` function. The `HttpServiceInterceptor` interface has a new `onUpload` function that requires implementation.
+If you need to set a HTTP interceptor you can do it via the `HttpServiceFactory.setHttpServiceInterceptorInterface` function. The `HttpServiceInterceptorInterface` has been changed: the `onDownload` function no longer exists and the signature of `onRequest` and `onResponse` have been changed to return a value through a continuation.
+
+**v10**
+
+```swift
+class Interceptor: HttpServiceInterceptorInterface {
+    func onRequest(for request: HttpRequest) -> HttpRequest {
+        return request
+    }
+
+    func onResponse(for response: HttpResponse) -> HttpResponse {
+        return response
+    }
+
+    func onDownload(forDownload download: DownloadOptions) -> DownloadOptions {
+        return download
+    }
+}
+```
+
+**v11**
+
+```swift
+class Interceptor: HttpServiceInterceptorInterface {
+    func onRequest(for request: HttpRequest, continuation: @escaping HttpServiceInterceptorRequestContinuation) {
+        continuation(HttpRequestOrResponse.fromHttpRequest(request))
+    }
+
+    func onResponse(for response: HttpResponse, continuation: @escaping HttpServiceInterceptorResponseContinuation) {
+        continuation(response)
+    }
+}
+```
 
 ### 3.9 Offline API
 

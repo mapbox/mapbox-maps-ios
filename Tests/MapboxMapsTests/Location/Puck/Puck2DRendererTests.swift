@@ -160,25 +160,51 @@ final class Puck2DRendererTests: XCTestCase {
 
         puck2D.isActive = true
 
-        XCTAssertEqual(style.addImageStub.invocations.count, 2)
-        let parameters = style.addImageStub.invocations.map(\.parameters)
-        guard parameters.count >= 2 else {
-            return
-        }
-        XCTAssertEqual(parameters[0].id, "locationIndicatorLayerTopImage")
-        let expectedTopImage = UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!
-        XCTAssertTrue(parameters[0].image.isEqual(expectedTopImage))
+        XCTAssertEqual(style.addImageStub.invocations.count, 1)
 
-        XCTAssertEqual(parameters[1].id, "locationIndicatorLayerShadowImage")
-        let expectedBearingImage = UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!
-        XCTAssertTrue(parameters[1].image.isEqual(expectedBearingImage))
+        XCTAssertEqual(style.addImageStub.invocations[0].parameters.id, "locationIndicatorLayerTopImage")
+        let expectedTopImage = UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!
+        XCTAssertTrue(style.addImageStub.invocations[0].parameters.image.isEqual(expectedTopImage))
+    }
+
+    func testUpdateImages() {
+        configuration = Puck2DConfiguration(
+            topImage: UIImage.empty,
+            bearingImage: UIImage.empty,
+            shadowImage: UIImage.empty)
+        recreatePuck()
+        updateRenderingData()
+
+        puck2D.isActive = true
+
+        verifyAddImages()
+
+        style.addImageStub.reset()
+        style.imageExistsStub.defaultReturnValue = true
+        let newTopImage = UIImage.empty
+        configuration.topImage = newTopImage
+        configuration.bearingImage = nil
+        puck2D.configuration = configuration
+
+        triggerRendering()
+
+        XCTAssertEqual(style.addImageStub.invocations.count, 1)
+        XCTAssertEqual(style.addImageStub.invocations[0].parameters.id, "locationIndicatorLayerTopImage")
+        XCTAssertTrue(style.addImageStub.invocations[0].parameters.image.isEqual(newTopImage))
+
+        XCTAssertEqual(style.removeImageStub.invocations.count, 1)
+        XCTAssertEqual(style.removeImageStub.invocations[0].parameters, "locationIndicatorLayerBearingImage")
     }
 
     func makeExpectedLayerProperties(with data: PuckRenderingData) -> [String: Any] {
         var expectedLayoutLayerProperties = [LocationIndicatorLayer.LayoutCodingKeys: Any]()
         expectedLayoutLayerProperties[.topImage] = "locationIndicatorLayerTopImage"
-        expectedLayoutLayerProperties[.bearingImage] = "locationIndicatorLayerBearingImage"
-        expectedLayoutLayerProperties[.shadowImage] = "locationIndicatorLayerShadowImage"
+        if configuration.bearingImage != nil {
+            expectedLayoutLayerProperties[.bearingImage] = "locationIndicatorLayerBearingImage"
+        }
+        if configuration.shadowImage != nil {
+            expectedLayoutLayerProperties[.shadowImage] = "locationIndicatorLayerShadowImage"
+        }
 
         let resolvedScale = configuration.scale ?? .constant(1)
         let scale = try! resolvedScale.toJSON()

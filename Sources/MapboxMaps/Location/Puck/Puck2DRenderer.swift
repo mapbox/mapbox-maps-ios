@@ -41,9 +41,16 @@ internal final class Puck2DRenderer: Puck2DRendererProtocol {
         didSet {
             if configuration != oldValue {
                 forceLongPath = true
+                needsUpdateTopImage = configuration.topImage != oldValue.topImage
+                needsUpdateBearingImage = configuration.bearingImage != oldValue.bearingImage
+                needsUpdateShadowImage = configuration.shadowImage != oldValue.shadowImage
             }
         }
     }
+
+    private var needsUpdateTopImage = true
+    private var needsUpdateBearingImage = true
+    private var needsUpdateShadowImage = true
 
     private func render(with data: PuckRenderingData) {
         self.currentAccuracyAuthorization = data.location.accuracyAuthorization
@@ -102,33 +109,38 @@ internal final class Puck2DRenderer: Puck2DRendererProtocol {
         self.encodedScale = try? configuration.resolvedScale.toJSON()
     }
 
+    // MARK: Images
+
     private func addImages() throws {
-        try style.addImage(
-            configuration.resolvedTopImage,
-            id: Self.topImageId,
-            sdf: false,
-            stretchX: [],
-            stretchY: [],
-            content: nil)
-        if let bearingImage = configuration.bearingImage {
-            try style.addImage(
-                bearingImage,
-                id: Self.bearingImageId,
-                sdf: false,
-                stretchX: [],
-                stretchY: [],
-                content: nil)
+        defer {
+            needsUpdateTopImage = false
+            needsUpdateBearingImage = false
+            needsUpdateShadowImage = false
         }
-        try style.addImage(
-            configuration.resolvedShadowImage,
-            id: Self.shadowImageId,
-            sdf: false,
-            stretchX: [],
-            stretchY: [],
-            content: nil)
+
+        if needsUpdateTopImage {
+            try style.addImage(configuration.resolvedTopImage, id: Self.topImageId, sdf: false, stretchX: [], stretchY: [], content: nil)
+        }
+        if needsUpdateBearingImage {
+            try replaceImage(id: Self.bearingImageId, with: configuration.bearingImage)
+        }
+        if needsUpdateShadowImage {
+            try replaceImage(id: Self.shadowImageId, with: configuration.shadowImage)
+        }
     }
 
-    // swiftlint:disable:next function_body_length
+    private func replaceImage(id: String, with newImage: UIImage?) throws {
+        if style.imageExists(withId: id) {
+            try style.removeImage(withId: id)
+        }
+        if let newImage {
+            try style.addImage(newImage, id: id, sdf: false, stretchX: [], stretchY: [], content: nil)
+        }
+    }
+
+    // MARK: Layer
+
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func updateLayer(with data: PuckRenderingData) throws {
         guard isActive else { return }
 
@@ -149,8 +161,10 @@ internal final class Puck2DRenderer: Puck2DRendererProtocol {
             if configuration.bearingImage != nil {
                 newLayerLayoutProperties[.bearingImage] = Self.bearingImageId
             }
+            if configuration.shadowImage != nil {
+                newLayerLayoutProperties[.shadowImage] = Self.shadowImageId
+            }
 
-            newLayerLayoutProperties[.shadowImage] = Self.shadowImageId
             newLayerPaintProperties[.locationTransition] = immediateTransition
             if let encodedScale {
                 newLayerPaintProperties[.topImageSize] = encodedScale
@@ -256,16 +270,17 @@ internal final class Puck2DRenderer: Puck2DRendererProtocol {
         // Store the new set of property keys
         previouslySetLayerPropertyKeys = Set(newLayerProperties.keys)
 
+        // add the images at the same time as adding the layer. doing it earlier results
+        // in the images getting removed if the style reloads in between when the images
+        // were added and when the persistent layer is added. The presence of a persistent
+        // layer causes MapboxCoreMaps to skip clearing images when the style reloads.
+        // https://github.com/mapbox/mapbox-maps-ios/issues/860
+        try addImages()
+
         // Update or add the layer
         if style.layerExists(withId: Self.layerID) {
             try style.setLayerProperties(for: Self.layerID, properties: allLayerProperties)
         } else {
-            // add the images at the same time as adding the layer. doing it earlier results
-            // in the images getting removed if the style reloads in between when the images
-            // were added and when the persistent layer is added. The presence of a persistent
-            // layer causes MapboxCoreMaps to skip clearing images when the style reloads.
-            // https://github.com/mapbox/mapbox-maps-ios/issues/860
-            try addImages()
             allLayerProperties[LocationIndicatorLayer.RootCodingKeys.id.rawValue] = Self.layerID
             allLayerProperties[LocationIndicatorLayer.RootCodingKeys.type.rawValue] = LayerType.locationIndicator.rawValue
             try style.addPersistentLayer(with: allLayerProperties, layerPosition: nil)
@@ -348,10 +363,6 @@ internal final class Puck2DRenderer: Puck2DRendererProtocol {
 private extension Puck2DConfiguration {
     var resolvedTopImage: UIImage {
         topImage ?? UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!
-    }
-
-    var resolvedShadowImage: UIImage {
-        shadowImage ?? UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!
     }
 
     var resolvedScale: Value<Double> {

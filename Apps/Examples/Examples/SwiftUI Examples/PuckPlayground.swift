@@ -27,6 +27,7 @@ struct PuckPlayground: View {
                     .pulsing(puck2dSettings.pulsing.asPuckPulsing)
                     .showsAccuracyRing(puck2dSettings.accuracyRing)
                     .opacity(opacity)
+                    .topImage(puck2dSettings.topImage.asPuckTopImage)
             case .d3:
                 Puck3D(model: puck3dSettings.modelType.model, bearing: bearingType)
                     .modelScale(puck3dSettings.modelScale)
@@ -51,6 +52,7 @@ struct PuckPlayground: View {
                 VStack {
                     Toggle("Accuracy ring", isOn: $puck2dSettings.accuracyRing)
                     RadioButtonSettingView(title: "Pulsing", value: $puck2dSettings.pulsing)
+                    RadioButtonSettingView(title: "Top Image", value: $puck2dSettings.topImage)
                 }
             case.d3:
                 RadioButtonSettingView(title: "Model", value: $puck3dSettings.modelType)
@@ -141,9 +143,27 @@ private struct Puck2DSettings {
             return pulsing
         }
     }
+    enum TopImage: String, CaseIterable {
+        case `default`
+        case star
+        case square
+
+        var asPuckTopImage: UIImage? {
+            switch self {
+            case .default:
+                return nil
+            case .star:
+                return UIImage(named: "star")
+            case .square:
+                return UIImage(named: "jpeg-image")
+            }
+        }
+    }
+
     var bearing = true
     var accuracyRing = false
     var pulsing: Pulsing = .default
+    var topImage: TopImage = .default
 }
 
 extension PuckBearing: CaseIterable {

@@ -30,6 +30,10 @@ Mapbox welcomes participation and contributions from everyone.
 * Fix issue when transition to Overview Viewport resulted in double padding.
 * [SwiftUI] Fix issue when Overview Viewport is incorrect if set as initial viewport.
 
+### Bug fixes 🐞
+
+* Fix issue where 2D puck images are not getting updates.
+
 ## 11.0.0-beta.5 - 9 October, 2023
 
 * Add a new CustomLayer API to simplify manipulation of layers with custom rendering (aka "CustomLayerHost").

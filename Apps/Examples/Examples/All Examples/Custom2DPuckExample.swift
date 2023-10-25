@@ -97,6 +97,10 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
             }
         }
 
+        var usesDefaultShadowImage: Bool {
+            self == .blueDot
+        }
+
         mutating func toggle() {
             var idx = Self.allCases.firstIndex(of: self)! + 1
             if idx == Self.allCases.count {
@@ -259,6 +263,9 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         puckConfiguration = Puck2DConfiguration.makeDefault(showBearing: showsBearing.isVisible)
         puckConfiguration.showsAccuracyRing = showsAccuracyRing.isVisible
         puckConfiguration.topImage = puckImage.image
+        if !puckImage.usesDefaultShadowImage {
+            puckConfiguration.shadowImage = nil
+        }
         puckConfiguration.opacity = puckOpacity.rawValue
         switch showsPuck {
         case .isVisible:

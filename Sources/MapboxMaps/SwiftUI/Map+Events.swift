@@ -36,6 +36,54 @@ public extension Map {
     }
 
     /// Adds an action to perform when the camera is changed.
+    ///
+    /// - Important: This callback is called on every rendering frame. Don't use it to modify `@State` variables, it will lead to excessive `body` execution and higher CPU consumption.
+    ///
+    /// For example:
+    /// ```swift
+    /// struct BadExample: View {
+    ///     @State var zoom: Double = 0
+    ///     var body: some View {
+    ///         Map {
+    ///             if zoom > 5 {
+    ///                 CircleAnnotation(centerCoordinate: coordinate)
+    ///             }
+    ///         }
+    ///         .onCameraChanged {
+    ///             // DON'T DO THIS
+    ///             zoom = $0.cameraState.zoom
+    ///         }
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// Instead update the state only when the actual value is changed:
+    /// ```swift
+    /// struct GoodExample: View {
+    ///     private class Model: ObservableObject {
+    ///         @Published var showAnnotation = false
+    ///         func setZoom(_ zoom: Double) {
+    ///             var showAnnotation = zoom < 5
+    ///             if showAnnotation != self.showAnnotation {
+    ///                 // OK, the showAnnotation updates only when actual value changed.
+    ///                 // The `body` will be executed once per update.
+    ///                 self.showAnnotation = showAnnotation
+    ///             }
+    ///         }
+    ///     }
+    ///
+    ///     @StateObject var model = Model()
+    ///     var body: some View {
+    ///         Map {
+    ///             if model.showAnnotation {
+    ///                 CircleAnnotation(centerCoordinate: coordinate)
+    ///             }
+    ///         }
+    ///         .onCameraChanged {
+    ///             model.setZoom($0.cameraState.zoom)
+    ///         }
+    ///     }
+    /// }
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -92,6 +140,8 @@ public extension Map {
     }
 
     /// Adds an action to perform when the map started rendering a frame.
+    ///
+    /// - Important: This callback is called on every rendering frame, don't modify `@State` in it. Consult ``Map/onCameraChanged(action:)`` for more information.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -100,6 +150,8 @@ public extension Map {
     }
 
     /// Adds an action to perform when the map finished rendering a frame.
+    ///
+    /// - Important: This callback is called on every rendering frame, don't modify `@State` in it. Consult ``Map/onCameraChanged(action:)`` for more information.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif

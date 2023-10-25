@@ -7,7 +7,9 @@ import MapboxCommon
 /// Use view annotations if you need to display interactive UIView bound to
 /// a geographical coordinate or map feature.
 ///
-/// If you need to display large amounts of data or clustering, please consider using ``PointAnnotation`` or Runtime Styling API, for example, ``SymbolLayer`` with ``GeoJSONSource``.
+/// The view annotations are great for displaying unique interactive features. However, they may be suboptimal for large amounts of data and don't support clustering. For those cases use ``PointAnnotation`` or Runtime Styling API, for example, ``SymbolLayer`` with ``GeoJSONSource``.
+///
+///- Note: View Annotations appear above all content of MapView (e.g. layers, annotations, puck). If you need to display annotation between layers or below puck, use ``PointAnnotation``.
 ///
 /// To display a view annotation configure a UIView, create `ViewAnnotation`, and add it to the view annotation manager:
 ///

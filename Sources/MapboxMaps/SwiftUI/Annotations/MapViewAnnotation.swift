@@ -2,7 +2,8 @@ import SwiftUI
 
 /// Displays a view annotation.
 ///
-/// Create a view annotation to display an interactive SwiftUI view bound to geographical coordinate or map feature. `MapViewAnnotation` is a SwiftUI analog to ``ViewAnnotation``.
+/// Use view annotations if you need to display interactive UIView bound to
+/// a geographical coordinate or map feature. The `MapViewAnnotation` is a SwiftUI analog to ``ViewAnnotation``.
 ///
 /// ```swift
 /// Map {
@@ -10,8 +11,14 @@ import SwiftUI
 ///        Text("🚀")
 ///           .background(Circle().fill(.red))
 ///     }
+///     .allowOverlap(false)
+///     .variableAnchors([ViewAnnotationAnchorConfig(anchor: .bottom)])
 /// }
 /// ```
+///
+/// The view annotations are great for displaying unique interactive features. However, they may be suboptimal for large amounts of data and don't support clustering. For those cases use ``PointAnnotation`` or Runtime Styling API, for example, ``SymbolLayer`` with ``GeoJSONSource``.
+///
+/// - Note: View Annotations appear above all content of MapView (e.g. layers, annotations, puck). If you need to display annotation between layers or below puck, use ``PointAnnotation``.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif

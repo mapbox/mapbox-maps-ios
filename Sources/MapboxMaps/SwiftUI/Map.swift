@@ -25,7 +25,7 @@ public typealias LocationUpdateAction = (Location) -> Void
 ///             Puck2D(heading: bearing)
 ///
 ///             // Displays view annotation.
-///             ViewAnnotation(CLLocationCoordinate(...))
+///             MapViewAnnotation(CLLocationCoordinate(...))
 ///                 Text("🚀")
 ///                     .background(Circle().fill(.red))
 ///             }

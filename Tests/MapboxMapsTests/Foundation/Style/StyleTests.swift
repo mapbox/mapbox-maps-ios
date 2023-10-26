@@ -3,7 +3,7 @@ import XCTest
 @testable @_spi(Experimental) import MapboxMaps
 @_implementationOnly import MapboxCommon_Private
 
-final class StyleTests: XCTestCase {
+final class StyleManagerTests: XCTestCase {
     var style: MapboxMaps.StyleManager!
     var styleManager: MockStyleManager!
     var sourceManager: MockStyleSourceManager!
@@ -12,10 +12,11 @@ final class StyleTests: XCTestCase {
     override func setUp() {
         styleManager = MockStyleManager()
         sourceManager = MockStyleSourceManager()
-        style = StyleManager(with: styleManager, sourceManager: sourceManager, onStyleDataLoaded: onStyleLoaded)
+        style = StyleManager(with: styleManager, sourceManager: sourceManager)
     }
 
     override func tearDown() {
+        resetAllStubs()
         styleManager = nil
         sourceManager = nil
         style = nil
@@ -66,22 +67,33 @@ final class StyleTests: XCTestCase {
         XCTAssertNotNil(style.styleURI)
     }
 
-    func testSetStyleURI() {
+    func testSetStyleURI() throws {
+        styleManager.setStyleURIStub.defaultSideEffect = {
+            self.styleManager.getStyleURIStub.defaultReturnValue = $0.parameters.value
+        }
         // Invalid (nil) URI -> will not update StyleURI
         style.styleURI = StyleURI(rawValue: "Not A Valid Style URL")
         XCTAssertNotEqual(style.styleURI?.rawValue, "Not A Valid Style URL")
 
         // Valid URI
-        style.styleURI = StyleURI(rawValue: "test://newTestStyle")
-        XCTAssertEqual(styleManager.setStyleURIForUriStub.invocations.last!.parameters, "test://newTestStyle")
+        let validURI = StyleURI(rawValue: "test://newTestStyle")
+        style.styleURI = validURI
+        let params = try XCTUnwrap(styleManager.setStyleURIStub.invocations.last).parameters
+        XCTAssertEqual(params.value, validURI?.rawValue)
+        XCTAssertEqual(style.styleURI, validURI)
     }
 
     func testGetSetStyleJSON() {
-        styleManager.getStyleJSONStub.defaultReturnValue = "{\"foo\":\"bar\"}"
-        XCTAssertEqual(style.styleJSON, "{\"foo\":\"bar\"}")
+        styleManager.setStyleJSONStub.defaultSideEffect = {
+            self.styleManager.getStyleJSONStub.defaultReturnValue = $0.parameters.value
+        }
 
-        style.styleJSON = "{\"foo\":\"foo\"}"
-        XCTAssertEqual(styleManager.setStyleJSONForJsonStub.invocations.last?.parameters, "{\"foo\":\"foo\"}")
+        let json = """
+        {"foo": "bar"}
+        """
+        style.styleJSON = json
+        XCTAssertEqual(style.styleJSON, json)
+        XCTAssertEqual(styleManager.setStyleJSONStub.invocations.last?.parameters.value, json)
     }
 
     func testDefaultCamera() {

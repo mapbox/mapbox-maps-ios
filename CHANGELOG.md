@@ -4,6 +4,18 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Breaking changes ⚠️
+* `MapboxMap.loadStyle` methods changed error type from `MapLoadingError` to `Error`.
+
+### Features ✨ and improvements 🏁
+* Refactor `MapboxMap.loadStyle` to cancel previous style loads when called multiple times.
+* New experimental `StyleManager.load(mapStyle:transition:completion)` method to load `MapStyle` in `MapboxMap`, or `Snapshotter`:
+  ```swift
+  mapboxMap.load(mapStyle: .standard(lightPreset: .dawn, showRoadLabels: false)) { _ in
+    print("Style is loaded")
+  }
+  ```
+
 ### Bug fixes 🐞
 
 * Fix issue where 2D puck images are not getting updates.

@@ -1218,3 +1218,8 @@ Func Viewport.overview(geometry:bearing:pitch:) has been renamed to Func overvie
 Accessor OverviewViewportStateOptions.padding.Get() has return type change from UIKit.UIEdgeInsets to UIKit.UIEdgeInsets?
 Accessor OverviewViewportStateOptions.padding.Set() has parameter 0 type change from UIKit.UIEdgeInsets to UIKit.UIEdgeInsets?
 Var OverviewViewportStateOptions.padding has declared type change from UIKit.UIEdgeInsets to UIKit.UIEdgeInsets?
+
+// Adopt new load style API.
+Func MapboxMap.loadStyle(_:transition:completion:) has parameter 2 type change from ((MapboxCoreMaps.MapLoadingError?) -> Swift.Void)? to ((Swift.Error?) -> Swift.Void)?
+Func MapboxMap.loadStyleJSON(_:completion:) has parameter 1 type change from ((MapboxCoreMaps.MapLoadingError?) -> Swift.Void)? to ((Swift.Error?) -> Swift.Void)?
+Func MapboxMap.loadStyleURI(_:completion:) has parameter 1 type change from ((MapboxCoreMaps.MapLoadingError?) -> Swift.Void)? to ((Swift.Error?) -> Swift.Void)?

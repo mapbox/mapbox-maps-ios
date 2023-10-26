@@ -319,26 +319,6 @@ final class MapboxMapTests: XCTestCase {
         waitForExpectations(timeout: 0.3)
     }
 
-    func testTransitionOptionsAppliedUponStyleDataLoaded() {
-        // given
-        let options = TransitionOptions(duration: .random(), delay: .random(), enablePlacementTransitions: .random())
-
-        // when
-        mapboxMap.loadStyle(.light, transition: options)
-
-        // then
-        let interval = EventTimeInterval(begin: .init(), end: .init())
-        events.onStyleLoaded.send(.init(timeInterval: interval))
-        events.onStyleDataLoaded.send(.init(type: .sources, timeInterval: interval))
-        events.onStyleDataLoaded.send(.init(type: .sprite, timeInterval: interval))
-        XCTAssertEqual(mapboxMap.styleTransition.duration, 0.3) // default value
-
-        events.onStyleDataLoaded.send(.init(type: .style, timeInterval: interval))
-        XCTAssertEqual(mapboxMap.styleTransition.duration!, options.duration!, accuracy: 0.1)
-        XCTAssertEqual(mapboxMap.styleTransition.delay!, options.delay!, accuracy: 0.1)
-        XCTAssertEqual(mapboxMap.styleTransition.enablePlacementTransitions, options.enablePlacementTransitions)
-    }
-
     func testEvents() {
         func checkEvent<T>(
             _ subjectKeyPath: KeyPath<MapEvents, SignalSubject<T>>,

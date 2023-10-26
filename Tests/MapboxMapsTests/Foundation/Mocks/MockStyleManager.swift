@@ -3,6 +3,20 @@ import Foundation
 @_implementationOnly import MapboxCommon_Private
 
 class MockStyleManager: StyleManagerProtocol {
+    struct LoadStyleParams {
+        var value: String
+        var callbacks: RuntimeStylingCallbacks
+    }
+    var setStyleURIStub = Stub<LoadStyleParams, Void>()
+    func setStyleURI(_ uri: String, callbacks: RuntimeStylingCallbacks) {
+        setStyleURIStub.call(with: .init(value: uri, callbacks: callbacks))
+    }
+
+    var setStyleJSONStub = Stub<LoadStyleParams, Void>()
+    func setStyleJSON(_ json: String, callbacks: RuntimeStylingCallbacks) {
+        setStyleJSONStub.call(with: .init(value: json, callbacks: callbacks))
+    }
+
     func asStyleManager() -> StyleManager {
         fatalError()
     }

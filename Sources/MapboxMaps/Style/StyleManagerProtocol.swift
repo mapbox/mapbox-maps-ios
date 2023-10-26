@@ -2,6 +2,16 @@ import Foundation
 @_implementationOnly import MapboxCommon_Private
 @_implementationOnly import MapboxCoreMaps_Private
 
+struct RuntimeStylingCallbacks {
+    typealias Action = () -> Void
+    var sources: Action?
+    var layers: Action?
+    var images: Action?
+    var completed: Action?
+    var cancelled: Action?
+    var error: ((StyleError) -> Void)?
+}
+
 internal protocol StyleManagerProtocol {
 
     func getStyleURI() -> String
@@ -9,6 +19,9 @@ internal protocol StyleManagerProtocol {
 
     func getStyleJSON() -> String
     func setStyleJSONForJson(_ json: String)
+
+    func setStyleURI(_ uri: String, callbacks: RuntimeStylingCallbacks)
+    func setStyleJSON(_ json: String, callbacks: RuntimeStylingCallbacks)
 
     func getStyleDefaultCamera() -> MapboxCoreMaps.CameraOptions
 
@@ -194,4 +207,39 @@ internal protocol StyleManagerProtocol {
 
 // MARK: Conformance
 
-extension MapboxCoreMaps.StyleManager: StyleManagerProtocol {}
+extension MapboxCoreMaps.StyleManager: StyleManagerProtocol {
+    func setStyleURI(_ uri: String, callbacks: RuntimeStylingCallbacks) {
+        load(style: uri, isJson: false, callbacks: callbacks)
+    }
+
+    func setStyleJSON(_ json: String, callbacks: RuntimeStylingCallbacks) {
+        load(style: json, isJson: true, callbacks: callbacks)
+    }
+
+    private func load(style: String, isJson: Bool, callbacks: RuntimeStylingCallbacks) {
+
+        var errorToken: Cancelable?
+        errorToken = subscribe(forMapLoadingError: { error in
+            if error.type == .style {
+                errorToken?.cancel()
+                callbacks.error?(StyleError(message: error.message))
+            }
+        })
+        let options =  RuntimeStylingOptions(
+            sourcesCallback: { _ in callbacks.sources?() },
+            layersCallback: { _ in callbacks.layers?() },
+            imagesCallback: { _ in callbacks.images?() },
+            completedCallback: { _ in
+                errorToken?.cancel()
+                callbacks.completed?() },
+            canceledCallback: { _ in
+                errorToken?.cancel()
+                callbacks.cancelled?()
+            })
+        if isJson {
+            setStyleJSONForJson(style, stylingOptions: options)
+        } else {
+            setStyleURIForUri(style, stylingOptions: options)
+        }
+    }
+}

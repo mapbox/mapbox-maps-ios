@@ -22,6 +22,13 @@ public struct StyleError: RawRepresentable, LocalizedError {
     }
 }
 
+/// Operation is cancelled.
+public struct CancelError: LocalizedError {
+    public var errorDescription: String? {
+        return "Cancelled"
+    }
+}
+
 public struct TypeConversionError: Error, Equatable {
     public let message: String
 

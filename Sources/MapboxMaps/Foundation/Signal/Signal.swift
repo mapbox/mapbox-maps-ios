@@ -95,20 +95,6 @@ extension Signal {
     func conditional(_ isEnabled: Ref<Bool>) -> Signal {
         filter { _ in isEnabled.value }
     }
-
-    /// Creates  a Signal that joins values and errors signals into a resulting signal.
-    func join<E>(withError other: Signal<E>) -> Signal<Result<Payload, E>> {
-        return Signal<Result<Payload, E>> { handler in
-            AnyCancelable([
-                self.observe { payload in
-                    handler(.success(payload))
-                },
-                other.observe { e in
-                    handler(.failure(e))
-                }
-            ])
-        }
-    }
 }
 
 extension Signal {

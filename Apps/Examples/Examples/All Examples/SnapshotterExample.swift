@@ -1,5 +1,5 @@
 import UIKit
-import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 
 public class SnapshotterExample: UIViewController, ExampleProtocol {
     private var cancelables = Set<AnyCancelable>()
@@ -20,12 +20,9 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        let mapInitOptions = MapInitOptions(
-            cameraOptions: CameraOptions(center: CLLocationCoordinate2D(latitude: 50, longitude: 138.482), zoom: 3.5),
-            styleURI: .dark
-        )
-        mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
+        mapView = MapView(frame: view.bounds)
         mapView.translatesAutoresizingMaskIntoConstraints = false
+        mapView.mapboxMap.mapStyle = .standard(lightPreset: .dawn, showRoadLabels: false)
         // Add the `MapViewController`'s view to the stack view as a
         // child view controller.
         stackView.addArrangedSubview(mapView)
@@ -79,7 +76,7 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
             pixelRatio: UIScreen.main.scale)
 
         snapshotter = Snapshotter(options: options)
-        snapshotter.styleURI = .light
+        snapshotter.load(mapStyle: .standard(lightPreset: .dusk))
 
         // Set the camera of the snapshotter
 

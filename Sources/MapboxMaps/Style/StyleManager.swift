@@ -65,14 +65,11 @@ public class StyleManager {
 
     internal init(
         with styleManager: StyleManagerProtocol,
-        sourceManager: StyleSourceManagerProtocol,
-        onStyleDataLoaded: Signal<StyleDataLoaded>
+        sourceManager: StyleSourceManagerProtocol
     ) {
         self.styleManager = styleManager
         self.sourceManager = sourceManager
-        styleReconciler = MapStyleReconciler(
-            coreStyleManager: styleManager,
-            onStyleDataLoaded: onStyleDataLoaded)
+        styleReconciler = MapStyleReconciler(styleManager: styleManager)
     }
 
     // MARK: - Layers
@@ -451,6 +448,26 @@ public class StyleManager {
     public var styleJSON: String {
         get { styleManager.getStyleJSON() }
         set { styleReconciler.mapStyle = MapStyle(json: newValue) }
+    }
+
+    /// Loads ``MapStyle``, calling a completion closure when the
+    /// style is fully loaded or there has been an error during load.
+    ///
+    /// If style loading started while the other style is already loading, the latter's loading `completion`
+    /// will receive a ``CancelError``. If a style is failed to load, `completion` will receive a ``StyleError``.
+    ///
+    /// - Parameters:
+    ///   - mapStyle: A style to load.
+    ///   - transition: Options for the style transition.
+    ///   - completion: Closure called when the style has been fully loaded.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental)
+    public func load(mapStyle: MapStyle,
+                     transition: TransitionOptions? = nil,
+                     completion: ((Error?) -> Void)? = nil) {
+        styleReconciler.loadStyle(mapStyle, transition: transition, completion: completion)
     }
 
     /// The map `style`'s default camera, if any, or a default camera otherwise.

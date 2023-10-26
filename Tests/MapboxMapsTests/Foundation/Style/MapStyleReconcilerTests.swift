@@ -5,13 +5,11 @@ final class MapStyleReconcilerTests: XCTestCase {
     var me: MapStyleReconciler!
     var styleManager: MockStyleManager!
 
-    @TestSignal var styleDataLoaded: Signal<StyleDataLoaded>
-
     override func setUp() {
         super.setUp()
         styleManager = MockStyleManager()
         styleManager.isStyleLoadedStub.defaultReturnValue = true
-        me = MapStyleReconciler(coreStyleManager: styleManager, onStyleDataLoaded: styleDataLoaded)
+        me = MapStyleReconciler(styleManager: styleManager)
     }
 
     override func tearDown() {
@@ -21,8 +19,34 @@ final class MapStyleReconcilerTests: XCTestCase {
         styleManager = nil
     }
 
-    func testLoadsJSONStyle() {
-        styleManager.setStyleJSONForJsonStub.defaultSideEffect = { _ in
+    enum LoadResult {
+        case cancel
+        case success
+        case error
+    }
+    private func simulateLoad(callbacks: RuntimeStylingCallbacks, result: LoadResult) {
+        styleManager.isStyleLoadedStub.defaultReturnValue = result == .success
+        switch result {
+        case .cancel:
+            callbacks.cancelled?()
+        case .error:
+            callbacks.error?(StyleError(message: "test error"))
+        case .success:
+            callbacks.layers?()
+            callbacks.sources?()
+            callbacks.images?()
+            callbacks.completed?()
+        }
+    }
+
+    func testNil() {
+        XCTAssertEqual(me.mapStyle, nil)
+        me.mapStyle = nil
+        XCTAssertEqual(me.mapStyle, nil)
+    }
+
+    func testLoadsJSONStyle() throws {
+        styleManager.setStyleJSONStub.defaultSideEffect = { _ in
             self.styleManager.isStyleLoadedStub.defaultReturnValue = false
         }
 
@@ -35,13 +59,14 @@ final class MapStyleReconcilerTests: XCTestCase {
             ])
         ])
 
-        XCTAssertEqual(styleManager.setStyleJSONForJsonStub.invocations.count, 1)
-        XCTAssertEqual(styleManager.setStyleJSONForJsonStub.invocations.last?.parameters, json)
+        XCTAssertEqual(styleManager.setStyleJSONStub.invocations.count, 1)
+        let params = try XCTUnwrap(styleManager.setStyleJSONStub.invocations.last).parameters
+        XCTAssertEqual(params.value, json)
 
         XCTAssertEqual(styleManager.setStyleImportConfigPropertyForImportIdStub.invocations.count, 0, "don't apply import config before load")
 
         // style is loaded
-        $styleDataLoaded.send(StyleDataLoaded(type: .style, timeInterval: EventTimeInterval(begin: Date(), end: Date())))
+        simulateLoad(callbacks: params.callbacks, result: .success)
 
         let inv = styleManager.setStyleImportConfigPropertyForImportIdStub.invocations
         XCTAssertEqual(inv.count, 1)
@@ -50,8 +75,8 @@ final class MapStyleReconcilerTests: XCTestCase {
         XCTAssertEqual(inv.last?.parameters.value as? String, "baz")
     }
 
-    func testLoadsURIStyle() {
-        styleManager.setStyleURIForUriStub.defaultSideEffect = { _ in
+    func testLoadsURIStyle() throws {
+        styleManager.setStyleURIStub.defaultSideEffect = { _ in
             self.styleManager.isStyleLoadedStub.defaultReturnValue = false
         }
 
@@ -61,13 +86,14 @@ final class MapStyleReconcilerTests: XCTestCase {
             ])
         ])
 
-        XCTAssertEqual(styleManager.setStyleURIForUriStub.invocations.count, 1)
-        XCTAssertEqual(styleManager.setStyleURIForUriStub.invocations.last?.parameters, StyleURI.streets.rawValue)
+        XCTAssertEqual(styleManager.setStyleURIStub.invocations.count, 1)
+        let params = try XCTUnwrap(styleManager.setStyleURIStub.invocations.last).parameters
+        XCTAssertEqual(params.value, StyleURI.streets.rawValue)
 
         XCTAssertEqual(styleManager.setStyleImportConfigPropertyForImportIdStub.invocations.count, 0, "don't apply import config before load")
 
         // style is loaded
-        $styleDataLoaded.send(StyleDataLoaded(type: .style, timeInterval: EventTimeInterval(begin: Date(), end: Date())))
+        simulateLoad(callbacks: params.callbacks, result: .success)
 
         let inv = styleManager.setStyleImportConfigPropertyForImportIdStub.invocations
         XCTAssertEqual(inv.count, 1)
@@ -76,10 +102,14 @@ final class MapStyleReconcilerTests: XCTestCase {
         XCTAssertEqual(inv.last?.parameters.value as? String, "baz")
     }
 
-    func testDoubleLoad() {
-
-        styleManager.setStyleURIForUriStub.defaultSideEffect = { _ in
+    func testDoubleLoad() throws {
+        var callbacks: RuntimeStylingCallbacks?
+        styleManager.setStyleURIStub.defaultSideEffect = { invoc in
             self.styleManager.isStyleLoadedStub.defaultReturnValue = false
+            if let callbacks {
+                self.simulateLoad(callbacks: callbacks, result: .cancel)
+            }
+            callbacks = invoc.parameters.callbacks
         }
 
         me.mapStyle = MapStyle(uri: .outdoors, importConfigurations: [
@@ -89,18 +119,104 @@ final class MapStyleReconcilerTests: XCTestCase {
             .init(importId: "foo-2", config: ["k-2": "v-2"])
         ])
 
-        XCTAssertEqual(styleManager.setStyleURIForUriStub.invocations.map(\.parameters), [
+        XCTAssertEqual(styleManager.setStyleURIStub.invocations.map(\.parameters.value), [
             StyleURI.outdoors.rawValue,
             StyleURI.streets.rawValue
         ])
 
         // style is loaded
-        $styleDataLoaded.send(StyleDataLoaded(type: .style, timeInterval: EventTimeInterval(begin: Date(), end: Date())))
+        simulateLoad(callbacks: try XCTUnwrap(callbacks), result: .success)
 
         // the first style update is skipped.
         let inv = styleManager.setStyleImportConfigPropertyForImportIdStub.invocations
         XCTAssertEqual(inv.count, 1)
         XCTAssertEqual(inv.last?.parameters.importId, "foo-2")
+        XCTAssertEqual(inv.last?.parameters.config, "k-2")
+        XCTAssertEqual(inv.last?.parameters.value as? String, "v-2")
+    }
+
+    func testLoadStyleSuccess() throws {
+        var callbacks: RuntimeStylingCallbacks?
+        styleManager.setStyleURIStub.defaultSideEffect = { invoc in
+            self.styleManager.isStyleLoadedStub.defaultReturnValue = false
+            callbacks = invoc.parameters.callbacks
+        }
+
+        let style1 = MapStyle.standard(lightPreset: .dawn)
+        let style2 = MapStyle.standard(lightPreset: .dusk)
+        let transition = TransitionOptions(duration: 1, delay: 2, enablePlacementTransitions: true)
+        var calls = 0
+        me.loadStyle(style1, transition: transition) { error in
+            XCTAssertNil(error)
+            calls += 1
+        }
+        me.loadStyle(style2, transition: transition) { error in
+            XCTAssertNil(error)
+            calls += 1
+        }
+
+        simulateLoad(callbacks: try XCTUnwrap(callbacks), result: .success)
+
+        XCTAssertEqual(styleManager.setStyleURIStub.invocations.count, 1)
+        XCTAssertEqual(styleManager.setStyleTransitionStub.invocations.count, 1)
+        XCTAssertEqual(styleManager.setStyleTransitionStub.invocations.last?.parameters, transition)
+
+        XCTAssertEqual(calls, 2)
+    }
+
+    func testLoadStyleError() throws {
+        var callbacks: RuntimeStylingCallbacks?
+        styleManager.setStyleURIStub.defaultSideEffect = { invoc in
+            self.styleManager.isStyleLoadedStub.defaultReturnValue = false
+            callbacks = invoc.parameters.callbacks
+        }
+
+        let style1 = MapStyle.standard(lightPreset: .dawn)
+        let style2 = MapStyle.standard(lightPreset: .dusk)
+        let transition = TransitionOptions(duration: 1, delay: 2, enablePlacementTransitions: true)
+        var calls = 0
+        me.loadStyle(style1, transition: transition) { error in
+            XCTAssertTrue(error is StyleError)
+            XCTAssertTrue((error as? StyleError)?.rawValue == "test error")
+            calls += 1
+        }
+        me.loadStyle(style2, transition: transition) { error in
+            XCTAssertTrue(error is StyleError)
+            XCTAssertTrue((error as? StyleError)?.rawValue == "test error")
+            calls += 1
+        }
+
+        simulateLoad(callbacks: try XCTUnwrap(callbacks), result: .error)
+
+        XCTAssertEqual(styleManager.setStyleURIStub.invocations.count, 1)
+        XCTAssertEqual(styleManager.setStyleTransitionStub.invocations.count, 0)
+
+        XCTAssertEqual(calls, 2)
+    }
+
+    func testReconcileWhenLoaded() {
+        styleManager.setStyleURIStub.defaultSideEffect = { invoc in
+            self.simulateLoad(callbacks: invoc.parameters.callbacks, result: .success)
+            self.styleManager.setStyleImportConfigPropertyForImportIdStub.reset()
+        }
+        me.mapStyle = MapStyle(uri: .outdoors, importConfigurations: [
+            .init(importId: "foo-1", config: ["k-1": "v-1", "a": "b"])
+        ])
+
+        let s2 = MapStyle(uri: .outdoors, importConfigurations: [
+            .init(importId: "foo-1", config: ["k-2": "v-2"])
+        ])
+
+        var count = 0
+        me.loadStyle(s2, transition: nil) { error in
+            XCTAssertNil(error)
+            count += 1
+        }
+        XCTAssertEqual(count, 1)
+
+        let inv = styleManager.setStyleImportConfigPropertyForImportIdStub.invocations
+        XCTAssertEqual(inv.count, 1)
+        XCTAssertEqual(inv.last?.parameters.importId, "foo-1")
         XCTAssertEqual(inv.last?.parameters.config, "k-2")
         XCTAssertEqual(inv.last?.parameters.value as? String, "v-2")
     }
@@ -113,7 +229,7 @@ final class MapStyleReconcilerTests: XCTestCase {
                     importId: "foo",
                     config: ["bar": "baz"])
             ],
-            coreStyleManager: styleManager)
+            styleManager: styleManager)
 
         let inv = styleManager.setStyleImportConfigPropertyForImportIdStub.invocations
         XCTAssertEqual(inv.count, 1)
@@ -140,7 +256,7 @@ final class MapStyleReconcilerTests: XCTestCase {
                         "qux": "quux"
                     ])
             ],
-            coreStyleManager: styleManager)
+            styleManager: styleManager)
 
         let inv = styleManager.setStyleImportConfigPropertyForImportIdStub.invocations
         XCTAssertEqual(inv.count, 1)

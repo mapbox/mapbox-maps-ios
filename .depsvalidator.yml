@@ -2,18 +2,28 @@
 manifests:
   - type: Package.swift
   - type: Package.resolved
+    omit_for:
+      # Temporarily disabled since we use .binaryTarget instead of SPM dependency for MapboxCoreMaps
+      - MapboxCoreMaps
   - type: Package.resolved
     path: Apps/Apps.xcworkspace/xcshareddata/swiftpm/Package.resolved
+    omit_for:
+    # Temporarily disabled since we use .binaryTarget instead of SPM dependency for MapboxCoreMaps
+      - MapboxCoreMaps
   - type: Podspec
   - type: packager
+  - type: Cross-check Common SDK version with GL Native
+    omit_for:
+      - MapboxCoreMaps
+      - Turf
 dependencies:
-  # Temporary disabled since we use .binaryTarget instead of SPM dependency for MapboxCoreMaps
-  # - name: MapboxCoreMaps
-  #   variations:
-  #     Package.swift: mapbox-core-maps-ios
-  # - name: MapboxCommon
-  #   variations:
-  #     Package.swift: mapbox-common-ios
+  - name: MapboxCoreMaps
+    variations:
+      Package.resolved: mapbox-core-maps-ios
+  - name: MapboxCommon
+    variations:
+      Package.swift: mapbox-common-ios
+      Package.resolved: mapbox-common-ios
   - name: Turf
     variations:
       Package.swift: turf-swift
@@ -23,3 +33,23 @@ manifest_definitions:
     type: SemanticVersion
     default_path: scripts/release/packager/versions.json
     command: jq -r ".$DEPSVALIDATOR_DEPENDENCY_NAME" "$DEPSVALIDATOR_MANIFEST_PATH"
+  - name: Cross-check Common SDK version with GL Native
+    type: SemanticVersion
+    default_path: gl-native-common-version(virtual_manifest)
+    command: |
+      set -e
+      export GITHUB_TOKEN=$(mbx-ci github reader token)
+      if [[ -z "$GITHUB_TOKEN" ]];
+      then
+        exit 1
+      fi
+      COREMAPS_VERSION=$(jq -r .MapboxCoreMaps scripts/release/packager/versions.json)
+      if [[ "$COREMAPS_VERSION" == *"SNAPSHOT"* ]];
+      then
+        # take commit hash from a snapshot string, e.g. 11.0.0-SNAPSHOT.1012T1154Z.cad0c70
+        GL_NATIVE_GITHUB_REF=$(echo "$COREMAPS_VERSION" | cut -d "." -f 5)
+      else
+        GL_NATIVE_GITHUB_REF="maps-v$COREMAPS_VERSION"
+      fi
+
+      gh api -H "Accept: application/vnd.github+json" "/repos/mapbox/mapbox-gl-native-internal/contents/common-version.txt?ref=$GL_NATIVE_GITHUB_REF" --jq ".content" | base64 --decode

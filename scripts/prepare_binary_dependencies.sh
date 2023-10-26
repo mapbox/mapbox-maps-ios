@@ -23,7 +23,7 @@ EOF
 cat <<EOF > Cartfile
 binary "Cartfile.MapboxCoreMaps.json" == $MAPBOX_CORE_MAPS_VERSION
 binary "Cartfile.MapboxCommon.json" == $MAPBOX_COMMON_VERSION
-github "mapbox/turf-swift" == $(jq -r .Turf $VERSIONS_PATH | sed 's/^v//')
+github "mapbox/turf-swift" == $(jq -r .Turf $VERSIONS_PATH)
 
 EOF
 

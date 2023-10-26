@@ -16,7 +16,7 @@ TURF_VERSION=$(jq -r .Turf scripts/release/packager/versions.json)
 MAPS_SDK_VERSION=$(jq -r .version Sources/MapboxMaps/MapboxMaps.json)
 CURRENT_YEAR=$(date +%Y)
 
-TURF_LICENSE_CONTENT=$(gh api -H "Accept: application/vnd.github+json" "/repos/mapbox/turf-swift/contents/LICENSE.md?ref=$TURF_VERSION" --jq ".content" | base64 --decode)
+TURF_LICENSE_CONTENT=$(gh api -H "Accept: application/vnd.github+json" "/repos/mapbox/turf-swift/contents/LICENSE.md?ref=v$TURF_VERSION" --jq ".content" | base64 --decode)
 CORE_LICENSE=$(gh api -H "Accept: application/vnd.github+json" "/repos/mapbox/mapbox-gl-native-internal/contents/LICENSE-iOS.md?ref=maps-v$COREMAPS_VERSION" --jq ".content" | base64 --decode)
 
 m4  -D __MAPS_SDK_VERSION__="$MAPS_SDK_VERSION" \

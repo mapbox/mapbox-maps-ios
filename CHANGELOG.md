@@ -6,6 +6,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Breaking changes ⚠️
 * `MapboxMap.loadStyle` methods changed error type from `MapLoadingError` to `Error`.
+* `OverviewViewportStateOptions.coordinatesPadding` is renamed to `OverviewViewportStateOptions.geometryPadding`.
+* [SwiftUI] ``Viewport.overview(geometry:bearing:pitch:coordinatesPadding:maxZoom:offset:)` is renamed to `Viewport.overview(geometry:bearing:pitch:geometryPadding:maxZoom:offset:)`
 
 ### Features ✨ and improvements 🏁
 * Refactor `MapboxMap.loadStyle` to cancel previous style loads when called multiple times.

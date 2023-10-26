@@ -1223,3 +1223,9 @@ Var OverviewViewportStateOptions.padding has declared type change from UIKit.UIE
 Func MapboxMap.loadStyle(_:transition:completion:) has parameter 2 type change from ((MapboxCoreMaps.MapLoadingError?) -> Swift.Void)? to ((Swift.Error?) -> Swift.Void)?
 Func MapboxMap.loadStyleJSON(_:completion:) has parameter 1 type change from ((MapboxCoreMaps.MapLoadingError?) -> Swift.Void)? to ((Swift.Error?) -> Swift.Void)?
 Func MapboxMap.loadStyleURI(_:completion:) has parameter 1 type change from ((MapboxCoreMaps.MapLoadingError?) -> Swift.Void)? to ((Swift.Error?) -> Swift.Void)?
+
+// Rename coordinatesPadding to geometryPadding
+Constructor OverviewViewportStateOptions.init(geometry:coordinatesPadding:bearing:pitch:padding:maxZoom:offset:animationDuration:) has been removed
+Var OverviewViewportStateOptions.coordinatesPadding has been removed
+Var Viewport.OverviewOptions.coordinatesPadding has been removed
+Func Viewport.overview(geometry:bearing:pitch:coordinatesPadding:maxZoom:offset:) has been renamed to Func overview(geometry:bearing:pitch:geometryPadding:maxZoom:offset:)

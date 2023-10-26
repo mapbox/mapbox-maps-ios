@@ -8,10 +8,10 @@ public struct OverviewViewportStateOptions: Equatable {
     /// The geometry that the ``OverviewViewportState`` should use when calculating its camera.
     public var geometry: Geometry
 
-    /// The padding that ``OverviewViewportState`` should add to coordinates when calculating fitting camera.
+    /// The padding that ``OverviewViewportState`` should add to geometry when calculating fitting camera.
     ///
     /// - Note: This is different from camera padding, see ``OverviewViewportStateOptions/padding``.
-    public var coordinatesPadding: UIEdgeInsets
+    public var geometryPadding: UIEdgeInsets
 
     /// The bearing that ``OverviewViewportState`` should use when calcualting its camera.
     public var bearing: CLLocationDirection?
@@ -39,7 +39,7 @@ public struct OverviewViewportStateOptions: Equatable {
     ///
     /// - Parameters:
     ///   - geometry: The geometry for which an overview should be shown.
-    ///   - coordinatesPadding: The padding to add to coordinates when calculating fitting camera.
+    ///   - geometryPadding: The padding to add to geometry when calculating fitting camera.
     ///   - bearing: Camera bearing.
     ///   - pitch: Camera pitch.
     ///   - padding: Camera padding.
@@ -47,7 +47,7 @@ public struct OverviewViewportStateOptions: Equatable {
     ///   - offset: The center of the given bounds relative to the map's center, measured in points.
     ///   - animationDuration: Defaults to 1.
     public init(geometry: GeometryConvertible,
-                coordinatesPadding: UIEdgeInsets = .zero,
+                geometryPadding: UIEdgeInsets = .zero,
                 bearing: CLLocationDirection? = 0,
                 pitch: CGFloat? = 0,
                 padding: UIEdgeInsets? = nil,
@@ -55,7 +55,7 @@ public struct OverviewViewportStateOptions: Equatable {
                 offset: CGPoint? = nil,
                 animationDuration: TimeInterval = 1) {
         self.geometry = geometry.geometry
-        self.coordinatesPadding = coordinatesPadding
+        self.geometryPadding = geometryPadding
         self.bearing = bearing
         self.pitch = pitch
         self.padding = padding

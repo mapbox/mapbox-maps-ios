@@ -143,7 +143,7 @@ final class DynamicViewAnnotationExample: UIViewController, ExampleProtocol {
         } else {
             if let route = routes.first(where: \.selected), let geometry = route.feature.geometry {
                 let coordPadding = UIEdgeInsets(allEdges: 20)
-                let options = OverviewViewportStateOptions(geometry: geometry, coordinatesPadding: coordPadding, padding: padding)
+                let options = OverviewViewportStateOptions(geometry: geometry, geometryPadding: coordPadding, padding: padding)
                 viewportState = mapView.viewport.makeOverviewViewportState(options: options)
             }
         }

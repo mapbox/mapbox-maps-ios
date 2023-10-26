@@ -79,7 +79,7 @@ public struct Viewport: Equatable {
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
-        public var coordinatesPadding: SwiftUI.EdgeInsets
+        public var geometryPadding: SwiftUI.EdgeInsets
 
 #if swift(>=5.8)
     @_documentation(visibility: public)
@@ -199,7 +199,7 @@ public struct Viewport: Equatable {
     ///   - geometry: Geometry to show.
     ///   - bearing: The bearing of the map, measured in degrees clockwise from true north.
     ///   - pitch: Pitch toward the horizon measured in degrees, with 0 degrees resulting in a top-down view for a two-dimensional map.
-    ///   - coordinatesPadding: Extra padding to add to geometry coordinates.
+    ///   - geometryPadding: Extra padding to add to geometry.
     ///   - maxZoom: The maximum zoom level to allow.
     ///   - offset: The center of the given bounds relative to the map's center, measured in points.
     /// - Returns: A viewport configured with given overview settings.
@@ -210,7 +210,7 @@ public struct Viewport: Equatable {
         geometry: GeometryConvertible,
         bearing: CGFloat = 0,
         pitch: CGFloat = 0,
-        coordinatesPadding: SwiftUI.EdgeInsets = .init(),
+        geometryPadding: SwiftUI.EdgeInsets = .init(),
         maxZoom: Double? = nil,
         offset: CGPoint? = nil
     ) -> Viewport {
@@ -218,7 +218,7 @@ public struct Viewport: Equatable {
             geometry: geometry.geometry,
             bearing: bearing,
             pitch: pitch,
-            coordinatesPadding: coordinatesPadding,
+            geometryPadding: geometryPadding,
             maxZoom: maxZoom,
             offset: offset)
         return Viewport(storage: .overview(options))
@@ -393,10 +393,10 @@ extension Viewport {
 @available(iOS 13.0, *)
 extension Viewport.OverviewOptions {
     func resolve(layoutDirection: LayoutDirection, padding: UIEdgeInsets) -> OverviewViewportStateOptions {
-        let coordinatesPadding = UIEdgeInsets(insets: coordinatesPadding, layoutDirection: layoutDirection)
+        let geometryPadding = UIEdgeInsets(insets: geometryPadding, layoutDirection: layoutDirection)
         return OverviewViewportStateOptions(
             geometry: geometry,
-            coordinatesPadding: coordinatesPadding,
+            geometryPadding: geometryPadding,
             bearing: bearing,
             pitch: pitch,
             padding: padding,

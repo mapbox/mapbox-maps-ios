@@ -816,7 +816,7 @@ class OfflineRegionObserver: MapboxCoreMaps.OfflineRegionObserver {
 
 #### 3.10 ``OverviewViewportStateOptions`` changes.
 
-The `OverviewViewportStateOptions.padding` parameter is renamed to ``OverviewViewportStateOptions/coordinatesPadding``. It adds padding for every coordinate before fitting the geometry. The ``OverviewViewportStateOptions/padding`` now adds camera padding, similar to ``FollowPuckViewportStateOptions/padding``.
+The `OverviewViewportStateOptions.padding` parameter is renamed to ``OverviewViewportStateOptions/geometryPadding``. It adds padding for every coordinate before fitting the geometry. The ``OverviewViewportStateOptions/padding`` now adds camera padding, similar to ``FollowPuckViewportStateOptions/padding``.
 
 ## 4. Update APIs deprecated in v10 which have been removed in v11
 

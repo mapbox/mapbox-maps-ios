@@ -55,10 +55,10 @@ public final class OverviewViewportState {
                 padding: options.padding,
                 bearing: options.bearing,
                 pitch: options.pitch),
-            coordinatesPadding: options.coordinatesPadding,
+            coordinatesPadding: options.geometryPadding,
             maxZoom: options.maxZoom,
             offset: options.offset)
-        camera?.padding = options.padding // TODO: fix this in core
+        camera?.padding = options.padding
         if let camera {
             observableCameraOptions.notify(with: camera)
         }

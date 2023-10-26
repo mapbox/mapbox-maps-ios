@@ -44,7 +44,7 @@ final class ViewportTests: XCTestCase {
             geometry: geometry,
             bearing: 2,
             pitch: 3,
-            coordinatesPadding: SwiftUI.EdgeInsets(top: 4, leading: 5, bottom: 6, trailing: 7),
+            geometryPadding: SwiftUI.EdgeInsets(top: 4, leading: 5, bottom: 6, trailing: 7),
             maxZoom: 8,
             offset: CGPoint(x: 9, y: 10))
 
@@ -52,7 +52,7 @@ final class ViewportTests: XCTestCase {
 
         let expectedOptions = OverviewViewportStateOptions(
             geometry: geometry,
-            coordinatesPadding: UIEdgeInsets(top: 4, left: 5, bottom: 6, right: 7),
+            geometryPadding: UIEdgeInsets(top: 4, left: 5, bottom: 6, right: 7),
             bearing: 2,
             pitch: 3,
             padding: padding,

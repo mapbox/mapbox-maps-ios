@@ -22,7 +22,7 @@ final class OverviewViewportStateOptionsTests: XCTestCase {
             Point(.random()),
             LineString([.random(), .random()])
         ].randomElement()!
-        let coordinatesPadding = UIEdgeInsets.random()
+        let geometryPadding = UIEdgeInsets.random()
         let padding = UIEdgeInsets.random()
         let bearing = CLLocationDirection?.random(.random(in: 0..<360))
         let pitch = CGFloat?.random(.random(in: 0...80))
@@ -30,14 +30,14 @@ final class OverviewViewportStateOptionsTests: XCTestCase {
 
         let options = OverviewViewportStateOptions(
             geometry: geometry,
-            coordinatesPadding: coordinatesPadding,
+            geometryPadding: geometryPadding,
             bearing: bearing,
             pitch: pitch,
             padding: padding,
             animationDuration: animationDuration)
 
         XCTAssertEqual(options.geometry, geometry.geometry)
-        XCTAssertEqual(options.coordinatesPadding, coordinatesPadding)
+        XCTAssertEqual(options.geometryPadding, geometryPadding)
         XCTAssertEqual(options.padding, padding)
         XCTAssertEqual(options.bearing, bearing)
         XCTAssertEqual(options.pitch, pitch)

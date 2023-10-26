@@ -160,7 +160,7 @@ private struct ViewportMenu: View {
             leading: coordinatePadding,
             bottom: coordinatePadding,
             trailing: coordinatePadding)
-        return .overview(geometry: geometry, coordinatesPadding: padding)
+        return .overview(geometry: geometry, geometryPadding: padding)
     }
 }
 

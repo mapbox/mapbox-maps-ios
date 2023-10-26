@@ -28,6 +28,7 @@ final class DynamicViewAnnotationExample: UIViewController, ExampleProtocol {
     private lazy var modeButton = {
         let button = UIButton(type: .system)
         button.backgroundColor = .white
+        button.tintColor = .black
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 20
         button.layer.shadowColor = UIColor(red: 0.084, green: 0.176, blue: 0.283, alpha: 0.25).cgColor

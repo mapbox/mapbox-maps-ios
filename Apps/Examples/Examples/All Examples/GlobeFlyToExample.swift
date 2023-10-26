@@ -35,8 +35,9 @@ class GlobeFlyToExample: UIViewController, ExampleProtocol {
             self.finish()
         }.store(in: &cancelables)
 
-        let tap = UITapGestureRecognizer(target: self, action: #selector(animateCameraOnClick))
-        mapView.addGestureRecognizer(tap)
+        mapView.gestures.onMapTap.observe { [weak self] _ in
+            self?.animateCameraOnClick()
+        }.store(in: &cancelables)
 
         instuctionLabel.text = "Tap anywhere on the map"
         instuctionLabel.textColor = UIColor.black
@@ -77,7 +78,7 @@ class GlobeFlyToExample: UIViewController, ExampleProtocol {
         try! mapView.mapboxMap.setTerrain(terrain)
     }
 
-    @objc func animateCameraOnClick() {
+    private func animateCameraOnClick() {
         instuctionLabel.isHidden = true
         var target = CameraOptions()
         if isAtStart {

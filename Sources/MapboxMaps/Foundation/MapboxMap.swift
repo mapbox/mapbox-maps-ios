@@ -1267,7 +1267,7 @@ extension MapboxMap {
     /// Returns array of tile identifiers that cover current map camera.
     ///
     /// - Parameters:
-    ///  - options: Options for the tile cover method.
+    ///   - options: Options for the tile cover method.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif

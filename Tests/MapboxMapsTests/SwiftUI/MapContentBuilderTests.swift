@@ -110,7 +110,7 @@ final class MapContentBuilderTests: XCTestCase {
         let visitor = DefaultMapContentVisitor()
         let composite = try XCTUnwrap(content() as? CompositeMapContent)
         XCTAssertEqual(composite.children.count, 1)
-        XCTAssertTrue(composite.children.first is ForEvery<[String], String>)
+        XCTAssertTrue(composite.children.first is ForEvery<MapContent, [String], String>)
 
         composite.visit(visitor)
         XCTAssertEqual(visitorIds, data.flatMap { id -> [AnyHashable] in return [0, id, 0] })

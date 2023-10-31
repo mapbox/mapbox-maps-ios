@@ -1,0 +1,53 @@
+protocol MapContentAnnotation {
+    var id: String { get set }
+    var isDraggable: Bool { get set  }
+    var isSelected: Bool { get set }
+}
+
+protocol MapContentAnnotationManager: AnyObject {
+    associatedtype AnnotationType: MapContentAnnotation
+    var annotations: [AnnotationType] { get set }
+    var isSwiftUI: Bool { get set }
+}
+
+/// Type erasure wrapper for annotation groups.
+struct AnnotationGroup {
+    var layerId: String?
+    var update: (AnnotationOrchestrator, String, inout [AnyHashable: String]) -> Void
+
+    init(layerId: String? = nil, update: @escaping (AnnotationOrchestrator, String, inout [AnyHashable: String]) -> Void) {
+        self.layerId = layerId
+        self.update = update
+    }
+
+    init<M: MapContentAnnotationManager, Data: RandomAccessCollection, ID: Hashable>(
+        prefixId: [AnyHashable],
+        layerId: String?,
+        layerPosition: LayerPosition?,
+        store: ForEvery<M.AnnotationType, Data, ID>,
+        make: @escaping (AnnotationOrchestrator, String, LayerPosition?) -> M,
+        updateProperties: @escaping (M) -> Void
+    ) {
+        self.layerId = layerId
+        self.update = { orchestrator, resolvedId, annotationsIdMap in
+            // Creates or updates annotation manager for a given group.
+            let existingManager = orchestrator.annotationManagersById[resolvedId] as? M
+            let manager = existingManager ?? make(orchestrator, resolvedId, layerPosition)
+            manager.isSwiftUI = true
+            updateProperties(manager)
+
+            var annotations = [M.AnnotationType]()
+            store.forEach { id, annotation in
+                var annotation = annotation
+                let stringId = annotationsIdMap[id] ?? annotation.id
+                annotationsIdMap[id] = stringId
+                annotation.id = stringId
+                annotation.isDraggable = false
+                annotation.isSelected = false
+                annotations.append(annotation)
+            }
+
+            manager.annotations = annotations
+        }
+    }
+}

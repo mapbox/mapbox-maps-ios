@@ -4,6 +4,22 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Features ✨ and improvements 🏁
+* [SwiftUI] Annotation groups can cake static (not data-driven) annotations. In the example below polyline annotation group displays two annotations on the same layer.
+  ```swift
+  Map {
+    PolylineAnnotationGroup {
+      PolylineAnnotation(lineCoordinates: route.coordinates)
+          .lineColor("blue")
+      if let alternativeRoute {
+          PolylineAnnotation(lineCoordinates: alternativeRoute.coordinates)
+              .lineColor("green")
+      }
+    }
+    .lineCap(.round)
+  }
+  ```
+
 ### Breaking changes ⚠️
 * `MapboxMap.loadStyle` methods changed error type from `MapLoadingError` to `Error`.
 * `OverviewViewportStateOptions.coordinatesPadding` is renamed to `OverviewViewportStateOptions.geometryPadding`.

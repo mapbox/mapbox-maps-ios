@@ -10,15 +10,15 @@ final class LayerAnnotationCoordinatorTests: XCTestCase {
         let sut = LayerAnnotationCoordinator(annotationOrchestrator: annotationOrchestrator)
 
         var group1Id: String?
-        let annotationGroup1 = AnyAnnotationGroup { (orchestrator, groupId, _) in
+        let annotationGroup1 = AnnotationGroup(layerId: "layer", update: { orchestrator, groupId, _ in
             XCTAssertIdentical(orchestrator, annotationOrchestrator)
             group1Id = groupId
-        }
+        })
 
         sut.update(annotations: [(0, annotationGroup1)])
         XCTAssertNotNil(group1Id)
 
-        let annotationGroup2 = AnyAnnotationGroup { (orchestrator, groupId, _) in
+        let annotationGroup2 =  AnnotationGroup(layerId: "layer") { orchestrator, groupId, _ in
             XCTAssertIdentical(orchestrator, annotationOrchestrator)
             XCTAssertEqual(groupId, group1Id, "Update with previously registered annotation group")
         }

@@ -1,41 +1,62 @@
 // This file is generated
 
-extension PolylineAnnotation: PrimitiveMapContent {
-    func _visit(_ visitor: MapContentVisitor) {
-        let group = PolylineAnnotationGroup([0], id: \.self) { _ in
-            self
-        }
-        visitor.add(annotationGroup: group.eraseToAny(visitor.id))
-    }
-}
-
-/// Displays a group of polyline annotations.
+/// Displays a group of ``PolylineAnnotation``s.
 ///
-/// Always prefer to use annotation group over individual annotation if more than one annotation of the same type is displayed.
-/// The annotation group is usually more performant, since only one underlying layer is used to draw multiple annotations.
+/// When multiple annotation grouped, they render by a single layer. This makes annotations more performant and
+/// allows to modify group-specific parameters.  For example, you canmodify ``lineCap(_:)``.
 ///
-/// Annotation group allows to configure group-related options, such as clustering (only for point annotations) and others.
+/// - Note: `PolylineAnnotationGroup` is a SwiftUI analog to ``PolylineAnnotationManager``.
+///
+/// The group can be created with dynamic data, or static data. When first method is used, you specify array of identified data and provide a closure that creates a ``PolylineAnnotation`` from that data, similar to ``ForEvery``:
+////// ```swift
+/// Map {
+///   PolylineAnnotationGroup(routes) { route in
+///     PolylineAnnotation(lineCoordinates: route.coordinates)
+///         .lineColor("blue")
+///   }
+///   .lineCap(.round)
+/// }
+/// ```
+///
+/// When the number of annotations is static, you use static that groups one or more annotations:
+////// ```swift
+/// Map {
+///   PolylineAnnotationGroup {
+///     PolylineAnnotation(lineCoordinates: route.coordinates)
+///         .lineColor("blue")
+///     if let alternativeRoute {
+///         PolylineAnnotation(lineCoordinates: alternativeRoute.coordinates)
+///             .lineColor("green")
+///     }
+///   }
+///   .lineCap(.round)
+/// }
+/// ```
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
 @_spi(Experimental)
 public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>: PrimitiveMapContent {
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    var data: Data
-    var idGenerator: (Data.Element) -> ID
-    var content: (Data.Element) -> PolylineAnnotation
+    let store: ForEvery<PolylineAnnotation, Data, ID>
 
+    /// Creates a group that identifies data by given key path.
+    ///
+    /// - Parameters:
+    ///     - data: Collection of data.
+    ///     - id: Data identifier key path.
+    ///     - content: A closure that creates annotation for a given data item.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
     public init(_ data: Data, id: KeyPath<Data.Element, ID>, content: @escaping (Data.Element) -> PolylineAnnotation) {
-        self.data = data
-        self.idGenerator = { $0[keyPath: id] }
-        self.content = content
+        store = ForEvery(data: data, id: id, content: content)
     }
 
+    /// Creates a group from identifiable data.
+    ///
+    /// - Parameters:
+    ///     - data: Collection of identifiable data.
+    ///     - content: A closure that creates annotation for a given data item.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -44,31 +65,30 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
         self.init(data, id: \.id, content: content)
     }
 
-    func _visit(_ visitor: MapContentVisitor) {
-        let anyGroup = eraseToAny(visitor.id)
-        visitor.add(annotationGroup: anyGroup)
+    /// Creates static group.
+    ///
+    /// - Parameters:
+    ///     - content: A builder closure that creates annotations.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public init(@ArrayBuilder<PolylineAnnotation> content: @escaping () -> [PolylineAnnotation?])
+        where Data == Array<(Int, PolylineAnnotation)>, ID == Int {
+        let annotations = content().enumerated().compactMap {
+            $0.element == nil ? nil : ($0.offset, $0.element!)
+        }
+        self.init(annotations, id: \.0, content: \.1)
     }
 
-    func eraseToAny(_ prefixId: [AnyHashable]) -> AnyAnnotationGroup {
-        AnyAnnotationGroup(layerId: layerId) { orchestrator, id, idMap in
-            let manager = orchestrator.annotationManagersById[id]
-                as? PolylineAnnotationManager
-            ?? orchestrator.makePolylineAnnotationManager(id: id, layerPosition: self.layerPosition)
-            self.updateProperties(manager: manager)
-            manager.isSwiftUI = true
-
-            let annotations = data.map { element in
-                var annotation = content(element)
-                let id = prefixId + [idGenerator(element)]
-                let stringId = idMap[id] ?? annotation.id
-                idMap[id] = stringId
-                annotation.id = stringId
-                annotation.isDraggable = false
-                annotation.isSelected = false
-                return annotation
-            }
-            manager.annotations = annotations
-        }
+    func _visit(_ visitor: MapContentVisitor) {
+        let group = AnnotationGroup(
+            prefixId: visitor.id,
+            layerId: layerId,
+            layerPosition: layerPosition,
+            store: store,
+            make: { $0.makePolylineAnnotationManager(id: $1, layerPosition: $2)},
+            updateProperties: { self.updateProperties(manager: $0) })
+        visitor.add(annotationGroup: group)
     }
 
     private func updateProperties(manager: PolylineAnnotationManager) {
@@ -182,6 +202,9 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     var layerId: String?
 
     /// Specifies identifier for underlying implementation layer.
+    ///
+    /// Use the identifier in ``layerPosition(_:)``, or to create view annotations bound the annotations from the group.
+    /// For more information, see the ``MapViewAnnotation/init(layerId:featureId:content:)``.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -189,5 +212,14 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
         with(self, setter(\.layerId, newValue))
     }
 }
+
+extension PolylineAnnotation: PrimitiveMapContent, MapContentAnnotation {
+    func _visit(_ visitor: MapContentVisitor) {
+        PolylineAnnotationGroup { self }
+            ._visit(visitor)
+    }
+}
+
+extension PolylineAnnotationManager: MapContentAnnotationManager {}
 
 // End of generated file.

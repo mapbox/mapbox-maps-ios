@@ -24,10 +24,8 @@ struct CompositeMapContent: PrimitiveMapContent {
     var children: [MapContent] = []
 
     func _visit(_ visitor: MapContentVisitor) {
-        for (idx, child) in children.enumerated() {
-            visitor.push(idx)
-            child.visit(visitor)
-            visitor.pop()
+        for (idx, content) in children.enumerated() {
+            visitor.visit(id: idx, content: content)
         }
     }
 }
@@ -38,12 +36,10 @@ enum ConditionalMapContent: PrimitiveMapContent {
 
     func _visit(_ visitor: MapContentVisitor) {
         switch self {
-        case .first(let mapContent):
-            visitor.push(1)
-            mapContent.visit(visitor)
-        case .second(let mapContent):
-            visitor.push(2)
-            mapContent.visit(visitor)
+        case .first(let content):
+            visitor.visit(id: 1, content: content)
+        case .second(let content):
+            visitor.visit(id: 2, content: content)
         }
     }
 }

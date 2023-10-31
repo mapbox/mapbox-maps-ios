@@ -1,41 +1,61 @@
 // This file is generated
 
-extension PointAnnotation: PrimitiveMapContent {
-    func _visit(_ visitor: MapContentVisitor) {
-        let group = PointAnnotationGroup([0], id: \.self) { _ in
-            self
-        }
-        visitor.add(annotationGroup: group.eraseToAny(visitor.id))
-    }
-}
-
-/// Displays a group of point annotations.
+/// Displays a group of ``PointAnnotation``s.
 ///
-/// Always prefer to use annotation group over individual annotation if more than one annotation of the same type is displayed.
-/// The annotation group is usually more performant, since only one underlying layer is used to draw multiple annotations.
+/// When multiple annotation grouped, they render by a single layer. This makes annotations more performant and
+/// allows to modify group-specific parameters.  For example, you can define clustering with ``clusterOptions(_:)``.
 ///
-/// Annotation group allows to configure group-related options, such as clustering (only for point annotations) and others.
+/// - Note: `PointAnnotationGroup` is a SwiftUI analog to ``PointAnnotationManager``.
+///
+/// The group can be created with dynamic data, or static data. When first method is used, you specify array of identified data and provide a closure that creates a ``PointAnnotation`` from that data, similar to ``ForEvery``:
+///
+/// ```swift
+/// Map {
+///   PointAnnotationGroup(favorites) { favorite in
+///     PointAnnotation(coordinate: favorite.coordinate)
+///         .image(named: "star")
+///   }
+///   .clusterOptions(ClusterOptions(...))
+/// }
+/// ```
+///
+/// When the number of annotations is static, you use static that groups one or more annotations:
+///
+/// ```swift
+/// Map {
+///   PointAnnotationGroup {
+///     PointAnnotation(coordinate: startCoordinate)
+///         .image(named: "start-icon")
+///     PointAnnotation(coordinate: endCoordinate)
+///         .image(named: "end-icon")
+///   }
+/// }
+/// ```
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
 @_spi(Experimental)
 public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>: PrimitiveMapContent {
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-    var data: Data
-    var idGenerator: (Data.Element) -> ID
-    var content: (Data.Element) -> PointAnnotation
+    let store: ForEvery<PointAnnotation, Data, ID>
 
+    /// Creates a group that identifies data by given key path.
+    ///
+    /// - Parameters:
+    ///     - data: Collection of data.
+    ///     - id: Data identifier key path.
+    ///     - content: A closure that creates annotation for a given data item.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
     public init(_ data: Data, id: KeyPath<Data.Element, ID>, content: @escaping (Data.Element) -> PointAnnotation) {
-        self.data = data
-        self.idGenerator = { $0[keyPath: id] }
-        self.content = content
+        store = ForEvery(data: data, id: id, content: content)
     }
 
+    /// Creates a group from identifiable data.
+    ///
+    /// - Parameters:
+    ///     - data: Collection of identifiable data.
+    ///     - content: A closure that creates annotation for a given data item.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -44,31 +64,30 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>: 
         self.init(data, id: \.id, content: content)
     }
 
-    func _visit(_ visitor: MapContentVisitor) {
-        let anyGroup = eraseToAny(visitor.id)
-        visitor.add(annotationGroup: anyGroup)
+    /// Creates static group.
+    ///
+    /// - Parameters:
+    ///     - content: A builder closure that creates annotations.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public init(@ArrayBuilder<PointAnnotation> content: @escaping () -> [PointAnnotation?])
+        where Data == Array<(Int, PointAnnotation)>, ID == Int {
+        let annotations = content().enumerated().compactMap {
+            $0.element == nil ? nil : ($0.offset, $0.element!)
+        }
+        self.init(annotations, id: \.0, content: \.1)
     }
 
-    func eraseToAny(_ prefixId: [AnyHashable]) -> AnyAnnotationGroup {
-        AnyAnnotationGroup(layerId: layerId) { orchestrator, id, idMap in
-            let manager = orchestrator.annotationManagersById[id]
-                as? PointAnnotationManager
-            ?? orchestrator.makePointAnnotationManager(id: id, layerPosition: self.layerPosition, clusterOptions: self.clusterOptions)
-            self.updateProperties(manager: manager)
-            manager.isSwiftUI = true
-
-            let annotations = data.map { element in
-                var annotation = content(element)
-                let id = prefixId + [idGenerator(element)]
-                let stringId = idMap[id] ?? annotation.id
-                idMap[id] = stringId
-                annotation.id = stringId
-                annotation.isDraggable = false
-                annotation.isSelected = false
-                return annotation
-            }
-            manager.annotations = annotations
-        }
+    func _visit(_ visitor: MapContentVisitor) {
+        let group = AnnotationGroup(
+            prefixId: visitor.id,
+            layerId: layerId,
+            layerPosition: layerPosition,
+            store: store,
+            make: { $0.makePointAnnotationManager(id: $1, layerPosition: $2)},
+            updateProperties: { self.updateProperties(manager: $0) })
+        visitor.add(annotationGroup: group)
     }
 
     private func updateProperties(manager: PointAnnotationManager) {
@@ -373,6 +392,9 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>: 
     var layerId: String?
 
     /// Specifies identifier for underlying implementation layer.
+    ///
+    /// Use the identifier in ``layerPosition(_:)``, or to create view annotations bound the annotations from the group.
+    /// For more information, see the ``MapViewAnnotation/init(layerId:featureId:content:)``.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -380,5 +402,14 @@ public struct PointAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>: 
         with(self, setter(\.layerId, newValue))
     }
 }
+
+extension PointAnnotation: PrimitiveMapContent, MapContentAnnotation {
+    func _visit(_ visitor: MapContentVisitor) {
+        PointAnnotationGroup { self }
+            ._visit(visitor)
+    }
+}
+
+extension PointAnnotationManager: MapContentAnnotationManager {}
 
 // End of generated file.

@@ -1,5 +1,5 @@
 // This file is generated.
-import Foundation
+import UIKit
 
 public struct CircleAnnotation: Annotation, Equatable {
 

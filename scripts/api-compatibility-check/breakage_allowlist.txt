@@ -1229,3 +1229,13 @@ Constructor OverviewViewportStateOptions.init(geometry:coordinatesPadding:bearin
 Var OverviewViewportStateOptions.coordinatesPadding has been removed
 Var Viewport.OverviewOptions.coordinatesPadding has been removed
 Func Viewport.overview(geometry:bearing:pitch:coordinatesPadding:maxZoom:offset:) has been renamed to Func overview(geometry:bearing:pitch:geometryPadding:maxZoom:offset:)
+
+// Make generic ForEach
+Constructor ForEvery.init(_:content:) has generic signature change from <Data, ID where Data : Swift.RandomAccessCollection, ID == Data.Element.ID, Data.Element : Swift.Identifiable> to <Content, Data, ID where Content == MapboxMaps.MapContent, Data : Swift.RandomAccessCollection, ID == Data.Element.ID, Data.Element : Swift.Identifiable>
+Constructor ForEvery.init(_:id:content:) has generic signature change from <Data, ID where Data : Swift.RandomAccessCollection, ID : Swift.Hashable> to <Content, Data, ID where Content == MapboxMaps.MapContent, Data : Swift.RandomAccessCollection, ID : Swift.Hashable>
+Struct ForEvery has generic signature change from <Data, ID where Data : Swift.RandomAccessCollection, ID : Swift.Hashable> to <Content, Data, ID where Data : Swift.RandomAccessCollection, ID : Swift.Hashable>
+Func MapContentBuilder.buildLimitedAvailability(_:) has been removed
+Constructor ForEvery.init(_:content:) has parameter 1 type change from (Data.Element) -> MapboxMaps.MapContent to (Data.Element) -> Content
+Constructor ForEvery.init(_:content:) has return type change from MapboxMaps.ForEvery<Data, ID> to MapboxMaps.ForEvery<Content, Data, ID>
+Constructor ForEvery.init(_:id:content:) has parameter 2 type change from (Data.Element) -> MapboxMaps.MapContent to (Data.Element) -> Content
+Constructor ForEvery.init(_:id:content:) has return type change from MapboxMaps.ForEvery<Data, ID> to MapboxMaps.ForEvery<Content, Data, ID>

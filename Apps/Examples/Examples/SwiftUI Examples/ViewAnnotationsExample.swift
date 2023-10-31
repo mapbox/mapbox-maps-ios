@@ -9,7 +9,7 @@ struct ViewAnnotationsExample: View {
     @State private var allowOverlap: Bool = false
     @State private var selected = false
     @State private var etaAnnotationAnchor = ViewAnnotationAnchor.center
-    
+
     var body: some View {
         Map(initialViewport: .camera(center: .helsinki, zoom: 5)
             // Add bottom inset for bottom config panel, View Annotations won't appear there.
@@ -64,12 +64,17 @@ struct ViewAnnotationsExample: View {
             .onAnchorChanged { self.etaAnnotationAnchor = $0.anchor }
             .selected(true)
 
-            PolylineAnnotationGroup([0], id: \.self) { _ in
+            PolylineAnnotationGroup {
+                PolylineAnnotation(lineCoordinates: routeCoordinates)
+                    .lineColor("#327AC2")
+                    .lineWidth(10)
+
                 PolylineAnnotation(id: "route-feature", lineCoordinates: routeCoordinates)
-                    .lineColor(StyleColor(rawValue: "#327AC2"))
-                    .lineWidth(8)
+                    .lineColor("#57A9FB")
+                    .lineWidth(6)
             }
             .layerId("route") // Specify id for underlying line layer.
+            .lineCap(.round)
         }
         .presentsWithTransaction(true) // Synchronize Metal and CALayer for better VA performance.
         .mapStyle(.streets)

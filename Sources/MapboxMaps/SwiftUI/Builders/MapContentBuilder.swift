@@ -24,9 +24,37 @@
     public static func buildEither(second component: MapContent) -> MapContent {
         ConditionalMapContent.second(component)
     }
+}
+
+/// A result builder that creates array of homogenous elements.
+/// If element is missing, the resulting array leaves nil gaps.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+@_spi(Experimental)
+@resultBuilder public struct ArrayBuilder<T> {
+    /// :nodoc:
+    public static func buildBlock(_ components: [T?]...) -> [T?] {
+        components.flatMap { $0 }
+    }
 
     /// :nodoc:
-    public static func buildLimitedAvailability(_ component: MapContent) -> MapContent {
-        component
+    public static func buildExpression(_ expression: T) -> [T?] {
+        [expression]
+    }
+
+    /// :nodoc:
+    public static func buildOptional(_ component: [T?]?) -> [T?] {
+        component ?? [nil]
+    }
+
+    /// :nodoc:
+    public static func buildEither(first component: [T?]) -> [T?] {
+        component + [nil]
+    }
+
+    /// :nodoc:
+    public static func buildEither(second component: [T?]) -> [T?] {
+        [nil] + component
     }
 }

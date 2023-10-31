@@ -1,5 +1,5 @@
 // This file is generated.
-import Foundation
+import UIKit
 
 public struct PointAnnotation: Annotation, Equatable {
 
@@ -490,6 +490,12 @@ public struct PointAnnotation: Annotation, Equatable {
 #endif
     public func image(_ image: Image?) -> Self {
         with(self, setter(\.image, image))
+    }
+
+    /// Sets named image as icon.
+    public func image(named name: String) -> Self {
+        let uiImage = UIImage(named: name)!
+        return image(Image(image: uiImage, name: name))
     }
 
     /// Adds a handler for tap gesture on current annotation.

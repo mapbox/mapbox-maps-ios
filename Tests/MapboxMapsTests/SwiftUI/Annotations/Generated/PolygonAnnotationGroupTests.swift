@@ -7,101 +7,49 @@ final class PolygonAnnotationGroupTests: XCTestCase {
 
     var mockAnnotationOrchestratorImpl: MockAnnotationOrchestatorImpl!
     var annotationOrchestrator: AnnotationOrchestrator!
+    var visitor: DefaultMapContentVisitor!
 
     override func setUp() {
         super.setUp()
 
+        self.visitor = DefaultMapContentVisitor()
         mockAnnotationOrchestratorImpl = MockAnnotationOrchestatorImpl()
         annotationOrchestrator = AnnotationOrchestrator(impl: mockAnnotationOrchestratorImpl)
     }
 
     override func tearDown() {
-        mockAnnotationOrchestratorImpl.makePolygonAnnotationManagerStub.reset()
-        mockAnnotationOrchestratorImpl.annotationManagersById = [:]
+        visitor = nil
+        mockAnnotationOrchestratorImpl = nil
         super.tearDown()
     }
 
     func testNewAnnotationManager() throws {
         // Given
-        let group = PolygonAnnotationGroup((0...4), id: \.self) { _ in
-            PolygonAnnotation(
-                polygon: .init(outerRing: Ring(coordinates: .random(withLength: 5, generator: CLLocationCoordinate2D.random)))
-            )
+        let coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+        let layerId = "layer-id"
+        let group = PolygonAnnotationGroup {
+            PolygonAnnotation(polygon: Polygon(center: coordinate, radius: 100, vertices: 3))
         }
+        .layerId(layerId)
 
-        // When
-        let erased = group.eraseToAny([0])
-        let annotationManagerId = UUID().uuidString
         var annotationIds: [AnyHashable: String] = [:]
 
-        erased.update(annotationOrchestrator, annotationManagerId, &annotationIds)
+        // When
+        visitor.visit(id: "any-id", content: group)
+        let addedGroup = try XCTUnwrap(visitor.annotationGroups.first)
+        XCTAssertEqual(addedGroup.0, ["any-id"])
+        XCTAssertEqual(addedGroup.1.layerId, layerId)
+        addedGroup.1.update(annotationOrchestrator, layerId, &annotationIds)
 
         // Then
         let stubbed = mockAnnotationOrchestratorImpl.makePolygonAnnotationManagerStub.invocations[0]
-        let createdAnnotationManager = try XCTUnwrap(stubbed.returnValue as? PolygonAnnotationManager)
-        XCTAssertEqual(stubbed.parameters.id, annotationManagerId)
-        XCTAssertEqual(createdAnnotationManager.annotations.count, group.data.count)
-        XCTAssertTrue(try group.data.allSatisfy {
-            let hash = [0, $0]
-            let annotationId = try XCTUnwrap(annotationIds[hash])
-            return createdAnnotationManager.annotations.contains(where: { $0.id == annotationId })
-        })
-    }
+        let manager = try XCTUnwrap(stubbed.returnValue as? PolygonAnnotationManager)
+        XCTAssertEqual(stubbed.parameters.id, layerId)
+        XCTAssertEqual(manager.annotations.count, 1)
 
-    func testUpdatingAnnotationManager() {
-        let group = PolygonAnnotationGroup((0...4), id: \.self) { _ in
-            PolygonAnnotation(
-                polygon: .init(outerRing: Ring(coordinates: .random(withLength: 5, generator: CLLocationCoordinate2D.random)))
-            )
-        }
-
-        // When
-        let existingAnnotationManager = mockAnnotationOrchestratorImpl.makePolygonAnnotationManagerStub.defaultReturnValue as! PolygonAnnotationManager
-        XCTAssertTrue(existingAnnotationManager.annotations.isEmpty)
-
-        let erased = group.eraseToAny([0])
-        let annotationManagerId = UUID().uuidString
-        var annotationIds: [AnyHashable: String] = [:]
-        mockAnnotationOrchestratorImpl.annotationManagersById[annotationManagerId] = existingAnnotationManager
-        erased.update(annotationOrchestrator, annotationManagerId, &annotationIds)
-
-        // Then
-        XCTAssertTrue(mockAnnotationOrchestratorImpl.makePolygonAnnotationManagerStub.invocations.isEmpty)
-
-        XCTAssertEqual(existingAnnotationManager.annotations.count, group.data.count)
-        XCTAssertTrue(try group.data.allSatisfy {
-            let hash = [0, $0]
-            let annotationId = try XCTUnwrap(annotationIds[hash])
-            return existingAnnotationManager.annotations.contains(where: { $0.id == annotationId })
-        })
-    }
-
-    func testOverrideExistingAnnotationManager() throws {
-        // Given
-        let group = PolygonAnnotationGroup((0...4), id: \.self) { _ in
-            PolygonAnnotation(
-                polygon: .init(outerRing: Ring(coordinates: .random(withLength: 5, generator: CLLocationCoordinate2D.random)))
-            )
-        }
-
-        // When
-        let annotationManagerId = UUID().uuidString
-        mockAnnotationOrchestratorImpl.annotationManagersById[annotationManagerId] = MockAnnotationManager()
-        var annotationIds: [AnyHashable: String] = [:]
-
-        let erased = group.eraseToAny([0])
-        erased.update(annotationOrchestrator, annotationManagerId, &annotationIds)
-
-        // Then
-        let stubbed = mockAnnotationOrchestratorImpl.makePolygonAnnotationManagerStub.invocations[0]
-        let createdAnnotationManager = try XCTUnwrap(stubbed.returnValue as? PolygonAnnotationManager)
-        XCTAssertEqual(stubbed.parameters.id, annotationManagerId)
-        XCTAssertEqual(createdAnnotationManager.annotations.count, group.data.count)
-        XCTAssertTrue(try group.data.allSatisfy {
-            let hash = [0, $0]
-            let annotationId = try XCTUnwrap(annotationIds[hash])
-            return createdAnnotationManager.annotations.contains(where: { $0.id == annotationId })
-        })
+        let annotation = try XCTUnwrap(manager.annotations.first)
+        let annotationId = try XCTUnwrap(annotationIds[0])
+        XCTAssertEqual(annotation.id, annotationId)
     }
 }
 // End generated file

@@ -15,7 +15,7 @@ class LayerAnnotationCoordinator {
         self.annotationOrchestrator = annotationOrchestrator
     }
 
-    func update(annotations newAnnotations: [(AnyHashable, AnyAnnotationGroup)]) {
+    func update(annotations newAnnotations: [(AnyHashable, AnnotationGroup)]) {
         let displayedIds = annotations.map(\.id)
         let newIds = newAnnotations.map(\.0)
 

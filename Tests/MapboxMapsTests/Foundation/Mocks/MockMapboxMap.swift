@@ -149,7 +149,12 @@ final class MockMapboxMap: MapboxMapProtocol {
                 coordinatesPadding: UIEdgeInsets?,
                 maxZoom: Double?,
                 offset: CGPoint?) throws -> MapboxMaps.CameraOptions {
-        return cameraForCoordinatesStub.call(with: .init(coordinates: coordinates, camera: camera, coordinatesPadding: coordinatesPadding, maxZoom: maxZoom, offset: offset))
+        var cameraOptions = cameraForCoordinatesStub.call(with: .init(coordinates: coordinates, camera: camera, coordinatesPadding: coordinatesPadding, maxZoom: maxZoom, offset: offset))
+        // simulate core method behavior
+        cameraOptions.padding = camera.padding
+        cameraOptions.bearing = camera.bearing
+        cameraOptions.pitch = camera.pitch
+        return cameraOptions
     }
 
     let pointStub = Stub<CLLocationCoordinate2D, CGPoint>(defaultReturnValue: .random())

@@ -188,6 +188,7 @@ final class MapboxMapTests: XCTestCase {
 
         let expectedCenter = CLLocationCoordinate2DMake(northeast.latitude - (latitudeDelta / 2),
                                                         southeast.longitude - (longitudeDelta / 2))
+        let padding = UIEdgeInsets(top: 1, left: 2, bottom: 3, right: 4)
 
         let camera = try mapboxMap.camera(
             for: [
@@ -196,7 +197,7 @@ final class MapboxMapTests: XCTestCase {
                 northeast,
                 southeast
             ],
-            camera: CameraOptions(),
+            camera: CameraOptions(padding: padding),
             coordinatesPadding: nil,
             maxZoom: 100,
             offset: .zero
@@ -205,7 +206,7 @@ final class MapboxMapTests: XCTestCase {
         XCTAssertEqual(expectedCenter.latitude, camera.center!.latitude, accuracy: 0.25)
         XCTAssertEqual(expectedCenter.longitude, camera.center!.longitude, accuracy: 0.25)
         XCTAssertEqual(camera.bearing, 0)
-        XCTAssertNil(camera.padding)
+        XCTAssertEqual(camera.padding, padding)
         XCTAssertEqual(camera.pitch, 0)
     }
 

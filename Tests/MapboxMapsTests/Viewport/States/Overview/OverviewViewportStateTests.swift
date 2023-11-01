@@ -51,6 +51,8 @@ final class OverviewViewportStateTest: XCTestCase {
 
         var expectedCameraOptions = cameraForInvocation.returnValue
         expectedCameraOptions.padding = options.padding
+        expectedCameraOptions.bearing = options.bearing
+        expectedCameraOptions.pitch = options.pitch
         XCTAssertEqual(observableCameraOptions.notifyStub.invocations.map(\.parameters), [expectedCameraOptions])
     }
 

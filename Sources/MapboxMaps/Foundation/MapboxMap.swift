@@ -508,7 +508,7 @@ public final class MapboxMap: StyleManager {
     ///   This padding is not applied to the map but to the coordinates provided. If you want to apply padding to the map use `camera` parameter.
     ///   - maxZoom: The maximum zoom level allowed in the returned camera options.
     ///   - offset: The center of the given bounds relative to map center in screen points.
-    /// - Returns: A `CameraOptions` object representing the provided parameters. Padding is absent in the returned `camera options` as the zoom level already accounts for the padding.
+    /// - Returns: A `CameraOptions` object representing the provided parameters.
     public func camera(for coordinates: [CLLocationCoordinate2D],
                        camera: CameraOptions,
                        coordinatesPadding: UIEdgeInsets?,

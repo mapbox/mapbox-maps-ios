@@ -49,18 +49,19 @@ public final class OverviewViewportState {
     // MARK: - Private Utilities
 
     private func recalculateCameraOptions() {
-        var camera = try? mapboxMap.camera(
-            for: options.geometry.coordinates,
-            camera: .init(
-                padding: options.padding,
-                bearing: options.bearing,
-                pitch: options.pitch),
-            coordinatesPadding: options.geometryPadding,
-            maxZoom: options.maxZoom,
-            offset: options.offset)
-        camera?.padding = options.padding
-        if let camera {
+        do {
+            let camera = try mapboxMap.camera(
+                for: options.geometry.coordinates,
+                camera: .init(
+                    padding: options.padding,
+                    bearing: options.bearing,
+                    pitch: options.pitch),
+                coordinatesPadding: options.geometryPadding,
+                maxZoom: options.maxZoom,
+                offset: options.offset)
             observableCameraOptions.notify(with: camera)
+        } catch let error {
+            Log.error(forMessage: "Failed to calculate camera options: \(error)", category: "Viewport")
         }
     }
 

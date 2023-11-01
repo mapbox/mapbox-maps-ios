@@ -1,13 +1,5 @@
 import SwiftUI
 
-/// An action called when a new location is emitted.
-#if swift(>=5.8)
-    @_documentation(visibility: public)
-#endif
-@_spi(Experimental)
-@available(iOS 13.0, *)
-public typealias LocationUpdateAction = (Location) -> Void
-
 /// A SwiftUI view that displays Mapbox Map.
 ///
 /// Use `Map` do display Mapbox Map in SwiftUI application.

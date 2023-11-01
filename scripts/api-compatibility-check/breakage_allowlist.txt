@@ -1255,3 +1255,6 @@ Var CustomLayer.visibility is now with @_spi
 
 // Support slot in Annotations
 Var AnnotationManager.slot has been added as a protocol requirement
+
+// Remove unused code
+TypeAlias LocationUpdateAction has been removed

@@ -42,4 +42,11 @@ final class AnyTouchGestureHandlerTests: XCTestCase {
 
         XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 0)
     }
+
+    func testSimultaneousHandling() {
+        let result = gestureHandler.gestureRecognizer(
+            gestureRecognizer,
+            shouldRecognizeSimultaneouslyWith: MockGestureRecognizer())
+        XCTAssertEqual(result, true)
+    }
 }

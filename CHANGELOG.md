@@ -8,8 +8,9 @@ Mapbox welcomes participation and contributions from everyone.
 * `MapboxMap.loadStyle` methods changed error type from `MapLoadingError` to `Error`.
 * `OverviewViewportStateOptions.coordinatesPadding` is renamed to `OverviewViewportStateOptions.geometryPadding`.
 * [SwiftUI] ``Viewport.overview(geometry:bearing:pitch:coordinatesPadding:maxZoom:offset:)` is renamed to `Viewport.overview(geometry:bearing:pitch:geometryPadding:maxZoom:offset:)`
-* Bearing indication on user location puck is disabled by default to reduce amount map redraws. 
+* Bearing indication on user location puck is disabled by default to reduce amount map redraws.
     To re-enable bearing update rendering, set `mapView.location.options.puckBearingEnabled` to `true`.
+* The default behavior of resetting the viewport to idle is changed. Previously viewport was reset to idle when the user touched the map for longer than 150 ms. Now it will happen when the user pans the map. If the desired behavior is different, you can disable the default by setting `mapView.viewport.options.transitionsToIdleUponUserInteraction` to `false` and implementing any gesture that calls `mapView.viewport.idle()`.
 
 ### Features ✨ and improvements 🏁
 * Refactor `MapboxMap.loadStyle` to cancel previous style loads when called multiple times.
@@ -40,6 +41,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Fix issue where 2D puck images are not getting updates.
 * [SwiftUI] Fixed issue when viewport inset with safe area is calculated incorrectly.
+* Fixed issue when quick interaction didn't lead to resetting viewport to `idle`.
 
 ## 11.0.0-beta.6 - 23 October, 2023
 

@@ -1,7 +1,7 @@
 /// Configuraton options for ``ViewportManager``.
 public struct ViewportOptions: Hashable {
     /// Indicates whether the ``ViewportManager`` should idle when the ``MapView``
-    /// receives touch input.
+    /// receives pan touch input.
     ///
     /// Set this property to `false` to enable building custom ``ViewportState``s that
     /// can work simultaneously with certain types of gestures.

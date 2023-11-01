@@ -36,7 +36,7 @@ internal final class Puck2DRenderer: Puck2DRendererProtocol {
     // The change in this properties will be handled in the next render call (renderingData update).
     // TODO: Those properties should come as part of rendering data.
     var puckBearing: PuckBearing = .heading
-    var puckBearingEnabled: Bool = true
+    var puckBearingEnabled: Bool = false
     var configuration: Puck2DConfiguration {
         didSet {
             if configuration != oldValue {

@@ -45,6 +45,7 @@ final class NavigationSimulatorExample: UIViewController, ExampleProtocol {
         let configuration = Puck2DConfiguration(topImage: UIImage(named: "user_puck_icon")!)
         mapView.location.options.puckType = .puck2D(configuration)
         mapView.location.options.puckBearing = .course
+        mapView.location.options.puckBearingEnabled = true
         mapView.location.override(locationProvider: navigationSimulator)
         mapView.location.onPuckRender.observe { [weak self] in
             self?.onPuckRender(data: $0)

@@ -73,6 +73,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
 
         // Add user position icon to the map with location indicator layer
         mapView.location.options.puckType = .puck2D()
+        mapView.location.options.puckBearingEnabled = true
 
         mapView.gestures.delegate = self
 

@@ -36,6 +36,7 @@ final class ViewportExample: UIViewController, ExampleProtocol {
 
         mapView.location.options.puckType = .puck2D(.makeDefault(showBearing: true))
         mapView.location.options.puckBearing = .heading
+        mapView.location.options.puckBearingEnabled = true
 
         followPuckViewportState = mapView.viewport.makeFollowPuckViewportState(
             options: FollowPuckViewportStateOptions(

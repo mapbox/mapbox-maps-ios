@@ -36,6 +36,7 @@ final class Custom3DPuckExample: UIViewController, ExampleProtocol {
         let configuration = Puck3DConfiguration(model: myModel, modelScale: .constant([10, 10, 10]), modelOpacity: .constant(0.5))
         mapView.location.options.puckType = .puck3D(configuration)
         mapView.location.options.puckBearing = .course
+        mapView.location.options.puckBearingEnabled = true
 
         mapView.location.onLocationChange.observeNext { [weak mapView] newLocation in
             guard let location = newLocation.last, let mapView else { return }

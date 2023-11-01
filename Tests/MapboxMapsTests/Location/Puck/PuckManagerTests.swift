@@ -26,7 +26,7 @@ final class PuckManagerTests: XCTestCase {
     func testInitialPropertyValues() {
         XCTAssertNil(puckManager.puckType)
         XCTAssertEqual(puckManager.puckBearing, .heading)
-        XCTAssertEqual(puckManager.puckBearingEnabled, true)
+        XCTAssertEqual(puckManager.puckBearingEnabled, false)
     }
 
     func testSetPuckTypeToPuck2D() throws {

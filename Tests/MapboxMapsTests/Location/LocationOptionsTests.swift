@@ -14,6 +14,6 @@ final class LocationOptionsTests: XCTestCase {
 
     func testLocationOptionsPuckBearingEnableDefault() {
         let locationOptions = LocationOptions()
-        XCTAssertEqual(locationOptions.puckBearingEnabled, true)
+        XCTAssertEqual(locationOptions.puckBearingEnabled, false)
     }
 }

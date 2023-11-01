@@ -33,7 +33,7 @@ public struct LocationOptions: Equatable {
 
     /// Whether the puck rotates to track the bearing source.
     ///
-    /// The default value is `true`.
+    /// The default value is `false`.
     public var puckBearingEnabled: Bool
 
     /// Initializes a `LocationOptions`.
@@ -44,7 +44,7 @@ public struct LocationOptions: Equatable {
     public init(
         puckType: PuckType? = nil,
         puckBearing: PuckBearing = .heading,
-        puckBearingEnabled: Bool = true
+        puckBearingEnabled: Bool = false
     ) {
         self.puckType = puckType
         self.puckBearing = puckBearing

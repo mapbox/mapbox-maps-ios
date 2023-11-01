@@ -25,7 +25,7 @@ internal final class Puck3DRenderer: Puck3DRendererProtocol {
     // The change in this properties will be handled in the next render call (renderingData update).
     // TODO: Those properties should come as part of rendering data.
     var puckBearing: PuckBearing = .heading
-    var puckBearingEnabled: Bool = true
+    var puckBearingEnabled: Bool = false
     var configuration: Puck3DConfiguration {
         didSet {
             onceConfigurationUpdated.reset(if: configuration != oldValue)

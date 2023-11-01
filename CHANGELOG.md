@@ -8,6 +8,8 @@ Mapbox welcomes participation and contributions from everyone.
 * `MapboxMap.loadStyle` methods changed error type from `MapLoadingError` to `Error`.
 * `OverviewViewportStateOptions.coordinatesPadding` is renamed to `OverviewViewportStateOptions.geometryPadding`.
 * [SwiftUI] ``Viewport.overview(geometry:bearing:pitch:coordinatesPadding:maxZoom:offset:)` is renamed to `Viewport.overview(geometry:bearing:pitch:geometryPadding:maxZoom:offset:)`
+* Bearing indication on user location puck is disabled by default to reduce amount map redraws. 
+    To re-enable bearing update rendering, set `mapView.location.options.puckBearingEnabled` to `true`.
 
 ### Features ✨ and improvements 🏁
 * Refactor `MapboxMap.loadStyle` to cancel previous style loads when called multiple times.

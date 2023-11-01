@@ -52,7 +52,7 @@ internal final class PuckManager: PuckManagerProtocol {
         }
     }
 
-    internal var puckBearingEnabled: Bool = true {
+    internal var puckBearingEnabled: Bool = false {
         didSet {
             state.puck?.puckBearingEnabled = puckBearingEnabled
         }

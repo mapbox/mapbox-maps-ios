@@ -818,6 +818,17 @@ class OfflineRegionObserver: MapboxCoreMaps.OfflineRegionObserver {
 
 The `OverviewViewportStateOptions.padding` parameter is renamed to ``OverviewViewportStateOptions/geometryPadding``. It adds padding for every coordinate before fitting the geometry. The ``OverviewViewportStateOptions/padding`` now adds camera padding, similar to ``FollowPuckViewportStateOptions/padding``.
 
+#### 3.11 Bearing updates are disabled by default.
+
+The default value for ``LocationOptions/puckBearingEnabled`` option has changed from `true` to `false`. That practially means that
+MapView wouldn't redraw on each device compass update and should significantly reduce CPU usage for applications that 
+only display user location without bearing/heading indication.
+If your application still need to rotate puck image according to device heading or location course, enable the option as:
+
+```swift
+    mapView.location.options.puckBearingEnabled = true
+```
+
 ## 4. Update APIs deprecated in v10 which have been removed in v11
 
 - `textLineHeight` property has been removed from ``PointAnnotationManager``. Instead, use the data-driven ``PointAnnotation/textLineHeight``.

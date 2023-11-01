@@ -178,6 +178,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         // Granularly configure the location puck with a `Puck2DConfiguration`
         mapView.location.options.puckType = .puck2D(puckConfiguration)
         mapView.location.options.puckBearing = .heading
+        mapView.location.options.puckBearingEnabled = true
 
         // Center map over the user's current location
         mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in

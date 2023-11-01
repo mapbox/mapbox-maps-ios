@@ -44,7 +44,7 @@ final class Puck3DRendererTests: XCTestCase {
     func testDefaultPropertyValues() {
         XCTAssertFalse(puck3D.isActive)
         XCTAssertEqual(puck3D.puckBearing, .heading)
-        XCTAssertEqual(puck3D.puckBearingEnabled, true)
+        XCTAssertEqual(puck3D.puckBearingEnabled, false)
     }
 
     func testActivatingPuckBeginsAndsStopsObserving() throws {
@@ -118,6 +118,7 @@ final class Puck3DRendererTests: XCTestCase {
         puckRenderDataSubject.value = data
         style.sourceExistsStub.defaultReturnValue = false
         puck3D.puckBearing = .heading
+        puck3D.puckBearingEnabled = true
 
         puck3D.isActive = true
 
@@ -139,6 +140,7 @@ final class Puck3DRendererTests: XCTestCase {
         puckRenderDataSubject.value = data
         style.sourceExistsStub.defaultReturnValue = false
         puck3D.puckBearing = .course
+        puck3D.puckBearingEnabled = true
 
         puck3D.isActive = true
 

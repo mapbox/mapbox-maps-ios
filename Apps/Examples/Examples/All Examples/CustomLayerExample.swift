@@ -1,5 +1,5 @@
 import UIKit
-import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 import MetalKit
 
 final class CustomLayerExample: UIViewController, ExampleProtocol {

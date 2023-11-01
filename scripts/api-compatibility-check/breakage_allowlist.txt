@@ -1239,3 +1239,16 @@ Constructor ForEvery.init(_:content:) has parameter 1 type change from (Data.Ele
 Constructor ForEvery.init(_:content:) has return type change from MapboxMaps.ForEvery<Data, ID> to MapboxMaps.ForEvery<Content, Data, ID>
 Constructor ForEvery.init(_:id:content:) has parameter 2 type change from (Data.Element) -> MapboxMaps.MapContent to (Data.Element) -> Content
 Constructor ForEvery.init(_:id:content:) has return type change from MapboxMaps.ForEvery<Data, ID> to MapboxMaps.ForEvery<Content, Data, ID>
+
+// Experimental CustomLayer
+Constructor CustomLayer.init(from:) is now with @_spi
+Constructor CustomLayer.init(id:renderer:slot:minZoom:maxZoom:visibility:) is now with @_spi
+Func CustomLayer.encode(to:) is now with @_spi
+Struct CustomLayer is now with @_spi
+Var CustomLayer.id is now with @_spi
+Var CustomLayer.maxZoom is now with @_spi
+Var CustomLayer.minZoom is now with @_spi
+Var CustomLayer.renderer is now with @_spi
+Var CustomLayer.slot is now with @_spi
+Var CustomLayer.type is now with @_spi
+Var CustomLayer.visibility is now with @_spi

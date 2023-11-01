@@ -573,6 +573,80 @@ final class PolygonAnnotationManagerTests: XCTestCase, AnnotationInteractionDele
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["fill-translate-anchor"] as! String, defaultValue)
     }
 
+    func testInitialSlot() {
+        let initialValue = manager.slot
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetSlot() {
+        let value = String.randomASCII(withLength: .random(in: 0...100))
+        manager.slot = value
+        XCTAssertEqual(manager.slot, value)
+
+        // test layer and source synced and properties added
+        $displayLink.send()
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["slot"] as! String, value)
+    }
+
+    func testSlotAnnotationPropertiesAddedWithoutDuplicate() {
+        let newSlotProperty = String.randomASCII(withLength: .random(in: 0...100))
+        let secondSlotProperty = String.randomASCII(withLength: .random(in: 0...100))
+
+        manager.slot = newSlotProperty
+        $displayLink.send()
+        manager.slot = secondSlotProperty
+        $displayLink.send()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["slot"] as! String, secondSlotProperty)
+    }
+
+    func testNewSlotPropertyMergedWithAnnotationProperties() {
+        var annotations = [PolygonAnnotation]()
+        for _ in 0...5 {
+            let polygonCoords = [
+                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+                CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+                CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+                CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+                CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+            ]
+            var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)), isSelected: false, isDraggable: false)
+            annotation.fillSortKey = Double.random(in: -100000...100000)
+            annotation.fillColor = StyleColor.random()
+            annotation.fillOpacity = Double.random(in: 0...1)
+            annotation.fillOutlineColor = StyleColor.random()
+            annotation.fillPattern = String.randomASCII(withLength: .random(in: 0...100))
+            annotations.append(annotation)
+        }
+        let newSlotProperty = String.randomASCII(withLength: .random(in: 0...100))
+
+        manager.annotations = annotations
+        manager.slot = newSlotProperty
+        $displayLink.send()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["slot"])
+    }
+
+    func testSetToNilSlot() {
+        let newSlotProperty = String.randomASCII(withLength: .random(in: 0...100))
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .fill, property: "slot").value as! String
+        manager.slot = newSlotProperty
+        $displayLink.send()
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["slot"])
+
+        manager.slot = nil
+        $displayLink.send()
+        XCTAssertNil(manager.slot)
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["slot"] as! String, defaultValue)
+    }
+
     func annotationManager(_ manager: AnnotationManager, didDetectTappedAnnotations annotations: [Annotation]) {
         self.delegateAnnotations = annotations
         expectation?.fulfill()

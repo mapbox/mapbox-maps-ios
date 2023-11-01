@@ -2,7 +2,6 @@ import SwiftUI
 import Turf
 @_spi(Experimental) import MapboxMaps
 
-
 @available(iOS 14.0, *)
 struct ViewAnnotationsExample: View {
     @State private var taps: [Tap] = []
@@ -51,7 +50,9 @@ struct ViewAnnotationsExample: View {
             }
 
             // A Dynamic View Annotation annotation, that is attached to the Polyline annotation.
-            MapViewAnnotation(layerId: "route", featureId: "route-feature") {
+            let routeLayer = "route"
+            let routeFeature = "route-feature"
+            MapViewAnnotation(layerId: routeLayer, featureId: routeFeature) {
                 Text("1h 30m")
                     .padding(3)
                     .callout(
@@ -65,19 +66,20 @@ struct ViewAnnotationsExample: View {
             .selected(true)
 
             PolylineAnnotationGroup {
+                // Draws route border
                 PolylineAnnotation(lineCoordinates: routeCoordinates)
                     .lineColor("#327AC2")
                     .lineWidth(10)
 
-                PolylineAnnotation(id: "route-feature", lineCoordinates: routeCoordinates)
+                PolylineAnnotation(id: routeFeature, lineCoordinates: routeCoordinates)
                     .lineColor("#57A9FB")
                     .lineWidth(6)
             }
-            .layerId("route") // Specify id for underlying line layer.
+            .layerId(routeLayer) // Specify id for underlying line layer.
             .lineCap(.round)
+            .slot("middle") // Display above roads and below 3D buildings and labels (for Standard Style).
         }
         .presentsWithTransaction(true) // Synchronize Metal and CALayer for better VA performance.
-        .mapStyle(.streets)
         .onMapTapGesture { context in
             taps.append(Tap(coordinate: context.coordinate))
         }

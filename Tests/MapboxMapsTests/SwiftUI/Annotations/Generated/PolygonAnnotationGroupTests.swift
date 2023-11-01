@@ -5,21 +5,22 @@ import XCTest
 @available(iOS 13.0, *)
 final class PolygonAnnotationGroupTests: XCTestCase {
 
-    var mockAnnotationOrchestratorImpl: MockAnnotationOrchestatorImpl!
-    var annotationOrchestrator: AnnotationOrchestrator!
+    var orchestratorImpl: MockAnnotationOrchestatorImpl!
+    var orchestrator: AnnotationOrchestrator!
     var visitor: DefaultMapContentVisitor!
 
     override func setUp() {
         super.setUp()
 
         self.visitor = DefaultMapContentVisitor()
-        mockAnnotationOrchestratorImpl = MockAnnotationOrchestatorImpl()
-        annotationOrchestrator = AnnotationOrchestrator(impl: mockAnnotationOrchestratorImpl)
+        orchestratorImpl = MockAnnotationOrchestatorImpl()
+        orchestrator = AnnotationOrchestrator(impl: orchestratorImpl)
     }
 
     override func tearDown() {
         visitor = nil
-        mockAnnotationOrchestratorImpl = nil
+        orchestratorImpl = nil
+        orchestrator = nil
         super.tearDown()
     }
 
@@ -27,10 +28,12 @@ final class PolygonAnnotationGroupTests: XCTestCase {
         // Given
         let coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
         let layerId = "layer-id"
+        let slot = "bottom"
         let group = PolygonAnnotationGroup {
             PolygonAnnotation(polygon: Polygon(center: coordinate, radius: 100, vertices: 3))
         }
         .layerId(layerId)
+        .slot(slot)
 
         var annotationIds: [AnyHashable: String] = [:]
 
@@ -39,13 +42,14 @@ final class PolygonAnnotationGroupTests: XCTestCase {
         let addedGroup = try XCTUnwrap(visitor.annotationGroups.first)
         XCTAssertEqual(addedGroup.0, ["any-id"])
         XCTAssertEqual(addedGroup.1.layerId, layerId)
-        addedGroup.1.update(annotationOrchestrator, layerId, &annotationIds)
+        addedGroup.1.update(orchestrator, layerId, &annotationIds)
 
         // Then
-        let stubbed = mockAnnotationOrchestratorImpl.makePolygonAnnotationManagerStub.invocations[0]
+        let stubbed = orchestratorImpl.makePolygonAnnotationManagerStub.invocations[0]
         let manager = try XCTUnwrap(stubbed.returnValue as? PolygonAnnotationManager)
         XCTAssertEqual(stubbed.parameters.id, layerId)
         XCTAssertEqual(manager.annotations.count, 1)
+        XCTAssertEqual(manager.slot, slot)
 
         let annotation = try XCTUnwrap(manager.annotations.first)
         let annotationId = try XCTUnwrap(annotationIds[0])

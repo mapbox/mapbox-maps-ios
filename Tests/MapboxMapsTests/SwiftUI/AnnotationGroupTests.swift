@@ -59,7 +59,6 @@ final class AnnotationGroupTests: XCTestCase {
         XCTAssertEqual(manager.property, 1)
         XCTAssertEqual(manager.annotations.count, 1)
         let a1 = manager.annotations[0]
-        let a1Id = a1.id
         XCTAssertEqual(a1.isSelected, false)
         XCTAssertEqual(a1.isDraggable, false)
         XCTAssertEqual(a1.property, "foo")
@@ -112,6 +111,8 @@ private class DummyAnnotationManager: MapContentAnnotationManager, AnnotationMan
     var id: String
     var sourceId: String { id }
     var layerId: String { id }
+
+    var slot: String?
 
     var annotations = [DummyAnnotation]()
     var isSwiftUI: Bool = false

@@ -1252,3 +1252,6 @@ Var CustomLayer.renderer is now with @_spi
 Var CustomLayer.slot is now with @_spi
 Var CustomLayer.type is now with @_spi
 Var CustomLayer.visibility is now with @_spi
+
+// Support slot in Annotations
+Var AnnotationManager.slot has been added as a protocol requirement

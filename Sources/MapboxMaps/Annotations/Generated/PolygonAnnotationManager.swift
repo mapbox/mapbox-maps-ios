@@ -205,6 +205,7 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
 
     // MARK: - Common layer properties
 
+
     /// Whether or not the fill should be antialiased.
     public var fillAntialias: Bool? {
         get {
@@ -242,6 +243,20 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
         }
         set {
             layerProperties["fill-translate-anchor"] = newValue?.rawValue
+        }
+    }
+
+    /// 
+    /// Slot for the underlying layer.
+    ///
+    /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.
+    /// See <doc:Migrate-to-v11##21-The-Mapbox-Standard-Style> for more info.
+    public var slot: String? {
+        get {
+            return layerProperties["slot"] as? String
+        }
+        set {
+            layerProperties["slot"] = newValue
         }
     }
 

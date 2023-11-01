@@ -11,6 +11,8 @@ internal final class MockAnnotationManager: AnnotationManagerInternal {
 
     @Stubbed var allLayerIds: [String] = []
 
+    @Stubbed var slot: String?
+
     let destroyStub = Stub<Void, Void>()
     func destroy() {
         destroyStub.call()

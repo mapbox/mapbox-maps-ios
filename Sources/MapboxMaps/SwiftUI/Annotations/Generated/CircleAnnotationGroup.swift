@@ -3,7 +3,7 @@
 /// Displays a group of ``CircleAnnotation``s.
 ///
 /// When multiple annotation grouped, they render by a single layer. This makes annotations more performant and
-/// allows to modify group-specific parameters.  For example, you candefine position ``layerPosition(_:)``.
+/// allows to modify group-specific parameters.  For example, you can define layer slot with ``slot(_:)``.
 ///
 /// - Note: `CircleAnnotationGroup` is a SwiftUI analog to ``CircleAnnotationManager``.
 ///
@@ -11,26 +11,28 @@
 ///
 /// ```swift
 /// Map {
-///   CircleAnnotationGroup(pivots) { pivot in
-///     CircleAnnotation(centerCoordinate: pivot.coordinate)
-///         .circleColor("white")
-///         .circleRadius(10)
-///   }
+///     CircleAnnotationGroup(pivots) { pivot in
+///         CircleAnnotation(centerCoordinate: pivot.coordinate)
+///             .circleColor("white")
+///             .circleRadius(10)
+///     }
 /// }
+/// .slot("top")
 /// ```
 ///
 /// When the number of annotations is static, you use static that groups one or more annotations:
 ///
 /// ```swift
 /// Map {
-///   CircleAnnotationGroup {
-///     CircleAnnotation(centerCoordinate: route.startCoordinate)
-///         .circleColor("white")
-///         .circleRadius(10)
-///     CircleAnnotation(centerCoordinate: route.endCoordinate)
-///         .circleColor("gray")
-///         .circleRadius(10)
-///   }
+///     CircleAnnotationGroup {
+///         CircleAnnotation(centerCoordinate: route.startCoordinate)
+///             .circleColor("white")
+///             .circleRadius(10)
+///         CircleAnnotation(centerCoordinate: route.endCoordinate)
+///             .circleColor("gray")
+///             .circleRadius(10)
+///     }
+///     .slot("top")
 /// }
 /// ```
 #if swift(>=5.8)
@@ -93,11 +95,13 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>:
     }
 
     private func updateProperties(manager: CircleAnnotationManager) {
+        assign(manager, \.slot, value: slot)
         assign(manager, \.circleEmissiveStrength, value: circleEmissiveStrength)
         assign(manager, \.circlePitchAlignment, value: circlePitchAlignment)
         assign(manager, \.circlePitchScale, value: circlePitchScale)
         assign(manager, \.circleTranslate, value: circleTranslate)
         assign(manager, \.circleTranslateAnchor, value: circleTranslateAnchor)
+        assign(manager, \.slot, value: slot)
     }
 
     // MARK: - Common layer properties
@@ -147,6 +151,19 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>:
         with(self, setter(\.circleTranslateAnchor, newValue))
     }
 
+    private var slot: String?
+    /// 
+    /// Slot for the underlying layer.
+    ///
+    /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.
+    /// See <doc:Migrate-to-v11##21-The-Mapbox-Standard-Style> for more info.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func slot(_ newValue: String) -> Self {
+        with(self, setter(\.slot, newValue))
+    }
+
 
     private var layerPosition: LayerPosition?
 
@@ -160,7 +177,7 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>:
         with(self, setter(\.layerPosition, newValue))
     }
 
-    var layerId: String?
+    private var layerId: String?
 
     /// Specifies identifier for underlying implementation layer.
     ///
@@ -169,8 +186,8 @@ public struct CircleAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>:
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
-    public func layerId(_ newValue: String) -> Self {
-        with(self, setter(\.layerId, newValue))
+    public func layerId(_ layerId: String) -> Self {
+        with(self, setter(\.layerId, layerId))
     }
 }
 

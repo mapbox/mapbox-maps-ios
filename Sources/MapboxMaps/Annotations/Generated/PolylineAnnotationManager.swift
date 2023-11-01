@@ -205,6 +205,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
     // MARK: - Common layer properties
 
+
     /// The display of line endings.
     public var lineCap: LineCap? {
         get {
@@ -292,6 +293,20 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         }
         set {
             layerProperties["line-trim-offset"] = newValue
+        }
+    }
+
+    /// 
+    /// Slot for the underlying layer.
+    ///
+    /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.
+    /// See <doc:Migrate-to-v11##21-The-Mapbox-Standard-Style> for more info.
+    public var slot: String? {
+        get {
+            return layerProperties["slot"] as? String
+        }
+        set {
+            layerProperties["slot"] = newValue
         }
     }
 

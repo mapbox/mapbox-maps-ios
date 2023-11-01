@@ -3,7 +3,7 @@
 /// Displays a group of ``PolylineAnnotation``s.
 ///
 /// When multiple annotation grouped, they render by a single layer. This makes annotations more performant and
-/// allows to modify group-specific parameters.  For example, you canmodify ``lineCap(_:)``.
+/// allows to modify group-specific parameters.  For example, you canmodify ``lineCap(_:)`` or define layer slot with ``slot(_:)``.
 ///
 /// - Note: `PolylineAnnotationGroup` is a SwiftUI analog to ``PolylineAnnotationManager``.
 ///
@@ -12,24 +12,26 @@
 /// Map {
 ///   PolylineAnnotationGroup(routes) { route in
 ///     PolylineAnnotation(lineCoordinates: route.coordinates)
-///         .lineColor("blue")
+///       .lineColor("blue")
 ///   }
 ///   .lineCap(.round)
+///   .slot("middle")
 /// }
 /// ```
 ///
 /// When the number of annotations is static, you use static that groups one or more annotations:
 ////// ```swift
 /// Map {
-///   PolylineAnnotationGroup {
-///     PolylineAnnotation(lineCoordinates: route.coordinates)
-///         .lineColor("blue")
-///     if let alternativeRoute {
-///         PolylineAnnotation(lineCoordinates: alternativeRoute.coordinates)
-///             .lineColor("green")
+///     PolylineAnnotationGroup {
+///         PolylineAnnotation(lineCoordinates: route.coordinates)
+///             .lineColor("blue")
+///         if let alternativeRoute {
+///             PolylineAnnotation(lineCoordinates: alternativeRoute.coordinates)
+///                 .lineColor("green")
+///         }
 ///     }
-///   }
-///   .lineCap(.round)
+///     .lineCap(.round)
+///     .slot("middle")
 /// }
 /// ```
 #if swift(>=5.8)
@@ -92,6 +94,7 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
     }
 
     private func updateProperties(manager: PolylineAnnotationManager) {
+        assign(manager, \.slot, value: slot)
         assign(manager, \.lineCap, value: lineCap)
         assign(manager, \.lineMiterLimit, value: lineMiterLimit)
         assign(manager, \.lineRoundLimit, value: lineRoundLimit)
@@ -101,6 +104,7 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
         assign(manager, \.lineTranslate, value: lineTranslate)
         assign(manager, \.lineTranslateAnchor, value: lineTranslateAnchor)
         assign(manager, \.lineTrimOffset, value: lineTrimOffset)
+        assign(manager, \.slot, value: slot)
     }
 
     // MARK: - Common layer properties
@@ -186,6 +190,19 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
         with(self, setter(\.lineTrimOffset, newValue))
     }
 
+    private var slot: String?
+    /// 
+    /// Slot for the underlying layer.
+    ///
+    /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.
+    /// See <doc:Migrate-to-v11##21-The-Mapbox-Standard-Style> for more info.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func slot(_ newValue: String) -> Self {
+        with(self, setter(\.slot, newValue))
+    }
+
 
     private var layerPosition: LayerPosition?
 
@@ -199,7 +216,7 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
         with(self, setter(\.layerPosition, newValue))
     }
 
-    var layerId: String?
+    private var layerId: String?
 
     /// Specifies identifier for underlying implementation layer.
     ///
@@ -208,8 +225,8 @@ public struct PolylineAnnotationGroup<Data: RandomAccessCollection, ID: Hashable
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
-    public func layerId(_ newValue: String) -> Self {
-        with(self, setter(\.layerId, newValue))
+    public func layerId(_ layerId: String) -> Self {
+        with(self, setter(\.layerId, layerId))
     }
 }
 

@@ -3,7 +3,7 @@
 /// Displays a group of ``PolygonAnnotation``s.
 ///
 /// When multiple annotation grouped, they render by a single layer. This makes annotations more performant and
-/// allows to modify group-specific parameters.  For example, you candefine position ``layerPosition(_:)``.
+/// allows to modify group-specific parameters.  For example, you can define layer slot with ``slot(_:)``.
 ///
 /// - Note: `PolygonAnnotationGroup` is a SwiftUI analog to ``PolygonAnnotationManager``.
 ///
@@ -11,22 +11,24 @@
 ///
 /// ```swift
 /// Map {
-///   PolygonAnnotationGroup(parkingZones) { zone in
-///     PolygonAnnotation(polygon: zone.polygon)
-///         .fillColor("blue")
-///   }
+///    PolygonAnnotationGroup(parkingZones) { zone in
+///        PolygonAnnotation(polygon: zone.polygon)
+///            .fillColor("blue")
+///    }
 /// }
+/// .slot("bottom")
 /// ```
 ///
 /// When the number of annotations is static, you use static that groups one or more annotations:
 ///
 /// ```swift
 /// Map {
-///   PolygonAnnotationGroup {
-///     PolygonAnnotation(polygon: parkingZone.polygon)
-///         .fillColor("blue")
-///   }
-///   .layerId("parking")
+///     PolygonAnnotationGroup {
+///         PolygonAnnotation(polygon: parkingZone.polygon)
+///             .fillColor("blue")
+///     }
+///     .layerId("parking")
+///     .slot("bottom")
 /// }
 /// ```
 #if swift(>=5.8)
@@ -89,10 +91,12 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
     }
 
     private func updateProperties(manager: PolygonAnnotationManager) {
+        assign(manager, \.slot, value: slot)
         assign(manager, \.fillAntialias, value: fillAntialias)
         assign(manager, \.fillEmissiveStrength, value: fillEmissiveStrength)
         assign(manager, \.fillTranslate, value: fillTranslate)
         assign(manager, \.fillTranslateAnchor, value: fillTranslateAnchor)
+        assign(manager, \.slot, value: slot)
     }
 
     // MARK: - Common layer properties
@@ -133,6 +137,19 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
         with(self, setter(\.fillTranslateAnchor, newValue))
     }
 
+    private var slot: String?
+    /// 
+    /// Slot for the underlying layer.
+    ///
+    /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.
+    /// See <doc:Migrate-to-v11##21-The-Mapbox-Standard-Style> for more info.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func slot(_ newValue: String) -> Self {
+        with(self, setter(\.slot, newValue))
+    }
+
 
     private var layerPosition: LayerPosition?
 
@@ -146,7 +163,7 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
         with(self, setter(\.layerPosition, newValue))
     }
 
-    var layerId: String?
+    private var layerId: String?
 
     /// Specifies identifier for underlying implementation layer.
     ///
@@ -155,8 +172,8 @@ public struct PolygonAnnotationGroup<Data: RandomAccessCollection, ID: Hashable>
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
-    public func layerId(_ newValue: String) -> Self {
-        with(self, setter(\.layerId, newValue))
+    public func layerId(_ layerId: String) -> Self {
+        with(self, setter(\.layerId, layerId))
     }
 }
 

@@ -299,6 +299,7 @@ public class PointAnnotationManager: AnnotationManagerInternal {
 
     // MARK: - Common layer properties
 
+
     /// If true, the icon will be visible even if it collides with other previously drawn symbols.
     public var iconAllowOverlap: Bool? {
         get {
@@ -566,6 +567,20 @@ public class PointAnnotationManager: AnnotationManagerInternal {
         }
         set {
             layerProperties["text-translate-anchor"] = newValue?.rawValue
+        }
+    }
+
+    /// 
+    /// Slot for the underlying layer.
+    ///
+    /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.
+    /// See <doc:Migrate-to-v11##21-The-Mapbox-Standard-Style> for more info.
+    public var slot: String? {
+        get {
+            return layerProperties["slot"] as? String
+        }
+        set {
+            layerProperties["slot"] = newValue
         }
     }
 

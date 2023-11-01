@@ -205,6 +205,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
 
     // MARK: - Common layer properties
 
+
     /// Controls the intensity of light emitted on the source features. This property works only with 3D light, i.e. when `lights` root property is defined.
     public var circleEmissiveStrength: Double? {
         get {
@@ -252,6 +253,20 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
         }
         set {
             layerProperties["circle-translate-anchor"] = newValue?.rawValue
+        }
+    }
+
+    /// 
+    /// Slot for the underlying layer.
+    ///
+    /// Use this property to position the annotations relative to other map features if you use Mapbox Standard Style.
+    /// See <doc:Migrate-to-v11##21-The-Mapbox-Standard-Style> for more info.
+    public var slot: String? {
+        get {
+            return layerProperties["slot"] as? String
+        }
+        set {
+            layerProperties["slot"] = newValue
         }
     }
 

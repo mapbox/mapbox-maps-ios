@@ -2785,6 +2785,100 @@ final class PointAnnotationManagerTests: XCTestCase, AnnotationInteractionDelega
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["text-translate-anchor"] as! String, defaultValue)
     }
 
+    func testInitialSlot() {
+        let initialValue = manager.slot
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetSlot() {
+        let value = String.randomASCII(withLength: .random(in: 0...100))
+        manager.slot = value
+        XCTAssertEqual(manager.slot, value)
+
+        // test layer and source synced and properties added
+        $displayLink.send()
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["slot"] as! String, value)
+    }
+
+    func testSlotAnnotationPropertiesAddedWithoutDuplicate() {
+        let newSlotProperty = String.randomASCII(withLength: .random(in: 0...100))
+        let secondSlotProperty = String.randomASCII(withLength: .random(in: 0...100))
+
+        manager.slot = newSlotProperty
+        $displayLink.send()
+        manager.slot = secondSlotProperty
+        $displayLink.send()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["slot"] as! String, secondSlotProperty)
+    }
+
+    func testNewSlotPropertyMergedWithAnnotationProperties() {
+        var annotations = [PointAnnotation]()
+        for _ in 0...5 {
+            var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
+            annotation.iconAnchor = IconAnchor.random()
+            annotation.iconImage = String.randomASCII(withLength: .random(in: 0...100))
+            annotation.iconOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+            annotation.iconRotate = Double.random(in: -100000...100000)
+            annotation.iconSize = Double.random(in: 0...100000)
+            annotation.iconTextFit = IconTextFit.random()
+            annotation.iconTextFitPadding = [Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+            annotation.symbolSortKey = Double.random(in: -100000...100000)
+            annotation.textAnchor = TextAnchor.random()
+            annotation.textField = String.randomASCII(withLength: .random(in: 0...100))
+            annotation.textJustify = TextJustify.random()
+            annotation.textLetterSpacing = Double.random(in: -100000...100000)
+            annotation.textLineHeight = Double.random(in: -100000...100000)
+            annotation.textMaxWidth = Double.random(in: 0...100000)
+            annotation.textOffset = [Double.random(in: -100000...100000), Double.random(in: -100000...100000)]
+            annotation.textRadialOffset = Double.random(in: -100000...100000)
+            annotation.textRotate = Double.random(in: -100000...100000)
+            annotation.textSize = Double.random(in: 0...100000)
+            annotation.textTransform = TextTransform.random()
+            annotation.iconColor = StyleColor.random()
+            annotation.iconEmissiveStrength = Double.random(in: 0...100000)
+            annotation.iconHaloBlur = Double.random(in: 0...100000)
+            annotation.iconHaloColor = StyleColor.random()
+            annotation.iconHaloWidth = Double.random(in: 0...100000)
+            annotation.iconImageCrossFade = Double.random(in: 0...1)
+            annotation.iconOpacity = Double.random(in: 0...1)
+            annotation.textColor = StyleColor.random()
+            annotation.textEmissiveStrength = Double.random(in: 0...100000)
+            annotation.textHaloBlur = Double.random(in: 0...100000)
+            annotation.textHaloColor = StyleColor.random()
+            annotation.textHaloWidth = Double.random(in: 0...100000)
+            annotation.textOpacity = Double.random(in: 0...1)
+            annotations.append(annotation)
+        }
+        let newSlotProperty = String.randomASCII(withLength: .random(in: 0...100))
+
+        manager.annotations = annotations
+        manager.slot = newSlotProperty
+        $displayLink.send()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["slot"])
+    }
+
+    func testSetToNilSlot() {
+        let newSlotProperty = String.randomASCII(withLength: .random(in: 0...100))
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .symbol, property: "slot").value as! String
+        manager.slot = newSlotProperty
+        $displayLink.send()
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["slot"])
+
+        manager.slot = nil
+        $displayLink.send()
+        XCTAssertNil(manager.slot)
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["slot"] as! String, defaultValue)
+    }
+
     func annotationManager(_ manager: AnnotationManager, didDetectTappedAnnotations annotations: [Annotation]) {
         self.delegateAnnotations = annotations
         expectation?.fulfill()

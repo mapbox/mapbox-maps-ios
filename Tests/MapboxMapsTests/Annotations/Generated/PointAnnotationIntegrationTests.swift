@@ -767,6 +767,29 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(layer.textTranslateAnchor, .constant(TextTranslateAnchor(rawValue: StyleManager.layerPropertyDefaultValue(for: .symbol, property: "text-translate-anchor").value as! String)))
     }
 
+    func testSlot() throws {
+        // Test that the setter and getter work
+        let value = String.randomASCII(withLength: .random(in: 0...100))
+        manager.slot = value
+        XCTAssertEqual(manager.slot, value)
+
+        // Test that the value is synced to the layer
+        manager.syncSourceAndLayerIfNeeded()
+        var layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+            let actualValue = layer.slot
+            XCTAssertEqual(actualValue, value)
+
+        // Test that the property can be reset to nil
+        manager.slot = nil
+        XCTAssertNil(manager.slot)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.syncSourceAndLayerIfNeeded()
+        layer = try mapView.mapboxMap.layer(withId: self.manager.layerId, type: SymbolLayer.self)
+        XCTAssertEqual(layer.slot, nil)
+    }
+
     func testIconAnchor() throws {
         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)), isSelected: false, isDraggable: false)
         // Test that the setter and getter work

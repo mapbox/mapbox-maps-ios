@@ -907,6 +907,80 @@ final class PolylineAnnotationManagerTests: XCTestCase, AnnotationInteractionDel
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["line-trim-offset"] as! [Double], defaultValue)
     }
 
+    func testInitialSlot() {
+        let initialValue = manager.slot
+        XCTAssertNil(initialValue)
+    }
+
+    func testSetSlot() {
+        let value = String.randomASCII(withLength: .random(in: 0...100))
+        manager.slot = value
+        XCTAssertEqual(manager.slot, value)
+
+        // test layer and source synced and properties added
+        $displayLink.send()
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["slot"] as! String, value)
+    }
+
+    func testSlotAnnotationPropertiesAddedWithoutDuplicate() {
+        let newSlotProperty = String.randomASCII(withLength: .random(in: 0...100))
+        let secondSlotProperty = String.randomASCII(withLength: .random(in: 0...100))
+
+        manager.slot = newSlotProperty
+        $displayLink.send()
+        manager.slot = secondSlotProperty
+        $displayLink.send()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.layerId, manager.id)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 2)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["slot"] as! String, secondSlotProperty)
+    }
+
+    func testNewSlotPropertyMergedWithAnnotationProperties() {
+        var annotations = [PolylineAnnotation]()
+        for _ in 0...5 {
+            let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
+            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates), isSelected: false, isDraggable: false)
+            annotation.lineJoin = LineJoin.random()
+            annotation.lineSortKey = Double.random(in: -100000...100000)
+            annotation.lineBlur = Double.random(in: 0...100000)
+            annotation.lineBorderColor = StyleColor.random()
+            annotation.lineBorderWidth = Double.random(in: 0...100000)
+            annotation.lineColor = StyleColor.random()
+            annotation.lineGapWidth = Double.random(in: 0...100000)
+            annotation.lineOffset = Double.random(in: -100000...100000)
+            annotation.lineOpacity = Double.random(in: 0...1)
+            annotation.linePattern = String.randomASCII(withLength: .random(in: 0...100))
+            annotation.lineWidth = Double.random(in: 0...100000)
+            annotations.append(annotation)
+        }
+        let newSlotProperty = String.randomASCII(withLength: .random(in: 0...100))
+
+        manager.annotations = annotations
+        manager.slot = newSlotProperty
+        $displayLink.send()
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties.count, annotations[0].layerProperties.count+1)
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["slot"])
+    }
+
+    func testSetToNilSlot() {
+        let newSlotProperty = String.randomASCII(withLength: .random(in: 0...100))
+        let defaultValue = StyleManager.layerPropertyDefaultValue(for: .line, property: "slot").value as! String
+        manager.slot = newSlotProperty
+        $displayLink.send()
+        XCTAssertNotNil(style.setLayerPropertiesStub.invocations.last?.parameters.properties["slot"])
+
+        manager.slot = nil
+        $displayLink.send()
+        XCTAssertNil(manager.slot)
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.last?.parameters.properties["slot"] as! String, defaultValue)
+    }
+
     func annotationManager(_ manager: AnnotationManager, didDetectTappedAnnotations annotations: [Annotation]) {
         self.delegateAnnotations = annotations
         expectation?.fulfill()

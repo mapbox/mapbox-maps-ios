@@ -17,7 +17,8 @@ final class Puck3DRendererTests: XCTestCase {
             modelRotation: .constant([Double.random(in: 0...1000)]),
             modelOpacity: .constant(Double.random(in: 0...1000)),
             modelCastShadows: .constant(.random()),
-            modelReceiveShadows: .constant(.testConstantValue())
+            modelReceiveShadows: .constant(.testConstantValue()),
+            modelEmissiveStrength: .constant(10)
         )
         style = MockStyle()
         puckRenderDataSubject = .init()
@@ -103,6 +104,7 @@ final class Puck3DRendererTests: XCTestCase {
         XCTAssertEqual(actualLayer.modelScaleMode, configuration.modelScaleMode)
         XCTAssertEqual(actualLayer.modelCastShadows, configuration.modelCastShadows)
         XCTAssertEqual(actualLayer.modelReceiveShadows, configuration.modelReceiveShadows)
+        XCTAssertEqual(actualLayer.modelEmissiveStrength, configuration.modelEmissiveStrength)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.first?.parameters.layerPosition, nil)
     }
 

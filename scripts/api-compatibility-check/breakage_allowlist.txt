@@ -1258,3 +1258,6 @@ Var AnnotationManager.slot has been added as a protocol requirement
 
 // Remove unused code
 TypeAlias LocationUpdateAction has been removed
+
+// Expose model-emissive-strength for Puck3D
+Constructor Puck3DConfiguration.init(model:modelScale:modelRotation:modelOpacity:modelCastShadows:modelReceiveShadows:modelScaleMode:) has been removed

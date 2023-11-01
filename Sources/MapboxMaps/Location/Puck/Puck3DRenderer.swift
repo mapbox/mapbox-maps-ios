@@ -98,6 +98,7 @@ internal final class Puck3DRenderer: Puck3DRendererProtocol {
         modelLayer.modelCastShadows = configuration.modelCastShadows
         modelLayer.modelReceiveShadows = configuration.modelReceiveShadows
         modelLayer.modelScaleMode = configuration.modelScaleMode
+        modelLayer.modelEmissiveStrength = configuration.modelEmissiveStrength
 
         do {
             // create the layer if needed

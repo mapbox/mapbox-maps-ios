@@ -14,6 +14,7 @@ final class Puck3DTests: XCTestCase {
             .modelRotation(.testConstantValue())
             .modelScale(.testConstantValue())
             .modelScaleMode(.testConstantValue())
+            .modelEmissiveStrength(5)
 
         let visitor = DefaultMapContentVisitor()
         puck.visit(visitor)
@@ -25,6 +26,7 @@ final class Puck3DTests: XCTestCase {
         expectedPuckConfig.modelRotation = .constant(.testConstantValue())
         expectedPuckConfig.modelScale = .constant(.testConstantValue())
         expectedPuckConfig.modelScaleMode = .testConstantValue()
+        expectedPuckConfig.modelEmissiveStrength = .constant(5)
 
         XCTAssertEqual(visitor.locationOptions, .init(puckType: .puck3D(expectedPuckConfig), puckBearingEnabled: false))
     }

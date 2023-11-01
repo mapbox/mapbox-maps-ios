@@ -168,6 +168,16 @@ public struct Puck3DConfiguration: Equatable {
 #endif
     @_spi(Experimental) public var modelScaleMode: Value<ModelScaleMode>?
 
+    /// Strength of the emission.
+    ///
+    /// There is no emission for value 0. For value 1.0, only emissive component (no shading) is displayed and values above 1.0 produce light contribution to surrounding area, for some of the parts (e.g. windows).
+    ///
+    /// Default value is 1.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public var modelEmissiveStrength: Value<Double>?
+
     /// Initialize a `Puck3DConfiguration` with a model, scale and rotation.
     /// - Parameters:
     ///   - model: The `gltf` model to use for the puck.
@@ -185,9 +195,7 @@ public struct Puck3DConfiguration: Equatable {
             modelScale: modelScale,
             modelRotation: modelRotation,
             modelOpacity: modelOpacity,
-            modelCastShadows: nil,
-            modelReceiveShadows: nil,
-            modelScaleMode: nil)
+            modelCastShadows: nil)
     }
 
     /// Initialize a `Puck3DConfiguration` with a model, scale, rotation and an parameter to control shadow casting.
@@ -198,6 +206,7 @@ public struct Puck3DConfiguration: Equatable {
     ///   - modelOpacity: The opacity of the model used as the location puck
     ///   - modelCastShadows: Enable/disable shadow casting for the puck model
     ///   - modelReceiveShadows: Enable/disable shadow receiving for the puck model
+    ///   - modelEmissiveStrength: Strength of the light emission.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -207,7 +216,8 @@ public struct Puck3DConfiguration: Equatable {
                                     modelOpacity: Value<Double>? = nil,
                                     modelCastShadows: Value<Bool>? = nil,
                                     modelReceiveShadows: Value<Bool>? = nil,
-                                    modelScaleMode: Value<ModelScaleMode>? = nil) {
+                                    modelScaleMode: Value<ModelScaleMode>? = nil,
+                                    modelEmissiveStrength: Value<Double> = .constant(1)) {
         self.model = model
         self.modelScale = modelScale
         self.modelRotation = modelRotation
@@ -215,6 +225,7 @@ public struct Puck3DConfiguration: Equatable {
         self.modelCastShadows = modelCastShadows
         self.modelReceiveShadows = modelReceiveShadows
         self.modelScaleMode = modelScaleMode ?? .constant(.viewport)
+        self.modelEmissiveStrength = modelEmissiveStrength
     }
 }
 

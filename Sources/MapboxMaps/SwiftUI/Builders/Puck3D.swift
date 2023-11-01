@@ -76,6 +76,18 @@ public struct Puck3D: PrimitiveMapContent {
         copyAssigned(self, \.configuration.modelScaleMode, .constant(modelScaleMode))
     }
 
+    /// Strength of the emission. 
+    ///
+    /// There is no emission for value 0. For value 1.0, only emissive component (no shading) is displayed and values above 1.0 produce light contribution to surrounding area, for some of the parts (e.g. windows).
+    ///
+    /// Default value is 1.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func modelEmissiveStrength(_ modelEmissiveStrength: Double) -> Puck3D {
+        copyAssigned(self, \.configuration.modelEmissiveStrength, .constant(modelEmissiveStrength))
+    }
+
     /// The scale of the model.
 #if swift(>=5.8)
     @_documentation(visibility: public)
@@ -122,6 +134,18 @@ public struct Puck3D: PrimitiveMapContent {
 #endif
     public func modelScaleMode(_ modelScaleMode: Expression) -> Puck3D {
         copyAssigned(self, \.configuration.modelScaleMode, .expression(modelScaleMode))
+    }
+
+    /// Strength of the emission.
+    ///
+    /// There is no emission for value 0. For value 1.0, only emissive component (no shading) is displayed and values above 1.0 produce light contribution to surrounding area, for some of the parts (e.g. windows).
+    ///
+    /// Default value is 1.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    public func modelEmissiveStrength(_ modelEmissiveStrength: Expression) -> Puck3D {
+        copyAssigned(self, \.configuration.modelEmissiveStrength, .expression(modelEmissiveStrength))
     }
 
     func _visit(_ visitor: MapContentVisitor) {

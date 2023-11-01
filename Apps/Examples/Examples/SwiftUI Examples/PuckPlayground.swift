@@ -18,6 +18,7 @@ struct PuckPlayground: View {
     @State private var opacity = 1.0
     @State private var puck3dSettings = Puck3DSettings()
     @State private var puck2dSettings = Puck2DSettings()
+    @State private var mapStyle = MapStyle.standard(lightPreset: .day)
 
     var body: some View {
         Map(initialViewport: .followPuck(zoom: 18, bearing: .heading, pitch: 60)) {
@@ -32,11 +33,21 @@ struct PuckPlayground: View {
                 Puck3D(model: puck3dSettings.modelType.model, bearing: bearingType)
                     .modelScale(puck3dSettings.modelScale)
                     .modelOpacity(opacity)
+                    .modelEmissiveStrength(puck3dSettings.emission)
             }
         }
+        .mapStyle(mapStyle)
         .ignoresSafeArea()
         .safeOverlay(alignment: .bottom) {
             settingsBody
+        }
+        .safeOverlay(alignment: .trailing) {
+            MapStyleSelectorButton(mapStyle: $mapStyle)
+        }
+        .onChange(of: puckType) { newValue in
+            if puckType == .d3 { // Switch to dusk mode to see model light emission
+                mapStyle = .standard(lightPreset: .dusk)
+            }
         }
     }
 
@@ -57,6 +68,7 @@ struct PuckPlayground: View {
             case.d3:
                 RadioButtonSettingView(title: "Model", value: $puck3dSettings.modelType)
                 SliderSettingView(title: "Scale", value: $puck3dSettings.scale, range: 1...3, step: 0.25)
+                SliderSettingView(title: "Light emission", value: $puck3dSettings.emission, range: 0...2, step: 0.1)
             }
         }
         .padding(10)
@@ -124,6 +136,7 @@ private struct Puck3DSettings {
     var scale = 1.0
     var modelScale: [Double] { .init(repeating: scale * modelType.initialScale, count: 3) }
     var modelType = ModelType.sportcar
+    var emission = 1.0
 }
 
 private struct Puck2DSettings {

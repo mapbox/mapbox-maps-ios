@@ -21,10 +21,22 @@ struct FloatingStyle <S: Shape>: ViewModifier {
     func body(content: Content) -> some View {
         content
             .padding(padding)
-            .background(Color(UIColor.systemBackground))
+            .regularMaterialBackground()
             .clipShape(shape)
             .shadow(radius: 1.4, y: 0.7)
             .padding(5)
+    }
+}
+
+@available(iOS 13.0, *)
+extension View {
+    @ViewBuilder
+    func regularMaterialBackground() -> some View {
+        if #available(iOS 15.0, *) {
+            self.background(.regularMaterial)
+        } else {
+            self.background(Color(UIColor.systemBackground))
+        }
     }
 }
 

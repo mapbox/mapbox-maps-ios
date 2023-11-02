@@ -15,10 +15,12 @@ manifests:
   - type: Cross-check Common SDK version with GL Native
     omit_for:
       - MapboxCoreMaps
+      - MapboxCommon
       - Turf
 dependencies:
   - name: MapboxCoreMaps
     variations:
+      Package.swift: mapbox-core-maps-ios
       Package.resolved: mapbox-core-maps-ios
   - name: MapboxCommon
     variations:

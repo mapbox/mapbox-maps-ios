@@ -35,6 +35,8 @@ struct MockMapView {
 }
 
 class MockViewportManager: ViewportManagerProtocol {
+    var options: ViewportOptions = .init()
+
     private struct WeakViewportStatusObserver {
         weak var value: ViewportStatusObserver?
     }

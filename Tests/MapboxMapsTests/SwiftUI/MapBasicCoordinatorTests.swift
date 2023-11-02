@@ -21,43 +21,34 @@ final class MapBasicCoordinatorTests: XCTestCase {
         setViewportStub = nil
     }
 
-    func testStyleURI() {
+    private func update(with deps: MapDependencies) {
         me.update(
             viewport: .constant(.idle),
-            deps: MapDependencies(mapStyle: .light),
+            deps: deps,
             layoutDirection: .leftToRight,
             animationData: nil)
+    }
+
+    func testStyleURI() {
+        update(with: MapDependencies(mapStyle: .light))
         XCTAssertEqual(mapView.style.mapStyle, .light)
 
-        me.update(
-            viewport: .constant(.idle),
-            deps: MapDependencies(mapStyle: .dark),
-            layoutDirection: .leftToRight,
-            animationData: nil)
+        update(with: MapDependencies(mapStyle: .dark))
         XCTAssertEqual(mapView.style.mapStyle, .dark)
     }
 
     func testMapOptions() {
-        me.update(
-            viewport: .constant(.idle),
-            deps: MapDependencies(),
-            layoutDirection: .leftToRight,
-            animationData: nil)
-
+        update(with: MapDependencies())
         let mapboxMap = mapView.mapboxMap
         // Setting to already existing values doesn't change it
         XCTAssertEqual(mapboxMap.northOrientationStub.invocations.count, 0)
         XCTAssertEqual(mapboxMap.setConstraintModeStub.invocations.count, 0)
         XCTAssertEqual(mapboxMap.setViewportModeStub.invocations.count, 0)
 
-        me.update(
-            viewport: .constant(.idle),
-            deps: MapDependencies(
-                constrainMode: .none,
-                viewportMode: .flippedY,
-                orientation: .downwards),
-            layoutDirection: .leftToRight,
-            animationData: nil)
+        update(with: MapDependencies(
+            constrainMode: .none,
+            viewportMode: .flippedY,
+            orientation: .downwards))
         XCTAssertEqual(mapboxMap.setConstraintModeStub.invocations.count, 1)
         XCTAssertEqual(mapboxMap.setViewportModeStub.invocations.count, 1)
         XCTAssertEqual(mapboxMap.northOrientationStub.invocations.count, 1)
@@ -74,11 +65,7 @@ final class MapBasicCoordinatorTests: XCTestCase {
             logo: LogoViewOptions(margins: .random()),
             attributionButton: AttributionButtonOptions(margins: .random())
         )
-        me.update(
-            viewport: .constant(.idle),
-            deps: MapDependencies(ornamentOptions: ornamentOptions),
-            layoutDirection: .leftToRight,
-            animationData: nil)
+        update(with: MapDependencies(ornamentOptions: ornamentOptions))
 
         let ornaments = mapView.ornaments
         XCTAssertEqual(ornaments.options, ornamentOptions)
@@ -87,13 +74,17 @@ final class MapBasicCoordinatorTests: XCTestCase {
     func testDebugOptions() {
         XCTAssertEqual(mapView.facade.debugOptions, [])
         let debugOptions: MapViewDebugOptions = [.camera, .collision]
-        me.update(
-            viewport: .constant(.idle),
-            deps: MapDependencies(debugOptions: debugOptions),
-            layoutDirection: .leftToRight,
-            animationData: nil)
-
+        update(with: MapDependencies(debugOptions: debugOptions))
         XCTAssertEqual(mapView.facade.debugOptions, debugOptions)
+    }
+
+    func testViewportOptions() {
+        XCTAssertEqual(mapView.facade.viewportManager.options.transitionsToIdleUponUserInteraction, true)
+        update(with: MapDependencies(transitionsToIdleUponUserInteraction: false))
+        XCTAssertEqual(mapView.facade.viewportManager.options.transitionsToIdleUponUserInteraction, false)
+
+        update(with: MapDependencies(transitionsToIdleUponUserInteraction: true))
+        XCTAssertEqual(mapView.facade.viewportManager.options.transitionsToIdleUponUserInteraction, true)
     }
 
     func testContentGestures() {
@@ -108,11 +99,7 @@ final class MapBasicCoordinatorTests: XCTestCase {
             onLayerTap: ["layer1": { onLayerTapGesture.call(with: ($0, $1)) }],
             onLayerLongPress: ["layer1": { onLayerLongPressGesture.call(with: ($0, $1)) }]
         )
-        me.update(
-            viewport: .constant(.idle),
-            deps: deps,
-            layoutDirection: .leftToRight,
-            animationData: nil)
+        update(with: deps)
 
         let contentGestures = mapView.gestures.contentManager
         let point = CGPoint(x: 10, y: 20)
@@ -156,11 +143,7 @@ final class MapBasicCoordinatorTests: XCTestCase {
         }
         let deps = MapDependencies(eventsSubscriptions: [subscription])
 
-        me.update(
-            viewport: .constant(.idle),
-            deps: deps,
-            layoutDirection: .leftToRight,
-            animationData: nil)
+        update(with: deps)
         let mapLoaded = MapLoaded(timeInterval: EventTimeInterval(begin: Date(), end: Date()))
 
         mapView.mapboxMap.events.onMapLoaded.send(mapLoaded)

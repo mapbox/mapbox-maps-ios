@@ -36,6 +36,7 @@ Mapbox welcomes participation and contributions from everyone.
       .slot("middle")
   }
   ```
+* [SwiftUI] Expose `transitionsToIdleUponUserInteraction` modifier.
 
 ### Bug fixes 🐞
 

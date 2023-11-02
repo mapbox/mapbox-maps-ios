@@ -14,6 +14,7 @@ struct MapDependencies {
     var ornamentOptions = OrnamentOptions()
     var debugOptions = MapViewDebugOptions()
     var presentsWithTransaction = false
+    var transitionsToIdleUponUserInteraction = true
 
     var onMapTap: ((MapContentGestureContext) -> Void)?
     var onMapLongPress: ((MapContentGestureContext) -> Void)?

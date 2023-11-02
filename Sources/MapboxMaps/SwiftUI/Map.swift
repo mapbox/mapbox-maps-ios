@@ -311,8 +311,21 @@ public extension Map {
     /// presents its content using a CoreAnimation transaction
     ///
     /// See ``MapView/presentsWithTransaction``.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
     func presentsWithTransaction(_ value: Bool) -> Self {
         copyAssigned(self, \.mapDependencies.presentsWithTransaction, value)
+    }
+
+    /// Indicates whether the ``Viewport`` should idle when map receives pan touch input.
+    ///
+    /// Defaults to `true`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    func transitionsToIdleUponUserInteraction(_ value: Bool) -> Self {
+        copyAssigned(self, \.mapDependencies.transitionsToIdleUponUserInteraction, value)
     }
 }
 

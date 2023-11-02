@@ -166,6 +166,7 @@ public final class ViewportManager {
 }
 
 protocol ViewportManagerProtocol {
+    var options: ViewportOptions { get set }
     func addStatusObserver(_ observer: ViewportStatusObserver)
     func removeStatusObserver(_ observer: ViewportStatusObserver)
     func idle()

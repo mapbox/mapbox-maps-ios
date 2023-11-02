@@ -1,13 +1,13 @@
 import MapboxMaps
 import UIKit
 
-class ShowHideLayerExample: UIViewController, ExampleProtocol {
+final class ShowHideLayerExample: UIViewController, ExampleProtocol {
+    private static let museumLayerId = "museum-circle-layer"
+    private static let contourLayerId = "contour-line-layer"
 
-    internal var mapView: MapView!
+    private var mapView: MapView!
     private var cancelables = Set<AnyCancelable>()
 
-    let museumLayerId = "museum-circle-layer"
-    let contourLayerId = "contour-line-layer"
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -40,7 +40,7 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         museumsSource.url = "mapbox://mapbox.2opop9hr"
 
         // Create CircleLayer with id and source identifier.
-        var museumLayer = CircleLayer(id: museumLayerId, source: museumsSource.id)
+        var museumLayer = CircleLayer(id: Self.museumLayerId, source: museumsSource.id)
 
         // Specify the layer within the vector source to render on the map.
         museumLayer.sourceLayer = "museum-cusco"
@@ -59,7 +59,7 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         // can be found at https://docs.mapbox.com/vector-tiles/reference/mapbox-terrain-v2/
         contourSource.url = "mapbox://mapbox.mapbox-terrain-v2"
 
-        var contourLayer = LineLayer(id: contourLayerId, source: contourSource.id)
+        var contourLayer = LineLayer(id: Self.contourLayerId, source: contourSource.id)
 
         // Assign this layer's source layer ID.
         contourLayer.sourceLayer = "contour"
@@ -89,11 +89,11 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         // Update the museum layer's visibility based on whether the switch
         // is on. `visibility` is `nil` by default.
         do {
-            try mapView.mapboxMap.updateLayer(withId: museumLayerId, type: CircleLayer.self) { layer in
+            try mapView.mapboxMap.updateLayer(withId: Self.museumLayerId, type: CircleLayer.self) { layer in
                 layer.visibility = .constant(sender.isOn ? .visible : .none)
             }
         } catch {
-            print("Failed to update the visibility for layer with id \(museumLayerId). Error: \(error.localizedDescription)")
+            print("Failed to update the visibility for layer with id \(Self.museumLayerId). Error: \(error.localizedDescription)")
         }
     }
 
@@ -101,11 +101,11 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         // Update the contour layer's visibility based on whether the switch
         // is on.
         do {
-            try mapView.mapboxMap.updateLayer(withId: contourLayerId, type: CircleLayer.self) { layer in
+            try mapView.mapboxMap.updateLayer(withId: Self.contourLayerId, type: CircleLayer.self) { layer in
                 layer.visibility = .constant(sender.isOn ? .visible : .none)
             }
         } catch {
-            print("Failed to update the visibility for layer with id \(contourLayerId). Error: \(error.localizedDescription)")
+            print("Failed to update the visibility for layer with id \(Self.contourLayerId). Error: \(error.localizedDescription)")
         }
     }
 
@@ -115,39 +115,51 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         museumSwitch.addTarget(self, action: #selector(toggleMuseumLayerVisibility(sender:)), for: .valueChanged)
         museumSwitch.isOn = true
         museumSwitch.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(museumSwitch)
 
         let contourSwitch = UISwitch()
         contourSwitch.addTarget(self, action: #selector(toggleContourLayerVisibility(sender:)), for: .valueChanged)
         contourSwitch.isOn = true
         contourSwitch.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(contourSwitch)
 
         // Add labels for the toggles.
         let museumLabel = UILabel()
         museumLabel.text = "Show museums"
-        museumLabel.textColor = .darkText
-        museumLabel.backgroundColor = .white
         museumLabel.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(museumLabel)
 
         let contourLabel = UILabel()
         contourLabel.text = "Show contours"
-        contourLabel.textColor = .darkText
-        contourLabel.backgroundColor = .white
         contourLabel.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(contourLabel)
+
+        let museumStackView = UIStackView(arrangedSubviews: [museumLabel, museumSwitch])
+        museumStackView.translatesAutoresizingMaskIntoConstraints = false
+        let contourStackView = UIStackView(arrangedSubviews: [contourLabel, contourSwitch])
+        contourStackView.translatesAutoresizingMaskIntoConstraints = false
+
+        let stackView = UIStackView(arrangedSubviews: [museumStackView, contourStackView])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.spacing = UIStackView.spacingUseSystem
+        stackView.axis = .vertical
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.directionalLayoutMargins = .init(top: 10, leading: 10, bottom: 10, trailing: 10)
+
+        let backdropView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+        backdropView.translatesAutoresizingMaskIntoConstraints = false
+        backdropView.layer.cornerRadius = 10
+        backdropView.clipsToBounds = true
+
+        stackView.insertSubview(backdropView, at: 0)
+        view.addSubview(stackView)
 
         // Layout the switches and labels.
         NSLayoutConstraint.activate([
-            museumSwitch.topAnchor.constraint(equalTo: mapView.safeAreaLayoutGuide.topAnchor, constant: 20),
-            museumSwitch.leadingAnchor.constraint(equalTo: mapView.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            museumLabel.leadingAnchor.constraint(equalTo: museumSwitch.trailingAnchor, constant: 10),
-            museumLabel.centerYAnchor.constraint(equalTo: museumSwitch.centerYAnchor),
-            contourSwitch.topAnchor.constraint(equalTo: museumSwitch.bottomAnchor, constant: 20),
-            contourSwitch.leadingAnchor.constraint(equalTo: mapView.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            contourLabel.leadingAnchor.constraint(equalTo: contourSwitch.trailingAnchor, constant: 10),
-            contourLabel.centerYAnchor.constraint(equalTo: contourSwitch.centerYAnchor)
+            mapView.ornaments.logoView.topAnchor.constraint(equalToSystemSpacingBelow: stackView.bottomAnchor, multiplier: 1),
+            stackView.leadingAnchor.constraint(equalToSystemSpacingAfter: mapView.safeAreaLayoutGuide.leadingAnchor, multiplier: 1),
+            mapView.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: stackView.trailingAnchor, multiplier: 1),
+
+            stackView.topAnchor.constraint(equalTo: backdropView.topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: backdropView.bottomAnchor),
+            stackView.leadingAnchor.constraint(equalTo: backdropView.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: backdropView.trailingAnchor)
         ])
     }
 }

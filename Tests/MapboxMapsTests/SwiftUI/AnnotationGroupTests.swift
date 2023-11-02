@@ -14,10 +14,10 @@ final class AnnotationGroupTests: XCTestCase {
     }
 
     override func tearDown() {
-        super.tearDown()
         resetAllStubs()
         orchestratorImpl = nil
         orchestrator = nil
+        super.tearDown()
     }
 
     func testGroup() throws {

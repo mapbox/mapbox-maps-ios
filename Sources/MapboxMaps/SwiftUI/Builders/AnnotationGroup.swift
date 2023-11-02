@@ -29,6 +29,9 @@ struct AnnotationGroup {
         updateProperties: @escaping (M) -> Void
     ) {
         self.layerId = layerId
+        // For some reason, the data in the store corrupts under tests in release mode when captured
+        // by `update` closure. Copying the data fixes the issue.
+        let data = ForEvery(data: store.data, id: store.id, content: store.content)
         self.update = { orchestrator, resolvedId, annotationsIdMap in
             // Creates or updates annotation manager for a given group.
             let existingManager = orchestrator.annotationManagersById[resolvedId] as? M
@@ -37,7 +40,7 @@ struct AnnotationGroup {
             updateProperties(manager)
 
             var annotations = [M.AnnotationType]()
-            store.forEach { id, annotation in
+            data.forEach { id, annotation in
                 var annotation = annotation
                 let stringId = annotationsIdMap[id] ?? annotation.id
                 annotationsIdMap[id] = stringId

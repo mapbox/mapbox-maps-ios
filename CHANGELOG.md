@@ -2,9 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-## main
+## 11.0.0-rc.2 - 2 November, 2023
 
 ### Breaking changes ⚠️
+
 * `MapboxMap.loadStyle` methods changed error type from `MapLoadingError` to `Error`.
 * `OverviewViewportStateOptions.coordinatesPadding` is renamed to `OverviewViewportStateOptions.geometryPadding`.
 * [SwiftUI] ``Viewport.overview(geometry:bearing:pitch:coordinatesPadding:maxZoom:offset:)` is renamed to `Viewport.overview(geometry:bearing:pitch:geometryPadding:maxZoom:offset:)`
@@ -13,6 +14,7 @@ Mapbox welcomes participation and contributions from everyone.
 * The default behavior of resetting the viewport to idle is changed. Previously viewport was reset to idle when the user touched the map for longer than 150 ms. Now it will happen when the user pans the map. If the desired behavior is different, you can disable the default by setting `mapView.viewport.options.transitionsToIdleUponUserInteraction` to `false` and implementing any gesture that calls `mapView.viewport.idle()`.
 
 ### Features ✨ and improvements 🏁
+
 * Refactor `MapboxMap.loadStyle` to cancel previous style loads when called multiple times.
 * New experimental `StyleManager.load(mapStyle:transition:completion)` method to load `MapStyle` in `MapboxMap`, or `Snapshotter`:
   ```swift

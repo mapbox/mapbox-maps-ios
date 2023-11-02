@@ -3,9 +3,8 @@
 
 import PackageDescription
 
-let commonVersion = "24.0.0-rc.1"
-let coreVersion = "11.0.0-rc.1"
-let coreChecksum = "38937e85667c090c486cae76f20ee37c16435fb21d2f0af1c54079f55e26ca5c"
+let commonVersion: Version = "24.0.0-rc.2"
+let coreVersion: Version = "11.0.0-rc.1"
 
 func folder(_ version: String) -> String { version.contains("SNAPSHOT") ? "snapshots" : "releases" }
 
@@ -21,19 +20,15 @@ let package = Package(
             targets: ["MapboxMaps"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/mapbox/mapbox-common-ios.git", exact: Version(stringLiteral: commonVersion)),
+        .package(url: "https://github.com/mapbox/mapbox-common-ios.git", exact: commonVersion),
+        .package(url: "https://github.com/mapbox/mapbox-core-maps-ios.git", exact: coreVersion),
         .package(url: "https://github.com/mapbox/turf-swift.git", exact: "2.7.0"),
     ],
     targets: [
-        .binaryTarget(
-            name: "MapboxCoreMaps",
-            url: "https://api.mapbox.com/downloads/v2/mobile-maps-core/\(folder(coreVersion))/ios/packages/\(coreVersion)/MapboxCoreMaps.xcframework-dynamic.zip",
-            checksum: coreChecksum
-        ),
         .target(
             name: "MapboxMaps",
             dependencies: [
-                "MapboxCoreMaps",
+                .product(name: "MapboxCoreMaps", package: "mapbox-core-maps-ios"),
                 .product(name: "MapboxCommon", package: "mapbox-common-ios"),
                 .product(name: "Turf", package: "turf-swift")
             ],

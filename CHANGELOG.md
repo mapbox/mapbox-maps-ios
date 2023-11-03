@@ -2,7 +2,7 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-## 11.0.0-rc.2 - 2 November, 2023
+## 11.0.0-rc.1 - 3 November, 2023
 
 ### Breaking changes ⚠️
 

@@ -699,6 +699,9 @@ class ViewController: UIViewController { }
 ```
 
 ### 3.8 Http Stack changes
+
+#### 3.8.1 HttpServiceFactory and HttpInterceptor changes
+
 `HTTPServiceFactory.reset`, `HttpServiceFactory.setUserDefinedForCustom` and `HttpServiceInterface` have been removed from public visibility. ***It is thus no longer possible to override the HTTP stack.***
 
 If you need to set a HTTP interceptor you can do it via the `HttpServiceFactory.setHttpServiceInterceptorInterface` function. The `HttpServiceInterceptorInterface` has been changed: the `onDownload` function no longer exists and the signature of `onRequest` and `onResponse` have been changed to return a value through a continuation.
@@ -733,6 +736,26 @@ class Interceptor: HttpServiceInterceptorInterface {
         continuation(response)
     }
 }
+```
+
+#### 3.8.2 HttpRequest changes
+
+Introduce `HttpRequestFlags` constants to set additional HttpRequest parameters.
+
+`HttpRequest.keepCompression` moved to `HttpRequest.flags`.
+
+**v10**
+
+```swift
+let httpRequest = HttpRequest(method: HttpMethod.get, url: "", headers: [:], keepCompression: false, timeout: 0,
+                              networkRestriction: NetworkRestriction.none, sdkInformation: sdkInformation, body: nil)
+```
+
+**v11**
+
+```swift
+let httpRequest = HttpRequest(method: HttpMethod.get, url: "", headers: [:], timeout: 0, networkRestriction: NetworkRestriction.none,
+                              sdkInformation: sdkInformation, body: nil, flags: HttpRequestFlags.none)
 ```
 
 ### 3.9 Offline API
@@ -828,6 +851,10 @@ If your application still need to rotate puck image according to device heading 
 ```swift
     mapView.location.options.puckBearingEnabled = true
 ```
+
+#### 3.12 TileRegionLoadOptions changes.
+
+`TileRegionLoadOptions.startLocation` property type changed from `CLLocation` to `Coordinate2D`.
 
 ## 4. Update APIs deprecated in v10 which have been removed in v11
 

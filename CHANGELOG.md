@@ -2,6 +2,12 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## main
+
+### Bug fixes 🐞
+
+* [SwiftUI] Fixed point annotations clustering.
+
 ## 11.0.0-rc.1 - 3 November, 2023
 
 ### Breaking changes ⚠️

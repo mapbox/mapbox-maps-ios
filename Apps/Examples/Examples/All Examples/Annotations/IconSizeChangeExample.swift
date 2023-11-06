@@ -77,29 +77,19 @@ final class IconSizeChangeExample: UIViewController, ExampleProtocol {
 
         try? mapView.mapboxMap.addLayer(selectedMarkerLayer)
 
-        // add a tap gesture recognizer to the map
-        mapView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(mapTapped(_:))))
-    }
-
-    @objc private func mapTapped(_ sender: UITapGestureRecognizer) {
-        let point = sender.location(in: mapView)
-
-        let options = RenderedQueryOptions(layerIds: [Constants.selectedMarkerLayerId], filter: nil)
-        // check if the selected marker was tapped
-        mapView.mapboxMap.queryRenderedFeatures(with: point, options: options) { [weak self] result in
-            guard let self = self else { return }
-
-            switch result {
-            case .success(let features):
-                if !features.isEmpty, self.markerSelected {
-                    return
-                }
-
-                self.updateSelectedMarker(atPoint: point)
-            case .failure(let error):
-                self.showAlert(with: "An error occurred: \(error.localizedDescription)")
+        // Add a handler for tap on the selected marker layer.
+        mapView.gestures.onLayerTap(Constants.selectedMarkerLayerId) { [weak self] _, context in
+            guard let self else { return false }
+            if !self.markerSelected {
+                self.updateSelectedMarker(atPoint: context.point)
             }
-        }
+            return true
+        }.store(in: &cancelables)
+        
+        // Add a handler for on map, except taps on selected marker.
+        mapView.gestures.onMapTap.observe { [weak self] context in
+            self?.updateSelectedMarker(atPoint: context.point)
+        }.store(in: &cancelables)
     }
 
     private func updateSelectedMarker(atPoint point: CGPoint) {

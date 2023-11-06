@@ -23,31 +23,21 @@ public class LongTapAnimationExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onMapLoaded.observeNext { _ in
-            self.setupExample()
+        mapView.mapboxMap.onMapLoaded.observeNext { [weak self] _ in
+            try? self?.mapView.mapboxMap.addImage(UIImage(named: "intermediate-pin")!, id: .blueMarker)
 
             // The following line is just for testing purposes.
-            self.finish()
+            self?.finish()
         }.store(in: &cancelables)
+
+        mapView.gestures.onMapLongPress.observe { [weak self] context in
+            self?.handleLongPress(at: context.point)
+        }.store(in: &cancelables)
+
         pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
     }
 
-    func setupExample() {
-        try! mapView.mapboxMap.addImage(UIImage(named: "intermediate-pin")!, id: .blueMarker)
-        let tapGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPress))
-        mapView.addGestureRecognizer(tapGesture)
-    }
-
-    @objc public func longPress(_ sender: UILongPressGestureRecognizer) {
-        switch sender.state {
-        case .began:
-            longPressBegan(at: sender.location(in: mapView))
-        default:
-            break
-        }
-    }
-
-    private func longPressBegan(at location: CGPoint) {
+    private func handleLongPress(at location: CGPoint) {
         haptic()
         let coordinate = mapView.mapboxMap.coordinate(for: location)
 

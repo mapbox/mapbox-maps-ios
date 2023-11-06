@@ -535,7 +535,7 @@ extension UIEdgeInsets {
 
 extension NSAttributedString {
     static func labelText(_ string: String, size: CGFloat, color: UIColor, bold: Bool = false) -> NSAttributedString {
-        var paragraphStyle = NSMutableParagraphStyle()
+        let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = 1.11
         paragraphStyle.lineSpacing = 4
         paragraphStyle.alignment = .left

@@ -13,11 +13,7 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
         return try! JSONDecoder().decode(LineString.self, from: routeData)
     }()
     private lazy var totalDistance: CLLocationDistance = route.distance() ?? 0
-    private lazy var annotationView: UIView = {
-        let view = UIImageView(image: UIImage(named: "intermediate-pin"))
-        view.contentMode = .scaleAspectFit
-        return view
-    }()
+    private var annotation: ViewAnnotation?
     private var animationStartTime: TimeInterval = 0
 
     override func viewDidLoad() {
@@ -52,13 +48,12 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
 
         try! mapView.mapboxMap.addLayer(layer)
 
-        let options = ViewAnnotationOptions(
-            annotatedFeature: .geometry(Point(route.coordinates.first!)),
-            width: 50,
-            height: 50,
-            variableAnchors: [.init(anchor: .bottom, offsetY: -5)]
-        )
-        try! mapView.viewAnnotations.add(annotationView, options: options)
+        let view = UIImageView(image: UIImage(named: "intermediate-pin"))
+        view.contentMode = .scaleAspectFit
+        let annotation = ViewAnnotation(coordinate: route.coordinates.first!, view: view)
+        annotation.variableAnchors = [.init(anchor: .bottom, offsetY: -12)]
+        mapView.viewAnnotations.add(annotation)
+        self.annotation = annotation
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -100,7 +95,8 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
             }
         }
         let currentCoordinate = route.coordinateFromStart(distance: currentDistanceOffset)!
-        let options = ViewAnnotationOptions(annotatedFeature: .geometry(Point(currentCoordinate)))
-        try! mapView.viewAnnotations.update(annotationView, options: options)
+
+        // set new coordinate to the annotation
+        annotation?.annotatedFeature = .geometry(Point(currentCoordinate))
     }
 }

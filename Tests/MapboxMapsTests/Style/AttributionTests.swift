@@ -176,7 +176,7 @@ class AttributionTests: XCTestCase {
         let metadataPath = Bundle.mapboxMaps.url(forResource: "MapboxMaps", withExtension: "json")!
         let data = try! Data(contentsOf: metadataPath)
         let metadata = try! JSONDecoder().decode(MapboxMapsMetadata.self, from: data)
-        let expectedURL = try XCTUnwrap(URL(string: "https://apps.mapbox.com/feedback/?referrer=\(Bundle.main.bundleIdentifier!)&owner=mapbox&id=standard-beta&access_token=test-token&map_sdk_version=\(metadata.version)#/2.00000/1.00000/3.00/4.0/5"))
+        let expectedURL = try XCTUnwrap(URL(string: "https://apps.mapbox.com/feedback/?referrer=\(Bundle.main.bundleIdentifier!)&owner=mapbox&id=standard&access_token=test-token&map_sdk_version=\(metadata.version)#/2.00000/1.00000/3.00/4.0/5"))
 
         let mapView = MapView(frame: .zero, mapInitOptions: mapInitOptions)
         let url = mapView.mapboxFeedbackURL(accessToken: "test-token")

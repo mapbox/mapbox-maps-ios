@@ -14,7 +14,7 @@ internal class StyleImportIntegrationTests: MapViewIntegrationTestCase {
         "layers": [Any](),
         "imports": [[
             "id": "standard",
-            "url": "mapbox://styles/mapbox/standard-beta",
+            "url": "mapbox://styles/mapbox/standard",
             "config": [
                 "font": "Montserrat",
                 "lightPreset": "day",

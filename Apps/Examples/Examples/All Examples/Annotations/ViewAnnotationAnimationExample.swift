@@ -14,7 +14,7 @@ final class ViewAnnotationAnimationExample: UIViewController, ExampleProtocol {
     }()
     private lazy var totalDistance: CLLocationDistance = route.distance() ?? 0
     private lazy var annotationView: UIView = {
-        let view = UIImageView(image: UIImage(named: "blue_marker_view"))
+        let view = UIImageView(image: UIImage(named: "intermediate-pin"))
         view.contentMode = .scaleAspectFit
         return view
     }()

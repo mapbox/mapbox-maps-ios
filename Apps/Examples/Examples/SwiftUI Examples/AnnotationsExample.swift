@@ -89,8 +89,9 @@ struct AnnotationsExample: View {
 
                 PointAnnotationGroup(taps) { tap in
                     PointAnnotation(coordinate: tap.coordinate)
-                        .image(named: "blue_marker_view")
+                        .image(named: "intermediate-pin")
                         .iconAnchor(.bottom)
+                        .iconOffset([0, 12])
                         .onTapGesture {
                             taps.removeAll(where: { $0.id == tap.id })
                         }

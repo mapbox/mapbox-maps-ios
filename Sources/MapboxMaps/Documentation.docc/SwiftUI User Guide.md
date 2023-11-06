@@ -100,7 +100,7 @@ let london = CLLocationCoordinate2D(latitude: 51.5073219, longitude: -0.1276474)
 Map(initialViewport: .camera(center: london, zoom: 12, bearing: 0, pitch: 0)
 ```
 
-The `initialViewport` in the example above means that viewport will be set only on map initialization. If the user drags the map, it won't be possible to set the viewport again. In contrast, the example below uses `@State` variable via two-way data binding. With this approach, the viewport can be set and re-set whenever necessary. The approach you should use depends on your particular use case. 
+The `initialViewport` in the example above means that viewport will be set only on map initialization. If the user drags the map, it won't be possible to set the viewport again. In contrast, the example below uses `@State` variable via two-way data binding. With this approach, the viewport can be set and re-set whenever necessary. The approach you should use depends on your particular use case.
 
 ```swift
 struct ContentView: View {
@@ -251,7 +251,7 @@ struct ContentView: View {
             /// Displays data-driven group of point annotations.
             PointAnnotationGroup(items, id: \.id) { item in
                 PointAnnotation(coordinate: item.coordinate)
-                    .image(.init(image: UIImage(named: "blue_marker_view")!, name: "blue-icon"))
+                    .image(named: "dest-pin")
                     .iconAnchor(.bottom)
             }
             .clusterOptions(ClusterOptions(...))
@@ -259,7 +259,7 @@ struct ContentView: View {
     }
 ```
 
-In example above you can see that `PointAnnotation` (and other types of layer annotations) can be placed alone, or by using an annotation group, such as ``PointAnnotationGroup``. 
+In example above you can see that `PointAnnotation` (and other types of layer annotations) can be placed alone, or by using an annotation group, such as ``PointAnnotationGroup``.
 
 The first method is a handy way to place only one annotation of its kind. The second is better for multiple annotations and gives more configuration options such as clustering, layer position, and more. Annotation groups also behave like ``ForEvery`` for layer annotations.
 
@@ -304,4 +304,4 @@ var body: some View {
 }
 ```
 
-We welcome your feedback on this experimental SwiftUI support. If you have any questions or comments please open an [issue in the Mapbox Maps SDK repo](https://github.com/mapbox/mapbox-maps-ios/issues) and add the `SwiftUI` label. 
+We welcome your feedback on this experimental SwiftUI support. If you have any questions or comments please open an [issue in the Mapbox Maps SDK repo](https://github.com/mapbox/mapbox-maps-ios/issues) and add the `SwiftUI` label.

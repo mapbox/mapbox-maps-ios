@@ -158,16 +158,16 @@ private struct Puck2DSettings {
     }
     enum TopImage: String, CaseIterable {
         case `default`
-        case star
-        case square
+        case dash
+        case jpeg
 
         var asPuckTopImage: UIImage? {
             switch self {
             case .default:
                 return nil
-            case .star:
-                return UIImage(named: "star")
-            case .square:
+            case .dash:
+                return UIImage(named: "dash-puck")
+            case .jpeg:
                 return UIImage(named: "jpeg-image")
             }
         }

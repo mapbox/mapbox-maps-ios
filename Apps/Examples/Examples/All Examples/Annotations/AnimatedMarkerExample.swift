@@ -62,7 +62,7 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
     }
 
     private func setupExample() {
-        try? mapView.mapboxMap.addImage(UIImage(named: "red_marker")!, id: Constants.markerIconId)
+        try? mapView.mapboxMap.addImage(UIImage(named: "dest-pin")!, id: Constants.markerIconId)
 
         // Create a GeoJSON data source.
         var source = GeoJSONSource(id: Constants.sourceId)
@@ -75,6 +75,7 @@ final class AnimatedMarkerExample: UIViewController, ExampleProtocol {
         symbolLayer.iconImage = .constant(.name(Constants.markerIconId))
         symbolLayer.iconIgnorePlacement = .constant(true)
         symbolLayer.iconAllowOverlap = .constant(true)
+        symbolLayer.iconOffset = .constant([0, 12])
 
         try? mapView.mapboxMap.addLayer(symbolLayer)
     }

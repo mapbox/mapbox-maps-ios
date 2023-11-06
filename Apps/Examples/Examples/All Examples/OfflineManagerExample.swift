@@ -329,7 +329,8 @@ final class OfflineManagerExample: UIViewController, NonMapViewExampleProtocol {
             }
 
             var pointAnnotation = PointAnnotation(coordinate: self.tokyoCoord)
-            pointAnnotation.image = .init(image: UIImage(named: "custom_marker")!, name: "custom-marker")
+            pointAnnotation.image = .init(image: UIImage(named: "dest-pin")!, name: "custom-marker")
+            pointAnnotation.iconOffset = [0, 12]
 
             let pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
             pointAnnotationManager.annotations = [pointAnnotation]

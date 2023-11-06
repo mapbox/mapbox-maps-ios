@@ -58,7 +58,7 @@ final class LargeGeoJSONPerformanceExample: UIViewController, ExampleProtocol {
             jsonUpdateCounter += 1
         }
 
-        try mapView.mapboxMap.addImage(UIImage(named: "blue_marker_view")!, id: "icon")
+        try mapView.mapboxMap.addImage(UIImage(named: "intermediate-pin")!, id: "icon")
 
         var source = GeoJSONSource(id: "source_marker")
         source.data = .feature(Feature(geometry: Point(cameraCenter).geometry))
@@ -70,6 +70,7 @@ final class LargeGeoJSONPerformanceExample: UIViewController, ExampleProtocol {
         var symbolLayer = SymbolLayer(id: "layer_marker", source: source.id)
         symbolLayer.iconImage = .constant(.name("icon"))
         symbolLayer.iconAnchor = .constant(.bottom)
+        symbolLayer.iconOffset = .constant([0, 12])
 
         try mapView.mapboxMap.addLayer(symbolLayer)
 

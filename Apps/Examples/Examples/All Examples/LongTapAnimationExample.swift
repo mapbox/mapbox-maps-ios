@@ -33,7 +33,7 @@ public class LongTapAnimationExample: UIViewController, ExampleProtocol {
     }
 
     func setupExample() {
-        try! mapView.mapboxMap.addImage(UIImage(named: "blue_marker_view")!, id: .blueMarker)
+        try! mapView.mapboxMap.addImage(UIImage(named: "intermediate-pin")!, id: .blueMarker)
         let tapGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPress))
         mapView.addGestureRecognizer(tapGesture)
     }
@@ -53,6 +53,7 @@ public class LongTapAnimationExample: UIViewController, ExampleProtocol {
 
         var annotation = PointAnnotation(point: Point(coordinate))
         annotation.iconImage = .blueMarker
+        annotation.iconOffset = [0, 12]
         pointAnnotationManager.annotations.append(annotation)
 
         let camera = CameraOptions(center: coordinate)

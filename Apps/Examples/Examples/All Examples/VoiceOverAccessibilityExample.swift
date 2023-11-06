@@ -58,8 +58,9 @@ final class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
         pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
         pointAnnotationManager.annotations = data.map { dataElement in
             var annotation = PointAnnotation(id: dataElement.id.description, coordinate: dataElement.coordinate)
-            annotation.image = .init(image: UIImage(named: "custom_marker")!, name: "custom_marker")
+            annotation.image = .init(image: UIImage(named: "dest-pin")!, name: "custom_marker")
             annotation.userInfo = ["name": dataElement.name]
+            annotation.iconOffset = [0, 12]
             return annotation
         }
 

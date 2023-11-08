@@ -67,9 +67,10 @@ protocol MapboxMapProtocol: AnyObject {
 ///
 /// If you have a ``MapView`` you can access the `MapboxMap` instance via ``MapView/mapboxMap`` property.
 ///
-/// Use ``style`` property to access runtime styling API, for example:
+/// ``MapboxMap`` inherits ``StyleManager-46yjd``, you can use it's methods to access runtime styling API:
+///
 ///   ```swift
-///   mapboxMap.style.uri = .satelliteStreets
+///   mapboxMap.styleURI = .satelliteStreets
 ///   ```
 ///
 /// Use `on`-prefixed properties to subscribe to map events, for example:

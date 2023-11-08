@@ -19,6 +19,7 @@ The Mapbox Maps SDK for iOS is a public library for displaying interactive, thor
 - ``Map-swift.struct``
 - ``MapStyle``
 - ``Viewport``
+- ``ViewportAnimation``
 - ``withViewportAnimation(_:body:completion:)``
 - ``MapViewAnnotation``
 - ``PointAnnotationGroup``
@@ -55,6 +56,7 @@ The Mapbox Maps SDK for iOS is a public library for displaying interactive, thor
 
 ### Style
 
+- ``StyleManager-46yjd``
 - ``StyleURI``
 - ``LayerPosition-swift.enum``
 - ``AmbientLight``

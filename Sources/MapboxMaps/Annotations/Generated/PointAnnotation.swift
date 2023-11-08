@@ -502,7 +502,7 @@ public struct PointAnnotation: Annotation, Equatable {
     ///
     /// The handler should return `true` if the gesture is handled, or `false` to propagate it to the annotations or layers below.
     ///
-    /// Parameters:
+    /// - Parameters:
     ///   - handler: A handler for tap gesture.
 #if swift(>=5.8)
     @_documentation(visibility: public)
@@ -513,7 +513,7 @@ public struct PointAnnotation: Annotation, Equatable {
 
     /// Adds a handler for tap gesture on current annotation.
     ///
-    /// Parameters:
+    /// - Parameters:
     ///   - handler: A handler for tap gesture.
     #if swift(>=5.8)
     @_documentation(visibility: public)
@@ -529,7 +529,7 @@ public struct PointAnnotation: Annotation, Equatable {
     ///
     /// The handler should return `true` if the gesture is handled, or `false` to propagate it to the annotations or layers below.
     ///
-    /// Parameters:
+    /// - Parameters:
     ///   - handler: A handler for long press gesture.
 #if swift(>=5.8)
     @_documentation(visibility: public)
@@ -540,7 +540,7 @@ public struct PointAnnotation: Annotation, Equatable {
 
     /// Adds a handler for long press gesture on current annotation.
     ///
-    /// Parameters:
+    /// - Parameters:
     ///   - handler: A handler for long press gesture.
     #if swift(>=5.8)
     @_documentation(visibility: public)

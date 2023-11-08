@@ -53,11 +53,15 @@ internal extension StyleProtocol {
 
 // swiftlint:disable type_body_length
 
-/// Style provides access to the APIs used to dynamically modify the map's style. Use it
-/// to read and write layers, sources, and images. Obtain the Style instance for a MapView
-/// via MapView.mapboxMap.style.
+/// Style manager is a base class for ``MapboxMap`` and ``Snapshotter`` that provides provides methods to manipulate Map Style at runtime.
 ///
-/// - Important: Style should only be used from the main thread.
+/// Use style manager to dynamically modify the map style. You can manage layers, sources, lights, terrain, and many more.
+/// Typically, you don’t create the style manager instances yourself. Instead you receive instance of this class from ``MapView`` as the ``MapView/mapboxMap`` property, or create an instance of ``Snapshotter``.
+///
+/// To load the style use ``styleURI`` or ``styleJSON`` or new experimental ``mapStyle`` property. The latter
+/// allows not only load the style, but also modify the style configuration, for more information, see ``MapStyle``.
+///
+/// - Important: `StyleManager` should only be used from the main thread.
 public class StyleManager {
     private let sourceManager: StyleSourceManagerProtocol
     private let styleManager: StyleManagerProtocol

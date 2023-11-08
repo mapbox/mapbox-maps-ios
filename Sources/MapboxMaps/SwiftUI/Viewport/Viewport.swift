@@ -1,42 +1,56 @@
 import SwiftUI
 import Turf
 
-/// The viewport represents the ways to position camera.
+/// Viewport represents the ways to position camera.
 ///
-/// The viewport may be set to the map as initial viewport:
+/// Currently, several types of viewport are supported:
+/// - Default Style viewport sets the camera to the camera parameters defined in the Style root property. This type is used by default.
+/// - Camera viewport allows to directly set camera using center coordinate, zoom, bearing, pitch, and anchor.
+/// - Overview viewport helps to focus the map camera on a specified Geometry with the minimum zoom level. For example, focus user attention on a route line.
+/// - Follow Puck viewport automatically tracks the user's position on the map.
+/// - Idle viewport is activated when the user interacts with the map. You can also set it to interrupt the ongoing viewport transition animation.
 ///
+/// Typically, you set viewport via two methods: by setting the constant initial viewport, or passing the viewport `Binding`.
+/// The former method is handy to set viewport only once, at map initialization time:
 /// ```swift
-///  Map(initialViewport: .styleDefault)
+/// struct StaticViewport: View {
+///     var body: some View {
+///         // Focus camera on Disneyland at zoom 10.
+///         Map(initialViewport: .camera(center: disneyland, zoom: 10))
+///     }
+/// }
+///
+/// private let disneyland = CLLocationCoordinate(latitude: 33.812092, longitude: -117.918976)
 /// ```
 ///
-/// or as binding:
+/// The latter method allows you to programmatically update the viewport at any time, with or without animations:
 ///
 /// ```swift
 /// struct UserLocationMap: View {
-///   @State var viewport: Viewport = .followPuck(zoom: 16, bearing: .heading)
-///   var body: some View {
-///     Map(viewport: $viewport)
-///   }
+///     // Initially, focus camera on US Disneyland.
+///     @State var viewport: Viewport = .camera(center: disneyland, zoom: 10)
+///
+///     var body: some View {
+///         VStack {
+///             Map(viewport: $viewport)
+///             Button("Jump to Paris Disneyland") {
+///                 // Later, update viewport with the different settings.
+///                 viewport = .camera(center: CLLocationCoordinate2D(latitude: 48.868, longitude: 2.782), zoom: 12)
+///             }
+///             Button("Animate to User") {
+///                 // Or, update viewport with animation.
+///                 withViewportAnimation {
+///                     viewport = .followPuck(zoom: 16, bearing: .heading, pitch: 60)
+///                 }
+///             }
+///         }
+///     }
 /// }
 /// ```
 ///
-/// Viewport change can be animated via the ``withViewportAnimation(_:body:completion:)``.
+/// See ``withViewportAnimation(_:body:completion:)`` and ``ViewportAnimation`` for more details about viewport animation.
 ///
-/// ```swift
-///   struct AnimatedMap: View {
-///       @State var viewport: Viewport = .styleDefault
-///       var body: some View {
-///           Map(viewport: $viewport)
-///               .overlay {
-///                   Button("Locate the user") {
-///                       withViewportAnimation {
-///                           viewport = .followPuck(zoom: 16, bearing: .heading, pitch: 60)
-///                       }
-///                   }
-///               }
-///       }
-///   }
-/// ```
+/// The ``Viewport`` allows you to read only the values that you set. If you need to read the actual camera state values, subscribe to ``Map/onCameraChanged(action:)`` event.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -245,7 +259,7 @@ public struct Viewport: Equatable {
         return Viewport(storage: .followPuck(options))
     }
 
-    /// Creates a new MapViewport with modified inset options.
+    /// Creates a new viewport with modified inset options.
     ///
     /// Insets are ignored for `idle` viewport.
     ///
@@ -294,7 +308,7 @@ public struct Viewport: Equatable {
         return copy
     }
 
-    /// Is `true` when viewport is idle.
+    /// `true` when viewport is idle.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif
@@ -302,7 +316,7 @@ public struct Viewport: Equatable {
         return storage == .idle
     }
 
-    /// Is `true` when camera is configured from the default style camera properties.
+    /// `true` when camera is configured from the default style camera properties.
 #if swift(>=5.8)
     @_documentation(visibility: public)
 #endif

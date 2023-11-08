@@ -22,6 +22,10 @@ Mapbox welcomes participation and contributions from everyone.
 
 * [SwiftUI] Fix bug when `Viewport.inset(...)` didn't use safe area insets on the first load.
 
+### Features ✨ and improvements 🏁
+
+* Added `allowOverlapWithPuck` and `ignoreCameraPadding` options to `ViewAnnotation` and `MapViewAnnotation`.
+
 ## 11.0.0-rc.1 - 3 November, 2023
 
 ### Breaking changes ⚠️

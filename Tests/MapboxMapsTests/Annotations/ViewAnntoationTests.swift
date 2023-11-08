@@ -41,6 +41,8 @@ final class ViewAnnotationTests: XCTestCase {
         va.selected = true
         let variableAnchors = [ViewAnnotationAnchorConfig(anchor: .bottom, offsetX: 10, offsetY: 20)]
         va.variableAnchors = variableAnchors
+        va.allowOverlapWithPuck = true
+        va.ignoreCameraPadding = true
 
         XCTAssertEqual(va.allowOverlap, true)
         XCTAssertEqual(va.visible, true)
@@ -59,6 +61,8 @@ final class ViewAnnotationTests: XCTestCase {
         XCTAssertEqual(addParameters.options.width, actualSize.width)
         XCTAssertEqual(addParameters.options.height, actualSize.height)
         XCTAssertEqual(addParameters.options.allowOverlap, true)
+        XCTAssertEqual(addParameters.options.allowOverlapWithPuck, true)
+        XCTAssertEqual(addParameters.options.ignoreCameraPadding, true)
         XCTAssertEqual(addParameters.options.selected, true)
         XCTAssertEqual(addParameters.options.visible, true)
         XCTAssertEqual(addParameters.options.variableAnchors, variableAnchors)

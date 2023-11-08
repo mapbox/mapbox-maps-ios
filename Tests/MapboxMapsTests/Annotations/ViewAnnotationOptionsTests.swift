@@ -8,6 +8,8 @@ final class ViewAnnotationOptionsTests: XCTestCase {
     let width: CGFloat = 25.0
     let height: CGFloat = 50.0
     let allowOverlap: Bool = true
+    let allowOverlapWithPuck = true
+    let ignoreCameraPadding = true
     let visible: Bool = true
     let anchor: ViewAnnotationAnchor = .right
     let offsetX: CGFloat = 100.0
@@ -44,20 +46,22 @@ final class ViewAnnotationOptionsTests: XCTestCase {
             width: width,
             height: height,
             allowOverlap: allowOverlap,
+            allowOverlapWithPuck: allowOverlapWithPuck,
             visible: visible,
             selected: selected,
-            variableAnchors: [ViewAnnotationAnchorConfig(anchor: anchor, offsetX: offsetX, offsetY: offsetY)])
+            variableAnchors: [ViewAnnotationAnchorConfig(anchor: anchor, offsetX: offsetX, offsetY: offsetY)],
+            ignoreCameraPadding: ignoreCameraPadding)
 
         let objcValue = CoreViewAnnotationOptions(
             __annotatedFeature: .fromGeometry(MapboxCommon.Geometry(point)),
             width: width as NSNumber?,
             height: height as NSNumber?,
             allowOverlap: allowOverlap as NSNumber?,
-            allowOverlapWithPuck: nil,
+            allowOverlapWithPuck: allowOverlap as NSNumber?,
             visible: visible as NSNumber?,
             variableAnchors: variableAnchors,
             selected: selected as NSNumber?,
-            ignoreCameraPadding: nil
+            ignoreCameraPadding: ignoreCameraPadding as NSNumber?
         )
 
         let convertedOptions = ViewAnnotationOptions(objcValue)

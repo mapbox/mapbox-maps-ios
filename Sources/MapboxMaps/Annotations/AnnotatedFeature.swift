@@ -4,7 +4,10 @@ import MapboxCoreMaps
 public struct AnnotatedFeature: Equatable {
     /// Represents a specific feature rendered on the layer.
     public struct LayerFeature: Equatable {
+        /// Identifier of the layer, that renders the feature.
         public var layerId: String
+
+        /// Feature identifier. If not specified, the annotation will appear on any feature from that layer.
         public var featureId: String?
     }
 
@@ -15,9 +18,9 @@ public struct AnnotatedFeature: Equatable {
     public var layerFeature: LayerFeature?
 
     /// Creates Annotated feature from layer feature.
-    /// 
-    /// - Parameters:
-    ///   - layerId: Layer identifier which renders the feature.
+    ///
+    /// - Parameters:
+    ///   - layerId: Identifier of the layer, that renders the feature.
     ///   - featureId: Feature identifier. If not specified, the annotation will appear on any feature from that layer.
     public static func layerFeature(layerId: String, featureId: String? = nil) -> AnnotatedFeature {
         return .init(layerFeature: .init(layerId: layerId, featureId: featureId))

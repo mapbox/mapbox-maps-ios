@@ -1267,3 +1267,6 @@ Constructor ViewportOptions.init(transitionsToIdleUponUserInteraction:) has been
 Struct Viewport.InsetOptions has been removed
 Var Viewport.insetOptions has been removed
 Func Viewport.inset(edges:length:ignoringSafeArea:) has been removed
+
+// New View Annotation properties
+Constructor ViewAnnotationOptions.init(annotatedFeature:width:height:allowOverlap:visible:selected:variableAnchors:) has been removed

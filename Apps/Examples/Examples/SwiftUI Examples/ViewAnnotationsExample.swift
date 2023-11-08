@@ -6,6 +6,8 @@ import Turf
 struct ViewAnnotationsExample: View {
     @State private var taps: [Tap] = []
     @State private var allowOverlap: Bool = false
+    @State private var allowOverlapWithPuck: Bool = false
+    @State private var ignorePadding: Bool = false
     @State private var selected = false
     @State private var etaAnnotationAnchor = ViewAnnotationAnchor.center
     @State private var overlayHeight: CGFloat = 0
@@ -26,6 +28,8 @@ struct ViewAnnotationsExample: View {
                     }
             }
             .allowOverlap(allowOverlap)
+            .allowOverlapWithPuck(allowOverlapWithPuck)
+            .ignoreCameraPadding(ignorePadding)
             .selected(selected)
             // Dynamic view annotations, appeared on tap.
             // The anchor can point to bottom, top, left, or right direction.
@@ -36,6 +40,8 @@ struct ViewAnnotationsExample: View {
                     }
                 }
                 .allowOverlap(allowOverlap)
+                .allowOverlapWithPuck(allowOverlapWithPuck)
+                .ignoreCameraPadding(ignorePadding)
                 // Allow bottom, top, left, right positions of anchor.
                 .variableAnchors(
                     [ViewAnnotationAnchor.bottom, .top, .left, .right].map { .init(anchor: $0) }
@@ -58,6 +64,8 @@ struct ViewAnnotationsExample: View {
                         tailSize: 5.0)
             }
             .allowOverlap(allowOverlap)
+            .allowOverlapWithPuck(allowOverlapWithPuck)
+            .ignoreCameraPadding(ignorePadding)
             .variableAnchors(.all) // Allow all directions for anchor
             .onAnchorChanged { self.etaAnnotationAnchor = $0.anchor }
             .selected(true)
@@ -87,6 +95,8 @@ struct ViewAnnotationsExample: View {
             VStack(alignment: .leading) {
                 Text("Tap to add annotations")
                 Toggle("Allow overlap", isOn: $allowOverlap)
+                Toggle("Allow overlap with puck", isOn: $allowOverlapWithPuck)
+                Toggle("Ignores padding", isOn: $ignorePadding)
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 6)

@@ -2,6 +2,11 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## 10.16.2 - November 8, 2023
+
+* Update MapboxCoreMaps to 10.16.2 and MapboxCommon to 23.8.4.
+
+
 ## 10.16.1 - October 3, 2023
 
 * Fix `StyleColor` failing to initialize with non-sRGB color spaces by converting supplied `UIColor`s to `sRGB` color space by default.

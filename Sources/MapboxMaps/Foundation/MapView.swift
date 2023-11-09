@@ -79,7 +79,7 @@ open class MapView: UIView {
     private let cameraViewContainerView = UIView()
 
     /// Holds ViewAnnotation views
-    private let viewAnnotationContainerView = SubviewInteractionOnlyView()
+    private let viewAnnotationContainerView = ViewAnnotationsContainer()
 
     private var needsDisplayRefresh: Bool = false
     private var displayLink: DisplayLinkProtocol?
@@ -183,6 +183,7 @@ open class MapView: UIView {
             mapboxMap._debugOptions = debugOptions.nativeDebugOptions
             ornaments.showCameraDebug = debugOptions.contains(.camera)
             ornaments.showPaddingDebug = debugOptions.contains(.padding)
+            viewAnnotationContainerView.subviewDebugFrames = debugOptions.contains(.collision)
         }
     }
 

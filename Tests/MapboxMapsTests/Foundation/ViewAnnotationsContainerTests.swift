@@ -1,13 +1,13 @@
 import XCTest
 @testable import MapboxMaps
 
-final class SubviewInteractionOnlyViewTests: XCTestCase {
+final class ViewAnnotationsContainerTests: XCTestCase {
 
     func testHitTest() {
         let wrapperView = UIView()
         wrapperView.frame = CGRect(origin: .zero, size: CGSize(width: 200.0, height: 200.0))
 
-        let subviewInteractionOnlyView = SubviewInteractionOnlyView()
+        let subviewInteractionOnlyView = ViewAnnotationsContainer()
         subviewInteractionOnlyView.frame = CGRect(origin: .zero, size: CGSize(width: 200.0, height: 200.0))
 
         let subview = UIView()
@@ -23,4 +23,15 @@ final class SubviewInteractionOnlyViewTests: XCTestCase {
         XCTAssertEqual(viewB, wrapperView)
     }
 
+    func testDebug() {
+        let view = UIView()
+        let me = ViewAnnotationsContainer()
+        me.addSubview(view)
+        me.subviewDebugFrames = true
+
+        XCTAssertEqual(view.subviews.contains(where: { $0.tag == 0xdeba9 }), true)
+        me.subviewDebugFrames = false
+
+        XCTAssertEqual(view.subviews.contains(where: { $0.tag == 0xdeba9 }), false)
+    }
 }

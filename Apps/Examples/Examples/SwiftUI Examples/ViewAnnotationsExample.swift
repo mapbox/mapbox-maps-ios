@@ -29,7 +29,7 @@ struct ViewAnnotationsExample: View {
             }
             .allowOverlap(allowOverlap)
             .selected(selected)
-            
+
             // Dynamic view annotations, appeared on tap.
             // The anchor can point to bottom, top, left, or right direction.
             ForEvery(taps) { tap in

@@ -382,17 +382,7 @@ extension Map {
 
         override func viewDidLoad() {
             super.viewDidLoad()
-
-            view.addSubview(mapView)
-
-            mapView.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                mapView.topAnchor.constraint(equalTo: view.topAnchor),
-                mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-                mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            ])
-
+            view.addConstrained(child: mapView)
             mapView.mapboxMap.size = view.bounds.size
         }
     }

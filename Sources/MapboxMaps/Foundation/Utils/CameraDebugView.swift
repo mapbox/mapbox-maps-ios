@@ -14,28 +14,25 @@ final class CameraDebugView: UIView {
     init() {
         super.init(frame: .zero)
 
-        if #available(iOS 13.0, *) {
-            backgroundColor = UIColor.systemBackground
-        } else {
-            backgroundColor = .white
-        }
         layer.cornerRadius = 5
         layer.shadowRadius = 1.4
         layer.shadowOffset = CGSize(width: 0, height: 0.7)
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOpacity = 0.3
+        let effect: UIBlurEffect
+        if #available(iOS 13.0, *) {
+            effect = UIBlurEffect(style: .systemThinMaterial)
+        } else {
+            effect = UIBlurEffect(style: .regular)
+        }
+        let backdropView = UIVisualEffectView(effect: effect)
+        backdropView.layer.cornerRadius = 5
+        backdropView.clipsToBounds = true
+        addConstrained(child: backdropView)
 
-        cameraStateLabel.translatesAutoresizingMaskIntoConstraints = false
         cameraStateLabel.numberOfLines = 0
-        addSubview(cameraStateLabel)
 
-        let padding: CGFloat = 4.0
-        NSLayoutConstraint.activate([
-            cameraStateLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: padding),
-            cameraStateLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -padding),
-            cameraStateLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding),
-            cameraStateLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -padding)
-        ])
+        addConstrained(child: cameraStateLabel, padding: 4.0)
     }
 
     required init?(coder: NSCoder) {

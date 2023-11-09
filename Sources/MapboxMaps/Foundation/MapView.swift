@@ -288,7 +288,6 @@ open class MapView: UIView {
         fatalError("This initializer should not be called.")
     }
 
-    // swiftlint:disable:next function_body_length
     private func commonInit(mapInitOptions: MapInitOptions, overridingStyleURI: URL?) {
         checkForMetalSupport()
 
@@ -346,13 +345,7 @@ open class MapView: UIView {
             insertSubview(viewAnnotationContainerView, aboveSubview: metalView)
         }
 
-        viewAnnotationContainerView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            viewAnnotationContainerView.topAnchor.constraint(equalTo: topAnchor),
-            viewAnnotationContainerView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            viewAnnotationContainerView.leftAnchor.constraint(equalTo: leftAnchor),
-            viewAnnotationContainerView.rightAnchor.constraint(equalTo: rightAnchor)
-        ])
+        addConstrained(child: viewAnnotationContainerView, add: false)
 
         cameraViewContainerView.isHidden = true
         addSubview(cameraViewContainerView)

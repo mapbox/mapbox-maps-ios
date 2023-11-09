@@ -13,22 +13,31 @@ final class PaddingDebugView: UIView {
     private var left = UILabel()
     private var bottom = UILabel()
     private var right = UILabel()
+    private var cross = CAShapeLayer()
 
     init(padding: UIEdgeInsets?) {
         self.padding = padding ?? .zero
         super.init(frame: .zero)
         update()
         self.isUserInteractionEnabled = false
-        frameView.layer.borderColor = UIColor.systemGreen.cgColor
+
+        let color = UIColor.systemGreen
+        frameView.layer.borderColor = color.cgColor
         frameView.layer.borderWidth = 1
+        frameView.layer.addSublayer(cross)
         self.addSubview(frameView)
         for label in [top, left, bottom, right] {
             label.translatesAutoresizingMaskIntoConstraints = false
-            label.backgroundColor = .systemGreen
+            label.backgroundColor = color
             label.textColor = .white
             label.font = .safeMonospacedSystemFont(size: 10)
             frameView.addSubview(label)
         }
+
+        let crossSize = 15.0
+        cross.frame = CGRect(x: 0, y: 0, width: crossSize, height: crossSize)
+        cross.path = UIBezierPath.crossPath(size: crossSize).cgPath
+        cross.strokeColor = color.cgColor
 
         NSLayoutConstraint.activate([
             top.centerXAnchor.constraint(equalTo: frameView.centerXAnchor),
@@ -49,6 +58,14 @@ final class PaddingDebugView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         self.frameView.frame = bounds.inset(by: padding)
+        let frameSize = frameView.bounds.size
+
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        cross.frame.origin = CGPoint(
+            x: (frameSize.width - cross.frame.width) / 2,
+            y: (frameSize.height - cross.frame.height) / 2)
+        CATransaction.commit()
     }
 
     private func update() {
@@ -59,5 +76,18 @@ final class PaddingDebugView: UIView {
         left.text = format(padding.left)
         bottom.text = format(padding.bottom)
         right.text = format(padding.right)
+    }
+}
+
+private extension UIBezierPath {
+    static func crossPath(size: CGFloat) -> UIBezierPath {
+        let path = UIBezierPath()
+        let half = size / 2
+        path.move(to: CGPoint(x: half, y: 0))
+        path.addLine(to: CGPoint(x: half, y: size))
+        path.move(to: CGPoint(x: 0, y: half))
+        path.addLine(to: CGPoint(x: size, y: half))
+        path.close()
+        return path
     }
 }

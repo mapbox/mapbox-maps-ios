@@ -11,17 +11,24 @@ final class ViewportManagerImplTests: XCTestCase {
     var doubleTouchGestureRecognizer: MockGestureRecognizer!
     var viewportImpl: ViewportManagerImpl!
     var statusObserver: MockViewportStatusObserver!
+    var mapboxMap: MockMapboxMap!
+    @TestSignal var safeAreaInsets: Signal<UIEdgeInsets>
+    @TestPublished var isDefaultCameraInitialized = false
 
     override func setUp() {
         super.setUp()
         options = .random()
         mainQueue = MockDispatchQueue()
         defaultTransition = MockViewportTransition()
+        mapboxMap = MockMapboxMap()
         anyTouchGestureRecognizer = MockGestureRecognizer()
         doubleTapGestureRecognizer = MockGestureRecognizer()
         doubleTouchGestureRecognizer = MockGestureRecognizer()
         viewportImpl = ViewportManagerImpl(
             options: options,
+            mapboxMap: mapboxMap,
+            safeAreaInsets: safeAreaInsets,
+            isDefaultCameraInitialized: $isDefaultCameraInitialized,
             mainQueue: mainQueue,
             defaultTransition: defaultTransition,
             anyTouchGestureRecognizer: anyTouchGestureRecognizer,
@@ -32,6 +39,7 @@ final class ViewportManagerImplTests: XCTestCase {
     }
 
     override func tearDown() {
+        mapboxMap = nil
         statusObserver = nil
         viewportImpl = nil
         doubleTouchGestureRecognizer = nil

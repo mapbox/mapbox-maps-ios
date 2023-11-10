@@ -14,7 +14,10 @@ struct MapDependencies {
     var ornamentOptions = OrnamentOptions()
     var debugOptions = MapViewDebugOptions()
     var presentsWithTransaction = false
-    var transitionsToIdleUponUserInteraction = true
+    var additionalSafeArea = SwiftUI.EdgeInsets()
+    var viewportOptions = ViewportOptions(
+        transitionsToIdleUponUserInteraction: true,
+        usesSafeAreaInsetsAsPadding: true)
 
     var onMapTap: ((MapContentGestureContext) -> Void)?
     var onMapLongPress: ((MapContentGestureContext) -> Void)?

@@ -7,6 +7,20 @@ Mapbox welcomes participation and contributions from everyone.
 ### Bug fixes 🐞
 
 * [SwiftUI] Fixed point annotations clustering.
+### Breaking changes ⚠️
+
+- Note: SwiftUI support is an experimental feature, it's API may be changed until it stabilizes.
+
+* [SwiftUI] Viewport inset system is refactored:
+  - The `Viewport.inset(...)` function is removed in favor of the `Viewport.padding(...)`
+  - The `Viewport.inset(...)` had `ignoringSafeArea` which supposed to specify if a specific edge safe area inset should be accounted in padding calculation. Instead of this parameter there is a `Map.usesSafeAreaInsetsAsPadding(_:)` modifier that enables or disables this for all edges.
+
+### Features ✨ and improvements 🏁
+ - [SwiftUI] New `Map.additionalSafeAreaInsets(...)` modifier that adds additional global safe area insets for the map. Use them to display any UI elements on top of the map. The additional safe area will automatically be accounted in camera padding calculation in every Viewport.
+
+### Bug fixes 🐞
+
+* [SwiftUI] Fix bug when `Viewport.inset(...)` didn't use safe area insets on the first load.
 
 ## 11.0.0-rc.1 - 3 November, 2023
 

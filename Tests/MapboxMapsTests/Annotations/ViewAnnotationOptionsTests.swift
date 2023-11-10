@@ -87,8 +87,6 @@ final class ViewAnnotationOptionsTests: XCTestCase {
             height: height
         )
 
-        let frame = sut.frame(with: nil)
-
         // center
         sut.variableAnchors = [ViewAnnotationAnchorConfig(anchor: .center, offsetX: offsetX, offsetY: offsetY)]
         verifyFrame(sut.frame(with: nil), expectedOrigin: CGPoint(x: offsetX - width * 0.5, y: offsetY - height * 0.5))

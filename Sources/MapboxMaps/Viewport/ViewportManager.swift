@@ -1,3 +1,5 @@
+import UIKit
+
 /// `Viewport` provides a structured approach to organizing camera management logic into states and
 /// transitions between them.
 ///
@@ -18,15 +20,18 @@ public final class ViewportManager {
     private let onPuckRender: Signal<PuckRenderingData>
     private let cameraAnimationsManager: CameraAnimationsManagerProtocol
     private let mapboxMap: MapboxMapProtocol
+    private let styleManager: StyleProtocol
 
     internal init(impl: ViewportManagerImplProtocol,
                   onPuckRender: Signal<PuckRenderingData>,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol,
-                  mapboxMap: MapboxMapProtocol) {
+                  mapboxMap: MapboxMapProtocol,
+                  styleManager: StyleProtocol) {
         self.impl = impl
         self.onPuckRender = onPuckRender
         self.cameraAnimationsManager = cameraAnimationsManager
         self.mapboxMap = mapboxMap
+        self.styleManager = styleManager
     }
 
     /// The current ``ViewportStatus``.
@@ -109,18 +114,37 @@ public final class ViewportManager {
         set { impl.defaultTransition = newValue }
     }
 
+    /// Creates a camera viewport state.
+    ///
+    /// The camera viewport state sets the specified camera options only once.
+    /// Additionally, it maintains the camera padding in sync with safe area insets.
+    ///
+    /// Use this state to set camera options instead of ``MapboxMap/setCamera(to:)``
+    /// if you use experimental ``ViewportOptions/usesSafeAreaInsetsAsPadding``.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    @_spi(Experimental)
+    public func makeCameraViewportState(camera: CameraOptions) -> ViewportState {
+        CameraViewportState(cameraOptions: Signal(just: camera), mapboxMap: mapboxMap, safeAreaPadding: impl.safeAreaPadding)
+    }
+
+    func makeDefaultStyleViewportState(padding: UIEdgeInsets) -> ViewportState {
+        CameraViewportState
+            .defaultStyleViewport(with: padding, styleManager: styleManager, mapboxMap: mapboxMap, safeAreaPadding: impl.safeAreaPadding)
+    }
+
     /// Creates a new instance of ``FollowPuckViewportState`` with the specified options.
     /// - Parameter options: configuration options used when creating ``FollowPuckViewportState``. Defaults to
     ///                      ``FollowPuckViewportStateOptions/init(padding:zoom:bearing:pitch:)``
     ///                      with the default value specified for all parameters.
     /// - Returns: The newly-created ``FollowPuckViewportState``.
     public func makeFollowPuckViewportState(options: FollowPuckViewportStateOptions = .init()) -> FollowPuckViewportState {
-        return FollowPuckViewportState(
-            dataSource: FollowPuckViewportStateDataSource(
-                options: options,
-                onPuckRender: onPuckRender,
-                observableCameraOptions: ObservableCameraOptions()),
-            mapboxMap: mapboxMap)
+        FollowPuckViewportState(
+            options: options,
+            mapboxMap: mapboxMap,
+            onPuckRender: onPuckRender,
+            safeAreaPadding: impl.safeAreaPadding)
     }
 
     /// Creates a new instance of ``OverviewViewportState`` with the specified options.
@@ -131,7 +155,7 @@ public final class ViewportManager {
             options: options,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager,
-            observableCameraOptions: ObservableCameraOptions())
+            safeAreaPadding: impl.safeAreaPadding)
     }
 
     /// Creates a new instance of ``DefaultViewportTransition``.

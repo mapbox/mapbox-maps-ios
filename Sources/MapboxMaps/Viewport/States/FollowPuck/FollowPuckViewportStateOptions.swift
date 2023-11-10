@@ -30,16 +30,14 @@ public struct FollowPuckViewportStateOptions: Codable, Hashable {
     /// not be modified.
     public var pitch: CGFloat?
 
-    /// Memberwise initializer for `FollowPuckViewportStateOptions`.
-    ///
-    /// All parameters have default values.
+    /// Creates options.
     ///
     /// - Parameters:
-    ///   - padding: Defaults to `UIEdgeInsets.zero`.
-    ///   - zoom: Defaults to 16.35.
-    ///   - bearing: Defaults to ``FollowPuckViewportStateBearing/heading``.
-    ///   - pitch: Defaults to 45.
-    public init(padding: UIEdgeInsets? = .zero,
+    ///   - padding: Camera padding.
+    ///   - zoom: Camera zoom. Default value is 16.35.
+    ///   - bearing: camera bearing, by default bearing will be taken from heading data.
+    ///   - pitch: Camera pitch. Default value is 45.
+    public init(padding: UIEdgeInsets? = nil,
                 zoom: CGFloat? = 16.35,
                 bearing: FollowPuckViewportStateBearing? = .heading,
                 pitch: CGFloat? = 45) {

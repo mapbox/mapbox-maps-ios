@@ -27,7 +27,7 @@ struct StandardStyleLocationsExample: View {
             .onChange(of: Pair(selectedBookmark, settingsHeight)) { newValue in
                 let newViewport = newValue.first.viewport
                     // Center of the map will be translated in order to accommodate settings panel
-                    .inset(edges: .bottom, length: newValue.second + 30)
+                    .padding(.bottom, newValue.second + 30)
                 viewport = newViewport
             }
     }

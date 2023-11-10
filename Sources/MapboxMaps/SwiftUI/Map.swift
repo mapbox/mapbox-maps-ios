@@ -143,6 +143,7 @@ public struct Map: UIViewControllerRepresentable {
     }
 
     public func updateUIViewController(_ mapController: UIViewController, context: Context) {
+        mapController.additionalSafeAreaInsets = UIEdgeInsets(insets: mapDependencies.additionalSafeArea, layoutDirection: layoutDirection)
         context.coordinator.basic.update(
             viewport: viewport,
             deps: mapDependencies,
@@ -335,7 +336,56 @@ public extension Map {
     @_documentation(visibility: public)
 #endif
     func transitionsToIdleUponUserInteraction(_ value: Bool) -> Self {
-        copyAssigned(self, \.mapDependencies.transitionsToIdleUponUserInteraction, value)
+        copyAssigned(self, \.mapDependencies.viewportOptions.transitionsToIdleUponUserInteraction, value)
+    }
+
+    /// When `true`, all viewport states increase the camera padding by the amount of the safe area insets.
+    ///
+    /// The following formula is used to calculate the camera padding:
+    /// ```
+    /// safe area insets = view safe area insets + additional safe area insets
+    /// camera padding = viewport padding + safe area insets
+    /// ```
+    ///
+    /// If your view has some UI elements on top of the map and you want them to be padded,
+    /// use ``Map/additionalSafeAreaInsets(_:)`` to specify an additional amount of safe area insets.
+    ///
+    /// - Note: ``MapViewAnnotation`` will respect the padding area and will be placed outside of it.
+    ///
+    /// Defaults to `true`.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    func usesSafeAreaInsetsAsPadding(_ value: Bool) -> Self {
+        copyAssigned(self, \.mapDependencies.viewportOptions.usesSafeAreaInsetsAsPadding, value)
+    }
+
+    /// Amount of additional safe area insets.
+    ///
+    /// If called multiple times, the last call wins. This property behaves identically to the
+    /// `UIViewController.additionalSafeAreaInsets`.
+    ///
+    /// - Note: This property cannot be animated.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    func additionalSafeAreaInsets(_ insets: SwiftUI.EdgeInsets) -> Self {
+        copyAssigned(self, \.mapDependencies.additionalSafeArea, insets)
+    }
+
+    /// Sets the amount of additional safe area insets for the given edges.
+    ///
+    /// If called multiple times, the last call wins. This property behaves identically to the
+    /// `UIViewController.additionalSafeAreaInsets`.
+    ///
+    /// - Note: This property cannot be animated.
+#if swift(>=5.8)
+    @_documentation(visibility: public)
+#endif
+    func additionalSafeAreaInsets(_ edges: Edge.Set = .all, _ length: CGFloat) -> Self {
+        var copy = self
+        copy.mapDependencies.additionalSafeArea.updateEdges(edges, length)
+        return copy
     }
 }
 

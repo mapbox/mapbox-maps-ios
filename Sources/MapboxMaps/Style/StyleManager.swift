@@ -5,6 +5,7 @@ import UIKit
 
 protocol StyleProtocol: AnyObject {
     var isStyleLoaded: Bool { get }
+    var isStyleRootLoaded: Signal<Bool> { get }
     var styleDefaultCamera: CameraOptions { get }
     var uri: StyleURI? { get set }
     var mapStyle: MapStyle? { get set }
@@ -405,6 +406,8 @@ public class StyleManager {
     public var isStyleLoaded: Bool {
         return styleManager.isStyleLoaded()
     }
+
+    var isStyleRootLoaded: Signal<Bool> { styleReconciler.isStyleRootLoaded }
 
     /// MapStyle represents style configuration to load the style.
     ///

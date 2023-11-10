@@ -104,7 +104,7 @@ private struct ViewportMenu: View {
             }
             Button(".overview(.polygon())") {
                 viewport = viewport(for: maineBoundaries, coordinatePadding: 10)
-                    .inset(edges: .all, length: 10)
+                    .padding(.all, 10)
             }
             Button(".followPuck(bearing: .course)") {
                 viewport = .followPuck(zoom: 13, bearing: .course, pitch: 55)
@@ -134,7 +134,7 @@ private struct ViewportMenu: View {
                 Button("[fly] .overview(.polygon())") {
                     withViewportAnimation(.fly(duration: 1)) {
                         viewport = viewport(for: maineBoundaries, coordinatePadding: 10)
-                            .inset(edges: .all, length: 10)
+                            .padding(.all, 10)
                     }
                 }
                 Button("[default] .followPuck(bearing: .heading)") {

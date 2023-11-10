@@ -12,7 +12,7 @@ internal func coreAPIClosureAdapter<T, SwiftError, ObjCType>(
     type: ObjCType.Type,
     concreteErrorType: SwiftError.Type,
     converter: @escaping (ObjCType) -> T? = { $0 as? T }) -> (Expected<ObjCType, SwiftError.CoreErrorType>?) -> Void where SwiftError: CoreErrorRepresentable {
-    return { (expected: Expected<ObjCType, SwiftError.CoreErrorType>?) -> Void in
+    return { (expected: Expected<ObjCType, SwiftError.CoreErrorType>?) in
         closure(
             Result(
                 expected: expected,

@@ -15,12 +15,18 @@ final class MapStyleReconciler {
         }
     }
 
+    /// Triggers `true` when the root style description is loaded and `false` when it's in progress, or failed to load.
+    /// Emits a value upon subscription.
+    var isStyleRootLoaded: Signal<Bool> { _isStyleRootLoaded.signal.skipRepeats() }
+
     private let styleManager: StyleManagerProtocol
     private var pendingCompletions = [(Error?) -> Void]()
     private var _mapStyle: MapStyle?
+    private let _isStyleRootLoaded: CurrentValueSignalSubject<Bool>
 
     init(styleManager: StyleManagerProtocol) {
         self.styleManager = styleManager
+        self._isStyleRootLoaded = .init(false)
     }
 
     func loadStyle(
@@ -32,11 +38,14 @@ final class MapStyleReconciler {
             _mapStyle = style
             let callbacks = RuntimeStylingCallbacks(
                 layers: { [weak self] in
+                    // This callback means the style description is loaded.
+                    guard let self else { return }
                     if let transition {
-                        self?.styleManager.setStyleTransitionFor(transition)
+                        self.styleManager.setStyleTransitionFor(transition)
                     }
                     // When new style is loaded, no need in incremental change of import configuration.
-                    self?.reconcileStyleImports(from: nil)
+                    self.reconcileStyleImports(from: nil)
+                    self._isStyleRootLoaded.value = true
                 },
                 completed: { [weak self] in
                     completion?(nil)
@@ -58,6 +67,7 @@ final class MapStyleReconciler {
             case let .uri(uri):
                 styleManager.setStyleURI(uri.rawValue, callbacks: callbacks)
             }
+            updateStyleRootLoaded()
             return
         }
         let old = _mapStyle
@@ -78,6 +88,11 @@ final class MapStyleReconciler {
         for completion in completions {
             completion(error)
         }
+        updateStyleRootLoaded()
+    }
+
+    private func updateStyleRootLoaded() {
+        _isStyleRootLoaded.value = styleManager.isStyleLoaded()
     }
 
     private func reconcileStyleImports(from old: [StyleImportConfiguration]?) {
@@ -87,7 +102,9 @@ final class MapStyleReconciler {
             to: mapStyle.importConfigurations,
             styleManager: styleManager)
     }
+}
 
+extension MapStyleReconciler {
     static func reconcileStyleImports(
         from old: [StyleImportConfiguration]?,
         to new: [StyleImportConfiguration],

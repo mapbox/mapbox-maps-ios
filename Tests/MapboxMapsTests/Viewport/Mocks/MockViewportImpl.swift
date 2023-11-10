@@ -1,6 +1,9 @@
 @testable import MapboxMaps
+import UIKit
 
 final class MockViewportManagerImpl: ViewportManagerImplProtocol {
+    @TestSignal var safeAreaPadding: Signal<UIEdgeInsets?>
+
     @Stubbed var options: ViewportOptions = .random()
 
     @Stubbed var status: ViewportStatus = .random()

@@ -102,6 +102,7 @@ open class MapView: UIView {
     private let dependencyProvider: MapViewDependencyProviderProtocol
 
     private let displayLinkSignalSubject = SignalSubject<Void>()
+    private let safeAreaSignalSubject = CurrentValueSignalSubject(UIEdgeInsets())
 
     private let notificationCenter: NotificationCenterProtocol
     private let bundle: BundleProtocol
@@ -424,16 +425,21 @@ open class MapView: UIView {
             mapboxMap: mapboxMap,
             displayLink: displayLinkSignalSubject.signal)
 
+        let safeAreaSignal = safeAreaSignalSubject.signal.skipRepeats()
+
         viewport = ViewportManager(
             impl: dependencyProvider.makeViewportManagerImpl(
                 mapboxMap: mapboxMap,
                 cameraAnimationsManager: internalCamera,
+                safeAreaInsets: safeAreaSignal,
+                isDefaultCameraInitialized: mapboxMap.isDefaultCameraInitialized,
                 anyTouchGestureRecognizer: gestures.anyTouchGestureRecognizer,
                 doubleTapGestureRecognizer: gestures.doubleTapToZoomInGestureRecognizer,
                 doubleTouchGestureRecognizer: gestures.doubleTouchToZoomOutGestureRecognizer),
             onPuckRender: location.onPuckRender,
             cameraAnimationsManager: internalCamera,
-            mapboxMap: mapboxMap)
+            mapboxMap: mapboxMap,
+            styleManager: mapboxMap)
     }
 
     deinit {
@@ -563,6 +569,7 @@ open class MapView: UIView {
         if let metalView = metalView {
             mapboxMap.size = metalView.bounds.size
         }
+        safeAreaSignalSubject.value = self.safeAreaInsets
     }
 
     @_spi(Metrics) public var metricsReporter: MapViewMetricsReporter?

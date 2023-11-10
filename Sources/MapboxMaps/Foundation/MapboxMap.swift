@@ -171,6 +171,11 @@ public final class MapboxMap: StyleManager {
     /// Provides access to events triggered during Map lifecycle.
     private let events: MapEvents
 
+    private let _isDefaultCameraInitialized = CurrentValueSignalProxy<Bool>()
+
+    /// Triggered when map is loaded for the first time, and camera is initialized with default style camera options.
+    var isDefaultCameraInitialized: Signal<Bool> { _isDefaultCameraInitialized.signal.skipRepeats() }
+
     deinit {
         __map.destroyRenderer()
     }
@@ -182,6 +187,7 @@ public final class MapboxMap: StyleManager {
         super.init(with: map, sourceManager: styleSourceManager)
 
         __map.createRenderer()
+        _isDefaultCameraInitialized.proxied = onCameraChanged.map { _ in true }
     }
 
     internal convenience init(mapClient: MapClient, mapInitOptions: MapInitOptions, styleSourceManager: StyleSourceManagerProtocol? = nil) {

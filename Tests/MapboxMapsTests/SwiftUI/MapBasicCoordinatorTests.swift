@@ -79,12 +79,18 @@ final class MapBasicCoordinatorTests: XCTestCase {
     }
 
     func testViewportOptions() {
-        XCTAssertEqual(mapView.facade.viewportManager.options.transitionsToIdleUponUserInteraction, true)
-        update(with: MapDependencies(transitionsToIdleUponUserInteraction: false))
-        XCTAssertEqual(mapView.facade.viewportManager.options.transitionsToIdleUponUserInteraction, false)
+        let options1 = ViewportOptions(
+            transitionsToIdleUponUserInteraction: false,
+            usesSafeAreaInsetsAsPadding: false)
+        update(with: MapDependencies(viewportOptions: options1))
+        XCTAssertEqual(mapView.facade.viewportManager.options, options1)
 
-        update(with: MapDependencies(transitionsToIdleUponUserInteraction: true))
-        XCTAssertEqual(mapView.facade.viewportManager.options.transitionsToIdleUponUserInteraction, true)
+        let options2 = ViewportOptions(
+            transitionsToIdleUponUserInteraction: true,
+            usesSafeAreaInsetsAsPadding: true)
+        update(with: MapDependencies(viewportOptions: options2))
+        XCTAssertEqual(mapView.facade.viewportManager.options, options2)
+
     }
 
     func testContentGestures() {

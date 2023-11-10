@@ -89,8 +89,7 @@ final class MapBasicCoordinator {
         assign(&mapView, \.ornaments.options, value: deps.ornamentOptions)
         assign(&mapView, \.debugOptions, value: deps.debugOptions)
         assign(&mapView, \.presentsWithTransaction, value: deps.presentsWithTransaction)
-        assign(&mapView, \.viewportManager.options.transitionsToIdleUponUserInteraction,
-               value: deps.transitionsToIdleUponUserInteraction)
+        assign(&mapView, \.viewportManager.options, value: deps.viewportOptions)
 
         cameraChangeHandlers = deps.cameraChangeHandlers
         subscribeOnce {

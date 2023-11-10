@@ -60,7 +60,7 @@ private class Model: ObservableObject {
 
             withViewportAnimation(.easeOut(duration: 0.5)) {
                 viewport = .camera(center: context.coordinate)
-                    .inset(edges: .bottom, length: bottomInset, ignoringSafeArea: true)
+                    .padding(.bottom, bottomInset)
             }
         }
     }

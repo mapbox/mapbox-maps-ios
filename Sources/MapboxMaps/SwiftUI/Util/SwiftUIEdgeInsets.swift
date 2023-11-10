@@ -18,6 +18,12 @@ extension SwiftUI.EdgeInsets {
         }
         self.init(top: top, leading: leading, bottom: bottom, trailing: trailing)
     }
+
+    mutating func updateEdges(_ edges: Edge.Set, _ length: CGFloat) {
+        for (edge, keyPath) in edgeToInsetMapping where edges.contains(edge) {
+            self[keyPath: keyPath] = length
+        }
+    }
 }
 
 @available(iOS 13.0, *)
@@ -40,7 +46,7 @@ extension UIEdgeInsets {
 }
 
 @available(iOS 13.0, *)
-let edgeToInsetMapping: [(Edge.Set, WritableKeyPath<SwiftUI.EdgeInsets, CGFloat>)] = [
+private let edgeToInsetMapping: [(Edge.Set, WritableKeyPath<SwiftUI.EdgeInsets, CGFloat>)] = [
     (.top, \.top),
     (.bottom, \.bottom),
     (.leading, \.leading),

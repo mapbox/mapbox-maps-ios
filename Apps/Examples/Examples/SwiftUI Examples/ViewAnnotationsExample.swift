@@ -12,7 +12,7 @@ struct ViewAnnotationsExample: View {
     var body: some View {
         Map(initialViewport: .camera(center: .helsinki, zoom: 5)
             // Add bottom inset for bottom config panel, View Annotations won't appear there.
-            .inset(edges: .bottom, length: 200)
+            .padding(.bottom, 160)
         ) {
             // A single view annotation, tap on it to change selected state.
             MapViewAnnotation(coordinate: .helsinki) {

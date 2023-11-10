@@ -3,6 +3,7 @@ internal protocol ViewportManagerImplProtocol: AnyObject {
     var options: ViewportOptions { get set }
 
     var status: ViewportStatus { get }
+    var safeAreaPadding: Signal<UIEdgeInsets?> { get }
     func addStatusObserver(_ observer: ViewportStatusObserver)
     func removeStatusObserver(_ observer: ViewportStatusObserver)
 
@@ -17,25 +18,52 @@ internal protocol ViewportManagerImplProtocol: AnyObject {
 //
 // at any given time, the viewport is either:
 //
-//  - idle (not updating the camera)
+//  - idle (only camera padding is updating from safe area (if configured))
 //  - in a state (camera is being managed by a ViewportState)
 //  - transitioning (camera is being managed by a ViewportTransition)
 //
-internal final class ViewportManagerImpl: ViewportManagerImplProtocol {
+final class ViewportManagerImpl: ViewportManagerImplProtocol {
 
-    internal var options: ViewportOptions {
+    var options: ViewportOptions {
         get {
-            ViewportOptions(
+            var opts = ViewportOptions(
                 transitionsToIdleUponUserInteraction: anyTouchGestureRecognizer.isEnabled)
+            opts.usesSafeAreaInsetsAsPadding = usesSafeAreaInsetsAsPadding.value
+            return opts
         }
         set {
             anyTouchGestureRecognizer.isEnabled = newValue.transitionsToIdleUponUserInteraction
+            usesSafeAreaInsetsAsPadding.value = newValue.usesSafeAreaInsetsAsPadding
         }
     }
 
-    private let mainQueue: DispatchQueueProtocol
+    /// Stream of amounts of camera padding that is contributed by safe area insets.
+    /// The value changes when device rotates, `additionalSafeAreaInsets` or
+    /// ``ViewportOptions/usesSafeAreaInsetsAsPadding`` change.
+    ///
+    /// When ``ViewportOptions/usesSafeAreaInsetsAsPadding`` is disabled the value is `nil`.
+    let safeAreaPadding: Signal<UIEdgeInsets?>
 
+    private let mapboxMap: MapboxMapProtocol
+    private let mainQueue: DispatchQueueProtocol
     private let anyTouchGestureRecognizer: UIGestureRecognizer
+    private let isDefaultCameraInitialized: Signal<Bool>
+
+    private var usesSafeAreaInsetsAsPadding = CurrentValueSignalSubject(false)
+    private var safeAreaPaddingForIdleToken: AnyCancelable?
+    private var safeAreaPaddingForIdle: UIEdgeInsets? {
+        didSet {
+            if status == .idle {
+                // In idle state the padding will remain the same, but we need to update
+                // safe area contribution into it, when it changes (device rotation).
+                let padding = self.mapboxMap.cameraState.padding
+                let newPadding = padding + ((safeAreaPaddingForIdle - oldValue) ?? .zero)
+                if padding != newPadding {
+                    mapboxMap.setCamera(to: CameraOptions(padding: newPadding))
+                }
+            }
+        }
+    }
 
     deinit {
         currentCancelable?.cancel()
@@ -44,20 +72,40 @@ internal final class ViewportManagerImpl: ViewportManagerImplProtocol {
 
     // viewport requires a default transition at all times
     internal init(options: ViewportOptions,
+                  mapboxMap: MapboxMapProtocol,
+                  safeAreaInsets: Signal<UIEdgeInsets>,
+                  isDefaultCameraInitialized: Signal<Bool>,
                   mainQueue: DispatchQueueProtocol,
                   defaultTransition: ViewportTransition,
                   anyTouchGestureRecognizer: UIGestureRecognizer,
                   doubleTapGestureRecognizer: UIGestureRecognizer,
                   doubleTouchGestureRecognizer: UIGestureRecognizer) {
+        self.mapboxMap = mapboxMap
         self.mainQueue = mainQueue
         self.defaultTransition = defaultTransition
         self.status = .idle
+        self.isDefaultCameraInitialized = isDefaultCameraInitialized
         self.anyTouchGestureRecognizer = anyTouchGestureRecognizer
+        self.safeAreaPadding = Signal
+            .combineLatest(usesSafeAreaInsetsAsPadding.signal, safeAreaInsets)
+            .map { enabled, insets in
+                enabled ? insets : nil
+            }
         anyTouchGestureRecognizer.addTarget(self, action: #selector(handleAnyTouchGesture(_:)))
         doubleTapGestureRecognizer.addTarget(self, action: #selector(handleDoubleTapAndTouchGestures(_:)))
         doubleTouchGestureRecognizer.addTarget(self, action: #selector(handleDoubleTapAndTouchGestures(_:)))
         // sync with provided options
         self.options = options
+
+        // In case of initialization from idle state and with `usesSafeAreaInsetsAsPadding = true`
+        // we need to wait until the first onCameraChange event is happened (`defaultCameraLoaded`).
+        // Otherwise, we early set just a camera padding and core won't apply the initial default
+        // style camera. In practice, it would result in irrelevant zero camera with some padding.
+        let defaultCameraLoaded =  isDefaultCameraInitialized.filter { $0 }
+        safeAreaPaddingForIdleToken = Signal
+            .combineLatest(safeAreaPadding, defaultCameraLoaded)
+            .map { $0.0 }
+            .assign(to: \.safeAreaPaddingForIdle, ofWeak: self)
     }
 
     // MARK: - Status

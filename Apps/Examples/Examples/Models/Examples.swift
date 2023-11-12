@@ -103,6 +103,9 @@ struct Examples {
 
     // Examples that focus on annotations.
     static let annotationExamples = [
+      Example(title: "Many many annotations",
+              description: "Add hundreds of annotations to the map",
+              type: ManyAnnotationsExample.self),
         Example(title: "Add a polygon annotation",
                 description: "Add a polygon annotation to the map.",
                 type: PolygonAnnotationExample.self),

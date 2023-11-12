@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0189B9152B008482004E4911 /* ManyAnnotationsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0189B9142B008482004E4911 /* ManyAnnotationsExample.swift */; };
 		0333B84F25ED942600D667C9 /* SceneKitExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0333B84E25ED942600D667C9 /* SceneKitExample.swift */; };
 		03BB33F925EDA19200109B28 /* 34M_17.dae in Resources */ = {isa = PBXBuildFile; fileRef = 03BB33F825EDA19200109B28 /* 34M_17.dae */; };
 		0706C4A625B1181A008733C0 /* TerrainExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0706C4A525B1181A008733C0 /* TerrainExample.swift */; };
@@ -181,6 +182,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0189B9142B008482004E4911 /* ManyAnnotationsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManyAnnotationsExample.swift; sourceTree = "<group>"; };
 		0333B84E25ED942600D667C9 /* SceneKitExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneKitExample.swift; sourceTree = "<group>"; };
 		03BB33F825EDA19200109B28 /* 34M_17.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = 34M_17.dae; sourceTree = "<group>"; };
 		0706C4A525B1181A008733C0 /* TerrainExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerrainExample.swift; sourceTree = "<group>"; };
@@ -580,6 +582,7 @@
 			children = (
 				7412CF6B27E9D48700F03B1C /* AddMarkersSymbolExample.swift */,
 				7412CF6127E8DD1E00F03B1C /* AddOneMarkerSymbolExample.swift */,
+				0189B9142B008482004E4911 /* ManyAnnotationsExample.swift */,
 				74A2313527EB37EE0065FB7D /* AnimatedMarkerExample.swift */,
 				74A2313B27EDCE7F0065FB7D /* AnnotationView.swift */,
 				7412CF6327E8EA2A00F03B1C /* CircleAnnotationExample.swift */,
@@ -964,6 +967,7 @@
 				B57E1BAE27B5B6B900E8E3BA /* ViewportExample.swift in Sources */,
 				74F04A772A7A358A00C051BC /* Lights3DExample.swift in Sources */,
 				A4211CE62592549900D215B4 /* RestrictCoordinateBoundsExample.swift in Sources */,
+				0189B9152B008482004E4911 /* ManyAnnotationsExample.swift in Sources */,
 				0C52BA9825AF8C880054ECA8 /* Custom3DPuckExample.swift in Sources */,
 				CADCF7292584990E0065C51B /* FeaturesAtPointExample.swift in Sources */,
 				3AA5FAF529C0786A00758AC0 /* PuckPlayground.swift in Sources */,

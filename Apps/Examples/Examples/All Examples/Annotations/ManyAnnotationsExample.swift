@@ -57,6 +57,7 @@ final class ManyAnnotationsExample: UIViewController, ExampleProtocol {
         }
 
         mapView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onMapTapped(_:))))
+
         mapView.translatesAutoresizingMaskIntoConstraints = false
 
         view.addSubview(mapView)
@@ -95,6 +96,7 @@ final class ManyAnnotationsExample: UIViewController, ExampleProtocol {
             mapView!.annotations.removeAnnotationManager(withId: pointAnnotationManager.id)
         }
         pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
+       pointAnnotationManager.delegate = self
 
         for exit in exitList {
             let annotation = makeMapAnnotation(exitId: exit._id, name: exit.name, latitude: exit.latitude, longitude: exit.longitude)

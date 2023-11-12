@@ -57,8 +57,9 @@ final class ManyAnnotationsExample: UIViewController, ExampleProtocol {
         }
 
         mapView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onMapTapped(_:))))
-
         mapView.translatesAutoresizingMaskIntoConstraints = false
+       pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
+       pointAnnotationManager.delegate = self
 
         view.addSubview(mapView)
         NSLayoutConstraint.activate([
@@ -91,12 +92,9 @@ final class ManyAnnotationsExample: UIViewController, ExampleProtocol {
 
     private func showExits(_ exitList: [MapExit]) {
         // print("show exits: \(exitList.count)")
-        pointAnnotationList.removeAll()
-        if pointAnnotationManager != nil {
-            mapView!.annotations.removeAnnotationManager(withId: pointAnnotationManager.id)
-        }
-        pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
-       pointAnnotationManager.delegate = self
+       pointAnnotationManager.annotations.removeAll()
+       pointAnnotationList.removeAll()
+        
 
         for exit in exitList {
             let annotation = makeMapAnnotation(exitId: exit._id, name: exit.name, latitude: exit.latitude, longitude: exit.longitude)

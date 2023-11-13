@@ -57,6 +57,11 @@ final class ExampleTableViewController: UITableViewController {
     @objc func openSwiftUI() {
         present(createSwiftUIExamplesController(), animated: true)
     }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setToolbarHidden(true, animated: false)
+    }
 }
 
 extension ExampleTableViewController: UISearchResultsUpdating {

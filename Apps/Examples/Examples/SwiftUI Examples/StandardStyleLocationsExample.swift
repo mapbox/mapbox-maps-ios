@@ -20,15 +20,14 @@ struct StandardStyleLocationsExample: View {
                 showTransitLabels: transitLabels,
                 showPlaceLabels: transitLabels,
                 showRoadLabels: roadLabels))
+            // Center of the map will be translated in order to accommodate settings panel
+            .additionalSafeAreaInsets(.bottom, settingsHeight)
             .ignoresSafeArea()
             .safeOverlay(alignment: .bottom) {
                 settingsPanel
             }
-            .onChange(of: Pair(selectedBookmark, settingsHeight)) { newValue in
-                let newViewport = newValue.first.viewport
-                    // Center of the map will be translated in order to accommodate settings panel
-                    .padding(.bottom, newValue.second + 30)
-                viewport = newViewport
+            .onChange(of: selectedBookmark) { newValue in
+                viewport = newValue.viewport
             }
     }
 
@@ -61,7 +60,6 @@ struct StandardStyleLocationsExample: View {
         }
         .padding(10)
         .floating(RoundedRectangle(cornerRadius: 10))
-        .padding(.bottom, 35)
         .background(GeometryReader() { proxy in
             Color.clear.onAppear() { settingsHeight = proxy.size.height }
         })

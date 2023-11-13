@@ -8,12 +8,10 @@ struct ViewAnnotationsExample: View {
     @State private var allowOverlap: Bool = false
     @State private var selected = false
     @State private var etaAnnotationAnchor = ViewAnnotationAnchor.center
+    @State private var overlayHeight: CGFloat = 0
 
     var body: some View {
-        Map(initialViewport: .camera(center: .helsinki, zoom: 5)
-            // Add bottom inset for bottom config panel, View Annotations won't appear there.
-            .padding(.bottom, 160)
-        ) {
+        Map(initialViewport: .camera(center: .helsinki, zoom: 5)) {
             // A single view annotation, tap on it to change selected state.
             MapViewAnnotation(coordinate: .helsinki) {
                 Text("🏠")
@@ -29,7 +27,6 @@ struct ViewAnnotationsExample: View {
             }
             .allowOverlap(allowOverlap)
             .selected(selected)
-
             // Dynamic view annotations, appeared on tap.
             // The anchor can point to bottom, top, left, or right direction.
             ForEvery(taps) { tap in
@@ -83,6 +80,8 @@ struct ViewAnnotationsExample: View {
         .onMapTapGesture { context in
             taps.append(Tap(coordinate: context.coordinate))
         }
+        // Add bottom padding for the bottom config panel, View Annotations won't appear there.
+        .additionalSafeAreaInsets(.bottom, overlayHeight)
         .ignoresSafeArea(edges: [.leading, .trailing, .bottom])
         .safeOverlay(alignment: .bottom) {
             VStack(alignment: .leading) {
@@ -92,7 +91,9 @@ struct ViewAnnotationsExample: View {
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
             .floating(RoundedRectangle(cornerRadius: 10))
-            .padding(.bottom, 30)
+            .onChangeOfSize { size in
+                overlayHeight = size.height
+            }
         }
     }
 }

@@ -13,12 +13,16 @@ struct PuckPlayground: View {
             }
         }
     }
+
+    @Environment(\.verticalSizeClass) var sizeClass
+
     @State private var puckType = PuckType.d2
     @State private var bearingType = PuckBearing.heading
     @State private var opacity = 1.0
     @State private var puck3dSettings = Puck3DSettings()
     @State private var puck2dSettings = Puck2DSettings()
     @State private var mapStyle = MapStyle.standard(lightPreset: .day)
+    @State private var settingsHeight = 0.0
 
     var body: some View {
         Map(initialViewport: .followPuck(zoom: 18, bearing: .heading, pitch: 60)) {
@@ -37,18 +41,26 @@ struct PuckPlayground: View {
             }
         }
         .mapStyle(mapStyle)
+        .additionalSafeAreaInsets(sidePanel ? .trailing : .bottom, settingsHeight)
         .ignoresSafeArea()
-        .safeOverlay(alignment: .bottom) {
+        .safeOverlay(alignment: sidePanel ? .trailing : .bottom) {
             settingsBody
+                .frame(maxWidth: sidePanel ? 300 : .infinity)
+                .onChangeOfSize { settingsHeight = sidePanel ? $0.width : $0.height }
         }
         .safeOverlay(alignment: .trailing) {
-            MapStyleSelectorButton(mapStyle: $mapStyle)
+                MapStyleSelectorButton(mapStyle: $mapStyle)
+                    .padding(.trailing, sidePanel ? 300 : 0)
         }
         .onChange(of: puckType) { newValue in
             if puckType == .d3 { // Switch to dusk mode to see model light emission
                 mapStyle = .standard(lightPreset: .dusk)
             }
         }
+    }
+
+    var sidePanel: Bool {
+        return sizeClass == .compact
     }
 
     @ViewBuilder

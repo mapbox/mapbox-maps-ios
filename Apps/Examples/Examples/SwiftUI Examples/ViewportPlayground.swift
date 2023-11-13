@@ -3,9 +3,12 @@ import MapboxMaps
 @_spi(Experimental) import MapboxMaps
 
 @available(iOS 14.0, *)
-struct MapViewportExample: View {
+struct ViewportPlayground: View {
     @State var viewport: Viewport = .styleDefault
     @State var mapStyle: MapStyle = .standard
+    @State var useSafeAreaAsPaddings: Bool = true
+    @State var additionalSafeArea: Bool = true
+    @State var settingsHeight = 0.0
 
     var body: some View {
         Map(viewport: $viewport) {
@@ -31,12 +34,20 @@ struct MapViewportExample: View {
         }
         .mapStyle(mapStyle)
         .debugOptions([.camera, .padding])
+        .usesSafeAreaInsetsAsPadding(useSafeAreaAsPaddings)
+        .additionalSafeAreaInsets(.bottom, additionalBottomSafeArea)
         .ignoresSafeArea()
         .safeOverlay(alignment: .bottomLeading) {
-            Text("viewport: \(viewportShortDescription)")
-                .font(.safeMonospaced)
-                .floating()
-                .padding(.bottom, 30)
+            VStack(alignment: .leading, spacing: 0) {
+                Text("Viewport sate: \(viewportShortDescription)")
+                MiniToggle(title: "Use safe area as padding", isOn: $useSafeAreaAsPaddings)
+                MiniToggle(title: "Use additional safe area", isOn: $additionalSafeArea)
+            }
+            .font(.safeMonospaced)
+            .floating()
+            .onChangeOfSize { size in
+                settingsHeight = size.height
+            }
         }
         .safeOverlay(alignment: .trailing) {
             MapStyleSelectorButton(mapStyle: $mapStyle)
@@ -46,6 +57,10 @@ struct MapViewportExample: View {
                 ViewportMenu(viewport: $viewport)
             }
         }
+    }
+
+    private var additionalBottomSafeArea: CGFloat {
+        additionalSafeArea ? settingsHeight : 0
     }
 
     var viewportShortDescription: String {
@@ -84,6 +99,21 @@ struct MapViewportExample: View {
     }
 }
 
+@available(iOS 13.0, *)
+private struct MiniToggle: View {
+    var title: String
+    @Binding var isOn: Bool
+    var body: some View {
+        HStack(spacing: 0) {
+            Text(title)
+            Toggle(isOn: $isOn) { EmptyView() }
+                .scaleEffect(0.7)
+                .fixedSize()
+                .padding(.bottom, -5)
+        }
+    }
+}
+
 @available(iOS 14.0, *)
 private struct ViewportMenu: View {
     @Binding var viewport: Viewport
@@ -106,6 +136,7 @@ private struct ViewportMenu: View {
                 viewport = viewport(for: maineBoundaries, coordinatePadding: 10)
                     .padding(.all, 10)
             }
+            .padding(10)
             Button(".followPuck(bearing: .course)") {
                 viewport = .followPuck(zoom: 13, bearing: .course, pitch: 55)
             }
@@ -203,7 +234,7 @@ private let maineBoundaries = Polygon([[
 struct MapViewportExample_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            MapViewportExample()
+            ViewportPlayground()
         }
     }
 }

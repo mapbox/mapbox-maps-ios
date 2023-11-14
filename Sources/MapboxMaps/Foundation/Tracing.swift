@@ -1,7 +1,6 @@
 import Foundation
 import os
 import MapboxCommon
-@_implementationOnly import MapboxCoreMaps_Private
 
 private let subsystem = "com.mapbox.maps"
 
@@ -83,7 +82,7 @@ public struct Tracing: OptionSet {
     }
 
     internal static func updateCore(tracing: Tracing) {
-        MapboxCoreMaps_Private.Tracing.setTracingBackendTypeFor(tracing.contains(.core) ? .platform : .noop)
+        CoreTracing.setTracingBackendTypeFor(tracing.contains(.core) ? .platform : .noop)
     }
 }
 

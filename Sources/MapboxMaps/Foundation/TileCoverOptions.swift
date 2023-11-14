@@ -52,7 +52,7 @@ public struct TileCoverOptions {
     }
 }
 
-extension MapboxCoreMaps.TileCoverOptions {
+extension CoreTileCoverOptions {
     internal convenience init(_ options: TileCoverOptions) {
             self.init(
                 __tileSize: options.tileSize.map { NSNumber(value: $0) },

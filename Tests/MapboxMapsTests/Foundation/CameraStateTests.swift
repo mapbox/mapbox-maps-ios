@@ -49,7 +49,7 @@ final class CameraStateTests: XCTestCase {
 
     func testInitWithObjCValue() {
         let cameraState = CameraState(
-            MapboxCoreMaps.CameraState(
+            CoreCameraState(
                 center: center,
                 padding: padding.toMBXEdgeInsetsValue(),
                 zoom: Double(zoom),

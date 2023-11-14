@@ -39,7 +39,7 @@ public struct CameraState: Codable, Hashable {
 }
 
 extension CameraState {
-    internal init(_ objcValue: MapboxCoreMaps.CameraState) {
+    internal init(_ objcValue: CoreCameraState) {
         self.centerCodable = .init(objcValue.center)
         self.paddingCodable = .init(objcValue.padding.toUIEdgeInsetsValue())
         self.zoom = CGFloat(objcValue.zoom)
@@ -48,7 +48,7 @@ extension CameraState {
     }
 }
 
-extension MapboxCoreMaps.CameraState {
+extension CoreCameraState {
     internal convenience init(_ swiftValue: CameraState) {
         self.init(
             center: swiftValue.center,

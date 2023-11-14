@@ -1,6 +1,5 @@
 // swiftlint:disable file_length
 @_implementationOnly import MapboxCommon_Private
-@_implementationOnly import MapboxCoreMaps_Private
 import UIKit
 
 protocol StyleProtocol: AnyObject {
@@ -770,7 +769,7 @@ public class StyleManager {
     /// - Returns:
     ///     The default value of the property for the layers with type layerType.
     public static func layerPropertyDefaultValue(for layerType: LayerType, property: String) -> StylePropertyValue {
-        return MapboxCoreMaps.StyleManager.getStyleLayerPropertyDefaultValue(forLayerType: layerType.rawValue, property: property)
+        return CoreStyleManager.getStyleLayerPropertyDefaultValue(forLayerType: layerType.rawValue, property: property)
     }
 
     /// Gets the properties for a style layer.
@@ -932,7 +931,7 @@ public class StyleManager {
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
     public func updateImageSource(withId id: String, image: UIImage) throws {
-        guard let mbmImage = Image(uiImage: image) else {
+        guard let mbmImage = CoreMapsImage(uiImage: image) else {
             throw TypeConversionError.unexpectedType
         }
 
@@ -982,7 +981,7 @@ public class StyleManager {
                          stretchX: [ImageStretches],
                          stretchY: [ImageStretches],
                          content: ImageContent? = nil) throws {
-        guard let mbmImage = Image(uiImage: image) else {
+        guard let mbmImage = CoreMapsImage(uiImage: image) else {
             throw TypeConversionError.unexpectedType
         }
 
@@ -1396,7 +1395,7 @@ public class StyleManager {
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
     @_spi(Experimental) public func setCustomRasterSourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, image: UIImage) throws {
-        guard let mbmImage = Image(uiImage: image) else {
+        guard let mbmImage = CoreMapsImage(uiImage: image) else {
             throw TypeConversionError.unexpectedType
         }
         try handleExpected {

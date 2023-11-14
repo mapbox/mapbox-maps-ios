@@ -1,4 +1,4 @@
-# Mapbox Maps SDK for iOS Migration Guide
+# Migrate to v11 from v10
 
 The Mapbox Maps SDK v11 introduces improvements to how Mapbox works on iOS platforms, as well as changes to how developers use the SDK. This document summarizes the most important changes - such as new features, deprecated APIs, and breaking changes - and walks you through how to upgrade an application using v10 of the Mapbox Maps SDK to v11.
 

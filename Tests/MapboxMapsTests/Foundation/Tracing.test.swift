@@ -4,7 +4,6 @@ import os
 @_implementationOnly import MapboxCoreMaps_Private.Tracing_Internal
 
 final class TracingTests: XCTestCase {
-    typealias CoreTracing = MapboxCoreMaps_Private.Tracing
     static var defaultTracing: TracingBackendType?
 
     override class func setUp() {

@@ -1,12 +1,12 @@
 import MapboxCoreMaps
-@_implementationOnly import MapboxCoreMaps_Private
+import MetalKit
 
 internal protocol DelegatingMapClientDelegate: AnyObject {
     func scheduleRepaint()
     func getMetalView(for metalDevice: MTLDevice?) -> MTKView?
 }
 
-internal final class DelegatingMapClient: MapClient, MBMMetalViewProvider {
+internal final class DelegatingMapClient: CoreMapClient, CoreMetalViewProvider {
     internal weak var delegate: DelegatingMapClientDelegate?
 
     internal func scheduleRepaint() {

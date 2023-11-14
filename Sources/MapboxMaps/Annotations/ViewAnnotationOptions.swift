@@ -111,7 +111,7 @@ public struct ViewAnnotationOptions: Equatable {
             variableAnchors: anchorConfig.map { [$0] })
     }
 
-    internal init(_ objcValue: MapboxCoreMaps.ViewAnnotationOptions) {
+    internal init(_ objcValue: CoreViewAnnotationOptions) {
         let annotatedFeature = objcValue.annotatedFeature.flatMap(AnnotatedFeature.from(core:))
         self.init(
             annotatedFeature: annotatedFeature,
@@ -159,14 +159,16 @@ public struct ViewAnnotationOptions: Equatable {
     }
 }
 
-extension MapboxCoreMaps.ViewAnnotationOptions {
+extension CoreViewAnnotationOptions {
     internal convenience init(_ swiftValue: ViewAnnotationOptions) {
         self.init(__annotatedFeature: swiftValue.annotatedFeature?.asCoreFeature,
                   width: swiftValue.width as NSNumber?,
                   height: swiftValue.height as NSNumber?,
                   allowOverlap: swiftValue.allowOverlap as NSNumber?,
+                  allowOverlapWithPuck: nil,
                   visible: swiftValue.visible as NSNumber?,
                   variableAnchors: swiftValue.variableAnchors,
-                  selected: swiftValue.selected as NSNumber?)
+                  selected: swiftValue.selected as NSNumber?,
+                  ignoreCameraPadding: nil)
     }
 }

@@ -3,7 +3,6 @@ import UIKit
 import CoreLocation
 import CoreImage.CIFilterBuiltins
 
-@_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
 
 internal protocol MapSnapshotterProtocol: StyleManagerProtocol {
@@ -11,24 +10,24 @@ internal protocol MapSnapshotterProtocol: StyleManagerProtocol {
 
     func getSize() -> Size
 
-    func getCameraState() -> MapboxCoreMaps.CameraState
+    func getCameraState() -> CoreCameraState
 
-    func setCameraFor(_ cameraOptions: MapboxCoreMaps.CameraOptions)
+    func setCameraFor(_ cameraOptions: CoreCameraOptions)
 
-    func start(forCallback: @escaping (Expected<MapSnapshot, NSString>) -> Void)
+    func start(forCallback: @escaping (Expected<CoreMapSnapshot, NSString>) -> Void)
 
     func cancel()
 
     func cameraForCoordinates(for coordinates: [Coordinate2D],
-                              padding: EdgeInsets?,
+                              padding: CoreEdgeInsets?,
                               bearing: NSNumber?,
-                              pitch: NSNumber?) -> MapboxCoreMaps.CameraOptions
+                              pitch: NSNumber?) -> CoreCameraOptions
 
-    func coordinateBoundsForCamera(forCamera camera: MapboxCoreMaps.CameraOptions) -> CoordinateBounds
-    func __tileCover(for options: MapboxCoreMaps.TileCoverOptions, cameraOptions: MapboxCoreMaps.CameraOptions?) -> [CanonicalTileID]
+    func coordinateBoundsForCamera(forCamera camera: CoreCameraOptions) -> CoordinateBounds
+    func __tileCover(for options: CoreTileCoverOptions, cameraOptions: CoreCameraOptions?) -> [CanonicalTileID]
 }
 
-extension MapSnapshotter: MapSnapshotterProtocol {
+extension CoreMapSnapshotter: MapSnapshotterProtocol {
 
 }
 
@@ -53,7 +52,7 @@ public class Snapshotter: StyleManager {
     /// - Parameters:
     ///   - options: Options describing an intended snapshot
     convenience public init(options: MapSnapshotOptions) {
-        let impl = MapSnapshotter(options: MapboxCoreMaps.MapSnapshotOptions(options))
+        let impl = CoreMapSnapshotter(options: CoreMapSnapshotOptions(options))
         self.init(
             options: options,
             mapSnapshotter: impl,
@@ -98,7 +97,7 @@ public class Snapshotter: StyleManager {
     /// Sets the camera of the snapshotter
     /// - Parameter cameraOptions: The target camera options
     public func setCamera(to cameraOptions: CameraOptions) {
-        mapSnapshotter.setCameraFor(MapboxCoreMaps.CameraOptions(cameraOptions))
+        mapSnapshotter.setCameraFor(CoreCameraOptions(cameraOptions))
     }
 
     /**
@@ -287,7 +286,7 @@ public class Snapshotter: StyleManager {
     /// - Parameter camera: The camera for which the coordinate bounds will be returned.
     /// - Returns: `CoordinateBounds` for the given `CameraOptions`
     public func coordinateBounds(for camera: CameraOptions) -> CoordinateBounds {
-        return mapSnapshotter.coordinateBoundsForCamera(forCamera: MapboxCoreMaps.CameraOptions(camera))
+        return mapSnapshotter.coordinateBoundsForCamera(forCamera: CoreCameraOptions(camera))
     }
 
     /// Calculates a `CameraOptions` to fit a list of coordinates.
@@ -319,7 +318,7 @@ public class Snapshotter: StyleManager {
     @_spi(Experimental)
     public func tileCover(for options: TileCoverOptions) -> [CanonicalTileID] {
         mapSnapshotter.__tileCover(
-            for: MapboxCoreMaps.TileCoverOptions(options),
+            for: CoreTileCoverOptions(options),
             cameraOptions: nil)
     }
 }

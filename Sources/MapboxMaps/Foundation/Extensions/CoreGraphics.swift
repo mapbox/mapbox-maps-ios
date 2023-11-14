@@ -7,8 +7,8 @@ import MapboxCoreMaps
 extension CGPoint {
 
     /// Converts a `CGPoint` to an internal `ScreenCoordinate` type.
-    internal var screenCoordinate: ScreenCoordinate {
-        ScreenCoordinate(x: Double(x), y: Double(y))
+    internal var screenCoordinate: CoreScreenCoordinate {
+        CoreScreenCoordinate(x: Double(x), y: Double(y))
     }
 
     /// Interpolate a point along a fraction of a line between two points.

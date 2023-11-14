@@ -74,7 +74,7 @@ public enum GeoJSONSourceData: Codable, Equatable {
 }
 
 extension GeoJSONSourceData {
-    internal var coreData: MapboxCoreMaps.GeoJSONSourceData {
+    internal var coreData: CoreGeoJSONSourceData {
         switch self {
         case .geometry(let geometry):
             let geometry = MapboxCommon.Geometry(geometry)

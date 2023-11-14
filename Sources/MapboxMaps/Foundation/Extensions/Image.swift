@@ -2,7 +2,7 @@ import UIKit
 
 // MARK: - Image
 
-extension Image {
+extension CoreMapsImage {
 
     /// Initialize an internal `Image` with a `UIImage`.
     ///

@@ -1,6 +1,5 @@
 import XCTest
 @testable import MapboxMaps
-@_implementationOnly import MapboxCoreMaps_Private
 
 final class ViewAnnotationOptionsTests: XCTestCase {
 
@@ -49,20 +48,22 @@ final class ViewAnnotationOptionsTests: XCTestCase {
             selected: selected,
             variableAnchors: [ViewAnnotationAnchorConfig(anchor: anchor, offsetX: offsetX, offsetY: offsetY)])
 
-        let objcValue = MapboxCoreMaps.ViewAnnotationOptions(
+        let objcValue = CoreViewAnnotationOptions(
             __annotatedFeature: .fromGeometry(MapboxCommon.Geometry(point)),
             width: width as NSNumber?,
             height: height as NSNumber?,
             allowOverlap: allowOverlap as NSNumber?,
+            allowOverlapWithPuck: nil,
             visible: visible as NSNumber?,
             variableAnchors: variableAnchors,
-            selected: selected as NSNumber?
+            selected: selected as NSNumber?,
+            ignoreCameraPadding: nil
         )
 
         let convertedOptions = ViewAnnotationOptions(objcValue)
         XCTAssertEqual(convertedOptions, swiftValue)
 
-        let convertedObjcValue = MapboxCoreMaps.ViewAnnotationOptions(swiftValue)
+        let convertedObjcValue = CoreViewAnnotationOptions(swiftValue)
         let convertedBack = ViewAnnotationOptions(convertedObjcValue)
 
         XCTAssertEqual(convertedBack, swiftValue)

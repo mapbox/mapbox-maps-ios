@@ -1,11 +1,10 @@
 import Foundation
 import CoreLocation
 import CoreGraphics
-import MapboxCoreMaps
 
 // MARK: - ScreenCoordinate
 
-extension ScreenCoordinate {
+extension CoreScreenCoordinate {
 
     // swiftlint:disable identifier_name
     /// Initializes an internal `ScreenCoordinate` type from two `CGFloat` values.

@@ -1,7 +1,6 @@
 // swiftlint:disable file_length
 import UIKit
 @_implementationOnly import MapboxCommon_Private
-@_implementationOnly import MapboxCoreMaps_Private
 import Turf
 
 public struct ViewAnnotationManagerError: Error, Equatable {

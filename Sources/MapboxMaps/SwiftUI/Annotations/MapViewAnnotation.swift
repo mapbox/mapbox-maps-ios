@@ -103,7 +103,7 @@ public struct MapViewAnnotation: MapContent {
         with(self, setter(\.allowOverlap, allowOverlap))
     }
 
-    /// When `false`, the annotation won't we shown on top of Puck.
+    /// When `false`, the annotation won't be shown on top of Puck.
     ///
     /// Default value is `false`.
 #if swift(>=5.8)

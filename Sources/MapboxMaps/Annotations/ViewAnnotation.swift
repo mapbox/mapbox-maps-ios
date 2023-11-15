@@ -68,7 +68,7 @@ public final class ViewAnnotation {
         set { setProperty(\.allowOverlap, value: newValue, oldValue: allowOverlap) }
     }
 
-    /// When `false`, the annotation won't we shown on top of Puck.
+    /// When `false`, the annotation won't be shown on top of Puck.
     ///
     /// Default value is `false`.
     public var allowOverlapWithPuck: Bool {

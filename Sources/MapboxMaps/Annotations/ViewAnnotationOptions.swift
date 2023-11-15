@@ -32,7 +32,7 @@ public struct ViewAnnotationOptions: Equatable {
     /// Note: When the value is true, the ordering of the views are determined by the order of their addition.
     public var allowOverlap: Bool?
 
-    /// When `false`, the annotation won't we shown on top of the Puck.
+    /// When `false`, the annotation won't be shown on top of the Puck.
     public var allowOverlapWithPuck: Bool?
 
     /// Specifies if this view annotation is visible or not.

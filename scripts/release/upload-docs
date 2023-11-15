@@ -13,33 +13,42 @@ def main():
                         type=dir_path, help='Path to DocC docs')
     parser.add_argument('--version', default=None, required=True,
                         type=version_no_prefix, help='Version to upload')
+    parser.add_argument('--dry-run', action='store_true', default=False,
+                        help='Do not upload docs to GitHub')
     args = parser.parse_args()
 
-    with tempfile.TemporaryDirectory() as tmpdirname:
-        writer_token_result = subprocess.run(['mbx-ci', 'github', 'writer', 'public', 'token'], capture_output=True, text=True)
+    tmpdirname = tempfile.mkdtemp()
 
-        print(f"Checkout publisher-production branch at {tmpdirname}/mapbox-maps-ios")
-        repo = checkout_repo(f"https://x-access-token:{writer_token_result.stdout}@github.com/mapbox/mapbox-maps-ios.git", "publisher-production", tmpdirname)
+    writer_token_result = subprocess.run(['mbx-ci', 'github', 'writer', 'public', 'token'], capture_output=True, text=True)
 
-        if os.getenv('CI'):
-            repo.config_writer().set_value("user", "name", "Release SDK bot").set_value("user", "email", "it-admin+mapboxci@mapbox.com").release()
+    print(f"Checkout publisher-production branch at {tmpdirname}/mapbox-maps-ios")
+    repo = checkout_repo(f"https://x-access-token:{writer_token_result.stdout}@github.com/mapbox/mapbox-maps-ios.git", "publisher-production", tmpdirname)
 
-        if args.docc_docs and args.docc_docs.exists() and args.docc_docs.is_dir():
-            print(f"Copy DocC docs from {args.docc_docs} to {repo.working_dir}/{args.version}-docc")
+    if os.getenv('CI'):
+        repo.config_writer().set_value("user", "name", "Release SDK bot").set_value("user", "email", "it-admin+mapboxci@mapbox.com").release()
 
-            shutil.copytree(args.docc_docs, Path(repo.working_dir) / f"{args.version}-docc", dirs_exist_ok=True)
-            repo.index.add([f"{args.version}-docc"])
-            repo.index.commit(f"Add DocC documentation for {args.version} version")
+    if args.docc_docs and args.docc_docs.exists() and args.docc_docs.is_dir():
+        print(f"Copy DocC docs from {args.docc_docs} to {repo.working_dir}/{args.version}")
 
+        shutil.copytree(args.docc_docs, Path(repo.working_dir) / args.version, dirs_exist_ok=True)
+        repo.index.add([args.version])
+        repo.index.commit(f"Add DocC documentation for {args.version} version")
+
+        if not args.dry_run:
             repo.remote().push()
 
-        if args.jazzy_docs and args.jazzy_docs.exists() and args.jazzy_docs.is_dir():
-            print(f"Copy jazzy docs from {args.jazzy_docs} to {repo.working_dir}/{args.version}")
-            shutil.copytree(args.jazzy_docs, Path(repo.working_dir) / args.version, dirs_exist_ok=True)
-            repo.index.add([args.version])
-            repo.index.commit(f"Add jazzy documentation for {args.version} version")
+    if args.jazzy_docs and args.jazzy_docs.exists() and args.jazzy_docs.is_dir():
+        print(f"Copy jazzy docs from {args.jazzy_docs} to {repo.working_dir}/{args.version}-jazzy")
+        shutil.copytree(args.jazzy_docs, Path(repo.working_dir) / f"{args.version}-jazzy", dirs_exist_ok=True)
+        repo.index.add([f"{args.version}-jazzy"])
 
+        repo.index.commit(f"Add jazzy documentation for {args.version} version")
+
+        if not args.dry_run:
             repo.remote().push()
+
+    if not args.dry_run:
+        shutil.rmtree(tmpdirname)
 
 def checkout_repo(repo: str, branch: str, folder) -> git.Repo:
     repo_name = Path(repo).stem

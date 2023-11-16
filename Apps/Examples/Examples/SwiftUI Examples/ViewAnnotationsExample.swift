@@ -70,15 +70,13 @@ struct ViewAnnotationsExample: View {
             .onAnchorChanged { self.etaAnnotationAnchor = $0.anchor }
             .selected(true)
 
+            // Route polyline
             PolylineAnnotationGroup {
-                // Draws route border
-                PolylineAnnotation(lineCoordinates: routeCoordinates)
-                    .lineColor("#327AC2")
-                    .lineWidth(10)
-
                 PolylineAnnotation(id: routeFeature, lineCoordinates: routeCoordinates)
                     .lineColor("#57A9FB")
-                    .lineWidth(6)
+                    .lineBorderColor("#327AC2")
+                    .lineWidth(10)
+                    .lineBorderWidth(2)
             }
             .layerId(routeLayer) // Specify id for underlying line layer.
             .lineCap(.round)

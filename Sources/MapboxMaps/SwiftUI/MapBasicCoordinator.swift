@@ -22,6 +22,7 @@ final class MapBasicCoordinator {
     private var onCameraUpdateInProgress = SignalSubject<Bool>()
 
     private var cancellables = Set<AnyCancellable>()
+    private var shortLivedSubscriptions = Set<AnyCancellable>()
 
     init(
         setViewport: ViewportSetter?,
@@ -92,32 +93,33 @@ final class MapBasicCoordinator {
         assign(&mapView, \.viewportManager.options, value: deps.viewportOptions)
 
         cameraChangeHandlers = deps.cameraChangeHandlers
-        subscribeOnce {
-            for subscription in deps.eventsSubscriptions {
-                subscription.observe(mapboxMap).store(in: &cancellables)
-            }
 
-            for (layerId, action) in deps.onLayerTap {
-                mapView.gestureManager.onLayerTap(layerId, handler: action)
-                    .store(in: &cancellables)
-            }
+        shortLivedSubscriptions.removeAll()
 
-            for (layerId, action) in deps.onLayerLongPress {
-                mapView.gestureManager.onLayerLongPress(layerId, handler: action)
-                    .store(in: &cancellables)
-            }
+        for subscription in deps.eventsSubscriptions {
+            subscription.observe(mapboxMap).store(in: &shortLivedSubscriptions)
+        }
 
-            if let onMapTap = deps.onMapTap {
-                mapView.gestureManager.onMapTap
-                    .observe(onMapTap)
-                    .store(in: &cancellables)
-            }
+        for (layerId, action) in deps.onLayerTap {
+            mapView.gestureManager.onLayerTap(layerId, handler: action)
+                .store(in: &shortLivedSubscriptions)
+        }
 
-            if let onMapLongPress = deps.onMapLongPress {
-                mapView.gestureManager.onMapLongPress
-                    .observe(onMapLongPress)
-                    .store(in: &cancellables)
-            }
+        for (layerId, action) in deps.onLayerLongPress {
+            mapView.gestureManager.onLayerLongPress(layerId, handler: action)
+                .store(in: &shortLivedSubscriptions)
+        }
+
+        if let onMapTap = deps.onMapTap {
+            mapView.gestureManager.onMapTap
+                .observe(onMapTap)
+                .store(in: &shortLivedSubscriptions)
+        }
+
+        if let onMapLongPress = deps.onMapLongPress {
+            mapView.gestureManager.onMapLongPress
+                .observe(onMapLongPress)
+                .store(in: &shortLivedSubscriptions)
         }
     }
 

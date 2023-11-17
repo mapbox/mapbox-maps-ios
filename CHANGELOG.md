@@ -6,6 +6,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Bug fixes 🐞
 
+* [SwiftUI] Fix map basic coordinator clinging to first subscriptions.
 * [SwiftUI] Fixed point annotations clustering.
 ### Breaking changes ⚠️
 
